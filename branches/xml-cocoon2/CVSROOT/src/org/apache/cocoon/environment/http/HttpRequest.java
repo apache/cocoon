@@ -28,7 +28,7 @@ import org.apache.cocoon.environment.Session;
  * to provide request information for HTTP servlets.
  *
  * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest22.java,v 1.1.2.8 2001-04-18 12:05:59 cziegeler Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.1.2.9 2001-04-19 13:11:46 cziegeler Exp $
  */
 
 public class HttpRequest implements Request {

@@ -46,7 +46,7 @@ import org.apache.cocoon.environment.Environment;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 16:56:49 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-19 13:11:44 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -324,7 +324,8 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
         getLogger().debug("Recycling of CachingStreamPipeline");
 
         super.recycle();
-        //this.serializerRole = null;
+        this.serializerRole = null;
+        this.readerRole = null;
     }
 }
 

@@ -236,9 +236,7 @@ by the main ones.
     <mkdir dir="${build.dest}"/>
     <copy todir="${build.src}" filtering="on">
       <fileset dir="${src.dir}">
-        <exclude name="**/http/HttpRequest2*.java"/>
         <exclude name="**/http/RequestWrapper2*.java"/>
-        <exclude name="**/http/HttpResponse2*.java"/>
         <exclude name="**/Ora*.java" unless="ora.driver.present"/>
         <exclude name="**/Sendmail*.java" unless="mail.present"/>
         <exclude name="**/browser/*.x*"/>
@@ -250,14 +248,8 @@ by the main ones.
   <!-- Prepares the servlet 2.3 source code                                -->
   <!-- =================================================================== -->
   <target name="prepare-src-23" depends="prepare-src-main" if="servlet23.present">
-    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest22.java"
-        tofile="${build.src}/org/apache/cocoon/environment/http/HttpRequest.java"
-        filtering="on"/>
     <copy file="${src.dir}/org/apache/cocoon/environment/http/RequestWrapper23.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/RequestWrapper.java"
-        filtering="on"/>
-    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse22.java"
-        tofile="${build.src}/org/apache/cocoon/environment/http/HttpResponse.java"
         filtering="on"/>
   </target>
 
@@ -265,14 +257,8 @@ by the main ones.
   <!-- Prepares the servlet 2.2 source code                                -->
   <!-- =================================================================== -->
   <target name="prepare-src-22" depends="prepare-src-23" unless="servlet23.present">
-    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpRequest22.java"
-        tofile="${build.src}/org/apache/cocoon/environment/http/HttpRequest.java"
-        filtering="on"/>
     <copy file="${src.dir}/org/apache/cocoon/environment/http/RequestWrapper22.java"
         tofile="${build.src}/org/apache/cocoon/environment/http/RequestWrapper.java"
-        filtering="on"/>
-    <copy file="${src.dir}/org/apache/cocoon/environment/http/HttpResponse22.java"
-        tofile="${build.src}/org/apache/cocoon/environment/http/HttpResponse.java"
         filtering="on"/>
   </target>
 

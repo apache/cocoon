@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-18 12:05:51 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-19 13:11:43 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -50,40 +50,7 @@
       XSPResponseHelper.setHeader(objectModel, <xsl:value-of select="$name"/>, <xsl:value-of select="$value"/>);
     </xsp:logic>
   </xsl:template>
-<!--
-  <xsl:template match="xsp-response:set-content-type">
-    <xsl:variable name="type">
-      <xsl:choose>
-        <xsl:when test="@type">"<xsl:value-of select="@type"/>"</xsl:when>
-        <xsl:when test="xsp-response:type">
-          <xsl:call-template name="get-nested-content">
-            <xsl:with-param name="content" select="xsp-response:type"/>
-          </xsl:call-template>
-        </xsl:when>
-      </xsl:choose>
-    </xsl:variable>
 
-    <xsp:logic>
-      XSPResponseHelper.setContentType(objectModel, <xsl:value-of select="$type"/>);
-    </xsp:logic>
-  </xsl:template>
-
-  <xsl:template match="xsp-response:send-redirect">
-    <xsl:variable name="location">
-      <xsl:choose>
-        <xsl:when test="@location">"<xsl:value-of select="@location"/>"</xsl:when>
-        <xsl:when test="xsp-response:location">
-          <xsl:call-template name="get-nested-content">
-            <xsl:with-param name="content" select="xsp-response:location"/>
-          </xsl:call-template>
-        </xsl:when>
-      </xsl:choose>
-    </xsl:variable>
-    <xsp:logic>
-      XSPResponseHelper.sendRedirect(objectModel, <xsl:value-of select="$location"/>);
-    </xsp:logic>
-  </xsl:template>
--->
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
     <xsl:choose>

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.29 2001-04-19 06:48:20 cziegeler Exp $
+  $Id: todo.xml,v 1.6.2.30 2001-04-19 13:11:39 cziegeler Exp $
 -->
 
 
@@ -27,9 +27,8 @@
  </devs>
 
  <actions priority="high">
-  <action context="code" assigned-to="CZ">
-   Cleaning up the environment object like Request, Response for the
-   different environments.
+  <action context="code" assigned-to="open">
+   Remove dependencies to the javax.servlet classes.
   </action>
 
   <action context="code" assigned-to="open">
@@ -63,14 +62,6 @@
 
   <action context="code" assigned-to="PR">
    Implement transparent content aggregation at the pipeline level.
-  </action>
-
-  <action context="code"  assigned-to="CZ">
-   Finish caching of intermediate SAX events between sitemap pipeline components.
-  </action>
-
-  <action context="code" assigned-to="CZ">
-   Finish caching of StreamPipelines.
   </action>
 
  </actions>
