@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: GeneratorSelector.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id: GeneratorSelector.java,v 1.2 2004/06/03 12:38:54 vgritsenko Exp $
  */
 public class GeneratorSelector extends ExcaliburComponentSelector implements Disposable {
 
@@ -81,7 +81,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
      */
     public void setLogKitManager( final LogKitManager logkit ) {
         super.setLogKitManager(logkit);
-        if( null == this.logKitManager ) {
+        if (null == this.logKitManager) {
              this.logKitManager = new LogkitLoggerManager( null, logkit );
         }
     }
@@ -91,7 +91,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
      */
     public void setLoggerManager( final LoggerManager logkit ) {
         super.setLoggerManager(logkit);
-        if( null ==  this.logKitManager ) {
+        if (null ==  this.logKitManager) {
              this.logKitManager = new LogkitLoggerManager( logkit, null );
         }
     }
@@ -143,7 +143,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
     }
 
     public void addGenerator(ComponentManager newManager,
-                                Object hint, Program generator)
+                             Object hint, Program generator)
             throws Exception {
         try {
             final ComponentHandler handler =
@@ -169,7 +169,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
             handler.dispose();
             this.classManager.reinstantiate();
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Removing " + handler.getClass().getName() + " for " + hint.toString());
+                getLogger().debug("Removing " + handler.getClass().getName() + " for " + hint);
             }
         }
     }
