@@ -275,7 +275,6 @@
   <xsl:template match="project">
     <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
-    <xsl:variable name="non-cocoon-block-dependencies" select="depend[not(starts-with(@project,'cocoon'))]"/>
     
     <target name="{@name}-excluded" if="internal.exclude.block.{$block-name}">
       <echo message="NOTICE: Block '{$block-name}' is excluded from the build."/>
@@ -532,17 +531,8 @@
       <!-- Copy the library depencies -->
       <copy filtering="off" todir="${{build.webapp.lib}}">
         <fileset dir="${{lib.optional}}">
-          <xsl:for-each select="$non-cocoon-block-dependencies">
-            <xsl:choose>
-              <xsl:when test="library">
-                <xsl:for-each select="library">
-                  <include name="{@name}*.jar"/>
-                </xsl:for-each>
-              </xsl:when>
-              <xsl:otherwise>
-                <include name="{@project}*.jar"/>
-              </xsl:otherwise>
-            </xsl:choose>
+          <xsl:for-each select="library">
+            <include name="{@name}*.jar"/>
           </xsl:for-each>
         </fileset>
       </copy>
@@ -577,17 +567,8 @@
       <path id="{$block-name}.classpath">
         <path refid="classpath"/>
         <fileset dir="${{lib.optional}}">
-          <xsl:for-each select="$non-cocoon-block-dependencies">
-            <xsl:choose>
-              <xsl:when test="library">
-                <xsl:for-each select="library">
-                  <include name="{@name}*.jar"/>
-                </xsl:for-each>
-              </xsl:when>
-              <xsl:otherwise>
-                <include name="{@project}*.jar"/>
-              </xsl:otherwise>
-            </xsl:choose>
+          <xsl:for-each select="library">
+            <include name="{@name}*.jar"/>
           </xsl:for-each>
         </fileset>
         <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
