@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.277 2004/03/12 15:14:19 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.278 2004/03/15 10:14:39 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="27658" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
+     Portal: Add default PropertyManagerService implementation
+   </action>
+   <action dev="CZ" type="fix" fixes-bug="27657" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
+     Portal: Fix synchronization problem with JSR-168 portlets in IncludingHTMLSerializer.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="27602" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
      Improvement for AbstractReader: Don't wrap an already buffered stream.
    </action>
