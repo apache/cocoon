@@ -50,32 +50,30 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.parameters.Parameters;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
+import org.apache.cocoon.components.treeprocessor.InvokeContext;
+import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
+import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-
 import org.apache.cocoon.sitemap.PatternException;
-
-import org.apache.cocoon.components.treeprocessor.InvokeContext;
-import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
-import org.apache.cocoon.components.treeprocessor.SimpleSelectorProcessingNode;
-
-import java.util.*;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
 
 /**
  * Handles &lt;map:act type="..."&gt; (action-sets calls are handled by {@link ActSetNode}).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ActTypeNode.java,v 1.3 2003/08/07 09:49:51 sylvain Exp $
+ * @version CVS $Id: ActTypeNode.java,v 1.4 2004/01/21 10:46:43 antonio Exp $
  */
 
 public class ActTypeNode extends SimpleSelectorProcessingNode
@@ -97,7 +95,8 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
     protected boolean inActionSet;
 
-    public ActTypeNode(String type, VariableResolver source, String name, boolean inActionSet) throws PatternException {
+    public ActTypeNode(String type, VariableResolver source, String name,
+            boolean inActionSet) throws PatternException {
         super(type);
         this.source = source;
         this.name = name;
@@ -117,28 +116,31 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
-      
-      // Perform any common invoke functionality 
-      super.invoke(env, context);
+          throws Exception {
+
+        // Perform any common invoke functionality 
+        super.invoke(env, context);
 
         // Prepare data needed by the action
-        Map            objectModel    = env.getObjectModel();
-        Redirector     redirector     = PipelinesNode.getRedirector(env);
-        SourceResolver resolver       = getSourceResolver(objectModel);
-        String         resolvedSource = source.resolve(context, objectModel);
-        Parameters     resolvedParams = VariableResolver.buildParameters(this.parameters, context, objectModel);
+        Map objectModel = env.getObjectModel();
+        Redirector redirector = PipelinesNode.getRedirector(env);
+        SourceResolver resolver = getSourceResolver(objectModel);
+        String resolvedSource = source.resolve(context, objectModel);
+        Parameters resolvedParams =
+            VariableResolver.buildParameters(this.parameters,
+                    context, objectModel);
 
         Map actionResult;
-        
+
         // If in action set, merge parameters
         if (inActionSet) {
-            Parameters callerParams = (Parameters)env.getAttribute(ActionSetNode.CALLER_PARAMETERS);
+            Parameters callerParams =
+                (Parameters)env.getAttribute(ActionSetNode.CALLER_PARAMETERS);
             if (resolvedParams == Parameters.EMPTY_PARAMETERS) {
                 // Just swap
                 resolvedParams = callerParams;
             } else if (callerParams != Parameters.EMPTY_PARAMETERS) {
-                // Build a new Parameters object since the both we hare are read-only
+                // Build new Parameters object, the both we hare are read-only!
                 Parameters newParams = new Parameters();
                 // And merge both
                 newParams.merge(resolvedParams);
@@ -149,14 +151,13 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
 
         // If action is ThreadSafe, avoid select() and try/catch block (faster !)
         if (this.threadSafeAction != null) {
-            actionResult = this.threadSafeAction.act(
-                redirector, resolver, objectModel, resolvedSource, resolvedParams);
+            actionResult = this.threadSafeAction.act(redirector, resolver,
+                    objectModel, resolvedSource, resolvedParams);
         } else {
             Action action = (Action)this.selector.select(this.componentName);
             try {
-                actionResult = action.act(
-                redirector, resolver, objectModel, resolvedSource, resolvedParams);
-
+                actionResult = action.act(redirector, resolver,
+                        objectModel, resolvedSource, resolvedParams);
             } finally {
                 this.selector.release(action);
             }
@@ -166,15 +167,11 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
             return true;
         }
 
-        if (actionResult == null) {
-            // Action failed
-            return false;
-
-        } else {
+        if (actionResult != null) {
             // Action succeeded : process children if there are some, with the action result
             if (this.children != null) {
                 boolean result = this.invokeNodes(this.children, env, context, name, actionResult);
-                
+
                 if (inActionSet) {
                     // Merge child action results, if any
                     Map childMap = (Map)env.getAttribute(ActionSetNode.ACTION_RESULTS);
@@ -187,15 +184,13 @@ public class ActTypeNode extends SimpleSelectorProcessingNode
                         env.setAttribute(ActionSetNode.ACTION_RESULTS, actionResult);
                     }
                 }
-                
                 return result;
-
-
-            } else {
-                // Return false to continue sitemap invocation
-                return false;
-            }
-        }
+            }// else {
+               // return false; // Return false to continue sitemap invocation
+            //}
+        }// else {
+            return false;   // Action failed
+        //}
     }
 
     public void dispose() {
