@@ -26,8 +26,13 @@ import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.apache.cocoon.Constants;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -54,7 +59,7 @@ import org.apache.excalibur.store.StoreJanitor;
  * </p>
  */
 public class EHStore extends AbstractLogEnabled 
-implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Serviceable {
+implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Serviceable, Contextualizable {
     
     private Cache cache;
     private CacheManager cacheManager;
@@ -70,7 +75,17 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
     
     /** The store janitor */
     private StoreJanitor storeJanitor;
+
+    /** The context containing the work and the cache directory */
+    private Context context;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context aContext) throws ContextException {
+        this.context = aContext;
+    }
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -109,7 +124,11 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
      */
     public void initialize() throws Exception {
         URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(this.configFile);
+        String tempDir = System.getProperty("java.io.tmpdir");
+        Object cacheDir = this.context.get(Constants.CONTEXT_CACHE_DIR);
+        if (cacheDir != null) System.setProperty("java.io.tmpdir", cacheDir.toString());
         this.cacheManager = CacheManager.create(configFileURL);
+        if (tempDir != null) System.setProperty("java.io.tmpdir", tempDir);
         this.cache = new Cache(this.cacheName, this.maximumSize, this.overflowToDisk, true, 0, 0);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
