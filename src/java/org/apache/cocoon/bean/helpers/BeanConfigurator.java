@@ -67,7 +67,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.5 2004/02/06 16:40:48 unico Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.6 2004/02/06 17:35:32 unico Exp $
  */
 public class BeanConfigurator {
 
@@ -151,13 +151,13 @@ public class BeanConfigurator {
             cocoon.setContextDir(getAttributeValue(root, ATTR_CONTEXT_DIR));
         }
         if (hasAttribute(root, ATTR_DEST_DIR)) {
-            destDir = getAttributeValue(root, ATTR_CONFIRM_EXTENSIONS);
+            destDir = getAttributeValue(root, ATTR_DEST_DIR);
         }
         if (hasAttribute(root, ATTR_WORK_DIR)) {
             cocoon.setWorkDir(getAttributeValue(root, ATTR_WORK_DIR));
         }
         if (hasAttribute(root, ATTR_CONFIG_FILE)) {
-            cocoon.setWorkDir(getAttributeValue(root, ATTR_WORK_DIR));
+            cocoon.setConfigFile(getAttributeValue(root, ATTR_CONFIG_FILE));
         }
         if (hasAttribute(root, ATTR_URI_FILE)) {
             cocoon.addTargets(processURIFile(getAttributeValue(root, ATTR_URI_FILE)), destDir);
