@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.4 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.5 2003/05/13 07:04:16 kpiroumian Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -635,7 +635,7 @@ public class I18nTransformer extends AbstractTransformer
     /**
      * This configuration parameter specifies the default locale to be used.
      */
-    public static final String I18N_LOCALE		= "locale";
+    public static final String I18N_LOCALE      = "locale";
 
 
     /**
@@ -1851,15 +1851,16 @@ public class I18nTransformer extends AbstractTransformer
         if (value == null) return "";
         // type
         String type = (String)params.get(I18N_TYPE_ATTRIBUTE);
-        // fraction-digits
-        int fractionDigits = -1;
-        try {
-            fractionDigits = Integer.parseInt((String)
-                    params.get(I18N_FRACTION_DIGITS_ATTRIBUTE));
-        }
-        catch(NumberFormatException nfe) {
-            getLogger().warn("Error in number format", nfe);
-        }
+
+         // fraction-digits
+         int fractionDigits = -1;
+         try {
+             String fd = (String)params.get(I18N_FRACTION_DIGITS_ATTRIBUTE);
+             if (fd != null) 
+                 fractionDigits = Integer.parseInt(fd);
+         } catch (NumberFormatException nfe) {
+             getLogger().warn("Error in number format with fraction-digits", nfe);
+         }
 
         // parsed number
         Number numberValue = null;
