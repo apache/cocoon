@@ -38,19 +38,15 @@ import java.sql.Types;
 
 public class EsqlHelper {
 
-    //private static Boolean TRUE = Boolean.TRUE;
-
     /** returns byte array from BLOB
      */
     public final static byte[] getBlob(ResultSet set, String column) throws RuntimeException {
 
-        byte[] result = null;
         try {
-            result = EsqlHelper.getBlob(set, set.findColumn(column));
+            return EsqlHelper.getBlob(set, set.findColumn(column));
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting blob data for column " + column, e);
         }
-        return result;
     }
 
     /** returns byte array from BLOB
@@ -138,13 +134,11 @@ public class EsqlHelper {
     public final static String getStringOrClob(ResultSet set, String column, String defaultString)
         throws RuntimeException {
 
-        String result = null;
         try {
-            result = EsqlHelper.getStringOrClob(set, set.findColumn(column), defaultString);
+            return EsqlHelper.getStringOrClob(set, set.findColumn(column), defaultString);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting text from column " + column, e);
         }
-        return result;
     }
 
     /** returns Unicode encoded string from CLOB or String column 
@@ -164,10 +158,6 @@ public class EsqlHelper {
                 reader = new BufferedReader(dbClob.getCharacterStream());
                 buffer = new char[length];
                 reader.read(buffer);
-                reader.close();
-                if (reader != null) {
-                    reader.close();
-                }
                 if (buffer != null) {
                     result = new String(buffer);
                 } else if (defaultString != null && !defaultString.equals("_null_")) {
@@ -183,6 +173,9 @@ public class EsqlHelper {
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting text from column " + column, e);
         } finally {
+            if (reader != null) {
+                reader.close();
+            }
             // ORACLE 'temporary lob' problem patch start
             if (dbClob != null && dbClob.getClass().getName().equals("oracle.sql.CLOB")) {
                 try {
@@ -222,10 +215,6 @@ public class EsqlHelper {
             reader = new BufferedReader(dbClob.getCharacterStream());
             buffer = new char[length];
             reader.read(buffer);
-            reader.close();
-            if (reader != null) {
-                reader.close();
-            }
             if (buffer != null) {
                 result = new String(buffer);
             } else if (defaultString != null && !defaultString.equals("_null_")) {
@@ -236,6 +225,9 @@ public class EsqlHelper {
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting text from column " + column, e);
         } finally {
+            if (reader != null) {
+                reader.close();
+            }
             // ORACLE 'temporary lob' problem patch start
             if (dbClob != null && dbClob.getClass().getName().equals("oracle.sql.CLOB")) {
                 try {
@@ -260,13 +252,12 @@ public class EsqlHelper {
     public final static String getAscii(ResultSet set, String column, String defaultString)
         throws RuntimeException {
 
-        String result = null;
         try {
-            result = EsqlHelper.getAscii(set, set.findColumn(column), defaultString);
+            int colIndex = set.findColumn(column);
+            return EsqlHelper.getAscii(set, colIndex, defaultString);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error getting ascii data for column " + column, e);
         }
-        return result;
     }
 
     /** returns ascii string from CLOB or String column 
@@ -325,7 +316,6 @@ public class EsqlHelper {
                     // swallow
                 }
             }
-
         }
         return result;
     }
@@ -400,5 +390,4 @@ public class EsqlHelper {
             }
         }
     }
-
 }
