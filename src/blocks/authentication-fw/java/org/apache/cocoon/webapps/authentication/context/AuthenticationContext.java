@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.9 2003/07/01 19:26:40 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.10 2003/09/25 17:28:38 joerg Exp $
 */
 public class AuthenticationContext
 implements SessionContext {
@@ -448,14 +448,14 @@ implements SessionContext {
 
         if (path.equals("/") ) {
             // get all: first authentication then application
-            contentHandler.startElement(null, "authentication", "authentication", new AttributesImpl());
+            contentHandler.startElement("", "authentication", "authentication", new AttributesImpl());
             this.authContext.streamXML("/authentication", contentHandler, lexicalHandler);
-            contentHandler.endElement(null, "authentication", "authentication");
+            contentHandler.endElement("", "authentication", "authentication");
 
             if (applicationName != null) {
-                contentHandler.startElement(null, "application", "application", new AttributesImpl());
+                contentHandler.startElement("", "application", "application", new AttributesImpl());
                 this.authContext.streamXML("/applications/" + applicationName, contentHandler, lexicalHandler);
-                contentHandler.endElement(null, "application", "application");
+                contentHandler.endElement("", "application", "application");
             }
             return true;
 
