@@ -799,6 +799,7 @@
     <depend project="jtidy"/>
     <depend project="castor"/>
     <depend project="commons-collections"/>
+    <depend project="jakarta-pluto" inherit="runtime"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
