@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.29 2001-04-05 15:40:35 giacomo Exp $
+  $Id: changes.xml,v 1.9.2.30 2001-04-05 20:24:01 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -23,6 +23,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="BL" type="remove">
+    Moved ComponentManagement infrastructure to Avalon where more eyes
+    can keep it working well, and it can benefit more people.
+  </action>
   <action dev="GP" type="update">
     Decoupled the RoleUtils class from the component management system.
     Implemented RoleInfo proposed by Ricardo Rocha
@@ -117,7 +121,7 @@
    Improved the samples and the webapp sitemap.
   </action>
   <action dev="SM" type="update"> 
-   Cleaned build system in order to be friendly to ASF-wide build procedures.
+   Cleaned build system in order to be friendly to ASF-wide bcocoonuild procedures.
   </action>
   <action dev="SM" type="update"> 
    Updated installation section (JServ no longer supported).
