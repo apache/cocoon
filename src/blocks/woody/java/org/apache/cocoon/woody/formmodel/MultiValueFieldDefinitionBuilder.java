@@ -60,6 +60,8 @@ import org.apache.cocoon.woody.event.ValueChangedListener;
 
 /**
  * Builds {@link MultiValueFieldDefinition}s.
+ * 
+ * @version $Id: MultiValueFieldDefinitionBuilder.java,v 1.8 2004/02/11 10:43:30 antonio Exp $
  */
 public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {

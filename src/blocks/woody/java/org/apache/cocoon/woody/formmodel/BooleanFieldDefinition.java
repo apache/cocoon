@@ -56,6 +56,8 @@ import org.apache.cocoon.woody.event.ValueChangedListener;
 
 /**
  * The {@link WidgetDefinition} part of a BooleanField widget, see {@link BooleanField} for more information.
+ * 
+ * @version $Id: BooleanFieldDefinition.java,v 1.3 2004/02/11 10:43:30 antonio Exp $
  */
 public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     private ValueChangedListener listener;

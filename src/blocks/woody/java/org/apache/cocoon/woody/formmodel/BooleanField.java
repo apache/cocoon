@@ -70,6 +70,8 @@ import java.util.Locale;
  * has no purpose here (there would always be only 2 choices: true or false),
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
+ * 
+ * @version $Id: BooleanField.java,v 1.10 2004/02/11 10:43:30 antonio Exp $
  */
 public class BooleanField extends AbstractWidget {
     // FIXME(SW) : should the initial value be false or null ? This would allow

@@ -50,7 +50,8 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cocoon.woody.event.ProcessingPhaseEvent;
 import org.apache.cocoon.woody.event.ProcessingPhaseListener;
@@ -58,6 +59,8 @@ import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 
 /**
  * The {@link WidgetDefinition} part of a Form widget, see {@link Form} for more information.
+ * 
+ * @version $Id: FormDefinition.java,v 1.4 2004/02/11 10:43:30 antonio Exp $
  */
 public class FormDefinition extends AbstractContainerDefinition {
     private ProcessingPhaseListener listener;

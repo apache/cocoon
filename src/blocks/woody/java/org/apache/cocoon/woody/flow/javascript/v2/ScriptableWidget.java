@@ -85,6 +85,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * @version $Id: ScriptableWidget.java,v 1.10 2004/02/11 10:43:32 antonio Exp $
+ * 
+ */
 public class ScriptableWidget extends ScriptableObject {
 
     final static String WIDGETS_PROPERTY = "__widgets__";

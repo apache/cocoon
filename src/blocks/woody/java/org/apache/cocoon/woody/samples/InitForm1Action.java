@@ -67,6 +67,8 @@ import java.util.Date;
  * An action that creates an instance of a specific example form included with Woody,
  * and adds some rows to its repeater widget. This example is meant to illustrate
  * how you can prepopulate a Form instance before its initial display.
+ * 
+ * @version $Id: InitForm1Action.java,v 1.5 2004/02/11 10:43:32 antonio Exp $
  */
 public class InitForm1Action extends AbstractWoodyAction {
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)

@@ -58,6 +58,8 @@ import org.outerj.expression.ExpressionException;
  * Work interface for the component that creates Expression objects.
  * The reason for centralising the creation of expressions is so that
  * new functions can be registered in one place.
+ * 
+ * @version $Id: ExpressionManager.java,v 1.3 2004/02/11 10:43:32 antonio Exp $
  */
 public interface ExpressionManager {
     

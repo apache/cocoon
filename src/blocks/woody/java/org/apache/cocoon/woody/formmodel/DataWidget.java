@@ -52,6 +52,10 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.datatype.Datatype;
 
+/**
+ * @version $Id: DataWidget.java,v 1.2 2004/02/11 10:43:30 antonio Exp $
+ * 
+ */
 public interface DataWidget extends Widget {
 
     public Datatype getDatatype();

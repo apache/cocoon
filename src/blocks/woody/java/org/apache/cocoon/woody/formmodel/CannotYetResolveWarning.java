@@ -54,6 +54,8 @@ package org.apache.cocoon.woody.formmodel;
  * This exception is thrown by {@link ExpressionContextImpl} when it asked for
  * the value of a required field, when that required field does not yet have
  * a value.
+ * 
+ * @version $Id: CannotYetResolveWarning.java,v 1.2 2004/02/11 10:43:30 antonio Exp $
  */
 public class CannotYetResolveWarning extends  RuntimeException {
     public String getMessage() {

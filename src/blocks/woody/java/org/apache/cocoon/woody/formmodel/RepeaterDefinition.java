@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.formmodel;
 
 /**
  * The {@link WidgetDefinition} part of a Repeater widget, see {@link Repeater} for more information.
+ * 
+ * @version $Id: RepeaterDefinition.java,v 1.6 2004/02/11 10:43:30 antonio Exp $
  */
 public class RepeaterDefinition extends AbstractContainerDefinition {
     private int initialSize = 0;

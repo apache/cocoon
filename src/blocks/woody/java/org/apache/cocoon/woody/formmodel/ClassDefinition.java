@@ -54,8 +54,8 @@ package org.apache.cocoon.woody.formmodel;
  * A {@link WidgetDefinition} which holds a collection of {@link Widget}s
  * and which can be instantiated with a {@link NewDefinition}.
  *
- * CVS $Id: ClassDefinition.java,v 1.1 2003/12/29 06:14:49 tim Exp $
  * @author Timothy Larson
+ * @version $Id: ClassDefinition.java,v 1.2 2004/02/11 10:43:30 antonio Exp $
  */
 public class ClassDefinition extends AbstractContainerDefinition {
     public Widget createInstance() {

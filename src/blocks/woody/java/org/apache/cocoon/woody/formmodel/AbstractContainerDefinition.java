@@ -56,8 +56,8 @@ import java.util.List;
 /**
  * The {@link AbstractContainerDefinition} corresponding to an {@link AbstractContainerWidget}.
  *
- * CVS $Id: AbstractContainerDefinition.java,v 1.2 2004/02/06 16:06:32 tim Exp $
  * @author Timothy Larson
+ * @version $Id: AbstractContainerDefinition.java,v 1.3 2004/02/11 10:43:30 antonio Exp $
  */
 public abstract class AbstractContainerDefinition
         extends AbstractWidgetDefinition implements ContainerDefinition {

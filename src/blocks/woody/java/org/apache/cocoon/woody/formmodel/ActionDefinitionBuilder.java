@@ -58,6 +58,8 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {@link ActionDefinition}s.
+ * 
+ * @version $Id: ActionDefinitionBuilder.java,v 1.6 2004/02/11 10:43:30 antonio Exp $
  */
 public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {

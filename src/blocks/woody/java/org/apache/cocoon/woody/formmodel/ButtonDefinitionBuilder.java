@@ -56,6 +56,8 @@ import org.apache.cocoon.woody.util.DomHelper;
 /**
  * The ButtonDefinitionBuilder has been replaced by {@link ActionDefinitionBuilder}. This implementation
  * is only left here to give a warning to users.
+ * 
+ * @version $Id: ButtonDefinitionBuilder.java,v 1.4 2004/02/11 10:43:30 antonio Exp $
  */
 public class ButtonDefinitionBuilder implements WidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {

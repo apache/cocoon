@@ -67,6 +67,8 @@ import java.util.Iterator;
  *
  * <p>This widget is typically used to communicate extra validation errors or other messages
  * to the user, that aren't associated with any other widget in particular.
+ * 
+ * @version $Id: Messages.java,v 1.3 2004/02/11 10:43:30 antonio Exp $
  */
 public class Messages extends AbstractWidget {
     private ArrayList messages = new ArrayList();

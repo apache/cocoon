@@ -69,6 +69,8 @@ import java.util.Locale;
  * or as a hidden field which gets its value set by javascript. The Action widget will generate its associated
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
+ * 
+ * @version $Id: Action.java,v 1.9 2004/02/11 10:43:30 antonio Exp $
  */
 public class Action extends AbstractWidget {
     protected ActionDefinition definition;

@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.formmodel;
 
 /**
  * The {@link WidgetDefinition} part of a MultiValueField widget, see {@link MultiValueField} for more information.
+ * 
+ * @version $Id: MultiValueFieldDefinition.java,v 1.2 2004/02/11 10:43:30 antonio Exp $
  */
 public class MultiValueFieldDefinition extends FieldDefinition {
     public Widget createInstance() {

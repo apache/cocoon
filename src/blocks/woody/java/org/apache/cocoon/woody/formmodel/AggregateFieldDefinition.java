@@ -61,6 +61,8 @@ import java.util.Iterator;
 
 /**
  * The {@link WidgetDefinition} part of a AggregateField widget, see {@link AggregateField} for more information.
+ * 
+ * @version $Id: AggregateFieldDefinition.java,v 1.6 2004/02/11 10:43:30 antonio Exp $
  */
 public class AggregateFieldDefinition extends AbstractWidgetDefinition {
     private Expression combineExpr;

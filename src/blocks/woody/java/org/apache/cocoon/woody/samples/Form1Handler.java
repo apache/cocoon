@@ -57,6 +57,8 @@ import org.apache.cocoon.woody.event.ValueChangedEvent;
 /**
  * Example FormHandler for the "Form1" sample form.
  * This implementation currently doesn't do anything interesting.
+ * 
+ * @version $Id: Form1Handler.java,v 1.6 2004/02/11 10:43:32 antonio Exp $
  */
 public class Form1Handler extends AbstractFormHandler {
     public void handleActionEvent(ActionEvent actionEvent) {

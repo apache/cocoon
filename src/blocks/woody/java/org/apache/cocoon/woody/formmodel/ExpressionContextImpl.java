@@ -57,6 +57,8 @@ import java.math.BigDecimal;
 /**
  * Implementation of the ExpressionContext required for the evaluation of
  * expressions by xReporter expression interpreter.
+ * 
+ * @version $Id: ExpressionContextImpl.java,v 1.5 2004/02/11 10:43:30 antonio Exp $
  */
 public class ExpressionContextImpl implements ExpressionContext {
     private Widget widget;

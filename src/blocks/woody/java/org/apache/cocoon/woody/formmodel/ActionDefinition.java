@@ -56,6 +56,8 @@ import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 
 /**
  * The {@link WidgetDefinition} part of a Action widget, see {@link Action} for more information.
+ * 
+ * @version $Id: ActionDefinition.java,v 1.3 2004/02/11 10:43:30 antonio Exp $
  */
 public class ActionDefinition extends AbstractWidgetDefinition {
     private String actionCommand;

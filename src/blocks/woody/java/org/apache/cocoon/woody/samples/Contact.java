@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.samples;
 
 /**
  * Contact belongs to the {@link Form2Bean} demo.
+ * 
+ * @version $Id: Contact.java,v 1.3 2004/02/11 10:43:32 antonio Exp $
  */
 public class Contact {
     private long id;
