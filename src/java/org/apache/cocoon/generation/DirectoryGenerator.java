@@ -43,52 +43,24 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * Generates an XML directory listing.
- * <p>
- * The root node of the generated document will normally be a
- * <code>directory</code> node, and a directory node can contain zero
- * or more <code>file</code> or directory nodes. A file node has no
- * children. Each node will contain the following attributes:
- * <blockquote>
- *   <dl>
- *   <dt> name
- *   <dd> the name of the file or directory
- *   <dt> lastModified
- *   <dd> the time the file was last modified, measured as the number of
- *   milliseconds since the epoch (as in java.io.File.lastModified)
- *   <dt> size
- *   <dd> the file size, in bytes (as in java.io.File.length)
- *   <dt> date (optional)
- *   <dd> the time the file was last modified in human-readable form
- *   </dl>
- * </blockquote>
- * <p>
- * <b>Configuration options:</b>
- * <dl>
- * <dt> <i>depth</i> (optional)
- * <dd> Sets how deep DirectoryGenerator should delve into the
- * directory structure. If set to 1 (the default), only the starting
- * directory's immediate contents will be returned.
- * <dt> <i>sort</i> (optional)
- * <dd> Sort order in which the nodes are returned. Possible values are
- * name, size, time, directory. directory is the same as name,
- * except that the directory entries are listed first. System order is default.
- * <dt> <i>reverse</i> (optional)
- * <dd>	Reverse the order of the sort
- * <dt> <i>dateFormat</i> (optional)
- * <dd> Sets the format for the date attribute of each node, as
- * described in java.text.SimpleDateFormat. If unset, the default
- * format for the current locale will be used.
- * <dt> <i>refreshDelay</i> (optional)
- * <dd> Sets the delay (in seconds) between checks on the filesystem for changed content.
- * Defaults to 1 second.
- * </dl>
- *
+ * 
+ * @cocoon.sitemap.component.name   directory
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.directory
+ * @cocoon.sitemap.component.documentation.caching
+ *               Uses the last modification date of the directory and the contained files
+ * 
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
+ *  
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.10 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.11 2004/05/26 11:37:05 cziegeler Exp $
  */
 public class DirectoryGenerator 
     extends ServiceableGenerator 

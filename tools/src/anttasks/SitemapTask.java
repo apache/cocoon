@@ -46,7 +46,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.14 $ $Date: 2004/05/08 02:54:45 $
+ * @version CVS $Revision: 1.15 $ $Date: 2004/05/26 11:37:05 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -90,11 +90,14 @@ public final class SitemapTask extends AbstractQdoxTask {
     /** The directory containing the sources*/
     private String directory;
     
+    /** The name of the block */
     private String blockName;
     
-    private boolean deprecated = false;
+    /** Is this block deprecated? */
+    protected boolean deprecated = false;
     
-    private boolean stable = true;
+    /** Is this block stable? */
+    protected boolean stable = true;
     
     /**
      * Set the directory containg the source files.
@@ -317,16 +320,33 @@ public final class SitemapTask extends AbstractQdoxTask {
             final String htmlName = docFile.getName().substring(0, docFile.getName().length()-3) + "html";
             Node oldEntry = XPathAPI.selectSingleNode(sectionNode, "menu-item[@href='"+htmlName+"']");
             Node newEntry = indexDoc.createElement("menu-item");
-            ((Element)newEntry).setAttribute("href", htmlName);
-            ((Element)newEntry).setAttribute("label", component.getName() + " " + component.getType());
+            ((Element)newEntry).setAttribute("href", htmlName);            
+            ((Element)newEntry).setAttribute("label", capitalize(component.getName()) + " " + capitalize(component.getType()));
             if ( oldEntry != null ) {
                 oldEntry.getParentNode().replaceChild(newEntry, oldEntry);
             } else {
                 sectionNode.appendChild(newEntry);
             }
+            // FIXME we should sort the entries!
             DocumentCache.writeDocument(indexFile, indexDoc, this);
         }
         
+    }
+
+    /**
+     * Helper method to capitalize a string.
+     * This is taken from commons-lang, but we don't want the dependency 
+     * right now!
+     */
+    public static String capitalize(String str) {
+        int strLen;
+        if (str == null || (strLen = str.length()) == 0) {
+            return str;
+        }
+        return new StringBuffer(strLen)
+            .append(Character.toTitleCase(str.charAt(0)))
+            .append(str.substring(1))
+            .toString();
     }
 
     final class SitemapComponent {
@@ -366,7 +386,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             StringBuffer buffer = new StringBuffer();
             
             // first check: deprecated?
-            if ( deprecated || this.getTagValue("deprecated", null) != null ) {
+            if ( SitemapTask.this.deprecated || this.getTagValue("deprecated", null) != null ) {
                 indent(parent, 3);
                 buffer.append("The ")
                 .append(this.type)
@@ -379,7 +399,7 @@ public final class SitemapTask extends AbstractQdoxTask {
                 buffer = new StringBuffer();
             }
             // unstable block?
-            if ( !stable ) {
+            if ( !SitemapTask.this.stable ) {
                 indent(parent, 3);
                 buffer.append("The ")
                 .append(this.type)
@@ -485,7 +505,7 @@ public final class SitemapTask extends AbstractQdoxTask {
                      descriptionDoc.getDocumentElement().getChildNodes());
             
             // check: deprecated?
-            if ( deprecated || this.getTagValue("deprecated", null) != null ) {
+            if ( SitemapTask.this.deprecated || this.getTagValue("deprecated", null) != null ) {
                 Node node = XPathAPI.selectSingleNode(body, "s1[@title='Description']");
                 // node is never null - this is ensured by the test above
                 Element e = node.getOwnerDocument().createElement("note");
@@ -497,7 +517,7 @@ public final class SitemapTask extends AbstractQdoxTask {
                 }
             }
             // check: stable?
-            if ( !stable ) {
+            if ( !SitemapTask.this.stable ) {
                 Node node = XPathAPI.selectSingleNode(body, "s1[@title='Description']");
                 // node is never null - this is ensured by the test above
                 Element e = node.getOwnerDocument().createElement("note");
@@ -512,8 +532,8 @@ public final class SitemapTask extends AbstractQdoxTask {
             this.addRow(tableNode, "Name", this.name);
 
             // Info - Block
-            if ( blockName != null ) {
-                this.addRow(tableNode, "Block", blockName);
+            if ( SitemapTask.this.blockName != null ) {
+                this.addRow(tableNode, "Block", SitemapTask.this.blockName);
             }
             
             // Info - Cacheable
@@ -597,7 +617,7 @@ public final class SitemapTask extends AbstractQdoxTask {
         }
         
         private String getTagValue(String tagName, String defaultValue) {
-            final DocletTag tag = javaClass.getTagByName( tagName );
+            final DocletTag tag = this.javaClass.getTagByName( tagName );
             if ( tag != null ) {
                 return tag.getValue();
             }
@@ -670,7 +690,8 @@ public final class SitemapTask extends AbstractQdoxTask {
                 throw new BuildException(e);
             }
         }
-    }
+    
+}
     
     // Class Constants
     private static final String LOG_ENABLED = "org.apache.avalon.framework.logger.LogEnabled";

@@ -26,12 +26,25 @@ import org.apache.cocoon.util.ImageUtils;
 import org.xml.sax.SAXException;
 
 /**
- * An extension of DirectoryGenerators that adds extra attributes for image
- * files.
+ * @cocoon.sitemap.component.documentation
+ * Generates an XML directory listing. This is an extension of 
+ * the <link href="directory-generator.html">Directory Generator</link> that 
+ * adds extra attributes for image files.
+ * 
+ * @cocoon.sitemap.component.name   imagedirectory
+ * @cocoon.sitemap.component.label  content
+ * @cocoon.sitemap.component.logger sitemap.generator.imagedirectory
+ * @cocoon.sitemap.component.documentation.caching
+ *               Uses the last modification date of the directory and the contained files
+ * 
+ * @cocoon.sitemap.component.pooling.min   2
+ * @cocoon.sitemap.component.pooling.max  16
+ * @cocoon.sitemap.component.pooling.grow  2
+ *
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ImageDirectoryGenerator.java,v 1.2 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: ImageDirectoryGenerator.java,v 1.3 2004/05/26 11:37:05 cziegeler Exp $
  */
 final public class ImageDirectoryGenerator extends DirectoryGenerator {
 
