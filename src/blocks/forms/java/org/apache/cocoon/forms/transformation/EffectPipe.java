@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -34,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * @version $Id: EffectPipe.java,v 1.5 2004/04/12 14:05:09 tim Exp $
+ * @version $Id: EffectPipe.java,v 1.6 2004/04/12 21:43:39 mpo Exp $
  */
 public class EffectPipe extends AbstractXMLPipe {
 
@@ -63,8 +62,7 @@ public class EffectPipe extends AbstractXMLPipe {
         public final String uri;
         public final String loc;
         public final String raw;
-        public Attributes attrs;
-        public boolean mine;
+        public final AttributesImpl attrs;
 
         public Element() {
             this(null, null, null, null, null);
@@ -83,13 +81,14 @@ public class EffectPipe extends AbstractXMLPipe {
             this.uri = uri;
             this.loc = loc;
             this.raw = raw;
-            this.attrs = XMLUtils.EMPTY_ATTRIBUTES;
             if (attrs == null) {
-                this.attrs = XMLUtils.EMPTY_ATTRIBUTES;
-                mine = true;
-            } else {
-                this.attrs = attrs;
-                mine = false;
+                if (loc == null && raw == null) {
+                    this.attrs = null; // prefix-mapping use of this class doesn't need attrs
+                } else {
+                    this.attrs = new AttributesImpl(); // be ready to possibly add
+                }
+            } else {                
+                this.attrs = new AttributesImpl(attrs);
             }
         }
 
@@ -101,31 +100,15 @@ public class EffectPipe extends AbstractXMLPipe {
          */
         public void addAttributes(Attributes newAttrs) {
             if (newAttrs == null || newAttrs.getLength() == 0) return; //nothing to add
-            if (attrs == XMLUtils.EMPTY_ATTRIBUTES) {
-                attrs = new AttributesImpl(newAttrs);
-                mine = true;
-            } else {
-                if (!mine) {
-                    attrs = new AttributesImpl(attrs);
-                    mine = true;
-                }
-
-                AttributesImpl modifAttrs  = ((AttributesImpl)attrs);
-                int newAttrsCount = newAttrs.getLength();
-                for (int i = 0; i < newAttrsCount; i++) {
-                    String uri = newAttrs.getURI(i);
-                    String loc = newAttrs.getLocalName(i);
-                    String raw = newAttrs.getQName(i);
-                    String type = newAttrs.getType(i);
-                    String value = newAttrs.getValue(i);
-                    
-                    int foundAttr = modifAttrs.getIndex(uri, loc);
-                    if (foundAttr == -1) {
-                        modifAttrs.addAttribute(uri, loc, raw, type, value);                
-                    } else {
-                        modifAttrs.setAttribute(foundAttr, uri, loc, raw, type, value);                                
-                    }                    
-                }
+            int newAttrsCount = newAttrs.getLength();
+            for (int i = 0; i < newAttrsCount; i++) {
+                String uri = newAttrs.getURI(i);
+                String loc = newAttrs.getLocalName(i);
+                String raw = newAttrs.getQName(i);
+                String type = newAttrs.getType(i);
+                String value = newAttrs.getValue(i);
+                
+                addAttribute(uri, loc, raw, type, value);
             }
         }
 
@@ -140,16 +123,11 @@ public class EffectPipe extends AbstractXMLPipe {
          * @param value the value of the attribute to add.
          */
         public void addAttribute(String uri, String loc, String raw, String type, String value) {
-            if (!mine || attrs == XMLUtils.EMPTY_ATTRIBUTES) {
-                attrs = new AttributesImpl(attrs);
-                mine = true;
-            }
-            AttributesImpl modifAttrs  = ((AttributesImpl)attrs);
-            int foundAttr = modifAttrs.getIndex(uri, loc);
+            int foundAttr = this.attrs.getIndex(uri, loc);
             if (foundAttr == -1) {
-                modifAttrs.addAttribute(uri, loc, raw, type, value);                
+                this.attrs.addAttribute(uri, loc, raw, type, value);                
             } else {
-                modifAttrs.setAttribute(foundAttr, uri, loc, raw, type, value);                                
+                this.attrs.setAttribute(foundAttr, uri, loc, raw, type, value);                                
             }
         }
 
@@ -160,19 +138,13 @@ public class EffectPipe extends AbstractXMLPipe {
         public void addAttribute(String loc, String value) {
             this.addAttribute("", loc, loc, "CDATA", value);
         }
-
-        //TODO: IMPORTANT!!! 
-        // check this: when commenting out this stuff everything still compiles!
-        // this means that attributes on these objects are never explicitely "claimed"
-        // which means that these Element objects should never get referenced 
-        // outside the scope of the SAX event that creates them.
-        // Is that really the case?
-//        public void claimAttributes() {
-//            if (!mine) {
-//                attrs = new AttributesImpl(attrs);
-//                mine = true;
-//            }
-//        }
+        
+        public void removeAttribute(String raw) {
+            int foundAttr = this.attrs.getIndex(raw);
+            if (foundAttr == -1) {
+                this.attrs.removeAttribute(foundAttr);                
+            }             
+        }
     }
 
     protected abstract class Handler {
@@ -259,9 +231,6 @@ public class EffectPipe extends AbstractXMLPipe {
         }
 
         public void startElement() throws SAXException {
-            if (element.attrs == null) {
-                element.attrs = XMLUtils.EMPTY_ATTRIBUTES;
-            }
             super.startElement(element.uri, element.loc, element.raw, element.attrs);
             elements.addFirst(element);
             element = null;

@@ -57,7 +57,7 @@ import java.util.Map;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  *
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.9 2004/04/12 14:05:09 tim Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.10 2004/04/12 21:43:39 mpo Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -282,10 +282,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 String formJXPath = input.attrs.getValue(LOCATION);
                 if (formJXPath != null) {
                     // remove the location attribute
-                    AttributesImpl attrsCopy = new AttributesImpl(input.attrs);
-                    attrsCopy.removeAttribute(input.attrs.getIndex(LOCATION));
-                    input.attrs = attrsCopy;
-                    input.mine = true;
+                    input.removeAttribute(LOCATION);
                 }
                 contextWidget = pipeContext.findForm(formJXPath);
 
