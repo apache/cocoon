@@ -21,18 +21,19 @@
  */
 class Sitemap extends Pipeline {
   
-    boolean setup(String requestPath) {
-        if (requestPath == "") {
+    boolean setup(environment) {
+        uri = environment.uri
+        if (uri == "") {
             generate "file", "welcome.xml", []
             transform "trax", "welcome.xslt", [] 
             serialize "xml", [ 'encoding': 'UTF-8' ]
-        } else if (m = (requestPath =~ "(.*)\.html")) {
+        } else if (m = (uri =~ "(.*)\.html")) {
             generate "file", m.group(1) + ".xml", []
             transform "trax", "welcome.xslt", []
             serialize "xml", [ 'encoding': 'UTF-8' ] 
-        } else if (m = (requestPath =~ "images/(.*)\.gif")) {
+        } else if (m = (uri =~ "images/(.*)\.gif")) {
             read "resources/images/" + m.group(1) + ".gif", "image/gif", []
-        } else if (m = (requestPath =~ "styles/(.*)\.css")) {
+        } else if (m = (uri =~ "styles/(.*)\.css")) {
             read "resources/styles/" + m.group(1) + ".css", "text/css", []
         } else {
             return false;

@@ -118,7 +118,7 @@ public class ButterflyServlet extends HttpServlet {
             Class sitemapClass = loader.parseClass(fis);
             GroovyObject sitemap = (GroovyObject) sitemapClass.newInstance();
             sitemap.setProperty("beanFactory", this.applicationContext);
-            Object[] args = { uri };
+            Object[] args = { env };
             Boolean retval = (Boolean) sitemap.invokeMethod("setup", args);
             if (retval.booleanValue()) {
                 sitemap.invokeMethod("process", new Object[] { env });
