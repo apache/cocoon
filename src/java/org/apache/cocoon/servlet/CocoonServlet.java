@@ -129,7 +129,7 @@ public class CocoonServlet extends HttpServlet {
     protected ServletContext servletContext;
 
     /** The classloader that will be set as the context classloader if init-classloader is true */
-    protected ClassLoader classLoader = this.getClass().getClassLoader();
+    protected final ClassLoader classLoader = this.getClass().getClassLoader();
 
     private String parentServiceManagerClass;
     private String parentServiceManagerInitParam;
@@ -178,7 +178,7 @@ public class CocoonServlet extends HttpServlet {
         super.init(conf);
 
         // initialize settings
-        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf);
+        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader);
 
         this.settings = Core.createSettings(env);
 
@@ -1300,9 +1300,11 @@ public class CocoonServlet extends HttpServlet {
     implements Core.BootstrapEnvironment {
 
         private final ServletConfig config;
-
-        public ServletBootstrapEnvironment(ServletConfig config) {
+        private final ClassLoader   classLoader;
+        
+        public ServletBootstrapEnvironment(ServletConfig config, ClassLoader cl) {
             this.config = config;
+            this.classLoader = cl;
         }
 
         public void log(String message) {
@@ -1320,6 +1322,13 @@ public class CocoonServlet extends HttpServlet {
         public void configure(Settings settings) {
             // fill from the servlet parameters
             SettingsHelper.fill(settings, this.config);                
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getInitClassLoader()
+         */
+        public ClassLoader getInitClassLoader() {
+            return this.classLoader;
         }
     }
 

@@ -20,17 +20,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.util.ClassUtils;
 
 /**
  * This is the core Cocoon component.
@@ -58,6 +63,16 @@ public class Core
 
     /** The component context. */
     private Context context;
+
+    private final Settings settings;
+    
+    public Core() {
+        this.settings = null;
+    }
+
+    public Core(Settings s) {
+        this.settings = s;
+    }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
@@ -97,6 +112,7 @@ public class Core
      */
     public Settings getSettings() {
         return getSettings(this.context);
+        // return this.settings;
     }
 
     /**
@@ -217,5 +233,119 @@ public class Core
         InputStream getInputStream(String path);
         
         void configure(Settings settings);
+        
+        ClassLoader getInitClassLoader();
+    }
+    
+    /**
+     * Bootstrap Cocoon Service Manager
+     */
+    public static ServiceManager createRootServiceManager(BootstrapEnvironment env) {        
+        // create settings
+        final Settings s = createSettings(env);
+        
+        if (s.isInitClassloader()) {
+            // Force context classloader so that JAXP can work correctly
+            // (see javax.xml.parsers.FactoryFinder.findClassLoader())
+            try {
+                Thread.currentThread().setContextClassLoader(env.getInitClassLoader());
+            } catch (Exception e) {
+                // ignore this
+            }
+        }
+
+        // create new Core
+        final Core cocoon = new Core(s);
+        
+        // create parent service manager
+        final ServiceManager parent = getParentServiceManager(s);
+
+        return new RootServiceManager(parent, cocoon);
+    }
+    
+    /**
+     * Instatiates the parent service manager, as specified in the
+     * parent-service-manager init parameter.
+     *
+     * If none is specified, the method returns <code>null</code>.
+     *
+     * @return the parent service manager, or <code>null</code>.
+     */
+    protected static ServiceManager getParentServiceManager(Settings s) {
+        String parentServiceManagerClass = s.getParentServiceManagerClassName();
+        String parentServiceManagerInitParam = null;
+        if (parentServiceManagerClass != null) {
+            int dividerPos = parentServiceManagerClass.indexOf('/');
+            if (dividerPos != -1) {
+                parentServiceManagerInitParam = parentServiceManagerInitParam.substring(dividerPos + 1);
+                parentServiceManagerClass = parentServiceManagerClass.substring(0, dividerPos);
+            }
+        }
+
+        ServiceManager parentServiceManager = null;
+        if (parentServiceManagerClass != null) {
+            try {
+                Class pcm = ClassUtils.loadClass(parentServiceManagerClass);
+                Constructor pcmc = pcm.getConstructor(new Class[]{String.class});
+                parentServiceManager = (ServiceManager) pcmc.newInstance(new Object[]{parentServiceManagerInitParam});
+
+                //ContainerUtil.enableLogging(parentServiceManager, getLogger());
+                //ContainerUtil.contextualize(parentServiceManager, this.appContext);
+                ContainerUtil.initialize(parentServiceManager);
+            } catch (Exception e) {
+                /*if (getLogger().isErrorEnabled()) {
+                    getLogger().error("Could not initialize parent component manager.", e);
+                }*/
+            }
+        }
+        return parentServiceManager;
+    }
+
+    public static final class RootServiceManager implements ServiceManager {
+        
+        protected final static String CORE_KEY = Core.class.getName();
+
+        protected final ServiceManager parent;
+        protected final Core cocoon;
+
+        public RootServiceManager(ServiceManager p, Core c) {
+            this.parent = p;
+            this.cocoon = c;
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
+         */
+        public boolean hasService(String key) {
+            if ( CORE_KEY.equals(key) ) {
+                return true;
+            }
+            if ( this.parent != null ) {
+                return this.parent.hasService(key);
+            }
+            return false;
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
+         */
+        public Object lookup(String key) throws ServiceException {
+            if ( CORE_KEY.equals(key) ) {
+                return this.cocoon;
+            }
+            if ( this.parent != null ) {
+                return this.parent.lookup(key);
+            }
+            throw new ServiceException("Cocoon", "Component for key '" + key + "' not found.");
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
+         */
+        public void release(Object component) {
+            if ( component != this.cocoon && parent != null ) {
+                this.parent.release(component);
+            }
+        }
     }
 }
