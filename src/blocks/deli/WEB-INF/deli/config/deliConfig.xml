@@ -23,6 +23,8 @@
 
  <namespaceConfigFile>WEB-INF/deli/config/namespaceConfig.xml</namespaceConfigFile>
 
+ <datatypeConfigFile>WEB-INF/deli/config/uaprofValidatorConfig.xml</datatypeConfigFile>
+
  <!-- note that the default uri is also hardcoded -->
  <rdfsUri>http://www.w3.org/1999/PR-rdf-schema-19990303#</rdfsUri>
  <rdfsUri>http://www.w3.org/TR/PR-rdf-schema#</rdfsUri>
