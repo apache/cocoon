@@ -51,58 +51,15 @@
 package org.apache.cocoon.woody.datatype;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.convertor.Convertor;
-import org.apache.cocoon.woody.datatype.convertor.DefaultFormatCache;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * Builds {@link SelectionList}s from an XML description.
- *
- * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
- * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
+ * 
+ * @version CVS $Id: SelectionListBuilder.java,v 1.4 2003/10/22 20:22:07 sylvain Exp $
  */
-public class SelectionListBuilder {
+public interface SelectionListBuilder {
+    
+    static final String ROLE = SelectionListBuilder.class.getName();
 
-    public static StaticSelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
-        StaticSelectionList selectionList = new StaticSelectionList(datatype);
-        Convertor convertor = null;
-        Convertor.FormatCache formatCache = new DefaultFormatCache();
-
-        NodeList children = selectionListElement.getChildNodes();
-        for (int i = 0; children.item(i) != null; i++) {
-            Node node = children.item(i);
-            if (convertor == null && node instanceof Element && Constants.WD_NS.equals(node.getNamespaceURI()) && "convertor".equals(node.getLocalName())) {
-                Element convertorConfigElement = (Element)node;
-                try {
-                    convertor = datatype.getBuilder().buildConvertor(convertorConfigElement);
-                } catch (Exception e) {
-                    throw new SAXException("Error building convertor from convertor configuration embedded in selection list XML.", e);
-                }
-            } else if (node instanceof Element && Constants.WD_NS.equals(node.getNamespaceURI()) && "item".equals(node.getLocalName())) {
-                if (convertor == null) {
-                    convertor = datatype.getConvertor();
-                }
-                Element element = (Element)node;
-                String stringValue = element.getAttribute("value");
-                Object value = convertor.convertFromString(stringValue, Locale.US, formatCache);
-                if (value == null)
-                    throw new Exception("Could not convert the value \"" + stringValue + "\" to the type " + datatype.getDescriptiveName() + ", defined at " + DomHelper.getLocation(element));
-
-                Object label = null;
-                Element labelEl = DomHelper.getChildElement(element, Constants.WD_NS, "label");
-                if (labelEl != null) {
-                    label = DomHelper.compileElementContent(labelEl);
-                }
-                selectionList.addItem(value, label);
-            }
-        }
-
-        return selectionList;
-    }
+    SelectionList build(Element selectionListElement, Datatype datatype) throws Exception;
 }

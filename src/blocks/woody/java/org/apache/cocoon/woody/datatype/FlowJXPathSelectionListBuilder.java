@@ -48,50 +48,52 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.formmodel;
+package org.apache.cocoon.woody.datatype;
 
-import org.apache.avalon.framework.service.ServiceSelector;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.SelectionList;
-import org.apache.cocoon.woody.datatype.SelectionListBuilder;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * Abstract base class for WidgetDefinitionBuilders that build widgets that have datatypes/selection lists.
+ * Builds a selection list that will take its values from the flow page data. The items list and,
+ * for each item, its value and label, are fetched using JXPath expressions.
+ * <p>
+ * If an item has no label, its value is used as the label.
+ * <p>
+ * Example:
+ * <pre>
+ *   &lt;wd:selection-list type="flow-jxpath"
+ *       list-path="selectList" value-path="value" label-path="label"/gt;
+ * </pre>
+ * Flow script:
+ * <pre>
+ *   var data = {
+ *      selectList: [{value:3, label:"three"}, {value:4}]
+ *   };
+ *   form.showForm("form.html", data);
+ * </pre>
+ * 
+ * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionList
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: FlowJXPathSelectionListBuilder.java,v 1.1 2003/10/22 20:22:07 sylvain Exp $
  */
-public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public class FlowJXPathSelectionListBuilder implements SelectionListBuilder, Contextualizable {
+
+    private Context context;
     
-    /**
-     * @return true if a selectionlist has actually been build.
-     */
-    protected boolean buildSelectionList(Element widgetElement, AbstractDatatypeWidgetDefinition widget) throws Exception {
-        // FIXME: pass the manager to the definition as a side effect. Should be removed
-        // when definition are managed like components.
-        widget.service(this.serviceManager);
-
-        Element selectionListElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "selection-list");
-        if (selectionListElement != null) {
-
-            // Get an appropriate list builder
-
-            ServiceSelector builderSelector = (ServiceSelector)this.serviceManager.lookup(SelectionListBuilder.ROLE + "Selector");
-
-            // listType can be null, meaning we will use the default selection list
-            String listType = selectionListElement.getAttribute("type");
-            if (listType.length() == 0) listType = null;
-            
-            SelectionListBuilder builder = (SelectionListBuilder)builderSelector.select(listType);
-            
-            try {
-                SelectionList list = builder.build(selectionListElement, widget.getDatatype());
-                widget.setSelectionList(list);
-            } finally {
-                builderSelector.release(builder);
-                this.serviceManager.release(builderSelector);
-            }
-            return true;
-        } else
-            return false;
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
     }
+
+    public SelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
+        
+        String listPath = DomHelper.getAttribute(selectionListElement, "list-path");
+        String keyPath = DomHelper.getAttribute(selectionListElement, "value-path");
+        String valuePath = DomHelper.getAttribute(selectionListElement, "label-path");
+        
+        return new FlowJXPathSelectionList(context, listPath, keyPath, valuePath, datatype);
+    }
+
 }
