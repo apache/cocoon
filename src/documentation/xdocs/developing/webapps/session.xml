@@ -416,6 +416,14 @@
         <source>&lt;session:inputxml name="forename" context="userdata" path="/user/forename"&gt;
      Defaultname
 &lt;/session:inputxml&gt;</source>
+        <p>But as always there is one drawback with this approach as well, you
+           have to put the <em>session-form-manager</em> action somewhere so
+           that it is called when the form values are submitted. As this
+           action does no harm, it can simply be put as the first action in your
+           main sitemap:</p>
+        <source>
+        &lt;map:act type="session-form-manager"/&gt;
+        </source>
      </s2>
   </s1>
 </body>
