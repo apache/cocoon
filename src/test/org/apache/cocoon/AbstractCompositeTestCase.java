@@ -93,7 +93,7 @@ import org.xml.sax.ext.LexicalHandler;
  * Testcase for action, generator and transformer components. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.1 2003/04/22 07:38:18 stephan Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.2 2003/04/23 06:20:20 stephan Exp $
  */
 public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 {
@@ -133,8 +133,15 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
     }
 
     public void setUp() {
+        objectmodel.clear();
+
+        request.reset();
         objectmodel.put(ObjectModelHelper.REQUEST_OBJECT, request);
+
+        response.reset();
         objectmodel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
+
+        context.reset();
         objectmodel.put(ObjectModelHelper.CONTEXT_OBJECT, context);
     }
 
@@ -311,9 +318,6 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 
             if (selector!=null)
                 this.manager.release(selector);
-
-            if (resolver!=null)
-                this.manager.release(resolver);
 
             if (inputsource!=null)
                 resolver.release(inputsource);

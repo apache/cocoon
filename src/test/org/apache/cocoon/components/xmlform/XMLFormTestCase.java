@@ -61,7 +61,7 @@ import org.apache.cocoon.AbstractCompositeTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: XMLFormTestCase.java,v 1.1 2003/04/22 07:38:18 stephan Exp $
+ * @version CVS $Id: XMLFormTestCase.java,v 1.2 2003/04/23 06:20:20 stephan Exp $
  */
 public class XMLFormTestCase extends AbstractCompositeTestCase {
 
@@ -109,7 +109,7 @@ public class XMLFormTestCase extends AbstractCompositeTestCase {
         String testform2 = "resource://org/apache/cocoon/components/xmlform/testform2.xml";
         String testresult2 = "resource://org/apache/cocoon/components/xmlform/testresult2.xml";
 
-        print(transform("xmlform", testform2, new Parameters(), load(testform2)));
+        //print(transform("xmlform", testform2, new Parameters(), load(testform2)));
 
         assertEqual(load(testresult2), transform("xmlform", testform1, new Parameters(), load(testform2)));
 

@@ -87,7 +87,7 @@ import org.xml.sax.ext.LexicalHandler;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractTransformerTestCase.java,v 1.5 2003/04/19 16:10:32 stephan Exp $
+ * @version CVS $Id: AbstractTransformerTestCase.java,v 1.6 2003/04/23 06:20:20 stephan Exp $
  */
 public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 {
@@ -172,9 +172,6 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 
             if (selector!=null)
                 this.manager.release(selector);
-
-            if (resolver!=null)
-                this.manager.release(resolver);
 
             if (inputsource!=null)
                 resolver.release(inputsource);
