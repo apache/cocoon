@@ -50,35 +50,72 @@
 */
 package org.apache.cocoon.caching.impl;
 
-import java.io.Serializable;
+import java.io.IOException;
 
-import org.apache.commons.collections.MultiHashMap;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.excalibur.store.Store;
 
 /**
- * A light object for persisting the state of an EventRegistry implementation 
- * based on two MultiHashMaps.
+ * This implementation of <code>EventRegistry</code> extends <code>
+ * DefaultEventRegistry</code> to handle persistence by storing its 
+ * <code>EventRegistryDataWrapper</code> in the <code>PersistentStore</code> 
+ * defined in cocoon.xconf.
  * 
+ * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: EventRegistryDataWrapper.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $
+ * @version CVS $Id: StoreEventRegistryImpl.java,v 1.1 2003/09/05 04:02:51 ghoward Exp $
  */
-public class EventRegistryDataWrapper implements Serializable {
-    private MultiHashMap m_keyMMap;
-    private MultiHashMap m_eventMMap;
-    
-    public EventRegistryDataWrapper() {
-        this.m_keyMMap = null;
-        this.m_eventMMap = null;
-    }
-    public void setupMaps(MultiHashMap keyMap, MultiHashMap eventMap) {
-        this.m_keyMMap = keyMap;
-        this.m_eventMMap = eventMap;
-    }
+public class StoreEventRegistryImpl 
+		extends DefaultEventRegistryImpl implements Composable {
+	private static final String EVENTREGISTRYKEY = "EVENTREGWRAPPER";
+	private boolean m_init_success = false;
+	private ComponentManager m_manager;
+	private Store m_persistentStore;
+	
+	/** 
+	 * Completely override dispose from superclass to persist the 
+	 * data wrapper in the Store instead of a serialized file on disk.
+	 */
+	public void dispose() {
+		EventRegistryDataWrapper ecdw = wrapRegistry();
+		try {
+			m_persistentStore.store(EVENTREGISTRYKEY,ecdw);
+		} catch (IOException e) {
+			getLogger().warn("Unable to persist Event Registry");
+		}
+		this.m_manager.release(this.m_persistentStore);
+		m_manager = null;
+		m_persistentStore = null;
+	}
 
-    public MultiHashMap get_eventMap() {
-        return m_eventMMap;
-    }
 
-    public MultiHashMap get_keyMap() {
-        return m_keyMMap;
-    }
+
+	/**
+	 * Obtain a reference to the Store
+	 */
+	public void compose(ComponentManager manager) throws ComponentException {
+		this.m_manager = manager;
+		this.m_persistentStore = (Store)manager.lookup(Store.PERSISTENT_STORE);
+	}
+
+	/**
+	 * Recover the datawrapper from the Store.
+	 */
+	protected boolean recover() {
+		Object o = m_persistentStore.get(EVENTREGISTRYKEY);
+		m_persistentStore.remove(EVENTREGISTRYKEY);
+		if (o != null && o instanceof EventRegistryDataWrapper) {
+			if (getLogger().isInfoEnabled()) {
+				getLogger().info("Retrieving EventRegistry from PersistentStore.");
+			}
+			unwrapRegistry((EventRegistryDataWrapper)o);
+			return true;
+		} else {
+			getLogger().warn("Unable to recover Event Registry.");
+			return false;
+		}
+	}
+
 }

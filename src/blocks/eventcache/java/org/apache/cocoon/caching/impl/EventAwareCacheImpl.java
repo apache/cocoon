@@ -61,18 +61,11 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 
 /**
- * Very experimental start at external cache invalidation.
- * Warning - API very unstable.  Do not use!  
- * (But it's getting closer!)
- * 
  * This implementation holds all mappings between Events and PipelineCacheKeys 
  * in two MultiHashMap to facilitate efficient lookup by either as Key.
  * 
- * TODO: Test performance.
- * TODO: Handle MultiThreading
- * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.4 2003/08/07 08:52:15 cziegeler Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.5 2003/09/05 04:02:51 ghoward Exp $
  */
 public class EventAwareCacheImpl 
         extends CacheImpl 

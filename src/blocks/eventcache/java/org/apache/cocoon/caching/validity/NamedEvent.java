@@ -46,15 +46,11 @@
 package org.apache.cocoon.caching.validity;
 
 /**
- * Very experimental start at external cache invalidation.
- * Warning - API very unstable.  Do not use!  In fact, if this 
- * becomes useful, it would probably move to Excalibur SourceResolve.
- * 
  * An External cache event that consists of just a name.  Examples 
  * (not necessarily useful) could include "Easter" or "Shutdown"
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: NamedEvent.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version $Id: NamedEvent.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $
  */
 public class NamedEvent extends Event {
     

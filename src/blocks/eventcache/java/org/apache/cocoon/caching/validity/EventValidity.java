@@ -48,15 +48,11 @@ package org.apache.cocoon.caching.validity;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
- * Very experimental start at external cache invalidation.
- * Warning - API very unstable.  Do not use!  In fact, if this 
- * becomes useful, it would probably move to Excalibur SourceResolve.
- * 
  * The SourceValidity object for cache invalidation based on 
  * external events.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventValidity.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $ 
+ * @version $Id: EventValidity.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $ 
  */
 public class EventValidity implements SourceValidity {
     

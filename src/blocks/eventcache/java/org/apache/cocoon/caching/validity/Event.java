@@ -48,15 +48,11 @@ package org.apache.cocoon.caching.validity;
 import java.io.Serializable;
 
 /**
- * Very experimental start at external cache invalidation.
- * Warning - API very unstable.  Do not use!  In fact, if this 
- * becomes useful, it would probably move to Excalibur SourceResolve.
- * 
  * Base class encapsulating the information about an external 
  * uncache event.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: Event.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version $Id: Event.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $
  */
 public abstract class Event implements Serializable {
     
