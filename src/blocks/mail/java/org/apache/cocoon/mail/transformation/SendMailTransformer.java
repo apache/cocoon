@@ -93,8 +93,12 @@ import org.xml.sax.helpers.AttributesImpl;
  * furthermore a report, where a state to each sent mail can bee seen.
  *
  * <p>
- *         The SendMailTransformer requires classes of the mail api from sun which comes
- *  with the mail.jar and activation.jar.
+ *  The SendMailTransformer requires classes of the mail api from sun which comes
+ *  with the mail.jar and activation.jar. 
+ *  In order to use the SendMailtransformer, you have to download the mail.jar 
+ *  from http://java.sun.com/products/javamail/ also like the activation.jar 
+ *  from http://java.sun.com/products/javabeans/glasgow/jaf.html 
+ *  and install it in the Cocoon lib directory.
  * </p>
  * <p>
  *    These two parameters can be defined already in the components-secion of the sitemap:
@@ -201,7 +205,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.4 2003/08/11 20:41:26 joerg Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.5 2003/10/06 11:47:42 cziegeler Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -694,6 +698,22 @@ public class SendMailTransformer extends AbstractSAXTransformer
         return iaArr;
     }
 
+	public void recycle() { 
+        this.toAddresses = null;
+	    this.attachments = null;
+	    this.subject = null;
+	    this.body = null;
+	    this.bodyURI = null;
+	    this.mailHost = null;
+	    this.fromAddress = null;
+	    this.attachmentDescriptor = null;
+	    this.port = 0;
+	    this.contextPath = null;
+	    this.sendPartial = true;
+	    this.smtpMessage = null;
+	    super.recycle();
+	}
+	
     class AttachmentDescriptor {
         String       strAttrName     = null;
         String       strAttrMimeType = null;
