@@ -34,9 +34,13 @@ import org.apache.cocoon.util.NullOutputStream;
  * method which calls a Cocoon pipeline internally. It uses the 
  * <code>org.apache.cocoon.environment.background.BackgroundEnvironment</code>
  * to avoid an external call.
+ * <p>
+ * Some enhancements have been made on the scheduler that make this class now
+ * useless as the regular sourceresolver mechanism can be used.
  *
- * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: AbstractPipelineCallingCronJob.java,v 1.2 2004/03/05 13:01:49 bdelacretaz Exp $
+ * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a>
+ * @deprecated Use the usual sourceresolver mechanism with a "cocoon://" URI
+ * @version CVS $Id: AbstractPipelineCallingCronJob.java,v 1.3 2004/03/11 15:38:31 sylvain Exp $
  *
  * @since 2.1.4
  */

@@ -15,11 +15,16 @@
  */
 package org.apache.cocoon.components.cron;
 
+import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.environment.background.BackgroundEnvironment;
+import org.apache.cocoon.util.NullOutputStream;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -30,7 +35,7 @@ import org.quartz.JobExecutionException;
  * This component is resposible to launch a {@link CronJob}s in a Quart Scheduler.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobExecutor.java,v 1.5 2004/03/05 13:01:49 bdelacretaz Exp $
+ * @version CVS $Id: QuartzJobExecutor.java,v 1.6 2004/03/11 15:38:31 sylvain Exp $
  *
  * @since 2.1.1
  */
@@ -38,6 +43,9 @@ public class QuartzJobExecutor
 implements Job {
     /** Map key for the run status */
     static final String DATA_MAP_KEY_ISRUNNING = "QuartzJobExecutor.isRunning";
+    
+    /** Shared instance (no state, as it does nothing) */
+    static final OutputStream NULL_OUTPUT = new NullOutputStream();
 
     /* (non-Javadoc)
      * @see org.quartz.Job#execute(org.quartz.JobExecutionContext)
@@ -69,7 +77,18 @@ implements Job {
 
         Object job = null;
         String jobrole = null;
-        ServiceManager manager = null;
+        
+        ServiceManager manager = (ServiceManager)data.get(QuartzJobScheduler.DATA_MAP_MANAGER);
+		org.apache.cocoon.environment.Context envContext =
+			(org.apache.cocoon.environment.Context)data.get(QuartzJobScheduler.DATA_MAP_ENV_CONTEXT);
+        BackgroundEnvironment env;
+		try {
+			env = new BackgroundEnvironment(logger, envContext, manager);
+		} catch (MalformedURLException mue) {
+			// Unlikely to happen
+			throw new JobExecutionException(mue);
+		}
+        CocoonComponentManager.enterEnvironment(env, env.getManager(), env.getProcessor());
 
         try {
             jobrole = (String)data.get(QuartzJobScheduler.DATA_MAP_ROLE);
@@ -77,7 +96,6 @@ implements Job {
             if (null == jobrole) {
                 job = data.get(QuartzJobScheduler.DATA_MAP_OBJECT);
             } else {
-                manager = (ServiceManager)data.get(QuartzJobScheduler.DATA_MAP_MANAGER);
                 job = manager.lookup(jobrole);
             }
 
@@ -106,6 +124,8 @@ implements Job {
             }
         } finally {
             data.put(DATA_MAP_KEY_ISRUNNING, Boolean.FALSE);
+            
+            CocoonComponentManager.leaveEnvironment();
 
             if (null != manager) {
                 manager.release(job);

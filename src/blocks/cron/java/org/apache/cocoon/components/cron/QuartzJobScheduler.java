@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -38,6 +39,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -46,9 +48,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
-
 import org.quartz.impl.DirectSchedulerFactory;
-
 import org.quartz.simpl.RAMJobStore;
 
 import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
@@ -60,14 +60,17 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.10 2004/03/08 13:43:42 unico Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.11 2004/03/11 15:38:31 sylvain Exp $
  *
  * @since 2.1.1
  */
 public class QuartzJobScheduler
 extends AbstractLogEnabled
-implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable, Contextualizable {
-    /** ThreadPool policy RUN */
+implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable,
+    Contextualizable, Initializable {
+	private org.apache.cocoon.environment.Context environmentContext;
+
+	/** ThreadPool policy RUN */
     private static final String POLICY_RUN = "RUN";
 
     /** ThreadPool policy WAIT */
@@ -93,6 +96,9 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
     /** Map key for the service manager */
     static final String DATA_MAP_MANAGER = "QuartzJobScheduler.ServiceManager";
+    
+    /** Map key for the environment context (needed by BackgroundEnvironment) */
+    static final String DATA_MAP_ENV_CONTEXT = "QuartzJobScheduler.EnvironmentContext";
 
     /** Map key for the logger */
     static final String DATA_MAP_LOGGER = "QuartzJobScheduler.Logger";
@@ -116,23 +122,29 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     static final String DEFAULT_QUARTZ_SCHEDULER_NAME = "Cocoon";
 
     /** The PooledExecutor instance */
-    private PooledExecutor m_executor;
+    private PooledExecutor executor;
 
     /** The quartz scheduler */
-    private Scheduler m_scheduler;
+    private Scheduler scheduler;
 
     /** The ServiceManager instance */
-    private ServiceManager m_manager;
+    private ServiceManager manager;
+    
+    /** The configuration, parsed in initialize() */
+    private Configuration config;
 
     /** Should we wait for running jobs to terminate on shutdown ? */
     private boolean m_shutdownGraceful;
+
+	/** The Cocoon enviroment in which jobs will operate */
+	private BackgroundEnvironment jobEnvironment;
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#getJobNames()
      */
     public String[] getJobNames() {
         try {
-            final String[] names = m_scheduler.getJobNames(DEFAULT_QUARTZ_JOB_GROUP);
+            final String[] names = scheduler.getJobNames(DEFAULT_QUARTZ_JOB_GROUP);
             Arrays.sort(names);
 
             return names;
@@ -148,7 +160,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      */
     public JobSchedulerEntry getJobSchedulerEntry(String jobname) {
         try {
-            return new QuartzJobSchedulerEntry(jobname, m_scheduler);
+            return new QuartzJobSchedulerEntry(jobname, scheduler);
         } catch (final Exception e) {
             getLogger().error("cannot create QuartzJobSchedulerEntry", e);
         }
@@ -260,25 +272,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      */
     public void configure(final Configuration config)
     throws ConfigurationException {
-        try {
-            // If cocoon reloads (or is it the container that reload us?) 
-            // we cannot create the same scheduler again
-            final String runID = new Date().toString().replace(' ', '_');
-            final ThreadPool pool = createThreadPool(config.getChild("thread-pool"));
-            DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool,
-                                                                 new RAMJobStore());
-            // m_scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
-            m_scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME);
-        } catch (final SchedulerException se) {
-            throw new ConfigurationException("cannot create a quartz scheduler", se);
-        }
-
-        final Configuration[] triggers = config.getChild("triggers").getChildren("trigger");
-        createTriggers(triggers);
-
-        if (getLogger().isDebugEnabled() && (triggers.length == 0)) {
-            getLogger().debug("no triggers configured at startup");
-        }
+    	this.config = config;
     }
 
     /* (non-Javadoc)
@@ -292,22 +286,49 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
                                   : "immediately (killing running jobs)"));
             }
 
-            m_scheduler.shutdown(m_shutdownGraceful);
-            m_scheduler = null;
+            scheduler.shutdown(m_shutdownGraceful);
+            scheduler = null;
         } catch (final SchedulerException se) {
             getLogger().error("failure during scheduler shutdown", se);
         }
 
-        m_executor = null;
+        this.executor = null;
     }
 
 	/* (non-Javadoc)
 	 * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
 	 */
 	public void contextualize(Context context) throws ContextException {
-		org.apache.cocoon.environment.Context c = (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-		System.out.println("context: " + c.getRealPath("/") );
-	}    
+		this.environmentContext = (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+	}
+	
+	public void initialize() throws Exception {
+		try {
+			// If cocoon reloads (or is it the container that reload us?) 
+			// we cannot create the same scheduler again
+			final String runID = new Date().toString().replace(' ', '_');
+			final ThreadPool pool = createThreadPool(this.config.getChild("thread-pool"));
+			DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool,
+																 new RAMJobStore());
+			// scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
+			scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME);
+		} catch (final SchedulerException se) {
+			throw new ConfigurationException("cannot create a quartz scheduler", se);
+		}
+
+		this.jobEnvironment = new BackgroundEnvironment(getLogger(), this.environmentContext, this.manager);
+
+		final Configuration[] triggers = this.config.getChild("triggers").getChildren("trigger");
+		createTriggers(triggers);
+		
+		// We're finished with the configuration
+		this.config = null;
+
+		if (getLogger().isDebugEnabled() && (triggers.length == 0)) {
+			getLogger().debug("no triggers configured at startup");
+		}
+
+	}
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#fireTarget(java.lang.Object)
@@ -323,13 +344,13 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         Object job = null;
 
         try {
-            job = m_manager.lookup(jobrole);
+            job = manager.lookup(jobrole);
 
             return fireJob(jobrole, job);
         } catch (final ServiceException se) {
             getLogger().error("cannot fire job " + jobrole, se);
         } finally {
-            m_manager.release(job);
+            manager.release(job);
         }
 
         return false;
@@ -355,7 +376,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         Object job = null;
 
         try {
-            job = m_manager.lookup(jobrole);
+            job = manager.lookup(jobrole);
 
             if (job instanceof ConfigurableCronJob) {
                 ((ConfigurableCronJob)job).setup(params, objects);
@@ -365,7 +386,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         } catch (final ServiceException se) {
             getLogger().error("cannot fire job " + jobrole, se);
         } finally {
-            m_manager.release(job);
+            manager.release(job);
         }
 
         return false;
@@ -415,7 +436,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     public void removeJob(final String name)
     throws NoSuchElementException {
         try {
-            if (m_scheduler.deleteJob(name, DEFAULT_QUARTZ_JOB_GROUP)) {
+            if (scheduler.deleteJob(name, DEFAULT_QUARTZ_JOB_GROUP)) {
                 getLogger().info("job " + name + " removed by request");
             } else {
                 getLogger().error("couldn't remove requested job " + name);
@@ -431,7 +452,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      */
     public void service(final ServiceManager manager)
     throws ServiceException {
-        m_manager = manager;
+        this.manager = manager;
     }
 
     /* (non-Javadoc)
@@ -439,7 +460,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      */
     public void start()
     throws Exception {
-        m_scheduler.start();
+        scheduler.start();
     }
 
     /* (non-Javadoc)
@@ -447,7 +468,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      */
     public void stop()
     throws Exception {
-        m_scheduler.pause();
+        scheduler.pause();
     }
 
     /**
@@ -511,7 +532,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
                         final boolean canRunConcurrently, final Parameters params, final Map objects)
     throws CascadingException {
         try {
-            final JobDetail jobdetail = m_scheduler.getJobDetail(name, DEFAULT_QUARTZ_JOB_GROUP);
+            final JobDetail jobdetail = scheduler.getJobDetail(name, DEFAULT_QUARTZ_JOB_GROUP);
 
             if (jobdetail != null) {
                 removeJob(name);
@@ -521,8 +542,9 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
         jobDataMap.put(DATA_MAP_NAME, name);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
-        jobDataMap.put(DATA_MAP_MANAGER, m_manager);
+        jobDataMap.put(DATA_MAP_MANAGER, manager);
         jobDataMap.put(DATA_MAP_RUN_CONCURRENT, new Boolean(canRunConcurrently));
+        jobDataMap.put(DATA_MAP_ENV_CONTEXT, this.environmentContext);
 
         if (null != params) {
             jobDataMap.put(DATA_MAP_PARAMETERS, params);
@@ -540,7 +562,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         }
 
         try {
-            m_scheduler.scheduleJob(detail, trigger);
+            scheduler.scheduleJob(detail, trigger);
         } catch (final SchedulerException se) {
             throw new CascadingException(se.getMessage(), se);
         }
@@ -567,51 +589,51 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
         if (useQueueing) {
             if (queueSize > 0) {
-                m_executor = new PooledExecutor(new BoundedBuffer(queueSize));
+                this.executor = new PooledExecutor(new BoundedBuffer(queueSize));
             } else {
-                m_executor = new PooledExecutor(new LinkedQueue());
+                this.executor = new PooledExecutor(new LinkedQueue());
             }
         } else {
-            m_executor = new PooledExecutor();
+            this.executor = new PooledExecutor();
         }
 
         final int maxPoolSize = poolConfig.getChild("max-pool-size").getValueAsInteger(-1);
 
         if (maxPoolSize > 0) {
-            m_executor.setMaximumPoolSize(maxPoolSize);
+            this.executor.setMaximumPoolSize(maxPoolSize);
         } else {
-            m_executor.setMaximumPoolSize(PooledExecutor.DEFAULT_MAXIMUMPOOLSIZE);
+            this.executor.setMaximumPoolSize(PooledExecutor.DEFAULT_MAXIMUMPOOLSIZE);
         }
 
         final int minPoolSize = poolConfig.getChild("min-pool-size").getValueAsInteger(-1);
 
         if (minPoolSize > 0) {
-            m_executor.setMinimumPoolSize(minPoolSize);
+            this.executor.setMinimumPoolSize(minPoolSize);
         } else {
-            m_executor.setMinimumPoolSize(PooledExecutor.DEFAULT_MINIMUMPOOLSIZE);
+            this.executor.setMinimumPoolSize(PooledExecutor.DEFAULT_MINIMUMPOOLSIZE);
         }
 
         final int keepAliveTimeMs = poolConfig.getChild("keep-alive-time-ms").getValueAsInteger(-1);
 
         if (keepAliveTimeMs > 0) {
-            m_executor.setKeepAliveTime(keepAliveTimeMs);
+            this.executor.setKeepAliveTime(keepAliveTimeMs);
         } else {
-            m_executor.setKeepAliveTime(PooledExecutor.DEFAULT_KEEPALIVETIME);
+            this.executor.setKeepAliveTime(PooledExecutor.DEFAULT_KEEPALIVETIME);
         }
 
         final String blockPolicy = poolConfig.getChild("block-policy").getValue(null);
 
         if (blockPolicy != null) {
             if (blockPolicy.equalsIgnoreCase(POLICY_ABORT)) {
-                m_executor.abortWhenBlocked();
+                this.executor.abortWhenBlocked();
             } else if (blockPolicy.equalsIgnoreCase(POLICY_DISCARD)) {
-                m_executor.discardWhenBlocked();
+                this.executor.discardWhenBlocked();
             } else if (blockPolicy.equalsIgnoreCase(POLICY_DISCARD_OLDEST)) {
-                m_executor.discardOldestWhenBlocked();
+                this.executor.discardOldestWhenBlocked();
             } else if (blockPolicy.equalsIgnoreCase(POLICY_RUN)) {
-                m_executor.runWhenBlocked();
+                this.executor.runWhenBlocked();
             } else if (blockPolicy.equalsIgnoreCase(POLICY_WAIT)) {
-                m_executor.waitWhenBlocked();
+                this.executor.waitWhenBlocked();
             } else {
                 getLogger().warn("Unknown block-policy configuration '" + blockPolicy + "'. Should be one of '" +
                                  POLICY_ABORT + "','" + POLICY_DISCARD + "','" + POLICY_DISCARD_OLDEST + "','" +
@@ -622,14 +644,14 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         m_shutdownGraceful = poolConfig.getChild("shutdown-graceful").getValueAsBoolean(true);
 
         final int shutdownWaitTimeMs = poolConfig.getChild("shutdown-wait-time-ms").getValueAsInteger(-1);
-        final ThreadPool pool = new ThreadPool(m_executor, shutdownWaitTimeMs);
+        final ThreadPool pool = new ThreadPool(this.executor, shutdownWaitTimeMs);
         pool.enableLogging(getLogger());
 
         if (getLogger().isInfoEnabled()) {
             getLogger().info("using a PooledExecutor as ThreadPool with queueing=" + useQueueing +
                              (useQueueing ? (",queue-size=" + ((queueSize > 0) ? ("" + queueSize) : "default")) : "") +
-                             ",max-pool-size=" + m_executor.getMaximumPoolSize() + ",min-pool-size=" +
-                             m_executor.getMinimumPoolSize() + ",keep-alive-time-ms=" + m_executor.getKeepAliveTime() +
+                             ",max-pool-size=" + this.executor.getMaximumPoolSize() + ",min-pool-size=" +
+                             this.executor.getMinimumPoolSize() + ",keep-alive-time-ms=" + this.executor.getKeepAliveTime() +
                              ",block-policy='" + blockPolicy + "',shutdown-wait-time-ms=" +
                              ((shutdownWaitTimeMs > 0) ? ("" + shutdownWaitTimeMs) : "default"));
         }
@@ -676,13 +698,13 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     private boolean fireJob(final String name, final Object job) {
         try {
             if (job instanceof CronJob) {
-                m_executor.execute(new Runnable() {
+                this.executor.execute(new Runnable() {
                         public void run() {
                             ((CronJob)job).execute(name);
                         }
                     });
             } else if (job instanceof Runnable) {
-                m_executor.execute((Runnable)job);
+                this.executor.execute((Runnable)job);
             } else {
                 getLogger().error("job named '" + name + "' is of invalid class: " + job.getClass().getName());
 
@@ -701,13 +723,11 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.10 2004/03/08 13:43:42 unico Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.11 2004/03/11 15:38:31 sylvain Exp $
      */
-    private static class ThreadPool
-    extends AbstractLogEnabled
-    implements org.quartz.spi.ThreadPool {
+    private static class ThreadPool extends AbstractLogEnabled implements org.quartz.spi.ThreadPool {
         /** Our executor thread pool */
-        private PooledExecutor m_executor;
+        private PooledExecutor executor;
 
         /** How long to wait for running jobs to terminate on disposition */
         private int m_shutdownWaitTimeMs;
@@ -717,7 +737,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
          */
         public ThreadPool(final PooledExecutor executor, final int shutownWaitTimeMs) {
             super();
-            m_executor = executor;
+            this.executor = executor;
             m_shutdownWaitTimeMs = shutownWaitTimeMs;
         }
 
@@ -725,7 +745,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
          * @see org.quartz.spi.ThreadPool#getPoolSize()
          */
         public int getPoolSize() {
-            return m_executor.getMaximumPoolSize();
+            return this.executor.getMaximumPoolSize();
         }
 
         /* (non-Javadoc)
@@ -739,7 +759,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
          */
         public boolean runInThread(final Runnable job) {
             try {
-                m_executor.execute(job);
+                this.executor.execute(job);
             } catch (final InterruptedException ie) {
                 getLogger().error("Cronjob failed", ie);
             }
@@ -752,27 +772,25 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
          */
         public void shutdown(final boolean waitForJobsToComplete) {
             if (waitForJobsToComplete) {
-                m_executor.shutdownAfterProcessingCurrentlyQueuedTasks();
+                this.executor.shutdownAfterProcessingCurrentlyQueuedTasks();
             } else {
-                m_executor.shutdownNow();
+                this.executor.shutdownNow();
             }
 
             try {
                 if (m_shutdownWaitTimeMs > 0) {
-                    if (!m_executor.awaitTerminationAfterShutdown(m_shutdownWaitTimeMs)) {
+                    if (!this.executor.awaitTerminationAfterShutdown(m_shutdownWaitTimeMs)) {
                         getLogger().warn("scheduled cron jobs are not terminating within " + m_shutdownWaitTimeMs +
                                          "ms, Will shut them down by interruption");
-                        m_executor.interruptAll();
-                        m_executor.shutdownNow();
+                        this.executor.interruptAll();
+                        this.executor.shutdownNow();
                     }
                 }
 
-                m_executor.awaitTerminationAfterShutdown();
+                this.executor.awaitTerminationAfterShutdown();
             } catch (final InterruptedException ie) {
                 getLogger().error("cannot shutdown Executor", ie);
             }
         }
     }
-
-
 }
