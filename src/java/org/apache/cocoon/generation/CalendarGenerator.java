@@ -52,27 +52,27 @@ import org.xml.sax.helpers.AttributesImpl;
  * &lt;/calendar:calendar&gt;
  * </pre>
  * <p>
- * The <i>src</i> parameter must be in the form "yyyy/mm" where "2004/01" stands
- * for January, 2004.
+ * The <i>src</i> parameter is ignored.
  * </p>
  * <p>
  *  <b>Configuration options:</b>
  *  <dl>
+ *   <dt> <i>month</i> (optional)
+ *   <dd> Sets the month for the calendar (January is 1). Default is the current month.
+ *   <dt> <i>year</i> (optional)
+ *   <dd> Sets the year for the calendar. Default is the current year.
  *   <dt> <i>dateFormat</i> (optional)
  *   <dd> Sets the format for the date attribute of each node, as
  *        described in java.text.SimpleDateFormat. If unset, the default
  *        format for the current locale will be used.
- *  </dl>
  *   <dt> <i>lang</i> (optional)
  *   <dd> Sets the ISO language code for determining the locale.
- *  </dl>
- *  </dl>
  *   <dt> <i>country</i> (optional)
  *   <dd> Sets the ISO country code for determining the locale.
  *  </dl>
  * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.4 2004/04/09 07:45:43 ugo Exp $
+ * @version CVS $Id: CalendarGenerator.java,v 1.5 2004/04/10 16:06:02 ugo Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     
@@ -120,7 +120,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      *
      * @param resolver     the SourceResolver object
      * @param objectModel  a <code>Map</code> containing model object
-     * @param src          the year and month in the form "yyyy/mm"
+     * @param src          the source URI (ignored)
      * @param par          configuration parameters
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
@@ -169,7 +169,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      *
      * @throws  SAXException if an error occurs while outputting the document
      */
-    public void generate() throws SAXException {
+    public void generate() throws SAXException, ProcessingException {
         Calendar start = Calendar.getInstance(TimeZone.getTimeZone("UTC"), locale);
         start.clear();
         start.set(Calendar.YEAR, this.year);
@@ -187,7 +187,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         this.contentHandler.startElement(URI, CALENDAR_NODE_NAME,
                 PREFIX + ':' + CALENDAR_NODE_NAME, attributes);
         int weekNo = start.get(Calendar.WEEK_OF_MONTH);
-        if (start.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+        if (start.get(Calendar.DAY_OF_WEEK) != start.getFirstDayOfWeek()) {
             attributes.clear();
             attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA", String.valueOf(weekNo));
             this.contentHandler.startElement(URI, WEEK_NODE_NAME,
@@ -208,6 +208,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                     dateFormatter.format(start.getTime()));
             this.contentHandler.startElement(URI, DAY_NODE_NAME,
                     PREFIX + ':' + DAY_NODE_NAME, attributes);
+            addContent(start, locale);
             this.contentHandler.endElement(URI, DAY_NODE_NAME,
                     PREFIX + ':' + DAY_NODE_NAME);
             start.add(Calendar.DAY_OF_MONTH, 1);
@@ -224,6 +225,16 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         this.contentHandler.endDocument();
     }
     
+    /**
+     * Add content to a &lt;day&gt; element. This method is intended to be overridden
+     * by subclasses that want to add content to one or more days of the calendar.
+     * 
+     * @param date   The date corresponding to the current element.
+     * @param locale The current locale.
+     * @throws SAXException if an error occurs while outputting the document
+     */
+    protected void addContent(Calendar date, Locale locale) throws SAXException {}
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
@@ -242,4 +253,18 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     public SourceValidity getValidity() {
         return NOPValidity.SHARED_INSTANCE;
     }
+    
+    /**
+     * Recycle resources
+     * @see org.apache.avalon.excalibur.pool.Recyclable.recycle()
+     */
+    public void recycle() {
+        this.cacheKeyParList = null;
+        this.attributes = null;
+        this.dateFormatter = null;
+        this.monthFormatter = null;
+        this.locale = null;
+        super.recycle();
+    }
+
 }
