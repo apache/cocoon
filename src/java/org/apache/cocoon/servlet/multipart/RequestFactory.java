@@ -61,7 +61,7 @@ import javax.servlet.http.HttpServletRequest;
  * This is the interface of Request Wrapper in Cocoon.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: RequestFactory.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
+ * @version CVS $Id: RequestFactory.java,v 1.2 2003/11/13 14:56:12 sylvain Exp $
  */
 public class RequestFactory {
 
@@ -88,7 +88,15 @@ public class RequestFactory {
        this.allowOverwrite = allowOverwrite;
        this.silentlyRename = silentlyRename;
        this.maxUploadSize = maxUploadSize;
-       this.defaultCharEncoding = defaultCharEncoding;    
+       this.defaultCharEncoding = defaultCharEncoding;
+       
+       if (saveUploadedFilesToDisk) {
+           // Empty the contents of the upload directory
+           File[] files = uploadDirectory.listFiles();
+           for (int i = 0; i < files.length; i++) {
+               files[i].delete();
+           }
+       }
     }
 
     /**

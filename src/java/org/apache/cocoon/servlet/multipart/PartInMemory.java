@@ -57,7 +57,7 @@ import java.util.Map;
  * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartInMemory.java,v 1.3 2003/08/19 06:01:26 sylvain Exp $
+ * @version CVS $Id: PartInMemory.java,v 1.4 2003/11/13 14:56:12 sylvain Exp $
  */
 public class PartInMemory extends Part {
 
@@ -98,6 +98,17 @@ public class PartInMemory extends Part {
      * @throws Exception
      */
     public InputStream getInputStream() throws Exception {
-        return in;
+        if (this.in != null) {
+            return this.in;
+        } else {
+            throw new IllegalStateException("This part has already been disposed.");
+        }
+    }
+    
+    /**
+     * Clean the byte array content buffer holding part data
+     */
+    public void dispose() {
+        this.in = null;
     }
 }

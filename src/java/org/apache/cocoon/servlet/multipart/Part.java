@@ -53,14 +53,18 @@ package org.apache.cocoon.servlet.multipart;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
+
 
 /**
  * This (abstract) class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: Part.java,v 1.2 2003/04/17 20:11:24 haul Exp $
+ * @version CVS $Id: Part.java,v 1.3 2003/11/13 14:56:12 sylvain Exp $
  */
-public abstract class Part {
+public abstract class Part implements Disposable {
+
+    private boolean disposeWithRequest = true;
 
     /** Field headers */
     protected Map headers;
@@ -99,7 +103,26 @@ public abstract class Part {
     public String getMimeType() {
         return (String) headers.get("content-type");
     }
-
+    
+    /**
+     * Do we want any temporary resource held by this part to be cleaned up when processing of
+     * the request that created it is finished? Default is <code>true</code>.
+     * 
+     * @return <code>true</code> if the part should be disposed with the request.
+     */
+    public boolean disposeWithRequest() {
+        return this.disposeWithRequest;
+    }
+    
+    /**
+     * Set the value of the <code>disposeWithRequest</code> flag (default is <code>true</code>).
+     * 
+     * @param dispose <code>true</code> if the part should be disposed after request processing
+     */
+    public void setDisposeWithRequest(boolean dispose) {
+        this.disposeWithRequest = dispose;
+    }
+    
     /**
      * Returns an InputStream containing the file data
      * @throws Exception
