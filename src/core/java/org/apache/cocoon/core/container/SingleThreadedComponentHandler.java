@@ -63,5 +63,7 @@ extends AbstractFactoryHandler {
     protected void doPut( final Object component ) {
         this.decommission( component );
     }
+    
+    protected void doInitialize() {}
 
 }

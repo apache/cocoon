@@ -60,11 +60,6 @@ implements ServiceManager, Configurable {
     /** The parent ServiceManager */
     protected ServiceManager parentManager;
     
-    /** added component handlers before initialization to maintain
-     *  the order of initialization
-     */
-    private final List newComponentHandlers = new ArrayList();
-
     /** The resolver used to resolve includes. It is lazily loaded in {@link #getSourceResolver()}. */
     private SourceResolver cachedSourceResolver;
 
@@ -144,46 +139,27 @@ implements ServiceManager, Configurable {
     throws Exception {
         super.initialize();
 
-        for( int i = 0; i < this.newComponentHandlers.size(); i++ ) {
-            final ComponentHandler handler =
-                (ComponentHandler)this.newComponentHandlers.get( i );
+        // Initialize component handlers. This is done in no particular order, but initializing a
+        // handler may indirectly initialize another handler through a call to lookup().
+        // This isn't a problem as a handler's initialize() method can be called several times.
+
+        // We copy the list of handlers as the componentHandler Map may change if implicitely declared
+        // components are looked up.
+        ComponentHandler[] handlers = (ComponentHandler[])this.componentHandlers.values().toArray(
+                new ComponentHandler[this.componentHandlers.size()]);
+
+        for( int i = 0; i < handlers.length; i++ ) {
             try {
-                handler.initialize();
+                handlers[i].initialize();
             } catch( Exception e ) {
-                if( this.getLogger().isErrorEnabled() )
-                {
+                if( this.getLogger().isErrorEnabled() ) {
                     this.getLogger().error( "Caught an exception trying to initialize "
                                        + "the component handler.", e );
                 }
-
                 // Rethrow the exception
                 throw e;
             }
         }
-
-        List keys = new ArrayList( this.componentHandlers.keySet() );
-
-        for( int i = 0; i < keys.size(); i++ ) {
-            final Object key = keys.get( i );
-            final ComponentHandler handler =
-                (ComponentHandler)this.componentHandlers.get( key );
-
-            if( !this.newComponentHandlers.contains( handler ) ) {
-                try {
-                    handler.initialize();
-
-                } catch( Exception e ) {
-                    if( this.getLogger().isErrorEnabled() ) {
-                        this.getLogger().error( "Caught an exception trying to initialize "
-                                           + "the component handler.", e );
-
-                    }
-                    // Rethrow the exception
-                    throw e;
-                }
-            }
-        }
-        this.newComponentHandlers.clear();
         
 //        Object[] keyArray = this.componentHandlers.keySet().toArray();
 //        java.util.Arrays.sort(keyArray);
@@ -349,22 +325,6 @@ implements ServiceManager, Configurable {
 
         try {
             component = handler.get();
-        } catch( final IllegalStateException ise ) {
-            try {
-                handler.initialize();
-                component = handler.get();
-                
-            } catch( final ServiceException ce ) {
-                // Rethrow instead of wrapping a ServiceException with another one
-                throw ce;
-            } catch( final Exception e ) {
-                final String message = "Could not access the component for role [" + role + "]";
-                if( this.getLogger().isDebugEnabled() ) {
-                    this.getLogger().debug( message, e );
-                }
-
-                throw new ServiceException( role, message, e );
-            }
         } catch ( ServiceException se) {
             // Rethrow insteand of wrapping it again
             throw se;
@@ -470,7 +430,6 @@ implements ServiceManager, Configurable {
             }
 
             this.componentHandlers.put( role, handler );
-            this.newComponentHandlers.add( handler );
         } catch ( final ServiceException se ) {
             throw se;
         } catch( final Exception e ) {
