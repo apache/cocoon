@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- CVS $Id: error2html.xslt,v 1.3 2003/03/17 00:47:43 vgritsenko Exp $ -->
+
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:error="http://apache.org/cocoon/error/2.1">

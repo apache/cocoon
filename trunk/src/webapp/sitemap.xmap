@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!--+
     | This is the 'heart' of Cocoon. The sitemap maps URI space to 
@@ -11,7 +10,11 @@
     | javadocs for them. Most pipelines are present to demonstrate some
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
+    |
+    | CVS $Id: sitemap.xmap,v 1.6 2003/03/17 00:47:43 vgritsenko Exp $
     +-->
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- =========================== Components ================================ -->
 
@@ -59,7 +62,7 @@
   <!--+
       | Transformers can be placed inside the pipeline between the generator
       | and the serializer. You may have as many transformers as you
-      | like. Transformers consume SAX events and emmit SAX events.
+      | like. Transformers consume SAX events and emit SAX events.
       |
       | The "xslt" transformer is an example of a component with additional
       | configuration.

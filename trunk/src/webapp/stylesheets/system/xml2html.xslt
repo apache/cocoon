@@ -1,14 +1,17 @@
-<!--
- |
- | XSLT REC Compliant Version of IE5 Default Stylesheet
- |
- | Original version by Jonathan Marsh (jmarsh@microsoft.com)
- | http://msdn.microsoft.com/xml/samples/defaultss/defaultss.xsl
- |
- | Conversion to XSLT 1.0 REC Syntax by Steve Muench (smuench@oracle.com)
- | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
- |
- +-->
+<?xml version="1.0"?>
+
+<!--+
+    | XSLT REC Compliant Version of IE5 Default Stylesheet
+    |
+    | Original version by Jonathan Marsh (jmarsh@microsoft.com)
+    | http://msdn.microsoft.com/xml/samples/defaultss/defaultss.xsl
+    |
+    | Conversion to XSLT 1.0 REC Syntax by Steve Muench (smuench@oracle.com)
+    | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
+    |
+    | CVS $Id: xml2html.xslt,v 1.2 2003/03/17 00:47:43 vgritsenko Exp $
+    +-->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
    <xsl:output indent="no" method="html"/>
 
