@@ -85,7 +85,7 @@ import org.apache.cocoon.caching.validity.NamedEvent;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSEventListener.java,v 1.7 2004/02/15 21:30:00 haul Exp $
+ * @version CVS $Id: JMSEventListener.java,v 1.8 2004/02/18 12:15:01 unico Exp $
  * @author <a href="mailto:chaul@apache.org">chaul</a>
  */
 public class JMSEventListener
@@ -161,14 +161,16 @@ public class JMSEventListener
             if (service == null) {
                 service = (EventAware) this.manager.lookup(this.serviceName);
             }
-            Event event = this.convertMessage(message);
-            if (this.getLogger().isInfoEnabled())
-                this.getLogger().info(
-                    "Notifying "
-                        + this.serviceName
-                        + " of "
-                        + event);
-            service.processEvent(event);
+            Event[] events = eventsFromMessage(message);
+            for (int i = 0; i < events.length; i++) {
+                if (this.getLogger().isDebugEnabled())
+                    this.getLogger().debug(
+                        "Notifying "
+                            + this.serviceName
+                            + " of "
+                            + events[i]);
+                service.processEvent(events[i]);
+            }
         } catch (ServiceException e) {
             if (this.getLogger().isErrorEnabled()) {
                 this.getLogger().error(
@@ -183,9 +185,9 @@ public class JMSEventListener
             }
         }
     }
-
+    
     /**
-     * Convert the message contents to a cache event. The default implementation 
+     * Convert the message contents to (a series of) cache event. The default implementation 
      * assumes that the message contains the trigger name, a '|', and a table name. 
      * It extracts the tablename and creates a NamedEvent with it. 
      * Override this method to provide your own message to event mappings.
@@ -193,10 +195,10 @@ public class JMSEventListener
      * @param message  the JMS message.
      * @return  the cache event.
      */
-    protected Event convertMessage(Message message) {
+    protected Event[] eventsFromMessage(Message message) {
         String name = message.toString();
         int pos = name.indexOf('|');
-        return new NamedEvent(name.substring(pos + 1));
+        return new Event[] { new NamedEvent(name.substring(pos + 1)) };
     }
 
 }
