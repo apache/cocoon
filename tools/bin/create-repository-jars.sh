@@ -1,6 +1,6 @@
 #!/bin/sh 
 
-# $Id: create-repository-jars.sh,v 1.2 2004/02/02 10:38:34 giacomo Exp $
+# $Id: create-repository-jars.sh,v 1.3 2004/02/02 10:50:23 giacomo Exp $
 
 # This script will do the following:
 #   - checkout/update a cocoon-2.1 repository
@@ -9,19 +9,19 @@
 #   - copy all jars and the war to the appropriate locations (repository structure)
 
 # The cvs repository name
-if [ "$REPOSITORY_NAME" == "" ]; then
+if [ "$REPOSITORY_NAME" = "" ]; then
   REPOSITORY_NAME=cocoon-2.1
 fi
 
 # What is the default revision/branch/tag to use
 # In case of a HEAD revision a SNAPSHOT version will be created and
 # any old snapshots will be removed to save some space
-if [ "$REVISION" == "" ]; then
+if [ "$REVISION" = "" ]; then
   REVISION=HEAD
 fi
 
 # What is the default CVSROOT to be used for checkout
-if [ "$CVSROOT" == "" ]; then
+if [ "$CVSROOT" = "" ]; then
   CVSROOT=":pserver:anoncvs@cvs.apache.org:/home/cvspublic"
 fi
 
@@ -33,7 +33,7 @@ fi
 # If it exists it will do a 
 #   'cvs upd -dPACr $REVISION'
 #   in there to update to the requested revision (see REVISION below)
-if [ "$LOCAL_REPOSITORY" == "" ]; then
+if [ "$LOCAL_REPOSITORY" = "" ]; then
   LOCAL_REPOSITORY=$HOME/cvs/cocoon-2.1
 fi
 
@@ -43,18 +43,18 @@ if [ ! -d $LOCAL_REPOSITORY ]; then
 fi
 
 # On which host should the artifacts be published
-if [ "$REMOTEHOST" == "" ]; then
+if [ "$REMOTEHOST" = "" ]; then
   REMOTEHOST=www.apache.org
 fi
 
 # Where is the path on the remote host the repository is located at
-if [ "$REMOTEPATH" == "" ]; then
+if [ "$REMOTEPATH" = "" ]; then
   REMOTEPATH=/www/www.apache.org/dist/java-repository/cocoon
 fi
 
 # ------- NO NEED TO CHANGE ANYTHING BELOW HERE ----------
 
-if [ "$JAVA_HOME" == "" ]; then
+if [ "$JAVA_HOME" = "" ]; then
   echo "You need to set the JAVA_HOME environment variable to the installed JDK 1.3"
   exit 1
 fi
@@ -95,7 +95,7 @@ ssh $REMOTEHOST "mkdir -p $REMOTEPATH/jars 2>/dev/null >/dev/null; \
 # check if the local repository exists and do a checkout/update accordingly
 if [ -d "$LOCAL_REPOSITORY" ]; then
   cd $LOCAL_REPOSITORY
-  if [ $NOCVS -eq 0 ]; then
+  if [ $NOCVS = 0 ]; then
     echo
     echo "updating the local repository at $LOCAL_REPOSITORY with"
     echo "    cvs up -dPACr $REVISION"
@@ -119,7 +119,7 @@ fi
 
 # cleanup the repository, prepare and do a build if not suppressed by command line option
 RC=0 # set in advace in case we don't do a build
-if [ $NOBUILD -eq 0 ]; then
+if [ $NOBUILD = 0 ]; then
   # build the local.blocks.properties file
   echo
   echo "generating local.blocks.properties file"
@@ -143,7 +143,7 @@ if [ $NOBUILD -eq 0 ]; then
 
   # build everything
   echo
-  if [ $NOCLEAN -eq 0 ]; then
+  if [ $NOCLEAN = 0 ]; then
     echo "clean the local repository, build the webapp, and the war files"
     CLEAN=clean-dist
   else
@@ -154,7 +154,7 @@ if [ $NOBUILD -eq 0 ]; then
   ./build.sh $CLEAN webapp war | tee $LOCAL_REPOSITORY/build.log
   # The build script dosn't report on failures so we have to do that by hand
   tail -10 $LOCAL_REPOSITORY/build.log|grep "BUILD SUCCESSFUL"
-  if [ $? -eq 0 ]; then
+  if [ $? = 0 ]; then
     RC=0
   else
     RC=1
@@ -168,7 +168,7 @@ fi
 
 # copy all the jars produced over to the iremote repository space
 VERSION=`ls build | grep cocoon | sed s/cocoon-//`
-if [ "$REVISION" == "HEAD" ]; then 
+if [ "$REVISION" = "HEAD" ]; then 
   TVERSION=`date "+%Y%m%d.%H%M%S"` 
 else
   TVERSION=$VERSION
@@ -182,13 +182,13 @@ for i in $JARS; do
   else
     BLOCKPART=`echo $FILE | sed 's/cocoon//'`
   fi
-  if [ "$REVISION" == "HEAD" ]; then
+  if [ "$REVISION" = "HEAD" ]; then
     # remove all snapshots in the remote repository
     SNAPSHOT=`ssh $REMOTEHOST "ls $REMOTEPATH/jars/cocoon$BLOCKPART-????????.??????.jar 2>/dev/null"` 
   fi
   scp $i $REMOTEHOST:$REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar
   ssh $REMOTEHOST "chmod g+w $REMOTEPATH/jars/cocoon$BLOCKPART-$TVERSION.jar"
-  if [ "$REVISION" == "HEAD" ]; then
+  if [ "$REVISION" = "HEAD" ]; then
     if [ ! -z "$SNAPSHOT" ]; then
       RM="rm $SNAPSHOT;"
     else
@@ -203,11 +203,11 @@ done
 
 # copy the war file to the web space
 WAR=build/cocoon-$VERSION/cocoon.war
-if [ "$REVISION" == "HEAD" ]; then
+if [ "$REVISION" = "HEAD" ]; then
   SNAPSHOT=`ssh $REMOTEHOST "ls $REMOTEPATH/wars/cocoon-war-????????.??????.war 2>/dev/null"` 
 fi
 scp $WAR $REMOTEHOST:$REMOTEPATH/wars/cocoon-war-$TVERSION.war
-if [ "$REVISION" == "HEAD" ]; then
+if [ "$REVISION" = "HEAD" ]; then
   if [ ! -z "$SNAPSHOT" ]; then
     RM="rm $SNAPSHOT;"
   else
