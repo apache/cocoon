@@ -51,6 +51,8 @@
       <pathelement path="${src}/deprecated"/>
       <!-- test source dir -->
       <pathelement path="${src}/test"/>
+      <!-- kernel source dir -->
+      <pathelement path="${src}/kernel"/>      
     </path>
 
     <path id="mockss">
