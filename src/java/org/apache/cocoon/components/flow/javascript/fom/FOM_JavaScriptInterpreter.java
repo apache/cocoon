@@ -69,6 +69,7 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.WrappedException;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.ToolErrorReporter;
@@ -399,6 +400,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         /* true if this scope has assigned any global vars */
         boolean useSession;
 
+        boolean locked = false;
+
         public ThreadScope() {
             final String[] names = { "importClass" };
             try {
@@ -413,12 +416,25 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             return "ThreadScope";
         }
 
+        public void setLock(boolean lock) {
+            this.locked = lock;
+        }
+
         public void put(String name, Scriptable start, Object value) {
+            if (!has(name, start) && this.locked) {
+                // Need to wrap into a runtime exception as Scriptable.put has no throws clause...
+                throw new WrappedException (new JavaScriptException("Implicit declaration of global variable '" + name +
+                  "' forbidden. Please ensure all variables are explicitely declared with the 'var' keyword"));
+            }
             this.useSession = true;
             super.put(name, start, value);
         }
 
         public void put(int index, Scriptable start, Object value) {
+            // FIXME(SW): do indexed properties have a meaning on the global scope?
+            if (!has(index, start) && this.locked) {
+                throw new WrappedException(new JavaScriptException("Global scope locked. Cannot set value for index " + index));
+            }
             this.useSession = true;
             super.put(index, start, value);
         }
@@ -687,6 +703,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     if (fun == Scriptable.NOT_FOUND) {
                         throw new ResourceNotFoundException("Function \"javascript:" + funName + "()\" not found");
                     }
+                    thrScope.setLock(true);
                     ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
                 } catch (JavaScriptException ex) {
                     EvaluatorException ee = Context.reportRuntimeError(
@@ -710,6 +727,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     throw new CascadingRuntimeException(ee.getMessage(), ee);
                 }
             } finally {
+                thrScope.setLock(false);
                 setSessionScope(thrScope);
                 if (cocoon != null) {
                     cocoon.popCallContext();
@@ -750,6 +768,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             try {
                 Thread.currentThread().setContextClassLoader(kScope.getClassLoader());
                 cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
+                kScope.setLock(true);
                 cocoon.pushCallContext(this, redirector, manager,
                                        avalonContext,
                                        getLogger(), wk);
@@ -797,6 +816,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     throw new CascadingRuntimeException(ee.getMessage(), ee);
                 }
             } finally {
+                kScope.setLock(false);
                 setSessionScope(kScope);
                 if (cocoon != null) {
                     cocoon.popCallContext();
