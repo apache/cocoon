@@ -59,9 +59,10 @@ import org.apache.cocoon.framework.*;
 import org.apache.cocoon.processor.*;
 import javax.naming.*;
 import javax.naming.directory.*;
+import javax.naming.ldap.*;
 
 /**
- * A processor that performs LDAP queries<br>
+ * A processor that performs Ldap queries<br>
  *
  * XML file format: <p><pre>
  *&lt;?xml version="1.0"?&gt;
@@ -92,10 +93,10 @@ import javax.naming.directory.*;
  * @version 1.0
  */
 
-public class LDAPProcessor extends AbstractActor implements Processor, Status {
+public class LdapProcessor extends AbstractActor implements Processor, Status {
 		
 	public Document process(Document doc, Dictionary parameters) throws Exception {
-		LDAPDefs ldefs = new LDAPDefs(doc);
+		LdapDefs ldefs = new LdapDefs(doc);
         NodeList query_nodes = doc.getElementsByTagName("ldap-query");
         Node query_nodes_ary[] = new Node[query_nodes.getLength()];
 
@@ -114,13 +115,13 @@ public class LDAPProcessor extends AbstractActor implements Processor, Status {
 				Node query_attribute = query_attributes.item(j);
 				query_props.put(query_attribute.getNodeName(),query_attribute.getNodeValue());
 			} 
-			DirContext ctx = ldefs.getDirContext(query_props.getProperty("server"));    
+			LdapContext ctx = ldefs.getLdapContext(query_props.getProperty("server"));    
 			processQuery(doc,parameters,query_element,query_props,ctx);
 		}
 		return doc;
 	}
 	
-	protected void processQuery(Document doc, Dictionary parameters, Element query_element, Properties query_props, DirContext ctx) throws Exception {
+	protected void processQuery(Document doc, Dictionary parameters, Element query_element, Properties query_props, LdapContext ctx) throws Exception {
 
         String doc_element_name = query_props.getProperty("doc-element");
         String row_element_name = query_props.getProperty("row-element");
@@ -142,7 +143,7 @@ public class LDAPProcessor extends AbstractActor implements Processor, Status {
 
 		
 		try {
-			String query = LDAPQueryCreator.getQuery(buf.toString(), query_props, parameters);
+			String query = LdapQueryCreator.getQuery(buf.toString(), query_props, parameters);
 			SearchControls constraints = new SearchControls();
 			constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
 			NamingEnumeration ldapresults = ctx.search(ldap_searchbase, query, constraints);
@@ -186,6 +187,6 @@ public class LDAPProcessor extends AbstractActor implements Processor, Status {
 		return true;
 	}
 	public String getStatus() {
-		return "LDAP Processor";
+		return "Ldap Processor";
 	}
 }

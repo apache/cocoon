@@ -53,6 +53,7 @@ package org.apache.cocoon.processor.ldap;
 
 import java.util.*;
 import javax.naming.*;
+import javax.naming.ldap.*;
 import javax.naming.directory.*;
 
 /**
@@ -62,14 +63,14 @@ import javax.naming.directory.*;
  * @version 1.0 
  */
 
-public class DirContextCreator {
+public class LdapContextCreator {
 
     protected String initializer;
     protected String ldapserverurl;
 
 	protected Properties env;
 
-    public DirContextCreator(Properties props) {
+    public LdapContextCreator(Properties props) {
         this.initializer = props.getProperty("initializer");
         this.ldapserverurl = props.getProperty("ldap-serverurl");
 		env = new Properties();
@@ -77,8 +78,8 @@ public class DirContextCreator {
 		env.put(Context.PROVIDER_URL, ldapserverurl);
     }
 
-    public DirContext getDirContext() throws Exception {
-		return new InitialDirContext(env);
+    public LdapContext getLdapContext() throws Exception {
+		return new InitialLdapContext(env,null);
     }
 
 }

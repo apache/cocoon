@@ -55,6 +55,7 @@ import org.w3c.dom.*;
 import java.sql.*;
 import java.util.*;
 import javax.naming.*;
+import javax.naming.ldap.*;
 import javax.naming.directory.*;
 
 /**
@@ -64,7 +65,7 @@ import javax.naming.directory.*;
  * @version 1.0
  */
 
-public class LDAPDefs {
+public class LdapDefs {
 
 	protected Hashtable creators = new Hashtable();
 	protected Hashtable query_props = new Hashtable();
@@ -87,7 +88,7 @@ public class LDAPDefs {
 	}
 
 
-	public LDAPDefs(Document document) throws Exception {
+	public LdapDefs(Document document) throws Exception {
 		NodeList ldapdefs = document.getElementsByTagName("ldap-defs");
 		Node ldap_defs_ary[] = new Node[ldapdefs.getLength()];
 		for (int i=0; i<ldapdefs.getLength(); i++) 
@@ -102,7 +103,7 @@ public class LDAPDefs {
 					Element element = (Element)node;
 					String name = element.getNodeName();
 					if (name.equals("ldap-server")) 
-						processLDAPDef(element);
+						processLdapDef(element);
                     else if (name.equals("ldap-querydefs"))
                         processQueryDef(element);
 				}
@@ -114,7 +115,7 @@ public class LDAPDefs {
 	/**
 	 * Process a single ldap definition node
 	 */
-	protected void processLDAPDef(Element ldap) throws Exception {
+	protected void processLdapDef(Element ldap) throws Exception {
 		String name = ldap.getAttribute("name");
 		if (name == null) return;
 
@@ -134,7 +135,7 @@ public class LDAPDefs {
 			ldap_props.put(prop_name,value.toString());
 		}
 		if (!ldap_props.containsKey("ldap-serverurl")) return;
-		creators.put(name,new DirContextCreator(ldap_props));
+		creators.put(name,new LdapContextCreator(ldap_props));
 	}
 
     protected void processQueryDef(Element querydef) {
@@ -153,9 +154,9 @@ public class LDAPDefs {
     }
 
 
-	public DirContext getDirContext(String name) throws Exception {
-		DirContextCreator creator = (DirContextCreator)creators.get(name);
-		return creator.getDirContext();
+	public LdapContext getLdapContext(String name) throws Exception {
+		LdapContextCreator creator = (LdapContextCreator)creators.get(name);
+		return creator.getLdapContext();
 	}
 
 	public Properties getQueryProperties(String name) throws Exception {

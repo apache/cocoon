@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * Utility methods for this processor.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.1 $ $Date: 1999-12-18 00:37:25 $
+ * @version $Revision: 1.2 $ $Date: 1999-12-23 01:29:50 $
  */
 
 public class Utils {

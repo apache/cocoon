@@ -58,7 +58,7 @@ import javax.servlet.http.*;
 import org.w3c.dom.*;
 
 /**
- * A class that can create an LDAP query. It's given a query to start with,
+ * A class that can create an Ldap query. It's given a query to start with,
  * plus a query_props table that contains parameters from the XML file, and the
  * parameters table from cocoon that notably may contain a HttpServletRequest
  * object keyed from "request".<br>
@@ -67,7 +67,7 @@ import org.w3c.dom.*;
  * @version 1.0
  */
 
-public class LDAPQueryCreator {
+public class LdapQueryCreator {
 
 		public static String getQuery(String query, Properties query_props, Dictionary parameters) throws Exception {
 			HttpServletRequest req = (HttpServletRequest)parameters.get("request");
