@@ -22,7 +22,6 @@
    </map:transformer>
    <map:transformer     name="log"       src="org.apache.cocoon.transformation.LogTransformer"/>
    <map:transformer     name="sql"       src="org.apache.cocoon.transformation.SQLTransformer"/>
-   <map:transformer     name="xinclude"  src="org.apache.cocoon.transformation.XIncludeTransformer"/>
    <map:transformer     name="extractor" src="org.apache.cocoon.transformation.FragmentExtractorTransformer"/>
   </map:transformers>
 

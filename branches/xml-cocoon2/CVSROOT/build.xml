@@ -198,6 +198,9 @@ by the main ones.
     <available property="datasource.present" classname="javax.sql.DataSource">
       <classpath refid="classpath"/>
     </available>
+    <available property="xpath.present" classname="org.apache.xpath.XPathAPI">
+      <classpath refid="classpath"/>
+    </available>
   </target>
 
   <!-- =================================================================== -->
@@ -287,6 +290,7 @@ by the main ones.
       <exclude name="**/JAI*.java"           unless="jai.present"/>
       <exclude name="**/HTMLGenerator.java"  unless="tidy.present"/>
       <exclude name="**/J2eeDataSource.java" unless="j2ee.present"/>
+      <exclude name="**/XIncludeTransformer.java" unless="xpath.present"/>
     </javac>
   </target>
 

@@ -13,7 +13,7 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:map="http://apache.org/cocoon/sitemap/1.0"
-    xmlns:java="http://xml.apache.org/xslt/java" exclude-result-prefixes="java"
+    xmlns:java="http://xml.apache.org/xslt/java/org.apache.cocoon.sitemap.XSLTFactoryLoader" exclude-result-prefixes="java"
     version="1.0">
 
   <xsl:output method="text"/>
@@ -30,7 +30,7 @@
        are producing
        FIXME(GP): This approach seem Xalan dependant and not (yet) portable
   -->
-  <xsl:variable name="factory-loader" select="java:org.apache.cocoon.sitemap.XSLTFactoryLoader.new()"/>
+  <xsl:variable name="factory-loader" select="java:new()"/>
 
 
   <!-- this template wraps the hole content within a single <code> element which
@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.80 2001-02-21 12:16:57 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.81 2001-02-21 13:59:46 dims Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
