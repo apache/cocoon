@@ -171,11 +171,6 @@
         shorthand="xmlizer"
         default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
 
-  <role name="org.apache.avalon.excalibur.monitor.Monitor"
-        shorthand="monitor"
-        default-class="org.apache.avalon.excalibur.monitor.ActiveMonitor">
-  </role>
-
   <role name="org.apache.cocoon.components.sax.XMLSerializer"
         shorthand="xml-serializer"
         default-class="org.apache.cocoon.components.sax.XMLByteStreamCompiler"/>
