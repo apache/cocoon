@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 /**
  * Test case for the {@link EnumConvertorBuilder} class.
  * 
- * @version CVS $Id$
+ * @version $Id$
  */
 public class EnumConvertorBuilderTestCase extends TestCase {
 
