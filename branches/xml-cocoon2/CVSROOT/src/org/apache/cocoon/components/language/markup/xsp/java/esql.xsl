@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.41 2001-02-05 22:02:37 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.42 2001-02-06 08:26:22 giacomo Exp $-->
 <!--
 
  ============================================================================
@@ -593,7 +593,7 @@
                   <xsp:expr>_esql_tagname.toUpperCase()</xsp:expr>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsp:expr>_esql_tagname</xsp:expr></xsp:param>
+                  <xsp:expr>_esql_tagname</xsp:expr>
                 </xsl:otherwise>
               </xsl:choose>
             </xsp:param>
