@@ -88,7 +88,7 @@
 		<p>
 		  Describes a single table named "employee". In addition a database
 		  connection is specified. See <link
-			href="../../developing/datasources.html">here</link> for more
+			href="../../developer/datasources.html">here</link> for more
 		  information on database connections. 
 		</p>
 

@@ -33,7 +33,7 @@
                     </dl>
                 <p>
                 This approach for internationalization (further - i18n) of XML documents within Cocoon 
-                is based on a transformer - <link href="../../apidocs/org/apache/cocoon/transformation/I18nTransformer.html">
+                is based on a transformer - <link href="../../../apidocs/org/apache/cocoon/transformation/I18nTransformer.html">
                         <code>I18nTransformer</code>
                     </link>
                 , which uses XML dictionaries for all the multilingual data. The namespace URI of i18n transformer is defined as follows: 

@@ -16,7 +16,7 @@ A serializer is the end point of an xml pipeline. It transforms SAX events into 
 In the sitemap file, each serializer has a unique name which is mapped to a java class. One serializer name must be declared as the default serializer. Each serializer may have additional configuration information specified in child elements.
   </p>
   <p>
- For more conceptual information about serializers see <link href="../userdocs/concepts/sitemap.html">the sitemap</link>. For detailed descriptions about all of the available Cocoon serializers, see the user's guide document <link href="../userdocs/serializers/serializers.html">Serializers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
+ For more conceptual information about serializers see <link href="../userdocs/concepts/sitemap.html">the sitemap</link>. For detailed descriptions about all of the available Cocoon serializers, see the user's guide document <link href="../userdocs/components/serializers/serializers.html">Serializers in Cocoon</link>. You may also wish to consult the Cocoon API documentation.
   </p>
 </answer>
 </faq>
