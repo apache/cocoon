@@ -17,9 +17,11 @@ import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
+
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.ComponentHolderFactory;
 import org.apache.cocoon.util.ClassUtils;
 
 import org.xml.sax.SAXException;
@@ -28,7 +30,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-09-28 19:14:05 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-10-08 21:09:26 $
  */
 public abstract class AbstractSitemap implements Sitemap {
     
@@ -76,22 +78,13 @@ public abstract class AbstractSitemap implements Sitemap {
       * Loads a class specified in a sitemap component definition and
       * initialize it
       */
-    protected Component load_component(String classURL, Configuration conf) throws Exception {
-        Object comp = ClassUtils.newInstance(classURL);
-        if (!(comp instanceof Component)) {
+    protected ComponentHolder load_component(String classURL, Configuration configuration) throws Exception {
+        if (!(ClassUtils.implementsInterface (classURL, Component.class.getName()))) {
             throw new IllegalAccessException ("Object " + classURL + " is not a Component");
         }
-        /* (GP)FIXME: The new AvalonAware release should contain Interfaces to mark classes
-           an ThreadSafe, Recyclable or Poolable and depending on that should instanciate
-           and configurate these objects accordingly
-        if (comp instanceof Composer) {
-            ((Composer) comp).setComponentManager(this.manager);
-        }
-        if (comp instanceof Configurable) {
-            ((Configurable) comp).setConfiguration(conf);
-        }
-        */
-        return ((Component) comp);
+        ComponentHolder componentHolder;
+        componentHolder = ComponentHolderFactory.getComponentHolder (classURL, configuration, this.manager);
+        return (componentHolder);
     }
 
      /**

@@ -21,7 +21,7 @@ import org.w3c.dom.DocumentFragment;
  * <code>SelectorFactory</code>s to get the generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-09-06 23:22:25 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-08 21:09:26 $ 
  */ 
 
 public class XSLTFactoryLoader {
@@ -30,8 +30,7 @@ public class XSLTFactoryLoader {
 
     public String getClassSource(String className, String prefix, String pattern, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception { 
-        
-        Object factory = obj.get(className); 
+        Object factory = obj.get(className);
         if (factory == null) factory = ClassUtils.newInstance(className); 
         obj.put(className, factory); 
         
@@ -45,8 +44,7 @@ public class XSLTFactoryLoader {
                    
     public String getMethodSource(String className, String prefix, String pattern, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception { 
-
-        Object factory = obj.get(className); 
+        Object factory = obj.get(className);
         if (factory == null) factory = ClassUtils.newInstance(className); 
         obj.put (className, factory); 
 
@@ -56,5 +54,13 @@ public class XSLTFactoryLoader {
         
         throw new Exception ("Wrong class \"" + factory.getClass().getName()
                             + "\". Should implement the CodeFactory interface");
+    }
+
+    public boolean isFactory (String className) {
+        boolean result = false;
+        try {
+            result = ClassUtils.implementsInterface (className, CodeFactory.class.getName());
+        } catch (Exception e) {}
+        return result;
     }
 }
