@@ -201,18 +201,6 @@ public class NamespaceHelper {
     }
 
     /**
-     * Returns all children of an element in the namespace
-     * of this NamespaceHelper.
-     *
-     * @param element The parent element.
-     * 
-     * @return the children.
-     */
-    public Element[] getChildren(Element element) {
-        return DocumentHelper.getChildren(element, getNamespaceURI());
-    }
-
-    /**
      * Returns all children of an element with a local name in the namespace
      * of this NamespaceHelper.
      *
@@ -225,29 +213,4 @@ public class NamespaceHelper {
         return DocumentHelper.getChildren(element, getNamespaceURI(), localName);
     }
 
-    /**
-     * Returns the first childr of an element with a local name in the namespace
-     * of this NamespaceHelper or <code>null</code> if none exists.
-     *
-     * @param element The parent element.
-     * @param localName The local name of the children to return.
-     * 
-     * @return the first child.
-     */
-    public Element getFirstChild(Element element, String localName) {
-        return DocumentHelper.getFirstChild(element, getNamespaceURI(), localName);
-    }
-
-	/**
-	 * Returns the next siblings of an element with a local name in the namespace
-	 * of this NamespaceHelper or <code>null</code> if none exists.
-	 *
-	 * @param element The parent element.
-	 * @param localName The local name of the children to return.
-	 * 
-	 * @return the next siblings.
-	 */
-	public Element[] getNextSiblings(Element element, String localName) {
-		return DocumentHelper.getNextSiblings(element, getNamespaceURI(), localName);
-	}
 }
