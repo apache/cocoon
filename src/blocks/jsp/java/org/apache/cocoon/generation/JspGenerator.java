@@ -74,7 +74,7 @@ import java.io.IOException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.1 2003/03/09 00:04:14 pier Exp $
+ * @version CVS $Id: JspGenerator.java,v 1.2 2003/06/07 23:01:48 vgritsenko Exp $
  */
 public class JspGenerator extends ServletGenerator implements Configurable {
 
@@ -116,12 +116,10 @@ public class JspGenerator extends ServletGenerator implements Configurable {
             engine = (JSPEngine)this.manager.lookup(JSPEngine.ROLE);
 
             getLogger().debug("JspGenerator executing JSP:" + url);
-
             byte[] bytes = engine.executeJSP(url, httpRequest, httpResponse, httpContext);
 
-            // explicitly specify bytestream encoding
             InputSource input = new InputSource(new ByteArrayInputStream(bytes));
-            // FIXME (KP): Why do we need this?
+            // utf-8 is default encoding; specified explicitely here as a reminder.
             input.setEncoding("utf-8");
 
             // pipe the results into the parser

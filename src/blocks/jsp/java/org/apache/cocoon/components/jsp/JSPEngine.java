@@ -63,21 +63,22 @@ import java.io.IOException;
  * A component for loading and running JSP.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngine.java,v 1.1 2003/03/09 00:04:12 pier Exp $
+ * @version CVS $Id: JSPEngine.java,v 1.2 2003/06/07 23:01:48 vgritsenko Exp $
  */
 public interface JSPEngine extends Component {
 
     String ROLE = JSPEngine.class.getName();
 
     /**
-    * execute the JSP and return the output
-    *
-    * @param context The Servlet Context
-    * @exception IOException
-    * @exception ServletException
-    * @exception SAXException
-    * @exception Exception
-    */
+     * Execute the JSP and return the output.
+     * Output of the JSPEngine <b>must</b> be in UTF8 encoding.
+     *
+     * @param context The Servlet Context
+     * @exception IOException
+     * @exception ServletException
+     * @exception SAXException
+     * @exception Exception
+     */
     byte[] executeJSP(String url,
                        HttpServletRequest request,
                        HttpServletResponse response,
