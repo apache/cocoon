@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
+
+<!--
+  History of Cocoon changes
+  $Id: todo.xml,v 1.24 2000-03-30 00:32:11 stefano Exp $
+-->
+
+<todo title="Things To Do for Cocoon 1.x">
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+ </devs>
+
+ <actions priority="low">
+  <action context="docs">
+   write some more docs
+  </action>
+ </actions>
+
+</todo>
