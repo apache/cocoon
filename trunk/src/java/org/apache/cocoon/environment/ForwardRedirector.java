@@ -54,16 +54,17 @@ import java.io.IOException;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * A <code>Redirector</code> that handles forward redirects, i.e. internal
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.16 2004/02/20 18:57:15 sylvain Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.17 2004/02/21 18:06:09 cziegeler Exp $
  */
-public abstract class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
+public abstract class ForwardRedirector 
+extends AbstractLogEnabled 
+implements Redirector, PermanentRedirector {
 
     /**
      * Was there a call to <code>redirect()</code> ?
@@ -73,6 +74,9 @@ public abstract class ForwardRedirector extends AbstractLogEnabled implements Re
     /** The <code>Environment to use for redirection (either internal or external) */
     protected Environment env;
 
+    /**
+     * Constructor
+     */
     public ForwardRedirector(Environment env) {
         this.env = env;
     }
@@ -90,7 +94,7 @@ public abstract class ForwardRedirector extends AbstractLogEnabled implements Re
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
         } else {
-            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().redirect(this.env, sessionMode, url);
+            this.doRedirect(sessionMode, url, false, false);
         }
 
         this.hasRedirected = true;
@@ -104,7 +108,7 @@ public abstract class ForwardRedirector extends AbstractLogEnabled implements Re
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
         } else {
-            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().permanentRedirect(this.env, sessionMode, url);
+            this.doRedirect(sessionMode, url, true, false);
         }
 
         this.hasRedirected = true;
@@ -123,15 +127,15 @@ public abstract class ForwardRedirector extends AbstractLogEnabled implements Re
         if (url.startsWith("cocoon:")) {
             cocoonRedirect(url);
         } else {
-            EnvironmentHelper.getCurrentProcessor().getEnvironmentHelper().globalRedirect(this.env, sessionMode, url);
+            this.doRedirect(sessionMode, url, false, true);
         }
         this.hasRedirected = true;
     }
 
     protected abstract void cocoonRedirect(String uri) throws IOException, ProcessingException;;
 
-    /**
-     * Perform check on whether redirection has occured or not
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Redirector#hasRedirected()
      */
     public boolean hasRedirected() {
         return this.hasRedirected;
@@ -143,6 +147,48 @@ public abstract class ForwardRedirector extends AbstractLogEnabled implements Re
     public void sendStatus(int sc) {
         env.setStatus(sc);
         this.hasRedirected = true;
+    }
+
+
+    /**
+     * Redirect the client to new URL with session mode
+     */
+    protected void doRedirect(boolean sessionmode, 
+                                String newURL, 
+                                boolean permanent,
+                                boolean global) 
+    throws IOException {
+        final Request request = ObjectModelHelper.getRequest(this.env.getObjectModel());
+        // check if session mode shall be activated
+        if (sessionmode) {
+
+            // The session
+            Session session = null;
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("redirect: entering session mode");
+            }
+            String s = request.getRequestedSessionId();
+            if (s != null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Old session ID found in request, id = " + s);
+                    if ( request.isRequestedSessionIdValid() ) {
+                        getLogger().debug("And this old session ID is valid");
+                    }
+                }
+            }
+            // get session from request, or create new session
+            session = request.getSession(true);
+            if (session == null) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("redirect session mode: unable to get session object!");
+                }
+            }
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
+            }
+        }
+        // redirect
+        this.env.redirect(newURL, global, permanent);
     }
 
 }

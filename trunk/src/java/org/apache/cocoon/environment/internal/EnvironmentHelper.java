@@ -64,9 +64,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
@@ -78,7 +75,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.11 2004/02/20 20:34:37 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.12 2004/02/21 18:06:09 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -311,67 +308,6 @@ implements SourceResolver, Serviceable, Disposable {
         }
     }
     
-    public void redirect(Environment env, 
-                         boolean sessionmode, 
-                         String newURL) 
-    throws IOException {
-        this.doRedirect(env, sessionmode, newURL, false, false);
-    }
-
-    public void globalRedirect(Environment env, 
-                               boolean sessionmode, 
-                               String newURL) 
-    throws IOException {
-        this.doRedirect(env, sessionmode, newURL, false, true);
-    }
-
-    public void permanentRedirect(Environment env, boolean sessionmode, String newURL) 
-    throws IOException {
-        this.doRedirect(env, sessionmode, newURL, true, false);
-    }
-
-    /**
-     *  Redirect the client to new URL with session mode
-     */
-    protected void doRedirect(Environment env, 
-                             boolean sessionmode, 
-                             String newURL, 
-                             boolean permanent,
-                             boolean global) 
-    throws IOException {
-        final Request request = ObjectModelHelper.getRequest(env.getObjectModel());
-        // check if session mode shall be activated
-        if (sessionmode) {
-
-            // The session
-            Session session = null;
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("redirect: entering session mode");
-            }
-            String s = request.getRequestedSessionId();
-            if (s != null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Old session ID found in request, id = " + s);
-                    if ( request.isRequestedSessionIdValid() ) {
-                        getLogger().debug("And this old session ID is valid");
-                    }
-                }
-            }
-            // get session from request, or create new session
-            session = request.getSession(true);
-            if (session == null) {
-                if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("redirect session mode: unable to get session object!");
-                }
-            }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug ("redirect: session mode completed, id = " + session.getId() );
-            }
-        }
-        // redirect
-        env.redirect(newURL, global, permanent);
-    }
-
     /**
      * This hook must be called by the sitemap each time a sitemap is entered
      * This method should never raise an exception, except when the
