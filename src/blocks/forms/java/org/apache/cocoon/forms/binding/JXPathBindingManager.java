@@ -100,7 +100,7 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
                 Element rootElm = doc.getDocumentElement();
                 if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
                     binding = getBuilderAssistant()
-                            .getBindingForConfigurationElement(rootElm);
+                        .getBindingForConfigurationElement(rootElm);
                     ((JXPathBindingBase) binding).enableLogging(getLogger());
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Creation of new binding finished. " + binding);
@@ -190,15 +190,14 @@ public class JXPathBindingManager extends AbstractLogEnabled implements
         }
 
         /**
-         * Creates a {@link Binding}following the specification in the
+         * Creates a {@link Binding} following the specification in the
          * provided config element.
          */
         public JXPathBindingBase getBindingForConfigurationElement(
                 Element configElm) throws BindingException {
             String bindingType = configElm.getLocalName();
             JXPathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
-            JXPathBindingBase childBinding = bindingBuilder.buildBinding(
-                    configElm, this);
+            JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
             return childBinding;
         }
 

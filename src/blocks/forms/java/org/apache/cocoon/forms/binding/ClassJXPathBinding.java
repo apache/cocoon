@@ -20,7 +20,7 @@ import org.apache.commons.jxpath.JXPathContext;
 
 /**
  * ClassJXPathBinding provides an implementation of a {@link Binding}
- * that that allows the specification of a class of reusable bindings.
+ * which allows the specification of a class of reusable bindings.
  * <p>
  * NOTES: <ol>
  * <li>This Binding uses the provided widget-id as the name for the class.</li>
