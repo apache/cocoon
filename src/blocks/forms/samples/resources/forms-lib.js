@@ -182,7 +182,9 @@ function forms_showTab(tabgroup, idx, length, state) {
         if (tabitems != null) {
             tabitems.style.display = (i == idx) ? '' : 'none';
             // execute event handler if any
-            if (i == idx && window.onTabShownHandlers != null) {
+            if (i == idx &&
+                    window.onTabShownHandlers != null &&
+                    window.onTabShownHandlers[tabgroup] != null) {
                 var onShowHandler = window.onTabShownHandlers[tabgroup][tabgroup + "_items_" + i];
                 if (onShowHandler != null) {
                     eval(onShowHandler);
