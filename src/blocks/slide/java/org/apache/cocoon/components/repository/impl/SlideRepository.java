@@ -85,7 +85,7 @@ import org.xml.sax.InputSource;
  * The class represent a manger for slide repositories
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepository.java,v 1.3 2003/11/15 13:26:00 joerg Exp $
+ * @version CVS $Id: SlideRepository.java,v 1.4 2003/11/15 13:34:43 joerg Exp $
  */
 public class SlideRepository
   implements Repository, ThreadSafe, Serviceable, Configurable, LogEnabled,
@@ -106,7 +106,7 @@ public class SlideRepository
     private String contextpath = null;
 
     /**
-     * Provide component with a logger.
+     * Provide service with a logger.
      *
      * @param logger the logger
      */
@@ -147,9 +147,9 @@ public class SlideRepository
     }
 
     /**
-     * Initialialize the component. Initialization includes
+     * Initialize the service. Initialization includes
      * allocating any resources required throughout the
-     * components lifecycle.
+     * service's lifecycle.
      */
     public void initialize() throws Exception {
 
@@ -256,10 +256,10 @@ public class SlideRepository
     }
 
     /**
-     * The dispose operation is called at the end of a components lifecycle.
+     * The dispose operation is called at the end of a service's lifecycle.
      * This method will be called after Startable.stop() method (if implemented
-     * by component). Components use this method to release and destroy any
-     * resources that the Component owns.
+     * by service). Services use this method to release and destroy any
+     * resources that the service owns.
      */
     public void dispose() {
         if (initialized) {
