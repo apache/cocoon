@@ -1,6 +1,6 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 
-<!-- $Id: esql.xsl,v 1.6 2003/09/08 14:26:50 haul Exp $-->
+<!-- $Id: esql.xsl,v 1.7 2003/10/06 15:36:08 tcurdt Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.6 $ $Date: 2003/09/08 14:26:50 $
+ * @version CVS $Revision: 1.7 $ $Date: 2003/10/06 15:36:08 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -503,7 +503,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
             <xsl:call-template name="set-call-parameter"/>
           </xsl:for-each>
           <xsl:choose>
-            <xsl:when test="esql:call[@needs-query='true' or @needs-query='yes']">_esql_query.execute(true);</xsl:when>
+            <xsl:when test="esql:call[@needs-query='true' or @needs-query='yes']">_esql_query.executeQuery();</xsl:when>
             <xsl:when test="esql:call[@resultset-from-object]">_esql_query.execute(<xsl:apply-templates select="esql:call" mode="resultset"/>);</xsl:when>
             <xsl:otherwise>_esql_query.execute();</xsl:otherwise>
           </xsl:choose>
