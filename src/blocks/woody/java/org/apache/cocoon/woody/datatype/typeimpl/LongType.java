@@ -50,12 +50,6 @@
 */
 package org.apache.cocoon.woody.datatype.typeimpl;
 
-import org.outerj.i18n.DecimalFormat;
-import org.outerj.i18n.I18nSupport;
-
-import java.util.Locale;
-import java.text.ParseException;
-
 /**
  * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation
  * for whole numbers.
