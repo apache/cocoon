@@ -152,9 +152,9 @@
       
       <map:match pattern="OPTIONS/**">
         <map:act type="set-header">
-          <map:parameter name="DAV" value="DAV:1"/>
+          <map:parameter name="DAV" value="1"/>
           <map:parameter name="Allow" 
-            value="OPTIONS, GET, HEAD, POST, DELETE,TRACE, PROPFIND, PROPPATCH, COPY, MOVE"/>
+            value="OPTIONS,GET,HEAD,POST,DELETE,TRACE,PROPFIND,PROPPATCH,COPY,MOVE"/>
         </map:act>
         <map:generate src="dummy.xml"/>
         <map:serialize type="xml"/>
