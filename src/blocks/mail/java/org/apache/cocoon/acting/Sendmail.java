@@ -19,6 +19,7 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -26,6 +27,8 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.mail.MailMessageSender;
+import org.apache.cocoon.mail.MailSender;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
@@ -105,9 +108,9 @@ import javax.mail.internet.AddressException;
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:andrzej@chaeron.com">Andrzej Taramina</a>
  * @since 2.1
- * @version CVS $Id: Sendmail.java,v 1.7 2004/03/28 14:28:04 antonio Exp $
+ * @version CVS $Id: Sendmail.java,v 1.8 2004/05/09 20:05:59 haul Exp $
  */
-public class Sendmail extends AbstractAction implements ThreadSafe, Configurable {
+public class Sendmail extends ServiceableAction implements ThreadSafe, Configurable {
     private final static String STATUS = "status";
     private final static String MESSAGE = "message";
     /** Request-Attribute that holds status data*/
@@ -120,9 +123,9 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
             getLogger().debug("SendmailAction: init");
         }
 
-        smtpHost = conf.getAttribute("smtphost", "127.0.0.1");
+        smtpHost = conf.getAttribute("smtphost", null);
 
-        if (this.getLogger().isDebugEnabled()) {
+        if (smtpHost != null && this.getLogger().isDebugEnabled()) {
             getLogger().debug(
                 "SendmailAction: using " + smtpHost + " as the smtp server");
         }
@@ -138,6 +141,7 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
         boolean success = false;
         Map status = null;
 
+        MailSender mms = null;
         try {
             if (this.getLogger().isDebugEnabled()) {
                 getLogger().debug("SendmailAction: act start");
@@ -155,7 +159,10 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
                 }
             }
 
-            MailMessageSender mms = new MailMessageSender(smtpHost);
+            mms = (MailSender) this.manager.lookup(MailSender.ROLE);
+            if (smtpHost != null) {
+            	mms.setSmtpHost(smtpHost);
+            }
 
             if (parameters.isParameter("from")) {
                 mms.setFrom(parameters.getParameter("from", null));
@@ -245,6 +252,15 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
             status.put(
                 Sendmail.MESSAGE,
                 "An error occured while sending email: " + me.getMessage());
+            
+        } catch (ServiceException e) {
+            this.getLogger().error(
+                    "SendmailAction: An exception was thrown while initializing mail component.",
+                    e);
+
+                status = new HashMap(2);
+                status.put(Sendmail.STATUS, "server-error");
+                status.put(Sendmail.MESSAGE, "An exception was thrown while sending email: "+e.getMessage());
 
         } catch (Exception e) {
             this.getLogger().error(
@@ -259,6 +275,7 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
             ObjectModelHelper.getRequest(objectModel).setAttribute(
                 Sendmail.REQUEST_ATTRIBUTE,
                 status);
+            this.manager.release(mms);
         }
         return (success ? status : null);
     }

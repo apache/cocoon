@@ -21,7 +21,7 @@
  * @author Donald A. Ball Jr.
  * @author Christian Haul
  * @author Frank Riddersbusch
- * @version CVS $Revision: 1.3 $ $Date: 2004/03/17 11:28:20 $
+ * @version CVS $Revision: 1.4 $ $Date: 2004/05/09 20:05:59 $
 -->
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -84,8 +84,16 @@
     </xsl:variable>
     <xsp:logic>
        { // sendmail
-         org.apache.cocoon.mail.MailMessageSender _sendmail_mms =
-           new org.apache.cocoon.mail.MailMessageSender(String.valueOf(<xsl:copy-of select="$smtphost"/>));
+         org.apache.cocoon.mail.MailSender _sendmail_mms = null;
+       	 try {
+	         _sendmail_mms = (org.apache.cocoon.mail.MailSender) this.manager.lookup(org.apache.cocoon.mail.MailSender.ROLE);
+         } catch (org.apache.avalon.framework.component.ComponentException e) {
+         	throw new ProcessingException("Could not setup mail components.", e);
+         }
+
+      <xsl:if test="$smtphost != ''">
+         _sendmail_mms.setSmtpHost(String.valueOf(<xsl:copy-of select="$smtphost"/>));
+      </xsl:if>
 
          _sendmail_mms.setTo(String.valueOf(<xsl:copy-of select="$to"/>));
          _sendmail_mms.setSubject(String.valueOf(<xsl:copy-of select="$subject"/>));
@@ -119,6 +127,7 @@
               </xsl:otherwise>
             </xsl:choose>
          } 
+         this.manager.release((org.apache.avalon.framework.component.Component) _sendmail_mms);
        }// sendmail
     </xsp:logic>
   </xsl:template>
