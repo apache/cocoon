@@ -69,8 +69,6 @@ This product includes software developed by ANTLR Project
 (http://www.antlr.org/)
 
 
-
-
 Portions are Copyright (c) 2001 Tivano Software GmbH
 (http://www.tivano.de). All Rights Reserved.
 
@@ -87,7 +85,8 @@ Portions are Copyright (c) Mort Bay Consulting Pty. Ltd. All rights reserved.
 
 Portions are Copyright (c) Hewlett-Packard Company 2002. All rights reserved.
 
-
+Schematron portions are Copyright (c) 2000,2001 Rick Jelliffe and Academia
+Sinica Computing Center, Taiwan
 
 
 
