@@ -63,6 +63,10 @@
 
   <map:pipelines>
     <map:pipeline>
+      <map:match pattern="">
+        <map:redirect-to uri="welcome"/>
+      </map:match>
+
       <!--
         - Welcome page
         -->
@@ -101,6 +105,13 @@
         -->
       <map:match pattern="*">
         <map:act type="faces"/>
+      </map:match>
+
+      <!--
+        - Auto mount for demos in sub directories
+        -->
+      <map:match pattern="*/**">
+        <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
       </map:match>
 
     </map:pipeline>
