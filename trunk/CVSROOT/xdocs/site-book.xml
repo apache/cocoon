@@ -37,8 +37,7 @@
   <page id="3rdparty" label="3rd Party" source="3rdparty.xml"/>
   <page id="patches" label="Patch Queue" source="patches.xml"/>
 <separator/>
-  <page id="cocoon2" label="Cocoon 2" source="cocoon2.xml"/>
-  <external label="Cocoon 2 Site" href="cocoon2/index.html"/>
+  <external label="Cocoon 2 Site" href="../cocoon2/index.html"/>
 <separator/>
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
