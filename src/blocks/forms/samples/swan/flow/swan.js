@@ -58,10 +58,7 @@ function editor_gui(form, type) {
       "sample_form_2.xml", "sample_form_2_template.xml"
     ];
 
-    if (present(documentURI, allowed_files)) {
-      print("Yeah! " + documentURI);
-    } else {
-      print("Trouble! " + documentURI);
+    if (!present(documentURI, allowed_files)) {
       cocoon.sendPage(type + "-error-pipeline");
       return;
     }
