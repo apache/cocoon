@@ -52,14 +52,12 @@ package org.apache.cocoon.components.modules.input;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -76,15 +74,22 @@ import org.apache.excalibur.source.SourceResolver;
  * </p>
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * 
+ * @avalon.component
+ * @avalon.service type="InputModule"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="properties-file-module"
  */
-public class PropertiesFileModule extends AbstractLogEnabled 
+public class PropertiesFileModule extends AbstractJXPathModule 
 implements InputModule, Serviceable, Configurable, ThreadSafe {
     
     private SourceResolver m_resolver;
     
     private Properties m_properties;
     
-    
+    /**
+     * @avalon.dependency type="SourceResolver"
+     */
     public void service(ServiceManager manager) throws ServiceException {
         m_resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
     }
@@ -96,6 +101,7 @@ implements InputModule, Serviceable, Configurable, ThreadSafe {
      * </p>
      */
     public void configure(Configuration configuration) throws ConfigurationException {
+        super.configure(configuration);
         String file = configuration.getChild("file").getAttribute("src");
         load(file);
     }
@@ -126,22 +132,10 @@ implements InputModule, Serviceable, Configurable, ThreadSafe {
         }
     }
     
-    public Object getAttribute(String name,Configuration modeConf,Map objectModel)
+    protected Object getContextObject(Configuration modeConf, Map objectModel)
         throws ConfigurationException {
         
-        return m_properties.getProperty(name);
+        return m_properties;
     }
-    
-    public Iterator getAttributeNames(Configuration modeConf, Map objectModel)
-        throws ConfigurationException {
-        
-        return m_properties.keySet().iterator();
-    }
-    
-    public Object[] getAttributeValues(String name,Configuration modeConf,Map objectModel)
-        throws ConfigurationException {
-        
-        return new Object[] { getAttribute(name,modeConf,objectModel) };
-    }
-    
+
 }
