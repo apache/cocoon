@@ -602,7 +602,7 @@
      sources in the IncludeTransformer.
    </action>
    <action dev="AG" type="update">
-     Updated commons-lang to 2.0-20041007T2305.
+     Updated commons-lang to 2.0-20041007T2305. Needed for Java 5 compatibility (enum is a keyword).
    </action>
    <action dev="AG" type="update">
      Updated jdt-core to 3.0.1.
