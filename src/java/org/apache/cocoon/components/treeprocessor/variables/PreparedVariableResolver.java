@@ -20,7 +20,11 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.sitemap.PatternException;
@@ -39,7 +43,7 @@ import java.util.Stack;
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
 
-    private ComponentManager manager;
+    private ServiceManager manager;
     private ComponentSelector selector;
     private List tokens;
     private boolean needsMapStack;
@@ -60,7 +64,14 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static Token CLOSE_TOKEN = new Token(CLOSE);
     private static Token EMPTY_TOKEN = new Token(EXPR);
 
+    /**
+     * @deprecated use the version with <code>ServiceManager</service>
+     */
     public PreparedVariableResolver(String expr, ComponentManager manager) throws PatternException {
+        this(expr, new WrapperServiceManager(manager));
+    }
+
+    public PreparedVariableResolver(String expr, ServiceManager manager) throws PatternException {
 
         super(expr);
         this.manager = manager;
@@ -194,8 +205,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         if (this.selector == null) {
             try {
                 // First access to a module : lookup selector
-                this.selector = (ComponentSelector)this.manager.lookup(InputModule.ROLE + "Selector");
-            } catch(ComponentException ce) {
+                this.selector = (ComponentSelector) this.manager.lookup(InputModule.ROLE + "Selector");
+            } catch(ServiceException ce) {
                 throw new PatternException("Cannot access input modules selector", ce);
             }
         }
