@@ -57,42 +57,50 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
      * Set the configurations for this serializer. 
      */
     public void setConfiguration(Configuration conf) throws ConfigurationException {
-		this.config = conf;
-		// First, get a DOM parser for the DOM Builder to work with.
-		super.factory=(Parser)this.manager.getComponent("parser");
-		// What image encoder do I use?
-		String enc = this.config.getConfiguration("encoder").getValue("");
-		if ("".equals(enc)) {
-			throw new ConfigurationException("No Image Encoder specified.", conf);
-		}
-		this.encoder = (ImageEncoder)this.manager.getComponent(enc);
-		// Configure the encoder
-		if (this.encoder instanceof Configurable) {
-			((Configurable)this.encoder).setConfiguration(conf);
-		}
-		// Transparent or a solid colour background?
-		this.transparent = this.config.getConfiguration("transparent").getValueAsBoolean(false);
-		if (!transparent) {
-			String bg = this.config.getConfiguration("background").getValue("#FFFFFF").trim();
-			if (bg.startsWith("#")) {
-				bg = bg.substring(1);
-			}
-			/* 
-			   This line can throw a NumberFormatException - do we:
-			   a) Catch it and set backgroundColor to white
-			   b) Catch it and throw another Exception
-			   c) Let it halt Cocoon by not catching it
-			*/
-			this.backgroundColour = new Color(Integer.parseInt(bg, 16));
-		}
-	}
+        this.config = conf;
+
+        // First, get a DOM parser for the DOM Builder to work with.
+        super.factory= (Parser) this.manager.getComponent("parser");
+
+        // What image encoder do I use?
+        String enc = this.config.getConfiguration("encoder").getValue();
+        if (enc == null) {
+            throw new ConfigurationException("No Image Encoder specified.", conf);
+        }
+        
+        try {
+            this.encoder = (ImageEncoder) this.manager.getComponent(enc);
+        } catch (ComponentNotFoundException e) {
+            throw new ConfigurationException("The ImageEncoder '" 
+                + enc + "' cannot be found. Check your component configuration in the sitemap", conf);
+        }
+        
+        // Configure the encoder
+        if (this.encoder instanceof Configurable) {
+            ((Configurable)this.encoder).setConfiguration(conf);
+        }
+        // Transparent or a solid colour background?
+        this.transparent = this.config.getConfiguration("transparent").getValueAsBoolean(false);
+        if (!transparent) {
+            String bg = this.config.getConfiguration("background").getValue("#FFFFFF").trim();
+            if (bg.startsWith("#")) {
+                bg = bg.substring(1);
+            }
+
+            try {
+                this.backgroundColour = new Color(Integer.parseInt(bg, 16));
+            } catch (NumberFormatException e) {
+                throw new ConfigurationException(bg + " is not a valid color.", conf);
+            }
+        }
+    }
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
     public void setComponentManager(ComponentManager manager) {
-		this.manager = manager;
+        this.manager = manager;
     }
 
     /**
@@ -134,30 +142,30 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
      * Receive notification of a successfully completed DOM tree generation.
      */
     public void notify(Document doc) throws SAXException {
-		try {
-			SVGDocumentImpl svg = new SVGDocumentImpl(doc);
-			SVGSVGElement root = svg.getRootElement();
-			SVGLength width = root.getWidth().getBaseVal();
-			SVGLength height = root.getHeight().getBaseVal();
-			width.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX);
-			height.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX);
-			int w = (int)width.getValue();
-			int h = (int)height.getValue();
-			BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			// Either leave this image transparent, or fill it with a solid colour
-			Graphics2D gra = img.createGraphics();
-			if (!transparent) {
-				gra.setColor(backgroundColour);
-				gra.fillRect(0, 0, w, h);
-			}
-			svg.draw(gra);
-			encoder.encode(img, this.output);
+        try {
+            SVGDocumentImpl svg = new SVGDocumentImpl(doc);
+            SVGSVGElement root = svg.getRootElement();
+            SVGLength width = root.getWidth().getBaseVal();
+            SVGLength height = root.getHeight().getBaseVal();
+            width.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX);
+            height.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX);
+            int w = (int) width.getValue();
+            int h = (int) height.getValue();
+            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+            // Either leave this image transparent, or fill it with a solid colour
+            Graphics2D gra = img.createGraphics();
+            if (!transparent) {
+                gra.setColor(backgroundColour);
+                gra.fillRect(0, 0, w, h);
+            }
+            svg.draw(gra);
+            encoder.encode(img, this.output);
             this.output.flush();
-		} catch (IOException ex) {
+        } catch (IOException ex) {
             throw new SAXException("IOException writing image ", ex);
         }
     }
-	
+    
     /**
      * Return the MIME type.
      */
