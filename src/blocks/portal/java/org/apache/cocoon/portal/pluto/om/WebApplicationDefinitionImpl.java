@@ -45,7 +45,7 @@ import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.6 2004/06/07 13:10:41 cziegeler Exp $
+ * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.7 2004/06/29 12:12:44 cziegeler Exp $
  */
 public class WebApplicationDefinitionImpl 
 implements WebApplicationDefinition, Support {
@@ -236,8 +236,13 @@ implements WebApplicationDefinition, Support {
         return servletMappings;
     }
     
-    protected void setContextRoot(String contextPath) {
-        this.contextPath = contextPath;
+    protected void setContextRoot(String contextRoot) {
+        // PATCH for IBM WebSphere
+        if (contextRoot != null && contextRoot.endsWith(".war") ) {
+            this.contextPath = contextRoot.substring(0, contextRoot.length()-4);
+        } else {
+            this.contextPath = contextRoot;
+        }
     }    
 
     public void setDescriptions(DescriptionSet descriptions) {
