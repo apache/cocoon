@@ -85,6 +85,13 @@
              <!-- the content of this action is only executed in case validation
                   succeeded, thus if the form handling is completed -->
              <map:generate type="serverpages" src="forms/form1_success.xsp"/>
+             <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+               <map:parameter name="contextPath" value="{request:contextPath}"/>
+               <map:parameter name="servletPath" value="{request:servletPath}"/>
+               <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+               <map:parameter name="file" value="forms/form1_success.xsp"/>
+               <map:parameter name="remove" value="{../0}"/>
+             </map:transform>
              <map:serialize/>
            </map:act>
          </map:when>
@@ -132,6 +139,13 @@
              <map:parameter name="attribute-name" value="registrationform"/>
 
              <map:generate type="serverpages" src="forms/registration_success.xsp"/>
+             <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+               <map:parameter name="contextPath" value="{request:contextPath}"/>
+               <map:parameter name="servletPath" value="{request:servletPath}"/>
+               <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+               <map:parameter name="file" value="forms/registration_success.xsp"/>
+               <map:parameter name="remove" value="{../0}"/>
+             </map:transform>
              <map:serialize/>
            </map:act>
          </map:otherwise>
