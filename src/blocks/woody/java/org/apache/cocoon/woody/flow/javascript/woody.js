@@ -54,9 +54,9 @@ defineClass("org.apache.cocoon.woody.flow.javascript.Woody");
 Woody.suicide = new Continuation();
 
 function Form(formDef, attrName) {
-    var formMgr;
-    var resolver;
-    var src;
+    var formMgr = null;
+    var resolver = null;
+    var src = null;
     try {
         formMgr = cocoon.getComponent(Packages.org.apache.cocoon.woody.FormManager.ROLE);
         resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
@@ -172,10 +172,10 @@ Form.prototype.getSubmitId = function() {
 }
 
 function woody(form_function, form_definition, attribute_name) {
-    var args = new Array(arguments.length - 2 + 1);
+    var args = new Array(arguments.length - 3 + 1);
     args[0] = new Form(form_definition, attribute_name);
-    for (var i = 2; i < arguments.length; i++) {
-        args[i-1] = arguments[i];
+    for (var i = 3; i < arguments.length; i++) {
+        args[i-2] = arguments[i];
     }
     this[form_function].apply(this, args);
 }
