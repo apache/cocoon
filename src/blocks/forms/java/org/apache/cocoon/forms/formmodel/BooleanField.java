@@ -23,6 +23,10 @@ import org.apache.cocoon.forms.event.*;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.apache.cocoon.forms.validation.ValidationErrorAware;
+import org.apache.cocoon.forms.validation.ValidationError;
+
+
 
 /**
  * A widget to select a boolean value. Usually rendered as a checkbox.
@@ -35,15 +39,16 @@ import org.xml.sax.SAXException;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.10 2004/05/07 13:42:10 mpo Exp $
+ * @version $Id$
  */
-public class BooleanField extends AbstractWidget implements ValueChangedListenerEnabled {
+public class BooleanField extends AbstractWidget implements ValidationErrorAware, ValueChangedListenerEnabled {
     // FIXME(SW) : should the initial value be false or null ? This would allow
     // event listeners to be triggered at bind time.
     private Boolean value = Boolean.FALSE;
     private final BooleanFieldDefinition definition;
     /** Additional listeners to those defined as part of the widget definition (if any). */
     private ValueChangedListener listener;
+    protected ValidationError validationError;
 
     public BooleanField(BooleanFieldDefinition definition) {
         this.definition = definition;
@@ -54,6 +59,7 @@ public class BooleanField extends AbstractWidget implements ValueChangedListener
     }
 
     public void readFromRequest(FormContext formContext) {
+        validationError = null;
         Object oldValue = value;
         String param = formContext.getRequest().getParameter(getRequestParameterName());
         if (param != null && param.equalsIgnoreCase("true"))
@@ -73,12 +79,33 @@ public class BooleanField extends AbstractWidget implements ValueChangedListener
      */
     public boolean validate() {
         // a boolean field is always valid
-        return true;
+        //return true;
+        return super.validate();
+    }
+
+
+    /**
+     * Returns the validation error, if any. There will always be a validation error in case the
+     * {@link #validate()} method returned false.
+     */
+    public ValidationError getValidationError() {
+        return validationError;
+    }
+
+    /**
+     * Set a validation error on this field. This allows fields to be externally marked as invalid by
+     * application logic.
+     *
+     * @param error the validation error
+     */
+    public void setValidationError(ValidationError error) {
+        this.validationError = error;
     }
 
 
     private static final String BOOLEAN_FIELD_EL = "booleanfield";
     private static final String VALUE_EL = "value";
+    private static final String VALIDATION_MSG_EL = "validation-message";
     
     /**
      * @return "booleanfield"
@@ -93,6 +120,12 @@ public class BooleanField extends AbstractWidget implements ValueChangedListener
         String stringValue = String.valueOf(value != null && value.booleanValue() == true? "true": "false");
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
         contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
+        // validation message element: only present if the value is not valid
+        if (validationError != null) {
+            contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);
+            validationError.generateSaxFragment(contentHandler);
+            contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
+        }
     }
 
     public Object getValue() {

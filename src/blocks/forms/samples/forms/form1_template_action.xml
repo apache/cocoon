@@ -20,9 +20,7 @@
   <title>Sample form</title>
   <content>
     <ft:form-template action="form1" method="POST">
-      <table align="center">
-        <tr>
-          <td>
+      <div style="width: 90%; margin: 10px 50px 50px 50px;">
                       
             <!-- group with tabs. Each of the children of <items> will constitute a tab -->
             <fi:group>
@@ -126,9 +124,7 @@
               </tr>
             </table>
             <input type="submit"/>
-          </td>
-        </tr>
-      </table>
+      </div>
     </ft:form-template>
   </content>
 </page>

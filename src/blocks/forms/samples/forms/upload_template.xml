@@ -14,24 +14,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template">
+<page xmlns:ft="http://apache.org/cocoon/forms/1.0#template"
+      xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
   <title>Upload Sample</title>
   <content>
     <para>
     For this example to work, you must enable uploads in your web.xml file.
     </para>
     <ft:form-template action="#{$continuation/id}.continue" method="POST" enctype="multipart/form-data">
-      <table>
-        <tr>
-          <td valign="top"><ft:widget-label id="user"/></td>
-          <td valign="top"><ft:widget id="user"/></td>
-        </tr>
-        <tr>
-          <td valign="top"><ft:widget-label id="upload"/></td>
-          <td valign="top"><ft:widget id="upload"/></td>
-        </tr>
-      </table>
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
+          <ft:widget id="user"/>
+          <ft:widget id="upload"/>
       <input type="submit"/>
+        </fi:items>
+      </fi:group>
     </ft:form-template>
   </content>
 </page>

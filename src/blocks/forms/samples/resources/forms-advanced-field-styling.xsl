@@ -76,7 +76,10 @@
     <script type="text/javascript">
       var helpWin<xsl:value-of select="$id"/> = forms_createPopupWindow('help<xsl:value-of select="$id"/>');
     </script>
-    <a id="{$id}" name="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;"><img border="0" src="{$resources-uri}/help.gif"/></a>
+    <a id="{$id}" name="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;">
+      <!-- TODO: i18n key for helppopup -->
+      <img src="{$resources-uri}/help.gif" alt="helppopup"/>
+    </a>
   </xsl:template>
 
   <!--+
@@ -86,7 +89,7 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
-    <span class="forms-doubleList" title="{fi:hint}">
+    <div class="forms-doubleList" title="{fi:hint}">
       <table>
         <xsl:if test="fi:styling/fi:available-label|fi:styling/fi:selected-label">
           <tr>
@@ -156,7 +159,7 @@
       <script type="text/javascript">
         var opt<xsl:value-of select="generate-id()"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>', <xsl:value-of select="fi:styling/@submit-on-change = 'true'"/>);
       </script>
-    </span>
+    </div>
   </xsl:template>
 
   <xsl:template match="fi:multivaluefield/fi:styling[@list-type='double-listbox']/@submit-on-change" mode="styling"/>

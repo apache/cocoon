@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * @version $Id: AbstractContainerWidget.java,v 1.12 2004/05/07 16:43:42 mpo Exp $
+ * @version $Id$
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
     
@@ -74,25 +74,20 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
     }
 
     /**
-     * Delegates the validate() down to the contained child-widgets,
-     * and only validates the extra rules on this containment level if all
-     * child-widgets are valid. 
+     * Delegates the <code>validate()</code> down to the contained child-widgets,
+     * and validates the extra rules on this containment level regardless of
+     * children widget's validities.
      * 
-     * When overriding one should call <code>super.validate()</code> as the first 
-     * statement to keep in sync with this behaviour. 
+     * <p>When overriding one should call <code>super.validate()</code> as the first
+     * statement to keep in sync with this behaviour.</p>
      * 
      * @return <code>true</code> only if all contained widgets are valid and the 
      *         extra validation rules on this containment level are ok.
      */
     public boolean validate() {
-        // Validate self only if child widgets are valid
-        //TODO: check if we should not change this to still validating kids first 
-        // BUT also validating the top level
-        if (widgets.validate()) {
-            return super.validate();
-        } else {
-            return false;
-        }
+        // Validate children first, then always validate self. Return combined result.
+        final boolean valid = widgets.validate();
+        return super.validate() && valid;
     }
 
 

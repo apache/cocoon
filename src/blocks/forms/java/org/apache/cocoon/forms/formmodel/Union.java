@@ -24,7 +24,7 @@ import org.apache.cocoon.forms.FormContext;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.11 2004/05/07 16:43:43 mpo Exp $
+ * @version $Id$
  */
 public class Union extends AbstractContainerWidget {
     
@@ -32,6 +32,7 @@ public class Union extends AbstractContainerWidget {
     //      XSLT post-processing, the choice of element-name reflects this.
     private static final String UNION_EL = "field";
     private Widget caseWidget;
+    private String caseValue;
     
     private final UnionDefinition definition;
 
@@ -78,13 +79,24 @@ public class Union extends AbstractContainerWidget {
         
         Widget widget;
         // Read current case from request
-        String value = (String)getValue();
-        if (value != null && !value.equals(""))
-            if ((widget = getChild(value)) != null)
+        String newValue = (String)getValue();
+        if (newValue != null && !newValue.equals("")) {
+            
+            if (getForm().getSubmitWidget() == caseWidget && !newValue.equals(caseValue)) {
+                // If submitted by the case widget and its value has changed, read the values
+                // for the previous case values. This allows to keep any entered values
+                // despite the case change.
+                widget = getChild(caseValue);
+            } else {
+                // Get the corresponding widget (will create it if needed)
+                widget = getChild(newValue);
+            }
+            
+            if (widget != null) {
                 widget.readFromRequest(formContext);
-
-        // Read union discriminant value from request
-        //item.readFromRequest(formContext);
+            }
+        }
+        caseValue = newValue;
     }
 
     // TODO: Simplify this logic.

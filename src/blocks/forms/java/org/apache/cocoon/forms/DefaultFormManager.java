@@ -22,6 +22,9 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -34,6 +37,7 @@ import org.apache.cocoon.forms.formmodel.WidgetDefinitionBuilder;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.apache.cocoon.forms.util.SimpleServiceSelector;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -45,13 +49,24 @@ import org.xml.sax.InputSource;
  */
 public class DefaultFormManager
   extends AbstractLogEnabled
-  implements FormManager, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
+  implements FormManager, Contextualizable, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
 
     protected static final String PREFIX = "CocoonForm:";
     protected ServiceManager manager;
     protected Configuration configuration;
     protected SimpleServiceSelector widgetDefinitionBuilderSelector;
     protected CacheManager cacheManager;
+
+    private Context avalonContext;
+    public void contextualize(Context context) throws ContextException {
+		this.avalonContext = context;
+	}
+
+    /** Temporary internal method, don't rely on it's existence! Needed to access the context from flowscript. */
+    // FIXME (SW). Extending the FOM is needed.
+    public Context getAvalonContext() {
+        return this.avalonContext;
+    }
 
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
@@ -97,6 +112,26 @@ public class DefaultFormManager
         return (Form)formDefinition.createInstance();
     }
 
+    public Form createForm(String uri) throws Exception {
+        SourceResolver sourceResolver = null;
+        Source source = null;
+
+        try {
+            sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+
+            source = sourceResolver.resolveURI(uri);
+            Form form = createForm(source);
+            return form;
+        } finally {
+            if (source != null) {
+                sourceResolver.release(source);
+            }
+            if (sourceResolver != null) {
+                manager.release(sourceResolver);
+            }
+        }
+    }
+
     public Form createForm(Element formElement) throws Exception {
         return (Form)getFormDefinition(formElement).createInstance();
     }
@@ -113,9 +148,9 @@ public class DefaultFormManager
                 InputSource inputSource = new InputSource(source.getInputStream());
                 inputSource.setSystemId(source.getURI());
                 formDocument = DomHelper.parse(inputSource);
-            }
-            catch (Exception exc) {
-                throw new CascadingException("Could not parse form definition from " + source.getURI(), exc);
+            } catch (Exception e) {
+                throw new CascadingException("Could not parse form definition from " +
+                                             source.getURI(), e);
             }
 
             Element formElement = formDocument.getDocumentElement();
@@ -132,6 +167,35 @@ public class DefaultFormManager
 
         FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
         return (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
+    }
+
+    public FormDefinition createFormDefinition(String uri) throws Exception {
+        SourceResolver sourceResolver = null;
+        Source source = null;
+        Document formDocument = null;
+
+        try {
+            sourceResolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+            source = sourceResolver.resolveURI(uri);
+
+            try {
+                InputSource inputSource = new InputSource(source.getInputStream());
+                inputSource.setSystemId(source.getURI());
+                formDocument = DomHelper.parse(inputSource);
+            } catch (Exception e) {
+                throw new CascadingException("Could not parse form definition from " +
+                                             source.getURI(), e);
+            }
+
+        } finally {
+            if (source != null)
+                sourceResolver.release(source);
+            if (sourceResolver != null)
+                manager.release(sourceResolver);
+        }
+
+        Element formElement = formDocument.getDocumentElement();
+        return getFormDefinition(formElement);
     }
 
     /**

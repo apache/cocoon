@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.4 2004/04/01 12:59:57 mpo Exp $
+ * @version CVS $Id$
  */
 public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
@@ -108,8 +108,21 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
                     BindingManager.NAMESPACE, "identity");
             JXPathBindingBase[] identityBinding = null;
             if (identityWrapElement != null) {
+                // TODO: we can only handle ValueJXPathBinding at the moment:
+                // http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=107906438632484&w=4
                 identityBinding =
                     assistant.makeChildBindings(identityWrapElement);
+                if (identityBinding != null) {
+                    for (int i = 0; i < identityBinding.length;i++) {
+                        if (!(identityBinding[i] instanceof ValueJXPathBinding)) {
+                            throw new BindingException("Error building repeater binding defined at " +
+                                    DomHelper.getLocation(bindingElm) + ": Only value binding (i.e. fb:value) " +
+                                    "can be used inside fb:identity at the moment. You can read " +
+                                    "http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=107906438632484&w=4" +
+                                    " if you want to know more on this.");
+                        }
+                    }
+                }
             }
 
             RepeaterJXPathBinding repeaterBinding =

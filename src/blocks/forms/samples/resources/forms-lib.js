@@ -17,7 +17,7 @@
  * Runtime JavaScript library for Cocoon forms.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: forms-lib.js,v 1.4 2004/05/11 22:50:25 joerg Exp $
+ * @version CVS $Id$
  */
 
 // Handlers that are to be called in the document's "onload" event
@@ -167,6 +167,10 @@ function forms_createOptionTransfer(id, submitOnChange) {
  * @param state (string, optional) name of the input storing the tabgroup state
  */
 function forms_showTab(tabgroup, idx, length, state) {
+    // Change state value
+    if (state.length > 0) {
+        document.forms[0][state].value = idx;
+    }
     for (var i = 0; i < length; i++) {
         // Change tab status (selected/unselected)
         var tab = document.getElementById(tabgroup + "_tab_" + i);
@@ -177,10 +181,13 @@ function forms_showTab(tabgroup, idx, length, state) {
         var tabitems = document.getElementById(tabgroup + "_items_" + i);
         if (tabitems != null) {
             tabitems.style.display = (i == idx) ? '' : 'none';
+            // execute event handler if any
+            if (i == idx && window.onTabShownHandlers != null) {
+                var onShowHandler = window.onTabShownHandlers[tabgroup][tabgroup + "_items_" + i];
+                if (onShowHandler != null) {
+                    eval(onShowHandler);
+                }
+            }
         }
-    }
-    // Change state value
-    if (state.length > 0) {
-        document.forms[0][state].value = idx;
     }
 }

@@ -34,39 +34,22 @@
   <content>
     <ft:form-template action="carselector" method="POST">
       <ft:continuation-id/>
-      <table border="1">
-        <tr>
-          <td valign="top"><ft:widget-label id="make"/></td>
-          <td valign="top">
+      <fi:group>
+        <fi:styling layout="columns"/>
+        <fi:items>
             <ft:widget id="make">
               <fi:styling submit-on-change="true"/>
             </ft:widget>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"><ft:widget-label id="type"/></td>
-          <td valign="top">
             <ft:widget id="type">
               <fi:styling submit-on-change="true"/>
             </ft:widget>
-          </td>
-        </tr>
-        <tr>
-          <td valign="top"><ft:widget-label id="model"/></td>
-          <td valign="top">
             <ft:widget id="model">
               <fi:styling submit-on-change="true"/>
             </ft:widget>
-          </td>
-        </tr>
-      </table>
-
-      <br/>
       <ft:widget id="message"/>
-      <br/>
-      <br/>
-      
       <input type="submit" value="Buy it!"/>
+        </fi:items>
+      </fi:group>
     </ft:form-template>
   </content>
 </page>

@@ -33,8 +33,6 @@
             // Get the corresponding type list
             typewidget.setSelectionList("cocoon:/cars/" + value);
           } else {
-            // Reset the value (will clear validation error)
-            event.source.setValue(null);
             // Set an empty selection list
             typewidget.setSelectionList(new Packages.org.apache.cocoon.forms.datatype.EmptySelectionList("Select a maker first"));
           }
@@ -74,8 +72,6 @@
           if (value != null) {
             modelwidget.setSelectionList("cocoon:/cars/" + makewidget.value + "/" + value);
           } else {
-            // Reset the value (will clear validation error)
-            event.source.setValue(null);
             // Set an empty selection list
             modelwidget.setSelectionList(new Packages.org.apache.cocoon.forms.datatype.EmptySelectionList("Select a type first"));
           }

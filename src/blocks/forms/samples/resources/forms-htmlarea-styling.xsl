@@ -51,7 +51,7 @@
         <script language="JavaScript"><xsl:value-of select="fi:styling/initFunction"/>('<xsl:value-of select="@id"/>');</script>
       </xsl:when>
       <xsl:otherwise>
-        <script language="JavaScript">HTMLArea.replace('<xsl:value-of select="@id"/>');</script>        
+        <script type="text/javascript">HTMLArea.replace('<xsl:value-of select="@id"/>');</script>        
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

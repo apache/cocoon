@@ -49,7 +49,7 @@ import org.outerj.expression.ExpressionException;
  * gives result of the correct type, and split regular expression can split string representation
  * into parts which can be converted to the values of nested fields.
  *
- * @version CVS $Id: AggregateField.java,v 1.10 2004/05/07 16:43:43 mpo Exp $
+ * @version CVS $Id$
  */
 public class AggregateField extends Field implements ContainerWidget {
 
@@ -73,8 +73,9 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public void addChild(Widget widget) {
-    	if (!(widget instanceof Field)) 
+    	if (!(widget instanceof Field)) {
             throw new IllegalArgumentException("AggregateField can only contain fields.");
+        }
         addField((Field)widget);
     }   
     
@@ -98,18 +99,19 @@ public class AggregateField extends Field implements ContainerWidget {
         if (newEnteredValue != null) {
             // There is one aggregated entered value. Read it and split it.
             super.readFromRequest(formContext);
-            if (needsParse) {
+            if (this.valueState == VALUE_UNPARSED) {
                 setFieldsValues(enteredValue);
             }
         } else {
             // Check if there are multiple splitted values. Read them and aggregate them.
-            boolean needsParse = false;
             for (Iterator i = fields.iterator(); i.hasNext();) {
                 Field field = (Field)i.next();
                 field.readFromRequest(formContext);
-                needsParse |= field.needsParse;
+                if (field.valueState == VALUE_UNPARSED) {
+                    this.valueState = VALUE_UNPARSED;
             }
-            if (needsParse) {
+            }
+            if (this.valueState == VALUE_UNPARSED) {
                 combineFields();
             }
         }
@@ -117,7 +119,7 @@ public class AggregateField extends Field implements ContainerWidget {
 
     public void setValue(Object newValue) {
         super.setValue(newValue);
-        if (needsValidate) {
+        if (this.valueState == VALUE_PARSED) {
             setFieldsValues(enteredValue);
         }
     }
@@ -185,7 +187,7 @@ public class AggregateField extends Field implements ContainerWidget {
     }
 
     public boolean validate() {
-        if ((enteredValue != null) != fieldsHaveValues()) {
+        if (enteredValue != null && !fieldsHaveValues()) {
             XMLizable failMessage = getAggregateFieldDefinition().getSplitFailMessage();
             if (failMessage != null) {
                 validationError = new ValidationError(failMessage);
@@ -194,16 +196,22 @@ public class AggregateField extends Field implements ContainerWidget {
                                                                       new String[] { getAggregateFieldDefinition().getSplitRegexp() },
                                                                       Constants.I18N_CATALOGUE));
             }
+            valueState = VALUE_DISPLAY_VALIDATION;
             return false;
         }
 
-        // validate my child fields
+        // Validate ALL my child fields
+        boolean valid = true;
         for (Iterator i = fields.iterator(); i.hasNext();) {
             Field field = (Field)i.next();
             if (!field.validate()) {
                 validationError = field.getValidationError();
-                return false;
+                valid = false;
             }
+        }
+        if (!valid) {
+            valueState = VALUE_DISPLAY_VALIDATION;
+                return false;
         }
 
         return super.validate();

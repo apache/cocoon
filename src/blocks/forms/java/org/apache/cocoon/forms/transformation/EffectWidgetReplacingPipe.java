@@ -66,7 +66,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
      * Form location attribute on <code>ft:form-template</code> element, containing
      * JXPath expression which should result in Form object.
      *
-     * @see FormsPipelineConfig#findForm
+     * @see FormsPipelineConfig#findForm(String)
      */
     private static final String LOCATION = "location";
 
