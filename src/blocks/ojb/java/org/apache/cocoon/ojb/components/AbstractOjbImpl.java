@@ -29,11 +29,12 @@ import org.apache.avalon.framework.service.Serviceable;
  * the OJB Configuration
  *
  * @author giacomo
- * @version $Id: AbstractOjbImpl.java,v 1.2 2004/03/05 13:02:01 bdelacretaz Exp $
+ * @version $Id$
  */
 public class AbstractOjbImpl
     extends AbstractLogEnabled
     implements Initializable, Disposable, Serviceable {
+    
     /** The <code>ServiceManager</code> instance */
     protected ServiceManager manager;
 

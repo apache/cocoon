@@ -34,10 +34,11 @@ import org.apache.ojb.broker.metadata.JdbcConnectionDescriptor;
  * Component defined in the Cocoon configuration.
  *
  * @author giacomo at apache.org
- * @version $Id: ConnectionFactoryAvalonDataSource.java,v 1.3 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version $Id$
  */
 public class ConnectionFactoryAvalonDataSource
     implements ConnectionFactory {
+    
     /** The <code>ServiceManager</code> to be used */
     private static ServiceManager manager;
 
