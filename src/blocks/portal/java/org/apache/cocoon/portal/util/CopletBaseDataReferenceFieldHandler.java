@@ -58,14 +58,13 @@ import org.apache.cocoon.portal.coplet.CopletData;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.5 2004/01/08 13:33:52 cziegeler Exp $
  */
 public class CopletBaseDataReferenceFieldHandler
     extends ReferenceFieldHandler {
 
     public Object getValue(Object object) {
-        CopletBaseData copletBaseData =
-            ((CopletData) object).getCopletBaseData();
+        CopletBaseData copletBaseData = ((CopletData) object).getCopletBaseData();
         if (copletBaseData != null) {
             return copletBaseData.getId();
         } else {
@@ -82,11 +81,11 @@ public class CopletBaseDataReferenceFieldHandler
     }
 
     public void setValue(Object object, Object value) {
-        CopletBaseData copletBaseData =
-            (CopletBaseData) getObjectMap().get(value);
-        if (copletBaseData == null)
+        CopletBaseData copletBaseData = (CopletBaseData) getObjectMap().get(value);
+        if (copletBaseData == null) {
             throw new IllegalArgumentException(
                 "Referenced Coplet Base Data " + value + " does not exist.");
+        }
         ((CopletData) object).setCopletBaseData(copletBaseData);
     }
 }

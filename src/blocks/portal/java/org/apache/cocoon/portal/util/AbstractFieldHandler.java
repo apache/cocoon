@@ -54,7 +54,7 @@ package org.apache.cocoon.portal.util;
  * Base field handler implementation
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractFieldHandler.java,v 1.1 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: AbstractFieldHandler.java,v 1.2 2004/01/08 13:33:52 cziegeler Exp $
  */
 public abstract class AbstractFieldHandler 
     extends org.exolab.castor.mapping.AbstractFieldHandler {
@@ -62,11 +62,10 @@ public abstract class AbstractFieldHandler
     /* (non-Javadoc)
      * @see org.exolab.castor.mapping.ExtendedFieldHandler#newInstance(java.lang.Object, java.lang.Object[])
      */
-    public Object newInstance(Object arg0, Object[] arg1)
-    throws IllegalStateException {
+    public Object newInstance(Object arg0, Object[] arg1) {
         if ( arg1 == null ) {
             return this.newInstance(arg0);
         }
-        throw new IllegalStateException("Construction is not supported.");
+        throw new IllegalStateException("Constructor is not supported.");
     }
 }

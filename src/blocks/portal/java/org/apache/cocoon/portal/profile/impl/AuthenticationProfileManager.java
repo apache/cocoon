@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.13 2003/12/10 17:02:04 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.14 2004/01/08 13:33:53 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -356,6 +356,9 @@ public class AuthenticationProfileManager
 			}
 
 			return new Object[]{object, Boolean.TRUE};
+        } catch (Exception t) {
+            this.getLogger().error("Error loading profile.", t);
+            throw t;
 		} finally {
 			this.manager.release(adapter);
 		}
