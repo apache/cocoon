@@ -50,25 +50,34 @@
 */
 package org.apache.cocoon.xml.dom;
 
-import org.apache.cocoon.xml.AbstractXMLProducer;
-import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.XMLProducer;
-import org.apache.cocoon.xml.EmbeddedXMLPipe;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.ext.LexicalHandler;
-import org.w3c.dom.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
+import javax.xml.transform.sax.SAXResult;
+
+import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.cocoon.xml.EmbeddedXMLPipe;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLProducer;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.ProcessingInstruction;
+import org.w3c.dom.Text;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * The <code>DOMStreamer</code> is a utility class that will generate SAX
@@ -86,7 +95,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.12 2003/10/15 16:10:29 bruno Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.13 2003/11/22 05:02:59 vgritsenko Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -158,6 +167,7 @@ public class DOMStreamer implements XMLProducer {
         defaultDOMStreamer.setContentHandler(handler);
         namespaceNormalizingDOMStreamer.setContentHandler(handler);
     }
+
     /**
      * Set the <code>LexicalHandler</code> that will receive XML data.
      */
@@ -170,10 +180,11 @@ public class DOMStreamer implements XMLProducer {
      * Start the production of SAX events.
      */
     public void stream(Node node) throws SAXException {
-        if (normalizeNamespaces)
+        if (normalizeNamespaces) {
             namespaceNormalizingDOMStreamer.stream(node);
-        else
+        } else {
             defaultDOMStreamer.stream(node);
+        }
     }
 
     public boolean isNormalizeNamespaces() {
@@ -248,20 +259,18 @@ public class DOMStreamer implements XMLProducer {
             }
 
             Node top = pos;
-
             while (null != pos) {
                 startNode(pos);
 
                 Node nextNode = pos.getFirstChild();
-
                 while (null == nextNode) {
                     endNode(pos);
 
-                    if (top.equals(pos))
+                    if (top.equals(pos)) {
                         break;
+                    }
 
                     nextNode = pos.getNextSibling();
-
                     if (null == nextNode) {
                         pos = pos.getParentNode();
 
@@ -733,10 +742,10 @@ public class DOMStreamer implements XMLProducer {
             ContentHandler handler;
             if (node.getNodeType() == Node.DOCUMENT_NODE) {
                 // Pass all SAX events
-            handler = contentHandler;
+                handler = contentHandler;
             } else {
                 // Strip start/endDocument
-            handler = new EmbeddedXMLPipe(contentHandler);
+                handler = new EmbeddedXMLPipe(contentHandler);
             }
 
             SAXResult result = new SAXResult(handler);
