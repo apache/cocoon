@@ -93,8 +93,7 @@ public class CacheEventAction extends ComposerAction implements ThreadSafe {
         Cache cache = (Cache)this.manager.lookup(Cache.ROLE);
         if (cache instanceof EventAwareCacheImpl) {
             Request request = ObjectModelHelper.getRequest(objectModel);
-            String eventParam = par.getParameter("event");
-            String eventName = request.getParameter(eventParam);
+            String eventName = par.getParameter("event");
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Configured for cache event named: " + eventName);
             }
