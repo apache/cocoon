@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.24 2001-02-27 19:41:59 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.25 2001-03-03 16:08:38 prussell Exp $
 -->
 
 <changes title="History of Changes">
@@ -18,10 +18,16 @@
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Paul Russell" email="prussell@apache.org" id="PR"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="PR" type="add">
+    Added support for SAXConnectors. This is the first stage in the
+    implementation of content aggregation. SAXConnectors could also
+    be used for profiling and pipeline logging.
+  </action>
   <action dev="BL" type="add">
     Added form to database Actions.  Using these Actions, you can quickly
     generate a webapp that functions in _very_ little time.
