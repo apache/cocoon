@@ -2,7 +2,7 @@
 rem ----------------------------------------------------------------------------
 rem build.bat - Win32 Build Script for Apache Cocoon
 rem
-rem $Id: build.bat,v 1.1 2003/03/09 00:01:32 pier Exp $
+rem $Id: build.bat,v 1.2 2003/04/29 17:43:30 vgritsenko Exp $
 rem ----------------------------------------------------------------------------
 
 rem ----- Copy Xalan and Xerces for the build system    ------------------------
@@ -20,6 +20,10 @@ if not exist "tools\lib\xml-api*.jar" copy lib\optional\xml-api*.jar tools\lib
 if not exist "tools\lib\xml-api*.jar" copy lib\core\xml-api*.jar tools\lib
 
 rem ----- Verify and Set Required Environment Variables ------------------------
+
+rem ----- Ignore system CLASSPATH variable
+set OLD_CLASSPATH=%CLASSPATH%
+set CLASSPATH=
 
 rem ----- Use Java in JAVA_HOME if JAVA_HOME is set.
 set OLD_PATH=%PATH%
@@ -41,3 +45,7 @@ set OLD_ANT_HOME=
 rem ----- Restore PATH
 set PATH=%OLD_PATH%
 set OLD_PATH=
+
+rem ----- Restore CLASSPATH
+set CLASSPATH=%OLD_CLASSPATH%
+set OLD_CLASSPATH=
