@@ -199,6 +199,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="SW" type="fix">
+     The CocoonBean now creates its own private logger hierarchy, thus avoiding to pollute the CocoonServlet
+     hierarchy when called in that context (e.g. when generating a static site from a CMS)
+   </action>
+
    <action dev="GP" type="add">
      Added replacement for Excalibur Event package in org.apache.cocoon.components.thread and migrated most 
      classes using their own threads to that package
