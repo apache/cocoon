@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,24 +23,29 @@ import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
 
 /**
- * Builds a <code>&lt;wd:repeater-action/></code>
- * <p>
- * Two actions are defined :
+ * Builds a <code>&lt;fd:repeater-action/&gt;</code>
+ *
+ * <p>Two actions are defined:
  * <ul>
- * <li><code>&lt;wd:repeater-action id="add" action-command="add-row" repeater="repeater-id"/></code> :
- *   when activated, adds a row to the sibling repeater named "repeater-id".
+ * <li>
+ *   <code>&lt;fd:repeater-action id="add" action-command="add-row"
+ *   repeater="repeater-id"/&gt;</code>: when activated, adds a row to the
+ *   sibling repeater named "repeater-id".
  * </li>
- * <li><code>&lt;wd:repeater-action id="rm" action-command="delete-rows" repeater="repeater-id"
- *   select="select-id"/></code> : removes the selected rows from the sibling repeater named "repeater-id".
- *   The selected rows are identified by the boolean field "select-id" present in each row.
+ * <li>
+ *   <code>&lt;fd:repeater-action id="rm" action-command="delete-rows"
+ *   repeater="repeater-id" select="select-id"/&gt;</code>: removes the
+ *   selected rows from the sibling repeater named "repeater-id". The
+ *   selected rows are identified by the boolean field "select-id" present
+ *   in each row.
  * </ul>
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version CVS $Id$
  */
 public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
-    
-    
+
+
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
         RepeaterActionDefinition definition = createDefinition(widgetElement, actionCommand);
@@ -64,9 +69,9 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
 
         return definition;
     }
-    
+
     protected RepeaterActionDefinition createDefinition(Element element, String actionCommand) throws Exception {
-        
+
         if ("delete-rows".equals(actionCommand)) {
             String repeater = DomHelper.getAttribute(element, "repeater");
             String select = DomHelper.getAttribute(element, "select");
@@ -75,7 +80,7 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
         } else if ("add-row".equals(actionCommand)) {
             String repeater = DomHelper.getAttribute(element, "repeater");
             return new AddRowActionDefinition(repeater);
-            
+
         } else {
             throw new Exception("Unknown repeater action '" + actionCommand + "' at " + DomHelper.getLineLocation(element));
         }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,19 +38,21 @@ import java.util.Locale;
 /**
  * Builds {@link SelectionList}s from an XML description or an URL.
  *
- * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
- * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
- * 
- * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.4 2004/05/06 14:59:44 bruno Exp $
+ * <p>Note: the class {@link DynamicSelectionList} also interprets the same
+ * <code>fd:selection-list</code> XML, so if anything changes here to how
+ * that XML is interpreted, it also needs to change over there and vice
+ * versa.</p>
+ *
+ * @version CVS $Id$
  */
 public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
-    
+
     private ServiceManager serviceManager;
 
     public void service(ServiceManager manager) throws ServiceException {
         this.serviceManager = manager;
     }
-    
+
     public SelectionList build(Element selectionListElement, Datatype datatype) throws Exception {
         SelectionList selectionList;
         String src = selectionListElement.getAttribute("src");
@@ -66,10 +68,10 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
             // selection list is defined inline
             selectionList = buildStaticList(selectionListElement, datatype);
         }
-        
+
         return selectionList;
     }
-   
+
     private  SelectionList buildStaticList(Element selectionListElement, Datatype datatype) throws Exception {
         StaticSelectionList selectionList = new StaticSelectionList(datatype);
         Convertor convertor = null;
@@ -127,8 +129,12 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
             inputSource.setSystemId(source.getURI());
             Document document = DomHelper.parse(inputSource);
             Element selectionListElement = document.getDocumentElement();
-            if (!Constants.DEFINITION_NS.equals(selectionListElement.getNamespaceURI()) || !"selection-list".equals(selectionListElement.getLocalName()))
-                throw new Exception("Excepted a wd:selection-list element at " + DomHelper.getLocation(selectionListElement));
+            if (!Constants.DEFINITION_NS.equals(selectionListElement.getNamespaceURI()) ||
+                    !"selection-list".equals(selectionListElement.getLocalName())) {
+                throw new Exception("Excepted a fd:selection-list element at " +
+                                    DomHelper.getLocation(selectionListElement));
+            }
+
             return selectionListElement;
         } finally {
             if (source != null) {
