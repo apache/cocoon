@@ -106,6 +106,7 @@
                     This is fairly simple as the directory structure of the samples is similar to the URLs
                     used to access the samples. These simple rules should help you find out much more about
                     the samples:
+                </p>
                     <ul>
                         <li>If using the standard build configuration, samples are found under the
                             <em>build/webapp/samples</em> directory. That's where you want to look
@@ -123,7 +124,6 @@
                             files, which map incoming requests to pipelines.
                         </li>
                     </ul>
-                </p>
             </s2>
         </s1>
 
