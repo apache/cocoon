@@ -80,6 +80,21 @@
   <message key="history.search.label">Buscar</message>
   <message key="history.title.label">Títulos</message>
   <message key="history.cleared.note">Su historia de búsquedas esta limpia.</message>
+  <message key="history.save.label">!!Save</message>
+  <message key="history.save.hint">!!save this query in your favourites</message>
+  <!-- displaying favourites -->
+  <message key="favourites.page.title">!!Search Favourites</message>
+  <message key="favourites.queries.title">!!Queries</message>
+  <message key="favourites.date.label">!!Date</message>
+  <message key="favourites.query.label">!!Query</message>
+  <message key="favourites.title.label">!!Title</message>
+  <message key="favourites.search.label">!!Search</message>
+  <message key="favourites.search.hint">!!perform a search using this favourite</message>
+  <message key="favourites.delete.label">!!Delete</message>
+  <message key="favourites.delete.hint">!!permanently delete this favourite</message>
+  <message key="cancel.save.note">!!you cancelled your save</message>
+  <message key="history.title.label">!!Title</message>
+  <message key="search.fave.hint">!!one of your favourite searches</message>  
 	<!-- linking -->
   <message key="link.home.hint">Página principal de los ejemplo de haba de consulta</message>
   <message key="link.home.label">Hogar</message>
