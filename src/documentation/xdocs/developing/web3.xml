@@ -82,7 +82,7 @@
 					   <td>@level</td><td>if @trace is <code>true</code> set the trace-level to your prefered value. Please refer to the JCO's documentation about tracing.</td>
                     </tr>
                     <tr>
-								<td>@size</td><td>denotes the pool-size of your sap connection pool. Be aware that this is a hard-limited pool.</td>
+					   <td>@size</td><td>denotes the pool-size of your sap connection pool. Be aware that this is a hard-limited pool.</td>
                     </tr>
 				</table>
 			</s2>
@@ -111,7 +111,7 @@
 
 		<s1 title="Implementing your own RFC's">
 			<p>First of all you have to setup your markup with the right Namespace</p>
-			<source><![CDATA[<page xmlns:rfc="http://efp.cc/Web3-Rfc/2.0">
+			<source><![CDATA[<page xmlns:rfc="http://apache.org/cocoon/Web3-Rfc/1.0">
 	...
 </page>]]></source>
 			<p>After doing so you can enter RFC-mappings with the following syntax. You will see this is a very easy task and you will enjoy
@@ -250,7 +250,7 @@
 				The included example demonstrates a more complex function call. Keep in mind that the correct execution
 				depends on the local customizing settings of the connected SAP System.
 			</p>
-			<source><![CDATA[<page xmlns:rfc="http://efp.cc/Web3-Rfc/1.0">
+			<source><![CDATA[<page xmlns:rfc="http://apache.org/cocoon/Web3-Rfc/1.0">
   <rfc:include name="XXX" streamer="XXX">
     <rfc:import>
       <rfc:structure name="XXX">
@@ -298,7 +298,8 @@
 		</s1>
 		<s1 title="Further questions">
 			<p>
-				Enjoy using Web3. For further questions feel free to contact the author <link href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</link>
+				Enjoy using Web3. For further questions feel free to contact the author 
+				<link href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</link>
 			</p>
 		</s1>
 		<figure src="images/cocoon-built.gif" alt="Built with Apache Cocoon"/>
