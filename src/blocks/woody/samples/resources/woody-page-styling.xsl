@@ -322,12 +322,6 @@
     </tr>
   </xsl:template>
 
-  <xsl:template match="wi:*" mode="label">
-    <label for="{@id}" title="{wi:hint}">
-      <xsl:copy-of select="wi:label/node()"/>
-    </label>
-  </xsl:template>
-
   <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
