@@ -24,6 +24,9 @@
       </filterset>
     </copy>
 
+    <!-- make sure change is detected -->
+    <sleep seconds="1"/>
+
     <httpRequest href="${url}" description="Send original request">
       <match>
         <xpath select="html/body/p[1]" pattern=".*replaceme-abc.*"/>
@@ -42,6 +45,9 @@
 	    <filter token="REPLACEME" value="replaceme-123"/>
       </filterset>
     </copy>
+
+    <!-- make sure change is detected -->
+    <sleep seconds="1"/>
 
     <httpRequest href="${url}" description="Send next request after flowscript was modified">
       <match>
