@@ -151,7 +151,7 @@ new improvements in order to build correctly.
   <target name="init">
     <tstamp/>
     <property name="name" value="Cocoon"/>
-    <property name="version" value="1.6.1"/>
+    <property name="version" value="1.6.2-dev"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="------------------- ${name} ${version} [${year}] ----------------"/>  
