@@ -68,6 +68,7 @@ import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -87,7 +88,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.9 2003/10/29 14:32:43 vgritsenko Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.10 2003/10/31 10:31:28 sylvain Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -395,6 +396,15 @@ public abstract class AbstractProcessingPipeline
                             environment.getObjectModel(),
                             (String)transformerSourceItt.next(),
                             (Parameters)transformerParamItt.next()
+                );
+            }
+
+            if (this.serializer instanceof SitemapModelComponent) {
+                ((SitemapModelComponent)this.serializer).setup(
+                    environment,
+                    environment.getObjectModel(),
+                    this.serializerSource,
+                    this.serializerParam
                 );
             }
 
