@@ -47,39 +47,30 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
- */
-package org.apache.cocoon.portal.layout.impl;
+*/
+package org.apache.cocoon.portal.factory.impl;
 
-import java.lang.reflect.Constructor;
-
-import org.apache.cocoon.portal.layout.LayoutAspectDescription;
-import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable;
+import org.apache.cocoon.portal.factory.Producible;
+import org.apache.cocoon.portal.factory.ProducibleDescription;
 
 
 
 /**
- * A configured layout aspect
+ * This interface marks an object that can be created by a factory.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultLayoutAspectDescription.java,v 1.2 2003/05/19 14:10:12 cziegeler Exp $
+ * @version CVS $Id: AbstractProducible.java,v 1.1 2003/05/20 14:06:42 cziegeler Exp $
  */
-public class DefaultLayoutAspectDescription 
-    implements LayoutAspectDescription {
-
+public abstract class AbstractProducible 
+    extends AbstractAspectalizable 
+    implements Producible {
+    
     protected String name;
-    
-    protected String className;
-    
-    protected String persistence;
 
-    /**
-     * @return
-     */
-    public String getClassName() {
-        return className;
-    }
-
+    transient protected ProducibleDescription description;
+    
     /**
      * @return
      */
@@ -90,46 +81,16 @@ public class DefaultLayoutAspectDescription
     /**
      * @param string
      */
-    public void setClassName(String string) {
-        className = string;
-    }
-
-    /**
-     * @param string
-     */
     public void setName(String string) {
         name = string;
     }
 
     /**
-     * @return
+     * Set the layout description
      */
-    public String getPersistence() {
-        return persistence;
+    public void setDescription(ProducibleDescription description) {
+        this.description = description;
     }
 
-    /**
-     * @param string
-     */
-    public void setPersistence(String string) {
-        persistence = string;
-    }
 
-    /**
-     * Create a new instance
-     */
-    public Object createNewInstance() {
-        // TODO - cache class
-        try {
-            Class clazz = ClassUtils.loadClass(this.className);
-            if ( this.className.startsWith("java.lang.")) {
-                Constructor constructor = clazz.getConstructor(new Class[] {String.class});
-                return constructor.newInstance(new String[] {"0"});
-            } else {
-                return clazz.newInstance();
-            }
-        } catch (Exception ignore) {
-            return null;
-        }
-    }
 }

@@ -48,26 +48,31 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.aspect;
+package org.apache.cocoon.portal.factory;
 
-import java.util.List;
+import org.apache.cocoon.portal.aspect.Aspectalizable;
+
+
 
 /**
- * This interface is able to get a stored aspect
+ * This interface marks an object that can be created by a factory.
+ * 
+ * TODO - perhaps we should add an id here as well
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectDataHandler.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: Producible.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
  */
-public interface AspectDataHandler {
+public interface Producible 
+    extends Aspectalizable {
+    
+    /**
+     * The name given from the factory
+     */
+    String getName();
 
-    Object getAspectData(Aspectalizable owner, String aspectName);
-    
-    void setAspectData(Aspectalizable owner, String aspectName, Object data);
-
-    List getAspectDatas(Aspectalizable owner);
-    
-    boolean isAspectSupported(String aspectName);
-    
+    /**
+     * Set the layout description
+     */
+    void setDescription(ProducibleDescription description);
 }

@@ -50,7 +50,7 @@
  */
 package org.apache.cocoon.portal.layout;
 
-import org.apache.cocoon.portal.aspect.Aspectalizable;
+import org.apache.cocoon.portal.factory.Producible;
 
 
 /**
@@ -58,10 +58,10 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.4 2003/05/19 12:50:59 cziegeler Exp $
+ * @version CVS $Id: Layout.java,v 1.5 2003/05/20 14:06:43 cziegeler Exp $
  */
 public interface Layout 
-    extends Parameters, Aspectalizable {
+    extends Parameters, Producible {
 
     /**
      * Get the name of the {@link Renderer} to draw this layout.
@@ -83,14 +83,6 @@ public interface Layout
      */
     String getId();
 
-    /**
-     * Get the name of the layout.
-     * This is the corresponding name of the configured layout
-     * in the {@link LayoutFactory}. 
-     * @return String the configured layout name
-     */    
-    String getName();
-    
     Item getParent();
 
     void setParent(Item item);

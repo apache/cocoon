@@ -47,27 +47,36 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
+ */
 package org.apache.cocoon.portal.aspect;
 
-import java.util.List;
 
 /**
- * This interface is able to get a stored aspect
+ * A configured aspect for an {@link Aspectalizable} object
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectDataHandler.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: AspectDescription.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
  */
-public interface AspectDataHandler {
+public interface AspectDescription  {
 
-    Object getAspectData(Aspectalizable owner, String aspectName);
-    
-    void setAspectData(Aspectalizable owner, String aspectName, Object data);
+    /**
+     * @return The class name of the data
+     */
+    String getClassName();
 
-    List getAspectDatas(Aspectalizable owner);
+    /**
+     * @return The name of the aspect
+     */
+    String getName();
+
+    /**
+     * @return The name (role) of the store to store the data
+     */
+    String getStoreName();
     
-    boolean isAspectSupported(String aspectName);
-    
+    /**
+     * If the data is not available, create it automatically (or not)
+     */
+    boolean isAutoCreate();
 }

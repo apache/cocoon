@@ -50,9 +50,6 @@
 */
 package org.apache.cocoon.portal.layout;
 
-import java.util.List;
-
-import org.apache.cocoon.portal.aspect.AspectDataHandler;
 
 
 /**
@@ -60,7 +57,7 @@ import org.apache.cocoon.portal.aspect.AspectDataHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.5 2003/05/19 13:16:34 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.6 2003/05/20 14:06:43 cziegeler Exp $
  */
 public abstract class AbstractLayout 
     extends AbstractParameters 
@@ -68,23 +65,18 @@ public abstract class AbstractLayout
     
     protected String rendererName;
     
-    protected String name;
-    
     protected String id;
     
     protected Item parent;
     
     protected boolean _static;
     
-    transient protected AspectDataHandler aspectDataHandler;
-    
     /**
      * @see org.apache.cocoon.portal.layout.Layout#getRendererName()
      */
     public String getRendererName() {
         if ( this.rendererName == null ) {
-            LayoutDescription desc = (LayoutDescription)this.aspectDataHandler.getDescription();
-            return desc.getRendererName();
+            return ((LayoutDescription)this.description).getRendererName();
         }
         return this.rendererName;
     }
@@ -130,40 +122,7 @@ public abstract class AbstractLayout
 		this._static = value;
 
 	}
-    
-    public Object getAspectData(String aspectName) {
-        return this.aspectDataHandler.getAspectData(this, aspectName);
-    }
-    
-    public void setAspectData(String aspectName, Object data) {
-        this.aspectDataHandler.setAspectData(this, aspectName, data);
-    }
-    
-    public List getAspectDatas() {
-        return this.aspectDataHandler.getAspectDatas(this);
-    }
-    
-    /**
-     * This method is invoked once to set the handler
-     */
-    public void setAspectDataHandler(AspectDataHandler handler) {
-        this.aspectDataHandler = handler;
-    }
-    
-    /**
-     * @return the name of the layout
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param string the layout name
-     */
-    public void setName(String string) {
-        name = string;
-    }
-
+      
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Layout#getLayoutRendererName()
      */

@@ -48,26 +48,53 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.aspect;
+package org.apache.cocoon.portal.aspect.impl;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.portal.aspect.AspectDataStore;
+import org.apache.cocoon.portal.aspect.Aspectalizable;
 
 /**
- * This interface is able to get a stored aspect
+ * An aspect data store is a component that manages aspect data objects.
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectDataHandler.java,v 1.4 2003/05/20 14:06:43 cziegeler Exp $
+ * @version CVS $Id: SessionAspectDataStore.java,v 1.1 2003/05/20 14:06:43 cziegeler Exp $
  */
-public interface AspectDataHandler {
+public class SessionAspectDataStore 
+    extends AbstractLogEnabled
+    implements Component, ThreadSafe, AspectDataStore {
+    
+    protected Map getMap(Aspectalizable owner) {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        final Request request = ObjectModelHelper.getRequest( objectModel );
+        Map componentMap = (Map)request.getSession().getAttribute(this.getClass().getName());
+        if ( componentMap == null) {
+            componentMap = new HashMap(3);
+            request.getSession().setAttribute(this.getClass().getName(), componentMap);
+        }
+        Map ownerMap = (Map)componentMap.get( owner );
+        if ( ownerMap == null ) {
+            ownerMap = new HashMap(3);
+            componentMap.put( owner, ownerMap );
+        }
+        return ownerMap;
+    }
+    
+    public Object getAspectData(Aspectalizable owner, String aspectName) {
+        return this.getMap(owner).get( aspectName );
+    }
+    
+    public void setAspectData(Aspectalizable owner, String aspectName, Object data) {
+        this.getMap(owner).put(aspectName, data);
+    }
 
-    Object getAspectData(Aspectalizable owner, String aspectName);
-    
-    void setAspectData(Aspectalizable owner, String aspectName, Object data);
-
-    List getAspectDatas(Aspectalizable owner);
-    
-    boolean isAspectSupported(String aspectName);
-    
 }

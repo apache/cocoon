@@ -2,7 +2,19 @@
 <mapping>
     <description>Portalprofile mapping file</description>
 
-	<class name="org.apache.cocoon.portal.layout.AbstractParameters">
+
+	<class name="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
+    </class>
+
+	<class name="org.apache.cocoon.portal.factory.impl.AbstractProducible"
+	       extends="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
+        <field name="name" type="java.lang.String">
+            <bind-xml name="name" node="attribute" />
+        </field>
+    </class>
+
+	<class name="org.apache.cocoon.portal.layout.AbstractParameters"
+	       extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
         <field name="parameters" type="org.apache.cocoon.portal.layout.impl.Parameter" collection="map">
             <bind-xml auto-naming="deriveByClass" />
         </field>
@@ -12,9 +24,6 @@
            extends="org.apache.cocoon.portal.layout.AbstractParameters">
         <field name="layoutRendererName" type="java.lang.String">
             <bind-xml name="layout-renderer-name" node="attribute" />
-        </field>
-        <field name="name" type="java.lang.String">
-            <bind-xml name="name" node="attribute" />
         </field>
         <field name="static" type="boolean">
             <bind-xml name="static" node="attribute" />

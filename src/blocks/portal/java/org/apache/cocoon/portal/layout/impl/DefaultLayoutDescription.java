@@ -50,11 +50,7 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.cocoon.portal.layout.LayoutAspectDescription;
+import org.apache.cocoon.portal.factory.impl.AbstractProducibleDescription;
 import org.apache.cocoon.portal.layout.LayoutDescription;
 
 
@@ -63,96 +59,14 @@ import org.apache.cocoon.portal.layout.LayoutDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultLayoutDescription.java,v 1.1 2003/05/19 12:50:58 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutDescription.java,v 1.2 2003/05/20 14:06:42 cziegeler Exp $
  */
 public class DefaultLayoutDescription
+    extends AbstractProducibleDescription
     implements LayoutDescription  {
 
-    protected String name;
-    
-    protected String className;
-    
     protected String rendererName;
     
-    protected List aspects = new ArrayList();
-
-    /**
-     * toString
-     * @return
-     */
-    public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("LayoutDescription(").append(super.toString()).append(")\n");
-        buffer.append("    Name=").append(this.name).append('\n');
-        buffer.append("    ClassName=").append(this.className).append('\n');
-        buffer.append("    RendererName=").append(this.rendererName).append('\n');
-        buffer.append("    Aspects=(\n");
-        Iterator i = this.aspects.iterator();
-        while ( i.hasNext() ) {
-            DefaultLayoutAspectDescription d = (DefaultLayoutAspectDescription)i.next();
-            buffer.append("             Aspect(").append(d.toString()).append(")\n");
-            buffer.append("                 Name=").append(d.getName()).append('\n');
-            buffer.append("                 ClassName=").append(d.getClassName()).append('\n');
-            buffer.append("                 Persistence=").append(d.getPersistence()).append('\n');
-        }
-        buffer.append("            )\n");
-        return buffer.toString();
-    }
-    
-    /**
-     * @return
-     */
-    public List getAspects() {
-        return aspects;
-    }
-
-    public void addAspect(LayoutAspectDescription aspect) {
-        this.aspects.add(aspect);
-    }
-    
-    /**
-     * Return the description for an aspect
-     */
-    public LayoutAspectDescription getAspect(String name) {
-        LayoutAspectDescription desc = null;
-        Iterator i = this.aspects.iterator();
-        while (desc == null && i.hasNext() ) {
-            LayoutAspectDescription current = (LayoutAspectDescription)i.next();
-            if ( name.equals(current.getName())) {
-                desc = current;
-            }
-        }
-        return desc;
-    }
-    
-    /**
-     * @return
-     */
-    public String getClassName() {
-        return className;
-    }
-
-    /**
-     * @return
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param string
-     */
-    public void setClassName(String string) {
-        className = string;
-    }
-
-    /**
-     * @param string
-     */
-    public void setName(String string) {
-        name = string;
-    }
-
     /**
      * @return
      */

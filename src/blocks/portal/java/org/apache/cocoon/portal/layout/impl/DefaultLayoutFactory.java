@@ -54,13 +54,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.aspect.AspectDataHandler;
+import org.apache.cocoon.portal.aspect.AspectDataStore;
+import org.apache.cocoon.portal.aspect.impl.DefaultAspectDataHandler;
+import org.apache.cocoon.portal.aspect.impl.DefaultAspectDescription;
 import org.apache.cocoon.portal.layout.*;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
@@ -71,13 +80,17 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.3 2003/05/19 12:50:58 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.4 2003/05/20 14:06:42 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
-    implements ThreadSafe, Component, LayoutFactory, Configurable {
+    implements ThreadSafe, Component, LayoutFactory, Configurable, Disposable, Composable {
 
     protected Map layouts = new HashMap();
+    
+    protected ComponentSelector storeSelector;
+    
+    protected ComponentManager manager;
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
@@ -97,14 +110,15 @@ public class DefaultLayoutFactory
                 final Configuration[] aspectsConf = layoutsConf[i].getChild("aspects").getChildren("aspect");
                 if (aspectsConf != null) {
                     for(int m=0; m < aspectsConf.length; m++) {
-                        DefaultLayoutAspectDescription adesc = new DefaultLayoutAspectDescription();
+                        DefaultAspectDescription adesc = new DefaultAspectDescription();
                         adesc.setClassName(aspectsConf[m].getAttribute("class"));
                         adesc.setName(aspectsConf[m].getAttribute("name"));
-                        adesc.setPersistence(aspectsConf[m].getAttribute("persistence"));
+                        adesc.setPersistence(aspectsConf[m].getAttribute("store"));
+                        adesc.setAutoCreate(aspectsConf[m].getAttributeAsBoolean("auto-create", false));
                         desc.addAspect( adesc );
                     }
                 }
-                LayoutAspectDataHandler handler = new LayoutAspectDataHandler(desc);
+                DefaultAspectDataHandler handler = new DefaultAspectDataHandler(desc, this.storeSelector);
                 this.layouts.put(desc.getName(), new Object[] {desc, handler});
             }
         }
@@ -125,9 +139,8 @@ public class DefaultLayoutFactory
             }
             DefaultLayoutDescription layoutDescription = (DefaultLayoutDescription)o[0];
 
-            // TODO do something here 
-            // we have to set the aspect data handler
-            layout.setAspectDataHandler((LayoutAspectDataHandler)o[1]);
+            layout.setDescription( layoutDescription );
+            layout.setAspectDataHandler((AspectDataHandler)o[1]);
             
             // recursive
             if ( layout instanceof CompositeLayout ) {
@@ -138,6 +151,26 @@ public class DefaultLayoutFactory
                 }
             }
         }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.storeSelector );
+            this.storeSelector = null;
+            this.manager = null;
+        }
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
+        this.storeSelector = (ComponentSelector)this.manager.lookup( AspectDataStore.ROLE+"Selector" );
     }
 
 }
