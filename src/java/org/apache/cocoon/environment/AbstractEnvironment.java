@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.15 2003/07/10 13:17:03 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.16 2003/09/18 14:40:25 vgritsenko Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -97,7 +97,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      /** The Context path */
     protected String context = null;
 
-	/** The context path stored temporarily between constructor and initComponents */
+    /** The context path stored temporarily between constructor and initComponents */
     private String tempInitContext = null;
 
     /** The root context path */
@@ -143,17 +143,17 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         this(uri, view, file.toURL().toExternalForm(), action);
     }
 
-	/**
-	 * Constructs the abstract environment
-	 */
-	public AbstractEnvironment(String uri, String view, String context, String action)
-	throws MalformedURLException {
-		this.uris = uri;
-		this.view = view;
-		this.tempInitContext = context;
-		this.action = action;
-		this.objectModel = new HashMap();
-	}
+    /**
+     * Constructs the abstract environment
+     */
+    public AbstractEnvironment(String uri, String view, String context, String action)
+    throws MalformedURLException {
+        this.uris = uri;
+        this.view = view;
+        this.tempInitContext = context;
+        this.action = action;
+        this.objectModel = new HashMap();
+    }
 
     // Sitemap methods
 
@@ -168,9 +168,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * Get the Root Context
      */
     public String getRootContext() {
-		if ( !this.initializedComponents) {
-			this.initComponents();
-		}
+        if ( !this.initializedComponents) {
+            this.initComponents();
+        }
         return this.rootContext;
     }
 
@@ -178,9 +178,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * Get the current Context
      */
     public String getContext() {
-		if ( !this.initializedComponents) {
-			this.initComponents();
-		}
+        if ( !this.initializedComponents) {
+            this.initComponents();
+        }
         return this.context;
     }
 
@@ -208,27 +208,27 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         this.context = context;
     }
 
-	/**
-	 * Set the context. This is similar to changeContext()
-	 * except that it is absolute.
-	 */
-	public void setContext(String prefix, String uri, String context) {
-		this.setContext(context);
-		this.setURIPrefix(prefix == null ? "" : prefix);
-		this.uris = uri;
-		if (getLogger().isDebugEnabled()) {
-			getLogger().debug("Reset context to " + this.context);
-		}
-	}
+    /**
+     * Set the context. This is similar to changeContext()
+     * except that it is absolute.
+     */
+    public void setContext(String prefix, String uri, String context) {
+        this.setContext(context);
+        this.setURIPrefix(prefix == null ? "" : prefix);
+        this.uris = uri;
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Reset context to " + this.context);
+        }
+    }
 
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */
     public void changeContext(String prefix, String newContext)
     throws IOException {
-		if ( !this.initializedComponents) {
-			this.initComponents();
-		}
+        if ( !this.initializedComponents) {
+            this.initComponents();
+        }
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Changing Cocoon context");
@@ -263,10 +263,10 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             
             org.apache.excalibur.source.Source source = null;
             try {
-            	source = this.sourceResolver.resolveURI(this.context + newContext);
-            	this.context = source.getURI();
+                source = this.sourceResolver.resolveURI(this.context + newContext);
+                this.context = source.getURI();
             } finally {
-            	this.sourceResolver.release(source);
+                this.sourceResolver.release(source);
             }
         } else {
             String sContext;
@@ -290,11 +290,11 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             
             org.apache.excalibur.source.Source source = null;
             try {
-	            source = this.sourceResolver.resolveURI(sContext);
-				this.context = source.getURI();
-			} finally {
-				this.sourceResolver.release(source);
-			}
+                source = this.sourceResolver.resolveURI(sContext);
+                this.context = source.getURI();
+            } finally {
+                this.sourceResolver.release(source);
+            }
         }
 
         if (getLogger().isDebugEnabled()) {
@@ -517,8 +517,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      * Releases a resolved resource
      */
     public void release( final org.apache.excalibur.source.Source source ) {
-        if ( null != source )
+        if ( null != source ) {
             this.sourceResolver.release( source );
+        }
     }
 
     /**
@@ -530,46 +531,44 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         try {
             this.manager = CocoonComponentManager.getSitemapComponentManager();
             this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-			if (this.tempInitContext != null) {
-				org.apache.excalibur.source.Source source = null;
-				try {
-					source = this.sourceResolver.resolveURI(this.tempInitContext);
-					this.context = source.getURI();
-					
-					if (this.rootContext == null) // hack for EnvironmentWrapper
-						this.rootContext = this.context;
-				} finally {
-					this.sourceResolver.release(source);
-				}
-				this.tempInitContext = null;
-			}
+            if (this.tempInitContext != null) {
+                org.apache.excalibur.source.Source source = null;
+                try {
+                    source = this.sourceResolver.resolveURI(this.tempInitContext);
+                    this.context = source.getURI();
+                    
+                    if (this.rootContext == null) // hack for EnvironmentWrapper
+                        this.rootContext = this.context;
+                } finally {
+                    this.sourceResolver.release(source);
+                }
+                this.tempInitContext = null;
+            }
         } catch (ComponentException ce) {
             // this should never happen!
             throw new CascadingRuntimeException("Unable to lookup component.", ce);
-		} catch (IOException ie) {
-			throw new CascadingRuntimeException("Unable to resolve URI: "+this.tempInitContext, ie);
-		}
+        } catch (IOException ie) {
+            throw new CascadingRuntimeException("Unable to resolve URI: "+this.tempInitContext, ie);
+        }
     }
     
-	/**
-	 * Notify that the processing starts.
-	 */
-	public void startingProcessing() {
+    /**
+     * Notify that the processing starts.
+     */
+    public void startingProcessing() {
         // do nothing here
-	}
+    }
 
-	/**
-	 * Notify that the processing is finished
-	 * This can be used to cleanup the environment object
-	 */
-	public void finishingProcessing() {
-		if ( null != this.manager ) {
-			this.manager.release( this.sourceResolver );
-			this.manager = null;
-			this.sourceResolver = null;
-		}
+    /**
+     * Notify that the processing is finished
+     * This can be used to cleanup the environment object
+     */
+    public void finishingProcessing() {
+        if ( null != this.manager ) {
+            this.manager.release( this.sourceResolver );
+            this.manager = null;
+            this.sourceResolver = null;
+        }
         this.initializedComponents = false;
-	}
-
-
+    }
 }
