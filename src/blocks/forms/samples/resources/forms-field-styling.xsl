@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.7 2004/04/21 14:00:03 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.8 2004/04/22 14:27:58 mpo Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -427,7 +427,7 @@
       +-->
   <xsl:template match="fi:form">
     <table border="1">
-      <xsl:for-each select="fi:children/*">
+      <xsl:for-each select="fi:widgets/*">
         <tr>
           <xsl:choose>
             <xsl:when test="self::fi:repeater">
