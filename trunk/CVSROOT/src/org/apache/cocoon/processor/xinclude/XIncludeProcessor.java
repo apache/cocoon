@@ -45,7 +45,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.9 $ $Date: 2000-07-05 03:51:51 $ $Author: balld $
+ * @version CVS $Revision: 1.10 $ $Date: 2000-07-06 18:25:49 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -238,7 +238,7 @@ class XIncludeProcessorWorker {
 			} else {
 				local = new File(Utils.getBasepath(request,context)+href);
 				system_id = local.toString();
-				content = ((URL)local).getContent();
+				content = new FileReader((File)local);
 			}
 			processor.monitored_table.put(monitor_key,"");
 			processor.monitor.watch(monitor_key,local);
