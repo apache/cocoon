@@ -91,7 +91,7 @@ import java.util.Map;
  * Torsten Curdt.
  *
  * @author Ivelin Ivanov <ivelin@apache.org>
- * @version CVS $Id: AbstractXMLFormAction.java,v 1.2 2003/04/26 12:10:43 stephan Exp $
+ * @version CVS $Id: AbstractXMLFormAction.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
  */
 public abstract class AbstractXMLFormAction
   extends ConfigurableComposerAction
@@ -366,7 +366,6 @@ public abstract class AbstractXMLFormAction
      * Subclasses may override this method
      * to use custom validators
      *
-     * @return
      */
     protected Validator getFormValidator() {
         try {
@@ -407,7 +406,6 @@ public abstract class AbstractXMLFormAction
      * Subclasses may override this method
      * to use custom model instantiation technique
      *
-     * @return
      */
     protected Object getFormModel() {
         try {

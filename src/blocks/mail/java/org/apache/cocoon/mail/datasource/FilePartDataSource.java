@@ -56,13 +56,13 @@ import javax.activation.DataSource;
 import org.apache.cocoon.servlet.multipart.Part;
 
 /** The FilePartDataSource class provides an object, that wraps a
- * Cocoon {@link org.apache.cocoon.components.request.multipart.FilePart}
+ * Cocoon {@link Part}
  * object in a DataSource interface.
  * @see javax.activation.DataSource
  *
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: FilePartDataSource.java,v 1.2 2003/07/03 08:00:00 cziegeler Exp $
+ * @version CVS $Id: FilePartDataSource.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
  */
 public class FilePartDataSource implements DataSource {
     private Part part;
@@ -99,7 +99,7 @@ public class FilePartDataSource implements DataSource {
      }
         
     /** Return the content type (mime type) obtained from
-     * {@link org.apache.cocoon.components.request.multipart.FilePart#getMimeType()}.
+     * {@link Part#getMimeType()}.
      * Return <CODE>application/octet-stream</CODE> if <CODE>getMimeType()</CODE>
      * returns <CODE>null</CODE>.
      * @return The content type (mime type) for this <CODE>DataSource</CODE> object.
@@ -116,7 +116,7 @@ public class FilePartDataSource implements DataSource {
     }
     
     /** The InputStream object obtained from
-     * {@link org.apache.cocoon.components.request.multipart.FilePart#getInputStream()}
+     * {@link Part#getInputStream()}
      * object.
      * @throws java.io.IOException if an I/O error occurs.
      * @return The InputStream object for this <CODE>DataSource</CODE> object.
@@ -133,7 +133,7 @@ public class FilePartDataSource implements DataSource {
     
     /** Returns the name for this <CODE>DataSource</CODE> object. This is
      * what is returned by
-     * {@link org.apache.cocoon.components.request.multipart.FilePart#getFileName}.
+     * {@link Part#getFileName}.
      * @return the name for this <CODE>DataSource</CODE> object.
      */    
     public String getName() {

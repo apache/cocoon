@@ -92,7 +92,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.6 2003/06/06 11:33:39 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.7 2003/07/03 08:27:47 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractLogEnabled 
@@ -165,7 +165,7 @@ public class AuthenticationProfileManager
     }
     
     /**
-     * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(Object)
+     * @see ProfileManager#getPortalLayout(String)
      */
     public Layout getPortalLayout(String key) {
         PortalService service = null;
