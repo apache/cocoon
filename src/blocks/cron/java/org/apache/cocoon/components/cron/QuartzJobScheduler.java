@@ -39,7 +39,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.background.BackgroundEnvironment;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -60,7 +59,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.11 2004/03/11 15:38:31 sylvain Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.12 2004/03/11 22:05:12 sylvain Exp $
  *
  * @since 2.1.1
  */
@@ -135,9 +134,6 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
     /** Should we wait for running jobs to terminate on shutdown ? */
     private boolean m_shutdownGraceful;
-
-	/** The Cocoon enviroment in which jobs will operate */
-	private BackgroundEnvironment jobEnvironment;
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#getJobNames()
@@ -315,8 +311,6 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 		} catch (final SchedulerException se) {
 			throw new ConfigurationException("cannot create a quartz scheduler", se);
 		}
-
-		this.jobEnvironment = new BackgroundEnvironment(getLogger(), this.environmentContext, this.manager);
 
 		final Configuration[] triggers = this.config.getChild("triggers").getChildren("trigger");
 		createTriggers(triggers);
@@ -723,7 +717,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.11 2004/03/11 15:38:31 sylvain Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.12 2004/03/11 22:05:12 sylvain Exp $
      */
     private static class ThreadPool extends AbstractLogEnabled implements org.quartz.spi.ThreadPool {
         /** Our executor thread pool */
