@@ -77,7 +77,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:miyabe@jzf.co.jp">MIYABE Tatsuhiko</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.3 2003/05/30 15:12:19 crossley Exp $
+ * @version CVS $Id: JSPEngineImpl.java,v 1.4 2003/05/30 15:31:58 bruno Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -233,7 +233,6 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public Locale getLocale(){ return this.response.getLocale();}
         public PrintWriter getWriter() {
             if (this.output == null) {
-                System.out.println(this.encoding);
                 this.output = new MyServletOutputStream(this.encoding);
             }
             return this.output.getWriter();
@@ -262,7 +261,6 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public void setLocale(java.util.Locale loc) {}
         public ServletOutputStream getOutputStream() {
             if (this.output == null) {
-                System.out.println(this.encoding);
                 this.output = new MyServletOutputStream(this.encoding);
             }
             return this.output;
@@ -314,7 +312,7 @@ public class JSPEngineImpl extends AbstractLogEnabled
             try {
                 this.writer = new PrintWriter(new OutputStreamWriter(output, encoding));
             } catch (UnsupportedEncodingException e) {
-                // This can't be true: JVM must support the encoding.
+                getLogger().error("Unsupported encoding: " + encoding + ", using platform default instead.");
                 this.writer = new PrintWriter(new OutputStreamWriter(output));
             }
         }
