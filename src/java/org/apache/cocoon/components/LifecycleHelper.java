@@ -61,7 +61,6 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -69,8 +68,6 @@ import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.logger.LogKitManager;
-import org.apache.avalon.excalibur.logger.LogKitManageable;
 
 /**
  * Utility class for setting up Avalon components. Similar to Excalibur's
@@ -79,7 +76,7 @@ import org.apache.avalon.excalibur.logger.LogKitManageable;
  * To be moved to Avalon ?
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: LifecycleHelper.java,v 1.5 2003/09/04 15:24:01 mpo Exp $
+ * @version CVS $Id: LifecycleHelper.java,v 1.6 2003/09/10 17:39:39 proyal Exp $
  */
 
 // FIXME : need to handle also LogEnabled.
@@ -109,10 +106,6 @@ public class LifecycleHelper {
      */
     final private RoleManager m_roles;
 
-    /** The LogKitManager for child ComponentSelectors
-     */
-    final private LogKitManager m_logkit;
-
     /**
      * Construct a new <code>LifecycleHelper</code> that can be used repeatedly to
      * setup several components. 
@@ -132,9 +125,8 @@ public class LifecycleHelper {
                             final Context context,
                             final ComponentManager componentManager,
                             final RoleManager roles,
-                            final LogKitManager logkit,
-                            final Configuration configuration) {
-        this(logger, context, null, componentManager, roles, logkit, configuration);
+                           final Configuration configuration) {
+        this(logger, context, null, componentManager, roles, configuration);
     }
 
     /**
@@ -156,9 +148,8 @@ public class LifecycleHelper {
                             final Context context,
                             final ServiceManager serviceManager,
                             final RoleManager roles,
-                            final LogKitManager logkit,
-                            final Configuration configuration) {
-        this(logger, context, serviceManager, null, roles, logkit, configuration);
+                           final Configuration configuration) {
+        this(logger, context, serviceManager, null, roles, configuration);
     }
 
     /**
@@ -182,14 +173,12 @@ public class LifecycleHelper {
                             final ServiceManager serviceManager,
                             final ComponentManager componentManager,
                             final RoleManager roles,
-                            final LogKitManager logkit,
-                            final Configuration configuration) {
+                           final Configuration configuration) {
         m_logger = logger;
         m_context = context;
         m_serviceManager = serviceManager;
         m_componentManager = componentManager;
         m_roles = roles;
-        m_logkit = logkit;
         m_configuration = configuration;
     }
 
@@ -224,7 +213,6 @@ public class LifecycleHelper {
             m_serviceManager,
             m_componentManager,
             m_roles,
-            m_logkit,
             m_configuration,
             initializeAndStart);
     }
@@ -238,8 +226,7 @@ public class LifecycleHelper {
                                          final Context context,
                                          final ComponentManager componentManager,
                                          final RoleManager roles,
-                                         final LogKitManager logkit,
-                                         final Configuration configuration)
+                                        final Configuration configuration)
     throws Exception {
         return setupComponent(
             component,
@@ -247,7 +234,6 @@ public class LifecycleHelper {
             context,
             componentManager,
             roles,
-            logkit,
             configuration,
             true);
     }
@@ -260,8 +246,7 @@ public class LifecycleHelper {
                                          final Context context,
                                          final ServiceManager serviceManager,
                                          final RoleManager roles,
-                                         final LogKitManager logkit,
-                                         final Configuration configuration)
+                                        final Configuration configuration)
     throws Exception {
         return setupComponent(
             component,
@@ -269,7 +254,6 @@ public class LifecycleHelper {
             context,
             serviceManager,
             roles,
-            logkit,
             configuration,
             true);
     }
@@ -283,8 +267,7 @@ public class LifecycleHelper {
                                          final Context context,
                                          final ComponentManager componentManager,
                                          final RoleManager roles,
-                                         final LogKitManager logkit,
-                                         final Configuration configuration,
+                                        final Configuration configuration,
                                          final boolean initializeAndStart)
     throws Exception {
         return setupComponent(
@@ -294,7 +277,6 @@ public class LifecycleHelper {
             null,
             componentManager,
             roles,
-            logkit,
             configuration,
             initializeAndStart);
     }
@@ -307,8 +289,7 @@ public class LifecycleHelper {
                                          final Context context,
                                          final ServiceManager serviceManager,
                                          final RoleManager roles,
-                                         final LogKitManager logkit,
-                                         final Configuration configuration,
+                                        final Configuration configuration,
                                          final boolean initializeAndStart)
     throws Exception {
         return setupComponent(
@@ -318,7 +299,6 @@ public class LifecycleHelper {
             serviceManager,
             null,
             roles,
-            logkit,
             configuration,
             initializeAndStart);
     }
@@ -333,28 +313,11 @@ public class LifecycleHelper {
                                  final ServiceManager serviceManager,
                                  final ComponentManager componentManager,
                                  final RoleManager roles,
-                                 final LogKitManager logkit,
                                  final Configuration configuration,
                                  final boolean initializeAndStart)
     throws Exception {
         if (component instanceof LogEnabled) {
-            Logger usedLogger;
-            if (null == logkit) {
-                usedLogger = logger;
-            } else if (configuration == null) {
-                usedLogger = logger;
-            } else {
-                final String loggerName =
-                    configuration.getAttribute("logger", null);
-                if (null == loggerName) {
-                    // No logger attribute available, using standard logger
-                    usedLogger = logger;
-                } else {
-                    usedLogger = new LogKitLogger(logkit.getLogger(loggerName));
-                }
-            }
-
-            ((LogEnabled) component).enableLogging(usedLogger);
+            ((LogEnabled) component).enableLogging(logger);
         }
 
         if (null != context && component instanceof Contextualizable) {
@@ -371,10 +334,6 @@ public class LifecycleHelper {
         
         if (null != roles && component instanceof RoleManageable) {
             ((RoleManageable) component).setRoleManager(roles);
-        }
-
-        if (null != logkit && component instanceof LogKitManageable) {
-            ((LogKitManageable) component).setLogKitManager(logkit);
         }
 
         if (null != configuration && component instanceof Configurable) {
