@@ -32,7 +32,7 @@ import java.util.Map;
  * extended there.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalInputModule.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class GlobalInputModule 
     extends AbstractLogEnabled
@@ -74,7 +74,6 @@ public final class GlobalInputModule
         }
     }
 
-
     /**
      * Returns an Iterator of String objects containing the names
      * of the attributes available. If no attributes are available,
@@ -95,7 +94,6 @@ public final class GlobalInputModule
             this.manager.release(holder);
         }
     }
-
 
     /**
      * Returns an array of String objects containing all of the values
@@ -119,6 +117,4 @@ public final class GlobalInputModule
         }
         return null;
     }
-
 }
-

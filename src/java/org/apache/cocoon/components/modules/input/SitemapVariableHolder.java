@@ -34,7 +34,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  * sitemap base
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapVariableHolder.java,v 1.6 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
@@ -76,8 +76,7 @@ public final class SitemapVariableHolder
     /**
      * Set the <code>Configuration</code> from a sitemap
      */
-    public void configure(SitemapConfigurationHolder holder)
-    throws ConfigurationException {
+    public void configure(SitemapConfigurationHolder holder) {
         this.holder = holder;
     }
 
@@ -123,6 +122,4 @@ public final class SitemapVariableHolder
             }
         }
     }
-    
 }
-

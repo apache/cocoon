@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.components.modules.input;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -28,7 +27,7 @@ import java.util.Map;
  * object is not found then an exception will be thrown.
  *
  * @author <a href="mailto:danielf@nada.kth.se">Daniel Fagerstrom</a>
- * @version CVS $Id: FlowAttributeModule.java,v 1.1 2004/04/04 09:43:43 gcasper Exp $
+ * @version CVS $Id$
  */
 public class FlowAttributeModule extends AbstractJXPathModule
     implements ThreadSafe {

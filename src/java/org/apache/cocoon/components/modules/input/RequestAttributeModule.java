@@ -38,7 +38,7 @@ import java.util.TreeSet;
  * getAttributeValues. Only one "*" is allowed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestAttributeModule.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RequestAttributeModule extends AbstractInputModule implements ThreadSafe {
 
@@ -55,17 +55,19 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
     }
 
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         return new IteratorHelper(ObjectModelHelper.getRequest(objectModel).getAttributeNames());
     }
 
 
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
-        Request request = ObjectModelHelper.getRequest(objectModel);
+    throws ConfigurationException {
+        final Request request = ObjectModelHelper.getRequest(objectModel);
+        
         String wildcard = (String) this.settings.get("parameter",name);
         if ( modeConf != null ) {
             wildcard = modeConf.getAttribute( "parameter", wildcard );

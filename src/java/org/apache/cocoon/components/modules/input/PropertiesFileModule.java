@@ -43,15 +43,13 @@ import org.apache.excalibur.source.SourceResolver;
 public class PropertiesFileModule extends AbstractJXPathModule 
 implements InputModule, Serviceable, Configurable, ThreadSafe {
     
-    private ServiceManager m_manager;
-    
-    private SourceResolver m_resolver;
-    
+    private ServiceManager m_manager;    
+    private SourceResolver m_resolver;    
     private Properties m_properties;
     
     
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see Serviceable#service(ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
@@ -68,7 +66,8 @@ implements InputModule, Serviceable, Configurable, ThreadSafe {
             this.m_manager = null;
             this.m_resolver = null;
         }
-	}
+    }
+
     /**
      * Configure the location of the properties file:
      * <p>
@@ -89,19 +88,16 @@ implements InputModule, Serviceable, Configurable, ThreadSafe {
             stream = source.getInputStream();
             m_properties = new Properties();
             m_properties.load(stream);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new ConfigurationException("Cannot load properties file " + file);
-        }
-        finally {
+        } finally {
             if (source != null) {
                 m_resolver.release(source);
             }
             if (stream != null) {
                 try {
                     stream.close();
-                }
-                catch (IOException e) {
+                } catch (IOException ignored) {
                 }
             }
         }
@@ -112,5 +108,4 @@ implements InputModule, Serviceable, Configurable, ThreadSafe {
         
         return m_properties;
     }
-
 }
