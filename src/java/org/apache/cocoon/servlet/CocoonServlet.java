@@ -122,7 +122,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.7 2003/05/20 12:38:27 bruno Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.8 2003/06/03 13:25:42 sylvain Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -269,9 +269,12 @@ public class CocoonServlet extends HttpServlet {
 
         super.init(conf);
 
-        final String initClassLoaderParam = conf.getInitParameter("init-classloader");
-        this.initClassLoader = "true".equalsIgnoreCase(initClassLoaderParam) ||
-                               "yes".equalsIgnoreCase(initClassLoaderParam);
+		// Check the init-classloader parameter only if it's not already true.
+		// This is useful for subclasses of this servlet that override the value
+		// initially set by this class (i.e. false).
+		if (!this.initClassLoader) {
+			this.initClassLoader = getInitParameterAsBoolean("init-classloader", false);
+		}
 
         if (this.initClassLoader) {
             // Force context classloader so that JAXP can work correctly
@@ -298,8 +301,8 @@ public class CocoonServlet extends HttpServlet {
 
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
-        final String workDirParam = conf.getInitParameter("work-directory");
-        if ((workDirParam != null) && (!workDirParam.trim().equals(""))) {
+        final String workDirParam = getInitParameter("work-directory");
+        if (workDirParam != null) {
             if (this.servletContextPath == null) {
                 // No context path : consider work-directory as absolute
                 this.workDir = new File(workDirParam);
@@ -361,17 +364,12 @@ public class CocoonServlet extends HttpServlet {
             log.debug("URL for Root: " + this.servletContextURL);
         }
 
-        this.forceLoadParameter = conf.getInitParameter("load-class");
-        if (conf.getInitParameter("load-class") == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("load-class was not set - defaulting to false?");
-            }
-        }
+        this.forceLoadParameter = getInitParameter("load-class", null);
 
-        this.forceSystemProperty = conf.getInitParameter("force-property");
+        this.forceSystemProperty = getInitParameter("force-property", null);
 
         // add work directory
-        if ((workDirParam != null) && (!workDirParam.trim().equals(""))) {
+        if (workDirParam != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Using work-directory " + this.workDir);
             }
@@ -383,7 +381,7 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
         final String uploadDirParam = conf.getInitParameter("upload-directory");
-        if ((uploadDirParam != null) && (!uploadDirParam.trim().equals(""))) {
+        if (uploadDirParam != null) {
             if (this.servletContextPath == null) {
                 this.uploadDir = new File(uploadDirParam);
             } else {
@@ -409,33 +407,12 @@ public class CocoonServlet extends HttpServlet {
         this.uploadDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
 
-        value = conf.getInitParameter("enable-uploads");
-        if (value != null) {
-            this.enableUploads = ("yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value));
-        } else {
-            this.enableUploads = ENABLE_UPLOADS;
-            if (log.isDebugEnabled()) {
-               log.debug("enable-uploads was not set - defaulting to " + this.enableUploads);
-            }
-        }
+        this.enableUploads = getInitParameterAsBoolean("enable-uploads", ENABLE_UPLOADS);
         
-        value = conf.getInitParameter("autosave-uploads");
-        if (value != null) {
-            this.autoSaveUploads = ("yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value));
-        } else {
-            this.autoSaveUploads = SAVE_UPLOADS_TO_DISK;
-            if (log.isDebugEnabled()) {
-               log.debug("autosave-uploads was not set - defaulting to " + this.autoSaveUploads);
-            }
-        }
+        this.autoSaveUploads = getInitParameterAsBoolean("autosave-uploads", SAVE_UPLOADS_TO_DISK);
 
-        String overwriteParam = conf.getInitParameter("overwrite-uploads");
+        String overwriteParam = getInitParameter("overwrite-uploads", "rename");
         // accepted values are deny|allow|rename - rename is default.
-        if (overwriteParam == null) {
-            if (log.isDebugEnabled()) {
-               log.debug("overwrite-uploads was not set - defaulting to rename");
-            }
-        }
         if ("deny".equalsIgnoreCase(overwriteParam)) {
             this.allowOverwrite = false;
             this.silentlyRename = false;
@@ -448,14 +425,10 @@ public class CocoonServlet extends HttpServlet {
            this.silentlyRename = true;
         }
 
-        this.maxUploadSize = MAX_UPLOAD_SIZE;
-        String maxSizeParam = conf.getInitParameter("upload-max-size");
-        if ((maxSizeParam != null) && (!maxSizeParam.trim().equals(""))) {
-            this.maxUploadSize = Integer.parseInt(maxSizeParam);
-        }
+        this.maxUploadSize = getInitParameterAsInteger("upload-max-size", MAX_UPLOAD_SIZE);
 
         String cacheDirParam = conf.getInitParameter("cache-directory");
-        if ((cacheDirParam != null) && (!cacheDirParam.trim().equals(""))) {
+        if (cacheDirParam != null) {
             if (this.servletContextPath == null) {
                 this.cacheDir = new File(cacheDirParam);
             } else {
@@ -490,15 +463,7 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // get allow reload parameter, default is true
-        value = conf.getInitParameter("allow-reload");
-        if (value != null) {
-            this.allowReload = value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true");
-        } else {
-            this.allowReload = ALLOW_RELOAD;
-            if (log.isDebugEnabled()) {
-                log.debug("allow-reload was not set - defaulting to " + ALLOW_RELOAD);
-            }
-        }
+		this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
 
         value = conf.getInitParameter("show-time");
         this.showTime = "yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)
@@ -509,12 +474,8 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        parentComponentManagerClass = conf.getInitParameter("parent-component-manager");
-        if (parentComponentManagerClass == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("parent-component-manager was not set - defaulting to null.");
-            }
-        } else {
+        parentComponentManagerClass = getInitParameter("parent-component-manager", null);
+        if (parentComponentManagerClass != null) {
             int dividerPos = parentComponentManagerClass.indexOf('/');
             if (dividerPos != -1) {
                 parentComponentManagerInitParam = parentComponentManagerClass.substring(dividerPos + 1);
@@ -522,38 +483,12 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        this.containerEncoding = conf.getInitParameter("container-encoding");
-        if (containerEncoding == null) {
-            this.containerEncoding = "ISO-8859-1";
-            if (log.isDebugEnabled()) {
-                log.debug("container-encoding was not set - defaulting to ISO-8859-1.");
-            }
-        }
+        this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
+        this.defaultFormEncoding = getInitParameter("form-encoding","ISO-8859-1");
 
-        this.defaultFormEncoding = conf.getInitParameter("form-encoding");
-        if (defaultFormEncoding == null) {
-            this.defaultFormEncoding = "ISO-8859-1";
-            if (log.isDebugEnabled()) {
-                log.debug("form-encoding was not set - defaulting to ISO-8859-1.");
-            }
-        }
+		this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
-        value = conf.getInitParameter("manage-exceptions");
-        this.manageExceptions = (value == null || value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("true"));
-        if (value == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Parameter manageExceptions was not set - defaulting to true.");
-            }
-        }
-
-        value = conf.getInitParameter("enable-instrumentation");
-        this.enableInstrumentation =
-            "yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value);
-        if (value == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("enable-instrumentation was not set - defaulting to false.");
-            }
-        }
+		this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
 
         this.requestFactory = new RequestFactory(this.autoSaveUploads,
                                                  this.uploadDir,
@@ -790,7 +725,7 @@ public class CocoonServlet extends HttpServlet {
      protected String getExtraClassPath()
      throws ServletException {
          String extraClassPath = this.getInitParameter("extra-classpath");
-         if ((extraClassPath != null) && !extraClassPath.trim().equals("")) {
+         if (extraClassPath != null) {
              StringBuffer sb = new StringBuffer();
              StringTokenizer st = new StringTokenizer(extraClassPath, System.getProperty("path.separator"), false);
              int i = 0;
@@ -849,14 +784,11 @@ public class CocoonServlet extends HttpServlet {
      * file.
      */
     private void initLogger() {
-        String logLevel = getInitParameter("log-level");
-        if (logLevel == null) {
-            logLevel = "INFO";
-        }
+        String logLevel = getInitParameter("log-level", "INFO");
 
         final String accesslogger = getInitParameter("servlet-logger");
 
-        final Priority logPriority = Priority.getPriorityForName(logLevel.trim());
+        final Priority logPriority = Priority.getPriorityForName(logLevel);
 
         final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext);
 
@@ -888,10 +820,7 @@ public class CocoonServlet extends HttpServlet {
             this.logKitManager = logKitManager;
 
             //Configure the logkit management
-            String logkitConfig = getInitParameter("logkit-config");
-            if (logkitConfig == null) {
-                logkitConfig = "/WEB-INF/logkit.xconf";
-            }
+            String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
 
             InputStream is = this.servletContext.getResourceAsStream(logkitConfig);
             if (is == null) is = new FileInputStream(logkitConfig);
@@ -1511,5 +1440,59 @@ public class CocoonServlet extends HttpServlet {
             this.cocoon.dispose();
             this.cocoon = null;
         }
+    }
+    
+    /**
+     * Get an initialisation parameter. The value is trimmed, and null is returned if the trimmed value 
+     * is empty.
+     */
+    public String getInitParameter(String name) {
+    	String result = super.getInitParameter(name);
+    	if (result != null) {
+    		result = result.trim();
+    		if (result.length() == 0) {
+    			result = null;
+    		}
+    	}
+    	
+    	return result;
+    }
+    
+    /** Convenience method to access servlet parameters */
+    protected String getInitParameter(String name, String defaultValue) {
+    	String result = getInitParameter(name);
+    	if (result == null) {
+    		if (log != null && log.isDebugEnabled()) {
+    			log.debug(name + " was not set - defaulting to '" + defaultValue + "'");
+    		}
+    		return defaultValue;
+    	} else {
+    		return result;
+    	}
+    }
+    
+    /** Convenience method to access boolean servlet parameters */
+    protected boolean getInitParameterAsBoolean(String name, boolean defaultValue) {
+    	String value = getInitParameter(name);
+    	if (value == null) {
+			if (log != null && log.isDebugEnabled()) {
+				log.debug(name + " was not set - defaulting to '" + defaultValue + "'");
+			}
+    		return defaultValue;
+    	} else {
+    		return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
+    	}
+    }
+    
+    protected int getInitParameterAsInteger(String name, int defaultValue) {
+    	String value = getInitParameter(name);
+    	if (value == null) {
+			if (log != null && log.isDebugEnabled()) {
+				log.debug(name + " was not set - defaulting to '" + defaultValue + "'");
+			}
+			return defaultValue;
+    	} else {
+    		return Integer.parseInt(value);
+    	}
     }
 }

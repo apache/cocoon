@@ -50,12 +50,20 @@
 */
 package org.apache.cocoon.servlet;
 
-import org.apache.cocoon.components.classloader.RepositoryClassLoader;
-import org.apache.cocoon.util.IOUtils;
-
-import javax.servlet.ServletException;
 import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -66,105 +74,135 @@ import java.net.URL;
  * of it.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.1 2003/03/09 00:09:37 pier Exp $
+ * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.2 2003/06/03 13:25:42 sylvain Exp $
  */
 
-public class ParanoidCocoonServlet extends CocoonServlet {
+public class ParanoidCocoonServlet extends HttpServlet {
 
-    protected RepositoryClassLoader repositoryLoader;
+	/**
+	 * The name of the actual servlet class.
+	 */
+	public static final String SERVLET_CLASS = "org.apache.cocoon.servlet.CocoonServlet";
     
-    public ParanoidCocoonServlet() {
-        super();
-        // Override the parent class classloader
-        this.repositoryLoader = new RepositoryClassLoader(new URL[] {}, this.getClass().getClassLoader());
-        super.classLoader = this.repositoryLoader;
-    }
+	private Servlet servlet;
+    
+	private ClassLoader classloader;
+    
+	public void init(ServletConfig config) throws ServletException {
+		
+		super.init(config);
 
-    /**
-     * This builds the important ClassPath used by this Servlet.  It
-     * does so in a Servlet Engine neutral way.  It uses the
-     * <code>ServletContext</code>'s <code>getRealPath</code> method
-     * to get the Servlet 2.2 identified classes and lib directories.
-     * It iterates through every file in the lib directory and adds
-     * it to the classpath.
-     *
-     * Also, we add the files to the ClassLoader for the Cocoon system.
-     * In order to protect ourselves from skitzofrantic classloaders,
-     * we need to work with a known one.
-     *
-     * @param context  The ServletContext to perform the lookup.
-     *
-     * @throws ServletException
-     */
-     protected String getClassPath()
-     throws ServletException {
+		// Create the classloader in which we will load the servlet
+		this.classloader = getClassLoader(this.getContextDir());
+        
+        // Create the servlet
+		try {
+			Class servletClass = this.classloader.loadClass(SERVLET_CLASS);
+            
+			this.servlet = (Servlet)servletClass.newInstance();
 
-        StringBuffer buildClassPath = new StringBuffer();
-        String classDirPath = getInitParameter("class-dir");
-        String libDirPath = getInitParameter("lib-dir");
-        String classDir;
-        File root;
+		} catch(Exception e) {
+			throw new ServletException("Cannot load servlet " + SERVLET_CLASS, e);
+		}
+        
+		// Always set the context classloader. JAXP uses it to find a ParserFactory,
+		// and thus fails if it's not set to the webapp classloader.
+		Thread.currentThread().setContextClassLoader(this.classloader);
+        
+		// Inlitialize the actual servlet
+		initServlet(servlet);
+        
+	}
+	
+	/**
+	 * Initialize the wrapped servlet. Subclasses (see {@link BootstrapServlet} change the
+	 * <code>ServletConfig</code> given to the servlet.
+	 * 
+	 * @param servlet the servlet to initialize
+	 * @throws ServletException
+	 */
+	protected void initServlet(Servlet servlet) throws ServletException {
+		this.servlet.init(getServletConfig());
+	}
+	
+	/**
+	 * Get the web application context directory.
+	 * 
+	 * @return the context dir
+	 * @throws ServletException
+	 */
+	protected File getContextDir() throws ServletException {
+		String result = getServletContext().getRealPath("/");
+		if (result == null) {
+			throw new ServletException(this.getClass().getName() + " cannot run in an undeployed WAR file");
+		}
+		return new File(result);
+	}
+    
+	/**
+	 * Get the classloader that will be used to create the actual servlet. Its classpath is defined
+	 * by the WEB-INF/classes and WEB-INF/lib directories in the context dir.
+	 */
+	private ClassLoader getClassLoader(File contextDir) throws ServletException {
+		List urlList = new ArrayList();
+        
+		try {
+			File classDir = new File(contextDir + "/WEB-INF/classes");
+			if (classDir.exists()) {
+				if (!classDir.isDirectory()) {
+					throw new ServletException(classDir + " exists but is not a directory");
+				}
+            
+				URL classURL = classDir.toURL();
+				log("Adding class directory " + classURL);
+				urlList.add(classURL);
+                
+			}
+            
+            // List all .jar and .zip
+			File libDir = new File(contextDir + "/WEB-INF/lib");
+			File[] libraries = libDir.listFiles(
+				new FilenameFilter() {
+	                public boolean accept(File dir, String name) {
+	                    return name.endsWith(".zip") || name.endsWith(".jar");
+	                }
+				}
+			);
 
-        if ((classDirPath != null) && !classDirPath.trim().equals("")) {
-            classDir = classDirPath;
-        } else {
-            classDir = this.servletContext.getRealPath("/WEB-INF/classes");
-        }
+			for (int i = 0; i < libraries.length; i++) {
+				URL lib = libraries[i].toURL();
+				log("Adding class library " + lib);
+				urlList.add(lib);
+			}
+		} catch (MalformedURLException mue) {
+			throw new ServletException(mue);
+		}
+        
+		URL[] urls = (URL[])urlList.toArray(new URL[urlList.size()]);
+        
+		return ParanoidClassLoader.newInstance(urls, this.getClass().getClassLoader());
+	}
+    
+	/**
+	 * Service the request by delegating the call to the real servlet
+	 */
+	public void service(ServletRequest request, ServletResponse response)
+	  throws ServletException, IOException {
 
-        if ((libDirPath != null) && !libDirPath.trim().equals("")) {
-            root = new File(libDirPath);
-        } else {
-            root = new File(this.servletContext.getRealPath("/WEB-INF/lib"));
-        }
+		Thread.currentThread().setContextClassLoader(this.classloader);
+		this.servlet.service(request, response);
+	}
+    
+	/**
+	 * Destroy the actual servlet
+	 */
+	public void destroy() {
 
-        addClassLoaderDirectory(classDir);
+		Thread.currentThread().setContextClassLoader(this.classloader);
+		this.servlet.destroy();
 
-        buildClassPath.append(classDir);
-
-        if (root.isDirectory()) {
-            File[] libraries = root.listFiles();
-
-            for (int i = 0; i < libraries.length; i++) {
-            	String fullName = IOUtils.getFullFilename(libraries[i]);
-                buildClassPath.append(File.pathSeparatorChar).append(fullName);
-
-                addClassLoaderDirectory(fullName);
-            }
-        }
-
-        buildClassPath.append(File.pathSeparatorChar)
-                      .append(System.getProperty("java.class.path"));
-
-        buildClassPath.append(File.pathSeparatorChar)
-                      .append(getExtraClassPath());
-
-        return buildClassPath.toString();
-     }
-
-    /**
-     * Adds an URL to the classloader.
-     */
-    protected void addClassLoaderURL(URL url) {
-        try {
-            this.repositoryLoader.addURL(url);
-        } catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Could not add URL" + url, e);
-            }
-        }
-    }
-
-    /**
-     * Adds a directory to the classloader.
-     */
-    protected void addClassLoaderDirectory(String dir) {
-        try {
-            this.repositoryLoader.addDirectory(new File(dir));
-        } catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Could not add directory" + dir, e);
-            }
-        }
-    }
+		super.destroy();
+	}
 }
 
