@@ -24,9 +24,31 @@
         <a href="../">Back</a> - to Cocoon examples main page
       </column>
       <column title="Login">
-        <p class="samplesNote">These Slide examples require Java Transaction
-        API library to be present. Get jta.jar and place it to the lib folder
-        before trying these examples. You will also need enabled uploads in web.xml .
+        <p>
+         These samples examplify an administration application for Slide. The
+         administration functionality is directly built on Slide's internal API.
+         Showing the use of the Slide source and namespace access. A different approach
+         would be to let all communication take place over WebDAV.
+        </p>
+        <p>
+         In order to configure WebDAV access for Slide you can uncomment the example
+         servlet declaration and servlet-mapping in web.xml.
+         You can then connect your favorite WebDAV client to
+         http://localhost:8888/webdav/.
+        </p>
+        <p>
+         By default write privileges are only granted to
+         authenticated users. This means that you would have to configure authentication
+         in order to login and start editing files.<br/>
+         You can find more info on how to do this for both Jetty and Tomcat in the
+         <a href="http://jakarta.apache.org/slide/howto-jaas.html">Slide documentation</a>.
+         <br/>
+         Alternatively you could edit WEB-INF/slide.xconf domain configuration file and
+         grant the desired privileges to the unauthenticated user.
+        </p>
+        <p class="samplesNote">
+         In order to use the upload feature within these samples
+         you will need to set enable-uploads parameter in web.xml to true.
         </p>
         <table border="0" cellspacing="0" cellpadding="2">
           <form action="${request.contextPath}${base}/login.cont" method="post">
