@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xweb xpath="/web-app" 
+      unless="comment()[contains(., 'Xindice XML-RPC Server servlet configuration')]" 
+      insert-after="servlet[last()]">
+
+  <!-- XMLDB Block, Xindice XML-RPC Server servlet configuration -->
+  <servlet>
+    <servlet-name>Xindice</servlet-name>
+    <display-name>Xindice XML-RPC Server</display-name>
+    <servlet-class>org.apache.xindice.server.XindiceServlet</servlet-class>
+
+    <!--
+      - This parameter should point to the Xindice Server configuration
+      - file. Relative paths resolved relative to webapp context root and
+      - must point to the resource within context. Absolute paths
+      - (starting with '/') loaded from the file system.
+      -->
+    <init-param>
+      <param-name>xindice.configuration</param-name>
+      <param-value>WEB-INF/xindice.xml</param-value>
+    </init-param>
+
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+</xweb>
