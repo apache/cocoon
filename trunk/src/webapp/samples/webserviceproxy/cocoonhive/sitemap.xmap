@@ -76,18 +76,18 @@
     <map:pipeline>
      
 	  <map:match pattern="amazon-listMania-resource">
-		<map:generate type="wsproxy" src="http://xml.amazon.com/onca/xml?v=1.0&amp;t=webservices-20&amp;dev-t=D2GNXHNXXYM094&amp;ListManiaSearch=1AU8KSU46JLPD&amp;type=lite&amp;f=xml" label="xml"/>
+		<map:generate type="proxy" src="http://xml.amazon.com/onca/xml?v=1.0&amp;t=webservices-20&amp;dev-t=D2GNXHNXXYM094&amp;ListManiaSearch=1AU8KSU46JLPD&amp;type=lite&amp;f=xml" label="xml"/>
 		<map:transform src="amazon/listMania2xhtml.xsl"/>
 		<map:serialize type="xhtml"/>
 	  </map:match>
 	  <map:match pattern="amazon-bookInfo-resource">
-		<map:generate type="wsproxy" src="http://xml.amazon.com/onca/xml?v=1.0&amp;t=webservices-20&amp;dev-t=D2GNXHNXXYM094&amp;type=heavy&amp;f=xml" label="xml"/>
+		<map:generate type="proxy" src="http://xml.amazon.com/onca/xml?v=1.0&amp;t=webservices-20&amp;dev-t=D2GNXHNXXYM094&amp;type=heavy&amp;f=xml" label="xml"/>
 		<map:transform src="amazon/bookInfo2xhtml.xsl"/>
 		<map:serialize type="xhtml"/>
 	  </map:match>
 
 	  <map:match pattern="openWiki-resource">
-		<map:generate type="wsproxy" src="http://www.openwiki.com/ow.asp?xml=1" label="xml"/>
+		<map:generate type="proxy" src="http://www.openwiki.com/ow.asp?xml=1" label="xml"/>
 		<map:transform type="xalan" src="ow/xsl/ow.xsl"/>
 		<map:serialize type="xml"/>
 	  </map:match>

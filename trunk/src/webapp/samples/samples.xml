@@ -3,16 +3,16 @@
 <samples>
 
   <group name="System Tools And Pages">
-    <sample name="Status Page" href="status">
+    <sample name="Status Page" href="status.html">
     Cocoon status page.
    </sample>
-   <sample name="Clear Cache" href="clearcache">
+   <sample name="Clear Cache" href="clearcache.html">
     Empties the Cocoon cache.
    </sample>
-   <sample name="Clear Persistent Store" href="clearpersistentstore">
+   <sample name="Clear Persistent Store" href="clearpersistentstore.html">
     Empties the Cocoon persistent store.
    </sample>
-   <sample name="Request Page" href="system/request.html">
+   <sample name="Request Page" href="request.html">
     This example shows the usage of the RequestGenerator.
    </sample>
    <sample name="Input Modules" href="modules/">

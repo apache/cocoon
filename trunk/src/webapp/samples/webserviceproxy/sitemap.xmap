@@ -18,7 +18,7 @@
 		<map:pipeline>
 			<!-- Interactive Web Application Syndication  -->
 			<map:match pattern="*">
-				<map:generate type="wsproxy"
+				<map:generate type="proxy"
 					src="http://localhost:8080/cocoon/samples/xmlform/wizard?cocoon-view=xml"
 					label="xml"/>
 				<!-- This line is temporarily hidden, due to problem with the InputModule -->
