@@ -57,6 +57,7 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.MultiSourceValidity;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.TraversableSource;
@@ -132,7 +133,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.6 2003/11/24 22:05:22 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.7 2003/12/08 10:00:02 unico Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -318,6 +319,10 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
     public void generate() throws SAXException, ProcessingException {
         TraversableSource inputSource = null;
         try {
+            Source src = this.resolver.resolveURI(this.source);
+            if (!(src instanceof TraversableSource)) {
+                throw new SourceException(this.source + " is not a traversable source");
+            }
             inputSource = (TraversableSource) this.resolver.resolveURI(this.source);
 
             if (!inputSource.exists()) {
@@ -340,9 +345,6 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         } catch (IOException ioe) {
             throw new ResourceNotFoundException("Could not read collection "
                                                 + this.source, ioe);
-        } catch (ClassCastException ce) {
-            throw new ResourceNotFoundException(this.source
-                                                + " is not a traversable source");
         } finally {
             this.resolver.release(inputSource);
         }
