@@ -51,7 +51,6 @@
 package org.apache.cocoon.components.cron;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -63,7 +62,7 @@ import org.apache.avalon.framework.parameters.Parameters;
  * This component schedules jobs.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: JobScheduler.java,v 1.1 2003/09/03 16:04:02 giacomo Exp $
+ * @version CVS $Id: JobScheduler.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
  *
  * @since 2.1.1
  */

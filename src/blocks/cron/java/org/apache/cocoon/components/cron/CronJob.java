@@ -54,7 +54,8 @@ package org.apache.cocoon.components.cron;
  * This is the interface a class has to implement to enable it to be  scheduled by a JobScheduler
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: CronJob.java,v 1.1 2003/09/03 16:04:02 giacomo Exp $
+ * @version CVS $Id: CronJob.java,v 1.2 2003/09/04 09:03:39 cziegeler Exp $
+ * @since 2.1.1
  */
 public interface CronJob {
     //~ Instance fields ------------------------------------------------------------------------------------------------
