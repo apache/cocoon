@@ -57,7 +57,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Default implementation of the refresher.
  * 
  * @since 2.1.1
- * @version CVS $Id: DelayRefresher.java,v 1.5 2004/04/15 08:05:56 cziegeler Exp $
+ * @version CVS $Id: DelayRefresher.java,v 1.6 2004/04/25 20:01:36 haul Exp $
  */
 public class DelayRefresher extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSafe, Refresher, CronJob {
@@ -201,6 +201,11 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
      */
     public void execute(String name) {
         if (this.changed && this.writeSource != null) {
+        	// TODO when an error occurs during write, we wouldn't try again although the
+        	// list is still dirty. In addition, the access through the Iterator is not
+        	// synchronized -- Collections.synchronizedMap() doesn't suffice here. Thus,
+        	// modifications to the collection of sources while writing them to a file 
+        	// ay result in undeterministic behaviour (quoting the javadocs)
             this.changed = false;
             try {
                 final OutputStream stream = ((ModifiableSource) this.writeSource).getOutputStream();
