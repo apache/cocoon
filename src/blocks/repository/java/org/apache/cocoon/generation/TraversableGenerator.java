@@ -127,7 +127,7 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.2 2003/10/28 14:09:49 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.3 2003/10/28 16:46:52 unico Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -241,22 +241,25 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         String rePattern = null;
         try {
             rePattern = par.getParameter("root", null);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("root pattern: " + rePattern);
+            }
             this.cacheKeyParList.add(rePattern);
             this.rootRE = (rePattern == null) ? null : new RE(rePattern);
 
             rePattern = par.getParameter("include", null);
+            if (this.getLogger().isDebugEnabled()) {
+                this.getLogger().debug("include pattern: " + rePattern);
+            }
             this.cacheKeyParList.add(rePattern);
             this.includeRE = (rePattern == null) ? null : new RE(rePattern);
 
             rePattern = par.getParameter("exclude", null);
-            this.cacheKeyParList.add(rePattern);
-            this.excludeRE = (rePattern == null) ? null : new RE(rePattern);
-
             if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("root pattern: " + rePattern);
-                this.getLogger().debug("include pattern: " + rePattern);
                 this.getLogger().debug("exclude pattern: " + rePattern);
             }
+            this.cacheKeyParList.add(rePattern);
+            this.excludeRE = (rePattern == null) ? null : new RE(rePattern);
             
         } catch (RESyntaxException rese) {
             throw new ProcessingException("Syntax error in regexp pattern '" 
