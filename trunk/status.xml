@@ -4,6 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
+<!-- CVS $Id: status.xml,v 1.62 2003/06/25 07:40:21 upayavira Exp $:-->
 <status>
 
   <developers>
@@ -45,6 +46,7 @@
   <person name="Diana Shannon" email="shannon@apache.org" id="DS"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
   <person name="Jeff Turner" email="jefft@apache.org" id="JT"/>
+  <person name="Upayavira" email="upayavira@apache.org" id="UV"/>
   <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
   <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
   <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
@@ -260,6 +262,9 @@
   <action dev="BRD" type="update" fixes-bug="15312" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
     Dispose the parent Component Manager if it implements Disposable. Happens when the
     Cocoon servlet shuts down or when Cocoon is reloaded.
+  </action>
+  <action dev="UV" type="add">
+    Added support for permanent redirects in &lt;map:redirect-to&gt;
   </action>
  </release>
  <release version="2.1m2" date="May 20 2003">
