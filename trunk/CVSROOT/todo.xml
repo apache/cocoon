@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.42 2000-11-01 20:20:37 greenrd Exp $
+  $Id: todo.xml,v 1.43 2000-11-07 19:58:53 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -36,9 +36,9 @@
  </actions>
 
  <actions priority="medium">
-  <action context="code">
-   Integrate and test Jeremy Quinn's multiline get-nested-content template,
-   especially for use with &lt;xsp:expr&gt;.
+  <action context="code" assigned-to="RDG">
+   Write a LinkEncodingProcessor (useful for cookieless clients e.g. WML)
+   which runs all HTTP links through response.encodeURL.
   </action>
   <action context="docs" assigned-to="RDG">
    Write a full guide to logicsheets, including: (1) What they are and how
@@ -54,10 +54,8 @@
   <action context="code" assigned-to="RDG">
    Fix stylesheet-chaining bug.
   </action>
-  <action context="code" assigned-to="RDG">
-   More meaningful XSLT and filenotfound
-   error reporting for XSP logicsheets
-   (currently just throws a NullPointerException)
+  <action context="code">
+   Add a working version of JQ's multiline string template to util logicsheet.
   </action>
   <action context="docs">
    Cleanup and improve documentation. (in progress.)
@@ -103,6 +101,10 @@
 
  <actions priority="wish">
   <action context="code">
+   Add Jeremy Quinn's multiline get-nested-content template to all relevant
+   logicsheets.
+  </action>
+  <action context="code">
    Automated test suite - maybe build upon samples and JMeter??
   </action>
   <action context="design">
@@ -111,10 +113,14 @@
    in separate methods.)
   </action>
   <action context="code">
-   More logicsheets for common requirements.
+   More powerful request taglib, e.g. list of parameters are read into
+   local variables.
   </action>
-  <action context="docs">
-   Some doc pages look screwy in Netscape - fix it.
+  <action context="code">
+   More logicsheets for common requirements, e.g. upload logicsheet.
+   (see infozone, turbine, etc. for examples;
+    O'Reilly is NOT open source) - but first fix
+   tomcat+apache+cocoon upload bug.
   </action>
  </actions>
 

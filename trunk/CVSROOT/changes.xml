@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.141 2000-11-07 18:31:44 greenrd Exp $ 
+  $Id: changes.xml,v 1.142 2000-11-07 19:58:51 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix">
+   Cocoon will now stop with an error if any namespace-mapped logicsheet
+   is not well-formed or missing, instead of just logging a warning message
+   to the servlet logger and throwing a NPE when the logicsheet is invoked.
+   This aids debugging.
+  </action>
   <action dev="RDG" type="fix">
    Line numbers are now reported in XML parsing errors. On some JDKs it may
    be necessary to put the sax-bugfix.jar before xerces.jar on the CLASSPATH.
