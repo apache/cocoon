@@ -54,7 +54,7 @@
 
   <p>
    In the <code>/bin</code> directory you'll find the <code>cocoon.jar</code>
-   jar package that contains the Cocoon binary files, while the  <code>/lib</code> 
+   jar package that contains the Cocoon binary files, while the <code>/lib</code> 
    directory contains all the libraries required for complete Cocoon operation.
    While these packages may not be the most up-to-date versions, they are
    guaranteed and tested to work properly with Cocoon so, we suggest that you
@@ -309,19 +309,44 @@ AddHandler cocoon xml</source>
    </p>
 
    <note>
-    Tomcat 3.0 has a bug that prevents Cocoon operation, please download
-    a later version.
-   </note>
-   
-   <note>
-    Due to DOM level1 and DOM level2 incompatibilities, make sure that <code>
-    xerces.jar</code> is located <strong>before</strong> <code>xml.jar</code>
-    since Xerces contains DOM2 (which is needed by Cocoon) while ProjectX 
-    contains DOM1 (which will generate runtime exceptions with Cocoon).
+    Make sure that <code>xerces.jar</code> is located <strong>before</strong> 
+    <code>xml.jar</code> otherwise Cocoon won't run. To do this, rename 
+    <code>xml.jar</code> as <code>zxml.jar</code> to be placed later in
+    alphabetical order.
    </note>
   </s2>
 
-  <s2 title="Installing Cocoon on BEA WebLogic">
+<s2 title="Installing Cocoon on New Atlanta's ServletExec 2.2">
+
+<p>After you have obtained all the jar packages you need
+(see the above section), you should add
+them to your <code>Classpath.pref</code> file.
+Then, add this to the <code>servlets.properties</code> file:</p>
+
+<source>servlet.Cocoon.code=org.apache.cocoon.Cocoon
+servlet.Cocoon.initArgs=properties=/web/var/tmp/cocoon/cocoon.properties
+</source>
+
+<p>and this to the <code>rules.properties</code> file:</p>
+
+<source>*.xml=Cocoon</source>
+
+<p>
+to provide the initArgs and extension association for Cocoon.  Once
+the web server is restarted to pick up the new configuration,
+everything should work ok - try accessing the samples contained in the
+distribution to see Cocoon in action or the /Cocoon.xml page for
+Cocoon internal status.
+</p>
+
+<p>
+You could also make these three configuration changes via
+ the servlet/admin GUI interface if you're not into editing files.
+</p>
+
+</s2>
+
+  <s2 title="Installing Cocoon on BEA WebLogic (first recipe)">
    <p>
     After you have obtained all the jar packages you need (see the above
     section), you should add all of them (included the <code>cocoon.jar</code>
@@ -356,38 +381,8 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    </p>
 
   </s2>
-
-<s2 title="Installing Cocoon on New Atlanta's ServletExec 2.2">
-
-<p>After you have obtained all the jar packages you need
-(see the above section), you should add
-them to your <code>Classpath.pref</code> file.
-Then, add this to the <code>servlets.properties</code> file:</p>
-
-<source>servlet.Cocoon.code=org.apache.cocoon.Cocoon
-servlet.Cocoon.initArgs=properties=/web/var/tmp/cocoon/cocoon.properties
-</source>
-
-<p>and this to the <code>rules.properties</code> file:</p>
-
-<source>*.xml=Cocoon</source>
-
-<p>
-to provide the initArgs and extension association for Cocoon.  Once
-the web server is restarted to pick up the new configuration,
-everything should work ok - try accessing the samples contained in the
-distribution to see Cocoon in action or the /Cocoon.xml page for
-Cocoon internal status.
-</p>
-
-<p>
-You could also make these three configuration changes via
- the servlet/admin GUI interface if you're not into editing files.
-</p>
-
-</s2>
-
-<s2 title="Installing Cocoon on BEA WebLogic">
+  
+<s2 title="Installing Cocoon on BEA WebLogic (second recipe)">
  <p>WLS 5.1 implements Servlet 2.2. so it plugs in easily. Here's a quick recipe:</p>
 
  <ul>
@@ -437,6 +432,85 @@ You could also make these three configuration changes via
  </s3>
 
 </s2>
+
+  <s2 title="Installing Cocoon on JRun">
+   <p>
+     To configure JRun, you must set up both JRun and the web server
+     of your choice to work with Cocoon.  We assume that you already
+     have a generic JRun installation that works with your web server.
+   </p>
+   <p>
+     For the JRun portion, you must add all Cocoon jars to the java.classpath
+     in [jrun-home]/jsm-default/properties with something like:
+   </p>
+<source>java.classpath=[previous jrun jars]:[cocoon-home]/lib/xerces.jar:
+[cocoon-home]/lib/stylebook.jar:[cocoon-home]/lib/fop.jar:
+[cocoon-home]/bin/cocoon.jar:[cocoon-home]/lib/xalan.jar:
+[cocoon-home]/lib/turbine-pool.jar</source>
+   <p>
+    Note that all newlines are added for readability and should not
+    actually be in the configuration file.  All jars should be listed
+    upon the same line. 
+   </p>
+
+   <p>
+    Now, modify [jrun-home]/jsm-default/services/jse/properties/rules.properties
+    and add the line:
+   </p>
+
+<source>*.xml=org.apache.cocoon.Cocoon</source>
+
+   <p>
+    In [jrun-home]/jsm-default/services/jse/properties/servlets.properties,
+    add the lines:
+   </p>
+
+<source>servlets.properties:servlet.org.apache.cocoon.Cocoon.code=org.apache.cocoon.Cocoon
+servlets.properties:servlet.org.apache.cocoon.Cocoon.args=properties=[cocoon-home]/conf/cocoon.properties
+servlets.properties:servlet.org.apache.cocoon.Cocoon.preload=false</source>
+
+   <p>
+    And finally, change the defaultdocs line in
+    [jrun-home]/jsm-default/services/jse/properties/files.properties
+    and add "index.xml" so that the line
+    looks something like:
+   </p>
+
+<source>defaultdocs=index.html,index.jsp,index.xml</source>
+
+   <p>
+     Since JRun is web server independent, you must configure JRun and Cocoon to
+     work with your webserver.  Again, we assume that you already have JRun
+     installed and working for your particular webserver.  We give
+     additional instructions only for making Cocoon work.
+   </p>
+
+  <s3 title="Cocoon with JRun and Apache">
+
+   <p>
+    Add the following to [apache path]/conf/httpd.conf
+   </p>
+
+<source>Action cocoon /servlet/org.apache.cocoon.Cocoon
+AddHandler cocoon xml
+Alias /cocoon/ "[cocoon-home]"</source>
+
+   <p>
+    The "Alias" line above is optional; but it will make
+    testing the setup much easier.  To verify that all is working,
+    make sure to test out the XSP demos.  If you get a
+    java.lang.NoSuchMethodError: org.w3c.dom.Node error, try moving
+    the xerces.jar to the front of JRun's java.classpath, restart
+    JRun, and try the XSP again.
+   </p>
+
+  </s3>
+
+  <s3 title="Cocoon with JRun and other web servers (iPlanet, IIS, etc)">
+  <p>Add your sucessful installation method here.  Volunteers welcome!</p>
+  </s3>
+
+  </s2>
 
   <s2 title="Installing Cocoon on other platforms">
    <p>Yet to be written! <em>Volunteers welcome!</em></p>
@@ -629,6 +703,12 @@ You could also make these three configuration changes via
    <td>Windows NT 4.0 SP4</td>
    <td colspan="2">BEA WebLogic Server 5.1 SP3</td>
    <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>RedHat Linux 6.2 (i686)</td>
+   <td>Apache 1.3.12 + mod_ssl 2.6.5</td>
+   <td>JRun 2.3.3</td>
+   <td>Sun JDK 1.2.2 Standard Edition</td>  
   </tr>
   </table>
 

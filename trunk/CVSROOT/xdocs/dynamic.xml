@@ -149,9 +149,9 @@ public class DummyProducer
   process the given servlet request and provide an output stream for reading the
   generated XML document.</p>
   
-  <p>Note that Produce has also another method, <code>getDocument(request)</code>,
+  <p>Note that DummyProducer has also another method, <code>getDocument(request)</code>,
   which is responsible to return directly a DOM tree. In case you need to render
-  you servlet code Cocoon-aware, the above example should tell you what to do.</p>
+  your servlet code Cocoon-aware, the above example should tell you what to do.</p>
   
   <p>Please, look at the shipped producers source code for example
   code and look at the <connect href="guide.xml">user guide</connect> on how to install and

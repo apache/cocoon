@@ -109,6 +109,7 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
     in your own code. To demonstrate this, I'll show an example how I modified
     Ricardo Rocha's excellent example XSQL. this is some of the code that he
     had before:</p>
+    
   <source><![CDATA[
     import java.sql.*;
     import java.util.*;
@@ -146,7 +147,9 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
             for (int j = 0; j &lt; columnCount; j++) {
               String value = resultSet.getString(j + 1);
     
-              Element element = factory.createElement(metaData.getColumnLabel(j + 1).toLowerCase());
+              Element element = factory.createElement(
+               metaData.getColumnLabel(j + 1).toLowerCase()
+              );
               row.appendChild(element);
     
               if (value != null) {
@@ -172,8 +175,8 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
     
     }
     ]]></source>
-    <p>Now this is the code modified (bold text) to use the Turbine
-    conncection pool:</p>
+    <p>Now this is the code modified to use the Turbine conncection pool:</p>
+    
   <source><![CDATA[
     import java.sql.*;
     import java.util.*;
@@ -181,7 +184,8 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
     import DBConnectionManager;
     
     public class XSQL {
-      <strong>static DBBroker pool = DBBroker.getInstance();</strong>  
+        static DBBroker pool = DBBroker.getInstance();       // <---- Pool code!
+        
         public static Element executeQuery(
         String connectionName,
         String statementId,
@@ -191,10 +195,10 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
         throws SQLException
       {
         Connection connection = null;
-        <strong>DBConnection db = null;</strong>    
+        DBConnection db = null;                              // <---- Pool code!
         try {
-          <strong>db = pool.getConnection(connectionName);</strong>
-          <strong>connection = db.getConnection();</strong>
+          db = pool.getConnection(connectionName);           // <---- Pool code!
+          connection = db.getConnection();                   // <---- Pool code!
           Statement statement = connection.createStatement();
           ResultSet resultSet = statement.executeQuery(statementText);
           ResultSetMetaData metaData = resultSet.getMetaData();
@@ -211,7 +215,9 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
             for (int j = 0; j &lt; columnCount; j++) {
               String value = resultSet.getString(j + 1);
     
-              Element element = factory.createElement(metaData.getColumnLabel(j + 1).toLowerCase());
+              Element element = factory.createElement(
+                metaData.getColumnLabel(j + 1).toLowerCase()
+              );
               row.appendChild(element);
     
               if (value != null) {
@@ -230,7 +236,7 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
           throw(new SQLException(statementText));
         } finally {
           if (connection != null) {
-              <strong>pool.releaseConnection(db);</strong>
+            pool.releaseConnection(db);                      // <---- Pool code!
           }
         }
       }
@@ -238,7 +244,7 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
     }
     ]]></source>
     <p>Please see the <link href="http://java.apache.org/turbine/getting_started.html">getting
-    started</link> documentation at the <link href="http://java.apache.org/turbine">Turbine</link>
+    started</link> documentation at the <link href="http://java.apache.org/turbine/">Turbine</link>
     homepage for more information about Turbine.
     </p>
   </s1>

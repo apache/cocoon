@@ -183,7 +183,7 @@ their resumes.  In a word: Cocoon simply rocks!
 
 ]]></source>
 
-  <p>would tell Cocoon to apply the <code>hello.text.xsl</code> stylesheet if the Lynx browser
+  <p>would tell Cocoon to apply the <code>hello-text.xsl</code> stylesheet if the Lynx browser
   is requesting the page. This powerful feature allows you to design your content
   independently and to choose its presentation depending on the capabilities of the browser
   agent.</p>
