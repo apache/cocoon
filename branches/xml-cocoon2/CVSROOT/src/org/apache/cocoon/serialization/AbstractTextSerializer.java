@@ -8,26 +8,33 @@
 
 package org.apache.cocoon.serialization;
 
-import org.apache.xml.serialize.SerializerFactory;
-import org.apache.xml.serialize.Method;
-import org.apache.xml.serialize.OutputFormat;
+import java.util.Properties;
 
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.sax.SAXTransformerFactory;
+
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-12 14:17:39 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-20 21:06:45 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
 
     /**
-     * The <code>OutputFormat</code> used by this serializer.
+     * The trax <code>TransformerFactory</code> used by this serializer.
      */
-    protected OutputFormat format;
+    protected SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
+
+    /**
+     * The <code>Properties</code> used by this serializer.
+     */
+    protected Properties format = new Properties();
 
     /**
      * Set the configurations for this serializer.
@@ -35,75 +42,46 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
     public void configure(Configuration conf)
       throws ConfigurationException {
 
-        Configuration encoding = conf.getChild("encoding");
+        Configuration cdataSectionElements = conf.getChild("cdata-section-elements");
         Configuration dtPublic = conf.getChild("doctype-public");
         Configuration dtSystem = conf.getChild("doctype-system");
+        Configuration encoding = conf.getChild("encoding");
         Configuration indent = conf.getChild("indent");
-        Configuration preserveSpace = conf.getChild("preserve-space");
-        Configuration declaration = conf.getChild("xml-declaration");
-        Configuration lineWidth = conf.getChild("line-width");
+        Configuration mediaType = conf.getChild("media-type");
+        Configuration method = conf.getChild("method");
+        Configuration omitXMLDeclaration = conf.getChild("omit-xml-declaration");
+        Configuration standAlone = conf.getChild("standalone");
+        Configuration version = conf.getChild("version");
 
-        String doctypePublic = null;
-
-        format = new OutputFormat();
-        format.setPreserveSpace(true);
-
-        if (! encoding.getLocation().equals("-")) {
-            try {
-                format.setEncoding(encoding.getValue());
-            } catch (ConfigurationException ce) {
-                getLogger().debug("No value for encoding--but expected", ce);
-            }
+        if (! cdataSectionElements.getLocation().equals("-")) {
+            format.put(OutputKeys.CDATA_SECTION_ELEMENTS,cdataSectionElements.getValue());
         }
-
         if (! dtPublic.getLocation().equals("-")) {
-            try {
-                doctypePublic = dtPublic.getValue();
-            } catch (ConfigurationException ce) {
-                getLogger().debug("No Public Doctype--but expected", ce);
-            }
+            format.put(OutputKeys.DOCTYPE_PUBLIC,dtPublic.getValue());
         }
-
         if (! dtSystem.getLocation().equals("-")) {
-            try {
-                format.setDoctype(doctypePublic, dtSystem.getValue());
-            } catch (ConfigurationException ce) {
-                getLogger().debug("No System Doctype--but expected", ce);
-            }
+            format.put(OutputKeys.DOCTYPE_SYSTEM,dtSystem.getValue());
         }
-
+        if (! encoding.getLocation().equals("-")) {
+            format.put(OutputKeys.ENCODING,encoding.getValue());
+        }
         if (! indent.getLocation().equals("-")) {
-            format.setIndenting(true);
-            try {
-                format.setIndent(indent.getValueAsInt());
-            } catch (ConfigurationException ce) {
-                getLogger().debug("No indent value or invalid value--but expected", ce);
-            }
+            format.put(OutputKeys.INDENT,indent.getValue());
         }
-
-        if (! preserveSpace.getLocation().equals("-")) {
-            try {
-                format.setPreserveSpace(preserveSpace.getValueAsBoolean());
-            } catch (ConfigurationException ce) {
-                getLogger().debug("No preserve-space value--but expected", ce);
-            }
+        if (! mediaType.getLocation().equals("-")) {
+            format.put(OutputKeys.MEDIA_TYPE,mediaType.getValue());
         }
-
-        if (! declaration.getLocation().equals("-")) {
-            try {
-                format.setOmitXMLDeclaration(!declaration.getValueAsBoolean());
-            } catch (ConfigurationException ce) {
-                getLogger().debug("No declaration value or invalid value--but expected", ce);
-            }
+        if (! method.getLocation().equals("-")) {
+            format.put(OutputKeys.METHOD,method.getValue());
         }
-
-
-        if (! lineWidth.getLocation().equals("-")) {
-            try {
-                format.setLineWidth(lineWidth.getValueAsInt());
-            } catch (ConfigurationException ce) {
-                getLogger().debug("No line-width value or invalid value--but expected", ce);
-            }
+        if (! omitXMLDeclaration.getLocation().equals("-")) {
+            format.put(OutputKeys.OMIT_XML_DECLARATION,omitXMLDeclaration.getValue());
+        }
+        if (! standAlone.getLocation().equals("-")) {
+            format.put(OutputKeys.STANDALONE,standAlone.getValue());
+        }
+        if (! version.getLocation().equals("-")) {
+            format.put(OutputKeys.VERSION,version.getValue());
         }
     }
 }

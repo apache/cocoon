@@ -10,9 +10,9 @@ package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
 
-import org.apache.xml.serialize.SerializerFactory;
-import org.apache.xml.serialize.Method;
-import org.apache.xml.serialize.OutputFormat;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.Configuration;
@@ -21,12 +21,12 @@ import org.apache.cocoon.PoolClient;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-19 15:58:10 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-20 21:06:47 $
  */
 
 public class XMLSerializer extends AbstractTextSerializer implements PoolClient {
 
-    private SerializerFactory factory;
+    private TransformerHandler handler;
 
     private Pool pool;
 
@@ -39,13 +39,16 @@ public class XMLSerializer extends AbstractTextSerializer implements PoolClient 
     }
 
     public XMLSerializer() {
-        this.factory = SerializerFactory.getSerializerFactory(Method.XML);
     }
 
     public void setOutputStream(OutputStream out) {
         try {
             super.setOutputStream(out);
-            this.setContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
+            this.handler = factory.newTransformerHandler();
+            format.put(OutputKeys.METHOD,"xml");
+            handler.setResult(new StreamResult(out));
+            handler.getTransformer().setOutputProperties(format);
+            this.setContentHandler(handler);
         } catch (Exception e) {
             getLogger().error("XMLSerializer.setOutputStream()", e);
             throw new RuntimeException(e.toString());

@@ -10,23 +10,23 @@ package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
 
-import org.apache.xml.serialize.SerializerFactory;
-import org.apache.xml.serialize.Method;
-import org.apache.xml.serialize.OutputFormat;
-
 import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
 import org.apache.cocoon.PoolClient;
 
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
+
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-19 15:58:10 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-20 21:06:46 $
  */
 
 public class HTMLSerializer extends AbstractTextSerializer implements PoolClient {
 
-    private SerializerFactory factory;
+    private TransformerHandler handler;
 
     private Pool pool;
 
@@ -39,13 +39,16 @@ public class HTMLSerializer extends AbstractTextSerializer implements PoolClient
     }
 
     public HTMLSerializer() {
-        this.factory = SerializerFactory.getSerializerFactory(Method.HTML);
     }
 
     public void setOutputStream(OutputStream out) {
         try {
             super.setOutputStream(out);
-            this.setContentHandler(this.factory.makeSerializer(out, this.format).asContentHandler());
+            handler = factory.newTransformerHandler();
+            format.put(OutputKeys.METHOD,"html");
+            handler.setResult(new StreamResult(out));
+            handler.getTransformer().setOutputProperties(format);
+            this.setContentHandler(handler);
         } catch (Exception e) {
             getLogger().error("HTMLSerializer.setOutputStream()", e);
             throw new RuntimeException(e.toString());

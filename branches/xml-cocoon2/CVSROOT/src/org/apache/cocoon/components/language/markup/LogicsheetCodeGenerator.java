@@ -10,6 +10,7 @@ package org.apache.cocoon.components.language.markup;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -17,14 +18,13 @@ import org.xml.sax.ContentHandler;
 
 import java.io.IOException;
 
-import org.apache.xml.serialize.SerializerFactory;
-import org.apache.xml.serialize.Method;
-import org.apache.xml.serialize.Serializer;
-import org.apache.xml.serialize.OutputFormat;
-
-
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
 import org.apache.log.Logger;
@@ -35,15 +35,13 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:34 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-20 21:06:43 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
 
     protected Logger log;
 
     private Logicsheet corelogicsheet;
-
-    private Serializer serializer;
 
     private ContentHandler serializerContentHandler;
 
@@ -57,23 +55,27 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator, Loggable {
     * The default constructor
     */
     public LogicsheetCodeGenerator() {
-        // set the serializer which would act as ContentHandler for the last transformer
-        // FIXME (SSA) change a home made content handler, that extract the PCDATA
-        // from the last remaining element
-        SerializerFactory factory = SerializerFactory.getSerializerFactory(Method.TEXT);
-        OutputFormat outformat = new OutputFormat();
-        // FIXME (SSA) set the right encoding set
-        //outformat.setEncoding("");
-        // FIXME (SSA) remove the nice identing. For debug purpose only.
-        outformat.setIndent(4);
-        outformat.setPreserveSpace(true);
-        this.serializer = factory.makeSerializer(outformat);
-        this.writer = new StringWriter();
-        this.serializer.setOutputCharStream(writer);
+
+        SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
+        Properties format = new Properties();
+
         try {
-            this.serializerContentHandler = this.serializer.asContentHandler();
-        } catch (IOException ioe) {
-            log.error("This should never happen, because we're not dealing with IO file, but rather with StringWriter", ioe);
+            // set the serializer which would act as ContentHandler for the last transformer
+            // FIXME (SSA) change a home made content handler, that extract the PCDATA
+            // from the last remaining element
+            TransformerHandler handler = factory.newTransformerHandler();
+
+            // Set the output properties
+            format.put(OutputKeys.METHOD,"text");
+            // FIXME (SSA) remove the nice identing. For debug purpose only.
+            format.put(OutputKeys.INDENT,"yes"); 
+            handler.getTransformer().setOutputProperties(format);
+
+            this.writer = new StringWriter();
+            handler.setResult(new StreamResult(writer));
+            this.serializerContentHandler = handler;
+        } catch (TransformerConfigurationException tce) {
+            log.error("LogicsheetCodeGenerator: unable to get TransformerHandler", tce);
         }
     }
 

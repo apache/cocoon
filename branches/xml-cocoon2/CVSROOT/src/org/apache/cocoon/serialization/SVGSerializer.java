@@ -27,10 +27,6 @@ import org.apache.batik.refimpl.transcoder.*;
 import org.apache.batik.transcoder.*;
 import org.apache.batik.refimpl.transcoder.AbstractTranscoder;
 
-import org.apache.xml.serialize.SerializerFactory;
-import org.apache.xml.serialize.Method;
-import org.apache.xml.serialize.OutputFormat;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
@@ -38,7 +34,7 @@ import java.io.ByteArrayOutputStream;
  * A Batik based Serializer for generating PNG/JPG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-19 15:58:10 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-02-20 21:06:46 $
  */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, PoolClient {
 
