@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.45 2001-01-17 00:02:13 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.46 2001-01-17 00:09:20 balld Exp $-->
 <!--
 
  ============================================================================
@@ -495,6 +495,23 @@
           ));
           xspCurrentNode.appendChild(_esql_node);
         }
+      </xsp:logic>
+    </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsp:logic>
+        for (int _esql_i = 1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
+          String _esql_tagname = _esql_query.resultset_metadata.getColumnName(_esql_i);
+          <xsp:element>
+            <xsp:param name="name"><xsp:expr>_esql_tagname</xsp:expr></xsp:param>
+            <xsp:expr>
+              <xsl:call-template name="get-string-encoded">
+                <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
+                <xsl:with-param name="resultset">_esql_query.resultset</xsl:with-param>
+              </xsl:call-template>
+            </xsp:expr>
+          </xsp:element>
+        }
+        this.characters("\n");
       </xsp:logic>
     </xsl:when>
     <xsl:otherwise>
