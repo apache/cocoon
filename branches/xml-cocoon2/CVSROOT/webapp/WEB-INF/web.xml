@@ -11,7 +11,11 @@
     "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
 
 <web-app>
+ <description>Demo application for Cocoon2</description>
+ <display-name>Cocoon2 Demo</display-name>
  <servlet>
+  <description>The main Cocoon2 servlet</description>
+  <display-name>Cocoon2</display-name>
   <servlet-name>Cocoon2</servlet-name>
   <servlet-class>org.apache.cocoon.servlet.CocoonServlet</servlet-class>
   <init-param>
