@@ -274,6 +274,8 @@ public class JXTemplateGenerator extends AbstractGenerator {
             public void remove() {
             }
         };
+    
+    private static final Locator NULL_LOCATOR = new LocatorImpl();
 
     /**
      * Jexl Introspector that supports Rhino JavaScript objects
@@ -681,8 +683,9 @@ public class JXTemplateGenerator extends AbstractGenerator {
      * (contained in #{}) 
      */
 
-    private Object compileExpr(String expr, String errorPrefix, 
-                               Locator location) throws SAXParseException {
+    private static Object compileExpr(String expr, String errorPrefix, 
+                                      Locator location) 
+        throws SAXParseException {
         try {
             return compileExpr(expr);
         } catch (Exception exc) {
@@ -694,7 +697,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
         }
     }
 
-    private Object compileExpr(String inStr) throws Exception {
+    private static Object compileExpr(String inStr) throws Exception {
         try {
             if (inStr == null) return null;
             StringReader in = new StringReader(inStr.trim());
@@ -738,7 +741,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
         return inStr;
     }
 
-    private Object compile(final String variable, boolean xpath) 
+    private static Object compile(final String variable, boolean xpath) 
         throws Exception {
         if (xpath) {
             return JXPathContext.compile(variable);
@@ -795,8 +798,9 @@ public class JXTemplateGenerator extends AbstractGenerator {
     static class Event {
         final Locator location;
         Event next;
-        Event(Locator location) {
-            this.location = new LocatorImpl(location);
+        Event(Locator locator) {
+            this.location = 
+                locator == null ? NULL_LOCATOR : new LocatorImpl(locator);
         }
 
         public String locationString() {
@@ -1033,8 +1037,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
     }
 
     static class StartElement extends Event {
-        StartElement(JXTemplateGenerator gen,
-                     Locator location, String namespaceURI,
+        StartElement(Locator location, String namespaceURI,
                      String localName, String raw,
                      Attributes attrs) 
             throws SAXException {
@@ -1073,7 +1076,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
                                     Object compiledExpression;
                                     try {
                                         compiledExpression =
-                                            gen.compile(str, xpath);
+                                            compile(str, xpath);
                                     } catch (Exception exc) {
                                         throw new SAXParseException(exc.getMessage(),
                                                                     location,
@@ -1451,7 +1454,6 @@ public class JXTemplateGenerator extends AbstractGenerator {
 
     static class Parser implements ContentHandler, LexicalHandler {
 
-        JXTemplateGenerator gen;
         StartDocument startEvent;
         Event lastEvent;
         Stack stack = new Stack();
@@ -1459,8 +1461,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
         Locator charLocation;
         StringBuffer charBuf;
         
-        public Parser(JXTemplateGenerator gen) {
-            this.gen = gen;
+        public Parser() {
         }
 
         StartDocument getStartEvent() {
@@ -1493,7 +1494,11 @@ public class JXTemplateGenerator extends AbstractGenerator {
             throws SAXException {
             if (charBuf == null) {
                 charBuf = new StringBuffer();
-                charLocation = new LocatorImpl(locator);
+                if (locator != null) {
+                    charLocation = new LocatorImpl(locator);
+                } else {
+                    charLocation = NULL_LOCATOR;
+                }
             }
             charBuf.append(ch, start, length);
         }
@@ -1642,8 +1647,8 @@ public class JXTemplateGenerator extends AbstractGenerator {
                     begin = begin == -1 ? 0 : begin;
                     end = end == -1 ? Integer.MAX_VALUE: end;
                     Object expr;
-                    expr = gen.compileExpr(items == null ? select : items,
-                                                null, locator);
+                    expr = compileExpr(items == null ? select : items,
+                                       null, locator);
                     StartForEach startForEach = 
                         new StartForEach(locator, expr, 
                                          var, begin, end, step);
@@ -1661,7 +1666,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
                         throw new SAXParseException("when: \"test\" is required", locator, null);
                     }
                     Object expr;
-                    expr = gen.compileExpr(test, "when: \"test\": ", locator);
+                    expr = compileExpr(test, "when: \"test\": ", locator);
                     StartWhen startWhen = new StartWhen(locator, expr);
                     newEvent = startWhen;
                 } else if (localName.equals(OUT)) {
@@ -1669,9 +1674,9 @@ public class JXTemplateGenerator extends AbstractGenerator {
                     if (value == null) {
                         throw new SAXParseException("out: \"value\" is required", locator, null);
                     }
-                    Object expr = gen.compileExpr(value, 
-                                                       "out: \"value\": ", 
-                                                       locator);
+                    Object expr = compileExpr(value, 
+                                              "out: \"value\": ", 
+                                              locator);
                     newEvent = new StartOut(locator, expr);
                 } else if (localName.equals(OTHERWISE)) {
                     if (stack.size() == 0 ||
@@ -1687,7 +1692,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
                         throw new SAXParseException("if: \"test\" is required", locator, null);
                     }
                     Object expr = 
-                        gen.compileExpr(test, "if: \"test\": ", locator);
+                        compileExpr(test, "if: \"test\": ", locator);
                     StartIf startIf = 
                         new StartIf(locator, expr);
                     newEvent = startIf;
@@ -1734,17 +1739,16 @@ public class JXTemplateGenerator extends AbstractGenerator {
                     Object valueExpr = null;
                     if (value != null) {
                         valueExpr = 
-                            gen.compileExpr(value, "set: \"value\":",
-                                                 locator);
+                            compileExpr(value, "set: \"value\":",
+                                        locator);
                     } 
                     StartSet startSet = new StartSet(locator, var, valueExpr);
                     newEvent = startSet;
                 } else if (localName.equals(IMPORT)) {
-                    // <import uri="${root}/foo/bar.xml" select="#{.}"/>
-                    // Allow expression substitution in "uri" attribute
+                    // <import uri="${root}/foo/bar.xml" context="${foo}"/>
                     AttributeEvent uri = null;
                     StartElement startElement = 
-                        new StartElement(gen, locator, namespaceURI,
+                        new StartElement(locator, namespaceURI,
                                          localName, raw, attrs);
                     Iterator iter = startElement.attributeEvents.iterator();
                     while (iter.hasNext()) {
@@ -1757,14 +1761,14 @@ public class JXTemplateGenerator extends AbstractGenerator {
                     if (uri == null) {
                         throw new SAXParseException("import: \"uri\" is required", locator, null);
                     }
-                    // If "select" is present then its value will be used
+                    // If "context" is present then its value will be used
                     // as the context object in the imported template
                     String select = attrs.getValue("context");
                     Object expr = null;
                     if (select != null) {
                         expr = 
-                            gen.compileExpr(select, "import: \"context\": ",
-                                            locator);
+                            compileExpr(select, "import: \"context\": ",
+                                        locator);
                     }
                     StartImport startImport = 
                         new StartImport(locator, uri, expr);
@@ -1778,7 +1782,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
                 }
             } else {
                 StartElement startElem = 
-                    new StartElement(gen, locator, namespaceURI,
+                    new StartElement(locator, namespaceURI,
                                      localName, raw, attrs);
                 newEvent = startElem;
             }
@@ -1829,13 +1833,12 @@ public class JXTemplateGenerator extends AbstractGenerator {
      */
 
     public static class TransformerAdapter extends AbstractTransformer {
-
         static class TemplateConsumer extends Parser implements XMLConsumer {
 
             public TemplateConsumer(SourceResolver resolver, Map objectModel,
                                     String src, Parameters parameters) 
                 throws ProcessingException, SAXException, IOException {
-                super(new JXTemplateGenerator());
+                this.gen = new JXTemplateGenerator();
                 this.gen.setup(resolver, objectModel, null, parameters);
             }
 
@@ -1850,6 +1853,8 @@ public class JXTemplateGenerator extends AbstractGenerator {
             void setConsumer(XMLConsumer consumer) {
                 gen.setConsumer(consumer);
             }
+
+            JXTemplateGenerator gen;
         }
 
         TemplateConsumer templateConsumer;
@@ -2024,7 +2029,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
         }
         if (startEvent == null) {
             long compileTime = inputSource.getLastModified();
-            Parser parser = new Parser(this);
+            Parser parser = new Parser();
             this.resolver.toSAX(this.inputSource, parser);
             startEvent = parser.getStartEvent();
             startEvent.compileTime = compileTime;
@@ -2105,7 +2110,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
                                 NodeList nodeList = (NodeList)val;
                                 DOMStreamer streamer =
                                     new DOMStreamer(consumer);
-                                for (int i  = 0, len = nodeList.getLength();
+                                for (int i = 0, len = nodeList.getLength();
                                      i < len; i++) {
                                     Node n = nodeList.item(i);
                                     streamer.stream(n);
@@ -2392,6 +2397,9 @@ public class JXTemplateGenerator extends AbstractGenerator {
                                                                 ev.location,
                                                                 e);
                                 }
+                                if (val == null) {
+                                    val = "";
+                                }
                                 attributeValue = val;
                             } else {
                                 StringBuffer buf = new StringBuffer();
@@ -2648,7 +2656,7 @@ public class JXTemplateGenerator extends AbstractGenerator {
                 }
                 if (doc == null) {
                     try {
-                        Parser parser = new Parser(this);
+                        Parser parser = new Parser();
                         this.resolver.toSAX(input, parser);
                         doc = parser.getStartEvent();
                         doc.compileTime = lastMod;
