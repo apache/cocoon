@@ -19,8 +19,6 @@
   <session-context-providers>
       <component-instance name="request"
                           class="org.apache.cocoon.webapps.session.context.StandardSessionContextProvider"/>
-      <component-instance name="response"
-                          class="org.apache.cocoon.webapps.session.context.StandardSessionContextProvider"/>
       <component-instance name="temporary"
                           class="org.apache.cocoon.webapps.session.context.StandardSessionContextProvider"/>
   </session-context-providers>
