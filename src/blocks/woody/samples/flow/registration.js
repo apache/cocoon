@@ -9,5 +9,5 @@ function registration() {
 
     var model = form.getModel();
     var bizdata = { "username" : model.name }
-    cocoon.sendPage("registration-success-pipeline", bizdata);
+    cocoon.sendPage("registration-success-pipeline.jx", bizdata);
 }
