@@ -16,6 +16,7 @@
 package org.apache.cocoon.ojb.broker.components;
 
 import org.apache.avalon.framework.component.Component;
+
 import org.apache.ojb.broker.PBFactoryException;
 import org.apache.ojb.broker.PBKey;
 import org.apache.ojb.broker.PersistenceBroker;

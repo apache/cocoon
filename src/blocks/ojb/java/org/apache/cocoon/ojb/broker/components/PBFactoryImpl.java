@@ -15,8 +15,9 @@
  */
 package org.apache.cocoon.ojb.broker.components;
 
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.ojb.components.AbstractOjbImpl;
+
 import org.apache.ojb.broker.PBFactoryException;
 import org.apache.ojb.broker.PBKey;
 import org.apache.ojb.broker.PersistenceBroker;
@@ -28,25 +29,8 @@ import org.apache.ojb.broker.PersistenceBrokerFactory;
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version CVS $Id$
 */
-public class PBFactoryImpl
-        extends AbstractOjbImpl
-        implements PBFactory, ThreadSafe {
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        super.dispose();
-        getLogger().debug("Disposed");
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize() throws Exception {
-        super.initialize();
-        getLogger().debug("Started");
-    }
+public class PBFactoryImpl extends AbstractLogEnabled
+                           implements PBFactory, ThreadSafe {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.ojb.broker.components.PBFactory#defaultPersistenceBroker()

@@ -15,7 +15,9 @@
   limitations under the License.
 -->
 
-<xconf xpath="/cocoon" unless="ojb-pb">
-  <!-- PersistenceBroker Interface -->
-  <ojb-pb logger="core.ojb.pb"/>
+<xconf xpath="/cocoon" unless="component[class='org.apache.cocoon.ojb.components.ConnectionFactoryImpl']">
+  <!-- OJB Connection Factory -->
+  <component role="org.apache.cocoon.ojb.components.ConnectionFactory"
+             class="org.apache.cocoon.ojb.components.ConnectionFactoryImpl"
+             logger="core.ojb"/>
 </xconf>
