@@ -101,7 +101,7 @@ import org.apache.cocoon.Utils;
  * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.16 $ $Date: 2000-10-04 17:02:59 $ $Author: balld $
+ * @version CVS $Revision: 1.17 $ $Date: 2000-11-09 12:06:03 $ $Author: greenrd $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -295,7 +295,7 @@ class XIncludeProcessorWorker {
 				return ary;
 			} else if (xinclude.href.charAt(0) == '/') {
 				/** local absolute URI, e.g. /foo.xml **/
-				local = new File(Utils.getRootpath(request,context),xinclude.href);
+				local = new File(Utils.getRootpath(request,context),xinclude.href.substring(1));
 				system_id = ((File)local).getAbsolutePath();
 				content = new FileReader((File)local);
 			} else if (xinclude.href.indexOf("://") >= 0) {
