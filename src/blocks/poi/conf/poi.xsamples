@@ -14,9 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <xsamples xpath="/samples" unless="group[@name='POI']">
   <group name="POI">
-    <sample name="POI" href="poi/">
+    <sample name="POI Block" href="poi/">
       You want to have excel sheets? Here they go ...
    </sample>
   </group>

@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Cron']">
 
   <group name="Cron">
-    <sample name="Cron" href="cron/">
+    <sample name="Cron Block" href="cron/">
       Cron block samples.
     </sample>
   </group>

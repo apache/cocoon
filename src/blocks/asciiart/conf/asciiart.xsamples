@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='ASCII Art']">
 
   <group name="ASCII Art">
-    <sample name="ASCII Art" href="asciiart/">
+    <sample name="ASCII Art Block" href="asciiart/">
       Plain text files with character-based artwork and diagrams are presented
       in various formats, e.g. plain text, JPEG, PNG
     </sample>

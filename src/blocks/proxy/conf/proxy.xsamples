@@ -16,9 +16,9 @@
 -->
 <xsamples xpath="/samples" unless="group[@name='Proxy']">
   <group name="Proxy">
-    <sample name="Proxy" href="proxy/">
-	  Web Site Syndication using proxies: Integrate remote webapp functionality
-	  into your website.
+    <sample name="Proxy Block" href="proxy/">
+      Web Site Syndication using proxies: Integrate remote webapp functionality
+      into your website.
    </sample>
   </group>
 </xsamples>

@@ -18,7 +18,9 @@
 <xsamples xpath="/samples" unless="group[@name='QDox']">
 
   <group name="QDox">
-    <sample name="Samples" href="qdox/">Javadoc-like parsing of Java code using QDox.</sample>
+    <sample name="QDox Block" href="qdox/">
+      Javadoc-like parsing of Java code using QDox.
+    </sample>
   </group>
 
 </xsamples>

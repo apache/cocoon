@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='iText']">
 
   <group name="iText">
-    <sample name="iText PDF serializer" href="itext/">
+    <sample name="iText Block" href="itext/">
       Examples of PDF document generation using iText.
     </sample>
   </group>

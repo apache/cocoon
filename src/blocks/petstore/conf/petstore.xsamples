@@ -18,9 +18,9 @@
 <xsamples xpath="/samples" unless="group[@name='Petstore']">
 
   <group name="Petstore">
-    <sample name="Flowscript version" href="petstore/">
-      The Cocoon flowscript version of the J2EE PetStore, using various
-      mechanisms: CocoonForms (Woody), velocity, xsp, jexl, jxforms.
+    <sample name="Petstore Block" href="petstore/">
+      The Cocoon Flow version of the J2EE PetStore, using various presentation
+      mechanisms: CocoonForms (Woody), Velocity, XSP, Jexl.
     </sample>
   </group>
   

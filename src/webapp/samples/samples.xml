@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.36 2004/03/21 03:19:55 crossley Exp $
+    | CVS $Id: samples.xml,v 1.37 2004/04/01 19:05:42 vgritsenko Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -77,7 +77,7 @@
   </group>
 
   <group name="Block Samples">
-    <sample name="Blocks with samples" href="blocks">
+    <sample name="Blocks with samples" href="blocks/">
       Functionality outside the core has been moved to units called "blocks".
       This will lead to a more modular Cocoon. Here you find the many samples 
       provided by the currently installed blocks. 

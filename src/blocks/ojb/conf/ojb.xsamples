@@ -18,11 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='OJB']">
 
   <group name="OJB">
-    <note>
-      For the examples of this block to work, you need to download
-      the Java Data Objects (JDO) Reference Implementation from java.sun.com .
-    </note>
-    <sample name="OJB" href="ojb/">
+    <sample name="OJB Block" href="ojb/">
       Apache Object/Relational Bridge.
     </sample>
   </group>

@@ -15,12 +15,18 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.5 2004/03/06 02:25:55 antonio Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.6 2004/04/01 19:01:03 vgritsenko Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="database block">
 
   <group name="Main examples page.">
     <sample name="Back" href="..">to Cocoon examples main page</sample>
+    <note>
+      For the examples of this block to work, either the HSQLDB block
+      needs to be present as well or another RDBMS backend needs to
+      be configured. Schema information is contained in each
+      subdirectory of samples/databases.
+    </note>
   </group>
 
   <group name="SQL Transformer">

@@ -17,13 +17,13 @@
 
 <!--
     SWF samples setup contributed by joerg.heinicke@gmx.de
-    $Id: swf.xsamples,v 1.4 2004/03/06 02:25:53 antonio Exp $
+    $Id: swf.xsamples,v 1.5 2004/04/01 19:01:04 vgritsenko Exp $
 -->
 
 <xsamples xpath="/samples" unless="group[@name='SWF']">
 
   <group name="SWF">
-    <sample name="SWF" href="swf/">
+    <sample name="SWF Block" href="swf/">
       Flash!
     </sample>
   </group>

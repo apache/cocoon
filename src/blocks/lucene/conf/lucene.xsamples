@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Lucene']">
 
   <group name="Lucene">
-    <sample name="Search with Lucene" href="lucene/welcome">
+    <sample name="Lucene Block" href="lucene/welcome">
       Examples showing use of Apache Lucene to search.
     </sample>
   </group>

@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <project name="samples">
 
   <description>
@@ -24,36 +25,40 @@
     <mkdir dir="${build.samples}"/>
 
     <javac srcdir="${samples}"
-       destdir="${build.samples}"
-       debug="${compiler.debug}"
-       optimize="${compiler.optimize}"
-       deprecation="${compiler.deprecation}"
-       target="${target.vm}"
-       compiler="${compiler}"
-       classpathref="classpath"/>
+           destdir="${build.samples}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
 
     <!-- copy sample files -->
     <copy todir="${build.webapp.samples}" filtering="on">
       <fileset dir="${webapp.samples}">
-       <exclude name="samples.xwelcome"/>
-       <exclude name="old_sitemap.xmap"/>
-       <exclude name="**/*.jpg"/>
-       <exclude name="**/*.gif"/>
-       <exclude name="**/*.png"/>
-       <exclude name="i18n/**"/> <!-- filtering breaks UTF-8 files -->
-       <exclude name="hello-world/style/xsl/**"/> <!-- filtering breaks UTF-8 files -->
+        <exclude name="samples.xwelcome"/>
+        <exclude name="old_sitemap.xmap"/>
+        <exclude name="**/*.jpg"/>
+        <exclude name="**/*.gif"/>
+        <exclude name="**/*.png"/>
+        <!-- filtering breaks UTF-8 files -->
+        <exclude name="i18n/**"/> 
+        <exclude name="hello-world/style/xsl/**"/>
       </fileset>
     </copy>
 
     <copy todir="${build.webapp.samples}" filtering="off">
       <fileset dir="${webapp.samples}">
-       <include name="**/*.jpg"/>
-       <include name="**/*.gif"/>
-       <include name="**/*.png"/>
-       <include name="i18n/**"/>
-       <include name="hello-world/style/xsl/**"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.png"/>
+        <include name="i18n/**"/>
+        <include name="hello-world/style/xsl/**"/>
       </fileset>
     </copy>
+
+    <!-- copy gump.xml which is used to create block samples page -->
+    <copy file="gump.xml" todir="${build.webapp.samples}/blocks"/>
 
     <!-- copy sample classes -->
     <copy todir="${build.webapp.classes}" filtering="off">

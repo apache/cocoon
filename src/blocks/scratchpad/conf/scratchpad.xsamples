@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Scratchpad Samples']">
   
   <group name="Scratchpad Samples">
-    <sample name="Scratchpad" href="scratchpad/">
+    <sample name="Scratchpad Block" href="scratchpad/">
       Here you find the samples about the functionality included in the scratchpad, which is the 
       place where new stuff is developed but not yet considered stable enough for production.
     </sample>

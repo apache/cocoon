@@ -16,9 +16,9 @@
 -->
 <xsamples xpath="/samples" unless="group[@name='STX']">
 
-    <group name="STX">
-        <sample name="STX" href="stx/">
-            Examples of using Streaming Transformations for XML (STX)
-        </sample>
-    </group>
+  <group name="STX">
+    <sample name="STX Block" href="stx/">
+      Examples of using Streaming Transformations for XML (STX)
+    </sample>
+  </group>
 </xsamples>

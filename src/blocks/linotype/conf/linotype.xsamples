@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Linotype']">
 
   <group name="Linotype">
-    <sample name="Blogging Tool" href="linotype/">
+    <sample name="Linotype Block" href="linotype/">
       This is a demo of a full blown blogging tool written on top of Apache Cocoon.
     </sample>
   </group>

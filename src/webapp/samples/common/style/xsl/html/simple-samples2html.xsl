@@ -21,7 +21,7 @@
     | Author: Nicola Ken Barozzi "nicolaken@apache.org"
     | Author: Vadim Gritsenko "vgritsenko@apache.org"
     | Author: Christian Haul "haul@apache.org"
-    | CVS $Id: simple-samples2html.xsl,v 1.10 2004/03/06 02:25:58 antonio Exp $
+    | CVS $Id: simple-samples2html.xsl,v 1.11 2004/04/01 19:05:42 vgritsenko Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -171,8 +171,16 @@
       </xsl:choose>
     </xsl:variable>
 
-    <a href="{$link}"><xsl:value-of select="@name"/></a><xsl:text> - </xsl:text>
-    <xsl:value-of select="."/>
+    <xsl:choose>
+      <xsl:when test="string-length($link) &gt; 0">
+        <a href="{$link}"><xsl:value-of select="@name"/></a>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@name"/>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text> - </xsl:text>
+    <xsl:copy-of select="*|text()"/>
     <br/>
   </xsl:template>
 

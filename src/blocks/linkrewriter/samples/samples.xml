@@ -14,26 +14,33 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS: $Id: samples.xml,v 1.4 2004/03/06 02:25:51 antonio Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.5 2004/04/01 19:01:03 vgritsenko Exp $ -->
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
   <group name="Back">
     <sample name="Back" href="../">
       to the samples main page
-   </sample>
- </group>
+    </sample>
+  </group>
+
   <group name="LinkRewriter Demos">
     <sample name="sitedemo" href="sitedemo/welcome">
       a demo with one page, 'welcome', with links that will have ..'s
       progressively added for each directory 'welcome' is in.  Eg, try
       <link href="sitedemo/welcome">welcome</link>, <link
-        href="sitedemo/foo/welcome">foo/welcome</link>, <link
-        href="sitedemo/foo/bar/welcome">foo/bar/welcome</link> and watch the
+      href="sitedemo/foo/welcome">foo/welcome</link>, <link
+      href="sitedemo/foo/bar/welcome">foo/bar/welcome</link> and watch the
       links change.
-   </sample>
-   <sample name="bookdemo" href="bookdemo/index.html">
-     a demonstration of using a book.xml file to resolve links between pages.
-   </sample>
+    </sample>
+    <sample name="bookdemo" href="bookdemo/index.html">
+      a demonstration of using a book.xml file to resolve links between pages.
+    </sample>
   </group>
+  <group name="Docs">
+    <sample name="See Also" href="http://xml.apache.org/forrest/linking.html">
+      page on the Forrest site.
+    </sample>
+  </group>
+
  <!--
   <group name="Documentation">
     <sample name="Docs" href="../../docs/index">

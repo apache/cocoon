@@ -17,7 +17,7 @@
 
 <xsamples xpath="/samples" unless="group[@name='XSP']">
   <group name="XSP">
-    <sample href="xsp/" name="Extensible Server Pages">
+    <sample href="xsp/" name="XSP Block">
       Extensible Server Pages, or XSP.
     </sample>
   </group>
