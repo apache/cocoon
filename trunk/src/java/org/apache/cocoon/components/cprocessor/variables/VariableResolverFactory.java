@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  *
- * @version CVS $Id: VariableResolverFactory.java,v 1.2 2004/03/08 13:57:37 cziegeler Exp $
+ * @version CVS $Id: VariableResolverFactory.java,v 1.3 2004/04/15 13:44:36 cziegeler Exp $
  */
 public class VariableResolverFactory {
     
@@ -108,12 +108,9 @@ public class VariableResolverFactory {
             return resolver;
             
         } else {
-            return new NOPVariableResolver(expression);
-            
+            return new NOPVariableResolver(expression);            
         }
     }
-
-
 }
 
 
