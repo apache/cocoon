@@ -15,8 +15,10 @@
  */
 package org.apache.cocoon.acting;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configuration;
@@ -44,15 +46,40 @@ import org.apache.cocoon.environment.SourceResolver;
  * </pre>
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: SessionPropagatorAction.java,v 1.2 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SessionPropagatorAction extends AbstractConfigurableAction implements ThreadSafe {
 
-    private Object[] defaults = {};
+    /**
+     * A private helper holding default parameter entries.
+     * 
+     */
+    private static class Entry {
+        public String key = null;
+        public String value = null;
+
+        public Entry(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+    
+    private List defaults;
 
     public void configure(Configuration conf) throws ConfigurationException {
         super.configure(conf);
-        this.defaults = super.settings.keySet().toArray();
+        Configuration[] dflts = conf.getChildren();
+        if (dflts != null) {
+            this.defaults = new ArrayList(dflts.length);
+            for (int i = 0; i < dflts.length; i++) {
+                this.defaults.add(
+                    new Entry(
+                        dflts[i].getName(),
+                        dflts[i].getValue()));
+            }
+        } else {
+            this.defaults = new ArrayList(0);
+        }
     }
 
     /**
@@ -90,18 +117,17 @@ public class SessionPropagatorAction extends AbstractConfigurableAction implemen
             }
 
             // defaults, that are not overridden
-            for (int i = 0; i < defaults.length; i++) {
-                if (!actionMap.containsKey(defaults[i])) {
-                    String sessionParamName = (String) defaults[i];
-                    String value = parameters.getParameter(sessionParamName);
+            for (int i = 0; i < defaults.size(); i++) {
+                final Entry entry = (Entry)defaults.get(i);
+                if (!actionMap.containsKey(entry.key)) {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Propagating value "
-                                          + value
+                                          + entry.value
                                           + " to session attribute "
-                                          + sessionParamName);
+                                          + entry.key);
                     }  
-                    session.setAttribute(sessionParamName, value);
-                    actionMap.put(sessionParamName, value);
+                    session.setAttribute(entry.key, entry.value);
+                    actionMap.put(entry.key, entry.value);
                 }
             }
             if (getLogger().isDebugEnabled()) {
