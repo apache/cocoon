@@ -7,7 +7,7 @@
   xmlns:xsp-response="http://xml.apache.org/cocoon/xsp/response"
 >
 
-  <xsl:import href="simple-page2html.xsl"/>
+  <xsl:include href="simple-page2html.xsl"/>
 
   <xsl:template match="xsp-request:uri">
     <b><xsl:value-of select="."/></b>
