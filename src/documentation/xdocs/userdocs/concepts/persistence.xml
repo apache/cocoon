@@ -23,7 +23,7 @@
   have problems when the filenames are very long.</p>
   </s1>  
   <s1 title="Jisp based persistence:">
-  <p>The aim of the <link href="http://www.coyotegulch.com/algorithm/jisp/index.html">Jisp
+  <p>The aim of the <link href="http://www.coyotegulch.com/jisp/index.html">Jisp
   based</link> persistence is to provide a more scalable persistence. The objects 
   are stored in an indexed file, which uses a B-Tree alghorithm to store the objects. 
   This is a more elegant and fast solution, especially when you have to handle many
