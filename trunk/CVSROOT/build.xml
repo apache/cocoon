@@ -231,7 +231,7 @@ of build files, give credits to the original authors. Thank you.
   <!-- Creates the class package                                           -->
   <!-- =================================================================== -->
   <target name="package" depends="compile">
-    <jar jarfile="${build.dir}/${name}.jar" basedir="${build.dest}" manifest="${build.src}/Manifest.mf" items="org, resources"/>
+    <jar jarfile="${build.dir}/${name}.jar" basedir="${build.dest}" manifest="${build.src}/Manifest.mf" items="org"/>
   </target>
 
   <!-- =================================================================== -->

@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.16 2000-01-05 16:04:18 stefano Exp $
+  $Id: changes.xml,v 1.17 2000-01-08 00:09:05 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,7 +15,7 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
-  <action dev="SM" type="fix" due-to="Axel Müller" due-to-email="axel.mueller@i2c-systems.com">
+  <action dev="SM" type="fix" due-to="Axel Muller" due-to-email="axel.mueller@i2c-systems.com">
   	Fixed Servlet API illegal state when setting the content type after acquiring the 
   	servlet response instance.
   </action>
