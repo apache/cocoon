@@ -18,7 +18,9 @@
     </map:match>
     <map:match pattern="liverss">
         <map:generate type="file" src="{request-param:feed}" label="content" />
+<!--
         <map:transform type="rss"/>
+-->        
         <map:transform type="xslt" src="content/resources/xsl/rss2html_news.xsl"/>
         <map:serialize type="xml"/>
     </map:match>
