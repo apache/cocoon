@@ -14,13 +14,12 @@ import java.net.URLClassLoader;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import java.util.StringTokenizer;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:11:46 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/01/14 14:05:11 $
  */
 public class Loader {
 
