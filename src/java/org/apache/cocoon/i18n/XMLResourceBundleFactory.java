@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.i18n;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -64,10 +65,13 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.xml.sax.SAXParseException;
 
@@ -79,7 +83,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.10 2004/01/16 15:55:38 kpiroumian Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.11 2004/02/04 15:16:01 sylvain Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -108,6 +112,11 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * Service Manager
      */
     protected ServiceManager manager = null;
+    
+    /**
+     * Source resolver
+     */
+    protected SourceResolver resolver;
 
 
     /**
@@ -127,8 +136,9 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         return this.logger;
     }
 
-    public void service(ServiceManager manager) {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     public void dispose() {
@@ -140,6 +150,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
             }
             i.remove();
         }
+        this.manager.release(this.resolver);
         this.manager = null;
     }
 
@@ -376,14 +387,25 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @return                  the parent locale
      */
     protected String getFileName(String base, String name, Locale locale) {
-        if (base == null) {
-            base = "";
+        StringBuffer sb = new StringBuffer();
+        if (base == null || base.length() == 0) {
+            // FIXME (SW): can this happen?
+        } else {
+            try {
+                Source src = this.resolver.resolveURI(base);
+                String uri = src.getURI();
+                sb.append(uri);
+                if (!uri.endsWith("/")) {
+                    sb.append('/');
+                }
+                this.resolver.release(src);
+            } catch(IOException ioe) {
+                throw new RuntimeException("Cannot resolve " + base, ioe);
+            }
         }
+        
+        sb.append(name);
 
-        StringBuffer sb = new StringBuffer(base);
-        if (!base.endsWith("/")) {
-            sb.append('/').append(name);
-        }
         if (locale != null) {
             if (!locale.getLanguage().equals("")) {
                 sb.append("_");
