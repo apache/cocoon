@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.17 2001-02-24 21:16:42 dims Exp $
+  $Id: todo.xml,v 1.6.2.18 2001-02-27 19:41:58 bloritsch Exp $
 -->
 
 
@@ -23,14 +23,14 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Create a form validation Action that uses an external configuration file
+   to validate the form and make sure that values are within acceptable ranges.
+  </action>
 
   <action context="code">
    Finish writing the command line interface and design the link rewriting
    behavior that cannot work with views.
-  </action>
-
-  <action context="code">
-   Write URLHandler for the protocols defined in the sitemap, e.g. class://. cvs://
   </action>
 
   <action context="code">

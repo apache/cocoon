@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.23 2001-02-24 21:16:42 dims Exp $
+  $Id: changes.xml,v 1.9.2.24 2001-02-27 19:41:59 bloritsch Exp $
 -->
 
 <changes title="History of Changes">
@@ -22,6 +22,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="BL" type="add">
+    Added form to database Actions.  Using these Actions, you can quickly
+    generate a webapp that functions in _very_ little time.
+  </action>
   <action dev="DM" type="update">
     Added command line code generation and compilation of XSP's and the Sitemap.
   </action>
