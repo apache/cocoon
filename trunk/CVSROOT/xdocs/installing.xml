@@ -346,7 +346,7 @@ You could also make these three configuration changes via
 
 </s2>
 
-  <s2 title="Installing Cocoon on BEA WebLogic (first recipe)">
+  <s2 title="Installing Cocoon on BEA WebLogic (version 4.5.1)">
    <p>
     After you have obtained all the jar packages you need (see the above
     section), you should add all of them (included the <code>cocoon.jar</code>
@@ -382,7 +382,7 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
 
   </s2>
   
-<s2 title="Installing Cocoon on BEA WebLogic (second recipe)">
+<s2 title="Installing Cocoon on BEA WebLogic (version 5.1)">
  <p>WLS 5.1 implements Servlet 2.2. so it plugs in easily. Here's a quick recipe:</p>
 
  <ul>
@@ -430,6 +430,9 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
   CLASSPATH add -Dweblogic.system.disableWeblogicClassPath=true to the
   Java command at the end of you WebLogic start script.</p>
  </s3>
+ 
+ <p>The above will also work for installing Cocoon in the BEA WebLogic
+ Enterprise 5.1 J-Engine.</p>
 
 </s2>
 
