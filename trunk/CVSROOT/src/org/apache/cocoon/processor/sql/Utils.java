@@ -59,7 +59,7 @@ import javax.servlet.http.*;
  * Utility methods for this processor.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-03 08:42:29 $
+ * @version $Revision: 1.6 $ $Date: 1999-12-08 07:37:09 $
  */
 
 public class Utils {
@@ -173,6 +173,5 @@ public class Utils {
 		}
 		return sb.toString();
 	}
-
 
 }

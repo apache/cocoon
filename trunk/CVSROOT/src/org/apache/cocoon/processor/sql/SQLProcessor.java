@@ -62,7 +62,7 @@ import org.apache.cocoon.processor.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.6 $ $Date: 1999-12-07 09:20:59 $
+ * @version $Revision: 1.7 $ $Date: 1999-12-08 07:37:08 $
  */
 
 public class SQLProcessor extends AbstractActor implements Processor, Status {
@@ -250,7 +250,6 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                 Element column_element;
                 Node row_node = results_node;
                 Element row_element = null;
-                String value;
                 int count = 0;
                 if (skip_rows > 0) {
                     while (rs.next()) {
@@ -269,19 +268,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                     }
 
                     for (int i=0; i<columns.length; i++) {
-						value = formatter.formatColumn(columns[i],rs,i+1);
-						/*
-						switch(columns[i].type) {
-							case Types.TIMESTAMP:
-								if (timestamp_format != null)
-									value = timestamp_format.format(rs.getDate(i+1));
-								else
-                        			value = rs.getString(i+1);
-								break;
-							default:
-								value = rs.getString(i+1);
-						}
-						*/
+						String value = rs.getString(i+1);
                         if (create_row_elements && create_id_attribute && id_attribute_column_index == i) {
                             row_element.setAttribute(id_attribute,value);
                             continue;
@@ -292,7 +279,7 @@ public class SQLProcessor extends AbstractActor implements Processor, Status {
                             column_element.setAttribute("NULL","YES");
                             column_element.appendChild(document.createTextNode(""));
                         } else {
-                            column_element.appendChild(document.createTextNode(value));
+							formatter.addColumnNode(document,column_element,columns[i],rs,i+1);
                         }
                         row_node.appendChild(column_element);
                     }
