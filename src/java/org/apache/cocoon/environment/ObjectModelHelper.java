@@ -66,13 +66,10 @@ import java.util.Map;
  * environment.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ObjectModelHelper.java,v 1.3 2003/04/01 21:25:09 sylvain Exp $
+ * @version CVS $Id: ObjectModelHelper.java,v 1.4 2003/09/27 13:01:15 joerg Exp $
  */
 
 public final class ObjectModelHelper {
-
-    // FIXME : Constants copied from cocoon.Constants where they should be deprecated
-    // LINK_OBJECT should also be moved to CommandLineEnvironment
 
     /** Key for the environment {@link Request} in the object model. */
     public final static String REQUEST_OBJECT  = "request";

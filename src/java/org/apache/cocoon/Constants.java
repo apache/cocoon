@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.7 2003/06/04 14:19:08 upayavira Exp $
+ * @version CVS $Id: Constants.java,v 1.8 2003/09/27 13:01:15 joerg Exp $
  */
 public final class Constants {
 
@@ -218,33 +218,6 @@ public final class Constants {
     public static final String LINK_CRAWLING_ROLE = "static";
 
     /**
-     * The name of a <code>Request</code> object in the so called objectModel <code>Map</code>.
-     * This constant is also defined in the org.apache.cocoon.environment.ObjectModelHelper class.
-     *
-     * FIXME(GP): Shouldn't this definition here be removed?
-     * @deprecated Use the {@link org.apache.cocoon.environment.ObjectModelHelper#getRequest(java.util.Map)} instead.
-     */
-    public static final String REQUEST_OBJECT = org.apache.cocoon.environment.ObjectModelHelper.REQUEST_OBJECT;
-
-    /**
-     * The name of a <code>Response</code> object in the so called objectModel <code>Map</code>.
-     * This constant is also defined in the org.apache.cocoon.environment.ObjectModelHelper class.
-     *
-     * FIXME(GP): Shouldn't this definition here be removed?
-     * @deprecated Use the {@link org.apache.cocoon.environment.ObjectModelHelper#getResponse(java.util.Map)} instead.
-     */
-    public static final String RESPONSE_OBJECT = org.apache.cocoon.environment.ObjectModelHelper.RESPONSE_OBJECT;
-
-    /**
-     *The name of a <code>Context</code> object in the so called objectModel <code>Map</code>.
-     * This constant is also defined in the org.apache.cocoon.environment.ObjectModelHelper class.
-     *
-     * FIXME(GP): Shouldn't this definition here be removed?
-     * @deprecated Use the {@link org.apache.cocoon.environment.ObjectModelHelper#getContext(java.util.Map)} instead.
-     */
-    public static final String CONTEXT_OBJECT = org.apache.cocoon.environment.ObjectModelHelper.CONTEXT_OBJECT;
-
-    /**
      * Key of the Map of index translation table.
      * <p>Presence of this Map in the ObjectModel indicates to the Sitemap that link
      * translation mode has been requested by the environment. Sitemap adds LinkTranslator
@@ -252,6 +225,8 @@ public final class Constants {
      * the links from this translation table.
      * <p>
      * TODO(VG): Move this declaration to ObjectModelHelper
+     * comment found at ObjectModelHelper(JH):
+     * LINK_OBJECT should also be moved to CommandLineEnvironment
      */
     public static final String LINK_OBJECT = "link";
 
@@ -325,11 +300,6 @@ public final class Constants {
      * (usually named cocoon.xconf)
      */
     public static final String CONTEXT_CONFIG_URL = "config-url";
-
-    /**
-     *  @deprecated used only by deprecated SessionStateSelector
-     */
-    public static final String SESSION_STATE_ATTRIBUTE = "org.apache.cocoon.SessionState";
 
     /**
      * Should descriptors be reloaded?

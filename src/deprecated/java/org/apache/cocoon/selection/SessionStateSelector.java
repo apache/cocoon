@@ -52,7 +52,6 @@ package org.apache.cocoon.selection;
 
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.cocoon.Constants;
 
 /**
  * This class generates source code to implement a selector that
@@ -67,12 +66,14 @@ import org.apache.cocoon.Constants;
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionStateSelector.java,v 1.1 2003/03/09 00:07:15 pier Exp $
+ * @version CVS $Id: SessionStateSelector.java,v 1.2 2003/09/27 13:01:15 joerg Exp $
  */
 public class SessionStateSelector extends SessionAttributeSelector {
 
+    public static final String SESSION_STATE_ATTRIBUTE = "org.apache.cocoon.SessionState";
+
     public SessionStateSelector() {
-        this.defaultName = Constants.SESSION_STATE_ATTRIBUTE;
+        this.defaultName = SESSION_STATE_ATTRIBUTE;
     }
 
     public void configure(Configuration config)
