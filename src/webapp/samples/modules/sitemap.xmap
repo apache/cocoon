@@ -14,12 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: sitemap.xmap,v 1.11 2004/05/07 09:52:26 upayavira Exp $ -->
-<!--
-Input Modules sample sitemap.
 
-Author: Konstantin Piroumian "kpiroumian@apache.org" 
--->
+<!--+
+    | Input Modules sample sitemap.
+    | Author: Konstantin Piroumian "kpiroumian@apache.org"
+    |
+    | $Id: sitemap.xmap,v 1.12 2004/06/16 20:00:07 vgritsenko Exp $
+    +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- =========================== Resources =============================== -->
@@ -27,11 +28,11 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
     <!-- This resource is used to create a composite page from menu and content -->
     <map:resource name="composite">
       <map:aggregate element="site">
-        <map:part src="cocoon:/menu/{../1}.xml"/>
+        <map:part src="cocoon:/menu/{../1}.html"/>
         <map:part src="cocoon:/content/{../1}.xml" label="content"/>
       </map:aggregate>
       <map:transform src="site2html.xsl">
-        <map:parameter name="page" value="{../0}" />
+        <map:parameter name="page" value="{../0}"/>
       </map:transform>
       <map:serialize/>
     </map:resource>
@@ -43,17 +44,29 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
 
       <!-- Default URL matcher. Matches '/' URLs-->
       <map:match pattern="">
-        <map:redirect-to uri="index.html" />
+        <map:redirect-to uri="index.html"/>
       </map:match>
 
       <map:match pattern="*.html">
-        <map:call resource="composite" />
-      </map:match>                
+        <map:call resource="composite"/>
+      </map:match>
 
+      <!-- Index page content -->
       <map:match pattern="content/index.xml">
-        <map:generate src="index.xhtml"/>
+        <map:generate src="menu.xml"/>
+        <map:transform src="menu2content.xsl"/>
         <map:serialize/>
-      </map:match>                            
+      </map:match>
+
+      <!-- Menu -->
+      <map:match pattern="menu/*">
+        <map:generate src="menu.xml"/>
+        <map:transform src="menu2navigation.xsl">
+          <map:parameter name="page" value="{1}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
 
       <map:match pattern="content/request.xml">
         <map:generate type="jx" src="properties.xml">
@@ -96,7 +109,7 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:transform src="properties2html.xsl">
           <map:parameter name="title" value="Request Input Module (RequestModule)"/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="content/baselink.xml">
@@ -113,8 +126,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
             In this demonstration, the request URI is {0} (an internal request not
             equivalent to what the user sees)"/>
         </map:transform>
-        <map:serialize />
-      </map:match>               
+        <map:serialize/>
+      </map:match>
 
       <map:match pattern="requestparam">
         <map:redirect-to uri="content/requestparam.xml?foo=foo+param&amp;bar=bar+param"/>
@@ -130,7 +143,7 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
             parameters. Edit the URL of this page to see the request parameter
             values change (parts after the '?' are request parameters) ."/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="content/session.xml">
@@ -147,8 +160,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
           <map:parameter name="description" value="SessionModule provides access
             to Session object properties."/>
         </map:transform>
-        <map:serialize />
-      </map:match>               
+        <map:serialize/>
+      </map:match>
 
       <map:match pattern="content/system-property.xml">
         <map:generate type="jx" src="properties.xml">
@@ -183,9 +196,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:transform src="properties2html.xsl">
           <map:parameter name="title" value="System Properties Input Module (SystemPropertiesModule)"/>
         </map:transform>
-        <map:serialize />
-      </map:match>               
-
+        <map:serialize/>
+      </map:match>
 
       <map:match pattern="content/xml.xml">
         <map:generate type="jx" src="properties.xml">
@@ -197,13 +209,13 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
           -->
         </map:generate>
         <map:transform src="properties2html.xsl">
-          <map:parameter name="title" value="XML File Input Module (XMLFileModule)"/>  
+          <map:parameter name="title" value="XML File Input Module (XMLFileModule)"/>
           <map:parameter name="description" value="XMLFileModule uses an XML
             file as a data source, with XPath expressions as the key values. In
             this example, the keys identify nodes in
-            context:///samples/modules/forrestconf.xml"/>
+            context://samples/modules/forrestconf.xml"/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="content/defaults.xml">
@@ -217,9 +229,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
             contains 'default' values, hardcoded into cocoon.xconf.
             It is simply a lookup table containing static values."/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
-
 
       <map:match pattern="content/chain.xml">
         <map:generate type="jx" src="properties.xml">
@@ -236,9 +247,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
             Try adding '?skin=myskin' to the URL, and it should
             change."/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
-
 
       <map:match pattern="content/date.xml">
         <map:generate type="jx" src="properties.xml">
@@ -249,20 +259,20 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
           <map:parameter name="description" value="Returns the current
             date and time.  The format is specified in cocoon.xconf"/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="content/session-attr.xml">
         <map:generate type="jx" src="properties.xml">
-          <map:parameter name="fruit" value="{session-attr:fruit}"/>               
+          <map:parameter name="fruit" value="{session-attr:fruit}"/>
         </map:generate>
         <map:transform src="properties2html.xsl">
           <map:parameter name="title" value="Session Attribute Input Module
-            (SessionAttributeModule)"/>  
+            (SessionAttributeModule)"/>
           <map:parameter name="description" value="SessionAttributeModule provides access
             to Session attributes."/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
 
       <map:match pattern="content/randomnumber.xml">
@@ -274,9 +284,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
           <map:parameter name="description" value="Returns a random number in a
             user-configurable range (by default 0 to 9999999999)"/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
-
 
       <map:match pattern="content/realpath.xml">
         <map:generate type="jx" src="properties.xml">
@@ -289,8 +298,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
           <map:parameter name="description" value="Returns the real path of a
             context-relative virtual path (if not deployed from a .war)."/>
         </map:transform>
-        <map:serialize />
-      </map:match>               
+        <map:serialize/>
+      </map:match>
 
       <map:match pattern="content/properties.xml">
         <map:generate type="jx" src="properties.xml">
@@ -308,24 +317,54 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
             to properties from a properties file. In this example the keys identify properties in
             resource://org/apache/cocoon/cocoon.properties"/>
         </map:transform>
-        <map:serialize />
+        <map:serialize/>
       </map:match>
 
-      <!-- Menu generation -->
-      <map:match pattern="menu/*">
-        <map:generate src="menu.xml"/>
-        <map:transform src="menu2html.xsl">
-          <map:parameter name="page" value="{1}" />
+      <map:match pattern="content/url-encode.xml">
+        <map:generate type="jx" src="properties.xml">
+          <map:parameter name="foo bar" value="{url-encode:foo bar}"/>
+          <map:parameter name="foo/bar" value="{url-encode:foo/bar}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="URL Encoding Module (URLEncodeModule)"/>
+          <map:parameter name="description" value="URLEncodeModule performs
+            URL encoding of the passed parameter"/>
         </map:transform>
         <map:serialize/>
       </map:match>
+
+      <map:match pattern="content/url-decode.xml">
+        <map:generate type="jx" src="properties.xml">
+          <map:parameter name="foo%20bar" value="{url-decode:foo%20bar}"/>
+          <map:parameter name="foo%2Fbar" value="{url-decode:foo%2Fbar}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="URL Decoding Module (URLDecodeModule)"/>
+          <map:parameter name="description" value="URLDecodeModule performs
+            URL decoding of the passed parameter"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="content/naming.xml">
+        <map:generate type="jx" src="properties.xml">
+          <map:parameter name="java:comp/env/greeting" value="{naming:java:comp/env/greeting}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="Naming Module (NamingInputModule)"/>
+          <map:parameter name="description" value="NamingInputModule provides access
+            to JNDI resources. This sample does not work with built-in Jetty as it does not provide JNDI."/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
 
       <!-- Display this sitemap source-->
       <map:match pattern="sitemap.xmap">
         <map:generate src="sitemap.xmap"/>
         <map:transform src="context://stylesheets/system/xml2html.xslt"/>
         <map:serialize/>
-      </map:match>            
+      </map:match>
 
       <map:match pattern="*.css">
         <map:read src="{1}.css" mime-type="text/css"/>
@@ -335,6 +374,6 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         <map:read src="images/{1}.gif" mime-type="image/gif"/>
       </map:match>
 
-    </map:pipeline>                
+    </map:pipeline>
   </map:pipelines>
 </map:sitemap>

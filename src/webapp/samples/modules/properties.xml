@@ -14,7 +14,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: properties.xml,v 1.2 2004/04/05 12:34:23 antonio Exp $ -->
+
+<!--+
+    | Prints out all passed parameters.
+    |
+    | $Id: properties.xml,v 1.3 2004/06/16 20:00:07 vgritsenko Exp $
+    +-->
 <properties xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:forEach var="name" items="${parameters.names}">
     <property>

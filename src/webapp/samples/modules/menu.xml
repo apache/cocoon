@@ -14,12 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!--DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "dtd/book-cocoon-v10.dtd" -->
 
 <book software="Apache Cocoon" 
       title="Apache Cocoon Input Modules Samples" 
-      copyright="@year@ The Apache Software Foundation"
->
+      copyright="@year@ The Apache Software Foundation">
 
   <menu label="Overview">
     <menu-item label="Index" href="index.html"/>
@@ -27,19 +25,22 @@
   </menu>  
  
   <menu label="Modules">
-    <menu-item label="RequestModule" href="request.html"/>
-    <menu-item label="BaseLinkModule" href="baselink.html"/>
-    <menu-item label="RequestParameterModule" href="requestparam.html"/>
-    <menu-item label="DateInputModule" href="date.html"/>
-    <menu-item label="DefaultsModule" href="defaults.html"/>
-    <menu-item label="SessionModule" href="session.html"/>
-    <menu-item label="SessionAttributeModule" href="session-attr.html"/>
-    <menu-item label="SystemPropertyModule" href="system-property.html"/>
-    <menu-item label="XMLFileModule" href="xml.html"/>
-    <menu-item label="ChainMetaModule" href="chain.html"/>
-    <menu-item label="RandomNumberModule" href="randomnumber.html"/>
-    <menu-item label="RealPathModule" href="realpath.html"/>
-    <menu-item label="PropertiesFileModule" href="properties.html"/>
+    <menu-item label="RequestModule" href="request.html" desc="Request object properties"/>
+    <menu-item label="BaseLinkModule" href="baselink.html" desc="BaseLink properties"/>
+    <menu-item label="RequestParameterModule" href="requestparam.html" desc="Request parameters"/>
+    <menu-item label="DateInputModule" href="date.html" desc="Date"/>
+    <menu-item label="DefaultsModule" href="defaults.html" desc="Default (static) values"/>
+    <menu-item label="SessionModule" href="session.html" desc="Session object properties"/>
+    <menu-item label="SessionAttributeModule" href="session-attr.html" desc="Session attributes"/>
+    <menu-item label="SystemPropertyModule" href="system-property.html" desc="System properties (environment variables)"/>
+    <menu-item label="XMLFileModule" href="xml.html" desc="XML node values"/>
+    <menu-item label="ChainMetaModule" href="chain.html" desc="Chained values"/>
+    <menu-item label="RandomNumberModule" href="randomnumber.html" desc="Random number"/>
+    <menu-item label="RealPathModule" href="realpath.html" desc="Real filesystem paths of context paths"/>
+    <menu-item label="PropertiesFileModule" href="properties.html" desc="Properties file values"/>
+    <menu-item label="URLEncodeModule" href="url-encode.html" desc="URLEncode passed parameter"/>
+    <menu-item label="URLDecodeModule" href="url-decode.html" desc="URLDecode passed parameter"/>
+    <menu-item label="NamingInputModule" href="naming.html" desc="JNDI Resources. This sample does not work with built-in Jetty as it does not provide JNDI."/>
   </menu>
 
   <menu label="Documentation">
@@ -52,5 +53,4 @@
     <menu-item label="Konstantin Piroumian" href="mailto:kpiroumian@apache.org"/>  
     <menu-item label="Many others..." href="/docs/who.html"/>      
   </menu>  
-   
 </book>
