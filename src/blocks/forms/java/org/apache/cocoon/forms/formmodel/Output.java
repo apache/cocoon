@@ -27,11 +27,11 @@ import java.util.Locale;
 /**
  * An Output widget can be used to show a non-editable value to the user.
  * An Output widget is associated with a certain
- * {@link org.apache.cocoon.woody.datatype.Datatype Datatype}.
+ * {@link org.apache.cocoon.forms.datatype.Datatype Datatype}.
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: Output.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
     private OutputDefinition definition;

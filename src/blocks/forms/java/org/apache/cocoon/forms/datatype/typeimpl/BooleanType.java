@@ -16,9 +16,9 @@
 package org.apache.cocoon.forms.datatype.typeimpl;
 
 /**
- * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
+ * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation for
  * java.lang.Boolean's.
- * @version $Id: BooleanType.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version $Id: BooleanType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class BooleanType extends AbstractDatatype {
     public Class getTypeClass() {

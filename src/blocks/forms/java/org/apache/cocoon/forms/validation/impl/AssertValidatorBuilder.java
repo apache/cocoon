@@ -22,10 +22,10 @@ import org.apache.cocoon.forms.validation.WidgetValidatorBuilder;
 import org.w3c.dom.Element;
 
 /**
- * Adapter for {@link org.apache.cocoon.woody.datatype.validationruleimpl.AssertValidationRuleBuilder}
+ * Adapter for {@link org.apache.cocoon.forms.datatype.validationruleimpl.AssertValidationRuleBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: AssertValidatorBuilder.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version CVS $Id: AssertValidatorBuilder.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class AssertValidatorBuilder extends AssertValidationRuleBuilder implements WidgetValidatorBuilder {
 

@@ -23,13 +23,13 @@ import java.util.Locale;
 import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
- * A {@link org.apache.cocoon.woody.datatype.convertor.Convertor Convertor}
+ * A {@link org.apache.cocoon.forms.datatype.convertor.Convertor Convertor}
  * implementation for types implementing Joshua Bloch's
  * <a href="http://developer.java.sun.com/developer/Books/shiftintojava/page1.html#replaceenums">
  * typesafe enum</a> pattern.
  * 
- * @see org.apache.cocoon.woody.datatype.typeimpl.EnumType
- * @version CVS $Id: EnumConvertor.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @see org.apache.cocoon.forms.datatype.typeimpl.EnumType
+ * @version CVS $Id: EnumConvertor.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class EnumConvertor implements Convertor {
 
@@ -50,7 +50,7 @@ public class EnumConvertor implements Convertor {
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.convertor.Convertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
+     * @see org.apache.cocoon.forms.datatype.convertor.Convertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.forms.datatype.convertor.Convertor.FormatCache)
      */
     public Object convertFromString(String value,
 									Locale locale,
@@ -79,7 +79,7 @@ public class EnumConvertor implements Convertor {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.convertor.Convertor#convertToString(java.lang.Object, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
+     * @see org.apache.cocoon.forms.datatype.convertor.Convertor#convertToString(java.lang.Object, java.util.Locale, org.apache.cocoon.forms.datatype.convertor.Convertor.FormatCache)
      */
     public String convertToString(Object value,
 								  Locale locale,
@@ -104,7 +104,7 @@ public class EnumConvertor implements Convertor {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.convertor.Convertor#getTypeClass()
+     * @see org.apache.cocoon.forms.datatype.convertor.Convertor#getTypeClass()
      */
     public Class getTypeClass() {
         return clazz;

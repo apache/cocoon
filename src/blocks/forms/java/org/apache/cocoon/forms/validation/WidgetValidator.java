@@ -27,7 +27,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * </li>
  * <p>
  * A validator returns a boolean result indicating if validation was successful or not.
- * If not successful, the validator <code>must<code> set a {@link org.apache.cocoon.woody.validation.ValidationError}
+ * If not successful, the validator <code>must<code> set a {@link org.apache.cocoon.forms.validation.ValidationError}
  * on the validated widget or one of its children.
  * <p>
  * <em>Note:</em> It is important (although it cannot be explicitely forbidden) that a validator
@@ -36,7 +36,7 @@ import org.apache.cocoon.forms.formmodel.Widget;
  * traversal of the widget tree).
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: WidgetValidator.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version CVS $Id: WidgetValidator.java,v 1.2 2004/03/09 11:31:10 joerg Exp $
  */
 public interface WidgetValidator {
     

@@ -18,9 +18,9 @@ package org.apache.cocoon.forms.datatype.typeimpl;
 import java.util.Date;
 
 /**
- * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
+ * A {@link org.apache.cocoon.forms.datatype.Datatype Datatype} implementation for
  * java.util.Date's (so includes a time-component).
- * @version $Id: DateType.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version $Id: DateType.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class DateType extends AbstractDatatype {
 

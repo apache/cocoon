@@ -20,12 +20,12 @@ import org.w3c.dom.Element;
 
 /**
  * Description of EnumSelectionListBuilder.
- * @version CVS $Id: EnumSelectionListBuilder.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version CVS $Id: EnumSelectionListBuilder.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class EnumSelectionListBuilder implements SelectionListBuilder {
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.SelectionListBuilder#build(org.w3c.dom.Element, org.apache.cocoon.woody.datatype.Datatype)
+     * @see org.apache.cocoon.forms.datatype.SelectionListBuilder#build(org.w3c.dom.Element, org.apache.cocoon.forms.datatype.Datatype)
      */
     public SelectionList build(Element selectionListElement, Datatype datatype)
         throws Exception {

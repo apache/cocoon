@@ -23,14 +23,14 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class enabling logging and supporting the intrepretation of
  * common configuration settings on all specific implementations of
- * {@link org.apache.cocoon.woody.binding.JXPathBindingBase}.
+ * {@link org.apache.cocoon.forms.binding.JXPathBindingBase}.
  *
  * Common supported configurations:
  * <ul>
  * <li>Attribute direction="load|save|both": {@link #getCommonAttributes(Element)}</li>
  * </ul>
  *
- * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 

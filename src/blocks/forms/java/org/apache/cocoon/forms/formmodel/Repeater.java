@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: Repeater.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class Repeater extends AbstractWidget implements ContainerWidget {
     private RepeaterDefinition repeaterDefinition;
@@ -358,7 +358,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.formmodel.ContainerWidget#getChildren()
+     * @see org.apache.cocoon.forms.formmodel.ContainerWidget#getChildren()
      */
     public Iterator getChildren() {
         // TODO Auto-generated method stub to make this compile again

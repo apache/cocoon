@@ -18,10 +18,10 @@ package org.apache.cocoon.forms.event;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 /**
- * Currently this event originates from a {@link org.apache.cocoon.woody.formmodel.Action Button}
+ * Currently this event originates from a {@link org.apache.cocoon.forms.formmodel.Action Button}
  * widget.
  * 
- * @version CVS $Id: ActionEvent.java,v 1.1 2004/03/09 10:33:45 reinhard Exp $
+ * @version CVS $Id: ActionEvent.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class ActionEvent extends WidgetEvent {
     String actionCommand;

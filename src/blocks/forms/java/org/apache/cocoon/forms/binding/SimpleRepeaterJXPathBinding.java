@@ -28,10 +28,10 @@ import org.apache.commons.jxpath.Pointer;
  * before recreating it from scratch.
  * <p>
  * For a smarter binding that avoids deletion and recreation, consider
- * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
+ * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: SimpleRepeaterJXPathBinding.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
 

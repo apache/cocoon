@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 
 /**
  * This type of selection list outputs a list of items
- * corresponding to the possible instances of an {@link org.apache.cocoon.woody.datatype.typeimpl.EnumType}.
+ * corresponding to the possible instances of an {@link org.apache.cocoon.forms.datatype.typeimpl.EnumType}.
  * <p>Example usage:</p>
  * <pre>
  * &lt;wd:selection-list type="enum" class="com.example.Sex"/>
@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * <p>If you don't want an initial null value, add a nullable="false"
  * attribute to the wd:selection-list element.
  * 
- * @version CVS $Id: EnumSelectionList.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version CVS $Id: EnumSelectionList.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
@@ -72,14 +72,14 @@ public class EnumSelectionList implements SelectionList {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.SelectionList#getDatatype()
+     * @see org.apache.cocoon.forms.datatype.SelectionList#getDatatype()
      */
     public Datatype getDatatype() {
         return datatype;
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.SelectionList#generateSaxFragment(org.xml.sax.ContentHandler, java.util.Locale)
+     * @see org.apache.cocoon.forms.datatype.SelectionList#generateSaxFragment(org.xml.sax.ContentHandler, java.util.Locale)
      */
     public void generateSaxFragment(
         ContentHandler contentHandler,

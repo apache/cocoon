@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 
 /**
  * Checks the number of values (i.e. the size of the array). This only works for Datatypes
- * for which {@link org.apache.cocoon.woody.datatype.Datatype#isArrayType()} returns
+ * for which {@link org.apache.cocoon.forms.datatype.Datatype#isArrayType()} returns
  * true.
  *
  * <p>This validation rule can perform 4 different checks:
@@ -37,7 +37,7 @@ import java.math.BigDecimal;
  *  <li>check min and max array size
  * </ul>
  * 
- * @version $Id: ValueCountValidationRule.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id: ValueCountValidationRule.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class ValueCountValidationRule extends AbstractValidationRule {
     private Expression exactExpr;

@@ -33,7 +33,7 @@ import java.util.Locale;
 
 /**
  * A general-purpose Widget that can hold one value. A Field widget can be associated
- * with a {@link org.apache.cocoon.woody.datatype.Datatype Datatype}, and thus
+ * with a {@link org.apache.cocoon.forms.datatype.Datatype Datatype}, and thus
  * a Field widget can be used to edit different kinds of data, such as strings,
  * numbers and dates. A Datatype can also have an associated SelectionList, so
  * that the value for the Field can be selected from a list, rather than being
@@ -42,7 +42,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: Field.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     protected SelectionList selectionList;

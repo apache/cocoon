@@ -26,7 +26,7 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.mozilla.javascript.Function;
 
 /**
- * A {@link org.apache.cocoon.woody.validation.WidgetValidator} implemented as a JavaScript snippet.
+ * A {@link org.apache.cocoon.forms.validation.WidgetValidator} implemented as a JavaScript snippet.
  * This snippet must return a boolean value. If it returns <code>false</code>, it <strong>must</strong> have
  * set a validation error on the validated widget or one of its children.
  * <p>
@@ -34,7 +34,7 @@ import org.mozilla.javascript.Function;
  * flowscript, can use the flow's global values and fonctions and the <code>cocoon</code> object.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptValidator.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version CVS $Id: JavaScriptValidator.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class JavaScriptValidator implements WidgetValidator {
     
@@ -47,7 +47,7 @@ public class JavaScriptValidator implements WidgetValidator {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.validation.Validator#validate(org.apache.cocoon.woody.formmodel.Widget, org.apache.cocoon.woody.FormContext)
+     * @see org.apache.cocoon.forms.validation.Validator#validate(org.apache.cocoon.forms.formmodel.Widget, org.apache.cocoon.forms.FormContext)
      */
     public final boolean validate(Widget widget, FormContext context) {
 

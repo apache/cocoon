@@ -29,9 +29,9 @@ import org.w3c.dom.Element;
 /**
  * Builds a JavaScript validator.
  * 
- * @see org.apache.cocoon.woody.validation.impl.JavaScriptValidator
+ * @see org.apache.cocoon.forms.validation.impl.JavaScriptValidator
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptValidatorBuilder.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version CVS $Id: JavaScriptValidatorBuilder.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
  */
 public class JavaScriptValidatorBuilder implements WidgetValidatorBuilder, Contextualizable, ThreadSafe {
     
@@ -47,7 +47,7 @@ public class JavaScriptValidatorBuilder implements WidgetValidatorBuilder, Conte
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.validation.ValidatorBuilder#build(org.apache.cocoon.woody.formmodel.WidgetDefinition, org.w3c.dom.Element)
+     * @see org.apache.cocoon.forms.validation.ValidatorBuilder#build(org.apache.cocoon.forms.formmodel.WidgetDefinition, org.w3c.dom.Element)
      */
     public WidgetValidator build(Element element, WidgetDefinition definition) throws Exception {
             Function function = JavaScriptHelper.buildFunction(element, ARG_NAMES);
