@@ -82,7 +82,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.30 2004/07/11 23:02:54 antonio Exp $
+ * @version CVS $Id$
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -185,7 +185,7 @@ public class Cocoon
             this.context = new ComponentContext(context);
 
             try {
-                DefaultContext setup = (DefaultContext)this.context;
+                DefaultContext setup = (DefaultContext) this.context;
                 this.threads = new TPCThreadManager();
 
                 Parameters params = new Parameters();
@@ -216,10 +216,9 @@ public class Cocoon
                 // FIXME : add a configuration option for the refresh delay.
                 // for now, hard-coded to 1 second.
                 URLSource urlSource = new URLSource();
-                urlSource.init((URL)context.get(Constants.CONTEXT_CONFIG_URL), null);
+                urlSource.init((URL) context.get(Constants.CONTEXT_CONFIG_URL), null);
                 this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                    1000L
-                );
+                                                                         1000L);
 
             } catch (IOException ioe) {
                 throw new ContextException("Could not open configuration file.", ioe);
@@ -255,9 +254,10 @@ public class Cocoon
      */
     public void initialize() throws Exception {
         if (parentComponentManager != null) {
-            this.componentManager = new CocoonComponentManager(parentComponentManager,(ClassLoader)this.context.get(Constants.CONTEXT_CLASS_LOADER));
+            this.componentManager = new CocoonComponentManager(parentComponentManager,
+                                                               (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
         } else {
-            this.componentManager = new CocoonComponentManager((ClassLoader)this.context.get(Constants.CONTEXT_CLASS_LOADER));
+            this.componentManager = new CocoonComponentManager((ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
         }
         ContainerUtil.enableLogging(this.componentManager, getLogger().getChildLogger("manager"));
         ContainerUtil.contextualize(this.componentManager, this.context);
@@ -279,13 +279,15 @@ public class Cocoon
             getLogger().debug("Work directory = " + workDir.getCanonicalPath());
         }
 
-        ExcaliburComponentManager startupManager = new ExcaliburComponentManager((ClassLoader)this.context.get(Constants.CONTEXT_CLASS_LOADER));
+        ExcaliburComponentManager startupManager = new ExcaliburComponentManager((ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
         ContainerUtil.enableLogging(startupManager, getLogger().getChildLogger("startup"));
         ContainerUtil.contextualize(startupManager, this.context);
         startupManager.setLoggerManager(this.loggerManager);
 
         try {
-            startupManager.addComponent(SAXParser.ROLE, ClassUtils.loadClass(parser), new DefaultConfiguration("", "empty"));
+            startupManager.addComponent(SAXParser.ROLE,
+                                        ClassUtils.loadClass(parser),
+                                        new DefaultConfiguration("", "empty"));
         } catch (Exception e) {
             throw new ConfigurationException("Could not load parser " + parser, e);
         }
@@ -308,13 +310,14 @@ public class Cocoon
         Processor processor = (Processor)this.componentManager.lookup(Processor.ROLE);
         if (processor instanceof ThreadSafe) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Processor of class " + processor.getClass().getName() + " is ThreadSafe");
+                getLogger().debug("Processor of class " + processor.getClass().getName() +
+                                  " is ThreadSafe");
             }
             this.threadSafeProcessor = processor;
         } else {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Processor of class " + processor.getClass().getName() +
-                " is NOT ThreadSafe -- will be looked up at each request");
+                                  " is NOT ThreadSafe -- will be looked up at each request");
             }
             this.componentManager.release(processor);
         }
@@ -397,7 +400,7 @@ public class Cocoon
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Root configuration: " + conf.getName());
         }
-        if (! "cocoon".equals(conf.getName())) {
+        if (!"cocoon".equals(conf.getName())) {
             throw new ConfigurationException("Invalid configuration file\n" + conf.toString());
         }
         if (getLogger().isDebugEnabled()) {
@@ -484,7 +487,7 @@ public class Cocoon
      * Dispose this instance
      */
     public void dispose() {
-        if (this.commands != null && this.threads != null ) {
+        if (this.commands != null && this.threads != null) {
             this.threads.deregister(this.commands);
         }
         ContainerUtil.dispose(this.commands);
@@ -492,8 +495,8 @@ public class Cocoon
         ContainerUtil.dispose(this.threads);
         this.threads = null;
 
-        if ( this.componentManager != null ) {
-            if ( this.requestListener!=null ){
+        if (this.componentManager != null) {
+            if (this.requestListener != null) {
                 this.componentManager.release(this.requestListener);
             }
             this.componentManager.release(this.threadSafeProcessor);
@@ -710,8 +713,7 @@ public class Cocoon
                 Processor processor = (Processor)this.componentManager.lookup(Processor.ROLE);
                 try {
                     return processor.buildPipeline(environment);
-                }
-                finally {
+                } finally {
                     this.componentManager.release(processor);
                 }
             }
@@ -764,4 +766,3 @@ public class Cocoon
         return this.componentManager;
     }
 }
-
