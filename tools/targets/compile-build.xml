@@ -67,7 +67,7 @@
           unless="internal.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
-    <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
+    <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles"
             srcdir="${deprecated.conf}"
             includes="**/*.xroles"/>
 
@@ -219,7 +219,6 @@
 
     <xslt in="${gump.descriptor}"
           out="${build.temp}/blocks-build.xml"
-          processor="trax"
           style="${tools.src}/blocks-build.xsl"/>
   </target>
 
@@ -240,9 +239,9 @@
   </target>
 
   <target name="call-block-target" depends="prepare">
-    <ant antfile="${build.temp}/blocks-build.xml" 
-         inheritAll="true" 
-         inheritRefs="false" 
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
          target="cocoon-block-${block.name}-${target.name}" />
   </target>
 </project>
