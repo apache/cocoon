@@ -18,7 +18,11 @@
 <xmap xpath="/sitemap/components/transformers" unless="transformer[@name='xmldb']">
 
     <map:transformer logger="sitemap.transformer.xmldb" name="xmldb" src="org.apache.cocoon.transformation.XMLDBTransformer">
+      <!-- Driver class (optional). Uncomment if you want XMLDBTransformer
+           to create and register XML:DB database. Keep commented out if
+           database created somewhere else (for example, by XML:DB source factory)
       <driver>org.apache.xindice.client.xmldb.embed.DatabaseImpl</driver>
+      -->
       <base>xmldb:xindice-embed:///db</base>
     </map:transformer>
 </xmap>

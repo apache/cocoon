@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -67,7 +67,9 @@ import javax.xml.transform.stream.StreamResult;
  * <p>Definition:</p>
  * <pre>
  * &lt;map:transformer name="xmldb" src="org.apache.cocoon.transformation.XMLDBTransformer"&gt;
+ *   &lt;!-- Optional driver parameter. Uncomment if you want transformer to register a database.
  *   &lt;driver&gt;org.apache.xindice.client.xmldb.DatabaseImpl&lt;/driver&gt;
+ *   --&gt;
  *   &lt;base&gt;xmldb:xindice:///db/collection&lt;/base&gt;
  * &lt;/map:transformer&gt;
  * </pre>
@@ -137,7 +139,7 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.9 2004/03/05 13:02:37 bdelacretaz Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.10 2004/05/03 15:45:43 vgritsenko Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
         implements CacheableProcessingComponent, Configurable, Initializable {
@@ -156,7 +158,7 @@ public class XMLDBTransformer extends AbstractTransformer
     /** The map of namespace prefixes. */
     private Map prefixMap = new HashMap();
 
-    /** XML:DB driver class name. */
+    /** XML:DB driver class name (optional) */
     private String driver = null;
 
     /** Default collection name. */
@@ -199,19 +201,21 @@ public class XMLDBTransformer extends AbstractTransformer
     public void configure(Configuration configuration) throws ConfigurationException {
         this.driver = configuration.getChild("driver").getValue(null);
         if (driver == null) {
-            throw new ConfigurationException("Required driver parameter is missing.");
+            getLogger().debug("Driver parameter is missing. Transformer will not initialize database.");
         }
 
         this.default_base = configuration.getChild("base").getValue(null);
     }
 
     /**
-     * Initializes XML:DB database instance using specified driver class.
+     * Initializes XML:DB database instance if driver class was configured.
      */
     public void initialize() throws Exception {
-        Class c = Class.forName(driver);
-        Database database = (Database)c.newInstance();
-        DatabaseManager.registerDatabase(database);
+        if (driver != null) {
+            Class c = Class.forName(driver);
+            Database database = (Database)c.newInstance();
+            DatabaseManager.registerDatabase(database);
+        }
     }
 
     /** Setup the transformer. */
