@@ -96,7 +96,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.8 2003/09/19 10:10:12 gcasper Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.9 2003/11/07 11:31:17 upayavira Exp $
  */
 public class CocoonWrapper {
 
@@ -175,7 +175,8 @@ public class CocoonWrapper {
             File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
             appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
-
+            appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, "ISO-8859-1");
+            
             loadClasses(classList);
 
             cocoon = new Cocoon();
