@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<samplesxconf xpath="/cocoon/*[@role='org.apache.cocoon.portal.PortalService']/portals" unless="portal[@name='portal']">
-
- <portal name="portal">
-   <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Auth</profile-manager>
- </portal>
-
-</samplesxconf>

@@ -1,4 +1,0 @@
-<xweb xpath="/web-app/servlet/init-param[param-name='allow-reload']/param-value"
-	if-prop="config.allow-reloads"
-	remove="/web-app/servlet/init-param[param-name='allow-reload']/param-value/text()"
->yes</xweb>

@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="cocoon/programming-languages" unless="python-language">
-    <!-- Python language -->
-    <python-language name="python" logger="core.language.python"/>
-</xconf>

@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<xconf xpath="/cocoon/input-modules" unless="component-instance[@name='xmlform']">
-    <component-instance logger="core.modules.input" name="xmlform" class="org.apache.cocoon.components.modules.input.XMLFormInput"/>
-</xconf>

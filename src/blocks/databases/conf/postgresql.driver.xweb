@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xweb xpath="/web-app/servlet/init-param[param-name='load-class']/param-value"
-	unless="text()[contains(string(.),'org.postgresql.Driver')] | 
-	comment()[contains(string(.),'org.postgresql.Driver')]"
-	if-prop="include.driver.postgre">
-        <!-- For PostgeSQL Database: -->
-             org.postgresql.Driver 
-</xweb>

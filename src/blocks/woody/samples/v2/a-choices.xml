@@ -1,7 +1,0 @@
-<wd:selection-list xmlns:wd="http://apache.org/cocoon/woody/definition/1.0">
-  <wd:item value="a"/>
-  <wd:item value="aa"/>
-  <wd:item value="aaa"/>
-  <wd:item value="aaaa"/>
-  <wd:item value="aaaaa"/>
-</wd:selection-list>

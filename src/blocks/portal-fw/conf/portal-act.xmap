@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/actions"
-      unless="action[@name='portal-auth']">
-
-    <map:action name="portal-auth"
-                src="org.apache.cocoon.webapps.portal.acting.AuthAction"/>
-</xmap>

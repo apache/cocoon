@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<page xmlns:xi="http://www.w3.org/2001/XInclude">
-  <title>XInclude loop inclusion test</title>
-  <content>
-    <xi:include href=""/>
-  </content>
-</page>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xweb xpath="/web-app/servlet/init-param[param-name='load-class']/param-value"
-	unless="text()[contains(string(.),'oracle.jdbc.driver.OracleDriver')] | 
-	comment()[contains(string(.),'oracle.jdbc.driver.OracleDriver')]"
-	if-prop="include.driver.oracle">
-        <!-- For Oracle Database: -->
-             oracle.jdbc.driver.OracleDriver 
-</xweb>

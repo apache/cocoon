@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/transformers"
-      unless="transformer[@name='portal-coplet']">
-
-    <map:transformer name="portal-coplet" 
-                     src="org.apache.cocoon.portal.transformation.CopletTransformer" 
-                     logger="sitemap.transformer.portal" />
-</xmap>

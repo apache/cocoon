@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.components.jms.JMSEventListener']">
-	<component class="org.apache.cocoon.components.jms.JMSEventListener"
-               role="org.apache.cocoon.components.jms.JMSEventListener" logger="core">
-       <parameter name="component" value="org.apache.cocoon.caching.Cache/EventAware"/>
-       <parameter name="connection" value="OpenJMS-demo"/>
-    </component>
-</xconf>

@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='webdav']">
-
-    <!-- pseudo protocol for WebDAV repositories -->
-    <component-instance name="webdav"
-                        class="org.apache.cocoon.components.source.impl.WebDAVSourceFactory"/>
-</xconf>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='wsproxy']">
-
-    <map:generator label="content"
-                   logger="sitemap.generator.wsproxy"
-                   name="wsproxy"
-                   src="org.apache.cocoon.generation.WebServiceProxyGenerator"/>
-</xmap>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.webapps.authentication.AuthenticationManager']">
-
-  <role name="org.apache.cocoon.webapps.authentication.AuthenticationManager"
-        shorthand="authentication-manager"
-        default-class="org.apache.cocoon.webapps.authentication.components.DefaultAuthenticationManager"/>
-
-</xroles>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='stx']">
-    <map:transformer name="stx"
-                     logger="sitemap.transformer.stx"
-                     src="org.apache.cocoon.transformation.TraxTransformer">
-        <transformer-factory>net.sf.joost.trax.TransformerFactoryImpl</transformer-factory>
-    </map:transformer>
-</xmap>

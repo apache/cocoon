@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.deli.Deli']">
-
-  <role name="org.apache.cocoon.components.deli.Deli"
-        shorthand="deli"
-        default-class="org.apache.cocoon.components.deli.DeliImpl"/>
-
-</xroles>

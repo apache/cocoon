@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='lexer']">
-    <map:transformer logger="sitemap.transformer.lexer" name="lexer"
-                     src="org.apache.cocoon.transformation.LexicalTransformer"/>
-    <map:transformer logger="sitemap.transformer.parser" name="parser"
-                     src="org.apache.cocoon.transformation.ParserTransformer"/>
-    <map:transformer logger="sitemap.transformer.pattern" name="pattern"
-                     src="org.apache.cocoon.transformation.PatternTransformer"/>
-</xmap>

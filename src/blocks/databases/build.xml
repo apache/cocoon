@@ -1,9 +1,0 @@
-<project default="main" >
-
-      <target name="main">
-        <mkdir dir="${build.webapp.webinf}/db"/>
-        <copy file="${block.dir}/conf/cocoondb.script" tofile="${build.webapp.webinf}/db/cocoondb.script"/>
-        <copy file="${block.dir}/conf/cocoondb.properties" tofile="${build.webapp.webinf}/db/cocoondb.properties"/>
-      </target>
-      
-</project>

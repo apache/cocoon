@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.profiler.Profiler']">
-
-  <role name="org.apache.cocoon.components.profiler.Profiler"
-        shorthand="profiler"
-        default-class="org.apache.cocoon.components.profiler.ProfilerImpl"/>
-</xroles>

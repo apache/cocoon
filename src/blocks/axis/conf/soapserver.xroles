@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<!-- not yet used -->
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.axis.SoapServer']">
-
-  <role name="org.apache.cocoon.components.axis.SoapServer"
-        shorthand="soap-server"
-        default-class="org.apache.cocoon.components.axis.SoapServerImpl"/>
-</xroles>

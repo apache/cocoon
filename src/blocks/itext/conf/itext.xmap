@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/serializers"
-      unless="serializer[@name='itext2pdf']">
-    <map:serializer name="itext2pdf" src="org.apache.cocoon.serialization.iTextSerializer" mime-type="application/pdf"/>
-</xmap>

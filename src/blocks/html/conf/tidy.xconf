@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon/xmlizer" unless="parser[@role='org.apache.excalibur.xml.sax.SAXParser/HTML']">
-
-      <parser role="org.apache.excalibur.xml.sax.SAXParser/HTML" mime-type="text/html"/>
-
-</xconf>

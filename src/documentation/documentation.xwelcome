@@ -1,7 +1,0 @@
-<xwelcome xpath="/welcome" unless="message[@id='docs']">
-
-  <message id="docs">
-   Here you find the <link href="docs/">Cocoon Documentation</link>.
-  </message>
-  
-</xwelcome>

@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='xmlform']">
-    <map:transformer logger="xmlform.sitemap.transformer" name="xmlform" 
-                     src="org.apache.cocoon.transformation.XMLFormTransformer"/>
-</xmap>

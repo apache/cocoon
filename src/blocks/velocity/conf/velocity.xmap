@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='velocity']">
-
-    <map:generator label="content"
-                   logger="sitemap.generator.velocity"
-                   name="velocity"
-                   src="org.apache.cocoon.generation.VelocityGenerator"/>
-</xmap>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<xsamples xpath="/samples" unless="group[@name='POI']">
-  <group name="POI">
-    <sample name="POI" href="poi/">
-      You want to have excel sheets? Here they go ...
-   </sample>
-  </group>
-</xsamples>
-

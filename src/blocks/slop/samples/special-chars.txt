@@ -1,9 +1,0 @@
-title: Test SlopGenerator with special characters
-
-Of course, the SlopParser must escape special chars properly, as in
-<element-names> or equations: x < y & y < z implies x < z.
-
-And, provided the encoding is set correctly, accented chars
-must be processed cleanly:
-french-test: Les éléments déchaînés se sont révélés.
-german-test: Ämterkonsultation wird übergeben.

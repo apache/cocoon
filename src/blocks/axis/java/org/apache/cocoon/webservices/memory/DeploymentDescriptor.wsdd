@@ -1,9 +1,0 @@
-<deployment xmlns="http://xml.apache.org/axis/wsdd/"
-            xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
-
- <service name="Cocoon-JVM-Memory" provider="java:RPC">
-  <parameter name="className" value="org.apache.cocoon.webservices.memory.Memory"/>
-  <parameter name="allowedMethods" value="getFreeMemory getTotalMemory invokeGC"/>
- </service>
-
-</deployment>

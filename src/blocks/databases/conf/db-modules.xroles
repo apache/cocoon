@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.modules.database.AutoIncrementModuleSelector']">
-  <!-- database modules -->
-
-  <role name="org.apache.cocoon.components.modules.database.AutoIncrementModuleSelector"
-        shorthand="autoincrement-modules"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
-
-</xroles>

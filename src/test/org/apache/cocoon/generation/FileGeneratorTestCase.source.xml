@@ -1,6 +1,0 @@
-<a>
- <b>bla bla bla</b>
- <c xmlns="http://xml.apache.org/cocoon/schema/bla/1.0">
-  <d>bla</d>
- </c>
-</a>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xroles xpath="/role-list"
-        unless="role[@name='org.apache.cocoon.woody.binding.BindingManager']">
-
-  <role name="org.apache.cocoon.woody.binding.BindingManager"
-        shorthand="woody-binding"
-        default-class="org.apache.cocoon.woody.binding.JXPathBindingManager"/>
-</xroles>

@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='jsp']">
-
-    <map:generator name="jsp"
-                   src="org.apache.cocoon.generation.JSPGenerator"
-                   label="content"/>
-</xmap>

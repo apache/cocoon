@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='proxy']">
-
-    <map:generator name="proxy"
-                   logger="sitemap.generator.proxy"
-                   src="org.apache.cocoon.generation.HttpProxyGenerator"
-                   label="content"/>
-</xmap>

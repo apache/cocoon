@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='jxforms']">
-    <map:generator logger="jxforms.sitemap.generator" name="jxforms" 
-                     src="org.apache.cocoon.generation.JXFormsGenerator"/>
-</xmap>

@@ -1,4 +1,0 @@
-<?xml version="1.0"?>
-<xmap xpath="/sitemap/components/serializers" unless="serializer[@name='xls']">
- <map:serializer name="xls" src="org.apache.cocoon.serialization.HSSFSerializer" mime-type="application/vnd.ms-excel"/>
-</xmap>

@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/selectors"
-      unless="selector[@name='session-media']">
-
-    <map:selector name="session-media"
-                  src="org.apache.cocoon.webapps.session.selection.MediaSelector"/>
-</xmap>

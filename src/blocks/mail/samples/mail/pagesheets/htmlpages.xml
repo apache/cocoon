@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<pagesheet xmlns="http://apache.org/cocoon/paginate/1.0">
-  <rules>
-    <count type="element" name="s1" num="5" />
-    <link type="unit" num="1"/>
-  </rules>
-</pagesheet>
-

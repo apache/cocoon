@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon" unless="portal-manager">
-
-  <portal-manager logger="core.portal-manager"
-                  pool-max="32" pool-min="8" pool-grow="4"/>
-
-</xconf>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xweb xpath="/web-app/servlet/init-param[param-name='load-class']/param-value"
-	unless="text()[contains(string(.),'sun.jdbc.odbc.JdbcOdbcDriver')] | 
-	comment()[contains(string(.),'sun.jdbc.odbc.JdbcOdbcDriver')]"
-	if-prop="include.driver.odbc">
-        <!-- ODBC -->
-             sun.jdbc.odbc.JdbcOdbcDriver
-</xweb>

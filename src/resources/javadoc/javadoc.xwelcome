@@ -1,7 +1,0 @@
-<xwelcome xpath="/welcome" unless="message[@id='javadocs']">
-
-  <message id="javadocs">
-   Here you find the <link href="api/java/index.html">Java API documentation</link> of the Cocoon internals.
-  </message>
-  
-</xwelcome>

@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<page xmlns:rfc="http://apache.org/cocoon/Web3-Rfc/1.0">
-	<rfc:include name="RFC_SYSTEM_INFO"/>
-</page>

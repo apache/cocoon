@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='search']">
-    <map:generator name="search" src="org.apache.cocoon.generation.SearchGenerator"/>
-</xmap>

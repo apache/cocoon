@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<output xmlns="http://chaperon.sourceforge.net/schema/syntaxtree/2.0">
- <exp>
-  <exp><number>1</number></exp>
-  <plus>+</plus>
-  <exp><number>5</number></exp>
- </exp>
-</ouput>

@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon/session-context-providers" unless="component-instance[@name='authentication']">
-    <component-instance class="org.apache.cocoon.webapps.authentication.context.AuthenticationContextProvider" name="authentication"/>
-</xconf>

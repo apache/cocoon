@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<!-- 
-    XMLForm instance document for the Cocoon Usage Feedback Web Service.
-    Author: Ivelin Ivanov, ivelin@apache.org, July 2002
--->
-
-<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
-  <ok/>
-</document>

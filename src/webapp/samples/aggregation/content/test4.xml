@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<para xmlns:xi="http://www.w3.org/2001/XInclude">
-  This is content in test4.xml, will do a include of test5.xml here:
-  <xi:include href="test5.xml#xpointer(/para/node())"/>
-</para>

@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='extractor']">
-
-    <map:transformer logger="sitemap.transformer.extractor" name="extractor" src="org.apache.cocoon.transformation.FragmentExtractorTransformer"/>
-</xmap>

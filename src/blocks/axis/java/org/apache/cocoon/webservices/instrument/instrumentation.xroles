@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.webservices.instrument.InstrumentationService']">
-
-  <role name="org.apache.cocoon.webservices.instrument.InstrumentationService"
-        shorthand="instrument-service"
-        default-class="org.apache.cocoon.webservices.instrument.InstrumentationServiceImpl"/>
-</xroles>

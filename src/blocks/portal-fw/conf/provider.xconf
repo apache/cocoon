@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon/session-context-providers" unless="component-instance[@name='portal']">
-    <component-instance class="org.apache.cocoon.webapps.portal.context.SessionContextProviderImpl" name="portal"/>
-</xconf>

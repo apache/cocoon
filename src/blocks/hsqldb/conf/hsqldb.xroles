@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.hsqldb.Server']">
-
-  <role name="org.apache.cocoon.components.hsqldb.Server" shorthand="hsqldb-server" default-class="org.apache.cocoon.components.hsqldb.ServerImpl"/>
-</xroles>

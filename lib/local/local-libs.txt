@@ -1,5 +1,0 @@
-Put here local libraries required for optional components, such as JFor or JavaMail.
-
-Local libraries aren't checked by the jar-checking system, so you must ensure they do
-not conflict with libraries that are part of the Cocoon distribution (directories core/
-and optional/).

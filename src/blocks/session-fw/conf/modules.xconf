@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon/input-modules" unless="component-instance[@name='session-context']">
-
-      <!-- This input module provides access to the information of a session context -->
-      <component-instance logger="core.modules.input" name="session-context" class="org.apache.cocoon.webapps.session.components.ContextInputModule"/>
-
-</xconf>

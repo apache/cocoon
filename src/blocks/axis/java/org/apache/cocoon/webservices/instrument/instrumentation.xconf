@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.webservices.instrument.InstrumentationService']">
-
- <component role="org.apache.cocoon.webservices.instrument.InstrumentationService"
-            class="org.apache.cocoon.webservices.instrument.InstrumentationServiceImpl"
-            logger="core.instrument.service">
- </component>
-</xconf>

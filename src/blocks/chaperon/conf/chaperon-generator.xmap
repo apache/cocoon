@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<xmap xpath="/sitemap/components/generators" unless="generator[@name='text']">
-    <map:generator logger="sitemap.generator.text" name="text" 
-                   src="org.apache.cocoon.generation.TextGenerator"/>
-</xmap>

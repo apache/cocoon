@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='script']">
-
-    <map:generator name="script"
-                   src="org.apache.cocoon.generation.ScriptGenerator"
-                   label="content"/>
-</xmap>

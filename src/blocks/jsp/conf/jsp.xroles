@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.jsp.JSPEngine']">
-
-  <role name="org.apache.cocoon.components.jsp.JSPEngine"
-        shorthand="jsp-engine"
-        default-class="org.apache.cocoon.components.jsp.JSPEngineImpl"/>
-
-</xroles>

@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.jxpath.JXPathCocoonContexts']">
-
-  <component role="org.apache.cocoon.jxpath.JXPathCocoonContexts" 
-    class="org.apache.cocoon.jxpath.JXPathCocoonContexts" 
-    logger="core.jxpath"/>	
-</xconf>

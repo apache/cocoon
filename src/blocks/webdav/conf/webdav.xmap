@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/transformers"
-      unless="transformer[@name='dasl']">
-
-    <!-- =================== DASL Transformer ========================= -->
-    <map:transformer name="dasl" src="org.apache.cocoon.transformation.DASLTransformer"/>
-</xmap>

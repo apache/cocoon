@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='php']">
-
-    <map:generator name="php"
-                   src="org.apache.cocoon.generation.PhpGenerator"
-                   label="content"/>
-</xmap>

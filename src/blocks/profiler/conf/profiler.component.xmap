@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<xmap xpath="/sitemap/components/pipes" unless="pipe[@name='profile-caching']">
-     <!-- The following two can be used for profiling:-->
-     <map:pipe name="profile-caching"
-                   src="org.apache.cocoon.components.profiler.ProfilingCachingProcessingPipeline"/>
-     <map:pipe name="profile-noncaching"
-                   src="org.apache.cocoon.components.profiler.ProfilingNonCachingProcessingPipeline"/>
-</xmap>

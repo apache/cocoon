@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/transformers" unless="transformer[@name='sql']">
-
-   <map:transformer logger="sitemap.transformer.sql" name="sql" src="org.apache.cocoon.transformation.SQLTransformer"/>
-
-</xmap>

@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.woody.datatype.DatatypeManager']">
-
-  <role name="org.apache.cocoon.woody.datatype.DatatypeManager"
-        shorthand="woody-datatype"
-        default-class="org.apache.cocoon.woody.datatype.DefaultDatatypeManager"/>
-</xroles>

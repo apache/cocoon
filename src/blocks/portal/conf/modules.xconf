@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon/input-modules" unless="component-instance[@class='org.apache.cocoon.portal.components.modules.input.CopletModule']">
-
-      <component-instance logger="core.modules.input" name="coplet" class="org.apache.cocoon.portal.components.modules.input.CopletModule"/>
-      <component-instance logger="core.modules.input" name="portal-layout" class="org.apache.cocoon.portal.components.modules.input.LayoutModule"/>
-
-</xconf>

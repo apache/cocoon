@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<xlog xpath="/logkit/categories" unless="category[@name='xmlform']">
-    <category name="xmlform" log-level="ERROR">
-      <log-target id-ref="xmlform"/>
-      <log-target id-ref="error"/>
-    </category>
-</xlog>

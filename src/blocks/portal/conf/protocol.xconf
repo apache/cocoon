@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='coplet']">
-
-    <!-- portal protocol -->
-    <component-instance class="org.apache.cocoon.portal.source.CopletSourceFactory" name="coplet"/>
-</xconf>

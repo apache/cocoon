@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/serializers"
-      unless="serializer[@name='fo2rtf']">
-    <map:serializer name="fo2rtf" src="org.apache.cocoon.serialization.RTFSerializer" mime-type="application/msword"/>
-</xmap>

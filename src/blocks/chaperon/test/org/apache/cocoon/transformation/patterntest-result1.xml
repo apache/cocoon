@@ -1,5 +1,0 @@
-<section xmlns:lex="http://chaperon.sourceforge.net/schema/lexemes/2.0">
- The <lex:lexeme symbol="chaperon" text="Chaperon"/> parser is not a part of the <lex:lexeme symbol="apache" text="Apache"/> project,
- but parts can be used in the <lex:lexeme symbol="apache" text="Apache"/> <strong><lex:lexeme symbol="cocoon" text="Cocoon"/></strong>
- project.
-</section>

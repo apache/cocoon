@@ -1,7 +1,0 @@
-<xwelcome xpath="/welcome" unless="message[@id='samples']">
-
-  <message id="samples">
-   To know more about Cocoon capabilities, look at the <link href="samples/">samples</link>.
-  </message>
-  
-</xwelcome>

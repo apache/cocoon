@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.ojb.jdo.components.JdoPMF']">
-
-  <role name="org.apache.cocoon.ojb.jdo.components.JdoPMF" shorthand="ojb-jdo" default-class="org.apache.cocoon.ojb.jdo.components.JdoPMFImpl"/>
-</xroles>

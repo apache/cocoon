@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='auth-conf']">
-
-    <map:generator name="auth-conf"
-                   src="org.apache.cocoon.webapps.authentication.generation.ConfigurationGenerator"
-                   label="content"/>
-</xmap>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<output xmlns="http://chaperon.sourceforge.net/schema/lexer/2.0">
- <lexeme symbol="num" text="35.5"/>
- <lexeme symbol="num" text="667.344"/>
- <lexeme symbol="num" text="23.23"/>
- <lexeme symbol="num" text="98."/>
- <lexeme symbol="num" text=".1"/>
- <lexeme symbol="num" text="88.88"/>
-</output>

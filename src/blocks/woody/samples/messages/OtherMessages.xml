@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<catalogue>
-  <message key="org.apache.cocoon.woody.samples.Sex.FEMALE">female</message>
-  <message key="org.apache.cocoon.woody.samples.Sex.MALE">male</message>
-</catalogue>

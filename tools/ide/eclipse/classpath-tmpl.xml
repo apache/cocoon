@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<data>
-  <src-dirs><item>@SRC_DIRS@</item></src-dirs>
-  <mock-dirs><item>@MOCKS_DIRS@</item></mock-dirs>
-  <libs><item>@LIBS@</item></libs>
-  <output>@OUTPUT_DIR@</output>
-</data>

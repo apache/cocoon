@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.caching.impl.EventAwareCacheImpl']">
-    <component role="org.apache.cocoon.caching.Cache/EventAware"
-               class="org.apache.cocoon.caching.impl.EventAwareCacheImpl"/>
-</xconf>

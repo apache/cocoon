@@ -1,9 +1,0 @@
-<bookmarks>
-<events>
-  <event type="jxpath" id="showtab">
-    <targettype>layout</targettype>
-    <targetid>maintab</targetid>
-    <path>aspectDatas/tab</path>
-  </event>
-</events>
-</bookmarks>

@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="cocoon/markup-languages/xsp-language[@name='xsp']"
-       unless="target-language[@name='python']">
-      <!-- XSP in Python -->
-      <target-language name="python">
-        <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/python/xsp.xsl"/>
-      </target-language>
-</xconf>

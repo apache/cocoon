@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xconf xpath="/cocoon" unless="ojb-odmg">
-  <!-- ODMG Implementation Interface -->
-  <ojb-odmg logger="core.ojb-odmg"/>
-</xconf>

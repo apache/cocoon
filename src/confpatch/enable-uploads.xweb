@@ -1,4 +1,0 @@
-<xweb xpath="/web-app/servlet/init-param[param-name='enable-uploads']/param-value"
-	if-prop="config.enable-uploads"
-	remove="/web-app/servlet/init-param[param-name='enable-uploads']/param-value/text()"
->true</xweb>

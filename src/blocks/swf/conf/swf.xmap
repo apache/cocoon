@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-
-<xmap xpath="/sitemap/components/serializers"
-      unless="serializer[@name='swf']">
-    <map:serializer name="swf" src="org.apache.cocoon.serialization.SWFSerializer" mime-type="application/x-shockwave-flash"/>
-</xmap>
