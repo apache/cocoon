@@ -170,7 +170,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:mike@hihat.net">Michael McKibben</a>
  * @author <a href="mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
- * @version CVS $Id: VelocityGenerator.java,v 1.5 2003/05/16 13:40:03 stephan Exp $
+ * @version CVS $Id: VelocityGenerator.java,v 1.6 2003/07/03 11:36:10 cziegeler Exp $
  */
 public class VelocityGenerator extends ComposerGenerator
   implements Initializable, Configurable, LogSystem {
@@ -209,7 +209,6 @@ public class VelocityGenerator extends ComposerGenerator
          * @param systemId the path to the resource
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getResourceStream
          *
-         * @return
          */
         public InputStream getResourceStream(String systemId)
           throws org.apache.velocity.exception.ResourceNotFoundException {
@@ -228,7 +227,6 @@ public class VelocityGenerator extends ComposerGenerator
          *
          * @param resource   
          *
-         * @return
          */
         public boolean isSourceModified(org.apache.velocity.runtime.resource.Resource resource) {
             long lastModified = 0;
@@ -249,7 +247,6 @@ public class VelocityGenerator extends ComposerGenerator
          *
          * @param resource   
          *
-         * @return
          */
         public long getLastModified(org.apache.velocity.runtime.resource.Resource resource) {
             long lastModified = 0;
@@ -270,7 +267,6 @@ public class VelocityGenerator extends ComposerGenerator
          *
          * @param systemId the path to the resource
          *
-         * @return
          */
         private Source resolveSource(String systemId)
           throws org.apache.velocity.exception.ResourceNotFoundException {

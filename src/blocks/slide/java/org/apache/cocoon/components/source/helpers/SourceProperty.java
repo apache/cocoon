@@ -67,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:holz@fiz-chemie.de">Martin Holz</a>
- * @version CVS $Id: SourceProperty.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
+ * @version CVS $Id: SourceProperty.java,v 1.3 2003/07/03 11:36:10 cziegeler Exp $
  */
 public class SourceProperty implements XMLizable {
 
@@ -273,8 +273,6 @@ public class SourceProperty implements XMLizable {
 
     /**
      *
-     *
-     * @return
      */
     public Element getValue() {
         return this.value;
