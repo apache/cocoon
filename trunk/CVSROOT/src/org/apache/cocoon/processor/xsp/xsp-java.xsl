@@ -107,7 +107,7 @@
 	// Make session object readily available
         HttpSession session = request.getSession(false);
 
-        <xsl:for-each select="/processing-instruction()[not(contains(.,'xsp'))]">
+        <xsl:for-each select="/processing-instruction()[not(starts-with(.,'xsp') or (contains(.,'cocoon-process') and contains(.,'xsp')))]">
           document.appendChild(
             document.createProcessingInstruction(
               "<xsl:value-of select="name()"/>",
