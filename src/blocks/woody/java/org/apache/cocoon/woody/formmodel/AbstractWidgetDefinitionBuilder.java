@@ -100,7 +100,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         try {
             builder = (WidgetDefinitionBuilder)widgetDefinitionBuilderSelector.select(widgetName);
         } catch (ServiceException e) {
-            throw new CascadingException("Unkown kind of widget \"" + widgetName + "\" specified at " + DomHelper.getLocation(widgetDefinition), e);
+            throw new CascadingException("Unknown kind of widget \"" + widgetName + "\" specified at " + DomHelper.getLocation(widgetDefinition), e);
         }
         return builder.buildWidgetDefinition(widgetDefinition);
     }

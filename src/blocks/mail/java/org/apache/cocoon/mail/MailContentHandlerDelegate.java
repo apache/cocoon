@@ -84,7 +84,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author Bernhard Huber
  * @since 24. Oktober 2002
- * @version CVS $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: MailContentHandlerDelegate.java,v 1.5 2003/09/22 20:10:46 upayavira Exp $
  */
 
 /*
@@ -657,7 +657,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
             } else if (o instanceof InputStream) {
                 encodeInputStreamForXML((InputStream) o);
             } else {
-                // unkown type
+                // unknown type
                 InputStream is = part.getInputStream();
                 encodeInputStreamForXML(is);
             }
@@ -836,7 +836,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.5 2003/09/22 20:10:46 upayavira Exp $
      */
     static class FolderXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -887,7 +887,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.5 2003/09/22 20:10:46 upayavira Exp $
      */
     static class MessageEnvelopeXMLizer extends AbstractLogEnabled
              implements XMLizable {
@@ -963,7 +963,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.4 2003/03/24 14:33:56 stefano Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.5 2003/09/22 20:10:46 upayavira Exp $
      */
     static class MessageXMLizer extends AbstractLogEnabled
              implements XMLizable {

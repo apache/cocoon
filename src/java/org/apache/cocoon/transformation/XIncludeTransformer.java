@@ -84,7 +84,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.7 2003/07/04 13:55:09 bruno Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.8 2003/09/22 20:10:47 upayavira Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     private SourceResolver resolver;
@@ -363,7 +363,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
                 // an empty href is a reference to the current document -- this can be different than the current base
                 if (href.equals("")) {
                     if (this.href == null)
-                        throw new SAXException("XIncludeTransformer: encountered empty href (= href pointing to the current document) but the location of the current document is unkown.");
+                        throw new SAXException("XIncludeTransformer: encountered empty href (= href pointing to the current document) but the location of the current document is unknown.");
                     int fragmentIdentifierPos2 = this.href.indexOf('#');
                     if (fragmentIdentifierPos2 != -1)
                         href = this.href.substring(0, fragmentIdentifierPos2);
