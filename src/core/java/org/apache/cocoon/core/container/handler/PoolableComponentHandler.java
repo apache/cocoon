@@ -61,6 +61,9 @@ import org.apache.cocoon.core.container.ComponentFactory;
 public class PoolableComponentHandler
 extends NonThreadSafePoolableComponentHandler {
     
+    /** All the interfaces for the proxy */
+    protected final Class[] interfaces;
+    
     /**
      * Create a PoolableComponentHandler which manages a pool of Components
      *  created by the specified factory object.
@@ -75,6 +78,7 @@ extends NonThreadSafePoolableComponentHandler {
                                      final Configuration config )
     throws Exception {
         super(info, logger, factory, config);
+        this.interfaces = this.guessWorkInterfaces(factory.getCreatedClass());
     }
     
     /* (non-Javadoc)
@@ -97,7 +101,7 @@ extends NonThreadSafePoolableComponentHandler {
     
     protected Object createProxy() {
         return Proxy.newProxyInstance(this.factory.getCreatedClass().getClassLoader(), 
-                                      this.guessWorkInterfaces(this.factory.getCreatedClass()), 
+                                      this.interfaces, 
                                       new ProxyHandler(this));
     }
 
@@ -183,7 +187,13 @@ extends NonThreadSafePoolableComponentHandler {
          */
         public void invoke() {
             try {
-                this.handler.putIntoPool(this.componentHolder.get());
+                final Object o = this.componentHolder.get();
+                /*if ( o == null ) {
+                    System.out.println("Releasing null for " + this.handler.factory.getCreatedClass());
+                } else {
+                    System.out.println("Releasing: " + o);
+                }*/
+                this.handler.putIntoPool(o);
             } catch (Exception ignore) {
                 // we ignore this
             }

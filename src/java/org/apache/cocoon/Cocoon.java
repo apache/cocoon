@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,8 +94,8 @@ public class Cocoon
     /** active request count */
     private volatile int activeRequestCount = 0;
 
-    /** the Processor if it is ThreadSafe */
-    private Processor threadSafeProcessor;
+    /** the Processor */
+    private Processor processor;
 
     /** The source resolver */
     protected SourceResolver sourceResolver;
@@ -177,14 +177,12 @@ public class Cocoon
      * @exception Exception if an error occurs
      */
     public void initialize() throws Exception {
-//long start = System.currentTimeMillis();
-
         this.serviceManager = new CocoonServiceManager(this.parentServiceManager);
         ContainerUtil.enableLogging(this.serviceManager, getLogger().getChildLogger("manager"));
         ContainerUtil.contextualize(this.serviceManager, this.context);
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("New Cocoon object.");
+            getLogger().debug("Initializing new Cocoon object.");
         }
 
         // Log the System Properties.
@@ -196,21 +194,8 @@ public class Cocoon
 
         ContainerUtil.initialize(this.serviceManager);
 
-        // Get the Processor and keep it if it's ThreadSafe
-        Processor processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
-        if (processor instanceof ThreadSafe) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Processor of class " + processor.getClass().getName() +
-                                  " is ThreadSafe");
-            }
-            this.threadSafeProcessor = processor;
-        } else {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Processor of class " + processor.getClass().getName() +
-                                  " is NOT ThreadSafe -- will be looked up at each request");
-            }
-            this.serviceManager.release(processor);
-        }
+        // Get the Processor and keep it
+        this.processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
 
         this.environmentHelper = new EnvironmentHelper(
                 (String) this.context.get(ContextHelper.CONTEXT_ROOT_URL));
@@ -222,8 +207,7 @@ public class Cocoon
         if (this.serviceManager.hasService(RequestListener.ROLE)){
             this.requestListener = (RequestListener) this.serviceManager.lookup(RequestListener.ROLE);
         }
-//long delay = System.currentTimeMillis() - start;
-//System.err.println("########## Cocoon.initialize() : " + delay);
+        Core.cleanup();        
     }
 
     /** Dump System Properties */
@@ -345,11 +329,11 @@ public class Cocoon
      */
     public void dispose() {
         if (this.serviceManager != null) {
-            if (this.requestListener != null) {
-                this.serviceManager.release(this.requestListener);
-            }
-            this.serviceManager.release(this.threadSafeProcessor);
-            this.threadSafeProcessor = null;
+            this.serviceManager.release(this.requestListener);
+            this.requestListener = null;
+
+            this.serviceManager.release(this.processor);
+            this.processor = null;
 
             this.serviceManager.release(this.sourceResolver);
             this.sourceResolver = null;
@@ -459,16 +443,11 @@ public class Cocoon
         getLogger().debug(msg.toString());
     }
 
-    /**
-     * Process the given <code>Environment</code> to produce the output.
-     *
-     * @param environment an <code>Environment</code> value
-     * @return a <code>boolean</code> value
-     * @exception Exception if an error occurs
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#process(org.apache.cocoon.environment.Environment)
      */
     public boolean process(Environment environment)
     throws Exception {
-//long start = System.currentTimeMillis();
 
         if (this.disposed) {
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
@@ -493,35 +472,18 @@ public class Cocoon
                 }
             }
 
-            if (this.threadSafeProcessor != null) {
-                result = this.threadSafeProcessor.process(environment);
-                if (this.requestListener != null) {
-                    try {
-                        requestListener.onRequestEnd(environment);
-                    } catch (Exception e) {
-                        getLogger().error("Error encountered monitoring request start: " + e.getMessage());
-                    }
-                }
-            } else {
-                Processor processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
+            result = this.processor.process(environment);
+
+            if (this.requestListener != null) {
                 try {
-                    result = processor.process(environment);
-                    if (this.requestListener != null) {
-                        try {
-                            requestListener.onRequestEnd(environment);
-                        } catch (Exception e) {
-                            getLogger().error("Error encountered monitoring request start: " + e.getMessage());
-                        }
-                    }
-                } finally {
-                    this.serviceManager.release(processor);
+                    requestListener.onRequestEnd(environment);
+                } catch (Exception e) {
+                    getLogger().error("Error encountered monitoring request start: " + e.getMessage());
                 }
             }
+
             // commit response on success
             environment.commitResponse();
-
-//long delay = System.currentTimeMillis() - start;
-//System.err.println("########## Cocoon.process() : " + delay);
 
             return result;
         } catch (Exception any) {
@@ -541,7 +503,7 @@ public class Cocoon
             if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
-            //Core.cleanup();
+            Core.cleanup();
 
             EnvironmentHelper.checkEnvironment(environmentDepth, getLogger());
         }
@@ -562,15 +524,7 @@ public class Cocoon
                 this.debug(environment, true);
             }
 
-            if (this.threadSafeProcessor != null) {
-                return this.threadSafeProcessor.buildPipeline(environment);
-            }
-            Processor processor = (Processor)this.serviceManager.lookup(Processor.ROLE);
-            try {
-                return processor.buildPipeline(environment);
-            } finally {
-                this.serviceManager.release(processor);
-            }
+            return this.processor.buildPipeline(environment);
 
         } finally {
             if (getLogger().isDebugEnabled()) {
