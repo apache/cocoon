@@ -213,6 +213,7 @@
     <map:read src="docs/samples/{1}.png" mime-type="image/png"/>
    </map:match>
 
+   <!-- =========================== Dynamic ================================ -->
    <map:match pattern="xsp/*">
     <map:generate type="serverpages" src="docs/samples/xsp/{1}.xsp"/>
     <map:transform src="stylesheets/dynamic-page2html.xsl"/>
@@ -222,15 +223,27 @@
    <map:match pattern="sql/*">
     <map:generate src="docs/samples/sql/{1}.xml"/>
     <map:transform type="sql">
-      <parameter name="driver"   value="org.gjt.mm.mysql.Driver"/>
-      <parameter name="dburl"    value="jdbc:mysql://localhost/test"/>
-      <parameter name="username" value="test"/>
-      <parameter name="password" value="test"/>
+      <parameter name="driver"   value="oracle.jdbc.driver.OracleDriver"/>
+      <parameter name="dburl"    value="jdbc:oracle:thin:@borg:1521:BORG"/>
+      <parameter name="username" value="bloritsch"/>
+      <parameter name="password" value="samantha"/>
     </map:transform>
     <map:transform src="stylesheets/simple-sql2html.xsl"/>
     <map:serialize/>
    </map:match>
 
+   <!-- ========================== Forms ================================= -->
+   <map:match pattern="forms/*">
+     <map:generate type="serverpages" src="docs/samples/forms/{1}.xsp"/>
+     <map:transform src="stylesheets/dynamic-page2html.xsl"/>
+     <map:serialize/>
+   </map:match>
+
+   <map:match pattern="forms/*/process">
+     <map:generate type="serverpages" src="docs/samples/forms/process-{1}.xsp"/>
+   </map:match>
+
+   <!-- ========================= Server ================================ -->
    <map:match pattern="generror">
     <map:generate src="docs/samples/error-giving-page.xml"/>
     <map:transform src="stylesheets/simple-samples2html.xsl"/>

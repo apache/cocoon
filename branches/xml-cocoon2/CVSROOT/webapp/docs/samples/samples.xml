@@ -63,6 +63,19 @@
    </sample>
   </group>
 
+  <group name="Sample Forms">
+    <sample name="Insert Department" href="forms/add-department" xlink:role="dynamic">
+      Adds new Departments to the department table.  You should make sure
+      that you have a database and table according to the docs/samples/sql/sql-page.sql
+      definitions.  Don't forget to change the driver information...
+    </sample>
+    <sample name="Insert Employees" href="forms/add-employee" xlink:role="dynamic">
+      Adds new Employees to the employees table.  You should make sure
+      that you have a database and table according to the docs/samples/sql/sql-page.sql
+      definitions.  Don't forget to change the driver information...
+    </sample>
+  </group>
+
   <group name="System Pages">
    <sample name="Status Page" href="status">
     Cocoon status page.
