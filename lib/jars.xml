@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.22 2003/04/01 21:25:08 sylvain Exp $
+    | CVS $Id: jars.xml,v 1.23 2003/04/03 13:20:54 bloritsch Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -252,8 +252,8 @@
    server.
   </description>
   <used-by>Cocoon</used-by>
-  <lib>optional/excalibur-altrmi-common-20030116.jar</lib>
-  <homepage>http://avalon.apache.org/framework/</homepage>
+  <lib>optional/altrmi-common-0.9.2.jar</lib>
+  <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
  </file>
 
  <file>
@@ -263,8 +263,8 @@
    server.
   </description>
   <used-by>Cocoon</used-by>
-  <lib>optional/excalibur-altrmi-server-impl-20030116.jar</lib>
-  <homepage>http://avalon.apache.org/framework/</homepage>
+  <lib>optional/altrmi-server-impl-0.9.2.jar</lib>
+  <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
  </file>
 
  <file>
@@ -274,8 +274,8 @@
    server.
   </description>
   <used-by>Cocoon</used-by>
-  <lib>optional/excalibur-altrmi-server-interfaces-20030116.jar</lib>
-  <homepage>http://avalon.apache.org/excalibur/</homepage>
+  <lib>optional/altrmi-server-interfaces-0.9.2.jar</lib>
+  <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
  </file>
 
  <file>
@@ -285,8 +285,8 @@
    server.
   </description>
   <used-by>Cocoon</used-by>
-  <lib>optional/excalibur-altrmi-registry-20030116.jar</lib>
-  <homepage>http://avalon.apache.org/excalibur/</homepage>
+  <lib>optional/altrmi-registry-0.9.2.jar</lib>
+  <homepage>http://incubator.apache.org/projects/altrmi/</homepage>
  </file>
 
  <file>
