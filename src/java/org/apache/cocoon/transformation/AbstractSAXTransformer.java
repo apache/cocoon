@@ -121,7 +121,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.3 2003/06/18 12:22:06 jefft Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.4 2003/06/19 11:19:25 jefft Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -199,22 +199,6 @@ implements Composable, Configurable, Recyclable {
 
     /** The namespaces */
     private List namespaces = new ArrayList(5);
-
-    /**
-     * Whether to log SAX events for debugging. Defaults to true, and can be
-     * set to false by subclasses with a constructor.
-     * */
-    protected final boolean logSAXEvents;
-
-    public AbstractSAXTransformer() {
-        this(true);
-    }
-
-    /** @param logSAXEvents Whether to do a debug-level log for each processed
-     * element. */
-    protected AbstractSAXTransformer(final boolean logSAXEvents) {
-        this.logSAXEvents = logSAXEvents;
-    }
 
     /**
      * Avalon Configurable Interface
@@ -699,13 +683,13 @@ implements Composable, Configurable, Recyclable {
                                          String raw,
                                          Attributes attr)
     throws ProcessingException, IOException, SAXException {
-        if (this.logSAXEvents && this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN startTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ", attr=" + attr + ")");
-        }
+        //if (this.getLogger().isDebugEnabled()) {
+        //    this.getLogger().debug("BEGIN startTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ", attr=" + attr + ")");
+        //}
         if (this.ignoreEventsCount == 0) super.startElement(uri, name, raw, attr);
-        if (this.logSAXEvents && this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END startTransformingElement");
-        }
+        //if (this.getLogger().isDebugEnabled()) {
+        //    this.getLogger().debug("END startTransformingElement");
+        //}
     }
 
     /**
@@ -719,13 +703,13 @@ implements Composable, Configurable, Recyclable {
                                        String name,
                                        String raw)
     throws ProcessingException, IOException, SAXException {
-        if (this.logSAXEvents && this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN endTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ")");
-        }
+        //if (this.getLogger().isDebugEnabled()) {
+        //    this.getLogger().debug("BEGIN endTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ")");
+        //}
         if (this.ignoreEventsCount == 0) super.endElement(uri, name, raw);
-        if (this.logSAXEvents && this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END endTransformingElement");
-        }
+        //if (this.getLogger().isDebugEnabled()) {
+        //    this.getLogger().debug("END endTransformingElement");
+        //}
     }
 
     /**
