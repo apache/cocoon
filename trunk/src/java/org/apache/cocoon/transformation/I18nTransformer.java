@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.6 2003/05/20 14:47:13 bruno Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.7 2003/05/20 15:14:02 bruno Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -2134,8 +2134,10 @@ public class I18nTransformer extends AbstractTransformer
         public Bundle getCatalogue() throws Exception {
             if (catalogue == null) {
                 resolve();
-                configureFactory(resolvedLocation);
-                catalogue = (Bundle)factory.select(resolvedName, locale);
+                synchronized(factory) {
+                    configureFactory(resolvedLocation);
+                    catalogue = (Bundle)factory.select(resolvedName, locale);
+                }
             }
             return catalogue;
         }
