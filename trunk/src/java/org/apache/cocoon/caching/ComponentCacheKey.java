@@ -61,7 +61,7 @@ import java.io.Serializable;
  *      is unique inside the components space.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentCacheKey.java,v 1.1 2003/03/09 00:08:44 pier Exp $
+ * @version CVS $Id: ComponentCacheKey.java,v 1.2 2004/02/22 15:06:26 unico Exp $
  */
 public final class ComponentCacheKey
     implements Serializable {
@@ -93,7 +93,7 @@ public final class ComponentCacheKey
                              String       componentIdentifier,
                              Serializable cacheKey) {
         this.type = componentType;
-        this.identifier = componentIdentifier;
+        this.identifier = componentIdentifier == null ? "" : componentIdentifier;
         this.key = cacheKey;
 
     }
