@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.38 2003/05/06 08:49:59 bdelacretaz Exp $
+    | CVS $Id: jars.xml,v 1.39 2003/05/06 09:09:26 bruno Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -338,7 +338,7 @@
   </description>
   <ant-target>jar</ant-target>
   <used-by>Cocoon</used-by>
-  <lib>endorsed/xalan-2.5.0.jar</lib>
+  <lib>endorsed/xalan-20030506.jar</lib>
   <homepage>http://xml.apache.org/xalan/</homepage>
  </file>
 
