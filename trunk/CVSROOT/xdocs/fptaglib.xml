@@ -145,11 +145,12 @@
 
 		<p>The output looks like this:</p>
 		<source><![CDATA[
-	<menu fp-action="read" [fp-error="fp-1"] fp-from="external-item" fp-select="../item/title" fp-type="text/xml">
-		<title>Title 1</title>
-		<title>Title 2</title>
-		<title>Title ...</title>
-	</menu>
+<menu fp-action="read" [fp-error="fp-1"] fp-from="external-item"
+      fp-select="../item/title" fp-type="text/xml">
+  <title>Title 1</title>
+  <title>Title 2</title>
+  <title>Title ...</title>
+</menu>
 	]]></source>
 
 		<p>Here we make a Form <code>input</code> Field, so the name is important, but it does not need to relate to the name of the location where the data is to be stored. The parent deos not have to be <code>input</code>, use whatever you want.</p>
