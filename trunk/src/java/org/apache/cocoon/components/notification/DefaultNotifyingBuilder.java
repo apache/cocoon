@@ -51,8 +51,6 @@
 package org.apache.cocoon.components.notification;
 
 import org.apache.avalon.framework.CascadingThrowable;
-import org.apache.avalon.framework.component.Component;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -69,9 +67,15 @@ import java.util.Map;
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author Marc Liyanage (futureLAB AG)
- * @version CVS $Id: DefaultNotifyingBuilder.java,v 1.2 2003/03/16 14:09:28 stefano Exp $
+ * @version CVS $Id: DefaultNotifyingBuilder.java,v 1.3 2003/10/27 01:41:52 ghoward Exp $
+ * 
+ * TODO: is no x-avalon.lifestyle correct/allowed here?
+ * 
+ * @avalon.component
+ * @avalon.service type="NotifyingBuilder"
+ * @x-avalon.info name="notifying-builder"
  */
-public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
+public class DefaultNotifyingBuilder implements NotifyingBuilder {
 
     /**
      * Builds a Notifying object (SimpleNotifyingBean in this case)
