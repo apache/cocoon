@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -72,22 +71,21 @@ import org.apache.poi.hssf.util.Region;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: Sheet.java,v 1.3 2003/03/24 14:33:53 stefano Exp $
+ * @version CVS $Id: Sheet.java,v 1.4 2003/06/14 01:16:59 joerg Exp $
  */
 
 // package scope
-class Sheet extends AbstractLogEnabled
-{
+class Sheet extends AbstractLogEnabled {
+
     private HSSFSheet _sheet;
-    private String    _name;
-    private int       _physical_index;
-    private Workbook  _workbook;
+    private String _name;
+    private int _physical_index;
+    private Workbook _workbook;
 
     // keys are Shorts (row numbers), values are Row instances
-    private Map       _rows;
+    private Map _rows;
 
-    private Map      regions;
-
+    private Map regions;
 
     //optimization constant
     private final static int ROWS_CAPACITY = 200;
@@ -95,21 +93,18 @@ class Sheet extends AbstractLogEnabled
     //optimization constant
     private final static int REGION_CAPACITY = 20;
 
-
     /**
      * Constructor Sheet
      *
      * @param workbook
      */
-
-    Sheet(final Workbook workbook)
-    {
-        _workbook       = workbook;
-        _name           = _workbook.getNextName();
-        _sheet          = _workbook.createSheet(_name);
+    Sheet(final Workbook workbook) {
+        _workbook = workbook;
+        _name = _workbook.getNextName();
+        _sheet = _workbook.createSheet(_name);
         _physical_index = _workbook.getPhysicalIndex(_name);
-        _rows           = new HashMap(ROWS_CAPACITY);
-        regions         = new HashMap(REGION_CAPACITY);
+        _rows = new HashMap(ROWS_CAPACITY);
+        regions = new HashMap(REGION_CAPACITY);
     }
 
     /**
@@ -117,11 +112,8 @@ class Sheet extends AbstractLogEnabled
      *
      * @param new_name
      */
-
-    void renameSheet(final String new_name)
-    {
-        if (!_name.equals(new_name))
-        {
+    void renameSheet(final String new_name) {
+        if (!_name.equals(new_name)) {
             _workbook.renameSheet(_physical_index, new_name);
             _name = new_name;
         }
@@ -131,27 +123,18 @@ class Sheet extends AbstractLogEnabled
      * set a column's width
      *
      * @param number the column number
-     * @param set the width in characters
      * @param points
      *
      * @exception IOException if any arguments are illegal
      */
-
-    void setColumnWidth(final int number, final double points)
-        throws IOException
-    {
-        if ((number < 0) || (number > Short.MAX_VALUE))
-        {
-            throw new IOException("column number " + number
-                                  + " is too large");
+    void setColumnWidth(final int number, final double points) throws IOException {
+        if ((number < 0) || (number > Short.MAX_VALUE)) {
+            throw new IOException("column number " + number + " is too large");
         }
-        if (!isValidColumnPoints(points))
-        {
-            throw new IOException("points " + points
-                                  + " is out of range");
+        if (!isValidColumnPoints(points)) {
+            throw new IOException("points " + points + " is out of range");
         }
-        _sheet.setColumnWidth(( short ) number,
-                              ( short ) ((points * 48) + .5));
+        _sheet.setColumnWidth((short)number, (short)((points * 48) + .5));
     }
 
     /**
@@ -161,9 +144,7 @@ class Sheet extends AbstractLogEnabled
      *
      * @return column width in characters
      */
-
-    short getColumnWidth(short number)
-    {
+    short getColumnWidth(short number) {
         return _sheet.getColumnWidth(number);
     }
 
@@ -174,23 +155,17 @@ class Sheet extends AbstractLogEnabled
      *
      * @exception IOException
      */
-
-    void setDefaultColumnWidth(double width)
-        throws IOException
-    {
-        if ((width < 0) || (width >= (4.8 * (0.5 + Short.MAX_VALUE))))
-        {
+    void setDefaultColumnWidth(double width) throws IOException {
+        if ((width < 0) || (width >= (4.8 * (0.5 + Short.MAX_VALUE)))) {
             throw new IOException("Invalid width (" + width + ")");
         }   // 12 is being used as a "guessed" points for the font
-        _sheet.setDefaultColumnWidth(( short ) ((width/4.8) + 0.5));
+        _sheet.setDefaultColumnWidth((short)((width / 4.8) + 0.5));
     }
 
     /**
      * @return default column width (in 1/256ths of a character width)
      */
-
-    short getDefaultColumnWidth()
-    {
+    short getDefaultColumnWidth() {
         return _sheet.getDefaultColumnWidth();
     }
 
@@ -201,41 +176,31 @@ class Sheet extends AbstractLogEnabled
      *
      * @exception IOException
      */
-
-    void setDefaultRowHeight(double height)
-        throws IOException
-    {
-        if (!isValidPoints(height))
-        {
+    void setDefaultRowHeight(double height) throws IOException {
+        if (!isValidPoints(height)) {
             throw new IOException("Invalid height (" + height + ")");
         }
-        _sheet.setDefaultRowHeight(( short ) ((height * 20) + .5));
+        _sheet.setDefaultRowHeight((short)((height * 20) + .5));
     }
 
     /**
      * @return default row height
      */
-
-    short getDefaultRowHeight()
-    {
+    short getDefaultRowHeight() {
         return _sheet.getDefaultRowHeight();
     }
 
     /**
      * @return name
      */
-
-    String getName()
-    {
+    String getName() {
         return _name;
     }
 
     /**
      * @return index
      */
-
-    int getIndex()
-    {
+    int getIndex() {
         return _physical_index;
     }
 
@@ -248,62 +213,30 @@ class Sheet extends AbstractLogEnabled
      *
      * @exception IOException if rowNo is out of range
      */
-
-    Row getRow(int rowNo)
-        throws IOException
-    {
-        if (rowNo < 0)
-        {
+    Row getRow(int rowNo) throws IOException {
+        if (rowNo < 0) {
             throw new IOException("Illegal row number: " + rowNo);
         }
-        Short  key  = new Short((short)rowNo);
-        Object o    = _rows.get(key);
-        Row    rval = null;
+        Short key = new Short((short)rowNo);
+        Object o = _rows.get(key);
+        Row rval = null;
 
-        if (o == null)
-        {
-            rval = createRow((int)rowNo);
+        if (o == null) {
+            rval = createRow(rowNo);
             _rows.put(key, rval);
-        }
-        else
-        {
-            rval = ( Row ) o;
+        } else {
+            rval = (Row)o;
         }
         return rval;
     }
 
-/*    void addStyleRegion(Region region,
-                     short halign,
-                     short valign,
-                     boolean wrap,
-                     boolean locked,
-                     boolean hidden,
-                     short fontcolor,
-                     short fontheight,
-                     String fontname) {
-
-        HSSFCellStyle style = _workbook.createStyle(halign,
-                                                    valign,
-                                                    wrap,
-                                                    locked,
-                                                    hidden,
-                                                    fontcolor,
-                                                    fontheight,
-                                                    fontname);
-        regions.put(region, style);
-
-
-    }*/
-
     HSSFCellStyle addStyleRegion(Region region) {
-
         HSSFCellStyle style = _workbook.createStyle();
         /*
         getLogger().debug("region = "+ region.getRowFrom() + ","+region.getColumnFrom()+
             ","+region.getRowTo()+","+region.getColumnTo());
             */
         regions.put(region, style);
-
         return style;
     }
 
@@ -313,34 +246,30 @@ class Sheet extends AbstractLogEnabled
      *  expect that then your code dies a horrible death.
      *  @return HSSFCellStyle
      */
-     HSSFCellStyle getCellStyleForRegion(int row, short col) {
+    HSSFCellStyle getCellStyleForRegion(int row, short col) {
         Iterator iregions = regions.keySet().iterator();
         while (iregions.hasNext()) {
-            Region region = ((Region) iregions.next());
-//            if (col == 1)
-//                getLogger().debug("breakpoint support");
-            if ( region.contains(row, col) ) {
+            Region region = ((Region)iregions.next());
+            //            if (col == 1)
+            //                getLogger().debug("breakpoint support");
+            if (region.contains(row, col)) {
                 //getLogger().debug("Returning style for " + row +"," + col);
-                return (HSSFCellStyle) regions.get( region );
+                return (HSSFCellStyle)regions.get(region);
             }
         }
         //getLogger().debug("returning null for "+row+","+col);
         return null;
     }
 
-
-    private Row createRow(final int rowNo)
-    {
-        return new Row(_sheet.createRow((int)rowNo), this);
+    private Row createRow(final int rowNo) {
+        return new Row(_sheet.createRow(rowNo), this);
     }
 
-    private boolean isValidPoints(double points)
-    {
+    private boolean isValidPoints(double points) {
         return ((points >= 0) && (points <= ((Short.MAX_VALUE + 0.5) / 20)));
     }
 
-    private boolean isValidColumnPoints(double points)
-    {
+    private boolean isValidColumnPoints(double points) {
         return ((points >= 0) && (points <= ((Short.MAX_VALUE + 0.5) / 48)));
     }
 
@@ -359,68 +288,54 @@ class Sheet extends AbstractLogEnabled
      * to the style defined by the style region.  If there is not a defined cell
      * and no styleregion encompases the area, then no cell is defined.
      */
-    public void assignBlanksToRegions () {
+    public void assignBlanksToRegions() {
         Iterator iregions = regions.keySet().iterator();
-
-
-
         while (iregions.hasNext()) {
-            Region region = ((Region) iregions.next());
+            Region region = ((Region)iregions.next());
             //getLogger().debug("fixing region "+region.getRowFrom()+","+region.getColumnFrom()+"-"+
             //          region.getRowTo()+","+region.getColumnTo());
-
-            for (int rownum = region.getRowFrom(); rownum < region.getRowTo() +1; rownum++) {
-
-                HSSFRow row  = _sheet.getRow(rownum);
-
-                for (short colnum = region.getColumnFrom(); colnum < region.getColumnTo()+1; colnum ++) {
-
+            for (int rownum = region.getRowFrom(); rownum < region.getRowTo() + 1; rownum++) {
+                HSSFRow row = _sheet.getRow(rownum);
+                for (short colnum = region.getColumnFrom(); colnum < region.getColumnTo() + 1; colnum++) {
                     HSSFCellStyle style = (HSSFCellStyle)regions.get(region);
-
-
-                    if (!isBlank(style)) { //don't waste time with huge blocks of blankly
-                                           //styled cells
-
+                    if (!isBlank(style)) {
+                        //don't waste time with huge blocks of blankly styled cells
                         if (row == null) {
-                            if (rownum > Short.MAX_VALUE)
-                            {  rownum = Short.MAX_VALUE; }
-
-                            row = _sheet.createRow((int)rownum);
+                            if (rownum > Short.MAX_VALUE) {
+                                rownum = Short.MAX_VALUE;
+                            }
+                            row = _sheet.createRow(rownum);
                         }
-
                         HSSFCell cell = row.getCell(colnum);
-
                         if (cell == null) {
                             //getLogger().debug("creating blank cell at "+rownum + "," +colnum);
-                            cell = row.createCell(colnum,HSSFCell.CELL_TYPE_BLANK);
+                            cell = row.createCell(colnum, HSSFCell.CELL_TYPE_BLANK);
                             cell.setCellStyle((HSSFCellStyle)regions.get(region));
                         }
                     }
-
                 }
             }
         }
     }
 
-
     private boolean isBlank(HSSFCellStyle style) {
-
         HSSFFont font = null;
-        if (style.getFontIndex() >0)
-            font = ((HSSFFont)_workbook.getWorkbook().getFontAt(style.getFontIndex()));
-
+        if (style.getFontIndex() > 0) {
+            font = (_workbook.getWorkbook().getFontAt(style.getFontIndex()));
+        }
         if (style.getBorderBottom() == 0 &&
-            style.getBorderTop() == 0 &&
-            style.getBorderRight() == 0 &&
-            style.getBorderLeft() == 0 &&
-            style.getFillBackgroundColor() == HSSFColor.WHITE.index &&
-            style.getFillPattern() == 0 &&
-            (style.getFontIndex() == 0 ||
-               ((font.getFontName().equals("Arial") ||
-                font.getFontName().equals("Helvetica")) &&
-                font.getFontHeightInPoints() > 8 && font.getFontHeightInPoints() < 12)
-             )) return true;
-
+                style.getBorderTop() == 0 &&
+                style.getBorderRight() == 0 &&
+                style.getBorderLeft() == 0 &&
+                style.getFillBackgroundColor() == HSSFColor.WHITE.index &&
+                style.getFillPattern() == 0 &&
+                (style.getFontIndex() == 0 ||
+                    ((font.getFontName().equals("Arial") ||
+                    font.getFontName().equals("Helvetica")) &&
+                    font.getFontHeightInPoints() > 8 &&
+                    font.getFontHeightInPoints() < 12))) {
+            return true;
+        }
         return false;
     }
 
