@@ -72,8 +72,14 @@ public class ComponentFactory {
         this.environment.logger = actualLogger;
         
         // now get the meta data for the component
-        // FIXME - get the classloader from the environment
-        this.serviceClass = this.getClass().getClassLoader().loadClass(this.serviceInfo.getServiceClassName());
+        // FIXME - this is a workaround
+        if ( this.environment.classloader == null ) {
+            this.environment.classloader = Thread.currentThread().getContextClassLoader();
+            if ( this.environment.classloader == null ) {
+                this.environment.classloader = this.getClass().getClassLoader();
+            }            
+        }
+        this.serviceClass = this.environment.classloader.loadClass(this.serviceInfo.getServiceClassName());
         if ( this.serviceInfo.getDestroyMethodName() != null ) {
             this.destroyMethod = this.serviceClass.getMethod(this.serviceInfo.getDestroyMethodName(), null);
         } else {
