@@ -78,7 +78,7 @@ import javax.xml.transform.TransformerException;
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.3 2003/03/12 15:35:53 cziegeler Exp $
+ * @version CVS $Id: DOMUtil.java,v 1.4 2003/07/24 09:17:17 haul Exp $
 */
 public final class DOMUtil {
 
@@ -1191,7 +1191,7 @@ public final class DOMUtil {
             sb.append(node.getNodeValue());
             break;
         case Node.DOCUMENT_NODE:
-            sb.append("<xml version=\"1.0\">");
+            sb.append("<?xml version=\"1.0\"?>");
             if (node.hasChildNodes()) {
                 children = node.getChildNodes();
                 for(int i=0; i < children.getLength(); i++) {
