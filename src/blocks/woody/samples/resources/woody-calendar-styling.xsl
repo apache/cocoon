@@ -40,7 +40,7 @@
       | must be called in <body> 
       +-->
   <xsl:template name="woody-calendar-body">
-    <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
+    <div id="woody_calendarDiv"/>
   </xsl:template>
 
   <!--+
