@@ -4,14 +4,14 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.3 1999-12-03 00:07:16 stefano Exp $
+  $Id: todo.xml,v 1.4 1999-12-03 23:46:16 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
  <devs>
   <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
-  <person name="Donald Ball" email="balld@webslingerZ.com" id="DB"/>
-  <person name="Ricardo Rocha" email="rrocha@plenix.org" id="RR"/>
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ricardo Rocha" email="ricard@apache.org" id="RR"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
  </devs>
  
@@ -23,6 +23,10 @@
   Write the HTML/FO stylesheets.
  </action>
 
+ <action priority="showstopper" assigned-to="SM" context="admin">
+  Write the user selectable error page.
+ </action>
+
  <action priority="showstopper" assigned-to="SM" context="build">
   Finish Ant build file and clean it up.
  </action>
@@ -31,6 +35,11 @@
   Make sure all the java.apache.org stuff is removed.
  </action>
 
+
+ <action priority="high" context="code">
+  Implement "xsl:output" instead of "cocoon-format" PI and redesign
+  formatting subsystem.
+ </action>
 
  <action priority="high" context="code">
   Pass request/session parameters to the XSLT processors for dynamic
