@@ -20,6 +20,7 @@ import java.util.Map;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.commons.lang.BooleanUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -194,13 +195,10 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          * Interpretes the value of the lenient attribute into a Boolean object
          * allowing three-state logic (true/false/unset)
          * @param leniency value of the @lenient attribute
-         * @return null if the leniency parameter is String, otherwise the
+         * @return null if the leniency parameter is null or a String otherwise the allowed values
          */
         private static Boolean decideLeniency(String leniency) {
-            if (leniency == null) {
-                return null;
-            }
-            return new Boolean(leniency);
+                return BooleanUtils.toBooleanObject(leniency);
         }
     }
 }
