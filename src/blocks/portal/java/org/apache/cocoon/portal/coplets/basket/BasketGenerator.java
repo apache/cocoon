@@ -67,7 +67,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: BasketGenerator.java,v 1.1 2004/02/23 14:52:50 cziegeler Exp $
+ * @version CVS $Id: BasketGenerator.java,v 1.2 2004/02/24 10:35:53 joerg Exp $
  */
 public class BasketGenerator
 extends ServiceableGenerator {
@@ -197,7 +197,6 @@ extends ServiceableGenerator {
             LinkService linkService = service.getComponentManager().getLinkService();
             XMLUtils.startElement(this.xmlConsumer, "basket-admin");
             if ( baskets.size() > 0 ) {
-                ProfileManager profileManager = service.getComponentManager().getProfileManager();
                 XMLUtils.startElement(this.xmlConsumer, "baskets");
                 for(int i=0; i<baskets.size();i++) {
                     BasketManager.BasketDescription item = (BasketManager.BasketDescription)baskets.get(i);
