@@ -35,7 +35,7 @@
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
  APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
- INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
+INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
  DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
  OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
  ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
@@ -92,24 +92,11 @@ public class JXFormsGenerator extends AbstractGenerator {
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
 
-    private static final char[] EMPTY_CHARS = "".toCharArray();
-
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
     private static final Iterator EMPTY_ITER = new Iterator() {
             public boolean hasNext() {
                 return false;
-            }
-            public Object next() {
-                return null;
-            }
-            public void remove() {
-            }
-        };
-
-    private static final Iterator NULL_ITER = new Iterator() {
-            public boolean hasNext() {
-                return true;
             }
             public Object next() {
                 return null;
@@ -1117,7 +1104,7 @@ public class JXFormsGenerator extends AbstractGenerator {
 
         static class TemplateConsumer extends Parser implements XMLConsumer {
 
-            JXFormsGenerator template;
+            private JXFormsGenerator template;
 
             public TemplateConsumer(SourceResolver resolver, Map objectModel,
                                     String src, Parameters parameters) 
@@ -1145,7 +1132,7 @@ public class JXFormsGenerator extends AbstractGenerator {
             }
         }
 
-        TemplateConsumer templateConsumer;
+        private TemplateConsumer templateConsumer;
 
         public void recycle() {
             super.recycle();
@@ -1169,9 +1156,9 @@ public class JXFormsGenerator extends AbstractGenerator {
     private static Map cache = new HashMap();
     private XMLConsumer consumer;
     private Source inputSource;
-    WebContinuation kont;
-    Object bean;
-    Map objectModel;
+    private WebContinuation kont;
+    private Object bean;
+    private Map objectModel;
 
     private XMLConsumer getConsumer() {
         return consumer;
@@ -1325,7 +1312,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 Iterator iter = null;
                 try {
                     if (nodeset == null) {
-                        iter = NULL_ITER;
+                        iter = EMPTY_ITER;
                     } else {
                         iter = 
                             nodeset.iteratePointers(rootContext,
@@ -1387,8 +1374,11 @@ public class JXFormsGenerator extends AbstractGenerator {
                     }
                     JXPathContext localJXPathContext = 
                         jxpathContextFactory.newContext(null, value);
-                    String path = contextPath;
-                    if (ref.string != null) {
+                    String path;
+                    if (ref.absolute) {
+                        path = ref.string;
+                    } else {
+                        path = contextPath;
                         if (path != null) {
                             path += "/.";
                         } else {
@@ -1413,7 +1403,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                 Iterator iter = null;
                 try {
                     if (nodeset == null) {
-                        iter = NULL_ITER;
+                        iter = EMPTY_ITER;
                     } else {
                         iter = 
                             nodeset.iteratePointers(rootContext,
@@ -1545,7 +1535,7 @@ public class JXFormsGenerator extends AbstractGenerator {
                                       startElement.raw,
                                       startElement.attributes);
                 if (newForm == null) {
-                    throw new SAXParseException("A form with id=\"" + id + "\" does not exist",
+                    throw new SAXParseException("Form not found: " + id,
                                                 ev.location,
                                                 null);
                 }
