@@ -50,12 +50,8 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.cocoon.woody.Constants;
@@ -77,7 +73,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.12 2003/12/29 06:14:49 tim Exp $
+ * @version CVS $Id: Form.java,v 1.13 2003/12/29 17:52:12 stefano Exp $
  */
 public class Form extends AbstractContainerWidget {
     

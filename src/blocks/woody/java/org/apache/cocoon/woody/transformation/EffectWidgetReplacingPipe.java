@@ -62,7 +62,6 @@ import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Struct;
 import org.apache.cocoon.woody.formmodel.Union;
 import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.cocoon.woody.transformation.EffectPipe.Handler;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.commons.jxpath.JXPathException;
@@ -86,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  *
- * CVS $Id: EffectWidgetReplacingPipe.java,v 1.2 2003/12/29 15:37:28 mpo Exp $
+ * CVS $Id: EffectWidgetReplacingPipe.java,v 1.3 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {

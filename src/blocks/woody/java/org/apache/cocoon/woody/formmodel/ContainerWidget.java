@@ -50,20 +50,11 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.datatype.SelectionList;
-import org.apache.cocoon.woody.datatype.ValidationError;
-import org.apache.cocoon.woody.event.WidgetEvent;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * Interface to be implemented by Widgets which contain other widgets.
  *
- * CVS $Id: ContainerWidget.java,v 1.3 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: ContainerWidget.java,v 1.4 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
  */
 public interface ContainerWidget extends Widget {

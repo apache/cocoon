@@ -50,18 +50,22 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.*;
 
 /**
  * Helper class for the implementation of widgets containing other widgets.
  *
- * CVS $Id: ContainerDelegate.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: ContainerDelegate.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
  */
 public class ContainerDelegate {

@@ -51,24 +51,12 @@
 package org.apache.cocoon.woody.formmodel;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.datatype.SelectionList;
-import org.apache.cocoon.woody.event.ValueChangedEvent;
-import org.apache.cocoon.woody.event.ValueChangedListener;
-import org.w3c.dom.Element;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * Interface to be implemented by WidgetDefinitions for Widgets which contain other widgets.
  *
- * CVS $Id: ContainerDefinition.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: ContainerDefinition.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
  */
 public interface ContainerDefinition extends WidgetDefinition {

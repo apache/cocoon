@@ -45,29 +45,27 @@
 */
 
 package org.apache.cocoon.components.flow.javascript.fom;
-import java.net.MalformedURLException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.Reader;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.tempuri.javac.JavaCompiler;
-import org.tempuri.javac.JavaCompilerErrorHandler;
-import org.tempuri.javac.JavaClassWriter;
-import org.tempuri.javac.JavaClassWriterFactory;
 import org.tempuri.javac.JavaClassReader;
 import org.tempuri.javac.JavaClassReaderFactory;
+import org.tempuri.javac.JavaClassWriter;
+import org.tempuri.javac.JavaClassWriterFactory;
+import org.tempuri.javac.JavaCompiler;
+import org.tempuri.javac.JavaCompilerErrorHandler;
 import org.tempuri.javac.JavaSourceReader;
 import org.tempuri.javac.JavaSourceReaderFactory;
 import org.tempuri.javacImpl.eclipse.JavaCompilerImpl;

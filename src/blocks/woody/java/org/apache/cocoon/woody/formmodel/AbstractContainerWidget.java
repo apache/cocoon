@@ -53,9 +53,6 @@ package org.apache.cocoon.woody.formmodel;
 import java.util.Locale;
 
 import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.datatype.SelectionList;
-import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.FormContext;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
@@ -64,7 +61,7 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * CVS $Id: AbstractContainerWidget.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * CVS $Id: AbstractContainerWidget.java,v 1.2 2003/12/29 17:52:12 stefano Exp $
  * @author Timothy Larson
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
