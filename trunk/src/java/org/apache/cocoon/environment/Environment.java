@@ -61,9 +61,8 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.2 2003/04/29 10:45:21 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.3 2003/05/04 19:03:01 stephan Exp $
  */
-
 public interface Environment
     extends SourceResolver {
 
@@ -80,12 +79,12 @@ public interface Environment
     /**
      * Get the Root Context
      */
-	String getRootContext();
+    String getRootContext();
 
     /**
      * Get current context
      */
-	String getContext();
+    String getContext();
 
     /**
      * Get the view to process
@@ -97,11 +96,11 @@ public interface Environment
      */
     String getAction();
 
-	/**
-	 * Set the context. This is similar to changeContext()
-	 * except that it is absolute.
-	 */
-	void setContext(String prefix, String uri, String context);
+    /**
+     * Set the context. This is similar to changeContext()
+     * except that it is absolute.
+     */
+    void setContext(String prefix, String uri, String context);
 
     /**
      * Change the context from uriprefix to context
