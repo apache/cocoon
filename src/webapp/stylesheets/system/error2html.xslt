@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.15 2004/02/18 17:29:00 joerg Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.16 2004/02/18 17:40:19 joerg Exp $ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -28,7 +28,7 @@
         <script src="{$contextPath}/scripts/main.js" type="text/javascript"/>
       </head>
       <body>
-      	<xsl:apply-templates select="." mode="onload"/>
+        <xsl:apply-templates select="." mode="onload"/>
         <h1><xsl:value-of select="$pageTitle"/></h1>
 
         <p class="message">
@@ -90,13 +90,13 @@
   </xsl:template>
 
   <xsl:template match="error:notify" mode="onload">
-  	<xsl:attribute name="onload">
-  	  <xsl:for-each select="error:extra[contains(@error:description,'stacktrace')]">
-  	  	<xsl:text>toggle('</xsl:text>
-  	  	<xsl:value-of select="@error:description"/>
-  	  	<xsl:text>');</xsl:text>
-  	  </xsl:for-each>
-  	</xsl:attribute>
+    <xsl:attribute name="onload">
+      <xsl:for-each select="error:extra[contains(@error:description,'stacktrace')]">
+        <xsl:text>toggle('</xsl:text>
+        <xsl:value-of select="@error:description"/>
+        <xsl:text>');</xsl:text>
+      </xsl:for-each>
+    </xsl:attribute>
   </xsl:template>
 
   <xsl:template match="error:extra">
