@@ -22,12 +22,16 @@
     <aspect name="action-counter" class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
     <aspect name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
     <aspect name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
-    <aspect name="link"  class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect" />    <aspect name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
+    <aspect name="link"  class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect" />    
+    <aspect name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
+
+    <!-- This aspect sets headers on the response that tell the client to not cache the response: -->
+    <aspect name="no-client-caching" class="org.apache.cocoon.portal.event.aspect.impl.NoClientCachingEventAspect"/>
  </component>
 
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
     <event-aspects>
-        <aspect type="action-counter"/>
+        <aspect type="no-client-caching"/>
         <aspect type="frame"/>
         <aspect type="link"/>
         <aspect type="full-screen-coplet"/>
