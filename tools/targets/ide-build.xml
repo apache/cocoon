@@ -128,8 +128,11 @@
   </target>
   
   <target name="eclipse-webapp-delete-jars" depends="prepare">
-      <!-- delete all jars, they are already included in the project -->
+      <!-- delete all jars and class files, they are already included in the project -->
       <delete>
-          <fileset dir="${build.webapp}/WEB-INF/lib" includes="*.jar"/>
+          <fileset dir="${build.webapp}/WEB-INF">
+            <include name="lib/*.jar" />
+            <include name="classes/**/*.class" />
+          </fileset>
       </delete>
   </target>
