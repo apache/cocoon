@@ -20,11 +20,13 @@ import java.util.Map;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -34,7 +36,7 @@ import org.apache.cocoon.environment.Environment;
  * 
  * @see org.apache.cocoon.components.ContextHelper
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.5 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.6 2004/05/16 15:20:48 cziegeler Exp $
  */
 
 public class ComponentContext 
@@ -141,7 +143,11 @@ public class ComponentContext
          */
         public Object lookup(String role) throws ServiceException {
             try {
-                return this.manager.lookup(role);
+                Object o = this.manager.lookup(role);
+                if ( o instanceof ComponentSelector ) {
+                    o = new ComponentSelectorWrapper((ComponentSelector)o);
+                }
+                return o;
             } catch (ComponentException ce) {
                 throw new ServiceException("ComponentManagerWrapper", "Unable to lookup component: " + role, ce);
             }
@@ -151,7 +157,53 @@ public class ComponentContext
          * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
          */
         public void release(Object c) {
+            if ( c instanceof ComponentSelectorWrapper ) {
+                c = ((ComponentSelectorWrapper)c).getComponent();
+            }
             this.manager.release((Component)c);
         }
+    }
+    
+    public static final class ComponentSelectorWrapper implements ServiceSelector {
+        
+        protected final ComponentSelector selector;
+        
+        public ComponentSelectorWrapper(ComponentSelector s) {
+            this.selector = s;
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceSelector#isSelectable(java.lang.Object)
+         */
+        public boolean isSelectable(Object role) {
+            return this.selector.hasComponent(role);
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceSelector#release(java.lang.Object)
+         */
+        public void release(Object role) {
+            this.selector.release((Component)role);
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceSelector#select(java.lang.Object)
+         */
+        public Object select(Object role) throws ServiceException {
+            try {
+                Object o = this.selector.select(role);
+                if ( o instanceof ComponentSelector ) {
+                    o = new ComponentSelectorWrapper((ComponentSelector)o);
+                }
+                return o;
+            } catch (ComponentException ce) {
+                throw new ServiceException("ComponentServiceWrapper", "Unable to lookup component: " + role, ce);
+            }
+        }
+        
+        public ComponentSelector getComponent() {
+            return this.selector;
+        }
+        
     }
 }

@@ -15,13 +15,13 @@
  */
 package org.apache.cocoon.components.source.impl;
 
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -61,7 +61,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.15 2004/05/16 12:19:18 vgritsenko Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.16 2004/05/16 15:20:48 cziegeler Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, ModifiableSource, XMLizable {
@@ -441,12 +441,12 @@ public class XMLDBSource extends AbstractLogEnabled
     throws IOException {
 
         ServiceManager manager = null;
-        ComponentSelector serializerSelector = null;
+        ServiceSelector serializerSelector = null;
         Serializer serializer = null;
         // this.manager does not have Serializer
         try {
             manager = (ServiceManager) this.context.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
-            serializerSelector = (ComponentSelector) manager.lookup(Serializer.ROLE + "Selector");
+            serializerSelector = (ServiceSelector) manager.lookup(Serializer.ROLE + "Selector");
             serializer = (Serializer)serializerSelector.select("xml");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             serializer.setOutputStream(os);
