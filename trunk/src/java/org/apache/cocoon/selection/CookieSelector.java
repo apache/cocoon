@@ -74,6 +74,7 @@ import java.util.Map;
  * </table>
  *
  * @author <a href="mailto:matteodg@infinito.it">Matteo Di Giovinazzo</a>
+ * @version CVS $Id: CookieSelector.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class CookieSelector extends AbstractLogEnabled
         implements Configurable, Selector, ThreadSafe {

@@ -76,9 +76,8 @@ import java.util.jar.JarEntry;
  *
  * @deprecated by the Avalon Exalibur Source Resolving
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: URLSource.java,v 1.1 2003/03/09 00:07:02 pier Exp $
+ * @version CVS $Id: URLSource.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
  */
-
 public class URLSource extends AbstractStreamSource {
 
     /** Identifier for file urls */

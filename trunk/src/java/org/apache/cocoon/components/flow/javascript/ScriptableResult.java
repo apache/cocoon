@@ -44,9 +44,14 @@
 
 */
 package org.apache.cocoon.components.flow.javascript;
+
 import org.mozilla.javascript.*;
 import java.sql.*;
 
+/**
+ *
+ * @version CVS $Id: ScriptableResult.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ */
 public class ScriptableResult extends ScriptableObject {
 
     public String getClassName() {

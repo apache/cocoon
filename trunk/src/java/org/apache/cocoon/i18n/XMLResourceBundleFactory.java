@@ -80,10 +80,9 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version $Id: XMLResourceBundleFactory.java,v 1.1 2003/03/09 00:09:32 pier Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
-
-public class XMLResourceBundleFactory 
+public class XMLResourceBundleFactory
     extends DefaultComponentSelector
     implements BundleFactory, Composable, Configurable, Disposable, ThreadSafe, LogEnabled {
 

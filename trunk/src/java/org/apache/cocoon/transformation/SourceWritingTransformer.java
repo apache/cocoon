@@ -79,7 +79,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
-/**
  * This transformer allows you to output to a ModifiableSource.
  *
  * <p>Definition:</p>
@@ -242,13 +241,14 @@ import org.xml.sax.SAXException;
  * The &lt;source:reinsert&gt; option can be used to
  * reinsert a replaced node at a given path in the new fragment.
  *
- *
+ * <b>
  * TODO: Use the serializer instead of the XMLUtils for inserting of fragments
  * TODO: Add a &lt;source:before/&gt; tag.
+ * </b>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- *
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.4 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer {

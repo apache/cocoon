@@ -55,6 +55,10 @@ import org.apache.cocoon.sitemap.PatternException;
 
 import java.util.List;
 
+/**
+ *
+ * @version CVS $Id: VariableResolverFactory.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ */
 public class VariableResolverFactory {
     
     private static ThreadLocal disposableCollector = new ThreadLocal();

@@ -53,6 +53,7 @@ import org.mozilla.javascript.Context;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 17, 2002
+ * @version CVS $Id: JSGlobal.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class JSGlobal extends Global
 {

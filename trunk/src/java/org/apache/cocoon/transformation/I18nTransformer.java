@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * $Id: I18nTransformer.java,v 1.2 2003/03/13 05:58:29 jefft Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.3 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,

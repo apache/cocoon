@@ -59,8 +59,8 @@ import java.util.Iterator;
 /**
  * The avalon behavioural component interface of crawling.
  *
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version    CVS $Id: CocoonCrawler.java,v 1.1 2003/03/09 00:08:48 pier Exp $
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @version CVS $Id: CocoonCrawler.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public interface CocoonCrawler extends Component
 {

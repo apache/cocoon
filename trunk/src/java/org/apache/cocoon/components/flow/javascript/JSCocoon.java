@@ -80,14 +80,12 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.Component;
 
-
-
-
 /**
  * JavaScript interface to various Cocoon abstractions.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
+ * @version CVS $Id: JSCocoon.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class JSCocoon extends ScriptableObject
 {

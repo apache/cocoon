@@ -86,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version $Id: XMLFileModule.java,v 1.3 2003/03/13 05:52:09 jefft Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.4 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {

@@ -56,8 +56,9 @@ import java.util.Map;
 
 /**
  * No-op implementation of {@link VariableResolver} for constant expressions
+ *
+ * @version CVS $Id: NOPVariableResolver.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
-
 public class NOPVariableResolver extends VariableResolver {
 
     private String expression = null;

@@ -56,6 +56,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 25, 2002
+ * @version CVS $Id: ContinueNodeBuilder.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class ContinueNodeBuilder extends AbstractProcessingNodeBuilder
 {

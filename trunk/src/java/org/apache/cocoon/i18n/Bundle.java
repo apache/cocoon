@@ -59,7 +59,7 @@ import org.apache.avalon.framework.component.Component;
  * Provide the minimal number of methods to be used for i18n.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version $Id: Bundle.java,v 1.1 2003/03/09 00:09:32 pier Exp $
+ * @version CVS $Id: Bundle.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public interface Bundle extends Component {
 

@@ -55,6 +55,7 @@ package org.apache.cocoon.environment;
  *
  * @deprecated Use the {@link org.apache.excalibur.source.Source} interface instead
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
+ * @version CVS $Id: ModifiableSource.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public interface ModifiableSource extends Source
 {

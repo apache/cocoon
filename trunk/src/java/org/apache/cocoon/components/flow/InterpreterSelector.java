@@ -51,6 +51,10 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
+/**
+ *
+ * @version CVS $Id: InterpreterSelector.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ */
 public class InterpreterSelector extends ExcaliburComponentSelector
   implements Configurable, ThreadSafe
 {

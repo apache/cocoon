@@ -58,6 +58,7 @@ import org.xml.sax.InputSource;
  * for different Schema languages
  *
  * @author  ivelin@apache.org
+ * @version CVS $Id: SchemaFactory.java,v 1.3 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public abstract class SchemaFactory {
 

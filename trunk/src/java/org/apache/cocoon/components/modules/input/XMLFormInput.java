@@ -73,7 +73,7 @@ import org.apache.cocoon.components.xmlform.Form;
  * </tr></table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version $Id: XMLFormInput.java,v 1.1 2003/03/09 00:09:04 pier Exp $
+ * @version CVS $Id: XMLFormInput.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public class XMLFormInput extends AbstractJXPathModule implements ThreadSafe {
     String formId = null;

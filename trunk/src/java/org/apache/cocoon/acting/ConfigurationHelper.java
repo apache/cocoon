@@ -49,8 +49,13 @@
 
 */
 package org.apache.cocoon.acting;
+
 import org.apache.avalon.framework.configuration.Configuration;
 
+/**
+ *
+ * @version CVS $Id: ConfigurationHelper.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ */
 public class ConfigurationHelper {
     public long lastModified = 0;
     public Configuration configuration = null;

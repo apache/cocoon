@@ -62,8 +62,8 @@ import org.apache.excalibur.source.SourceValidity;
  * not valid any more.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:09:41 $
  * @since 2.1
+ * @version CVS $Id: ExpiresValidity.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public final class ExpiresValidity
     implements SourceValidity

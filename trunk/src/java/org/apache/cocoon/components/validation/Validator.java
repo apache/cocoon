@@ -57,6 +57,7 @@ import java.util.List;
  * Created on Sat, April 6, 2002
  *
  * @author  ivelin@apache.org
+ * @version CVS $Id: Validator.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public interface Validator {
 

@@ -68,9 +68,8 @@ import org.xml.sax.SAXException;
  * to avoid recoding existing source objects.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:07:04 $
+ * @version CVS $Id: CocoonToAvalonSource.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
-
 public final class CocoonToAvalonSource
     implements Source, XMLizable, Recyclable {
 

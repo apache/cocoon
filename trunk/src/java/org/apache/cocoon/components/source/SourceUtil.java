@@ -93,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version $Id: SourceUtil.java,v 1.2 2003/03/14 08:24:12 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.3 2003/03/16 17:49:12 vgritsenko Exp $
  */
 public final class SourceUtil {
 

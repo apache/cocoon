@@ -68,9 +68,8 @@ import java.util.Map;
  * A factory for 'file:' sources.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version $Id: FileSourceFactory.java,v 1.1 2003/03/09 00:09:14 pier Exp $
+ * @version CVS $Id: FileSourceFactory.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
-
 public class FileSourceFactory
     extends AbstractLogEnabled
     implements SourceFactory, ThreadSafe {

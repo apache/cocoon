@@ -65,6 +65,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
+ * @version CVS $Id: WebContinuation.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
  */
 public class WebContinuation extends AbstractLogEnabled
   implements Comparable

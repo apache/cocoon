@@ -100,7 +100,7 @@ import java.util.Map;
  * @see org.apache.cocoon.transformation.WriteDOMSessionTransformer
  * @author <a href="mailto:cedric.damioli@anyware-tech.com">C&eacute;dric Damioli</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version $Id: SessionAttributeGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: SessionAttributeGenerator.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
  */
 public class SessionAttributeGenerator extends AbstractGenerator {
 

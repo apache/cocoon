@@ -57,6 +57,7 @@ package org.apache.cocoon.components.validation.schematron;
  * <assert test="count(ear)=2">A <name/> element should contain two <emph>ear</emph> elements.</assert> 
  *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
+ * @version CVS $Id: Assert.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
  */
 public class Assert {
 
