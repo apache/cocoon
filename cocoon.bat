@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.8 2003/06/27 23:18:31 joerg Exp $
+:: $Id: cocoon.bat,v 1.9 2003/07/18 10:32:29 cziegeler Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -16,7 +16,7 @@
 :: JAVA_HOME
 ::   Home of Java installation.
 ::
-:: JAVA_OPTIONS
+:: JAVA_OPT
 ::   Extra options to pass to the JVM
 ::
 :: JAVA_DEBUG_PORT
