@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -95,15 +95,15 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.25 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.26 2004/04/23 15:50:34 vgritsenko Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
-    /** Application <code>Context</code> Key for the servlet configuration 
+    /** Application <code>Context</code> Key for the servlet configuration
      *  @since 2.1.3
      */
     public static final String CONTEXT_SERVLET_CONFIG = "servlet-config";
-    
+
     // Processing time message
     protected static final String PROCESSED_BY = "Processed by "
         + Constants.COMPLETE_NAME + " in ";
@@ -463,7 +463,7 @@ public class CocoonServlet extends HttpServlet {
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.defaultFormEncoding = getInitParameter("form-encoding","ISO-8859-1");
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
-        
+
 		this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
 		this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
@@ -482,8 +482,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * Dispose Cocoon when servlet is destroyed
      */
-    public void destroy()
-    {
+    public void destroy() {
         if (this.initClassLoader) {
             try {
                 Thread.currentThread().setContextClassLoader(this.classLoader);
@@ -1098,18 +1097,19 @@ public class CocoonServlet extends HttpServlet {
                                 rse);
                 return;
 
-            } catch (ConnectionResetException cre) {
+            } catch (ConnectionResetException e) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(cre.getMessage(), cre);
+                    getLogger().debug(e.getMessage(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(cre.getMessage());
+                    getLogger().warn(e.getMessage());
                 }
 
-            } catch ( SocketException se ) {
+            } catch (IOException e) {
+                // Tomcat5 wraps SocketException into ClientAbortException which extends IOException.
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(se.getMessage(), se);
+                    getLogger().debug(e.getMessage(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(se.getMessage());
+                    getLogger().warn(e.getMessage());
                 }
 
             } catch (Exception e) {
@@ -1269,8 +1269,10 @@ public class CocoonServlet extends HttpServlet {
      * @return the parent component manager, or <code>null</code>.
      */
     protected synchronized ComponentManager getParentComponentManager() {
-        if (parentComponentManager != null && parentComponentManager instanceof Disposable)
+        if (parentComponentManager != null && parentComponentManager instanceof Disposable) {
             ((Disposable)parentComponentManager).dispose();
+        }
+
         parentComponentManager = null;
         if (parentComponentManagerClass != null) {
             try {
@@ -1344,8 +1346,7 @@ public class CocoonServlet extends HttpServlet {
         }
     }
 
-    private Logger getCocoonLogger()
-    {
+    private Logger getCocoonLogger() {
         final String rootlogger = getInitParameter("cocoon-logger");
         if (rootlogger != null) {
             return this.getLoggerManager().getLoggerForCategory(rootlogger);
@@ -1457,8 +1458,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * Destroy Cocoon
      */
-    private final void disposeCocoon()
-    {
+    private final void disposeCocoon() {
         if (this.cocoon != null) {
             ContainerUtil.dispose(this.cocoon);
             this.cocoon = null;
@@ -1518,13 +1518,11 @@ public class CocoonServlet extends HttpServlet {
     	}
     }
 
-    protected Logger getLogger()
-    {
+    protected Logger getLogger() {
         return this.log;
     }
 
-    protected LoggerManager getLoggerManager()
-    {
+    protected LoggerManager getLoggerManager() {
         return this.loggerManager;
     }
 }

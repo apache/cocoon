@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -86,7 +86,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.4 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.5 2004/04/23 15:50:34 vgritsenko Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -1076,18 +1076,19 @@ public class CocoonPortlet extends GenericPortlet {
                                 rse);
                 return;
 
-            } catch (ConnectionResetException cre) {
+            } catch (ConnectionResetException e) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(cre.getMessage(), cre);
+                    getLogger().debug(e.getMessage(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(cre.getMessage());
+                    getLogger().warn(e.getMessage());
                 }
 
-            } catch (SocketException se) {
+            } catch (IOException e) {
+                // Tomcat5 wraps SocketException into ClientAbortException which extends IOException.
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(se.getMessage(), se);
+                    getLogger().debug(e.getMessage(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(se.getMessage());
+                    getLogger().warn(e.getMessage());
                 }
 
             } catch (Exception e) {
@@ -1227,18 +1228,19 @@ public class CocoonPortlet extends GenericPortlet {
                                 rse);
                 return;
 
-            } catch (ConnectionResetException cre) {
+            } catch (ConnectionResetException e) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(cre.getMessage(), cre);
+                    getLogger().debug(e.getMessage(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(cre.getMessage());
+                    getLogger().warn(e.getMessage());
                 }
 
-            } catch (SocketException se) {
+            } catch (IOException e) {
+                // Tomcat5 wraps SocketException into ClientAbortException which extends IOException.
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(se.getMessage(), se);
+                    getLogger().debug(e.getMessage(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(se.getMessage());
+                    getLogger().warn(e.getMessage());
                 }
 
             } catch (Exception e) {
