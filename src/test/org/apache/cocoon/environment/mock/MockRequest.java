@@ -307,9 +307,9 @@ public class MockRequest implements Request {
     public Session getSession(boolean create) {
         if ((session == null) && (create))
             this.session = new MockSession();
-        else if ((session != null) && (!((MockSession) session).isValid()) && (create))
+        else if ((session != null) && (!(session).isValid()) && (create))
             this.session = new MockSession();
-        if ((session != null) && (((MockSession) session).isValid()))
+        if ((session != null) && ((session).isValid()))
             return this.session;
         else
             return null;

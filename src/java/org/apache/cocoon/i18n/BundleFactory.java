@@ -52,7 +52,6 @@ package org.apache.cocoon.i18n;
 
 import java.util.Locale;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 
@@ -62,7 +61,7 @@ import org.apache.avalon.framework.component.ComponentSelector;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: BundleFactory.java,v 1.4 2003/12/10 15:37:37 vgritsenko Exp $
+ * @version CVS $Id: BundleFactory.java,v 1.5 2003/12/12 05:39:38 antonio Exp $
  */
 public interface BundleFactory extends ComponentSelector {
 

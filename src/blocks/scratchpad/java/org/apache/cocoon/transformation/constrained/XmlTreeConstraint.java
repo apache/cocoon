@@ -56,7 +56,7 @@ import java.util.ListIterator;
 
 /**
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version CVS $Id: XmlTreeConstraint.java,v 1.2 2003/09/05 07:04:34 cziegeler Exp $
+ * @version CVS $Id: XmlTreeConstraint.java,v 1.3 2003/12/12 05:39:38 antonio Exp $
  */
 public class XmlTreeConstraint {
 
@@ -197,7 +197,7 @@ public class XmlTreeConstraint {
 		ListIterator iter2 = l2.listIterator(l2.size());
 
 		while (iter1.hasPrevious()) {
-			if (!(((String) iter1.previous().toString())
+			if (!((iter1.previous().toString())
 					.equals(iter2.previous().toString()))) {
 
 				//System.out.println("ends are NOT equal.");

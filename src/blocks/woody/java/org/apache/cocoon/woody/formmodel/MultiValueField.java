@@ -194,7 +194,7 @@ public class MultiValueField extends AbstractWidget {
             setValues(new Object[0]);
         }
         else if (value.getClass().isArray()) {
-            setValues((Object[])values);
+            setValues(values);
         } else {
             throw new RuntimeException("Cannot set value of field \"" + getFullyQualifiedId() + "\" with an object of type " + value.getClass().getName());
         }
