@@ -3,10 +3,32 @@ cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody.js");
 function form2(form, documentURI, bindingURI) {
     var document = loadDocument(documentURI);
     var binding = loadBinding(bindingURI);
+    var model = form.getModel();
 
     binding.loadFormFromModel(form.form, document);
 
-    form.show("form2-display-pipeline", function() { return true; } );
+    form.show("form2-display-pipeline", function(form) {
+        print("submitId="+form.getSubmitId());
+        switch(form.getSubmitId()) {
+        case "remove-selected-contacts":
+            {
+                for (var i = model.contacts.length-1; i >= 0; i--) {
+                    if (model.contacts[i].select) {
+                        model.contacts.remove(i);
+                    }
+                }
+            }
+            break;
+        case "add-contact":
+            {
+                model.contacts.length++;
+            }
+            break;
+        default:
+            return true;
+        }
+        return false;
+    });
 
     binding.saveFormToModel(form.form, document);
     saveDocument(document, makeTargetURI(documentURI));
