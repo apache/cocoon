@@ -33,6 +33,7 @@ import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.sax.XMLTeePipe;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.components.thread.RunnableManager;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -106,10 +107,17 @@ public final class DefaultIncludeCacheManager
                     if (this.getLogger().isDebugEnabled()) {
                         this.getLogger().debug("Booting preemptive loader: " + this.preemptiveLoaderURI);
                     }
-                    PreemptiveBooter thread = new PreemptiveBooter();
-                    thread.setURI(this.preemptiveLoaderURI);
-                    thread.start();
-                    Thread.yield();
+                    PreemptiveBooter thread = new PreemptiveBooter( this.preemptiveLoaderURI );
+                    try
+                    {
+                        final RunnableManager runnableManager = (RunnableManager)this.manager.lookup( RunnableManager.ROLE );
+                        runnableManager.execute( thread );
+                        this.manager.release( runnableManager );
+                    }
+                    catch( final ServiceException se )
+                    {
+                        getLogger().error( "Cannot lookup RunnableManager", se );
+                    }
                 }
             }
         } 
@@ -446,11 +454,12 @@ final class LoaderThread implements Runnable {
     
 }
 
-final class PreemptiveBooter extends Thread {
+final class PreemptiveBooter implements Runnable {
 
-    private String uri;
-    
-    void setURI(String uri) {
+    private final String uri;
+
+    public PreemptiveBooter( final String uri )
+    {
         this.uri = uri;
     }
     
