@@ -47,12 +47,12 @@ import java.io.IOException;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-25 13:51:31 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-25 15:39:06 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Recyclable, SAXConnector, Disposable {
 
     /** Stacks namespaces during processing */
-    //private ArrayList currentNS = new ArrayList();
+    private ArrayList currentNS = new ArrayList();
 
     /** The current <code>ComponentManager</code>. */
     protected ComponentManager manager = null;
@@ -97,10 +97,10 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
             return;
         }
 
-        //if (uri.equals("")) {
-        //    uri = (String)this.getNS();
-        //}
-        //this.pushNS(uri);
+        if (uri == null || uri.equals("")) {
+            uri = (String)this.getNS();
+        }
+        this.pushNS(uri);
         super.startElement(uri, name, raw, attr);
     }
 
@@ -108,49 +108,51 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         if (uri != null && name != null && uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
             return;
         }
-        //super.endElement((String)this.popNS(),name,raw);
-        super.endElement(uri,name,raw);
+        super.endElement((String)this.popNS(),name,raw);
     }
 
-    //private void startElem(String namespaceURI, String prefix, String name) throws SAXException {
-    //    this.pushNS(namespaceURI);
-    //    AttributesImpl attrs = new AttributesImpl();
-    //    String qname = name;
-    //    if (!namespaceURI.equals("")) {
-    //        super.startPrefixMapping(prefix, namespaceURI);
-    //        if (!prefix.equals("")) {
-    //            attrs.addAttribute("", prefix, "xmlns:" + prefix, "CDATA", namespaceURI);
-    //        } else {
-    //            attrs.addAttribute("", "xmlns", "xmlns", "CDATA", namespaceURI);
-    //        }
-    //    }
-    //    super.startElement(namespaceURI, name, name, attrs);
-    //}
+    private void startElem(String namespaceURI, String prefix, String name) throws SAXException {
+        this.pushNS(namespaceURI);
+        AttributesImpl attrs = new AttributesImpl();
+        String qname = name;
+        if (!namespaceURI.equals("")) {
+            super.startPrefixMapping(prefix, namespaceURI);
+            if (prefix!= null && !prefix.equals("")) {
+                attrs.addAttribute("", prefix, "xmlns:" + prefix, "CDATA", namespaceURI);
+            } else {
+                attrs.addAttribute("", "xmlns", "xmlns", "CDATA", namespaceURI);
+            }
+        }
+        super.startElement(namespaceURI, name, name, attrs);
+    }
 
-    //private void endElem(String prefix, String name) throws SAXException {
-    //    String ns = this.popNS();
-    //    super.endElement(ns, name, name);
-    //    if (!ns.equals("")) {
-    //        super.endPrefixMapping(prefix);
-    //    }
-    //}
+    private void endElem(String prefix, String name) throws SAXException {
+        String ns = this.popNS();
+        super.endElement(ns, name, name);
+        if (!ns.equals("")) {
+            super.endPrefixMapping(prefix);
+        }
+    }
 
-    //private String pushNS(String ns) {
-    //    currentNS.add(ns);
-    //    return ns;
-    //}
+    private String pushNS(String ns) {
+        currentNS.add(ns);
+        return ns;
+    }
 
-    //private String popNS() {
-    //    int last = currentNS.size()-1;
-    //    String ns = (String)currentNS.get(last);
-    //    currentNS.remove(last);
-    //    return ns;
-    //}
+    private String popNS() {
+        int last = currentNS.size()-1;
+        String ns = (String)currentNS.get(last);
+        currentNS.remove(last);
+        return ns;
+    }
 
-    //private String getNS() {
-    //    int last = currentNS.size()-1;
-    //    return (String)currentNS.get(last);
-    //}
+    private String getNS() {
+        int last = currentNS.size()-1;
+        String ns = "";
+        if (last >= 0)
+            ns = (String)currentNS.get(last);
+        return ns;
+    }
 
     public void setDocumentLocator(Locator locator) {
         super.setDocumentLocator(locator);
@@ -178,8 +180,8 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
 
             IncludeXMLConsumer consumer = new IncludeXMLConsumer(this);
 
-            //if (!element.equals(""))
-            //    this.startElem(ns, prefix, element);
+            if (!element.equals(""))
+                this.startElem(ns, prefix, element);
 
             ((XMLProducer)eventPipeline).setConsumer(consumer);
 
@@ -188,8 +190,8 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
             eventPipeline.process(this.environment);
             this.environment.popURI();
 
-            //if (!element.equals(""))
-            //    this.endElem(prefix, element);
+            if (!element.equals(""))
+                this.endElem(prefix, element);
         } catch (Exception e) {
             getLogger().error("Error selecting sitemap",e);
         } finally {
@@ -212,6 +214,6 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
      * Recycle the producer by removing references
      */
     public void recycle () {
-        //this.currentNS.clear();
+        this.currentNS.clear();
     }
 }

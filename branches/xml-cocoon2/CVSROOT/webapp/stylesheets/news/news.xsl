@@ -3,15 +3,48 @@
                 xmlns:ns2="http://foo.bar.com/moreover"
                 xmlns:ns3="http://foo.bar.com/isyndicate"
 >
-
+	<xsl:include href="../page/simple-page2html.xsl"/>
+    
 	<!-- Match The Root Node -->
 	<xsl:template match="/">
 		<HTML>
-            <xsl:apply-templates select="//ns1:BODY"/>
-            <xsl:apply-templates select="//ns2:BODY"/>
-            <xsl:apply-templates select="//ns3:BODY"/>
+            <BODY>
+                <xsl:apply-templates/>
+            </BODY>
 		</HTML>
 	</xsl:template>
+
+	<xsl:template match="HTML">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+	<xsl:template match="ns1:HTML">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+	<xsl:template match="ns2:HTML">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+	<xsl:template match="ns3:HTML">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+	<xsl:template match="BODY">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+	<xsl:template match="ns1:BODY">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+	<xsl:template match="ns2:BODY">
+        <xsl:apply-templates/>
+    </xsl:template>
+
+	<xsl:template match="ns3:BODY">
+        <xsl:apply-templates/>
+    </xsl:template>
 
 	<xsl:template match="@*|*|text()|processing-instruction()" priority="-1">
 		<xsl:copy>

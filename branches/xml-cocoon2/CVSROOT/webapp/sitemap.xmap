@@ -274,6 +274,14 @@
     <map:serialize/>
    </map:match>
 
+   <map:match pattern="news/aggregate.xsp">
+    <map:generate type="serverpages" src="docs/samples/xsp/aggregate.xsp"/>
+    <map:transform src="stylesheets/news/news.xsl">
+        <parameter name="view-source" value="docs/samples/xsp/aggregate.xsp"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
    <!-- ================  Static  =========================== -->
 
    <map:match pattern="fo">
