@@ -47,7 +47,7 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
  
- */
+*/
 package org.apache.cocoon.selection;
 
 import java.text.SimpleDateFormat;
@@ -137,7 +137,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * </code></pre>
  *
  * @author <a href="mailto:huber@apache.org">Bernhard Huber</a>
- * @version CVS $Id: DateSelector.java,v 1.1 2003/09/04 12:42:44 cziegeler Exp $
+ * @version CVS $Id: DateSelector.java,v 1.2 2003/09/05 07:04:35 cziegeler Exp $
  */
 public class DateSelector extends AbstractSwitchSelector
 implements Configurable, ThreadSafe {

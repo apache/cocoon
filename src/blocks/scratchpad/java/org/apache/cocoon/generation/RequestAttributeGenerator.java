@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: RequestAttributeGenerator.java,v 1.1 2003/09/04 12:42:40 cziegeler Exp $
+ * @version CVS $Id: RequestAttributeGenerator.java,v 1.2 2003/09/05 07:04:34 cziegeler Exp $
  *
  * @cocoon:name                      req-attr
  * @cocoon:status                    scratchpad
@@ -86,39 +86,20 @@ import org.xml.sax.SAXException;
  *   default="none"
  */
 public class RequestAttributeGenerator extends ServiceableGenerator {
-    /**
-     * The name of this class
-     *
-     * @since    1.0
-     */
-    public final static String CLASS = RequestAttributeGenerator.class.getName();
 
     /**
      * The config parameter for specifying name of the request attribute,
      * holding the name associated with the xml data, ie <code>attribute-name
      * </code>.
      *
-     * @since    1.0
      */
     public final static String REQUEST_ATTRIBUTE_NAME = "attribute-name";
     /**
      * The default name of the request attribute name, storing xml-data,
      *  ie. <code>org.apache.cocoon.xml-data</code>.
      *
-     * @since    1.0
      */
     public final static String REQUEST_ATTRIBUTE_NAME_DEFAULT = "org.apache.cocoon.xml-data";
-
-
-    /**
-     * Recycle this component.
-     * All instance variables are set to <code>null</code>.
-     *
-     * @since    1.0
-     */
-    public void recycle() {
-        super.recycle();
-    }
 
 
     /**
@@ -127,10 +108,8 @@ public class RequestAttributeGenerator extends ServiceableGenerator {
      *
      * @exception  SAXException         Description of Exception
      * @exception  ProcessingException  Description of Exception
-     * @since                           1.0
      */
     public void generate() throws SAXException, ProcessingException {
-        SAXParser parser = null;
         String parameter = parameters.getParameter(REQUEST_ATTRIBUTE_NAME, REQUEST_ATTRIBUTE_NAME_DEFAULT);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Expecting xml data in request-attribute " + parameter);
@@ -147,6 +126,8 @@ public class RequestAttributeGenerator extends ServiceableGenerator {
             throw new ProcessingException("request-attribute " +
                     parameter + " is null, no xml-data for processing");
         }
+
+        SAXParser parser = null;
         try {
             String sXml = new String(xml_data);
             if (getLogger().isDebugEnabled()) {
@@ -167,9 +148,7 @@ public class RequestAttributeGenerator extends ServiceableGenerator {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in RequestAttributeGenerator.generate()", e);
         } finally {
-            if (parser != null) {
-                this.manager.release((Component)parser);
-            }
+            this.manager.release((Component)parser);
         }
     }
 
@@ -188,7 +167,6 @@ public class RequestAttributeGenerator extends ServiceableGenerator {
      * @param  contentType  value associated with Content-Type HTTP header.
      * @param  res          Description of Parameter
      * @return              The characterEncoding value
-     * @since 1.0
      */
     protected String getCharacterEncoding(Response res, String contentType) {
         String charencoding = null;
@@ -232,7 +210,6 @@ public class RequestAttributeGenerator extends ServiceableGenerator {
      * @param  contentType  Description of Parameter
      * @param  idx          Description of Parameter
      * @return              Description of the Returned Value
-     * @since 1.0
      */
     protected String extractCharset(String contentType, int idx) {
         String charencoding = null;

@@ -1,4 +1,4 @@
-/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+/*
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -175,7 +175,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.1 2003/09/04 12:42:40 cziegeler Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.2 2003/09/05 07:04:34 cziegeler Exp $
  */
 public class FlowVelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {

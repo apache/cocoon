@@ -55,7 +55,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
@@ -116,7 +115,7 @@ import org.xml.sax.SAXException;
  * @author Unico Hommes
  */
 public class EventCacheGenerator extends ComposerGenerator 
-implements Configurable, Generator, CacheableProcessingComponent, Recyclable {
+implements Configurable, CacheableProcessingComponent {
 
 
     // ---------------------------------------------------- constants
@@ -229,6 +228,7 @@ implements Configurable, Generator, CacheableProcessingComponent, Recyclable {
         m_delegate = null;
         m_key = null;
         m_event = null;
+        super.recycle();
     }
 
     

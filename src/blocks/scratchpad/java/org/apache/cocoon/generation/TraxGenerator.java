@@ -1,4 +1,4 @@
-/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+/*
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -167,11 +167,11 @@ public class TraxGenerator extends TraxTransformer implements Generator {
     }
 
     public void setConsumer(XMLConsumer consumer) {
-        xmlConsumer = consumer;
+        this.xmlConsumer = consumer;
     }
 
     public void recycle() {
         super.recycle();
-        doc = null;
+        this.doc = null;
     }
 }
