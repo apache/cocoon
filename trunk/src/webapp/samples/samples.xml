@@ -18,7 +18,7 @@
    <sample name="Input Modules" href="modules/">
     This example shows the usage of Input Modules in sitemap attribute expressions.
    </sample>
-    <sample name="Error Page" href="system/generror.html">
+    <sample name="Error Page" href="generror.html">
     This example shows what happens if an error is triggered in the pipeline.
    </sample>
   </group>
