@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.45 $ $Date: 2001-04-12 17:15:35 $
+ * @version CVS $Revision: 1.1.2.46 $ $Date: 2001-04-12 17:17:35 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -212,6 +212,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                     program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
                 } catch (LanguageException le) {
                     getLogger().debug("Language Exception", le);
+                    throw new ProcessingException("Language Exception", le);
                 } finally {
                     this.markupSelector.release((Component) markupLanguage);
                     this.languageSelector.release((Component) programmingLanguage);
