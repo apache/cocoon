@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: changes.xml,v 1.11 1999-12-14 23:56:18 stefano Exp $
+  $Id: changes.xml,v 1.12 1999-12-16 00:59:03 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,9 +15,6 @@
   </devs>
 
  <release version="1.6-dev" date="not yet released">
-  <action dev="RR" type="add">
-    Added XSP engine.
-  </action>
   <action dev="RR" type="add">
     Made ServletResponse and ServletContext available to engine and processors. This will require
     further abstraction to avoid processors from messing up with the response output stream.
