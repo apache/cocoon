@@ -66,7 +66,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
- *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
  * @version CVS $Id$
@@ -1187,7 +1186,8 @@ public class SQLTransformer extends AbstractSAXTransformer
                     } catch ( NullPointerException e ) {
                         getTheLogger().debug( "NullPointer while closing the resultset.", e );
                     }
-                if ( pst != null )
+                
+                if ( pst != null && pst != cst )
                     pst.close();
                 pst = null;        // Prevent using pst again.
                 if ( cst != null )

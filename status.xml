@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="TC" type="fix" fixes-bug="30874">
+    Fixes the SQLTransformer not to close the statement twice
+   </action>
    <action dev="CZ" type="add">
      New getSitemapPath() method on the Request object to get the path to the
      current sitemap even if you are in a sub sitemap. Added an abstract request
