@@ -45,7 +45,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.21 2004/06/11 20:32:19 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -190,6 +190,8 @@ public abstract class AbstractCachingProcessingPipeline
                             "Failed to execute pipeline.", se);
                 }
             } catch (Exception e) {
+                if (e instanceof ProcessingException)
+                    throw (ProcessingException)e;
                 throw new ProcessingException("Error executing pipeline.", e);
             }
         } else {
