@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.22 2001-01-16 15:50:30 greenrd Exp $ --
+/*-- $Id: Utils.java,v 1.23 2001-01-19 00:23:48 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.processor.xsp.XSPUtil;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.22 $ $Date: 2001-01-16 15:50:30 $
+ * @version $Revision: 1.23 $ $Date: 2001-01-19 00:23:48 $
  */
 
 public final class Utils {
@@ -231,6 +231,7 @@ public final class Utils {
             url.append(req.getQueryString());
         }
 
+        /** This severely f***s up caching. Will fix later - RDG
         Enumeration headers = req.getHeaderNames();
         if (headers != null) {
           url.append("&headers:");
@@ -241,6 +242,7 @@ public final class Utils {
             url.append((String)req.getHeader(name));
           }
         }
+        */
         return url.toString();
     }
 
