@@ -1134,7 +1134,7 @@
   <project name="cocoon-block-tour" status="unstable">
     <package>org.apache.cocoon</package>
 
-    <ant target="tour-block">
+    <ant target="gump-block">
       <property name="block-name" value="tour"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
@@ -1156,7 +1156,7 @@
   <project name="cocoon-block-faces" status="unstable">
     <package>org.apache.cocoon</package>
 
-    <ant target="faces-block">
+    <ant target="gump-block">
       <property name="block-name" value="faces"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
