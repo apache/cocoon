@@ -138,19 +138,7 @@
     </java>
   </target>
 -->
-<!-- === Javadoc/IDLDoc Targets ================================================ -->
-
-  <!-- Create IDL API documentation -->
-  <target name="idldocs" depends="prepare" unless="unless.exclude.idldocs" description="Builds the IDL API documentation for non-java language bindings">
-    <mkdir dir="${build.idldocs}"/>
-    <java classname="org.openorb.compiler.doc.IdlDoc">
-      <arg value="-I${idl}"/>
-      <arg value="-outdir:${build.idldocs}"/>
-      <arg value="-all"/>
-      <arg value="-html"/>
-      <arg value="${idl}/main.idl"/>
-    </java>
-  </target>
+<!-- === Javadoc ============================================================= -->
 
   <!-- Check if javadocs have to be generated -->
   <!-- Obsolete:
