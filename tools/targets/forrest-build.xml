@@ -14,20 +14,38 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<project name="forrest">
+<project name="do-forrest">
 
   <description>
     Forrest Targets
   </description>
 
-  <target name="forrest" depends="prepare, prepare-docs, forrest.init, validate-jars, javadocs" unless="exclude.documentation" description="Generates static HTML documentation">
+  <!-- FIXME: This build system is in the process of being restructured
+  to use Forrest-0.6 rather than Forrest-0.5.1
+  Many of the existing ant targets below, such as forrest.init and
+  forrest.webapp have not yet been upgraded.
+  Much of the checking for various locations of FORREST_HOME
+  and loading of various properties files might not even be required now.
+  -->
 
-    <!-- Add some other documents -->
+  <property environment="env"/>
+  <property name="forrest.home" value="${env.FORREST_HOME}"/>
+  <!-- forrest-0.6
+  -->
+  <import file="${env.FORREST_HOME}/forrest.build.xml"/>
+  <!-- forrest-0.7-dev
+  <import file="${env.FORREST_HOME}/main/forrest.build.xml"/>
+  -->
+
+  <target name="do-forrest" depends="site, prepare-extra-docs, prepare, prepare-docs, validate-jars, javadocs" unless="exclude.documentation" description="Generates static HTML documentation">
+  </target>
+
+  <!-- Add some other specific documents -->
+  <target name="prepare-extra-docs">
+    <echo message="Adding extra documents, e.g. jars.xml"/>
     <copy file="${build.temp}/jars.xml"
       tofile="${build.context}/xdocs/installing/jars.xml" filtering="off"
       overwrite="yes"/>
-
-    <ant antfile="${forrest.home}/forrest.antproxy.xml" target="site"/>
   </target>
 
   <!-- Generates an unpackaged webapp of the website -->
@@ -148,24 +166,8 @@
     <echo>
       ----------------------------------------------
       To run this target, you need Forrest installed.
-      Please do the following:
-
-      export CVSROOT=:pserver:anoncvs@cvs.apache.org:/home/cvspublic
-      cvs checkout xml-forrest
-      cd xml-forrest
-      build      (Windows)
-      ./build.sh (Unix)
-
-      Then either:
-
-      - Set FORREST_HOME as the Forrest build instructions describe
-      - Create a project.properties, with the forrest.home property
-        pointing to the forrest shbat directory, e.g.
-
-        forrest.home=${winpath}  (Windows)
-        forrest.home=${unixpath}  (Unix)
-
-        (adjusting the path according to where your xml-forrest is)
+      Please use the "forrest_06_branch" from SVN.
+      http://forrest.apache.org/build.html
       ----------------------------------------------
     </echo>
     <fail message="Need to define $${forrest.home}"/>
