@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.47 2001-01-19 19:31:37 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.48 2001-01-23 18:37:27 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.47 $ $Date: 2001-01-19 19:31:37 $
+ * @version $Revision: 1.48 $ $Date: 2001-01-23 18:37:27 $
  */
 
 public class Engine implements Defaults {
@@ -381,6 +381,7 @@ public class Engine implements Defaults {
                             String processDesc = processor.getClass ().getName () + "-" + processNum;
                             if (PROFILE) profiler.startEvent (requestMarker, processDesc);
                             document = processor.process(document, environment);
+                            if ((HttpServletResponseFacade) response).hasRedirected) throw new RedirectException ();
                             page.setChangeable(processor);
                             if (PROFILE) profiler.finishEvent (requestMarker, processDesc);
                             if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
