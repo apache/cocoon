@@ -33,6 +33,10 @@ The initial code of the new portal framework is a donation by a joined developme
 effort of BASF IT-Services (http://www.basf-it-services.com) 
 and s&n AG (http://www.s-und-n.de).
 
+The initial code of the new ojb block and other contributions from Antonio Gallardo
+and Carlos Chávez are made posible by the time donated by AG Software, S. A.
+(http://www.agssa.net).
+
 
  Credits of included software
  ----------------------------
@@ -63,6 +67,9 @@ This product includes software developed by the Chaperon Project
 
 This product includes software developed by the Exolab Project
 (http://www.exolab.org/).
+
+This product includes software developed by ANTLR Project
+(http://www.antlr.org/)
 
 
 

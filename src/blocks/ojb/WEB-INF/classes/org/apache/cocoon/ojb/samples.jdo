@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo SYSTEM "file://build/org/apache/cocoon/ojb/samples/jdo.dtd">
+
+<jdo>
+    <package name="org.apache.cocoon.ojb.samples">
+        <class name="Department">
+            <extension vendor-name="ojb" key="table" value="DEPARTMENT"/>
+            <field name="id">
+                <extension vendor-name="ojb" key="column" value="ID"/>
+            </field>
+            <field name="name">
+                <extension vendor-name="ojb" key="column" value="NAME"/>
+            </field>
+        </class>
+        <class name="Employee">
+            <extension vendor-name="ojb" key="table" value="EMPLOYEE"/>
+            <field name="id">
+                <extension vendor-name="ojb" key="column" value="ID"/>
+            </field>
+            <field name="departmentId">
+                <extension vendor-name="ojb" key="column" value="DEPARTMENT_ID"/>
+            </field>
+            <field name="name">
+                <extension vendor-name="ojb" key="column" value="NAME"/>
+            </field>
+        </class>
+ </package>
+</jdo>
