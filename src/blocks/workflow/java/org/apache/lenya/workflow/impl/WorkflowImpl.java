@@ -1,5 +1,5 @@
 /*
-$Id: WorkflowImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
+$Id: WorkflowImpl.java,v 1.3 2004/03/01 11:10:00 andreas Exp $
 <License>
 
  ============================================================================
@@ -189,13 +189,10 @@ public class WorkflowImpl implements Workflow {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param name DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     *
-     * @throws WorkflowException DOCUMENT ME!
+     * Returns the event for a certain event name.
+     * @param name A string.
+     * @return The event with this name.
+     * @throws WorkflowException when no event with the given name exists.
      */
     public EventImpl getEvent(String name) throws WorkflowException {
         if (!events.containsKey(name)) {
@@ -216,13 +213,10 @@ public class WorkflowImpl implements Workflow {
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param name DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     *
-     * @throws WorkflowException DOCUMENT ME!
+     * Returns the variable for a certain name.
+     * @param name The name of the variable.
+     * @return A variable.
+     * @throws WorkflowException if no variable with the given name exists.
      */
     public BooleanVariableImpl getVariable(String name)
         throws WorkflowException {
