@@ -57,10 +57,10 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.RequestLifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.excalibur.source.SourceUtil;
 
@@ -77,7 +77,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.12 2003/10/22 18:10:48 bloritsch Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.13 2003/10/30 12:41:19 cziegeler Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Serviceable, Contextualizable, Interpreter,
@@ -197,8 +197,8 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         Map objectModel = env.getObjectModel();
         FlowHelper.setContextObject(objectModel, biz);
 
-        // Attermpt to start processing the wrapper environment
-        Object key = RequestLifecycleHelper.startProcessing(wrapper);
+        // Attempt to start processing the wrapper environment
+        Object key = EnvironmentHelper.startProcessing(wrapper);
 
         Processor processor = null;
         boolean result = false;
@@ -207,7 +207,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             processor = (Processor)this.manager.lookup(Processor.ROLE);
 
             // Enter the environment
-            RequestLifecycleHelper.enterEnvironment(wrapper, this.manager, processor);
+            EnvironmentHelper.enterProcessor(processor, this.manager, wrapper);
 
             // Process the subrequest
             result = processor.process(wrapper);
@@ -223,9 +223,9 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             if ( processor != null ) {
                 // enterEnvironemnt has only been called if the
                 // processor has been looked up
-                RequestLifecycleHelper.leaveEnvironment();
+                EnvironmentHelper.leaveProcessor();
             }
-            RequestLifecycleHelper.endProcessing(wrapper, key);
+            EnvironmentHelper.endProcessing(wrapper, key);
             this.manager.release(processor);
         }
     }

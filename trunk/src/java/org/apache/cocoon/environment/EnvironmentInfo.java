@@ -57,14 +57,14 @@ import org.apache.cocoon.Processor;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentInfo.java,v 1.1 2003/10/29 18:58:06 cziegeler Exp $
+ * @version CVS $Id: EnvironmentInfo.java,v 1.2 2003/10/30 12:38:26 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentInfo {
     
     public final Processor      processor;
     public final int            oldStackCount;
-    //public final ServiceManager manager;
+    public final ServiceManager manager;
     public final Environment    environment;
     
     public EnvironmentInfo(Processor processor, 
@@ -73,7 +73,7 @@ public class EnvironmentInfo {
                            Environment    environment) {
         this.processor = processor;
         this.oldStackCount = oldStackCount;
-//        this.manager = manager;
+        this.manager = manager;
         this.environment = environment;
     }
 }

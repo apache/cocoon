@@ -53,6 +53,7 @@ package org.apache.cocoon.components;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.environment.EnvironmentHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -68,7 +69,7 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.27 2003/10/24 07:29:56 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.28 2003/10/30 12:38:26 cziegeler Exp $
  */
 public final class CocoonComponentManager
 implements ServiceManager
@@ -161,7 +162,7 @@ implements ServiceManager
      * processed (sub)sitemap.
      */
     static public ServiceManager getSitemapComponentManager() {
-        return RequestLifecycleHelper.getSitemapComponentManager();
+        return EnvironmentHelper.getSitemapServiceManager();
     }
     
 }

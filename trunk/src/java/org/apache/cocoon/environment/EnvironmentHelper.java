@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.9 2003/10/30 12:31:05 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.10 2003/10/30 12:38:26 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -448,6 +448,21 @@ implements SourceResolver, Serviceable, Disposable {
         return null;
     }
     
+    /**
+     * Get the current sitemap component manager.
+     * This method return the current sitemap component manager. This
+     * is the manager that holds all the components of the currently
+     * processed (sub)sitemap.
+     */
+    static public ServiceManager getSitemapServiceManager() {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if ( stack != null && !stack.isEmpty()) {
+            final EnvironmentInfo info = stack.getCurrentInfo();
+            return info.manager;
+        }
+        return null;
+    }
+
     /**
      * Return the processor that is actually processing the request
      */
