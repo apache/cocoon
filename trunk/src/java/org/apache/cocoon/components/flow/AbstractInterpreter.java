@@ -78,7 +78,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.8 2003/09/02 16:29:09 coliver Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.9 2003/10/08 20:18:34 cziegeler Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,
@@ -202,10 +202,10 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         try {
             // Retrieve a processor instance
             processor = (Processor)this.manager.lookup(Processor.ROLE);
-
+            
             // Enter the environment
             CocoonComponentManager.enterEnvironment(wrapper, this.manager, processor);
-
+            
             // Process the subrequest
             result = processor.process(wrapper);
             wrapper.commitResponse();
@@ -217,7 +217,11 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             throw(any);
         } finally {
             // Leave the environment, terminate processing and release processor
-            CocoonComponentManager.leaveEnvironment();
+            if ( processor != null ) {
+                // enterEnvironemnt has only been called if the
+                // processor has been looked up
+                CocoonComponentManager.leaveEnvironment();
+            }
             CocoonComponentManager.endProcessing(wrapper, key);
             this.manager.release(processor);
         }
