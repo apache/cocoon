@@ -20,7 +20,7 @@
                 exclude-result-prefixes="wi">
   <!--+
       | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | Version CVS $Id: woody-field-styling.xsl,v 1.47 2004/04/21 13:53:56 joerg Exp $
+      | Version CVS $Id: woody-field-styling.xsl,v 1.48 2004/04/21 14:00:03 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -411,7 +411,7 @@
       <xsl:copy-of select="@*"/>
       <xsl:attribute name="onsubmit">woody_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
       <!-- hidden field to store the submit id -->
-      <input type="hidden" name="woody_submit_id"/>
+      <div><input type="hidden" name="woody_submit_id"/></div>
       <xsl:apply-templates/>
       
       <!-- TODO: consider putting this in the xml stream from the generator? -->
