@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,34 +30,36 @@ import org.xml.sax.SAXException;
  * corresponding to the possible instances of an {@link org.apache.cocoon.forms.datatype.typeimpl.EnumType}.
  * <p>Example usage:</p>
  * <pre>
- * &lt;wd:selection-list type="enum" class="com.example.Sex"/>
+ * &lt;fd:selection-list type="enum" class="com.example.Sex"/&gt;
  * </pre>
  * <p>Produces the following output:</p>
  * <pre>
- * &lt;wi:selection-list>
- *   &lt;wi:item value=""/>
- *   &lt;wi:item value="com.example.Sex.MALE">
- *     &lt;wi:label>
- *       &lt;i18n:text>com.example.Sex.MALE</i18n:text>
- *     &lt;/wi:label>
- *   &lt;/wi:item>
- *   &lt;wi:item value="com.example.Sex.FEMALE">
- *     &lt;wi:label>
- *       &lt;i18n:text>com.example.Sex.FEMALE</i18n:text>
- *     &lt;/wi:label>
- *   &lt;/wi:item>
- * &lt;/wi:selection-list>
+ * &lt;fi:selection-list&gt;
+ *   &lt;fi:item value=""/&gt;
+ *   &lt;fi:item value="com.example.Sex.MALE"&gt;
+ *     &lt;fi:label&gt;
+ *       &lt;i18n:text&gt;com.example.Sex.MALE&lt;/i18n:text&gt;
+ *     &lt;/fi:label&gt;
+ *   &lt;/fi:item&gt;
+ *   &lt;fi:item value="com.example.Sex.FEMALE"&gt;
+ *     &lt;fi:label&gt;
+ *       &lt;i18n:text&gt;com.example.Sex.FEMALE&lt;/i18n:text&gt;
+ *     &lt;/fi:label&gt;
+ *   &lt;/fi:item&gt;
+ * &lt;/fi:selection-list&gt;
  * </pre>
- * <p>If you don't want an initial null value, add a nullable="false"
- * attribute to the wd:selection-list element.
- * 
- * @version CVS $Id: EnumSelectionList.java,v 1.4 2004/03/09 13:17:26 cziegeler Exp $
+ *
+ * <p>If you don't want an initial null value, add a
+ * <code>nullable="false"</code> attribute to the
+ * <code>fd:selection-list</code> element.</p>
+ *
+ * @version CVS $Id$
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
     public static final String I18N_PREFIX_COLON = "i18n:";
     public static final String TEXT_EL = "text";
-    
+
     private Datatype datatype;
     private Class clazz;
     private boolean nullable;
@@ -82,10 +84,9 @@ public class EnumSelectionList implements SelectionList {
     /* (non-Javadoc)
      * @see org.apache.cocoon.forms.datatype.SelectionList#generateSaxFragment(org.xml.sax.ContentHandler, java.util.Locale)
      */
-    public void generateSaxFragment(
-        ContentHandler contentHandler,
-        Locale locale)
-        throws SAXException {
+    public void generateSaxFragment(ContentHandler contentHandler,
+                                    Locale locale)
+    throws SAXException {
         try {
             contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, XMLUtils.EMPTY_ATTRIBUTES);
             Field fields[] = clazz.getDeclaredFields();
@@ -95,7 +96,7 @@ public class EnumSelectionList implements SelectionList {
                 voidAttrs.addCDATAAttribute("value", "");
                 contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, voidAttrs);
                 contentHandler.endElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL);
-            }            
+            }
             for (int i = 0 ; i < fields.length ; ++i) {
                 int mods = fields[i].getModifiers();
                 if (Modifier.isPublic(mods) && Modifier.isStatic(mods)
@@ -120,5 +121,4 @@ public class EnumSelectionList implements SelectionList {
             throw new SAXException("Got exception trying to get enum's values", e);
         }
     }
-
 }
