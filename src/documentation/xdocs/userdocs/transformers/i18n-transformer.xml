@@ -350,7 +350,13 @@
                         refer to e.g. request parameters. (<em>at least 1 catalogue
                           element required</em>).</li>
                       <li><strong>untranslated-text</strong>: text used for
-                        untranslated keys (default is to output the key name).</li>
+                        untranslated keys (default is to output the key name).
+                        For the i18n:text element, this will only be used if
+                        the content of the i18n:text element was empty (thus
+                        when the key was specified using the i18n:key
+                        attribute). Otherwise the content of the i18n:text
+                        element will be outputted when no translation is
+                        found.</li>
                       <li><strong>cache-at-startup</strong>: flag whether to cache
                         messages at startup (false by default).</li>
                     </ul>
