@@ -146,7 +146,12 @@ import java.util.Map;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.9 2003/10/23 07:57:24 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.10 2003/10/23 08:27:46 cziegeler Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Transformer"
+ * @x-avalon.lifestyle type="pooled"
+ * @x-avalon.info name="cinclude-transformer"
  */
 public class CIncludeTransformer
 extends AbstractSAXTransformer
@@ -229,6 +234,10 @@ implements Disposable, CacheableProcessingComponent {
     }
 
     /**
+     * This component depends on the following:
+     *
+     * @avalon.dependency type="IncludeCacheManager"
+     * 
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {

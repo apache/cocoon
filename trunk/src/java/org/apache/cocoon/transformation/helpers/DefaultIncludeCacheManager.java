@@ -55,13 +55,13 @@ import java.net.URL;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
@@ -90,19 +90,24 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.6 2003/09/24 21:41:12 cziegeler Exp $
+ *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.7 2003/10/23 08:27:46 cziegeler Exp $
  *  @since   2.1
+ * 
+ * @avalon.component
+ * @avalon.service type="IncludeCacheManager"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="include-cache-manager"
  */
 public final class DefaultIncludeCacheManager
     extends AbstractLogEnabled
     implements IncludeCacheManager, 
                 ThreadSafe, 
-                Composable, 
+                Serviceable, 
                 Disposable,
                 Parameterizable, 
                 Component {
 
-    private ComponentManager manager;
+    private ServiceManager manager;
     
     private SourceResolver   resolver;
     
@@ -215,7 +220,7 @@ public final class DefaultIncludeCacheManager
                 if (this.getLogger().isDebugEnabled()) {
                     this.getLogger().debug("Thread started for " + uri);
                 }
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new SourceException("Unable to lookup thread pool or xml serializer.", ce);
             } catch (Exception e) {
                 throw new SourceException("Unable to get pooled thread.", e);
@@ -308,7 +313,7 @@ public final class DefaultIncludeCacheManager
                 deserializer = (XMLDeserializer)this.manager.lookup( XMLDeserializer.ROLE );
                 deserializer.setConsumer(handler);
                 deserializer.deserialize(result);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new SAXException("Unable to lookup xml deserializer.", ce);
             } finally {
                 this.manager.release( deserializer );
@@ -337,7 +342,7 @@ public final class DefaultIncludeCacheManager
                         deserializer = (XMLDeserializer)this.manager.lookup( XMLDeserializer.ROLE );
                         deserializer.setConsumer(handler);
                         deserializer.deserialize(response.getResponse());
-                    } catch (ComponentException ce) {
+                    } catch (ServiceException ce) {
                         throw new SAXException("Unable to lookup xml deserializer.", ce);
                     } finally {
                         this.manager.release( deserializer );
@@ -390,7 +395,7 @@ public final class DefaultIncludeCacheManager
             
         } catch (ProcessingException pe) {
             throw new SAXException("ProcessingException", pe);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new SAXException("Unable to lookup xml serializer.", e);
         }
     }
@@ -403,14 +408,6 @@ public final class DefaultIncludeCacheManager
             this.getLogger().debug("Terminating cache manager session " + session);
         }
         session.cleanup(this.resolver);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     /**
@@ -441,10 +438,18 @@ public final class DefaultIncludeCacheManager
         final String storeRole = parameters.getParameter("use-store", Store.ROLE);
         try {
             this.store = (Store)this.manager.lookup(storeRole);
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new ParameterException("Unable to lookup store with role " + storeRole, e);
         }
         this.defaultCacheStorage = new StoreIncludeCacheStorageProxy(this.store, this.getLogger());
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
 }
@@ -459,7 +464,7 @@ final class LoaderThread implements Runnable {
 
     public LoaderThread(Source source, 
                          XMLSerializer serializer, 
-                         ComponentManager manager) {
+                         ServiceManager manager) {
         this.source = source;
         this.serializer = serializer;
         this.finished = false;
