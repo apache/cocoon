@@ -33,6 +33,8 @@ import java.io.OutputStream;
 import java.io.IOException;
 import java.util.Date;
 
+import org.xml.sax.SAXException;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
@@ -89,7 +91,7 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
      * Lastly, the <code>key</code> value is derived from the value of
      * the <code>source</code> string.
      */
-    public void generate() throws org.apache.cocoon.ProcessingException, org.xml.sax.SAXException, java.io.IOException {
+    public void generate() throws ProcessingException, SAXException, IOException {
         DataSourceComponent datasource = null;
         Connection con = null;
 
@@ -208,7 +210,6 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
         }
 
         InputStream is = object.getBinaryStream();
-        OutputStream os = response.getOutputStream();
 
         byte[] bytes = new byte[(int) object.length()];
         is.read(bytes);
@@ -222,8 +223,6 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
         }
 
         response.setHeader("Accept-Ranges", "bytes");
-        os.write(bytes);
-        os.flush();
-        os.close();
+        out.write(bytes);
     }
 }
