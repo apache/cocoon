@@ -63,8 +63,10 @@ public class StringTypeBuilder extends AbstractDatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {
         StringType type = new StringType();
         type.setArrayType(arrayType);
+        type.setBuilder(this);
 
         buildValidationRules(datatypeElement, type, datatypeManager);
+        buildConvertor(datatypeElement, type);
         buildSelectionList(datatypeElement, type);
 
         return type;

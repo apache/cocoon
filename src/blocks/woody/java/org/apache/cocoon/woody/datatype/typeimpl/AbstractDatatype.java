@@ -51,14 +51,10 @@
 package org.apache.cocoon.woody.datatype.typeimpl;
 
 import org.outerj.expression.ExpressionContext;
-import org.apache.cocoon.woody.datatype.Datatype;
-import org.apache.cocoon.woody.datatype.SelectionList;
-import org.apache.cocoon.woody.datatype.ValidationError;
-import org.apache.cocoon.woody.datatype.ValidationRule;
+import org.apache.cocoon.woody.datatype.*;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
@@ -68,6 +64,8 @@ public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();
     private SelectionList selectionList;
     private boolean arrayType = false;
+    private DatatypeBuilder builder;
+    private Convertor convertor;
 
     public ValidationError validate(Object value, ExpressionContext expressionContext) {
         Iterator validationRulesIt = validationRules.iterator();
@@ -98,7 +96,35 @@ public abstract class AbstractDatatype implements Datatype {
         return arrayType;
     }
 
-    protected void setArrayType(boolean arrayType) {
+    void setArrayType(boolean arrayType) {
         this.arrayType = arrayType;
+    }
+
+    void setConvertor(Convertor convertor) {
+        this.convertor = convertor;
+    }
+
+    void setBuilder(DatatypeBuilder builder) {
+        this.builder = builder;
+    }
+
+    public Convertor getPlainConvertor() {
+        return builder.getPlainConvertor();
+    }
+
+    public DatatypeBuilder getBuilder() {
+        return builder;
+    }
+
+    public Convertor getConvertor() {
+        return convertor;
+    }
+
+    public Object convertFromString(String value, Locale locale) {
+        return getConvertor().convertFromString(value, locale, null);
+    }
+
+    public String convertToString(Object value, Locale locale) {
+        return getConvertor().convertToString(value, locale, null);
     }
 }
