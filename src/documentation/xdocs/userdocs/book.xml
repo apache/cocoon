@@ -41,6 +41,10 @@
     <menu-item label="Control Flow" href="flow/index.html"/>
   </menu>
   
+  <menu label="Forms">
+    <menu-item label="Forms" href="forms/index.html"/>
+  </menu>
+
   <menu label="XSP">
     <menu-item label="XSP" href="xsp/index.html"/>
   </menu>
