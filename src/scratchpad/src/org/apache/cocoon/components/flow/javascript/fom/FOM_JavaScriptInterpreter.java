@@ -91,7 +91,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.5 2003/07/02 17:05:37 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.6 2003/07/06 07:09:19 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -364,7 +364,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                                            thrScope)).longValue();
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        cocoon.setup(this, environment, manager);
+        cocoon.setup(this, environment, manager, getLogger());
 
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
@@ -567,7 +567,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.setup(this, environment, manager);
+            cocoon.setup(this, environment, manager, getLogger());
             if (enableDebugger) {
                 getDebugger().setVisible(true);
             }

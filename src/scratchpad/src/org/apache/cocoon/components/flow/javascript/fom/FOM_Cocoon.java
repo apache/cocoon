@@ -75,6 +75,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
+import org.apache.avalon.framework.logger.Logger;
 
 /**
  * Implementation of FOM (Flow Object Model).
@@ -82,7 +83,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.8 2003/07/02 17:05:37 coliver Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.9 2003/07/06 07:09:18 coliver Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -91,6 +92,7 @@ public class FOM_Cocoon extends ScriptableObject {
 
     private Environment environment;
     private ComponentManager componentManager;
+    private Logger logger;
 
     private FOM_Request request;
     private FOM_Response response;
@@ -117,10 +119,12 @@ public class FOM_Cocoon extends ScriptableObject {
 
     public void setup(FOM_JavaScriptInterpreter interp,
                       Environment env, 
-                      ComponentManager manager) {
+                      ComponentManager manager,
+                      Logger logger) {
         this.interpreter = interp;
         this.environment = env;
         this.componentManager = manager;
+        this.logger = logger;
     }
 
     public void invalidate() {
@@ -128,6 +132,8 @@ public class FOM_Cocoon extends ScriptableObject {
         this.response = null;
         this.session = null;
         this.context = null;
+        this.log = null;
+        this.logger = null;
         this.componentManager = null;
         this.environment = null;
         this.interpreter = null;
@@ -622,12 +628,12 @@ public class FOM_Cocoon extends ScriptableObject {
         public FOM_Log() {
         }
 
+        public FOM_Log(Object logger) {
+            this.logger = (Logger)unwrap(logger);
+        }
+
         public String getClassName() {
             return "FOM_Log";
-        }
-        
-        public void enableLogging(Logger logger) {
-            this.logger = logger;
         }
         
         public void jsFunction_debug(String message) {
@@ -698,7 +704,7 @@ public class FOM_Cocoon extends ScriptableObject {
         if (log != null) {
             return log;
         }
-        log = new FOM_Log();
+        log = new FOM_Log(logger);
         log.setParentScope(getParentScope());
         log.setPrototype(getClassPrototype(this, "FOM_Log"));
         return log;
