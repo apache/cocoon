@@ -75,7 +75,7 @@ public class WebDAVUtil {
     throws HttpException, IOException {
 
         final String filename = uri.substring(uri.lastIndexOf("/"));
-        final String uriPrefix = uri.substring(0, uri.lastIndexOf("/"));
+        final String uriPrefix = uri.substring(0, uri.lastIndexOf("/") + 1);
         final HttpURL sourceURL = new HttpURL(uri);                                                                   
         final WebdavResource resource = getWebdavResource(uriPrefix);
                         
