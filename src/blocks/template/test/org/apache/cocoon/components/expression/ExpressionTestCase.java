@@ -73,5 +73,24 @@ public class ExpressionTestCase extends CocoonTestCase {
         assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
         this.release(factory);
     }
+
+    public void testFactoryPluggable() throws ExpressionException, ServiceException {
+        ExpressionFactory factory = (ExpressionFactory)this.lookup(ExpressionFactory.ROLE);
+        assertNotNull("Test lookup of expression factory", factory);
+
+        Expression expression = factory.getExpression("1+2");
+        assertNotNull("Test expression compilation", expression);
+        assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
+
+        expression = factory.getExpression("jexl:1+2");
+        assertNotNull("Test expression compilation", expression);
+        assertEquals(new Long(3), expression.evaluate(new ExpressionContext()));
+
+        expression = factory.getExpression("jxpath:1+2");
+        assertNotNull("Test expression compilation", expression);
+        assertEquals(new Double(3), expression.evaluate(new ExpressionContext()));
+
+        this.release(factory);
+    }
 }
 

@@ -28,6 +28,7 @@ public class ExpressionFactory
     extends AbstractLogEnabled
     implements Disposable, Serviceable, ThreadSafe {
     public static String ROLE = ExpressionFactory.class.getName();
+    public static String DEFAULT ="default";
 
     /** The component manager */
     protected ServiceManager manager;
@@ -64,5 +65,15 @@ public class ExpressionFactory
             this.compilerSelector.release(compiler);
         }
         return expressionImpl;
+    }
+
+    public Expression getExpression(String expression) throws ExpressionException {
+        String language = DEFAULT;
+        int end = expression.indexOf(':');
+        if (end != -1) {
+            language = expression.substring(0, end);
+            expression = expression.substring(end+1);
+        }
+        return getExpression(language, expression);
     }
 }
