@@ -40,8 +40,6 @@ import org.apache.cocoon.environment.Session;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.SourceValidity;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.EvaluatorException;
@@ -69,14 +67,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+
 
 /**
  * Interface with the JavaScript interpreter.
@@ -119,11 +112,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     private Global scope;
 
-    // FIXME: Does not belong here, should be moved into the sitemap or even higher?
-    private CompilingClassLoader classLoader;
-    private MyClassRepository javaClassRepository = new MyClassRepository();
-    private String[] javaSourcePath;
-
     /**
      * List of <code>String</code> objects that represent files to be
      * read in by the JavaScript interpreter.
@@ -139,78 +127,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     protected ServiceManager getServiceManager() {
         return manager;
-    }
-
-    class MyClassRepository implements CompilingClassLoader.ClassRepository {
-        Map javaSource = new HashMap();
-        Map javaClass = new HashMap();
-        Map sourceToClass = new HashMap();
-        Map classToSource = new HashMap();
-
-        public synchronized void addCompiledClass(String className, Source src,
-                    byte[] contents) {
-            javaSource.put(src.getURI(), src.getValidity());
-            javaClass.put(className, contents);
-            String uri = src.getURI();
-            Set set = (Set)sourceToClass.get(uri);
-            if (set == null) {
-                set = new HashSet();
-                sourceToClass.put(uri, set);
-            }
-            set.add(className);
-            classToSource.put(className, src.getURI());
-        }
-
-        public synchronized byte[] getCompiledClass(String className) {
-            return (byte[])javaClass.get(className);
-        }
-
-        public synchronized boolean upToDateCheck() throws Exception {
-            SourceResolver sourceResolver = (SourceResolver)
-                getServiceManager().lookup(SourceResolver.ROLE);
-            try {
-                List invalid = new LinkedList();
-                for (Iterator i = javaSource.entrySet().iterator(); i.hasNext();) {
-                    Map.Entry e = (Map.Entry) i.next();
-                    String uri = (String) e.getKey();
-                    SourceValidity validity = (SourceValidity) e.getValue();
-                    int valid = validity.isValid();
-                    if (valid == SourceValidity.UNKNOWN) {
-                        Source newSrc = null;
-                        try {
-                            newSrc = sourceResolver.resolveURI(uri);
-                            valid = newSrc.getValidity().isValid(validity);
-                        } catch (Exception ignored) {
-                        } finally {
-                            if (newSrc != null) {
-                                sourceResolver.release(newSrc);
-                            }
-                        }
-                    }
-                    if (valid != SourceValidity.VALID) {
-                        invalid.add(uri);
-                    }
-                }
-
-                for (Iterator i = invalid.iterator(); i.hasNext();) {
-                    String uri = (String) i.next();
-                    Set set = (Set) sourceToClass.get(uri);
-                    Iterator ii = set.iterator();
-                    while (ii.hasNext()) {
-                        String className = (String) ii.next();
-                        sourceToClass.remove(className);
-                        javaClass.remove(className);
-                        classToSource.remove(className);
-                    }
-                    set.clear();
-                    javaSource.remove(uri);
-                }
-
-                return invalid.size() == 0;
-            } finally {
-                getServiceManager().release(sourceResolver);
-            }
-        }
     }
 
     /**
@@ -250,24 +166,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
         String debugger = config.getChild("debugger").getValue(null);
         enableDebugger = "enabled".equalsIgnoreCase(debugger);
-
-        if (reloadScripts) {
-            String classPath = config.getChild("classpath").getValue(null);
-            synchronized (javaClassRepository) {
-                if (classPath != null) {
-                    StringTokenizer izer = new StringTokenizer(classPath, ";");
-                    int i = 0;
-                    javaSourcePath = new String[izer.countTokens() + 1];
-                    javaSourcePath[javaSourcePath.length - 1] = "";
-                    while (izer.hasMoreTokens()) {
-                        javaSourcePath[i++] = izer.nextToken();
-                    }
-                } else {
-                    javaSourcePath = new String[]{""};
-                }
-                updateSourcePath();
-            }
-        }
     }
 
     public void initialize() throws Exception {
@@ -298,11 +196,6 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
     }
 
-    private void updateSourcePath() {
-        if (classLoader != null) {
-            classLoader.setSourcePath(javaSourcePath);
-        }
-    }
 
     /**
      * Returns the JavaScript scope, a Scriptable object, from the user
@@ -599,9 +492,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 compiledScript = entry.getScript(cx, this.scope, false, this);
                 return compiledScript;
             }
-        } else {
-            throw new ResourceNotFoundException(fileName + ": not found");
         }
+        throw new ResourceNotFoundException(fileName + ": not found");
+
     }
 
     protected Script compileScript(Context cx, Scriptable scope, Source src)
