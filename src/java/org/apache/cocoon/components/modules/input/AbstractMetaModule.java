@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -345,7 +345,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                 if (cs.hasComponent(name)) {
                     release = true;
                     try {
-                    input = (InputModule) cs.select(name);
+                        input = (InputModule) cs.select(name);
                     } catch (ComponentException e) {
                         throw new ConfigurationException(
                                 "MetaModule unable to create "+
@@ -353,8 +353,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
                                 " specified internal module '"+name+"'", e);
                     }
                 } else {
-                    if (getLogger().isWarnEnabled())
-                        getLogger().warn("No such InputModule: "+name);
+                    throw new ConfigurationException("MetaModule: No such InputModule: "+name);
                 }
             }
 

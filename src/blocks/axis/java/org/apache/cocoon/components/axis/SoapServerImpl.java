@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,12 +88,12 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  * 
- * @version CVS $Id: SoapServerImpl.java,v 1.4 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id$
  */
 public class SoapServerImpl extends AbstractLogEnabled
     implements SoapServer, Composable, Configurable, Contextualizable, Initializable,
-               Startable, ThreadSafe
-{
+               Startable, ThreadSafe {
+
     /**
      * Constant describing the default location of the server configuration file
      */
@@ -125,37 +125,29 @@ public class SoapServerImpl extends AbstractLogEnabled
     private WSDDDocument[] m_descriptors;
 
     // context reference
-    private Context m_context;
+    private Context context;
 
     // component manager reference
-    private ComponentManager m_manager;
+    private ComponentManager manager;
 
-    /**
-     * Contextualize this Reader.
-     *
-     * @param context a <code>Context</code> instance
-     * @exception ContextException if an error occurs
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(final Context context)
-        throws ContextException
-    {
-        m_context = context;
+    throws ContextException {
+        this.context = context;
     }
 
-    /**
-     * Compose this server
-     *
-     * @param manager a <code>ComponentManager</code> value
-     * @exception ComponentException if an error occurs
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
      */
     public void compose(ComponentManager manager)
-        throws ComponentException
-    {
-        m_manager = manager;
+    throws ComponentException {
+        this.manager = manager;
     }
 
     /**
-     * Configures this reader.
+     * Configures this server.
      *
      * <p>
      *  Sets the following optional configuration settings:
@@ -191,8 +183,7 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception ConfigurationException if an error occurs
      */
     public void configure(final Configuration config)
-        throws ConfigurationException
-    {
+    throws ConfigurationException {
         try {
             setServerConfig(config);
             setAttachmentDir(config);
@@ -216,22 +207,18 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception Exception if an error occurs
      */
     public void setServerConfig(final Configuration config)
-        throws Exception
-    {
+    throws Exception {
         final Configuration wsdd = config.getChild("server-wsdd");
         SourceResolver resolver = null;
 
-        try
-        {
-            resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
+        try {
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
             m_serverWSDD =
                 resolver.resolveURI(
                     wsdd.getAttribute("src", DEFAULT_SERVER_CONFIG)
                 );
-        }
-        finally
-        {
-            if (resolver != null) m_manager.release(resolver);
+        } finally {
+            this.manager.release(resolver);
         }
     }
 
@@ -244,22 +231,19 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception ContextException if a context error occurs
      */
     private void setAttachmentDir(final Configuration config)
-        throws ConfigurationException, ContextException
-    {
+    throws ConfigurationException, ContextException {
         final Configuration dir = config.getChild("attachment-dir");
         m_attachmentDir = dir.getAttribute("src", null);
 
-        if (m_attachmentDir == null)
-        {
+        if (m_attachmentDir == null) {
             File workDir =
-                (File) m_context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
+                (File) this.context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
             File attachmentDir =
                 IOUtils.createFile(workDir, "attachments" + File.separator);
             m_attachmentDir = IOUtils.getFullFilename(attachmentDir);
         }
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("attachment directory = " + m_attachmentDir);
         }
     }
@@ -273,22 +257,19 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception ContextException if a context error occurs
      */
     private void setJWSDir(final Configuration config)
-        throws ConfigurationException, ContextException
-    {
+    throws ConfigurationException, ContextException {
         final Configuration dir = config.getChild("jws-dir");
         m_jwsClassDir = dir.getAttribute("src", null);
 
-        if (m_jwsClassDir == null)
-        {
+        if (m_jwsClassDir == null) {
             File workDir =
-                (File) m_context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
+                (File) this.context.get(org.apache.cocoon.Constants.CONTEXT_WORK_DIR);
             File jwsClassDir =
                 IOUtils.createFile(workDir, "axis-jws" + File.separator);
             m_jwsClassDir = IOUtils.getFullFilename(jwsClassDir);
         }
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("jws class directory = " + m_jwsClassDir);
         }
     }
@@ -300,22 +281,20 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception ConfigurationException if an error occurs
      */
     private void setSecurityProvider(final Configuration config)
-        throws ConfigurationException
-    {
+    throws ConfigurationException {
         final Configuration secProvider =
             config.getChild("security-provider", false);
 
-        if (secProvider != null)
-        {
+        if (secProvider != null) {
             final String attr = secProvider.getAttribute("enabled");
             final boolean providerIsEnabled = BooleanUtils.toBoolean(attr);
 
-            if (providerIsEnabled)
+            if (providerIsEnabled) {
                 m_securityProvider = new ServletSecurityProvider();
+            }
         }
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("security provider = " + m_securityProvider);
         }
     }
@@ -327,8 +306,7 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception ConfigurationException if an error occurs
      */
     private void setTransportName(final Configuration config)
-        throws ConfigurationException
-    {
+    throws ConfigurationException {
         final Configuration name = config.getChild("transport");
         m_transportName =
             name.getAttribute("name", HTTPTransport.DEFAULT_TRANSPORT_NAME);
@@ -343,24 +321,20 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception Exception if an error occurs
      */
     private void setManagedServices(final Configuration config)
-        throws Exception
-    {
+    throws Exception {
         final Configuration m = config.getChild("managed-services", false);
         final List descriptors = new ArrayList();
 
-        if (m != null)
-        {
+        if (m != null) {
             SourceResolver resolver = null;
             DOMParser parser = null;
 
-            try
-            {
+            try {
                 final Configuration[] services = m.getChildren("descriptor");
-                resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
-                parser = (DOMParser) m_manager.lookup(DOMParser.ROLE);
+                resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+                parser = (DOMParser) this.manager.lookup(DOMParser.ROLE);
 
-                for (int i = 0; i < services.length; ++i)
-                {
+                for (int i = 0; i < services.length; ++i) {
                     final String location = services[i].getAttribute("src");
                     Source source = resolver.resolveURI(location);
 
@@ -373,11 +347,9 @@ public class SoapServerImpl extends AbstractLogEnabled
 
                     descriptors.add(new WSDDDocument(d));
                 }
-            }
-            finally
-            {
-                if (resolver != null) m_manager.release(resolver);
-                if (parser != null) m_manager.release((Component)parser);
+            } finally {
+                this.manager.release(resolver);
+                this.manager.release((Component)parser);
             }
         }
 
@@ -386,39 +358,32 @@ public class SoapServerImpl extends AbstractLogEnabled
             (WSDDDocument[]) descriptors.toArray(new WSDDDocument[]{});
     }
 
-    /**
-     * Initialize this reader, creates AXIS server engine.
-     *
-     * @exception Exception if an error occurs
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize()
-        throws Exception
-    {
+    throws Exception {
         m_axisServer = createEngine();
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("SoapServerImpl.initialize() complete");
         }
     }
 
     /**
-     * Starts this reader. Deploys all managed services as specified at
+     * Starts this server. Deploys all managed services as specified at
      * configuration time.
      *
      * @exception Exception if an error occurs
      */
     public void start()
-        throws Exception
-    {
+    throws Exception {
         // deploy all configured services
-        for (int i = 0; i < m_descriptors.length; ++i)
-        {
+        for (int i = 0; i < m_descriptors.length; ++i) {
             WSDDDeployment deployment = m_engineConfig.getDeployment();
             m_descriptors[i].deploy(deployment);
 
-            if (getLogger().isDebugEnabled())
-            {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug(
                     "Deployed Descriptor:\n" +
                     XMLUtils.DocumentToString(m_descriptors[i].getDOMDocument())
@@ -426,8 +391,7 @@ public class SoapServerImpl extends AbstractLogEnabled
             }
         }
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("SoapServerImpl.start() complete");
         }
     }
@@ -440,31 +404,29 @@ public class SoapServerImpl extends AbstractLogEnabled
      * @exception Exception if an error occurs
      */
     public void stop()
-        throws Exception
-    {
+    throws Exception {
         WSDDDeployment deployment = m_engineConfig.getDeployment();
         WSDDService[] services = deployment.getServices();
 
         // undeploy all deployed services
-        for (int i = 0; i < services.length; ++i)
-        {
+        for (int i = 0; i < services.length; ++i) {
             deployment.undeployService(services[i].getQName());
 
-            if (getLogger().isDebugEnabled())
-            {
+            if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Undeployed: " + services[i].toString());
             }
         }
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("SoapServerImpl.stop() complete");
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.axis.SoapServer#invoke(org.apache.axis.MessageContext)
+     */
     public void invoke(MessageContext message)
-        throws Exception
-    {
+    throws Exception {
         m_axisServer.invoke(message);
     }
 
@@ -478,9 +440,8 @@ public class SoapServerImpl extends AbstractLogEnabled
     public MessageContext createMessageContext(
         HttpServletRequest req,
         HttpServletResponse res,
-        ServletContext con
-    )
-    {
+        ServletContext con) {
+
         MessageContext msgContext = new MessageContext(m_axisServer);
         String webInfPath = con.getRealPath("/WEB-INF");
         String homeDir = con.getRealPath("/");
@@ -490,7 +451,7 @@ public class SoapServerImpl extends AbstractLogEnabled
 
         // Add Avalon specifics to MessageContext
         msgContext.setProperty(LOGGER, getLogger());
-        msgContext.setProperty(AvalonProvider.COMPONENT_MANAGER, m_manager);
+        msgContext.setProperty(AvalonProvider.COMPONENT_MANAGER, this.manager);
 
         // Save some HTTP specific info in the bag in case someone needs it
         msgContext.setProperty(Constants.MC_JWS_CLASSDIR, m_jwsClassDir);
@@ -514,19 +475,18 @@ public class SoapServerImpl extends AbstractLogEnabled
         // Save the real path
         String realpath = con.getRealPath(req.getServletPath());
 
-        if (realpath != null)
-        {
+        if (realpath != null) {
             msgContext.setProperty(Constants.MC_REALPATH, realpath);
         }
 
         msgContext.setProperty(Constants.MC_CONFIGPATH, webInfPath);
 
-        if (m_securityProvider != null)
+        if (m_securityProvider != null) {
             msgContext.setProperty("securityProvider", m_securityProvider);
+        }
 
         // write out the contents of the message context for debugging purposes
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             debugMessageContext(msgContext);
         }
 
@@ -538,12 +498,8 @@ public class SoapServerImpl extends AbstractLogEnabled
      *
      * @param context a <code>MessageContext</code> instance
      */
-    private void debugMessageContext(final MessageContext context)
-    {
-        for (final Iterator i = context.getPropertyNames();
-             i.hasNext();
-        )
-        {
+    private void debugMessageContext(final MessageContext context) {
+        for (final Iterator i = context.getPropertyNames(); i.hasNext(); ) {
             final String key = (String) i.next();
             getLogger().debug(
                 "MessageContext: Key:" + key + ": Value: " + context.getProperty(key)
@@ -557,12 +513,10 @@ public class SoapServerImpl extends AbstractLogEnabled
      * context.
      */
     public AxisServer createEngine()
-        throws Exception
-    {
+    throws Exception {
         AxisServer engine = AxisServer.getServer(getEngineEnvironment());
 
-        if (getLogger().isDebugEnabled())
-        {
+        if (getLogger().isDebugEnabled()) {
             getLogger().debug("Axis engine created");
         }
 
@@ -570,8 +524,7 @@ public class SoapServerImpl extends AbstractLogEnabled
     }
 
     protected Map getEngineEnvironment()
-        throws Exception
-    {
+    throws Exception  {
         Map env = new HashMap();
 
         // use FileProvider directly with a Avalon Source object instead of going
@@ -585,33 +538,4 @@ public class SoapServerImpl extends AbstractLogEnabled
 
         return env;
     }
-
-    /*
-     * Helper method to convert a <code>Message</code> structure
-     * into a <code>String</code>.
-     *
-     * @param msg a <code>Message</code> value
-     * @return a <code>String</code> value
-     */
-    /* FIXME (SM): this method appears to be unused, should we remove it?
-    private String messageToString(final Message msg)
-    {
-        try
-        {
-            OutputStream os = new ByteArrayOutputStream();
-            msg.writeTo(os);
-            return os.toString();
-        }
-        catch (Exception e)
-        {
-            if (getLogger().isWarnEnabled())
-            {
-                getLogger().warn(
-                    "Warning, could not convert message (" + msg + ") into string", e
-                );
-            }
-
-            return null;
-        }
-    } */
 }
