@@ -2,7 +2,7 @@
 
 <!--
   Release Announcement Template
-  CVS $Id: announcement.xml,v 1.2 2003/03/17 00:47:42 vgritsenko Exp $
+  CVS $Id: announcement.xml,v 1.3 2003/06/30 14:05:55 cziegeler Exp $
 -->
 
 <announcement site="http://cocoon.apache.org">
@@ -40,6 +40,6 @@
    </p>
 
   </body>
-  <changes version="@version@" file="changes.xml"/>
+  <changes version="@version@" file="status.xml"/>
 </announcement>
 
