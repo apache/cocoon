@@ -68,9 +68,9 @@ import java.net.MalformedURLException;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.3 2003/03/10 15:57:42 cziegeler Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.4 2003/06/24 15:20:28 upayavira Exp $
  */
-public class ForwardRedirector extends AbstractLogEnabled implements Redirector {
+public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
     /** Was there a call to <code>redirect()</code> ? */
     private boolean hasRedirected = false;
@@ -118,8 +118,24 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
         this.hasRedirected = true;
     }
 
+    public void permanentRedirect(boolean sessionMode, String url) throws IOException, ProcessingException {
+        if (getLogger().isInfoEnabled()) {
+            getLogger().info("Redirecting to '" + url + "'");
+        }
+
+        if (url.startsWith("cocoon:")) {
+            cocoonRedirect(sessionMode, url);
+        } else if (env instanceof PermanentRedirector) {
+            ((PermanentRedirector)env).permanentRedirect(sessionMode, url);
+        } else {
+            env.redirect(sessionMode, url);
+        }
+        this.hasRedirected = true;
+
+    }
+
     /**
-     * Inconditionnaly redirects to a given URL, even it this redirector is part of a
+     * Unconditionally redirects to a given URL, even it this redirector is part of a
      * subpipeline.
      */
     public void globalRedirect(boolean sessionMode, String url) throws IOException, ProcessingException {

@@ -60,17 +60,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.AbstractEnvironment;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.*;
 import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.9 2003/05/26 07:45:42 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.10 2003/06/24 15:20:28 upayavira Exp $
  */
-public class HttpEnvironment extends AbstractEnvironment implements Redirector {
+public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
     public static final String HTTP_REQUEST_OBJECT = "httprequest";
     public static final String HTTP_RESPONSE_OBJECT= "httpresponse";
@@ -151,10 +148,18 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
       }
     }
 
+    public void redirect(boolean sessionmode, String newURL) throws IOException {
+        doRedirect(sessionmode, newURL, false);
+    }
+
+    public void permanentRedirect(boolean sessionmode, String newURL) throws IOException {
+        doRedirect(sessionmode, newURL, true);
+    }
+
    /**
     *  Redirect the client to new URL with session mode
     */
-    public void redirect(boolean sessionmode, String newURL) throws IOException {
+    private void doRedirect(boolean sessionmode, String newURL, boolean permanent) throws IOException {
         this.hasRedirected = true;
 
         // check if session mode shall be activated
@@ -202,7 +207,11 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Sending redirect to '" + redirect + "'");
         }
-        this.response.sendRedirect (redirect);
+        if (permanent) {
+            this.response.sendPermanentRedirect(redirect);
+        } else {
+            this.response.sendRedirect (redirect);
+        }
     }
 
     public boolean hasRedirected() {
