@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <n:news xmlns:n="http://www.betaversion.org/linotype/news/1.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:r="http://apache.org/cocoon/requestgenerator/2.0" online="on" author="" creation-date="May 26, 2003" creation-time="16:38" creation-fulldate="Mon, 26 May 2003 21:38:07 GMT"><n:title>Welcome to Linotype 1.1</n:title><body xmlns:h="http://apache.org/cocoon/requestgenerator/2.0"><p>Linotypes were machines that first allowed a single individual to mass-produce content without sacrificing typesetting elegance and text readability. Blogs turned the web into writeable media without sacrificing the ability to remain hypertextual. This is simply an attempt to combine the two concepts together.</p>
 
 <p>Linotype uses the very bleeding edge of web technologies:</p>
