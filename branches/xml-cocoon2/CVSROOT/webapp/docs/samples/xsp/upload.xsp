@@ -9,12 +9,13 @@
 >
   <xsp:structure>
    <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
+   <xsp:include>org.apache.avalon.framework.context.ContextException</xsp:include>
   </xsp:structure>
 
   <xsp:logic>
   File uploadDir = null;
   /** Contextualize this class */
-  public void contextualize(Context context) {
+  public void contextualize(Context context) throws ContextException {
     uploadDir = (File) context.get(Constants.CONTEXT_UPLOAD_DIR);
   }
   </xsp:logic>
@@ -31,9 +32,12 @@
      <para>
      <ul>
        <xsp:logic>
+        getLogger().debug("Dir=" + uploadDir);
          String[] filelist = uploadDir.list();
          <![CDATA[
-         for (int i = 0; i > filelist.length; i++) {
+         getLogger().debug("List=" + filelist.length);
+         for (int i = 0; i < filelist.length; i++) {
+            getLogger().debug("File [" + i + "]=" + filelist[i]);
          ]]>
            <li>
              <xsp:expr>filelist[i]</xsp:expr>
