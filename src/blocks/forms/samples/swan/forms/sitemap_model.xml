@@ -23,11 +23,6 @@
       CVS $Id$
     -->
 
-    <!--
-    TODO:
-      Add features to "items-class" (e.g. move-up, move-down, add-before, add-after).
-    -->
-
     <fd:messages id="messages"/>
 
     <fd:new id="items-class"/>
@@ -41,24 +36,17 @@
           </fd:widgets>
         </fd:repeater>
         <fd:repeater-action id="addItem" action-command="add-row" repeater="items">
-          <fd:label>+</fd:label>
+          <fd:label>Add Child</fd:label>
           <fd:on-action>
             <javascript>
               var repeater = event.getSourceWidget().lookupWidget("../items");
-              repeater.getRow(repeater.getSize() - 1).getChild("view-selector").setValue("edit");
+              var view = repeater.getRow(repeater.getSize() - 1).getChild("view-selector");
+              view.setValue("edit");
+              view.setProcessRequests(false);
               //print(widget.getRequestParameterName());
             </javascript>
           </fd:on-action>
         </fd:repeater-action>
-        <fd:repeater-action id="removeItems" action-command="delete-rows" repeater="items" select="select">
-          <fd:label>-</fd:label>
-        </fd:repeater-action>
-      </fd:widgets>
-    </fd:class>
-
-    <fd:class id="select-class">
-      <fd:widgets>
-        <fd:booleanfield id="select"><fd:label>Select</fd:label></fd:booleanfield>
       </fd:widgets>
     </fd:class>
 
@@ -78,6 +66,7 @@
               var union = widget.lookupWidget("../union");
               var type = widget.lookupWidget("../type-selector");
               var stuff = union.lookupWidget(union.getValue() + "/stuff");
+              print("View set to: " + widget.getValue() + " for: " + widget.getRequestParameterName());
               if("edit".equals(widget.getValue())) {
                 if(stuff != null) {
                   stuff.setProcessRequests(true);
@@ -154,7 +143,18 @@
 
     <fd:class id="item-row-class">
       <fd:widgets>
-        <fd:new id="select-class"/>
+        <fd:row-action id="down" action-command="move-down">
+          <fd:label>v</fd:label>
+        </fd:row-action>
+        <fd:row-action id="up" action-command="move-up">
+          <fd:label>^</fd:label>
+        </fd:row-action>
+        <fd:row-action id="delete" action-command="delete">
+          <fd:label>X</fd:label>
+        </fd:row-action>
+        <fd:row-action id="add" action-command="add-after">
+          <fd:label>+</fd:label>
+        </fd:row-action>
         <fd:new id="view-selector-class"/>
         <fd:new id="type-selector-class"/>
         <fd:union id="union" default="" case="type-selector">

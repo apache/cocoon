@@ -30,6 +30,34 @@
     li {
       list-style-type: none
     }
+
+    /* The actions buttons, placed on the right */
+    .actions {
+      float: right;
+      padding-top: 0.2em;
+    }
+
+    /* A "section" contains stuff, related actions and substuff */
+    div.section {
+      padding-top: 0.4em;
+      padding-bottom: 0.4em;
+      padding-left: 0.4em;
+      border: 1px dotted black;
+      mmargin-top: 0.4em;
+      margin-bottom: -1px;
+    }
+
+    /* Indent sub-sections (recursively) */
+    div.section div.section {
+      margin-left: 3em;
+      border-right: none;
+    }
+
+    /* Change bg color depending on nesting depth */
+    div.section div.section { background-color: #F0F0F0; }
+    div.section div.section div.section { background-color: #E0E0E0; }
+    div.section div.section div.section div.section { background-color: #D0D0D0; }
+    div.section div.section div.section div.section div.section { background-color: #C0C0C0; }
   </style>
 
   <title>Sitemap Editor</title>
@@ -441,11 +469,6 @@
       </ft:class>
 
       <ft:class id="view-selector-class">
-        <!--
-        <ft:widget id="view-selector">
-          <fi:styling list-type="dropdown" submit-on-change="true"/>
-        </ft:widget>
-        -->
         <ft:choose path="view-selector">
           <ft:when value="fold">
             <ft:widget id="view-view"><fi:styling type="image" src="resources/BtnGrey.gif"/></ft:widget>
@@ -463,21 +486,23 @@
       </ft:class>
 
       <ft:class id="item-row-class">
-          <ft:widget id="select"/>
-          <ft:new id="view-selector-class"/>
-          <ft:new id="type-selector-class"/>
-          <ft:new id="union-class"/>
+        <span class="actions">
+          <ft:widget id="down"><fi:styling type="image" src="resources/move_down.gif"/></ft:widget>
+          <ft:widget id="up"><fi:styling type="image" src="resources/move_up.gif"/></ft:widget>
+          <ft:widget id="delete"><fi:styling type="image" src="resources/delete.gif"/></ft:widget>
+          <ft:widget id="add"><fi:styling type="image" src="resources/new.gif"/></ft:widget>
+        </span>
+        <ft:new id="view-selector-class"/>
+        <ft:new id="type-selector-class"/>
+        <ft:new id="union-class"/>
       </ft:class>
 
       <ft:class id="items-class">
-        <ft:repeater-size id="items"/>
-        <ul>
-          <ft:repeater-widget id="items">
-            <li><ft:new id="item-row-class"/></li>
-          </ft:repeater-widget>
-        </ul>
         <ft:widget id="addItem"/>
-        <ft:widget id="removeItems"/><br/>
+        <ft:repeater-size id="items"/>
+        <ft:repeater-widget id="items">
+          <div class="section"><ft:new id="item-row-class"/></div>
+        </ft:repeater-widget>
       </ft:class>
 
       <!--
