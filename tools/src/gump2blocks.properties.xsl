@@ -61,16 +61,6 @@
 </desc:descs>
 
 <xsl:template match="/module">
-    <xsl:message>
-
-There are 2 issues this transformation does not handle at the moment:
-- The order of the @status sections, i.e. stable, unstable, deprecated.
-  It depends on the first occurence of a block of one particular section.
-- Default exclude of a specific block. If a block is broken at any time
-  and should be excluded, it must be done by hand afterwards.
-So before committing the updated blocks.properties please make a cvs diff
-to see what has really changed.
-    </xsl:message>
     <xsl:value-of select="document('')/xsl:stylesheet/desc:descs/desc:desc[@name = 'common']"/>
     <xsl:apply-templates
         select="project[starts-with(@name, 'cocoon-block-')]
@@ -98,7 +88,7 @@ to see what has really changed.
     </xsl:call-template>
 
     <!-- TODO: make this configurable externally (dependent on @status or @name) -->
-    <xsl:if test="@status != 'deprecated'">#</xsl:if>
+    <xsl:if test="not(@status='deprecated' or @exclude='true')">#</xsl:if>
     <xsl:text>exclude.block.</xsl:text>
     <xsl:value-of select="substring-after(@name, 'cocoon-block-')"/>
     <xsl:text>=true&#10;</xsl:text>
