@@ -48,7 +48,7 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.10 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          implements LuceneCocoonIndexer, Configurable, Serviceable, Disposable
@@ -264,7 +264,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          * @exception  IOException  Description of Exception
          */
         public void deleteAllStaleDocuments() throws IOException {
-            while (uidIter.term() != null && uidIter.term().field() == "uid") {
+            while (uidIter.term() != null && uidIter.term().field().equals("uid")) {
                 reader.delete(uidIter.term());
                 uidIter.next();
             }

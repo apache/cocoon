@@ -171,7 +171,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         String urlstring = name;
         String filename = extractFilename(urlstring);
         int minLen = calculateMinLen(name);
-        if (filename != "") {
+        if (!filename.equals("")) {
             urlstring = shortenURI(urlstring, minLen);
         }
 
@@ -202,7 +202,7 @@ public class LocateResource extends AbstractInputModule implements Composable, T
         String urlstring = name;
         String filename = extractFilename(urlstring);
         int minLen = calculateMinLen(name);
-        if (filename != "") {
+        if (!filename.equals("")) {
             urlstring = shortenURI(urlstring, minLen);
         }
 

@@ -49,7 +49,7 @@ import org.apache.avalon.framework.service.ServiceException;
  *</pre>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseQueryAction.java,v 1.4 2004/03/05 13:01:52 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DatabaseQueryAction extends DatabaseAction {
 
@@ -175,10 +175,13 @@ public class DatabaseQueryAction extends DatabaseAction {
                 for (int i = 1; i <= metadata.getColumnCount(); i++) {
                     Object value = resultset.getObject(i);
                     tableName = metadata.getTableName(i);
-                    columnName = metadata.getColumnLabel(i) + "["+rowIndex+"]";
-                    if (tableName != "") columnName = tableName + "." + columnName;
-                    if (this.getLogger().isDebugEnabled())
-                        this.getLogger().debug("retrieving "+columnName+" as "+value);
+                    columnName = metadata.getColumnLabel(i) + "[" + rowIndex + "]";
+                    if (!tableName.equals("")) {
+                        columnName = tableName + "." + columnName;
+                    }
+                    if (this.getLogger().isDebugEnabled()) {
+                        this.getLogger().debug("retrieving " + columnName + " as " + value);
+                    }
                     results.put(metadata.getTableName(i)+"."+metadata.getColumnLabel(i),value);
                 }
             }
