@@ -26,7 +26,7 @@
     z-index: 2;
 }
 
-.woody-validation-message {
+.woody-validation-message, a.woody-validation-message:link {
     color: red;
     font-weight: bold;
 }
