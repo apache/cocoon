@@ -22,18 +22,18 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.cocoon.components.container.ComponentLocatorImpl;
 
 /**
  * An extension of <code>ExcaliburComponentSelector</code> that can have a parent
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.9 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.10 2004/07/14 19:39:09 cziegeler Exp $
  */
 
 public class ExtendedComponentSelector 
-    extends ExcaliburComponentSelector 
-    implements ParentAware {
+    extends ExcaliburComponentSelector {
 
     /** The role manager */
     protected RoleManager roles;
@@ -42,7 +42,7 @@ public class ExtendedComponentSelector
     protected ExtendedComponentSelector parentSelector;
 
     /** The parent locator, if any */
-    protected ComponentLocator parentLocator;
+    protected ComponentLocatorImpl parentLocator;
 
     /** The class loader to use */
     protected ClassLoader classLoader;
@@ -56,15 +56,12 @@ public class ExtendedComponentSelector
     /** This selector's location (used for debugging purposes) */
     private String location;
 
-    public ExtendedComponentSelector()
-    {
-        super();
+    public ExtendedComponentSelector() {
         this.classLoader = Thread.currentThread().getContextClassLoader();
     }
 
     /** Create the ComponentSelector with a Classloader */
-    public ExtendedComponentSelector(ClassLoader loader)
-    {
+    public ExtendedComponentSelector(ClassLoader loader) {
         super(loader);
 
         if (loader == null) {
@@ -227,8 +224,7 @@ public class ExtendedComponentSelector
                 throw new ConfigurationException(message);
             }
 
-            try
-            {
+            try {
                 Class clazz = this.classLoader.loadClass(className);
                 addComponent(hint, clazz, instance);
 
@@ -250,6 +246,9 @@ public class ExtendedComponentSelector
         return this.defaultHint;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.ComponentSelector#select(java.lang.Object)
+     */
     public Component select(Object hint) throws ComponentException {
 
         if (hint == null) {
@@ -274,6 +273,9 @@ public class ExtendedComponentSelector
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.ComponentSelector#release(org.apache.avalon.framework.component.Component)
+     */
     public void release(Component component) {
         // Was it selected on the parent ?
         if ( this.parentSelector != null &&
@@ -307,10 +309,13 @@ public class ExtendedComponentSelector
         return super.hasComponent(hint);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.components.ParentAware#setParentInformation(org.apache.avalon.framework.component.ComponentManager, java.lang.String)
+    /**
+     * Set the ComponentLocatorImpl that allows access to a possible
+     * parent of this selector
+     * @param locator
+     * @throws ComponentException
      */
-    public void setParentLocator(ComponentLocator locator)
+    public void setParentLocator(ComponentLocatorImpl locator)
     throws ComponentException {
         if (this.parentSelector != null) {
             throw new ComponentException(null, "Parent selector is already set");

@@ -26,7 +26,7 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.ParentAware;
+import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
 
@@ -40,7 +40,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.2 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.3 2004/07/14 19:39:10 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager {
@@ -121,7 +121,7 @@ extends ExcaliburComponentManager {
         super.addComponent(role, clazz, conf);
         // Note that at this point, we're not initialized and cannot do
         // lookups, so defer parental introductions to initialize().
-        if ( ParentAware.class.isAssignableFrom( clazz ) ) {
+        if ( ExtendedComponentSelector.class.isAssignableFrom( clazz ) ) {
             parentAwareComponents.add(role);
         }
     }
@@ -143,7 +143,7 @@ extends ExcaliburComponentManager {
                 Component component = null;
                 try {
                     component = this.lookup( role );
-                    ((ParentAware)component).setParentLocator( new ComponentLocatorImpl(this.parentManager, role ));
+                    ((ExtendedComponentSelector)component).setParentLocator( new ComponentLocatorImpl(this.parentManager, role ));
                 } catch (ComponentException ignore) {
                     // we don't set the parent then
                 } finally {
