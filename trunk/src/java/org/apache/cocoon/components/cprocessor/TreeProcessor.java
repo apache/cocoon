@@ -148,21 +148,34 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     public TreeProcessor() {
     }
     
-    private TreeProcessor(TreeProcessor parent, Source source, boolean checkReload, String prefix) throws Exception {
+    /**
+     * @param parent  The parent processor
+     * @param source  The sitemap
+     * @param checkReload Check for changes in the sitemap?
+     * @param prefix  The prefix used to mount this sitemap
+     * @throws Exception
+     */
+    private TreeProcessor(TreeProcessor parent, Source source, boolean checkReload, String prefix) 
+    throws Exception {
         m_parent = parent;
         m_transform = parent.m_transform;
         m_checkReload = checkReload;
         m_source = source;
+        m_environmentHelper = new EnvironmentHelper(parent.m_environmentHelper);
+        // Setup tree processor
         ContainerUtil.enableLogging(this, parent.getLogger());
         ContainerUtil.contextualize(this, parent.m_context);
         ContainerUtil.service(this, parent.m_container.getServiceManager());
         ContainerUtil.initialize(this);
-        m_environmentHelper = new EnvironmentHelper(parent.m_environmentHelper);
+        // Setup environment helper
         ContainerUtil.enableLogging(m_environmentHelper, this.getLogger());
         ContainerUtil.service(m_environmentHelper, this.m_manager);
         m_environmentHelper.changeContext(source, prefix);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) {
         m_context = context;
     }
@@ -177,6 +190,9 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config) throws ConfigurationException {
         m_fileName = config.getAttribute("file", null);
         m_checkReload = config.getAttributeAsBoolean("check-reload", true);
@@ -186,6 +202,9 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize() throws Exception {
         // setup the environment helper
         if (m_environmentHelper == null ) {
