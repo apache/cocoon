@@ -104,6 +104,19 @@ Form.prototype.getModel = function() {
     return this.formWidget;
 }
 
+/**
+ * Get a Widget (the java object) from the form.
+ * If <code>name</code> is undefined, the form widget itself is returned.
+ * Otherwise, the form's child widget of name <code>name</code> is returned.
+ */
+Form.prototype.getWidget = function(name) {
+    if (name == undefined) {
+        return this.form;
+    } else {
+        return this.form.getWidget(name);
+    }
+}
+
 Form.prototype.show = function(uri, validator, locale) {
     var lastWebCont = this.lastWebContinuation;
     // create a continuation, the invocation of which will resend
@@ -140,8 +153,8 @@ Form.prototype.show = function(uri, validator, locale) {
         } else {
             this.submitId = undefined;
         }
-        if (validator != undefined) {
-            finished = validator(this) && finished;
+        if (finished && validator != undefined) {
+            finished = validator(this);
         }
         if (finished) {
             break;

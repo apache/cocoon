@@ -144,6 +144,16 @@ public class Field extends AbstractWidget {
     public ValidationError getValidationError() {
         return validationError;
     }
+    
+    /**
+     * Set a validation error on this field. This allows fields to be externally marked as invalid by
+     * application logic.
+     * 
+     * @param error the validation error
+     */
+    public void setValidationError(ValidationError error) {
+        this.validationError = error;
+    }
 
     public boolean isRequired() {
         return definition.isRequired();
