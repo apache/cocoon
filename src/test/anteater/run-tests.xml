@@ -64,7 +64,7 @@
     <foreach target="runtest" param="name">
       <fileset dir=".">
         <include name="*.xml"/>
-        <exclude name="all-tests.xml"/>
+        <exclude name="run-tests.xml"/>
       </fileset>
     </foreach>
   </target>
