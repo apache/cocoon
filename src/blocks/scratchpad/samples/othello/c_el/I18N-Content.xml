@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
+<osm:container xmlns:osm="http://osmosis.gr/osml/1.0" contentID="content">
+	<osm:pageTitle>
+		<osm:text>i18n Content</osm:text>
+	</osm:pageTitle>
+	<osm:para id="" class="" width="" height="" align="left" valign="top">
+		<osm:paratitle id="" class="title" width="" height="" align="left" valign="top">
+			<osm:text>i18n Content</osm:text>
+		</osm:paratitle>
+	</osm:para>
+	<osm:para id="" class="" width="" height="" align="left" valign="top">
+		<osm:parabody id="" class="" width="" height="">
+			<osm:text>This page is transated using different content files </osm:text>
+		</osm:parabody>
+		<osm:parabody id="" class="" width="" height="">
+			<osm:text>c_en: english content</osm:text>
+		</osm:parabody>
+		<osm:parabody id="" class="" width="" height="">
+			<osm:text>c_el: greek content</osm:text>
+		</osm:parabody>
+	</osm:para>
+</osm:container>
