@@ -433,10 +433,10 @@
     </map:match>
 
     <!--+
-        | "Old" location of the documentation, should be replaced in samples by "documentation".
+        | Map the API documentation.
         +-->
-    <map:match pattern="documents/**">
-      <map:mount src="documentation/" uri-prefix="documents"/>
+    <map:match pattern="api/**">
+      <map:read src="api/{1}"/>
     </map:match>
     
     <!--+
@@ -446,6 +446,18 @@
     <map:match pattern="*/**">
       <map:mount check-reload="yes" src="{1}/" uri-prefix="{1}"/>
     </map:match>
+    
+    <!--+
+        | At the very end of a pipeline, you can catch the errors triggered
+        | by the pipeline execution. The error handler is an internal sitemap
+        | component that when triggered by an error takes over the normal
+        | pipeline execution and generates an XML representation
+        | of the error found and jump down here where you can futher
+        | manipulate the error screen.
+        +-->
+    <!--map:handle-errors>
+      TODO (SM): write a meaningful error handler
+    </map:handle-errors-->
 
   </map:pipeline>
 
