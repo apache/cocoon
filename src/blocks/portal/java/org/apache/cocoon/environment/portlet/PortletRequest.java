@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,8 +65,8 @@ public abstract class PortletRequest implements Request {
     /** The current session */
     private PortletSession session;
 
-    private Cookie[] wrappedCookies = null;
-    private Map wrappedCookieMap = null;
+    private Cookie[] wrappedCookies;
+    private Map wrappedCookieMap;
     protected String portletRequestURI;
 
 
@@ -267,7 +267,8 @@ public abstract class PortletRequest implements Request {
                 }
             } else {
                 // new wrapper
-                this.session = new PortletSession(serverSession);
+                this.session = new PortletSession(serverSession,
+                                                  this.environment.getDefaultSessionScope());
             }
         } else {
             // invalidate
