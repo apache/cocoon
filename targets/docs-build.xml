@@ -96,18 +96,29 @@ Not rebuilding docs, as they are up-to-date:
   </target>
 
   <!-- Create docs -->
-  <target name="docs"
+<!-- FIXME: Temporarily disable forrest until we fix the 0.6 vs 0.5 and cocoon version number conflict 
       depends="validate-jars, prepare-docs, cocoon-validate-xdocs, docs_done, javadocs, do-forrest"
+-->
+  <target name="docs"
+      depends="validate-jars, prepare-docs, cocoon-validate-xdocs, docs_done, javadocs"
       unless="docs.notrequired" description="Builds the documentation">
     <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
 
+<echo message="
+FIXME: Not copying the forrest-built docs to ${build.docs}
+because you now need to run forrest manually and copy them yourself."/>
+<!-- FIXME: Temporarily disable forrest until we fix the 0.6 vs 0.5 and cocoon version number conflict 
     <copy todir="${build.docs}" filtering="off">
       <fileset dir="${build.site}"/>
     </copy>
+-->
     <copy todir="${build.docs}/apidocs" filtering="off">
       <fileset dir="${build.javadocs}"/>
     </copy>
+<echo message="
+NOTE: Now that the docs are prepared, run 'forrest' from the command-line.
+It will generate docs into ${build.site}"/>
   </target>
 
   <!-- Prepares the printer-docs -->
