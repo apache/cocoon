@@ -25,7 +25,7 @@
           <a href="${base}/../../">Back</a> - to Cocoon Samples main page
         </p>
         <p>
-          <a href="${base}">Back</a> - to Cocoon Blocks Samples main page
+          <a href="${base}/../">Back</a> - to Cocoon Blocks Samples main page
         </p>
       </column>
       <column title="Login">
