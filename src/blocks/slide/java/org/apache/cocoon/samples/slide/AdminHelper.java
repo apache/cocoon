@@ -559,14 +559,17 @@ public class AdminHelper {
                                String path,
                                String subject,
                                String type,
+                               String expiration,
                                String exclusive,
                                String inherit) throws Exception {
 
        String uri = getUriFromPath(nat,path);
        boolean isExclusive = Boolean.valueOf(exclusive).booleanValue();
        boolean isInherit = Boolean.valueOf(inherit).booleanValue();
-       // expires after one minute
-       Date expire = new Date(System.currentTimeMillis() + 1000*60);
+       
+       // expiration in minutes
+       int intExpiration = Integer.valueOf(expiration).intValue();
+       Date expire = new Date(System.currentTimeMillis() + intExpiration*1000*60);
        
        SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
        Lock lock = nat.getLockHelper();

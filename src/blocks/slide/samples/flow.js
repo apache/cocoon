@@ -189,9 +189,10 @@ function protected_addlock() {
   var subject      = cocoon.request.getParameter("subject");
   var type         = cocoon.request.getParameter("type");
   var exclusive    = cocoon.request.getParameter("exclusive");
+  var expiration   = cocoon.request.getParameter("expiration");
   var inheritable  = cocoon.request.getParameter("inheritable");
   
-  AdminHelper.addLock(nat,principal,resourcePath,subject,type,exclusive,inheritable);
+  AdminHelper.addLock(nat,principal,resourcePath,subject,type,expiration,exclusive,inheritable);
   
   cocoon.redirectTo("locks/" + resourcePath);
 }
