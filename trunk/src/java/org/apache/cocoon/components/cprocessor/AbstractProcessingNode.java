@@ -56,7 +56,6 @@ import java.util.Map;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -64,7 +63,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.3 2004/02/22 19:08:15 unico Exp $
+ * @version CVS $Id: AbstractProcessingNode.java,v 1.4 2004/02/23 08:19:17 cziegeler Exp $
  */
 public abstract class AbstractProcessingNode extends AbstractNode 
 implements ProcessingNode, Configurable {
