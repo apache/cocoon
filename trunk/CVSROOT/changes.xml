@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.206 2001-02-07 13:50:19 greenrd Exp $ 
+  $Id: changes.xml,v 1.207 2001-02-07 19:30:54 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" fixes-bug="541" 
+   due-to="Dafang Zhang" due-to-email="dafang.zhang@wcom.com">
+   XSLTProcessor checks for null headers which previously caused errors.
+  </action>
   <action dev="RDG" type="update">
    LinkEncodingProcessor now encodes frames in framesets as well.
   </action>

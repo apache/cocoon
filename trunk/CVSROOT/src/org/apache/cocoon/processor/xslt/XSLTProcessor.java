@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.27 2001-02-01 21:02:50 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.28 2001-02-07 19:30:54 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.27 $ $Date: 2001-02-01 21:02:50 $
+ * @version $Revision: 1.28 $ $Date: 2001-02-07 19:30:54 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -146,8 +146,12 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
         if (headers != null) {
           while (headers.hasMoreElements ()) {
             String name = (String) headers.nextElement ();
-            if (isValidName (name))
-              params.put ("R_" + name, request.getHeader (name));
+            if (isValidName (name)) {
+              String value = request.getHeader (name);
+              if (value != null) {
+                params.put ("R_" + name, value);
+              }
+            }
           }
         }
 
