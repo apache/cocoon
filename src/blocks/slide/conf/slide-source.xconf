@@ -2,6 +2,6 @@
 <xconf xpath="/cocoon/source-factories" unless="component-instance[@name='slide']">
 
     <!-- pseudo protocol for Jakarta Slide repositories -->
-    <component-instance name="slide" 
+    <component-instance name="slide" logger="slide.sourcefactory"
                         class="org.apache.cocoon.components.source.impl.SlideSourceFactory"/>
 </xconf>

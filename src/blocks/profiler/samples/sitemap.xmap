@@ -2,33 +2,15 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-
  <map:components>
-
-  <map:generators   default="file">   
-  </map:generators>
-
-  <map:transformers default="xslt">    
-  </map:transformers>
-
-  <map:readers      default="resource">  
-  </map:readers>
-
-  <map:serializers  default="html">     
-  </map:serializers>
-
-  <map:matchers     default="wildcard">
-  </map:matchers>
-
-  <map:selectors    default="browser">
-  </map:selectors>
-
-  <map:actions>
-  </map:actions>
-
-  <map:pipes    default="caching">
-  </map:pipes>
-
+  <map:generators   default="file"/>
+  <map:transformers default="xslt"/>
+  <map:readers      default="resource"/>
+  <map:serializers  default="html"/>
+  <map:matchers     default="wildcard"/>
+  <map:selectors    default="browser"/>
+  <map:actions/>
+  <map:pipes        default="caching"/>
  </map:components>
 
 <!-- =========================== Views =================================== -->

@@ -6,7 +6,7 @@
       |
       | The Slide repository handles serveral sources sorted in namspaces.
       +-->
-  <repository logger="core.repositories.slide"
+  <repository logger="slide.repository"
               file="context://samples/slide/slide.xconf"/>
 
   <!--+
@@ -16,11 +16,11 @@
       +-->
   <principal-provider role="org.apache.cocoon.components.repository.PrincipalProviderSelector" 
                       class="org.apache.cocoon.components.ExtendedComponentSelector"
-                      logger="core.repositories.principalprovider" default="slide">
+                      logger="core.principalprovider" default="slide">
 
     <!-- Default implementation via Jakarta Slide -->
     <component-instance class="org.apache.cocoon.components.repository.impl.SlidePrincipalProvider" 
-                        name="slide" logger="core.repositories.principalprovider.slide"
+                        name="slide" logger="slide.principalprovider"
                         namespace="myrepository"/>
   </principal-provider>
 </xconf>
