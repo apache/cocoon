@@ -29,6 +29,7 @@ import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.collections.ArrayStack;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -151,12 +152,20 @@ public class JXMacrosHelper {
         getRepeater(widget, id).generateSize(this.cocoonConsumer);
     }
 
+    private static final String VALIDATION_ERROR = "validation-error";
+
     public void generateValidationError(ValidationError error) throws SAXException {
         // Needs to be buffered
         RootBufferingPipe pipe = new RootBufferingPipe(this.cocoonConsumer);
         this.stack.push(pipe);
         this.stack.push(error);
+        pipe.startElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR, XMLUtils.EMPTY_ATTRIBUTES);
         error.generateSaxFragment(pipe);
+        pipe.endElement(Constants.INSTANCE_NS, VALIDATION_ERROR, Constants.INSTANCE_PREFIX_COLON + VALIDATION_ERROR);
+    }
+
+    public boolean isValidationError(Object object) {
+        return object instanceof ValidationError;
     }
 
     public void defineClassBody(Form form, String id, Object body) {
