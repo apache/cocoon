@@ -293,6 +293,8 @@ public class EnvironmentWrapper
     throws IOException {
         if (environment instanceof EnvironmentWrapper) {
             ((EnvironmentWrapper)environment).globalRedirect(sessionmode, newURL);
+        } else if ( environment instanceof MutableEnvironmentFacade ) {
+            ((MutableEnvironmentFacade)environment).getDelegate().globalRedirect(sessionmode, newURL);
         } else {
             environment.redirect(sessionmode,newURL);
         }
