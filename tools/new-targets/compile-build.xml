@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="compile">
+
+  <description>
+    Compilation Targets
+  </description>
+
+  <!-- compiles everything -->
+  <target name="compile"
+      depends="compile-core, compile-deprecated, compile-tests"/>
+
+  <!-- compiles the core -->
+  <target name="compile-core" depends="prepare">
+
+    <!-- copy those files that need to be in the classpath -->
+    <copy todir="${build.dest}">
+      <fileset dir="${java}">
+        <exclude name="**/*.java"/>
+        <exclude name="**/*.xroles"/>
+        <exclude name="**/*.xconf"/>
+      </fileset>
+    </copy>
+
+    <!-- compile mock classes -->
+    <mkdir dir="${build.mocks}"/>
+    <javac srcdir="${mocks}"
+           destdir="${build.mocks}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+
+    <!-- compile core source files -->
+    <javac srcdir="${java}"
+           destdir="${build.dest}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           nowarn="${compiler.nowarn}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+  </target>
+
+  <!-- compiles deprecated code -->
+  <target name="compile-deprecated" depends="prepare"
+      unless="internal.exclude.deprecated">
+    <mkdir dir="${build.deprecated}"/>
+
+<!--
+    <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
+            srcdir="${deprecated.conf}"
+            includes="**/*.xroles"/>
+-->
+    <javac srcdir="${deprecated.src}"
+           destdir="${build.deprecated}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           compiler="${compiler}"
+           classpathref="classpath"/>
+  </target>
+
+  <target name="compile-tests" depends="compile-core, compile-deprecated">
+    <mkdir dir="${build.test}"/>
+
+    <!-- Copy test files to build test dir -->
+    <copy todir="${build.test}" filtering="on">
+      <fileset dir="${test}" excludes="**/*.java"/>
+    </copy>
+
+    <path id="test.classpath">
+      <path refid="classpath"/>
+      <pathelement location="${build.dest}" />
+       <!-- FIXME Resolver tests depend on deprecated stuff -->
+      <pathelement location="${build.deprecated}" />
+      <pathelement location="${build.test}" />
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+    </path>
+
+    <!-- Compile tests -->
+    <javac srcdir="${test}"
+           destdir="${build.test}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           compiler="${compiler}"
+           classpathref="test.classpath"/>
+  </target>
+
+<!-- === Package Targets ================================================= -->
+
+  <!-- packages everything -->
+  <target name="package"
+      depends="package-core, package-deprecated, package-testcase"/>
+
+  <!-- package the core -->
+  <target name="package-core" depends="compile-core, block-roles">
+    <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf" index="true">
+      <fileset dir="${build.dest}">
+         <exclude name="**/Manifest.mf"/>
+      </fileset>
+    </jar>
+  </target>
+
+  <!-- package deprecated code -->
+  <target name="package-deprecated" depends="compile-deprecated"
+      unless="internal.exclude.deprecated">
+    <jar jarfile="${build}/${name}-deprecated.jar" index="true">
+      <fileset dir="${build.deprecated}"/>
+    </jar>
+  </target>
+
+  <!-- package testcase code -->
+  <target name="package-testcase" depends="compile-tests">
+    <jar jarfile="${build}/${name}-testcase.jar" index="true">
+      <fileset dir="${build.test}">
+        <include name="org/apache/cocoon/environment/mock/*"/>
+        <include name="org/apache/cocoon/components/source/SourceResolverAdapter*"/>
+        <include name="org/apache/cocoon/SitemapComponentTestCase*"/>
+        <include name="org/apache/cocoon/xml/WhitespaceFilter*"/>
+      </fileset>
+    </jar>
+  </target>
+
+<!-- === Block Targets =================================================== -->
+
+  <!-- prepares the blocks build -->
+  <target name="prepare-blocks" depends="prepare">
+    <mkdir dir="${build.blocks}"/>
+
+    <xslt in="${gump.descriptor}"
+          out="${build.temp}/blocks-build.xml"
+          processor="trax"
+          style="${tools.src}/blocks-build.xsl"/>
+  </target>
+
+  <!-- patch the cocoon role file -->
+  <target name="block-roles" depends="prepare-blocks">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="roles"/>
+  </target>
+
+  <!-- compiles and packages all blocks -->
+  <target name="blocks" depends="compile,prepare-blocks">
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
+         target="compile"/>
+  </target>
+
+  <target name="call-block-target" depends="prepare">
+    <ant antfile="${build.temp}/blocks-build.xml" 
+         inheritAll="true" 
+         inheritRefs="false" 
+         target="cocoon-block-${block.name}-${target.name}" />
+  </target>
+</project>

@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project name="ide">
+  
+  <description>
+    IDE targets
+  </description>
+
+  <!-- Generate the Emacs JDE project file -->
+  <target name="emacs-project" depends="prepare" description="Generate the Emacs project files">
+    <path id="jar.files">
+      <fileset dir="${build.webapp}/WEB-INF/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <pathelement path="${build.context}/WEB-INF/classes"/>
+    </path>
+    <property name="jar.files" refid="jar.files"/>
+    <copy file="${tools}/ide/emacs/prj.el.in" tofile="prj.el" filtering="yes">
+      <filterset>
+        <filter token="jar.files" value="${jar.files}"/>
+        <filter token="src" value="${java}"/>
+        <filter token="build.webapp" value="${build.webapp}"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- Build the Eclipse projects files -->
+  <target name="eclipse-project" depends="prepare" description="Generate the Eclipse project files">
+
+    <echo message="Building Eclipse Project Files"/>
+
+    <!-- prepare the various paths that will form the project -->
+    <path id="srcs">
+      <!-- main source dir -->
+      <pathelement path="${src}/java"/>
+      <!-- samples source dir -->
+      <pathelement path="${src}/samples"/>
+      <!-- deprecated source dir -->
+      <pathelement path="${src}/deprecated/java"/>
+      <!-- test source dir -->
+      <pathelement path="${src}/test"/>
+      <!-- blocks source dirs -->
+      <dirset dir="${blocks}">
+        <include name="*/java"/>
+        <include name="*/java${target.vm}"/>
+      </dirset>
+    </path>
+
+    <path id="mockss">
+      <dirset dir="${src}">
+        <include name="**/mocks"/>
+      </dirset>
+    </path>
+
+    <path id="libs">
+      <!-- main libs -->
+      <fileset dir="${lib}">
+        <include name="core/*.jar"/>
+        <!-- Currently, we have no JVM dependent libraries       
+          <include name="core/jvm${target.vm}/*.jar"/>
+        -->
+        <include name="optional/*.jar"/>
+        <include name="local/*.jar"/>
+        <include name="endorsed/*.jar"/>
+      </fileset>
+      <!-- blocks lib -->
+      <fileset dir="${blocks}">
+        <include name="**/*.jar"/>
+      </fileset>
+      <!-- tools libs -->
+      <fileset dir="${tools}/lib">
+        <include name="*.jar"/>
+      </fileset>      
+    </path>
+
+    <!-- convert paths to properties -->
+    <property name="srcs" refid="srcs"/>
+    <property name="mockss" refid="mockss"/>
+    <property name="libs" refid="libs"/>
+
+    <!-- expand properties in the template file -->
+    <copy file="${tools}/ide/eclipse/classpath-tmpl.xml"
+          tofile="${build.temp}/classpath-temp.xml"
+          filtering="yes"
+          overwrite="yes">
+      <filterset>
+        <filter token="SRC_DIRS" value="${srcs}"/>
+        <filter token="LIBS" value="${libs}"/>
+        <filter token="MOCKS_DIRS" value="${mockss}"/>
+        <filter token="OUTPUT_DIR" value="${ide.eclipse.outputdir}"/>
+      </filterset>
+    </copy>
+
+    <!-- split the path in 'item' XML elements -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${path.separator}" value="&lt;/item&gt;&#xA; &lt;item&gt;"/>
+    <!-- relativize file names by removing the current directory -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${user}${file.separator}" value=""/>
+    <!-- and in case that fails, remove the base directory -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${basedir}${file.separator}" value=""/>
+
+    <!-- replace platform-dependent path separator by '/' -->
+    <replace file="${build.temp}/classpath-temp.xml"
+             token="${file.separator}" value="/"/>
+
+    <!-- now build the .classpath file -->
+    <xslt in="${build.temp}/classpath-temp.xml" out="${basedir}/.classpath"
+          processor="trax"
+          style="${tools}/ide/eclipse/make-classpath.xsl">
+       <param name="exportlib" expression="${ide.eclipse.export.libs}"/>
+    </xslt>
+
+    <!-- copy the project file (expand version) -->
+    <copy file="${tools}/ide/eclipse/project"
+          tofile="${basedir}/.project"
+          overwrite="yes">
+      <filterset>
+        <filter token="VERSION" value="${version}"/>
+      </filterset>
+    </copy>
+  </target>
+
+  <!-- Prepares the webapp to make it directly usable with the eclipse project -->
+  <target name="eclipse-webapp-prepare" depends="eclipse-webapp-delete-jars, eclipse-webapp-restore-roles"
+          description="Prepares the webapp directory to make it usable within Eclipse"/>
+
+  <target name="eclipse-webapp-restore-roles" depends="prepare">
+      <copy file="${build.dest}/org/apache/cocoon/cocoon.roles"
+            tofile="${build.webapp}/WEB-INF/classes/org/apache/cocoon/cocoon.roles"
+            overwrite="yes"/>
+  </target>
+  
+  <target name="eclipse-webapp-delete-jars" depends="prepare">
+      <!-- delete all jars and class files, they are already included in the project -->
+      <delete>
+          <fileset dir="${build.webapp}/WEB-INF">
+            <include name="lib/*.jar" />
+            <include name="classes/**/*.class" />
+          </fileset>
+      </delete>
+  </target>
+</project>
