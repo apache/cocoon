@@ -19,7 +19,7 @@
   
   <docs label="Documentation" href="" tab="docs">
     <index label="Overview" href="index.html"/>
-  	<status label="Changes" href="changes.html"/>
+    <status label="Changes" href="changes.html"/>
     <doc label="Core Technologies">
       <doc label="Concepts" href="concepts.html"/>      
       <doc label="Sitemap">
@@ -27,7 +27,9 @@
         <doc label="Aggregation"/>
         <doc label="..."/>        
         <doc label="Components">
-          <doc label="Generators"/>
+          <doc label="Generators">
+            <doc label="File Generator" href="sc_file-generator.html"/>
+          </doc>
           <doc label="Transformers"/>
           <doc label="..."/>          
         </doc>        
@@ -90,33 +92,6 @@
       <doc label="..."/>
     </doc> 
     
-    <doc label="Blocks">
-      <doc label="Overview"  href="blocks.html"/>
-      <doc label="Core blocks">
-        <doc label="Cocoon Forms"/>      
-      </doc>
-      <doc label="Core blocks under heavy development">
-        <doc label="XML-Templating"/> 
-        <doc label="Javaflow"/>         
-      </doc>         
-      <doc label="Supported blocks">
-        <doc label="Cocoon Portal" href="http://brutus.apache.org/docs/build/cocoon-doco-portal/"/>
-          <!-- later to be removed by http://cocoon.apache.org/blocks/portal/1.0/index.html" -->        
-        <doc label="OJB"/>        
-        <doc label="..."/>
-      </doc>
-      <doc label="Unsupported blocks">
-        <doc label="ASCII-Art"/>       
-      </doc>        
-      <doc label="External blocks">
-        <doc label="List"/>    
-      </doc>      
-    </doc>
-    
-    <doc label="Tutorials">
-      <doc label="..."/>
-    </doc>
-    
     <doc label="Cocoon Internals">
       <doc label="Overview"/>
       <doc label="How to work on Cocoon internals?"/>      
@@ -136,14 +111,42 @@
         
   </docs>
 
-  <get label="Getting started" tab="getting-started">
-    <doc label="Overview" href="getting-started.html"/>
-    <doc label="Run Cocoon in 2 Minutes"/>
-    <doc label="What can Cocoon do for you?"/>
-    <doc label="Overview Cocoon concepts"/>
-    <doc label="Publishing (pipelines)"/>
-    <doc label="Applications (control flow)"/>
-    <doc label="Form Handling (Ccooon Forms)"/>
-  </get>
+  <tutorials label="Tutorials" tab="tutorials">
+    <doc label="Getting started">
+      <doc label="Overview" href="getting-started.html"/>
+      <doc label="Run Cocoon in 2 Minutes"/>
+      <doc label="What can Cocoon do for you?"/>
+      <doc label="Overview Cocoon concepts"/>
+      <doc label="Publishing (pipelines)"/>
+      <doc label="Applications (control flow)"/>
+      <doc label="Form Handling (Ccooon Forms)"/>
+    </doc> 
+    <doc label="More Tutorials">
+      <doc label="..."/>
+    </doc>
+  </tutorials>
+
+  <doc label="Blocks" tab="blocks">
+    <doc label="Overview"  href="blocks.html"/>
+    <doc label="Core blocks">
+      <doc label="Cocoon Forms"/>      
+    </doc>
+    <doc label="Core blocks under heavy development">
+      <doc label="XML-Templating"/> 
+      <doc label="Javaflow"/>         
+    </doc>         
+    <doc label="Supported blocks">
+      <doc label="Cocoon Portal" href="http://brutus.apache.org/docs/build/cocoon-doco-portal/"/>
+        <!-- later to be removed by http://cocoon.apache.org/blocks/portal/1.0/index.html" -->        
+      <doc label="OJB"/>        
+      <doc label="..."/>
+    </doc>
+    <doc label="Unsupported blocks">
+      <doc label="ASCII-Art"/>       
+    </doc>        
+    <doc label="External blocks">
+      <doc label="List"/>    
+    </doc>      
+  </doc>
   
 </site>

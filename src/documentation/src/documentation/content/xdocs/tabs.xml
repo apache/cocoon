@@ -36,10 +36,11 @@
     <!-- later to be replaced by: http://cocoon.apache.org -->
   <tab id="community" label="Community" href="http://brutus.apache.org/docs/build/cocoon-doco-global/community.html"/>
     <!-- later to be replaced by: http://cocoon.apache.org/community.html -->
-  <tab id="getting-started" label="Getting started" dir="" indexfile="getting-started.html"/>
+  <tab id="tutorials" label="Tutorials" dir="" indexfile="getting-started.html"/>
   <tab id="docs" label="Documentation" dir="" indexfile="index.html">
     <tab id="docs-2.1" label="2.1 docs" href="http://not-available-yet/index.html"/>
     <tab id="docs-2.0" label="2.0 docs" href="http://not-available-yet/index.html"/>    
   </tab>
+  <tab id="blocks" label="Blocks" dir="" indexfile="blocks.html"/>
   
 </tabs>
