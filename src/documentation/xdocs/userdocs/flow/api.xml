@@ -49,7 +49,7 @@
     </s2>
   </s1>
     <s1 title="Objects">
-    <s2 title = "cocoon">
+    <s2 title = "cocoon object">
     <p>The <code>cocoon</code> object represents the current Cocoon sitemap and provides the following readonly properties:</p> 
     <s3 title="request">
     <p>The current Cocoon request:</p>
@@ -129,6 +129,45 @@
     <p>
       Load the JavaScript script specified by <code>uri</code>. The Cocoon
      source resolver is used to resolve <code>uri</code>. 
+    </p>
+    </s3>
+    </s2>
+    <s2 title="log object"><anchor id="log"/>
+    <p> The <code>log</code> object provides an interface to the Cocoon logging system.
+    </p>
+    <p>
+        It supports the following functions:
+    </p>
+    <s3 title="error">
+    <p>
+        <em>Function</em> <code>error([String] message)</code>
+    </p>
+    <p>
+      Log an error message.
+    </p>
+    </s3>
+    <s3 title="debug">
+    <p>
+        <em>Function</em> <code>debug([String] message)</code>
+    </p>
+    <p>
+      Log a debug message.
+    </p>
+    </s3>
+    <s3 title="warn">
+    <p>
+        <em>Function</em> <code>warn([String] message)</code>
+    </p>
+    <p>
+      Log a warning message.
+    </p>
+    </s3>
+    <s3 title="info">
+    <p>
+        <em>Function</em> <code>info([String] message)</code>
+    </p>
+    <p>
+      Log an information message.
     </p>
     </s3>
     </s2>

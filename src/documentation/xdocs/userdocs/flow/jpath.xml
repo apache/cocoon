@@ -24,8 +24,7 @@
     <p>The JPath tags are defined in the namespace</p>
     <source>http://apache.org/xsp/jpath/1.0</source>
     <s2 title ="if">
-     <p>The <code>if</code> tag allows the conditional execution of its body according to value of
-        a <code>test</code> attribute:</p>
+     <p>The <code>if</code> tag allows the conditional execution of its body according to value of its <code>test</code> attribute:</p>
      <source>
 &lt;if test="XPathExpression"&gt;
   body
