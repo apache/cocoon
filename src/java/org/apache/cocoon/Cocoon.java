@@ -109,7 +109,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.5 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.6 2003/05/16 07:04:56 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -161,12 +161,6 @@ public class Cocoon
 
     /** the Processor if it is ThreadSafe */
     private Processor threadSafeProcessor = null;
-
-    /** The Source Resolver */
-    private org.apache.excalibur.source.SourceResolver sourceResolver;
-
-    /** The XMLizer */
-    private org.apache.excalibur.xmlizer.XMLizer xmlizer;
 
     /**
      * Creates a new <code>Cocoon</code> instance.
@@ -343,8 +337,6 @@ public class Cocoon
             this.componentManager.release(processor);
         }
 
-        this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.componentManager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
-        this.xmlizer = (org.apache.excalibur.xmlizer.XMLizer)this.componentManager.lookup(org.apache.excalibur.xmlizer.XMLizer.ROLE);
     }
 
     /** Dump System Properties */
@@ -502,10 +494,6 @@ public class Cocoon
      */
     public void dispose() {
         this.componentManager.release(this.threadSafeProcessor);
-        this.componentManager.release(this.sourceResolver);
-        this.componentManager.release((Component)this.xmlizer);
-        this.sourceResolver = null;
-        this.xmlizer = null;
         ContainerUtil.dispose(threads);
         this.componentManager.dispose();
         this.disposed = true;

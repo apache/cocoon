@@ -54,6 +54,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.CascadingIOException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.excalibur.source.Source;
@@ -70,7 +71,7 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.1 2003/03/09 00:09:29 pier Exp $
+ * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.2 2003/05/16 07:04:55 cziegeler Exp $
  */
 
 public abstract class AbstractCommandLineEnvironment
@@ -131,7 +132,7 @@ implements Redirector {
             Source redirectSource = null;
             try {
                 redirectSource = this.resolveURI(newURL);
-                this.toSAX(redirectSource, ls);
+                SourceUtil.parse( this.manager, redirectSource, ls);
             } catch (SourceException se) {
                 throw new CascadingIOException("SourceException: " + se, se);
             } catch (SAXException se) {

@@ -59,14 +59,11 @@ import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.BufferedOutputStream;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 
 /**
@@ -76,7 +73,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.5 2003/05/07 11:19:13 bruno Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.6 2003/05/16 07:04:55 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -337,20 +334,6 @@ public class EnvironmentWrapper
         this.setContext(this.lastContext);
         this.setURIPrefix(this.lastPrefix);
         this.uris = this.lastURI;
-    }
-
-    /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     */
-    public void toSAX( org.apache.excalibur.source.Source source,
-                       ContentHandler handler )
-    throws SAXException, IOException, ProcessingException {
-        this.environment.toSAX( source, handler );
     }
 
     /**
