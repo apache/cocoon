@@ -1,4 +1,4 @@
-package org.apache.cocoon.component;
+package org.apache.cocoon.components.naming;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -27,13 +27,13 @@ import org.apache.cocoon.ProcessingException;
 
 /**
  *	The <code>LDAPEntryManager</code> is an Avalon Component for managing Entries in a Javax Naming Directory.
- *	This is the LDAP implementation of the {@link org.apache.cocoon.component.EntryManager EntryManager} interface.
+ *	This is the LDAP implementation of the {@link org.apache.cocoon.components.naming.EntryManager EntryManager} interface.
  *  This is designed to be used from FlowScript, it uses Maps instead of NamingEnumerations and Attributes.
  *	@author Jeremy Quinn <a href="http://apache.org/~jeremy">http://apache.org/~jeremy</a>.
  *
  *   Example configuration (goes in cocoon.xconf)
  *   <pre><tt>
- *	&lt;component role="org.apache.cocoon.component.EntryManager" class="org.apache.cocoon.component.LDAPEntryManager" logger="flow.ldap"&gt;
+ *	&lt;component role="org.apache.cocoon.component.EntryManager" class="org.apache.cocoon.components.naming.LDAPEntryManager" logger="flow.ldap"&gt;
  *	  &lt;parameter name="ldap-host" value="hostname:port"/&gt;
  *	  &lt;parameter name="ldap-base" value="dc=example,dc=com"/&gt;
  *	  &lt;parameter name="ldap-user" value="username"/&gt;
