@@ -201,7 +201,7 @@
   -->
   <xsl:template match="wi:*" mode="group-columns-content">
     <tr valign="baseline">
-      <td><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
+      <td valign="top"><label for="{@id}" title="{wi:hint}"><xsl:copy-of select="wi:label/node()"/></label></td>
       <td><xsl:apply-templates select="."/></td>
     </tr>
   </xsl:template>
