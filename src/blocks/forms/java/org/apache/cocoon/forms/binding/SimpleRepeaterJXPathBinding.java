@@ -63,7 +63,7 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
         Repeater repeater = (Repeater) selectWidget(frmModel, this.repeaterId);
 
         if (this.clearOnLoad) {
-            repeater.removeRows();
+            repeater.clear();
         }
 
         // Move to repeater context
