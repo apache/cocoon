@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.15 2004/03/05 13:01:55 bdelacretaz Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.16 2004/03/06 02:05:27 joerg Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -87,6 +87,7 @@ public class SQLTransformer
     public static final String MAGIC_NR_OF_ROWS = "show-nr-of-rows";
     public static final String MAGIC_QUERY = "query";
     public static final String MAGIC_VALUE = "value";
+    public static final String MAGIC_COLUMN_CASE = "column-case";
     public static final String MAGIC_DOC_ELEMENT = "doc-element";
     public static final String MAGIC_ROW_ELEMENT = "row-element";
     public static final String MAGIC_IN_PARAMETER = "in-parameter";
@@ -110,7 +111,7 @@ public class SQLTransformer
     public static final String MAGIC_NAME_ATTRIBUTE = "name";
     public static final String MAGIC_STORED_PROCEDURE_ATTRIBUTE = "isstoredprocedure";
     public static final String MAGIC_UPDATE_ATTRIBUTE = "isupdate";
-	  public static final String CLOB_ENCODING = "clob-encoding";
+    public static final String CLOB_ENCODING = "clob-encoding";
 
     /** The states we are allowed to be in **/
     protected static final int STATE_OUTSIDE = 0;
@@ -878,6 +879,9 @@ public class SQLTransformer
         /** Mapping out parameters - objectModel **/
         protected HashMap outParametersNames = null;
 
+        /** Handling of case of column names in results */
+        protected String columnCase; 
+
         protected Query( SQLTransformer transformer, int query_index ) {
             this.transformer = transformer;
             this.query_index = query_index;
@@ -1046,7 +1050,7 @@ public class SQLTransformer
 
             this.rowset_name = properties.getParameter( SQLTransformer.MAGIC_DOC_ELEMENT, "rowset" );
             this.row_name = properties.getParameter( SQLTransformer.MAGIC_ROW_ELEMENT, "row" );
-
+            this.columnCase = properties.getParameter(SQLTransformer.MAGIC_COLUMN_CASE, "lowercase");
             Enumeration enum = query_parts.elements();
             StringBuffer sb = new StringBuffer();
             while ( enum.hasMoreElements() ) {
@@ -1265,9 +1269,10 @@ public class SQLTransformer
             AttributesImpl attr = new AttributesImpl();
             if ( !isupdate && !isstoredprocedure ) {
                 for ( int i = 1; i <= md.getColumnCount(); i++ ) {
-                    transformer.start( md.getColumnName( i ).toLowerCase(), attr );
-                    this.serializeData(manager, getColumnValue( i ) );
-                    transformer.end( md.getColumnName( i ).toLowerCase() );
+                    String columnName = getColumnName(md.getColumnName(i));
+                    transformer.start(columnName, attr);
+                    this.serializeData(manager, getColumnValue(i));
+                    transformer.end(columnName);
                 }
             } else if ( isupdate && !isstoredprocedure ) {
                 transformer.start( "returncode", attr );
@@ -1304,13 +1309,14 @@ public class SQLTransformer
                                 while ( rs.next() ) {
                                     transformer.start( this.row_name, attr );
                                     for ( int i = 1; i <= md.getColumnCount(); i++ ) {
-                                        transformer.start( md.getColumnName( i ).toLowerCase(), attr );
+                                        String columnName = getColumnName(md.getColumnName(i));
+                                        transformer.start(columnName, attr);
                                         if ( md.getColumnType( i ) == 8 ) {  //prevent nasty exponent notation
                                             this.serializeData(manager, SQLTransformer.getStringValue( rs.getBigDecimal( i ) ));
                                         } else {
                                             this.serializeData(manager, SQLTransformer.getStringValue( rs.getObject( i ) ));
                                         }
-                                        transformer.end( md.getColumnName( i ).toLowerCase() );
+                                        transformer.end(columnName);
                                     }
                                     transformer.end( this.row_name );
                                 }
@@ -1328,6 +1334,20 @@ public class SQLTransformer
             } finally {
                 //close();
             }
+        }
+
+        private String getColumnName(String tempColumnName) {
+            if (this.columnCase.equals("lowercase")) {
+                tempColumnName = tempColumnName.toLowerCase();
+            } else if (this.columnCase.equals("uppercase")) {
+                tempColumnName = tempColumnName.toUpperCase();
+            } else if (this.columnCase.equals("preserve")) {
+                // do nothing
+            } else {
+                getTheLogger().warn("[" + this.columnCase + "] is not a valid value for <column-case>. "
+                                    + "Column name retrieved from database will be used.");
+            }
+            return tempColumnName;
         }
     }
 

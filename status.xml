@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.258 2004/03/05 02:24:26 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.259 2004/03/06 02:05:27 joerg Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="add" fixes-bug="22400" due-to="Steve Krulewitz" due-to-email="skrul@yahoo.com">
+     Added additional property &lt;column-case&gt; to the SQLTransformer with
+     the possible values "preserve", "uppercase", and "lowercase".
+   </action>
    <action dev="JH" type="fix" fixes-bug="27254" due-to="Georg Ragaller" due-to-email="georg.ragaller@nse.de">
      Fixed path separator handling in cocoon.bat/.sh and Loader.java.
    </action>
