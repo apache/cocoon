@@ -51,6 +51,7 @@
 package org.apache.cocoon.acting;
 
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.environment.Redirector;
@@ -65,12 +66,14 @@ import java.util.Map;
  * Sitemap evaluation of input modules using the curly bracket syntax e.g.
  * {defaults:skin} suffers from the fact that it is not
  * possible to use a sitemap variable as part of the invocation like
- * {defaults:{1})}. This action takes two parameters, the name
- * of the input module and the attribute name. Thus the above becomes
+ * {defaults:{1})}. This action takes three parameters, the name
+ * of the input module, the attribute name, and whether to call getAttribute() or
+ * getAttributeValues(). Thus the above becomes
  * <pre>
  *   &lt;map:act type="inputmodule"&gt;
  *     &lt;map:parameter name="module" value="defaults"/&gt;
  *     &lt;map:parameter name="attribute" value="{1}"/&gt;
+ *     &lt;map:parameter name="single-value" value="false"/&gt;
  * 
  *     &lt;!-- do something with the result: "{1}" --&gt;
  * 
@@ -87,6 +90,7 @@ import java.util.Map;
  *                    src="org.apache.cocoon.acting.InputModuleAction" 
  *                    logger="sitemap.action.inputmodule"&gt;
  *        &lt;module&gt;defaults&lt;/module&gt;
+ *        &lt;single-value&gt;false&lt;/single-value&gt;
  *     &lt;/map:action&gt;
  * </pre>
  * 
@@ -94,7 +98,7 @@ import java.util.Map;
  * @see org.apache.cocoon.components.modules.input.InputModule
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.1 2003/05/20 14:22:01 haul Exp $
+ * @version CVS $Id: InputModuleAction.java,v 1.2 2003/08/15 15:54:15 haul Exp $
  */
 public class InputModuleAction extends ConfigurableComposerAction {
 
@@ -112,26 +116,52 @@ public class InputModuleAction extends ConfigurableComposerAction {
         HashMap map = null;
         Configuration conf = null;
         String module = parameters.getParameter("module", (String) this.settings.get("module"));
-        String attrib = parameters.getParameter("attribute", (String) this.settings.get("attribute"));
+        String attrib =
+            parameters.getParameter("attribute", (String) this.settings.get("attribute"));
+        boolean single =
+            parameters.getParameterAsBoolean(
+                "single-value",
+                ((Boolean) this.settings.get("single-value")).booleanValue());
 
         if (module != null && attrib != null) {
             XSPModuleHelper mhelper = new XSPModuleHelper();
             mhelper.setup(manager);
-            Object[] result = mhelper.getAttributeValues(objectModel, conf, module, attrib, null);
+            Object[] result = null;
+            if (!single) {
+                result = mhelper.getAttributeValues(objectModel, conf, module, attrib, null);
+            } else {
+                Object tmp = mhelper.getAttribute(objectModel, conf, module, attrib, null);
+                if (tmp != null){
+                    result = new Object[1];
+                    result[0] = tmp;
+                }
+            }
             mhelper.releaseAll();
 
             if (result != null && result.length != 0) {
                 map = new HashMap();
                 for (int i = 0; i < result.length; i++) {
-                    map.put(new Integer(i), result[i]);
+                    map.put(Integer.toString(i), result[i]);
                 }
             }
         } else {
-            if (getLogger().isErrorEnabled()){
-                getLogger().error("Parameter is missing: module="+module+" attribute="+attrib);
+            if (getLogger().isErrorEnabled()) {
+                getLogger().error(
+                    "Parameter is missing: module=" + module + " attribute=" + attrib);
             }
         }
         return map;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration conf) throws ConfigurationException {
+        super.configure(conf);
+        boolean result = false;
+        String tmp = (String) this.settings.get("single-value", "false");
+        result = tmp.equalsIgnoreCase("true") || tmp.equalsIgnoreCase("yes");
+        this.settings.put("single-value", new Boolean(result));
     }
 
 }
