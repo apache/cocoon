@@ -17,17 +17,23 @@ package org.apache.cocoon.webapps.authentication.generation;
 
 import java.security.Principal;
 import java.security.acl.Group;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.security.auth.Subject;
-import javax.security.auth.callback.*;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
 
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.ServiceableGenerator;
-import org.apache.cocoon.webapps.session.ContextManager;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -42,65 +48,30 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version $Id: PortalJaasSecurityGenerator.java 96 2004-08-28 21:30:23Z kulawik $
  */
 public class JaasSecurityGenerator extends ServiceableGenerator {
-    
-	private String userid;
-	private String password;
-	private String jaasRealm = "jaas-cms-security-domain";
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
-	 */
-	public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) {
-		if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("begin setup");
-        }
-		try {
-			super.setup(resolver, objectModel, src, par);
-			ContextManager cm = (ContextManager) this.manager.lookup(ContextManager.ROLE);
-			try {
-				if (cm.hasSessionContext()) {
-					cm.deleteContext("authentication");
-				}
-			} catch (Exception exe) {
-			}
-			userid = par.getParameter("username");
-			password = par.getParameter("password");
-			try {
-				String jaasRealmTmp = par.getParameter("jaasRealm", null);
-				if (jaasRealmTmp != null && !jaasRealmTmp.equalsIgnoreCase("")) {
-					jaasRealm = jaasRealmTmp;
-				}
-			} catch (Exception se) {
-			}
-			if (this.getLogger().isDebugEnabled()) {
-				this.getLogger().debug("trying to login as " + userid + " on the webpage");
-			}
-		} catch (Exception ex) {
-			new ProcessingException(ex.getMessage());
-		}
-		if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("end setup");
-        }
-	}
-
-	public void addTextNode(String nodeName, String text) throws SAXException {
-		contentHandler.startElement("", nodeName, nodeName, new AttributesImpl());
-		contentHandler.characters(text.toCharArray(), 0, text.length());
-		contentHandler.endElement("", nodeName, nodeName);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.generation.Generator#generate()
 	 */
 	public void generate() throws SAXException, ProcessingException {
-		if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("begin generate");
+        String userid;
+        String password;
+        String jaasRealm;
+        try {
+            userid = this.parameters.getParameter("username");
+            password = this.parameters.getParameter("password");
+            jaasRealm = this.parameters.getParameter("jaasRealm", "jaas-cms-security-domain");
+        } catch (ParameterException pe) {
+            throw new ProcessingException("Required parameter is missing.", pe);
+        }
+
+        if (this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("trying to login as " + userid + " on the webpage");
         }
 		contentHandler.startDocument();
 		contentHandler.startElement("", "authentication", "authentication", new AttributesImpl());
 
 		try {
-			LoginContext lc = new LoginContext(jaasRealm, new InternalCallbackHandler());
+			LoginContext lc = new LoginContext(jaasRealm, new InternalCallbackHandler(userid, password));
 			lc.login();
 			Subject s = lc.getSubject();
 			if (this.getLogger().isDebugEnabled()) {
@@ -125,30 +96,34 @@ public class JaasSecurityGenerator extends ServiceableGenerator {
 			}
 			lc.logout();
 
-			addTextNode("ID", principal);
+            XMLUtils.createElement(this.xmlConsumer, "ID", principal);
 			it = roles.iterator();
 			while (it.hasNext()) {
 				String role = (String) it.next();
-				addTextNode("role", role);
+				XMLUtils.createElement(this.xmlConsumer, "role", role);
 			}
 			contentHandler.startElement("", "data", "data", new AttributesImpl());
-			addTextNode("user", principal);
+			XMLUtils.createElement(this.xmlConsumer, "user", principal);
 			contentHandler.endElement("", "data", "data");
-		} catch (Exception exe) {
+            contentHandler.endElement("", "authentication", "authentication");
+            contentHandler.endDocument();
+		} catch (LoginException exe) {
 			this.getLogger().warn("Could not login user \"" + userid + "\"");
-		} finally {
-			contentHandler.endElement("", "authentication", "authentication");
-			contentHandler.endDocument();
-			if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("end generate");
-            }
 		}
 	}
 	
 	/**
 	 * Callback Handler
 	 */
-	private class InternalCallbackHandler implements CallbackHandler {
+	private static class InternalCallbackHandler implements CallbackHandler {
+        
+        private String userid;
+        private String password;
+
+        public InternalCallbackHandler(String userid, String password) {
+            this.userid = userid;
+            this.password = password;
+        }
         
 		/* (non-Javadoc)
 		 * @see javax.security.auth.callback.CallbackHandler#handle(javax.security.auth.callback.Callback[])
