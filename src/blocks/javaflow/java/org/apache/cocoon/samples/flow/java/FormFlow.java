@@ -23,11 +23,11 @@ import org.apache.cocoon.forms.samples.*;
                  
 import java.util.Date;
 
-public class FormFlow extends AbstractFormFlow {
+public class FormFlow extends AbstractCocoonFlow {
 
     public void doEditForm1() {
 
-        Form form = loadForm("forms/form1.xml");
+				FormInstance form = new FormInstance("forms/form1.xml");
 
         Field birthDate = (Field) form.getWidget("birthdate");
         birthDate.setValue(new Date());
@@ -41,8 +41,7 @@ public class FormFlow extends AbstractFormFlow {
         field = (Field) repeater.getWidget(1, "firstname");
         field.setValue("Lucien");
 
-        getRequest().setAttribute("form1", form);
-        showForm(form, "form/form1");
+        form.show("form/form1");
 
         sendPage("page/form1-result", new VarMap().add("email", ((Field)form.getWidget("email")).getValue())
                                                   .add("somebool", ((BooleanField)form.getWidget("somebool")).getValue())
@@ -65,11 +64,10 @@ public class FormFlow extends AbstractFormFlow {
         contact.setFirstName("Hermann");
         bean.addContact(contact);
 
-        Form form = loadForm("forms/form2.xml");
-        Binding binding = loadBinding("forms/form2-binding.xml");
-        binding.loadFormFromModel(form, bean);
-        showForm(form, "form/form2");
-        binding.saveFormToModel(form, bean);
+        FormInstance form = new FormInstance("forms/form2.xml", "forms/form2-binding.xml");
+        form.load(bean);
+        form.show("form/form2");
+        form.save(bean);
                                          
         sendPage("page/form2-result", new VarMap().add("form2bean", bean));
     }
