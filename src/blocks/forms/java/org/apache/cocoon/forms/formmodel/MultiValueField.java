@@ -213,16 +213,6 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     }
 
     /**
-     * Delete this field's selection list.
-     */
-    public void removeSelectionList() {
-    	this.selectionList = null;
-    	if(this.definition != null) {
-    		this.definition.setSelectionList(null);
-    	}
-    }
-
-    /**
      * Set this field's selection list using values from an in-memory
      * object. The <code>object</code> parameter should point to a collection
      * (Java collection or array, or Javascript array) of objects. Each object

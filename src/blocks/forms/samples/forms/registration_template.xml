@@ -18,7 +18,8 @@
   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
   <title>Registration</title>
   <content>
-    <ft:form-template action="#{$cocoon/continuation/id}.continue" method="POST">
+    <ft:form-template action="continue" method="POST">
+      <ft:continuation-id/>
       <fi:group>
         <fi:styling layout="columns"/>
         <fi:items>

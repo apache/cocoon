@@ -390,7 +390,7 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
             delegate.setValue(value);
         } else if (delegate instanceof BooleanField) {
             BooleanField field = (BooleanField)delegate;
-            field.setValue(new Boolean(Context.toBoolean(value)));
+            field.setValue(Boolean.valueOf(Context.toBoolean(value)));
         } else if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             if (value instanceof NativeArray) {
@@ -752,12 +752,6 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
                 }
             }
         }
-    }
-
-    public void jsFunction_removeSelectionList() {
-    	if (delegate instanceof SelectableWidget) {
-    		((SelectableWidget)delegate).removeSelectionList();
-    	}
     }
 
     static final Object[] WIDGET_CLASS_MAP = {

@@ -45,16 +45,6 @@ public abstract class AbstractWidget implements Widget {
     private Widget parent;
 
     /**
-     * Process request parameters for this widget?
-     */
-    private boolean processMyRequests = true;
-
-    /**
-     * Process request parameters for children of this widget?
-     */
-    private boolean processChildRequests = true;
-
-    /**
      * The widget's own state
      */
     private WidgetState state = WidgetState.ACTIVE;
@@ -241,31 +231,6 @@ public abstract class AbstractWidget implements Widget {
 
     public void setValue(Object object) {
         throw new RuntimeException("Cannot set the value of widget " + getRequestParameterName());
-    }
-
-    /**
-     * Controls whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for this widget and its children.
-     */
-    public void setProcessRequests(boolean processRequests) {
-      this.processMyRequests = processRequests;
-      this.processChildRequests = processRequests;
-    }
-
-    /**
-     * Controls whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for this widget.
-     */
-    public void setProcessMyRequests(boolean processMyRequests) {
-      this.processMyRequests = processMyRequests;
-    }
-
-    /**
-     * Controls whether {@link #readFromRequest(FormContext formContext)}
-     * processes the request parameter(s) for children of this widget.
-     */
-    public void setProcessChildRequests(boolean processChildRequests) {
-      this.processChildRequests = processChildRequests;
     }
 
     public boolean isRequired() {

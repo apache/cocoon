@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.binding;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.forms.util.DomHelper;
@@ -111,7 +113,22 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
             String leniency = DomHelper.getAttribute(bindingElm, "lenient", null);
 
-            return new CommonAttributes(location, direction, leniency);
+            //TODO: current jxpath is not inheriting registered namespaces over to 
+            // child-relative jxpath contexts --> because of that we can't just 
+            // remember the getLocalNSDeclarations but need the full set from 
+            // getInheritedNSDeclarations
+            // IMPORTANT NOTE: if jxpath would change this behaviour we would however
+            // still need to be able to unregister namespace-declarations 
+            // (in a smart way: unhide what is possably available from your parent.   
+            // So both changes to jxpath need to be available before changing the below.
+            Map nsDeclarationMap = DomHelper.getInheritedNSDeclarations(bindingElm);
+            // we (actually jxpath) doesn't support un-prefixed namespace-declarations:
+            // so we decide to break on those above silently ignoring them
+            if (nsDeclarationMap != null && nsDeclarationMap.values().contains(null))
+                throw new BindingException("Error in binding file " + location
+                                + "\nBinding doesn't support having namespace-declarations without explicit prefixes.");
+            
+            return new CommonAttributes(location, direction, leniency, nsDeclarationMap);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {
@@ -143,18 +160,23 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          * should be operating in lenient mode or not 
          */
         final Boolean leniency;
+        /**
+         * Array of namespace-declarations (prefix-uri pairs) that need to be set on the jxpath 
+         */
+        final Map nsDeclarations;
 
-        final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null);
+        final static CommonAttributes DEFAULT = new CommonAttributes("location unknown", true, true, null, null);
 
-        CommonAttributes(String location, String direction, String leniency){
-            this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency));
+        CommonAttributes(String location, String direction, String leniency, Map nsDeclarations){
+            this(location, isLoadEnabled(direction), isSaveEnabled(direction), decideLeniency(leniency), nsDeclarations);
         }
 
-        CommonAttributes(String location, boolean loadEnabled, boolean saveEnabled, Boolean leniency){
+        CommonAttributes(String location, boolean loadEnabled, boolean saveEnabled, Boolean leniency, Map nsDeclarations){
             this.location = location;
             this.loadEnabled = loadEnabled;
             this.saveEnabled = saveEnabled;
             this.leniency = leniency;
+            this.nsDeclarations = nsDeclarations;
         }
 
         /**

@@ -115,9 +115,6 @@ Form.prototype.showForm = function(uri, bizData) {
         throw "Forms do not support custom javascript validators anymore. Declare your validators in the form model file.";
     }
 
-    // Fire any events pending from binding, etc.
-    this.form.fireEvents();
-
     do {
         var k = cocoon.sendPageAndWait(uri, bizData);
         if (result == null) result = k;

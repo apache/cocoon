@@ -28,6 +28,4 @@ public interface SelectableWidget extends Widget {
     public void setSelectionList(String uri);
 
     public void setSelectionList(Object model, String valuePath, String labelPath);
-
-    public void removeSelectionList();
 }
