@@ -2550,13 +2550,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     public void recycle() {
+        if ( this.resolver != null) {
+            this.resolver.release(this.inputSource);            
+        }
+        this.inputSource = null;
+        this.consumer = null;
+        this.jxpathContext = null;
+        this.globalJexlContext = null;
+        this.variables = null;
+        this.definitions = null;
         super.recycle();
-        consumer = null;
-        jxpathContext = null;
-        globalJexlContext = null;
-        variables = null;
-        inputSource = null;
-        definitions = null;
     }
 
     public void setup(SourceResolver resolver, Map objectModel,
@@ -3522,55 +3525,53 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     uri = buf.toString();
                     
                 }
-                Source input;
+                Source input = null;
+                StartDocument doc;
                 try {
                     input = resolver.resolveURI(uri);
+                
+                    SourceValidity validity = null;
+                    synchronized (cache) {
+                        doc = (StartDocument)cache.get(input.getURI());
+                        if (doc != null) {
+                            boolean recompile = false;
+                            if ( doc.compileTime == null) {
+                                recompile = true;
+                            } else {
+                                int valid = doc.compileTime.isValid();
+                                if ( valid == SourceValidity.UNKNOWN ) {
+                                    validity = input.getValidity();
+                                    valid = doc.compileTime.isValid(validity);
+                                }
+                                if ( valid != SourceValidity.VALID ) {
+                                    recompile = true;
+                                }
+                            }
+                            if ( recompile ) {
+                                doc = null; // recompile
+                            }
+                        }
+                    }
+                    if (doc == null) {
+                        Parser parser = new Parser();
+                        // call getValidity before using the stream is faster if the source is a SitemapSource
+                        if ( validity == null ) {
+                            validity = input.getValidity();
+                        }
+                        SourceUtil.parse(this.manager, input, parser);
+                        doc = parser.getStartEvent();
+                        doc.compileTime = validity;
+                        synchronized (cache) {
+                            cache.put(input.getURI(), doc);
+                        }
+                    }
                 } catch (Exception exc) {
                     throw new SAXParseException(exc.getMessage(),
                                                 ev.location,
                                                 exc);
                 }
-                SourceValidity validity = null;
-                StartDocument doc;
-                synchronized (cache) {
-                    doc = (StartDocument)cache.get(input.getURI());
-                    if (doc != null) {
-                        boolean recompile = false;
-                        if ( doc.compileTime == null) {
-                            recompile = true;
-                        } else {
-                            int valid = doc.compileTime.isValid();
-                            if ( valid == SourceValidity.UNKNOWN ) {
-                                validity = input.getValidity();
-                                valid = doc.compileTime.isValid(validity);
-                                
-                            }
-                            if ( valid != SourceValidity.VALID ) {
-                                recompile = true;
-                            }
-                        }
-                        if ( recompile ) {
-                            doc = null; // recompile
-                        }
-                    }
-                }
-                if (doc == null) {
-                    try {
-                        Parser parser = new Parser();
-                        SourceUtil.parse(this.manager, input, parser);
-                        doc = parser.getStartEvent();
-                        if ( validity == null ) {
-                            validity = input.getValidity();
-                        }
-                        doc.compileTime = validity;
-                    } catch (Exception exc) {
-                        throw new SAXParseException(exc.getMessage(),
-                                                    ev.location,
-                                                    exc);
-                    }
-                    synchronized (cache) {
-                        cache.put(input.getURI(), doc);
-                    }
+                finally {
+                    resolver.release(input);
                 }
                 JXPathContext selectJXPath = jxpathContext;
                 MyJexlContext selectJexl = jexlContext;
