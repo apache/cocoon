@@ -81,7 +81,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.acting.AbstractTransformer;
+import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -354,7 +354,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.20 2003/12/08 10:17:01 cziegeler Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.21 2003/12/08 10:23:47 cziegeler Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 

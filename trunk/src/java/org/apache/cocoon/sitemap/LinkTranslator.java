@@ -55,7 +55,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.acting.Transformer;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
@@ -68,7 +68,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkTranslator.java,v 1.4 2003/12/08 10:17:01 cziegeler Exp $
+ * @version CVS $Id: LinkTranslator.java,v 1.5 2003/12/08 10:23:46 cziegeler Exp $
  */
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     

@@ -55,7 +55,7 @@ import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.acting.Transformer;
+import org.apache.cocoon.transformation.Transformer;
 
 import java.util.Collection;
 import java.util.Map;
@@ -63,7 +63,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TransformNodeBuilder.java,v 1.2 2003/12/08 10:17:01 cziegeler Exp $
+ * @version CVS $Id: TransformNodeBuilder.java,v 1.3 2003/12/08 10:23:46 cziegeler Exp $
  */
 
 public class TransformNodeBuilder extends AbstractProcessingNodeBuilder

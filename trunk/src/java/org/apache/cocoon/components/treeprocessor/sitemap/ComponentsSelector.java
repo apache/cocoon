@@ -72,14 +72,14 @@ import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapComponentSelector;
-import org.apache.cocoon.acting.Transformer;
+import org.apache.cocoon.transformation.Transformer;
 
 /**
  * Component selector for sitemap components.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.8 2003/12/08 10:17:01 cziegeler Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.9 2003/12/08 10:23:46 cziegeler Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector

@@ -75,7 +75,7 @@ import org.apache.cocoon.environment.mock.MockRedirector;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.acting.Transformer;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -93,7 +93,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.9 2003/12/08 10:17:01 cziegeler Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.10 2003/12/08 10:23:46 cziegeler Exp $
  */
 public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 {

@@ -60,7 +60,7 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.acting.AbstractTransformer;
+import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
@@ -83,7 +83,7 @@ import java.util.Map;
  * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.6 2003/12/08 10:17:01 cziegeler Exp $
+ * @version    CVS $Id: Paginator.java,v 1.7 2003/12/08 10:23:46 cziegeler Exp $
  */
 public class Paginator extends AbstractTransformer
   implements Composable, Disposable, CacheableProcessingComponent {

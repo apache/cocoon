@@ -55,7 +55,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.acting.Transformer;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 
 import org.apache.excalibur.source.SourceValidity;
@@ -69,7 +69,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: LinkGatherer.java,v 1.6 2003/12/08 10:17:01 cziegeler Exp $
+ * @version CVS $Id: LinkGatherer.java,v 1.7 2003/12/08 10:23:46 cziegeler Exp $
  */
 public class LinkGatherer extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     private List links;

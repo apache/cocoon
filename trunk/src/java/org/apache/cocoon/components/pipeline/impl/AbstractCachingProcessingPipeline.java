@@ -63,7 +63,7 @@ import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.*;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.acting.Transformer;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.AggregatedValidity;
@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.18 2003/12/08 10:17:01 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.19 2003/12/08 10:23:47 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
