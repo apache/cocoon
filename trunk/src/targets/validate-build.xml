@@ -65,7 +65,11 @@
 
   <!-- Validation of xdocs  -->
   <target name="validate-xdocs" depends="prepare-docs" unless="exclude.validate.xdocs">
+<!--
     <echo message="Conducting validation of core XML documentation."/>
+-->
+    <echo message="Not conducting validation of core XML documentation."/>
+    <echo message="Use 'forrest validate-xdocs' instead."/>
 
 <!-- FIXME: 
     <echo message="Validating all **/book.xml instances using RELAX NG ..."/>
@@ -74,12 +78,23 @@
     </jing>
 -->
 
+<!--
     <echo message="Validating all xdocs/**/*.xml instances using DTDs ..."/>
     <xmlvalidate failonerror="true" lenient="no" warn="yes">
-      <!-- FIXME: we can use xmlcatalog with Ant-1.6 -->
+-->
+      <!-- FIXME: we can use xmlcatalog/catalogpath with Ant-1.6 -->
+<!--
+      <xmlcatalog>
+        <catalogpath>
+          <pathelement location="${webapp}/WEB-INF/entities/catalog.xcat"/>
+        </catalogpath>
+      </xmlcatalog>
+-->
+<!--
       <fileset dir="${build.context}/xdocs" includes="**/*.xml"
                excludes="status.xml,drafts/*.xml,dictionary.xml,catalog-test.xml,ctwig/sample/**/*.xml,tabs.xml,dtd/**"/>
     </xmlvalidate>
+-->
 
     <echo message="Validating the documentation sitemap.xmap using RELAX NG ..."/>
     <jing rngfile="${webapp}/WEB-INF/entities/sitemap-v06.rng">
