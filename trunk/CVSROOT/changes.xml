@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.85 2000-06-22 22:35:11 stefano Exp $
+  $Id: changes.xml,v 1.86 2000-06-29 06:19:26 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix" due-to-"Ulrich Mayring" due-to-email="ulim@denic.de">
+   fixed stupid bug in absolute href support in xinclude processor. also now set system ids on included xml resources.
+  </action>
+
   <action dev="SM" type="fix" due-to="Matthias Brunner" due-to-email="mb@blumenstrasse.vol.at">
    Fixed typo on util.xsl that generated XSP compilation problems for the util taglib.
   </action>
