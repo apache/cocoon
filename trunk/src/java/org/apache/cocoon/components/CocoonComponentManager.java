@@ -50,15 +50,9 @@
 */
 package org.apache.cocoon.components;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.EnvironmentHelper;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Cocoon Component Manager.
@@ -71,102 +65,11 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.29 2003/11/05 21:29:08 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.30 2004/01/07 15:48:32 cziegeler Exp $
  */
 public final class CocoonComponentManager
-implements ServiceManager
 {
 
-    /** The parent component manager for implementing parent aware components */
-    private ServiceManager parentManager;
-
-    /** Temporary list of parent-aware components.  Will be null for most of
-     * our lifecycle. */
-    private ArrayList parentAwareComponents = new ArrayList();
-
-    /** Create the ComponentManager */
-    public CocoonComponentManager() {
-    }
-
-    /** Create the ComponentManager with a parent ComponentManager */
-    public CocoonComponentManager(final ServiceManager manager) {
-        this.parentManager = manager;
-    }
-
-    public boolean hasService(String role)
-    {
-        return parentManager.hasService(role);
-    }
-
-    /**
-     * Return an instance of a component based on a Role.  The Role is usually the Interface's
-     * Fully Qualified Name(FQN)--unless there are multiple Components for the same Role.  In that
-     * case, the Role's FQN is appended with "Selector", and we return a ComponentSelector.
-     */
-    public Object lookup( final String role )
-    throws ServiceException {
-        return parentManager.lookup(role);
-    }
-
-    /**
-     * Release a Component.  This implementation makes sure it has a handle on the propper
-     * ComponentHandler, and let's the ComponentHandler take care of the actual work.
-     */
-    public void release( final Object component ) {
-        parentManager.release( component);
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.component.ExcaliburComponentManager#addComponent(java.lang.String, java.lang.Class, org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void addComponent(String role, Class clazz, Configuration conf)
-        throws ServiceException {
-//        super.addComponent(role, clazz, conf);
-        // Note that at this point, we're not initialized and cannot do
-        // lookups, so defer parental introductions to initialize().
-        if ( ParentAware.class.isAssignableFrom( clazz ) ) {
-            parentAwareComponents.add(role);
-        }
-    }
-
-    public void initialize()
-        throws Exception
-    {
-//        super.initialize();
-        if (parentAwareComponents == null) {
-            throw new ServiceException(null, "CocoonComponentManager already initialized");
-        }
-        // Set parents for parentAware components
-        Iterator iter = parentAwareComponents.iterator();
-        while (iter.hasNext()) {
-            String role = (String)iter.next();
-//            getLogger().debug(".. "+role);
-            if ( parentManager != null && parentManager.hasService( role ) ) {
-                // lookup new component
-                Object component = null;
-                try {
-                    component = this.lookup( role );
-                    ((ParentAware)component).setParentLocator( new ComponentLocatorImpl(this.parentManager, role ));
-                } catch (ServiceException ignore) {
-                    // we don't set the parent then
-                } finally {
-                    this.release( component );
-                }
-            }
-        }
-        parentAwareComponents = null;  // null to save memory, and catch logic bugs.
-    }
-    
-    /**
-     * Get the current sitemap component manager.
-     * This method return the current sitemap component manager. This
-     * is the manager that holds all the components of the currently
-     * processed (sub)sitemap.
-     */
-    static public ServiceManager getSitemapComponentManager() {
-        return EnvironmentHelper.getSitemapServiceManager();
-    }
-    
     /**
      * Add an automatically released component
      */

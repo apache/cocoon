@@ -59,6 +59,7 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.JavaScriptException;
 
 import org.apache.cocoon.sitemap.SitemapRedirector;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.Response;
@@ -69,7 +70,6 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.components.modules.input.InputModule;
-import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.cprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
@@ -84,7 +84,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.14 2003/12/28 21:09:59 unico Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.15 2004/01/07 15:48:32 cziegeler Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -348,7 +348,7 @@ public class JSCocoon extends ScriptableObject
         Redirector redirector = new SitemapRedirector(this.environment);
         SourceResolver resolver = (SourceResolver)this.environment.getObjectModel()
             .get(OBJECT_SOURCE_RESOLVER);
-        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceManager sitemapManager = EnvironmentHelper.getSitemapServiceManager();
         ServiceSelector actionSelector
             = (ServiceSelector)sitemapManager.lookup(Action.ROLE + "Selector");
         Action action = (Action)actionSelector.select(type);
@@ -390,7 +390,7 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceManager sitemapManager = EnvironmentHelper.getSitemapServiceManager();
         ServiceSelector inputSelector = (ServiceSelector)sitemapManager
             .lookup(InputModule.ROLE + "Selector");
         InputModule input = (InputModule) inputSelector.select(type);
@@ -410,7 +410,7 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceManager sitemapManager = EnvironmentHelper.getSitemapServiceManager();
         ServiceSelector outputSelector = (ServiceSelector)sitemapManager
             .lookup(OutputModule.ROLE + "Selector");
         OutputModule output = (OutputModule) outputSelector.select(type);
@@ -428,7 +428,7 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceManager sitemapManager = EnvironmentHelper.getSitemapServiceManager();
         ServiceSelector outputSelector = (ServiceSelector)sitemapManager
             .lookup(OutputModule.ROLE + "Selector");
         OutputModule output = (OutputModule) outputSelector.select(type);
@@ -444,7 +444,7 @@ public class JSCocoon extends ScriptableObject
     {
         // since no new components can be declared on sitemap we could
         // very well use the 'other' one here. Anyway, since it's there...
-        ServiceManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ServiceManager sitemapManager = EnvironmentHelper.getSitemapServiceManager();
         ServiceSelector outputSelector = (ServiceSelector)sitemapManager
             .lookup(OutputModule.ROLE + "Selector");
         OutputModule output = (OutputModule) outputSelector.select(type);

@@ -62,7 +62,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -93,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.9 2003/10/19 17:46:19 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.10 2004/01/07 15:48:32 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -122,7 +122,7 @@ public final class SourceUtil {
     static public void toSAX( Source source,
                               ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+        toSAX(EnvironmentHelper.getSitemapServiceManager(), 
               source, null, handler);
     }
 
@@ -138,7 +138,7 @@ public final class SourceUtil {
                                 String mimeTypeHint,
                               ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
-        toSAX(CocoonComponentManager.getSitemapComponentManager(), 
+        toSAX(EnvironmentHelper.getSitemapServiceManager(), 
               source, mimeTypeHint, handler);
     }
 
@@ -450,7 +450,7 @@ public final class SourceUtil {
                 frag.normalize();
 
                 if ( null != serializerName) {
-					ServiceManager manager = CocoonComponentManager.getSitemapComponentManager();
+					ServiceManager manager = EnvironmentHelper.getSitemapServiceManager();
 
 	                ServiceSelector selector = null;
 	                Serializer serializer = null;
@@ -491,7 +491,7 @@ public final class SourceUtil {
             } else {
             	String content;
 				if ( null != serializerName) {
-					ServiceManager  manager = CocoonComponentManager.getSitemapComponentManager();
+					ServiceManager  manager = EnvironmentHelper.getSitemapServiceManager();
                     
                     ServiceSelector selector = null;
                     Serializer serializer = null;
