@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.49 2000-04-04 11:09:09 stefano Exp $
+  $Id: changes.xml,v 1.50 2000-04-04 13:40:21 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,16 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix" due-to="Andrew Sheehan" due-to-email="AJSheehan@doe.mass.edu">
+   Fixed problem with Sun ProjectX compilation that failed on some platforms.
+  </action>
+  <action dev="SM" type="fix" due-to="James Birchfield" due-to-email="jsrbirch@home.com">
+   Fixed problem with LDAP examples.
+  </action>
+  <action dev="SM" type="fix" due-to="Maurice Galland" due-to-email="maurice.galland@kariboo.com">
+   Fixed a problem with DocumentDTD that defined the "role" attribute twice
+   and triggered validation problems on some parsers.
+  </action>
   <action dev="SM" type="fix" fixes-bug="91">
    Fixed a problem with document stylesheets that messed up anchors.
   </action>
