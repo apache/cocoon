@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.13 2000-10-24 04:23:52 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.14 2000-10-26 21:08:06 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -21,6 +21,12 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="add">
+   added esql logicsheet to c2
+  </action>
+  <action dev="DB" type="fix">
+   patched xsp generator to use proper namespace for automatic text elements
+  </action>
   <action dev="BL" type="update">
     Updated Cocoon to be Avalon 3.0a4 compliant.  Introduced ComponentManager and
     ComponentSelector patterns correctly in code.  Updated sitemap to create
