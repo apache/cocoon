@@ -20,5 +20,9 @@
 
     <map:generator name="html" logger="sitemap.generator.html"
                    src="org.apache.cocoon.generation.HTMLGenerator"
-                   label="content"/>
+                   label="content">
+      <!-- Tidy configuration file.
+      <jtidy-config>context://WEB-INF/tidy.properties</jtidy-config>
+      -->
+    </map:generator>
 </xmap>

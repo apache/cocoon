@@ -40,23 +40,26 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * Unstable transformer: converts (escaped) HTML snippets into JTidied HTML. 
+ * Converts (escaped) HTML snippets into JTidied HTML. 
  * This transformer expects a list of elements, passed as comma separated
  * values of the "tags" parameter. It records the text enclosed in such
  * elements and pass it thru JTidy to obtain valid XHTML.
- * TODO: add namespace support.
- * WARNING: this transformer should be considered unstable.
+ *
+ * <p>TODO: Add namespace support.
+ * <p><strong>WARNING:</strong> This transformer should be considered unstable.
  *
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
+ *
+ * @version CVS $Id: HTMLTransformer.java,v 1.5 2004/06/08 19:02:52 vgritsenko Exp $
  */
 public class HTMLTransformer
     extends AbstractSAXTransformer
     implements Configurable {
 
-	/**
-	 * Properties for Tidy format
-	 */
+    /**
+     * Properties for Tidy format
+     */
     private Properties properties;
     
     /**
@@ -104,7 +107,6 @@ public class HTMLTransformer
     /**
      * Configure this transformer, possibly passing to it
      * a jtidy configuration file location.
-     *
      */
     public void configure(Configuration config) throws ConfigurationException {
         String configUrl = config.getChild("jtidy-config").getValue(null);
@@ -209,5 +211,4 @@ public class HTMLTransformer
             this.tags.put(tok, tok);
         }
     }
-    
 }
