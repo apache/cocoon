@@ -86,12 +86,15 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.6 2003/03/11 11:19:29 bruno Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.7 2003/03/16 08:07:29 jefft Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
+    /** Default value for normalizeNamespaces. */
+    private final boolean DEFAULT_NORMALIZE_NAMESPACES = true;
+
     /** Indicates whether namespace normalization should happen. */
-    protected boolean normalizeNamespaces = true;
+    protected boolean normalizeNamespaces = DEFAULT_NORMALIZE_NAMESPACES;
 
     /** DOMStreamer used in case of namespace normalization. */
     protected NamespaceNormalizingDOMStreamer namespaceNormalizingDOMStreamer = new NamespaceNormalizingDOMStreamer();
@@ -186,7 +189,7 @@ public class DOMStreamer implements XMLProducer {
     public void recycle() {
         defaultDOMStreamer.recycle();
         namespaceNormalizingDOMStreamer.recycle();
-        normalizeNamespaces = true;
+        normalizeNamespaces = DEFAULT_NORMALIZE_NAMESPACES;
     }
 
     /**
