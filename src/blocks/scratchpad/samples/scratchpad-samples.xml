@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.2 2003/09/06 13:23:31 reinhard Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.3 2003/09/06 13:46:35 reinhard Exp $ -->
 
 <samples>
 
@@ -30,7 +30,7 @@
   </group>
 
   <group name="Intercepted Flow">
-    <sample name="Example" href="flow-interception/">
+    <sample name="Example" href="intercepted-flow/">
       Show the usage intercepted JavaScript flow functions
     </sample>
   </group>
