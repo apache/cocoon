@@ -27,7 +27,7 @@
         the session transformer.</p>
      <p>The chapter "Special Contexts" explains some special
         contexts which do not require a session. They are available everytime. These
-        special contexts are the request context, the response context and the
+        special contexts are the request context and the
         temporary context.</p>
   </s1>
   <s1 title="Session Tracking">
@@ -195,7 +195,7 @@
   <s1 title="Special Contexts">
      <p>Cocoon creates and maintains special contexts that allow the
         applications to access the environment. This allows the read-only access
-        to such things as the current request or the response using the same XPath
+        to such things as the current request using the same XPath
         commands previously described. These context do not require any session, they
         are always available and change on every request.</p>
      <s2 title="The Request Context - Accessing the Environment, Part One">
@@ -291,43 +291,6 @@
 &lt;isRequestedSessionIdFromCookie&gt;value&lt;/isRequestedSessionIdFromCookie&gt;
 &lt;isRequestedSessionIdFromCookie&gt;value&lt;/isRequestedSessionIdFromCookie&gt;
 &lt;isRequestedSessionIdValid&gt;value&lt;/isRequestedSessionIdValid&gt;</source>
-     </s2>
-     <s2 title="The Response Context - Accessing the Environment, Part Two">
-        <p>The response context is an XML description of the current
-          (HTTP) response. This context is a special write only context that can be
-          accessed with the usual commands:</p>
-        <p><em>&lt;session:setxml context="response"
-          path="/header"/&gt;</em></p>
-        <p>This command will be removed from the XML and the information will
-          be added to the response. Headers and cookies can be
-          added using the response context .</p>
-        <s3 title="Adding headers">
-          <p>Headers can be added either by <em>setxml</em> or by
-             <em>appendxml</em>. If <em>setxml</em> is used, the header with the name gets
-             the given value, regardless if the header had any value beforehand or not. If
-             <em>appendxml</em> is used the value will be added.</p>
-          <source>&lt;session:setxml context="response" path="/header/headername"&gt;The value&lt;/session:setxml&gt;
-
-   or
-
-&lt;session:appendxml context="response" path="/header/headername"&gt;The value&lt;/session:appendxml&gt;</source>
-        </s3>
-        <s3 title="Adding cookies">
-          <p>Cookies can be added either by setxml or by appendxml. There is
-             no difference between these commands.</p>
-          <source>&lt;session:setxml context="response" path="/cookie"&gt;
-  &lt;!-- Now follows the cookie definition --&gt;
-  &lt;name&gt;The cookie name&lt;/name&gt;
-  &lt;value&gt;The value of the cookie&lt;/value&gt;
-  &lt;!-- The following are optional --&gt;
-  &lt;path&gt;value&lt;/path&gt;
-  &lt;domain&gt;value&lt;/domain&gt;
-  &lt;secure&gt;true or false&lt;/secure&gt;
-  &lt;comment&gt;value&lt;/comment&gt;
-  &lt;maxAge&gt;value&lt;/maxAge&gt;
-  &lt;version&gt;value&lt;/version&gt;
-&lt;/session:setxml&gt;</source>
-        </s3>
      </s2>
      <s2 title="The Temporary Context">
         <p>The temporary context with the name <em>"temp"</em> is available on
