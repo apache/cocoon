@@ -68,7 +68,7 @@ import org.w3c.dom.NodeList;
  * For a smarter binding that avoids deletion and recreation, consider
  * {@link org.apache.cocoon.woody.binding.RepeaterJXPathBinding}
  *
- * CVS $Id: TempRepeaterJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * CVS $Id: TempRepeaterJXPathBinding.java,v 1.2 2004/01/06 12:32:47 joerg Exp $
  * @author Timothy Larson
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
@@ -76,7 +76,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
     private final String repeaterId;
     private final String repeaterPath;
     private final String rowPath;
-    private final String rowPathInsert;
+//    private final String rowPathInsert;
     private final boolean clearOnLoad;
     private final JXPathBindingBase rowBinding;
     private final JXPathBindingBase insertRowBinding;
@@ -92,7 +92,7 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
-        this.rowPathInsert = rowPathInsert;
+//        this.rowPathInsert = rowPathInsert;
         this.rowBinding = rowBinding;
         this.rowBinding.setParent(this);
         this.insertRowBinding = insertBinding;
