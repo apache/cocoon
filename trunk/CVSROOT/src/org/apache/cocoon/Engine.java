@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.44 2000-12-12 16:26:42 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.45 2001-01-16 15:50:29 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.44 $ $Date: 2000-12-12 16:26:42 $
+ * @version $Revision: 1.45 $ $Date: 2001-01-16 15:50:29 $
  */
 
 public class Engine implements Defaults {
@@ -302,6 +302,8 @@ public class Engine implements Defaults {
 
         String encodedRequest = Utils.encode( request );
 
+        String encoding = null;
+
         try {
             if ( CACHE ) {
                 // ask if the cache contains the page requested and if it's
@@ -393,7 +395,7 @@ public class Engine implements Defaults {
                         page.setContent(writer.toString());
 
                         // set content type together with encoding if appropriate
-                        String encoding = formatter.getEncoding();
+                        encoding = formatter.getEncoding();
                         if (encoding != null) {
                             page.setContentType(formatter.getMIMEType() + "; charset=" + encoding);
                         } else {
@@ -433,6 +435,11 @@ public class Engine implements Defaults {
                 // set the response content type
                 response.setContentType(page.getContentType());
 
+                ByteArrayOutputStream outBuf = new ByteArrayOutputStream ();
+                boolean isHead = "HEAD".equals (request.getMethod ());
+                byte[] content = Utils.getBytes (page.getContent (), encoding);
+                int contentLength = content.length;
+
                 // set the Last-Modified header if this option is enabled in cocoon.properties
                 // and the request has been cached
                 if (LASTMODIFIED) {
@@ -442,36 +449,29 @@ public class Engine implements Defaults {
                    }
                 }
 
-                /* will fix later
-                if (!VERBOSE && page.isText()) {
-                    if (encoding == null) {
-                        response.setContentLength(page.getContent().getBytes().length);
-                    } else {
-                        response.setContentLength(page.getContent().getBytes(encoding).length);
-                    }
-                }
-                */
+                outBuf.write (content);
 
-                // get the output writer
-                PrintWriter out = response.getWriter();
-
-                // send the page
-                out.println(page.getContent());
-
-                // if verbose mode is on the the output type allows it
+                // if verbose mode is on, the output type allows it
                 // and the HTTP request isn't a HEAD
                 // print some processing info as a comment
                 if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
                     time = System.currentTimeMillis() - time;
-                    out.println("<!-- This page was served "
+                    String comment = "<!-- This page was served "
                         + (wasInCache ? "from cache " : "")
                         + "in " + time + " milliseconds by "
-                        + Cocoon.version() + " -->");
-                    //out.println("<!-- free memory: " + Runtime.getRuntime().freeMemory() + " -->");
+                        + Cocoon.version() + " -->";
+                    byte[] commentBytes = Utils.getBytes (comment, encoding);
+                    outBuf.write (commentBytes);
+                    contentLength += commentBytes.length;
+                }
+                response.setContentLength (contentLength);
+ 
+                if (!isHead) {
+                     OutputStream realOut = response.getOutputStream();
+                     realOut.write (outBuf.toByteArray ());
+                     realOut.flush ();
                 }
 
-                // send all content so that client doesn't wait while caching.
-                out.flush();
                 if (PROFILE) profiler.finishEvent (requestMarker, OUTPUTTING);
             }
 

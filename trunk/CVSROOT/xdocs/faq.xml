@@ -579,16 +579,21 @@
 
   <question>Why is Internet Explorer not showing PDF or VRML samples?</question>
   <answer>
-   <p>This is a long-time problem with Internet Explorer which doesn't look for
-   the MIME type sent by the HTTP response, but instead just looks at the
-   file extension at the end of the URL to determine what program should
-   open it (unlike other
-   browsers which are smarter and follow the Internet standards 
-   correctly).
-   There is a trick that forces IE to look at the MIME type -
-   adding a <code>?</code> at the end of your URI. Cocoon should
-   ignore this, but IE won't, and will react to the MIME type and 
-   trigger the correct plugin/application for that content.</p>
+   <p>There are at least <strong>three distinct bugs</strong> involved here.</p>
+
+   <p>The first is a HTTP glitch in Cocoon which triggers a second bug in IE. This has been
+    fixed in Cocoon 1.8.1, so first make sure you are using Cocoon 1.8.1 or higher.</p>
+
+   <p>The third is a long-time problem with Internet Explorer which doesn't look 
+    for the MIME type sent by the HTTP response, but instead just looks at the
+    file extension at the end of the URL to determine what program should
+    open it (unlike other browsers which are smarter and follow the Internet standards 
+    correctly).
+    There is a trick that forces IE to look at the MIME type -
+    adding <code>?dummy=test.pdf</code> (or some similar parameter ending in .pdf)
+    at the end of your URI. Cocoon should
+    ignore this, but IE won't, and will react to the MIME type and 
+    trigger the correct plugin/application for that content.</p>
 
    <p>Russ Whyte has also developed a 
     <link href="http://archive.covalent.net/xml/cocoon-users/2000/09/0618.xml">
@@ -601,22 +606,13 @@
     Note that this is <em>not</em> a bug in Cocoon and is completely outside
     our control.</p>
 
-   <note>There are bugs in MS Internet Explorer 5.x and/or Acrobat Reader
-    which even ignore the question mark. See the
+   <note>See also the (rather unhelpful)
     <link href="http://support.microsoft.com/support/kb/articles/Q177/3/21.ASP">
     Microsoft Knowledge Base</link> and 
     <link href="http://www.adobe.com/support/techdocs/3d76.htm">
     Adobe Support Knowledgebase (1)</link>, 
     <link href="http://www.adobe.com/support/techdocs/98fe.htm">(2)</link>.
    </note>
-  </answer>
- </faq>
-
- <faq id="faq-ieopensave">
-  <question>Why is Internet Explorer bringing up an Open/Save dialog when I view PDF pages?</question>
-  <answer>
-   <p>This is a workaround for a bug in Internet Explorer (see previous question). We think you'll agree
-    it's preferable to just an empty page!</p>
   </answer>
  </faq>
 

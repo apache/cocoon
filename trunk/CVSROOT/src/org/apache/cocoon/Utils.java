@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.21 2000-12-22 11:51:08 greenrd Exp $ --
+/*-- $Id: Utils.java,v 1.22 2001-01-16 15:50:30 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,11 +66,16 @@ import org.apache.cocoon.processor.xsp.XSPUtil;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.21 $ $Date: 2000-12-22 11:51:08 $
+ * @version $Revision: 1.22 $ $Date: 2001-01-16 15:50:30 $
  */
 
 public final class Utils {
 
+    public static byte[] getBytes (String s, String encoding)
+    throws UnsupportedEncodingException {
+        return (encoding == null) ? s.getBytes () : s.getBytes (encoding);
+    }
+                                                                                                  
     /**
      * This method returns a vector of PI nodes based on the PI target name.
      */

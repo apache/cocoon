@@ -101,36 +101,31 @@
    This page shows how you can use Cocoon to generate dynamic content using
    XML processing instructions to trigger ECMAScript logic execution.
   </sample>-->
-
-  <sample name="Special Producer" url="dummy.xml?producer=dummy">
-   This page shows how you can use Cocoon to generate dynamic content using
-   XML processing instructions to trigger ECMAScript logic execution.
-  </sample>
  </group>
 
  <!-- 
-      Stupid IE has a bug in the handling of MIME-types and we fool it adding
-      a '?' after the url. Tell me, isn't this totally nonsense? I mean, 
+      Stupid IE has a bug in the handling of MIME-types and we fool it by adding
+      a "?dummy=test.pdf" after the url. Tell me, isn't this totally nonsense? I mean, 
       Cocoon is simply ignoring that query so, while this
       is the worse hack I've ever seen, this is the only way we make IE
       do what it's supposed to do. Microsoft, listen up: patch the damn thing! 
   -->
       
  <group name="Formatting Object Rendering">
-  <sample name="Simple FO Example" url="fo/test-fo.xml?">
+  <sample name="Simple FO Example" url="fo/test-fo.xml?dummy=test.pdf">
    This page shows some potentials of the XSL Formatting Object specifications
    tranformed into PDF (we suggest you to install Adobe Acrobat Reader as your
    browser plugin for smoother integration)
   </sample>
 
-  <sample name="More complex FO + SVG Example" url="fo/test2-fo.xml?">
+  <sample name="More complex FO + SVG Example" url="fo/test2-fo.xml?dummy=test.pdf">
    This page shows higher potentials of the XSL Formatting Object specifications
    when mixed with other graphic outline specification such as SVG (Scalable
    Vector Graphics). Both are interpreted by FOP and rendered into PDF as
    area and vector graphics.
   </sample>
 
-  <sample name="Novel FO formatting" url="fo/darkness-novel.xml?">
+  <sample name="Novel FO formatting" url="fo/darkness-novel.xml?dummy=test.pdf">
    In this example, part of Joseph Conrad's "The Heart of Darkness" novel
    is taken from its orginal style-free XML format and rendered into PDF
    using an XML->FO stylesheet.
