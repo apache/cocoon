@@ -84,7 +84,7 @@ import org.apache.avalon.framework.component.Component;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.8 2003/03/20 04:18:51 coliver Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.9 2003/04/04 23:08:13 stefano Exp $
  */
 public class JSCocoon extends ScriptableObject
 {
@@ -250,6 +250,21 @@ public class JSCocoon extends ScriptableObject
             return interpreter.process(uri, biz, (OutputStream)out, environment);
         } catch (JavaScriptException e) {
             throw e;
+        } catch (Exception e) {
+            throw new JavaScriptException(e);
+        }
+    }
+
+    /**
+     * Send a client-side redirect to the browser.
+     *
+     * @param uri The URI to which the browser should be redirected to.
+     */
+    public void jsFunction_redirect(String uri)
+        throws JavaScriptException
+    {
+        try {
+            environment.redirect(false,uri);
         } catch (Exception e) {
             throw new JavaScriptException(e);
         }

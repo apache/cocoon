@@ -1,5 +1,5 @@
 //
-// CVS $Id: system.js,v 1.4 2003/03/25 14:25:18 stefano Exp $
+// CVS $Id: system.js,v 1.5 2003/04/04 23:08:13 stefano Exp $
 //
 // JavaScript definitions
 //
@@ -61,6 +61,14 @@ function handleContinuation(kont)
 function handleInvalidContinuation(id)
 {
   sendPage("invalidContinuation", {"ident" : id});
+}
+
+// Redirect Support
+//
+// redirect to the given URI
+function redirect(uri)
+{
+  cocoon.redirect(uri);
 }
 
 // Action Support
