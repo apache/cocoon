@@ -83,9 +83,9 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
- * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
+ * @author <a href="mailto:reinhard@apache.org">Reinhard Poetz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.10 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id$
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Serviceable, Configurable, Initializable
