@@ -1,26 +1,29 @@
 #!/bin/sh
+# -----------------------------------------------------------------------------
+# build.sh - Unix Build Script for Apache Cocoon
+#
+# $Id: build.sh,v 1.10.2.9 2000-09-16 00:12:23 stefano Exp $
+# -----------------------------------------------------------------------------
 
-echo
-echo "Cocoon Build System"
-echo "-------------------"
+# ----- Verify and Set Required Environment Variables -------------------------
+
+if [ "$ANT_HOME" = "" ] ; then
+  ANT_HOME=.
+fi
 
 if [ "$JAVA_HOME" = "" ] ; then
-  echo "ERROR: JAVA_HOME not found in your environment."
-  echo
-  echo "Please, set the JAVA_HOME variable in your environment to match the"
-  echo "location of the Java Virtual Machine you want to use."
+  echo You must set JAVA_HOME to point at your Java Development Kit installation
   exit 1
 fi
 
-ANT_HOME=./lib
-LOCALCLASSPATH=`echo lib/*.jar | tr ' ' ':'`:$JAVA_HOME/lib/tools.jar:$CLASSPATH
+# ----- Set Up The Runtime Classpath ------------------------------------------
 
-echo
-echo Building with classpath $LOCALCLASSPATH
+CP=$ANT_HOME/lib/ant.jar:$JAVA_HOME/lib/tools.jar
+
+# ----- Make sure Ant script is executable ------------------------------------
 
 chmod 0755 $ANT_HOME/bin/antRun
 
-echo
-echo Starting Ant...
+# ----- Execute The Requested Build -------------------------------------------
 
-$JAVA_HOME/bin/java -Dant.home=$ANT_HOME -classpath $LOCALCLASSPATH org.apache.tools.ant.Main $*
+$JAVA_HOME/bin/java $ANT_OPTS -classpath $CP org.apache.tools.ant.Main -Dant.home=$ANT_HOME $*

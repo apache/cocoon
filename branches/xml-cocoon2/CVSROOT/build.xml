@@ -1,9 +1,9 @@
 <!-- ===========================================================================
 
 
-                           * ==================== *
-                           |  How to build Cocoon |
-                           * ==================== *
+                       * =========================== *
+                       |  Apache Cocoon Build System |
+                       * =========================== *
 
                                      by
 
@@ -25,7 +25,8 @@ To make things easier for you, the Cocoon distribution contains a precompiled
 version of Ant and the build scripts take care of all the classpath issues.
 
 The only thing that you have to make sure, is the "JAVA_HOME" environment
-property should be set to match the JVM you want to use. That's it.
+property should be set to match the JVM you want to use. That's all you have
+to do.
 
 
 Building instructions
@@ -47,6 +48,23 @@ tremendously the performance of the whole build system, compared to other
 tools (i.e. make or shell scripts) where a new JVM is started for each task.
 
 
+Building on another directory
+=============================
+
+Sometimes you might want to build on an external directory to keep the 
+distribution clean: no worries, this is just an environment property away.
+Suppose you want to use the "../build" directory instead you simply tipe
+
+ [unix]  ./build.sh  -Dbuild.root=../build
+ [win32] .\build.bat -Dbuild.root=..\build
+
+By using the -Dxxx=yyy argument, you are setting environments in the JVM: Ant
+is designed to give higher priority to system environments to allow you to
+modify _any_ <property> that you can find in the building instructions below,
+so it's just a matter of understanding what property you want to change
+and you don't have to touch this file.
+
+
 Build targets
 =============
 
@@ -56,30 +74,49 @@ distributions and web site. In fact, the file you have here is _exactly_ what
 is used by cocoon maintainers to take care of everything in the Cocoon
 project, no less and no more.
 
-These are the meaningful targets for this build file:
+To know more about the available targets take a look at this file, which is
+pretty self-explanatory or type
 
- - package [default] -> creates ./build/cocoon/cocoon.jar
- - webapp -> creates ./build/cocoon/cocoon.war
- - webapp-lib -> creates ./build/cocoon/cocoon.war with included libraries
- - docs -> generates the HTML documentation in ./build/cocoon/docs
- - printer-docs -> generates printer friendly HTML documentation in ./build/printer-docs
- - javadocs -> generates the API documentation in ./build/cocoon/javadocs
- - dist-zip -> generates the Cocoon distribution in ./dist
- - dist-tgz -> generates the Cocoon distribution in ./dist
- - clean -> cleans the distribution after builds
- - distclean -> restores the distribution to its original and clean state
- - site -> generates the web site in ../xml-site/targets/cocoon
+ [unix]  ./build.sh  -projecthelp
+ [win32] .\build.bat -projecthelp
+ 
 
-NOTE: the "site" target is only useful for site mantainers.
+Install target
+==============
+
+The install target is mainly a facility to allow you to install a newly build
+cocoon + web application in your servlet container. If called normally it
+doesn't do anything, but if you type
+
+ [unix]  ./build.sh  -Dinstall.lib="../tomcat/lib" -Dinstall.war="../tomcat/webapps" install
+ [win32] .\build.bat -Dinstall.lib="..\tomcat\lib" -Dinstall.war="..\tomcat\webapps" install
+
+overriding the installation properties, it copies all the required libraries
+and the default web application so that you just have to fire up your servlet
+container without doing anything else. Pretty slick, isn't it?
+
+That's all you have to know to start hacking Cocoon... so what are you 
+waiting for? C'mon, dive in and have fun. 
+
+                               Happy hacking from the Apache Cocoon Dev Team:)
 
 ============================================================================ -->
 
 <project default="package" basedir=".">
 
   <!-- =================================================================== -->
+  <!-- Indentify Classpath                                                 -->
+  <!-- =================================================================== -->
+  <path id="classpath">
+    <fileset dir="./lib">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <!-- =================================================================== -->
   <!-- Initialization target                                               -->
   <!-- =================================================================== -->
-  <target name="init">
+  <target name="init" description="Sets the build properties">
     <tstamp/>
     <property name="fullname" value="Apache Cocoon"/>
     <property name="Name"     value="Cocoon"/>
@@ -107,7 +144,6 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="browser.skin" value="${skins.dir}/xml.apache.org/"/>
     <property name="printer.skin" value="${skins.dir}/printer/"/>
     <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
-    <property name="doc.generator.package" value="${lib.dir}/stylebook-1.0-b2.jar"/>
 
     <property name="build.root"     value="./build"/>
     <property name="build.dir"      value="${build.root}/${name}"/>
@@ -123,7 +159,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="dist.target" value="${dist.root}"/>
 
     <property name="site" value="../xml-site/targets/${name}"/>
-
+    
     <filter token="name"    value="${fullname}"/>
     <filter token="year"    value="${year}"/>
     <filter token="version" value="${version}"/>
@@ -145,45 +181,16 @@ NOTE: the "site" target is only useful for site mantainers.
   </target>
 
   <!-- =================================================================== -->
-  <!-- Help on usage                                                       -->
-  <!-- =================================================================== -->
-  <target name="usage">
-    <echo message=""/>
-    <echo message=""/>
-    <echo message="Cocoon Build file"/>
-    <echo message="-------------------------------------------------------------"/>
-    <echo message=""/>
-    <echo message=" available targets are:"/>
-    <echo message=""/>
-    <echo message="   package   --> generates the cocoon.jar file (default)"/>
-    <echo message="   webapp    --> generates the cocoon.war file"/>
-    <echo message="   compile   --> compiles the source code"/>
-    <echo message="   docs      --> generates the HTML documentation"/>
-    <echo message="   printer-docs --> generates printer-friendly HTML documentation"/>
-    <echo message="   javadocs  --> generates the API documentation"/>
-    <echo message="   dist-zip  --> generates the Cocoon distribution as .zip"/>
-    <echo message="   dist-tgz  --> generates the Cocoon distribution as .tar.gz"/>
-    <echo message="   clean     --> cleans up the directory after building"/>
-    <echo message="   distclean --> cleans up to original CVS state"/>
-    <echo message="   site      --> generates the Cocoon web site"/>
-    <echo message=""/>
-    <echo message=" See the comments inside the build.xml file for more details."/>
-    <echo message="-------------------------------------------------------------"/>
-    <echo message=""/>
-    <echo message=""/>
-  </target>
-
-  <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
-  <target name="prepare" depends="init">
+  <target name="prepare" depends="init" description="Prepares the build directory">
     <mkdir dir="${build.dir}"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare">
+  <target name="prepare-src" depends="prepare" description="Copies and filters the source code into the build directory">
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
     <copydir src="${src.dir}" dest="${build.src}" filtering="on"/>
@@ -192,7 +199,7 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
-  <target name="compile" depends="prepare-src">
+  <target name="compile" depends="prepare-src" description="Compiles the source code">
     <copydir src="${build.src}" dest="${build.dest}">
       <include name="**/Manifest.mf"/>
       <include name="**/*.xsl"/>
@@ -212,24 +219,25 @@ NOTE: the "site" target is only useful for site mantainers.
            debug="${debug}"
            optimize="${optimize}"
            deprecation="${deprecation}">
+      <classpath refid="classpath"/>
       <exclude name="**/*.html"/>
       <exclude name="**/CocoonServlet*.java" unless="servlet.present"/>
-      <exclude name="**/XT*.java" unless="xt.present"/>
-      <exclude name="**/SVG*.java" unless="svg.present"/>
-      <exclude name="**/Javascript*" unless="rhino.present"/>
-      <exclude name="**/Jstyle*" unless="jstyle.present"/>
-      <exclude name="**/FO2*" unless="fop.present"/>
-      <exclude name="**/Php*" unless="php.present"/>
-      <exclude name="**/JPEGEncoder*.java" unless="jpeg.present"/>
-      <exclude name="**/PNGEncoder*.java" unless="png.present"/>
-      <exclude name="**/JAI*.java" unless="jai.present"/>
+      <exclude name="**/XT*.java"            unless="xt.present"/>
+      <exclude name="**/SVG*.java"           unless="svg.present"/>
+      <exclude name="**/Javascript*"         unless="rhino.present"/>
+      <exclude name="**/Jstyle*"             unless="jstyle.present"/>
+      <exclude name="**/FO2*"                unless="fop.present"/>
+      <exclude name="**/Php*"                unless="php.present"/>
+      <exclude name="**/JPEGEncoder*.java"   unless="jpeg.present"/>
+      <exclude name="**/PNGEncoder*.java"    unless="png.present"/>
+      <exclude name="**/JAI*.java"           unless="jai.present"/>
     </javac>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates the jar file                                                -->
   <!-- =================================================================== -->
-  <target name="package" depends="compile">
+  <target name="package" depends="compile" description="Generates the jar package">
     <jar jarfile="${build.dir}/${name}.jar"
          basedir="${build.dest}"
          manifest="${build.src}/Manifest.mf"
@@ -239,7 +247,7 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <!-- Prapares the webapp directories                                     -->
   <!-- =================================================================== -->
-  <target name="prepare-webapp" depends="prepare">
+  <target name="prepare-webapp" depends="prepare" description="Prepares the web application">
     <mkdir dir="${build.war}"/>
 
     <copydir src="${webapp.dir}" dest="${build.war}" filtering="on">
@@ -263,27 +271,28 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <!-- Creates the war file                                                -->
   <!-- =================================================================== -->
-  <target name="webapp" depends="prepare-webapp">
+  <target name="webapp" depends="prepare-webapp" description="Generates the war package">
     <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
   </target>
 
   <!-- =================================================================== -->
-  <!-- Creates the war file                                                -->
+  <!-- Installs Cocoon file                                                -->
   <!-- =================================================================== -->
-  <target name="webapp-lib" depends="package, prepare-webapp">
-    <copydir src="${lib.dir}" dest="${build.war}/WEB-INF/lib" filtering="off">
+  <target name="install" depends="package, webapp" if="install.lib" description="Installs all jar and war packages">
+    <copydir src="${lib.dir}" dest="${install.lib}">
+      <include name="*.jar"/>
       <exclude name="ant*.jar"/>
-      <exclude name="**/bin/**"/>
       <exclude name="stylebook*.jar"/>
+      <exclude name="servlet*.jar"/>
     </copydir>
-    <copyfile src="${build.dir}/${name}.jar" dest="${build.war}/WEB-INF/lib/${name}.jar"/>
-    <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
+    <copyfile src="${build.dir}/${name}.jar" dest="${install.lib}/${name}.jar"/>
+    <copyfile src="${build.dir}/${name}.war" dest="${install.war}/${name}.war"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
-  <target name="prepare-docs" depends="init">
+  <target name="prepare-docs" depends="init" description="Prepares the documentation source files">
     <copyfile src="changes.xml" dest="${docs.dir}/changes.xml" filtering="on"/>
     <copyfile src="todo.xml"    dest="${docs.dir}/todo.xml"/>
 
@@ -294,46 +303,43 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <!-- Generate HTML docs                                                  -->
   <!-- =================================================================== -->
-  <target name="docs" depends="prepare-docs">
+  <target name="docs" depends="prepare-docs" description="Generates the documentation">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes"
-          classpath="${java.class.path}:${doc.generator.package}"
-          classname="${doc.generator}">
-     <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
+    <java classname="${doc.generator}">
+      <classpath refid="classpath"/>
+      <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
     </java>
   </target>
 
   <!-- =================================================================== -->
   <!-- Generate printer-friendly HTML docs                                 -->
   <!-- =================================================================== -->
-  <target name="printer-docs" depends="prepare-docs">
+  <target name="printer-docs" depends="prepare-docs" description="Generates printer-friendly documentation">
     <mkdir dir="${build.docs.printer}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes"
-          classpath="${java.class.path}:${doc.generator.package}"
-          classname="${doc.generator}">
-     <arg line="targetDirectory=${build.docs} ${docs.dir}/book.xml ${printer.skin}"/>
+    <java classname="${doc.generator}">
+      <classpath refid="classpath"/>
+      <arg line="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
     </java>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
-  <target name="site" depends="prepare-docs">
+  <target name="site" depends="prepare-docs" description="Generates the web site (for site maintainers only)">
     <mkdir dir="${site}"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
-    <java fork="yes"
-          classpath="${java.class.path}:${doc.generator.package}"
-          classname="${doc.generator}">
-     <arg line="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
+    <java classname="${doc.generator}">
+      <classpath refid="classpath"/>
+      <arg line="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
     </java>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare-src">
+  <target name="javadocs" depends="prepare-src" description="Generates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="${packages}"
              sourcepath="${build.src}"
@@ -345,14 +351,15 @@ NOTE: the "site" target is only useful for site mantainers.
              windowtitle="${Name} API"
              doctitle="${Name}"
              bottom="Copyright &#169; ${year} Apache Software Foundation. All Rights Reserved."
-             stylesheetfile="${resource.dir}/javadoc.css"
-    />
+             stylesheetfile="${resource.dir}/javadoc.css">
+      <classpath refid="classpath"/>
+    </javadoc>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="package, webapp, docs, javadocs">
+  <target name="dist" depends="package, webapp, docs, javadocs" description="Prepares the distribution">
     <mkdir dir="${dist.dir}"/>
     <mkdir dir="${dist.dir}/lib"/>
     <mkdir dir="${dist.dir}/src"/>
@@ -387,14 +394,14 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <!-- Packages the distribution as .zip                                   -->
   <!-- =================================================================== -->
-  <target name="dist-zip" depends="dist">
+  <target name="dist-zip" depends="dist" description="Generates the distribution as a .zip file">
     <zip zipfile="${dist.target}/${Name}-${version}.zip" basedir="${dist.dir}" includes="**"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Packages the distribution with .tar.gzip                            -->
   <!-- =================================================================== -->
-  <target name="dist-tgz" depends="dist">
+  <target name="dist-tgz" depends="dist" description="Generates the distribution as a .tar.gz file">
     <tar tarfile="${dist.target}/${Name}-${version}.tar" basedir="${dist.root}" includes="**"/>
     <gzip zipfile="${dist.target}/${Name}-${version}.tar.gz" src="${dist.target}/${Name}-${version}.tar"/>
   </target>
@@ -402,14 +409,14 @@ NOTE: the "site" target is only useful for site mantainers.
   <!-- =================================================================== -->
   <!-- Clean targets                                                       -->
   <!-- =================================================================== -->
-  <target name="clean" depends="init">
+  <target name="clean" depends="init" description="Cleans the build directories">
     <delete file="${docs.dir}/changes.xml"/>
     <delete file="${docs.dir}/todo.xml"/>
     <delete file="${docs.dir}/book.xml"/>
     <deltree dir="${build.dir}"/>
   </target>
 
-  <target name="distclean" depends="clean">
+  <target name="distclean" depends="clean" description="Cleans everything to the original state">
     <deltree dir="${build.root}"/>
     <delete file="${dist.target}/${Name}-${version}.tar.gz"/>
     <delete file="${dist.target}/${Name}-${version}.tar"/>
