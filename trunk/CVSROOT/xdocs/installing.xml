@@ -1161,6 +1161,12 @@ You could also make these three configuration changes via
    <td>IBM JDK 1.3</td>
   </tr>
   <tr>
+   <td>AIX 4.3.3 (RS/6000)</td>
+   <td>Apache 1.3.14</td>
+   <td>Tomcat 3.2.1</td>
+   <td>IBM JDK 1.3</td>
+  </tr>
+  <tr>
    <td>Windows 98</td>
    <td>Apache 1.3.9</td>
    <td>Apache JServ 1.0</td>
