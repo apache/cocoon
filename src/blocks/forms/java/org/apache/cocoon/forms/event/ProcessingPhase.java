@@ -19,13 +19,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.enum.ValuedEnum;
+import org.apache.commons.lang.enums.ValuedEnum;
 
 /**
  * Type-safe enumeration of the various form processing phases.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingPhase.java,v 1.1 2004/03/09 10:33:45 reinhard Exp $
+ * @version CVS $Id$
  */
 public class ProcessingPhase extends ValuedEnum {
 
