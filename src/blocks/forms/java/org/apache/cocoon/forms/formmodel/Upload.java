@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.10 2004/04/30 12:23:03 bruno Exp $
+ * @version CVS $Id: Upload.java,v 1.11 2004/05/07 13:08:24 bruno Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private final UploadDefinition uploadDefinition;
@@ -152,9 +152,6 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
 	 * Adds attributes @required, @mime-types
 	 */
 	public AttributesImpl getXMLElementAttributes() {
-		// TODO Auto-generated method stub
-		System.out.println("getXMLElementAttributes");
-		
 		AttributesImpl attrs = super.getXMLElementAttributes();
         attrs.addCDATAAttribute("id", getFullyQualifiedId());
         attrs.addCDATAAttribute("required", String.valueOf(uploadDefinition.isRequired()));
