@@ -1,5 +1,5 @@
 //
-// CVS $Id: xmlForm.js,v 1.8 2003/04/01 19:25:11 coliver Exp $
+// CVS $Id: xmlForm.js,v 1.9 2003/04/01 20:02:43 coliver Exp $
 //
 // XMLForm Support
 //
@@ -58,10 +58,27 @@ XForm.prototype.setModel = function(model) {
  * @return [WebContinuation] a new WebContinuation instance
  */
 XForm.prototype.start = function(lastCont, timeToLive) {
+    var result = this._start(lastCont, timeToLive);
+    // 
+    // _start() will return an Object when it's called
+    // the first time. However, when its Continuation is invoked it
+    // will return a WebContinuation instead. In the latter case
+    // we're going back to the previous page: so
+    // clear the current page's violations before showing the previous page
+    // Without this, violations from the current page will
+    // incorrectly be displayed on the previous page.
+    if (result instanceof WebContinuation) {
+        this.form.clearViolations();
+        return result;
+    }
+    return result.kont;
+} 
+
+XForm.prototype._start = function(lastCont, timeToLive) {
     var k = new Continuation();
     var kont = new WebContinuation(this.cocoon, k, 
                                    lastCont, timeToLive);
-    return kont;
+    return {kont: kont};
 } 
 
 /**
@@ -142,7 +159,6 @@ XForm.prototype._sendView = function(uri, lastCont, timeToLive) {
  */
 XForm.prototype.sendView = function(phase, uri, validator) {
     var lastCont = this.lastContinuation;
-    this.form.clearViolations();
     var view = this.form.getFormView(this.cocoon.environment.objectModel);
     while (true) {
         // create a continuation, the invocation of which will resend
@@ -167,7 +183,7 @@ XForm.prototype.sendView = function(phase, uri, validator) {
             handleInvalidContinuation();
             suicide();
         }
-        this.form.populate( this.cocoon.environment.objectModel);
+        this.form.populate(this.cocoon.environment.objectModel);
         if (validator != undefined) {
             validator(this);
         }
