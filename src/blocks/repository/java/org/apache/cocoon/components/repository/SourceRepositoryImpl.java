@@ -104,29 +104,39 @@ implements Serviceable, ThreadSafe, SourceRepository {
         }
         
         Source source = null;
-        ModifiableTraversableSource destination = null;
-        
+        Source destination = null;
         try {
+            destination = m_resolver.resolveURI(out);
             
-            destination = (ModifiableTraversableSource) m_resolver.resolveURI(out);
+            if (!(destination instanceof ModifiableSource)) {
+                final String message = 
+                    "Conflict during save(): protocol is not modifiable.";
+                getLogger().warn(message);
+                return STATUS_CONFLICT;
+            }
+            
             final boolean exists = destination.exists();
             if (!exists) {
                 Source parent = ((TraversableSource) destination).getParent();
                 if (!parent.exists()) {
-                    getLogger().warn("Conflict during save(): " +
-                        "parent does not exist." );
+                    final String message =
+                        "Conflict during save(): parent does not exist.";
+                    getLogger().warn(message);
                     return STATUS_CONFLICT;
                 }
             }
             
-            if (destination.isCollection()) {
-                getLogger().warn("Conflict during save(): " +
-                    "destination is an existing collection.");
-                return STATUS_CONFLICT;
+            if (destination instanceof TraversableSource) {
+                if (((TraversableSource) destination).isCollection()) {
+				    final String message = 
+                        "Conflict during save(): destination is a collection.";
+                    getLogger().warn(message);
+                    return STATUS_CONFLICT;
+            	}
             }
             
             int status;
-            if (destination.exists()) {
+            if (exists) {
                 status = STATUS_OK;
             }
             else {
@@ -159,29 +169,37 @@ implements Serviceable, ThreadSafe, SourceRepository {
             getLogger().debug("makeCollection: " + location);
         }
         
-        ModifiableTraversableSource source = null;
+        Source source = null;
         Source parent = null;
         try {
-            source = (ModifiableTraversableSource) m_resolver.resolveURI(location);
+            source = m_resolver.resolveURI(location);
             
             if (source.exists()) {
-                getLogger().warn("makeCollection() is not allowed: " +
-                    "the resource already exists.");
+                final String message = 
+                    "makeCollection() is not allowed: the resource already exists.";
+                getLogger().warn(message);
                 return STATUS_NOT_ALLOWED;
             }
             
-            parent = source.getParent();
-            if (!parent.exists()) {
-                getLogger().warn("Conflict during makeCollection(): " +
-                    "parent does not exist.");
+            if (!(source instanceof ModifiableTraversableSource)) {
+            	final String message = 
+                    "Conflict in makeCollection(): source is not modifiable traversable.";
+                getLogger().warn(message);
                 return STATUS_CONFLICT;
             }
             
-            source.makeCollection();
+            parent = ((TraversableSource) source).getParent();
+            if (!parent.exists()) {
+                final String message = "Conflict in makeCollection(): parent does not exist.";
+                getLogger().warn(message);
+                return STATUS_CONFLICT;
+            }
+            
+            ((ModifiableTraversableSource) source).makeCollection();
             return STATUS_CREATED;
         }
         catch (IOException e) {
-            getLogger().error("Unexpected exception during MKCOL.",e);
+            getLogger().error("Unexpected exception during makeCollection().",e);
             throw e;
         }
         finally {
@@ -195,62 +213,60 @@ implements Serviceable, ThreadSafe, SourceRepository {
     }
     
     /**
-     * Deletes a Source and all of its descendants.
+     * Removes a Source and all of its descendants.
      * 
-     * @param location  the location of the source to delete.
+     * @param location  the location of the source to remove.
      * @return  a http status code describing the exit status.
      * @throws IOException
      */
-    public int remove(String location) throws SourceException, IOException {
+    public int remove(String location) throws IOException {
         
-        final Source source =  m_resolver.resolveURI(location);
-        
-        if (!source.exists()) {
-            getLogger().warn("Trying to delete a non-existing source.");
-            return STATUS_NOT_FOUND;
-        }
-        
-        if (!(source instanceof ModifiableSource)) {
-            getLogger().warn("Trying to delete a non-modifiable source.");
-            return STATUS_CONFLICT;
-        }
-        
+        Source source = null;
         try {
-            return remove((ModifiableSource) source);
+            source = m_resolver.resolveURI(location);
+            if (!source.exists()) {
+                final String message = 
+                    "Trying to remove a non-existing source.";
+                getLogger().warn(message);
+                return STATUS_NOT_FOUND;
+            }
+            return remove(source);
         }
         catch (IOException e) {
-            getLogger().error("Unexpected exception during DELETE.",e);
+            getLogger().error("Unexpected exception during remove().",e);
             throw e;
         }
         finally {
-            m_resolver.release(source);
+            if (source != null) {
+                m_resolver.release(source);
+            }
         }
         
     }
     
-    private int remove(ModifiableSource source) throws SourceException {
+    private int remove(Source source) throws SourceException {
         
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("remove: " + source.getURI());
         }
         
-        if (source instanceof ModifiableTraversableSource) {
-            ModifiableTraversableSource parent = (ModifiableTraversableSource) source;
-            if (parent.isCollection()) {
+        if (!(source instanceof ModifiableSource)) {
+            final String message = 
+                "Conflict in remove(): source is not modifiable";
+            getLogger().warn(message);
+            return STATUS_CONFLICT;         
+        }
+        
+        if (source instanceof TraversableSource) {
+            if (((TraversableSource) source).isCollection()) {
                 int status = STATUS_OK;
-                final Iterator iter = parent.getChildren().iterator();
+                final Iterator iter = ((TraversableSource) source).getChildren().iterator();
                 while (iter.hasNext()) {
                     Source child = null;
                     try {
-                        child = (Source) iter.next();
-                        if (!(child instanceof ModifiableSource)) {
-                            return STATUS_CONFLICT;
-                        }
-                        else {
-                            status = remove((ModifiableSource) child);
-                            if (status != STATUS_OK) {
-                                return status;
-                            }
+                        status = remove((Source) iter.next());
+                        if (status != STATUS_OK) {
+                            return status;
                         }
                     }
                     finally {
@@ -261,10 +277,8 @@ implements Serviceable, ThreadSafe, SourceRepository {
                 }
             }
         }
-        
-        source.delete();
+        ((ModifiableSource) source).delete();
         return STATUS_OK;
-        
     }
     
     public int move(String from, String to) throws IOException {
@@ -274,7 +288,8 @@ implements Serviceable, ThreadSafe, SourceRepository {
         }
         
         if (from != null && from.equals(to)) {
-            final String message = "move() is not allowed: " +
+            final String message = 
+                "move() is not allowed: " +
                 "The source and destination URIs are the same";
             getLogger().warn(message);
             return STATUS_NOT_ALLOWED;
@@ -302,6 +317,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
     
     private int move(Source source, Source destination) throws IOException {
         if (!source.exists()) {
+            final String message =
+                "Trying to move a non-existing source.";
+            getLogger().warn(message);
             return STATUS_NOT_FOUND;
         }
         if (destination.exists()) {
@@ -318,7 +336,8 @@ implements Serviceable, ThreadSafe, SourceRepository {
         }
         
         if (from != null && from.equals(to)) {
-            final String message = "copy() is not allowed: " +
+            final String message = 
+                "copy() is not allowed: " +
                 "The source and destination URIs are the same";
             getLogger().warn(message);
             return STATUS_NOT_ALLOWED;
@@ -346,6 +365,9 @@ implements Serviceable, ThreadSafe, SourceRepository {
     
     private int copy(Source source, Source destination) throws IOException {
         if (!source.exists()) {
+            final String message =
+                "Trying to copy a non-existing source";
+            getLogger().warn(message);
             return STATUS_NOT_FOUND;
         }
         if (destination.exists()) {
