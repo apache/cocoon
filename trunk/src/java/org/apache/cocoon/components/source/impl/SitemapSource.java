@@ -86,7 +86,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.29 2004/02/22 17:36:34 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.30 2004/02/22 17:53:36 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -96,22 +96,22 @@ implements Source, XMLizable {
     private SourceValidity sourceValidity;
 
     /** The system id */
-    private String systemId;
+    private final String systemId;
 
     /** The system id used for caching */
     private String systemIdForCaching;
     
     /** The current ServiceManager */
-    private ServiceManager manager;
+    private final ServiceManager manager;
 
     /** The processor */
-    private Processor processor;
+    private final Processor processor;
 
     /** The pipeline description */
     private Processor.InternalPipelineDescription pipelineDescription;
 
     /** The environment */
-    private MutableEnvironmentFacade environment;
+    private final MutableEnvironmentFacade environment;
 
     /** The redirect <code>Source</code> */
     private Source redirectSource;
@@ -129,7 +129,7 @@ implements Source, XMLizable {
     private boolean processed;
     
     /** The used protocol */
-    private String protocol;
+    private final String protocol;
 
     /** SourceResolver (for the redirect source) */
     private SourceResolver sourceResolver;
@@ -165,7 +165,7 @@ implements Source, XMLizable {
         // create environment...
         EnvironmentWrapper wrapper = new EnvironmentWrapper(env, info.requestURI, 
                                                    info.queryString, logger, manager, info.rawMode, info.view);
-        wrapper.setURI(info.prefix, uri);
+        wrapper.setURI(info.prefix, info.uri);
         
         // The environment is a facade whose delegate can be changed in case of internal redirects
         this.environment = new MutableEnvironmentFacade(wrapper);
@@ -176,6 +176,8 @@ implements Source, XMLizable {
         } else {
             this.environment.getObjectModel().remove(ObjectModelHelper.PARENT_CONTEXT);
         }
+        
+        this.systemId = info.systemId;
         
         // initialize
         this.init();

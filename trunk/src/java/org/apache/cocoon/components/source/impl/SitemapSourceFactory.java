@@ -58,7 +58,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
 import org.apache.excalibur.source.SourceUtil;
@@ -70,7 +69,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * as it needs the current <code>Sitemap</code> as input.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.6 2004/01/06 12:49:26 cziegeler Exp $
+ * @version CVS $Id: SitemapSourceFactory.java,v 1.7 2004/02/22 17:53:36 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=SourceFactory
@@ -79,7 +78,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  */
 public final class SitemapSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, ThreadSafe, Serviceable, URIAbsolutizer
+    implements SourceFactory, Serviceable, URIAbsolutizer
 {
     /** The <code>ServiceManager</code> */
     private ServiceManager manager;
