@@ -16,14 +16,19 @@
 package org.apache.cocoon.webapps.authentication.context;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.components.DefaultAuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
@@ -48,7 +53,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.18 2004/04/06 14:48:56 cziegeler Exp $
+ * @version CVS $Id$
 */
 public class AuthenticationContext
 implements SessionContext {
@@ -61,6 +66,8 @@ implements SessionContext {
     protected Context         context;
     protected XPathProcessor  xpathProcessor;
     protected SourceResolver  resolver;
+    /** A list of roles the user is in */
+    protected List            roles;
     
     /** Constructor */
     public AuthenticationContext(Context context, XPathProcessor processor, SourceResolver resolver) {
@@ -801,4 +808,27 @@ implements SessionContext {
         this.handler.setApplicationIsLoaded(appConf);
     }
 
+    /**
+     * Test if the user has a role
+     * @since 2.1.6
+     */
+    public boolean isUserInRole(String role) {
+        if ( this.roles == null ) {
+            this.roles = new ArrayList();
+            try {
+                final String allRoles = (String)this.getContextInfo().get("roles");
+                final StringTokenizer st = new StringTokenizer( allRoles, ",");
+                while ( st.hasMoreElements() ) {
+                    this.roles.add(st.nextElement());
+                }
+            } catch (ProcessingException pe) {
+                // we ignore this
+            }
+        }
+        if ( this.roles.contains( role ) ) {
+            return true;
+        }
+        final Request req = ContextHelper.getRequest(this.context);
+        return req.isUserInRole(role);
+    }
 }
