@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -82,10 +82,10 @@ public class CachingPointProcessingPipeline
     /**
      * Set the generator.
      */
-    public void setGenerator (String role, String source, Parameters param, Parameters hintParam) 
+    public void setGenerator (String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
         super.setGenerator(role, source, param, hintParam);
-        
+
         // check the hint param for a "caching-point" hint
         String pipelinehint = null;
         try {
@@ -128,7 +128,7 @@ public class CachingPointProcessingPipeline
                 getLogger().warn("caching-point hint Exception, pipeline-hint ignored: " + ex);
             }
         }
-	
+
         // add caching point flag
         // default value is false
         this.isCachePoint.add(new Boolean(this.nextIsCachePoint));
@@ -156,7 +156,7 @@ public class CachingPointProcessingPipeline
         }
         if (!this.autoCachingPoint) {
             return;
-        }   
+        }
 
         this.nextIsCachePoint = true;
         if (this.getLogger().isDebugEnabled()) {
@@ -265,8 +265,8 @@ public class CachingPointProcessingPipeline
                     this.xmlSerializer = (XMLSerializer)this.manager.lookup( XMLSerializer.ROLE );
                     localXMLSerializer = this.xmlSerializer;
                 }
-                if ( this.cachedResponse == null ) {
 
+                if (this.cachedResponse == null) {
                     XMLProducer prev = super.generator;
                     XMLConsumer next;
 
