@@ -201,6 +201,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+  <action dev="NN" type="add">
+    Dummy
+  </action>
+ </release>
+ <release version="2.1.6" date="November 19 2004">
    <action dev="AG" type="fix" fixes-bug="23118" due-to="Jorg Heymans" due-to-email="jh@domek.be">
      Lucene: SearchGenerator incorrectly counts previous-index. Reported by: Tomasz Nowak (tnowak-p@netventure.pl)
    </action>
