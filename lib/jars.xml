@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.37 2003/05/03 13:51:41 bruno Exp $
+    | CVS $Id: jars.xml,v 1.38 2003/05/06 08:49:59 bdelacretaz Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -766,5 +766,16 @@
   <lib>woody/lib/xreporter-expression-20030428.jar</lib>
   <homepage>http://xreporter.cocoondev.org</homepage>
  </file>
+
+  <file>
+    <title>QDox - Quick JavaDoc Scanner</title>
+    <description>
+        QDox is a high speed, small footprint parser for extracting class/interface/method
+        definitions from source files complete with JavaDoc @tags.
+    </description>
+    <used-by>QDoxSource (qdox block)</used-by>
+    <lib>qdox/lib/qdox-1.1.jar</lib>
+    <homepage>http://qdox.codehaus.org</homepage>
+   </file>
 
 </jars>
