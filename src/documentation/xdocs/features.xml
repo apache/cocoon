@@ -18,7 +18,7 @@
         </li>
         <li>
           Cocoon implements these concepts around the notion of <strong>component pipelines</strong>, 
-          each component on the pipeline specializing on a particular operation 
+          each component on the pipeline specializing in a particular operation 
           (usual pipeline uses a Generator, Transformers and a Serializer). This 
           makes it possible to use a Lego(tm)-like approach in building web solutions, 
           hooking together components into pipelines without requiring programming.
@@ -33,7 +33,7 @@
           <link href="license.html">Apache Software License</link>).
         </li>
         <li>
-          Cocoon doesn't duplicate efforts but tightly integrates many technologies.
+          Cocoon does not duplicate efforts but tightly integrates many technologies.
         </li>
         <li>
           Cocoon is in use at many live sites and on many company networks.
@@ -43,7 +43,8 @@
           than <link href="who.html">15 active committers</link>!
         </li>
         <li>
-          here is free support on our <link href="mail-lists.html">mailing lists</link> 
+          There is free support from the thousands of people on our
+          <link href="http://cocoon.apache.org/community/mail-lists.html">mailing lists</link> 
           and commercial support is available from various companies and consultants.
         </li>
         <li>
@@ -53,10 +54,10 @@
               <fork href="http://www.orixo.com/events/gt2003/">Cocoon GetTogether</fork>
             </li>
             <li>
-              <fork href="http://apachecon.com">ApacheCon</fork>
+              <fork href="http://apachecon.com/">ApacheCon</fork>
             </li>
             <li>
-              <fork href="http://cocoon.ifs.tuwien.ac.at">Austrian Cocoon Day</fork>  
+              <fork href="http://cocoon.ifs.tuwien.ac.at/">Austrian Cocoon Day</fork>  
             </li>
             <li>
               <fork href="http://www.wjax.de/">WJAX</fork>
@@ -85,7 +86,8 @@
           datasources and output formats)
         </li>
         <li>
-          Create static content (automatically) by separating data from view - see Forrest
+          Create static content (automatically) by separating data from view
+          - see <link href="http://xml.apache.org/forrest/">Apache Forrest</link>
         </li>
         <li>
           Advanced web applications with J2EE integration
@@ -111,7 +113,8 @@
         </li>
         <li>
           Use Cocoon as the base for your Content Management System (CMS) 
-          (see also Lenya for a Cocoon based CMS)
+          (see <link href="http://cocoon.apache.org/lenya/">Apache Lenya</link>
+          for a Cocoon based CMS)
         </li>
         <li>
           Use Cocoon for producing mobile content (mobile phones, pdas)
@@ -145,7 +148,7 @@
           (accessible for all SAP (r) customers)
         </li>
         <li>
-          <fork href="http://www.webdav.org">WebDAV</fork>
+          <fork href="http://www.webdav.org/">WebDAV</fork>
         </li>
         <li>
           CVS (supported by the external project <fork href="http://cocoondev.org/projects/cvssource.html">CVSSource</fork>)
@@ -191,10 +194,10 @@
       </li>
       </ul>
     </s1>
-    <s1 title="Easily aggregate different datasources">
+    <s1 title="Transform your XML based on standards">
       <ul>
         <li>
-          <fork href="http://www.w3.org/TR/xslt">XSLT</fork> (The default XSLT-Engine is Xalan, XSLTC is included in the 
+          <fork href="http://www.w3.org/TR/xslt">XSLT</fork> (The default XSLT-Engine is Apache Xalan, XSLTC is included in the 
           Cocoon distribution, other XSLT-Engines like Saxon can be easily 
           integrated)        
         </li>
@@ -213,7 +216,7 @@
          <fork href="http://www.w3.org/XML/">XML</fork>
        </li>
         <li>
-         <fork href="http://www.w3.org/XML/">HTML</fork>
+         <fork href="http://www.w3.org/MarkUp/">HTML</fork>
        </li>
        <li>
          <fork href="http://www.w3.org/XHTML/">XHTML</fork>
@@ -234,10 +237,11 @@
          Postscript
        </li>
         <li>
-         Charts (see external project Fins http://www.cocoondev.org/projects/fins.html)
+         Charts (see external project 
+         <fork href="http://www.cocoondev.org/projects/fins.html">Fins</fork>)
        </li>
         <li>
-         <fork href="http://www.macromedia.com">Flash</fork>
+         <fork href="http://www.macromedia.com/">Flash</fork>
        </li>
         <li>
          Plain text
@@ -271,41 +275,45 @@
           Caching on many levels
         </li>
         <li>
-          Integrated search engine (using <fork href="http://jakarta.apache.org/lucene">Lucene</fork>)
+          Integrated search engine (using
+          <fork href="http://jakarta.apache.org/lucene/">Lucene</fork>)
         </li>
         <li>
-          <link href="http://cocoon.apache.org/2.1/developing/deli.html">DELI</link> (detect client configuration)
+          <link href="developing/deli.html">DELI</link> (detect client configuration)
         </li>
         <li>
           Catalog Entity Resolver to map to local copies of DTDs and other resources
         </li>
         <li>
-          Publish your own WebServices (<fork href="http://xml.apache.org/axis">Apache Axis</fork> is integrated)
+          Publish your own WebServices
+          (<fork href="http://xml.apache.org/axis/">Apache Axis</fork> is integrated)
         </li>
         <li>
           <fork href="http://java.sun.com/products/javamail/">Java Mail</fork> support
         </li>
         <li>
-          Easy integration of object-relational-frameworks (
-          <fork href="http://db.apache.org/ojb"></fork>OJB, <fork href="http://www.hibernate.org">Hibernate</fork>, ...)
+          Easy integration of object-relational frameworks
+          (<fork href="http://db.apache.org/ojb/">OJB</fork>,
+          <fork href="http://www.hibernate.org/">Hibernate</fork>, ...)
         </li>
         <li>
           I18n support (translation support)
         </li>
         <li>
           Easily extensible by clear interfaces (write your own components 
-          following <link href="http://avalon.apache.org">Avalon</link> patterns)
+          following <link href="http://avalon.apache.org/">Avalon</link> patterns)
         </li>
         <li>
           Many, many examples and samples
         </li>
         <li>
-          Configurable build mechanism based on <link href="http://ant.apache.org">Ant</link> (you decide which parts 
-          of Cocoon you need)
+          Configurable build mechanism based on
+          <link href="http://ant.apache.org/">Ant</link>
+          (you decide which parts of Cocoon you need)
         </li>
         <li>
-          Integration of Java data binding frameworks (
-          <fork href="http://www.castor.org">Castor</fork>, 
+          Integration of Java data binding frameworks
+          (<fork href="http://www.castor.org/">Castor</fork>, 
           <fork href="http://jakarta.apache.org/commons/betwixt/">Betwixt</fork>)
       </li>
       </ul>
@@ -314,7 +322,7 @@
       <ul>
         <li>
            Enhanced form handling with strong validation through 
-           <link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">CocoonForms</link> 
+           <link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">CocoonForms</link>
         </li>
         <li>
            Easy integration of (future) <fork href="http://www.w3.org/TR/xforms/">XForms</fork> clients
@@ -325,14 +333,14 @@
       <ul>
         <li>
            Cocoon can be run in every servlet container or J2EE application server that
-           supports Java Servlets 2.2 and above, like 
-           <fork href="http://jakarta.apache.org/tomcat">Tomcat</fork>, 
+           supports Java Servlets 2.2 and above, e.g. 
+           <fork href="http://jakarta.apache.org/tomcat/">Tomcat</fork>, 
            <fork href="http://jetty.mortbay.org/jetty/">Jetty</fork>, 
-           <fork href="http://www.jboss.org">JBoss</fork>
+           <fork href="http://www.jboss.org/">JBoss</fork>
            <fork href="http://www.macromedia.com/software/jrun/">JRun</fork>, 
            <fork href="http://www.caucho.com/">Resin</fork>,
            <fork href="http://www.ibm.com/software/webservers/">Websphere</fork>,
-           <fork href="http://www.bea.com">Weblogic</fork>, ...
+           <fork href="http://www.bea.com/">Weblogic</fork>, ...
         </li>
         <li>
            Command line execution, without requiring a servlet container
