@@ -62,13 +62,27 @@ import org.apache.avalon.framework.parameters.Parameters;
  * This component schedules jobs.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: JobScheduler.java,v 1.3 2003/09/04 12:42:44 cziegeler Exp $
+ * @version CVS $Id: JobScheduler.java,v 1.4 2003/09/04 15:59:09 giacomo Exp $
  *
  * @since 2.1.1
  */
 public interface JobScheduler {
     /** The role of a JobScheduler */
     String ROLE = JobScheduler.class.getName();
+
+    /**
+     * Get the names of all scheduled jobs.
+     *
+     * @return state of execution successfullness
+     */
+    String[] getJobNames();
+
+    /**
+     * Get the JobSchedulerEntry for a scheduled job
+     *
+     * @return the entry
+     */
+    JobSchedulerEntry getJobSchedulerEntry(String jobname);
 
     /**
      * Schedule a periodic job.
@@ -141,25 +155,13 @@ public interface JobScheduler {
         throws CascadingException;
 
     /**
-     * Fire a target once immediately
+     * Fire a job once immediately
      *
      * @param jobrole The Avalon components role name of the job itself
      *
-     * @return state of execution successfullness
+     * @return success state adding the job
      */
     boolean fireJob(String jobrole);
-
-    /**
-     * Fire a target once immediately
-     *
-     * @param jobrole The Avalon components role name of the job itself
-     * @param params Additional Parameters to setup CronJob
-     * @param objects A Map with additional object to setup CronJob
-     *
-     * @return state of execution successfullness
-     */
-    boolean fireJob(String jobrole, Parameters params, Map objects)
-        throws CascadingException;
 
     /**
      * Fire a CronJob once immediately
@@ -167,35 +169,47 @@ public interface JobScheduler {
      * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
      *        specific class (i.e. org.quartz.Job)
      *
-     * @return state of execution successfullness
+     * @return whether the job has been successfully started
      */
     boolean fireJob(Object job);
 
     /**
-     * Fire a target once immediately
+     * Fire a job once immediately
+     *
+     * @param jobrole The Avalon components role name of the job itself
+     * @param params Additional Parameters to setup CronJob
+     * @param objects A Map with additional object to setup CronJob
+     *
+     * @return whether the job has been successfully started
+     */
+    boolean fireJob(String jobrole, Parameters params, Map objects)
+        throws CascadingException;
+
+    /**
+     * Fire a job once immediately
      *
      * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
      *        specific class (i.e. org.quartz.Job)
      * @param params Additional Parameters to setup CronJob
      * @param objects A Map with additional object to setup CronJob
      *
-     * @return state of execution successfullness
+     * @return whether the job has been successfully started
      */
     boolean fireJob(Object job, Parameters params, Map objects)
         throws CascadingException;
 
     /**
-     * Fire a target once at a specific date
+     * Fire a job once at a specific date
      *
      * @param date The date this job should be scheduled
      * @param name the name of the job
      * @param jobrole The Avalon components role name of the job itself
      */
     void fireJobAt(Date date, String name, String jobrole)
-    throws CascadingException;
+        throws CascadingException;
 
     /**
-     * Fire a target once immediately
+     * Fire a job once immediately
      *
      * @param date The date this job should be scheduled
      * @param name the name of the job
@@ -215,10 +229,10 @@ public interface JobScheduler {
      *        specific class (i.e. org.quartz.Job)
      */
     void fireJobAt(Date date, String name, Object job)
-    throws CascadingException;
+        throws CascadingException;
 
     /**
-     * Fire a target once immediately
+     * Fire a job once immediately
      *
      * @param date The date this job should be scheduled
      * @param name the name of the job
