@@ -110,6 +110,17 @@ public class MockRequest implements Request {
         return attributes.keys();
     }
 
+    public void setAttribute(String name, Object o) {
+        if (o == null)
+            attributes.remove(name);
+        else
+            attributes.put(name, o);
+    }
+
+    public void removeAttribute(String name) {
+        attributes.remove(name);
+    }
+
     public String getAuthType() {
         return authType;
     }
@@ -177,17 +188,6 @@ public class MockRequest implements Request {
 
     public String getRemoteHost() {
         return remoteHost;
-    }
-
-    public void setAttribute(String name, Object o) {
-        if (o == null)
-            attributes.remove(name);
-        else
-            attributes.put(name, o);
-    }
-
-    public void removeAttribute(String name) {
-        attributes.remove(name);
     }
 
     public Locale getLocale() {
