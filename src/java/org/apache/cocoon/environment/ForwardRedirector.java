@@ -52,10 +52,8 @@ package org.apache.cocoon.environment;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
@@ -64,7 +62,7 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.7 2003/08/16 13:42:40 sylvain Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.8 2003/10/15 21:02:24 cziegeler Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
@@ -77,25 +75,8 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
     /** The <code>Environment to use for redirection (either internal or external) */
     private Environment env;
 
-    /** The <code>Processor</code> that owns this redirector and which will be used
-        to handle relative "cocoon:/..." redirects */
-    private Processor processor;
-
-    /** The component manager which gives access to the top-level <code>Processor</code>
-        to handle absolute "cocoon://..." redirects */
-    private ComponentManager manager;
-
-    /** Is this internal*/
-    private boolean internal;
-
-    public ForwardRedirector(Environment env,
-                             Processor processor,
-                             ComponentManager manager,
-                             boolean internal) {
+    public ForwardRedirector(Environment env) {
         this.env = env;
-        this.processor = processor;
-        this.manager = manager;
-        this.internal = internal;
     }
 
     /**

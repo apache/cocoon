@@ -73,7 +73,6 @@ public class MockRequest implements Request {
     private String scheme;
     private String protocol = "HTTP/1.1";
     private String requestURI;
-    private String requestURL;
     private String contextPath = "";
     private String servletPath;
     private String pathInfo;
@@ -345,7 +344,6 @@ public class MockRequest implements Request {
         scheme = null;
         protocol = "HTTP/1.1";
         requestURI = null;
-        requestURL = null;
         contextPath = null;
         servletPath = null;
         pathInfo = null;

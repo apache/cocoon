@@ -67,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Testcase for DOMStreamer and DOMBuilder.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.5 2003/07/10 00:25:26 ghoward Exp $
+ * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.6 2003/10/15 21:00:24 cziegeler Exp $
  */
 public class DOMBuilderStreamerTestCase extends XMLTestCase {
 
@@ -205,7 +205,7 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
     }
 
     public final void print(Document document) {
-        TransformerFactory factory = (TransformerFactory) TransformerFactory.newInstance();
+        TransformerFactory factory = TransformerFactory.newInstance();
         try
         {
           javax.xml.transform.Transformer serializer = factory.newTransformer();

@@ -72,7 +72,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:crossley@apache.org">David Crossley</a>
- * @version CVS $Id: ResolverImplTestCase.java,v 1.8 2003/10/09 12:01:08 ugo Exp $
+ * @version CVS $Id: ResolverImplTestCase.java,v 1.9 2003/10/15 21:00:24 cziegeler Exp $
  */
 public final class ResolverImplTestCase
          extends ExcaliburTestCase
@@ -230,7 +230,7 @@ public final class ResolverImplTestCase
         "<!ENTITY nbsp   \"&#160;\" ><!--=no break (required) space-->\n" +
         "<!ENTITY shy    \"&#173;\" ><!--=soft hyphen-->\n" +
         "";
-    private DefaultContext context;
+    //private DefaultContext context;
     private EntityResolver resolverImpl;
     private File workDir;
     private File commandlineContextDir;
@@ -434,7 +434,7 @@ public final class ResolverImplTestCase
      * @since
      */
     protected void addContext(DefaultContext context) {
-        this.context = context;
+        //this.context = context;
 
         context.put(Constants.CONTEXT_WORK_DIR, workDir);
 

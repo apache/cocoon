@@ -67,7 +67,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNodeBuilder.java,v 1.3 2003/07/10 13:17:00 cziegeler Exp $
+ * @version CVS $Id: PipelinesNodeBuilder.java,v 1.4 2003/10/15 21:02:24 cziegeler Exp $
  */
 
 public class PipelinesNodeBuilder extends ContainerNodeBuilder implements ThreadSafe {
@@ -80,7 +80,7 @@ public class PipelinesNodeBuilder extends ContainerNodeBuilder implements Thread
             this.checkNamespace(child);
             this.treeBuilder.getProcessor().setComponentConfigurations(child);
         }
-        PipelinesNode node = new PipelinesNode(this.treeBuilder.getProcessor());
+        PipelinesNode node = new PipelinesNode();
         this.treeBuilder.setupNode(node, config);
 
 		Configuration[] childConfigs = config.getChildren();

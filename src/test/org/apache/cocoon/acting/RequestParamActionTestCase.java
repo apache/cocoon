@@ -59,7 +59,7 @@ import org.apache.avalon.framework.parameters.Parameters;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: RequestParamActionTestCase.java,v 1.1 2003/04/19 16:11:17 stephan Exp $
+ * @version CVS $Id: RequestParamActionTestCase.java,v 1.2 2003/10/15 21:00:23 cziegeler Exp $
  */
 public class RequestParamActionTestCase extends AbstractActionTestCase {
 
@@ -80,10 +80,10 @@ public class RequestParamActionTestCase extends AbstractActionTestCase {
         Map result = act("request", null, parameters);
 
         assertNotNull("Test if resource exists", result);
-        assertEquals("Test for parameter", "test.xml?abc=def&ghi=jkl", (String)result.get("requestURI"));
-        assertEquals("Test for parameter", "?abc=def&ghi=jkl", (String)result.get("requestQuery"));
-        assertEquals("Test for parameter", "servlet", (String)result.get("context"));
-        assertEquals("Test for parameter", "def", (String)result.get("abc"));
-        assertNull("Test for parameter", (String)result.get("ghi"));
+        assertEquals("Test for parameter", "test.xml?abc=def&ghi=jkl", result.get("requestURI"));
+        assertEquals("Test for parameter", "?abc=def&ghi=jkl", result.get("requestQuery"));
+        assertEquals("Test for parameter", "servlet", result.get("context"));
+        assertEquals("Test for parameter", "def", result.get("abc"));
+        assertNull("Test for parameter", result.get("ghi"));
     }
 }
