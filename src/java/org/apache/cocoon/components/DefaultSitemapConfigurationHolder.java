@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.2 2003/03/20 12:28:45 cziegeler Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.3 2003/04/19 19:49:33 cziegeler Exp $
  */
 public final class DefaultSitemapConfigurationHolder 
     implements SitemapConfigurationHolder {
@@ -72,7 +72,7 @@ public final class DefaultSitemapConfigurationHolder
     }
     
     /**
-     * @see org.apache.cocoon.components.SitemapConfigurationHolder#getConfiguration()
+     * @see SitemapConfigurationHolder#getConfiguration()
      */
     public ChainedConfiguration getConfiguration() {
         Map confs = CocoonComponentManager.getCurrentProcessor().getComponentConfigurations();
@@ -80,7 +80,7 @@ public final class DefaultSitemapConfigurationHolder
     }
 
     /**
-     * @see org.apache.cocoon.components.SitemapConfigurationHolder#getPreparedConfiguration()
+     * @see SitemapConfigurationHolder#getPreparedConfiguration()
      */
     public Object getPreparedConfiguration() {
         if ( null != this.preparedConfigurations ) {
@@ -93,7 +93,7 @@ public final class DefaultSitemapConfigurationHolder
     }
 
     /**
-     * @see org.apache.cocoon.components.SitemapConfigurationHolder#setPreparedConfiguration(java.lang.Object)
+     * @see SitemapConfigurationHolder#setPreparedConfiguration(ChainedConfiguration, java.lang.Object)
      */
     public void setPreparedConfiguration(ChainedConfiguration configuration, 
                                           Object preparedConfig) {
