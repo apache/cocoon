@@ -81,6 +81,20 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
         m_validity = null;
     }
 
+    public void startDocument()
+    throws SAXException {
+        // Make sure that we have a validity while processing
+        this.getValidity();
+        super.startDocument();
+    }
+
+    public void endDocument()
+    throws SAXException {
+        // Make sure that the validity is "closed" at the end
+        this.m_validity.close();
+        super.endDocument();
+    }
+
     public void startElement(String uri, String localName, String qName, Attributes atts) 
     throws SAXException {
         if (NS_URI.equals(uri)) {
@@ -89,9 +103,7 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
                 Source source = null;
                 try {
                     source = m_resolver.resolveURI(src);
-                    if (m_validity != null) {
-                        m_validity.addSource(source);
-                    }
+                    m_validity.addSource(source);
                     SourceUtil.toSAX(m_manager, source, "text/xml", 
                             new IncludeXMLConsumer(super.contentHandler));
                 }
