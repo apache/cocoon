@@ -202,7 +202,7 @@
 
   <changes>
   <release version="@version@" date="@date@">
-   <action dev="CZ" type="fix" fixes-bug="10277">
+   <action dev="VG" type="update">
      CForms: JavaSelectionList implementations can now be Contextualizable and
      can build SelectionLists with XMLizable labels.
    </action>
