@@ -49,7 +49,7 @@
 
    <p>
     A simple example using xinclude might help to use this transfomer
-    effectivly:
+    effectively:
    </p>
    <p>
     Add the XIncludetransfomer to the components in your sitemap.xmap
@@ -80,7 +80,7 @@
    <p>
     In this example pipeline it assumed that simple-xinc.xml contains
     the include element. As well as defining the include element,
-    it defines the namespache URI "http://www.w3.org/2001/XInclude".
+    it defines the namespace URI "http://www.w3.org/2001/XInclude".
     This helps the XIncludeTransformer to find the include element to 
     get replaced by the included content.
     The simple-xinc.xml may look like this:
