@@ -57,6 +57,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.store.Store;
 import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -77,7 +78,7 @@ import java.io.IOException;
 /**
  * Component implementing the {@link FormManager} role.
  */
-public class DefaultFormManager implements FormManager, ThreadSafe, Composable, Disposable, Configurable {
+public class DefaultFormManager extends AbstractLogEnabled implements FormManager, ThreadSafe, Composable, Disposable, Configurable {
     private ComponentManager componentManager;
     private Map widgetDefinitionBuilders = new HashMap();
     private FormDefinitionBuilder formDefinitionBuilder;
@@ -93,7 +94,7 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable, 
         // get available widgets from configuration
         Configuration[] widgetConfs = configuration.getChild("widgets").getChildren("widget");
         if (widgetConfs.length == 0)
-            throw new ConfigurationException("No widgets found in FormManager configuration.");
+            getLogger().warn("No Woody widgets found in FormManager configuration.");
 
         for (int i = 0; i < widgetConfs.length; i++) {
             String name = widgetConfs[i].getAttribute("name");
@@ -102,7 +103,7 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable, 
             try {
                 clazz = Class.forName(factoryClassName);
             } catch (Exception e) {
-                throw new ConfigurationException("Could not load class \"" + factoryClassName + "\" specified at " + configuration.getLocation(), e);
+                throw new ConfigurationException("Could not load class \"" + factoryClassName + "\" specified at " + widgetConfs[i].getLocation(), e);
             }
             WidgetDefinitionBuilder widgetDefinitionBuilder;
             try {
