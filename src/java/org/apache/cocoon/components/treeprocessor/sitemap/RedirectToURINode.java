@@ -61,11 +61,14 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.3 2003/09/01 12:32:07 cziegeler Exp $
+ * @version CVS $Id: RedirectToURINode.java,v 1.4 2003/11/09 18:03:02 vgritsenko Exp $
  */
 
 public class RedirectToURINode extends AbstractProcessingNode {
 
+    // TODO: It can implement ParameterizableProcessingNode to pass redirect parameters
+    //       Those parameters will be URL-encoded and appended to the redirect URI
+    
     /** The 'uri' attribute */
     private VariableResolver uri;
 
