@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.3 2003/05/20 00:54:12 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.4 2003/07/14 09:30:46 reinhard Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- indicates what flowscript to attach to this sitemap -->
-  <map:flow language="JavaScript">
+  <map:flow language="javascript">
     <map:script src="prefs.js"/>
   </map:flow>
 
