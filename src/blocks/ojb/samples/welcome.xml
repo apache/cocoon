@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <group name="Using JDO 1.0">
+  <group name="Using JDO 1.01">
   <sample name="Back" href="..">to Cocoon examples main page</sample><br/>
+  <p>To use the demo you need to download JDO from Sun's website.</p>
   <note>
     The Java Data Objects (JDO) API is a standard interface-based Java model
     abstraction of persistence, developed as Java Specification Request 12.
@@ -11,7 +12,6 @@
   </note>
   <sample name="XSP" href="jdo/xspdemo">Sample using JDO in a XSP page.</sample>
   <sample name="Woody" href="jdo/woody/employee">Sample using JDO with Woody Binding.</sample>
-  <sample name="JXForm" href="">Sample using JXForms with JDO. To be done.</sample>
  </group>
 
  <group name="Using ODMG 3.0 (To be done)">
@@ -21,7 +21,6 @@
   </note>
   <sample name="XSP" href="odmg/xspdemo">Sample using JDO in a XSP page.</sample>
   <sample name="Woody" href="">Sample using Woody binding. To be done.</sample>
-  <sample name="JXForm" href="">Sample using JXForms. To be done.</sample>
  </group>
 
  <group name="Using Persistence Broker (To be done)">
@@ -32,7 +31,6 @@
  </group>
 
  <group name="OJB Documentation">
-  <p>To use the demo you need to download JDO from Sun's website.</p>
   <note>
     OJB block allows the use of the Apache OJB project into Cocoon.
     OJB block is still alpha software and under active development.
@@ -40,18 +38,16 @@
   </note>
   <sample name="Apache OJB website" href="http://db.apache.org/ojb/">Apache OJB project</sample>
   <sample name="Using JDO Tutorial" href="http://db.apache.org/ojb/tutorial4.html">How to use OJB with JDO</sample>
-  <sample name="Using ODMG Tutorial" href="http://db.apache.org/ojb/tutorial1.html">How to use ODMG with OJB</sample>
-  <sample name="Using Persistence Broker Tutorial" href="http://db.apache.org/ojb/tutorial1.html">How to use the OJB's Persitence Broker</sample>
+  <sample name="Using ODMG Tutorial" href="http://db.apache.org/ojb/odmg-tutorial.html">How to use ODMG with OJB</sample>
+  <sample name="Using Persistence Broker Tutorial" href="http://db.apache.org/ojb/pb-tutorial.html">How to use the OJB's Persitence Broker</sample>
  </group>
 
  <group name="Other Links">
    <note>Additional link to database access technologies</note>
-
    <sample name="JDO Website" href="http://java.sun.com/products/jdo/">JDO website</sample>
    <sample name="JDO Central" href="http://www.jdocentral.com/">JDO community website</sample>
    <sample name="ODMG Website" href="http://www.odmg.org/">ODMG website</sample>
    <sample name="JDO Cocoon Wiki Documentation" href="http://wiki.cocoondev.org/Wiki.jsp?page=OJB">
     Notes of a first experiment using OJB with Cocoon.</sample>
  </group>
-
 </samples>
