@@ -24,17 +24,30 @@
     </authors>
   </header>
   <body>
-    <s1 title="booleanfield widget">
+    <s1 title="Concept">
       <p>An fd:booleanfield is a field that has a value of
       true or false. Usually is rendered as a checkbox.</p>
 
-      <p>Configuration example:</p>
+      <p>It is different from a <link href="widget_field.html">field widget</link>
+      with a <code>boolean</code> datatype because an HTML checkbox submits
+      no request parameter if the checkbox is unchecked. If you would render
+      it instead as a listbox with true and false values, you could also
+      use a regular field widget. Since the styling preference might change over
+      time, it is however better to use consistently the fd:booleanfield widget.</p>
+    </s1>
 
+    <s1 title="Configuration">
       <source><![CDATA[<fd:booleanfield id="...">
   <fd:label>...</fd:label>
   <fd:help>...</fd:help>
   <fd:hint>...</fd:hint>
+  <fd:on-value-changed>
+     [...]
+  </fd:on-value-changed>
 </fd:booleanfield>]]></source>
+
+      <p>See <link href="widget_field.html">field wiget</link> for a description of the
+      configuration options.</p>
     </s1>
   </body>
 </document>

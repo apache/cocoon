@@ -24,45 +24,67 @@
     </authors>
   </header>
   <body>
-    <s1 title="field widget">
+    <s1 title="Concept">
       <p>The field widget is the most common widget. It is used both for
       text boxes or selection lists. It can be associated with different
       datatypes such as string, long or date to ask for different types of data.</p>
 
-      <p>[pasted the following text here from the sample, still needs some editing to fit in]</p>
+      <figure src="images/forms_field_datatype_relation.png" alt="Diagram showing the associations between field, datatype, convertor, selection list and validation rules."/>
 
-      <p>A field widget can be associated with a datatype. The function of the datatype
-      is to convert the string value entered by the user to a more specific type
-      like a number or a date (and vice versa, convert them back to strings)
-      (this part is actually delegated to a seperate object: a Convertor).
-      The datatype also performs the validation. (This split-up between "widget"
-      and "datatype" is specific for the field widget -- it is perfectly possible
-      to make widgets that have nothing to do with datatypes). In this way, a
-      field widget contains strongly-typed data. For example, if you associated
-      a long datatype with a field widget, then you can be sure that when you
-      retrieve the widget's value, you will get a Long object after the
-      form was validated successfully.</p>
+      <s2 title="Datatypes">
+        <p>A datatype represents a certain type of data, such as a
+        string, integer, decimal or date. Each datatype matches to a certain
+        Java class. If you associate a field widget with a datatype, its
+        setValue(Object) and getValue() methods will take, respectively
+        return objects that are instances of that Java class (or subclasses
+        thereof).</p>
 
-      <p>The reasoning behind the base attribute on the fd:datatype element
-      is that you are actually defining a new datatype, based on the built-in
-      "string" or "long" datatype, and customise it with validation rules
-      (and possibly other parameters).</p>
+        <p>Each datatype is associated with a <strong>convertor</strong>.
+        The task of the convertor is to convert from string representation
+        to object representation, and vice versa.</p>
 
-      <s2 title="Defining a selection list for a field">
+        <p>The string to object conversion usually happens when converting
+        the value entered by the user to an object. This process can
+        fail if the user entered an incorrect string, for example
+        <code>abc</code> when a number is required. In this case
+        an appropriate validation error will be set on the widget.
+        String to object conversion also happens when parsing data
+        in selection lists (if the selection list is retrieved as XML)
+        and can also be used as part of the <link href="binding.html">binding</link>.</p>
+
+        <p>The object to string conversion happens when the state
+        of the widget is spit out as XML, this is mostly when injecting
+        the widget XML in the publishing pipeline.</p>
+
+        <p>By having a field widget associated with a datatype, you can be sure
+        that, after successful validation of the widget, retrieving the value
+        of the widget will give you an object of the correct type.</p>
+
+        <p>The available datatypes and their respective convertors are
+        documented in a <link href="datatypes.html">separate document</link>.</p>
+      </s2>
+
+      <s2 title="Selection lists">
         <p>A field widget can furthermore be associated with a selection list.
         This makes that the field widget could be rendered either as a textbox
         or a list, depending on whether its datatype has a selection list.
-        For an example of selection lists, see the "Form1" example provided with
-        CForms. The selection-list is related with the datatype: the values in
-        the selection-list should be of the same type as the datatype.</p>
+        The selection list is related with the datatype: the values in
+        the selection list should be of the same type as the datatype.</p>
 
-        <figure src="images/forms_field_datatype_relation.png" alt="Diagram showing the associations between field, datatype, convertor, selection list and validation rules."/>
+        <p>Selection list data can be specified directly in the form definition
+        (for short, unchanging lists), retrieved from external sources (i.e.
+        a Cocoon pipeline), or pulled from an oject structure. Full details on
+        selection lists are also in a <link href="datatypes.html">separate document</link>.</p>
+      </s2>
 
+      <s2 title="Conclusion">
         <p>If we wouldn't make these datatype and selection list associations,
         we would need to create specific widgets for each possible combination:
         StringField, LongField, DateField, StringSelectionList, LongSelectionList, ...</p>
       </s2>
+    </s1>
 
+    <s1 title="Configuration">
       <p>Configuration example:</p>
 
       <source><![CDATA[<fd:field id="..." required="true|false">
@@ -73,16 +95,22 @@
      [...]
   </fd:datatype>
   <fd:selection-list .../>
+  <fd:validation>
+     [...]
+  </fd:validation>
   <fd:on-value-changed>
-    ...
+     [...]
   </fd:on-value-changed>
 </fd:field>]]></source>
 
       <p>The field element takes a required <strong>id</strong> attribute.
-      This id should be unique among all widgets in the same container (usually the form).</p>
+      This id should be unique among all widgets in the same container (i.e. inside
+      the same fd:widgets element).</p>
 
       <p>The <strong>required</strong> attribute is optional, by default it is false.
-      It indicates whether this field is required.</p>
+      It indicates whether this field is required. This is a static property of the
+      widget. If you want the field to be "conditionally required", then set this
+      to false and use custom validation logic to check the requiredness of the field.</p>
 
       <p>The <strong>fd:label</strong> element contains the label for this widget.
       This element is optional. It can contain mixed content. For internationalised
@@ -101,14 +129,18 @@
       on which built-in type this datatype should be based. The contents
       of the fd:datatype element can contain further configuration
       information for the datatype. The possible datatypes and their
-      configuration options are described here.</p>
+      configuration options are described <link href="datatypes.html">over here</link>.</p>
 
       <p>The <strong>fd:selection-list</strong> element is used to associate
-      a selection list with this field. See Forms Datatype Reference for more details.</p>
+      a selection list with this field. See <link href="datatypes.html">Datatypes</link>
+      for more details.</p>
+
+      <p>The <strong>fd:validation</strong> element specifies widget validators.
+      See <link href="validation.html">Validation</link> for more details.</p>
 
       <p>The <strong>fd:on-value-changed</strong> element specifies event
       handlers to be executed in case the value of this field changes.
-      See also Forms Event Handling. The interface to be implemented
+      See also <link href="eventhandling.html">Event Handling</link>. The interface to be implemented
       for Java event listeners is <code>org.apache.cocoon.forms.event.ValueChangedListener</code>.
       The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ValueChangedEvent</code>.</p>
 
