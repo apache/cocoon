@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-13 14:44:16 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-13 14:46:24 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -173,7 +173,7 @@ class RepositoryClassLoader extends ClassLoader {
 
                     while (process) {
                         if (pos < buffer.length) {
-                            n = in.read (buffer, pos, buffer.length - pos));
+                            n = in.read (buffer, pos, buffer.length - pos);
                             if (n != -1) {
                                 pos += n;
                             } else {
