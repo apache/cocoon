@@ -35,7 +35,7 @@ import org.apache.cocoon.environment.Session;
  * are different.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestWrapper.java,v 1.6 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: RequestWrapper.java,v 1.7 2004/03/11 14:21:56 cziegeler Exp $
  */
 public final class RequestWrapper implements Request {
 
@@ -54,6 +54,9 @@ public final class RequestWrapper implements Request {
     /** raw mode? **/
     private final boolean rawMode;
 
+    /** The request uri */
+    private String requestURI;
+    
     /**
      * Constructor
      */
@@ -83,6 +86,7 @@ public final class RequestWrapper implements Request {
             else
                 this.queryString += '&' + this.req.getQueryString();
         }
+        this.requestURI = this.req.getRequestURI();
     }
 
     public Object get(String name) {
@@ -267,7 +271,7 @@ public final class RequestWrapper implements Request {
     }
 
     public String getRequestURI() {
-        return this.req.getRequestURI();
+        return this.requestURI;
     }
 
     public String getSitemapURI() {
@@ -313,4 +317,12 @@ public final class RequestWrapper implements Request {
     public String getAuthType() {
         return this.req.getAuthType();
     }   
+    
+    public void setRequestURI(String prefix, String uri) {
+        StringBuffer buffer = new StringBuffer(this.getContextPath());
+        buffer.append('/');
+        buffer.append(prefix);
+        buffer.append(uri);
+        this.requestURI = buffer.toString();
+    }
 }

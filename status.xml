@@ -55,7 +55,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.273 2004/03/11 09:56:47 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.274 2004/03/11 14:21:56 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -210,6 +210,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     An internal redirect is now handled the same way as an external redirect would be handled.
+     This includes that the error handler of the called pipeline is invoked in case of an error.
+   </action>
    <action dev="CZ" type="update" fixes-bug="27188" due-to-email="durdina@asset.sk">
      Set the default encoding for the Portlet Environment.
    </action>
