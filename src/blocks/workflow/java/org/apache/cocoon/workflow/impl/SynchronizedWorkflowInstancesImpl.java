@@ -65,6 +65,9 @@ import org.apache.log4j.Category;
 /**
  * An object of this class encapsulates a set of synchronized
  * workflow instances.
+ *
+ * FIXME - Remove dependency to log4j
+ * 
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
  */
 public class SynchronizedWorkflowInstancesImpl implements SynchronizedWorkflowInstances {

@@ -80,8 +80,10 @@ import org.xml.sax.SAXException;
 /**
  * Various utility methods to work with JAXP.
  *
+ * FIXME Use the usual Cocoon way: Parser component, Source Resolver etc.
+ * 
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: DocumentHelper.java,v 1.3 2004/03/01 20:54:30 cziegeler Exp $
+ * @version $Id: DocumentHelper.java,v 1.4 2004/03/01 21:00:27 cziegeler Exp $
  */
 public class DocumentHelper {
     

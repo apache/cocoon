@@ -85,8 +85,10 @@ import org.w3c.dom.Element;
  * <li>the event that caused the transition (omitted in the first version).</li>
  * </ul>
  * 
+ * FIXME - Remove dependency to Xerces (XPathAPI)
+ * 
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
- * @version $Id: History.java,v 1.2 2004/03/01 20:11:17 joerg Exp $
+ * @version $Id: History.java,v 1.3 2004/03/01 21:00:27 cziegeler Exp $
  */
 public abstract class History implements WorkflowListener {
     public static final String WORKFLOW_ATTRIBUTE = "workflow";
