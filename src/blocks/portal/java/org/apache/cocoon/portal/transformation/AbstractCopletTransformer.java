@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.4 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.5 2003/12/11 15:36:04 cziegeler Exp $
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
@@ -93,27 +93,37 @@ extends AbstractSAXTransformer {
 
     protected CopletInstanceData getCopletInstanceData() 
     throws SAXException {
+        return this.getCopletInstanceData(null);
+    }
+    
+    protected CopletInstanceData getCopletInstanceData(String copletId) 
+    throws SAXException {
         PortalService portalService = null;
         try {
 
             portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
             // determine coplet id
-            String copletId = null;            
             Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-            if (context != null) {
-                copletId = (String)context.get(Constants.COPLET_ID_KEY);
-            } else {
+            if ( context == null ) {
+                // set portal name
                 try {
-                    copletId = this.parameters.getParameter(COPLET_ID_PARAM);
-                        
-                    // set portal name
-                    try {
-                        portalService.setPortalName(this.parameters.getParameter(PORTAL_NAME_PARAM));
-                    } finally {
-                    }
+                    portalService.setPortalName(this.parameters.getParameter(PORTAL_NAME_PARAM));
                 } catch (ParameterException e) {
-                    throw new SAXException("copletId and portalName must be passed as parameter or in the object model within the parent context.");
+                    throw new SAXException("portalName must be passed as parameter or in the object model within the parent context.");
+                }
+            }
+            
+            if ( copletId == null ) {
+                if (context != null) {
+                    copletId = (String)context.get(Constants.COPLET_ID_KEY);
+                } else {
+                    try {
+                        copletId = this.parameters.getParameter(COPLET_ID_PARAM);
+                            
+                    } catch (ParameterException e) {
+                        throw new SAXException("copletId must be passed as parameter or in the object model within the parent context.");
+                    }
                 }
             }
             if (copletId == null) {
