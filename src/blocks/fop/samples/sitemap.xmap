@@ -115,6 +115,15 @@
                 <map:serialize type="fo2pdf"/>
             </map:match>
 
+            <!-- reuse the XSP caching example for our caching test -->
+            <map:match pattern="cache-test-*-*-*.pdf">
+                <map:generate src="cocoon://samples/xsp/java/cacheable?pageKey={1}&amp;other={2}&amp;validity=30"/>
+                <map:transform src="cache-test/xsp-sample-to-fo.xsl">
+                    <map:parameter name="pages" value="{3}"/>
+                </map:transform>
+                <map:serialize type="fo2pdf"/>
+            </map:match>
+
         </map:pipeline>
 
     </map:pipelines>
