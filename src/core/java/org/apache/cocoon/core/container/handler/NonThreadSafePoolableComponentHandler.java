@@ -53,7 +53,7 @@ import org.apache.cocoon.core.container.ComponentFactory;
  *
  * @version CVS $Id$
  */
-public class PoolableComponentHandler
+public class NonThreadSafePoolableComponentHandler
 extends AbstractFactoryHandler {
     
     /** The default max size of the pool */
@@ -92,7 +92,7 @@ extends AbstractFactoryHandler {
      *                managed by the ComponentHandler.
      * @param config The configuration to use to configure the pool.
      */
-    public PoolableComponentHandler( final ComponentInfo info,
+    public NonThreadSafePoolableComponentHandler( final ComponentInfo info,
                                      final Logger logger,
                                      final ComponentFactory factory,
                                      final Configuration config )
@@ -150,7 +150,7 @@ extends AbstractFactoryHandler {
      * @throws Exception An exception may be thrown as described above or if there is an exception
      *  thrown by the ObjectFactory's newInstance() method.
      */
-    protected Object doGet() throws Exception {
+    protected Object getFromPool() throws Exception {
         Object poolable;
         synchronized( this.semaphore ) {
             // Look for a Poolable at the end of the m_ready list
@@ -185,7 +185,7 @@ extends AbstractFactoryHandler {
      *
      * @param poolable Poolable to return to the pool.
      */
-    protected void doPut( final Object poolable ) {
+    protected void putIntoPool( final Object poolable ) {
         try {
             this.factory.enteringPool(poolable);
         } catch (Exception ignore) {
@@ -227,5 +227,20 @@ extends AbstractFactoryHandler {
     
     protected void doInitialize() {
         // nothing to do here
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.handler.AbstractComponentHandler#doGet()
+     */
+    protected Object doGet() throws Exception {
+        return this.getFromPool();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.core.container.handler.AbstractComponentHandler#doPut(java.lang.Object)
+     */
+    protected void doPut(Object component) throws Exception {
+        this.putIntoPool(component);
     }
 }
