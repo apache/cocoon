@@ -24,7 +24,6 @@
   <menu label="Other Planning">
     <menu-item label="Release Plan" href="release.html"/>
     <menu-item label="Cocoon Samples" href="samples.html"/>
-    <menu-item label="Entity Catalogs" href="catalog.html"/>
     <menu-item label="Proposed TOC" href="proposed-toc.html"/>
   </menu>
 </book>

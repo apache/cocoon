@@ -63,9 +63,6 @@
    <li><link href="samples.html">Refactoring of Cocoon Samples</link>
     - there are still some old samples that are not yet moved under the
     new webapp/samples/ structure ... you can help</li>
-   <li><link href="catalog.html">Entity Catalogs</link>
-    - stuff that needs to happen the to entity resolver after the move to
-    Avalon of Source resolving</li>
    <li><link href="proposed-toc.html">Proposed TOC, Cocoon Guide</link></li>
    <li>See the general <link href="../todo.html">To Do</link> list 
     and the <code>cocoon-dev</code> email archives for other issues</li>
