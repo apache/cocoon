@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.cocoon.util.jxpath.DOMFactory;
 import org.apache.commons.jxpath.JXPathContext;
@@ -31,7 +30,7 @@ import org.w3c.dom.Node;
  * Jakarta Commons <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>.
  *
- * @version CVS $Id: JXPathBindingBase.java,v 1.5 2004/05/07 16:43:42 mpo Exp $
+ * @version CVS $Id: JXPathBindingBase.java,v 1.6 2004/05/07 22:04:20 joerg Exp $
  */
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 

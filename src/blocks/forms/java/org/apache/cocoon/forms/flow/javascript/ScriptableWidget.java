@@ -17,7 +17,6 @@
 package org.apache.cocoon.forms.flow.javascript;
 import org.apache.cocoon.forms.formmodel.AggregateField;
 import org.apache.cocoon.forms.formmodel.BooleanField;
-import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Field;
 import org.apache.cocoon.forms.formmodel.MultiValueField;
 import org.apache.cocoon.forms.formmodel.Output;
@@ -31,7 +30,7 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.4 2004/05/07 16:43:43 mpo Exp $
+ * @version $Id: ScriptableWidget.java,v 1.5 2004/05/07 22:04:20 joerg Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
