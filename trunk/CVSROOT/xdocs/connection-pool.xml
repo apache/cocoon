@@ -56,42 +56,42 @@ wrapper.classpath=/usr/local/java/cocoon/lib/turbine-pool.jar
         for help or try on your own. It is quite easy to add support for your favorite
         database.</p>
      <source>
-        # These are your database settings, look in the
-        # org.apache.turbine.util.db.pool.* package for more information.
-        processor.xsp.pool.database.default.driver=oracle.jdbc.driver.OracleDriver
-        processor.xsp.pool.database.default.url=jdbc:oracle:thin:@localhost:1521:ORCL
-        processor.xsp.pool.database.default.username=dbUser
-        processor.xsp.pool.database.default.password=dbPass
-        processor.xsp.pool.database.default.maxConnections=3
-        processor.xsp.pool.database.default.expiryTime=3600000
-        # These are the supported jdbc-drivers and their adaptors.
-        # These properties are used by the DBFactory.
-        processor.xsp.pool.database.adaptor=DBWeblogic,DBOracle,DBInstantDB,DBPostgres,DBSybase,DBInformix
-        processor.xsp.pool.database.adaptor.DBWeblogic=weblogic.jdbc.pool.Driver
-        processor.xsp.pool.database.adaptor.DBOracle=oracle.jdbc.driver.OracleDriver
-        processor.xsp.pool.database.adaptor.DBInstantDB=org.enhydra.instantdb.jdbc.idbDriver
-        processor.xsp.pool.database.adaptor.DBPostgres=postgresql.Driver
-        processor.xsp.pool.database.adaptor.DBInformix=com.informix.jdbc.IfxDriver
-        processor.xsp.pool.database.adaptor.DBSybase=com.sybase.jdbc.SybDriver
-        # The full path name to a pool log file
-        # if not given, commands to log events using org.apache.turbine.util.Log will be ignored.
-        # This file must already exist and be writable.
-        # Default: none
-        #
-        processor.xsp.pool.logfile=/opt/apache/var/log/dbPool.log
-     </source>
+# These are your database settings, look in the
+# org.apache.turbine.util.db.pool.* package for more information.
+processor.xsp.pool.database.default.driver=oracle.jdbc.driver.OracleDriver
+processor.xsp.pool.database.default.url=jdbc:oracle:thin:@localhost:1521:ORCL
+processor.xsp.pool.database.default.username=dbUser
+processor.xsp.pool.database.default.password=dbPass
+processor.xsp.pool.database.default.maxConnections=3
+processor.xsp.pool.database.default.expiryTime=3600000
+# These are the supported jdbc-drivers and their adaptors.
+# These properties are used by the DBFactory.
+processor.xsp.pool.database.adaptor=DBWeblogic,DBOracle,DBInstantDB,DBPostgres,DBSybase,DBInformix
+processor.xsp.pool.database.adaptor.DBWeblogic=weblogic.jdbc.pool.Driver
+processor.xsp.pool.database.adaptor.DBOracle=oracle.jdbc.driver.OracleDriver
+processor.xsp.pool.database.adaptor.DBInstantDB=org.enhydra.instantdb.jdbc.idbDriver
+processor.xsp.pool.database.adaptor.DBPostgres=postgresql.Driver
+processor.xsp.pool.database.adaptor.DBInformix=com.informix.jdbc.IfxDriver
+processor.xsp.pool.database.adaptor.DBSybase=com.sybase.jdbc.SybDriver
+# The full path name to a pool log file
+# if not given, commands to log events using org.apache.turbine.util.Log will be ignored.
+# This file must already exist and be writable.
+# Default: none
+#
+processor.xsp.pool.logfile=/opt/apache/var/log/dbPool.log
+</source>
 
      <p> The <strong>default</strong> is by convention the default connection used
          by the Turbine Connection Pool.  To define a Named connection, add new entries
          with the word "default" replaced with the name you want.  Here is an example
          for defining a connection to an Oracle database called "helpdesk":</p>
      <source>
-        processor.xsp.pool.database.helpdesk.driver=oracle.jdbc.driver.OracleDriver
-        processor.xsp.pool.database.helpdesk.url=jdbc:oracle:thin:@localhost:1521:ORCL
-        processor.xsp.pool.database.helpdesk.username=dbUser
-        processor.xsp.pool.database.helpdesk.password=dbPass
-        processor.xsp.pool.database.helpdesk.maxConnections=3
-        processor.xsp.pool.database.helpdesk.expiryTime=3600000
+processor.xsp.pool.database.helpdesk.driver=oracle.jdbc.driver.OracleDriver
+processor.xsp.pool.database.helpdesk.url=jdbc:oracle:thin:@localhost:1521:ORCL
+processor.xsp.pool.database.helpdesk.username=dbUser
+processor.xsp.pool.database.helpdesk.password=dbPass
+processor.xsp.pool.database.helpdesk.maxConnections=3
+processor.xsp.pool.database.helpdesk.expiryTime=3600000
      </source>
 
      <p>The maxConnections setting is the maximum number

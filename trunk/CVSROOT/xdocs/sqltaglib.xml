@@ -94,53 +94,53 @@
         <p>Let's step through an example of using a connection defined to be "helpdesk"
            that uses oracle. In the cocoon.properties have something simular to this:</p>
 		<source>
-           #### ORACLE
-           processor.xsp.pool.database.helpdesk.driver=oracle.jdbc.driver.OracleDriver
-           processor.xsp.pool.database.helpdesk.url=jdbc:oracle:thin:@localhost:1521:dldf
-           processor.xsp.pool.database.helpdesk.username=dnUser
-           processor.xsp.pool.database.helpdesk.password=dbPass
-           # The number of database connections to cache in the ConnectionPool.
-           processor.xsp.pool.database.helpdesk.maxConnections=3
+#### ORACLE
+processor.xsp.pool.database.helpdesk.driver=oracle.jdbc.driver.OracleDriver
+processor.xsp.pool.database.helpdesk.url=jdbc:oracle:thin:@localhost:1521:dldf
+processor.xsp.pool.database.helpdesk.username=dnUser
+processor.xsp.pool.database.helpdesk.password=dbPass
+# The number of database connections to cache in the ConnectionPool.
+processor.xsp.pool.database.helpdesk.maxConnections=3
         </source>
          <p>then in my xml file, I would use the connection pool name "helpdesk" as:</p>
 		<source><![CDATA[
-         <sql:execute-query>
-            <sql:use-connection>helpdesk</sql:use-connection>
-            <sql:skip-rows>0</sql:skip-rows>
-            <sql:max-rows>50</sql:max-rows>
-            <sql:null-indicator>y</sql:null-indicator>
-            <sql:count-attribute>BOB</sql:count-attribute>
-            <sql:doc-element>ROWSET</sql:doc-element>
-            <sql:row-element>ROW</sql:row-element>
-            <sql:tag-case>preserve</sql:tag-case>
-            <sql:id-attribute>ID</sql:id-attribute>
-            <sql:query>
-               SELECT last_name, first_name, initials
-               FROM EMPLOYEE
-           </sql:query>
-        </sql:execute-query>
-   ]]></source>
+<sql:execute-query>
+  <sql:use-connection>helpdesk</sql:use-connection>
+  <sql:skip-rows>0</sql:skip-rows>
+  <sql:max-rows>50</sql:max-rows>
+  <sql:null-indicator>y</sql:null-indicator>
+  <sql:count-attribute>BOB</sql:count-attribute>
+  <sql:doc-element>ROWSET</sql:doc-element>
+  <sql:row-element>ROW</sql:row-element>
+  <sql:tag-case>preserve</sql:tag-case>
+  <sql:id-attribute>ID</sql:id-attribute>
+  <sql:query>
+    SELECT last_name, first_name, initials
+    FROM EMPLOYEE
+  </sql:query>
+</sql:execute-query>
+]]></source>
    <p>Notice that for the connection pool, you do <strong>not</strong> use the <strong>driver</strong>, 
       <strong>dburl</strong>, <strong>username</strong>,
        nor <strong>password</strong> tags. 
      Lets look at an example that does not use the connection pool:</p>
 		<source><![CDATA[
-          <sql:execute-query>
-             <sql:driver>com.informix.jdbc.IfxDriver</sql:driver>
-             <sql:dburl>jdbc:informix-sqli://localhost:1526/database:informixserver=server</sql:dburl>
-             <sql:username>dbUser</sql:username>
-             <sql:password>dbPass</sql:password>
-             <sql:skip-rows>0</sql:skip-rows>
-             <sql:max-rows>50</sql:max-rows>
-             <sql:tag-case>preserve</sql:tag-case>
-             <sql:count-attribute>count</sql:count-attribute>
-             <sql:doc-element>ROWSET</sql:doc-element>
-             <sql:row-element>ROW</sql:row-element>
-             <sql:null-indicator>omit</sql:null-indicator>
-             <sql:id-attribute>ID</sql:id-attribute>
-             <sql:query>SELECT * FROM CUSTOMER;</sql:query>
-           </sql:execute-query>
-   ]]></source>
+<sql:execute-query>
+  <sql:driver>com.informix.jdbc.IfxDriver</sql:driver>
+  <sql:dburl>jdbc:informix-sqli://localhost:1526/database:informixserver=server</sql:dburl>
+  <sql:username>dbUser</sql:username>
+  <sql:password>dbPass</sql:password>
+  <sql:skip-rows>0</sql:skip-rows>
+  <sql:max-rows>50</sql:max-rows>
+  <sql:tag-case>preserve</sql:tag-case>
+  <sql:count-attribute>count</sql:count-attribute>
+  <sql:doc-element>ROWSET</sql:doc-element>
+  <sql:row-element>ROW</sql:row-element>
+  <sql:null-indicator>omit</sql:null-indicator>
+  <sql:id-attribute>ID</sql:id-attribute>
+  <sql:query>SELECT * FROM CUSTOMER;</sql:query>
+</sql:execute-query>
+]]></source>
    </s1>
 
 	<s1 title="Column Names and Formatting">
@@ -159,9 +159,9 @@
 		<p>For each sql:column-format element, a new instance of the Format subclass specified by the sql:class element is constructed using the construction parameters specified by the sql:parameter elements. The constructor must accept only Strings as parameters; if other datatypes are required for a class you wish to use, you must provide your own decorator wrapper for that class. Values from the named column are formatting using the format method. Here is an example:</p>
 		<source><![CDATA[
 <sql:column-format>
-	<sql:name>my_date</sql:name>
-	<sql:class>java.text.SimpleDateFormat</sql:class>
-	<sql:parameter>MM/dd/yyyy</sql:parameter>
+  <sql:name>my_date</sql:name>
+  <sql:class>java.text.SimpleDateFormat</sql:class>
+  <sql:parameter>MM/dd/yyyy</sql:parameter>
 </sql:column-format>
 ]]></source>
 	</s1>

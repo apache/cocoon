@@ -115,12 +115,12 @@
 		
 		<p>This is how to set up a file resource that you want to modify.</p>
 		<source><![CDATA[
-	<fp:resource id="external-item">
-		<fp:resource-file>../index.xml</fp:resource-file>
-		<fp:resource-node>item[position()=<request:get-parameter name="item"/>]</fp:resource-node>
-		<fp:default-mode>insert-before</fp:default-mode>
-	</fp:resource>
-	]]></source>
+<fp:resource id="external-item">
+  <fp:resource-file>../index.xml</fp:resource-file>
+  <fp:resource-node>item[position()=<request:get-parameter name="item"/>]</fp:resource-node>
+  <fp:default-mode>insert-before</fp:default-mode>
+</fp:resource>
+]]></source>
 		
 		<p>We are nesting an element from the Request TagLib inside an FP element to build an XPath on the fly from the "item" request parameter. Now you can use <code>fp:read</code> and <code>fp:write</code> elements to read and/or write to this file, inserting a new "item" Node before the current one, from text in a Form field.</p>
 
@@ -131,10 +131,10 @@
 
 		<p>Here, I want to get the Title of all onf the Items, to build a Menu.</p>
 		<source><![CDATA[
-	<menu action="item-add.xml?item=">
-		<fp:read select="../item/title" from="external-item" as="node"/>
-	</menu>
-	]]></source>		
+<menu action="item-add.xml?item=">
+  <fp:read select="../item/title" from="external-item" as="node"/>
+</menu>
+]]></source>		
 
 		<p>The <code>fp:read</code> element is replaced by the contents of the read.</p>
 		<p>The <code>from</code> attribute is the name of the resource you want to read.</p>
@@ -155,19 +155,19 @@
 		<p>Here we make a Form <code>input</code> Field, so the name is important, but it does not need to relate to the name of the location where the data is to be stored. The parent deos not have to be <code>input</code>, use whatever you want.</p>
 
 		<source><![CDATA[
-	<input name="title">
-		<xsp:attribute name="label"><fp:read select="title/label" from="default-item"/></xsp:attribute>
-		<fp:if-post>
-			<fp:write to="external-item" select="title">
-				<request:get-parameter name="title"/>
-			</fp:write>
-			<fp:read select="title" from="external-item"/>
-		</fp:if-post>
-		<fp:if-get>
-			<fp:read select="title/value" from="default-item"/>
-		</fp:if-get>
-	</input>
-	]]></source>			
+<input name="title">
+  <xsp:attribute name="label"><fp:read select="title/label" from="default-item"/></xsp:attribute>
+  <fp:if-post>
+    <fp:write to="external-item" select="title">
+      <request:get-parameter name="title"/>
+    </fp:write>
+    <fp:read select="title" from="external-item"/>
+  </fp:if-post>
+  <fp:if-get>
+    <fp:read select="title/value" from="default-item"/>
+  </fp:if-get>
+</input>
+]]></source>			
 
 		<p>I create a <code>label</code> attribute in the <code>input</code> element, using XSP, but the content comes from reading Text from the defaults file (I would have had to set this file up previously as a <code>fp:resource</code>). The default value for the <code>as</code> attribute is "string", so I am leaving it out. I understand Xerces prefers you to write attributes before elements.</p>
 		<p>Next I write, only if someone is POSTing a Form.</p>
