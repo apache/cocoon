@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.4 2003/08/16 01:44:12 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.5 2003/09/07 06:13:39 vgritsenko Exp $ -->
 
 <samples name="Batik Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <group name="Main examples page.">
     <sample name="Back" href="..">to Cocoon examples main page</sample>
+  </group>
+
+  <group name="Hello World!">
+    <sample name="SVG" href="../hello-world/hello.svg">
+      SVG from the main samples
+    </sample>
+    <sample name="JPG" href="hello.jpeg">
+      Same hello in JPG format
+    </sample>
+    <sample name="PNG" href="hello.png">
+      Hello in PNG format
+    </sample>
   </group>
 
   <group name="Batik Logo">
@@ -60,5 +72,4 @@
       Mozilla with native SVG support
     </sample>
   </group>
-
 </samples>
