@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -451,7 +450,7 @@ implements ServiceSelector, Serviceable, Configurable {
      * Set the ComponentLocatorImpl that allows access to a possible
      * parent of this selector
      * @param locator
-     * @throws ComponentException
+     * @throws ServiceException
      */
     public void setParentLocator(ServiceManager locator, String role)
     throws ServiceException {

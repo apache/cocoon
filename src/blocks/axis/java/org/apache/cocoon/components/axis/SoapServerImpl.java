@@ -145,7 +145,7 @@ public class SoapServerImpl extends AbstractLogEnabled
      * Compose this server
      *
      * @param manager a <code>ServiceManager</code> value
-     * @exception ComponentException if an error occurs
+     * @exception ServiceException if an error occurs
      */
     public void service(ServiceManager manager)
         throws ServiceException

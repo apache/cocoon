@@ -37,7 +37,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * The syntax to use is LAYOUT_ID/PATH or LAYOUT_KEY:LAYOUT_ID/PATH
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: LayoutModule.java,v 1.2 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LayoutModule 
 implements InputModule, Serviceable, ThreadSafe {
@@ -98,7 +98,7 @@ implements InputModule, Serviceable, ThreadSafe {
             return value;
             
         } catch (ServiceException e) {
-            throw new ConfigurationException("ComponentException ", e);
+            throw new ConfigurationException("ServiceException ", e);
         } finally {
             this.manager.release(portalService);
         }

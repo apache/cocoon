@@ -94,7 +94,7 @@ import java.util.Enumeration;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: SearchGenerator.java,v 1.5 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SearchGenerator extends ServiceableGenerator
     implements Contextualizable, Initializable, Disposable
@@ -738,7 +738,7 @@ public class SearchGenerator extends ServiceableGenerator
             } catch (IOException ioe) {
                 throw new ProcessingException("IOException in search", ioe);
             } catch (ServiceException ce) {
-                throw new ProcessingException("ComponentException in search", ce);
+                throw new ProcessingException("ServiceException in search", ce);
             } finally {
                 if (lcs != null) {
                     this.manager.release(lcs);

@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.14 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
@@ -132,7 +132,7 @@ public class URICopletAdapter
 		} catch (ProcessingException pe) {
 			throw new SAXException("ProcessingException", pe);
 		} catch (ServiceException ce) {
-			throw new SAXException("ComponentException", ce);
+			throw new SAXException("ServiceException", ce);
 		} finally {
 			this.resolver.release(copletSource);
 			this.manager.release(portalService);

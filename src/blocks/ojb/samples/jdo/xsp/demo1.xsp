@@ -49,7 +49,7 @@
 				try {
 					pmf = (JdoPMF) manager.lookup(JdoPMF.ROLE);
 					persistenceManager = pmf.getPersistenceManager();
-				} catch (ComponentException cme) {
+				} catch (ServiceException cme) {
 					getLogger().error("Could not look up the PersistenceManager", cme);
 				}
 				<!-- Setting up the Bean -->
