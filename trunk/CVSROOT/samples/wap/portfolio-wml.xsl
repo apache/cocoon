@@ -27,7 +27,7 @@
      <br/>
      <br/>
      <small>
-      Copyright &#xA9; 1999<br/>
+      Copyright (C) 1999<br/>
       Apache Software Foundation.<br/>
       All rights reserved.
      </small>
