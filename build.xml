@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.10 2003/03/15 20:23:07 stefano Exp $:
+       CVS: $Id: build.xml,v 1.11 2003/03/15 23:27:39 stefano Exp $:
 
 ============================================================================ -->
 
@@ -593,7 +593,30 @@
     <!-- patch the welcome page to tell we have samples to show -->
     <xpatch directory="${webapp.samples}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>
   </target>
-  
+
+  <target name="scratchpad-samples" depends="prepare, init-xpatch" unless="unless.exclude.scratchpad">
+ 
+    <!-- copy sample files -->
+    <copy todir="${build.webapp.samples}" filtering="on">
+      <fileset dir="${scratchpad.samples}">
+       <exclude name="**/*.jpg"/>
+       <exclude name="**/*.gif"/>
+       <exclude name="**/*.png"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${build.webapp.samples}" filtering="off">
+      <fileset dir="${scratchpad.samples}">
+       <include name="**/*.jpg"/>
+       <include name="**/*.gif"/>
+       <include name="**/*.png"/>
+      </fileset>
+    </copy>
+
+    <!-- patch the samples page to tell we have scratchpad samples to show -->
+    <xpatch directory="${scratchpad.samples}" extension="xsamples" configuration="${build.webapp.samples}/samples.xml"/> 
+  </target>
+    
   <target name="block-samples" depends="prepare" unless="unless.exclude.webapp.samples">
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
@@ -613,12 +636,6 @@
     <copy file="${resources.styles}/cocoon.css" tofile="${build.webapp}/resources/styles/cocoon.css"/>
 
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
-
-    <copy todir="${build.webapp}/stylesheets" filtering="on">
-      <fileset dir="${webapp.samples}/stylesheets">
-        <include name="*.xsl*"/>
-      </fileset>
-    </copy>
     
     <copy todir="${build.webapp}/WEB-INF" filtering="on">
       <fileset dir="${webapp}/WEB-INF">
@@ -670,7 +687,7 @@
          target="patch"/>
   </target>
 
-  <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="unless.exclude.webapp.samples"/>
+  <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples, scratchpad-samples" unless="unless.exclude.webapp.samples"/>
  
   <target name="prepare-webapp-deprecated" depends="prepare-webapp,init-xpatch" unless="unless.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
