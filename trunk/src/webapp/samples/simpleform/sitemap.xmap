@@ -77,7 +77,7 @@
  <map:resources>
   <map:resource name="dynamic-page">
      <map:generate src="{target}.xsp" type="serverpages"/>
-     <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+     <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>
@@ -113,7 +113,7 @@
   <map:pipeline>
 
    <map:match pattern="">
-     <map:redirect-to uri="simpleform"/>
+     <map:redirect-to uri="sform"/>
    </map:match>
    
    <!-- ============ form validation using xsp and logicsheet ============== -->
@@ -147,15 +147,15 @@
       <map:parameter name="validate-set" value="testform"/>
       
       <!-- this is only applied if the validation has been successful -->
-      <!--map:generate src="success.xml"/>
+      <map:generate src="success.xml"/>
       <map:transform type="simpleform"/>
-      <map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
+      <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
          <map:parameter name="servletPath" value="{request:servletPath}"/>
          <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
          <map:parameter name="contextPath" value="{request:contextPath}"/>
          <map:parameter name="file" value=".xml"/>
       </map:transform>
-      <map:serialize/-->
+      <map:serialize/>
       <!-- because of the above serializer the "success" pipeline ends here. -->
 
     </map:act>
@@ -167,7 +167,7 @@
     <map:generate type="file" src="{1}.xml"/>    
     <map:transform type="sfinstance"/> <!-- extract the instance data -->
     <map:transform type="simpleform"/><!-- fill in the instance data, request parameters, and error tags -->
-     <map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
+     <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>

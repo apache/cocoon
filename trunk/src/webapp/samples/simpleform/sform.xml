@@ -43,6 +43,7 @@
        <para>
          Please enter your name: <input type="text" size="20" name="person/firstname"/>
          <input type="text" size="20" name="person/name"/>
+         <error name="person/name" when="too-large">max. <strong>10</strong> characters allowed</error>
        </para>
 
        <para>
@@ -56,7 +57,7 @@
        </para>
 
        <error name="*" when="ok"><para>All went <b>well.</b></para></error>
-       <error name="*" when-ge="error"><para>An <b>error</b> occurred.</para></error>
+       <error name="*" when-ge="error"><para>An <strong>error</strong> occurred.</para></error>
 
     </form>
 
