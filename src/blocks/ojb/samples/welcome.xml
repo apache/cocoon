@@ -53,7 +53,7 @@
       Low-level API that can be used directly by applications that don't need
       full fledged object level transactions.
     </note>
-    <sample name="XSP" href="">Sample using JDO in a XSP page. To be done.</sample>
+    <sample name="XSP" href="pb/xspdemo">Sample using JDO in a XSP page.</sample>
     <sample name="Cocoon Forms" href="">Sample using Cocoon Forms Binding. To be done.</sample>
     <sample name="JXForm" href="">Sample using JXForms. To be done.</sample>
   </group>
