@@ -54,9 +54,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.commons.jxpath.JXPathContext;
@@ -73,7 +75,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     private final String repeaterPath;
     private final String rowPath;
     private final String uniqueRowId;
-    private final String uniqueRowPath;
+    private final String uniqueRowIdPath;
+    private final Convertor uniqueRowIdConvertor;
+    private final Locale uniqueRowIdConvertorLocale;
     private final ValueJXPathBinding uniqueFieldBinding;
     private final JXPathBindingBase rowBinding;
     private final JXPathBindingBase insertRowBinding;
@@ -82,16 +86,30 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, String rowPath, String uniqueRowId,
-                                 String uniqueRowPath, JXPathBindingBase[] childBindings,
+    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, String rowPath, 
+                                 String uniqueRowId, String uniqueRowPath, 
+                                 JXPathBindingBase[] childBindings,
+                                 JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
+        this(repeaterId, repeaterPath, rowPath, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
+    }
+
+    /**
+     * Constructs RepeaterJXPathBinding
+     */
+    public RepeaterJXPathBinding(String repeaterId, String repeaterPath, String rowPath, 
+                                 String uniqueRowId, String uniqueRowPath, 
+                                 Convertor convertor, Locale convertorLocale, 
+                                 JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.uniqueRowId = uniqueRowId;
-        this.uniqueRowPath = uniqueRowPath;
+        this.uniqueRowIdPath = uniqueRowPath;
         this.uniqueFieldBinding =
-            new ValueJXPathBinding(uniqueRowId, uniqueRowPath, true, null, null, null);
+            new ValueJXPathBinding(uniqueRowId, uniqueRowPath, true, null, convertor, convertorLocale);
+        this.uniqueRowIdConvertor = convertor;
+        this.uniqueRowIdConvertorLocale = convertorLocale;
         this.rowBinding = new ComposedJXPathBindingBase(childBindings);
         this.insertRowBinding = insertBinding;
         this.deleteRowBinding = new ComposedJXPathBindingBase(deleteBindings);
@@ -154,9 +172,8 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         for (int i = 0; i < formRowCount; i++) {
             Repeater.RepeaterRow thisRow = repeater.getRow(i);
 
-            //TODO future might need data-conversion here
             Widget rowIdWidget = thisRow.getWidget(this.uniqueRowId);
-            String rowIdValue = (String) rowIdWidget.getValue();
+            Object rowIdValue = rowIdWidget.getValue();
 
             if (rowIdValue != null) {
                 //if rowIdValue != null --> iterate nodes to find match 
@@ -167,8 +184,15 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     JXPathContext rowContext =
                         repeaterContext.getRelativeContext(jxp);
 
-                    //TODO future might need data-conversion here
-                    String matchId = (String) rowContext.getValue(this.uniqueRowPath);
+                    Object matchId = rowContext.getValue(this.uniqueRowIdPath);
+                    if (matchId != null && this.uniqueRowIdConvertor != null) {
+                        if (matchId instanceof String) {
+                            matchId = this.uniqueRowIdConvertor.convertFromString((String)matchId, this.uniqueRowIdConvertorLocale, null);
+                        } else {
+                            getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
+                        }                            
+                    }                        
+
                     if (rowIdValue.equals(matchId)) {
                         // match! --> bind to children
                         this.rowBinding.saveFormToModel(thisRow, rowContext);
@@ -189,9 +213,16 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         while (rowPointers.hasNext()) {
             Pointer jxp = (Pointer) rowPointers.next();
             JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
-            //TODO future might need data-conversion here
-            String matchId = (String) rowContext.getValue(this.uniqueRowPath);
 
+            Object matchId = rowContext.getValue(this.uniqueRowIdPath);
+            if (matchId != null && this.uniqueRowIdConvertor != null) {
+                if (matchId instanceof String) {
+                    matchId = this.uniqueRowIdConvertor.convertFromString((String)matchId, this.uniqueRowIdConvertorLocale, null);
+                } else {
+                    getLogger().warn("Convertor ignored on backend-value which isn't of type String.");
+                }                            
+            }  
+            
             // check if matchPath was in list of updates, if not --> bind for delete
             if (!updatedRowIds.contains(matchId)) {
                 rowsToDelete.add(rowContext);

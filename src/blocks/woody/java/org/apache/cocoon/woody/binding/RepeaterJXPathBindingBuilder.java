@@ -50,6 +50,11 @@
 */
 package org.apache.cocoon.woody.binding;
 
+import java.util.Locale;
+
+import org.apache.cocoon.i18n.I18nUtils;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.w3c.dom.Element;
 
@@ -103,8 +108,20 @@ public class RepeaterJXPathBindingBuilder
             String rowPath = DomHelper.getAttribute(bindingElm, "row-path");
             String uniqueRowId =
                 DomHelper.getAttribute(bindingElm, "unique-row-id");
-            String uniquePath =
+            String uniqueRowIdPath =
                 DomHelper.getAttribute(bindingElm, "unique-path");
+
+
+            Convertor convertor = null;
+            Locale convertorLocale = Locale.US;
+            Element convertorEl = DomHelper.getChildElement(bindingElm, Constants.WD_NS, "convertor");
+            if (convertorEl != null) {
+                String datatype = DomHelper.getAttribute(convertorEl, "datatype");
+                String localeStr = convertorEl.getAttribute("datatype");
+                if (!localeStr.equals(""))
+                    convertorLocale = I18nUtils.parseLocale(localeStr);
+                convertor = assistant.getDatatypeManager().createConvertor(datatype, convertorEl);
+            }
 
             Element childWrapElement =
                 DomHelper.getChildElement(
@@ -139,14 +156,10 @@ public class RepeaterJXPathBindingBuilder
 
             RepeaterJXPathBinding repeaterBinding =
                 new RepeaterJXPathBinding(
-                    repeaterId,
-                    parentPath,
-                    rowPath,
-                    uniqueRowId,
-                    uniquePath,
-                    childBindings,
-                    insertBinding,
-                    deleteBindings);
+                    repeaterId, parentPath, rowPath,
+                    uniqueRowId, uniqueRowIdPath,
+                    convertor, convertorLocale, 
+                    childBindings, insertBinding, deleteBindings);
 
             return repeaterBinding;
         } catch (BindingException e) {
