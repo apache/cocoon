@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.22 2000-07-06 03:40:16 balld Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.23 2000-07-20 00:16:22 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.22 $ $Date: 2000-07-06 03:40:16 $
+ * @version $Revision: 1.23 $ $Date: 2000-07-20 00:16:22 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -155,15 +155,14 @@ public class XSPProcessor extends AbstractActor
             XSPLogicsheet logicsheet = new XSPLogicsheet(transformer, parser, null);
     
             String processorName = (String) c.get("processor");
-				XSPLanguageProcessor languageProcessor =
-					(XSPLanguageProcessor) this.factory.create(processorName);
+                XSPLanguageProcessor languageProcessor =
+                    (XSPLanguageProcessor) this.factory.create(processorName);
             this.languages.put(languageName, languageProcessor);
 
             String logicsheetName = (String) c.get("logicsheet");
             InputStream logicsheetInputStream = this.getClass().getResourceAsStream(logicsheetName);
-				if (logicsheetInputStream == null) throw new Exception("Resource '" +
-																	   logicsheetName +
-																	   "' could not be found.");
+            if (logicsheetInputStream == null) 
+                throw new Exception("Resource '" + logicsheetName + "' could not be found.");
             logicsheet.setStylesheet(this.parser.parse(new InputSource(logicsheetInputStream)));
    
             String preprocessorName = (String) c.get("preprocessor");
@@ -176,8 +175,8 @@ public class XSPProcessor extends AbstractActor
         } catch (SAXException e) {
             throw new RuntimeException(Utils.getStackTraceAsString(e.getException()));
         } catch (Exception e) {
-				throw new RuntimeException("Error while initializing XSP engine: " +
-										   Utils.getStackTraceAsString(e));
+            throw new RuntimeException("Error while initializing XSP engine: " +
+                                       Utils.getStackTraceAsString(e));
         }
     }
 
@@ -255,39 +254,42 @@ public class XSPProcessor extends AbstractActor
         byLanguage.put(language, this.store.get(resource.toString()));
       } catch (Exception ex) {
         // should we consider this fatal and throw an exception? (SM)
-				logger.log(this, "Logicsheet for namespace '" +
-						   namespace + "' not found at '" +
-						   location +
-						   "' due to " +
-						   ex,
-						   Logger.WARNING);
+        logger.log(this, "Logicsheet for namespace '" +
+                   namespace + "' not found at '" +
+                   location +
+                   "' due to " +
+                   ex,
+                   Logger.WARNING);
       }
 
       this.byNamespace.put(namespace, byLanguage);
     }
-		// BPM me thinks that this is where I need to put the pool information
-		// Load connection pool information
-		// Load namespace-mapped logicsheets
-		Configurations poolConf = conf.getConfigurations("pool");
-		Properties poolProperties = poolConf.getProperties();
-// 		Enumeration en = poolConf.keys();
-		
-// 		while (en.hasMoreElements()) {
-// 			String key = (String) en.nextElement();
-// 			String value = (String) poolConf.get(key);
-// 			logger.log("@@@"+key+"="+value+"@@@", Logger.DEBUG);
-//         }
-		try {
-			TurbineResourceService.setProperties(poolProperties);
-			logger.log("TurbineResources all set!!", Logger.DEBUG);
-		} catch (IOException ioexp) {
-			// should we consider this fatal and throw an exception? (SM)
-			logger.log(this,
-					   "Setting of TurbineResource properties failed due to " +
-					   ioexp,
-					   Logger.WARNING);
-		}
-		
+    
+    // Load connection pool information
+    // Load namespace-mapped logicsheets
+    Configurations poolConf = conf.getConfigurations("pool");
+    Properties poolProperties = poolConf.getProperties();
+    
+/*
+    Enumeration en = poolConf.keys();
+    
+    while (en.hasMoreElements()) {
+        String key = (String) en.nextElement();
+        String value = (String) poolConf.get(key);
+        logger.log("@@@"+key+"="+value+"@@@", Logger.DEBUG);
+    }
+*/    
+
+    try {
+        TurbineResourceService.setProperties(poolProperties);
+        logger.log("TurbineResources all set!!", Logger.DEBUG);
+    } catch (IOException ioexp) {
+        // should we consider this fatal and throw an exception? (SM)
+        logger.log(this,
+                   "Setting of TurbineResource properties failed due to " +
+                   ioexp,
+                   Logger.WARNING);
+    }
   }
 
   public Document process(Document document, Dictionary parameters)
@@ -415,8 +417,7 @@ public class XSPProcessor extends AbstractActor
           (
            (XSPLogicsheet)
            ((Hashtable) this.byNamespace.get("xsp")).get(languageName)
-          ).
-            apply(document, logicsheetParameters);
+          ).apply(document, logicsheetParameters);
   
   
         // Retrieve and format generated source code
@@ -605,11 +606,17 @@ public class XSPProcessor extends AbstractActor
   }
 
   public boolean hasChanged(Object context) {
-    if (!(context instanceof HttpServletRequest))
-      return true;               // Can't interpret context
+    if (!(context instanceof HttpServletRequest)) return true; // Can't interpret context
 
     HttpServletRequest request = (HttpServletRequest) context;
     String filename = Utils.getBasename(request, servletContext);
+
+    File sourceFile = new File(filename);
+    try {
+      filename = sourceFile.getCanonicalPath();
+    } catch (IOException e) {
+      filename = sourceFile.getAbsolutePath();
+    }
 
     // Get page from Cocoon cache
     PageEntry pageEntry = (PageEntry) this.store.get(filename);
