@@ -96,28 +96,115 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P�tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.24 2004/01/13 01:40:46 vgritsenko Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.25 2004/01/19 17:53:38 coliver Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
-    private Context avalonContext;
+    class CallContext {
+        CallContext caller;
+        Context avalonContext;
+        ServiceManager serviceManager;
+        FOM_JavaScriptInterpreter interpreter;
+        Environment environment;
+        ComponentManager componentManager;
+        Logger logger;
+        FOM_Request request;
+        FOM_Response response;
+        FOM_Session session;
+        FOM_Context context;
+        Scriptable parameters;
+        FOM_Log log;
+        WebContinuation lastContinuation;
 
-    private ServiceManager serviceManager;
+        public CallContext(CallContext caller,
+                           FOM_JavaScriptInterpreter interp,
+                           Environment env,
+                           ComponentManager manager,
+                           ServiceManager serviceManager,
+                           Context avalonContext,
+                           Logger logger,
+                           WebContinuation lastContinuation) {
+            this.caller = caller;
+            this.interpreter = interp;
+            this.environment = env;
+            this.componentManager = manager;
+            this.serviceManager = serviceManager;
+            this.avalonContext = avalonContext;
+            this.logger = logger;
+            this.lastContinuation = lastContinuation;
+        }
 
-    private FOM_JavaScriptInterpreter interpreter;
+        public FOM_Session getSession() {
+            if (session != null) {
+                return session;
+            }
+            Map objectModel = environment.getObjectModel();
+            session =
+                new FOM_Session(ObjectModelHelper.getRequest(objectModel).getSession(true));
+            session.setParentScope(getParentScope());
+            session.setPrototype(getClassPrototype(getParentScope(),
+                                                   "FOM_Session"));
+            return session;
+        }
 
-    private Environment environment;
-    private ComponentManager componentManager;
-    private Logger logger;
+        public FOM_Request getRequest() {
+            if (request != null) {
+                return request;
+            }
+            Map objectModel = environment.getObjectModel();
+            request = new FOM_Request(ObjectModelHelper.getRequest(objectModel));
+            request.setParentScope(getParentScope());
+            request.setPrototype(getClassPrototype(getParentScope(), 
+                                                   "FOM_Request"));
+            return request;
+        }
 
-    private FOM_Request request;
-    private FOM_Response response;
-    private FOM_Session session;
-    private FOM_Context context;
-    private Scriptable parameters;
-    private FOM_Log log;
+        public FOM_Context getContext() {
+            if (context != null) {
+                return context;
+            }
+            Map objectModel = getEnvironment().getObjectModel();
+            context =
+                new FOM_Context(ObjectModelHelper.getContext(objectModel));
+            context.setParentScope(getParentScope());
+            context.setPrototype(getClassPrototype(getParentScope(), 
+                                                   "FOM_Context"));
+            return context;
+        }
 
-    private WebContinuation lastContinuation;
+        public FOM_Response getResponse() {
+            if (response != null) {
+                return response;
+            }
+            Map objectModel = environment.getObjectModel();
+            response =
+                new FOM_Response(ObjectModelHelper.getResponse(objectModel));
+            response.setParentScope(getParentScope());
+            response.setPrototype(getClassPrototype(getParentScope(), 
+                                                    "FOM_Response"));
+            return response;
+        }
+        
+        public FOM_Log getLog() {
+            if (log != null) {
+                return log;
+            }
+            log = new FOM_Log(logger);
+            log.setParentScope(getParentScope());
+            log.setPrototype(getClassPrototype(getParentScope(), "FOM_Log"));
+            return log;
+        }
+
+        public Scriptable getParameters() {
+            return parameters;
+        }
+
+        public void setParameters(Scriptable parameters) {
+            this.parameters = parameters;
+        }
+    }
+
+    private CallContext currentCall;
 
     public String getClassName() {
         return "FOM_Cocoon";
@@ -135,41 +222,25 @@ public class FOM_Cocoon extends ScriptableObject {
         defineClass(scope, FOM_WebContinuation.class);
     }
 
-    void setup(FOM_JavaScriptInterpreter interp,
-               Environment env,
-               ComponentManager manager,
-               ServiceManager serviceManager,
-               Context avalonContext,
-               Logger logger) {
-        this.interpreter = interp;
-        this.environment = env;
-        this.componentManager = manager;
-        this.serviceManager = serviceManager;
-        this.avalonContext = avalonContext;
-        this.logger = logger;
+    void pushCallContext(FOM_JavaScriptInterpreter interp,
+                         Environment env,
+                         ComponentManager manager,
+                         ServiceManager serviceManager,
+                         Context avalonContext,
+                         Logger logger,
+                         WebContinuation lastContinuation) {
+        this.currentCall = new CallContext(currentCall, interp, env, manager,
+                                           serviceManager, avalonContext,
+                                           logger, lastContinuation);
     }
 
-    void invalidate() {
+    void popCallContext() {
         // Clear the scope attribute
         Request request = this.getRequest();
         if (request != null) {
             request.removeAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
         }
-        else {
-            // Cannot use logger here, as it might already be null
-            System.err.println("Request is null. Might be trying to invalidate an already invalidated FOM_Cocoon instance.");
-        }
-
-        // Cleanup everything
-        this.request = null;
-        this.response = null;
-        this.session = null;
-        this.context = null;
-        this.log = null;
-        this.logger = null;
-        this.componentManager = null;
-        this.environment = null;
-        this.interpreter = null;
+        this.currentCall = this.currentCall.caller;
     }
 
 
@@ -179,12 +250,11 @@ public class FOM_Cocoon extends ScriptableObject {
         WebContinuation wk = null;
         if (continuation != null) {
             ContinuationsManager contMgr = (ContinuationsManager)
-                componentManager.lookup(ContinuationsManager.ROLE);
-            wk = lastContinuation =
-                contMgr.createWebContinuation(continuation,
-                                              lastContinuation,
-                                              0,
-                                              null);
+                getComponentManager().lookup(ContinuationsManager.ROLE);
+            wk = contMgr.createWebContinuation(continuation,
+                                               currentCall.lastContinuation,
+                                               0,
+                                               null);
         }
 
         String redUri = uri;
@@ -194,8 +264,8 @@ public class FOM_Cocoon extends ScriptableObject {
         fom_wk.setParentScope(getParentScope());
         fom_wk.setPrototype(getClassPrototype(getParentScope(),
                                               fom_wk.getClassName()));
-        interpreter.forwardTo(getParentScope(), this, redUri,
-                              bizData, fom_wk, environment);
+        getInterpreter().forwardTo(getParentScope(), this, redUri,
+                                   bizData, fom_wk, getEnvironment());
 
         FOM_WebContinuation result = null;
         if (wk != null) {
@@ -222,19 +292,19 @@ public class FOM_Cocoon extends ScriptableObject {
         if (!(unwrap(outputStream) instanceof OutputStream)) {
             throw new JavaScriptException("expected a java.io.OutputStream instead of " + outputStream);
         }
-        interpreter.process(getParentScope(), this, uri, map,
-                            (OutputStream)unwrap(outputStream),
-                            environment);
+        getInterpreter().process(getParentScope(), this, uri, map,
+                                 (OutputStream)unwrap(outputStream),
+                                 getEnvironment());
     }
 
     public void jsFunction_redirectTo(String uri) throws Exception {
         // Cannot use environment directly as TreeProcessor uses own version of redirector
         // environment.redirect(false, uri);
-        PipelinesNode.getRedirector(environment).redirect(false, uri);
+        PipelinesNode.getRedirector(getEnvironment()).redirect(false, uri);
     }
 
     public void jsFunction_sendStatus(int sc) {
-        PipelinesNode.getRedirector(environment).sendStatus(sc);
+        PipelinesNode.getRedirector(getEnvironment()).sendStatus(sc);
     }
 
 /*
@@ -264,7 +334,7 @@ public class FOM_Cocoon extends ScriptableObject {
      */
     public Object jsFunction_getComponent(String id)
         throws Exception {
-        return componentManager.lookup(id);
+        return getComponentManager().lookup(id);
     }
 
     /**
@@ -275,7 +345,7 @@ public class FOM_Cocoon extends ScriptableObject {
      */
     public void jsFunction_releaseComponent( Object component ) throws Exception {
         try {
-            this.componentManager.release( (Component) unwrap(component) );
+            this.getComponentManager().release( (Component) unwrap(component) );
         } catch( ClassCastException cce ) {
             throw new JavaScriptException( "Only components can be released!" );
         }
@@ -293,9 +363,9 @@ public class FOM_Cocoon extends ScriptableObject {
         org.mozilla.javascript.Context cx =
             org.mozilla.javascript.Context.getCurrentContext();
         Scriptable scope = getParentScope();
-        Script script = interpreter.compileScript( cx,
-                                                   environment,
-                                                   filename );
+        Script script = getInterpreter().compileScript( cx,
+                                                        getEnvironment(),
+                                                        filename );
         return script.exec( cx, scope );
     }
 
@@ -318,10 +388,10 @@ public class FOM_Cocoon extends ScriptableObject {
     public Object jsFunction_setupObject(Object obj) throws Exception {
         LifecycleHelper.setupComponent(
              unwrap(obj),
-             this.logger,
-             this.avalonContext,
-             this.serviceManager,
-             this.componentManager,
+             this.getLogger(),
+             this.getAvalonContext(),
+             this.getServiceManager(),
+             this.getComponentManager(),
              null,// roleManager
              null,// configuration
              true);
@@ -1284,72 +1354,23 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     public FOM_Request jsGet_request() {
-        if (request != null) {
-            return request;
-        }
-        if (environment == null) {
-            // context has been invalidated
-            return null;
-        }
-        Map objectModel = environment.getObjectModel();
-        request = new FOM_Request(ObjectModelHelper.getRequest(objectModel));
-        request.setParentScope(getParentScope());
-        request.setPrototype(getClassPrototype(getParentScope(), "FOM_Request"));
-        return request;
+        return currentCall.getRequest();
     }
 
     public FOM_Response jsGet_response() {
-        if (response != null) {
-            return response;
-        }
-        if (environment == null) {
-            // context has been invalidated
-            return null;
-        }
-        Map objectModel = environment.getObjectModel();
-        response =
-            new FOM_Response(ObjectModelHelper.getResponse(objectModel));
-        response.setParentScope(getParentScope());
-        response.setPrototype(getClassPrototype(this, "FOM_Response"));
-        return response;
+        return currentCall.getResponse();
     }
 
     public FOM_Log jsGet_log() {
-        if (log != null) {
-            return log;
-        }
-        log = new FOM_Log(logger);
-        log.setParentScope(getParentScope());
-        log.setPrototype(getClassPrototype(this, "FOM_Log"));
-        return log;
+        return currentCall.getLog();
     }
 
     public FOM_Context jsGet_context() {
-        if (context != null) {
-            return context;
-        }
-        Map objectModel = environment.getObjectModel();
-        context =
-            new FOM_Context(ObjectModelHelper.getContext(objectModel));
-        context.setParentScope(getParentScope());
-        context.setPrototype(getClassPrototype(this, "FOM_Context"));
-        return context;
+        return currentCall.getContext();
     }
 
     public FOM_Session jsGet_session() {
-        if (session != null) {
-            return session;
-        }
-        if (environment == null) {
-            // session has been invalidated
-            return null;
-        }
-        Map objectModel = environment.getObjectModel();
-        session =
-            new FOM_Session(ObjectModelHelper.getRequest(objectModel).getSession(true));
-        session.setParentScope(getParentScope());
-        session.setPrototype(getClassPrototype(this, "FOM_Session"));
-        return session;
+        return currentCall.getSession();
     }
 
     /**
@@ -1359,11 +1380,15 @@ public class FOM_Cocoon extends ScriptableObject {
      * the Sitemap parameters from <map:call>
      */
     public Scriptable jsGet_parameters() {
-        return parameters;
+        return getParameters();
+    }
+
+    public Scriptable getParameters() {
+        return currentCall.getParameters();
     }
 
     void setParameters(Scriptable value) {
-        parameters = value;
+        currentCall.setParameters(value);
     }
 
     // unwrap Wrapper's and convert undefined to null
@@ -1419,7 +1444,7 @@ public class FOM_Cocoon extends ScriptableObject {
      * @return The object model
      */
     public Map getObjectModel() {
-        return environment.getObjectModel();
+        return getEnvironment().getObjectModel();
     }
 
     /**
@@ -1428,7 +1453,28 @@ public class FOM_Cocoon extends ScriptableObject {
      */
 
     public ComponentManager getComponentManager() {
-        return componentManager;
+        return currentCall.componentManager;
+    }
+
+
+    private Environment getEnvironment() {
+        return currentCall.environment;
+    }
+
+    private Context getAvalonContext() {
+        return currentCall.avalonContext;
+    }
+
+    private Logger getLogger() {
+        return currentCall.logger;
+    }
+
+    private ServiceManager getServiceManager() {
+        return currentCall.serviceManager;
+    }
+
+    private FOM_JavaScriptInterpreter getInterpreter() {
+        return currentCall.interpreter;
     }
 
     /**
@@ -1442,12 +1488,12 @@ public class FOM_Cocoon extends ScriptableObject {
                           Object bean,
                           FOM_WebContinuation fom_wk)
         throws Exception {
-        interpreter.forwardTo(getTopLevelScope(this),
-                              this,
-                              uri,
-                              bean,
-                              fom_wk,
-                              environment);
+        getInterpreter().forwardTo(getTopLevelScope(this),
+                                   this,
+                                   uri,
+                                   bean,
+                                   fom_wk,
+                                   getEnvironment());
     }
 
     /**
@@ -1463,7 +1509,7 @@ public class FOM_Cocoon extends ScriptableObject {
         throws Exception {
         List list = null;
         if (parameters == null || parameters == Undefined.instance) {
-            parameters = this.parameters;
+            parameters = getParameters();
         }
         Object[] ids = parameters.getIds();
         list = new ArrayList();
@@ -1473,7 +1519,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                         org.mozilla.javascript.Context.toString(getProperty(parameters, name)));
             list.add(arg);
         }
-        interpreter.handleContinuation(kontId, list, environment);
+        getInterpreter().handleContinuation(kontId, list, getEnvironment());
     }
 
     /**
@@ -1492,7 +1538,7 @@ public class FOM_Cocoon extends ScriptableObject {
         WebContinuation wk;
         ContinuationsManager contMgr;
         contMgr = (ContinuationsManager)
-            componentManager.lookup(ContinuationsManager.ROLE);
+            getComponentManager().lookup(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(unwrap(k),
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,

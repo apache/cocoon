@@ -112,7 +112,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.18 2004/01/06 12:37:21 joerg Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.19 2004/01/19 17:53:38 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -546,8 +546,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
         thrScope.setupPackages(getClassLoader(needsRefresh));
-        cocoon.setup(this, environment, manager, serviceManager, avalonContext,
-                getLogger());
+        cocoon.pushCallContext(this, environment, manager, serviceManager, 
+                               avalonContext, getLogger(), null);
 
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
@@ -719,7 +719,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             } finally {
                 updateSession(environment, thrScope);
                 if (cocoon != null) {
-                    cocoon.invalidate();
+                    cocoon.popCallContext();
                 }
                 Context.exit();
             }
@@ -751,9 +751,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.setup(this, environment, manager, 
-                         serviceManager, avalonContext, 
-                         getLogger());
+            cocoon.pushCallContext(this, environment, manager, 
+                                   serviceManager, avalonContext, 
+                                   getLogger(), wk);
             // Register the current scope for scripts indirectly called from this function
             cocoon.getRequest().setAttribute(
                     FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
@@ -799,7 +799,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
                 updateSession(environment, kScope);
-                cocoon.invalidate();
+                cocoon.popCallContext();
                 Context.exit();
             }
         }
