@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
@@ -138,9 +139,6 @@ public class CocoonServlet extends HttpServlet {
 
     /** The parent ServiceManager, if any. Stored here in order to be able to dispose it in destroy(). */
     private ServiceManager parentServiceManager;
-
-    protected String forceLoadParameter;
-    protected String forceSystemProperty;
 
     /**
      * This is the path to the servlet context (or the result
@@ -325,8 +323,6 @@ public class CocoonServlet extends HttpServlet {
                 this.getLogger().debug("Path for Root: " + debugPathTwo);
             }
         }
-        this.forceLoadParameter = getInitParameter("load-class", null);
-        this.forceSystemProperty = getInitParameter("force-property", null);
 
         // Output some debug info
         if (getLogger().isDebugEnabled()) {
@@ -393,14 +389,9 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(Constants.CONTEXT_CACHE_DIR, this.cacheDir);
 
         this.appContext.put(Constants.CONTEXT_CONFIG_URL,
-                            getConfigFile(conf.getInitParameter("configurations")));
-        if (conf.getInitParameter("configurations") == null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("configurations was not set - defaulting to... ?");
-            }
-        }
+                            this.getConfigFile(this.settings.getConfiguration()));
 
-        parentServiceManagerClass = getInitParameter("parent-service-manager", null);
+        parentServiceManagerClass = this.settings.getParentServiceManagerClassName();
         if (parentServiceManagerClass != null) {
             int dividerPos = parentServiceManagerClass.indexOf('/');
             if (dividerPos != -1) {
@@ -642,13 +633,12 @@ public class CocoonServlet extends HttpServlet {
      * @throws ServletException
      */
     protected String getExtraClassPath() throws ServletException {
-        String extraClassPath = this.getInitParameter("extra-classpath");
-        if (extraClassPath != null) {
+        if (this.settings.getExtraClasspaths().size() > 0) {
             StringBuffer sb = new StringBuffer();
-            StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
+            final Iterator iter = this.settings.getExtraClasspaths().iterator();
             int i = 0;
-            while (st.hasMoreTokens()) {
-                String s = st.nextToken();
+            while (iter.hasNext()) {
+                String s = (String)iter.next();
                 if (i++ > 0) {
                     sb.append(File.pathSeparatorChar);
                 }
@@ -778,29 +768,21 @@ public class CocoonServlet extends HttpServlet {
      * bug in WebSphere that does not load the URL handler for the
      * "classloader://" protocol.  In order to overcome that bug,
      * set "force-load" to "com.ibm.servlet.classloader.Handler".
-     *
-     * If you need to force more than one class to load, then
-     * separate each entry with whitespace, a comma, or a semi-colon.
-     * Cocoon will strip any whitespace from the entry.
      */
     private void forceLoad() {
-        if (this.forceLoadParameter != null) {
-            StringTokenizer fqcnTokenizer = new StringTokenizer(forceLoadParameter, " \t\r\n\f;,", false);
-
-            while (fqcnTokenizer.hasMoreTokens()) {
-                final String fqcn = fqcnTokenizer.nextToken().trim();
-
-                try {
-                    if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("Trying to load class: " + fqcn);
-                    }
-                    ClassUtils.loadClass(fqcn).newInstance();
-                } catch (Exception e) {
-                    if (getLogger().isWarnEnabled()) {
-                        getLogger().warn("Could not force-load class: " + fqcn, e);
-                    }
-                    // Do not throw an exception, because it is not a fatal error.
+        final Iterator i = this.settings.getLoadClasses();
+        while ( i.hasNext() ) {
+            final String fqcn = (String)i.next();
+            try {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Trying to load class: " + fqcn);
                 }
+                ClassUtils.loadClass(fqcn).newInstance();
+            } catch (Exception e) {
+                if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Could not force-load class: " + fqcn, e);
+                }
+                // Do not throw an exception, because it is not a fatal error.
             }
         }
     }
@@ -813,28 +795,19 @@ public class CocoonServlet extends HttpServlet {
      * Cocoon will strip any whitespace from the entry.
      */
     private void forceProperty() {
-        if (this.forceSystemProperty != null) {
-            StringTokenizer tokenizer = new StringTokenizer(forceSystemProperty, " \t\r\n\f;,", false);
-
-            java.util.Properties systemProps = System.getProperties();
-            while (tokenizer.hasMoreTokens()) {
-                final String property = tokenizer.nextToken().trim();
-                if (property.indexOf('=') == -1) {
-                    continue;
-                }
+        if ( this.settings.getForceProperties().size() > 0 ) {
+            Properties systemProps = System.getProperties();
+            final Iterator i = this.settings.getForceProperties().entrySet().iterator(); 
+            while (i.hasNext()) {
+                final Map.Entry current = (Map.Entry)i.next();
                 try {
-                    String key = property.substring(0, property.indexOf('='));
-                    String value = property.substring(property.indexOf('=') + 1);
-                    if (value.indexOf("${") != -1) {
-                        value = StringUtils.replaceToken(value);
-                    }
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("setting " + key + "=" + value);
+                        getLogger().debug("setting " + current.getKey() + "=" + current.getValue());
                     }
-                    systemProps.setProperty(key, value);
+                    systemProps.setProperty(current.getKey().toString(), current.getValue().toString());
                 } catch (Exception e) {
                     if (getLogger().isWarnEnabled()) {
-                        getLogger().warn("Could not set property: " + property, e);
+                        getLogger().warn("Could not set property: " + current.getKey(), e);
                     }
                     // Do not throw an exception, because it is not a fatal error.
                 }
