@@ -149,6 +149,10 @@
        </map:call>
      </map:match>
 
+     <map:match pattern="do-*.flow">
+       <map:call function="do_{1}"/>
+     </map:match>
+
      <map:match pattern="*.continue">
        <map:call continuation="{1}"/>
      </map:match>

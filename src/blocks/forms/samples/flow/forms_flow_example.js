@@ -86,3 +86,46 @@ function determineLocale() {
     return null;
 }
 
+function do_dynaRepeater() {
+    var form = new Form("forms/dynamicrepeater.xml");
+    form.setAttribute("counter", new java.lang.Integer(0));
+    form.showForm("dynamicrepeater-display-pipeline.jx");
+    
+    var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    doc.appendChild(doc.createElement("contacts"));
+    form.createBinding("forms/dynamicrepeater_binding.xml");
+    
+    form.save(doc);
+    cocoon.sendPage("xmlresult-display-pipeline.jx",
+        {title: "Contact list", document: doc}
+    );
+}
+
+function do_datasourceChooser() {
+    var form = new Form("forms/datasource_chooser.xml");
+    form.showForm("datasource_chooser-display-pipeline.jx");
+    
+    var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    doc.appendChild(doc.createElement("config"));
+    form.createBinding("forms/datasource_chooser_binding.xml");
+    form.save(doc);
+    
+    cocoon.sendPage("xmlresult-display-pipeline.jx",
+        {title: "Here's the datasource definition", document: doc}
+    );
+}
+
+function do_taskTree() {
+    var form = new Form("forms/tasktree.xml");
+    form.showForm("tasktree-display-pipeline.jx");
+    
+    var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    doc.appendChild(doc.createElement("project"));
+    form.createBinding("forms/tasktree_binding.xml");
+    form.save(doc);
+    
+    cocoon.sendPage("xmlresult-display-pipeline.jx",
+        {title: "Here's the resulting project definition", document: doc}
+    );
+}
+

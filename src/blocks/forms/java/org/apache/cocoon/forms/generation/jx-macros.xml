@@ -6,7 +6,7 @@
         ft:form-template
     -->
 	<jx:macro name="form-template" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
-    <jx:set var="cformsHelper" value="#{org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper($cocoon/consumer)}"/>
+	  <jx:set var="cformsHelper" value="${Packages.org.apache.cocoon.forms.generation.JXMacrosHelper.createHelper(cocoon.consumer)}"/>
 	  <jx:set var="cformsDummy" value="${cformsHelper.startForm(macro.arguments)}"/>
         <jx:set var="form" value="${CocoonFormsInstance}"/>
         <!-- the form is also the current widget -->
@@ -137,7 +137,7 @@
       
       <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
       <jx:set var="validationError" value="${widget.getValidationError()}"/>
-      <jx:if test="${cformsHelper.isValidationError(validationError)}">
+      <jx:if test="${validationError != null}">
         <jx:set var="cformsDummy" value="${cformsHelper.generateValidationError(validationError)}"/>
           <jx:evalBody/>
         <jx:set var="cformsDummy" value="${cformsHelper.flushRoot(validationError)}"/>
@@ -146,7 +146,13 @@
 
 
     <!--
-        ft:aggregate-widget : TODO
+        ft:aggregate-widget
     -->
-    
+	<jx:macro name="aggregate-widget" targetNamespace="http://apache.org/cocoon/forms/1.0#template">
+	  <jx:parameter name="id"/>
+      
+      <jx:set var="widget" value="${cformsHelper.getWidget(widget, id)}"/>
+      <jx:evalBody/>
+    </jx:macro>
+        
 </jx:template>
