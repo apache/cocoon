@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.22 2003/03/19 08:52:12 cziegeler Exp $:
+       CVS $Id: build.xml,v 1.23 2003/03/20 04:13:28 vgritsenko Exp $:
 
 ============================================================================ -->
 
@@ -865,17 +865,17 @@
 
     <!-- Copy test files to build test dir -->
     <copy todir="${build.test}" filtering="on">
-      <fileset dir="${test}"/>
+      <fileset dir="${test}" excludes="**/*.java"/>
     </copy>
 
     <!-- Compile tests -->
-    <javac srcdir="${build.test}"
-            destdir="${build.test}"
-            debug="${compiler.debug}"
-            optimize="${compiler.optimize}"
-            deprecation="${compiler.deprecation}"
-            target="${target.vm}"
-            fork="true">
+    <javac srcdir="${test}"
+           destdir="${build.test}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           fork="true">
       <classpath refid="classpath"/>
       <classpath refid="scratchpad.classpath"/>
       <classpath>
