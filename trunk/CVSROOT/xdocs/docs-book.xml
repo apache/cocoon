@@ -27,7 +27,6 @@
   <external label="Javadocs" href="./api/index.html"/>
 <separator/>
   <page id="cocoon2" label="Cocoon 2" source="cocoon2.xml"/>
-  <page id="javadoc" label="Javadoc XML" source="javadoc.xml"/>
 <separator/>
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
