@@ -63,13 +63,14 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.ExpiresValidity;
 
 /**
  * The preemptive loader is a singleton that runs in the background
  * and loads content into the cache.
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: PreemptiveLoader.java,v 1.3 2003/03/12 15:35:11 cziegeler Exp $
+ *  @version CVS $Id: PreemptiveLoader.java,v 1.4 2003/07/27 11:09:17 cziegeler Exp $
  *  @since   2.1
  */
 public final class PreemptiveLoader {
