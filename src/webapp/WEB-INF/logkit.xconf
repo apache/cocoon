@@ -158,5 +158,8 @@
       <log-target id-ref="flow"/>
       <log-target id-ref="error"/>
     </category>
+
+    <log-target id-ref="core"/>
+    <log-target id-ref="error"/>
   </categories>
 </logkit>
