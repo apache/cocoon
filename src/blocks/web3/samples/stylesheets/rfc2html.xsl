@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:rfc="http://efp.cc/Web3-Rfc/1.0">
+                xmlns:rfc="http://apache.org/cocoon/Web3-Rfc/1.0">
 
 	<xsl:template match="/">
 		<html>
