@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Apache Cocoon Forms: Validation Rules</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="General">
+      <p>For each validation rule, the failmessage (i.e. the message displayed
+      to the user in case the validation failed) can be overridden by specifying
+      a child <strong>fd:failmessage</strong> element inside the validation rule element. The
+      failmessage can contain mixed content. Example:</p>
+
+      <source><![CDATA[<fd:datatype base="string">
+  <fd:validation>
+    <fd:email>
+      <fd:failmessage>Not a valid email address!</fd:failmessage>
+    </fd:email>
+  </fd:validation>
+</fd:datatype>]]></source>
+
+      <p>To provide locale-dependent messages, use i18n tags in
+      combination with the I18nTransformer.</p>
+
+      <p>Often the values that validation rules will check are specified as
+      expressions. CForms uses for this the <link href="http://xreporter.cocoondev.org/en/expressions.html">xReporter expression interpreter</link>.</p>
+    </s1>
+
+    <s1 title="Summary">
+      <table>
+        <tr>
+          <th>Validator</th>
+          <th>Allowed datatypes</th>
+        </tr>
+        <tr>
+          <td>assert</td>
+          <td>all datatypes</td>
+        </tr>
+        <tr>
+          <td>email</td>
+          <td>string</td>
+        </tr>
+        <tr>
+          <td>length</td>
+          <td>string</td>
+        </tr>
+        <tr>
+          <td>mod10</td>
+          <td>string</td>
+        </tr>
+        <tr>
+          <td>range</td>
+          <td>integer, long, decimal</td>
+        </tr>
+        <tr>
+          <td>regexp</td>
+          <td>string</td>
+        </tr>
+        <tr>
+          <td>value-count</td>
+          <td>all datatypes as part of multivaluefield</td>
+        </tr>
+      </table>
+    </s1>
+
+    <s1 title="Description">
+      <s2 title="assert">
+        <p>Evaluates the expression specified in the "test" attribute. This expression
+        should have a boolean result, it should evaluate to either true or false.
+        Example: Suppose there are 2 fields widgets <code>password</code> and <code>confirmPassword</code>.
+        We can use assert inside <code>confirmPassword</code> to check if is equals to <code>password</code> widget:</p>
+
+        <source><![CDATA[<fd:assert test="password = confirmPassword">
+  <fd:failmessage>The two passwords are not equal.</fd:failmessage>
+</fd:assert>]]></source>
+      </s2>
+
+      <s2 title="email">
+        <p>Checks that a value is a valid email address. Example:</p>
+
+        <source><![CDATA[<fd:email/>]]></source>
+      </s2>
+
+      <s2 title="length">
+        <p>Checks the length of strings. This validation rule can take 3 attributes:
+        min, max and exact. You can use either of these three separately or
+        min and max together. The values of these attributes are expressions. Example:</p>
+
+        <source><![CDATA[<fd:length min="2" max="4"/>
+
+Another example:
+
+<fd:length exact="2*2">
+   <fd:failmessage>Must be 4 characters long!</fd:failmessage>
+</fd:length>]]></source>
+      </s2>
+
+      <s2 title="mod10">
+        <p>Uses the "mod10" algorithm used to check the validity of credit card
+        numbers such as VISA. This validation rule does not require any additional
+        attributes. Example:</p>
+
+        <source><![CDATA[<fd:mod10>
+   <fd:failmessage>Invalid credit card number.</fd:failmessage>
+</fd:mod10>]]></source>
+      </s2>
+
+      <s2 title="range">
+        <p>Checks the numeric range. This validation rule can take 3 attributes:
+        min, max and exact. You can use either of these three separately or
+        min and max together. The values of these attributes are expressions. Example:</p>
+
+        <source><![CDATA[<fd:range min="2" max="4"/>
+
+Another example:
+
+<fd:range exact="2*2"/>]]></source>
+      </s2>
+
+      <s2 title="regexp">
+        <p>Checks that a string matches a regular expression. It requires a "pattern"
+        attribute specifying the regexp. The regular expression library used is
+        Jakarta ORO, see <link href="http://jakarta.apache.org/oro/api/org/apache/oro/text/regex/package-summary.html">here</link> for some information. Example:</p>
+
+        <source><![CDATA[<fd:regexp pattern="[a-z]{3,5}">
+   <fd:failmessage>Invalid code!</fd:failmessage>
+</fd:regexp>]]></source>
+      </s2>
+
+      <s2 title="value-count">
+        <p>Checks the number of items selected in a multivaluefield.
+        Again works with min, max and exact attributes. Example:</p>
+
+        <source><![CDATA[<fd:value-count min="2" max="4"/>
+
+Another example:
+
+<fd:value-count exact="2"/>]]></source>
+      </s2>
+    </s1>
+  </body>
+</document>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: multivaluefield widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="multivaluefield widget">
+      <p>The fd:multivaluefield is similar to the field widget but
+      can take multiple values. A multivaluefield should always have
+      a fd:datatype element combined with a fd:selection-list, since
+      the user will have to select values from this list. The
+      fd:multivaluefield could be rendered as a list of checkboxes
+      or as a listbox in which the user can select multiple items.</p>
+
+      <p>Configuration example:</p>
+
+      <source><![CDATA[<fd:multivaluefield id="...">
+  <fd:label>...</fd:label>
+  <fd:help>...</fd:help>
+  <fd:hint>...</fd:hint>
+  <fd:datatype base="...">
+    [...]
+  </fd:datatype>
+  <fd:selection-list>
+    <fd:item value="...">
+      <fd:label>...</fd:label>
+    </fd:item>
+    [...]
+  </fd:selection-list>
+</fd:multivaluefield>]]></source>
+
+      <p>Most of the elements and attributes have the same meaning
+      as for the <link href="widget_field.html">field</link> widget.</p>
+
+      <p>Note: A multivaluefield cannot have a required attribute,
+      instead you should use the value-count validation rule to
+      check the number of values the user has selected.</p> 
+    </s1>
+  </body>
+</document>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: repeater widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="repeater widget">
+      <p>An fd:repeater widget is a widget that repeats a number of other widgets.
+      It can be used to create e.g. tables, repeating subforms, etc.</p>
+
+      <p>Configuration example:</p>
+
+      <source><![CDATA[<fd:repeater id="..." initial-size="...">
+  <fd:widgets>
+    [...]
+  </fd:widgets>
+</fd:repeater>]]></source>
+
+      <p>The <strong>fd:widgets</strong> element should contain a number of other widgets to repeat.
+      This can be any of type of widget: field, multivaluefied, booleanfield,
+      or even repeater itself.</p>
+
+      <p>The optional <strong>initial-size</strong> attribute allows to specify how much rows should
+      be initially present on the repeater. It mostly avoids to display a table
+      with only table headers. Default value is zero.</p>
+
+      <p>Note: The Forms Template Transformer has specific support for specifying
+      a template to use to render each of the rows of a repeater widget. See
+      the CForms samples for an example on how to use this.</p>
+    </s1>
+  </body>
+</document>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: field widget</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="field widget">
+      <p>The field widget is the most common widget. It is used both for
+      text boxes or selection lists. It can be associated with different
+      datatypes such as string, long or date to ask for different types of data.</p>
+
+      <p>[pasted the following text here from the sample, still needs some editing to fit in]</p>
+
+      <p>A field widget can be associated with a datatype. The function of the datatype
+      is to convert the string value entered by the user to a more specific type
+      like a number or a date (and vice versa, convert them back to strings)
+      (this part is actually delegated to a seperate object: a Convertor).
+      The datatype also performs the validation. (This split-up between "widget"
+      and "datatype" is specific for the field widget -- it is perfectly possible
+      to make widgets that have nothing to do with datatypes). In this way, a
+      field widget contains strongly-typed data. For example, if you associated
+      a long datatype with a field widget, then you can be sure that when you
+      retrieve the widget's value, you will get a Long object after the
+      form was validated successfully.</p>
+
+      <p>The reasoning behind the base attribute on the fd:datatype element
+      is that you are actually defining a new datatype, based on the built-in
+      "string" or "long" datatype, and customise it with validation rules
+      (and possibly other parameters).</p>
+
+      <s2 title="Defining a selection list for a field">
+        <p>A field widget can furthermore be associated with a selection list.
+        This makes that the field widget could be rendered either as a textbox
+        or a list, depending on whether its datatype has a selection list.
+        For an example of selection lists, see the "Form1" example provided with
+        CForms. The selection-list is related with the datatype: the values in
+        the selection-list should be of the same type as the datatype.</p>
+
+        <figure src="images/forms_field_datatype_relation.png" alt="Diagram showing the associations between field, datatype, convertor, selection list and validation rules."/>
+
+        <p>If we wouldn't make these datatype and selection list associations,
+        we would need to create specific widgets for each possible combination:
+        StringField, LongField, DateField, StringSelectionList, LongSelectionList, ...</p>
+      </s2>
+
+      <p>Configuration example:</p>
+
+      <source><![CDATA[<fd:field id="..." required="true|false">
+  <fd:label>...</fd:label>
+  <fd:hint>...</fd:hint>
+  <fd:help>...</fd:help>
+  <fd:datatype base="...">
+     [...]
+  </fd:datatype>
+  <fd:selection-list .../>
+  <fd:on-value-changed>
+    ...
+  </fd:on-value-changed>
+</fd:field>]]></source>
+
+      <p>The field element takes a required <strong>id</strong> attribute.
+      This id should be unique among all widgets in the same container (usually the form).</p>
+
+      <p>The <strong>required</strong> attribute is optional, by default it is false.
+      It indicates whether this field is required.</p>
+
+      <p>The <strong>fd:label</strong> element contains the label for this widget.
+      This element is optional. It can contain mixed content. For internationalised
+      labels, use i18n-tags in combination with Cocoon's I18nTransformer.</p>
+
+      <p>The <strong>fd:hint</strong> element contains a hint for the form control of this widget.
+      This element is optional. It can contain a hint about the input control.
+      For internationalised labels, use i18n-tags in combination with Cocoon's I18nTransformer.</p>
+
+      <p>The <strong>fd:help</strong> element contains more help for the form control of this widget.
+      This element is optional. It can contain text help about the input control.
+      For internationalised labels, use i18n-tags in combination with Cocoon's I18nTransformer.</p>
+
+      <p>The <strong>fd:datatype</strong> element indicates the datatype for
+      this field. This element is required. The base attribute specifies
+      on which built-in type this datatype should be based. The contents
+      of the fd:datatype element can contain further configuration
+      information for the datatype. The possible datatypes and their
+      configuration options are described here.</p>
+
+      <p>The <strong>fd:selection-list</strong> element is used to associate
+      a selection list with this field. See Forms Datatype Reference for more details.</p>
+
+      <p>The <strong>fd:on-value-changed</strong> element specifies event
+      handlers to be executed in case the value of this field changes.
+      See also Forms Event Handling. The interface to be implemented
+      for Java event listeners is <code>org.apache.cocoon.forms.event.ValueChangedListener</code>.
+      The WidgetEvent subclass is <code>org.apache.cocoon.forms.event.ValueChangedEvent</code>.</p>
+
+      <p><strong>Note:</strong> Events used in &lt;fd:on-value-changed&gt;
+      require that the form instance is stored serverside (because otherwise
+      CForms doesn't know what the previous values of the fields were).
+      This is automatically the case when you use flowscript. If you don't use
+      flowscript you could store the form instance in e.g. the session.</p>
+    </s1>
+  </body>
+</document>

@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: Binding Framework</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Intro">
+      <p>Likely you will want to use CForms to "edit stuff", such as the properties
+      of a bean or data from an XML document (we'll simply use the term object to
+      refer to either of these). This supposes that before you show the form,
+      you copy the data from the object to the form, and after the form has been
+      validated, you copy the data in the form back to the object. To avoid having
+      to write actual code for this, a binding framework is available.</p>
+
+      <p>The basic definition of a binding is as follows (if you don't know Java, just ignore this):</p>
+
+      <source><![CDATA[public interface Binding {
+    public void loadFormFromModel(Widget frmModel, Object objModel);
+    public void saveFormToModel(Widget frmModel, Object objModel);
+}]]></source>
+
+      <p>A binding can work with any object and can perform the binding in any
+      possible way. Currently one implementation is available, based on
+      <link href="http://jakarta.apache.org/commons/jxpath/index.html">JXPath</link>.
+      JXPath allows to address data in both beans and XML documents using
+      <link href="http://www.w3.org/TR/xpath">XPath</link> expressions, so this
+      binding implementation can be used both with beans and XML documents.
+      The rest of this document will focus on this implementation.</p>
+
+      <p>The binding is configured using an XML file. This XML file contains
+      elements in the fb namesspace (Forms Binding):</p>
+
+      <source><![CDATA[http://apache.org/cocoon/forms/1.0#binding]]></source>
+    </s1>
+
+    <s1 title="What does a binding file look like?">
+      <p>To give you an idea of what a binding file looks like, below a
+      very simple example is shown.</p>
+
+      <source><![CDATA[<fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" path="/" >
+    <fb:value id="firstname" path="firstName"/>
+    <fb:value id="lastname" path="lastName"/>
+    <fb:value id="email" path="email"/>
+</fb:context>]]></source>
+
+      <p>The id attribute identifies the widget. The path attribute is the address
+      of the items in the target object (a Javabean or an XML document).
+      The paths can be arbitrary JXPath expressions.</p>
+
+      <p>[Convention] Let's call all elements in the fb namespace "binding elements".
+      They all cause a binding-related action to be performed.</p>
+
+      <p>The <code>fb:context</code> element changes the <link href="http://jakarta.apache.org/commons/jxpath/apidocs/org/apache/commons/jxpath/JXPathContext.html">JXPath context</link>
+      to the specified path. The path expressions on the binding elements occuring
+      inside the context element will then be evaluated in this context, thus relative
+      to the path specified on the fb:context element.</p>
+
+      <p>The <code>fb:value</code> element is used to bind the value of a widget.</p>
+
+      <p>The binding framework can do much more than what is shown in the simple
+      example above, so read on for more meat.</p>
+    </s1>
+
+    <s1 title="Quick reference of supported binding elements">
+      <table>
+        <tr>
+          <th>Element</th>
+          <th>Description</th>
+          <th>Attributes</th>
+          <th>child elements</th>
+        </tr>
+        <tr>
+          <td>fb:*</td>
+          <td>common settings for all bindings</td>
+          <td>direction</td>
+          <td>not applicable, see specific elements</td>
+        </tr>
+        <tr>
+          <td>fb:context</td>
+          <td>changes the JXPath context</td>
+          <td>path</td>
+          <td>any</td>
+        </tr>
+        <tr>
+          <td>fb:value</td>
+          <td>binds the value of widgets</td>
+          <td>id, path</td>
+          <td>fb:on-update, fd:convertor</td>
+        </tr>
+        <tr>
+          <td>fb:aggregate</td>
+          <td>binds aggregatefield widgets</td>
+          <td>id, path</td>
+          <td>fb:value</td>
+        </tr>
+        <tr>
+          <td>fb:repeater</td>
+          <td>binds repeater widgets</td>
+          <td>id, parent-path, row-path, unique-row-id
+          (deprecated), unique-path (deprecated)</td>
+          <td>fd:convertor (deprecated), fb:on-bind,
+          fb:on-delete-row, fb:on-insert-row, fb:unique-row</td>
+        </tr>
+        <tr>
+          <td>fb:unique-row</td>
+          <td>specifies unique fields for a repeater row</td>
+          <td>none</td>
+          <td>fb:unique-field</td>
+        </tr>
+        <tr>
+          <td>fb:unique-field</td>
+          <td>specifies unique field for a repeater row</td>
+          <td>id, path</td>
+          <td>fd:convertor</td>
+        </tr>
+        <tr>
+          <td>fb:set-attribute</td>
+          <td>sets an attribute to a fixed value</td>
+          <td>name, value</td>
+          <td>none</td>
+        </tr>
+        <tr>
+          <td>fb:delete-node</td>
+          <td>deletes the current context node</td>
+          <td>none</td>
+          <td>none</td>
+        </tr>
+        <tr>
+          <td>fb:insert-node</td>
+          <td>insert a node in an XML document</td>
+          <td>src, xpath</td>
+          <td>piece of XML that should be inserted</td>
+        </tr>
+        <tr>
+          <td>fb:insert-bean</td>
+          <td>inserts an object in a list-type bean property</td>
+          <td>classname, addmethod</td>
+          <td>none</td>
+        </tr>
+        <tr>
+          <td>fb:simple-repeater</td>
+          <td>binds repeater widgets</td>
+          <td>id, parent-path,row-path, clear-before-load, delete-parent-if-empty</td>
+          <td>any</td>
+        </tr>
+        <tr>
+          <td>fb:javascript</td>
+          <td>write binding logic in Javascript</td>
+          <td>id, path</td>
+          <td>fb:load-form, fb:save-form</td>
+        </tr>
+        <tr>
+          <td>fb:custom</td>
+          <td>write binding logic in Java</td>
+          <td>id, path, class, builderclass,factorymethod</td>
+          <td>fb:config</td>
+        </tr>
+      </table>
+    </s1>
+
+    <s1 title="Detailed reference of binding elements">
+      <s2 title="fb:*/@direction">
+        <p>All Bindings share the ability to have the two distinct actions
+        they provide (i.e. load and save) been enabled or disabled by setting
+        the attribute direction to one of the following values:</p>
+
+        <table>
+          <tr>
+            <th>value</th>
+            <th>load active?</th>
+            <th>save active?</th>
+          </tr>
+          <tr>
+            <td>both(default)</td>
+            <td>yes</td>
+            <td>yes</td>
+          </tr>
+          <tr>
+            <td>load</td>
+            <td>yes</td>
+            <td>no</td>
+          </tr>
+          <tr>
+            <td>save</td>
+            <td>no</td>
+            <td>yes</td>
+          </tr>
+        </table>
+
+        <p>The default value 'both' for this attribute makes its use optional.</p>
+
+        <p><strong>NOTE</strong>: this setting replaces the @readonly attribute that
+        was available only on selected bindings.</p>
+      </s2>
+
+      <s2 title="fb:context">
+        <p>Attributes:</p>
+        <ul>
+          <li>path</li>
+          <li>direction (optional)</li>
+        </ul>
+        <p>Child elements: any</p>
+
+        <p>The <code>fb:context</code> element changes the JXPath context to the
+        specified path. The path expressions on the binding elements occuring inside
+        the context element will then be evaluated in this context, thus relative to
+        the path specified on the <code>fb:context</code> element.</p>
+
+        <p>The <code>fb:context</code> element is usually used in two occasions.
+        First of all, it is used as the root element of the binding file; because an
+        XML file must always have one root element, and you will usually want to
+        perform more than one binding action.</p>
+
+        <p>Secondly, you use <code>fb:context</code> if you need to address multiple
+        items having a common base path. On the one hand, this saves you on typing
+        and helps readability, and on the other hand, this improves the performance
+        of the binding. To illustrate this with an example, instead of doing this:</p>
+
+        <source><![CDATA[...
+<fb:value id="firstname" path="info/person/firstName"/>
+<fb:value id="lastname" path="info/person/lastName"/>
+...]]></source>
+
+        <p>it is better to do this:</p>
+
+        <source><![CDATA[...
+<fb:context path="info/person">
+  <fb:value id="firstname" path="firstName"/>
+  <fb:value id="lastname" path="lastName"/>
+</fb:context>
+...]]></source>
+
+      </s2>
+
+      <s2 title="fb:value">
+        <p>Attributes:</p>
+        <ul>
+          <li>id</li>
+          <li>path</li>
+          <li>direction (optional)</li>
+        </ul>
+        <p>Child elements:</p>
+        <ul>
+          <li>fb:on-update (optional)</li>
+          <li>fd:convertor (note the fd: namespace!) (optional)</li>
+        </ul>
+
+        <p>This binding element is used to bind the value of a widget.</p>
+
+        <p>The <code>fb:on-update</code> element (which itself has no attributes),
+        can contain one or more binding elements that will be executed if the value
+        of the widget has changed, and thus if the object has been updated. For example,
+        you could use the <code>fb:set-attribute</code> binding to set the
+        value of an attribute <code>changed</code> to <code>true</code>.</p>
+
+        <p>The <code>fd:convertor</code> element has the same purpose as the
+        <code>fd:convertor</code> element in the form definition: it converts
+        between objects (numbers, dates) and strings. This is mostly used when
+        binding to XML documents. Suppose you have defined a certain widget in
+        a form definition to have a "date" datatype, and you want to bind to
+        an XML document which contains the date in the XML Schema date representation,
+        then you could define a convertor as follows:</p>
+
+        <source><![CDATA[<fb:value id="birthday" path="person/birthday">
+  <fd:convertor datatype="date" type="formatting">
+    <fd:patterns>
+      <fd:pattern>yyyy-MM-dd</fd:pattern>
+    </fd:patterns>
+  </fd:convertor>
+</fb:value>]]></source>
+
+        <p>The datatype attribute on the <code>fd:convertor</code> element, which you
+        don't have to specify in the form definition, identifies the datatype to which
+        the convertor belongs.</p>
+      </s2>
+
+      <s2 title="fb:aggregate">
+        <p>Attributes:</p>
+        <ul>
+          <li>id</li>
+          <li>path</li>
+          <li>direction</li>
+        </ul>
+        <p>Child elements:</p>
+        <ul>
+          <li>fb:value elements</li>
+        </ul>
+
+        <p>The <code>fb:aggregate</code> element is used to bind aggregatefields. Remember
+        that aggregatefields are a special type of widget that groups multiple field widgets
+        and lets the user edit their values in one textbox, splitting the values out to the
+        different widgets on submit based on a regexp.</p>
+
+        <p>The <code>fb:aggregate</code> binding allows to bind the values of the individual
+        field widgets out of which an aggregatefield widget consists. The bindings for these
+        field widgets are specified by the fb:value child elements.</p>
+      </s2>
+
+      <s2 title="fb:repeater">
+        <p>Attributes:</p>
+        <ul>
+          <li>id</li>
+          <li>parent-path</li>
+          <li>row-path</li>
+          <li>unique-row-id (deprecated)</li>
+          <li>unique-path (deprecated)</li>
+          <li>row-path-insert (optional)</li>
+          <li>direction (optional)</li>
+        </ul>
+        <p>Child elements:</p>
+        <ul>
+          <li>fb:identity</li>
+          <li>fd:convertor (deprecated)</li>
+          <li>fb:on-bind</li>
+          <li>fb:on-delete-row</li>
+          <li>fb:on-insert-row</li>
+        </ul>
+        <p><strong>NOTE:</strong> The attributes <code>unique-row-id</code> and
+        <code>unique-path</code> and the child element <code>fd:convertor</code>
+        are deprecated in favor of &lt;fb:unique-row&gt;.</p>
+
+        <p>The <code>fb:repeater</code> binding binds repeaters based on the concept
+        that each row in the repeater is identified by one or more widgets uniquely.
+        This unique identification is necessary to know which rows in the repeater
+        correspond to which objects in the target collection. Newly added rows in
+        the repeater can (but should not) have a null value for this identification
+        widget(s). Typically this/these widget(s) will not editable, so in most cases
+        it will be an output widget. If you don't need the identification widget(s)
+        at the client you don't need to add them to the template at all! You only have
+        to specify <code>direction="load"</code> to this/these widget(s) then.
+        This prevents the database IDs from getting to the client.</p>
+
+        <p>The <code>id</code> attribute should contain the id of the repeater.</p>
+
+        <p>The <code>unique-row-id</code> attribute specifies the id of the widget
+        appearing on each repeater row that contains the unique identification for
+        that row. The unique-path attribute contains the corresponding path in the object model.</p>
+
+        <p><strong>NOTE</strong>: Both attributes are deprecated. Please use <code>&lt;fb:identity&gt;</code> instead.</p>
+
+        <p>The <code>parent-path</code> and <code>row-path</code> attributes can best be
+        understood when described differently for XML documents and Javabeans.</p>
+
+        <p>For XML documents: If you have an XML structure like this:</p>
+
+        <source><![CDATA[<things>
+   <thing ... />
+   <thing ... />
+</things>]]></source>
+
+        <p>then the parent-path attribute contains the path to the containing
+        element ("things") and the row-path attribute contains the path to the
+        repeating element ("thing").</p>
+
+        <p>For beans: if your bean has a property "things" which is a Collection
+        [or whathever JXPath supports as lists], then the parent-path should simply
+        contain "." and the row-path "things".</p>
+
+        <p>For both beans and XML documents there is an optional attribute
+        row-path-insert which functions just like the row-path but is used
+        for the nested on-insert-row binding (see below). By default the row-path-insert
+        just takes the value of the row-path. By explicitely setting them different
+        one can exploit one of the following use cases:</p>
+
+        <ul>
+          <li>(1) use xpath-predicates in the row-path (note that you can not do that on the row-path-insert)</li>
+          <li>(2) save the inserted rows in a different target-node of the backend model.</li>
+        </ul>
+
+        <p>A child element <code>fd:convertor</code> can be used to specify the convertor
+        to use in case the unique-id from the model is a String (typical for XML documents)
+        and the matching widget inside the repeater has a different type.</p>
+
+        <p><strong>NOTE:</strong> This element is deprecated at that place as it
+        is only used in combination with the deprecated attributes unique-row-id
+        and unique-path. Please use <code>&lt;fb:identity&gt;</code> instead.</p>
+
+        <p>The three remaining child elements <code>fb:on-bind</code>, <code>fb:on-delete-row</code>,
+        <code>fb:on-insert-row</code> should contain the binding elements that have to
+        be executed in case of these three events.</p>
+
+        <p>The children of the <code>fb:on-bind</code> element are executed when
+        an existing repeater row is updated, or after inserting a new row. The JXPath
+        context is automatically changed to match the current row.</p>
+
+        <p>The children of the <code>fb:on-delete-row</code> element are executed
+        when a repeater row has been deleted. If you want to delete the row, then put
+        a <code>&lt;fb:delete-node/&gt;</code> in there. Alternatively, you could also
+        use the <code>fb:set-attribute</code> binding to set e.g. an attribute status to deleted.</p>
+
+        <p>The children of the <code>fb:on-insert-row</code> are executed in case a
+        new row has been added to the repeater. Typically this will contain a
+        <code>fb:insert-node</code> or a <code>fb:insert-bean</code> binding (see
+        the descriptions of these binding elements for more details).</p>
+
+        <p>The childrens of the <code>fb:unique-row</code> specify the widgets appearing
+        on each repeater row for the unique identification of that row. Each &lt;fb:unique-field&gt;
+        child specifies one widget.</p>
+      </s2>
+
+      <s2 title="fb:identity">
+        <p>Child elements:</p>
+        <ul>
+          <li>fb:value widget-bindings that make up the identity</li>
+        </ul>
+
+        <p>The <code>&lt;fb:identity&gt;</code> is just a container for the child elements
+        specifying the bindings of the identification widgets.</p>
+
+        <p>The nested elements just describe regular value bindings that can
+        declare their own convertor if needed.</p>
+
+        <p><strong>NOTE:</strong> This 'identity' binding is only active in the
+        'load' operation, so specifying the direction="save" is meaningless.</p>
+      </s2>
+
+      <s2 title="fb:set-attribute">
+        <p>Attributes:</p>
+        <ul>
+          <li>name</li>
+          <li>value</li>
+          <li>direction (optional)</li>
+        </ul>
+        <p>Child elements: none</p>
+
+        <p>Set the value of the attribute specified in the <code>name</code> attribute to the
+        fixed string value specified in the <code>value</code> attribute.</p>
+
+        <p><strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <code>direction="save"</code> to protect you model
+        from being changed during load.</p>
+      </s2>
+
+      <s2 title="fb:delete-node">
+        <p>Attributes:</p>
+        <ul>
+          <li>direction (optional)</li>
+        </ul>
+
+        <p>Child elements: none</p>
+
+        <p>Deletes the current context node.</p>
+
+        <p><strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <code>direction="save"</code> to protect you model from
+        being changed during load.</p>
+      </s2>
+
+      <s2 title="fb:insert-node">
+        <p>Attributes:</p>
+        <ul>
+          <li>src (optional)</li>
+          <li>xpath (optional, only in combination with src)</li>
+          <li>direction (optional)</li>
+        </ul>
+
+        <p>Child elements: the piece of XML that should be inserted</p>
+
+        <p>This binding element can only be used when the target object is an XML document (DOM-tree).</p>
+
+        <p>It inserts the content of the <code>fb:insert-node</code> element as child
+        of the current context element, or, if a src attribute is specified, retrieves
+        the XML from the specified source and inserts that as child of the current
+        context element. In this last case, you can also supply an xpath attribute
+        to select a specific element from the retrieved source.</p>
+
+        <p><strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <code>direction="save"</code> to protect you model
+        from being changed during load.</p>
+      </s2>
+
+      <s2 title="fb:insert-bean">
+        <p>Attributes:</p>
+        <ul>
+          <li>classname</li>
+          <li>addmethod</li>
+          <li>direction (optional)</li>
+        </ul>
+
+        <p>This binding element can only be used when the target object is a Javabean.</p>
+
+        <p>It instantiates a new object of the type specified in the classname
+        attribute and calls the method specified in the addmethod attribute on the
+        current context object with the newly instantiated object as argument.</p>
+
+        <p><strong>NOTE:</strong> This binding is never active in the 'load' operation,
+        so there is no need to specify the <code>direction="save"</code> to protect you model
+        from being changed during load.</p>
+      </s2>
+
+      <s2 title="fb:simple-repeater">
+        <p>Attributes:</p>
+        <ul>
+          <li>id</li>
+          <li>parent-path (same as in fb:repeater)</li>
+          <li>row-path (same as in fb:repeater)</li>
+          <li>clear-before-load (default true)</li>
+          <li>delete-parent-if-empty (default false)</li>
+          <li>direction (optional)</li>
+        </ul>
+
+        <p>Child elements: any</p>
+
+        <p>A simple repeater binding that will replace (i.e. delete then re-add all) its content.</p>
+
+        <p>Works with XML or with JavaBeans if a JXPath factory is set on the binding context.</p>
+      </s2>
+
+      <s2 title="fb:javascript">
+        <p>Attributes:</p>
+        <ul>
+          <li>id</li>
+          <li>path</li>
+          <li>direction (optional)</li>
+        </ul>
+
+        <p>Child elements:</p>
+        <ul>
+          <li>fb:load-form</li>
+          <li>fb:save-form</li>
+        </ul>
+
+        <p>Specifies the binding using two JavaScript snippets, respectively for loading and saving the form.</p>
+
+        <p>Example:</p>
+
+        <source><![CDATA[<fb:javascript id="foo" path="@foo">
+  <fb:load-form>
+    var appValue = jxpathPointer.getValue();
+    var formValue = doLoadConversion(appValue);
+    widget.setValue(formValue);
+  </fb:load-form>
+  <fb:save-form>
+    var formValue = widget.getValue();
+    var appValue = doSaveConversion(formValue);
+    jxpathPointer.setValue(appValue);
+  </fb:save-form>
+</fb:javascript>]]></source>
+
+        <p>This example is rather trivial and could be replaced by a simple
+        <code>&lt;fb:value&gt;</code>, but it shows the available variables in the script:</p>
+
+        <ul>
+          <li><code>widget:</code> the widget identified by the <code>id</code> attribute,</li>
+          <li><code>jxpathPointer:</code> the JXPath pointer corresponding to the <code>path</code> attribute,</li>
+          <li><code>jxpathContext</code> (not shown): the JXPath context corresponding to the <code>path</code> attribute</li>
+        </ul>
+
+        <p>It's much more interesting to fill a selection list via <code>fb:javascript</code>
+        as there is no built-in element for it at the moment. Imagine your binding bean
+        contains a collection field:</p>
+
+        <source><![CDATA[<fb:javascript id="selectionListWidget" path="objectCollection" direction="load">
+  <fb:load-form>
+    var collection = jxpathPointer.getNode();
+    widget.setSelectionList(collection, "id", "name")
+  </fb:load-form>
+</fb:javascript>]]></source>
+
+        <p><strong>NOTE:</strong></p>
+
+        <ul>
+          <li>The <code>&lt;fb:save-form&gt;</code> snippet should be ommitted
+          if the <code>direction</code> attribute is set to load.</li>
+          <li>The <code>&lt;fb:load-form&gt;</code> snippet should be ommitted if the
+          <code>direction</code> attribute is set to save.</li>
+          <li>The <code>@readonly</code> attribute supported in early versions of this
+          binding has been replaced by the @direction attribute as supported now on all binding elements.</li>
+        </ul>
+      </s2>
+
+      <s2 title="fb:custom">
+        <p>Attributes:</p>
+        <ul>
+          <li>id (optional, if not provided the containing widget-context will be passed)</li>
+          <li>path (optional, if not provided "." is assumed)</li>
+          <li>direction (optional)</li>
+          <li>class (optional, if not present @builderclass and @factorymethod should be)</li>
+          <li>builderclass (optional)</li>
+          <li>factorymethod (optional)</li>
+        </ul>
+
+        <p>Child elements:</p>
+        <ul>
+          <li>fb:config</li>
+        </ul>
+
+        <p>Allows to specify your own user-defined binding to be written in Java.
+        There are two essential modes of operation reflected in two examples:</p>
+
+        <p>Example 1 - No configuration required:</p>
+
+        <source><![CDATA[<fb:custom id="custom" path="custom-value"
+      class="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"/>]]></source>
+
+        <p>This describes the classname of your user defined binding class.</p>
+
+        <p>Above imposes the following requirements:</p>
+
+        <ol>
+          <li>there is a <code>class</code> CustomValueWrapBinding available in the specified package</li>
+          <li>it has a default (i.e. no arguments) constructor</li>
+          <li>it is a subclass of org.apache.cocoon.forms.binding.AbstractCustomBinding</li>
+        </ol>
+
+        <p>This last will impose the implementation of two methods:</p>
+
+        <ul>
+          <li>void doLoad(Widget widget, JXPathContext context) throws BindingException;</li>
+          <li>void doSave(Widget widget, JXPathContext context) throws BindingException;</li>
+        </ul>
+
+        <p>where the available arguments are</p>
+
+        <ul>
+          <li><code>widget</code>: the widget identified by the <code>id</code> attribute,</li>
+          <li><code>context</code>: the JXPath context corresponding to the <code>path</code> attribute</li>
+        </ul>
+
+        <p>Example 2 - with nested configuration:</p>
+
+        <source><![CDATA[  <fb:custom id="config" path="config-value"
+      builderclass="org.apache.cocoon.forms.samples.bindings.CustomValueWrapBinding"
+      factorymethod="createBinding" >
+      <fb:config prefixchar="[" suffixchar="]" />
+  </fb:custom>]]></source>
+
+        <p>The additional requirements to your user defined classes are now:</p>
+
+        <ol>
+          <li>there is a <code>builderclass</code> CustomValueWrapBinding class having a static <code>factorymethod</code></li>
+          <li>that can (optionally) take an org.w3c.dom.Element holding it's configuration</li>
+          <li>and return an instance of your own user-defined binding which must be a non abstract subclass of org.apache.cocoon.forms.binding.AbstractCustomBinding</li>
+        </ol>
+      </s2>
+    </s1>
+  </body>
+</document>

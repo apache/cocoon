@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Cocoon Forms: XSLT</title>
+    <authors>
+      <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Intro">
+      <p>This page contains information on the default XSLT's provided by CForms,
+      and the fi:styling directives they support. Be sure to read first about
+      the <link href="templatetransformer.html">template transformer</link>.</p>
+
+      <p>There are basically 3 XSLTs:</p>
+
+      <ul>
+        <li><code>forms-samples-styling.xsl</code>: this stylesheet includes two
+        stylesheets: one for widget styling, one for page styling. You can choose
+        between the basic types of it or advanced stylings.</li>
+        <li><code>forms-field-styling.xsl</code>: contains templates that style
+        individual widgets, i.e. templates that translate fi:field, fi:booleanfield
+        fi:action, etc. to HTML.</li>
+        <li><code>forms-page-styling.xsl</code>: contains templates for building high-level
+        page layout effects, such as tabbed panes.</li>
+      </ul>
+
+      <p>Additionally there are 2 XSLTs for advanced widget styling:</p>
+
+      <ul>
+        <li><code>forms-advanced-field-styling.xsl</code>: contains templates that
+        provide advanced styling of fields, e.g. the "double-listbox" for a
+        multivaluefield. It's indeed an extension of the above basic <code>forms-field-styling.xsl</code>.
+        Furthermore it includes the next stylesheet.</li>
+        <li><code>forms-calendar-styling.xsl</code>: contains the styling of a
+        field with type "date" and provides a visual calendar for easy selection
+        of date. So the calendar is an advanced styling too, but because it has
+        much specific stuff we separated it out of <code>forms-advanced-styling.xsl</code>.</li>
+      </ul>
+
+      <p>From the sitemap you only need to reference the first one, for example as follows:</p>
+
+      <source><![CDATA[<map:transform src="context://samples/forms/resources/forms-samples-styling.xsl"/>]]></source>
+    </s1>
+
+    <s1 title="fi:styling options">
+      <s2 title="fi:field (without selection list)">
+        <p>By default all attributes on the fi:styling element will be copied
+        onto the resulting HTML &lt;input&gt; element. Thus you can put e.g. type,
+        class, style and size attributes on it. For example:</p>
+
+        <source><![CDATA[<ft:widget id="myfield">
+  <fi:styling size="50" class="kinky"/>
+</ft:widget>]]></source>
+
+        <p>Some values for the type attribute will cause special effects:</p>
+
+        <ul>
+          <li><strong>type="textarea"</strong>: creates a &lt;textarea&gt; instead of an &lt;input&gt; element</li>
+          <li><strong>type="htmlarea"</strong>: creates a &lt;textarea&gt; instead of an &lt;input&gt; element,
+          adding support for WYSIWYG editing of HTML using HTMLArea (works with IE 5.5+ under Windows
+          and Mozilla 1.3+, any platform)</li>
+          <li><strong>type="output"</strong>: outputs the field's value as uneditable text</li>
+        </ul>
+
+        <p>Adding an attribute <strong>submit-on-change="true"</strong> on fi:styling will cause
+        an automatic form submit when the field's value changes.</p>
+      </s2>
+
+      <s2 title="fi:field (with selection list)">
+        <p>By default, a field with a selection list is rendered as a dropdown box.</p>
+
+        <p>Adding an attribute <strong>list-type="radio"</strong> on fi:styling
+        produces a vertical list of radio buttons instead. Add list-orientation="horizontal"
+        to have a horizontal list of radio buttons.</p>
+
+        <p>Adding an attribute <strong>list-type="listbox"</strong> on fi:styling produces a selection list,
+        use the attribute list-size to specify its size (default 5).</p>
+      </s2>
+
+      <s2 title="fi:action">
+        <p>By default, creates an &lt;input&gt; of type submit, thus showing a standard button.
+        To have an image button instead, try this:</p>
+
+        <source><![CDATA[<fi:styling type="image" src="blah.gif">]]></source>
+      </s2>
+
+      <s2 title="Other widgets">
+        <p>Not yet documented here, but don't be afraid to look at the source of the XSLT's.</p>
+      </s2>
+    </s1>
+
+    <s1 title="High-level styling with fi:group">
+      <p>No documentation yet, checkout the samples and the source of forms-page-styling.xsl.</p>
+
+      <p>For storing the state of a tab or choice selection server-side just add a field to
+      the form definition that shall hold this value:</p>
+
+      <source><![CDATA[<fd:field id="state">
+  <fd:datatype base="integer"/>
+</fd:field>]]></source>
+
+      <p>Bind this value to whatever you want. In the form template you need then following code:</p>
+
+      <source><![CDATA[<fi:group>
+  <fi:styling type="choice"/>
+  <fi:state>
+    <ft:widget id="state"/> <!-- refering to the above defined field -->
+  </fi:state>
+  <fi:items>
+    ...
+  </fi:items>
+</fi:group>]]></source>
+    </s1>
+
+    <s1 title="Miscellaneous">
+      <s2 title="fi:validation-errors">
+        <p>The <code>fi:validation-errors</code> tag is used to display all validation
+        errors of all widgets in a form at one location, i.e. a the top of the form.</p>
+
+        <p>The fi:validation-errors tag must be a child of a ft:form-template element.</p>
+
+        <p>You can customise a message to be shown before and after the errors by adding
+        a child header and/or footer element:</p>
+
+        <source><![CDATA[<fi:validation-errors>
+  <header><p>Correct these errors please:</p></header>
+  <footer><p>And then resubmit the form.</p></footer>
+</fi:validation-errors>]]></source>
+      </s2>
+    </s1>
+  </body>
+</document>
