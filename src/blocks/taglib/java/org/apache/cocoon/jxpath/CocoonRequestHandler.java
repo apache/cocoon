@@ -19,21 +19,21 @@ package org.apache.cocoon.jxpath;
 import java.util.Enumeration;
 
 import org.apache.cocoon.environment.Request;
+import org.apache.commons.collections.EnumerationUtils;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
-import org.apache.commons.jxpath.servlet.Util;
 
 /**
  * Implementation of the DynamicPropertyHandler interface that provides
  * access to attributes of a Cocoon Request.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: CocoonRequestHandler.java,v 1.3 2004/03/05 13:02:24 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CocoonRequestHandler implements DynamicPropertyHandler {
 
     public String[] getPropertyNames(Object request){
         Enumeration e = ((Request)request).getAttributeNames();
-        return Util.toStrings(e);
+        return (String [])EnumerationUtils.toList(e).toArray();
     }
 
     public Object getProperty(Object request, String property){

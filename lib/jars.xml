@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.241 2004/07/11 23:45:08 antonio Exp $
+    | CVS $Id$
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -680,7 +680,7 @@
     <title>Jakarta Commons JXPath</title>
     <description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
     <used-by>Flow, JXPath logicsheet</used-by>
-    <lib>core/commons-jxpath-20030909.jar</lib>
+    <lib>core/commons-jxpath-1.2.jar</lib>
     <homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
   </file>
 
