@@ -78,7 +78,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.7 2003/12/25 13:53:53 unico Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.8 2004/02/06 23:34:32 joerg Exp $
  */
 public class XMLResourceBundleFactory extends DefaultServiceSelector
         implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -179,7 +179,7 @@ public class XMLResourceBundleFactory extends DefaultServiceSelector
      * @param name    bundle name
      * @param locale  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
     public Bundle select(String name, String locale) throws ServiceException {
         return select(getDirectory(), name, locale);
@@ -191,7 +191,7 @@ public class XMLResourceBundleFactory extends DefaultServiceSelector
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
     public Bundle select(String name, Locale locale) throws ServiceException {
         return select(getDirectory(), name, locale);
@@ -205,7 +205,7 @@ public class XMLResourceBundleFactory extends DefaultServiceSelector
      * @param name    bundle name
      * @param locale  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
     public Bundle select(String directory, String name, String localeName) throws ServiceException {
         return select(directory, name, new Locale(localeName, localeName));
@@ -219,7 +219,7 @@ public class XMLResourceBundleFactory extends DefaultServiceSelector
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
     public Bundle select(String directory, String name, Locale locale) throws ServiceException {
         Bundle bundle = _select(directory, name, locale, this.cacheAtStartup);

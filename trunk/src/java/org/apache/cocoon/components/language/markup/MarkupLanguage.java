@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.excalibur.source.Source;
 
@@ -61,9 +60,9 @@ import org.apache.excalibur.source.Source;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MarkupLanguage.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
+ * @version CVS $Id: MarkupLanguage.java,v 1.3 2004/02/06 23:34:32 joerg Exp $
  */
-public interface MarkupLanguage extends Component {
+public interface MarkupLanguage {
 
     String ROLE = MarkupLanguage.class.getName();
 

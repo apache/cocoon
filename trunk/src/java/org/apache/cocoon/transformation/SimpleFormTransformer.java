@@ -51,10 +51,10 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.ProcessingException;
@@ -173,7 +173,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.8 2003/12/06 21:22:07 cziegeler Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.9 2004/02/06 23:34:32 joerg Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -289,7 +289,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     private Configuration defaultInputConf = null;
     private Configuration inputConf = null;
     private InputModule input = null;
-    private ComponentSelector inputSelector = null;
+    private ServiceSelector inputSelector = null;
     private String inputName = null;
 
     /** Skip element's content only. Otherwise skip also surrounding element. */
@@ -452,10 +452,10 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
 
         try {
             // obtain input module
-            this.inputSelector = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+            this.inputSelector = (ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
             if (this.inputName != null
                 && this.inputSelector != null
-                && this.inputSelector.hasComponent(this.inputName)) {
+                && this.inputSelector.isSelectable(this.inputName)) {
                 this.input = (InputModule) this.inputSelector.select(this.inputName);
                 if (!(this.input instanceof ThreadSafe
                     && this.inputSelector instanceof ThreadSafe)) {
@@ -474,7 +474,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
                                 + (this.inputSelector != null ? "not " : "")
                                 + "null, Component is "
                                 + (this.inputSelector != null
-                                    && this.inputSelector.hasComponent(this.inputName)
+                                    && this.inputSelector.isSelectable(this.inputName)
                                         ? "known"
                                         : "unknown"));
             }
@@ -1093,7 +1093,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      */
     private Object[] getValues(String name) {
         Object[] values = null;
-        ComponentSelector iputSelector = null;
+        ServiceSelector iputSelector = null;
         InputModule iput = null;
         try {
             if (this.input != null) {
@@ -1111,10 +1111,10 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
             } else {
                 // input was not thread safe
                 // so acquire it again
-                iputSelector = (ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+                iputSelector = (ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
                 if (this.inputName != null
                     && iputSelector != null
-                    && iputSelector.hasComponent(this.inputName)) {
+                    && iputSelector.isSelectable(this.inputName)) {
 
                     iput = (InputModule) iputSelector.select(this.inputName);
                 }

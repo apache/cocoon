@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.xscript;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -74,12 +73,12 @@ import java.util.Map;
  * The actual implementation of the <code>XScriptManager</code> interface.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XScriptManagerImpl.java,v 1.2 2004/02/06 22:24:40 joerg Exp $
+ * @version CVS $Id: XScriptManagerImpl.java,v 1.3 2004/02/06 23:34:32 joerg Exp $
  * @since August  4, 2001
  */
 public class XScriptManagerImpl
         extends AbstractLogEnabled
-        implements XScriptManager, Serviceable, Component, Parameterizable, Contextualizable, ThreadSafe
+        implements XScriptManager, Serviceable, Parameterizable, Contextualizable, ThreadSafe
 {
     public static final String CONTEXT = "org.apache.cocoon.components.xscript.scope";
 

@@ -83,7 +83,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.4 2003/12/25 13:53:53 unico Exp $
+ * @version CVS $Id: XMLResourceBundle.java,v 1.5 2004/02/06 23:34:32 joerg Exp $
  */
 public class XMLResourceBundle extends ResourceBundle
                                implements Bundle {
@@ -123,7 +123,7 @@ public class XMLResourceBundle extends ResourceBundle
      * Compose this instance
      *
      * @param manager The <code>ComponentManager</code> instance
-     * @throws ComponentException if XPath processor is not found
+     * @throws ServiceException if XPath processor is not found
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;

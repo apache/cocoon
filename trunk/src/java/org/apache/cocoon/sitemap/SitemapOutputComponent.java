@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.sitemap;
 
-import org.apache.avalon.framework.component.Component;
-
 import java.io.IOException;
 import java.io.OutputStream;
+
+import org.apache.avalon.framework.component.Component;
 
 /**
  * This interface marks a component as a sitemap component that produces
@@ -61,7 +61,7 @@ import java.io.OutputStream;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapOutputComponent.java,v 1.2 2003/09/05 11:40:41 cziegeler Exp $
+ * @version CVS $Id: SitemapOutputComponent.java,v 1.3 2004/02/06 23:34:32 joerg Exp $
  */
 public interface SitemapOutputComponent extends Component {
 

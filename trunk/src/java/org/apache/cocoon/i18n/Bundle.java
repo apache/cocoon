@@ -52,16 +52,14 @@ package org.apache.cocoon.i18n;
 
 import java.util.MissingResourceException;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * Resource bundle component interface. 
  * Provide the minimal number of methods to be used for i18n.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: Bundle.java,v 1.3 2003/11/27 02:18:38 vgritsenko Exp $
+ * @version CVS $Id: Bundle.java,v 1.4 2004/02/06 23:34:32 joerg Exp $
  */
-public interface Bundle extends Component {
+public interface Bundle {
 
     String ROLE = Bundle.class.getName();
 

@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -90,7 +89,7 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.7 2003/10/23 08:27:46 cziegeler Exp $
+ *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.8 2004/02/06 23:34:33 joerg Exp $
  *  @since   2.1
  * 
  * @avalon.component
@@ -104,8 +103,7 @@ public final class DefaultIncludeCacheManager
                 ThreadSafe, 
                 Serviceable, 
                 Disposable,
-                Parameterizable, 
-                Component {
+                Parameterizable {
 
     private ServiceManager manager;
     
