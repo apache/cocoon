@@ -51,15 +51,16 @@ extends ServiceableGenerator {
         // start the portal rendering
         // 1. event processing
         // 2. rendering
-        PortalManager pm = null;
+        PortalService service = null;
         try {
-            pm = (PortalManager)this.manager.lookup(PortalManager.ROLE);
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            PortalManager pm = service.getComponentManager().getPortalManager();
             pm.process();
             pm.showPortal(this.xmlConsumer, this.parameters);
         } catch (ServiceException ce) {
-            throw new ProcessingException("Unable to lookup portal manager.", ce);
+            throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
-            this.manager.release(pm);
+            this.manager.release(service);
         }
 	}
 
