@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<!-- mind how xpatch oddly requires the file extension to 
+	be equal to the root elm -->
+	
+<xlog xpath="/logkit/categories" 
+      remove="/logkit/categories/category[@name='woody']">
+    
+    <category log-level="debug" name="woody">
+    	<log-target id-ref="woody" />
+    </category>
+    
+</xlog>
