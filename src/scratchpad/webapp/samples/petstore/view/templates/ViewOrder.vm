@@ -109,24 +109,24 @@ Courier: </td><td>$order.courier
   <tr bgcolor="#FFFF88">
   <td><b><a href="viewItem.do?itemId=$cartItem.item.itemId"><font color="BLACK">$cartItem.item.itemId</font></a></b></td>
   <td>
-#if ($cartItem.item) 
+   #if ($cartItem.item) 
 	$!cartItem.item.attr1
 	$!cartItem.item.attr2
 	$!cartItem.item.attr3
 	$!cartItem.item.attr4
 	$!cartItem.item.attr5
 	$!cartItem.item.product.name	
-#else
+  #else
   <i>{description unavailable}</i>
-#end
+  #end
   </td>
 
-  <td>$cartItem.quantity</td>
+  <td>$cartItem.quantity.intValue()</td>
   <td align="right">$cartItem.item.listPrice</td>
   </tr>
 #end
   <tr bgcolor="#FFFF88">
-  <td colspan="4" align="right"><b>Total: $order.totalPrice</b></td>
+  <td colspan="4" align="right"><b>Total: $yoshi.formatNumber($order.totalPrice, '$#,##0.00'</b></td>
   </tr>
 </table>
 </td></tr>
