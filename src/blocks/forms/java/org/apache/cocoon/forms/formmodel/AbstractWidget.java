@@ -429,12 +429,16 @@ public abstract class AbstractWidget implements Widget {
         contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
     }
 
-    public Object getAttribute(String name) {
-        if (this.attributes != null){
-            return this.attributes.get(name);
-        } else{
-            return null;
-        }
+	public Object getAttribute(String name) {
+        Object result = null;
+        
+        // First check locally
+        if (this.attributes != null) result = this.attributes.get(name);
+        
+        // Fall back to the definition's attributes
+        if (result == null) result = getDefinition().getAttribute(name);
+        
+        return result;
     }
 
     public void setAttribute(String name, Object value) {

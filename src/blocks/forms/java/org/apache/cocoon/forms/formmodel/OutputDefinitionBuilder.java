@@ -24,13 +24,12 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {@link OutputDefinition}s.
  * 
- * @version $Id: OutputDefinitionBuilder.java,v 1.3 2004/03/17 15:37:58 joerg Exp $
+ * @version $Id$
  */
 public class OutputDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         OutputDefinition definition = new OutputDefinition();
-        setLocation(widgetElement, definition);
-        setId(widgetElement, definition);
+        setCommonProperties(widgetElement, definition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
         if (datatypeElement == null) {

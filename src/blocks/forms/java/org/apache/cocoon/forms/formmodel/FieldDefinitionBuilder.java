@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 /**
  * Builds {FieldDefinition}s.
  *
- * @version $Id: FieldDefinitionBuilder.java,v 1.4 2004/06/15 07:33:44 sylvain Exp $
+ * @version $Id$
  */
 public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
 
@@ -37,8 +37,7 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
     }
 
     protected void buildWidgetDefinition(FieldDefinition fieldDefinition, Element widgetElement) throws Exception {
-        setLocation(widgetElement, fieldDefinition);
-        setId(widgetElement, fieldDefinition);
+        setCommonProperties(widgetElement, fieldDefinition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "datatype");
         if (datatypeElement == null) {

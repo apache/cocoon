@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  * usually won't have to bother with the WidgetDefinition's, but will rather use
  * the Widget's themselves.
  * 
- * @version CVS $Id: WidgetDefinition.java,v 1.5 2004/04/29 08:46:19 cziegeler Exp $
+ * @version CVS $Id$
  */
 public interface WidgetDefinition {
 
@@ -47,6 +47,14 @@ public interface WidgetDefinition {
      * Gets id of this widget definition.
      */
     public String getId();
+    
+    /**
+     * Gets an attribute that has been defined on the widget's definition
+     * 
+     * @param name the attribute name
+     * @return the attribute value, or null if it doesn't exist
+     */
+    public Object getAttribute(String name);
     
     /**
      * Validate a widget using the validators that were defined in its definition. If validation

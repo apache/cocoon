@@ -22,14 +22,13 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link FormDefinition}s.
  * 
- * @version $Id: FormDefinitionBuilder.java,v 1.3 2004/06/08 15:42:19 danielf Exp $
+ * @version $Id$
  */
 public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element formElement) throws Exception {
         FormDefinition formDefinition = new FormDefinition();
-        setLocation(formElement, formDefinition);
-        formDefinition.setId(DomHelper.getAttribute(formElement, "id", ""));
+        setCommonProperties(formElement, formDefinition);
         setDisplayData(formElement, formDefinition);
         setValidators(formElement, formDefinition);
 
