@@ -32,7 +32,7 @@ import org.apache.commons.collections.iterators.IteratorEnumeration;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.22 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.23 2004/05/29 17:39:38 cziegeler Exp $
  */
 public abstract class AbstractEnvironment 
     extends AbstractLogEnabled 
@@ -42,7 +42,7 @@ public abstract class AbstractEnvironment
     protected String uri;
 
     /** The prefix */
-    protected String prefix;
+    protected String prefix = "";
     
     /** The View requested */
     protected String view;
