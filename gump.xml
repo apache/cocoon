@@ -199,6 +199,7 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="chaperon"/>
     <depend project="cocoon-block-xsp" type="samples"/>
+    <depend project="castor"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/chaperon/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/chaperon/test"/>
