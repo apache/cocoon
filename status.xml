@@ -202,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="LG" type="add" due-to="Jonas Ekstedt" due-to-email="ekstedt@ibg.uu.se">
+    initial revision of new block: Cocoon Templates
+   </action>
    <action dev="RP" type="add">
     cForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
             up the result by HTMLArea fields. The cleanup process, that is based upon
