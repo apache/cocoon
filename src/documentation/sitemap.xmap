@@ -18,6 +18,9 @@
       </map:transformer>
 
       <map:transformer name="linkrewriter" logger="sitemap.transformer.linkrewriter" src="org.apache.cocoon.transformation.LinkRewriterTransformer">
+        <link-attrs>href src</link-attrs>
+        <schemes>site ext</schemes>
+
         <input-module name="site">
           <input-module name="linkmap">
             <file src="{src}" reloadable="false" />
@@ -78,13 +81,8 @@
       <map:matcher name="regexp" src="org.apache.cocoon.matching.RegexpURIMatcher"/>
     </map:matchers>
 
-    <map:actions>
-      <map:action logger="sitemap.action.resource-exists" name="resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"/>
-    </map:actions>
-
-    <map:selectors default="exists">
-      <map:selector logger="sitemap.selector.exists" name="exists"
-        src="org.apache.cocoon.selection.ResourceExistsSelector" />
+    <map:selectors>
+      <map:selector logger="sitemap.selector.exists" name="exists" src="org.apache.cocoon.selection.ResourceExistsSelector" />
     </map:selectors>
 
     <map:pipes default="caching">
@@ -115,6 +113,7 @@
         <map:parameter name="isfaq" value="{notoc}"/>
         <map:parameter name="nopdf" value="{nopdf}"/>
         <map:parameter name="path" value="{path}"/>
+        <map:parameter name="obfuscate-mail-links" value="false"/>
         <!-- Can set an alternative project skinconfig here 
         <map:parameter name="config-file" value="../../../../skinconf.xml"/>
         -->
@@ -131,6 +130,139 @@
     <map:pipeline internal-only="false">
 
       <!-- ============================================================ -->
+      <!-- SOURCE FORMATS                                               -->
+      <!--                 Raw XML sources, typically doc-v11 format    -->
+      <!-- ============================================================ -->
+
+      <map:match pattern="changes.xml">
+        <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="todo.xml">
+        <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="**dtdx.xml">
+        <map:mount uri-prefix="" src="dtd.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="**linkmap*">
+        <map:mount uri-prefix="" src="linkmap.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="**menulinks*">
+        <map:mount uri-prefix="" src="linkmap.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="**issues.xml">
+        <map:mount uri-prefix="" src="issues.xmap" check-reload="yes" />
+      </map:match>
+
+      <!-- COCOON SPECIFIC -->
+      <map:match pattern="faq/**.xml">
+        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
+      </map:match>
+      <!-- /COCOON SPECIFIC -->
+
+      <map:match pattern="**faq.xml">
+        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="community/**index.xml">
+        <map:mount uri-prefix="" src="forrest.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="community/*/**.xml">
+        <map:mount uri-prefix="" src="revisions.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="site.xml">
+        <map:mount uri-prefix="" src="aggregate.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="**.xml">
+        <map:mount uri-prefix="" src="forrest.xmap" check-reload="yes" />
+      </map:match>
+
+    </map:pipeline>
+
+
+    <!-- ============================================================ -->
+    <!-- INTERMEDIATE FORMATS                                         -->
+    <!--                          Tabs, menus and body HTML.          -->
+    <!--                       Called from output format pipelines    -->
+    <!-- ============================================================ -->
+    <map:pipeline internal-only="false">
+
+      <!-- COCOON SPECIFIC -->
+      <map:match pattern="faq/**body-*.html">
+        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
+      </map:match>
+      <!-- /COCOON SPECIFIC -->
+
+
+      <!-- External matches -->
+      <!-- (HTML rendered directly from special formats) -->
+      <map:match pattern="**body-faq.html">
+        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="**body-*.html">
+        <map:select type="exists">
+          <map:when test="content/xdocs/{1}{2}.ehtml">
+            <map:generate src="content/xdocs/{1}{2}.ehtml" />
+            <map:transform src="resources/stylesheets/html2htmlbody.xsl" />
+            <map:transform type="linkrewriter" src="cocoon:/{1}linkmap-{2}.html"/>
+            <map:serialize type="xml" />
+          </map:when>
+        </map:select>
+      </map:match>
+
+      <!-- Default matches -->
+      <!-- (HTML rendered from doc-v11 intermediate format -->
+      <map:match pattern="**body-*.html">
+        <map:generate src="cocoon:/{1}{2}.xml"/>
+        <map:transform type="idgen"/>
+        <map:transform type="xinclude"/>
+        <map:transform type="linkrewriter" src="cocoon:/{1}linkmap-{2}.html"/>
+        <map:call resource="skinit">
+          <map:parameter name="type" value="document2html"/>
+          <map:parameter name="path" value="/{1}{2}.xml"/>
+          <map:parameter name="notoc" value="false"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="**menu-*.html">
+        <map:generate src="cocoon:/{1}book-{2}.html"/>
+        <map:transform type="linkrewriter" src="cocoon:/{1}linkmap-{2}.html"/>
+        <map:call resource="skinit">
+          <map:parameter name="type" value="book2menu"/>
+          <map:parameter name="path" value="/{1}{2}.xml"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="**tab-*.html">
+        <map:generate src="content/xdocs/tabs.xml" />
+        <map:transform type="linkrewriter" src="cocoon:/{1}linkmap-{2}.html"/>
+        <map:call resource="skinit">
+          <map:parameter name="type" value="tab2menu"/>
+          <map:parameter name="path" value="{1}{2}"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="**book-*.html">
+        <map:mount uri-prefix="" src="navigation.xmap" check-reload="yes" />
+      </map:match>
+
+
+
+
+    </map:pipeline>
+
+
+    <map:pipeline internal-only="false">
+
+      <!-- ============================================================ -->
       <!-- OUTPUT FORMATS                                               -->
       <!--                  Serves content directly to the user         -->
       <!-- +==========================================================+ -->
@@ -143,7 +275,7 @@
       </map:match>
       <!-- /COCOON SPECIFIC -->
 
-       <map:match type="regexp" pattern="^.+$">
+      <map:match type="regexp" pattern="^.+$">
         <map:select type="exists">
           <map:when test="content/{0}">
             <map:mount uri-prefix="" src="raw.xmap" check-reload="yes" />
@@ -153,9 +285,9 @@
 
       <map:match pattern="*.html">
         <map:aggregate element="site">
-          <map:part src="cocoon:/tab-{1}.xml"/>
-          <map:part src="cocoon:/menu-{1}.xml"/>
-          <map:part src="cocoon:/body-{1}.xml"/>
+          <map:part src="cocoon:/tab-{0}"/>
+          <map:part src="cocoon:/menu-{0}"/>
+          <map:part src="cocoon:/body-{0}"/>
         </map:aggregate>
         <map:call resource="skinit">
           <map:parameter name="type" value="site2xhtml"/>
@@ -165,9 +297,9 @@
 
       <map:match pattern="**/*.html">
         <map:aggregate element="site">
-          <map:part src="cocoon:/{1}/tab-{2}.xml"/>
-          <map:part src="cocoon:/{1}/menu-{2}.xml"/>
-          <map:part src="cocoon:/{1}/body-{2}.xml"/>
+          <map:part src="cocoon:/{1}/tab-{2}.html"/>
+          <map:part src="cocoon:/{1}/menu-{2}.html"/>
+          <map:part src="cocoon:/{1}/body-{2}.html"/>
         </map:aggregate>
         <map:call resource="skinit">
           <map:parameter name="type" value="site2xhtml"/>
@@ -190,6 +322,11 @@
 
       <map:match type="regexp" pattern="^(.*?)([^/]*).pdf$">
         <map:generate src="cocoon:/{1}{2}.xml"/>
+        <!--
+        <map:transform type="idgen"/>
+        -->
+        <map:transform type="xinclude"/>
+        <map:transform type="linkrewriter" src="cocoon://{1}linkmap-{2}.pdf"/>
         <map:transform src="skins/{forrest:skin}/xslt/fo/document2fo.xsl">
           <map:parameter name="ctxbasedir" value="{realpath:.}/"/>
           <map:parameter name="xmlbasedir" value="content/xdocs/{1}"/>
@@ -219,135 +356,6 @@
     </map:pipeline>
 
 
-    <!-- ============================================================ -->
-    <!-- INTERMEDIATE FORMATS                                         -->
-    <!--                          Tabs, menus and body HTML.          -->
-    <!--                       Called from output format pipelines    -->
-    <!-- ============================================================ -->
-    <map:pipeline internal-only="false">
-
-      <!-- External matches -->
-      <!-- (HTML rendered directly from special formats) -->
-
-      <!-- COCOON SPECIFIC -->
-      <map:match pattern="faq/**body-*.xml">
-        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
-      </map:match>
-      <!-- /COCOON SPECIFIC -->
-
-      <map:match pattern="**body-faq.xml">
-        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**body-*.xml">
-        <map:act type="resource-exists">
-          <map:parameter name="url" value="content/xdocs/{1}{2}.ehtml" />
-          <map:generate src="content/xdocs/{../1}{../2}.ehtml" />
-          <map:transform src="resources/stylesheets/html2htmlbody.xsl" />
-          <map:transform type="linkrewriter" src="cocoon:/{1}linkmap">
-            <map:parameter name="link-attrs" value="href src"/>
-            <map:parameter name="schemes" value="site ext"/>
-          </map:transform>
-          <map:serialize type="xml" />
-        </map:act>
-      </map:match>
-
-      <!-- Default matches -->
-      <!-- (HTML rendered from doc-v11 intermediate format -->
-      <map:match pattern="**body-*.xml">
-        <map:generate src="cocoon:/{1}{2}.xml"/>
-        <map:transform type="xinclude"/>
-        <map:transform type="linkrewriter" src="cocoon:/{1}linkmap">
-          <map:parameter name="link-attrs" value="href src"/>
-          <map:parameter name="schemes" value="site ext"/>
-        </map:transform>
-        <map:call resource="skinit">
-          <map:parameter name="type" value="document2html"/>
-          <map:parameter name="path" value="/{1}{2}.xml"/>
-          <map:parameter name="notoc" value="false"/>
-        </map:call>
-      </map:match>
-
-      <map:match pattern="**menu-*.xml">
-        <map:generate src="cocoon:/{1}book.xml"/>
-        <map:transform type="linkrewriter" src="cocoon:/{1}linkmap">
-          <map:parameter name="schemes" value="site ext"/>
-        </map:transform>
-        <map:call resource="skinit">
-          <map:parameter name="type" value="book2menu"/>
-          <map:parameter name="path" value="/{1}{2}.xml"/>
-        </map:call>
-      </map:match>
-
-      <map:match pattern="**tab-*.xml">
-        <map:generate src="cocoon:/{1}tab.xml" />
-        <map:transform type="linkrewriter" src="cocoon:/{1}linkmap">
-          <map:parameter name="schemes" value="site ext"/>
-        </map:transform>
-        <map:call resource="skinit">
-          <map:parameter name="type" value="tab2menu"/>
-          <map:parameter name="path" value="{1}{2}"/>
-        </map:call>
-      </map:match>
-    </map:pipeline>
-
-    <!-- ============================================================ -->
-    <!-- SOURCE FORMATS                                               -->
-    <!--                 Raw XML sources, typically doc-v11 format    -->
-    <!-- ============================================================ -->
-    <map:pipeline internal-only="false">
- 
-      <map:match pattern="**book.xml">
-        <map:mount uri-prefix="" src="navigation.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**tab.xml">
-        <map:mount uri-prefix="" src="navigation.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="changes.xml">
-        <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="todo.xml">
-        <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**dtdx.xml">
-        <map:mount uri-prefix="" src="dtd.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**linkmap**">
-        <map:mount uri-prefix="" src="linkmap.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**issues.xml">
-        <map:mount uri-prefix="" src="issues.xmap" check-reload="yes" />
-      </map:match>
-
-      <!-- COCOON SPECIFIC -->
-      <map:match pattern="faq/**.xml">
-        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
-      </map:match>
-      <!-- /COCOON SPECIFIC -->
-
-      <map:match pattern="**faq.xml">
-        <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="community/**index.xml">
-        <map:mount uri-prefix="" src="forrest.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="community/*/**">
-        <map:mount uri-prefix="" src="revisions.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**.xml">
-        <map:mount uri-prefix="" src="forrest.xmap" check-reload="yes" />
-      </map:match>
-
-    </map:pipeline>
 
     <!-- ============================================================ -->
     <!-- REDIRECTS                                                    -->
