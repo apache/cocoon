@@ -200,6 +200,16 @@
     </tr>
   </xsl:template>
 
+  <!-- double-list multivaluefield : lists under the label -->
+  <xsl:template match="wi:multivaluefield[wi:styling/@list-type='double-listbox']" mode="group-columns-content">
+    <tr align="center">
+      <td colspan="2"><label for="{@id}"><xsl:copy-of select="wi:label/node()"/></label></td>
+    </tr>
+    <tr align="center">
+      <td colspan="2"><xsl:apply-templates select="."/></td>
+    </tr>
+  </xsl:template>
+
   <!-- nested group -->
   <xsl:template match="wi:group" mode="group-columns-content">
     <tr>

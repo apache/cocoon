@@ -52,7 +52,7 @@
                   <wi:items>
                     <wt:widget id="somebool"/>
                     <wt:widget id="drinks">
-                      <wi:styling list-type="checkbox"/>
+                      <wi:styling list-type="double-listbox"/>
                     </wt:widget>
                   </wi:items>
                 </wi:group>

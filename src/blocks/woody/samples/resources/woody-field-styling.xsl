@@ -10,7 +10,16 @@
     <xsl:param name="uri" select="'resources'"/>
     <xsl:param name="div">woody_calendarDiv</xsl:param>
     
+    <!-- use this for debugging 
+    <script src="{$uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript"></script>
+    <script src="{$uri}/mattkruse-lib/CalendarPopup.js" language="JavaScript"></script>
+    <script src="{$uri}/mattkruse-lib/date.js" language="JavaScript"></script>
+    <script src="{$uri}/mattkruse-lib/OptionTransfer.js" language="JavaScript"></script>
+    <script src="{$uri}/mattkruse-lib/PopupWindow.js" language="JavaScript"></script>
+    <script src="{$uri}/mattkruse-lib/selectbox.js" language="JavaScript"></script>
+    -->
     <script src="{$uri}/mattkruse-lib.js" language="JavaScript"></script>
+    
     <script src="{$uri}/woody-lib.js" language="JavaScript"></script>
     <script language="JavaScript">
       // Setup calendar
@@ -32,11 +41,11 @@
   
   <!-- must be called in <head> to load calendar script and setup the CSS -->
   <xsl:template name="woody-field-body">
-      <xsl:attribute name="onload">woody_init(); <xsl:value-of select="@onload"/></xsl:attribute>
-    <script language="JavaScript">
+    <xsl:attribute name="onload">woody_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
+    <!--script language="JavaScript">
       // Register woody startup function
       document.body.onload = woody_init;
-    </script>
+    </script-->
     
      <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
   </xsl:template>
@@ -281,57 +290,139 @@
   </xsl:template>
 
   <!--
-    wi:multivaluefield : produce a list of checkboxes or a multiple selection-lists
+    wi:multivaluefield : produce a list of checkboxes
   -->
-  <xsl:template match="wi:multivaluefield">
+
+  <xsl:template match="wi:multivaluefield[wi:styling[@list-type='checkbox']]">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
-    <xsl:variable name="liststyle" select="wi:styling/@list-type"/>
 
     <span title="{wi:hint}">
-      <xsl:choose>
-        <!-- checkbox -->
-        <xsl:when test="$liststyle = 'checkbox'">
-          <xsl:for-each select="wi:selection-list/wi:item">
-            <xsl:variable name="value" select="@value"/>
-            <input id="{generate-id()}" type="checkbox" value="{@value}" name="{$id}">
-              <xsl:if test="$values[. = $value]">
-                <xsl:attribute name="checked">true</xsl:attribute>
-              </xsl:if>
-            </input>
-            <label for="{generate-id()}"><xsl:copy-of select="wi:label/node()"/></label>
-            <br/>
-          </xsl:for-each>
-        </xsl:when>
-        <!-- listbox -->
-        <xsl:otherwise>
-          <select id="{@id}" name="{$id}" multiple="multiple">
-            <xsl:attribute name="size">
-              <xsl:choose>
-                <xsl:when test="wi:styling/@listbox-size">
-                  <xsl:value-of select="wi:styling/@listbox-size"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:text>5</xsl:text>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:attribute>
-            <xsl:for-each select="wi:selection-list/wi:item">
-              <xsl:variable name="value" select="@value"/>
-              <option value="{$value}">
-                <xsl:if test="$values[. = $value]">
-                  <xsl:attribute name="selected">selected</xsl:attribute>
-                </xsl:if>
-                <xsl:copy-of select="wi:label/node()"/>
-              </option>
-            </xsl:for-each>
-          </select>
-        </xsl:otherwise>
-      </xsl:choose>
+      <xsl:for-each select="wi:selection-list/wi:item">
+        <xsl:variable name="value" select="@value"/>
+        <input id="{generate-id()}" type="checkbox" value="{@value}" name="{$id}">
+          <xsl:if test="$values[. = $value]">
+            <xsl:attribute name="checked">true</xsl:attribute>
+          </xsl:if>
+        </input>
+        <label for="{generate-id()}"><xsl:copy-of select="wi:label/node()"/></label>
+        <br/>
+      </xsl:for-each>
     </span>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
+  <!--
+    wi:multivaluefield : produce a multiple-selection list
+  -->
+
+  <xsl:template match="wi:multivaluefield">
+    <xsl:variable name="id" select="@id"/>
+    <xsl:variable name="values" select="wi:values/wi:value/text()"/>
+
+    <span title="{wi:hint}">
+      <select id="{@id}" name="{$id}" multiple="multiple">
+        <xsl:attribute name="size">
+          <xsl:choose>
+            <xsl:when test="wi:styling/@listbox-size">
+              <xsl:value-of select="wi:styling/@listbox-size"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>5</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
+        <xsl:for-each select="wi:selection-list/wi:item">
+          <xsl:variable name="value" select="@value"/>
+          <option value="{$value}">
+            <xsl:if test="$values[. = $value]">
+              <xsl:attribute name="selected">selected</xsl:attribute>
+            </xsl:if>
+            <xsl:copy-of select="wi:label/node()"/>
+          </option>
+        </xsl:for-each>
+      </select>
+    </span>
+    <xsl:apply-templates select="." mode="common"/>
+  </xsl:template>
+
+  <!--
+    wi:multivaluefield : produce a double selection list
+  -->
+
+  <xsl:template match="wi:multivaluefield[wi:styling[@list-type='double-listbox']]">
+    <xsl:variable name="id" select="@id"/>
+    <xsl:variable name="values" select="wi:values/wi:value/text()"/>
+    <xsl:variable name="size">
+      <xsl:choose>
+        <xsl:when test="wi:styling/@listbox-size">
+          <xsl:value-of select="wi:styling/@listbox-size"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>5</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <span title="{wi:hint}">
+      <table>
+      <tr>
+          <td>
+      <!-- select for the unselected values -->
+      <select id="{@id}.unselected" name="{@id}.unselected" size="{$size}" multiple="multiple">
+        <xsl:for-each select="wi:selection-list/wi:item">
+          <xsl:variable name="value" select="@value"/>
+          <xsl:if test="not($values[. = $value])">
+            <option value="{$value}">
+              <xsl:copy-of select="wi:label/node()"/>
+            </option>
+          </xsl:if>
+        </xsl:for-each>
+      </select>
+</td>
+          <td align="center" valign="middle">
+          <!-- command buttons -->
+      		<!-- strangely, IE adds an extra blank line if there only a button on a line. So we surround it with nbsp -->
+      		<xsl:text>&#160;</xsl:text>
+      		<input type="button" value="&#160;&gt;&#160;" onclick="opt{generate-id()}.transferRight()"/>
+      		<xsl:text>&#160;</xsl:text>
+      		<br/>
+      		<xsl:text>&#160;</xsl:text>
+      		<input type="button" value="&gt;&gt;" onclick="opt{generate-id()}.transferAllRight()"/>
+      		<xsl:text>&#160;</xsl:text>
+      		<br/>
+      		<xsl:text>&#160;</xsl:text>
+      		<input type="button" value="&#160;&lt;&#160;" onclick="opt{generate-id()}.transferLeft()"/>
+      		<xsl:text>&#160;</xsl:text>
+      		<br/>
+      		<xsl:text>&#160;</xsl:text>
+      		<input type="button" value="&lt;&lt;" onclick="opt{generate-id()}.transferAllLeft()"/>
+      		<xsl:text>&#160;</xsl:text>
+      		<br/>
+            <xsl:apply-templates select="." mode="common"/>
+          </td>
+          <td>
+      <!-- select for the selected values -->
+      <select id="{@id}" name="{@id}" size="{$size}" multiple="multiple">
+        <xsl:for-each select="wi:selection-list/wi:item">
+          <xsl:variable name="value" select="@value"/>
+          <xsl:if test="$values[. = $value]">
+            <option value="{$value}">
+              <xsl:copy-of select="wi:label/node()"/>
+            </option>
+          </xsl:if>
+        </xsl:for-each>
+      </select>
+</td>
+      </tr>
+    </table>
+    <script language="JavaScript">
+      var opt<xsl:value-of select="generate-id()"/> = woody_createOptionTransfer('<xsl:value-of select="@id"/>');
+    </script>
+    </span>
+    
+  </xsl:template>
+  
   <!--
     wi:upload
   -->
@@ -391,6 +482,7 @@
   <xsl:template match="wi:form-template">
     <form>
       <xsl:copy-of select="@*"/>
+      <xsl:attribute name="onsubmit">woody_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
       <!-- hidden field to store the submit id -->
       <input type="hidden" name="woody_submit_id"/>
       <xsl:apply-templates/>
