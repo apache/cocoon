@@ -34,7 +34,7 @@ import java.util.Map;
  * effective.  The name of the root configuration element is irrelevant.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: AbstractComplementaryConfigurableAction.java,v 1.4 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id: AbstractComplementaryConfigurableAction.java,v 1.5 2004/05/27 13:14:36 cziegeler Exp $
  */
 public abstract class AbstractComplementaryConfigurableAction extends ConfigurableServiceableAction {
     private static Map configurations = new HashMap();
@@ -52,14 +52,6 @@ public abstract class AbstractComplementaryConfigurableAction extends Configurab
         if (this.settings.containsKey("reloadable"))
             reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
         return this.getConfiguration(descriptor, null, reloadable);
-    }
-
-    /**
-     * @deprecated please use the getConfiguration(String, SourceResolver, boolean)
-     *             version of this method instead.
-     */
-    protected Configuration getConfiguration(String descriptor, boolean reloadable) throws ConfigurationException {
-        return this.getConfiguration( descriptor, null, reloadable );
     }
 
     /**

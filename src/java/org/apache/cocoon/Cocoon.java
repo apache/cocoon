@@ -82,7 +82,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.25 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.26 2004/05/27 13:14:36 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -267,22 +267,7 @@ public class Cocoon
 
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
-        // first check for deprecated property to be compatible:
-        String parser = System.getProperty(Constants.DEPRECATED_PARSER_PROPERTY, Constants.DEFAULT_PARSER);
-        if ( !Constants.DEFAULT_PARSER.equals( parser ) ) {
-            getLogger().warn("Deprecated property " +
-                             Constants.DEPRECATED_PARSER_PROPERTY + " is used. Please use " +
-                             Constants.PARSER_PROPERTY + " instead.");
-            if ( "org.apache.cocoon.components.parser.XercesParser".equals(parser) ) {
-                parser = XercesParser.class.getName();
-            } else {
-                getLogger().warn("Unknown value for deprecated property: " +
-                                 Constants.DEPRECATED_PARSER_PROPERTY + ", value: " + parser +
-                                 ". If you experience problems during startup, check the parser configuration section of the documentation.");
-            }
-        } else {
-            parser = System.getProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
-        }
+        String parser = System.getProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Using parser: " + parser);
             getLogger().debug("Classpath = " + classpath);
