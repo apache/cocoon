@@ -48,7 +48,6 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-
 package org.apache.cocoon.transformation.constrained;
 
 import org.xml.sax.Attributes;
@@ -56,7 +55,7 @@ import org.xml.sax.Attributes;
 /**
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a> 
- * @version CVS $Id: ElementValueEvent.java,v 1.1 2003/09/04 12:42:43 cziegeler Exp $
+ * @version CVS $Id: ElementValueEvent.java,v 1.2 2003/09/05 07:04:34 cziegeler Exp $
  */
 public class ElementValueEvent extends ContainerElementEndEvent {
 

@@ -52,7 +52,6 @@ package org.apache.cocoon.components.cron;
 
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -64,7 +63,7 @@ import java.util.Date;
  * Implementation of the JobSchedulerEntry interface for the QuartzJobScheduler
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobSchedulerEntry.java,v 1.1 2003/09/04 15:56:51 giacomo Exp $
+ * @version CVS $Id: QuartzJobSchedulerEntry.java,v 1.2 2003/09/05 07:04:36 cziegeler Exp $
  */
 public class QuartzJobSchedulerEntry
 implements JobSchedulerEntry {

@@ -51,9 +51,6 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.jsp.JSPEngine;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -75,13 +72,9 @@ import java.io.IOException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.6 2003/08/04 09:44:23 joerg Exp $
+ * @version CVS $Id: JspGenerator.java,v 1.7 2003/09/05 07:04:35 cziegeler Exp $
  */
-public class JspGenerator extends ServletGenerator implements Configurable {
-
-    public void configure(Configuration conf) throws ConfigurationException
-    {
-    }
+public class JspGenerator extends ServletGenerator {
 
     /**
      * Generate XML data from JSP.
