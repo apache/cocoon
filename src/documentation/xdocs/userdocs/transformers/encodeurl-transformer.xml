@@ -42,9 +42,10 @@
    </p>
    <p>
     You can specify which attributes hold URL values in order to restrict
-    URL rewriting to specific attributes only. In the current implementation
+    URL rewriting to specific attributes and values only. In the current implementation
     you specify include, and exclude patterns as regular expressions, concatting
-    element-name + "/@" + attribute-name.
+    element-name-regexp + "/@" + attribute-name-regexp [ + "=" + attribute-value-regexp ] 
+    whereas the part in brackets [] are optional.
    </p>
    <p>
     The EncodeURLTransformer has several configuration options. These options
@@ -52,9 +53,10 @@
    </p>
    <dl>
      <dt>include-name</dt>
-     <dd>RE pattern for including attributes from encode URL rewriting, 
+     <dd>RE pattern for including attributes for encode URL rewriting, 
        The attribute values are encoded, if an 
-       expressions of the form <code>element-name/@attribute-name</code>
+       expressions of the form 
+       <code>element-name-regexp/@attribute-name-regexp[=attribute-value-regexp]</code>
        matches.
        <br/>
        By default <code>include-name</code> is defined as
@@ -63,7 +65,8 @@
      <dt>exclude-name</dt>
      <dd>RE pattern for excluding attributes from encode URL rewriting,
        The attribute values are not encoded, if an 
-       expressions of the form <code>element-name/@attribute-name</code>
+       expressions of the form 
+       <code>element-name-regexp/@attribute-name-regexp[=attribute-value-regexp]</code>
        matches.
        <br/>
        By default <code>exclude-name</code> is defined as
@@ -91,7 +94,7 @@
       src="org.apache.cocoon.transformation.EncodeURLTransformer">
       <!-- default configuration, explicitly defined -->
       <include-name>.*/@href|.*/@action|frame/@src</include-name>
-      <exclude-name>img/@src</exclude-name>
+      <exclude-name>img/@src|(a/@href|iframe/@src)=.*adserver</exclude-name>
     </map:transformer>
   ...
 ]]></source>
