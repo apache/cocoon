@@ -57,14 +57,21 @@ import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.batik.transcoder.Transcoder;
-import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.TranscodingHints;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.util.ParsedURL;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.components.transcoder.TranscoderFactory;
+import org.apache.cocoon.components.url.ParsedContextURLProtocolHandler;
+import org.apache.cocoon.components.url.ParsedResourceURLProtocolHandler;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.dom.SVGBuilder;
 import org.apache.excalibur.source.SourceValidity;
@@ -77,20 +84,20 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.12 2004/02/07 13:18:16 joerg Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.13 2004/02/08 18:33:58 sylvain Exp $
  */
 public class SVGSerializer extends SVGBuilder
-implements Serializer, Configurable, Poolable, CacheableProcessingComponent/*, Serviceable, Disposable , Contextualizable*/ {
+implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
 
-//    /**
-//     * Get the context
-//     */
-//    public void contextualize(Context context) throws ContextException {
-//        ParsedContextURLProtocolHandler.setContext(
-//            (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
-//        ParsedURL.registerHandler(new ParsedContextURLProtocolHandler());
-//        ParsedURL.registerHandler(new ParsedResourceURLProtocolHandler());
-//    }
+    /**
+     * Get the context
+     */
+    public void contextualize(Context context) throws ContextException {
+        ParsedContextURLProtocolHandler.setContext(
+            (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
+        ParsedURL.registerHandler(new ParsedContextURLProtocolHandler());
+        ParsedURL.registerHandler(new ParsedResourceURLProtocolHandler());
+    }
 
     /** The current <code>OutputStream</code>. */
     private OutputStream output;
