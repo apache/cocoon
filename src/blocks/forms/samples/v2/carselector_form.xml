@@ -14,8 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id$-->
-<!-- form used to illustrate programmatic changing of listbox content. -->
+
+<!--
+  Form used to illustrate programmatic changing of listbox content.
+
+  @version $Id$
+-->
+
 <fd:form
   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
   xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
