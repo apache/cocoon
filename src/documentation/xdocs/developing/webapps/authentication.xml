@@ -59,6 +59,8 @@
         The <em>auth-login</em> and the <em>auth-logout</em> action control the
         authentication whereas the <em>auth-loggedIn</em> action controls the application
         flow.</p>
+    <figure src="images/authentication-fw.jpg" alt="Overview"
+              width="480" height="360"/>
   </s1>
   <s1 title="Protecting Documents">
      <p>One feature of the framework is the user authentication. A document can be
