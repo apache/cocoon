@@ -77,8 +77,8 @@ import org.w3c.dom.NodeList;
 /**
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
  * common to many implementations.
- * 
- * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.11 2004/02/11 10:43:30 antonio Exp $
+ *
+ * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.12 2004/02/29 05:29:41 vgritsenko Exp $
  */
 public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
     protected ServiceSelector widgetDefinitionBuilderSelector;
@@ -102,7 +102,8 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     protected void setId(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         String id = DomHelper.getAttribute(widgetElement, "id");
         if (id.length() < 1) {
-            throw new Exception("Missing id attribute on element \"" + widgetElement.getTagName() + "\" at " + DomHelper.getLocation(widgetElement));
+            throw new Exception("Missing id attribute on element '" + widgetElement.getTagName() + "' at " +
+                                DomHelper.getLocation(widgetElement));
         }
         widgetDefinition.setId(id);
     }
@@ -113,7 +114,8 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         try {
             builder = (WidgetDefinitionBuilder)widgetDefinitionBuilderSelector.select(widgetName);
         } catch (ServiceException e) {
-            throw new CascadingException("Unknown kind of widget \"" + widgetName + "\" specified at " + DomHelper.getLocation(widgetDefinition), e);
+            throw new CascadingException("Unknown kind of widget '" + widgetName + "' at " +
+                                         DomHelper.getLocation(widgetDefinition), e);
         }
         return builder.buildWidgetDefinition(widgetDefinition);
     }
@@ -131,10 +133,10 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
                 }
             }
         }
-        
+
         return result == null ? Collections.EMPTY_LIST : result;
     }
-    
+
     protected void setDisplayData(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         final String[] names = {"label", "help", "hint"};
         Map displayData = new HashMap(names.length);
@@ -144,15 +146,15 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
             if (dataElement != null) {
                 data = DomHelper.compileElementContent(dataElement);
             }
-            
-            // Note: we put also null values in the may in order to test their existence
-            // (see AbstractWidgetDefinition.generateDisplayData)
+
+            // NOTE: We put also null values in the may in order to test their existence
+            //       (see AbstractWidgetDefinition.generateDisplayData)
             displayData.put(names[i], data);
         }
-        
+
         widgetDefinition.setDisplayData(displayData);
     }
-    
+
     protected void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         Element validatorElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "validation");
         if (validatorElement != null) {
@@ -165,15 +167,16 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
                     try {
                         builder = (WidgetValidatorBuilder)this.widgetValidatorBuilderSelector.select(name);
                     } catch(ServiceException e) {
-                        throw new CascadingException("Unknow kind of validator '" + name + "' at " + DomHelper.getLocation(element), e);
+                        throw new CascadingException("Unknow kind of validator '" + name + "' at " +
+                                                     DomHelper.getLocation(element), e);
                     }
-                    
+
                     widgetDefinition.addValidator(builder.build(element, widgetDefinition));
                 }
             }
         }
     }
-    
+
     public void dispose() {
         serviceManager.release(widgetDefinitionBuilderSelector);
         serviceManager.release(datatypeManager);
