@@ -99,7 +99,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManager.java,v 1.9 2003/08/07 17:13:39 joerg Exp $
+ * @version CVS $Id: PortalManager.java,v 1.10 2003/08/27 09:08:12 cziegeler Exp $
 */
 public final class PortalManager
 extends AbstractSessionComponent {
@@ -1860,9 +1860,12 @@ extends AbstractSessionComponent {
                 delete = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false);
                 delete = delete.substring(1, delete.lastIndexOf(':') + 1);
                 while (keys.hasMoreElements()) {
-                    currentKey = (String)keys.nextElement();
-                    if (currentKey.startsWith(delete)) {
-                        store.remove(currentKey);
+                    Object k = keys.nextElement();
+                    if ( k instanceof String ) {
+                        currentKey = (String)k;
+                        if (currentKey.startsWith(delete)) {
+                            store.remove(currentKey);
+                        }
                     }
                 }
             }
