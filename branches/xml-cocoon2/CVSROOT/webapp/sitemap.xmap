@@ -1,0 +1,211 @@
+<?xml version="1.0"?>
+ 
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Components ================================ --> 
+
+ <map:components>
+
+  <map:generators default="file"> 
+   <map:generator  name="file"        src="org.apache.cocoon.generation.FileGenerator"/> 
+   <map:generator  name="request"     src="org.apache.cocoon.generation.RequestGenerator"/> 
+   <map:generator  name="directory"   src="org.apache.cocoon.generation.DirectoryGenerator"/> 
+   <map:generator  name="serverpages" src="org.apache.cocoon.generation.ServerPagesGenerator"/> 
+   <map:generator  name="status"      src="org.apache.cocoon.generation.StatusGenerator"/>   
+  </map:generators> 
+ 
+  <map:transformers default="xslt"> 
+   <map:transformer     name="xslt"      src="org.apache.cocoon.transformation.XalanTransformer"> 
+    <compile-stylesheets map:value="true"/> 
+   </map:transformer> 
+   <map:transformer     name="log"       src="org.apache.cocoon.transformation.LogTransformer"/> 
+   <map:transformer     name="sql"       src="org.apache.cocoon.transformation.SQLTransformer"/> 
+   <map:transformer     name="xinclude"  src="org.apache.cocoon.transformation.XIncludeTransformer"/> 
+  </map:transformers> 
+
+  <map:readers default="resource"> 
+   <map:reader name="resource"       src="org.apache.cocoon.reading.ResourceReader"/> 
+  </map:readers> 
+   
+  <map:serializers default="html"> 
+   <map:serializer name="xml"     mime-type="text/xml"        src="org.apache.cocoon.serialization.XMLSerializer"/> 
+   <map:serializer name="html"    mime-type="text/html"       src="org.apache.cocoon.serialization.HTMLSerializer"/> 
+   <map:serializer name="fo2pdf"  mime-type="application/pdf" src="org.apache.cocoon.serialization.FOPSerializer"/>
+   <map:serializer name="vrml"    mime-type="model/vrml"      src="org.apache.cocoon.serialization.TextSerializer"/>
+   <map:serializer name="wap"     mime-type="text/vnd.wap.wml" src="org.apache.cocoon.serialization.XMLSerializer">
+    <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
+    <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
+   </map:serializer> 
+   <map:serializer name="svg"     mime-type="image/svg-xml"   src="org.apache.cocoon.serialization.XMLSerializer">
+    <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
+    <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
+   </map:serializer> 
+  </map:serializers>
+  
+  <map:selectors default="browser">
+  </map:selectors>
+
+  <map:matchers default="uri">
+   <map:matcher name="uri"        factory="org.apache.cocoon.matching.WildcardURIMatcherFactory"/>
+   <map:matcher name="uri-regexp" factory="org.apache.cocoon.matching.RegexpURIMatcherFactory"/>
+  </map:matchers>
+
+ </map:components>
+
+<!-- =========================== Views =================================== --> 
+
+ <map:views>
+ </map:views>
+
+<!-- =========================== Resources ================================= --> 
+
+ <map:resources>
+  <map:resource name="slides">
+   <map:generate src="documents/slides/slides.xml"/> 
+   <map:transform src="stylesheets/slides-navigation.xsl"/> 
+   <map:transform src="stylesheets/slides-apachecon.xsl"/> 
+   <map:serialize/> 
+  </map:resource>
+ </map:resources>
+ 
+<!-- =========================== Pipelines ================================= -->  
+ 
+ <map:pipelines>
+  <map:pipeline>
+
+   <map:match pattern="welcome"> 
+    <map:generate src="docs/samples/samples.xml"/> 
+    <map:transform src="stylesheets/simple-samples2html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+
+   <!-- ================  Hello  =========================== -->  
+  
+   <map:match pattern="hello.html">
+    <map:generate src="docs/samples/hello-page.xml"/> 
+    <map:transform src="stylesheets/page/simple-page2html.xsl"/> 
+    <map:serialize type="html"/> 
+   </map:match>
+
+   <map:match pattern="hello.svg">
+    <map:generate src="docs/samples/hello-page.xml"/> 
+    <map:transform src="stylesheets/page/simple-page2svg.xsl"/> 
+    <map:serialize type="svg"/> 
+   </map:match>
+
+   <map:match pattern="hello.wrl">
+    <map:generate src="docs/samples/hello-page.xml"/> 
+    <map:transform src="stylesheets/page/simple-page2vrml.xsl"/> 
+    <map:serialize type="vrml"/> 
+   </map:match>
+
+   <map:match pattern="hello.wml">
+    <map:generate src="docs/samples/hello-page.xml"/> 
+    <map:transform src="stylesheets/page/simple-page2wml.xsl"/> 
+    <map:serialize type="wap"/> 
+   </map:match>
+
+   <map:match pattern="hello.pdf">
+    <map:generate src="docs/samples/hello-page.xml"/> 
+    <map:transform src="stylesheets/page/simple-page2fo.xsl"/> 
+    <map:serialize type="fo2pdf"/> 
+   </map:match>
+
+   <!-- ================  Sites  =========================== -->  
+
+   <map:match pattern="sites/*.apache.org"> 
+    <map:generate src="docs/sites/{1}_apache_org.xml"/> 
+    <map:transform src="stylesheets/sites/{1}_apache_org-html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+
+   <!-- ================  Static  =========================== -->  
+
+   <map:match pattern="fo"> 
+    <map:generate src="docs/samples/fo/readme.fo"/> 
+    <map:serialize type="fo2pdf"/> 
+   </map:match>
+
+   <map:match pattern="slides/slides">
+    <map:redirect-to resource="slides"/>
+   </map:match>
+
+   <map:match pattern="slides/">
+    <map:redirect-to uri="slides/slides"/>
+   </map:match>
+
+   <map:match pattern="slides/style"> 
+    <map:read src="resources/styles/slides-apachecon.css" mime-type="text/css"/> 
+   </map:match>
+
+   <map:match pattern="slides/*.gif">
+    <map:read src="documents/slides/{1}.gif" mime-type="image/gif"/> 
+   </map:match>
+
+   <map:match pattern="slides/*.jpg">
+    <map:read src="documents/slides/{1}.jpg" mime-type="image/jpg"/> 
+   </map:match>
+
+   <map:match pattern="xsp/*"> 
+    <map:generate type="serverpages" src="documents/xsp/{1}.xsp"/> 
+    <map:transform src="stylesheets/dynamic-page2html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+
+   <map:match pattern="sql/*"> 
+    <map:generate src="documents/sql/{1}.xml"/> 
+    <map:transform type="sql"> 
+      <parameter name="driver"   value="org.gjt.mm.mysql.Driver"/>
+      <parameter name="dburl"    value="jdbc:mysql://localhost/test"/>
+      <parameter name="username" value="test"/>
+      <parameter name="password" value="test"/>
+    </map:transform>
+    <map:transform src="stylesheets/simple-sql2html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+    
+   <map:match pattern="generror"> 
+    <map:generate src="documents/error-giving-page.xml"/> 
+    <map:transform src="stylesheets/simple-welcome2html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+ 
+   <map:match pattern="status"> 
+    <map:generate type="status" src="status"/> 
+    <map:transform src="stylesheets/system/status2html.xsl"/>
+    <map:serialize/> 
+   </map:match>
+
+   <map:match pattern="styles/**.css"> 
+    <map:read src="resources/styles/{1}.css" mime-type="text/css"/> 
+   </map:match>
+
+   <map:match pattern="images/**.gif"> 
+    <map:read src="resources/images/{1}.gif" mime-type="image/gif"/> 
+   </map:match>
+
+   <map:match pattern="images/**.jpg"> 
+    <map:read src="resources/images/{1}.jpg" mime-type="image/jpg"/> 
+   </map:match>
+
+   <map:match pattern="images/**.png"> 
+    <map:read src="resources/images/{1}.png" mime-type="image/png"/> 
+   </map:match>
+
+   <map:match pattern="*"> 
+    <map:generate type="directory" src="{1}"/> 
+    <map:transform src="stylesheets/system/directory2html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+
+   <map:handle-errors> 
+    <map:transform src="stylesheets/system/error2html.xsl"/>
+    <map:serialize/> 
+   </map:handle-errors> 
+
+  </map:pipeline>
+ </map:pipelines>
+    
+</map:sitemap>
+
+<!-- end of file -->

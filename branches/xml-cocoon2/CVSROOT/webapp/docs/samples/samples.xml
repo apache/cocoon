@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<samples>
+
+  <group name="Multimedia Hello World">
+   <sample name="HTML" url="hello.html">
+    This is a very simple demostration of how to use Cocoon. A simple XML page
+    is transformed into an HTML page.
+   </sample>
+   <sample name="WML" url="hello.wml">
+    Now something more juicy: the exact same page is translated into WAP WML.
+   </sample>
+   <sample name="SVG" url="hello.svg">
+    Need a fancier look? No problem, SVG is your friend.
+   </sample>
+   <sample name="VRML" url="hello.wrl">
+    Need more space? Well, not really useful in this case, but VRML may come handy.
+   </sample>
+   <sample name="PDF" url="hello.pdf">
+    Printed HTML sucks? Don't worry, your friend Cocoon gives you a nice PDF.
+   </sample>
+  </group>
+
+  <group name="Static Content Examples">
+   <sample name="java.apache.org" url="sites/java.apache.org">
+    This page shows a much more complex example that shows how powerful
+    is the style separation and how powerful XML+XSL can be even for
+    web publishing.
+   </sample>
+   <sample name="jakarta.apache.org" url="sites/jakarta.apache.org">
+    This pages shows the same thing for the Apache Jakarta web site.
+   </sample>
+   <sample name="formatting objects" url="fo">
+    This is an example of FO translated to PDF by Apache FOP.
+   </sample>
+   <sample name="slides" url="slides/slides">
+    Example of complex XSLT usage.
+   </sample>
+  </group>
+
+  <group name="Dynamic Content Examples">
+   <sample name="Status Page" url="status">
+    Simple status page example.
+   </sample>
+   <sample name="Simple XSP" url="xsp/simple">
+    Simple XSP example.
+   </sample>
+   <sample name="Simple SQL" url="sql/sql-page">
+    Simple SQL example. You should make sure that you have a database and 
+    table according to the conf/sitemap.xmap and the documens/sql/sql-page.sql 
+    definitions.
+   </sample>
+  </group>
+
+  <group name="Error Page Example">
+   <sample name="Error Page" url="generror">
+    Simple error page example.
+   </sample>
+  </group>
+  
+</samples>
