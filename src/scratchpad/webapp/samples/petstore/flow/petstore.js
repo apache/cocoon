@@ -46,8 +46,8 @@
 
 // Page Flow for PetStore Application
 
-// load xml form support
-cocoon.load("resource://org/apache/cocoon/components/flow/javascript/xmlForm.js");
+// load JXForm support
+cocoon.load("resource://org/apache/cocoon/components/jxforms/flow/jxForm.js");
 
 var MAX_RESULTS = 5;
 
@@ -376,19 +376,20 @@ function editAccountForm(form) {
                  password: "",
                  password2: ""};
     form.setModel(model);
-    form.sendView("editAccountForm", 
-                  "view/xmlform/EditAccountForm.xml", 
+    form.sendView("view/jxforms/EditUserInformation.xml", 
                   function(form) {
-        for (var i in model.account) {
-            print(i+"="+model.account[i]);
-        }
         if (model.userName == "") {
             form.addViolation("/userName", "User ID is required");
         } else {
-            if (model.password != model.password2) {
+	    if (model.password == null || model.password.length == 0) {
+		form.addViolation("/password", "Password is required");
+	    } else if (model.password != model.password2) {
                 form.addViolation("/password2", "Passwords don't match");
             }
         }
+    });
+    form.sendView("view/jxforms/EditAccountInformation.xml", 
+                  function(form) {
         if (account.firstName == "") {
             form.addViolation("/account/firstName", "First name is required");
         }
@@ -405,6 +406,8 @@ function editAccountForm(form) {
         }
 
     });
+    form.sendView("view/jxforms/EditProfileInformation.xml"); 
+    form.finish();
     index();
 }
 

@@ -231,17 +231,20 @@ JXForm.prototype._setValidator = function(schNS, schDoc) {
 }
 
 /**
- * Sends view to presentation pipeline but doesn't wait for submission
+ * Optionally sends final view to presentation pipeline but doesn't wait for 
+ * submission and then destroys internal state of this form
  * @param uri [String] presentation pipeline uri
  */
 
 JXForm.prototype.finish = function(uri) {
-    this.form.remove(this.cocoon.environment.objectModel, this.id);
-    this.form.save(this.cocoon.environment.objectModel, "request");
-    this.cocoon.forwardTo("cocoon://" + 
-                          this.cocoon.environment.getURIPrefix() + uri,
-                          this.form.getModel(), 
-                          null);
+    if (uri != undefined) {
+	this.form.remove(this.cocoon.environment.objectModel, this.id);
+	this.form.save(this.cocoon.environment.objectModel, "request");
+	this.cocoon.forwardTo("cocoon://" + 
+			      this.cocoon.environment.getURIPrefix() + uri,
+			      this.form.getModel(), 
+			      null);
+    }
     this.dead = true;
     if (this.rootContinuation != null) {
         this.rootContinuation.invalidate();
