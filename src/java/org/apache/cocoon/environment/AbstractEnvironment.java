@@ -50,44 +50,39 @@
 */
 package org.apache.cocoon.environment;
 
-import org.apache.commons.collections.IteratorEnumeration;
-
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.util.BufferedOutputStream;
-import org.apache.cocoon.util.ClassUtils;
-
-import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.apache.excalibur.xmlizer.XMLizer;
-
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.util.BufferedOutputStream;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.commons.collections.IteratorEnumeration;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.xml.sax.XMLizable;
+import org.apache.excalibur.xmlizer.XMLizer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 /**
  * Base class for any environment
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.2 2003/03/12 07:38:42 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.3 2003/03/12 07:42:25 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
