@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<root>
-
-  <p>I'm about to invoke a dynamic tag:</p>
-  <em>This tag was invoked dynamically</em>
-
-</root>
