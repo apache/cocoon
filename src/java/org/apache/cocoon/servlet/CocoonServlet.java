@@ -94,7 +94,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.23 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.24 2004/03/13 15:01:24 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -772,9 +772,7 @@ public class CocoonServlet extends HttpServlet {
         final CocoonLogFormatter formatter = new CocoonLogFormatter();
         formatter.setFormat( "%7.7{priority} %{time}   [%8.8{category}] " +
                              "(%{uri}) %{thread}/%{class:short}: %{message}\\n%{throwable}" );
-        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext );
-
-        servTarget.setFormatter(formatter);
+        final ServletOutputLogTarget servTarget = new ServletOutputLogTarget(this.servletContext, formatter );
 
         final Hierarchy defaultHierarchy = Hierarchy.getDefaultHierarchy();
         final ErrorHandler errorHandler = new DefaultErrorHandler();
