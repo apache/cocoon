@@ -121,7 +121,7 @@
     <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
     overwrite it with the old Cocoon-specific sitemap here -->
     <copy file="${documentation}/sitemap-localdocs.xmap"
-      tofile="${build.webapp.docs}/sitemap.xmap"/>
+      tofile="${build.webapp.docs}/sitemap.xmap" overwrite="true"/>
 
     <copy todir="${build.webapp.docs}" filtering="off">
       <fileset dir="${documentation}">
