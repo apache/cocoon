@@ -60,8 +60,8 @@ import java.util.List;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.caching.validity.EventValidity;
+import org.apache.cocoon.caching.validity.NamedEvent;
 import org.apache.cocoon.components.source.InspectableSource;
 import org.apache.cocoon.components.source.SourceDescriptor;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
@@ -76,14 +76,13 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * Source wrapper that enhances the wrapped sources with additional capabilities.
  * 
  * <p>
- *  Currently the extra functionality this Source adds is
- *  inspectability through the InspectableSource interface.
- *  The implementation accomplishes this by delegating the
- *  inspectable calls to the SourceDescriptor service.
+ * Currently this Source optionally adds inspectability
+ * through the InspectableSource interface and event caching
+ * by handing out EventValidities based on the Source uri.
  * </p>
  * 
  * <p>
- *  Wrapped sources must implement ModifiableTraversableSource.
+ * Wrapped sources must implement ModifiableTraversableSource.
  * </p>
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
@@ -95,29 +94,25 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     final String m_prefix;
     // the wrapped source
     final ModifiableTraversableSource m_delegate;
-    private final ServiceManager m_manager;
     private final SourceDescriptor m_descriptor;
+    private final boolean m_useEventCaching;
     
     // ---------------------------------------------------- Lifecycle
     
     public RepositorySource(
         final String prefix,
         final ModifiableTraversableSource delegate, 
-        final ServiceManager manager, 
-        final Logger logger) throws SourceException {
+        final SourceDescriptor descriptor,
+        final Logger logger,
+        final boolean useEventCaching) throws SourceException {
         
         m_prefix = prefix;
         m_delegate = delegate;
-        m_manager = manager;
+        m_descriptor = descriptor;
         enableLogging(logger);
-        try {
-            m_descriptor = (SourceDescriptor) 
-                manager.lookup(SourceDescriptorManager.ROLE);
-        } catch (ServiceException e) {
-            throw new SourceException("Missing service",e);
-        }
+        m_useEventCaching = useEventCaching;
     }
-        
+    
     // ---------------------------------------------------- InspectableSource implementation
     
     /**
@@ -133,7 +128,9 @@ implements Source, ModifiableTraversableSource, InspectableSource {
         if (m_delegate instanceof InspectableSource) {
             properties.addAll(Arrays.asList(((InspectableSource) m_delegate).getSourceProperties()));
         }
-        properties.addAll(Arrays.asList(m_descriptor.getSourceProperties(m_delegate)));
+        if (m_descriptor != null) {
+            properties.addAll(Arrays.asList(m_descriptor.getSourceProperties(m_delegate)));
+        }
         return (SourceProperty[]) properties.toArray(new SourceProperty[properties.size()]);
     }
     
@@ -147,7 +144,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
         if (m_delegate instanceof InspectableSource) {
             property = ((InspectableSource) m_delegate).getSourceProperty(uri,name);
         }
-        if (property == null) {
+        if (property == null && m_descriptor != null) {
             property = m_descriptor.getSourceProperty(m_delegate,uri,name);
         }
         return property;
@@ -159,12 +156,12 @@ implements Source, ModifiableTraversableSource, InspectableSource {
      * the wrapped source directly and on the source descriptor.
      */
     public void removeSourceProperty(String uri, String name) throws SourceException {
-        
         if (m_delegate instanceof InspectableSource) {
             ((InspectableSource) m_delegate).removeSourceProperty(uri,name);
         }
-        m_descriptor.removeSourceProperty(m_delegate,uri,name);
-        
+        if (m_descriptor != null) {
+            m_descriptor.removeSourceProperty(m_delegate,uri,name);
+        }
     }
     
     /**
@@ -175,7 +172,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     public void setSourceProperty(SourceProperty property) throws SourceException {
         if (m_delegate instanceof InspectableSource) {
             ((InspectableSource) m_delegate).setSourceProperty(property);
-        } else {
+        } else if (m_descriptor != null) {
             m_descriptor.setSourceProperty(m_delegate, property);
         }
     }
@@ -205,16 +202,36 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     }
     
     public String getScheme() {
-        return m_prefix + ":" + m_delegate.getScheme();
+        return m_prefix;
     }
     
     public String getURI() {
         return m_prefix + ":" + m_delegate.getURI();
     }
     
+    /**
+     * Return a SourceValidity object describing
+     * the validity of this Source.
+     * <p>
+     * If the SourceDescriptor service is present, the resulting
+     * validity is an aggregated validity object containing both
+     * the validity describing the source itself _and_ one describing
+     * the validity of the SourceProperties managed by the SourceDescriptor.
+     * </p>
+     * When using event caching the SourceValidity describing the Source itself
+     * is an EventValidity that contains a NamedEvent which name is the wrapped 
+     * Source URI.
+     */
     public SourceValidity getValidity() {
-        SourceValidity val1 = m_delegate.getValidity();
-        if (val1 != null) {
+        SourceValidity val1;
+        if (m_useEventCaching) {
+            val1 = new EventValidity(new NamedEvent(getURI()));
+        }
+        else {
+            val1 = m_delegate.getValidity();
+        }
+        
+        if (val1 != null && m_descriptor != null) {
             SourceValidity val2 = m_descriptor.getValidity(m_delegate);
             if (val2 != null) {
                 AggregatedValidity result = new AggregatedValidity();
@@ -223,7 +240,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
                 return result;
             }
         }
-        return null;
+        return val1;
     }
     
     public void refresh() {
@@ -234,21 +251,35 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     // ---------------------------------------------------- ModifiableTraversableSource
     
     public Source getChild(String name) throws SourceException {
+        if (!m_delegate.isCollection()) return null;
+        ModifiableTraversableSource child = (ModifiableTraversableSource) m_delegate.getChild(name);
+        if (child == null) return null;
+        
         return new RepositorySource(
-            m_prefix,  
-            (ModifiableTraversableSource) m_delegate.getChild(name),
-            m_manager,getLogger());
+            m_prefix,
+            child,
+            m_descriptor,
+            getLogger(),
+            m_useEventCaching
+        );
     }
 
     public Collection getChildren() throws SourceException {
+        if (!m_delegate.isCollection()) return null;
     	Collection result = new ArrayList();
 		Iterator iter = m_delegate.getChildren().iterator();
     	while(iter.hasNext()) {
-    		result.add(new RepositorySource(
-            m_prefix,
-    		    (ModifiableTraversableSource) iter.next(),
-    		    m_manager,
-    		    getLogger()));
+            ModifiableTraversableSource child = (ModifiableTraversableSource) iter.next();
+            
+    		result.add(
+                new RepositorySource(
+                    m_prefix,
+                    child,
+                    m_descriptor,
+    		        getLogger(),
+                    m_useEventCaching
+                )
+            );
     	}
         return result;
     }
@@ -258,10 +289,15 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     }
 
     public Source getParent() throws SourceException {
+        String eventName = null;
+        
         return new RepositorySource(
             m_prefix,
-            (ModifiableTraversableSource) m_delegate.getParent(), 
-        	  m_manager, getLogger());
+            (ModifiableTraversableSource) m_delegate.getParent(),
+        	m_descriptor, 
+            getLogger(),
+            m_useEventCaching
+        );
     }
 
     public boolean isCollection() {
