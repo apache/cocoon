@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.30 2001-04-05 20:24:01 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.31 2001-04-11 11:08:11 cziegeler Exp $
 -->
 
 <changes title="History of Changes">
@@ -20,9 +20,14 @@
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Paul Russell" email="prussell@apache.org" id="PR"/>
   <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
+  <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+    Added initial caching algorithm for EventPipelines. The caching system
+    is pluggable and includes caching of generators and transformers.
+  </action>
   <action dev="BL" type="remove">
     Moved ComponentManagement infrastructure to Avalon where more eyes
     can keep it working well, and it can benefit more people.
