@@ -124,7 +124,7 @@ public class BaseLinkModule extends AbstractInputModule implements ThreadSafe {
 
         Object[] result = new Object[1];
         result[0] = getAttribute(name, modeConf, objectModel);
-        return result;
+        return (result == null? null : result);
 
     }
 
