@@ -40,12 +40,16 @@ import org.apache.avalon.AbstractLoggable;
 import org.xml.sax.SAXException;
 import org.xml.sax.InputSource;
 
+import org.apache.cocoon.components.language.generator.ProgramGenerator;
+import org.apache.cocoon.components.language.generator.CompiledComponent;
+import org.apache.cocoon.components.url.URLFactory;
+
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.58 $ $Date: 2001-02-22 19:07:34 $
+ * @version CVS $Revision: 1.4.2.59 $ $Date: 2001-02-24 15:58:04 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -206,5 +210,58 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
     public boolean process(Environment environment)
     throws Exception {
         return this.sitemapManager.invoke(environment, "", this.sitemapFileName, true);
+    }
+
+    /**
+     * Process the given <code>Environment</code> to generate the sitemap.
+     */
+    public void generateSitemap(Environment environment)
+    throws Exception {
+        URLFactory urlFactory = (URLFactory) this.componentManager.lookup(Roles.URL_FACTORY);
+        File sourceFile = new File(urlFactory.getURL(environment.resolveEntity(null, sitemapFileName).getSystemId()).getFile());
+        String markupLanguage = "sitemap";
+        String programmingLanguage = "java";
+
+        getLogger().debug("Sitemap regeneration begin:" + sitemapFileName);
+        try {
+            ProgramGenerator programGenerator = (ProgramGenerator) this.componentManager.lookup(Roles.PROGRAM_GENERATOR);
+            CompiledComponent smap = (CompiledComponent) programGenerator.load(sourceFile, markupLanguage, programmingLanguage, environment);
+            getLogger().debug("Sitemap regeneration complete");
+
+            if (smap != null) {
+                getLogger().debug("Main: The sitemap has been successfully compiled!");
+            } else {
+                getLogger().debug("Main: No errors, but the sitemap has not been set.");
+            }
+
+            this.componentManager.release((Component) programGenerator);
+        } catch (Exception e) {
+            getLogger().error("Main: Error compiling sitemap", e);
+            throw e;
+        }
+    }
+
+    /**
+     * Process the given <code>Environment</code> to generate Java code for specified XSP files.
+     */
+    public void generateXSP(String fileName, Environment environment)
+    throws Exception {
+        getLogger().debug("XSP generation begin:" + fileName);
+
+        URLFactory urlFactory = (URLFactory) this.componentManager.lookup(Roles.URL_FACTORY);
+        File sourceFile = new File(urlFactory.getURL(environment.resolveEntity(null, fileName).getSystemId()).getFile());
+        String markupLanguage = "xsp";
+        String programmingLanguage = "java";
+
+        try {
+            ProgramGenerator programGenerator = (ProgramGenerator) this.componentManager.lookup(Roles.PROGRAM_GENERATOR);
+            CompiledComponent xsp = (CompiledComponent) programGenerator.load(sourceFile, markupLanguage, programmingLanguage, environment);
+            getLogger().debug("XSP generation complete:" + xsp);
+
+            this.componentManager.release((Component) programGenerator);
+        } catch (Exception e) {
+            getLogger().error("Main: Error compiling XSP", e);
+            throw e;
+        }
     }
 }

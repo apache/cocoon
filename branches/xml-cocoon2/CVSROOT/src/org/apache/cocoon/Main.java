@@ -49,7 +49,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.23 $ $Date: 2001-02-24 13:57:49 $
+ * @version CVS $Revision: 1.1.4.24 $ $Date: 2001-02-24 15:58:04 $
  */
 
 public class Main {
@@ -308,7 +308,8 @@ public class Main {
     public void warmup() throws Exception {
         log.info("Warming up...");
         log.info(" [Cocoon might need to compile the sitemaps, this might take a while]");
-        cocoon.process(new LinkSamplingEnvironment("/", context, attributes, null));
+        //cocoon.process(new LinkSamplingEnvironment("/", context, attributes, null));
+        cocoon.generateSitemap(new LinkSamplingEnvironment("/", context, attributes, null));
     }
 
     /**
@@ -318,8 +319,16 @@ public class Main {
         log.info("...ready, let's go:");
         Iterator i = uris.iterator();
         while (i.hasNext()) {
-            this.processURI(NetUtils.normalize((String) i.next()), 0, xspOnly);
+            if(xspOnly)
+                this.processXSP(NetUtils.normalize((String) i.next()));
+            else 
+                this.processURI(NetUtils.normalize((String) i.next()), 0);
         }
+    }
+
+    public void processXSP(String uri) throws Exception {
+        Environment env = new LinkSamplingEnvironment("/", context, attributes, null);
+        cocoon.generateXSP(uri, env);
     }
 
     /**
@@ -340,7 +349,7 @@ public class Main {
      *  <li>then the file name of the translated URI is returned</li>
      * </ul>
      */
-    public String processURI(String uri, int level, boolean xspOnly) throws Exception {
+    public String processURI(String uri, int level) throws Exception {
         log.info("Processing URI: " + leaf(level) + uri);
 
         Collection links = this.getLinks(uri);
@@ -351,38 +360,33 @@ public class Main {
             String path = NetUtils.getPath(uri);
             String relativeLink = (String) i.next();
             String absoluteLink = NetUtils.normalize(NetUtils.absolutize(path, relativeLink));
-            String translatedAbsoluteLink = this.processURI(absoluteLink, level + 1, xspOnly);
+            String translatedAbsoluteLink = this.processURI(absoluteLink, level + 1);
             String translatedRelativeLink = NetUtils.relativize(path, translatedAbsoluteLink);
             translatedLinks.put(relativeLink, translatedRelativeLink);
         }
         
         String filename = mangle(uri);
-        if (!xspOnly) {
-            File file = IOUtils.createFile(destDir, filename);
-            FileOutputStream output = new FileOutputStream(file);
-            String type = getPage(uri, translatedLinks, output);
-            output.close();
+        File file = IOUtils.createFile(destDir, filename);
+        FileOutputStream output = new FileOutputStream(file);
+        String type = getPage(uri, translatedLinks, output);
+        output.close();
 
-            String ext = NetUtils.getExtension(filename);
-            String defaultExt = MIMEUtils.getDefaultExtension(type);
+        String ext = NetUtils.getExtension(filename);
+        String defaultExt = MIMEUtils.getDefaultExtension(type);
 
-            if ((ext == null) || (!ext.equals(defaultExt))) {
-                filename += defaultExt;
-                File newFile = IOUtils.createFile(destDir, filename);
-                file.renameTo(newFile);
-                file = newFile;
-            }
-            log.info(tree(level));
+        if ((ext == null) || (!ext.equals(defaultExt))) {
+            filename += defaultExt;
+            File newFile = IOUtils.createFile(destDir, filename);
+            file.renameTo(newFile);
+            file = newFile;
+        }
+        log.info(tree(level));
 
-            if (type == null) {
-                log.warn(leaf(level + 1) + "[broken link]--> " + filename);
-                resourceUnavailable(file);
-            } else {
-                log.info(leaf(level + 1) + "[" + type + "]--> " + filename);
-            }
+        if (type == null) {
+            log.warn(leaf(level + 1) + "[broken link]--> " + filename);
+            resourceUnavailable(file);
         } else {
-            log.info(tree(level));
-            log.info(leaf(level + 1) + "--> " + filename);
+            log.info(leaf(level + 1) + "[" + type + "]--> " + filename);
         }
 
         return filename;
