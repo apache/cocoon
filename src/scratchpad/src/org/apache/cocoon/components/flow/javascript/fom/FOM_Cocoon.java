@@ -161,6 +161,13 @@ public class FOM_Cocoon extends ScriptableObject {
         environment.redirect(false, uri);
     }
 
+/*
+
+ NOTE (SM): These are the hooks to the future FOM Event Model that will be
+ designed in the future. It has been postponed because we think
+ there are more important things to do at the moment, but these
+ are left here to indicate that they are planned.
+ 
     public void jsFunction_addEventListener(String eventName, 
                                             Object function) {
         // what is this?
@@ -170,7 +177,9 @@ public class FOM_Cocoon extends ScriptableObject {
                                                Object function) {
         // what is this?
     }
-
+    
+*/
+  
     public Object jsFunction_getComponent(String id) {
         // what is this?
         return null;
