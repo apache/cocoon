@@ -74,7 +74,7 @@
                     </a>
                   </xsl:when>
                   <xsl:when test="@type='doc'">
-                    <a target="_blank" href="{concat($contextPath,'/documents/',@href)}">
+                    <a target="_blank" href="{concat($contextPath,'/docs/',@href)}">
                       <xsl:apply-templates/>
                     </a>
                   </xsl:when>
