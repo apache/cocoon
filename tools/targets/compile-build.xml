@@ -44,6 +44,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
@@ -55,6 +56,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            nowarn="${compiler.nowarn}"
            compiler="${compiler}"
            classpathref="classpath"/>
@@ -76,6 +78,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            compiler="${compiler}"
            classpathref="classpath"/>
   </target>
@@ -106,6 +109,7 @@
            optimize="${compiler.optimize}"
            deprecation="${compiler.deprecation}"
            target="${target.vm}"
+           source="${source.vm}"
            compiler="${compiler}"
            classpathref="test.classpath"/>
   </target>
