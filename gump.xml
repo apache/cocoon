@@ -40,7 +40,7 @@
     <ant target="gump-core">
       <property name="version" value="@@DATE@@"/>
       <depend property="logkit.jar" project="avalon-logkit"/>
-      <depend property="avalonapi.jar" project="avalon-framework" id="api"/>
+      <depend property="avalonapi.jar" project="avalon-framework-api"/>
     </ant>
 
     <depend project="ant" inherit="runtime"/>
