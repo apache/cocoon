@@ -150,7 +150,9 @@ function loadDocument(uri) {
         parser = cocoon.getComponent(Packages.org.apache.excalibur.xml.dom.DOMParser.ROLE);
         resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
         source = resolver.resolveURI(uri);
-        return parser.parseDocument(new Packages.org.xml.sax.InputSource(source.getURI()));
+        var is = new Packages.org.xml.sax.InputSource(source.getInputStream());
+        is.setSystemId(source.getURI());
+        return parser.parseDocument(is);
     } finally {
         if (source != null)
             resolver.release(source);
