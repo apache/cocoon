@@ -23,52 +23,12 @@ import org.apache.cocoon.i18n.I18nUtils;
 import java.util.Locale;
 
 /**
- * Builds {@link FormattingDecimalConvertor}s.
+ * Builds {@link FormattingFloatConvertor}s.
  *
- * @version CVS $Id: FormattingFloatConvertorBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: FormattingFloatConvertorBuilder.java,v 1.3 2004/03/18 11:44:59 bruno Exp $
  */
-public class FormattingFloatConvertorBuilder implements ConvertorBuilder {
-    public Convertor build(Element configElement) throws Exception {
-        FormattingDecimalConvertor convertor = createConvertor();
-
-        if (configElement == null)
-            return convertor;
-
-        String variant = configElement.getAttribute("variant");
-        if (!variant.equals("")) {
-            if (variant.equals("integer"))
-                convertor.setVariant(FormattingDecimalConvertor.INTEGER);
-            else if (variant.equals("number"))
-                convertor.setVariant(FormattingDecimalConvertor.NUMBER);
-            else if (variant.equals("percent"))
-                convertor.setVariant(FormattingDecimalConvertor.PERCENT);
-            else if (variant.equals("currency"))
-                convertor.setVariant(FormattingDecimalConvertor.CURRENCY);
-            else
-                throw new Exception("Invalid value \"" + variant + "\" for variant attribute at " + DomHelper.getLocation(configElement));
-        }
-
-        Element patternsEl = DomHelper.getChildElement(configElement, Constants.DEFINITION_NS, "patterns", false);
-        if (patternsEl != null) {
-            Element patternEl[] = DomHelper.getChildElements(patternsEl, Constants.DEFINITION_NS, "pattern");
-            for (int i = 0; i < patternEl.length; i++) {
-                String locale = patternEl[i].getAttribute("locale");
-                String pattern = DomHelper.getElementText(patternEl[i]);
-                if (pattern.equals(""))
-                    throw new Exception("pattern element does not contain any content at " + DomHelper.getLocation(patternEl[i]));
-                if (locale.equals(""))
-                    convertor.setNonLocalizedPattern(pattern);
-                else {
-                    Locale loc = I18nUtils.parseLocale(locale);
-                    convertor.addFormattingPattern(loc, pattern);
-                }
-            }
-        }
-
-        return convertor;
-    }
-
+public class FormattingFloatConvertorBuilder extends FormattingDecimalConvertorBuilder {
     protected FormattingDecimalConvertor createConvertor() {
-        return new FormattingDecimalConvertor();
+        return new FormattingFloatConvertor();
     }
 }
