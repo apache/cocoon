@@ -119,7 +119,7 @@ import java.util.Iterator;
  * @author <a href="mailto:mauch@imkenberg.de">Thorsten Mauch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
- * @version CVS $Id: CastorTransformer.java,v 1.4 2003/10/09 17:37:32 cziegeler Exp $
+ * @version CVS $Id: CastorTransformer.java,v 1.5 2003/10/11 01:27:09 joerg Exp $
  */
 public class CastorTransformer extends AbstractTransformer implements Configurable {
     private static final String CASTOR_URI = "http://apache.org/cocoon/castor/1.0";
@@ -131,7 +131,6 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
     private final static String SCOPE_SITEMAP = "sitemap";
     private final static String SCOPE_SESSION = "session";
     private final static String SCOPE_REQUEST = "request";
-    private final static String SCOPE_CONTEXT = "context";
     private final static String ATTRIB_MAPPING = "mapping";
 
     // Stores all used mappings in the static cache
@@ -345,7 +344,6 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
      */
     private Object searchBean(Map objectModel, String name, String scope) {
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Object bean;
                                                                                                                                                                
         //  search all maps for the given bean
         if ((scope == null) || SCOPE_SITEMAP.equals(scope)) {
