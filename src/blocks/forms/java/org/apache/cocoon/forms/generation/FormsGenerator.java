@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * <li> Or else at its default-location in the flow context-object.</li>
  * </ol>
  * 
- * @version $Id: FormsGenerator.java,v 1.5 2004/03/18 21:04:41 joerg Exp $
+ * @version $Id: FormsGenerator.java,v 1.6 2004/04/09 16:26:04 mpo Exp $
  */
 public class FormsGenerator extends AbstractGenerator {
     
@@ -54,7 +54,11 @@ public class FormsGenerator extends AbstractGenerator {
             throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
-        this.config = FormsPipelineConfig.createConfig(objectModel, parameters);            
+        this.config = FormsPipelineConfig.createConfig(objectModel, parameters);
+        // enforce a default POST method when using the generator.
+        if (this.config.getFormMethod() == null) {
+            this.config.setFormMethod("POST");
+        }
     }
 
     public void recycle() {
