@@ -60,25 +60,32 @@ import org.w3c.dom.Element;
 
 /**
  * Builds {FieldDefinition}s.
- * 
- * @version $Id: FieldDefinitionBuilder.java,v 1.8 2004/02/11 10:43:30 antonio Exp $
+ *
+ * @version $Id: FieldDefinitionBuilder.java,v 1.9 2004/02/29 05:28:48 vgritsenko Exp $
  */
 public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         FieldDefinition fieldDefinition = new FieldDefinition();
+        buildWidgetDefinition(fieldDefinition, widgetElement);
+        return fieldDefinition;
+    }
+
+    protected void buildWidgetDefinition(FieldDefinition fieldDefinition, Element widgetElement) throws Exception {
         setLocation(widgetElement, fieldDefinition);
         setId(widgetElement, fieldDefinition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
-        if (datatypeElement == null)
-            throw new Exception("A nested datatype element is required for the widget specified at " + DomHelper.getLocation(widgetElement));
+        if (datatypeElement == null) {
+            throw new Exception("A nested datatype element is required for the widget at " +
+                                DomHelper.getLocation(widgetElement));
+        }
 
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
         fieldDefinition.setDatatype(datatype);
 
         buildSelectionList(widgetElement, fieldDefinition);
-        
+
         Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
         while (iter.hasNext()) {
             fieldDefinition.addValueChangedListener((ValueChangedListener)iter.next());
@@ -89,7 +96,5 @@ public class FieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuil
 
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         fieldDefinition.setRequired(required);
-
-        return fieldDefinition;
     }
 }
