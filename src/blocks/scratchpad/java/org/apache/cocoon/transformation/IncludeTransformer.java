@@ -339,7 +339,7 @@ implements Serviceable, Transformer, CacheableProcessingComponent {
                 /* Get the source discovered opening the element and include */
                 Source source = null;
                 try {
-                    if (this.x_parameter != null) {
+                    if (this.x_parameters != null) {
                         this.x_source = NetUtils.parameterize(this.x_source,
                                                               this.x_parameters);
                     }
