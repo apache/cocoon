@@ -88,7 +88,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * for retrieving SourceProperties, SourcePermission etc.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDescriptionGenerator.java,v 1.5 2003/09/04 09:38:32 cziegeler Exp $
+ * @version CVS $Id: SourceDescriptionGenerator.java,v 1.6 2003/09/05 07:31:46 cziegeler Exp $
  */
 public class SourceDescriptionGenerator extends ServiceableGenerator
   implements CacheableProcessingComponent, Recyclable {
@@ -671,6 +671,7 @@ public class SourceDescriptionGenerator extends ServiceableGenerator
             this.resolver.release((Source) cachedsources.get(uri));
             cachedsources.remove(uri);
         }
+        super.recycle();
     }
 
     /**

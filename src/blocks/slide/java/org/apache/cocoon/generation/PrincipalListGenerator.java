@@ -75,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * principals from a PrincipalProvider.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalListGenerator.java,v 1.2 2003/05/19 10:02:05 stephan Exp $
+ * @version CVS $Id: PrincipalListGenerator.java,v 1.3 2003/09/05 07:31:46 cziegeler Exp $
  */
 public class PrincipalListGenerator extends ComposerGenerator 
         implements Recyclable {
@@ -192,6 +192,7 @@ public class PrincipalListGenerator extends ComposerGenerator
     public void recycle() {
         this.principalcaller = null;
         this.principalprovidername = null;
+        super.recycle();
     }
 }
 

@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -61,7 +60,7 @@ import java.io.IOException;
  * knows how to check the results against certain criteria
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: NumericConverter.java,v 1.3 2003/05/17 11:58:42 joerg Exp $
+ * @version CVS $Id: NumericConverter.java,v 1.4 2003/09/05 07:31:45 cziegeler Exp $
  */
 public class NumericConverter
 {

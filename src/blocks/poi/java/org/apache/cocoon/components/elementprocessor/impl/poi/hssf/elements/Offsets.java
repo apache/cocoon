@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -68,7 +67,7 @@ import java.io.IOException;
  * mature yet.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Offsets.java,v 1.3 2003/03/24 14:33:53 stefano Exp $
+ * @version CVS $Id: Offsets.java,v 1.4 2003/09/05 07:31:40 cziegeler Exp $
  */
 public class Offsets
 {
