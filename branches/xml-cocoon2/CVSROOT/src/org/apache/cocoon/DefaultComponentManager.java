@@ -38,9 +38,9 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-16 15:27:00 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-17 18:33:35 $
  */
-public class DefaultComponentManager implements ComponentManager {
+public class DefaultComponentManager implements ComponentManager, Configurable {
 
     protected Logger log = LogKit.getLoggerFor("cocoon");
 
@@ -125,7 +125,7 @@ public class DefaultComponentManager implements ComponentManager {
         // Work out what class of component we're dealing with.
         if ( ThreadSafe.class.isAssignableFrom(componentClass) ) {
             log.debug("DefaultComponentManager using threadsafe instance of " + componentClass.getName() + " for role " + role + ".");
-            component = getThreadsafeComponent(componentClass);
+            component = getThreadsafeComponent(role, componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
             log.debug("DefaultComponentManager using poolable instance of "
                 + componentClass.getName() + " for role " + role + "."
@@ -150,7 +150,7 @@ public class DefaultComponentManager implements ComponentManager {
                     e
                 );
             }
-            setupComponent(component);
+            setupComponent(role, component);
         } else {
             /* The component doesn't implement any of the Avalon marker
              * classes, treat as normal.
@@ -173,19 +173,69 @@ public class DefaultComponentManager implements ComponentManager {
                     e
                 );
             }
-            setupComponent(component);
+            setupComponent(role, component);
         }
 
         return component;
+    }
+
+    public void configure(Configuration conf) throws ConfigurationException {
+        // Set components
+        Iterator e = conf.getChildren("component");
+        while (e.hasNext()) {
+            Configuration co = (Configuration) e.next();
+            String type = co.getAttribute("type", "");
+            String role = co.getAttribute("role", "");
+            String className = co.getAttribute("class", "");
+
+            if (! type.equals("")) {
+                role = RoleUtils.lookup(type);
+            }
+
+            if (className.equals("")) {
+                className = RoleUtils.defaultClass(role);
+            }
+
+            try {
+                log.debug("Adding component (" + role + " = " + className + ")");
+                this.addComponent(role,ClassUtils.loadClass(className),co);
+            } catch ( Exception ex ) {
+                log.error("Could not load class " + className, ex);
+                throw new ConfigurationException("Could not get class " + className
+                    + " for role " + role, ex);
+            }
+        }
+
+        e = RoleUtils.shorthandNames();
+        while (e.hasNext()) {
+            Configuration co = conf.getChild((String) e.next());
+            if (! co.getLocation().equals("-")) {
+                String role = RoleUtils.lookup(co.getName());
+                String className = co.getAttribute("class", "");
+
+                if (className.equals("")) {
+                    className = RoleUtils.defaultClass(role);
+                }
+
+                try {
+                    log.debug("Adding component (" + role + " = " + className + ")");
+                    this.addComponent(role, ClassUtils.loadClass(className), co);
+                } catch ( Exception ex ) {
+                    log.error("Could not load class " + className, ex);
+                    throw new ConfigurationException("Could not get class " + className
+                        + " for role " + role, ex);
+                }
+            }
+        }
     }
 
     /** Retrieve an instance of a threadsafe component.
      * @param componentClass the class to retrieve an instance of.
      * @return and instance of the component.
      */
-    private Component getThreadsafeComponent(Class componentClass)
+    private Component getThreadsafeComponent(String role, Class componentClass)
     throws ComponentManagerException {
-        Component component = (Component)threadSafeInstances.get(componentClass);
+        Component component = (Component)threadSafeInstances.get(role);
 
         if ( component == null ) {
             try {
@@ -203,8 +253,8 @@ public class DefaultComponentManager implements ComponentManager {
                     e
                 );
             }
-            setupComponent(component);
-            threadSafeInstances.put(componentClass,component);
+            setupComponent(role, component);
+            threadSafeInstances.put(role, component);
         }
         return component;
     }
@@ -251,12 +301,12 @@ public class DefaultComponentManager implements ComponentManager {
     /** Configure a new component.
      * @param c the component to configure.
      */
-    private void setupComponent(Component c)
+    private void setupComponent(String role, Component c)
     throws ComponentManagerException {
         if ( c instanceof Configurable ) {
             try {
                 ((Configurable)c).configure(
-                    (Configuration)this.configurations.get(c.getClass())
+                    (Configuration)this.configurations.get(role)
                 );
             } catch (ConfigurationException e) {
                 log.error("Could not configure component " + c.getClass().getName(), e);
@@ -277,34 +327,12 @@ public class DefaultComponentManager implements ComponentManager {
      * @param component the class of this component.
      * @param Configuration the configuration for this component.
      */
-    public void addComponent(String role, Class component, Configuration config)
+    protected void addComponent(String role, Class component, Configuration config)
     throws ConfigurationException,
            ComponentManagerException {
-        if (component.equals(CocoonComponentSelector.class)) {
-            CocoonComponentSelector selector = new CocoonComponentSelector();
-            Iterator instances = config.getChildren("component-instance");
-
-            selector.compose(this);
-
-            while (instances.hasNext()) {
-                Configuration current = (Configuration) instances.next();
-                Object hint = current.getAttribute("name");
-                String className = (String) current.getAttribute("class");
-            try {
-                    selector.addComponent(hint, ClassUtils.loadClass(className), current);
-                } catch (Exception e) {
-                    log.error("The component instance for \"" + hint + "\" has an invalid class name.", e);
-                    throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.", e);
-                }
-            }
-
-            this.addComponentInstance(role, selector);
-            return;
-        }
-
         this.components.put(role,component);
         if ( config != null ) {
-            this.configurations.put(component,config);
+            this.configurations.put(role, config);
         }
       }
 

@@ -34,7 +34,6 @@ import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.util.RoleUtils;
 import org.apache.cocoon.DefaultComponentManager;
 
 import org.apache.log.Logger;
@@ -47,7 +46,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.43 $ $Date: 2001-01-16 15:26:59 $
+ * @version CVS $Revision: 1.4.2.44 $ $Date: 2001-01-17 18:33:35 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -185,54 +184,9 @@ public class Cocoon
         }
 
         log.debug("Setting up components...");
-        // Set components
-        Iterator e = conf.getChildren("component");
-        while (e.hasNext()) {
-            Configuration co = (Configuration) e.next();
-            String type = co.getAttribute("type", "");
-            String role = co.getAttribute("role", "");
-            String className = co.getAttribute("class", "");
+        this.componentManager.configure(conf);
 
-            if (! type.equals("")) {
-                role = RoleUtils.lookup(type);
-            }
-
-            if (className.equals("")) {
-                className = RoleUtils.defaultClass(role);
-            }
-
-            try {
-                log.debug("Adding component (" + role + " = " + className + ")");
-                componentManager.addComponent(role,ClassUtils.loadClass(className),co);
-            } catch ( Exception ex ) {
-                log.error("Could not load class " + className, ex);
-                throw new ConfigurationException("Could not get class " + className
-                    + " for role " + role, ex);
-            }
-        }
-
-        e = RoleUtils.shorthandNames();
-        while (e.hasNext()) {
-            Configuration co = conf.getChild((String) e.next());
-            if (! co.getLocation().equals("-")) {
-                String role = RoleUtils.lookup(co.getName());
-                String className = co.getAttribute("class", "");
-
-                if (className.equals("")) {
-                    className = RoleUtils.defaultClass(role);
-                }
-
-                try {
-                    log.debug("Adding component (" + role + " = " + className + ")");
-                    componentManager.addComponent(role, ClassUtils.loadClass(className), co);
-                } catch ( Exception ex ) {
-                    log.error("Could not load class " + className, ex);
-                    throw new ConfigurationException("Could not get class " + className
-                        + " for role " + role, ex);
-                }
-            }
-        }
-
+        log.debug("Setting up the sitemap.");
         // Create the sitemap
         Configuration sconf = conf.getChild("sitemap");
 

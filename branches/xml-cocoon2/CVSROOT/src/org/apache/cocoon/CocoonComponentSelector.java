@@ -11,6 +11,7 @@ package org.apache.cocoon;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collections;
+import java.util.Iterator;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentSelector;
@@ -18,6 +19,9 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.SingleThreaded;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Poolable;
@@ -36,9 +40,9 @@ import org.apache.log.LogKit;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-08 20:20:44 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-17 18:33:35 $
  */
-public class CocoonComponentSelector implements ComponentSelector, Composer, ThreadSafe {
+public class CocoonComponentSelector implements ComponentSelector, Composer, Configurable, ThreadSafe {
     protected Logger log = LogKit.getLoggerFor("cocoon");
     /** Hashmap of all components which this ComponentManager knows about.
      */
@@ -91,7 +95,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
         Component component;
 
         if ( hint == null ) {
-            log.error("Attempted to retrieve component with null hint.");
+            log.error("CocoonComponentSelector Attempted to retrieve component with null hint.");
             throw new ComponentNotFoundException("Attempted to retrieve component with null hint.");
         }
 
@@ -101,7 +105,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
         if ( componentClass == null ) {
             component = (Component)this.instances.get(hint);
             if ( component == null ) {
-                log.error("Could not find component for hint '" + hint.toString() + "'.");
+                log.error("CocoonComponentSelector Could not find component for hint '" + hint.toString() + "'.");
                 throw new ComponentNotFoundException("Could not find component for hint '" + hint.toString() + "'.");
             } else {
                 // we found an individual instance of a component.
@@ -110,7 +114,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
-            log.error("Component with hint '" + hint.toString() + "' (" + componentClass.getName() + ")does not implement Component.");
+            log.error("CocoonComponentSelector Component with hint '" + hint.toString() + "' (" + componentClass.getName() + ")does not implement Component.");
             throw new ComponentNotAccessibleException(
                 "Component with hint '" + hint.toString() + "' (" + componentClass.getName() + ")does not implement Component.",
                 null
@@ -119,20 +123,20 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
 
         // Work out what class of component we're dealing with.
         if ( ThreadSafe.class.isAssignableFrom(componentClass)) {
-            component = getThreadsafeComponent(componentClass);
+            component = getThreadsafeComponent(hint, componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
-            component = getPooledComponent(componentClass);
+            component = getPooledComponent(hint, componentClass);
         } else if ( SingleThreaded.class.isAssignableFrom(componentClass) ) {
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-                log.error("Could not access class " + componentClass.getName(), e);
+                log.error("CocoonComponentSelector Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-                log.error("Could not access class " + componentClass.getName(), e);
+                log.error("CocoonComponentSelector Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -146,13 +150,13 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
             try {
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-                log.error("Could not instantiate component " + componentClass.getName(), e);
+                log.error("CocoonComponentSelector Could not instantiate component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-                log.error("Could not access class " + componentClass.getName(), e);
+                log.error("CocoonComponentSelector Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -164,11 +168,29 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
         return component;
     }
 
+    public void configure(Configuration conf) throws ConfigurationException {
+        log.debug("CocoonComponentSelector setting up with root element: " + conf.getName());
+        Iterator instances = conf.getChildren("component-instance");
+
+        while (instances.hasNext()) {
+            Configuration current = (Configuration) instances.next();
+            Object hint = current.getAttribute("name");
+            String className = (String) current.getAttribute("class");
+
+            try {
+                this.addComponent(hint, ClassUtils.loadClass(className), current);
+            } catch (Exception e) {
+                log.error("CocoonComponentSelector The component instance for \"" + hint + "\" has an invalid class name.", e);
+                throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.", e);
+            }
+        }
+    }
+
     /** Retrieve an instance of a threadsafe component.
      * @param componentClass the class to retrieve an instance of.
      * @return and instance of the component.
      */
-    private Component getThreadsafeComponent(Class componentClass)
+    private Component getThreadsafeComponent(Object hint, Class componentClass)
     throws ComponentManagerException {
         Component component = (Component)threadSafeInstances.get(componentClass);
 
@@ -189,7 +211,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
                 );
             }
             setupComponent(component);
-            threadSafeInstances.put(componentClass,component);
+            threadSafeInstances.put(hint,component);
         }
         return component;
     }
@@ -197,7 +219,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
     /** Return an instance of a component from its associated pool.
      * @param componentClass the class of the component of which we need an instance.
      */
-    private Component getPooledComponent(Class componentClass)
+    private Component getPooledComponent(Object hint, Class componentClass)
     throws ComponentManagerException {
         ComponentPool pool = (ComponentPool)pools.get(componentClass);
 
@@ -214,7 +236,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
                     e
                 );
             }
-            pools.put(componentClass,pool);
+            pools.put(hint,pool);
         }
 
         Component component;
@@ -243,7 +265,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
                     (Configuration)this.configurations.get(c.getClass())
                 );
             } catch (ConfigurationException e) {
-                log.error("Could not configure component " + c.getClass().getName(), e);
+                log.error("CocoonComponentSelector Could not configure component " + c.getClass().getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not configure component " + c.getClass().getName() + ".",
                     e
@@ -261,7 +283,7 @@ public class CocoonComponentSelector implements ComponentSelector, Composer, Thr
      * @param component the class of this component.
      * @param Configuration the configuration for this component.
      */
-    public void addComponent(Object hint, Class component, Configuration config) {
+    private void addComponent(Object hint, Class component, Configuration config) {
         this.components.put(hint,component);
         if ( config != null ) {
             this.configurations.put(component,config);
