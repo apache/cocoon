@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon/flow-interpreters" unless="component-instance[@name='java']">
+  <component-instance name="java" class="org.apache.cocoon.components.flow.java.JavaInterpreter"/>
+</xconf>

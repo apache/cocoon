@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.136 2004/03/27 22:43:30 unico Exp $
+    | CVS $Id: gump.xml,v 1.137 2004/03/29 17:47:20 stephan Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1105,6 +1105,26 @@
     <home nested="build/cocoon-@@DATE@@"/>
                                                                                                                                                                                
     <jar name="blocks/xsp-block.jar"/>
+                                                                                                                                                                               
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-javaflow" status="unstable">
+    <package>org.apache.cocoon</package>
+                                                                                                                                                                               
+    <ant target="gump-block">
+      <property name="block-name" value="javaflow"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+                                                                                                                                                                               
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-forms" />
+    <depend project="cocoon-block-ojb" />
+                                                                                                                                                                               
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+                                                                                                                                                                               
+    <jar name="blocks/javaflow-block.jar"/>
                                                                                                                                                                                
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>

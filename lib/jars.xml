@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.195 2004/03/28 20:07:59 antonio Exp $
+    | CVS $Id: jars.xml,v 1.196 2004/03/29 17:47:20 stephan Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -1084,5 +1084,15 @@
     <used-by>Portal</used-by>
     <lib>portal/lib/pluto-20040310.jar</lib>
     <homepage>http://jakarta.apache.org/pluto/</homepage>
+  </file>
+  <file>
+    <title>Jakarta BCEL</title>
+    <description>
+      The Byte Code Engineering Library is intended to give users a convenient
+      possibility to analyze, create, and manipulate (binary) Java class files.
+    </description>
+    <used-by>XSLTC, javaflow</used-by>
+    <lib>core/jakarta-bcel-20040329.jar</lib>
+    <homepage>http://jakarta.apache.org/bcel/</homepage>
   </file>
 </jars>
