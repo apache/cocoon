@@ -99,6 +99,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
+import java.util.*;
+import java.text.*;
 
 /**
  * <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> 
@@ -240,6 +242,28 @@ import org.xml.sax.helpers.LocatorImpl;
  * processed (defaults to <code>1</code> if <code>step</code> is absent). 
  * Either <code>items</code> or both <code>begin</code> and <code>end</code> 
  * must be present.<p>
+ *
+ *
+ *
+ * <p>
+ * The <code>formatNumber</code> tag is used to display numeric data, including currencies and percentages, in a locale-specific manner. The <code>formatNumber</code>> action determines from the locale, for example, whether to use a period or a comma for delimiting the integer and decimal portions of a number. Here is its syntax: 
+ * </p>
+ * <p>
+ * &lt;formatNumber value="Expression"
+ *     [type="Type"] [pattern="Expression"]
+ *     [currencyCode="Expression"] [currencySymbol="Expression"]
+ *     [maxIntegerDigits="Expression"] [minIntegerDigits="Expression"]
+ *     [maxFractionDigits="Expression"] [minFractionDigits="Expression"]
+ *     [groupingUsed="Expression"]
+ *     [var="Name"] [locale="Expression"]&gt;
+ * </p>
+ *
+ * <p>The <code>formatDate</code> tag provides facilities to format Date values:</p> 
+ *<p>
+ * &lt;formatDate value="Expression" [dateStyle="Style"] 
+ [timeStyle="Style"] [pattern="Expression"] [type="Type"] [var="Name"] 
+ [locale="Expression"]&gt;
+ * </p>
  *
  * <p>The <code>macro</code> tag allows you define a new custom tag.</p>
  *
@@ -389,8 +413,13 @@ public class JXTemplateGenerator extends ComposerGenerator {
                     if (result == Undefined.instance ||
                         result == ScriptableObject.NOT_FOUND) {
                         result = null;
-                    } else while (result instanceof Wrapper) {
-                        result = ((Wrapper)result).unwrap();
+                        
+                    } else {
+                        if (!(result instanceof NativeJavaClass)) {
+                            while (result instanceof Wrapper) {
+                                result = ((Wrapper)result).unwrap();
+                            }
+                        }
                     }
                     return result;
                 } catch (JavaScriptException e) {
@@ -437,8 +466,11 @@ public class JXTemplateGenerator extends ComposerGenerator {
                     if (result == Undefined.instance || 
                         result == ScriptableObject.NOT_FOUND) {
                         result = null;
-                    } else while (result instanceof Wrapper) {
-                        result = ((Wrapper)result).unwrap();
+                    } 
+                    if (result instanceof Wrapper) {
+                        if (!(result instanceof NativeJavaClass)) {
+                            result = ((Wrapper)result).unwrap();
+                        }
                     }
                     return result;
                 } finally {
@@ -520,8 +552,12 @@ public class JXTemplateGenerator extends ComposerGenerator {
                     if (result == Undefined.instance ||
                         result == ScriptableObject.NOT_FOUND) {
                         result = null;
-                    } else while (result instanceof Wrapper) {
-                        result = ((Wrapper)result).unwrap();
+                    } else {
+                        if (!(result instanceof NativeJavaClass)) {
+                            while (result instanceof Wrapper) {
+                                result = ((Wrapper)result).unwrap();
+                            }
+                        }
                     }
                     return result;
                 } finally {
@@ -559,8 +595,12 @@ public class JXTemplateGenerator extends ComposerGenerator {
                     if (result == Undefined.instance ||
                         result == ScriptableObject.NOT_FOUND) {
                         result = null;
-                    } else while (result instanceof Wrapper) {
-                        result = ((Wrapper)result).unwrap();
+                    } else {
+                        if (!(result instanceof NativeJavaClass)) {
+                            while (result instanceof Wrapper) {
+                                result = ((Wrapper)result).unwrap();
+                            }
+                        }
                     }
                     return result;
                 } finally {
@@ -741,6 +781,8 @@ public class JXTemplateGenerator extends ComposerGenerator {
     final static String SET = "set";
     final static String MACRO = "macro";
     final static String PARAMETER = "parameter";
+    final static String FORMAT_NUMBER = "formatNumber";
+    final static String FORMAT_DATE = "formatDate";
 
 
     /**
@@ -811,8 +853,30 @@ public class JXTemplateGenerator extends ComposerGenerator {
         throws SAXException {
         Expression res = compileExpr(val, msg, location);
         if (res == null) return null;
-        if (res.compiledExpression != null) {
+        if (res.compiledExpression == null) {
             res.compiledExpression = Integer.valueOf(res.raw);
+        }
+        return res;
+    }
+
+    // Compile an numeric expression (returns either a Compiled Expression
+    // or an Number literal)
+    private static Expression compileNumber(String val, String msg, Locator location) 
+        throws SAXException {
+        Expression res = compileExpr(val, msg, location);
+        if (res == null) return null;
+        if (res.compiledExpression == null) {
+            res.compiledExpression = Integer.valueOf(res.raw);
+        }
+        return res;
+    }
+
+    private static Expression compileBoolean(String val, String msg, Locator location) 
+        throws SAXException {
+        Expression res = compileExpr(val, msg, location);
+        if (res == null) return null;
+        if (res.compiledExpression == null) {
+            res.compiledExpression = Boolean.valueOf(res.raw);
         }
         return res;
     }
@@ -828,9 +892,10 @@ public class JXTemplateGenerator extends ComposerGenerator {
         return new Expression(variable, compiled);
     }
 
-    private Object getValue(Expression expr, JexlContext jexlContext,
+    static private Object getValue(Expression expr, JexlContext jexlContext,
                             JXPathContext jxpathContext) 
         throws Exception {
+        if (expr == null) return null;
         Object compiled = expr.compiledExpression;
         try {
             if (compiled instanceof CompiledExpression) {
@@ -851,7 +916,7 @@ public class JXTemplateGenerator extends ComposerGenerator {
         }
     }
 
-    private int getIntValue(Expression expr, JexlContext jexlContext,
+    static private int getIntValue(Expression expr, JexlContext jexlContext,
                             JXPathContext jxpathContext) 
         throws Exception {
         Object res = getValue(expr, jexlContext, jxpathContext);
@@ -859,6 +924,42 @@ public class JXTemplateGenerator extends ComposerGenerator {
             return ((Number)res).intValue();
         }
         return 0;
+    }
+
+    static private Number getNumberValue(Expression expr, JexlContext jexlContext,
+                               JXPathContext jxpathContext) 
+        throws Exception {
+        Object res = getValue(expr, jexlContext, jxpathContext);
+        if (res instanceof Number) {
+            return (Number)res;
+        }
+        if (res == null) {
+            return null;
+        }
+        return Double.valueOf(res.toString());
+    }
+
+    static private String getStringValue(Expression expr, JexlContext jexlContext,
+                                  JXPathContext jxpathContext) 
+        throws Exception {
+        Object res = getValue(expr, jexlContext, jxpathContext);
+        if (res != null) {
+            return res.toString();
+        }
+        if (expr != null) {
+            return expr.raw;
+        }
+        return null;
+    }
+
+    static private Boolean getBooleanValue(Expression expr, JexlContext jexlContext,
+                                    JXPathContext jxpathContext) 
+        throws Exception {
+        Object res = getValue(expr, jexlContext, jxpathContext);
+        if (res instanceof Boolean) {
+            return (Boolean)res;
+        }
+        return null;
     }
 
     // Hack: try to prevent JXPath from converting result to a String
@@ -1503,6 +1604,450 @@ public class JXTemplateGenerator extends ComposerGenerator {
         final Expression value;
     }
 
+    // formatNumber tag (borrows from Jakarta taglibs JSTL)
+
+    private static final char HYPHEN = '-';
+    private static final char UNDERSCORE = '_';
+
+    private static Locale parseLocale(String locale, String variant) {
+
+        Locale ret = null;
+        String language = locale;
+        String country = null;
+        int index = -1;
+
+        if (((index = locale.indexOf(HYPHEN)) > -1)
+                || ((index = locale.indexOf(UNDERSCORE)) > -1)) {
+            language = locale.substring(0, index);
+            country = locale.substring(index+1);
+        }
+
+        if ((language == null) || (language.length() == 0)) {
+            throw new IllegalArgumentException("No language in locale");
+        }
+
+        if (country == null) {
+            if (variant != null)
+                ret = new Locale(language, "", variant);
+            else
+                ret = new Locale(language, "");
+        } else if (country.length() > 0) {
+            if (variant != null)
+                ret = new Locale(language, country, variant);
+            else
+                ret = new Locale(language, country);
+        } else {
+            throw new IllegalArgumentException("Empty country in locale");
+
+        }
+
+        return ret;
+    }
+
+    private static final String NUMBER = "number";    
+    private static final String CURRENCY = "currency";
+    private static final String PERCENT = "percent";
+
+    static class StartFormatNumber extends StartInstruction {
+
+        Expression value;                   
+        Expression type;                    
+        Expression pattern;                 
+        Expression currencyCode;            
+        Expression currencySymbol;          
+        Expression isGroupingUsed;         
+        Expression maxIntegerDigits;           
+        Expression minIntegerDigits;           
+        Expression maxFractionDigits;          
+        Expression minFractionDigits;          
+        Expression locale;
+        
+        Expression var;                        
+
+        private static Class currencyClass;
+
+        static {
+            try {
+                currencyClass = Class.forName("java.util.Currency");
+                // container's runtime is J2SE 1.4 or greater
+            } catch (Exception cnfe) {
+            }
+        }
+
+        public StartFormatNumber(StartElement raw,
+                                 Expression var,
+                                 Expression value,                   
+                                 Expression type,                   
+                                 Expression pattern,                 
+                                 Expression currencyCode,            
+                                 Expression currencySymbol,          
+                                 Expression isGroupingUsed,         
+                                 Expression maxIntegerDigits,           
+                                 Expression minIntegerDigits,           
+                                 Expression maxFractionDigits,          
+                                 Expression minFractionDigits,
+                                 Expression locale) {
+            super(raw);
+            this.var = var;                   
+            this.value = value;                   
+            this.type = type;                    
+            this.pattern = pattern;                 
+            this.currencyCode = currencyCode;            
+            this.currencySymbol = currencySymbol;          
+            this.isGroupingUsed = isGroupingUsed;         
+            this.maxIntegerDigits = maxIntegerDigits;           
+            this.minIntegerDigits = minIntegerDigits;           
+            this.maxFractionDigits = maxFractionDigits;          
+            this.minFractionDigits = minFractionDigits;          
+            this.locale = locale;
+        }
+
+        String format(JexlContext jexl, JXPathContext jxp) 
+            throws Exception {
+            // Determine formatting locale
+            String var = getStringValue(this.var, jexl, jxp);
+            Number input = getNumberValue(this.value, jexl, jxp);
+            String type = getStringValue(this.type, jexl, jxp);
+            String pattern = getStringValue(this.pattern, jexl, jxp);
+            String currencyCode = getStringValue(this.currencyCode, jexl, jxp);
+            String currencySymbol = getStringValue(this.currencySymbol, 
+                                                 jexl, jxp);
+            Boolean isGroupingUsed = getBooleanValue(this.isGroupingUsed, 
+                                                     jexl, jxp);
+            Number maxIntegerDigits = getNumberValue(this.maxIntegerDigits, 
+                                                     jexl, jxp);
+            Number minIntegerDigits = getNumberValue(this.minIntegerDigits, 
+                                                     jexl, jxp);
+            Number maxFractionDigits = getNumberValue(this.maxFractionDigits, 
+                                                      jexl, jxp);
+            Number minFractionDigits = getNumberValue(this.minFractionDigits, 
+                                                      jexl, jxp);
+            String localeStr = getStringValue(this.locale,
+                                              jexl, jxp);
+            Locale loc;
+            if (localeStr == null) {
+                loc = Locale.getDefault();
+            } else {
+                loc = parseLocale(localeStr, null);
+            }
+            String formatted;
+            if (loc != null) {
+                // Create formatter 
+                NumberFormat formatter = null;
+                if ((pattern != null) && !pattern.equals("")) {
+                    // if 'pattern' is specified, 'type' is ignored
+                    DecimalFormatSymbols symbols = new DecimalFormatSymbols(loc);
+                    formatter = new DecimalFormat(pattern, symbols);
+                } else {
+                    formatter = createFormatter(loc,
+                                                type);
+
+                }
+                if (((pattern != null) && !pattern.equals(""))
+                    || CURRENCY.equalsIgnoreCase(type)) {
+                    setCurrency(formatter,
+                                currencyCode,
+                                currencySymbol);
+                }
+                configureFormatter(formatter,
+                                   isGroupingUsed,
+                                   maxIntegerDigits,
+                                   minIntegerDigits,
+                                   maxFractionDigits,
+                                   minFractionDigits);
+                formatted = formatter.format(input);
+            } else {
+                // no formatting locale available, use toString()
+                formatted = input.toString();
+            }
+            if (var != null) {
+                jexl.getVars().put(var, formatted);
+                jxp.getVariables().declareVariable(var,
+                                                   formatted);
+                return null;
+            }
+            return formatted;
+        }
+        
+        private NumberFormat createFormatter(Locale loc,
+                                             String type) 
+            throws Exception {
+            NumberFormat formatter = null;
+            if ((type == null) || NUMBER.equalsIgnoreCase(type)) {
+                formatter = NumberFormat.getNumberInstance(loc);
+            } else if (CURRENCY.equalsIgnoreCase(type)) {
+                formatter = NumberFormat.getCurrencyInstance(loc);
+            } else if (PERCENT.equalsIgnoreCase(type)) {
+                formatter = NumberFormat.getPercentInstance(loc);
+            } else {
+                throw new IllegalArgumentException("Invalid type: \"" + type + "\": should be \"number\" or \"currency\" or \"percent\"");
+            }
+            return formatter;
+        }
+
+        /*
+         * Applies the 'groupingUsed', 'maxIntegerDigits', 'minIntegerDigits',
+         * 'maxFractionDigits', and 'minFractionDigits' attributes to the given
+         * formatter.
+         */
+        private void configureFormatter(NumberFormat formatter,
+                                        Boolean isGroupingUsed,
+                                        Number maxIntegerDigits,
+                                        Number minIntegerDigits,
+                                        Number maxFractionDigits,
+                                        Number minFractionDigits) {
+            if (isGroupingUsed != null)
+                formatter.setGroupingUsed(isGroupingUsed.booleanValue());
+            if (maxIntegerDigits != null)
+                formatter.setMaximumIntegerDigits(maxIntegerDigits.intValue());
+            if (minIntegerDigits != null)
+                formatter.setMinimumIntegerDigits(minIntegerDigits.intValue());
+            if (maxFractionDigits != null)
+                formatter.setMaximumFractionDigits(maxFractionDigits.intValue());
+            if (minFractionDigits != null)
+                formatter.setMinimumFractionDigits(minFractionDigits.intValue());
+        }
+        
+        /*
+         * Override the formatting locale's default currency symbol with the
+         * specified currency code (specified via the "currencyCode" attribute) or
+         * currency symbol (specified via the "currencySymbol" attribute).
+         *
+         * If both "currencyCode" and "currencySymbol" are present,
+         * "currencyCode" takes precedence over "currencySymbol" if the
+         * java.util.Currency class is defined in the container's runtime (that
+         * is, if the container's runtime is J2SE 1.4 or greater), and
+         * "currencySymbol" takes precendence over "currencyCode" otherwise.
+         *
+         * If only "currencyCode" is given, it is used as a currency symbol if
+         * java.util.Currency is not defined.
+         *
+         * Example:
+         *
+         * JDK    "currencyCode" "currencySymbol" Currency symbol being displayed
+         * -----------------------------------------------------------------------
+         * all         ---            ---         Locale's default currency symbol
+         *
+         * <1.4        EUR            ---         EUR
+         * >=1.4       EUR            ---         Locale's currency symbol for Euro
+         *
+         * all         ---           \u20AC       \u20AC
+         * 
+         * <1.4        EUR           \u20AC       \u20AC
+         * >=1.4       EUR           \u20AC       Locale's currency symbol for Euro
+         */
+        private void setCurrency(NumberFormat formatter,
+                                 String currencyCode,
+                                 String currencySymbol) throws Exception {
+            String code = null;
+            String symbol = null;
+            
+            if ((currencyCode == null) && (currencySymbol == null)) {
+                return;
+            }
+            
+            if ((currencyCode != null) && (currencySymbol != null)) {
+                if (currencyClass != null)
+                    code = currencyCode;
+                else
+                    symbol = currencySymbol;
+            } else if (currencyCode == null) {
+                symbol = currencySymbol;
+            } else {
+                if (currencyClass != null)
+                    code = currencyCode;
+                else
+                    symbol = currencyCode;
+            }
+            
+            if (code != null) {
+                Object[] methodArgs = new Object[1];
+                
+                /*
+                 * java.util.Currency.getInstance()
+                 */
+                Method m = currencyClass.getMethod("getInstance",
+                                                   new Class[] {String.class});
+
+                methodArgs[0] = code;
+                Object currency = m.invoke(null, methodArgs);
+                
+                /*
+                 * java.text.NumberFormat.setCurrency()
+                 */
+                Class[] paramTypes = new Class[1];
+                paramTypes[0] = currencyClass;
+                Class numberFormatClass = Class.forName("java.text.NumberFormat");
+                m = numberFormatClass.getMethod("setCurrency", paramTypes);
+                methodArgs[0] = currency;
+                m.invoke(formatter, methodArgs);
+            } else {
+                /*
+                 * Let potential ClassCastException propagate up (will almost
+                 * never happen)
+                 */
+                DecimalFormat df = (DecimalFormat) formatter;
+                DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+                dfs.setCurrencySymbol(symbol);
+                df.setDecimalFormatSymbols(dfs);
+            }
+        }
+    }
+
+    // formatDate tag (borrows from Jakarta taglibs JSTL)
+
+    static class StartFormatDate extends StartInstruction {
+
+        private static final String DATE = "date";
+        private static final String TIME = "time";
+        private static final String DATETIME = "both";
+
+        Expression var;
+        Expression value;
+        Expression type;
+        Expression pattern;
+        Expression timeZone;
+        Expression dateStyle;
+        Expression timeStyle;
+        Expression locale;
+
+        StartFormatDate(StartElement raw,
+                        Expression var,
+                        Expression value,
+                        Expression type,
+                        Expression pattern,
+                        Expression timeZone,
+                        Expression dateStyle,
+                        Expression timeStyle,
+                        Expression locale) {
+            super(raw);
+            this.var = var;
+            this.value = value;
+            this.type = type;
+            this.pattern = pattern;
+            this.timeZone = timeZone;
+            this.dateStyle = dateStyle;
+            this.timeStyle = timeStyle;
+            this.locale = locale;
+        }
+
+        String format(JexlContext jexl, JXPathContext jxp) 
+            throws Exception {
+            String var = getStringValue(this.var, jexl, jxp);
+            Object value = getValue(this.value, jexl, jxp);
+            Object locVal = getValue(this.locale, 
+                                     jexl, jxp);
+            String pattern = getStringValue(this.pattern,
+                                            jexl, jxp);
+            Object timeZone = getValue(this.timeZone, jexl, jxp);
+
+            String type = getStringValue(this.type, jexl, jxp);
+            String timeStyle = getStringValue(this.timeStyle, jexl, jxp);
+            String dateStyle = getStringValue(this.dateStyle, jexl, jxp);
+
+            String formatted = null;
+
+            // Create formatter
+            Locale locale;
+            if (locVal != null) {
+                if (locVal instanceof Locale) {
+                    locale = (Locale)locVal;
+                } else {
+                    locale = parseLocale(locVal.toString(), null);
+                }
+            } else {
+                locale = Locale.getDefault();
+            }
+            DateFormat formatter = createFormatter(locale,
+                                                   type,
+                                                   dateStyle,
+                                                   timeStyle);
+            // Apply pattern, if present
+            if (pattern != null) {
+                try {
+                    ((SimpleDateFormat) formatter).applyPattern(pattern);
+                } catch (ClassCastException cce) {
+                    formatter = new SimpleDateFormat(pattern, locale);
+                }
+            }
+            // Set time zone
+            TimeZone tz = null;
+            if ((timeZone instanceof String)
+                && ((String) timeZone).equals("")) {
+                timeZone = null;
+            }
+            if (timeZone != null) {
+                if (timeZone instanceof String) {
+                    tz = TimeZone.getTimeZone((String) timeZone);
+                } else if (timeZone instanceof TimeZone) {
+                    tz = (TimeZone) timeZone;
+                } else {
+                    throw new IllegalArgumentException("Illegal timeZone value: \""+timeZone+"\"");
+                }
+            } 
+            if (tz != null) {
+                formatter.setTimeZone(tz);
+            }
+            formatted = formatter.format(value);
+            if (var != null) {
+                jexl.getVars().put(var, formatted);
+                jxp.getVariables().declareVariable(var,
+                                                   formatted);
+                return null;
+            }
+            return formatted;
+        }
+
+        private DateFormat createFormatter(Locale loc,
+                                           String type,
+                                           String dateStyle,
+                                           String timeStyle) 
+            throws Exception {
+            DateFormat formatter = null;
+            if ((type == null) || DATE.equalsIgnoreCase(type)) {
+                formatter = DateFormat.getDateInstance(getStyle(dateStyle),
+                                                       loc);
+            } else if (TIME.equalsIgnoreCase(type)) {
+                formatter = DateFormat.getTimeInstance(getStyle(timeStyle),
+                                                       loc);
+            } else if (DATETIME.equalsIgnoreCase(type)) {
+                formatter = DateFormat.getDateTimeInstance(getStyle(dateStyle),
+                                                           getStyle(timeStyle),
+                                                           loc);
+            } else {
+                throw new IllegalArgumentException("Invalid type: \""+ type+"\"");
+            }
+            return formatter;
+        }
+
+        private static final String DEFAULT = "default";
+        private static final String SHORT = "short";
+        private static final String MEDIUM = "medium";
+        private static final String LONG = "long";
+        private static final String FULL = "full";
+
+        private int getStyle(String style) {
+            int ret = DateFormat.DEFAULT;
+            if (style != null) {
+                if (DEFAULT.equalsIgnoreCase(style)) {
+                    ret = DateFormat.DEFAULT;
+                } else if (SHORT.equalsIgnoreCase(style)) {
+                    ret = DateFormat.SHORT;
+                } else if (MEDIUM.equalsIgnoreCase(style)) {
+                    ret = DateFormat.MEDIUM;
+                } else if (LONG.equalsIgnoreCase(style)) {
+                    ret = DateFormat.LONG;
+                } else if (FULL.equalsIgnoreCase(style)) {
+                    ret = DateFormat.FULL;
+                } else {
+                    throw new IllegalArgumentException("Invalid style: \"" + style +"\": should be \"default\" or \"short\" or \"medium\" or \"long\" or \"full\"");
+                }
+            }
+            return ret;
+        }
+    }
+
+
     static class Parser implements ContentHandler, LexicalHandler {
 
         StartDocument startEvent;
@@ -1677,6 +2222,94 @@ public class JXTemplateGenerator extends ComposerGenerator {
                         new StartForEach(startElement, expr, 
                                          var, begin, end, step);
                     newEvent = startForEach;
+                } else if (localName.equals(FORMAT_NUMBER)) {
+                    Expression value = 
+                        compileExpr(attrs.getValue("value"),
+                                    null, locator);;
+                    Expression type = 
+                        compileExpr(attrs.getValue("type"),
+                                    null, locator);
+                    Expression pattern = 
+                        compileExpr(attrs.getValue("pattern"),
+                                    null, locator);
+                    Expression currencyCode = 
+                        compileExpr(attrs.getValue("currencyCode"),
+                                    null, locator);;
+                    Expression currencySymbol = 
+                        compileExpr(attrs.getValue("currencySymbol"),
+                                    null, locator);;          
+                    Expression isGroupingUsed =  
+                        compileBoolean(attrs.getValue("isGroupingUsed"), 
+                                       null, locator);
+                    Expression maxIntegerDigits = 
+                        compileInt(attrs.getValue("maxIntegerDigits"), 
+                                   null, locator);           
+                    Expression minIntegerDigits =            
+                        compileInt(attrs.getValue("minIntegerDigits"), 
+                                   null, locator);           
+                    Expression maxFractionDigits =          
+                        compileInt(attrs.getValue("maxFractionDigits"), 
+                                   null, locator);           
+                    Expression minFractionDigits =           
+                        compileInt(attrs.getValue("minFractionDigits"), 
+                                   null, locator);           
+                    Expression var =
+                        compileExpr(attrs.getValue("var"), 
+                                    null, locator);           
+                    Expression locale =
+                        compileExpr(attrs.getValue("locale"), 
+                                    null, locator);           
+                    StartFormatNumber startFormatNumber = 
+                        new StartFormatNumber(startElement,
+                                              var,
+                                              value,
+                                              type,
+                                              pattern,
+                                              currencyCode,
+                                              currencySymbol,
+                                              isGroupingUsed,
+                                              maxIntegerDigits,
+                                              minIntegerDigits,
+                                              maxFractionDigits,
+                                              minFractionDigits,
+                                              locale);
+                    newEvent = startFormatNumber;
+                } else if (localName.equals(FORMAT_DATE)) {
+                    Expression var =
+                        compileExpr(attrs.getValue("var"), 
+                                    null, locator);           
+                    Expression value = 
+                        compileExpr(attrs.getValue("value"),
+                                    null, locator);;
+                    Expression type = 
+                        compileExpr(attrs.getValue("type"),
+                                    null, locator);
+                    Expression pattern = 
+                        compileExpr(attrs.getValue("pattern"),
+                                    null, locator);
+                    Expression timeZone =
+                        compileExpr(attrs.getValue("timeZone"), 
+                                    null, locator);           
+                    Expression dateStyle =
+                        compileExpr(attrs.getValue("dateStyle"), 
+                                    null, locator);           
+                    Expression timeStyle =
+                        compileExpr(attrs.getValue("timeStyle"), 
+                                    null, locator);           
+                    Expression locale =
+                        compileExpr(attrs.getValue("locale"), 
+                                    null, locator);           
+                    StartFormatDate startFormatDate = 
+                        new StartFormatDate(startElement,
+                                            var,
+                                            value,
+                                            type,
+                                            pattern,
+                                            timeZone,
+                                            dateStyle,
+                                            timeStyle,
+                                            locale);
+                    newEvent = startFormatDate;
                 } else if (localName.equals(CHOOSE)) {
                     StartChoose startChoose = new StartChoose(startElement);
                     newEvent = startChoose;
@@ -2705,8 +3338,8 @@ public class JXTemplateGenerator extends ComposerGenerator {
                                 } catch (Exception e) {
                                     throw new SAXParseException(e.getMessage(),
                                                                 ev.location,
-                                                                e);
-                                }
+                                                                e); 
+                               }
                                 if (val == null) {
                                     val = "";
                                 }
@@ -2725,6 +3358,38 @@ public class JXTemplateGenerator extends ComposerGenerator {
                                       startElement.raw,
                                       attrs); 
                 
+            } else if (ev instanceof StartFormatNumber) {
+                StartFormatNumber startFormatNumber = 
+                    (StartFormatNumber)ev;
+                try {
+                    String result =
+                        startFormatNumber.format(jexlContext,
+                                                 jxpathContext);
+                    if (result != null) {
+                        char[] chars = result.toCharArray();
+                        consumer.characters(chars, 0, chars.length);
+                    }
+                } catch (Exception e) {
+                    throw new SAXParseException(e.getMessage(),
+                                                ev.location,
+                                                e);
+                }
+            } else if (ev instanceof StartFormatDate) {
+                StartFormatDate startFormatDate = 
+                    (StartFormatDate)ev;
+                try {
+                    String result =
+                        startFormatDate.format(jexlContext,
+                                               jxpathContext);
+                    if (result != null) {
+                        char[] chars = result.toCharArray();
+                        consumer.characters(chars, 0, chars.length);
+                    }
+                } catch (Exception e) {
+                    throw new SAXParseException(e.getMessage(),
+                                                ev.location,
+                                                e);
+                }
             } else if (ev instanceof StartPrefixMapping) {
                 StartPrefixMapping startPrefixMapping = 
                     (StartPrefixMapping)ev;
