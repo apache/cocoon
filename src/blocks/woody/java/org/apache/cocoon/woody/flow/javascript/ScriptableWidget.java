@@ -99,6 +99,10 @@ public class ScriptableWidget extends ScriptableObject {
             if (id.equals("length")) {
                 return true;
             }
+	} else if (delegate instanceof MultiValueField) {
+            if (id.equals("length")) {
+                return true;
+            }
         } else if (delegate != null) {
             Widget sub = delegate.getWidget(id);
             if (sub != null) {
@@ -113,6 +117,10 @@ public class ScriptableWidget extends ScriptableObject {
             Repeater repeater = (Repeater)delegate;
             return index >= 0 && index < repeater.getSize();
         }
+        if (delegate instanceof MultiValueField) {
+            Object[] values = (Object[])delegate.getValue();
+            return index >= 0 && index < values.length;
+        }
         return super.has(index, start);
     }
 
@@ -121,6 +129,11 @@ public class ScriptableWidget extends ScriptableObject {
             if (id.equals("length")) {
                 Repeater repeater = (Repeater)delegate;
                 return new Integer(repeater.getSize());
+            }
+        } else if (delegate instanceof MultiValueField) {
+            if (id.equals("length")) {
+                Object[] values = (Object[])delegate.getValue();
+                return new Integer(values.length);
             }
         } else if (delegate != null) {
             Widget sub = delegate.getWidget(id);
@@ -145,6 +158,14 @@ public class ScriptableWidget extends ScriptableObject {
                 }
                 return wrap(repeater.getRow(index));
             }
+        }
+        if (delegate instanceof MultiValueField) {
+            Object[] values = (Object[])delegate.getValue();
+            if (index >= 0 && index < values.length) {
+                return values[index];
+            } else {
+	      return NOT_FOUND;
+	    }
         }
         return super.get(index, start);
     }
