@@ -1068,7 +1068,7 @@
       API for compiling java
     </description>
     <used-by>javaflow</used-by>
-    <lib>optional/commons-jci-0.1-dev.jar</lib>
+    <lib>core/commons-jci-0.1-dev.jar</lib>
     <homepage></homepage>
   </file>
 

@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,6 +43,7 @@ import org.apache.cocoon.sitemap.LeaveSitemapEvent;
 import org.apache.cocoon.sitemap.LeaveSitemapEventListener;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.SitemapListener;
+import org.apache.commons.jci.monitor.FilesystemAlterationListener;
 
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
@@ -50,7 +52,7 @@ import org.apache.cocoon.sitemap.SitemapListener;
  * @version $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled
-                                   implements Processor, Disposable {
+                                   implements Processor, Disposable, FilesystemAlterationListener {
 
     /** Our ServiceManager */
     private ServiceManager manager;
@@ -84,6 +86,75 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     /** Optional event listeners for the leave sitemap event */
     private List leaveSitemapEventListeners = new ArrayList();
 
+    /** Needs a reload? */
+    protected volatile boolean needsReload = false;
+    protected boolean fresh = true;
+    
+    public void onChangeDirectory( final File changeDirectory ) {
+        if (!fresh) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Sitemap reload required");
+            }
+            needsReload = true;
+        }
+    }
+
+    public void onChangeFile( final File changedFile ) {
+        if (!fresh) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Sitemap reload required");
+            }
+            needsReload = true;
+        }
+    }
+
+    public void onCreateDirectory( final File createdDirectory ) {
+        if (!fresh) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Sitemap reload required");
+            }
+            needsReload = true;
+        }
+    }
+
+    public void onCreateFile( final File createdFile ) {
+        if (!fresh) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Sitemap reload required");
+            }
+            needsReload = true;
+        }
+    }
+
+    public void onDeleteDirectory( final File deletedDirectory ) {
+        if (!fresh) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Sitemap reload required");
+            }
+            needsReload = true;
+        }
+    }
+
+    public void onDeleteFile( final File deletedFile ) {
+        if (!fresh) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Sitemap reload required");
+            }
+            needsReload = true;
+        }
+    }
+
+    public void onStart() {
+    }
+
+    public void onStop() {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Now tracking classpath changes");
+        }
+        fresh = false;
+    }
+
+    
     /**
      * Builds a concrete processig, given the wrapping processor
      */
@@ -161,6 +232,10 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         }
     }
 
+    boolean isReloadNeeded() {
+        return needsReload;
+    }
+    
     public TreeProcessor getWrappingProcessor() {
         return this.wrappingProcessor;
     }
