@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -156,7 +155,7 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.5 2003/09/05 07:40:21 cziegeler Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.6 2003/09/09 18:52:32 joerg Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Initializable {

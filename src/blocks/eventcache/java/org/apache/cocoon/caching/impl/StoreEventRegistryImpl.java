@@ -65,12 +65,11 @@ import org.apache.excalibur.store.Store;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: StoreEventRegistryImpl.java,v 1.1 2003/09/05 04:02:51 ghoward Exp $
+ * @version CVS $Id: StoreEventRegistryImpl.java,v 1.2 2003/09/09 18:52:33 joerg Exp $
  */
 public class StoreEventRegistryImpl 
 		extends DefaultEventRegistryImpl implements Composable {
 	private static final String EVENTREGISTRYKEY = "EVENTREGWRAPPER";
-	private boolean m_init_success = false;
 	private ComponentManager m_manager;
 	private Store m_persistentStore;
 	

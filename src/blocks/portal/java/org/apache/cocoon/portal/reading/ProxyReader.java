@@ -67,7 +67,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.portal.application.PortalApplicationConfig;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.transformation.ProxyTransformer;
 import org.apache.cocoon.reading.AbstractReader;
@@ -84,7 +83,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: ProxyReader.java,v 1.2 2003/09/02 08:56:43 cziegeler Exp $
+ * @version CVS $Id: ProxyReader.java,v 1.3 2003/09/09 18:52:33 joerg Exp $
  */
 public class ProxyReader extends AbstractReader implements Composable {
     /**

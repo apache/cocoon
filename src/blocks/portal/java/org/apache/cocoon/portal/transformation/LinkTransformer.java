@@ -89,7 +89,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: LinkTransformer.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: LinkTransformer.java,v 1.2 2003/09/09 18:52:33 joerg Exp $
  */
 public class LinkTransformer
     extends AbstractTransformer
@@ -270,7 +270,6 @@ public class LinkTransformer
         }
 
         if (elementName != null && elementName.equals(name)) {
-            Object unused = elementStack.pop();
             super.endElement(
                 NewEventLinkTransformer.NAMESPACE_URI,
                 NewEventLinkTransformer.EVENT_ELEM,

@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.2 2003/09/09 18:52:33 joerg Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
@@ -549,8 +549,6 @@ public class ProxyTransformer
         throws IOException {
 
         String cookie = (String) copletInstanceData.getAttribute(COOKIE);
-        String sessionToken =
-            (String) copletInstanceData.getAttribute(SESSIONTOKEN);
 
         if (!post) {
             uri = uri + query;
