@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.47 2001-01-17 02:24:48 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.48 2001-01-17 02:33:42 balld Exp $-->
 <!--
 
  ============================================================================
@@ -308,8 +308,6 @@
         throw new RuntimeException("Error setting connection autocommit");
       }
       <xsl:apply-templates/>
-    } catch (Exception e) {
-        log.error("Error processing the page", e);
     } finally {
       try {
         if(!_esql_connection.connection.getAutoCommit()) {
