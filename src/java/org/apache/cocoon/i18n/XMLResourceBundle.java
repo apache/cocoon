@@ -198,7 +198,6 @@ public class XMLResourceBundle extends AbstractLogEnabled
                 case 2:
                     if (this.namespace.equals(ns) && EL_MESSAGE.equals(localName)) {
                         // </i18n:message>
-                        this.buffer.processParams();
                         this.buffer = null;
                         state --;
                     } else {

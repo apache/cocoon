@@ -17,28 +17,32 @@ package org.apache.cocoon.xml;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
 import java.io.Writer;
 import java.io.IOException;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
 
 /**
  * Modification of the SAX buffer with parameterization capabilities.
  *
- * <p>Any <code>{name}</code> expression inside of the character events can be
+ * Any <code>{name}</code> expression inside of the character events can be
  * replaced by the content of another SaxBuffer if it is present in the map
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
- *
- * <p>Once all events have been pushed into this buffer, you need to call
- * {@link #processParams()}.</p>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
 public class ParamSaxBuffer extends SaxBuffer {
+
+   /**
+    * If ch (in characters()) contains an unmatched '{' then
+    * we save the chars from '{' onward in previous_ch.
+    * Next call to characters() prepends the saved chars to ch before processing
+    * (and sets previous_ch to null).
+    */
+    private char[] previous_ch = null;
 
     /**
      * Creates empty SaxBuffer
@@ -54,102 +58,113 @@ public class ParamSaxBuffer extends SaxBuffer {
     }
 
     /**
-     * Parses text in character events and extracts <code>{name}</code> parameters for later
+     * Parses text and extracts <code>{name}</code> parameters for later
      * substitution.
      */
-    public void processParams() throws SAXException {
-        // what we do here is running over all sax bits and copying them over
-        // into a new list, and meanwhile processing all Character bits
+    public void characters(char ch[], int start, int length) throws SAXException {
 
-        int initialSize;
-        if (saxbits.size() <= 3)
-            initialSize = 6;
-        else
-            initialSize = (int)((double)saxbits.size() * 1.35d);
+        if (previous_ch != null) {
+            // prepend char's from previous_ch to ch
+            char[] buf = new char[length + previous_ch.length];
+            System.arraycopy(previous_ch, 0, buf, 0, previous_ch.length);
+            System.arraycopy(ch, start, buf, previous_ch.length, length);
+            ch = buf;
+            start = 0;
+            length += previous_ch.length;
+            previous_ch = null;
+        }
 
-        List newSaxBits = new ArrayList(initialSize);
+        final int end = start + length;
+        for (int i = start; i < end; i++) {
+            if (ch[i] == '{') {
+                // Send any collected characters so far
+                if (i > start) {
+                    addBit(new Characters(ch, start, i - start));
+                }
 
-        int i = 0;
-        while (i < saxbits.size()) {
-            Object bit = saxbits.get(i);
-            if (bit instanceof Characters) {
-                char[] chars = ((Characters)bit).ch;
-
-                // check if there are more character events immediately following this one,
-                // if so merge all data into one big array
-                int consecutiveCharacterEventCount = 0;
-                int totalLength = chars.length;
-                for (int k = i + 1; k < saxbits.size(); k++) {
-                    Object otherbit = saxbits.get(k);
-                    if (otherbit instanceof Characters) {
-                        consecutiveCharacterEventCount++;
-                        totalLength += ((Characters)otherbit).ch.length;
-                    } else {
+                // Find closing brace, and construct parameter name
+                StringBuffer name = new StringBuffer();
+                int j = i + 1;
+                for (; j < end; j++) {
+                    if (ch[j] == '}') {
                         break;
                     }
+                    name.append(ch[j]);
                 }
-
-                if (consecutiveCharacterEventCount > 0) {
-                    char[] newchars = new char[totalLength];
-                    System.arraycopy(chars, 0, newchars, 0, chars.length);
-                    int newCharPos = chars.length;
-                    for (int k = 0; k < consecutiveCharacterEventCount; k++) {
-                        Object otherbit = saxbits.get(i + 1 + k);
-                        char[] otherchars = ((Characters)otherbit).ch;
-                        System.arraycopy(otherchars, 0, newchars, newCharPos, otherchars.length);
-                        newCharPos += otherchars.length;
-                    }
-                    chars = newchars;
-                    i += consecutiveCharacterEventCount + 1;
-                } else {
-                    i++;
+                if (j == end) {
+                    // '{' without a closing '}'
+                    // save char's from '{' in previous_ch in case the following call to characters()
+                    // provides the '}'
+                    previous_ch = new char[end - i];
+                    System.arraycopy(ch, i, previous_ch, 0, end - i);
+                    break;
                 }
+                addBit(new Parameter(name.toString()));
 
-                // now process the actual {...}
-                int start = 0;
-                final int end = chars.length;
-                for (int r = 0; r < end; r++) {
-                    if (chars[r] == '{') {
-                        // Send any collected characters so far
-                        if (r > start) {
-                            newSaxBits.add(new Characters(chars, start, r - start));
-                        }
-
-                        // Find closing brace, and construct parameter name
-                        StringBuffer name = new StringBuffer();
-                        int j = r + 1;
-                        for (; j < end; j++) {
-                            if (chars[j] == '}') {
-                                break;
-                            }
-                            name.append(chars[j]);
-                        }
-                        if (j == end) {
-                            throw new SAXException("Unclosed '}'");
-                        }
-                        newSaxBits.add(new Parameter(name.toString()));
-
-                        // Continue processing
-                        r = j;
-                        start = j + 1;
-                        continue;
-                    }
-                }
-
-                // Send any tailing characters
-                if (start < end) {
-                    newSaxBits.add(new Characters(chars, start, end - start));
-                }
-            } else {
-                newSaxBits.add(bit);
-                i++;
+                // Continue processing
+                i = j;
+                start = j + 1;
+                continue;
             }
         }
-        this.saxbits = newSaxBits;
+
+        // Send any tailing characters
+        if (start < end) {
+            addBit(new Characters(ch, start, end - start));
+        }
     }
 
-    public void characters(char ch[], int start, int length) throws SAXException {
-        addBit(new Characters(ch, start, length));
+    public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
+        flushChars();
+        super.endElement(namespaceURI, localName, qName);
+    }
+
+    public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+        flushChars();
+        super.ignorableWhitespace(ch, start, length);
+    }
+
+    public void processingInstruction(String target, String data) throws SAXException {
+        flushChars();
+        super.processingInstruction(target, data);
+    }
+
+    public void startDocument() throws SAXException {
+        flushChars();
+        super.startDocument();
+    }
+
+    public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {
+        flushChars();
+        super.startElement(namespaceURI, localName, qName, atts);
+    }
+
+    public void endDocument() throws SAXException {
+        flushChars();
+        super.endDocument();
+    }
+
+    public void comment(char ch[], int start, int length) throws SAXException {
+        flushChars();
+        super.comment(ch, start, length);
+    }
+
+    public void endDTD() throws SAXException {
+        flushChars();
+        super.endDTD();
+    }
+
+    public void startDTD(String name, String publicId, String systemId) throws SAXException {
+        flushChars();
+        super.startDTD(name, publicId, systemId);
+    }
+
+    private void flushChars() {
+        // Handle saved chars (in case we had a '{' with no matching '}').
+        if (previous_ch != null) {
+            addBit(new Characters(previous_ch, 0, previous_ch.length));
+            previous_ch = null;
+        }
     }
 
     /**
