@@ -480,7 +480,7 @@
 	<title>Jakarta Commons JXPath</title>
 	<description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
 	<used-by>JXPath logicsheet and XMLForm</used-by>
-	<lib>optional/commons-jxpath-1.1b1.jar</lib>
+	<lib>optional/commons-jxpath-1.1.jar</lib>
 	<homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
  </file>
  <file name="jdtcore">
