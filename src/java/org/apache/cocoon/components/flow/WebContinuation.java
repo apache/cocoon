@@ -46,7 +46,6 @@
 package org.apache.cocoon.components.flow;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -65,10 +64,11 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
- * @version CVS $Id: WebContinuation.java,v 1.3 2003/03/20 01:04:23 vgritsenko Exp $
+ * @version CVS $Id: WebContinuation.java,v 1.4 2003/03/20 02:46:32 vgritsenko Exp $
  */
 public class WebContinuation extends AbstractLogEnabled
         implements Comparable {
+
     /**
      * The continuation this object represents.
      */
@@ -128,20 +128,21 @@ public class WebContinuation extends AbstractLogEnabled
      *
      * @param continuation an <code>Object</code> value
      * @param parentContinuation a <code>WebContinuation</code> value
-     * @param manager a <code>ContinuationsManagerImpl</code> value
+     * @param timeToLive time this continuation should live
      */
-    public WebContinuation(Object continuation,
-                           WebContinuation parentContinuation,
-                           ContinuationsManagerImpl manager,
-                           int timeToLive) {
+    WebContinuation(String id,
+                    Object continuation,
+                    WebContinuation parentContinuation,
+                    int timeToLive) {
+        this.id = id;
         this.continuation = continuation;
         this.parentContinuation = parentContinuation;
-        id = manager.generateContinuationId(this);
         this.updateLastAccessTime();
         this.timeToLive = timeToLive;
 
-        if (parentContinuation != null)
+        if (parentContinuation != null) {
             this.parentContinuation.children.add(this);
+        }
     }
 
     /**
@@ -336,7 +337,7 @@ public class WebContinuation extends AbstractLogEnabled
      * Update the continuation in the
      */
     protected void updateLastAccessTime() {
-        lastAccessTime = new Date().getTime();
+        lastAccessTime = System.currentTimeMillis();
     }
 
     /**
