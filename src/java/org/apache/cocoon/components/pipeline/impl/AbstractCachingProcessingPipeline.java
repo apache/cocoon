@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,10 +49,9 @@ import java.util.Date;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public abstract class AbstractCachingProcessingPipeline
-        extends BaseCachingProcessingPipeline {
+public abstract class AbstractCachingProcessingPipeline extends BaseCachingProcessingPipeline {
 
     /** The role name of the generator */
     protected String generatorRole;
@@ -71,19 +70,23 @@ public abstract class AbstractCachingProcessingPipeline
 
     /** The index indicating the first transformer getting input from the cache */
     protected int firstProcessedTransformerIndex;
+
     /** Complete response is cached */
     protected boolean completeResponseIsCached;
 
 
     /** This key indicates the response that is fetched from the cache */
     protected PipelineCacheKey fromCacheKey;
+
     /** This key indicates the response that will get into the cache */
     protected PipelineCacheKey toCacheKey;
+
     /** The source validities used for caching */
     protected SourceValidity[] toCacheSourceValidities;
 
     /** The index indicating to the first transformer which is not cacheable */
     protected int firstNotCacheableTransformerIndex;
+
     /** Cache complete response */
     protected boolean cacheCompleteResponse;
 
@@ -93,18 +96,25 @@ public abstract class AbstractCachingProcessingPipeline
 
     /** Smart caching ? */
     protected boolean doSmartCaching;
+
     /** Default setting for smart caching */
     protected boolean configuredDoSmartCaching;
 
-    /**
-     * Abstract methods defined in subclasses
-     */
+
+    /** Abstract method defined in subclasses */
     protected abstract void cacheResults(Environment environment,
-            OutputStream os)  throws Exception;
+                                         OutputStream os)
+    throws Exception;
+
+    /** Abstract method defined in subclasses */
     protected abstract ComponentCacheKey newComponentCacheKey(int type,
-            String role,Serializable key);
+                                                              String role,
+                                                              Serializable key);
+
+    /** Abstract method defined in subclasses */
     protected abstract void connectCachingPipeline(Environment   environment)
-            throws ProcessingException;
+    throws ProcessingException;
+
 
     /**
      * Parameterizable Interface - Configuration
@@ -158,7 +168,8 @@ public abstract class AbstractCachingProcessingPipeline
      * Set the Reader.
      */
     public void setReader (String role, String source, Parameters param,
-            String mimeType) throws ProcessingException {
+                           String mimeType)
+    throws ProcessingException {
         super.setReader(role, source, param, mimeType);
         this.readerRole = role;
     }
@@ -606,16 +617,17 @@ public abstract class AbstractCachingProcessingPipeline
      */
     protected void setupPipeline(Environment environment)
     throws ProcessingException {
-        super.setupPipeline( environment );
+        super.setupPipeline(environment);
 
-        // generate the key to fill the cache
-        this.generateCachingKey(environment);
+        // Generate the key to fill the cache
+        generateCachingKey(environment);
 
-        // test the cache for a valid response
+        // Test the cache for a valid response
         if (this.toCacheKey != null) {
-            this.validatePipeline(environment);
+            validatePipeline(environment);
         }
-        this.setupValidities();
+
+        setupValidities();
     }
 
     /**
@@ -690,7 +702,7 @@ public abstract class AbstractCachingProcessingPipeline
                                 readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
                             } else {
                                 CacheValidity cv = ((Cacheable)super.reader).generateValidity();
-                                if ( cv != null ) {
+                                if (cv != null) {
                                     readerValidity = CacheValidityToSourceValidity.createValidity( cv );
                                 }
                             }
@@ -804,7 +816,7 @@ public abstract class AbstractCachingProcessingPipeline
     public SourceValidity getValidityForEventPipeline() {
         if (this.cachedResponse != null) {
             if (this.toCacheSourceValidities != null) {
-                // This means that the pipeline is valid based on the validities 
+                // This means that the pipeline is valid based on the validities
                 // of the individual components
                 final AggregatedValidity validity = new AggregatedValidity();
                 for (int i=0; i < this.toCacheSourceValidities.length; i++) {
