@@ -62,11 +62,10 @@ import javax.xml.transform.sax.SAXResult;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.jxdom.DocumentAdapter;
 import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;

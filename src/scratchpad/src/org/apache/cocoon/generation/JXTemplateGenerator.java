@@ -66,11 +66,10 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlow;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
