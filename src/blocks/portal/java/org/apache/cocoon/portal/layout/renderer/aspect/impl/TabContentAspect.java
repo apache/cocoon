@@ -52,9 +52,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.portal.PortalService;
@@ -74,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.9 2003/07/18 14:41:44 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.10 2003/08/19 14:09:34 cziegeler Exp $
  */
 public class TabContentAspect 
     extends CompositeContentAspect {
@@ -90,50 +88,36 @@ public class TabContentAspect
         if (layout instanceof CompositeLayout) {
             TabPreparedConfiguration config = (TabPreparedConfiguration)context.getAspectConfiguration();
 
+            XMLUtils.startElement(handler, config.tagName);
+
             AttributesImpl attributes = new AttributesImpl();
-            Map parameter = layout.getParameters();
-			Map.Entry entry;
-			for (Iterator iter = parameter.entrySet().iterator(); iter.hasNext();) {
-				entry = (Map.Entry) iter.next();
-				attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
-			}
-            XMLUtils.startElement(handler, config.tagName, attributes);
+            CompositeLayout tabLayout = (CompositeLayout) layout;
 
-            PortalService portalService = null;
-            try {
-                portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
-                attributes = new AttributesImpl();
-                CompositeLayout tabLayout = (CompositeLayout) layout;
+            // selected tab
+            Integer data = (Integer) layout.getAspectData(config.aspectName);
+            int selected = data.intValue();
+            
+            // loop over all tabs
+            for (int j = 0; j < tabLayout.getSize(); j++) {
+                NamedItem tab = (NamedItem) tabLayout.getItem(j);
 
-                // selected tab
-                Integer data = (Integer) layout.getAspectData(config.aspectName);
-                int selected = data.intValue();
-                
-                // loop over all tabs
-                for (int j = 0; j < tabLayout.getSize(); j++) {
-                    NamedItem tab = (NamedItem) tabLayout.getItem(j);
-
-                    // open named-item tag
-                    attributes.clear();
-                    attributes.addCDATAAttribute("name", String.valueOf(tab.getName()));
-                    if (j == selected) {
-                        attributes.addCDATAAttribute("selected", "true");
-                    } else {
-                        ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, "tab", new Integer(j));
-                        attributes.addCDATAAttribute("parameter", portalService.getComponentManager().getLinkService().getLinkURI(event));
-                    }
-                    XMLUtils.startElement(handler, "named-item", attributes);
-                    if (j == selected) {
-                        this.processLayout(tab.getLayout(), service, handler);
-                    }
-                    // close named-item tag
-                    XMLUtils.endElement(handler, "named-item");
+                // open named-item tag
+                attributes.clear();
+                attributes.addCDATAAttribute("name", String.valueOf(tab.getName()));
+                if (j == selected) {
+                    attributes.addCDATAAttribute("selected", "true");
+                } else {
+                    ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, "tab", new Integer(j));
+                    attributes.addCDATAAttribute("parameter", service.getComponentManager().getLinkService().getLinkURI(event));
                 }
-            } catch (ComponentException ce) {
-                throw new SAXException("Unable to lookup event manager.", ce);
-            } finally {
-                this.manager.release(portalService);
+                XMLUtils.startElement(handler, "named-item", attributes);
+                if (j == selected) {
+                    this.processLayout(tab.getLayout(), service, handler);
+                }
+                // close named-item tag
+                XMLUtils.endElement(handler, "named-item");
             }
+
             XMLUtils.endElement(handler, config.tagName);
         } else {
             throw new SAXException("Wrong layout type, TabLayout expected: " + layout.getClass().getName());

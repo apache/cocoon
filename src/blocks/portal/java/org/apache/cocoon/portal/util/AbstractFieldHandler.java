@@ -48,61 +48,25 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.renderer.aspect.impl;
-
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
-import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.CopletLayout;
-import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
-import org.apache.cocoon.xml.IncludeXMLConsumer;
-import org.apache.cocoon.xml.XMLUtils;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+package org.apache.cocoon.portal.util;
 
 /**
- * This aspect directly invokes the coplet adapter to stream out the coplet content.
+ * Base field handler implementation
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * 
- * @version CVS $Id: DefaultCopletAspect.java,v 1.2 2003/08/19 14:09:34 cziegeler Exp $
+ * @version CVS $Id: AbstractFieldHandler.java,v 1.1 2003/08/19 14:09:34 cziegeler Exp $
  */
-public class DefaultCopletAspect extends AbstractAspect {
+public abstract class AbstractFieldHandler 
+    extends org.exolab.castor.mapping.AbstractFieldHandler {
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
-	 */
-	public void toSAX(RendererAspectContext context,
-                		Layout layout,
-                		PortalService service,
-                		ContentHandler handler)
-	throws SAXException {
-        
-        XMLUtils.startElement(handler, "content");
-        CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
-
-        final String adapterName = cid.getCopletData().getCopletBaseData().getCopletAdapterName();
-        CopletAdapter copletAdapter = null;
-        ComponentSelector adapterSelector = null;
-        try {
-            adapterSelector = (ComponentSelector) this.manager.lookup(CopletAdapter.ROLE + "Selector");
-            copletAdapter = (CopletAdapter) adapterSelector.select(adapterName);
-            copletAdapter.toSAX(cid, new IncludeXMLConsumer(handler));
-        } catch (ComponentException ce) {
-            throw new SAXException("Unable to lookup component.", ce);
-        } finally {
-            if (null != copletAdapter) {
-                adapterSelector.release(copletAdapter);
-            }
-            this.manager.release(adapterSelector);
+    /* (non-Javadoc)
+     * @see org.exolab.castor.mapping.ExtendedFieldHandler#newInstance(java.lang.Object, java.lang.Object[])
+     */
+    public Object newInstance(Object arg0, Object[] arg1)
+    throws IllegalStateException {
+        if ( arg1 == null ) {
+            return this.newInstance(arg0);
         }
-
-        XMLUtils.endElement(handler, "content");
-        context.invokeNext(layout, service, handler);
-	}
-
+        throw new IllegalStateException("Construction is not supported.");
+    }
 }

@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeContentAspect.java,v 1.3 2003/06/15 16:56:09 cziegeler Exp $
+ * @version CVS $Id: CompositeContentAspect.java,v 1.4 2003/08/19 14:09:34 cziegeler Exp $
  */
 public class CompositeContentAspect extends AbstractCompositeAspect {
 
@@ -85,14 +85,7 @@ public class CompositeContentAspect extends AbstractCompositeAspect {
     throws SAXException {
         PreparedConfiguration config = (PreparedConfiguration)context.getAspectConfiguration();
         
-        AttributesImpl attributes = new AttributesImpl();
-        Map parameter = layout.getParameters();
-        Map.Entry entry;
-        for (Iterator iter = parameter.entrySet().iterator(); iter.hasNext();) {
-        	entry = (Map.Entry) iter.next();
-            attributes.addCDATAAttribute((String)entry.getKey(), (String)entry.getValue());
-        }
-        XMLUtils.startElement(handler, config.tagName, attributes);
+        XMLUtils.startElement(handler, config.tagName);
         super.toSAX(context, layout, service, handler);
         XMLUtils.endElement(handler, config.tagName);
 
