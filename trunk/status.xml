@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.106 2003/08/07 00:46:25 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.107 2003/08/07 03:33:00 joerg Exp $:-->
 <status>
 
  <developers>
@@ -429,7 +429,7 @@
   <action dev="BRD" type="fix" fixes-bug="19881" due-to="Michael Enke" due-to-email="michael.enke@wincor-nixdorf.com">
     Fixed synchronisation problem in I18nTransformer when retrieving catalogues.
   </action>
-  <action dev="BRD" type="fix" fixes-bug="19423 and 15525">
+  <action dev="BRD" type="fix" fixes-bug="19423, 15525">
     Improved XPointer support in the XIncludeTransformer. Meanwhile improved the way xml:base
     attributes are handled, added support for the xi:fallback element, do XInclude processing
     on included content, and added XInclude samples.
