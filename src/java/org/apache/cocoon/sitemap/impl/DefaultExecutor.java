@@ -21,7 +21,10 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.matching.PreparableMatcher;
 import org.apache.cocoon.sitemap.ExecutionContext;
+import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
@@ -30,19 +33,19 @@ import org.apache.cocoon.sitemap.SitemapExecutor;
  * TODO - This is not finished yet!
  * 
  * @since 2.2
- * @version CVS $Id: DefaultExecutor.java,v 1.2 2004/06/09 13:43:04 cziegeler Exp $
+ * @version CVS $Id: DefaultExecutor.java,v 1.3 2004/06/11 08:51:57 cziegeler Exp $
  */
 public class DefaultExecutor 
     implements SitemapExecutor {
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeAction(org.apache.cocoon.acting.Action, org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeAction(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.acting.Action, org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
     public Map invokeAction(final ExecutionContext context,
+                            final Map              objectModel, 
                             final Action           action, 
                             final Redirector       redirector, 
                             final SourceResolver   resolver, 
-                            final Map              objectModel, 
                             final String           resolvedSource, 
                             final Parameters       resolvedParams )
     throws Exception {
@@ -51,16 +54,43 @@ public class DefaultExecutor
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables()
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.Matcher, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
-    public void popVariables(ExecutionContext context) {
+    public Map invokeMatcher(ExecutionContext context, 
+                             Map objectModel,
+                             Matcher matcher, 
+                             String pattern, 
+                             Parameters resolvedParams)
+    throws PatternException {
+        return matcher.match(pattern, objectModel, resolvedParams);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokePreparableMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.PreparableMatcher, java.lang.Object, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Map invokePreparableMatcher(ExecutionContext  context,
+                                       Map               objectModel,
+                                       PreparableMatcher matcher,
+                                       Object            preparedPattern,
+                                       Parameters        resolvedParams )
+    throws PatternException {
+        return matcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
+     */
+    public void popVariables(ExecutionContext context,
+                             Map              objectModel) {
         // nothing to do
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#pushVariables(java.lang.String, java.util.Map)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#pushVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String, java.util.Map)
      */
-    public Map pushVariables(ExecutionContext context, String key, Map variables) {
+    public Map pushVariables(ExecutionContext context, 
+                             Map              objectModel,
+                             String key, Map variables) {
         return variables;
     }
 }

@@ -24,47 +24,98 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.matching.PreparableMatcher;
 import org.apache.cocoon.sitemap.ExecutionContext;
+import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapExecutor;
 
 /**
  * Sampe sitemap executor that prints out everything to a logger
  * 
  * @since 2.2
- * @version CVS $Id: SimpleSitemapExecutor.java,v 1.1 2004/06/09 13:43:04 cziegeler Exp $
+ * @version CVS $Id: SimpleSitemapExecutor.java,v 1.2 2004/06/11 08:51:57 cziegeler Exp $
  */
 public class SimpleSitemapExecutor 
     extends AbstractLogEnabled
-    implements ThreadSafe {
+    implements ThreadSafe, SitemapExecutor {
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeAction(org.apache.cocoon.sitemap.ExecutionContext, org.apache.cocoon.acting.Action, org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeAction(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.acting.Action, org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
-    public Map invokeAction(ExecutionContext context, Action action,
-            Redirector redirector, SourceResolver resolver, Map objectModel,
-            String resolvedSource, Parameters resolvedParams) 
+    public Map invokeAction(final ExecutionContext context,
+                            final Map              objectModel, 
+                            final Action           action, 
+                            final Redirector       redirector, 
+                            final SourceResolver   resolver, 
+                            final String           resolvedSource, 
+                            final Parameters       resolvedParams )
     throws Exception {
         this.getLogger().info("- Invoking action '" + context.getType() + "' (" +
-                           context.getLocation() + ").");
+                context.getLocation() + ").");
         final Map result = action.act(redirector, resolver, objectModel, resolvedSource, resolvedParams);
         if ( result != null ) {
-            this.getLogger().info("- Action '" + context.getType() + "' returned a map.");
+         this.getLogger().info("- Action '" + context.getType() + "' returned a map.");
         } else {
-            this.getLogger().info("- Action '" + context.getType() + "' did not return a map.");            
+         this.getLogger().info("- Action '" + context.getType() + "' did not return a map.");            
         }
         return result;
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables(org.apache.cocoon.sitemap.ExecutionContext)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokeMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.Matcher, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
-    public void popVariables(ExecutionContext context) {
+    public Map invokeMatcher(ExecutionContext context, 
+                             Map objectModel,
+                             Matcher matcher, 
+                             String pattern, 
+                             Parameters resolvedParams)
+    throws PatternException {
+        this.getLogger().info("- Invoking matcher '" + context.getType() + "' (" +
+                context.getLocation() + ").");
+        final Map result = matcher.match(pattern, objectModel, resolvedParams);
+        if ( result != null ) {
+            this.getLogger().info("- Matcher '" + context.getType() + "' returned a map.");
+        } else {
+            this.getLogger().info("- Matcher '" + context.getType() + "' did not return a map.");            
+        }
+        return result;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#invokePreparableMatcher(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, org.apache.cocoon.matching.PreparableMatcher, java.lang.Object, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public Map invokePreparableMatcher(ExecutionContext  context,
+                                       Map               objectModel,
+                                       PreparableMatcher matcher,
+                                       Object            preparedPattern,
+                                       Parameters        resolvedParams )
+    throws PatternException {
+        this.getLogger().info("- Invoking matcher '" + context.getType() + "' (" +
+                context.getLocation() + ").");
+        final Map result = matcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
+        if ( result != null ) {
+            this.getLogger().info("- Matcher '" + context.getType() + "' returned a map.");
+        } else {
+            this.getLogger().info("- Matcher '" + context.getType() + "' did not return a map.");            
+        }
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#popVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map)
+     */
+    public void popVariables(ExecutionContext context,
+                             Map              objectModel) {
         this.getLogger().info("- Variable Context ends");
     }
     
     /* (non-Javadoc)
-     * @see org.apache.cocoon.sitemap.SitemapExecutor#pushVariables(org.apache.cocoon.sitemap.ExecutionContext, java.lang.String, java.util.Map)
+     * @see org.apache.cocoon.sitemap.SitemapExecutor#pushVariables(org.apache.cocoon.sitemap.ExecutionContext, java.util.Map, java.lang.String, java.util.Map)
      */
-    public Map pushVariables(ExecutionContext context, String key, Map variables) {
+    public Map pushVariables(ExecutionContext context, 
+                             Map              objectModel,
+                             String key, Map variables) {
         this.getLogger().info("- New Variable Context: " + (key != null ? "('" + key + "')" : ""));
         Iterator keys = variables.entrySet().iterator();
         while (keys.hasNext()) {
@@ -73,6 +124,6 @@ public class SimpleSitemapExecutor
         }
         return variables;
     }
-
+    
 }
 
