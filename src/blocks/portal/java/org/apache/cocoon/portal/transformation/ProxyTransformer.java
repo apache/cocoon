@@ -207,6 +207,7 @@ public class ProxyTransformer
         this.userAgent = null;
         this.documentBase = null;
         this.link = null;
+        this.request = null;
     }
     
     /**
