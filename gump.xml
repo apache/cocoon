@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
+
+<!--
+  Cocoon GUMP Descriptor
+  CVS $Id: gump.xml,v 1.14 2003/03/17 00:47:42 vgritsenko Exp $
+-->
+
 <module name="cocoon-2.1">
 
   <url href="http://cocoon.apache.org/"/>

@@ -98,7 +98,7 @@ printed. If you don't like these warnings, specify the property "omit.opt.warnin
 
                               Happy hacking from the Apache Cocoon Dev Team :)
 
-CVS: $Id: build.old.xml,v 1.1 2003/03/09 00:01:32 pier Exp $:
+CVS $Id: build.old.xml,v 1.2 2003/03/17 00:47:42 vgritsenko Exp $:
 
 ============================================================================ -->
 

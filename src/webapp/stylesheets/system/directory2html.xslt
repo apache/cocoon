@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- CVS $Id: directory2html.xslt,v 1.2 2003/03/17 00:47:43 vgritsenko Exp $ -->
+
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:dir="http://apache.org/cocoon/directory/2.0">
