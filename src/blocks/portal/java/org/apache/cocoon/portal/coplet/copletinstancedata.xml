@@ -90,13 +90,15 @@
 		</field>
 	</class>
 
+  <!-- If you prefer to specify the name and value as attributes of the attribute element
+  just add node="attribute" to the bind-xml elements -->
   <class name="org.apache.cocoon.portal.util.AttributedMapItem">
     <field name="key" type="java.lang.String">
-      <bind-xml name="name" node="attribute"/>
+      <bind-xml name="name"/>
     </field>
 
     <field name="value">
-      <bind-xml name="value" node="attribute"/>
+      <bind-xml name="value"/>
     </field>
   </class>
 
