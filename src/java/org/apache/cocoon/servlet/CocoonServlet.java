@@ -474,7 +474,7 @@ public class CocoonServlet extends HttpServlet {
                                                  this.allowOverwrite,
                                                  this.silentlyRename,
                                                  this.maxUploadSize,
-                                                 this.defaultFormEncoding);
+                                                 this.containerEncoding);
         // Add the servlet configuration
         this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
         this.createCocoon();
