@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2005 The Apache Software Foundation
+  Copyright 1999-2004 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!--+
-    |
-    | SVN $Id$
-    +-->
-<components>
-  <include src="context://WEB-INF/xconf/cocoon-template-expression.xconf"/>
-</components>
+<!-- $Id$ -->
+<role-list>
+  <role name="org.apache.cocoon.components.expression.ExpressionCompilerSelector"
+        shorthand="expression-compilers"
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
+  <role name="org.apache.cocoon.components.expression.ExpressionFactory"
+        shorthand="expression-factory"
+        default-class="org.apache.cocoon.components.expression.ExpressionFactory"/>
+</role-list>
