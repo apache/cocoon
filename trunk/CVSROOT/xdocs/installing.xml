@@ -88,6 +88,7 @@
    </p>
 
 <source>
+wrapper.classpath=/usr/local/java/jdk/lib/tools.jar
 wrapper.classpath=/usr/local/java/lib/cocoon.jar
 wrapper.classpath=/usr/local/java/lib/xerces.jar
 wrapper.classpath=/usr/local/java/lib/xalan.jar
