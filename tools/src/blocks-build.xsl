@@ -177,6 +177,7 @@
          <copy filtering="on" todir="{string('${build.blocks}')}/{$block-name}/dest">
             <fileset dir="{string('${blocks}')}/{$block-name}/java">
                <include name="**/*.xsl"/>
+               <include name="**/*.js"/>
             </fileset>
          </copy>
 
