@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,11 +30,9 @@ import org.apache.pluto.om.window.PortletWindow;
 
 /**
  * Our request wrapper
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: URICopletAdapter.java,v 1.11 2003/10/20 13:36:41 cziegeler
- *          Exp $
+ * @version CVS $Id$
  */
 public class ServletRequestImpl extends HttpServletRequestWrapper {
 
@@ -42,7 +40,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
     protected Map portletParameterMap;
 
     final protected HttpServletRequest request;
-    
+
     final protected PortletURLProviderImpl provider;
 
     protected PortletWindow window;
@@ -69,7 +67,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getQueryString()
      */
     public String getQueryString() {
@@ -78,7 +76,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletRequest#getRequestURL()
      */
     public StringBuffer getRequestURL() {
@@ -88,7 +86,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#setCharacterEncoding(java.lang.String)
      */
     public void setCharacterEncoding(String arg0)
@@ -98,7 +96,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getContentType()
      */
     public String getContentType() {
@@ -111,7 +109,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameter(java.lang.String)
      */
     public String getParameter(String name) {
@@ -121,7 +119,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameterMap()
      */
     public Map getParameterMap() {
@@ -183,7 +181,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameterNames()
      */
     public Enumeration getParameterNames() {
@@ -192,7 +190,7 @@ public class ServletRequestImpl extends HttpServletRequestWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletRequest#getParameterValues(java.lang.String)
      */
     public String[] getParameterValues(String name) {

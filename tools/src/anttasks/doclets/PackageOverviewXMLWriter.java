@@ -27,9 +27,9 @@ import javax.xml.transform.sax.TransformerHandler;
 import org.xml.sax.SAXException;
 
 /**
- * Generates index of available packages 
+ * Generates index of available packages.
  * 
- * @version CVS $Revision: 1.1 $ $Date: 2004/05/25 12:53:43 $
+ * @version CVS $Id$
  */
 public class PackageOverviewXMLWriter extends AbstractXMLWriter{
 

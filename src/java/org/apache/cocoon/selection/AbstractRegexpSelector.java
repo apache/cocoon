@@ -67,8 +67,8 @@ import org.apache.regexp.RESyntaxException;
  * &lt;/map:pipelines&gt;
  * </pre>
  *
- * @version CVS $Revision: 1.1 $
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
+ * @version CVS $Id$
  */
 public abstract class AbstractRegexpSelector extends AbstractSwitchSelector
 implements Configurable, ThreadSafe {

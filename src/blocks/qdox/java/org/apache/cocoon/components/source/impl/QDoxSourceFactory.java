@@ -74,7 +74,7 @@ import org.apache.regexp.RESyntaxException;
  * </p>
  * 
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.6 $ $Date: 2004/04/03 01:16:36 $
+ * @version CVS $Id$
  */
 public final class QDoxSourceFactory
     extends AbstractLogEnabled

@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,11 +26,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
  * Our response wrapper
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * 
- * @version CVS $Id: URICopletAdapter.java,v 1.11 2003/10/20 13:36:41 cziegeler
- *          Exp $
+ * @version CVS $Id$
  */
 public class ServletResponseImpl extends HttpServletResponseWrapper {
 
@@ -41,7 +39,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
     protected int bufferSize = 1024;
 
     protected String redirectURL;
-    
+
     public ServletResponseImpl(HttpServletResponse response) {
         super(response);
         this.stream = new MyOutputStream();
@@ -69,7 +67,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
     public String getRedirectURL() {
         return this.redirectURL;
     }
-    
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
@@ -79,7 +77,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletResponse#sendError(int,
      *      java.lang.String)
      */
@@ -89,7 +87,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletResponse#sendError(int)
      */
     public void sendError(int arg0) throws IOException {
@@ -98,7 +96,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletResponse#redirect(java.lang.String)
      */
     public void sendRedirect(String arg0) throws IOException {
@@ -107,7 +105,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletResponse#setStatus(int,
      *      java.lang.String)
      */
@@ -117,7 +115,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.http.HttpServletResponse#setStatus(int)
      */
     public void setStatus(int arg0) {
@@ -126,7 +124,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#flushBuffer()
      */
     public void flushBuffer() throws IOException {
@@ -135,7 +133,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#getBufferSize()
      */
     public int getBufferSize() {
@@ -144,7 +142,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#getOutputStream()
      */
     public ServletOutputStream getOutputStream() throws IOException {
@@ -153,7 +151,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#getWriter()
      */
     public PrintWriter getWriter() throws IOException {
@@ -162,7 +160,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#isCommitted()
      */
     public boolean isCommitted() {
@@ -171,7 +169,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#reset()
      */
     public void reset() {
@@ -182,7 +180,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#setBufferSize(int)
      */
     public void setBufferSize(int arg0) {
@@ -191,7 +189,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#setContentLength(int)
      */
     public void setContentLength(int arg0) {
@@ -199,7 +197,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#setContentType(java.lang.String)
      */
     public void setContentType(String arg0) {
@@ -207,7 +205,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#setLocale(java.util.Locale)
      */
     public void setLocale(Locale arg0) {
@@ -215,7 +213,7 @@ public class ServletResponseImpl extends HttpServletResponseWrapper {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.servlet.ServletResponse#resetBuffer()
      */
     public void resetBuffer() {
@@ -233,7 +231,7 @@ class MyOutputStream extends ServletOutputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.OutputStream#write(int)
      */
     public void write(int b) throws IOException {
@@ -242,7 +240,7 @@ class MyOutputStream extends ServletOutputStream {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.io.OutputStream#flush()
      */
     public void flush() throws IOException {

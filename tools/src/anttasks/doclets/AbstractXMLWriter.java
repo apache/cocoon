@@ -38,9 +38,9 @@ import com.thoughtworks.qdox.model.JavaParameter;
 import com.thoughtworks.qdox.model.Type;
 
 /**
- * Makes constants and utility methods available to subclasses 
- * 
- * @version CVS $Revision: 1.1 $ $Date: 2004/05/25 12:53:43 $
+ * Makes constants and utility methods available to subclasses
+ *
+ * @version CVS $Id$
  */
 public class AbstractXMLWriter {
 
