@@ -72,7 +72,7 @@ import java.util.Stack;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: LuceneIndexContentHandler.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
+ * @version CVS $Id: LuceneIndexContentHandler.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
  */
 public class LuceneIndexContentHandler implements ContentHandler
 {
@@ -301,10 +301,9 @@ public class LuceneIndexContentHandler implements ContentHandler
         if (fieldTags == null) {
             return false;
         }
-				final String s = tag.toString();
         Iterator i = fieldTags.iterator();
         while (i.hasNext()) {
-        		if (tag.equals(i.next())) {
+            if (tag.equals(i.next())) {
                 return true;
             }
         }

@@ -75,7 +75,7 @@ import java.util.Iterator;
  *@author     <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
  *@author     <a href="mailto:pdh@totalise.co.uk">Peter Hargreaves</a>
  *
- *@version CVS $Id: StoreJanitorImpl.java,v 1.1 2003/03/09 00:10:13 pier Exp $
+ *@version CVS $Id: StoreJanitorImpl.java,v 1.2 2003/03/24 14:33:56 stefano Exp $
  */
 public class StoreJanitorImpl
          extends AbstractLogEnabled
@@ -397,16 +397,6 @@ public class StoreJanitorImpl
      */
     private int getPriority() {
         return this.priority;
-    }
-
-    /**
-     *Gets the jVM attribute of the StoreJanitorImpl object
-     *
-     *@return    The jVM value
-     *@since
-     */
-    private Runtime getJVM() {
-        return this.jvm;
     }
 
     /**

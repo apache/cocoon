@@ -131,7 +131,7 @@ import java.util.Map;
  * where "session-form" is configured as SessionFormAction
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SessionFormAction.java,v 1.1 2003/03/09 00:06:07 pier Exp $
+ * @version CVS $Id: SessionFormAction.java,v 1.2 2003/03/24 14:33:56 stefano Exp $
 */
 public class SessionFormAction extends AbstractValidatorAction implements ThreadSafe
 {
@@ -149,11 +149,13 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
             return null;
         }
 
+        /* FIXME (SM): the code below appears unused. Should we remove it?
+
         // read global parameter settings
         boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
         if (this.settings.containsKey("reloadable")) {
             reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
-        }
+        }*/
 
         // read local settings
         try {

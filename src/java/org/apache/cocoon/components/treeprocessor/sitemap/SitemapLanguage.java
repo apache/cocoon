@@ -75,12 +75,10 @@ import java.util.*;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.2 2003/03/24 14:33:55 stefano Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {
-
-    private static final String ATTR_PREFIX = "org.apache.cocoon.components.treeprocessor.ViewNodeBuilder";
 
     // Regexp's for splitting expressions
     private static final String COMMA_SPLIT_REGEXP = "[\\s]*,[\\s]*";

@@ -127,7 +127,7 @@ import java.util.Map;
  * @author <a href="mailto:czoffoli@littlepenguin.org">Christian Zoffoli</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @since 2002/02/03
- * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.2 2003/03/16 17:49:10 vgritsenko Exp $
+ * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
  *
  * based on DatabaseAuthenticatorAction created by Martin Man <Martin.Man@seznam.cz>
  */
@@ -214,8 +214,6 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
   private String getAuthQuery ( Configuration conf, Request req )
   {
 
-    boolean first_constraint = true;
-
     StringBuffer queryBuffer = new StringBuffer ("//");
     StringBuffer queryBufferEnd = new StringBuffer ("");
 
@@ -269,7 +267,6 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
             }
           } else {
             queryBufferEnd.append (dbcol).append("='").append(request_value).append("']");
-            first_constraint = false;
           }
         }
 
@@ -376,7 +373,7 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
 
       Configuration table = conf.getChild ("root");
       Configuration[] select = table.getChildren ("select");
-      String dbcol, session_param, type;
+      String session_param, type;
       HashMap map = new HashMap();
 
       XObject xo;
@@ -402,7 +399,6 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
 
       try {
           for (int i = 0; i < select.length; i ++) {
-            dbcol = select[i].getAttribute ("element");
             try {
               session_param = select[i].getAttribute ("to-session");
               if (session_param != null && !session_param.trim().equals (""))

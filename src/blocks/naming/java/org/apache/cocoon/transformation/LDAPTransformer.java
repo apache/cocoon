@@ -114,7 +114,7 @@ import java.util.*;
  * <br>
  *
  * @author Felix Knecht
- * @version CVS $Id: LDAPTransformer.java,v 1.1 2003/03/09 00:04:49 pier Exp $
+ * @version CVS $Id: LDAPTransformer.java,v 1.2 2003/03/24 14:33:54 stefano Exp $
  */
 public class LDAPTransformer extends AbstractTransformer {
 
@@ -1094,10 +1094,6 @@ public class LDAPTransformer extends AbstractTransformer {
             getLogger().debug("RECEIVED CHARACTERS: " + new String(ary, start, length));
         }
         current_value.append(ary, start, length);
-    }
-
-    private void attribute(AttributesImpl attr, String name, String value) {
-        attr.addAttribute("", name, name, "CDATA", value);
     }
 
     private void start(String name, AttributesImpl attr) throws SAXException {

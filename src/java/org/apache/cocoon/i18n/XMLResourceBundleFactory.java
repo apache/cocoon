@@ -80,7 +80,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.3 2003/03/24 14:33:55 stefano Exp $
  */
 public class XMLResourceBundleFactory
     extends DefaultComponentSelector
@@ -174,17 +174,6 @@ public class XMLResourceBundleFactory
         if (bundle == null)
             throw new ComponentException("Unable to locate resource: " + name);
         return bundle;
-    }
-
-    /**
-     * Select a bundle based on bundle name and locale.
-     *
-     * @param name              bundle name
-     * @param locale            locale
-     * @return                  the bundle
-     */
-    private Component _select(String name, Locale loc) {
-        return _select(name, loc, cacheAtStartup);
     }
 
     /**

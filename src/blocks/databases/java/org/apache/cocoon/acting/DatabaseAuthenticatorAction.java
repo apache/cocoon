@@ -104,7 +104,7 @@ import java.util.Map;
  * not verified.
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.1 2003/03/09 00:03:02 pier Exp $
+ * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.2 2003/03/24 14:33:57 stefano Exp $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe
 {
@@ -276,11 +276,10 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
             Session session) {
         Configuration table = conf.getChild ("table");
         Configuration[] select = table.getChildren ("select");
-        String dbcol, session_param, type;
+        String session_param, type;
         HashMap map = new HashMap();
         try {
             for (int i = 0; i < select.length; i ++) {
-                dbcol = select[i].getAttribute ("dbcol");
                 try {
                     session_param = select[i].getAttribute ("to-session");
                     if (session_param != null &&

@@ -86,7 +86,7 @@ import javax.xml.transform.OutputKeys;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id: SQLTransformer.java,v 1.4 2003/03/13 15:10:56 jeremy Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.5 2003/03/24 14:33:56 stefano Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -755,13 +755,6 @@ public class SQLTransformer
         } else {
             super.endTransformingElement( uri, name, raw );
         }
-    }
-
-    /**
-     * Helper method for generating SAX events
-     */
-    private void attribute( AttributesImpl attr, String name, String value ) {
-        attr.addAttribute( outUri, name, nsQualify( name, outPrefix ), "CDATA", value );
     }
 
     /**

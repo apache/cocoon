@@ -72,7 +72,7 @@ import java.util.Map;
  * See http://jakarta.apache.org/commons/
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
- * @version CVS $Id: SchematronValidator.java,v 1.2 2003/03/16 17:49:13 vgritsenko Exp $
+ * @version CVS $Id: SchematronValidator.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
  */
 public class SchematronValidator implements Validator {
 
@@ -88,16 +88,6 @@ public class SchematronValidator implements Validator {
 	 * Used for efficiency when validating by phase
 	 */
 	private Map phaseMap_ = new HashMap();
-
-	/**
-	 * the schema name space prefix used in the schema document
-	 */
-	private String schemaPrefix_;
-
-	/**
-	 * the default schema name space prefix 
-	 */
-	private String defaultSchemaPrefix_ = "sch";
 
 	/*
 	 * Schematron Phase property

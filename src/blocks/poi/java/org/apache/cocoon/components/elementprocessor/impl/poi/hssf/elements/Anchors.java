@@ -70,7 +70,7 @@ import java.io.IOException;
  * terribly mature yet.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Anchors.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
+ * @version CVS $Id: Anchors.java,v 1.3 2003/03/24 14:33:53 stefano Exp $
  */
 public class Anchors
 {
@@ -124,7 +124,6 @@ public class Anchors
             throw new IOException("cannot process a null anchors string");
         }
         char[]   input   = value.trim().toCharArray();
-        String[] anchors = new String[ _component_count ];
         int      index   = 0;
 
         for (int j = 0; j < _component_count; j++)

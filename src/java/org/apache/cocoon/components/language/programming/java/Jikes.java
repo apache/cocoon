@@ -61,7 +61,7 @@ import java.util.StringTokenizer;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Jikes.java,v 1.1 2003/03/09 00:09:00 pier Exp $
+ * @version CVS $Id: Jikes.java,v 1.2 2003/03/24 14:33:57 stefano Exp $
  * @since 2.0
  */
 
@@ -74,7 +74,6 @@ public class Jikes extends AbstractJavaCompiler {
 
         private BufferedInputStream stream;
         private boolean endOfStream = false;
-        private boolean stopSignal  = false;
         private int SLEEP_TIME = 5;
         private OutputStream out;
 

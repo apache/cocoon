@@ -102,7 +102,7 @@ import java.util.Map;
  *  parameter "append-session" to "yes" or "true".
  *
  * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
- * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.1 2003/03/09 00:03:03 pier Exp $
+ * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.2 2003/03/24 14:33:57 stefano Exp $
  */
 public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe {
 
@@ -366,13 +366,11 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
             Session session) {
         Configuration table = conf.getChild("table");
         Configuration[] select = table.getChildren("select");
-        String dbcol;
         String session_param;
         String type;
         HashMap map = new HashMap();
         try {
             for (int i = 0; i < select.length; i++) {
-                dbcol = select[i].getAttribute("dbcol");
                 try {
                     session_param = select[i].getAttribute("to-session");
                     if (session_param != null &&

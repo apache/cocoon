@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.5 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.6 2003/03/24 14:33:54 stefano Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -160,7 +160,7 @@ implements SourceResolver
      */
     public static void leaveEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final Object[] objects = (Object[])stack.pop();
+        stack.pop();
     }
 
     /**

@@ -97,7 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
+ * @version CVS $Id: FragmentExtractorTransformer.java,v 1.3 2003/03/24 14:33:55 stefano Exp $
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Composable, Disposable, Recyclable {
@@ -109,12 +109,9 @@ public class FragmentExtractorTransformer extends AbstractTransformer
     private static final String EXTRACT_ELEMENT = "svg";
 
     private static final String FE_URI = "http://apache.org/cocoon/fragmentextractor/2.0";
-    private static final String XLINK_URI = "http://www.w3c.org/1999/xlink";
 
     private String extractURI;
     private String extractElement;
-
-    private static String generatorClass = "org.apache.cocoon.generation.FragmentExtractorGenerator";
 
     /** The component manager instance */
     protected ComponentManager manager = null;

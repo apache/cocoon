@@ -77,7 +77,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  * A factory for sources from a Jakarta Slide repository.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.2 2003/03/16 17:49:07 vgritsenko Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
  */
 public class SlideSourceFactory extends AbstractLogEnabled
   implements SourceFactory, ThreadSafe, Composable, Contextualizable {
@@ -134,8 +134,8 @@ public class SlideSourceFactory extends AbstractLogEnabled
         this.getLogger().debug("Source parameters:  "+
                                queryParameters.toString());
 
-        String repositoryname = queryParameters.getParameter("cocoon-repository",
-                                    null);
+        //String repositoryname = queryParameters.getParameter("cocoon-repository", null);
+
         String namespace = queryParameters.getParameter("cocoon-repository-namespace",
                                null);
         String principal = queryParameters.getParameter("cocoon-source-principal",

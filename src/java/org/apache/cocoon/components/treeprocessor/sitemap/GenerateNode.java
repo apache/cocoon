@@ -50,24 +50,21 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.sitemap.PatternException;
+import java.util.Map;
 
-import org.apache.cocoon.components.treeprocessor.CategoryNode;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.PipelineEventComponentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
-
-import org.apache.avalon.framework.parameters.Parameters;
-
-import java.util.*;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: GenerateNode.java,v 1.1 2003/03/09 00:09:21 pier Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.2 2003/03/24 14:33:55 stefano Exp $
  */
 
 public class GenerateNode extends PipelineEventComponentProcessingNode implements ParameterizableProcessingNode {
@@ -78,10 +75,6 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
 
     private Map parameters;
 
-
-    /** The category node */
-    private CategoryNode viewsNode;
-
     public GenerateNode(String name, VariableResolver source) throws PatternException {
         this.generatorName = name;
         this.source = source;
@@ -90,7 +83,6 @@ public class GenerateNode extends PipelineEventComponentProcessingNode implement
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
     }
-
 
     public final boolean invoke(Environment env, InvokeContext context)
       throws Exception {

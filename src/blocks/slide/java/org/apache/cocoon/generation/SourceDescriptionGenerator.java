@@ -88,7 +88,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * for retrieving SourceProperties, SourcePermission etc.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceDescriptionGenerator.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: SourceDescriptionGenerator.java,v 1.3 2003/03/24 14:33:56 stefano Exp $
  */
 public class SourceDescriptionGenerator extends ComposerGenerator
   implements CacheableProcessingComponent, Recyclable {
@@ -540,10 +540,7 @@ public class SourceDescriptionGenerator extends ComposerGenerator
             IncludeXMLConsumer consumer = new IncludeXMLConsumer(this.contentHandler);
 
             for (int i = 0; i<properties.length; i++) {
-                SourceProperty property = properties[i];
-
-                this.contentHandler.startPrefixMapping("",
-                                                       properties[i].getNamespace());
+                this.contentHandler.startPrefixMapping("", properties[i].getNamespace());
                 properties[i].toSAX(consumer);
                 this.contentHandler.endPrefixMapping("");
             }
