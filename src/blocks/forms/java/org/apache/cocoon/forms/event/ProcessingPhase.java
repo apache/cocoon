@@ -29,8 +29,6 @@ import org.apache.commons.lang.enums.ValuedEnum;
  */
 public class ProcessingPhase extends ValuedEnum {
 
-    static final long serialVersionUID = 2787912812325487202L;
-
     protected ProcessingPhase(String name, int value) {
         super(name, value);
     }

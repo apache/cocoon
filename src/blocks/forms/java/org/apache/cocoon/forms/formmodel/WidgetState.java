@@ -27,8 +27,6 @@ import org.apache.commons.lang.enums.ValuedEnum;
  */
 public class WidgetState extends ValuedEnum {
 
-    static final long serialVersionUID = 8067270953768962838L;
-
     private static final int ACTIVE_VALUE = 3;
 
     private static final int DISABLED_VALUE = 2;

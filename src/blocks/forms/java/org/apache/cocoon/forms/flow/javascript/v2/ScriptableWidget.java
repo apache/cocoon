@@ -60,8 +60,6 @@ import java.util.HashMap;
  */
 public class ScriptableWidget extends ScriptableObject {
 
-    static final long serialVersionUID = 8067270953768962838L;
-
     final static String WIDGETS_PROPERTY = "__widgets__";
 
     Widget delegate;

@@ -31,8 +31,6 @@ import java.io.IOException;
  */
 public class Web3Properties extends Properties {
 
-    static final long serialVersionUID = -2527971369954496362L;
-
     ArrayList orderedKeys = new ArrayList();
     
     /** Creates new Properties */

@@ -36,8 +36,6 @@ import org.mozilla.javascript.Wrapper;
  */
 public class ScriptableWidget extends ScriptableObject {
 
-    static final long serialVersionUID = -5821974339680735330L;
-
     Widget delegate;
 
     public String getClassName() {

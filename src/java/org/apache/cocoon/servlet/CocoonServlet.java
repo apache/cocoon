@@ -101,8 +101,6 @@ import java.util.jar.Manifest;
  */
 public class CocoonServlet extends HttpServlet {
 
-    static final long serialVersionUID = 5050504239326075995L;
-
     /**
      * Application <code>Context</code> Key for the servlet configuration
      * @since 2.1.3
