@@ -21,6 +21,7 @@
     <!-- add a new instance of each class as a subscriber: -->
     <subscriber-classes>
         <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultChangeAspectDataEventSubscriber"/>
+        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultJXPathEventSubscriber"/>
     </subscriber-classes>
     <!-- add each component as a subscriber (the component should be thread safe): -->
     <subscriber-roles>
