@@ -253,7 +253,7 @@ browser.5=netscape=Mozilla
      handles the requested URI and produces an
      XML document. Since producers are pluggable, they work like subservlets
      for this framework, allowing users to define and implement their own
-     producers. A producer is responsible of creating the XML document which is
+     producers. A producer is responsible for creating the XML document which is
      fed into the processing reactor. It's up to the producer implementation to
      define the function that produces the document from the request object.
    </dd>
@@ -262,9 +262,9 @@ browser.5=netscape=Mozilla
      is responsible of evaluating what
      processor should work on the document by reacting on XML processing
      instructions. The reactor pattern is different from a processing pipeline
-     since it allows the processing path to the dynamically configurable and it
+     since it allows the processing path to be dynamically configurable and it
      increases performance since only those required processors are called to
-     handle the document. The reactor is also responsible to forward the
+     handle the document. The reactor is also responsible for forwarding the
      document to the appropriate formatter.
    </dd>
    <dt>Formatter</dt>
@@ -282,13 +282,13 @@ browser.5=netscape=Mozilla
    </dd>
    <dt>Loader</dt>
    <dd>
-     is responsible of loading the formatted
+     is responsible for loading the formatted
      document when this is executable code. This part is used for compiled
      server pages where the separation of content and logic is merged and
      compiled into a Producer. When the formatter output is executable code, it
      is not sent back to the client directly, but it gets loaded and executed
      as a document producer. This guarantees both performance improvement
-     (since the producer are cached) as well as easier producer development,
+     (since the producers are cached) as well as easier producer development,
      following the common compiled server pages model.
    </dd>
   </dl>

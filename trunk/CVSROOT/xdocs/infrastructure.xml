@@ -153,11 +153,11 @@ applications. In the Cocoon infrastructure, XML becomes the API from
 which other components are called. Whether COM, CORBA, Java or any
 other language is actually called becomes transparent to the user. The
 user only needs to know about the XML API which, by definition, should
-thrive to be human readable. This makes debugging and maintenance a
+strive to be human readable. This makes debugging and maintenance a
 lot easier.</p>
 
 <p>This approach to dynamic content generation is quite different from
-other methods. The typical method prone by SUN and Microsoft is to
+other methods. The typical method proposed by SUN and Microsoft is to
 generate and XML output from a servlet or ASP page, then process it
 with an XSLT processor. Some of the drawbacks of that method are:</p>
 

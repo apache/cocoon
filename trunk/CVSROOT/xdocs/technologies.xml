@@ -337,19 +337,11 @@
   goes further and defines a way of separating content and style from
   the programming logic that drives server side behavior.</p>
 
-  <p>The XSP language (<connect href="WD-xsp.xml">eXtensible Server
-  Pages</connect>) defines an XML DTD for separating content and logic
-  for compiled server pages.  
-
-  <!-- FIXME (RAW): I'm finding this sentence hard to parse and, since
-       I don't yet myself have a handle on what exactly is "source"
-       and "binary" in this context, I couldn't reformulate it
-       effectively. -->
-
-  XSP is, like XSLFO, supposed to be a <em>final DTD</em>, in that it
-  is the result of one or more transformation steps and must be
-  rendered by some formatter into pure source code which can then be
-  compiled into binary code.</p>
+  <p>The XSP language defines an XML DTD for separating content and logic
+  for compiled server pages. XSP is, like XSLFO, supposed to be a 
+  <em>final DTD</em>. In fact, XSP is rendered into source code and then
+  compiled into binary code. This allows performance increase since no
+  parsing or interpretation overhead happens at runtime.</p>
 
   <p>In dynamic content generation technology, content and logic are
   combined: in every page there is a mix of static content and dynamic
