@@ -70,113 +70,61 @@
         <xsp:include>java.text.SimpleDateFormat</xsp:include>
       </xsp:structure>
 
-      <xsp:logic>
-        /* Util Class Level */
-
-        private static int count = 0;
-        private static synchronized int getCount() {
-          return ++count;
-        }
-        private static synchronized int getSessionCount(HttpSession session) {
-          Integer integer = (Integer) session.getValue("util.counter");
-          if (integer == null) {
-            integer = new Integer(0);
-          }
-          int cnt = integer.intValue() + 1;
-          session.putValue("util.counter", new Integer(cnt));
-          return cnt;
-        }
-        private static String formatDate(Date date, String pattern) {
-          if (pattern == null || pattern.length() == 0) {
-            pattern = "yyyy/MM/dd hh:mm:ss aa";
-          }
-          return (new SimpleDateFormat(pattern)).format(date);
-        }
-      </xsp:logic>
-
       <xsl:apply-templates/>
     </xsp:page>
   </xsl:template>
 
-  <xsl:template match="util:embed">
-    <xsl:variable name="uri">
+  <!-- Include URL contents as DOM -->
+  <xsl:template match="util:include-uri">
+    <xsl:variable name="href">
       <xsl:choose>
-        <xsl:when test="@uri">"<xsl:value-of select="@uri"/>"</xsl:when>
-        <xsl:when test="util:uri">
+        <xsl:when test="@href">"<xsl:value-of select="@href"/>"</xsl:when>
+        <xsl:when test="util:href">
           <xsl:call-template name="get-nested-content">
-            <xsl:with-param name="content" select="util:uri"/>
+            <xsl:with-param name="content" select="util:href"/>
           </xsl:call-template>
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
 
+    <!-- This should be an <xsp:expr> yielding Node... -->
     <xsp:logic> {
-      String embedURI = String.valueOf(<xsl:copy-of select="$uri"/>);
+      String __name = String.valueOf(<xsl:copy-of select="$href"/>);
 
       try {
-        URL url = new URL(embedURI);
-        InputSource is = new InputSource(url.openStream());
-        is.setSystemId(url.toExternalForm());
+        URL __url = new URL(__name);
+        InputSource __is = new InputSource(__url.openStream());
+        __is.setSystemId(__url.toString());
 
         xspCurrentNode.appendChild(
           XSPUtil.cloneNode(
-            this.xspParser.parse(is).getDocumentElement(),
+            this.xspParser.parse(__is).getDocumentElement(),
             document
           )
         );
       } catch (Exception e) {
         xspCurrentNode.appendChild(
           document.createTextNode(
-            "{" +
-              "Unable to embed: " +
-              embedURI +
-            "}"
+            "{Unable to include: '" + __name + "'}"
           )
         );
       }
     } </xsp:logic>
   </xsl:template>
 
-  <xsl:template match="util:get-file-contents">
-    <xsl:variable name="filename">
+  <!-- Include file contents as DOM -->
+  <xsl:template match="util:include-file">
+    <xsl:variable name="name">
       <xsl:choose>
-        <xsl:when test="@filename">"<xsl:value-of select="@filename"/>"</xsl:when>
-        <xsl:when test="util:filename">
+        <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
+        <xsl:when test="util:name">
           <xsl:call-template name="get-nested-content">
-            <xsl:with-param name="content" select="util:filename"/>
+            <xsl:with-param name="content" select="util:name"/>
           </xsl:call-template>
         </xsl:when>
       </xsl:choose>
     </xsl:variable>
 
-    <xsp:expr>
-      XSPUtil.getFileContents(
-	XSPUtil.relativeFilename(
-          String.valueOf(<xsl:copy-of select="$filename"/>),
-	  request
-	)
-      )
-    </xsp:expr>
-  </xsl:template>
-
-  <xsl:template match="util:counter">
-    <xsl:choose>
-      <xsl:when test="@scope = 'session'">
-        <xsp:expr>getSessionCount(session)</xsp:expr>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsp:expr>getCount()</xsp:expr>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-  <xsl:template match="util:time">
-    <xsp:expr>
-      formatDate(new Date(), "<xsl:value-of select="@format"/>")
-    </xsp:expr>
-  </xsl:template>
-
-  <xsl:template match="util:include">
     <xsp:logic>
       xspCurrentNode.appendChild(
         XSPUtil.cloneNode(
@@ -184,7 +132,7 @@
             new InputSource(
               new FileReader(
                 XSPUtil.relativeFilename(
-                  "<xsl:value-of select="@file"/>",
+                  <xsl:copy-of select="$name"/>,
                   request
                 )
               )
@@ -196,6 +144,64 @@
     </xsp:logic>
   </xsl:template>
 
+  <!-- Include file contents as text -->
+  <xsl:template match="util:get-file-contents">
+    <xsl:variable name="name">
+      <xsl:choose>
+        <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
+        <xsl:when test="util:name">
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="util:name"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsp:expr>
+      XSPUtil.getFileContents(
+	XSPUtil.relativeFilename(
+          String.valueOf(<xsl:copy-of select="$name"/>),
+	  request
+	)
+      )
+    </xsp:expr>
+  </xsl:template>
+
+
+  <!-- Counters -->
+  <xsl:template match="util:counter">
+    <xsl:choose>
+      <xsl:when test="@scope = 'session'">
+        <xsp:expr>XSPUtil.getSessionCount(session)</xsp:expr>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsp:expr>XSPUtil.getCount()</xsp:expr>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Date -->
+  <xsl:template match="util:time">
+    <xsl:variable name="format">
+      <xsl:choose>
+        <xsl:when test="@format">"<xsl:value-of select="@format"/>"</xsl:when>
+        <xsl:when test="util:format">
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="util:format"/>
+          </xsl:call-template>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsp:expr>
+      XSPUtil.formatDate(
+        new Date(),
+	String.valueOf(<xsl:copy-of select="$format"/>).trim()
+      )
+    </xsp:expr>
+  </xsl:template>
+
+  <!-- Standard Templates -->
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
     <xsl:choose>
