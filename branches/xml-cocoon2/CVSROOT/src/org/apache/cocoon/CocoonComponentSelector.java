@@ -19,6 +19,7 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.Recyclable;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.Configurable;
@@ -42,7 +43,7 @@ import org.apache.avalon.Loggable;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-21 17:22:26 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-22 15:03:09 $
  */
 public class CocoonComponentSelector implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Loggable {
     protected Logger log;
@@ -238,7 +239,8 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
                     e
                 );
             }
-            pools.put(hint,pool);
+
+            pools.put(componentClass, pool);
         }
 
         Component component;
@@ -254,6 +256,18 @@ public class CocoonComponentSelector implements Contextualizable, ComponentSelec
         }
 
         return component;
+    }
+
+    public void release(Component component) {
+        if (component instanceof Poolable) {
+            ComponentPool pool = (ComponentPool) pools.get(component.getClass());
+
+            if (pool != null) {
+                pool.put((Poolable) component);
+            }
+        } else if (component instanceof Recyclable) {
+            ((Recyclable) component).recycle();
+        }
     }
 
     /** Configure a new component.

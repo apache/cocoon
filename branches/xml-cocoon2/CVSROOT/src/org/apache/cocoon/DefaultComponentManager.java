@@ -23,6 +23,7 @@ import org.apache.avalon.Contextualizable;
 import org.apache.avalon.SingleThreaded;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Recyclable;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Composer;
@@ -40,7 +41,7 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-16 22:07:31 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-22 15:03:09 $
  */
 public class DefaultComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
@@ -276,7 +277,7 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
                     e
                 );
             }
-            pools.put(componentClass,pool);
+            pools.put(componentClass, pool);
         }
 
         Component component;
@@ -292,6 +293,18 @@ public class DefaultComponentManager implements ComponentManager, Loggable, Conf
         }
 
         return component;
+    }
+
+    public void release(Component component) {
+        if (component instanceof Poolable) {
+            ComponentPool pool = (ComponentPool) pools.get(component.getClass());
+
+            if (pool != null) {
+                pool.put((Poolable) component);
+            }
+        } else if (component instanceof Recyclable) {
+            ((Recyclable) component).recycle();
+        }
     }
 
     /** Configure a new component.
