@@ -61,8 +61,8 @@ import java.io.IOException;
  * @deprecated Use the Avalon Excalibur EntityResolver instead
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:crossley@indexgeo.com.au">David Crossley</a>
- * @version CVS $Id: Resolver.java,v 1.1 2003/03/09 00:06:58 pier Exp $
+ * @author <a href="mailto:crossley@apache.org">David Crossley</a>
+ * @version CVS $Id: Resolver.java,v 1.2 2004/01/30 06:05:49 crossley Exp $
  */
 public interface Resolver extends Component, EntityResolver {
 
