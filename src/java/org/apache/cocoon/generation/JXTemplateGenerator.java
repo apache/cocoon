@@ -84,6 +84,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.jexl.ExpressionFactory;
@@ -105,6 +106,7 @@ import org.apache.commons.jxpath.Variables;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
@@ -357,7 +359,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.33 2004/01/28 06:44:26 coliver Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.34 2004/01/31 15:57:32 bruno Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -3146,6 +3148,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                jxpathContext, n);
                                 }
                                 continue;
+                            } else if (val instanceof XMLizable) {
+                                ((XMLizable)val).toSAX(new IncludeXMLConsumer(consumer));
+                                continue;
                             }
                             if (val != null) {
                                 chars = val.toString().toCharArray();
@@ -3663,6 +3668,8 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             executeDOM(consumer, jexlContext,
                                        jxpathContext, n);
                         }
+                    } else if (val instanceof XMLizable) {
+                        ((XMLizable)val).toSAX(new IncludeXMLConsumer(consumer));
                     } else {
                         if (val == null) {
                             val = "";
