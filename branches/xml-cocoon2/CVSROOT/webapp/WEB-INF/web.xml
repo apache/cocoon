@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- 
+<!--
      This is the web-app configurations that allow Cocoon to work under
      Apache Tomcat. Please, follow the installation section of the
-     documentation for more information about installing Cocoon on Tomcat 
+     documentation for more information about installing Cocoon on Tomcat
 -->
 
 <!DOCTYPE web-app
@@ -34,6 +34,15 @@
    <param-name>log-level</param-name>
    <param-value>DEBUG</param-value>
   </init-param>
+  <!-- Only uncomment this if you need it!  Otherwise Cocoon will
+       not start because it can't load a class!
+
+       For IBM WebSphere:
+    <init-param>
+      <param-name>force-load</param-name>
+      <param-value>com.ibm.servlet.classloader.Handler</param-value>
+    </init-param>
+  -->
  </servlet>
  <servlet-mapping>
   <servlet-name>Cocoon2</servlet-name>
