@@ -175,6 +175,7 @@ a Java 1.2 compatible JVM is required for this target.
     <available property="xt.present" classname="com.jclark.xsl.sax.XSLProcessor"/>
     <available property="fesi.present" classname="FESI.jslib.JSGlobalObject"/>
     <available property="jndi.present" classname="javax.naming.Name"/>
+    <available property="projectx.present" classname="com.sun.xml.parser.Parser"/>
 
     <filter token="year" value="${year}"/>
     <filter token="version" value="${version}"/>
@@ -217,12 +218,19 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
+  <target name="prepare-projectx" depends="init" if="projectx.present">
+    <copydir src="${src.dir}"
+             dest="${build.src}"
+             includes="**/parser/Sun*"
+             filtering="on"/>
+  </target>
+  
   <target name="prepare-xt" depends="init" if="xt.present">
     <copydir src="${src.dir}"
              dest="${build.src}"
              includes="**/XT*"
              filtering="on"/>
-  </target>
+  </target>  
 
   <target name="prepare-ldap" depends="init" if="jndi.present">
     <copydir src="${src.dir}"
@@ -241,7 +249,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare, prepare-xt, prepare-ecma, prepare-ldap">
+  <target name="prepare-src" depends="prepare, prepare-projectx, prepare-xt, prepare-ecma, prepare-ldap">
     <!-- create directories -->
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
@@ -249,7 +257,7 @@ a Java 1.2 compatible JVM is required for this target.
     <!-- copy src files -->
     <copydir src="${src.dir}"
              dest="${build.src}"
-             excludes="**/XT*, **/ldap/**, **/ecmascript/**"
+             excludes="**/parser/Sun*, **/XT*, **/ldap/**, **/ecmascript/**"
              filtering="on"/>
   </target>
 
