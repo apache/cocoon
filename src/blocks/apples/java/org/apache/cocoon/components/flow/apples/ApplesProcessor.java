@@ -50,6 +50,7 @@ import java.util.List;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
@@ -77,14 +78,16 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable 
         List params,
         Environment env)
         throws Exception {
-            
+
         AppleController app = instantiateController(className);
-        
-        getLogger().debug("Pulling fresh apple through the lifecycle...");
-        LifecycleHelper.setupComponent(app, getLogger(), null, this.serviceManager, null, null, null);
-        
+
         WebContinuation wk = this.continuationsMgr.createWebContinuation(app, null, TIMETOLIVE);
-        
+
+        getLogger().debug("Pulling fresh apple through the lifecycle...");
+        DefaultContext appleContext = new DefaultContext();
+        appleContext.put("continuation-id", wk.getId());
+        LifecycleHelper.setupComponent(app, getLogger(), appleContext, this.serviceManager, null, null, null);
+
         processApple(params, env, app, wk);
     }
 
@@ -100,25 +103,25 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable 
             this.continuationsMgr.lookupWebContinuation(continuationId);
         if (wk == null) {
             // Throw an InvalidContinuationException to be handled inside the
-            // <map:handle-errors> sitemap element.                       
+            // <map:handle-errors> sitemap element.
             throw new InvalidContinuationException(
                 "The continuation ID " + continuationId + " is invalid.");
         }
 
         AppleController app =
             (AppleController) wk.getContinuation();
-             
+
         getLogger().debug("found apple from continuation: " + app);
-        
+
         // TODO access control checks? exception to be thrown for illegal access?
         processApple(params, env, app, wk);
- 
+
     }
 
 
     private AppleController instantiateController(String className)
         throws Exception {
-            
+
         // TODO think about dynamic reloading of these beasts in future
         // classloading stuf et al.
 
@@ -126,7 +129,7 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable 
         Object o = clazz.newInstance();
         return (AppleController) o;
     }
-    
+
 
 
     private void processApple(
@@ -135,21 +138,25 @@ public class ApplesProcessor extends AbstractInterpreter implements Serviceable 
         AppleController app,
         WebContinuation wk)
         throws Exception {
-        
-        Request cocoonRequest = ObjectModelHelper.getRequest(env.getObjectModel());    
+
+        Request cocoonRequest = ObjectModelHelper.getRequest(env.getObjectModel());
         AppleRequest req = new DefaultAppleRequest(params, cocoonRequest);
         DefaultAppleResponse res = new DefaultAppleResponse();
         app.process(req, res);
-        
-        String uri = res.getURI();
-        if (SourceUtil.indexOfSchemeColon(uri) == -1) {
-            uri = "cocoon:/" + uri;
+
+        if (res.isRedirect()) {
+            env.redirect(false, res.getURI());
+        } else {
+            String uri = res.getURI();
+            if (SourceUtil.indexOfSchemeColon(uri) == -1) {
+                uri = "cocoon:/" + uri;
+            }
+
+            getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData());
+
+            this.forwardTo(uri, res.getData(), wk, env);
         }
-        
-        getLogger().debug("Apple forwards to " + uri + " with bizdata= " + res.getData());
-                           
-        this.forwardTo(uri, res.getData(), wk, env);
-        
+
         //TODO allow for AppleResponse to set some boolean saying the use case
         // is completed and the continuation can be invalidated ?
     }
