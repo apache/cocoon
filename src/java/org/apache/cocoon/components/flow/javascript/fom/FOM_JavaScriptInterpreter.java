@@ -823,7 +823,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     public void forwardTo(Scriptable scope, FOM_Cocoon cocoon, String uri,
                           Object bizData, FOM_WebContinuation fom_wk,
-                          Redirector redirector) throws Exception {
+                          Redirector redirector)
+    throws Exception {
         setupView(scope, cocoon, fom_wk);
         super.forwardTo(uri, bizData,
                         fom_wk == null ? null : fom_wk.getWebContinuation(),
@@ -832,7 +833,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     // package access as this is called by FOM_Cocoon
     void process(Scriptable scope, FOM_Cocoon cocoon, String uri,
-            Object bizData, OutputStream out) throws Exception {
+                 Object bizData, OutputStream out)
+    throws Exception {
         setupView(scope, cocoon, null);
         super.process(uri, bizData, out);
     }

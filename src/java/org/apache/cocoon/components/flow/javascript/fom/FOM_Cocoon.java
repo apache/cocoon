@@ -273,12 +273,13 @@ public class FOM_Cocoon extends ScriptableObject {
     public void jsFunction_processPipelineTo(String uri,
                                              Object map,
                                              Object outputStream)
-        throws Exception {
-        if (!(unwrap(outputStream) instanceof OutputStream)) {
-            throw new JavaScriptException("expected a java.io.OutputStream instead of " + outputStream);
+    throws Exception {
+        Object out = unwrap(outputStream);
+        if (!(out instanceof OutputStream)) {
+            throw new JavaScriptException("expected a java.io.OutputStream instead of " + out);
         }
         getInterpreter().process(getParentScope(), this, uri, map,
-                                 (OutputStream)unwrap(outputStream));
+                                 (OutputStream)out);
     }
 
     public void jsFunction_redirectTo(String uri, boolean isGlobal) throws Exception {
