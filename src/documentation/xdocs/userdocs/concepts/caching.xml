@@ -16,12 +16,52 @@
 	 </s1>
 	 <s1 title="Overview">
 		<p>The caching algorithm of Cocoon has a very flexible and powerful design.
-               The algorithms and components used are not hardcoded into the core of 
-               Cocoon. They can be configured using Avalon components.</p>
+           The algorithms and components used are not hard coded into the core of 
+           Cocoon. They can be configured in the sitemap.</p>
             <p>This document describes the components available for caching,
                how they can be configured and how to implement your own cacheable components.
             </p>
 	 </s1>
+	 <s1 title="How to configure caching">
+	     <p>The caching can be turned on and off on a per pipeline setting in the sitemap.
+	      This means, for each <em>map:pipeline</em> section in a sitemap, it's possible to
+	      turn on/off caching and configure the caching algorithm.</p>
+	      <p>The following example shows how to turn on caching for a pipeline:</p>
+    <source>
+     <![CDATA[
+       <map:pipeline type="caching">
+          ...
+       </map:pipeline>
+     ]]>
+    </source> 
+	      <p>If you know that it doesn't make sense to turn on caching for some of 
+	      your pipelines, put them together in their own section and use:</p>
+    <source>
+     <![CDATA[
+       <map:pipeline type="noncaching">
+          ...
+       </map:pipeline>
+     ]]>
+    </source>
+      <p>As you might guess from how the caching is turned on (via a type attribute), you
+         can have different caching (or better pipeline) implementation to choose from. This
+         is similar to choose from a set of generators the generator to use in your pipeline etc.
+         You will find in your main sitemap a section declaring all pipeline implementations.
+         It's in the <em>map:components</em> section:
+      </p>
+    <source>
+     <![CDATA[
+       <map:pipes default="caching">
+          <map:pipe name="caching" src="..."/>
+          <map:pipe name="noncaching" src="..."/>
+       </map:pipes>
+     ]]>
+    </source>
+      <p>Depending on your Cocoon installation you might have different implementations in
+      that section. As with all components, you can define a default for all pipelines and
+      override this whereever it makes sense.</p>
+	 </s1>
+<!-- FIXME: THe following is OLD -->	 
 	 <s1 title="Caching of event pipelines">
 		<p>The algorithm used for caching depends on the event pipeline configured. 
                For more information about configuration see the chapter below.</p>
