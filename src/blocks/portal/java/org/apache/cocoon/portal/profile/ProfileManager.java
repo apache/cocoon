@@ -89,7 +89,10 @@ public interface ProfileManager {
     void unregister(Layout layout);
 
     /**
-     * Save the profile
+     * Save the profile. Usually this just calls {@link #saveUserCopletInstanceDatas(String)}
+     * and {@link #saveUserLayout(String)}, but implementations are free to
+     * implement this method in a different way.
+     * @param layoutKey
      */
     void saveUserProfiles(String layoutKey);
 
@@ -100,10 +103,10 @@ public interface ProfileManager {
     void saveUserLayout(String layoutKey);
 
     /**
-     * Save the coplet instance
+     * Save the coplet instance data
      * @param layoutKey
      */
-    void saveUserCopletInstance(String layoutKey);
+    void saveUserCopletInstanceDatas(String layoutKey);
 
     /**
      * Get all instances
