@@ -55,7 +55,7 @@ import org.w3c.dom.Element;
 
 /**
  * Description of EnumSelectionListBuilder.
- * @version CVS $Id: EnumSelectionListBuilder.java,v 1.1 2003/11/07 22:04:38 ugo Exp $
+ * @version CVS $Id: EnumSelectionListBuilder.java,v 1.2 2003/11/17 16:18:12 ugo Exp $
  */
 public class EnumSelectionListBuilder implements SelectionListBuilder {
 
@@ -65,7 +65,8 @@ public class EnumSelectionListBuilder implements SelectionListBuilder {
     public SelectionList build(Element selectionListElement, Datatype datatype)
         throws Exception {
         String className = DomHelper.getAttribute(selectionListElement, "class");
-        return new EnumSelectionList(className, datatype);
+        boolean nullable = DomHelper.getAttributeAsBoolean(selectionListElement, "nullable", true);
+        return new EnumSelectionList(className, datatype, nullable);
     }
 
 }
