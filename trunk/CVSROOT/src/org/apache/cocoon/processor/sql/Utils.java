@@ -1,4 +1,5 @@
 /*
+testing
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
@@ -59,7 +60,7 @@ import javax.servlet.http.*;
  * Utility methods for this processor.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.6 $ $Date: 1999-12-08 07:37:09 $
+ * @version $Revision: 1.7 $ $Date: 2000-02-04 05:17:34 $
  */
 
 public class Utils {
