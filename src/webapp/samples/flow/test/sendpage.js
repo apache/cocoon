@@ -13,8 +13,41 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-function showString(parameter)
-{
-  print ("parameter = " + parameter);
-  cocoon.sendPage("page/showString", { "parameter" : parameter, "replaceme" : "@REPLACEME@" });
+
+function showString(parameter) {
+    var replaceme = "@REPLACEME@";
+    print("parameter = " + parameter, " replaceme = " + replaceme);
+    cocoon.sendPage("page/showString", { "parameter" : parameter, "replaceme" : replaceme });
+}
+
+
+var counter;
+var result;
+
+function factorial() {
+    // Init
+    var topmost;
+    if (counter == undefined) {
+        topmost = "yep";
+        counter = 0;
+        result = 1;
+    }
+
+    print("Factorial '" + counter + "', '" + result + "'");
+
+    if (counter < cocoon.request.getParameter("n")) {
+        result = result * ++counter;
+        // Recurse
+        cocoon.processPipelineTo("factorial", {}, new org.apache.cocoon.util.NullOutputStream());
+    }
+
+    cocoon.sendPage("page/showString",
+                    { "replaceme" : "Factorial of " + counter + " is ...",
+                      "parameter" : result });
+
+    // Clear
+    if (topmost != undefined) {
+        result = undefined;
+        counter = undefined;
+    }
 }
