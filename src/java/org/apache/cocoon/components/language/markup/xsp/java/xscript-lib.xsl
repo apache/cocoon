@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- $Id: xscript-lib.xsl,v 1.1 2003/03/09 00:08:57 pier Exp $-->
+<!-- $Id: xscript-lib.xsl,v 1.2 2003/05/22 21:26:26 vgritsenko Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  * Date: September 19, 2001
  *
  * @author <a href="mailto:ovidiu@cup.hp.com>Ovidiu Predescu</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:57 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/05/22 21:26:26 $
 -->
 
 <xsl:stylesheet
@@ -106,7 +106,7 @@
     </xsl:variable>
     <xsl:choose>
       <xsl:when test="$as = 'object'">
-        <xsp:logic><xsl:value-of select="$object"/></xsp:logic>
+        <xsp:expr><xsl:value-of select="$object"/></xsp:expr>
       </xsl:when>
       <xsl:otherwise>
         <!-- insert the content of the XScript variable in the SAX
@@ -197,6 +197,7 @@
                          <xsl:value-of select="$scope"/>);
     </xsp:logic>
   </xsl:template>
+
 
   <xsl:template name="xscript-variable-inline">
     <!-- PUBLIC: create an XScript variable from inline XML -->

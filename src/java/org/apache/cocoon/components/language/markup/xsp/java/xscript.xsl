@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- $Id: xscript.xsl,v 1.1 2003/03/09 00:08:57 pier Exp $-->
+<!-- $Id: xscript.xsl,v 1.2 2003/05/22 21:26:26 vgritsenko Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  * Date: September 19, 2001
  *
  * @author <a href="mailto:ovidiu@cup.hp.com>Ovidiu Predescu</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:57 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/05/22 21:26:26 $
 -->
 
 <xsl:stylesheet
@@ -122,13 +122,11 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <xsp:logic>
-      <xsl:call-template name="xscript-get">
-        <xsl:with-param name="name" select="@name"/>
-        <xsl:with-param name="as" select="@as"/>
-        <xsl:with-param name="scope" select="$scope"/>
-      </xsl:call-template>;
-    </xsp:logic>
+    <xsl:call-template name="xscript-get">
+      <xsl:with-param name="name" select="@name"/>
+      <xsl:with-param name="as" select="@as"/>
+      <xsl:with-param name="scope" select="$scope"/>
+    </xsl:call-template>
   </xsl:template>
 
 
