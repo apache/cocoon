@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.66 2000-05-07 00:44:45 ricardo Exp $
+  $Id: changes.xml,v 1.67 2000-05-07 04:42:07 ricardo Exp $
 -->
 
 <changes title="History of Changes">
@@ -22,6 +22,11 @@
  </release>
  
  <release version="1.7.3" date="May 6 2000">
+  <action dev="RR" type="fix" due-to="Kevin Burton" due-to-email="burton@relativity.yi.org">
+  </action>
+    Changed "create-session" attribute in &lt;xsp:page&gt; to accept
+    only "true" and "false" as dictated by the XML Schema boolean
+    datatype
   <action dev="RR" type="update">
     Added namespace preservation for XSP pages. To preserve namespaces in an
     XSP page, add an "xsp:xxx" attribute to the page's root element, where
