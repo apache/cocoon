@@ -49,6 +49,7 @@
  <components>
      <input-modules>
        <component-instance class="org.apache.cocoon.components.modules.input.RequestParameterModule" logger="core.modules.input" name="request-param"/>
+       <component-instance class="org.apache.cocoon.components.modules.input.BaseLinkModule" logger="core.modules.input" name="baselink"/>
    </input-modules>
 
  </components>

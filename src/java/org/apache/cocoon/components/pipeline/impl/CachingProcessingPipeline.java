@@ -16,7 +16,9 @@
 package org.apache.cocoon.components.pipeline.impl;
 
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.caching.CacheValidityToSourceValidity;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.CachingOutputStream;
 import org.apache.cocoon.caching.ComponentCacheKey;
@@ -27,17 +29,21 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
+import org.apache.excalibur.source.SourceValidity;
 
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * The CachingProcessingPipeline
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingProcessingPipeline.java,v 1.4 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: CachingProcessingPipeline.java,v 1.5 2004/05/06 19:27:54 upayavira Exp $
  */
 public class CachingProcessingPipeline
     extends AbstractCachingProcessingPipeline {
@@ -55,6 +61,16 @@ public class CachingProcessingPipeline
                                           expiresObj);
                 this.cache.store(this.toCacheKey,
                                  response);
+/*                List links = (List) environment.getObjectModel().get(Constants.LINK_COLLECTION_OBJECT);
+                if (links!=null) {
+                    SourceValidity[] linkValidities = new SourceValidity[this.toCacheSourceValidities.length+1];
+                    System.arraycopy(this.toCacheSourceValidities, 0, linkValidities, 0, this.toCacheSourceValidities.length);
+                    for (int i=0; i<this.toCacheSourceValidities.length;i++) {
+                        linkValidities[i]=this.toCacheSourceValidities[i];
+                    }
+                    linkValidities[this.toCacheSourceValidities.length]=CacheValidityToSourceValidity.createValidity(null);
+                    this.cache.store(linkValidities, new CachedResponse(links.serialize()));
+                }*/
             } else {
                 CachedResponse response = new CachedResponse(this.toCacheSourceValidities,
                                           (byte[])this.xmlSerializer.getSAXFragment(),

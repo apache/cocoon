@@ -59,7 +59,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.41 2004/04/30 12:55:55 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.42 2004/05/06 19:27:54 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -159,6 +159,7 @@ public class CocoonBean extends CocoonWrapper {
     /**
      * Adds a target for processing
      *
+     * @deprecated in favour of addTarget(Target target)
      * @param type Type of target - append, replace, insert.
      * @param root
      * @param sourceURI URI of the starting page
@@ -179,6 +180,9 @@ public class CocoonBean extends CocoonWrapper {
         crawler.addTarget(target);
     }
 
+    /**
+     * @deprecated in favour of addTarget(Target target)
+     */
     public void addTarget(String type, String sourceURI, String destURI)
         throws IllegalArgumentException {
         Target target = new Target(type, sourceURI, destURI);
@@ -189,6 +193,9 @@ public class CocoonBean extends CocoonWrapper {
         crawler.addTarget(target);
     }
 
+    /**
+     * @deprecated in favour of addTarget(Target target)
+     */
     public void addTarget(String sourceURI, String destURI)
         throws IllegalArgumentException {
         Target target = new Target(sourceURI, destURI);
@@ -199,6 +206,9 @@ public class CocoonBean extends CocoonWrapper {
         crawler.addTarget(target);
     }
 
+    /**
+     * @deprecated in favour of addTarget(Target target)
+     */
     public void addTargets(List uris, String destURI)
         throws IllegalArgumentException {
         Iterator i = uris.iterator();
@@ -212,6 +222,9 @@ public class CocoonBean extends CocoonWrapper {
         }
     }
 
+    /**
+     * @deprecated in favour of addTarget(Target target)
+     */
     public void addTarget(
         String type,
         String root,
@@ -237,6 +250,10 @@ public class CocoonBean extends CocoonWrapper {
         crawler.addTarget(target);
     }
 
+    public void addTarget(Target target) {
+        crawler.addTarget(target);
+    }
+    
     public int getTargetCount() {
         return crawler.getRemainingCount();
     }

@@ -29,7 +29,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.12 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id: Target.java,v 1.13 2004/05/06 19:27:54 upayavira Exp $
  */
 public class Target {
     // Defult type is append
