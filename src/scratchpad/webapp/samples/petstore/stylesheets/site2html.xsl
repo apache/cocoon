@@ -483,8 +483,9 @@
 		<form>
 			<xsl:copy-of select="@action | @method | @styleId"/>
 				<xsl:apply-templates/>
-		<p>
+                <p><center>
 			<input type="image" src="images/button_submit.gif"/>
+                 </center>
 		</p>
 		</form>
 	</xsl:template>
