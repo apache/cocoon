@@ -16,15 +16,19 @@
 class Sitemap extends Pipeline {
   
     boolean setup(String requestPath) {
-        if (requestPath =~ "index\.html") {
-            // TODO: paths should be relative to the webapp context!
+        if (requestPath == "") {
             generate "build/webapp/welcome.xml"
             transform "trax", "build/webapp/welcome.xslt" 
             serialize "xml"
-        } else if (requestPath =~ "images/.*\.gif") {
-            read "build/webapp/resources/images/powered.gif", "image/gif"
-        } else if (requestPath =~ "styles/.*\.css") {
-            read "build/webapp/resources/styles/main.css", "text/css"
+        } else if (m = (requestPath =~ "(.*)\.html")) {
+            // TODO: paths should be relative to the webapp context!
+            generate "build/webapp/" + m.group(1) + ".xml"
+            transform "trax", "build/webapp/welcome.xslt" 
+            serialize "xml"
+        } else if (m = (requestPath =~ "images/(.*)\.gif")) {
+            read "build/webapp/resources/images/" + m.group(1) + ".gif", "image/gif"
+        } else if (m = (requestPath =~ "styles/(.*)\.css")) {
+            read "build/webapp/resources/styles/" + m.group(1) + ".css", "text/css"
         } else {
             return false;
         }
