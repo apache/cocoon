@@ -33,7 +33,7 @@ import org.w3c.dom.NodeList;
  * For a smarter binding that avoids deletion and recreation, consider
  * {@link org.apache.cocoon.forms.binding.RepeaterJXPathBinding}
  *
- * @version CVS $Id: TempRepeaterJXPathBinding.java,v 1.5 2004/05/07 13:42:09 mpo Exp $
+ * @version CVS $Id$
  */
 public class TempRepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -134,9 +134,13 @@ public class TempRepeaterJXPathBinding extends JXPathBindingBase {
                 if (virtualRows == true) {
                     Node repeaterNode = (Node)repeaterPointer.getNode();
                     Node virtualNode = repeaterNode.getOwnerDocument().createElementNS(null, "virtual");
-                    Node clone = ((Node)rowPointer.getNode()).cloneNode(true);
+                    Node node = (Node)rowPointer.getNode();
+                    Node clone = node.cloneNode(true);
+                    Node docElement = node.getOwnerDocument().getDocumentElement().cloneNode(false);
                     virtualNode.appendChild(clone);
-                    rowContext = JXPathContext.newContext(repeaterContext, virtualNode);
+                    docElement.appendChild(virtualNode);
+                    rowContext = JXPathContext.newContext(repeaterContext, docElement);
+                    rowContext = rowContext.getRelativeContext(rowContext.getPointer("virtual"));
                 }
 
                 // Finally, perform the load row binding.
