@@ -24,8 +24,8 @@
       <available file="${forrest.bin}/forrest.bat" property="blaaaa"/>
     </condition>
     <fail unless="cond.forrest.bin.exists"
-    
       message="Set the variable 'forrest.bin' to the directory that contains the Forrest start scripts!"/>
+      
     <!-- run Forrest using exec task - depending on the operating system either choose 
          forrest.sh or forrest.bat -->
     <dirname file="${forrest.bin}/blaaaa" property="forrest.bin.absolute"/>
