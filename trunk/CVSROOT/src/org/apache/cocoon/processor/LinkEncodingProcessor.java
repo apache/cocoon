@@ -1,4 +1,4 @@
-/*-- $Id: LinkEncodingProcessor.java,v 1.7 2000-12-16 15:15:31 greenrd Exp $ --
+/*-- $Id: LinkEncodingProcessor.java,v 1.8 2001-02-07 13:50:19 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * Xalan-specific features in your stylesheet.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.7 $ $Date: 2000-12-16 15:15:31 $
+ * @version $Revision: 1.8 $ $Date: 2001-02-07 13:50:19 $
  */
 
 public class LinkEncodingProcessor implements Processor, Status {
@@ -122,14 +122,16 @@ public class LinkEncodingProcessor implements Processor, Status {
              Attr attr = (Attr) x;
              String name = attr.getName ();
              if (!name.equalsIgnoreCase ("href") 
-                 && !name.equalsIgnoreCase ("action")) {
+                 && !name.equalsIgnoreCase ("action")
+                 && !(name.equalsIgnoreCase ("src") 
+                      && attr.getOwnerElement ().getTagName ().equalsIgnoreCase ("frame"))) {
                return false;
              }
              String href = attr.getValue ();
              try {
                  URL full = new URL (requestBase, href);
                  String hrefHost = full.getHost ();
-                 // Allow for not-fully--qualified domain names in hrefs
+                 // Allow for not-fully-qualified domain names in hrefs
                  return (hrefHost.indexOf ('.') == -1) 
                      ? (hostName + '.').startsWith (hrefHost + '.')
                      : hostName.equals (hrefHost);
