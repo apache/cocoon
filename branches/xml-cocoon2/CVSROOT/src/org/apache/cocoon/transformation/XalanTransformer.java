@@ -21,10 +21,10 @@ import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.parser.Parser;
+import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.util.DocumentHandlerAdapter;
-import org.apache.cocoon.xml.util.DocumentHandlerWrapper;
+import org.apache.cocoon.xml.dom.DocumentHandlerAdapter;
+import org.apache.cocoon.xml.dom.DocumentHandlerWrapper;
 
 import org.apache.xalan.xslt.StylesheetRoot;
 import org.apache.xalan.xslt.XSLTInputSource;
@@ -41,15 +41,24 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-02 21:12:40 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-05 17:26:52 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
     
-    /** The component manager instance */
-    private ComponentManager manager=null;
+    /** The store service instance */
+    private Store store = null;
+
     /** The XALAN XSLTProcessor */
-    private XSLTProcessor processor=null;
+    private XSLTProcessor processor = null;
+
+    /**
+     * Set the current <code>ComponentManager</code> instance used by this
+     * <code>Composer</code>.
+     */
+    public void setComponentManager(ComponentManager manager) {
+        this.store = (Store) manager.getComponent("store");
+    }
 
     /**
      * Set the <code>EntityResolver</code>, the <code>Map</code> with 
@@ -60,46 +69,36 @@ implements Transformer, Composer {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request=(HttpServletRequest)objectModel.get("request");
+        HttpServletRequest request = (HttpServletRequest)objectModel.get("request");
         if (request == null) {
             throw new ProcessingException ("Missing request object in obejctModel");
         }
+        
         // Check the stylesheet uri
-        // String xsluri=par.getParameter("stylesheet",null); 
-        String xsluri=src; 
-        if (xsluri==null) throw new ProcessingException("No stylesheet");
-
-        // Load the stylesheet (we should cache it in the STORE!)
-        //Cocoon cocoon=(Cocoon)this.manager.getComponent("cocoon");
-        StylesheetRoot stylesheet=null;
-        if (true) {
-            XSLTProcessor loaderprocessor=XSLTProcessorFactory.getProcessor();
-            InputSource xslsrc=resolver.resolveEntity(null,xsluri);
-            XSLTInputSource style=new XSLTInputSource(xslsrc);
-            stylesheet=loaderprocessor.processStylesheet(style);
+        String xsluri = src; 
+        if (xsluri == null) {
+            throw new ProcessingException("Stylesheet URI can't be null");
         }
 
+        // Load the stylesheet
+        XSLTProcessor loaderprocessor = XSLTProcessorFactory.getProcessor();
+        InputSource xslsrc = resolver.resolveEntity(null,xsluri);
+        XSLTInputSource style = new XSLTInputSource(xslsrc);
+        StylesheetRoot stylesheet = loaderprocessor.processStylesheet(style);
+
         // Create the processor and set it as this documenthandler
-        this.processor=XSLTProcessorFactory.getProcessor();
+        this.processor = XSLTProcessorFactory.getProcessor();
         this.processor.setStylesheet(stylesheet);
 		Enumeration enum = request.getParameterNames();
 		while (enum.hasMoreElements()) {
-			String name = (String)enum.nextElement();
+			String name = (String) enum.nextElement();
 			if (isValidXSLTParameterName(name)) {
 				String value = request.getParameter(name);
-				processor.setStylesheetParam(name,this.processor.createXString(value));
+				processor.setStylesheetParam(name, this.processor.createXString(value));
 			}
 		}
+
         this.setDocumentHandler(this.processor);
-
-    }
-
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composer</code>.
-     */
-    public void setComponentManager(ComponentManager manager) {
-        this.manager=manager;
     }
 
     /**
@@ -135,7 +134,9 @@ implements Transformer, Composer {
     public void setLexicalHandler(LexicalHandler lexical) {
     }
 
-	public static boolean isValidXSLTParameterName(String name) {
+    // FIXME (SM): this method may be a hotspot for requests with many 
+    //             parameters we should try to optimize it further 
+	static boolean isValidXSLTParameterName(String name) {
 		StringCharacterIterator iter = new StringCharacterIterator(name);
 		char c = iter.first();
 		if (!(Character.isLetter(c) || c == '_')) {
@@ -155,5 +156,4 @@ implements Transformer, Composer {
 		}
 		return true;
 	}
-
 }
