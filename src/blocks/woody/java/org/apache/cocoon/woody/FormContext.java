@@ -53,13 +53,11 @@ package org.apache.cocoon.woody;
 import java.util.Locale;
 
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.woody.event.ActionEvent;
 
 public class FormContext {
     
     protected Request request;
     protected Locale locale;
-    protected ActionEvent actionEvent;
 
     public FormContext(Request request, Locale locale) {
         this.request = request;
@@ -68,26 +66,6 @@ public class FormContext {
 
     public FormContext(Request request) {
         this(request, request.getLocale());
-    }
-
-    /**
-     * Sets the current ActionEvent. An ActionEvent is the result of a certain user
-     * action that caused a form submit. For example, pressing a button.
-     *
-     * <p>This method will be called by the widget that detected an action has been
-     * performed on it. The Event will then be performed after all widgets have been
-     * through the "readFromRequest" stage.
-     *
-     * <p>If an action event is set, validation is automatically disabled.
-     */
-    public void setActionEvent(ActionEvent actionEvent) {
-        if (this.actionEvent != null)
-            throw new IllegalStateException("There is already an actionEvent set on this formContext!");
-        this.actionEvent = actionEvent;
-    }
-
-    public ActionEvent getActionEvent() {
-        return actionEvent;
     }
 
     public Request getRequest() {
