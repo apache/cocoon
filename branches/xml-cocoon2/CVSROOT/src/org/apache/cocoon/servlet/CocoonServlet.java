@@ -38,6 +38,11 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.log.Logger;
 import org.apache.log.LogKit;
 import org.apache.log.Priority;
+import org.apache.log.Category;
+import org.apache.log.output.FileOutputLogTarget;
+import org.apache.log.LogTarget;
+import org.apache.log.filter.AbstractFilterTarget;
+import org.apache.log.LogEntry;
 
 
 /**
@@ -47,7 +52,7 @@ import org.apache.log.Priority;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.30 $ $Date: 2000-11-15 19:29:41 $
+ * @version CVS $Revision: 1.1.4.31 $ $Date: 2000-11-17 20:28:34 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -71,17 +76,20 @@ public class CocoonServlet extends HttpServlet {
      */
     public void init(ServletConfig conf) throws ServletException {
 
-        try {
-            log = LogKit.createLogger("cocoon", new URL("file://./logs/cocoon.log"), Priority.DEBUG);
-        } catch (MalformedURLException mue) {
-            LogKit.log("Could not set up Cocoon Logger, will use screen instead", mue);
-        }
-
-        LogKit.setGlobalPriority(Priority.DEBUG);
-
         super.init(conf);
 
         this.context = conf.getServletContext();
+
+        try {
+            String path = "file://" +
+	                  this.context.getRealPath("/") +
+                          "/WEB-INF/logs/cocoon.log";
+            log = LogKit.createLogger("cocoon", path, "DEBUG");
+        } catch (Exception e) {
+            LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
+        }
+
+        LogKit.setGlobalPriority(Priority.DEBUG);
 
         // WARNING (SM): the line below BREAKS the Servlet API portability of
         // web applications.
@@ -236,11 +244,18 @@ public class CocoonServlet extends HttpServlet {
         ServletOutputStream out = res.getOutputStream();
 
         long end = System.currentTimeMillis();
+        String timeString = processTime(end - start);
+        log.debug("'" + uri + "' " + timeString);
 
         String showTime = req.getParameter(Cocoon.SHOWTIME_PARAM);
 
         if ((showTime != null) && !showTime.equalsIgnoreCase("no")) {
-            showTime(out, showTime.equalsIgnoreCase("hide"), end - start);
+            boolean hide = showTime.equalsIgnoreCase("hide");
+            out.print((hide) ? "<!-- " : "<p>");
+
+            out.print(timeString);
+
+            out.println((hide) ? " -->" : "</p>");
         }
 
         out.flush();
@@ -261,27 +276,27 @@ public class CocoonServlet extends HttpServlet {
         }
     }
 
-    private void showTime(ServletOutputStream out, boolean hide, long time) throws IOException {
+    private String processTime(long time) throws IOException {
 
-        out.print((hide) ? "<!-- " : "<p>");
-
-        out.print("Processed by " + Cocoon.COMPLETE_NAME + " in ");
+        StringBuffer out = new StringBuffer("Processed by ")
+                           .append(Cocoon.COMPLETE_NAME)
+                           .append(" in ");
 
         if (time > hour) {
-            out.print(time / hour);
-            out.print(" hours.");
+            out.append((float) time / (float) hour);
+            out.append(" hours.");
         } else if (time > minute) {
-            out.print(time / minute);
-            out.print(" minutes.");
+            out.append((float) time / (float) minute);
+            out.append(" minutes.");
         } else if (time > second) {
-            out.print(time / second);
-            out.print(" seconds.");
+            out.append((float) time / (float) second);
+            out.append(" seconds.");
         } else {
-            out.print(time);
-            out.print(" milliseconds.");
+            out.append(time);
+            out.append(" milliseconds.");
         }
 
-        out.println((hide) ? " -->" : "</p>");
+        return out.toString();
     }
 }
 
