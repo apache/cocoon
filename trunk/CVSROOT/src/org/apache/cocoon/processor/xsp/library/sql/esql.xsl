@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.79 2001-05-18 01:03:55 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.80 2001-05-21 18:29:20 balld Exp $-->
 <!--
 
  ============================================================================
@@ -344,7 +344,7 @@
             </xsl:for-each>
             _esql_connection.connection = DriverManager.getConnection(_esql_connection.dburl, _esql_connection.info);
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-            throw new RuntimeException("Error opening connection to dburl: "+String.valueOf(<xsl:copy-of select="$dburl"/>));
+            throw new RuntimeException("Error opening connection to dburl: "+String.valueOf(<xsl:copy-of select="$dburl"/>)+": "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage());
           }
         </xsl:otherwise>
       </xsl:choose>
@@ -493,7 +493,14 @@
           _esql_query.results = _esql_query.statement.execute(_esql_query.query);
         </xsl:otherwise>
       </xsl:choose>
-      System.err.println("QUERY: "+_esql_query.query);
+      <xsl:choose>
+        <xsl:when test="$environment = 'cocoon1'">
+          System.err.println("QUERY: "+_esql_query.query);
+        </xsl:when>
+        <xsl:otherwise>
+          getLogger().debug("esql query: "+_esql_query.query);
+        </xsl:otherwise>
+      </xsl:choose>
       if (_esql_query.results) {
         _esql_query.resultset = _esql_query.statement.getResultSet();
         _esql_query.resultset_metadata = _esql_query.resultset.getMetaData();
