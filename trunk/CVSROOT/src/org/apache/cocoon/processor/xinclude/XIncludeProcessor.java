@@ -60,6 +60,8 @@ import java.io.FileReader;
 import java.util.Stack;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Vector;
+import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpUtils;
 import org.xml.sax.InputSource;
@@ -83,23 +85,35 @@ import org.apache.cocoon.processor.ProcessorException;
 import org.apache.cocoon.Utils;
 
 /**
- * First version of a DOM XInclude parser for cocoon. This has been back ported
- * from my XInclude filter for cocoon2.
+ * Second version of a DOM2 XInclude parser for cocoon. This revision
+ * should support the bulk of the 2000-07-17 version of the XInclude working
+ * draft. Notably excluded is inclusion loop checking 
+ * (<a href="http://www.w3.org/TR/xinclude#IDw2Bq1">section 3.2.1</a>). Note
+ * also that included namespaces may not be handled properly 
+ * (<a href="http://www.w3.org/TR/xinclude#ID0mBq1">section 3.2.2</a>) -
+ * I'd love feedback on this. Namespaces are simple - but the DOM2 (and SAX2)
+ * methods for interacting with them aren't. Finally, note that the order of
+ * include element processing as noted in
+ * <a href="http://www.w3.org/TR/xinclude#IDwgAq1">section 3.1</a> is not
+ * correct - internal xpointer links are not necessarily resolved against
+ * the original source document. I haven't figured out a good way to resolve
+ * that without cloning the entire source document first, which would be
+ * a terrible wasteful of memory.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.11 $ $Date: 2000-07-20 00:17:41 $ $Author: stefano $
+ * @version CVS $Revision: 1.12 $ $Date: 2000-07-24 04:13:26 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
-	protected boolean debug = true;
+	protected boolean debug = false;
 
 	public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
 	public static final String XMLBASE_ATTRIBUTE = "base";
 
 	public static final String XINCLUDE_NAMESPACE_URI = "http://www.w3.org/1999/XML/xinclude";
-	public static final String XINCLUDE_INCLUDE_ELEMENT = "include";
-	public static final String XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE = "href";
-	public static final String XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE = "parse";
+	public static final String XINCLUDE_HREF_ATTRIBUTE = "href";
+	public static final String XINCLUDE_PARSE_ATTRIBUTE = "parse";
+	public static final int BUFFER_SIZE = 1024;
 
 	protected Parser parser;
 	protected Logger logger;
@@ -130,7 +144,7 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 	public boolean hasChanged(Object object) {
 		/** I would have thought that the monitor would return false if the
 		    key has no resources being monitored, but it doesn't. I think
-			that might should change, but we'll work around it for now. **/
+		    that might should change, but we'll work around it for now. **/
 		Object key = Utils.encode((HttpServletRequest)object);
 		if (monitored_table.containsKey(key)) {
 			return monitor.hasChanged(key);
@@ -138,6 +152,35 @@ public class XIncludeProcessor extends AbstractActor implements Processor, Statu
 		return false;
 	}
 
+class XIncludeElement {
+
+	Element element;
+	Element parent;
+	String href;
+	String parse;
+	Object base;
+	String suffix;
+	String xpath = null;
+
+	XIncludeElement(Element element, Element parent, String href, String parse, Object base) {
+		this.element = element;
+		this.parent = parent;
+		this.parse = parse;
+		this.base = base;
+		int index = href.indexOf('#');
+		if (index < 0) {
+			suffix = "";
+			this.href = href;
+		} else {
+			suffix = href.substring(index+1);
+			this.href = href.substring(0,index);
+			if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
+				xpath = suffix.substring(9,suffix.length()-1);
+			}
+		}
+	}
+
+}
 
 class XIncludeProcessorWorker {
 
@@ -147,15 +190,11 @@ class XIncludeProcessorWorker {
 
 	Document document;
 
-	File base_file = null;
-	
-	/** The current XMLBase URI. We start with an empty "dummy" URL. **/
-	URL current_xmlbase_uri = null;
+	Object current_xmlbase;
 
-	/** This is a stack of xml:base attributes which belong to our ancestors **/
 	Stack xmlbase_stack = new Stack();
 
-	Hashtable namespace_table = new Hashtable();
+	Vector xinclude_elements = new Vector();
 
 	Object monitor_key;
 
@@ -168,131 +207,123 @@ class XIncludeProcessorWorker {
 		request = (HttpServletRequest)parameters.get("request");
 		monitor_key = Utils.encode(request);
 		String basename = Utils.getBasename(request,context);
-		base_file = new File((new File(basename)).getParent());
+		current_xmlbase = new File((new File(basename)).getParent());
 	}
 
 	void process() throws Exception {
 		Element element = document.getDocumentElement();
-		/** FIXME - why doesn't Xerces let us use node.getNamespaceURI()??? **/
-		NamedNodeMap attributes = element.getAttributes();
-		int length = attributes.getLength();
-		for (int i=0; i<length; i++) {
-			Attr attr = (Attr)attributes.item(i);
-			String name = attr.getName();
-			if (name.length() >= 6 && name.substring(0,6).equals("xmlns:")) {
-				String prefix = name.substring(6);
-				String uri = attr.getValue();
-				namespace_table.put(prefix,uri);
+		scan(element,null);
+		Enumeration e = xinclude_elements.elements();
+		while (e.hasMoreElements()) {
+			XIncludeElement xinclude = (XIncludeElement)e.nextElement();
+			Object object = processXIncludeElement(xinclude);
+			if (object instanceof Node) {
+				Node node = (Node)object;
+				xinclude.parent.replaceChild(node,xinclude.element);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					xmlbase_stack.push(xinclude.base);
+					scan((Element)node,xinclude.parent);
+					xmlbase_stack.pop();
+				}
+			} else if (object instanceof Node[]) {
+				Node ary[] = (Node[])object;
+				for (int i=0; i<ary.length; i++) {
+					xinclude.parent.insertBefore(ary[i],xinclude.element);
+				}
+				xinclude.parent.removeChild(xinclude.element);
+				for (int i=0; i<ary.length; i++) {
+					xmlbase_stack.push(xinclude.base);
+					if (ary[i].getNodeType() == Node.ELEMENT_NODE) {
+						scan((Element)ary[i],xinclude.parent);
+					}
+					xmlbase_stack.pop();
+				}
+
 			}
 		}
-		process(element,null);
 	}
 
-	void process(Element element, Element parent) throws Exception {
+	void scan(Element element, Element parent) throws Exception {
 		String name = element.getLocalName();
 		String uri = element.getNamespaceURI();
 		String prefix = element.getPrefix();
 		String value;
 		boolean xmlbase_attribute = false;
-		if ((value = element.getAttributeNS(processor.XMLBASE_NAMESPACE_URI,processor.XMLBASE_ATTRIBUTE)) != null) {
-			startXMLBaseAttribute(value);
+		if (element.hasAttributeNS(processor.XMLBASE_NAMESPACE_URI,processor.XMLBASE_ATTRIBUTE)) {
+			xmlbase_stack.push(current_xmlbase);
+			current_xmlbase = new URL(element.getAttributeNS(processor.XMLBASE_NAMESPACE_URI,processor.XMLBASE_ATTRIBUTE));
 			xmlbase_attribute = true;
 		}
-		if (uri != null && uri.equals(processor.XINCLUDE_NAMESPACE_URI) && name.equals(processor.XINCLUDE_INCLUDE_ELEMENT)) {
-			String href = element.getAttribute(processor.XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
-			String parse = element.getAttribute(processor.XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
-			Object object = processXIncludeElement(element, href, parse);
-			if (object instanceof Node) {
-				Node node = (Node)object;
-				parent.replaceChild(node,element);
-				if (node.getNodeType() == Node.ELEMENT_NODE) {
-					element = (Element)node;
-				} else {
-					return;
+		if (!(scanForXInclude(element,parent))) {
+			for (Node child = element.getFirstChild(); child != null; child = child.getNextSibling()) {
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					scan((Element)child,element);
 				}
-			} else if (object instanceof Node[]) {
-				Node ary[] = (Node[])object;
-				for (int i=0; i<ary.length; i++) {
-					parent.insertBefore(ary[i],element);
-				}
-				parent.removeChild(element);
-				for (int i=0; i<ary.length ;i++) {
-					if (ary[i].getNodeType() == Node.ELEMENT_NODE) {
-						process((Element)ary[i],parent);
-					}
-				}
-				return;
-			}
-		}
-		NodeList child_nodes = element.getChildNodes();
-		int length = child_nodes.getLength();
-		Node ary[] = new Node[length];
-		for (int i=0; i<length; i++) {
-			ary[i] = child_nodes.item(i);
-		}
-		for (int i=0; i<length; i++) {
-			if (ary[i].getNodeType() == Node.ELEMENT_NODE) {
-				process((Element)ary[i],element);
 			}
 		}
 		if (xmlbase_attribute) {
-			endXMLBaseAttribute();
+			current_xmlbase = xmlbase_stack.pop();
 		}
 	}
 
-	void startXMLBaseAttribute(String value) throws MalformedURLException {
-		if (current_xmlbase_uri != null) {
-			xmlbase_stack.push(current_xmlbase_uri);
+	boolean scanForXInclude(Element element, Element parent) {
+		if (element.hasAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_HREF_ATTRIBUTE) && element.hasAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_PARSE_ATTRIBUTE)) {
+			String href = element.getAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_HREF_ATTRIBUTE);
+			String parse = element.getAttributeNS(processor.XINCLUDE_NAMESPACE_URI,processor.XINCLUDE_PARSE_ATTRIBUTE);
+			xinclude_elements.addElement(new XIncludeElement(element,parent,href,parse,current_xmlbase));
+			return true;
 		}
-		System.err.println("URL IS "+value);
-		current_xmlbase_uri = new URL(value);
+		return false;
 	}
 
-	void endXMLBaseAttribute() {
-		current_xmlbase_uri = (URL)xmlbase_stack.pop();
-	}
-
-	Object processXIncludeElement(Element element, String href, String parse) throws Exception {
-		String suffix;
-		int index = href.indexOf('#');
-		if (index < 0) {
-			suffix = "";
-		} else {
-			suffix = href.substring(index+1);
-			href = href.substring(0,index);
-		}
-		Object content;
-		String system_id;
-		Object local;
+	Object processXIncludeElement(XIncludeElement xinclude) throws Exception {
+		Object content = null;
+		String system_id = null;
+		Object local = null;
 		try {
-			if (href.charAt(0) == '/') {
-				local = new File(Utils.getRootpath(request,context)+href);
+			if (xinclude.href.equals("")) {
+				if (xinclude.xpath == null) {
+					throw new ProcessorException("Invalid xinclude element: "+xinclude+": no href, no valid suffix");
+				}
+				NodeList list = XPathAPI.selectNodeList(document,xinclude.xpath);
+				int length = list.getLength();
+				Node ary[] = new Node[length];
+				for (int i=0; i<length; i++) {
+					ary[i] = list.item(i).cloneNode(true);
+				}
+				return ary;
+			} else if (xinclude.href.charAt(0) == '/') {
+				/** local absolute URI, e.g. /foo.xml **/
+				local = new File(Utils.getRootpath(request,context),xinclude.href);
 				system_id = ((File)local).getAbsolutePath();
 				content = new FileReader((File)local);
-			} else if (href.indexOf("://") >= 0) {
-				local = new URL(href);
+			} else if (xinclude.href.indexOf("://") >= 0) {
+				/** absolute URI, e.g. http://example.com/foo.xml **/
+				local = new URL(xinclude.href);
 				system_id = local.toString();
 				content = ((URL)local).getContent();
-			} else if (current_xmlbase_uri != null) {
-				local = new URL(current_xmlbase_uri,href);
+			} else if (xinclude.base instanceof URL) {
+				/** relative URI, relative to XML Base URI **/
+				local = new URL((URL)xinclude.base,xinclude.href);
 				system_id = local.toString();
 				content = ((URL)local).getContent();
-			} else {
-				local = new File(Utils.getBasepath(request,context)+href);
-				system_id = local.toString();
+			} else if (xinclude.base instanceof File) {
+				/** relative URI, relative to XML file in filesystem **/
+				local = new File((File)xinclude.base,xinclude.href);
+				system_id = ((File)local).getAbsolutePath();
 				content = new FileReader((File)local);
 			}
 			processor.monitored_table.put(monitor_key,"");
 			processor.monitor.watch(monitor_key,local);
 		} catch (MalformedURLException e) {
-			throw new ProcessorException("Could not include document: "+href+" is a malformed URL.");
+			throw new ProcessorException("Invalid xinclude element: "+xinclude+": malformed URL");
 		}
 		Object result = null;
-		if (parse.equals("text")) {
+		if (xinclude.parse.equals("text")) {
 			if (content instanceof Reader) {
 				Reader reader = (Reader)content;
 				int read;
-				char ary[] = new char[1024];
+				char ary[] = new char[processor.BUFFER_SIZE];
 				StringBuffer sb = new StringBuffer();
 				if (reader != null) {
 					while ((read = reader.read(ary)) != -1) {
@@ -305,7 +336,7 @@ class XIncludeProcessorWorker {
 				InputStream input = (InputStream)content;
 				InputStreamReader reader = new InputStreamReader(input);
 				int read;
-				char ary[] = new char[1024];
+				char ary[] = new char[processor.BUFFER_SIZE];
 				StringBuffer sb = new StringBuffer();
 				if (reader != null) {
 					while ((read = reader.read(ary)) != -1) {
@@ -315,7 +346,7 @@ class XIncludeProcessorWorker {
 				}
 				result = document.createTextNode(sb.toString());
 			}
-		} else if (parse.equals("xml")) {
+		} else if (xinclude.parse.equals("xml")) {
 			InputSource input;
 			if (content instanceof Reader) {
 				input = new InputSource((Reader)content);
@@ -330,9 +361,8 @@ class XIncludeProcessorWorker {
 				included_document = parser.parse(input,false);
 				stripDocumentTypeNodes(included_document.getDocumentElement());
 			} catch (Exception e) {}
-			if (suffix.startsWith("xpointer(") && suffix.endsWith(")")) {
-				String xpath = suffix.substring(9,suffix.length()-1);
-				NodeList list = XPathAPI.selectNodeList(included_document,xpath);
+			if (xinclude.xpath != null) {
+				NodeList list = XPathAPI.selectNodeList(included_document,xinclude.xpath);
 				int length = list.getLength();
 				Node ary[] = new Node[length];
 				for (int i=0; i<length; i++) {
