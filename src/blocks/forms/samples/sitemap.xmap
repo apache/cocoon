@@ -22,7 +22,7 @@
     <map:generator name="form" src="org.apache.cocoon.forms.generation.FormsGenerator"/>
   </map:generators>
 
-  <map:transformers default="xalan">    
+  <map:transformers default="xslt">    
     <map:transformer name="form" src="org.apache.cocoon.forms.transformation.FormsTemplateTransformer"/>
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="other">
