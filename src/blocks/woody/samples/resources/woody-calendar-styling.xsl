@@ -4,24 +4,17 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
-  
+
   <!--+
-      | This stylesheet is designed to be imported by 'woody-samples-styling.xsl'.
-      | Uncomment this variable declaration if you need to use it by itself.
-      |
-      |      <xsl:param name="resources-uri">resources</xsl:param>
+      | This stylesheet is designed to be included by 'woody-advanced-styling.xsl'.
       +-->
 
-  <!-- must be called in <head> to load calendar script and setup the CSS -->
-  <xsl:template name="woody-calendar-head">
-    <!-- assume these have been loaded by woody-field-styling
-      <script src="{$resources-uri}/mattkruse-lib/PopupWindow.js" language="JavaScript" type="text/javascript"/>
-      <script src="{$resources-uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript" type="text/javascript"/>
-    -->
+  <!-- Location of the resources directory, where JS libs and icons are stored -->
+  <xsl:param name="resources-uri">resources</xsl:param>
+
+  <xsl:template match="head" mode="woody-calendar">
     <script src="{$resources-uri}/mattkruse-lib/CalendarPopup.js" language="JavaScript" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/date.js" language="JavaScript" type="text/javascript"/>
-
-
     <script language="JavaScript" type="text/javascript">
       // Setup calendar
       var woody_calendar = CalendarPopup('woody_calendarDiv');
@@ -30,16 +23,13 @@
       woody_calendar.showYearNavigationInput();
       woody_calendar.setCssPrefix("woody_");
     </script>
-  </xsl:template>
-  
-  <xsl:template name="woody-calendar-css">
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/woody-calendar.css"/>
   </xsl:template>
 
   <!--+
       | must be called in <body> 
       +-->
-  <xsl:template name="woody-calendar-body">
+  <xsl:template match="body" mode="woody-calendar">
     <div id="woody_calendarDiv"/>
   </xsl:template>
 

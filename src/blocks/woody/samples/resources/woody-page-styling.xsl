@@ -5,11 +5,17 @@
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
 
-  <xsl:template name="woody-page-head">
-    <!-- only woody_showTab is needed here. Assume woody-lib.js is loaded by the field-styling -->
+  <!--+
+      | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
+      +-->
+  <xsl:template match="head" mode="woody-page">
+    <!--+ 'woody-page-styling.xsl' relies on 'woody-field-styling.xsl' for the
+        | inclusion of the correct JS and CSS files. To fix it, we have to
+        | separate the page specific parts into its own files.
+        +-->
   </xsl:template>
 
-  <xsl:template name="woody-page-body"/>
+  <xsl:template match="body" mode="woody-page"/>
 
   <!--
     wi:group : default is to enclose items in a div
