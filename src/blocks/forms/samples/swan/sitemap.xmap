@@ -116,7 +116,7 @@
       </map:match>
 
       <map:match pattern="resources/**">
-        <map:read src="../{0}"/>
+        <map:read src="resource://org/apache/cocoon/forms/{0}"/>
       </map:match>
  
       <map:match pattern="swan/resources/**">
