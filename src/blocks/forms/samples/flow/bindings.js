@@ -69,6 +69,16 @@ function bindingSample(sampleCode, backendType) {
     // the back-end model itself however depends on sample and type. 
     var bean = createBeanForSample(backendType, sampleCode);
 	
+	if (bean == null) {
+        cocoon.sendPage("textresult-display-pipeline.jx", {
+            title: "Contact list",
+            text: "Sorry the sample '" + sampleCode +
+                "' is not yet available for the backend '" +
+                backendType + "'"
+            }
+        );
+        return;
+    }
     // loads the backend-bean into the form
     form.load(bean);
 
@@ -116,7 +126,11 @@ function createBeanForSample(backendType, sampleCode) {
     } else {
         var factoryFunction = "create" + backendType + "BeanFor" + sampleCode;
         print("Using the bean returned by function " + factoryFunction + "()");
-        return this[factoryFunction].apply();
+        if (this[factoryFunction]) {
+            return this[factoryFunction].apply();
+        } else {
+            return null; // not available
+        }
     }
 }
 
