@@ -139,7 +139,7 @@ import org.xml.sax.SAXParseException;
  * Child Elements:
  *
  * <dl>
- * <dt>&lt;property key="propertyKey" value="propertyValue"/&gt; (optional; 0..n)</dt>
+ * <dt>&lt;property name="propertyName" value="propertyValue"/&gt; (optional; 0..n)</dt>
  * <dd>An additional property to pass along to the Velocity template
  * engine during initialization</dd>
  *
@@ -152,7 +152,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: VelocityGenerator.java,v 1.13 2004/03/05 13:02:25 bdelacretaz Exp $
+ * @version CVS $Id: VelocityGenerator.java,v 1.14 2004/03/06 00:09:52 joerg Exp $
  */
 public class VelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {
