@@ -116,7 +116,7 @@
         </copy>
     </target>
 
-    <target name="cocoon:classesToJAR" if="cond.classesToJAR">
+    <target name="cocoon:classesToJAR" if="cocoon.cond.classesToJAR">
         <zip destfile="${cocoon.build.webapp.dir}/WEB-INF/lib/_project.jar">
             <fileset dir="${cocoon.build.webapp.dir}/WEB-INF/classes"/>
         </zip>
