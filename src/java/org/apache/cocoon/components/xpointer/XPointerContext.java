@@ -54,7 +54,7 @@ import org.w3c.dom.Document;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.xpath.PrefixResolver;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -72,7 +72,7 @@ public class XPointerContext implements PrefixResolver {
     private Logger logger;
     private String xpointer;
     private HashMap prefixes = new HashMap();
-    private ComponentManager componentManager;
+    private ServiceManager manager;
 
     /**
      * Constructs an XPointerContext object.
@@ -81,11 +81,11 @@ public class XPointerContext implements PrefixResolver {
      * @param source the source into which the xpointer points
      * @param xmlConsumer the consumer to which the result of the xpointer evaluation should be send
      */
-    public XPointerContext(String xpointer, Source source, XMLConsumer xmlConsumer, Logger logger, ComponentManager componentManager) {
+    public XPointerContext(String xpointer, Source source, XMLConsumer xmlConsumer, Logger logger, ServiceManager manager) {
         this.source = source;
         this.xmlConsumer = xmlConsumer;
         this.logger = logger;
-        this.componentManager = componentManager;
+        this.manager = manager;
         this.xpointer = xpointer;
 
         prefixes.put("xml", "http://www.w3.org/XML/1998/namespace");
@@ -120,8 +120,8 @@ public class XPointerContext implements PrefixResolver {
         return xpointer;
     }
 
-    public ComponentManager getComponentManager() {
-        return componentManager;
+    public ServiceManager getServiceManager() {
+        return manager;
     }
 
     public void addPrefix(String prefix, String namespace) throws SAXException {

@@ -50,9 +50,9 @@
 */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.cocoon.ProcessingException;
@@ -84,11 +84,11 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.11 2004/02/06 15:41:21 sylvain Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.12 2004/02/07 15:20:09 joerg Exp $
  */
-public class XIncludeTransformer extends AbstractTransformer implements Composable {
+public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     private XIncludePipe xIncludePipe;
 
     public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
@@ -122,7 +122,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
         xIncludePipe.setLexicalHandler(handler);
     }
 
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 

@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.components.language.markup;
 
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -66,7 +66,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: NamedLogicsheet.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
+ * @version CVS $Id: NamedLogicsheet.java,v 1.3 2004/02/07 15:20:09 joerg Exp $
  */
 public class NamedLogicsheet extends Logicsheet {
 
@@ -80,7 +80,7 @@ public class NamedLogicsheet extends Logicsheet {
      */
     private String prefix;
 
-    public NamedLogicsheet(String systemId, ComponentManager manager, SourceResolver resolver)
+    public NamedLogicsheet(String systemId, ServiceManager manager, SourceResolver resolver)
         throws IOException, ProcessingException, SourceException, SAXException
     {
         super(systemId, manager, resolver);

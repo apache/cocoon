@@ -50,11 +50,10 @@
 */
 package org.apache.cocoon.components.xscript;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
@@ -80,10 +79,10 @@ import java.util.Date;
  * Source object.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XScriptObject.java,v 1.2 2003/03/11 14:42:54 vgritsenko Exp $
+ * @version CVS $Id: XScriptObject.java,v 1.3 2004/02/07 15:20:09 joerg Exp $
  * @since August  4, 2001
  */
-public abstract class XScriptObject implements Source, Composable {
+public abstract class XScriptObject implements Source, Serviceable {
 
     /**
      * The creation date of this <code>XScriptObject</code>.
@@ -96,7 +95,7 @@ public abstract class XScriptObject implements Source, Composable {
      */
     XScriptManager xscriptManager;
 
-    protected ComponentManager componentManager;
+    protected ServiceManager serviceManager;
 
     /**
      * Creates a new <code>XScriptObject</code> instance.
@@ -108,8 +107,8 @@ public abstract class XScriptObject implements Source, Composable {
         ((XScriptManagerImpl) this.xscriptManager).register(this);
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.componentManager = manager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.serviceManager = manager;
     }
 
     /**
@@ -132,12 +131,12 @@ public abstract class XScriptObject implements Source, Composable {
             StreamResult result = new StreamResult(writer);
 
             XSLTProcessor transformer
-                    = (XSLTProcessor) componentManager.lookup(XSLTProcessor.ROLE);
+                    = (XSLTProcessor) serviceManager.lookup(XSLTProcessor.ROLE);
 
             try {
                 transformer.transform(this, stylesheet, params, result);
             } finally {
-                componentManager.release(transformer);
+                serviceManager.release(transformer);
             }
 
             return new XScriptObjectResult(xscriptManager, writer.toString());
@@ -158,7 +157,7 @@ public abstract class XScriptObject implements Source, Composable {
     public void toSAX(ContentHandler handler) throws SAXException {
         SAXParser parser = null;
         try {
-            parser = (SAXParser) componentManager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) serviceManager.lookup(SAXParser.ROLE);
             InputSource source = getInputSource();
             parser.parse(source, handler);
         } catch (SAXException e) {
@@ -167,7 +166,7 @@ public abstract class XScriptObject implements Source, Composable {
             throw new SAXException(e);
         } finally {
             if (parser != null) {
-                componentManager.release((Component)parser);
+                serviceManager.release(parser);
             }
         }
     }

@@ -54,13 +54,13 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
@@ -75,23 +75,22 @@ import org.apache.excalibur.store.Store;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.8 2003/12/11 18:20:08 sylvain Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.9 2004/02/07 15:20:09 joerg Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
-implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
+implements Cache, ThreadSafe, Serviceable, Disposable, Parameterizable {
 
     /** The store containing the cached responses */
     protected Store store;
 
-    /** The component manager */
-    protected ComponentManager manager;
+    /** The service manager */
+    protected ServiceManager manager;
 
     /**
-     * Composable Interface
+     * Serviceable Interface
      */
-    public void compose (ComponentManager manager)
-    throws ComponentException {
+    public void service (ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -176,8 +175,8 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
         String storeName = parameters.getParameter("store", Store.ROLE);
         try {
             this.store = (Store)this.manager.lookup(storeName);
-        } catch (ComponentException ce) {
-            throw new ParameterException("Unable to lookup store: " + storeName, ce);
+        } catch (ServiceException e) {
+            throw new ParameterException("Unable to lookup store: " + storeName, e);
         }
     }
 

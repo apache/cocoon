@@ -52,9 +52,9 @@ package org.apache.cocoon.components.language.markup;
 
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
 import org.apache.excalibur.xml.xslt.XSLTProcessorException;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.source.Source;
@@ -84,7 +84,7 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: Logicsheet.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
+ * @version CVS $Id: Logicsheet.java,v 1.3 2004/02/07 15:20:09 joerg Exp $
  */
 public class Logicsheet extends AbstractLogEnabled
 {
@@ -104,11 +104,11 @@ public class Logicsheet extends AbstractLogEnabled
     protected Map namespaceURIs = new HashMap();
 
     /**
-     * The ComponentManager of this instance.
+     * The ServiceManager of this instance.
      */
-    private ComponentManager manager;
+    private ServiceManager manager;
 
-    public Logicsheet(Source source, ComponentManager manager, SourceResolver resolver)
+    public Logicsheet(Source source, ServiceManager manager, SourceResolver resolver)
         throws SAXException, IOException, ProcessingException
     {
         this.resolver = resolver;
@@ -116,7 +116,7 @@ public class Logicsheet extends AbstractLogEnabled
         this.manager = manager;
     }
 
-    public Logicsheet(String systemId, ComponentManager manager, SourceResolver resolver)
+    public Logicsheet(String systemId, ServiceManager manager, SourceResolver resolver)
         throws SAXException, IOException, SourceException, ProcessingException
     {
         this.resolver = resolver;
@@ -167,7 +167,7 @@ public class Logicsheet extends AbstractLogEnabled
             XMLFilter saveNSFilter = new SaveNamespaceFilter(namespaceURIs);
             return xsltProcessor.getTransformerHandler(source, saveNSFilter);
 
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             throw new ProcessingException("Could not obtain XSLT processor", e);
         } catch (MalformedURLException e) {
             throw new ProcessingException("Could not resolve " + this.systemId, e);

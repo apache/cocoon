@@ -50,8 +50,7 @@
 */
 package org.apache.cocoon.components.xpointer;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -73,7 +72,7 @@ public class XPointerPart implements PointerPart {
 
     public boolean process(XPointerContext xpointerContext) throws SAXException, ResourceNotFoundException {
         Document document = xpointerContext.getDocument();
-        ComponentManager manager = xpointerContext.getComponentManager();
+        ServiceManager manager = xpointerContext.getServiceManager();
         XPathProcessor xpathProcessor = null;
         try {
             try {
@@ -100,7 +99,7 @@ public class XPointerPart implements PointerPart {
             }
         } finally {
             if (xpathProcessor != null)
-                manager.release((Component)xpathProcessor);
+                manager.release(xpathProcessor);
         }
     }
 }
