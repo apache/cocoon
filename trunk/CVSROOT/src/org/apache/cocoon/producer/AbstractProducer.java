@@ -1,4 +1,4 @@
-/*-- $Id: AbstractProducer.java,v 1.7 2000-02-13 18:29:40 stefano Exp $ -- 
+/*-- $Id: AbstractProducer.java,v 1.8 2000-04-04 11:12:49 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,8 +55,8 @@ import org.w3c.dom.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.*;
 import org.apache.cocoon.parser.*;
-import org.apache.cocoon.parser.*;
 import org.apache.cocoon.framework.*;
+import org.xml.sax.InputSource;
 
 /**
  * This abstract class implements the Producer interface and provides
@@ -65,12 +65,13 @@ import org.apache.cocoon.framework.*;
  * seen as a transparent "mediator" between stream and DOM realms.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-02-13 18:29:40 $
+ * @version $Revision: 1.8 $ $Date: 2000-04-04 11:12:49 $
  */
 
 public abstract class AbstractProducer extends AbstractActor implements Producer, Defaults {
 
     protected Object context;
+    protected Parser parser;
     
     /**
      * Initialize the producer setting its context.
@@ -78,6 +79,7 @@ public abstract class AbstractProducer extends AbstractActor implements Producer
     public void init(Director director) {
         super.init(director);
         this.context = director.getActor("context");
+        this.parser = (Parser) director.getActor("parser");
     }    
     
     /**
@@ -89,10 +91,9 @@ public abstract class AbstractProducer extends AbstractActor implements Producer
      * never called directly by Cocoon.
      */
     public Document getDocument(HttpServletRequest request) throws Exception {
-        Parser parser = (Parser) director.getActor("parser");
-        org.xml.sax.InputSource input = new org.xml.sax.InputSource();
+        InputSource input = new InputSource();
         input.setSystemId(this.getPath(request));
-        input.setCharacterStream(getStream(request));
+        input.setCharacterStream(this.getStream(request));
         return parser.parse(input);
     }
     

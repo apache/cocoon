@@ -1,4 +1,4 @@
-/*-- $Id: ProducerFromFile.java,v 1.7 2000-02-13 18:29:41 stefano Exp $ -- 
+/*-- $Id: ProducerFromFile.java,v 1.8 2000-04-04 11:12:49 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,6 +53,8 @@ package org.apache.cocoon.producer;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import org.w3c.dom.*;
+import org.xml.sax.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.*;
@@ -60,23 +62,26 @@ import org.apache.cocoon.framework.*;
 
 /**
  * This class implements the producer interface in order to produce a document
- * based on its tranlated path. This should work on most of the servlet engine 
- * available, even if we should use getResource().
+ * based on its tranlated path.
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-02-13 18:29:41 $
+ * @version $Revision: 1.8 $ $Date: 2000-04-04 11:12:49 $
  */
 
 public class ProducerFromFile extends AbstractProducer implements Status {
     
     private Monitor monitor = new Monitor(10);
-    
-    public Reader getStream(HttpServletRequest request) throws IOException {
-        File file = new File(Utils.getBasename(request, this.context));
-        this.monitor.watch(Utils.encode(request), file);
-        return new InputStreamReader(new FileInputStream(file));
-    }
 
+    public Document getDocument(HttpServletRequest request) throws Exception {
+        String file = Utils.getBasename(request, this.context);
+        this.monitor.watch(Utils.encode(request), new File(file));
+        return parser.parse(new InputSource(file));
+    }    
+
+    public Reader getStream(HttpServletRequest request) throws Exception {
+        throw new Exception("this method should never be called!");
+    }
+    
     public String getPath(HttpServletRequest request) {
         String basename = Utils.getBasename(request, this.context);
         return basename.substring(0, basename.lastIndexOf('/') + 1);
