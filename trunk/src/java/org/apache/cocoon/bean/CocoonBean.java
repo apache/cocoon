@@ -51,19 +51,21 @@ package org.apache.cocoon.bean;
 
 import org.apache.avalon.fortress.ContainerManager;
 import org.apache.avalon.fortress.impl.DefaultContainerManager;
-import org.apache.avalon.fortress.impl.DefaultContainer;
 import org.apache.avalon.fortress.util.FortressConfig;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.components.CocoonContainer;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * CocoonBean does XYZ
@@ -75,7 +77,7 @@ public class CocoonBean
 {
     private final FortressConfig m_confBuilder;
     private ContainerManager m_contManager;
-
+    private Logger m_initializationLogger;
     private String m_contextURI = Constants.DEFAULT_CONTEXT_DIR;
     private File m_workDirectory = new File( System.getProperty( "java.io.tmpdir" ) );
     private String m_logConfigURI = m_contextURI + File.separator + "cocoon.xlog";
@@ -91,6 +93,8 @@ public class CocoonBean
     public CocoonBean()
     {
         m_confBuilder = new FortressConfig();
+        m_parentClassLoader = Thread.currentThread().getContextClassLoader();
+        m_initializationLogger = new NullLogger();
         m_contManager = null;
     }
 
@@ -109,9 +113,29 @@ public class CocoonBean
         }
 
         CocoonContainer container = (CocoonContainer)m_contManager.getContainer();
+        ServiceManager manager = container.getServiceManager();
 
-        return container;
+        Processor rootProcessor = null;
+        try
+        {
+            rootProcessor = (Processor)manager.lookup(Processor.ROLE);
+        }
+        catch ( ServiceException e )
+        {
+            throw new CascadingRuntimeException("Error retrieving root processor", e);
+        }
+
+        return rootProcessor;
     }
+
+
+    public Logger getInitializationLogger()
+    {
+        return m_initializationLogger; }
+
+    public void setInitializationLogger( Logger initializationLogger )
+    {
+        m_initializationLogger = initializationLogger; }
 
     public File getWorkDirectory()
     {
@@ -225,6 +249,10 @@ public class CocoonBean
 
     public void initialize() throws Exception
     {
+        forceLoadClasses();
+
+        m_initializationLogger.debug("Starting up Cocoon");
+
         m_confBuilder.setContextDirectory( m_contextURI );
         m_confBuilder.setContainerConfiguration( m_configURI );
         m_confBuilder.setLoggerCategory( m_logCategory );
@@ -237,15 +265,37 @@ public class CocoonBean
         m_confBuilder.setCommandFailureHandlerClass( CocoonCommandFailureHandler.class );
         m_confBuilder.setContainerClass(CocoonContainer.class);
 
-        // TODO: implement these.  Share pool manager accross invocations
+        // TODO: implement this.
         //m_confBuilder.setLifecycleExtensionManager( m_lifecycleExtensions );
 
-        m_contManager = new DefaultContainerManager( m_confBuilder.getContext() );
+        m_contManager = new DefaultContainerManager( m_confBuilder.getContext(), m_initializationLogger );
         ContainerUtil.initialize( m_contManager );
+    }
+
+    private void forceLoadClasses()
+    {
+        m_initializationLogger.debug("Loading classes");
+
+        Iterator it = m_classForceLoadList.iterator();
+        while (it.hasNext())
+        {
+            String className = (String) it.next();
+            m_initializationLogger.debug("Loading class: " + className);
+
+            try
+            {
+                m_parentClassLoader.loadClass(className);
+            }
+            catch (Exception e)
+            {
+                m_initializationLogger.warn("Could not load class: " + className, e);
+            }
+        }
     }
 
     public void dispose()
     {
+        m_initializationLogger.debug("Shutting down Cocoon");
         ContainerUtil.dispose( m_contManager );
     }
 
