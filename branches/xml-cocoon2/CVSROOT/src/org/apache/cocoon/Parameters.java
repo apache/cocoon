@@ -9,12 +9,14 @@ package org.apache.cocoon;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import org.apache.arch.config.Configuration;
+import org.apache.arch.config.ConfigurationException;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:04 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 07:11:35 $
  */
 public class Parameters {
     private Hashtable parameters=null;
@@ -34,7 +36,7 @@ public class Parameters {
      *
      * @return The previous value of the parameter or <b>null</b>.
      */
-    public String setParameter(String name, String value) {
+    private String setParameter(String name, String value) {
         if (name==null) return(null);
         if (value==null) return((String)this.parameters.remove(name));
         return((String)this.parameters.put(name,value));
@@ -155,13 +157,30 @@ public class Parameters {
      *
      * @return This <code>Parameters</code> instance.
      */
-    public Parameters merge(Parameters conf) {
-        Enumeration e=conf.getParameterNames();
+    public Parameters merge(Parameters param) {
+        Enumeration e=param.getParameterNames();
         while (e.hasMoreElements()) {
             String name=(String)e.nextElement();
-            String value=conf.getParameter(name);
-            this.setParameter(new String(name),new String(value));
+            String value=param.getParameter(name);
+            this.setParameter(name,value);
         }
         return(this);
+    }
+    
+    /**
+     * Create a <code>Parameters</code> object from a <code>Configuration</code>
+     * object.
+     */
+    public static Parameters fromConfiguration(Configuration conf)
+    throws ConfigurationException {
+        Enumeration e=conf.getConfigurations("parameter");
+        Parameters param=new Parameters();
+        while (e.hasMoreElements()) {
+            Configuration child=(Configuration)e.nextElement();
+            String name=child.getAttribute("name");
+            String value=child.getAttribute("value");
+            param.setParameter(name,value);
+        }
+        return(param);
     }
 }
