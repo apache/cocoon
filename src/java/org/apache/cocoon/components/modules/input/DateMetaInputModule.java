@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import java.util.Map;
  * "input-module" holds InputModule to obtain the string from.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DateMetaInputModule.java,v 1.4 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DateMetaInputModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -133,10 +133,10 @@ public class DateMetaInputModule extends AbstractMetaModule implements ThreadSaf
 
         // done reading configuration
         // setup modules and read values
-        Iterator enum = getNames(objectModel,
-                                 this.input, this.defaultInput, inputConfig,
-                                 null, inputName, mConf);
-        return enum;
+        Iterator enumeration = getNames(objectModel,
+                                    this.input, this.defaultInput, inputConfig,
+                                    null, inputName, mConf);
+        return enumeration;
      }
 
 
