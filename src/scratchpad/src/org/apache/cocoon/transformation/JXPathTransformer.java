@@ -68,6 +68,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.generation.Generator;
 import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathContextFactory;
 import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.jxpath.Variables;
 import org.apache.excalibur.source.Source;
@@ -93,6 +94,9 @@ import org.xml.sax.helpers.AttributesImpl;
  */
 public class JXPathTransformer
 extends AbstractSAXTransformer implements Initializable, Generator {
+
+    private static final JXPathContextFactory 
+        jxpathContextFactory = JXPathContextFactory.newInstance();
 
     public static final String JXPATH_NAMESPACE_URI  = 
 	"http://cocoon.apache.org/transformation/jxpath/1.0";
@@ -421,8 +425,8 @@ extends AbstractSAXTransformer implements Initializable, Generator {
     }
 
     private void pushContext(Object contextObject) {
-        JXPathContext ctx;
-        contextStack.push(ctx = JXPathContext.newContext(contextObject));
+        JXPathContext ctx = 
+            jxpathContextFactory.newContext(null, contextObject);
         // Make web continuation available as an XPath variable 
         // you would typically access its id:
         // 
@@ -451,6 +455,7 @@ extends AbstractSAXTransformer implements Initializable, Generator {
                 public void undeclareVariable(String varName) {
                 }
             });
+        contextStack.push(ctx);
     }
 
     private void popContext() {
