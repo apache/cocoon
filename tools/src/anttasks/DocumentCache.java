@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
 public final class DocumentCache {
 
     /** Cache the read configuration files (Documents) */
-    protected static Map fileCache = new HashMap();
+    protected final static Map fileCache = new HashMap();
     
     /** The document builder */
     private static DocumentBuilder builder;
@@ -90,7 +90,7 @@ public final class DocumentCache {
                 if ( task != null ) {
                     task.log("Reading: " + fileName, Project.MSG_DEBUG);
                 }
-                document = builder.parse(file);
+                document = builder.parse(fileName);
             } catch (IOException e) {
                 throw new BuildException("IOException: "+e);
             }                
