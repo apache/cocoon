@@ -69,7 +69,10 @@
       <istrue value="${exclude.validate.config}"/>
     </condition>
     <condition property="unless.exclude.validate.xdocs">
-      <istrue value="${exclude.validate.xdocs}"/>
+      <or>
+        <istrue value="${exclude.validate.xdocs}"/>
+        <istrue value="${exclude.documentation}"/>
+      </or>
     </condition>
 
     <filter token="Name"                value="${fullname}"/>
