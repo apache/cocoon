@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.woody.datatype.convertor;
+package org.apache.cocoon.forms.datatype.convertor;
 
 import java.util.Locale;
 
-import org.apache.cocoon.woody.datatype.Sex;
+import org.apache.cocoon.forms.datatype.Sex;
 
 import junit.framework.TestCase;
 
 /**
  * Test case for the {@link EnumConvertor} class.
  * 
- * @version CVS $Id: EnumConvertorTestCase.java,v 1.1 2004/03/09 10:34:11 reinhard Exp $
+ * @version CVS $Id: EnumConvertorTestCase.java,v 1.1 2004/03/09 13:03:13 cziegeler Exp $
  */
 public class EnumConvertorTestCase extends TestCase {
 

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.woody.datatype.convertor;
+package org.apache.cocoon.forms.datatype.convertor;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.TestCase;
 
-import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.forms.Constants;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.ResourceSource;
 import org.w3c.dom.Document;
@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 /**
  * Test case for the {@link EnumConvertorBuilder} class.
  * 
- * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.1 2004/03/09 10:34:11 reinhard Exp $
+ * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.1 2004/03/09 13:03:13 cziegeler Exp $
  */
 public class EnumConvertorBuilderTestCase extends TestCase {
 

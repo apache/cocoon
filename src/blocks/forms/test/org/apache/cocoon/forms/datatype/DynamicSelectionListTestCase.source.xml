@@ -17,7 +17,7 @@
 
 <!--+
     |   Source file for DynamicSelectionList test case.
-    |   $Id: DynamicSelectionListTestCase.source.xml,v 1.1 2004/03/09 10:33:58 reinhard Exp $
+    |   $Id: DynamicSelectionListTestCase.source.xml,v 1.1 2004/03/09 13:03:10 cziegeler Exp $
     +-->
 
 <wd:selection-list xmlns:wd="http://apache.org/cocoon/woody/definition/1.0">
