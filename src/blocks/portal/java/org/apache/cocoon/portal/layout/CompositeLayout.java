@@ -59,21 +59,21 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayout.java,v 1.6 2003/05/26 13:18:19 cziegeler Exp $
+ * @version CVS $Id: CompositeLayout.java,v 1.7 2003/07/31 14:37:05 cziegeler Exp $
  */
 public interface CompositeLayout 
     extends Layout {
 
 	/**
 	 * Add indexed item to the itemList.
-	 * @param index, index for the position inside the list
-	 * @param item, item to add
+	 * @param index index for the position inside the list
+	 * @param item item to add
 	 */
     void addItem(int index, Item item);
 
 	/**
 	 * Add Item to the ItemList.
-	 * @param item, item to add
+	 * @param item item to add
 	 */
 	void addItem(Item item);
 
