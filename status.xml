@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.292 2004/04/02 20:22:07 upayavira Exp $:-->
+<!-- CVS $Id: status.xml,v 1.293 2004/04/02 20:52:47 joerg Exp $:-->
 
 <status>
  <developers>
@@ -212,19 +212,24 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="JH" type="update">
+     Changed blocks selection handling to allow more intuitive
+     include.block.blockname syntax in (local.)blocks.properties. Old syntax
+     exclude.block.blockname is still supported.
+   </action>
    <action dev="UV" type="update">
      Enabled use of nested sitemap variables, e.g. {request-param:{1}}.
    </action>
-     <action dev="AG" type="update">
+   <action dev="AG" type="update">
      Updated antlr to 2.7.3
    </action>
-    <action dev="AG" type="update">
+   <action dev="AG" type="update">
      Deprecated Tokenizer and the methods count(), matchStrings(),
-     repleaceTokens() and both split() in StringUtils. The functionality of all this
-     was replaced in favor of Apache commons.lang lib.
-     They will be removed in Cocoon 2.2
+     replaceTokens() and both split() in StringUtils. The functionality of all
+     this was replaced in favor of Apache commons-lang lib. They will be removed
+     in Cocoon 2.2
    </action>
-    <action dev="AG" type="update">
+   <action dev="AG" type="update">
      Updated batik to 1.5.1, db-ojb to 1.0RC6
    </action>
    <action dev="TC" type="remove">
@@ -232,6 +237,7 @@
    </action>
    <action dev="TC" type="remove">
      Removed precept block. Was dead code.
+   </action>
    <action dev="AG" type="update">
      Updated jdtcore to 2.1.3, update castor-xml to 0.9.5.3
    </action>
