@@ -24,7 +24,7 @@ import java.io.Serializable;
  * for an internal pipeline call.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: IdentifierCacheKey.java,v 1.1 2004/04/15 08:05:55 cziegeler Exp $
+ * @version CVS $Id$
  * @since 2.1.1
  */
 public class IdentifierCacheKey
@@ -78,7 +78,7 @@ public class IdentifierCacheKey
     public String toString() {
         if (this.toString == null) {
             StringBuffer buffer = new StringBuffer();
-            buffer.append("SCK:");
+            buffer.append("IK:");
             buffer.append(this.cacheKey);
             this.toString = buffer.toString();
         }
