@@ -32,14 +32,10 @@
   <!-- =========================== Pipelines ================================= -->
   <map:pipelines>
     <map:pipeline>
-      <map:match pattern="*">
-        <map:act type="TestBeanAction"/>
-        <map:generate src="test.xml"/>
-        <map:transform type="castor"/>  
-        <map:serialize/>
-      </map:match>  
+      <map:act type="TestBeanAction"/>
+      <map:generate src="test.xml"/>
+      <map:transform type="castor"/>  
+      <map:serialize type="xml"/>
     </map:pipeline>
   </map:pipelines>
 </map:sitemap>
-
-<!-- End of File -->
