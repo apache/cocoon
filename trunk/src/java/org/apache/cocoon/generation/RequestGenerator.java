@@ -81,28 +81,37 @@ import org.xml.sax.helpers.AttributesImpl;
  * <dt> <i>form-encoding</i> (optional)
  * <dd> The supposed encoding of the request parameter. Default is null.
  * <dt> <i>generate-attributes</i> (optional)
- * <dd> If true, also generates request attributes. Default is false.
+ * <dd> If true, request attributes were also included. Default is false.
  * </dl>
- * These configuration options supported in both declaration and use time. 
+ * These configuration options are supported at both declaration and use time.
+ * The configuration at use time takes priority over declaration time.
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.6 2003/09/25 12:59:53 vgritsenko Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.7 2003/09/25 17:20:19 joerg Exp $
  */
 public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 
-    /** The URI of the namespace of this generator. */
-    private static final String PREFIX = "h";
-    private static final String URI = "http://apache.org/cocoon/request/2.0";
+    /** The namespace prefix of this generator. */
+    private final static String PREFIX = "h";
+    /** The namespace URI of this generator. */
+    private final static String URI = "http://apache.org/cocoon/request/2.0";
 
+    /** The configured container encoding at declaration time. */
     private String global_container_encoding;
-    private String global_form_encoding;
-    private boolean global_generate_attributes;
-
+    /** The configured container encoding at use time. */
     private String container_encoding;
+
+    /** The configured form encoding at declaration time. */
+    private String global_form_encoding;
+    /** The configured form encoding at use time. */
     private String form_encoding;
+
+    /** The configuration for including request attributes at declaration time. */
+    private boolean global_generate_attributes;
+    /** The configuration for including request attributes at use time. */
     private boolean generate_attributes;
 
     public void parameterize(Parameters parameters)
@@ -130,6 +139,7 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
 
         this.contentHandler.startDocument();
         this.contentHandler.startPrefixMapping(PREFIX, URI);
+
         attribute(attr, "target", request.getRequestURI());
         attribute(attr, "source", (this.source != null ? this.source : ""));
         start("request", attr);
@@ -137,7 +147,7 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
         start("requestHeaders", attr);
         Enumeration headers = request.getHeaderNames();
         while (headers.hasMoreElements()) {
-            String header = (String) headers.nextElement();
+            String header = (String)headers.nextElement();
             attribute(attr, "name", header);
             start("header", attr);
             data(request.getHeader(header));
@@ -154,7 +164,7 @@ public class RequestGenerator extends ServiceableGenerator implements Parameteri
             String values[] = request.getParameterValues(parameter);
             if (values != null) {
                 for (int x = 0; x < values.length; x++) {
-                    start("value",attr);
+                    start("value", attr);
                     if (form_encoding != null) {
                         try {
                             data(values[x], container_encoding, form_encoding);
