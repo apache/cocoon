@@ -38,13 +38,12 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.6 2004/04/16 09:39:57 stephan Exp $
+ * @version CVS $Id: FormInstance.java,v 1.7 2004/04/24 00:00:42 joerg Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
     private Form form;
     private Binding binding;
-    private Widget formWidget;
     private Locale locale;
     private boolean isValid;
     private Object validator; // Used?
@@ -93,10 +92,8 @@ public class FormInstance extends AbstractContinuable {
         try {
             formMgr = (FormManager)getComponent(FormManager.ROLE);
             resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
-            Form form = formMgr.createForm(formDefinition);
+            this.form = formMgr.createForm(formDefinition);
             this.binding = null;
-            // this.formWidget = new Widget(form);  could not create instance
-            // this.local = cocoon.createPageLocal(); PageLocal ?
         } catch (Exception e) {
             throw new CascadingRuntimeException("Could not create form instance", e);
         } finally {
@@ -107,7 +104,7 @@ public class FormInstance extends AbstractContinuable {
     }
 
     public Widget getModel() {
-        return this.formWidget;
+        return this.form;
     }
 
     /**
