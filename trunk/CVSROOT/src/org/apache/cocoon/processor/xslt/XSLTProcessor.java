@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.7 2000-02-16 01:11:18 stefano Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.8 2000-02-23 00:50:48 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-02-16 01:11:18 $
+ * @version $Revision: 1.8 $ $Date: 2000-02-23 00:50:48 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -98,7 +98,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
 
         try {
             Object resource = getResource(document, path, browser);
-            Document stylesheet = getStylesheet(resource, document, request);
+            Document stylesheet = getStylesheet(resource, request);
             Document result = this.parser.createEmptyDocument();
             return transformer.transform(document, null, stylesheet, resource.toString(), result);
         } catch (PINotFoundException e) {
@@ -154,31 +154,22 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         }
     }
 
-    private Document getStylesheet(Object resource, Document document, HttpServletRequest request) throws ProcessorException {
+    private Document getStylesheet(Object resource, HttpServletRequest request) throws ProcessorException {
 
         try {
-            Document sheet;
-            String stylesheetKey = Utils.encode(request, true) + resource.toString();
-
-            if (this.hasChanged(stylesheetKey)) {
-                sheet = getDocument(resource);
-                this.store.hold(resource, sheet);
-                this.monitor.watch(stylesheetKey, resource);
+            Object o = this.store.get(resource);
+            if ((o != null) && (!this.hasChanged(request))) {
+                return (Document) o;
             } else {
-                Object o = this.store.get(resource);
-                if (o != null) {
-                    sheet = (Document) o;
-                } else {
-                    sheet = getDocument(resource);
-                    this.store.hold(resource, sheet);
-                    this.monitor.watch(stylesheetKey, resource);
-                }
+                Document sheet = getDocument(resource);
+                this.store.hold(resource, sheet);
+                this.monitor.watch(Utils.encode(request), resource);
+                return sheet;
             }
-
-            return sheet;
         } catch (Exception e) {
+            this.monitor.invalidate(request);
             throw new ProcessorException("Could not associate stylesheet to document: "
-                + " error reading " + resource + ": " + e.getMessage());
+                + " error reading " + resource + ": " + e);
         }
     }
 
@@ -200,7 +191,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
     }
 
     public boolean hasChanged(Object context) {
-        return this.monitor.hasChanged((String) context);
+        return this.monitor.hasChanged(Utils.encode((HttpServletRequest) context));
     }
 
     public String getStatus() {

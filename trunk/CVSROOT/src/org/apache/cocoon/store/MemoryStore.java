@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.7 2000-02-14 00:59:19 stefano Exp $ --
+/*-- $Id: MemoryStore.java,v 1.8 2000-02-23 00:50:50 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -48,6 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
  */
+
 package org.apache.cocoon.store;
 
 import java.io.*;
@@ -65,13 +66,18 @@ import org.apache.cocoon.framework.*;
  * sending a note about a method to do it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.7 $ $Date: 2000-02-14 00:59:19 $
+ * @version $Revision: 1.8 $ $Date: 2000-02-23 00:50:50 $
  */
 
-public class MemoryStore implements Store, Configurable, Status {
+public class MemoryStore implements Store, Status {
+
+    /**
+     * Indicates how much memory should be left free in the JVM for
+     * normal operation.
+     */
+    private static final int memory = 500000;
 
     private Runtime jvm;
-    private int memory;
     private Hashtable hashtable;
 
     class Container {
@@ -89,39 +95,6 @@ public class MemoryStore implements Store, Configurable, Status {
         this.hashtable = new Hashtable(101, 0.75f); // tune later on
     }
 
-    // !!!!!!!!!!!!!!!! check this method with more JVMs !!!!!!!!!!!!!!!!!!!!!
-    public void init(Configurations confs) throws InitializationException {
-        this.memory = Integer.parseInt((String) confs.getNotNull("memory"));
-
-        // create a dummy object that is as big as the required free memory
-        // this will force the JVM heap to grow to accomodates the required needs.
-        try {
-            byte[] dummy = new byte[this.memory];
-            for (int i = 0; i < this.memory; dummy[i++] = 1);
-        } catch (OutOfMemoryError e) {
-            throw new InitializationException("The system doesn't have "
-                + memory + " bytes that are required for operation. Please, "
-                + "increase your JVM memory or lower 'store.memory' requirements.");
-        } finally {
-            jvm.gc();
-        }
-
-        for (int i = 0; i < 10; i++) {
-            try {
-                if (memory < jvm.freeMemory()) {
-                    break;
-                } else {
-                    Thread.sleep(1000);
-                }
-            } catch (InterruptedException ignored) {}
-        }
-
-        if (memory <= 0)
-            throw new IllegalArgumentException("Free memory limit must be higher than zero.");
-        if (memory > jvm.freeMemory())
-            throw new IllegalArgumentException("Free memory is already lower than imposed limit. Lower your 'store.memory' configuration.");
-    }
-
     /**
      * Store the given object in a persistent state. It is up to the
      * caller to ensure that the key has a persistent state across
@@ -137,11 +110,7 @@ public class MemoryStore implements Store, Configurable, Status {
      * virtual machine is restarted or some error happens.
      */
     public synchronized void hold(Object key, Object object) {
-
-        while (jvm.freeMemory() < memory) {
-            this.free();
-        }
-
+        if (jvm.freeMemory() < memory) this.free();
         this.hashtable.put(key, new Container(object));
     }
 

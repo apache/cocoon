@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.18 2000-02-16 01:12:29 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.19 2000-02-23 00:50:47 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.18 $ $Date: 2000-02-16 01:12:29 $
+ * @version $Revision: 1.19 $ $Date: 2000-02-23 00:50:47 $
  */
 
 public class Engine implements Defaults {
@@ -312,8 +312,7 @@ public class Engine implements Defaults {
 
         if (page == null) {
             throw new Exception("FATAL ERROR: the system ran out of memory when"
-                + " processing the request. Increase your JVM memory as well"
-                + " as the 'store.memory' value in your configuratios.");
+                + " processing the request. Increase your JVM memory.");
         }
 
         if (DEBUG) {
