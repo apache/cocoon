@@ -144,7 +144,7 @@
 
   </map:pipeline>
 
-  <map:pipeline type="caching">  
+  <map:pipeline type="caching"> 
 
    <map:match pattern="">
     <map:redirect-to uri="welcome"/>
