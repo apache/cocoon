@@ -64,7 +64,7 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.1 2003/05/23 09:18:48 cziegeler Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.2 2003/05/23 12:14:04 cziegeler Exp $
  */
 
 public final class ContextHelper {
@@ -73,10 +73,10 @@ public final class ContextHelper {
     public static final String CONTEXT_OBJECT_MODEL = "object-model";
 
     /** Application <code>Context</code> Key for the current request object */
-    public static final String CONTEXT_REQUEST_OBJECT = CONTEXT_OBJECT_MODEL + '/' + ObjectModelHelper.REQUEST_OBJECT;
+    public static final String CONTEXT_REQUEST_OBJECT = CONTEXT_OBJECT_MODEL + '.' + ObjectModelHelper.REQUEST_OBJECT;
 
     /** Application <code>Context</code> Key for the current response object */
-    public static final String CONTEXT_RESPONSE_OBJECT = CONTEXT_OBJECT_MODEL + '/' + ObjectModelHelper.RESPONSE_OBJECT;
+    public static final String CONTEXT_RESPONSE_OBJECT = CONTEXT_OBJECT_MODEL + '.' + ObjectModelHelper.RESPONSE_OBJECT;
 
     private ContextHelper() {
         // Forbid instantiation
