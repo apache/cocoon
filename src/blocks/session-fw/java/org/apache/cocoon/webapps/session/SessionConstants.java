@@ -54,12 +54,12 @@ package org.apache.cocoon.webapps.session;
  * The <code>Constants</code> used throughout the core of the session management.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionConstants.java,v 1.1 2003/03/09 00:06:07 pier Exp $
+ * @version CVS $Id: SessionConstants.java,v 1.2 2003/05/18 11:31:40 cziegeler Exp $
 */
 public interface SessionConstants {
 
     /** The namespace used by the session transformers */
-    String SESSION_NAMESPACE_URI = "http://cocoon.apache.org/session/1.0";
+    String SESSION_NAMESPACE_URI = "http://apache.org/cocoon/session/1.0";
 
     /** Reserved Context: Request context */
     String REQUEST_CONTEXT = "request";

@@ -62,7 +62,7 @@
           in the sitemap and can be used inside a document. All tags must be prefixed
           with the session namespace. So the actual tag used in the document will read
           <em>&lt;session:xxxx&gt;</em>. The current namespace URI for the session 
-          transformer is <em>"http://cocoon.apache.org/session/1.0"</em>.</p>
+          transformer is <em>"http://apache.org/cocoon/session/1.0"</em>.</p>
      </s2>
      <s2 title="Context-Tags">
         <p>A context is basically an application specific block of XML data in
@@ -118,7 +118,7 @@
           <p>The following example shows the use of several commands and in
              particular how the <em>mergexml</em> command can be used to manipulate context
              data.</p>
-          <source>&lt;resource xmlns:session="http://cocoon.apache.org/session/1.0"&gt;
+          <source>&lt;resource xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
   &lt;session:createcontext name="trackdemo"/&gt;
   &lt;!-- build context data --&gt;
   &lt;session:setxml context="trackdemo" path="/"&gt;
@@ -370,7 +370,7 @@
         <p>The "form-handling-page" is a pipeline which is declared in the
           sitemap and uses the session transformer. It could also read the following
           xml:</p>
-        <source>&lt;page xmlns:session="http://cocoon.apache.org/session/1.0"&gt;
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
   &lt;forename&gt;
     &lt;session:getxml context="request" path="/parameter/forename"/&gt;
   &lt;/forename&gt;
@@ -383,7 +383,7 @@
           inserts the value submitted by the user into the xml stream.</p>
         <p>If you want to write the information in a session context, you must
           wrap the whole xml inside a setxml:</p>
-        <source>&lt;page xmlns:session="http://cocoon.apache.org/session/1.0"&gt;
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
   &lt;session:setxml context="userdata" path="/user"&gt;
     &lt;forename&gt;
       &lt;session:getxml context="request" path="/parameter/forename"/&gt;
@@ -409,7 +409,7 @@
           and in addition the information about where the submitted values should be
           stored inside the session.</p>
         <p>The example from the previous chapter could look like this:</p>
-        <source>&lt;page xmlns:session="http://cocoon.apache.org/session/1.0"&gt;
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
   &lt;session:form name="myform"&gt;
     &lt;session:action&gt;the-next-page&lt;/session:action&gt;
     &lt;session:content&gt;
@@ -426,7 +426,7 @@
           contains form values which should be stored in the specified context under the
           given path. The session transformer transforms by removing the namespace and
           the context attribute:</p>
-        <source>&lt;page xmlns:session="http://cocoon.apache.org/session/1.0"&gt;
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
   &lt;form action="the-next-page"&gt;
     &lt;inputxml name="forename" type="text"/&gt;
     &lt;inputxml name="surname" type="text"/&gt;
@@ -442,7 +442,7 @@
         <p>For editing values - if the context already contains information
           about the user - <em>inputxml</em> inserts the current value inside the tag. So
           the xml streamed would after a second run would look like this:</p>
-        <source>&lt;page xmlns:session="http://cocoon.apache.org/session/1.0"&gt;
+        <source>&lt;page xmlns:session="http://apache.org/cocoon/session/1.0"&gt;
   &lt;form action="the-next-page"&gt;
     &lt;inputxml name="forename" type="text"&gt;Walter&lt;/inputxml&gt;
     &lt;inputxml name="surname" type="text"&gt;Walterson&lt;/inputxml&gt;
