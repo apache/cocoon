@@ -68,7 +68,7 @@ import java.net.MalformedURLException;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.2 2003/03/10 14:23:00 cziegeler Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.3 2003/03/10 15:57:42 cziegeler Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector {
 
@@ -144,6 +144,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
 
     private void cocoonRedirect(boolean sessionMode, String uri)
     throws IOException, ProcessingException {
+        Processor actualProcessor = null;
         try {
             boolean rawMode = false;
             String prefix;
@@ -159,7 +160,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
                 }
             }
 
-            Processor actualProcessor;
+            Processor usedProcessor;
 
             // Does the uri point to this sitemap or to the root sitemap?
             if (uri.startsWith("//")) {
@@ -167,6 +168,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
                 prefix = ""; // start at the root
                 try {
                     actualProcessor = (Processor)this.manager.lookup(Processor.ROLE);
+                    usedProcessor = actualProcessor;
                 } catch (ComponentException e) {
                     throw new ProcessingException("Cannot get Processor instance", e);
                 }
@@ -174,7 +176,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
             } else if (uri.startsWith("/")) {
                 prefix = null; // means use current prefix
                 uri = uri.substring(1);
-                actualProcessor = this.processor;
+                usedProcessor = this.processor;
 
             } else {
                 throw new ProcessingException("Malformed cocoon URI.");
@@ -202,9 +204,9 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
             try {
                 
                 if ( !this.internal ) {
-                    processingResult = actualProcessor.process(newEnv);
+                    processingResult = usedProcessor.process(newEnv);
                 } else {
-                    ProcessingPipeline pp = actualProcessor.processInternal(newEnv);
+                    ProcessingPipeline pp = usedProcessor.processInternal(newEnv);
                     if (pp != null) pp.release();
                     processingResult = pp != null;
                 }
@@ -225,6 +227,8 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector 
             String msg = "Error while redirecting to " + uri;
             getLogger().error(msg, e);
             throw new ProcessingException(msg, e);
+        } finally {
+            this.manager.release( actualProcessor );
         }
     }
 
