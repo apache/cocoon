@@ -6,7 +6,7 @@
   <component type="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
   <component type="store" class="org.apache.cocoon.components.store.MemoryStore"/>
 
-  <component type="programming-language" class="org.apache.cocoon.CocoonComponentSelector">
+  <component type="programming-languages" class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
       <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
       <parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
@@ -16,7 +16,7 @@
 
   <component type="classloader" class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
 
-  <component type="markup-language" class="org.apache.cocoon.CocoonComponentSelector">
+  <component type="markup-languages" class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
       <parameter name="prefix" value="xsp"/>
       <parameter name="uri" value="http://apache.org/xsp"/>
@@ -36,17 +36,17 @@
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
         </builtin-logicsheet>
 
-	<builtin-logicsheet>
-	  <parameter name="prefix" value="esql"/>
-	  <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
-	  <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/>
-	</builtin-logicsheet>
+    <builtin-logicsheet>
+      <parameter name="prefix" value="esql"/>
+      <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
+      <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/>
+    </builtin-logicsheet>
 
-	<builtin-logicsheet>
-	  <parameter name="prefix" value="log"/>
-	  <parameter name="uri" value="http://apache.org/xsp/log"/>
-	  <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/log.xsl"/>
-	</builtin-logicsheet>
+    <builtin-logicsheet>
+      <parameter name="prefix" value="log"/>
+      <parameter name="uri" value="http://apache.org/xsp/log"/>
+      <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/log.xsl"/>
+    </builtin-logicsheet>
       </target-language>
     </component-instance>
 
@@ -64,7 +64,7 @@
     <parameter name="auto-reload" value="true"/>
   </component>
 
-  <component type="datasource" class="org.apache.cocoon.CocoonComponentSelector">
+  <component type="datasources" class="org.apache.cocoon.CocoonComponentSelector">
     <component-instance name="personnel" class="org.apache.cocoon.components.datasource.JdbcDataSource">
       <pool-controller min="5" max="10"/>
       <dburl>jdbc:postgresql://localhost/test</dburl>
@@ -76,5 +76,5 @@
   <!-- these components is used as a PoolController for the sitemap component pools  -->
   <component type="pool-controller" class="org.apache.cocoon.util.ComponentPoolController"/>
 
-  <sitemap file="sitemap.xmap"/> 
+  <sitemap file="sitemap.xmap"/>
 </cocoon>

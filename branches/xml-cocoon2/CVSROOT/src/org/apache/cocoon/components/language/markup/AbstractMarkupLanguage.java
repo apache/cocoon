@@ -50,7 +50,7 @@ import org.apache.log.Logger;
  * be decoupled from this context!!!
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-01-12 15:31:17 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-16 17:04:22 $
  */
 public abstract class AbstractMarkupLanguage
      implements MarkupLanguage, Composer, Configurable
@@ -159,7 +159,7 @@ public abstract class AbstractMarkupLanguage
                     String namedLogicsheetName = namedLogicsheetURL.toExternalForm();
                     NamedLogicsheet namedLogicsheet = new NamedLogicsheet();
                     namedLogicsheet.setInputSource(
-                        new InputSource(namedLogicsheetURL.toString())
+                        new InputSource(namedLogicsheetName)
                     );
                     namedLogicsheet.setPrefix(namedLogicsheetPrefix);
                     namedLogicsheet.setUri(namedLogicsheetUri);
@@ -235,9 +235,9 @@ public abstract class AbstractMarkupLanguage
 
     /**
     * Add a dependency on an external file to the document for inclusion in
-    * generated code. This is used to populate a list of <code>File</code>'s 
-	* tested for change on each invocation; this information is used to assert 
-	* whether regeneration is necessary.
+    * generated code. This is used to populate a list of <code>File</code>'s
+    * tested for change on each invocation; this information is used to assert
+    * whether regeneration is necessary.
     *
     * @param location The file path of the dependent file
     * @see <code>AbstractMarkupLanguage</code>, <code>ServerPagesGenerator</code>
