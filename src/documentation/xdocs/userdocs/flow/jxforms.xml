@@ -14,8 +14,19 @@
    <link href="http://www.w3.org/DOM/">XML/DOM</link>, 
    <link href="http://www.jdom.org/">JDOM</link>,
    <link href="http://jakarta.apache.org/commons/beanutils/api/org/apache/commons/beanutils/DynaBean.html">DynaBeans</link>, and JavaScript objects.
+    </p>
 		
-   </p>
+  <s2 title="Table of Contents">
+   <p><link href="#Overview">Overview</link></p>
+   <p><link href="#Sitemap">Sitemap</link></p>
+   <p><link href="#Controls">Form Controls</link></p>
+   <p><link href="#JSAPI">JavaScript API</link></p>
+   <p><link href="#Validation">Validation</link></p>
+   <p><link href="#HTML">Conversion to HTML</link></p>
+  </s2>
+  </s1>
+  <s1 title="Overview"><anchor id="Overview"/>
+
 <p>W3C XForms defines a device-neutral, platform-independent set of
 form controls suitable for general-purpose use. JXForms supports a subset of these controls. The controls are
 bound to a <em>model</em> provided by your Flowscript via <link href="http://www.w3.org/TR/xpath">XPath</link> expressions, for example in this simple case using the <code>ref</code> attribute
@@ -44,11 +55,11 @@ intentionally defaulted the JXForms namespace prefix here):</p>
   &lt;label&gt;Expiration Date&lt;/label&gt;
 
 &lt;/input&gt;
-&lt;submit submission="submit"&gt;
+&lt;submit id="submit" continuation="forward"&gt;
   &lt;label&gt;Submit&lt;/label&gt;
 &lt;/submit&gt;</source>
   <p>
-  In your Flowscript you would supply an appropriate model, for example, like this:</p>
+  In your Flow script you would supply an appropriate model, for example, like this:</p>
    <p><source>
       var model = {
          method: "cash",
@@ -56,8 +67,12 @@ intentionally defaulted the JXForms namespace prefix here):</p>
          expiry: ""
       }
    </source></p>
-  <p>
-  Upon submission of the form the model will be updated accordingly, and you can take action in your script based on its values:
+   <p>
+   Since JXForms uses <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>, your model may consist of any objects that <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link> supports.
+   </p>
+   <p>
+   Use the <code>setModel()</code> function of the form to associate your model with the form. Then use the <code>sendView()</code> function of the form to display it.
+  Upon submission of the form, the model will be automatically updated and you can take action in your script based on its values:
   </p>
    <p><source>
       var model = {
@@ -76,75 +91,13 @@ intentionally defaulted the JXForms namespace prefix here):</p>
           ....
       } 
    </source></p>
-   <p>
-   Since JXForms uses <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>, your model may consist of any objects that <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link> supports.
-   </p>
    <p> 
-   JXForms also supports declarative validation of form elements using Schematron, and automated support for back/forward navigation in multi-page forms using continuations.
+   JXForms also supports declarative <link href="#validation">validation</link> of form elements using Schematron, and automated <link href="#backNext">support</link> for back/forward navigation in multi-page forms using continuations.
    </p>
   </s1>
 
- <s1 title="Form Controls">
- <p>The JXForms tags are defined in the following namespace:</p>
- <source>http://apache.org/cocoon/jxforms/1.0</source>
- <p>JXForms supports the following controls:</p>
- <s2 title="form">
- <p/>
- </s2>
- <s2 title="input">
- <p/>
- </s2>
- <s2 title="secret">
- <p/>
- </s2>
- <s2 title="textarea">
- <p/>
- </s2>
- <s2 title="output">
- <p/>
- </s2>
- <s2 title="select">
-   <p>
-    </p>
- <p>JXForms <code>&lt;select&gt;</code> is modelled after the <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectMany">W3C XForms &lt;select&gt;</link> element. It supports the following attributes:</p>
- <ul>
-   <li><code>ref</code></li>
-   <li><code>id</code></li>
-   <li><code>appearance</code></li>
- </ul>
- </s2>
- <s2 title="select1">
- <p/>
- </s2>
- <s2 title="submit">
- <p>JXForms <code>&lt;submit&gt;</code> differs from that of W3C XForms. It supports the following attributes:</p>
- <ul>
-   <li><code>id</code></li>
-   <li><code>continuation</code></li>
-   <li><code>class</code></li>
- </ul>
- <p>Example: Submit
- </p>
-<source>
-&lt;submit submission="timecard"&gt;
-  &lt;label&gt;Submit Timecard&lt;/label&gt;
-&lt;/submit&gt;
-</source>
- <p>
- </p>
-</s2>
- <s2 title="group">
- <p/>
- </s2>
- <s2 title="repeat">
- <p/>
- </s2>
- <s2 title="itemset">
- <p/>
- </s2>
- </s1>  
- <s1 title="Sitemap">
-<p>To use the JXForms, you will need to add several elements to your <link href="../concepts/sitemap.html">Sitemap</link>, namely the JXForms generator, and several XSLT stylesheets. To use the JXForms generator add a generator entry to your Sitemap with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXFormsGenerator</code>, for example like this:</p>
+ <s1 title="Sitemap"><anchor id="Sitemap"/>
+<p>To use JXForms, you will need to add several elements to your Cocoon <link href="../concepts/sitemap.html">Sitemap</link>, namely the JXForms generator, and several XSLT stylesheets. To use the JXForms generator, add a generator entry to your Sitemap with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXFormsGenerator</code>, for example like this:</p>
 <source>
 &lt;map:generators&gt;
   &lt;map:generator label="content,data" 
@@ -152,7 +105,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
          src="org.apache.cocoon.generation.JXFormsGenerator"/&gt;
 &lt;/map:generators&gt;
  </source>
- <p>To invoke your form you use the Sitemap's <code>&lt;map:call&gt;</code> operation to invoke the <code>jxForm</code> Flowscript function, for example like this:</p>
+ <p>To invoke your form use the Sitemap's <code>&lt;map:call&gt;</code> operation to invoke the <code>jxForm</code> Flowscript function, for example like this:</p>
 <source><![CDATA[
    <map:match pattern="feedBackWizard">
      <map:call function="jxForm">
@@ -164,13 +117,200 @@ intentionally defaulted the JXForms namespace prefix here):</p>
    </map:match>
 ]]></source>
 
-</s1>  
- <s1 title="Flowscript">
   <p>
-  JXForms provides a JavaScript <code>JXForm</code> object that provides methods for you to manage your form's <em>model</em> and to invoke its associated <em>view</em> and any validation you've specified.
+  </p>
+ </s1>  
+ <s1 title="Form Controls"><anchor id="Controls"/>
+ <p>The JXForms tags are defined in the following namespace:</p>
+ <source>http://apache.org/cocoon/jxforms/1.0</source>
+ <p>JXForms supports the following controls:</p>
+ <s2 title="form">
+ <p>The JXForms <code>&lt;form&gt;</code> element represents the overall form. It also corresponds to a validation <em>phase</em> in your <link href="#Validation">validation</link> rules. It has no direct counterpart in W3C XForms.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+  <xf:form id="form-feedback" view="userIdentity">
+    <xf:label>Personal Information</xf:label>
+    <error>
+      <xf:violations class="error"/>
+    </error>
+    <xf:input ref="/firstName">
+      <xf:label>First Name</xf:label>
+      <xf:violations class="error"/>
+    </xf:input>
+  </xf:form>
+      ]]></source> 
+ <p></p>
+ <p>It supports the following attributes:</p>
+ <ul>
+   <li><code>id</code></li>
+   <li><code>view</code></li>
+ </ul>
+ <p>
+ The <code>id</code> attribute must match the <code>id</code> Sitemap parameter passed to the <code>jxForm</code> function in <code>&lt;map:call&gt;</code>. The <code>view</code> attribute must match the <code>id</code> of a <code>&lt;phase&gt;</code> element in your Schematron validation rules.
+ </p>
+ </s2>
+ <s2 title="error">
+ <p>JXForms <code>&lt;error&gt;</code> has no counterpart in W3C XForms. If present under the <code>form</code> element it serves as a placeholder for validation error messages associated with the entire form.
+ </p>
+ </s2>
+ <s2 title="violations">
+ <p>JXForms <code>&lt;violations&gt;</code> element has no counterpart in W3C XForms.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+ </s2>
+ <s2 title="violation">
+ <p>JXForms <code>&lt;violation&gt;</code> element has no counterpart in W3C XForms.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+ </s2>
+ <s2 title="input">
+ <p>JXForms <code>&lt;input&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-input">input</link> element. It allows the user to do free-form data entry.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+ <p>It supports the following attributes:</p>
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>appearance</code></li>
+   <li><code>class</code></li>
+ </ul>
+ <p/>
+ </s2>
+ <s2 title="secret">
+ <p>JXForms <code>&lt;secret&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-secret">secret</link> element. It is is used for entering information that is considered sensitive, and thus not echoed to a visual or aural display as it is being entered, e.g., password entry. </p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+<p>It supports the following attributes:</p>
+
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>appearance</code></li>
+   <li><code>class</code></li>
+ </ul>
+ <p/>
+ </s2>
+ <s2 title="textarea">
+ <p>JXForms <code>&lt;textarea&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-textarea">textarea</link> element. </p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+ <p>It supports the following attributes:</p>
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>appearance</code></li>
+ </ul>
+ <p/>
+ </s2>
+ <s2 title="output">
+ <p>JXForms <code>&lt;output&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-output">output</link> element. It is used to display values from the model, but provides no means to enter or modify those values.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+ <p>It supports the following attributes:</p>
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>value</code></li>
+   <li><code>appearance</code></li>
+   <li><code>class</code></li>
+ </ul>
+ </s2>
+ <s2 title="select">
+   <p>
+    </p>
+ <p>JXForms <code>&lt;select&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectMany">select</link> element. </p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+
+<p>It supports the following attributes:</p>
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>appearance</code></li>
+   <li><code>class</code></li>
+ </ul>
+ </s2>
+ <s2 title="select1">
+ <p>JXForms <code>&lt;select&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectOne">select1</link> element. It supports the following attributes:</p>
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>appearance</code></li>
+   <li><code>class</code></li>
+ </ul>
+ <p/>
+ </s2>
+ <s2 title="submit">
+ <p>JXForms <code>&lt;submit&gt;</code> differs from <link href="http://www.w3.org/TR/xforms/slice8.html#ui-submit">that</link> of W3C XForms. </p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+
+<p>It supports the following attributes:</p>
+ <ul>
+   <li><code>id</code></li>
+   <li><code>continuation</code></li>
+   <li><code>class</code></li>
+ </ul>
+ <p>
+ </p>
+</s2>
+ <s2 title="group">
+ <p>JXForms <code>&lt;group&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-group">group</link> element.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+
+ <p>It supports the following attributes:</p>
+ <ul>
+   <li><code>ref</code></li>
+   <li><code>class</code></li>
+ </ul>
+ <p>
+  The value of the <code>ref</code> attribute of a <code>&lt;group&gt;</code> is the context node for evaluting relative paths of the <code>ref</code> attributes of its sub-elements.
+ </p>
+ </s2>
+ <s2 title="repeat">
+ <p>JXForms <code>&lt;repeat&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-repeat">repeat</link> element.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+<p> It supports the following attributes:</p>
+ <ul>
+   <li><code>nodeset</code></li>
+ </ul>
+ <p/>
+ </s2>
+ <s2 title="itemset">
+ <p>JXForms <code>&lt;itemset&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice9.html#ui-common-elements-itemset">itemset</link> element. It is used for the dynamic creation of selections within the <code>select</code> and <code>select1</code> elements.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+<p> It supports the following attributes:</p>
+ <ul>
+   <li><code>nodeset</code></li>
+ </ul>
+ <p/>
+ </s2>
+ </s1>  
+ <s1 title="JavaScript API"><anchor id="JSAPI"/>
+  <p>
+  JXForms provides a JavaScript <code>JXForm</code> object that provides methods for you to manage your form's <em>model</em> and to invoke its associated <em>view</em> and any validation rules you've specified.
   </p>
   <p>
-  To use JXForms in a Flowscript you must load <code>JXForm.js</code> into your script and define a function that takes at one argument (the argument passed to your function will be a JavaScript representation of your form), for example like this:</p>
+  To use JXForms in a Flowscript you must load <code>resource://org/apache/cocoon/components/flow/javascript/JXForm.js</code> into your script and define a function that takes one argument (the argument passed to your function will be a JavaScript representation of your form), for example like this:</p>
   <source>
 
     cocoon.load("resource://org/apache/cocoon/components/flow/javascript/JXForm.js");
@@ -178,8 +318,9 @@ intentionally defaulted the JXForms namespace prefix here):</p>
     function myFormHandler(form) {
        ...
     }
-
   </source>
+  <p>
+  </p>
   <s2 title="JXForm Object">
   <p>
     The <code>JXForm</code> object passed to your function has the following properties and functions:</p>
@@ -243,9 +384,14 @@ intentionally defaulted the JXForms namespace prefix here):</p>
     </s3>
   </s2>
  </s1>  
- <s1 title="Validation">
+ <s1 title="Validation"><anchor id="Validation"/>
+ <p>
+ JXForms provides declarative form validation using the <link href="http://www.ascc.net/xml/resource/schematron/Schematron2000.html">Schematron</link> assertion language. Since Schematron is also based on XPath, you use the same expressions to reference your model in your validation rules as in your forms. In addition, because JXForms implements Schematron using <link href="http://jakarta.apache.org/commons/jxpath">JXPath</link>, you can make assertions about Java and JavaScript objects in your validation rules as well as about XML documents.
+ </p>
  </s1>  
- <s1 title="Stylesheets">
+ <s1 title="Conversion to HTML"><anchor id="HTML"/>
+ <p>For conversion of JXForms controls to XHTML, JXForms provides two XSLT stylesheets that must be applied to the output of JXFormsGenerator: <code>jxforms-default.xsl</code> and <code>jxforms2html.xsl</code>. The former performs formatting of validation error messages. The latter converts the result to XHTML.
+ </p>
  </s1>  
  </body>
 </document>
