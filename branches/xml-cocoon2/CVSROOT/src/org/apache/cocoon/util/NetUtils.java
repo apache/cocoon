@@ -19,7 +19,7 @@ import javax.servlet.ServletContext;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-31 15:03:56 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-31 20:43:50 $
  */
 
 public class NetUtils {
@@ -57,22 +57,22 @@ public class NetUtils {
      * @exception MalformedURLException If the location is malformed
      */
     public static URL getURL(String location) throws MalformedURLException {
-        if (location.indexOf("://") < 0) {
+        if (location.startsWith("resource://")) {
+            URL u = ClassUtils.getResource(location.substring("resource://".length()));
+            if (u != null) return u;
+            else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
+        } else if (location.startsWith("context://")) {
+            URL u = NetUtils.context.getResource(location.substring("context://".length()));
+            if (u != null) return u;
+            else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
+        } else if (location.indexOf("://") > 0) {
+            return new URL(location);
+        } else {
             if (NetUtils.root != null) {
                 return (new File(NetUtils.root, location)).toURL();
             }
 
             return (new File(location)).toURL();
-        } else if (location.startsWith("resource://")) {
-            URL u = ClassUtils.getResource(location.substring("resource://".length()));
-            if (u != null) return u;
-            else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
-        } else if (location.startsWith("context://")) {
-        URL u = NetUtils.context.getResource(location.substring("context://".length()));
-        if (u != null) return u;
-        else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
-    } else {
-            return new URL(location);
         }
     }
 
