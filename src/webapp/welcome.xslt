@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS $Id: welcome.xslt,v 1.5 2003/03/26 21:21:40 stefano Exp $ -->
+<!-- CVS $Id: welcome.xslt,v 1.6 2003/03/29 01:08:38 ghoward Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -17,7 +17,7 @@
              stream 
          --> 
         <meta http-equiv="Content-Type" content="text/xhtml; charset=UTF-8"/>
-        <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
+        <link href="styles/main.css" type="text/css" rel="stylesheet"/>
         <link href="favicon.ico" rel="SHORTCUT ICON" />
       </head>
       <body>
