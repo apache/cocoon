@@ -50,21 +50,15 @@
 */
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
-import java.io.InputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 
 /**
@@ -106,7 +100,7 @@ import java.net.MalformedURLException;
  * </pre>
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: ResourceExistsSelector.java,v 1.1 2003/03/19 06:19:38 jefft Exp $
+ * @version CVS $Id: ResourceExistsSelector.java,v 1.2 2003/03/20 12:32:18 cziegeler Exp $
  */
 public class ResourceExistsSelector extends AbstractLogEnabled
   implements ThreadSafe, Selector {

@@ -89,7 +89,7 @@ import java.util.StringTokenizer;
 /**
  * Eclipse Java Compiler
  *
- * @version CVS $Id: EclipseJavaCompiler.java,v 1.3 2003/03/20 04:12:49 vgritsenko Exp $
+ * @version CVS $Id: EclipseJavaCompiler.java,v 1.4 2003/03/20 12:32:18 cziegeler Exp $
  */
 public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
@@ -118,7 +118,7 @@ public class EclipseJavaCompiler implements LanguageCompiler, Recyclable {
 
     public EclipseJavaCompiler() {
         this.debug = true;
-        this.source14 = true;
+        source14 = true;
     }
 
     public void recycle() {
