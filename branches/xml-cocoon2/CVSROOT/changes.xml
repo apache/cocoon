@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.26 2001-03-10 15:48:41 rossb Exp $
+  $Id: changes.xml,v 1.9.2.27 2001-04-04 20:56:36 giacomo Exp $
 -->
 
 <changes title="History of Changes">
@@ -23,6 +23,11 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="GP" type="update">
+    Split up ResourcePipeline into the Component EventPipeline and StreamPipeline
+    and put them in the components package.
+    it.
+  </action>
   <action dev="RB" type="update">
     Added a TranscoderFactory for Batik, and updated the SVG Serializer to use
     it.

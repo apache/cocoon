@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.20 2001-04-04 20:23:05 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.21 2001-04-04 20:56:36 giacomo Exp $
 -->
 
 
@@ -34,7 +34,7 @@
 
   <action context="code">
    Complete the web.xml file and put descriptions into it (similar to the
-   httpd.conf file of the web server or the server.xml of Cataline)
+   httpd.conf file of the web server or the server.xml of Catalina)
   </action>
 
   <action context="code" assigned-to="GP">
