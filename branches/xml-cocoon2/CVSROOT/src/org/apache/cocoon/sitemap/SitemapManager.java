@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-25 20:18:19 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-08-29 20:33:42 $
  */
 public class SitemapManager implements Configurable, Composer {
 
@@ -89,8 +89,9 @@ public class SitemapManager implements Configurable, Composer {
         while (enum.hasMoreElements()) {
             sitemapHandler = (SitemapHandler) enum.nextElement ();
             if (sitemapHandler != null) {
-                if (sitemapHandler.hasChanged())
+                if (sitemapHandler.hasChanged()) {
                     return true;
+                }
             }
         }
         return false;
