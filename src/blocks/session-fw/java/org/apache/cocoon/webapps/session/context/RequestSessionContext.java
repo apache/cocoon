@@ -32,6 +32,7 @@ import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -111,7 +112,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  - getAuthType()
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: RequestSessionContext.java,v 1.7 2004/03/19 14:16:55 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class RequestSessionContext
 implements SessionContext {
@@ -281,9 +282,15 @@ implements SessionContext {
         Enumeration all = this.request.getAttributeNames();
         while (all.hasMoreElements() == true) {
             attrName = (String) all.nextElement();
-            attr = doc.createElementNS(null, attrName);
-            attrElement.appendChild(attr);
-            DOMUtil.valueOf(attr, this.request.getAttribute(attrName));
+            try {
+                attr = doc.createElementNS(null, attrName);
+                attrElement.appendChild(attr);
+                DOMUtil.valueOf(attr, this.request.getAttribute(attrName));
+            } catch(DOMException de) {
+                // Some request attributes have names that are invalid as element names.
+                // Example : "FOM JavaScript GLOBAL SCOPE/file://my/path/to/flow/script.js"
+                System.err.println("Cannot create XML element with name '" + attrName + "' : " + de.getMessage());
+            }
         }
     }
 
