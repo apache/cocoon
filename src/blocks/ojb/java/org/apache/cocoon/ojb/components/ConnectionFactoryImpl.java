@@ -74,11 +74,11 @@ public class ConnectionFactoryImpl implements Component, ThreadSafe, Serviceable
         try {
             return ((DataSourceComponent) ConnectionFactoryImpl.datasources.select(conDesc.getJcdAlias())).getConnection();
         } catch (final ServiceException e) {
-            throw new LookupException("Cannot lookup DataSource named " +
+            throw new LookupException("Cannot lookup DataSource " +
                                       conDesc.getJcdAlias(), e);
         } catch (final SQLException e) {
-            throw new LookupException("Cannot get connection from DataSource named " +
-                                      conDesc.getDbAlias(), e);
+            throw new LookupException("Cannot get connection from DataSource " +
+                                      conDesc.getJcdAlias(), e);
         }
     }
 
