@@ -1,6 +1,6 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 
-<!-- $Id: esql.xsl,v 1.7 2003/10/06 15:36:08 tcurdt Exp $-->
+<!-- $Id: esql.xsl,v 1.8 2003/11/08 21:42:29 haul Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.7 $ $Date: 2003/10/06 15:36:08 $
+ * @version CVS $Revision: 1.8 $ $Date: 2003/11/08 21:42:29 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -924,10 +924,28 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
     <xsl:choose>
       <xsl:when test="@root">
         <xsl:text>"&lt;</xsl:text>
+        <xsl:if test="@root-ns-prefix">
+            <xsl:value-of select="@root-ns-prefix"/>
+            <xsl:text>:</xsl:text>
+        </xsl:if>
         <xsl:value-of select="@root"/>
+        <xsl:if test="@root-ns">
+            <xsl:text> xmlns</xsl:text>
+            <xsl:if test="@root-ns-prefix">
+                <xsl:text>:</xsl:text>
+                <xsl:value-of select="@root-ns-prefix"/>
+            </xsl:if>
+            <xsl:text>=\&quot;</xsl:text>
+            <xsl:value-of select="@root-ns"/>
+            <xsl:text>\&quot;</xsl:text>
+        </xsl:if>
         <xsl:text>&gt;"+</xsl:text>
         <xsl:call-template name="get-string"/>
         <xsl:text>+"&lt;/</xsl:text>
+        <xsl:if test="@root-ns-prefix">
+            <xsl:value-of select="@root-ns-prefix"/>
+            <xsl:text>:</xsl:text>
+        </xsl:if>
         <xsl:value-of select="@root"/>
         <xsl:text>&gt;"</xsl:text>
       </xsl:when>
