@@ -1,85 +1,28 @@
 <?xml version="1.0"?>
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<!-- =========================== Components ================================ -->
-
- <map:components>
-
-  <map:generators default="file"/>
-  <map:transformers default="xslt"/>
-  <map:readers default="resource"/>
-  <map:serializers default="html">
-   <map:serializer name="vrml"   mime-type="model/vrml"       logger="sitemap.serializer.vrml"
-                   src="org.apache.cocoon.serialization.TextSerializer"/>
-
-   <map:serializer name="wml"    mime-type="text/vnd.wap.wml" logger="sitemap.serializer.wml"
-                   src="org.apache.cocoon.serialization.XMLSerializer">
-    <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
-    <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
-    <encoding>ASCII</encoding>
-    <omit-xml-declaration>yes</omit-xml-declaration>
-   </map:serializer>
-
-   <map:serializer name="xhtml" mime-type="text/html"         logger="sitemap.serializer.xhtml"
-                   src="org.apache.cocoon.serialization.XMLSerializer"
-                   pool-max="64" pool-min="2" pool-grow="2">
-     <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
-     <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
-     <encoding>UTF-8</encoding>
-   </map:serializer>
-
-   <map:serializer name="text"   mime-type="text/plain"        logger="sitemap.serializer.text"
-                   src="org.apache.cocoon.serialization.TextSerializer"/>
-
-   <map:serializer logger="sitemap.serializer.svgxml" name="svgxml" src="org.apache.cocoon.serialization.XMLSerializer" mime-type="image/svg-xml">
-    <doctype-public>-//W3C//DTD SVG 20000303 Stylable//EN</doctype-public>
-    <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
-   </map:serializer>
-   
-  </map:serializers>               
-  
-  <map:matchers default="wildcard"/>
-  <map:selectors default="browser"/>
-  
- </map:components>
-
-<!-- =========================== Views =================================== -->
-
-<!--
-  Views provide diffent, well, views to resources. Views are
-  orthogonal to pipelines. Please refer to the docs.
--->
- <map:views>
-  <map:view name="content" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
-
-  <map:view name="pretty-content" from-label="data">
-    <map:transform src="stylesheets/simple-xml2html.xsl"/>
-    <map:serialize type="html"/>
-  </map:view>
-  
-  <map:view name="links" from-position="last">
-   <map:serialize type="links"/>
-  </map:view>
-
- </map:views>
 
  <map:pipelines>
 
- <!-- ================  Hello  =========================== -->
-
   <map:pipeline>
 
+   <map:match pattern="">
+     <map:generate src="samples.xml"/>
+     <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+     </map:transform>
+     <map:serialize/>
+   </map:match>
+   
    <map:match pattern="hello.html">
     <map:generate src="content/hello.xml"/>
-    <map:transform src="style/xsl/simple-page2html.xsl"/>
+    <map:transform src="style/xsl/page2html.xsl"/>
     <map:serialize type="html"/>
    </map:match>
 
-   <map:match pattern="hello.html">
+   <map:match pattern="hello.xhtml">
     <map:generate src="content/hello.xml"/>
-    <map:transform src="style/xsl/simple-page2html.xsl"/>
+    <map:transform src="style/xsl/page2html.xsl"/>
     <map:serialize type="xhtml"/>
    </map:match>
 
@@ -87,6 +30,31 @@
     <map:generate src="content/hello.xml"/>
     <map:serialize type="text"/>
    </map:match>
+
+   <map:match pattern="hello.wml">
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/page2wml.xsl"/>
+    <map:serialize type="wml"/>
+   </map:match>
+   
+   <map:match pattern="hello.vml">
+    <map:generate src="content/xml/hello-page.xml"/>
+    <map:transform src="style/xsl/page2vml.xsl"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
+   <map:match pattern="hello.svg">
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/page2svg.xsl"/>
+    <map:serialize type="svgxml"/>
+   </map:match>
+      
+   <map:match pattern="hello.wrl">
+    <map:generate src="content/hello.xml"/>
+    <map:transform src="style/xsl/page2vrml.xsl"/>
+    <map:serialize type="vrml"/>
+   </map:match>
+
 
    <map:match pattern="hello.service">
     <map:generate src="content/hello.xml"/>
@@ -97,31 +65,7 @@
     <map:generate src="webservice/HelloWorld.wsdl"/>
     <map:serialize type="xml"/>
    </map:match>
-   
-   <map:match pattern="hello.wml">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2wml.xsl"/>
-    <map:serialize type="wml"/>
-   </map:match>
-
-   <map:match pattern="hello.vml">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2vml.xsl"/>
-    <map:serialize type="xml"/>
-   </map:match>
-
-   <map:match pattern="hello.svg">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2svg.xsl"/>
-    <map:serialize type="svgxml"/>
-   </map:match>
-      
-   <map:match pattern="hello.wrl">
-    <map:generate src="content/xml/hello-page.xml"/>
-    <map:transform src="style/xsl/simple-page2vrml.xsl"/>
-    <map:serialize type="vrml"/>
-   </map:match>
-         
+            
   </map:pipeline>
   
  </map:pipelines>

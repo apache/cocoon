@@ -28,7 +28,7 @@ http://schemas.xmlsoap.org/wsdl/">
   </binding>
   <service name="HelloWorld">
     <port name="HelloWorldHttpGet" binding="s0:HelloWorldHttpGet">
-      <http:address location="http://localhost:8080/samples/hello-world/"/>
+      <http:address location="http://localhost:8888/samples/hello-world/"/>
     </port>
   </service>
 </definitions>
