@@ -322,14 +322,17 @@
      <br/>
      Form.js :
      <ul>
-       <li>added "fun" and "ttl" parameters to <code>Form.showForm()</code>, which now has the exact
-           same parameters as cocoon.sendPageAndWait().</li>
        <li>the argument of <code>new Form(...)</code> can now be either a String or a DOM Element.
            Accepting an Element allows the use of any kind of dynamic process to build the form
            definition.</li>
        <li><code>Form.showForm()</code> now uses a single continuation, which saves memory and speeds
            up processing by shortening the continuation chain when the user has a long interaction
            with the form.</li>
+       <li>"ttl" parameter added to <code>Form.showForm()</code>, which has the same meaning as for cocoon.sendPageAndWait().</li>
+       <li>new "cleanupHook" property on Form: this is a function that is called each time the form is displayed.
+           This is similar to the "fun" parameter of cocoon.sendPageAndWait().</li>
+       <li>new "restoreHook" property on Form: this is a function that is called each time the continuation is called back,
+           to restore if needed the execution environment before processing the request.</li>
      </ul>
      <br/>
      Actions:
