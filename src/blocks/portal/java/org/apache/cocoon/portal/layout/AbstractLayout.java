@@ -62,7 +62,7 @@ import org.apache.commons.collections.SequencedHashMap;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.9 2003/06/14 16:58:02 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.10 2003/09/02 08:34:17 cziegeler Exp $
  */
 public abstract class AbstractLayout 
     extends AbstractProducible 
@@ -71,8 +71,6 @@ public abstract class AbstractLayout
     protected String rendererName;
     
     protected Item parent;
-    
-    protected boolean _static;
     
     protected Map parameters = new SequencedHashMap();
      
@@ -105,22 +103,6 @@ public abstract class AbstractLayout
         this.parent = item;
     }
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.Layout#isStatic()
-	 */
-	public boolean isStatic() {
-		return _static;
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.portal.layout.Layout#setStatic(boolean)
-	 */
-	public void setStatic(boolean value) {
-		this._static = value;
-
-	}
-      
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.layout.Layout#getLayoutRendererName()
      */

@@ -59,7 +59,7 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayout.java,v 1.7 2003/07/31 14:37:05 cziegeler Exp $
+ * @version CVS $Id: CompositeLayout.java,v 1.8 2003/09/02 08:34:17 cziegeler Exp $
  */
 public interface CompositeLayout 
     extends Layout {
@@ -77,6 +77,11 @@ public interface CompositeLayout
 	 */
 	void addItem(Item item);
 
+    /**
+     * Get the item at the index
+     * @param index
+     * @return The item or null
+     */
 	Item getItem(int index);
 
 	/**
@@ -91,6 +96,10 @@ public interface CompositeLayout
 	 */
 	int getSize();
     
+    /**
+     * Remove an item
+     * @param item
+     */
     void removeItem(Item item);
     
 }

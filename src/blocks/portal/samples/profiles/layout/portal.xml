@@ -4,9 +4,9 @@
         <composite-layout name="column">
             <item>
                 <parameter name="width" value="350" />
-                <composite-layout static="true" name="row">
+                <composite-layout name="row">
                     <item>
-		                <coplet-layout static="true" name="coplet">
+		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="Newsweek"/>
 		                    <coplet-instance-data>Newsweek-1</coplet-instance-data>
 		                </coplet-layout>
@@ -20,7 +20,7 @@
                 </composite-layout>
             </item>
             <item>
-                <composite-layout static="false" name="row">
+                <composite-layout name="row">
                     <item>
 		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="BBC News"/>
@@ -61,7 +61,7 @@
                 </composite-layout>
             </item>
             <item>
-                <composite-layout static="false" name="row">
+                <composite-layout name="row">
                     <item>
 		                <coplet-layout name="coplet">
 		                    <parameter name="title" value="Chicago Sunday Times" />

@@ -58,7 +58,7 @@ import org.apache.cocoon.portal.factory.Producible;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.7 2003/07/03 08:00:00 cziegeler Exp $
+ * @version CVS $Id: Layout.java,v 1.8 2003/09/02 08:34:17 cziegeler Exp $
  */
 public interface Layout 
     extends Parameters, Producible {
@@ -81,8 +81,4 @@ public interface Layout
 
     void setParent(Item item);
 
-    boolean isStatic();
-
-    void setStatic(boolean value);
-    
 }

@@ -64,7 +64,7 @@ import org.apache.cocoon.portal.layout.Item;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayoutImpl.java,v 1.1 2003/05/26 13:18:19 cziegeler Exp $
+ * @version CVS $Id: CompositeLayoutImpl.java,v 1.2 2003/09/02 08:34:20 cziegeler Exp $
  */
 public class CompositeLayoutImpl 
     extends AbstractLayout
@@ -83,7 +83,7 @@ public class CompositeLayoutImpl
 	 * @param item, item to add
 	 */
 	public final void addItem(int index, Item item) {
-		items.add(index, item);
+		this.items.add(index, item);
         item.setParent(this);
 	}
 
@@ -92,7 +92,7 @@ public class CompositeLayoutImpl
 	 * @param item, item to add
 	 */
 	public final void addItem(Item item) {
-		items.add(item);
+		this.items.add(item);
 		item.setParent(this);
 	}
 
@@ -101,7 +101,7 @@ public class CompositeLayoutImpl
 	 * @return Item
 	 */
 	public final Item getItem(int index) {
-		return (Item) items.get(index);
+		return (Item) this.items.get(index);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class CompositeLayoutImpl
 	 * @return items
 	 */
 	public final List getItems() {
-		return items;
+		return this.items;
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class CompositeLayoutImpl
 	 * @return size
 	 */
 	public final int getSize() {
-		return items.size();
+		return this.items.size();
 	}
     
     public final void removeItem(Item item) {

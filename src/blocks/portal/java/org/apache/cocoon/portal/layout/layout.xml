@@ -33,9 +33,6 @@
         <field name="parameters" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.util.ParameterFieldHandler">
             <bind-xml name="parameter" />
         </field>
-        <field name="static" type="boolean">
-            <bind-xml name="static" node="attribute" />
-        </field>
     </class>
     
     <class name="org.apache.cocoon.portal.layout.impl.LinkLayout"
