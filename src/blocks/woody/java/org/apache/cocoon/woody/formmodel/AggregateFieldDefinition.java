@@ -64,6 +64,9 @@ import java.util.Iterator;
  */
 public class AggregateFieldDefinition extends AbstractWidgetDefinition {
     private Expression combineExpr;
+    /**
+     * Compiled split pattern.
+     */
     private Pattern splitPattern;
     /**
      * The original regexp expression from which the {@link #splitPattern} was compiled,
