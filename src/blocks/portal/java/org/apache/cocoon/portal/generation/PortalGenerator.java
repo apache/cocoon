@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.generation;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
@@ -39,7 +38,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalGenerator.java,v 1.8 2004/04/28 13:58:16 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class PortalGenerator 
 extends ServiceableGenerator {
@@ -75,18 +74,14 @@ extends ServiceableGenerator {
         super.setup(resolver, objectModel, src, par);
         
         // instantiate the portal service for this request
-        // and set the portal-name
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            service.setPortalName(par.getParameter("portal-name"));
             
             // This is a fix: if we don't use the link service here, we get
             // in some rare cases a wrong uri!
             service.getComponentManager().getLinkService().getRefreshLinkURI();
             
-        } catch (ParameterException pe) {
-            throw new ProcessingException("Parameter portal-name is required.");
         } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {

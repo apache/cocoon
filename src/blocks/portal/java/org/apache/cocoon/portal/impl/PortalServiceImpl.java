@@ -207,7 +207,7 @@ public class PortalServiceImpl
                 // scan for skins
                 final List skinList = new ArrayList();
                 this.skins.put(name, skinList);
-                final Configuration[] skinConfs = current.getChild("skin").getChildren("skins");
+                final Configuration[] skinConfs = current.getChild("skins").getChildren("skin");
                 if ( skinConfs != null ) {
                     for(int s=0;s<skinConfs.length;s++) {
                         final Configuration currentSkin = skinConfs[s];

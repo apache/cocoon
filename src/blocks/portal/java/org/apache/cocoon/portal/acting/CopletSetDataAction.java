@@ -57,9 +57,6 @@ extends ServiceableAction {
                 copletId = (String)context.get(Constants.COPLET_ID_KEY);
             } else {
                 copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
-            
-                // set portal name
-                portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));
             }
         
             if (copletId == null) {
