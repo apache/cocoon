@@ -64,7 +64,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  * attribute columns.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: AutoIncrementModule.java,v 1.1 2003/03/09 00:03:08 pier Exp $
+ * @version CVS $Id: AutoIncrementModule.java,v 1.2 2003/09/05 12:46:12 giacomo Exp $
  * */
 public interface AutoIncrementModule extends Component {
 
@@ -80,7 +80,7 @@ public interface AutoIncrementModule extends Component {
 
      * @param tableConf Table's configuration from resource description.
      * @param columnConf column's configuration from resource description.
-     * @param mdoeConf this mode's configuration from resource description.
+     * @param modeConf this mode's configuration from resource description.
      * @param conn Connection
      * @param stmt Statement that was executed to insert the last row.
      * @param request The request object
@@ -118,7 +118,7 @@ public interface AutoIncrementModule extends Component {
      *
      * @param tableConf Table's configuration from resource description.
      * @param columnConf column's configuration from resource description.
-     * @param mdoeConf this mode's configuration from resource description.
+     * @param modeConf this mode's configuration from resource description.
      * @param conn Connection
      * @param request The request object
      * @param idx In case of multiple rows to be inserted, index to the desired row
