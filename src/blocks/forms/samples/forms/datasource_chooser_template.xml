@@ -57,6 +57,8 @@
       <br/>
       
       <ft:widget id="ok"/>
+      <br/>
+      <a href="./do-datasourceChooser.flow">Restart this sample</a> -  <a href="./">Back to samples</a>
 
     </ft:form-template>
   </content>

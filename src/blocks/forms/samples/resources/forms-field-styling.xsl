@@ -66,6 +66,10 @@
   <xsl:template match="fi:*" mode="styling">
     <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
 
+  	<xsl:if test="@state = 'disabled'">
+  		<xsl:attribute name="disabled">disabled</xsl:attribute>
+  	</xsl:if>
+
     <!--+ 
         | @listbox-size needs to be handled separately as even if it is not
         | specified some output (@size) must be generated.

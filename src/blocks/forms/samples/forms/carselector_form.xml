@@ -32,9 +32,11 @@
           if (value != null) {
             // Get the corresponding type list
             typewidget.setSelectionList("cocoon:/cars/" + value);
+            typewidget.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
           } else {
             // Set an empty selection list
             typewidget.setSelectionList(new Packages.org.apache.cocoon.forms.datatype.EmptySelectionList("Select a maker first"));
+            typewidget.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
           }
           // Always set the type value to null. Note that it will also fire an event on the "type"
           // widget if it already had a value.
@@ -55,7 +57,7 @@
       </fd:on-value-changed>
     </fd:field>
   
-    <fd:field id="type" required="true">
+    <fd:field id="type" required="true" state="disabled">
       <fd:label>Type:</fd:label>
       <fd:datatype base="string"/>
       <fd:selection-list>
@@ -71,9 +73,11 @@
           var makewidget = event.source.lookupWidget("../make");
           if (value != null) {
             modelwidget.setSelectionList("cocoon:/cars/" + makewidget.value + "/" + value);
+            modelwidget.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
           } else {
             // Set an empty selection list
             modelwidget.setSelectionList(new Packages.org.apache.cocoon.forms.datatype.EmptySelectionList("Select a type first"));
+            modelwidget.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.INVISIBLE);
           }
           
           // Always set the model value to null. Note that it will also fire an event on the "model"
@@ -93,7 +97,7 @@
       </fd:on-value-changed>
     </fd:field>
     
-    <fd:field id="model" required="true">
+    <fd:field id="model" required="true" state="invisible">
       <fd:label>Model:</fd:label>
       <fd:datatype base="string"/>
       <fd:selection-list>
