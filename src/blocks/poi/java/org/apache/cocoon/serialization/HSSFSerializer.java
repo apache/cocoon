@@ -63,77 +63,69 @@ import org.apache.cocoon.components.elementprocessor.impl.poi.hssf.HSSFElementPr
  *
  * @author   Marc Johnson (marc_johnson27591@hotmail.com)
  * @author   Nicola Ken Barozzi (nicolaken@apache.org)
- * @version CVS $Id: HSSFSerializer.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
+ * @version CVS $Id: HSSFSerializer.java,v 1.3 2003/04/02 04:22:14 crossley Exp $
  */
-public class HSSFSerializer
-      extends POIFSSerializer implements Initializable, Configurable
-{
-  private ElementProcessorFactory _element_processor_factory;
-  private final static String _mime_type = "vnd.ms-excel";
-  String locale;
+public class HSSFSerializer extends POIFSSerializer implements Initializable, Configurable {
+    private ElementProcessorFactory _element_processor_factory;
+    private final static String _mime_type = "application/vnd.ms-excel";
+    String locale;
 
-  /**
-   *  Constructor
-   */
+    /**
+     *  Constructor
+     */
+    public HSSFSerializer() {
+        super();
+    }
 
-  public HSSFSerializer() {
-    super();
-  }
+    /**
+     * Initialialize the component. Initialization includes allocating any
+     * resources required throughout the components lifecycle.
+     *
+     * @exception Exception if an error occurs
+     */
+    public void initialize() throws Exception {
+        _element_processor_factory = new HSSFElementProcessorFactory(locale);
+        setupLogger(_element_processor_factory);
+    }
 
-  /**
-   * Initialialize the component. Initialization includes 
-   * allocating any resources required throughout the 
-   * components lifecycle.
-   *
-   * @exception Exception if an error occurs
-   */
-  public void initialize() throws Exception{
-
-    _element_processor_factory  = new HSSFElementProcessorFactory(locale);
-    setupLogger(_element_processor_factory);
-  }
-
-  public void configure(Configuration conf) throws ConfigurationException {
+    public void configure(Configuration conf) throws ConfigurationException {
         Configuration[] parameters = conf.getChildren("parameter");
         for (int i = 0; i < parameters.length; i++) {
             String name = parameters[i].getAttribute("name");
             if (name.trim().equals("locale")) {
-		locale = parameters[i].getAttribute("value");
+                locale = parameters[i].getAttribute("value");
             }
         }
+    }
 
-  }
-        
-  /**
-   *  get the mime type
-   *
-   *@return    vnd.ms-excel
-   */
+    /**
+     * get the mime type
+     *
+     *@return    application/vnd.ms-excel
+     */
+    public String getMimeType() {
+        return _mime_type;
+    }
 
-  public String getMimeType() {
-    return _mime_type;
-  }
+    /**
+     *  get the ElementProcessorFactory
+     *
+     *@return    the ElementProcessorFactory
+     */
+    protected ElementProcessorFactory getElementProcessorFactory() {
+        return _element_processor_factory;
+    }
 
-  /**
-   *  get the ElementProcessorFactory
-   *
-   *@return    the ElementProcessorFactory
-   */
+    /**
+     *  post-processing for endDocument
+     */
+    protected void doLocalPostEndDocument() {
+    }
 
-  protected ElementProcessorFactory getElementProcessorFactory() {
-    return _element_processor_factory;
-  }
-
-  /**
-   *  post-processing for endDocument
-   */
-
-  protected void doLocalPostEndDocument() { }
-
-  /**
-   *  pre-processing for endDocument
-   */
-
-  protected void doLocalPreEndDocument() { }
+    /**
+     *  pre-processing for endDocument
+     */
+    protected void doLocalPreEndDocument() {
+    }
 
 }
