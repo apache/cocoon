@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.156 2003/09/25 16:57:44 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.157 2003/09/26 14:46:23 bdelacretaz Exp $:-->
 
 <status>
  <developers>
@@ -191,6 +191,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BD" type="add">
+     Slop block: New YAPT sample, lightweight presentation tool.
+   </action>
    <action dev="CZ" type="add" fixes-bug="23171" due-to="Volker Schmitt" due-to-email="volker.schmitt@basf-it-services.com">
      Fixing release of Source in the JXTemplateGenerator.
    </action>
