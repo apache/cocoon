@@ -22,8 +22,9 @@
 
  <anchor id="overview"/>
  <s1 title="Overview">
-  <p>
-### 
+<note>This document is under development.</note>
+  <p>You really should validate documents in your editing environment.
+    It is not the concern of Cocoon. However there are some facilities.
   </p>
  </s1>
 
@@ -45,8 +46,8 @@ to extend it.
  <s1 title="Operation">
    <p>
     There are three validation targets in build.xml (see some internal notes).
-    If you do not want validation to happen automatically during the build
-    (for some strange reason) then you can switch it off in
+    If you do not want validation to happen automatically during the build,
+    then you can switch it off in
     <code>./properties.xml</code>
    </p>
    <p>
