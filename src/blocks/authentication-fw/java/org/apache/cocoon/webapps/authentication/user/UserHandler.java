@@ -27,7 +27,7 @@ import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.10 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @version CVS $Id: UserHandler.java,v 1.11 2004/03/19 13:59:21 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -62,8 +62,7 @@ implements java.io.Serializable {
     /**
      * Are all application contexts already loaded?
      */
-    public boolean getApplicationsLoaded()
-    throws ProcessingException {
+    public boolean getApplicationsLoaded() {
         if ( this.handler.getApplications().isEmpty() ) {
             return true;
         } else {

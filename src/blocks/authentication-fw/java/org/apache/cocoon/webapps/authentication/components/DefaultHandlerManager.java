@@ -26,38 +26,35 @@ import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
-import org.apache.excalibur.source.SourceResolver;
 
 
 /**
  *  This is a utility class managing the authentication handlers
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultHandlerManager.java,v 1.5 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @version CVS $Id: DefaultHandlerManager.java,v 1.6 2004/03/19 13:59:22 cziegeler Exp $
 */
 public final class DefaultHandlerManager {
 
     /**
      * Get the current handler configuration
      */
-    static public Map prepareHandlerConfiguration(SourceResolver resolver,
-                                                       Map            objectModel,
-                                                       SitemapConfigurationHolder holder)
+    static public Map prepareHandlerConfiguration(Map            objectModel,
+                                                  SitemapConfigurationHolder holder)
     throws ConfigurationException {
         Map configs = (Map)holder.getPreparedConfiguration();
         if ( null == configs ) {
             ChainedConfiguration chainedConfig = holder.getConfiguration();
-            configs = prepare( resolver, objectModel, holder, chainedConfig );
+            configs = prepare( objectModel, holder, chainedConfig );
         }
         return configs;
     }
     /**
      * Prepare the handler configuration
      */
-    static private Map prepare(SourceResolver resolver,
-                                 Map            objectModel,
-                                 SitemapConfigurationHolder holder,
-                                 ChainedConfiguration conf) 
+    static private Map prepare( Map            objectModel,
+                                SitemapConfigurationHolder holder,
+                                ChainedConfiguration conf) 
     throws ConfigurationException {
         // test for handlers
         boolean found = false;
@@ -73,7 +70,7 @@ public final class DefaultHandlerManager {
         Map values = null;
         final ChainedConfiguration parent = conf.getParent();
         if ( null != parent ) {
-            values = prepare( resolver, objectModel, holder, parent );
+            values = prepare( objectModel, holder, parent );
             if ( found ) {
                 values = new HashMap( values );
             }
@@ -91,7 +88,7 @@ public final class DefaultHandlerManager {
                     throw new ConfigurationException("Handler names must be unique: " + name);
                 }
 
-                addHandler( resolver, objectModel, handlers[i], values );
+                addHandler( objectModel, handlers[i], values );
             }
         }
         holder.setPreparedConfiguration( conf, values );
@@ -102,10 +99,9 @@ public final class DefaultHandlerManager {
     /**
      * Add one handler configuration
      */
-    static private void addHandler(SourceResolver resolver,
-                                     Map            objectModel,
-                                     Configuration  configuration,
-                                     Map            values)
+    static private void addHandler(Map            objectModel,
+                                   Configuration  configuration,
+                                   Map            values)
     throws ConfigurationException {
         // get handler name
         final String name = configuration.getAttribute("name");
@@ -114,12 +110,8 @@ public final class DefaultHandlerManager {
         HandlerConfiguration currentHandler = new HandlerConfiguration(name);
 
         try {
-            currentHandler.configure(resolver, ObjectModelHelper.getRequest(objectModel), configuration);
+            currentHandler.configure(ObjectModelHelper.getRequest(objectModel), configuration);
         } catch (ProcessingException se) {
-            throw new ConfigurationException("Exception during configuration of handler: " + name, se);
-        } catch (org.xml.sax.SAXException se) {
-            throw new ConfigurationException("Exception during configuration of handler: " + name, se);
-        } catch (java.io.IOException se) {
             throw new ConfigurationException("Exception during configuration of handler: " + name, se);
         }
         values.put( name, currentHandler );
