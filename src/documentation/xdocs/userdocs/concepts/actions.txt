@@ -1,20 +1,8 @@
-WARNING: This material is subject to change at anytime and may
-never find a way into the main distribution. It could
-be removed if it has proven not to be useful for Cocoon 2.
-
-This is a proposal for a Action sitemap component. For more
-information look at the javadoc comments in the file Action.java
-in this directory. For a possible implementation look at the file
-HelloAction.java.
-
-Create a file named "actions.inc" in the root of the Cocoon 2
-repository to include this functionality and execute the command
-"build package webapp".
-
-The created cocoon.war and cocoon.jar file in build/cocoon
-directory contains the modified version which include the
-Action sitemap component and the sample HelloAction which
-is called when requesting the URL http://localhost:8080/cocoon/welcome
+This is the proposal for a Action sitemap component. It shows the
+basic ideas behind actions. For more information look at the javadoc 
+comments in the file Action.java in the org.apache.cocoon.acting
+package. For a possible implementation look at the file HelloAction.java
+or at the other actions in the same package.
 
 To give you an overview of the discussion about sitemap Actions here is
 an excerpt from the cocoon-dev mailing list:
