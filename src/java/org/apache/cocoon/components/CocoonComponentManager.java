@@ -87,7 +87,7 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.17 2003/10/08 20:18:34 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.18 2003/10/09 07:09:59 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -186,11 +186,15 @@ implements SourceResolver
         } 
     }
     
-    public static void checkEnvironment(Logger logger) {
+    public static void checkEnvironment(Logger logger) 
+    throws Exception {
         // TODO (CZ): This is only for testing - remove it later on
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
         if (stack != null && !stack.isEmpty() ) {
-            logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY");        
+            logger.error("ENVIRONMENT STACK HAS NOT BEEN CLEANED PROPERLY");   
+            throw new ProcessingException("Environment stack has not been cleaned up properly. "
+                                          +"Please report this (if possible together with a test case) "
+                                          +"to the Cocoon developers.");     
         }
     }
 
