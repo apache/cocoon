@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  * Base class for XSP's object model manipulation logicsheets
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-31 16:41:58 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-05 22:07:06 $
  */
 public class XSPObjectHelper {
   /**
@@ -134,7 +134,7 @@ public class XSPObjectHelper {
   )
     throws SAXException
   {
-    attr.addAttribute("", name, "", "CDATA", value);
+    attr.addAttribute("", name, name, "CDATA", value);
   }
 
   /**
