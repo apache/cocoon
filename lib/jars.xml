@@ -524,7 +524,7 @@
       based upon Microsoft's OLE 2 Compound Document format using pure Java.
     </description>
     <used-by>MS Excel serializer (poi block)</used-by>
-    <lib>poi/lib/poi-2.5-final-20040302.jar</lib>
+    <lib>poi/lib/poi-2.5.1-final-20040804.jar</lib>
     <homepage>http://jakarta.apache.org/poi/</homepage>
   </file>
 
