@@ -12,7 +12,7 @@
 <body>
 	<s1 title="JPath Logic Sheet">
   <p>
-The JPath Logic Sheet is an XSP logic sheet that allows you to access data from a Cocoon Flowscript in an XSP page and inject it into a Cocoon pipeline. It provides a set of tags (similar to the those defined by <link href="http://www.w3.org/TR/xslt">XSLT</link>) that allow you to iterate over Java collections (and Java or JavaScript arrays) and to test for the presence of optional or alternate bean properties. It is based on <link href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</link>.
+The JPath Logic Sheet is an <link href="../xsp/index.html">XSP</link> logic sheet that allows you to access data from a Cocoon Flowscript in an XSP page and inject it into a Cocoon pipeline. It provides a set of tags (similar to the those defined by <link href="http://www.w3.org/TR/xslt">XSLT</link>) that allow you to iterate over Java collections (and Java or JavaScript arrays) and to test for the presence of optional or alternate bean properties. It is based on <link href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</link>.
   </p>
 </s1>
 <s1 title ="Tags">

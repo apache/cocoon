@@ -15,9 +15,9 @@
 	<p>Cocoon provides a JavaScript API to manage control flow based on an <link href="http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino">extended</link> version of <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> that supports continuations.</p>
     </s1>
     <s1 title="Functions">
-    <s2 title = "sendPage">
+    <s2 title = "sendPage"><anchor id="sendPage"/>
       <p>
-      <code>void sendPage([String] uri, [Object] bean)</code>
+      <em>Function</em> <code>sendPage([String] uri, [Object] bean)</code>
       </p>
       <p>
       Passes control to the Cocoon sitemap to generate the output page.
@@ -29,9 +29,9 @@
        <code>bean</code> is a context object which can be accessed inside this page to extract various values and place them in the generated page.
       </p>
     </s2>
-    <s2 title = "sendPageAndWait">
+    <s2 title = "sendPageAndWait"><anchor id="sendPageAndWait"/>
     <p>
-    <code>WebContinuation sendPageAndWait([String] uri, [Object] bean, [Number] timeToLive)</code>
+    <em>Function</em> <code>[WebContinuation] sendPageAndWait([String] uri, [Object] bean, [Number] timeToLive)</code>
     </p>
      <p>
      Passes control to the Cocoon sitemap to generate the output page.
@@ -39,75 +39,94 @@
       <p>The flow script is suspended after the page is generated and the whole execution stack saved in the WebContinuation object returned from this function. </p>
      <p> <code>uri</code> is the relative URL of the page to be sent back to the client. <code>bean</code> is a context object which can be accessed inside this page to extract various values and place them in the generated page.</p>
      <p><code>timeToLive</code> is the time to live for the continuation created.</p>
-     <p>The return value is the continuation object.</p>
+     <p>The return value is the <link href="#WebContinuation">continuation</link> object.</p>
     </s2>
   </s1>
     <s1 title="Objects">
     <s2 title = "cocoon">
-    </s2>
     <p>The <code>cocoon</code> object represents the current Cocoon sitemap and provides the following readonly properties:</p> 
+    <s4 title="request">
     <p>The current Cocoon request:</p>
     <p>
-    Property <code>[org.apache.cocoon.environment.Request] request</code>
+    <em>Property</em> <code>[org.apache.cocoon.environment.Request] request</code>
     </p>
+    </s4>
+    <s4 title="response">
     <p>The current Cocoon response:</p>
     <p>
-    Property <code>[org.apache.cocoon.environment.Response] response</code>
+    <em>Property</em> <code>[org.apache.cocoon.environment.Response] response</code>
     </p>
+    </s4>
+    <s4 title="session">
     <p>The current Cocoon session:</p>
     <p>
-    Property <code>[org.apache.cocoon.environment.Session] session</code>
+    <em>Property</em> <code>[org.apache.cocoon.environment.Session] session</code>
     </p>
+    </s4>
+    <s4 title="context">
     <p>The current Cocoon application context:</p>
     <p>
-    Property <code>[org.apache.cocoon.environment.Context] context</code>
+    <em>Property</em> <code>[org.apache.cocoon.environment.Context] context</code>
     </p>
+    </s4>
+    <s4 title="environment">
     <p>The current Cocoon environment:</p>
     <p>
-    Property <code>[org.apache.cocoon.environment.Environment] environment</code>
+    <em>Property</em> <code>[org.apache.cocoon.environment.Environment] environment</code>
     </p>
+    </s4>
+    <s4 title="componentManager">
     <p>The current Sitemap's component manager:</p>
     <p>
-    Property <code>[org.apache.avalon.framework.component.ComponentManager] componentManager</code>
+    <em>Property</em> <code>[org.apache.avalon.framework.component.ComponentManager] componentManager</code>
     </p>
+    </s4>
+    <s4 title="parameters">
     <p>Any parameters passed to the script by the Sitemap:</p>
     <p>
-    Property <code>[Array] parameters</code>
+    <em>Property</em> <code>[Array] parameters</code>
     </p>
     <p>The <code>cocoon</code> object also provides the following functions:</p>
+    </s4>
+    <s4 title="process">
     <p>
-    Function <code>[Boolean] process([String] uri, [Object] bizData, [java.io.OutputStream] stream)</code></p>
+    <em>Function</em> <code>[Boolean] process([String] uri, [Object] bizData, [java.io.OutputStream] stream)</code></p>
     <p>
      Call the Cocoon sitemap for the given URI, sending the output of the
-     eventually matched pipeline to the specified outputstream.</p>
+     eventually matched pipeline to the specified <code>OutputStream</code>.</p>
     <p><code>uri</code> is the URI for which the request should be generated.</p>
     <p><code>bizData</code> is the business data object
      to be made available to the forwarded pipeline</p>
      <p><code>stream</code> is an <code>OutputStream</code> where the output should be written to.</p>
      <p>Returns the result from the Cocoon processor.
      </p>
+    </s4>
+    <s4 title="createSession"><anchor id="createSession"/>
     
-    <p> Function <code>createSession()</code></p>
+    <p> <em>Function</em> <code>createSession()</code></p>
     <p>  
        Associate the current set of JavaScript global variables with the user's session. This means that all invocations from the
        sitemap of a JavaScript function (using the &lt;map:call
        function="..."&gt;), will share global JavaScript variables.
     </p> 
 
+    </s4>
+    <s4 title="removeSession">
     <p>
-    Function <code>removeSession()</code>
+    <em>Function</em> <code>removeSession()</code>
     </p>
     <p>
        Dissociate global JavaScript variables from the user's session.
     </p>
 
-    <p>Function <code>load([String] uri)</code></p>
+    <p><em>Function</em> <code>load([String] uri)</code></p>
     <p>
       Load the JavaScript script specified by <code>uri</code>. The Cocoon
      source resolver is used to resolve <code>uri</code>. 
     </p>
-
-    <s2 title="WebContinuation">
+    </s4>
+    </s2>
+    <s2 title="WebContinuation"><anchor id="WebContinuation"/>
     <p>A <code>WebContinuation</code> represents a continuation of a Flowscript. Because a user may click on the back button in the browser and restart a saved computation in a continuation, each <code>WebContinuation</code> becomes the parent of a subtree of continuations.
     </p>
     <p>
@@ -116,8 +135,9 @@
     <p>
        <code>WebContinuation</code> objects support the following functions and properties:
     </p>
+    <s4 title="invalidate">
     <p>
-        Function <code>invalidate()</code>
+        <em>Function</em> <code>invalidate()</code>
     </p>
     <p>
       Invalidates a <code>WebContinuation</code>. This effectively
@@ -126,12 +146,15 @@
       <code>WebContinuation</code> invalidates all the
       <code>WebContinuation</code>s which are children of it.    
     </p>
+    </s4>
+    <s4 title="id">
     <p>
-        Property <code>[String] id</code>
+        <em>Property</em> <code>[String] id</code>
     </p>
     <p>
        Returns this object's unique identifier as a String
     </p>
+    </s4>
     </s2>
     </s1>
   </body>
