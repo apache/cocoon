@@ -25,33 +25,33 @@
   </group>
 
   <group name="XML-ized web sites">
-   <sample name="java.apache.org" xlink:href="sites/java.apache.org">
+   <sample name="java.apache.org" xlink:href="sites/java.apache.org" xlink:type="simple">
     This page shows a much more complex example that shows how powerful
     is the style separation and how powerful XML+XSLT can be even for
     web publishing.
    </sample>
-   <sample name="jakarta.apache.org" xlink:href="sites/jakarta.apache.org">
+   <sample name="jakarta.apache.org" xlink:href="sites/jakarta.apache.org" xlink:type="simple">
     This pages shows the XML-ized version of the Apache Jakarta web site.
    </sample>
   </group>
   
   <group name="Static Content">
-   <sample name="formatting objects" xlink:href="fo">
+   <sample name="formatting objects" xlink:href="fo" xlink:type="simple">
     This is an example of FO translated to PDF by Apache FOP.
    </sample>
-   <sample name="scalable vector graphics" xlink:href="svg">
+   <sample name="scalable vector graphics" xlink:href="svg" xlink:type="simple">
     An example of a SVG file rendered to a PNG image.
    </sample>
-   <sample name="slides" xlink:href="slides/slides">
+   <sample name="slides" xlink:href="slides/slides" xlink:type="simple" xlink:role="dynamic">
     Example of complex XSLT usage.
    </sample>
   </group>
 
   <group name="Dynamic Content">
-   <sample name="Simple XSP" xlink:href="xsp/simple">
+   <sample name="Simple XSP" xlink:href="xsp/simple" xlink:type="simple" xlink:role="dynamic">
     Simple XSP example.
    </sample>
-   <sample name="Simple SQL" xlink:href="sql/sql-page">
+   <sample name="Simple SQL" xlink:href="sql/sql-page" xlink:type="simple" xlink:role="dynamic">
     Simple SQL example. You should make sure that you have a database and 
     table according to the conf/sitemap.xmap and the documens/sql/sql-page.sql 
     definitions.
@@ -59,10 +59,10 @@
   </group>
 
   <group name="System Pages">
-   <sample name="Status Page" xlink:href="status">
+   <sample name="Status Page" xlink:href="status" xlink:type="simple" xlink:role="dynamic">
     Cocoon status page.
    </sample>
-   <sample name="Error Page" xlink:href="generror">
+   <sample name="Error Page" xlink:href="generror" xlink:type="simple" xlink:role="dynamic">
     This example shows what happens if an error is triggered in the pipeline.
    </sample>
   </group>
