@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.37 2000-03-02 23:16:19 stefano Exp $
+  $Id: changes.xml,v 1.38 2000-03-03 14:16:19 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   Patched Ant to remove dependency on Sun ProjectX and fixed problem for
+   javadoc not working if tools.jar not set in classpath.
+  </action>
   <action dev="SM" type="add">
    Added the ant scripts that were left over from my environment. Now I removed
    everything from my environment, even the classpath is empty.. so I'll be
