@@ -367,4 +367,8 @@ public class MockRequest implements Request {
         parameters.clear();
         headers.clear();
     }
+    
+    public boolean isInternal() {
+        return true;
+    }
 }

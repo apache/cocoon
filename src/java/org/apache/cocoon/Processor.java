@@ -61,7 +61,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.2 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.3 2003/07/06 11:44:30 sylvain Exp $
  */
 public interface Processor extends Component {
 
@@ -85,7 +85,7 @@ public interface Processor extends Component {
      * a <code>ProcessingPipeline</code>.
      * @since 2.1
      */
-    ProcessingPipeline processInternal(Environment environment)
+    ProcessingPipeline buildPipeline(Environment environment)
     throws Exception;
 
     /**

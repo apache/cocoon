@@ -110,7 +110,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.9 2003/06/24 16:44:35 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.10 2003/07/06 11:44:30 sylvain Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -655,7 +655,7 @@ public class Cocoon
      * a <code>ProcessingPipeline</code>.
      * @since 2.1
      */
-    public ProcessingPipeline processInternal(Environment environment)
+    public ProcessingPipeline buildPipeline(Environment environment)
     throws Exception {
         if (disposed) {
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
@@ -668,11 +668,11 @@ public class Cocoon
             }
 
             if (this.threadSafeProcessor != null) {
-                return this.threadSafeProcessor.processInternal(environment);
+                return this.threadSafeProcessor.buildPipeline(environment);
             } else {
                 Processor processor = (Processor)this.componentManager.lookup(Processor.ROLE);
                 try {
-                    return processor.processInternal(environment);
+                    return processor.buildPipeline(environment);
                 }
                 finally {
                     this.componentManager.release(processor);

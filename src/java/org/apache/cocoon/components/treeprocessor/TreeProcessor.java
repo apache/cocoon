@@ -89,7 +89,7 @@ import java.util.Map;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.5 2003/06/11 13:33:25 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.6 2003/07/06 11:44:30 sylvain Exp $
  */
 
 public class TreeProcessor
@@ -333,7 +333,7 @@ public class TreeProcessor
      * a <code>ProcessingPipeline</code>.
      * @since 2.1
      */
-    public ProcessingPipeline processInternal(Environment environment)
+    public ProcessingPipeline buildPipeline(Environment environment)
     throws Exception {
         InvokeContext context = new InvokeContext( true );
 

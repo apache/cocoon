@@ -62,7 +62,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ReadNode.java,v 1.1 2003/03/09 00:09:22 pier Exp $
+ * @version CVS $Id: ReadNode.java,v 1.2 2003/07/06 11:44:30 sylvain Exp $
  */
 
 public class ReadNode extends AbstractProcessingNode implements ParameterizableProcessingNode {
@@ -114,7 +114,7 @@ public class ReadNode extends AbstractProcessingNode implements ParameterizableP
             env.setStatus(this.statusCode);
         }
 
-        if (! context.isInternalRequest()) {
+        if (! context.isBuildingPipelineOnly()) {
             // Process pipeline
             return pipeline.process(env);
 

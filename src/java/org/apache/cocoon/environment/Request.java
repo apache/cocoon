@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: Request.java,v 1.2 2003/07/06 11:44:30 sylvain Exp $
  *
  */
 
@@ -833,4 +833,11 @@ public interface Request {
      */
 
     boolean isRequestedSessionIdFromURL();
+    
+    /**
+     * Is this an internal request (i.e. a "cocoon:" request) ?
+     * 
+     * @return true if the request is internal
+     */
+    boolean isInternal();
 }

@@ -62,7 +62,7 @@ import org.apache.cocoon.environment.Environment;
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.2 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.3 2003/07/06 11:44:30 sylvain Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Component, Disposable, ThreadSafe {
@@ -90,9 +90,9 @@ implements Processor, Component, Disposable, ThreadSafe {
      * a <code>ProcessingPipeline</code>.
      * @since 2.1
      */
-    public ProcessingPipeline processInternal(Environment environment)
+    public ProcessingPipeline buildPipeline(Environment environment)
     throws Exception {
-        return this.processor.processInternal(environment);
+        return this.processor.buildPipeline(environment);
     }
 
     /**
