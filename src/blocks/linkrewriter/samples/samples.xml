@@ -14,12 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS: $Id: samples.xml,v 1.5 2004/04/01 19:01:03 vgritsenko Exp $ -->
-<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- CVS: $Id: samples.xml,v 1.6 2004/04/03 08:17:42 crossley Exp $ -->
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="LinkRewriter Block Samples">
   <group name="Back">
-    <sample name="Back" href="../">
-      to the samples main page
-    </sample>
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
 
   <group name="LinkRewriter Demos">

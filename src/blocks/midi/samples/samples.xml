@@ -14,9 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<samples xmlns:xlink="http://www.w3.org/1999/xlink">
-  <group name="Main examples page.">
-    <sample name="Back" href="..">to Cocoon examples main page</sample>
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="MIDI Block Samples">
+  <group name="Back">
+    <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+    <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   </group>
   <group name="What is the MIDI block?">
     <note>The MIDI block currently gives you an XMidiGenerator to generate an

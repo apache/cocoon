@@ -14,17 +14,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: samples.xml,v 1.7 2004/03/06 02:34:33 joerg Exp $ -->
-<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+<!-- CVS $Id: samples.xml,v 1.8 2004/04/03 08:17:41 crossley Exp $ -->
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="FOP Block Samples">
 
-    <group name="Main examples page.">
-        <sample name="Back" href="..">to Cocoon examples main page</sample>
+    <group name="Back">
+      <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+      <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
+      <note>
+        FOP block requires Batik block to be present for generating PDF with embedded images.
+      </note>   
     </group>
 
     <group name="Simple FOP examples">
-        <note>
-            FOP block requires Batik block to be present for generating PDF with embedded images.
-        </note>   
         <sample name="Hello, PDF world!" href="hello.pdf">
             The well-known hello.xml document rendered as PDF.
         </sample>

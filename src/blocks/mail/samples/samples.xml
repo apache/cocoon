@@ -15,15 +15,20 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.3 2004/03/06 02:26:07 antonio Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.4 2004/04/03 08:17:42 crossley Exp $ -->
 
-<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="mail block">
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Mail Block Samples">
 
-  <group name="Sendmail">
+  <group name="Back">
+     <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+     <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
      <note>
        You need to have SMTP up and running on the server for this and propably
        you have to put a mail.jar in your WEB-INF/lib directory.
      </note>
+  </group>
+
+  <group name="Sendmail">
      <sample name="Action documentation" href="/docs/userdocs/actions/sendmail-action.html">
        Documentation for the Sendmail action component.
      </sample>

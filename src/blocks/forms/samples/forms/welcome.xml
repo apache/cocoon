@@ -14,11 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.1 2004/03/09 10:33:48 reinhard Exp $-->
-<samples>
-
- <group name="Main examples page.">
-   <sample name="Back" href="../blocks">to Cocoon examples main page</sample>
+<!-- $Id: welcome.xml,v 1.2 2004/04/03 08:17:42 crossley Exp $-->
+<samples name="CForms Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <group name="Back">
+  <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+  <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
   <note>
     Cocoon Forms is the upcoming forms framework for Cocoon.
     Although it is marked as unstable it is the *only* supported solution - all
@@ -26,7 +26,8 @@
     Of course, your feedback is very much welcome on the Cocoon mailing lists.
   </note>
   <sample name="Cocoon Forms Documentation" href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">
-    Documentation is available on the Cocoon Wiki.</sample>
+    Documentation is available on the Cocoon Wiki.
+  </sample>
  </group>
 
  <group name="Basic Samples">

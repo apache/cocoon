@@ -20,9 +20,10 @@
                 xmlns:dir="http://apache.org/cocoon/directory/2.0">
 
   <xsl:template match="dir:directory">
-    <samples name="ASCII Art Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
-      <group name="Main examples page.">
-        <sample name="Back" href="..">to Cocoon examples main page</sample>
+    <samples name="ASCII Art Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <group name="Back">
+        <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+        <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
       </group>
 
       <group name="Available ascii art TXT files">

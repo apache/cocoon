@@ -16,12 +16,17 @@
 -->
 <document>
   <header>
-    <title>Jakarta Slide example</title>
+    <title>Jakarta Slide Block Samples</title>
   </header>
   <body>
     <row>
       <column title="Back">
-        <a href="${base}/../">Back</a> - to Cocoon examples main page
+        <p>
+          <a href="${base}/../../">Back</a> - to Cocoon Samples main page
+        </p>
+        <p>
+          <a href="${base}">Back</a> - to Cocoon Blocks Samples main page
+        </p>
       </column>
       <column title="Login">
         <p>

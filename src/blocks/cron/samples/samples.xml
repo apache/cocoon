@@ -15,13 +15,13 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.4 2004/03/06 02:25:47 antonio Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.5 2004/04/03 08:17:41 crossley Exp $ -->
 
-<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Cron block">
+<samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Cron Block Samples">
 
-    <group name="Main examples page.">
-        <sample name="Back" href="..">to Cocoon main examples page</sample>
-        <sample name="Back" href="../blocks">to Cocoon block examples page</sample>
+    <group name="Back">
+        <sample name="Back" href="../..">to Cocoon Samples main page</sample>
+        <sample name="Back" href="..">to Cocoon Blocks Samples main page</sample>
     </group>
 
     <group name="Documentation">
