@@ -88,15 +88,21 @@ public abstract class AbstractProcessingPipeline
     protected String sitemapReaderMimeType;
     protected OutputComponentSelector readerSelector;
 
-    /** This is the last component in the pipeline, either the serializer
-     *  or a custom xmlconsumer for the cocoon: protocol etc.
+    /**
+     * True when pipeline has been prepared.
+     */
+    private boolean prepared;
+
+    /**
+     * This is the last component in the pipeline, either the serializer
+     * or a custom xmlconsumer for the cocoon: protocol etc.
      */
     protected XMLConsumer lastConsumer;
 
-    /** the component manager set with compose() */
+    /** The component manager set with compose() */
     protected ComponentManager manager;
 
-    /** the component manager set with compose() and recompose() */
+    /** The component manager set with compose() and recompose() */
     protected ComponentManager newManager;
 
     /** The configuration */
@@ -343,11 +349,11 @@ public abstract class AbstractProcessingPipeline
      * @return true if the pipeline is 'sane', false otherwise.
      */
     protected boolean checkPipeline() {
-        if ( this.generator == null && this.reader == null) {
+        if (this.generator == null && this.reader == null) {
             return false;
         }
 
-        if ( this.generator != null && this.serializer == null ) {
+        if (this.generator != null && this.serializer == null) {
             return false;
         }
 
@@ -390,15 +396,9 @@ public abstract class AbstractProcessingPipeline
                 );
             }
         } catch (SAXException e) {
-            throw new ProcessingException(
-                "Could not setup pipeline.",
-                e
-            );
+            throw new ProcessingException("Could not setup pipeline.", e);
         } catch (IOException e) {
-            throw new ProcessingException(
-                "Could not setup pipeline.",
-                e
-            );
+            throw new ProcessingException("Could not setup pipeline.", e);
         }
     }
 
@@ -409,9 +409,8 @@ public abstract class AbstractProcessingPipeline
                            XMLProducer producer,
                            XMLConsumer consumer)
     throws ProcessingException {
-        XMLProducer next = producer;
         // Connect next component.
-        next.setConsumer(consumer);
+        producer.setConsumer(consumer);
     }
 
     /**
@@ -437,14 +436,8 @@ public abstract class AbstractProcessingPipeline
      */
     public boolean process(Environment environment)
     throws ProcessingException {
-        // If this is an internal request, lastConsumer was reset!
-        if (null == this.lastConsumer) {
-            this.lastConsumer = this.serializer;
-        } else {
-            this.preparePipeline(environment);
-        }
-        if ( this.reader != null ) {
-            this.preparePipeline(environment);
+        if (!this.prepared) {
+            preparePipeline(environment);
         }
 
         // See if we need to set an "Expires:" header
@@ -464,10 +457,16 @@ public abstract class AbstractProcessingPipeline
                 return true;
             }
 
-            return this.processReader(environment);
+            return processReader(environment);
+        } else {
+            // If this is an internal request, lastConsumer was reset!
+            if (this.lastConsumer == null) {
+                this.lastConsumer = this.serializer;
+            }
+
+            connectPipeline(environment);
+            return processXMLPipeline(environment);
         }
-        this.connectPipeline(environment);
-        return this.processXMLPipeline(environment);
     }
 
     /**
@@ -475,15 +474,20 @@ public abstract class AbstractProcessingPipeline
      */
     protected void preparePipeline(Environment environment)
     throws ProcessingException {
-        if ( !checkPipeline() ) {
+        if (!checkPipeline()) {
             throw new ProcessingException("Attempted to process incomplete pipeline.");
         }
 
-        if ( this.reader != null ) {
-            this.setupReader( environment );
-        } else {
-            this.setupPipeline(environment);
+        if (this.prepared) {
+            throw new ProcessingException("Duplicate preparePipeline call caught.");
         }
+
+        if (this.reader != null) {
+            setupReader(environment);
+        } else {
+            setupPipeline(environment);
+        }
+        this.prepared = true;
     }
 
     /**
@@ -494,7 +498,7 @@ public abstract class AbstractProcessingPipeline
     public void prepareInternal(Environment environment)
     throws ProcessingException {
         this.lastConsumer = null;
-        this.preparePipeline(environment);
+        preparePipeline(environment);
     }
 
     /**
@@ -503,10 +507,10 @@ public abstract class AbstractProcessingPipeline
     protected boolean processXMLPipeline(Environment environment)
     throws ProcessingException {
 
-        this.setMimeTypeForSerializer(environment);
-        
+        setMimeTypeForSerializer(environment);
+
         try {
-            if (this.serializer != this.lastConsumer) {
+            if (this.lastConsumer == null) {
                 // internal processing
                 this.generator.generate();
             } else {
@@ -526,9 +530,9 @@ public abstract class AbstractProcessingPipeline
                     this.generator.generate();
                 }
             }
-        } catch ( ProcessingException e ) {
+        } catch (ProcessingException e) {
             throw e;
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             // TODO: Unwrap SAXException ?
             throw new ProcessingException("Failed to execute pipeline.", e);
         }
@@ -570,12 +574,12 @@ public abstract class AbstractProcessingPipeline
             environment.setContentType(this.sitemapReaderMimeType);
         }
     }
-    
+
     /**
      * Set the mime-type for a serializer
      * @param environment The current environment
      */
-    protected void setMimeTypeForSerializer(Environment environment) 
+    protected void setMimeTypeForSerializer(Environment environment)
     throws ProcessingException {
         if (this.lastConsumer == null) {
             // internal processing: text/xml
@@ -638,19 +642,21 @@ public abstract class AbstractProcessingPipeline
     }
 
     public void recycle() {
-        // release reader.
-        if ( this.readerSelector != null) {
+        this.prepared = false;
+        
+        // Release reader.
+        if (this.readerSelector != null) {
             this.readerSelector.release(this.reader);
-            this.newManager.release( this.readerSelector );
+            this.newManager.release(this.readerSelector);
             this.readerSelector = null;
             this.reader = null;
             this.readerParam = null;
         }
 
         // Release generator.
-        if ( this.generatorSelector != null) {
-            this.generatorSelector.release( this.generator );
-            this.newManager.release( this.generatorSelector );
+        if (this.generatorSelector != null) {
+            this.generatorSelector.release(this.generator);
+            this.newManager.release(this.generatorSelector);
             this.generatorSelector = null;
             this.generator = null;
             this.generatorParam = null;
@@ -660,19 +666,19 @@ public abstract class AbstractProcessingPipeline
         int size = this.transformerSelectors.size();
         for (int i = 0; i < size; i++) {
             final ComponentSelector selector =
-                (ComponentSelector)this.transformerSelectors.get(i);
-            selector.release( (Component)this.transformers.get(i) );
-            this.newManager.release( selector );
+                    (ComponentSelector) this.transformerSelectors.get(i);
+            selector.release((Component) this.transformers.get(i));
+            this.newManager.release(selector);
         }
         this.transformerSelectors.clear();
         this.transformers.clear();
         this.transformerParams.clear();
         this.transformerSources.clear();
 
-        // release serializer
-        if ( this.serializerSelector != null ) {
+        // Release serializer
+        if (this.serializerSelector != null) {
             this.serializerSelector.release(this.serializer);
-            this.newManager.release( this.serializerSelector );
+            this.newManager.release(this.serializerSelector);
             this.serializerSelector = null;
             this.serializerParam = null;
         }
@@ -688,11 +694,11 @@ public abstract class AbstractProcessingPipeline
     public boolean process(Environment environment, XMLConsumer consumer)
     throws ProcessingException {
         this.lastConsumer = consumer;
-        if ( this.reader != null ) {
+        if (this.reader != null) {
             throw new ProcessingException("Streaming of an internal pipeline is not possible with a reader.");
         }
-        this.connectPipeline(environment);
-        return this.processXMLPipeline(environment);
+        connectPipeline(environment);
+        return processXMLPipeline(environment);
     }
 
     /**
