@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
 /**
  * See description of {@link WidgetReplacingPipe}.
  * 
- * @version CVS $Id: WoodyTemplateTransformer.java,v 1.6 2003/11/17 10:04:00 joerg Exp $
+ * @version CVS $Id: WoodyTemplateTransformer.java,v 1.7 2003/12/22 21:03:44 vgritsenko Exp $
  */
 public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Transformer {
 
@@ -108,7 +108,9 @@ public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Tra
             localeParameter = I18nUtils.parseLocale(localeStr);
         }
 
-        init(null, this);
+        // FIXME: Duplicate code above and in createConfig
+        WoodyPipeLineConfig pipeContext = WoodyPipeLineConfig.createConfig(objectModel, parameters); 
+        init(null, pipeContext);
     }
 
     public JXPathContext getJXPathContext() {
