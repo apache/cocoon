@@ -297,7 +297,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
   <target name="site" depends="prepare-docs">
-    <mkdir dir="${site.dir}"/>
+    <mkdir dir="${site}"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
     <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" class="${doc.generator}"
           args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}"/>
