@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE todo SYSTEM "./docs/dtd/todo-v10.dtd">
+
+<!--
+  History of Cocoon changes
+  $Id: todo.xml,v 1.19 2000-02-23 14:02:13 stefano Exp $
+-->
+
+<todo title="Things To Do">
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+ </devs>
+
+ <actions priority="high">
+  <action context="code">
+   Make XSP logicsheets reloadable if they are changed on disk.
+  </action>
+ </actions>
+
+ <actions priority="medium">
+  <action context="code">
+   Add logging.
+  </action>
+ </actions>
+
+ <actions priority="low">
+  <action context="docs">
+   Make the section title an element to allow entities to be included.
+  </action>
+ </actions>
+
+</todo>

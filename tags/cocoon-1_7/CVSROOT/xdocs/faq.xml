@@ -1,0 +1,329 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE faqs SYSTEM "./dtd/faq-v10.dtd">
+
+<faqs title="Frequently Asked Questions">
+
+<faq>
+ <question>I can't get XSP to work. What might be wrong?</question>
+ <answer>
+  <p>
+   The XSP processor requires a single configuration that might cause problems:
+   the repository location for compiled server pages.
+  </p>
+
+<source>processor.xsp.repository = ./repository</source>
+
+  <p>
+   If the process that runs the servlet engine doesn't have both reading
+   and writing persmissions on that directory, the XSP processor won't work, so
+   make sure you locate that directory to a safe place.
+  </p>
+
+  <note><strong>Warning:</strong>
+    Since this directory may contain security sensible information, make sure
+    you deny access (even read-only) to untrusted users.
+  </note>
+
+  <p>
+   Another common problem is the system complaining about missing classes such as:
+  </p>
+
+  <source>java.lang.NoClassDefFoundError: sun/tools/javac/Main</source>
+
+  <p>
+   If this happens, make sure you have installed the <code>tools.jar</code>
+   package you find in <code>[jdk_home]/lib/tools.jar</code>.
+  </p>
+ </answer>
+</faq>
+
+<faq>
+ <question>Why the LDAP processor doesn't work?</question>
+ <answer>
+  <p>Make sure you have the <link href="http://java.sun.com/products/jndi/index.html">Sun JNDI API</link>
+   package installed in your classpath.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>Why DCP doesn't work with EcmaScript anymore? Where do I find the class <code>FESI/jslib/JSObject</code>?</question>
+ <answer>
+  <p>Since Cocoon now ships with all the required packages and Fesi is a
+  very big package, we decided to make Ecmascript support for DCP optional.</p>
+  <p>So, you should turn on the language interpretation in the cocoon
+  configurations and place the <link href="http://home.worldcom.ch/jmlugrin/fesi/download.html">
+  FESI</link> package in your classpath.</p>
+  <note>the DCP processor should be considered deprecated and we do not guarantee
+  that will be supported in future versions. We highly suggest you to
+  transfor all of your DCP pages into XSP pages.</note>
+ </answer>
+</faq>
+
+<faq>
+ <question>How come Apache is not redirecting requests to Cocoon?</question>
+ <answer>
+ <p>There is a bug in mod_jserv that makes it dependent on its configuration
+ position. If you use <em>ApJServHandler</em> you should change this to more
+ standard <em>Action and AddHandler</em>. If you installed an old version
+ of Cocoon, read again the installation instructions to find a solutions for
+ this problem. (thanks to Dan Egnor for finding and solving the problem).</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>How do I pipe my servlet output into Cocoon?</question>
+ <answer>
+  <p>Simple answer: <em>you don't!!!</em> read <connect href="dynamic.xml">the page
+  about dynamic content</connect> to find out equivalent ways to do what you need.</p>
+  <p>Complex answer: the Servlet API <em>was not</em> designed with servlet
+  chaining capabilities in mind. Servlet chaining was a night hack of the
+  original Java web server authors that allowed to pipe one servlet output
+  into the request of another. Currently (version 2.2) the Servlet API spec
+  doesn't allow a servlet to post-process the output of another servlet, so,
+  since Cocoon is a servlet, there is no portable way for it to call
+  your servlet and to process its output.</p>
+  <p>The Cocoon Project is in close contact with the Servlet API Expert Group at
+  Sun (being Stefano Mazzocchi a member of that board) and will propose
+  post-processing hooks for inclusion in the next Servlet API specifications.
+  Since this is work in progress, please, don't fill up the mail list with
+  questions about this: Cocoon will reflect the API changes as soon as they
+  are publicly available.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>Where do I get more information on XSL and XML?</question>
+ <answer>
+  <p>
+    The web community is very exited about XML and XSL and many sources of
+    information are coming up even if these languages are fairly new. Here is a list of
+    locations you might be interested in to continue to gather resources on this
+    state-of-the-art technology</p>
+  <ul>
+    <li><link href="http://www.xml.org">http://www.xml.org</link> - A very nice site for XML
+      information.</li>
+    <li><link href="http://www.w3.org/xml/">http://www.w3.org/xml/</link> - The XML
+      official home page at W3C</li>
+    <li><link href="http://www.w3.org/style/xsl">http://www.w3.org/style/xsl</link> - The XSL official
+      home page W3C</li>
+    <li><link href="http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html">http://www.software.ibm.com/xml/education/tutorial-prog/abstract.html</link>
+      - XML Tutorial from IBM</li>
+    <li><link href="http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml">http://www.webtechniques.com/features/1999/01/walsh/walsh.shtml</link>
+      - XSL Tutorial</li>
+    <li><link href="http://www.oasis-open.org/cover/xml.html">http://www.oasis-open.org/cover/xml.html</link>
+      - XML Resource Listing</li>
+    <li><link href="http://www.oasis-open.org/cover/xsl.html">http://www.oasis-open.org/cover/xsl.html</link>
+      - XSL Resource Listing</li>
+    <li><link href="http://www.xmlsoftware.com">http://www.xmlsoftware.com</link> -
+      XML software listing</li>
+    <li><link href="http://www.xmlinfo.com">http://www.xmlinfo.com</link> - XML
+      information updates on W3C status and others</li>
+    <li><link href="http://www.xslinfo.com">http://www.xslinfo.com</link> - XSL
+      information, updates, example stylesheets</li>
+    <li><link href="http://www.schema.net">http://www.schema.net</link> - Repository
+      of standard DTDs</li>
+  </ul>
+</answer>
+</faq>
+
+<faq>
+ <question>Are there document translations to other languages?</question>
+ <answer>
+  <p>Given the problems we already have with documentation (which is never big and good enough),
+  the Cocoon Project uses English as its standard and only documentation language. This is also
+  the only language used in the mail lists. Also, the Cocoon distribution will contain
+  English documentation only to reduce updating problems.</p>
+  <p>On the other hand, we welcome any effort that provides document translations and
+  we will keep here links to those translated documents.</p>
+  <ul>
+   <li><link href="http://www.epita.net">French Translation</link></li>
+  </ul>
+  <note>The Cocoon Project is not directly involved in these translating efforts
+  and we are not resposible for any lack of synch between the official Cocoon
+  documentation and the translated version. For this reason, do not contact
+  the Cocoon Project but directly the people that provide the translation. Thank you.</note>
+ </answer>
+</faq>
+
+<faq>
+ <question>Why do I keep getting FileNotFoundException under Tomcat 3.0?</question>
+ <answer><p>See question below</p></answer>
+</faq>
+
+<faq>
+ <question>How come Cocoon doesn't work on Tomcat 3.0?</question>
+ <answer>
+  <p>You must apply this patch to Tomcat 3.0 and recompile it or it won't work.
+  This patch is already present in latest CVS code but in case you don't want
+  to download the latest code you can apply this:</p>
+
+  <source><![CDATA[ Index: RequestMapper.java
+   ===================================================================
+   RCS file: /home/cvs/jakarta-tomcat/src/share/org/apache/tomcat/core/RequestMapper.java,v
+
+   retrieving revision 1.5
+   retrieving revision 1.6
+   diff -u -r1.5 -r1.6
+   --- RequestMapper.java 1999/11/05 18:36:33  1.5
+   +++ RequestMapper.java 1999/12/17 18:59:14  1.6
+   @@ -285,13 +285,7 @@
+                mapPath = "/" + s;
+            } else if (mapPath == null &&
+                this.resourceName != null) {
+   -            // XXX
+   -            // hack to differentiate amongst a mapped servlet and a jsp
+   -      if (! wrapper.getServletClass().equals(Constants.JSP.CLASSNAME)) {
+   -                mapPath = "/" + wrapper.getServletClass();
+   -            } else {
+   -                mapPath = this.resourceName;
+   -            }
+   +            mapPath = this.resourceName;
+            }
+
+            return mapPath;]]></source>
+ </answer>
+</faq>
+
+<faq>
+ <question>Are external entities still broken?</question>
+ <answer>
+  <p>No, external entity support has been fixed for both absolute and relative
+  URIs. Note that ProjectX and Xerces behave differently on these but this
+  is not something we are in control of.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>I see that Cocon 1.x has starting to incorporate features planned for
+ Cocoon 2.x, why?</question>
+ <answer>
+  <p>We believe that smooth project evolution is much better than step-wise
+  revolutionary paths. For this reason, we'll try hard to incorporate all the
+  Cocoon2 features in the main project thus limiting the porting effort for you
+  over time.</p>
+  <p>Note that this doesn't mean that Cocoon won't change in the future and we
+  state clearly that we do care about back compatibility but only when this is
+  not limiting the evolution of he platform too much.</p>
+  <p>For this reason, while the DOM->SAX evolution might be totally painless, the
+  sitemap proposal will completely change the Cocoon configurations. Anyway, Cocoon
+  has a long way to go and if it changes during its evolution to a final state,
+  don't complain: you have been warned.</p>
+  <p>However, we DO consider and value the time you invested in Cocoon so we'll
+  do our best to make sure that unneeded back incompatibilities don't get included.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>The XSL book I read says the correct way of indicating the XSL stylesheet is by
+    using the XML processing instruction <code>&lt;?xml:stylesheet?&gt;</code> while Cocoon is
+    using <code>&lt;?xml-stylesheet?&gt;</code>. Who is right?
+ </question>
+ <answer>
+  <p>The PI <code>&lt;?xml:stylesheet type=&quot;text/xsl&quot; href=&quot;&quot;?&gt;</code>
+  is the old method of associating a stylesheet with an XML document. Unfortunately, this
+  technology is rapidly changing and your books should warn you that the topic they are
+  discussing is not even in W3C Recommendation state. Which means that more changes are on
+  their way.</p>
+  <p>The current and proper way to associate a stylesheet with an XML document can be found at
+  <link href="http://www.w3.org/TR/xml-stylesheet">http://www.w3.org/TR/xml-stylesheet</link> and
+  clearly indicates that <code>&lt;?xml-stylesheet ...?&gt;</code> is the proper way.</p>
+ </answer>
+</faq>
+
+<faq>
+ <question>
+    I think that using Processing Instructions to &quot;chain&quot;
+    document layers somehow violates the context separation since I would like
+    to be able to place style sensible information in sessions or request
+    parameters. What do you think about this?
+ </question>
+ <answer>
+  <p>You are right, PI reaction breaks the context separation and it's, at the
+    very end, the wrong approach. To follow a complete &quot;model, view,
+    controller&quot; design pattern, one should be able to associate a different
+    processing chain for each requested URI and for every possible request state
+    (with request parameters, session parameters and environment parameters).</p>
+  <p>The proposed solution (as you read in the <connect href="cocoon2.xml">Cocoon2
+    outline</connect>) is to have a site map where site
+    managers decide what processing chain to apply to each possible request.
+    This somehow follows the mod_rewrite model in the Apache Web Server, but
+    rather than URL rewriting, the site map allows site designers to control the
+    behavior of their documents in one place without having to modify every
+    single reactive PI in each source file.</p>
+  <p>So, you've been warned: the PIs will go away, current functionality will
+    remain but the processing management will be abstracted one layer up.</p>
+</answer>
+</faq>
+
+<faq>
+<question>What is WAP and how do I browse WML?</question>
+<answer>
+  <p>WAP stands for Wireless Application Protocol and WML stands for Wireless
+    Markup Language. For more information about these two, please refer to the
+    <link href="http://www.wapforum.org">WAP Forum</link>. For a client able
+    to browse WML 1.1, Cocoon has been tested with the
+    <link href="http://www.nokia.com">Nokia WAP Toolkit</link> which
+    emulates a Nokia WAP cell phone on your desktop.</p>
+</answer>
+</faq>
+
+<faq>
+<question>What is VoxML and how do I browse VML?</question>
+<answer>
+  <p>VoxML is a voice markup language, designed to allow direct integration
+    between voice recognition/synthesis software and web technologies.
+    The Cocoon VML samples have been tested with the
+    <link href="http://www.voxml.org">Motorola VoxML SDK 1.1</link>(for windows)
+    which is freely available.</p>
+</answer>
+</faq>
+
+<faq>
+<question>Why is my Internet Explorer not showing PDF or VRML samples?</question>
+<answer>
+  <p>This is a long-time problem with internet explorer which, illegally,
+  reacts on URI extention rathen than returned MIME type. The only think you can
+  do for now is to map .pdf or .wrl to Cocoon for handling, but we know that
+  sucks. Don't worry, in the future, the sitemap proposal will allow you
+  to work around this magically. For now, just don't use IE :)</p>
+</answer>
+</faq>
+
+<faq>
+<question>When I compile Cocoon on my system, I get all a bunch of errors. What's wrong?</question>
+<answer>
+  <p>You probably didn't add all the needed packages to your compiler's classpath.
+    Note that Cocoon supports much more packages than you normally use and you should have
+    them all to compile the full source code (this is why the cocoon.jar is distributed). To
+    avoid this, simply remove (or rename) the classes that wrap around the packages you don't
+    use.</p>
+  <p>Note that if you tried to compile Cocoon.java alone, many classes are not compiled
+  because there is no hardcoded reference to them. Cocoon uses dynamic loading based on its
+  property file to get the modules it needs when started. For this reason, the compiler is
+  not able to tell which class will be use and its dependency checks are never complete. The
+  only way to compile it is to manually indicate all the files to compile or to use the
+  makefiles after removing the unwanted wrapper classes for the packages you don't have or
+  you don't want.</p>
+  <p>Note that Cocoon is built using Ant: please, refer to the build.xml file
+  for more information on how to set up your system to compile Cocoon</p>
+</answer>
+</faq>
+
+<faq>
+ <question>Why the name &quot;Cocoon&quot;?</question>
+ <answer>
+  <p> (Cocoon's creator Stefano Mazzocchi answers): It's a pretty stupid reason and a funny
+  story: I spent my 1998 Xmas vacation with my girlfriend up on the Alps at her cottage. One
+  night I couldn't sleep, I went to watch some TV and finishing reading the XSL
+  documentation I brought with me. Being a science fiction <em>afficionado</em>, I found out
+  that Ron Howard's movie <em>Cocoon</em> was on and I started watching it. The idea of the XSL
+  rendering servlet stoke me like the alien &quot;cocoons&quot; in the pool stroke those old men in the
+  movie and, while watching, I started paper-coding it right away. After a while the movie
+  was over and the publishing framework designed. The name &quot;Cocoon&quot; seemed right
+  for the thing, meaning to be a way to bring new life to old ideas as well as to create <em>cocoons</em>
+  for such new ideas to become beautiful butterflies. :-)</p>
+</answer>
+</faq>
+
+</faqs>

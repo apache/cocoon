@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="sql"?>
+<?cocoon-format type="text/xml"?>
+
+<page>
+
+ <connectiondefs>
+  <connection name="foo_connection">
+   <driver>org.gjt.mm.mysql.Driver</driver>
+   <dburl>jdbc:mysql://mysql.example.com/foo_database</dburl>
+   <username>foo_user</username>
+   <password>foo_password</password>
+  </connection>
+ </connectiondefs> 
+ 
+ <query connection="foo_connection">
+  select name,number,message from foo_table order by name
+ </query>
+ 
+</page>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<?cocoon-process type="ldap"?>
+<?cocoon-format type="text/xml"?>
+
+<page>
+
+ <ldapdefs>
+  <server name="searchlight">
+   <initializer>com.sun.jndi.ldap.LdapCtxFactory</initializer>
+   <ldapserverurl>ldap://dir.skyway.nsa:389</ldapserverurl>
+   <ldapsearchbase>o=U.S. Government, c=US</ldapsearchbase>
+  </server>
+ </ldapdefs>
+
+ <query server="searchlight">
+	uid=jmbirch
+ </query>
+
+</page>

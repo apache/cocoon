@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="portfolio-html.xsl" type="text/xsl"?>
+<?xml-stylesheet href="portfolio-wml.xsl" type="text/xsl" media="wap"?>
+<?cocoon-process type="xslt"?>
+
+<!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
+
+<!-- Let us suppose this page has been dynamically generated  -->
+<!-- against a stock quotes database.                         -->
+
+<portfolio>
+ <total>122786</total>
+ <variations>
+  <!-- these are not calculated, only to show off -->
+  <day rate="-">0.23</day>
+  <week rate="+">1.82</week>
+  <month rate="+">1.32</month>
+  <ever rate="+">45.00</ever>
+ </variations>
+ <stocks company="Macrosoft" url="http://www.macrosoft.com">
+  <quotes>300</quotes>
+  <value>120.42</value>
+  <total>36126.00</total>
+  <variations>
+   <day rate="-">0.04</day>
+   <week rate="+">0.49</week>
+   <month rate="-">3.89</month>
+   <ever rate="+">459.58</ever>
+  </variations>
+ </stocks>
+ <stocks company="HAL" url="http://www.hal.com">
+  <quotes>1000</quotes>
+  <value>47.34</value>
+  <total>47340.00</total>
+  <variations>
+   <day rate="+">0.38</day>
+   <week rate="+">0.59</week>
+   <month rate="-">1.34</month>
+   <ever rate="-">34.53</ever>
+  </variations>
+ </stocks>
+ <stocks company="Riskape" url="http://www.riskape.com">
+  <quotes>130</quotes>
+  <value>85.43</value>
+  <total>11105.00</total>
+  <variations>
+   <day rate="-">1.34</day>
+   <week rate="-">10.49</week>
+   <month rate="+">4.89</month>
+   <ever rate="+">50.58</ever>
+  </variations>
+ </stocks>
+ <stocks company="Moon" url="http://www.moon.com">
+  <quotes>500</quotes>
+  <value>56.43</value>
+  <total>28215.00</total>
+  <variations>
+   <day rate="+">0.44</day>
+   <week rate="+">2.38</week>
+   <month rate="-">0.2</month>
+   <ever rate="+">87.03</ever>
+  </variations>
+ </stocks>
+</portfolio>
