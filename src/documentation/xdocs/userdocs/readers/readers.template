@@ -90,7 +90,7 @@
   <map:reader name="template" 
     src="org.apache.cocoon.reading.TemplateReader"
     logger="sitemap.reader.template" 
-    pool-max="32" pool-min="1" pool-grow="4"/>
+    pool-max="32"/>
     <!-- optional reader configuration -->
     ...
   </map:readers>

@@ -52,9 +52,7 @@ import java.util.Comparator;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the directory and the contained files
  * 
- * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)

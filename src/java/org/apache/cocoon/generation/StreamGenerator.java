@@ -42,9 +42,7 @@ import java.io.StringReader;
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.stream
  * 
- * @cocoon.sitemap.component.pooling.min   1
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
  *
  * For the POST requests with a mimetype of application/x-www-form-urlencoded,
  * or multipart/form-data the xml data is expected to be associated with the

@@ -112,9 +112,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.jx
  * 
- * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
  * @version CVS $Id$

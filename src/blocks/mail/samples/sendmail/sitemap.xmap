@@ -52,7 +52,7 @@
     <map:transformers default="xslt">
       <map:transformer logger="sitemap.transformer.simpleform"
                        name="simpleform"
-                       pool-grow="2" pool-max="32" pool-min="8"
+                       pool-max="32"
                        src="org.apache.cocoon.transformation.SimpleFormTransformer"/>
     </map:transformers>
   </map:components>

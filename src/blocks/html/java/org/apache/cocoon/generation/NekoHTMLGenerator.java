@@ -64,9 +64,7 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xml document for validation
  * 
- * @cocoon.sitemap.component.pooling.min   4
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>

@@ -23,7 +23,7 @@
   <session-context-manager logger="core.session-manager"/>
 
   <session-media-manager logger="core.media-manager"
-                 pool-max="32" pool-min="8" pool-grow="4">
+                 pool-max="32">
       <mediatypes default="html">
         <media name="wap" useragent="Nokia"/>
         <media name="wap" useragent="UP"/>

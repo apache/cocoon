@@ -97,7 +97,7 @@
   <map:reader name="resource" 
     src="org.apache.cocoon.reading.ResourceReader" 
     logger="sitemap.reader.resource" 
-    pool-max="32" pool-min="1" pool-grow="4"/>
+    pool-max="32"/>
     <!-- optional reader configuration -->
     ...
   </map:readers>
@@ -150,7 +150,7 @@
   <map:reader name="resource" 
     src="org.apache.cocoon.reading.ResourceReader" 
     logger="sitemap.reader.resource" 
-    pool-max="32" pool-min="1" pool-grow="4"/>
+    pool-max="32"/>
     <!-- optional reader configuration -->
     <parameter name="expires" value="86400000"/>
   </map:readers>

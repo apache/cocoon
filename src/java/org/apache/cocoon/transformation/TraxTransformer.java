@@ -66,9 +66,7 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xslt document for validation
  * 
- * @cocoon.sitemap.component.pooling.min   8
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  * 
  * This Transformer is used to transform the incoming SAX stream using
  * a TrAXProcessor. Use the following sitemap declarations to define, configure

@@ -159,27 +159,20 @@
       <s2 title="Pooling configuration">
         <p>Avalon now incorporates a couple of modifiers for a Component
           definition that allows you to control the number of Components in a
-          pool, and how quickly it grows.  This is especially helpful in Cocoon
+          pool.  This is especially helpful in Cocoon
           where the defaults don't always work well.</p>
-        <p>The magic attributes are "pool-min", "pool-max", and "pool-grow".
+        <p>The magic attribute is "pool-max".
           The defaults are:</p>
         <ol>
           <li>pool-max: 8</li>
-          <li>pool-min: 2</li>
-          <li>pool-grow: pool-min (2)</li>
         </ol>
         <p>What this means is that the pool for the default component initially
-          contains 2 instances. If demand exceeds this then the pool will
-          increase, two components at a time, up to 8 instances. Beyond that the
+          contains zero instances. If demand exceeds this then the pool will
+          increase, one component at a time, up to 8 instances. Beyond that the
           pool turns into a factory.  That is, new <code>Component</code>
           instances are created, but destroyed when they are returned. This is a
           performance issue - but it does manage the number of instances
           available at one time.</p>
-        <p>Please note that if not specified, "pool-grow" always matches
-          "pool-min". If not specified "pool-min" always equals "2". If you
-          specify the minimum to be higher than the maximum, then the maximum
-          will match the minimum, and the pool will be completely filled on
-          initialization.</p>
       </s2>
     </s1>
   </body>

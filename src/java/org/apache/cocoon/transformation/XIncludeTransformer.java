@@ -56,9 +56,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @cocoon.sitemap.component.name   xinclude
  * @cocoon.sitemap.component.logger sitemap.transformer.xinclude
  * 
- * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
  * 
  * Implementation of an XInclude transformer. It supports xml:base attributes,
  * XPointer fragment identifiers (see the xpointer package to see what exactly is

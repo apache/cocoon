@@ -41,9 +41,7 @@ import java.util.Map;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xml document for validation
  * 
- * @cocoon.sitemap.component.pooling.min   8
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)

@@ -52,7 +52,7 @@
     doctype-public="-//W3C//DTD SVG 1.0//EN"
     doctype-system="http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd";
     logger="sitemap.serializer.xml" 
-    pool-grow="4" pool-max="32" pool-min="4">
+    pool-max="32">
     <!-- serializer configurations -->
 ...    
   </map:serializer>
