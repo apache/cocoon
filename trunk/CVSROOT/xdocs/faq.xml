@@ -202,9 +202,14 @@
  </faq>
 
  <faq id="faq-nocompile">
-  <question>I keep changing my XSP pages to try and fix a bug, and it never seems
+  <question>When I change my XSP pages, it doesn't seem
    to recompile. What gives?</question>
   <answer>
+
+   <p>If you are using Tomcat, first check that the permissions of your repository
+    directory (specified in <code>cocoon.properties</code>) are set to read-write. One
+    way to do this is just create a new repository directory with the right permissions and change
+    <code>cocoon.properties</code> to point to it.</p>
 
    <p>If you use <![CDATA[<?xml-stylesheet?>]]>
     to implement a logicsheet instead of the preferred mechanism,
