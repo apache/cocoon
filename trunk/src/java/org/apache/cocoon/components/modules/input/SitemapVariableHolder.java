@@ -69,7 +69,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  * sitemap base
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapVariableHolder.java,v 1.4 2003/03/20 12:28:45 cziegeler Exp $
+ * @version CVS $Id: SitemapVariableHolder.java,v 1.5 2003/09/05 11:57:05 cziegeler Exp $
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
@@ -135,8 +135,10 @@ public final class SitemapVariableHolder
         if ( null == values ) {
             values = new HashMap(this.globalValues);
             ChainedConfiguration conf = this.holder.getConfiguration();
-            this.prepare(conf, values);
-            this.holder.setPreparedConfiguration(conf, values);
+            if ( conf != null ) {
+                this.prepare(conf, values);
+                this.holder.setPreparedConfiguration(conf, values);
+            }
         }
         return values;
     }
