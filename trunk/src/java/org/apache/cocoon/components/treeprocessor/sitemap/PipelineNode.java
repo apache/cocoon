@@ -73,7 +73,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.2 2003/04/01 21:25:09 sylvain Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.3 2003/04/07 08:21:30 sylvain Exp $
  */
 public class PipelineNode
     extends AbstractParentProcessingNode
@@ -217,8 +217,9 @@ public class PipelineNode
             // <notifier> is added in HandleErrorsNode
             return node.invoke(env, errorContext);
         } catch (Exception subEx) {
-            getLogger().error("Error notifier is unable to notify the problem. Please check the logs. In the default webapp, look in the WEB-INF/logs dir.", subEx);
-            return false;
+            getLogger().error("An exception occured in while handling errors at " + node.getLocation(), subEx);
+            // Rethrow it : it will either be handled by the parent sitemap or by the environment (e.g. Cocoon servlet)
+            throw subEx;
         } finally {
             if (errorContext != null) {
                 errorContext.dispose();
