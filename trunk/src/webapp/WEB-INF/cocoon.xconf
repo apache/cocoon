@@ -221,6 +221,20 @@
    <parameter name="verbosity" value="1"/>
   </entity-resolver>
 
+  <request-param-input 
+    id="request-param" 
+    logger="core.modules.input" 
+  />
+  <request-input 
+    id="request" 
+    logger="core.modules.input" 
+  />
+  <properties-file-input
+    id="cocoon-properties"
+    logger="core.modules.logger">
+    <file src="resource://org/apache/cocoon/cocoon.properties" />
+  </properties-file-input>
+  
 <!-- TODO: entries below are still 2.1 configuration -->
 
 <!-- ========================= Sitemap Flowscript ========================== -->
@@ -343,7 +357,6 @@
     <component-instance logger="core.modules.input" name="request-attr"     class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/>
     <component-instance logger="core.modules.input" name="request-header"   class="org.apache.cocoon.components.modules.input.HeaderAttributeModule"/>
     <component-instance logger="core.modules.input" name="session-attr"     class="org.apache.cocoon.components.modules.input.SessionAttributeModule"/>
-    <component-instance logger="core.modules.input" name="system-property"  class="org.apache.cocoon.components.modules.input.SystemPropertyModule"/>
     <component-instance logger="core.modules.input" name="constant"         class="org.apache.cocoon.components.modules.input.StringConstantModule"/>
     <component-instance logger="core.modules.input" name="random"           class="org.apache.cocoon.components.modules.input.RandomNumberModule"/>
     <component-instance logger="core.modules.input" name="digest"       class="org.apache.cocoon.components.modules.input.DigestMetaModule"/>
