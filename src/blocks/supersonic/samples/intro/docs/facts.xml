@@ -43,8 +43,9 @@
 
         <h2>Licensing</h2>
         <p>
-            Cocoon is distributed under the fairly liberal <em>Apache Software Foundation License</em>,
-            which allows it to be used in most any way provided due credit is given to the Foundation.
+            Cocoon is distributed under the liberal
+            <em><a href="http://www.apache.org/licenses/">Apache License</a></em>
+            which maximises its use while still providing protection.
         </p>
 
         <h2>Community</h2>
@@ -56,7 +57,9 @@
         </p>
         <p>
             The current team comprises more than 40 active committers, of which about 20
-            are regularly active and contribute new components, bug fixes, tests and documentation.
+            are regularly active. Those committers and the wider Cocoon
+            community contribute new components, bug fixes, tests and
+            documentation, and provide user support to each other.
         </p>
 
     </content>

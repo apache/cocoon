@@ -23,7 +23,7 @@
             is <em>how to implement my business layer</em>.
         </p>
         <p>
-            The short answer: <em>it's up to you</em> ;-)
+            The short answer: <em>it is up to you</em> ;-)
         </p>
         <p>
             More precisely, you could say that Cocoon leaves a lot
@@ -52,11 +52,11 @@
             objects from Flowscript code.
             Such objects do not necessarily need to know about Cocoon or
             Avalon classes, which means that legacy code could be easily integrated,
-            provided their are no class libraries conflicts.
+            provided there are no class libraries conflicts.
         </p>
         <p>
             Working in this way however, prevents you from using any Avalon features
-            like configuration, logging and monitoring facilities.
+            like configuration, logging, and monitoring facilities.
         </p>
         <p>
             As such, this is a suboptimal solution, but might be interesting for
@@ -81,7 +81,8 @@
             The benefits are largely worth it for serious applications.
         </p>
         <p>
-            Structuring your code in <em>blocks</em> as is done inside Cocoon will make integration
+            Structuring your code in <em>blocks</em>, as is done inside Cocoon,
+            will make integration
             easier and should help future migrations to newer versions of Cocoon.
         </p>
 

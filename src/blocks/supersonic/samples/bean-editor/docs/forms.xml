@@ -49,7 +49,7 @@
             </ul>
             This seems a lot of work when described in this way, but notice
             once again how modular things are: each "concern" of our bean editor
-            is cleary defined in its own place.
+            is clearly defined in its own place.
         </p>
         <p>
             Note also that, while our example uses static XML files for these
@@ -150,7 +150,7 @@
         </p>
         <p>
             For the <em>taskId</em> form field, the <em>readonly</em> flag
-            makes the binding unidirectional,
+            makes the binding unidirectional.
             The value of the form field will not be copied to the bean
             when <em>form.save</em> is called.
         </p>
