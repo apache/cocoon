@@ -2,9 +2,9 @@
 
 <!DOCTYPE changes SYSTEM "./dtd/changes-v10.dtd">
 
-<!-- 
+<!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.21 2000-01-20 00:17:41 stefano Exp $
+  $Id: changes.xml,v 1.22 2000-01-23 23:09:52 stefano Exp $
 -->
 
 <changes title="Cocoon History of Changes">
@@ -15,72 +15,83 @@
   </devs>
 
  <release version="1.6.1-dev" date="Not yet released">
+  <action dev="SM" type="fix" due-to="Manuel Schulte" due-to-email="manuel@alpha.sea-to-sky.netv">
+    Fixed XML name which X stands for "eXtensible" not "eXtended".
+  </action>
+  <action dev="SM" type="fix" due-to="Scott Boag" due-to-email="Scott_Boag@lotus.com">
+    Fixed problem with xsl:import in Xalan.
+  </action>
+  <action dev="SM" type="fix" due-to="Dan Egnor" due-to-email="egnor@ofb.net">
+    Fixed problem with Apache not calling Cocoon due to dependencies bug
+    in mod_jserv. Also changed installation instructions to allow
+    better use of default Apache configurations.
+  </action>
   <action dev="SM" type="fix" due-to="Philippe Lavoie" due-to-email="philippe.lavoie@cactus.ca">
-  	Fixed problem with JRun path normalization.
+    Fixed problem with JRun path normalization.
   </action>
   <action dev="RR" type="fix">
-  	Removed dependencies on Java 1.2 from XSP engine.
+    Removed dependencies on Java 1.2 from XSP engine.
   </action>
   <action dev="SM" type="update">
-  	Removed encoding from WML formatter since some WAP browsers don't like it.
+    Removed encoding from WML formatter since some WAP browsers don't like it.
   </action>
  </release>
 
  <release version="1.6" date="January 18 2000">
   <action dev="SM" type="update">
-  	Fixed command line operation.
+    Fixed command line operation.
   </action>
   <action dev="SM" type="update">
-  	Cleaned up XSLTProcessor code.
+    Cleaned up XSLTProcessor code.
   </action>
   <action dev="SM" type="fix">
-  	Added samples about external entities and XSLT import.
+    Added samples about external entities and XSLT import.
   </action>
   <action dev="SM" type="fix">
-  	Fixed ability to include/import from stylesheets.
+    Fixed ability to include/import from stylesheets.
   </action>
   <action dev="SM" type="fix">
-  	Fixed ability to include external entities with relative paths.
+    Fixed ability to include external entities with relative paths.
   </action>
   <action dev="SM" type="fix" due-to="Axel M\u00fcller" due-to-email="axel.mueller@i2c-systems.com">
-  	Fixed Servlet API illegal state when setting the content type after acquiring the 
-  	servlet response instance.
+    Fixed Servlet API illegal state when setting the content type after acquiring the
+    servlet response instance.
   </action>
   <action dev="SM" type="update">
-  	Added XSP sample pages.
+    Added XSP sample pages.
   </action>
   <action dev="SM" type="update">
-  	Cleaned-up docs, in preparation for release.
+    Cleaned-up docs, in preparation for release.
   </action>
   <action dev="SM" type="update">
-  	Tuned Xerces attributes for speed.
+    Tuned Xerces attributes for speed.
   </action>
   <action dev="SM" type="add" due-to="James Birchfield" due-to-email="jmbirchfield@proteus-technologies.com">
-  	Added VRML formatter.
+    Added VRML formatter.
   </action>
   <action dev="SM" type="update">
-  	Updated XSP working draft to match implementation (the WD was slowly changed
-  	during development to match new emerging needs).
+    Updated XSP working draft to match implementation (the WD was slowly changed
+    during development to match new emerging needs).
   </action>
   <action dev="RR" type="add">
-  	Added XSP primer in documentation.
+    Added XSP primer in documentation.
   </action>
   <action dev="RR" type="add">
-  	Added implementation of the XSP technology. The Cocoon Project is thankful to 
-  	<link href="http://www.exoffice.com">Exoffice Technologies</link> that sponsored
-  	the creation of such implementation by hiring Ricardo and donated it to the project.
+    Added implementation of the XSP technology. The Cocoon Project is thankful to
+    <link href="http://www.exoffice.com">Exoffice Technologies</link> that sponsored
+    the creation of such implementation by hiring Ricardo and donated it to the project.
   </action>
   <action dev="SM" type="add" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
-  	Added examples on how to call the Cocoon engine from another servlet.
+    Added examples on how to call the Cocoon engine from another servlet.
   </action>
   <action dev="SM" type="add">
-  	Added better documentation in the build.xml file for how to build Cocoon.
+    Added better documentation in the build.xml file for how to build Cocoon.
   </action>
   <action dev="SM" type="add" due-to="James Birchfield" due-to-email="jmbirchfield@proteus-technologies.com">
-  	Added LDAP processor documentation.
+    Added LDAP processor documentation.
   </action>
   <action dev="SM" type="update" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
-  	Added the singleton pattern to Engine to allow use of Cocoon from Turbine.
+    Added the singleton pattern to Engine to allow use of Cocoon from Turbine.
   </action>
   <action dev="SM" type="fix" due-to="Richard A. Wells" due-to-email="raw@raw.com">
     Fixed language and typos in technology.xml.
@@ -99,22 +110,22 @@
     Added the ability to return HTTP error messages from Cocoon.
   </action>
   <action dev="DB" type="fix" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
-  	Added dummy methods to EngineWrapper for JSDK 2.2 compatibility
+    Added dummy methods to EngineWrapper for JSDK 2.2 compatibility
   </action>
   <action dev="DB" type="add">
-  	Added ProducerFromMap as a sitemap primer.
+    Added ProducerFromMap as a sitemap primer.
   </action>
   <action dev="SM" type="add" due-to="Brett McLaughlin" due-to-email="bmclaugh@algx.net">
-  	Added Tomcat installation instructions.
+    Added Tomcat installation instructions.
   </action>
   <action dev="DB" type="update">
-  	Moved a few things around in ColumnFormatter so that it's possible for columns to be formatted as more than simply a text node (e.g. embedded HTML). Also added a little formatter that can transform \n into <![CDATA[<br>]]> for text and varchar columns.
+    Moved a few things around in ColumnFormatter so that it's possible for columns to be formatted as more than simply a text node (e.g. embedded HTML). Also added a little formatter that can transform \n into <![CDATA[<br>]]> for text and varchar columns.
   </action>
   <action dev="DB" type="add" due-to="Ed Ward" due-to-email="ed@waterfall.freeserve.co.uk">
-  	Added new classes to SQLProcessor to do column-specific date formatting.
+    Added new classes to SQLProcessor to do column-specific date formatting.
   </action>
   <action dev="SM" type="add" due-to="Gerrit Hiddink" due-to-email="grit@wwcn.org">
-    Add new producer for POST document processing, also useful for use of 
+    Add new producer for POST document processing, also useful for use of
     Cocoon as a module (see EngineWrapper).
   </action>
   <action dev="SM" type="fix" due-to="Ambarish Chaudhari" due-to-email="ambarish.chaudhari@ecapsol.com">
@@ -180,7 +191,7 @@
     outside. This was breaking the WML formatter.
   </action>
   <action dev="SM" type="fix">
-    Patched XSL:P to support &lt;xsl:processing-instruction&gt; instead of &lt;xsl:pi&gt; which is now deprecated. 
+    Patched XSL:P to support &lt;xsl:processing-instruction&gt; instead of &lt;xsl:pi&gt; which is now deprecated.
     This makes XSL:P a hybrid between XSLT revisions but it's easier this way than to create two sets
     of examples that work with latest and oldest releases of XSLT. Hopefully XSLT will standardize soon.
   </action>
@@ -413,7 +424,7 @@
   </action>
   <action dev="DB" type="add">
     Added a better cache engine.
-  </action> 
+  </action>
 </release>
 
 <release version="1.2" date="April 30 1999">
