@@ -180,9 +180,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="SMS" type="update" fixes-bug="19885" due-to="Torsten Knodt" due-to-email="torstenknodt@datas-world.de">
+   Cleaned up MIMEUtils.
+  </action>
   <action dev="SW" type="update">
-    The DirectoryGenerator is now cacheable. A new "refreshDelay" parameter defines the delay between two checks
-    on the filesystem for modified files.
+   The DirectoryGenerator is now cacheable. A new "refreshDelay" parameter defines the delay between two checks
+   on the filesystem for modified files.
   </action>
   <action dev="TC" type="add" fixes-bug="19772" due-to="Daniel Fagerstrom" due-to-email="danielf@nada.kth.se">
    Added STX block. (alternative to XSLT)
