@@ -1,10 +1,4 @@
 /*
- * Created on 11.06.2004
- *
- * To change this generated comment go to 
- * Window>Preferences>Java>Code Generation>Code Template
- */
-/*
  * Copyright 1999-2004 The Apache Software Foundation.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,7 +23,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 /**
  * This is a configurator for log4j that supports variable substitution
  * 
- * @version CVS $Id: Log4JConfigurator.java,v 1.1 2004/06/11 20:29:29 cziegeler Exp $
+ * @version CVS $Id: Log4JConfigurator.java,v 1.2 2004/06/14 14:07:09 cziegeler Exp $
  */
 public class Log4JConfigurator extends DOMConfigurator {
 
