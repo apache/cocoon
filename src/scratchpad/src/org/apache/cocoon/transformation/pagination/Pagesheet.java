@@ -78,7 +78,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * </pre>
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Pagesheet.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
+ * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
+ * @version CVS $Id: Pagesheet.java,v 1.3 2003/05/17 15:44:57 stephan Exp $
  */
 
 /*
@@ -100,6 +101,15 @@ This is an example pagesheet to show the power of this:
      <link type="unit" num="5"/>
      <link type="range" value="20"/>
    </rules>
+   <rules>
+     <count type="element" name="file" namespace="http://apache.org/cocoon/directory/2.0" num="16"/>
+     <link type="unit" num="5"/>
+     <link type="range" value="2"/>
+     <link type="range" value="5"/>
+     <link type="range" value="10"/>
+     <link type="range" value="20"/>
+     <link type="range" value="100"/>
+   </rules>
   </pagesheet>
 
 which indicates that:
@@ -114,8 +124,16 @@ which indicates that:
  3) for the rest of the pages, there are three unit links (-3 -2 -1 0 +1 +2 +3)
     and range goes 20 (so +20 and -20).
 
+ 4) if more than one ranges are defined, range links will be created in sequence
+
+ 5) range links will be from big to small (eg. 20, 10, then 5) for backward links,
+    range links will be from small to big (eg. 5, 10, then 20) for forward links
+
+ 6) range link(s) will have an attribute 'range' to indicate the range size
+
 */
-public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
+public class Pagesheet extends DefaultHandler
+  implements Cloneable, Modifiable {
 
     // Used only during parsing of pagesheet document
     private int level = 0;
@@ -125,6 +143,7 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
 
     // Loaded pagesheet information
     ResizableContainer pageRules;
+
     Map itemGroupsPerName;
     Map itemGroupsPerElement;
     Map itemListsPerName;
@@ -132,23 +151,30 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
 
     // Runtime information
     private ResizableContainer pages;
-    private Page currentPage = new Page(1, 1);
+    private Page currentPage = null;
     private int pageCounter = 1;
     private int elementCounter = 0;
     private int descendant = 0;
 
     private static class Page {
+
         public int elementStart;
         public int elementEnd;
         public int characters;
 
-        public Page(int elementStart, int elementEnd) {
+        public Page(PageRules rules, int elementStart) {
             this.elementStart = elementStart;
-            this.elementEnd = elementEnd;
+
+            if (rules.elementCount>0) {
+                this.elementEnd = this.elementStart+rules.elementCount-1;
+            } else {
+                this.elementEnd = this.elementStart+1;
+            }
         }
 
         public boolean validInPage(int elementCounter) {
-            return (this.elementStart <= elementCounter) && (elementCounter <= this.elementEnd);
+            return (this.elementStart<=elementCounter) &&
+                   (elementCounter<=this.elementEnd);
         }
     }
 
@@ -164,64 +190,73 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
 
         public int getPageForItem(int item) {
             Integer i = (Integer) this.get(item-1);
-            return (i == null) ? 0 : i.intValue();
+
+            return (i==null) ? 0 : i.intValue();
         }
 
         public boolean valid(int item) {
-            return (item == this.size());
+            return (item==this.size());
         }
     }
-
 
     public Pagesheet() {
         this.pages = new ResizableContainer(2);
     }
 
-    private Pagesheet(ResizableContainer rules, Map itemGroupsPerName, Map itemGroupsPerElement) {
+    private Pagesheet(ResizableContainer rules, Map itemGroupsPerName,
+                      Map itemGroupsPerElement) {
         this.pageRules = rules;
         this.itemGroupsPerName = itemGroupsPerName;
         this.itemGroupsPerElement = itemGroupsPerElement;
 
         this.pages = new ResizableContainer(5);
 
-        if ((this.itemGroupsPerName != null) && (this.itemGroupsPerElement != null)) {
+        if ((this.itemGroupsPerName!=null) &&
+            (this.itemGroupsPerElement!=null)) {
             this.itemListsPerName = new HashMap(itemGroupsPerName.size());
             this.itemListsPerElement = new HashMap(itemGroupsPerName.size());
 
             Iterator iter = itemGroupsPerName.values().iterator();
+
             for (; iter.hasNext(); ) {
                 ItemGroup group = (ItemGroup) iter.next();
                 ItemList list = new ItemList(10);
+
                 this.itemListsPerName.put(group.getName(), list);
-                this.itemListsPerElement.put(group.getElementURI() + group.getElementName(), list);
+                this.itemListsPerElement.put(group.getElementURI()+
+                                             group.getElementName(), list);
             }
         }
     }
 
     // --------------- interprets the pagesheet document ----------------
 
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        if (!uri.equals(Paginator.PAGINATE_URI)) {
+    public void startPrefixMapping(String prefix,
+                                   String uri) throws SAXException {
+        if ( !uri.equals(Paginator.PAGINATE_URI)) {
             throw new SAXException("The pagesheet's namespace is not supported.");
         }
     }
 
-    public void startElement(String uri, String loc, String raw, Attributes a) throws SAXException {
+    public void startElement(String uri, String loc, String raw,
+                             Attributes a) throws SAXException {
         level++;
         switch (level) {
-            case 1:
+            case 1 :
                 if (loc.equals("pagesheet")) {
                     // This object represents pagesheet
                     return;
                 }
                 break;
-            case 2:
+
+            case 2 :
                 if (loc.equals("rules")) {
-                    if (this.pageRules == null) {
+                    if (this.pageRules==null) {
                         this.pageRules = new ResizableContainer(2);
                     }
                     String key = a.getValue("page");
-                    if (key != null) {
+
+                    if (key!=null) {
                         try {
                             pg = Integer.parseInt(key);
                         } catch (NumberFormatException e) {
@@ -233,16 +268,17 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
                     rules = new PageRules();
                     return;
                 } else if (loc.equals("items")) {
-                    if (this.itemGroupsPerName == null) {
+                    if (this.itemGroupsPerName==null) {
                         this.itemGroupsPerName = new HashMap(2);
                     }
-                    if (this.itemGroupsPerElement == null) {
+                    if (this.itemGroupsPerElement==null) {
                         this.itemGroupsPerElement = new HashMap(2);
                     }
                     return;
                 }
                 break;
-            case 3:
+
+            case 3 :
                 if (loc.equals("count")) {
                     rules.elementName = a.getValue("name");
                     rules.elementURI = a.getValue("namespace");
@@ -272,7 +308,7 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
                         }
                     } else if (a.getValue("type").equals("range")) {
                         try {
-                            rules.rangeLink = Integer.parseInt(a.getValue("value"));
+                            rules.addRangeLink(a.getValue("value"));
                         } catch (NumberFormatException e) {
                             throw new SAXException("Syntax error: the attribute 'link/@value' must contain a number.");
                         }
@@ -282,24 +318,31 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
                     return;
                 } else if (loc.equals("group")) {
                     String name = a.getValue("name");
-                    if (name == null) {
+
+                    if (name==null) {
                         throw new SAXException("Syntax error: the attribute 'group/@name' must be present.");
                     }
                     String elementName = a.getValue("element");
-                    if (elementName == null) {
+
+                    if (elementName==null) {
                         throw new SAXException("Syntax error: the attribute 'group/@element' must be present.");
                     }
                     String elementURI = a.getValue("namespace");
-                    ItemGroup group = new ItemGroup(name, elementURI, elementName);
+                    ItemGroup group = new ItemGroup(name, elementURI,
+                                                    elementName);
+
                     this.itemGroupsPerName.put(name, group);
-                    this.itemGroupsPerElement.put(elementURI + elementName, group);
+                    this.itemGroupsPerElement.put(elementURI+elementName,
+                                                  group);
                     return;
                 }
         }
-        throw new SAXException("Syntax error: element " + raw + " is not recognized or is misplaced.");
+        throw new SAXException("Syntax error: element "+raw+
+                               " is not recognized or is misplaced.");
     }
 
-    public void endElement(String uri, String loc, String raw) throws SAXException {
+    public void endElement(String uri, String loc,
+                           String raw) throws SAXException {
         level--;
         if (loc.equals("rules")) {
             pageRules.set(pg, rules);
@@ -307,10 +350,10 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
     }
 
     public void endDocument() throws SAXException {
-        if (pageRules.size() == 0) {
+        if (pageRules.size()==0) {
             throw new SAXException("Pagesheet must contain at least a set of pagination rules.");
         }
-        if (pageRules.get(0) == null) {
+        if (pageRules.get(0)==null) {
             throw new SAXException("Pagesheet must contain the global pagination rules.");
         }
     }
@@ -323,23 +366,30 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
         if (rules.match(name, uri)) {
             elementCounter++;
             descendant++;
-            if (currentPage == null || elementCounter == currentPage.elementStart) {
-                // System.out.println(">>>> " + pageCounter + ": Starting page!!!");
-                if (rules.elementCount > 0) {
-                    currentPage.elementEnd = currentPage.elementStart + rules.elementCount - 1;
-                } else {
-                    currentPage.elementEnd = currentPage.elementStart + 1;
-                }
-                pages.set(pageCounter, currentPage);
+
+            if (currentPage==null) {
+                currentPage = new Page(rules, 1);
             }
+
+            if (elementCounter>currentPage.elementEnd) {
+                /*System.out.println(">>>> "+pageCounter+
+                                   ": Starting new page!!! >>> "+
+                                   elementCounter);*/
+                pageCounter++;
+                currentPage = new Page(rules, currentPage.elementEnd+1);
+            }
+
+            pages.set(pageCounter, currentPage);
         }
 
-        if (itemGroupsPerElement != null) {
-            String qname = uri + name;
+        if (itemGroupsPerElement!=null) {
+            String qname = uri+name;
             ItemGroup group = (ItemGroup) this.itemGroupsPerElement.get(qname);
-            if ((group != null) && (group.match(uri))) {
+
+            if ((group!=null) && (group.match(uri))) {
                 ItemList list = (ItemList) this.itemListsPerElement.get(qname);
-                if (list != null) {
+
+                if (list!=null) {
                     list.addItem(pageCounter);
                 }
             }
@@ -348,28 +398,24 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
 
     public void processEndElement(String uri, String name) {
         PageRules rules = getPageRules(pageCounter);
-        if (rules.match(name,uri)) {
+
+        if (rules.match(name, uri)) {
             descendant--;
 
-            if (rules.charCount > 0 && currentPage.characters > rules.charCount) {
+            if ((rules.charCount>0) &&
+                (currentPage.characters>rules.charCount)) {
                 // We are over character limit. Flip the page.
                 // System.out.println(">>>> " + pageCounter + ": Flipping page!!!");
                 currentPage.elementEnd = elementCounter;
-            } else if (rules.elementCount == 0) {
+            } else if (rules.elementCount==0) {
                 // No limit on elements is specified, and limit on characters is not reached yet.
-                currentPage.elementEnd ++;
-            }
-
-            if (elementCounter == currentPage.elementEnd) {
-                System.out.println(">>>> " + pageCounter + ": Ending page!!!");
-                pageCounter++;
-                currentPage = new Page(currentPage.elementEnd + 1, 0);
+                currentPage.elementEnd++;
             }
         }
     }
 
     public void processCharacters(char[] ch, int index, int len) {
-        if (descendant > 0) {
+        if (descendant>0) {
             // Count amount of characters in the currect page.
             // System.out.println(">>>> " + pageCounter + ": " + new String(ch, index, len) + " (" + len + " bytes)");
             currentPage.characters += len;
@@ -379,7 +425,7 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
     // --------------- return the pagination information ----------------
 
     public boolean isInPage(int page, int item, String itemGroup) {
-        return ((descendant == 0) || valid(page, item, itemGroup));
+        return ((descendant==0) || valid(page, item, itemGroup));
     }
 
     public int getTotalPages() {
@@ -387,44 +433,62 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
     }
 
     public int getTotalItems(String itemGroup) {
-        if (this.itemListsPerName == null) return 0;
+        if (this.itemListsPerName==null) {
+            return 0;
+        }
         ItemList list = (ItemList) this.itemListsPerName.get(itemGroup);
-        return (list == null) ? 0 : list.size();
+
+        return (list==null) ? 0 : list.size();
     }
 
     public int getPageForItem(int item, String itemGroup) {
-        if (this.itemListsPerName == null) return 0;
+        if (this.itemListsPerName==null) {
+            return 0;
+        }
         ItemList list = (ItemList) this.itemListsPerName.get(itemGroup);
-        return (list == null) ? 0 : list.getPageForItem(item);
+
+        return (list==null) ? 0 : list.getPageForItem(item);
     }
 
     public int itemCount(String elementURI, String elementName) {
-        if (this.itemListsPerElement == null) return 0;
-        ItemList list = (ItemList) this.itemListsPerElement.get(elementURI+elementName);
-        return (list == null) ? 0 : list.size();
+        if (this.itemListsPerElement==null) {
+            return 0;
+        }
+        ItemList list = (ItemList) this.itemListsPerElement.get(elementURI+
+                            elementName);
+
+        return (list==null) ? 0 : list.size();
     }
 
     public String getItemGroupName(String elementURI, String elementName) {
-        if (this.itemListsPerElement == null) return null;
-        return ((ItemGroup) this.itemGroupsPerElement.get(elementURI+elementName)).getName();
+        if (this.itemListsPerElement==null) {
+            return null;
+        }
+        return ((ItemGroup) this.itemGroupsPerElement.get(elementURI+
+            elementName)).getName();
     }
 
     // ---------------- miscellaneous methods ----------------------------
 
     private boolean valid(int page, int item, String itemGroup) {
-        if (item == 0) {
+        if (item==0) {
             Page p = (Page) pages.get(page);
-            return (p != null) && (p.validInPage(elementCounter));
+
+            return (p!=null) && (p.validInPage(elementCounter));
         } else {
-            if (this.itemListsPerElement == null) return false;
+            if (this.itemListsPerElement==null) {
+                return false;
+            }
             ItemList list = (ItemList) this.itemListsPerName.get(itemGroup);
-            return (list != null) && (list.valid(item));
+
+            return (list!=null) && (list.valid(item));
         }
     }
 
     public PageRules getPageRules(int page) {
         PageRules p = (PageRules) pageRules.get(page);
-        return (p != null) ? p : (PageRules) pageRules.get(0);
+
+        return (p!=null) ? p : (PageRules) pageRules.get(0);
     }
 
     public void setLastModified(long lastModified) {
@@ -432,10 +496,11 @@ public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
     }
 
     public boolean modifiedSince(long date) {
-        return (date != this.lastModified);
+        return (date!=this.lastModified);
     }
 
     public Object clone() {
-        return new Pagesheet(pageRules, itemGroupsPerName, itemGroupsPerElement);
+        return new Pagesheet(pageRules, itemGroupsPerName,
+                             itemGroupsPerElement);
     }
 }
