@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.26 2000-11-10 07:53:28 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.27 2000-11-11 07:33:57 balld Exp $-->
 <!--
 
  ============================================================================
@@ -287,7 +287,7 @@
 
 <xsl:template match="esql:execute-query/esql:results">
   <xsl:for-each select="esql:row-results[0]">
-    <xsl:apply-templates select="preceding-sibling::*[not(name()='esql:no-results']"/>
+    <xsl:apply-templates select="preceding-sibling::*[not(name()='esql:no-results')]"/>
     <xsp:logic>
       while (_esql_query.resultset.next()) {
         <xsl:apply-templates/>
@@ -297,7 +297,7 @@
         _esql_query.position++;
       }
     </xsp:logic>
-    <xsl:apply-templates select="following-sibling::*[not(name()='esql:no-results']"/>
+    <xsl:apply-templates select="following-sibling::*[not(name()='esql:no-results')]"/>
     <xsl:if test="esql:no-results">
       <xsp:logic>
         if (_esql_query.position == _esql_query.skip_rows) {
