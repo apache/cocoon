@@ -20,7 +20,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-30 18:37:40 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-11 15:14:33 $
  */
 public interface Action extends Component, ThreadSafe {
     /**
@@ -48,7 +48,7 @@ public interface Action extends Component, ThreadSafe {
      *                    be skipped.
      * @exception Exception Indicates something is totally wrong
      */
-    public List act(EntityResolver resolver, Map objectModel, String source, Parameters par)
+    List act(EntityResolver resolver, Map objectModel, String source, Parameters par)
     throws Exception;
 }
 
