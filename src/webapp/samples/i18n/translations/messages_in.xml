@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Indonesian message catalogue file for Cocoon 2 i18n sample -->
-<!-- $Id: messages_in.xml,v 1.1 2003/03/26 07:32:20 kpiroumian Exp $ -->
+<!-- $Id: messages_in.xml,v 1.2 2003/03/27 07:33:09 kpiroumian Exp $ -->
 <catalogue xml:lang="in">
     <message key="count_title">Halaman ini sudah dipanggil {0} kali. Panggilan terakhir: {1}.</message>
     <message key="a_key">Ini nilai sebuah kode.</message>
@@ -16,6 +16,7 @@
     <message key="article_text2">Kalimat lain berdasarkan i18n, canggih deh.</message>
     <message key="copyright">Copyright © 2001 Konstantin Piroumian. Translasi bahasa indonesia oleh Tommy Santoso.</message>
     <message key="Hello, {0}! Glad to see you!">Hallo {0}! Senang bertemu degan anda!</message>
+    <message key="Hello">Hallo {0}! Senang bertemu dengan anda!</message>
     <message key="Kot">Tomcat</message>
     <message key="none">tidak ada</message>
     <message key="one">satu</message>
