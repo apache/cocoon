@@ -15,11 +15,6 @@
  */
 package org.apache.cocoon.environment;
 
-import java.io.IOException;
-
-import org.apache.cocoon.ProcessingException;
-import org.xml.sax.SAXException;
-
 /**
  * Base interface for resolving a source by system identifiers. This 
  * component is a special extension of the Avalon Excalibur 
@@ -27,20 +22,11 @@ import org.xml.sax.SAXException;
  * used for Cocoon sitemap components.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SourceResolver.java,v 1.3 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id: SourceResolver.java,v 1.4 2004/05/24 11:26:39 cziegeler Exp $
  */
 
 public interface SourceResolver
 extends org.apache.excalibur.source.SourceResolver {
-
-    /**
-     * Resolve the source.
-     * @param systemID This is either a system identifier
-     * (<code>java.net.URL</code> or a local file.
-     * @deprecated Use the resolveURI methods instead
-     */
-    Source resolve(String systemID)
-    throws ProcessingException, SAXException, IOException;
 
 }
 

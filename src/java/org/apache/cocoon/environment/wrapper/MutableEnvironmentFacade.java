@@ -21,10 +21,7 @@ import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Source;
-import org.xml.sax.SAXException;
 
 /**
  * Enviroment facade, whose delegate object can be changed. This class is required to handle internal redirects
@@ -38,7 +35,7 @@ import org.xml.sax.SAXException;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.8 2004/05/24 11:15:40 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.9 2004/05/24 11:26:39 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -283,13 +280,6 @@ public class MutableEnvironmentFacade implements Environment {
      */
     public boolean isInternalRedirect() {
         return env.isInternalRedirect();
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.environment.SourceResolver#resolve(java.lang.String)
-     */
-    public Source resolve(String systemID) throws ProcessingException, SAXException, IOException {
-        return env.resolve(systemID);
     }
 
     /* (non-Javadoc)

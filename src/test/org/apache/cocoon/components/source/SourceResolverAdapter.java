@@ -21,15 +21,14 @@ import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Source;
 import org.apache.cocoon.environment.SourceResolver;
-import org.xml.sax.SAXException;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
 
 /**
  * An adapter for the Excalibur SourceResolver.
  *
- * @version CVS $Id: SourceResolverAdapter.java,v 1.10 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id: SourceResolverAdapter.java,v 1.11 2004/05/24 11:26:40 cziegeler Exp $
  */
 public class SourceResolverAdapter implements SourceResolver
 {
@@ -44,8 +43,8 @@ public class SourceResolverAdapter implements SourceResolver
      * This is a shortcut for <code>resolve(location, null, null)</code>
      * @throws org.apache.excalibur.source.SourceException if the source cannot be resolved
      */
-    public org.apache.excalibur.source.Source resolveURI( String location )
-        throws MalformedURLException, IOException, org.apache.excalibur.source.SourceException {
+    public Source resolveURI( String location )
+        throws MalformedURLException, IOException, SourceException {
   
         return this.resolver.resolveURI(location);
     }
@@ -62,10 +61,10 @@ public class SourceResolverAdapter implements SourceResolver
      *                     are specific to the used protocol.
      * @throws org.apache.excalibur.source.SourceException if the source cannot be resolved
      */
-    public org.apache.excalibur.source.Source resolveURI( String location,
+    public Source resolveURI( String location,
                                                           String base,
                                                           Map parameters )
-        throws MalformedURLException, IOException, org.apache.excalibur.source.SourceException {
+        throws MalformedURLException, IOException, SourceException {
 
         return this.resolver.resolveURI(location, base, parameters);
     }
@@ -73,19 +72,8 @@ public class SourceResolverAdapter implements SourceResolver
     /**
      * Releases a resolved resource
      */
-    public void release( org.apache.excalibur.source.Source source ) {
+    public void release( Source source ) {
         this.resolver.release(source);
     }
 
-    /**
-     * Resolve the source.
-     * @param systemID This is either a system identifier
-     * (<code>java.net.URL</code> or a local file.
-     * @deprecated Use the resolveURI methods instead
-     */
-    public Source resolve(String systemID)
-        throws ProcessingException, SAXException, IOException {
-
-        throw new RuntimeException("Method SourceResolver.resolve(String) is deprecated");
-    }
 }

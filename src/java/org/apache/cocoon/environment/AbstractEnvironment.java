@@ -18,7 +18,6 @@ package org.apache.cocoon.environment;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -29,14 +28,11 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.BufferedOutputStream;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.source.SourceException;
-import org.xml.sax.SAXException;
 
 /**
  * Base class for any environment
@@ -44,7 +40,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.20 2004/05/24 11:15:40 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.21 2004/05/24 11:26:39 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -86,9 +82,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 
     /** The real output stream */
     protected OutputStream outputStream;
-
-    /** The AvalonToCocoonSourceWrapper (this is for the deprecated support) */
-    static protected Method avalonToCocoonSourceWrapper;
 
     /** Do we have our components ? */
     protected boolean initializedComponents = false;
@@ -356,59 +349,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
      */
     public Map getObjectModel() {
         return this.objectModel;
-    }
-
-    /**
-     * Resolve an entity.
-     * @deprecated Use the resolveURI methods instead
-     */
-    public Source resolve(String systemId)
-    throws ProcessingException, SAXException, IOException {
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        if (getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Resolving '"+systemId+"' in context '" + this.context + "'");
-        }
-        if (systemId == null) throw new SAXException("Invalid System ID");
-
-        // get the wrapper class - we don't want to import the wrapper directly
-        // to avoid a direct dependency from the core to the deprecation package
-        Class clazz;
-        try {
-            clazz = ClassUtils.loadClass("org.apache.cocoon.components.source.impl.AvalonToCocoonSourceInvocationHandler");
-        } catch (Exception e) {
-            throw new ProcessingException("The deprecated resolve() method of the environment was called."
-                                          +"Please either update your code to use the new resolveURI() method or"
-                                          +" install the deprecation support.", e);
-        }
-        if ( null == avalonToCocoonSourceWrapper ) {
-            synchronized (this.getClass()) {
-                try {
-                    avalonToCocoonSourceWrapper = clazz.getDeclaredMethod("createProxy",
-                           new Class[] {ClassUtils.loadClass("org.apache.excalibur.source.Source"),
-                                        ClassUtils.loadClass("org.apache.excalibur.source.SourceResolver"),
-                                        ClassUtils.loadClass(Environment.class.getName()),
-                                        ClassUtils.loadClass(ComponentManager.class.getName())});
-                } catch (Exception e) {
-                    throw new ProcessingException("The deprecated resolve() method of the environment was called."
-                                                  +"Please either update your code to use the new resolveURI() method or"
-                                                  +" install the deprecation support.", e);
-                }
-            }
-           
-        }
-        try {
-            org.apache.excalibur.source.Source source = this.resolveURI( systemId );
-            Source wrappedSource;
-            wrappedSource = (Source)avalonToCocoonSourceWrapper.invoke(clazz,
-                        new Object[] {source, this.sourceResolver, this, this.manager});
-            return wrappedSource;
-        } catch (SourceException se) {
-            throw SourceUtil.handle(se);
-        } catch (Exception e) {
-            throw new ProcessingException("Unable to create source wrapper.", e);
-        }
     }
 
     /* (non-Javadoc)
