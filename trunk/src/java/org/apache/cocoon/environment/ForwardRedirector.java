@@ -61,7 +61,7 @@ import org.apache.cocoon.components.treeprocessor.TreeProcessor;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.12 2003/10/30 12:31:05 cziegeler Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.13 2003/11/16 23:17:10 unico Exp $
  */
 public class ForwardRedirector
 extends AbstractLogEnabled 
@@ -141,4 +141,13 @@ implements Redirector, PermanentRedirector {
     public boolean hasRedirected() {
         return this.hasRedirected;
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Redirector#sendStatus(int)
+     */
+    public void sendStatus(int sc) {
+        env.setStatus(sc);
+        this.hasRedirected = true;
+    }
+
 }

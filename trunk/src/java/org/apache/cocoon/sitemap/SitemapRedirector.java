@@ -60,7 +60,7 @@ import java.io.IOException;
  * Wrapper for sitemap redirection
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapRedirector.java,v 1.4 2003/10/30 13:48:46 cziegeler Exp $
+ * @version CVS $Id: SitemapRedirector.java,v 1.5 2003/11/16 23:17:10 unico Exp $
  */
 public class SitemapRedirector implements Redirector {
     
@@ -94,5 +94,10 @@ public class SitemapRedirector implements Redirector {
      */
     public boolean hasRedirected() {
         return this.hasRedirected;
+    }
+    
+    public void sendStatus(int sc) {
+        e.setStatus(sc);
+        this.hasRedirected = true;
     }
 }
