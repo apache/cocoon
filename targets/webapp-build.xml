@@ -29,11 +29,7 @@
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
 
 	<!-- generate sitemap entries -->
-    <sitemap-components sitemap="${build.webapp}/sitemap.xmap">
-      <fileset dir="${java}">
-        <include name="**/*.java"/>
-      </fileset>
-    </sitemap-components>
+    <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
 
     <copy todir="${build.webapp}/stylesheets" filtering="on">
       <fileset dir="${webapp}/stylesheets">
