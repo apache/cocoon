@@ -161,7 +161,8 @@
       XSPUtil.getFileContents(
 	XSPUtil.relativeFilename(
           String.valueOf(<xsl:copy-of select="$name"/>),
-	  request
+	  request,
+	  (ServletContext) context
 	)
       )
     </xsp:expr>
