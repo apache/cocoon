@@ -62,7 +62,9 @@ public class PortalServiceImpl
 
     protected Map portalComponentManagers = new HashMap();
     
-    final protected String key = this.getClass().getName();
+    protected Map portalConfigurations = new HashMap();
+    
+    final protected static String KEY = PortalServiceImpl.class.getName();
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -73,11 +75,11 @@ public class PortalServiceImpl
 
     protected PortalServiceInfo getInfo() {
         final Request request = ContextHelper.getRequest( this.context );
-        PortalServiceInfo info = (PortalServiceInfo) request.getAttribute(this.key, Request.GLOBAL_SCOPE);
+        PortalServiceInfo info = (PortalServiceInfo) request.getAttribute(KEY, Request.GLOBAL_SCOPE);
         if ( info == null ) {
             info = new PortalServiceInfo();
             info.setup(ContextHelper.getObjectModel(this.context), this.portalComponentManagers);
-            request.setAttribute(this.key, info, Request.GLOBAL_SCOPE);
+            request.setAttribute(KEY, info, Request.GLOBAL_SCOPE);
         }
         return info;
     }
@@ -145,6 +147,7 @@ public class PortalServiceImpl
             ContainerUtil.dispose( i.next() );
         }
         this.portalComponentManagers.clear();       
+        this.portalConfigurations.clear();
     }
 
     /* (non-Javadoc)
@@ -163,6 +166,8 @@ public class PortalServiceImpl
                 ContainerUtil.service( c, this.manager );
                 ContainerUtil.configure( c, current );
                 ContainerUtil.initialize( c );
+                
+                this.portalConfigurations.put( name, current );
             } catch (Exception e) {
                 throw new ConfigurationException("Unable to setup new portal component manager for portal " + name, e);
             }
@@ -175,7 +180,7 @@ public class PortalServiceImpl
      */
     public void setEntryLayout(String layoutKey, Layout object) {
         if ( layoutKey == null ) {
-            layoutKey = this.getComponentManager().getProfileManager().getDefaultLayoutKey();
+            layoutKey = this.getDefaultLayoutKey();
         }
         if ( object == null ) {
             this.removeTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
@@ -189,9 +194,35 @@ public class PortalServiceImpl
      */
     public Layout getEntryLayout(String layoutKey) {
         if ( layoutKey == null ) {
-            layoutKey = this.getComponentManager().getProfileManager().getDefaultLayoutKey();
+            layoutKey = this.getDefaultLayoutKey();
         }
         return (Layout)this.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#setDefaultLayoutKey(java.lang.String)
+     */
+    public void setDefaultLayoutKey(String layoutKey) {
+        if ( layoutKey == null ) {
+            this.removeAttribute("default-layout-key");
+        } else {
+            this.setAttribute("default-layout-key", layoutKey);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalService#getDefaultLayoutKey()
+     */
+    public String getDefaultLayoutKey() {
+        String key = (String)this.getAttribute("default-layout-key");
+        if ( key == null ) {
+            Configuration config = (Configuration)this.portalConfigurations.get(this.getPortalName());
+            key = config.getAttribute("default-layout-key", "portal");
+            if ( key != null ) {
+                this.setDefaultLayoutKey(key);
+            }
+        }
+        return key;
     }
 
     

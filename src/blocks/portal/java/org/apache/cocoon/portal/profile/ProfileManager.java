@@ -49,16 +49,6 @@ public interface ProfileManager extends Component {
      */
 	Layout getPortalLayout(String layoutKey, String layoutID);
     
-    /**
-     * Change the default layout key for most functions
-     */
-    void setDefaultLayoutKey(String layoutKey);
-    
-    /**
-     * Get the default layout key
-     */
-    String getDefaultLayoutKey();
-    
     CopletInstanceData getCopletInstanceData(String copletID);
     
     List getCopletInstanceData(CopletData data);
