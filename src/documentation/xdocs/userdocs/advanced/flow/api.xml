@@ -121,6 +121,13 @@
      to be made available to the forwarded pipeline</p>
      <p><code>stream</code> is an <code>OutputStream</code> where the output should be written to.</p>
     </s3>
+    <s3 title="redirectTo">
+    <p>
+    <em>Function</em> <code>redirectTo([String] uri)</code></p>
+    <p>
+      Send a client-side redirect to the browser. The <code>uri</code> argument is the URI to which the browser should be redirected.
+    </p>
+    </s3>
     <s3 title="load">
     <p><em>Function</em> <code>load([String] uri)</code></p>
     <p>
