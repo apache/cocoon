@@ -26,7 +26,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.6 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id: Request.java,v 1.7 2004/07/07 07:58:49 cziegeler Exp $
  *
  */
 
@@ -656,14 +656,14 @@ public interface Request {
      * <tr><td>HEAD /xyz?a=b HTTP/1.1<td><td>/xyz
      * </table>
      * </blockquote>
+     * 
+     * For internal requests, this method returns
+     * the information for the original/external request!
      *
      * @return                a <code>String</code> containing
      *                        the part of the URL from the
      *                        protocol name up to the query string
-     *
-     *
      */
-
     String getRequestURI();
 
     /**
@@ -685,6 +685,20 @@ public interface Request {
      */
     String getSitemapURI();
 
+    /**
+     * <p>
+     * Returns the path to the sitemap of the requested resource as interpreted 
+     * by the sitemap.
+     * For example, if your webapp is mounted at "webapp" and the HTTP request
+     * is for "webapp/foo", this method returns "webapp/". Consequently, if the
+     * request is for "foo", this method returns the empty string.
+     * </p>
+     *
+     * @return a <code>String</code> containing the path to the sitemap
+     * @since 2.2
+     */
+    String getSitemapPath();
+    
     /**
      *
      * Returns the part of this request's URL that calls

@@ -33,7 +33,7 @@ import org.apache.cocoon.environment.Session;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.9 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.10 2004/07/07 07:58:50 cziegeler Exp $
  */
 
 /*
@@ -130,6 +130,13 @@ public class CommandLineRequest implements Request {
         return this.env.getURI();
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getSitemapPath()
+     */
+    public String getSitemapPath() {
+        return this.env.getURIPrefix();
+    }
+
     public String getQueryString() { return null; } // use parameters instead
     public String getPathTranslated() { return null; } // FIXME (SM) this is legal but should we do something more?
 

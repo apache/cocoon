@@ -40,7 +40,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletRequest.java,v 1.3 2004/06/18 16:45:57 vgritsenko Exp $
+ * @version CVS $Id: PortletRequest.java,v 1.4 2004/07/07 07:58:49 cziegeler Exp $
  */
 public abstract class PortletRequest implements Request {
 
@@ -249,8 +249,18 @@ public abstract class PortletRequest implements Request {
         return this.portletRequestURI;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getSitemapURI()
+     */
     public String getSitemapURI() {
         return this.environment.getURI();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getSitemapPath()
+     */
+    public String getSitemapPath() {
+        return this.environment.getURIPrefix();
     }
 
     public String getServletPath() {
