@@ -49,7 +49,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.50 $ $Date: 2001-02-14 04:10:31 $
+ * @version CVS $Revision: 1.4.2.51 $ $Date: 2001-02-14 05:08:42 $
  */
 public class Cocoon extends AbstractLoggable
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Contextualizable {
@@ -82,7 +82,7 @@ public class Cocoon extends AbstractLoggable
     private File workDir;
 
     /** The component manager. */
-    private DefaultComponentManager componentManager = new DefaultComponentManager();
+    private DefaultComponentManager componentManager;
 
     /**
      * Create a new <code>Cocoon</code> instance.
@@ -95,7 +95,6 @@ public class Cocoon extends AbstractLoggable
     public void contextualize(Context context) {
         if (this.context == null) {
             this.context = context;
-            this.componentManager.contextualize(this.context);
 
             this.classpath = (String) context.get(Constants.CONTEXT_CLASSPATH);
             this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
@@ -104,6 +103,10 @@ public class Cocoon extends AbstractLoggable
     }
 
     public void init() throws Exception {
+        this.componentManager = new DefaultComponentManager();
+        this.componentManager.contextualize(this.context);
+        this.componentManager.setLogger(getLogger());
+
         getLogger().debug("New Cocoon object.");
 
         // Setup the default parser, for parsing configuration.

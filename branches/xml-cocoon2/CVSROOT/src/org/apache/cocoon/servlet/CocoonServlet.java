@@ -59,7 +59,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.54 $ $Date: 2001-02-14 04:53:26 $
+ * @version CVS $Revision: 1.1.4.55 $ $Date: 2001-02-14 05:08:42 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -402,8 +402,8 @@ public class CocoonServlet extends HttpServlet {
             URL configFile = (URL) this.appContext.get(Constants.CONTEXT_CONFIG_URL);
             log.info("Reloading from: " + configFile.toExternalForm());
             Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
-            c.setLogger(this.log);
             c.contextualize(this.appContext);
+            c.setLogger(this.log);
             c.init();
             this.creationTime = new Date().getTime();
             this.cocoon = c;
