@@ -237,7 +237,7 @@ processed (defaults to <code>1</code> if <code>step</code> is absent). Either <c
 <p>
 The <code>formatNumber</code> tag is used to display numeric data, including currencies and percentages, in a locale-specific manner. It determines from the locale, for example, whether to use a period or a comma for delimiting the integer and decimal portions of a number. Here is its syntax: 
 </p>
-<p><source>
+<source>
 &lt;formatNumber value="Expression"
     [type="Type"] [pattern="Expression"]
     [currencyCode="Expression"] [currencySymbol="Expression"]
@@ -246,7 +246,6 @@ The <code>formatNumber</code> tag is used to display numeric data, including cur
     [groupingUsed="Expression"]
     [var="Name"] [locale="Expression"]&gt;
 </source>
-</p>
 <p>
 Only the <code>value</code> attribute is required. It is used to specify the numeric value that is to be formatted.
 </p>
@@ -269,13 +268,11 @@ The <code>groupingUsed</code> attribute takes a <code>Boolean</code> value and c
 </s2>
 <s2 title="formatDate">
 <p>The <code>formatDate</code> tag provides facilities to format Date values:</p> 
-<p>
 <source>
 &lt;formatDate value="Expression" [dateStyle="Style"] 
  [timeStyle="Style"] [pattern="Expression"] [type="Type"] [var="Name"] 
  [locale="Expression"]&gt;
 </source>
-</p>
 <p>
 Only the value attribute is required. Its value should be an instance of the <code>java.util.Date</code> class, specifying the date and/or time data to be formatted and displayed.</p>
 
