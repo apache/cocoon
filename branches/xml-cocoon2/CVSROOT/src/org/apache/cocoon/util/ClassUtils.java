@@ -21,7 +21,7 @@ import javax.servlet.ServletContext;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-18 15:01:20 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-18 21:17:28 $
  */
 public class ClassUtils {
 
@@ -48,9 +48,9 @@ public class ClassUtils {
      *
      * @param className A class name
      * @return The class pointed to by <code>className</code>
-     * @exception Exception If a loading error occurs
+     * @exception ClassNotFoundException If a loading error occurs
      */
-    public static Class loadClass(String className) throws Exception {
+    public static Class loadClass(String className) throws ClassNotFoundException {
         return Class.forName(className);
     }
 
