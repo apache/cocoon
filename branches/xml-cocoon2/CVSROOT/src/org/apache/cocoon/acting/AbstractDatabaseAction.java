@@ -58,7 +58,7 @@ import org.apache.cocoon.components.parser.Parser;
  * and the type.
  *
  * Each configuration file must use the same format in order to be
- * affective.  The name of the root configuration element is irrelevant.
+ * effective.  The name of the root configuration element is irrelevant.
  *
  * <pre>
  *   &lt;root&gt;
@@ -166,10 +166,9 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-02 20:26:21 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-06 21:17:23 $
  */
-public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
-    private static Map configurations = new HashMap();
+public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
     private static final Map typeConstants;
     protected ComponentSelector dbselector;
@@ -207,66 +206,6 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
 
         super.compose(manager);
     }
-
-    /**
-     * Set up the Database environment so that the configuration for the
-     * Form is handled properly.  Please note that multiple Actions can
-     * share the same configurations.  By using this approach, we can
-     * premake our PreparedStatements, and cache them for later use.
-     * Also note that the configuration file does not have to be a file.
-     */
-    protected Configuration getConfiguration(String descriptor) throws ConfigurationException {
-        Configuration conf = null;
-
-        if (descriptor == null) {
-            throw new ConfigurationException("The form descriptor is not set!");
-        }
-
-        synchronized (AbstractDatabaseAction.configurations) {
-            conf = (Configuration) AbstractDatabaseAction.configurations.get(descriptor);
-
-            if (conf == null) {
-                URLFactory urlFactory = null;
-                Parser parser = null;
-                URL resource = null;
-
-                try {
-                    urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
-                    resource = urlFactory.getURL(descriptor);
-
-                    parser = (Parser)this.manager.lookup(Roles.PARSER);
-                    SAXConfigurationHandler builder = new SAXConfigurationHandler();
-                    InputSource inputStream = new InputSource(resource.openStream());
-
-                    parser.setContentHandler(builder);
-                    inputStream.setSystemId(resource.toExternalForm());
-                    parser.parse(inputStream);
-
-                    conf = builder.getConfiguration();
-                } catch (Exception e) {
-                    getLogger().error("Could not configure Database mapping environment", e);
-                    throw new ConfigurationException("Error trying to load configurations for resource: " + resource.toExternalForm());
-                } finally {
-                    if (urlFactory != null) this.manager.release((Component) urlFactory);
-                    if (parser != null) this.manager.release((Component) parser);
-                }
-
-                this.cacheConfiguration(descriptor, conf);
-            }
-        }
-
-        return conf;
-    }
-
-    /**
-     * Cache the configuration so that we can use it later.
-     */
-    private void cacheConfiguration(String descriptor, Configuration conf) {
-        synchronized (AbstractDatabaseAction.configurations) {
-            AbstractDatabaseAction.configurations.put(descriptor, conf);
-        }
-    }
-
     /**
      * Get the Datasource we need.
      */
