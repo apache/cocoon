@@ -107,7 +107,7 @@
 
 	<xsl:variable name="create-session">
 	  <xsl:choose>
-	    <xsl:when test="@create-session = 'true' or @create-session = 'yes'">true</xsl:when>
+	    <xsl:when test="@create-session = 'true'">true</xsl:when>
 	    <xsl:otherwise>false</xsl:otherwise>
 	  </xsl:choose>
 	</xsl:variable>
