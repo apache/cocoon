@@ -18,7 +18,11 @@ import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Date;
+import java.util.Map;
 
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -27,17 +31,21 @@ import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.util.HashUtil;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.configuration.Parameters;
 
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-18 12:06:02 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-18 16:56:55 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -53,12 +61,52 @@ import org.xml.sax.SAXException;
  *       </dd>
  *   </dl>
  */
-public class ResourceReader extends AbstractReader implements Composer {
+public class ResourceReader extends AbstractReader 
+            implements Composer, Cacheable {
 
     private ComponentManager manager;
 
+    /** The system ID of the input source */
+    private String      systemID;
+
+    /**
+     * Setup the file generator.
+     */
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+        throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, par);
+        this.systemID = resolver.resolveEntity(null, super.source).getSystemId();
+    }
+
     public void compose (ComponentManager manager) {
         this.manager = manager;
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public long generateKey() {
+        if (this.systemID.startsWith("file:") == true) {
+            return HashUtil.hash(this.systemID);
+        }
+        return 0;
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        if (this.systemID.startsWith("file:") == true) {
+            File xmlFile = new File(this.systemID.substring("file:".length()));
+            return new TimeStampCacheValidity(xmlFile.lastModified());
+        }
+        return null;
     }
 
     /**

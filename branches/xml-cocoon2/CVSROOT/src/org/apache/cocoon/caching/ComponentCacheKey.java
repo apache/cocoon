@@ -16,13 +16,14 @@ package org.apache.cocoon.caching;
  *      is unique inside the component space.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 10:32:52 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 16:56:43 $
  */
 public final class ComponentCacheKey {
 
     public static final int ComponentType_Generator   = 1;
     public static final int ComponentType_Transformer = 2;
     public static final int ComponentType_Serializer  = 3;
+    public static final int ComponentType_Reader      = 4;
 
     private String toStringValue;
 

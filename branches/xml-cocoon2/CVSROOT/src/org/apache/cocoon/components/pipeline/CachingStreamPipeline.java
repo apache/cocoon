@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
+
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
@@ -43,12 +46,15 @@ import org.apache.cocoon.environment.Environment;
  *  </ul>
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 15:33:02 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-18 16:56:49 $
  */
 public final class CachingStreamPipeline extends AbstractStreamPipeline {
 
     /** The role name of the serializer */
     private String serializerRole;
+
+    /** The role name of the serializer */
+    private String readerRole;
 
     /** The cache for the responses */
     private StreamCache streamCache;
@@ -71,6 +77,137 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
     throws Exception {
         super.setSerializer(role, source, param, mimeType);
         this.serializerRole = role;
+    }
+
+    /** Set the Reader.
+     */
+    public void setReader (String role, String source, Parameters param, String mimeType)
+    throws Exception {
+        super.setReader(role, source, param, mimeType);
+        this.readerRole = role;
+    }
+
+    /** Process the pipeline using a reader.
+     * @throws ProcessingException if
+     */
+    protected boolean processReader(Environment environment)
+    throws ProcessingException {
+
+        try 
+        {
+            this.reader.setup((EntityResolver) environment,environment.getObjectModel(),readerSource,readerParam);
+            String mimeType = this.reader.getMimeType();
+
+            mimeType = this.reader.getMimeType();
+            if ( mimeType != null ) {
+                environment.setContentType(mimeType);
+            } else if ( readerMimeType != null ) {
+                environment.setContentType(this.readerMimeType);
+            } else {
+                environment.setContentType(this.sitemapReaderMimeType);
+            }
+        } catch (SAXException e){
+            getLogger().debug("SAXException in ProcessReader", e);
+
+            throw new ProcessingException(
+                "Failed to execute pipeline.",
+                e
+            );
+        } catch (IOException e){
+            getLogger().debug("IOException in ProcessReader", e);
+
+            throw new ProcessingException(
+                "Failed to execute pipeline.",
+                e
+            );
+        }
+
+        try {
+            boolean usedCache = false;
+            OutputStream outputStream;
+            PipelineCacheKey pcKey = null;
+            Map validityObjects = new HashMap();
+
+            outputStream = environment.getOutputStream();
+
+            // test if serializer and event pipeline are cacheable
+            long readerKey = 0;
+            CacheValidity readerValidity = null;
+            if (this.reader instanceof Cacheable
+                && (readerKey = ((Cacheable)this.reader).generateKey()) != 0
+                && (readerValidity = ((Cacheable)this.reader).generateValidity()) != null ){
+
+                // response is cacheable, build the key
+                ComponentCacheKey ccKey;
+                pcKey = new PipelineCacheKey();
+                ccKey = new ComponentCacheKey(ComponentCacheKey.ComponentType_Reader,
+                                                this.readerRole,
+                                                readerKey);
+                validityObjects.put(ccKey, readerValidity);
+                pcKey.addKey(ccKey);
+
+                // now we have the key to get the cached object
+                CachedStreamObject cachedObject = (CachedStreamObject)this.streamCache.get(pcKey);
+
+                if (cachedObject != null) {
+                    getLogger().debug("Found cached response.");
+
+                    Iterator validityIterator = validityObjects.keySet().iterator();
+                    ComponentCacheKey validityKey;
+                    boolean valid = true;
+                    while (validityIterator.hasNext() == true && valid == true) {
+                        validityKey = (ComponentCacheKey)validityIterator.next();
+                        valid = cachedObject.isValid(validityKey, (CacheValidity)validityObjects.get(validityKey));
+                    }
+                    if (valid == true) {
+                        getLogger().debug("Using valid cached content.");
+                        
+                        usedCache = true;
+                        byte[] response = cachedObject.getResponse();
+                        outputStream.write(response);
+                        if (response.length != 0) {
+                            environment.setContentLength(response.length);
+                        }
+                    } else {
+                        getLogger().debug("Cached content is invalid.");
+                        
+                        // remove invalid cached object
+                        this.streamCache.remove(pcKey);
+                        cachedObject = null;
+                    }
+                }
+                if (cachedObject == null) {
+                    getLogger().debug("Caching content for further requests.");
+                    outputStream = new CachingOutputStream(outputStream);
+                }
+            }
+
+            if (usedCache == false) {
+
+                this.reader.setOutputStream(outputStream);
+                int length = this.reader.generate();
+                if (length != 0) {
+                    environment.setContentLength(length);
+                }
+
+                // store the response
+                if (pcKey != null) {
+                    this.streamCache.store(pcKey,
+                        new CachedStreamObject(validityObjects,
+                              ((CachingOutputStream)outputStream).getContent()));
+                }
+            }
+
+        } catch ( Exception e ) {
+            getLogger().debug("IOException in ProcessReader", e);
+
+            throw new ProcessingException(
+                "Failed to execute pipeline.",
+                e
+            );
+        }
+
+        return true;
     }
 
    /**
@@ -170,6 +307,7 @@ public final class CachingStreamPipeline extends AbstractStreamPipeline {
                 }
 
             } catch ( Exception e ) {
+                getLogger().debug("Exception in process", e);
                 throw new ProcessingException(
                     "Failed to execute pipeline.",
                     e

@@ -9,9 +9,13 @@ package org.apache.cocoon.reading;
 
 import java.io.OutputStream;
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
+
+import org.apache.cocoon.ProcessingException;
 
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.AbstractLoggable;
@@ -20,7 +24,7 @@ import org.apache.avalon.Recyclable;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-18 12:06:01 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-18 16:56:53 $
  */
 public abstract class AbstractReader extends AbstractLoggable implements Reader, Recyclable {
     /** The current <code>EntityResolver</code>. */
@@ -38,7 +42,8 @@ public abstract class AbstractReader extends AbstractLoggable implements Reader,
      * Set the <code>EntityResolver</code> the object model <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
      */
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+        throws ProcessingException, SAXException, IOException {
         this.resolver=resolver;
         this.objectModel=objectModel;
         this.source=src;
