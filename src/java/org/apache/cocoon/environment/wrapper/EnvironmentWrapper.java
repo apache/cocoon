@@ -39,7 +39,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.13 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.14 2004/03/11 14:21:56 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -71,6 +71,8 @@ public class EnvironmentWrapper
     
     protected String contentType;
 
+    protected boolean external = false;
+    
     /**
      * Constructs an EnvironmentWrapper object from a Request
      * and Response objects
@@ -452,7 +454,13 @@ public class EnvironmentWrapper
      * Always return <code>false</code>.
      */
     public boolean isExternal() {
-        return false;
+        return this.external;
     }
 
+    public void setExternal(boolean flag) {
+        this.external = flag;
+        if ( flag ) {
+            ((RequestWrapper)this.request).setRequestURI(this.prefix.toString(), this.uris);
+        }
+    }
 }

@@ -60,7 +60,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.20 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.21 2004/03/11 14:21:56 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -360,6 +360,7 @@ public class TreeProcessor
         }
         
         Environment newEnv = new ForwardEnvironmentWrapper(environment, this.manager, uri, getLogger());
+        ((ForwardEnvironmentWrapper)newEnv).setExternal(true);
         
         if (facade != null) {
             // Change the facade delegate
