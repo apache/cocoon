@@ -61,11 +61,11 @@ import org.apache.avalon.framework.component.ComponentSelector;
  * particular types of resource bundles, implementors of Bundle interface.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: BundleFactory.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: BundleFactory.java,v 1.3 2003/11/27 02:55:28 vgritsenko Exp $
  */
 public interface BundleFactory extends ComponentSelector {
 
-    String ROLE = "org.apache.cocoon.i18n.BundleFactory";
+    String ROLE = BundleFactory.class.getName();
 
     /** Constants for configuration keys */
     static class ConfigurationKeys {
@@ -73,5 +73,49 @@ public interface BundleFactory extends ComponentSelector {
         public static final String ROOT_DIRECTORY = "catalogue-location";
     }
 
+    /**
+     * Select a bundle based on the catalogue base location, bundle name,
+     * and the locale name.
+     *
+     * @param base    catalogue base location (URI)
+     * @param name    bundle name
+     * @param locale  locale name
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    Component select(String base, String bundleName, String locale) throws ComponentException;
+
+    /**
+     * Select a bundle based on the catalogue base location, bundle name,
+     * and the locale.
+     *
+     * @param base    catalogue base location (URI)
+     * @param name    bundle name
+     * @param locale  locale
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    Component select(String base, String bundleName, Locale locale) throws ComponentException;
+
+    /**
+     * Select a bundle based on the bundle name and the locale name from
+     * the default catalogue.
+     *
+     * @param name    bundle name
+     * @param locale  locale name
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    Component select(String bundleName, String locale) throws ComponentException;
+
+    /**
+     * Select a bundle based on the bundle name and the locale from
+     * the default catalogue.
+     *
+     * @param name    bundle name
+     * @param locale  locale
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
     Component select(String bundleName, Locale locale) throws ComponentException;
 }

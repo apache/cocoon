@@ -69,6 +69,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.excalibur.source.SourceNotFoundException;
 
 import org.xml.sax.SAXParseException;
 
@@ -80,7 +81,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.4 2003/07/19 15:21:04 joerg Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.5 2003/11/27 02:55:28 vgritsenko Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Composable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -95,13 +96,25 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
     protected Map cacheNotFound = new HashMap();
 
     /** The logger */
-    protected Logger logger;
+    private Logger logger;
 
     /** Component Manager */
     protected ComponentManager manager = null;
 
+
     /** Default constructor. */
     public XMLResourceBundleFactory() {
+    }
+
+    /**
+     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
+     */
+    public void enableLogging(Logger logger) {
+        this.logger = logger;
+    }
+    
+    public Logger getLogger() {
+        return this.logger;
     }
 
     public void compose(ComponentManager manager) {
@@ -109,13 +122,13 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
     }
 
     public void dispose() {
-        Collection bundles = getComponentMap().values();
-        Iterator i = bundles.iterator();
+        Iterator i = getComponentMap().values().iterator();
         while (i.hasNext()) {
             Object bundle = i.next();
             if (bundle instanceof Disposable) {
                 ((Disposable)bundle).dispose();
             }
+            i.remove();
         }
         this.manager = null;
     }
@@ -131,58 +144,92 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         try {
             this.directory = configuration.getChild(ConfigurationKeys.ROOT_DIRECTORY, true).getValue();
         } catch (ConfigurationException e) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Root directory not provided in configuration, using default (root).");
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Root directory not provided in configuration, using default (root).");
             }
             this.directory = "";
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("XMLResourceBundleFactory configured with: cacheAtStartup = "
-                         + cacheAtStartup + ", directory = '" + directory + "'");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Configured with: cacheAtStartup = " +
+                              cacheAtStartup + ", directory = '" + directory + "'");
         }
     }
 
+
     /**
-     * Select a bundle based on bundle name and locale.
+     * Returns the root directory to all bundles.
      *
-     * @param name              bundle name
-     * @param locale            locale
-     * @return                  the bundle
-     * @exception ComponentException if a bundle is not found
+     * @return the directory path
      */
-    public Component select(String name, Locale locale) throws ComponentException {
-        return select(name, locale, cacheAtStartup);
+    protected String getDirectory() {
+        return directory;
     }
 
     /**
-     * Select a bundle based on bundle name and locale.
+     * Should we load bundles to cache on startup or not?
      *
-     * @param name              bundle name
-     * @param locale            locale
-     * @param cacheAtStartup    cache all the keys when constructing?
-     * @return                  the bundle
-     * @exception ComponentException if a bundle is not found
+     * @return true if pre-loading all resources; false otherwise
      */
-    public Component select(String name, Locale locale, boolean cacheAtStartup)
-        throws ComponentException {
-        Component bundle = _select(name, locale, cacheAtStartup);
+    protected boolean cacheAtStartup() {
+        return cacheAtStartup;
+    }
+
+
+    /**
+     * Select a bundle based on the bundle name and the locale name.
+     *
+     * @param name    bundle name
+     * @param locale  locale name
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    public Component select(String name, String locale) throws ComponentException {
+        return select(getDirectory(), name, locale);
+    }
+
+    /**
+     * Select a bundle based on the bundle name and the locale.
+     *
+     * @param name    bundle name
+     * @param locale  locale
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    public Component select(String name, Locale locale) throws ComponentException {
+        return select(getDirectory(), name, locale);
+    }
+
+    /**
+     * Select a bundle based on the catalogue base location, bundle name,
+     * and the locale name.
+     *
+     * @param base    catalogue base location (URI)
+     * @param name    bundle name
+     * @param locale  locale name
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    public Component select(String directory, String name, String localeName) throws ComponentException {
+        return select(directory, name, new Locale(localeName, localeName));
+    }
+
+    /**
+     * Select a bundle based on the catalogue base location, bundle name,
+     * and the locale.
+     *
+     * @param base    catalogue base location (URI)
+     * @param name    bundle name
+     * @param locale  locale
+     * @return        the bundle
+     * @exception     ComponentException if a bundle is not found
+     */
+    public Component select(String directory, String name, Locale locale) throws ComponentException {
+        Component bundle = _select(directory, name, locale, this.cacheAtStartup);
         if (bundle == null) {
             throw new ComponentException(name, "Unable to locate resource: " + name);
         }
         return bundle;
-    }
-
-    /**
-     * Select a bundle based on bundle name and locale name.
-     *
-     * @param name              bundle name
-     * @param localeName        locale name
-     * @return                  the bundle
-     * @exception ComponentException if a bundle is not found
-     */
-    public Component select(String name, String localeName) throws ComponentException {
-        return select(name, new Locale(localeName, localeName));
     }
 
     /**
@@ -194,88 +241,36 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @return                  the bundle
      */
     protected Component selectParent(String name, Locale locale) {
-        return selectParent(name, locale, cacheAtStartup);
-    }
-
-    /**
-     * Select the parent bundle of the current bundle, based on
-     * bundle name and locale.
-     *
-     * @param name              bundle name
-     * @param locale            locale
-     * @param cacheAtStartup    cache all the keys when constructing?
-     * @return                  the bundle
-     */
-    protected Component selectParent(String name, Locale locale, boolean cacheAtStartup) {
-        return _select(name, getParentLocale(locale), cacheAtStartup);
-    }
-
-    /**
-     * Select a bundle based on source XML file name.
-     *
-     * @param fileName          file name
-     * @return                  the bundle
-     * @exception ComponentException if a bundle is not found
-     */
-    public Component selectFromFilename(String fileName) throws ComponentException {
-        return selectFromFilename(fileName, cacheAtStartup);
-    }
-
-    /**
-     * Select a bundle based on source XML file name.
-     *
-     * @param fileName          file name
-     * @param cacheAtStartup    cache all the keys when constructing?
-     * @return                  the bundle
-     * @exception ComponentException if a bundle is not found
-     */
-    public Component selectFromFilename(String fileName, boolean cacheAtStartup)
-        throws ComponentException {
-        Component bundle = _select(fileName, null, cacheAtStartup);
-        if (bundle == null) {
-            throw new ComponentException(fileName, "Unable to locate resource: " + fileName);
-        }
-        return bundle;
+        return _select(getDirectory(), name, getParentLocale(locale), this.cacheAtStartup);
     }
 
     /**
      * Select a bundle based on bundle name and locale.
      *
+     * @param base              catalogue location
      * @param name              bundle name
      * @param locale            locale
      * @param cacheAtStartup    cache all the keys when constructing?
      * @return                  the bundle
      */
-    private Component _select(String name, Locale locale, boolean cacheAtStartup) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("_getBundle: " + name + ", locale " + locale);
-        }
-        String fileName = getFileName(name, locale);
+    private Component _select(String base, String name, Locale locale, boolean cacheAtStartup) {
+        String fileName = getFileName(base, name, locale);
         XMLResourceBundle bundle = (XMLResourceBundle)selectCached(fileName);
         if (bundle == null && !isNotFoundBundle(fileName)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("not found in cache, loading: " + fileName);
-            }
             synchronized (this) {
                 bundle = (XMLResourceBundle)selectCached(fileName);
                 if (bundle == null && !isNotFoundBundle(fileName)) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("synchronized: not found in cache, loading: " + fileName);
-                    }
                     bundle = _loadBundle(name, fileName, locale, cacheAtStartup);
-                    Locale parentLoc = locale;
-                    String parentBundleName;
-                    while (bundle == null && parentLoc != null
-                                && !parentLoc.getLanguage().equals("")) {
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("synchronized: still not found, trying parent: "
-                                         + fileName);
+
+                    while (bundle == null && locale != null && !locale.getLanguage().equals("")) {
+                        if (getLogger().isDebugEnabled()) {
+                            getLogger().debug("Bundle '" + fileName + "' not found; trying parent");
                         }
-                        parentLoc = getParentLocale(parentLoc);
-                        parentBundleName = getFileName(name, parentLoc);
-                        bundle = _loadBundle(name, parentBundleName, parentLoc, cacheAtStartup);
-                        updateCache(parentBundleName, bundle);
+                        locale = getParentLocale(locale);
+                        String parentFileName = getFileName(base, name, locale);
+                        bundle = _loadBundle(name, parentFileName, locale, cacheAtStartup);
                     }
+                    
                     updateCache(fileName, bundle);
                 }
             }
@@ -294,10 +289,11 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      */
     private XMLResourceBundle _loadBundle(String name, String fileName,
                                           Locale locale, boolean cacheAtStartup) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Trying to load bundle: " + name + ", locale " + locale
-                         + ", filename " + fileName);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Loading bundle: " + name + ", locale: " + locale +
+                              ", uri: " + fileName);
         }
+
         XMLResourceBundle bundle = null;
         XMLResourceBundle parentBundle = null;
         try {
@@ -310,13 +306,17 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
             bundle.init(name, fileName, locale, parentBundle, cacheAtStartup);
             return bundle;
         } catch (FileNotFoundException fe) {
-            logger.info("Resource not found: " + name + ", locale " + locale
-                        + ", bundleName " + fileName + ". Exception: " + fe.getMessage());
+            getLogger().info("Resource not found: " + name + ", locale: " + locale +
+                             ", bundleName: " + fileName + ". Exception: " + fe.getMessage());
+        } catch (SourceNotFoundException e) {
+            getLogger().info("Resource not found: " + name + ", locale: " + locale +
+                             ", bundleName: " + fileName + ". Exception: " + e.getMessage());
         } catch (SAXParseException se) {
-            logger.error("Incorrect resource format", se);
+            getLogger().error("Incorrect resource format", se);
         } catch (Exception e) {
-            logger.error("Resource loading failed", e);
+            getLogger().error("Resource loading failed", e);
         }
+
         return null;
     }
 
@@ -353,9 +353,15 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param locale               the locale
      * @return                  the parent locale
      */
-    protected String getFileName(String name, Locale locale) {
-        StringBuffer sb = new StringBuffer(getDirectory());
-        sb.append('/').append(name);
+    protected String getFileName(String base, String name, Locale locale) {
+        if (base == null) {
+            base = "";
+        }
+        
+        StringBuffer sb = new StringBuffer(base);
+        if (!base.endsWith("/")) {
+            sb.append('/').append(name);
+        }
         if (locale != null) {
             if (!locale.getLanguage().equals("")) {
                 sb.append("_");
@@ -373,9 +379,9 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         sb.append(".xml");
 
         String result = sb.toString();
-        if (logger.isDebugEnabled()) {
-            logger.debug("Resolving bundle name to file name: " + name
-                         + ", locale " + locale + " --> " + result);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Resolved bundle name: " + name +
+                              ", locale: " + locale + " --> " + result);
         }
         return result;
     }
@@ -390,12 +396,12 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         Component bundle = null;
         try {
             bundle = super.select(fileName);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Returning from cache: " + fileName);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Returning from cache: " + fileName);
             }
         } catch (ComponentException e) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Not found in cache: " + fileName);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Not found in cache: " + fileName);
             }
         }
         return bundle;
@@ -411,12 +417,12 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
     protected boolean isNotFoundBundle(String fileName) {
         String result = (String) (cacheNotFound.get(fileName));
         if (result != null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Returning from not_found_cache: " + fileName);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Returning from not_found_cache: " + fileName);
             }
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Not found in not_found_cache: " + fileName);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Not found in not_found_cache: " + fileName);
             }
         }
         return result != null;
@@ -429,41 +435,15 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      */
     protected void updateCache(String fileName, XMLResourceBundle bundle) {
         if (bundle == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Updating not_found_cache: " + fileName);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Updating not_found_cache: " + fileName);
             }
             cacheNotFound.put(fileName, fileName);
         } else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Updating cache: " + fileName);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Updating cache: " + fileName);
             }
             super.put(fileName, bundle);
         }
     }
-
-    /**
-     * Returns the root directory to all bundles.
-     *
-     * @return the directory path
-     */
-    public String getDirectory() {
-        return directory;
-    }
-
-    /**
-     * Should we load bundles to cache on startup or not?
-     *
-     * @return true if pre-loading all resources; false otherwise
-     */
-    public boolean cacheAtStartup() {
-        return cacheAtStartup;
-    }
-
-    /**
-     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
-     */
-    public void enableLogging(Logger logger) {
-        this.logger = logger;
-    }
-
 }
