@@ -39,9 +39,9 @@ import org.apache.cocoon.environment.portlet.PortletContext;
 import org.apache.cocoon.environment.portlet.PortletEnvironment;
 import org.apache.cocoon.portlet.multipart.MultipartActionRequest;
 import org.apache.cocoon.portlet.multipart.RequestFactory;
-import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.log.ContextMap;
 import org.apache.log.Hierarchy;
 import org.apache.log4j.LogManager;
@@ -65,25 +65,24 @@ import java.net.URL;
 import java.util.HashMap;
 
 /**
- * This is the entry point for Cocoon execution as an JSR168 Portlet.
+ * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * <p>This implementation of the Portlet interface requires that someone will
  * first create and initialize an instance of the Cocoon object, and this
  * Portlet will use this instance to process requests.</p>
  *
- * @version CVS $Id: ManagedCocoonPortlet.java,v 1.3 2004/07/11 17:23:29 antonio Exp $
+ * @version CVS $Id$
  */
 public class ManagedCocoonPortlet extends GenericPortlet {
 
     // Processing time message
     protected static final String PROCESSED_BY = "Processed by "
-        + Constants.COMPLETE_NAME + " in ";
+            + Constants.COMPLETE_NAME + " in ";
 
     // Used by "show-time"
     static final float SECOND = 1000;
     static final float MINUTE = 60 * SECOND;
     static final float HOUR   = 60 * MINUTE;
-
 
     private Logger log;
 
@@ -160,6 +159,9 @@ public class ManagedCocoonPortlet extends GenericPortlet {
      * Default scope for the session attributes, either
      * {@link javax.portlet.PortletSession#PORTLET_SCOPE} or
      * {@link javax.portlet.PortletSession#APPLICATION_SCOPE}.
+     * This corresponds to <code>default-session-scope</code>
+     * parameter, with default value <code>portlet</code>.
+     *
      * @see org.apache.cocoon.environment.portlet.PortletSession
      */
     protected int defaultSessionScope;
@@ -173,7 +175,7 @@ public class ManagedCocoonPortlet extends GenericPortlet {
      * Initialize this <code>CocoonPortlet</code> instance.
      *
      * <p>Uses the following parameters:
-     * 	portlet-logger
+     *  portlet-logger
      *  enable-uploads
      *  autosave-uploads
      *  overwrite-uploads
@@ -188,8 +190,10 @@ public class ManagedCocoonPortlet extends GenericPortlet {
      * @throws PortletException
      */
     public void init(PortletConfig conf) throws PortletException {
-        String value;
+
         super.init(conf);
+
+        String value;
 
         this.portletContext = conf.getPortletContext();
         this.envPortletContext = new PortletContext(this.portletContext);
@@ -260,19 +264,18 @@ public class ManagedCocoonPortlet extends GenericPortlet {
             this.allowOverwrite = false;
             this.silentlyRename = false;
         } else if ("allow".equalsIgnoreCase(overwriteParam)) {
-           this.allowOverwrite = true;
-           this.silentlyRename = false; // ignored in this case
+            this.allowOverwrite = true;
+            this.silentlyRename = false; // ignored in this case
         } else {
-           // either rename is specified or unsupported value - default to rename.
-           this.allowOverwrite = false;
-           this.silentlyRename = true;
+            // either rename is specified or unsupported value - default to rename.
+            this.allowOverwrite = false;
+            this.silentlyRename = true;
         }
 
         this.maxUploadSize = getInitParameterAsInteger("upload-max-size", MAX_UPLOAD_SIZE);
 
         value = conf.getInitParameter("show-time");
-        this.showTime = "yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value)
-            || (this.hiddenShowTime = "hide".equals(value));
+        this.showTime = BooleanUtils.toBoolean(value) || (this.hiddenShowTime = "hide".equals(value));
         if (value == null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("show-time was not set - defaulting to false");
@@ -280,9 +283,9 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         }
 
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
-        this.defaultFormEncoding = getInitParameter("form-encoding","ISO-8859-1");
+        this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
 
-		this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
+        this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
         this.requestFactory = new RequestFactory(this.autoSaveUploads,
                                                  this.uploadDir,
@@ -322,7 +325,7 @@ public class ManagedCocoonPortlet extends GenericPortlet {
 
         // get the request (wrapped if contains multipart-form data)
         ActionRequest request;
-        try{
+        try {
             if (this.enableUploads) {
                 request = requestFactory.getServletRequest(req);
             } else {
@@ -378,8 +381,8 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         ContextMap ctxMap = null;
 
         Environment env;
-        try{
-            env = getEnvironment(servletPath, NetUtils.decode(uri, "UTF-8"), request, res);
+        try {
+            env = getEnvironment(servletPath, uri, request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon portlet", e);
@@ -458,11 +461,11 @@ public class ManagedCocoonPortlet extends GenericPortlet {
                 getLogger().info("'" + uri + "' " + timeString);
             }
             res.setProperty("X-Cocoon-Time", timeString);
-        } catch(PortletException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new PortletException("Exception in process()", e);
         } finally {
+            if (ctxMap != null) {
+                ctxMap.clear();
+            }
+
             try {
                 if (request instanceof MultipartActionRequest) {
                     if (getLogger().isDebugEnabled()) {
@@ -476,6 +479,10 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         }
     }
 
+    /**
+     * Process the specified <code>RenderRequest</code> producing output
+     * on the specified <code>RenderResponse</code>.
+     */
     public void render(RenderRequest req, RenderResponse res)
     throws PortletException, IOException {
 
@@ -529,8 +536,8 @@ public class ManagedCocoonPortlet extends GenericPortlet {
         ContextMap ctxMap = null;
 
         Environment env;
-        try{
-            env = getEnvironment(servletPath, NetUtils.decode(uri, "UTF-8"), request, res);
+        try {
+            env = getEnvironment(servletPath, uri, request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
                 getLogger().error("Problem with Cocoon portlet", e);
@@ -627,11 +634,11 @@ public class ManagedCocoonPortlet extends GenericPortlet {
                     out.println((hide) ? " -->" : "</p>\n");
                 }
             }
-        } catch(PortletException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new PortletException("Exception in process()", e);
         } finally {
+            if (ctxMap != null) {
+                ctxMap.clear();
+            }
+
             try {
                 OutputStream out = res.getPortletOutputStream();
                 out.flush();
@@ -789,53 +796,53 @@ public class ManagedCocoonPortlet extends GenericPortlet {
      * is empty.
      */
     public String getInitParameter(String name) {
-    	String result = super.getInitParameter(name);
-    	if (result != null) {
-    		result = result.trim();
-    		if (result.length() == 0) {
-    			result = null;
-    		}
-    	}
+        String result = super.getInitParameter(name);
+        if (result != null) {
+            result = result.trim();
+            if (result.length() == 0) {
+                result = null;
+            }
+        }
 
-    	return result;
+        return result;
     }
 
     /** Convenience method to access portlet parameters */
     protected String getInitParameter(String name, String defaultValue) {
-    	String result = getInitParameter(name);
-    	if (result == null) {
-    		if (getLogger() != null && getLogger().isDebugEnabled()) {
-    			getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-    		}
-    		return defaultValue;
-    	} else {
-    		return result;
-    	}
+        String result = getInitParameter(name);
+        if (result == null) {
+            if (getLogger() != null && getLogger().isDebugEnabled()) {
+                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+            }
+            return defaultValue;
+        } else {
+            return result;
+        }
     }
 
     /** Convenience method to access boolean portlet parameters */
     protected boolean getInitParameterAsBoolean(String name, boolean defaultValue) {
-    	String value = getInitParameter(name);
-    	if (value == null) {
-			if (getLogger() != null && getLogger().isDebugEnabled()) {
-				getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-			}
-    		return defaultValue;
-    	} else {
-    		return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("yes");
-    	}
+        String value = getInitParameter(name);
+        if (value == null) {
+            if (getLogger() != null && getLogger().isDebugEnabled()) {
+                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+            }
+            return defaultValue;
+        }
+
+        return BooleanUtils.toBoolean(value);
     }
 
     protected int getInitParameterAsInteger(String name, int defaultValue) {
-    	String value = getInitParameter(name);
-    	if (value == null) {
-			if (getLogger() != null && getLogger().isDebugEnabled()) {
-				getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
-			}
-			return defaultValue;
-    	} else {
-    		return Integer.parseInt(value);
-    	}
+        String value = getInitParameter(name);
+        if (value == null) {
+            if (getLogger() != null && getLogger().isDebugEnabled()) {
+                getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
+            }
+            return defaultValue;
+        } else {
+            return Integer.parseInt(value);
+        }
     }
 
     protected void initLogger() {
