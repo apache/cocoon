@@ -25,15 +25,22 @@ import org.apache.avalon.Configuration;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:09:34 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 12:51:46 $
  */
-public class SitemapConfigurationBuilder {
+public class SitemapConfigurationBuilder extends ConfigurationImpl {
+    protected SitemapConfigurationBuilder (String name) {
+        super(name);
+    }
+
+    protected String addAttribute(String name, String value) {
+        return super.addAttribute(name,value);
+    }
 
     /**
      * Return a new Configuration object.
      */
     public Configuration newConfiguration(String name) {
-        return new ConfigurationImpl(name);
+        return new SitemapConfigurationBuilder(name);
     }
 
     /** 
@@ -41,7 +48,7 @@ public class SitemapConfigurationBuilder {
      * value or <b>null</b>. 
      */ 
     public void addAttribute(String name, String value, Configuration conf) {
-        ((ConfigurationImpl)conf).addAttribute(name,value);
+        ((SitemapConfigurationBuilder)conf).addAttribute(name,value);
     } 
  
     /** 
@@ -49,6 +56,6 @@ public class SitemapConfigurationBuilder {
      * value or <b>null</b>. 
      */ 
     public void addConfiguration(Configuration child, Configuration conf) { 
-        ((ConfigurationImpl)conf).addConfiguration(child); 
+        ((SitemapConfigurationBuilder)conf).addConfiguration(child); 
     } 
 } 
