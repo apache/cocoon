@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document xmlns:xf="http://apache.org/cocoon/jxforms/1.0">
-  <xf:form id="form-feedback" view="system" action="" method="GET">
+  <xf:form id="form-feedback" view="system">
     <xf:label>System Information</xf:label>
     <error>
       <xf:violations class="error"/>

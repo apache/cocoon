@@ -95,7 +95,6 @@ JXForm.prototype._sendView = function(uri, lastWebCont, timeToLive) {
     if (bizData == undefined) {
         bizData = null;
     }
-    this.lastWebContinuation = wk;
     this.forwardTo(uri, bizData, wk);
     JXForm.suicide();
 }
@@ -159,7 +158,11 @@ JXForm.prototype.finish = function(uri) {
  * @param scope [String] one of "request" or "session"
  */
 
-function jxForm(application, id, validator_ns, validator_doc, scope) {
+function jxform(application, id, validator_ns, validator_doc) {
+    if (this[application] == undefined || 
+	!(this[application] instanceof Function)) {
+      throw new Packages.org.apache.cocoon.ResourceNotFoundException("Function \"javascript:"+application+"()\" not found");
+    }
     function getCommand() {
         var enum_ = cocoon.request.getParameterNames();
         var command = undefined;
@@ -192,10 +195,7 @@ function jxForm(application, id, validator_ns, validator_doc, scope) {
         return;
     } 
     // Just start a new instance of the application
-    var args = new Array(arguments.length - 5 + 1);
-    args[0] = new JXForm(id, validator_ns, validator_doc, scope);
-    for (var i = 5; i < arguments.length; i++) {
-      args[i-4] = arguments[i];
-    }
-    this[application].apply(this, args);
+    print("hello");
+    this[application].apply(this, 
+			    [new JXForm(id, validator_ns, validator_doc, undefined)]);
 }
