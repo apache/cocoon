@@ -30,7 +30,6 @@ import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
@@ -65,7 +64,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-14 21:08:24 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-14 21:24:56 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
@@ -164,11 +163,11 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
     public void compose(ComponentManager manager) {
         try {
             this.manager = manager;
-            log.debug("Looking up " + Roles.STORE);
+            getLogger().debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
             this.browser = (Browser) manager.lookup(Roles.BROWSER);
         } catch (Exception e) {
-            log.error("Could not find component", e);
+            getLogger().error("Could not find component", e);
         }
     }
 
@@ -234,16 +233,16 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
         try {
             transformerHandler = getTransformerHandler(resolver);
         } catch (TransformerConfigurationException e){
-            log.error("Problem in getTransformer:", e);
+            getLogger().error("Problem in getTransformer:", e);
             throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
         } catch (SAXException e){
-            log.error("Problem in getTransformer:", e);
+            getLogger().error("Problem in getTransformer:", e);
             throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
         } catch (IOException e){
-            log.error("Problem in getTransformer:", e);
+            getLogger().error("Problem in getTransformer:", e);
             throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
         } catch (ProcessingException e){
-            log.error("Problem in getTransformer:", e);
+            getLogger().error("Problem in getTransformer:", e);
             throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
         }
 
@@ -304,9 +303,9 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
             transformerHandler.getTransformer().setParameter("ua-capabilities", uaCapabilities);
         } catch (Exception e) {
             /** FIXME - i don't have a logger
+                (GP) now you have one :) */
             getLogger().error("Error setting Browser info", e);
-            **/
-        }    
+        }
 
         super.setContentHandler(transformerHandler);
         if(transformerHandler instanceof Loggable) {
@@ -389,7 +388,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
                 method.invoke(transformerHandler,params);
             }
         } catch (Exception e){
-            log.debug("Exception in recycle:", e);
+            getLogger().debug("Exception in recycle:", e);
         }
         this.transformerHandler = null;
         this.objectModel = null;

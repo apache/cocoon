@@ -19,9 +19,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributeListImpl;
 
-import org.apache.avalon.Loggable;
-import org.apache.log.Logger;
-
 /**
  * This class is an utility class &quot;wrapping&quot; around a SAX version 2.0
  * <code>ContentHandler</code> and forwarding it those events received throug
@@ -30,11 +27,9 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  *         (Apache Software Foundation, Computer Associates)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-22 21:56:55 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-14 21:24:56 $
  */
 public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable, Loggable {
-
-    protected Logger log;
 
     /** The current <code>ContentHandler</code>. */
     protected ContentHandler documentHandler=null;
@@ -52,12 +47,6 @@ public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recycl
     public ContentHandlerWrapper(ContentHandler document) {
         this();
         this.setContentHandler(document);
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
     }
 
     /**
