@@ -20,15 +20,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.CascadingIOException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.serialization.Serializer;
@@ -45,12 +45,14 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSource.java,v 1.7 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: CopletSource.java,v 1.8 2004/04/19 14:47:31 cziegeler Exp $
  */
 public class CopletSource 
-    implements Source, XMLizable, Serviceable {
+    implements Source, XMLizable, Serviceable, Contextualizable {
 
     protected ServiceManager manager;
+    
+    protected Context context;
     
     protected String uri;
     protected String copletControllerName;
@@ -66,6 +68,13 @@ public class CopletSource
         this.manager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+    
     public CopletSource(String location, String protocol,
                          CopletInstanceData coplet) {
         this.uri = location;
@@ -78,25 +87,29 @@ public class CopletSource
 	 * @see org.apache.excalibur.source.Source#getInputStream()
 	 */
 	public InputStream getInputStream() throws IOException, SourceNotFoundException {
-        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
-        ComponentSelector serializerSelector = null;
-        Serializer serializer = null;
         try {
-            serializerSelector = (ComponentSelector) sitemapManager.lookup(Serializer.ROLE+"Selector");
-            serializer = (Serializer) serializerSelector.select("xml");
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            serializer.setOutputStream(os);
-            this.toSAX(serializer);
-            return new ByteArrayInputStream(os.toByteArray());
-        } catch (SAXException se) {
-            throw new CascadingIOException("Unable to stream content.", se);
-        } catch (ComponentException ce) {
-            throw new CascadingIOException("Unable to get components for serializing.", ce);
-        } finally {
-            if ( serializer != null ) {
-                serializerSelector.release(serializer);
+            ServiceManager sitemapManager = (ServiceManager) this.context.get(ContextHelper.CONTEXT_SITEMAP_SERVICE_MANAGER);
+            ServiceSelector serializerSelector = null;
+            Serializer serializer = null;
+            try {
+                serializerSelector = (ServiceSelector) sitemapManager.lookup(Serializer.ROLE+"Selector");
+                serializer = (Serializer) serializerSelector.select("xml");
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                serializer.setOutputStream(os);
+                this.toSAX(serializer);
+                return new ByteArrayInputStream(os.toByteArray());
+            } catch (SAXException se) {
+                throw new CascadingIOException("Unable to stream content.", se);
+            } catch (ServiceException ce) {
+                throw new CascadingIOException("Unable to get components for serializing.", ce);
+            } finally {
+                if ( serializer != null ) {
+                    serializerSelector.release(serializer);
+                }
+                sitemapManager.release(serializerSelector);
             }
-            sitemapManager.release(serializerSelector);
+        } catch (ContextException ce) {
+            throw new CascadingIOException("Unable to get service manager.", ce);
         }
 	}
 
