@@ -138,7 +138,8 @@ public class JXForm extends ScriptableObject {
     }
 
     public String jsFunction_getSubmitId() {
-        return submitId;
+        //return submitId;
+        return (String)cocoon.getRequest().getAttribute("jxform-submit-id");
     }
 
     public void jsSet_submitId(String value) {
@@ -146,7 +147,8 @@ public class JXForm extends ScriptableObject {
     }
 
     public String jsGet_submitId() {
-        return submitId;
+        //return submitId;
+        return (String)cocoon.getRequest().getAttribute("jxform-submit-id");
     }
 
     public void jsFunction_forwardTo(String uri,
