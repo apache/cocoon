@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -37,7 +36,7 @@ import org.apache.cocoon.components.repository.helpers.CredentialsToken;
  * A factory component to create instances of repositories.
  */
 public class RepositoryManager extends AbstractLogEnabled
-implements Serviceable, Disposable, Configurable, Component, ThreadSafe {
+implements Serviceable, Disposable, Configurable, ThreadSafe {
 
     /** The Avalon role name */
     public static final String ROLE = RepositoryManager.class.getName();

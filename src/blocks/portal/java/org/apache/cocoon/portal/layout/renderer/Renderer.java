@@ -17,7 +17,6 @@ package org.apache.cocoon.portal.layout.renderer;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.xml.sax.ContentHandler;
@@ -29,10 +28,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Renderer.java,v 1.4 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Renderer 
-    extends Component {
+public interface Renderer {
     
     String ROLE = Renderer.class.getName();
     

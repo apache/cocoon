@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.sax;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.xml.XMLProducer;
 import org.xml.sax.SAXException;
 
@@ -31,9 +30,9 @@ import org.xml.sax.SAXException;
  * the serialized data.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLDeserializer.java,v 1.3 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface XMLDeserializer extends XMLProducer, Component {
+public interface XMLDeserializer extends XMLProducer {
 
     String ROLE = XMLDeserializer.class.getName();
 

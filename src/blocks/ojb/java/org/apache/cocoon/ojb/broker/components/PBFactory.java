@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.ojb.broker.components;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.ojb.broker.PBFactoryException;
 import org.apache.ojb.broker.PBKey;
 import org.apache.ojb.broker.PersistenceBroker;
@@ -26,9 +25,9 @@ import org.apache.ojb.broker.PersistenceBroker;
  * The PersistenceBroker API provides the lowest level access to OJB's persistence engine.
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: PBFactory.java,v 1.3 2004/06/25 14:49:56 cziegeler Exp $
+ * @version CVS $Id$
 */
-public interface PBFactory extends Component {
+public interface PBFactory {
     
     /**
      * The <code>ROLE</code>

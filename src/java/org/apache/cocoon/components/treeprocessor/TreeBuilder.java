@@ -17,7 +17,6 @@ package org.apache.cocoon.components.treeprocessor;
 
 import java.util.List;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -25,10 +24,10 @@ import org.apache.avalon.framework.service.ServiceManager;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.8 2004/07/16 12:36:45 sylvain Exp $
+ * @version CVS $Id$
  */
 
-public interface TreeBuilder extends Component {
+public interface TreeBuilder {
     
     final static String ROLE = TreeBuilder.class.getName();
 

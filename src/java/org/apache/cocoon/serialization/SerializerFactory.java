@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.serialization;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * A serializer factory is the factory of {@link Serializer}s.
  *
@@ -31,7 +29,7 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
-public interface SerializerFactory extends Component {
+public interface SerializerFactory {
 
     String ROLE = Serializer.ROLE;
 

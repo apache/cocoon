@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.framework.component.Component;
 
 import org.apache.axis.MessageContext;
 
@@ -45,10 +44,10 @@ import org.apache.axis.MessageContext;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: SoapServer.java,v 1.2 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface SoapServer extends Component, Startable
-{
+public interface SoapServer extends Startable {
+    
     /**
      * Component's ROLE definition
      */

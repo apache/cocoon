@@ -15,16 +15,14 @@
  */
 package org.apache.cocoon.samples.parentcm;
 
-import org.apache.avalon.framework.component.Component;
-
 import java.util.Date;
 
 /**
  * Interface for a simple time-keeping component.
  * @author ?
- * @version CVS $Id: Time.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Time extends Component {
+public interface Time {
 
     String ROLE = Time.class.getName();
 

@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.sitemap;
 
-import org.apache.avalon.framework.component.Component;
-
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -26,9 +24,9 @@ import java.io.OutputStream;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapOutputComponent.java,v 1.3 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface SitemapOutputComponent extends Component {
+public interface SitemapOutputComponent {
 
     /**
      * Set the {@link OutputStream} where the requested resource should

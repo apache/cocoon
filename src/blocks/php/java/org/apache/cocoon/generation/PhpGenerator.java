@@ -27,7 +27,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.logger.Logger;
 
@@ -46,7 +45,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Id: PhpGenerator.java,v 1.2 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PhpGenerator extends ServletGenerator  {
 
@@ -174,7 +173,7 @@ public class PhpGenerator extends ServletGenerator  {
             throw new ProcessingException(e.toString(), e);
         } finally {
             this.resolver.release( inputSource );
-            this.manager.release( (Component)parser );
+            this.manager.release( parser );
         }
     }
 }

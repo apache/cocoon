@@ -17,7 +17,6 @@ package org.apache.cocoon.portal;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.portal.layout.Layout;
 
 /**
@@ -31,7 +30,7 @@ import org.apache.cocoon.portal.layout.Layout;
  * 
  * @version CVS $Id$
  */
-public interface PortalService extends Component {
+public interface PortalService {
 
     String ROLE = PortalService.class.getName();
     

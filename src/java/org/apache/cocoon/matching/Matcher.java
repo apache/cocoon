@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -24,9 +23,9 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: Matcher.java,v 1.2 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Matcher extends Component {
+public interface Matcher {
 
     String ROLE = Matcher.class.getName();
 

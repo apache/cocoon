@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -34,7 +33,7 @@ import org.apache.commons.httpclient.HttpException;
  * intended to be used by flowscripts or corresponding wrapper components.
  */
 public class WebDAVRepositoryVersioningHelper extends AbstractLogEnabled
-implements RepositoryVersioningHelper, Serviceable, Disposable, Component {
+implements RepositoryVersioningHelper, Serviceable, Disposable {
     
     /* The ServiceManager */
     private ServiceManager manager;

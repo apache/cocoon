@@ -16,7 +16,6 @@
 
 package org.apache.cocoon;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.environment.Environment;
 
 
@@ -27,7 +26,8 @@ import org.apache.cocoon.environment.Environment;
  * NB Cocoon does not require an instance of this Component to function, but if
  * there is one it will be used.
  */
-public interface RequestListener extends Component {
+public interface RequestListener  {
+    
     String ROLE = RequestListener.class.getName();
 
     /** 

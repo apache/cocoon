@@ -18,7 +18,6 @@ package org.apache.cocoon.components.persistence;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -32,14 +31,14 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStoreImpl.java,v 1.5 2004/07/11 14:04:35 cziegeler Exp $
+ * @version CVS $Id$
  * @since 2.1.1
  * @deprecated Use the scoped attributes on the Request object instead.
  *             This component will be removed with Cocoon 2.3.
  */
 public class RequestDataStoreImpl
     extends AbstractLogEnabled
-    implements Component, ThreadSafe, RequestDataStore, Contextualizable {
+    implements ThreadSafe, RequestDataStore, Contextualizable {
         
     protected Context context;
 

@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.aspect.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -38,11 +37,11 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: TemporaryAspectDataStore.java,v 1.2 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class TemporaryAspectDataStore 
     extends AbstractLogEnabled
-    implements Component, Serviceable, ThreadSafe, AspectDataStore, Contextualizable {
+    implements Serviceable, ThreadSafe, AspectDataStore, Contextualizable {
     
     protected Context context;
     

@@ -17,16 +17,14 @@ package org.apache.cocoon.components.notification;
 
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  *  Generates an Notifying representation of widely used objects.
  *
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
- * @version CVS $Id: NotifyingBuilder.java,v 1.2 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
-public interface NotifyingBuilder extends Component{
+public interface NotifyingBuilder {
 
   /**
   * The role implemented by a <code>NotifyingBuilder</code>.

@@ -22,7 +22,6 @@ import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.mock.MockEnvironment;
 
@@ -78,7 +77,7 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, this.manager, env);
         
         assertEqual( load(result),
         transform("i18n", src, parameters, load(input)));
@@ -105,7 +104,7 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, this.manager, env);
         
         assertEqual( load(result),
         transform("i18n", src, parameters, load(input)));

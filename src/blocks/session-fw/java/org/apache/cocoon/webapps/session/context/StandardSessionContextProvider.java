@@ -18,7 +18,6 @@ package org.apache.cocoon.webapps.session.context;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -39,11 +38,11 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class StandardSessionContextProvider
 extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Component, Disposable {
+implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Disposable {
 
     protected Context context;
     

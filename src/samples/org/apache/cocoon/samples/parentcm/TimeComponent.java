@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.samples.parentcm;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.Date;
@@ -24,9 +23,10 @@ import java.util.Date;
  * Implementing class for the parent component manager sample's
  * <code>org.apache.cocoon.samples.parentcm.Time</code> component.
  * @author ?
- * @version CVS $Id: TimeComponent.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public class TimeComponent implements Component, Time, ThreadSafe {
+public class TimeComponent implements Time, ThreadSafe {
+    
     public Date getTime () {
         return new Date();
     }

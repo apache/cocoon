@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -44,10 +43,10 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  *  Context provider for the portal context
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProviderImpl.java,v 1.9 2004/05/26 08:39:49 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class SessionContextProviderImpl extends AbstractLogEnabled
-        implements SessionContextProvider, ThreadSafe, Component, Serviceable, Contextualizable, Disposable {
+        implements SessionContextProvider, ThreadSafe, Serviceable, Contextualizable, Disposable {
 
     private ServiceManager manager;
     private Context context;

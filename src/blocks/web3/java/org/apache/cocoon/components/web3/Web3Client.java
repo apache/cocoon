@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.web3;
 
-import org.apache.avalon.framework.component.Component;
-
 import com.sap.mw.jco.IRepository;
 import com.sap.mw.jco.JCO.Client;
 import com.sap.mw.jco.JCO.Function;
@@ -26,11 +24,11 @@ import com.sap.mw.jco.JCO.Function;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3Client.java,v 1.5 2004/03/05 13:02:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Web3Client extends Component {
+public interface Web3Client {
     
-    String ROLE = "org.apache.cocoon.components.web3.Web3Client";
+    String ROLE = Web3Client.class.getName();
     
     /**
      * Releases the Connection to the backend

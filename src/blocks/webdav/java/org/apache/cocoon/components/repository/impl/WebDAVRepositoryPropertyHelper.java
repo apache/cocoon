@@ -24,7 +24,6 @@ import java.util.Set;
 import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -43,7 +42,7 @@ import org.w3c.dom.Node;
  * intended to be used by flowscripts or corresponding wrapper components.
  */
 public class WebDAVRepositoryPropertyHelper extends AbstractLogEnabled
-implements RepositoryPropertyHelper, Serviceable, Disposable, Component {
+implements RepositoryPropertyHelper, Serviceable, Disposable {
     
     /* The ServiceManager */
     private ServiceManager manager;

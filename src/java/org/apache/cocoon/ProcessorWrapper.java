@@ -16,7 +16,6 @@
 package org.apache.cocoon;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Environment;
@@ -29,7 +28,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * @version CVS $Id$
  */
 public final class ProcessorWrapper
-implements Processor, Component, Disposable, ThreadSafe {
+implements Processor, Disposable, ThreadSafe {
 
     private Processor processor;
 

@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -30,7 +29,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @version CVS $Id$
  */
-public interface Processor extends Component {
+public interface Processor {
 
     /** The role of the root processor */
     String ROLE = Processor.class.getName();

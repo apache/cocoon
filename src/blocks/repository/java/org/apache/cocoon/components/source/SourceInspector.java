@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.source;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -26,11 +25,11 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceInspector.java,v 1.6 2004/03/05 13:02:21 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface SourceInspector extends Component {
+public interface SourceInspector {
 
-    public final static String ROLE = "org.apache.cocoon.components.source.SourceInspector";
+    public final static String ROLE = SourceInspector.class.getName();
 
     /**
      * Gets the SourceProperty associated with the given Source identified 

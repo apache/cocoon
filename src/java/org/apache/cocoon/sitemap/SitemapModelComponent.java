@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.sitemap;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
@@ -31,9 +30,9 @@ import java.util.Map;
  * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: SitemapModelComponent.java,v 1.3 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface SitemapModelComponent extends Component {
+public interface SitemapModelComponent {
     /**
      * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
      * the source and sitemap <code>Parameters</code> used to process the request.
