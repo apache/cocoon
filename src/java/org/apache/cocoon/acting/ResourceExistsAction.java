@@ -55,6 +55,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceNotFoundException;
 
 import java.util.Map;
 
@@ -62,29 +63,37 @@ import java.util.Map;
  * This action simply checks to see if a given resource exists. It checks
  * whether the specified in the src attribute source exists or not.
  * The action returns empty <code>Map</code> if it exists, null otherwise.
- * <p>Instead of src attribute, source can be specified using
+ * 
+ * <p>
+ * Instead of src attribute, source can be specified using
  * parameter named 'url' (this is old syntax).
+ * 
  * <p>
  * <b>Note:</b> {@link org.apache.cocoon.selection.ResourceExistsSelector}
  * should be preferred to this component, as the semantics of a Selector better
- * match the supplied functionality.
+ * matches the supplied functionality.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.3 2003/10/15 20:47:14 cziegeler Exp $
+ * @version CVS $Id: ResourceExistsAction.java,v 1.4 2003/12/12 14:33:09 vgritsenko Exp $
  */
 public class ResourceExistsAction extends ServiceableAction implements ThreadSafe {
 
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
-        String urlstring = parameters.getParameter("url", source);
-        Source src = null;
+    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String src, Parameters parameters) throws Exception {
+        String resourceURI = parameters.getParameter("url", src);
+        Source source = null;
         try {
-            src = resolver.resolveURI(urlstring);
-            if (src.exists())
-              return EMPTY_MAP;
+            source = resolver.resolveURI(resourceURI);
+            if (source.exists()) {
+                return EMPTY_MAP;
+            }
+        } catch (SourceNotFoundException e) {
+            // Do not log
         } catch (Exception e) {
-            getLogger().warn("Exception", e);
+            getLogger().warn("Exception resolving resource " + resourceURI, e);
         } finally {
-            resolver.release(src);
+            if (source != null) {
+                resolver.release(source);
+            }
         }
         return null;
     }
