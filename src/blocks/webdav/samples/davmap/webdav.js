@@ -79,6 +79,7 @@ function options() {
   var options = "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PUT" 
               + ",MKCOL,PROPFIND,PROPPATCH,COPY,MOVE";
   cocoon.response.setHeader("Allow",options);
+  cocoon.sendPage("status/200",{});
 }
 
 /*
