@@ -202,6 +202,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Mail block: Remove deprecated MailCommandSelector.
+   </action>
+   <action dev="CZ" type="update">
+     XMLDB block: Remove deprecated XMLDBGenerator and XMLDBCollectionGenerator.
+   </action>
    <action dev="LG" type="fix" fixes-bug="33836" due-to="Niklas Therning" due-to-email="niklas@trillian.se">
      Fix thread safety problem in JXTemplateGenerator.setup() concerning template script reparsing.
    </action>
