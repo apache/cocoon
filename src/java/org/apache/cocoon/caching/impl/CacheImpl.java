@@ -75,7 +75,7 @@ import org.apache.excalibur.store.Store;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.6 2003/08/07 08:52:15 cziegeler Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.7 2003/08/08 11:15:11 cziegeler Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
@@ -113,6 +113,9 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
     public void store(Serializable     key,
                       CachedResponse   response)
     throws ProcessingException {
+        if ( this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Caching new response for " + key);
+        }
         try {
             this.store.store(key, response);
         } catch (IOException ioe) {
@@ -127,7 +130,12 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      *                    request
      */
     public CachedResponse get(Serializable key) {
-        return (CachedResponse)this.store.get(key);
+        final CachedResponse r = (CachedResponse)this.store.get(key);
+        if ( this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Cached response for " + key + " : " + 
+                                   (r == null ? "not found" : "found"));
+        }
+        return r;
     }
 
     /**
@@ -137,6 +145,9 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      *                    request
      */
     public void remove(Serializable key) {
+        if ( this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Removing cached response for " + key); 
+        }
         this.store.remove(key);
     }
 
@@ -144,6 +155,9 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      * clear cache of all cached responses 
      */
     public void clear() {
+        if ( this.getLogger().isDebugEnabled()) {
+            this.getLogger().debug("Clearing cache"); 
+        }
         // FIXME this clears the whole store!
         this.store.clear();
     }
