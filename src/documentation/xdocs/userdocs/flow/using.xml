@@ -109,11 +109,7 @@
     The above explains how MVC could be really achieved in Cocoon with the
     control flow layer. Note that there is no direct communication between
     Model and View, everything is directed by the Control Flow by passing to
-    View a context object constructed from Model data. In a perfect world,
-    XSP should have only one logicsheet, the JXPath logicsheet. There should
-    be no other things in an XSP page that put logic in the page (read View),
-    instead of the Model. If you don't like XSP, and prefer to use JSP or
-    Velocity, the JXPath logicsheet equivalents should be implemented.
+    View a context object constructed from Model data.
   </p>
  
   <h4>Basic usage</h4>
@@ -130,7 +126,7 @@
        The business logic model which implements your application
       </li>
       <li>
-        The XSP pages, which describe the content of the pages, and XSLT
+        The page templates, which describe the content of the pages, and XSLT
         stylesheets which describe the look of the content.
       </li>
     </ul>
