@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.70 2003/07/01 11:53:50 haul Exp $:-->
+<!-- CVS $Id: status.xml,v 1.71 2003/07/01 23:47:44 joerg Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="update" fixes-bug="21248" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
+    Updated POI from 1.7.0-dev to 1.10.0-dev. Patched code accordingly. Fixed usage of deprecated methods.
+  </action>
   <action dev="CH" type="fix" due-to="Michael Gerzabek" due-to-email="michael.gerzabek@aon.at">
     Web3: Fix extra close element on connectivity loss.
   </action>
