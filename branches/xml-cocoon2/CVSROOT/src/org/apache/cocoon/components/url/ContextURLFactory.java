@@ -10,24 +10,22 @@ package org.apache.cocoon.components.url;
 import java.net.URL;
 import java.net.MalformedURLException;
 
-import javax.servlet.ServletContext;
-
-import org.apache.cocoon.Constants;
-
-import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.AbstractLoggable;
 
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.environment.Context;
+
 /**
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version $Id: ContextURLFactory.java,v 1.1.2.4 2001-03-23 12:26:07 dims Exp $
+ * @version $Id: ContextURLFactory.java,v 1.1.2.5 2001-04-20 13:05:00 cziegeler Exp $
  */
 public class ContextURLFactory extends AbstractLoggable implements URLFactory, Contextualizable {
 
     /**
      * The context
      */
-    protected Context context;
+    protected org.apache.avalon.Context context;
 
     /**
      * Create a URL from a location. This method supports the
@@ -39,12 +37,12 @@ public class ContextURLFactory extends AbstractLoggable implements URLFactory, C
      * @exception MalformedURLException If the location is malformed
      */
     public URL getURL(String location) throws MalformedURLException {
-        ServletContext servletContext = (ServletContext)context.get(Constants.CONTEXT_SERVLET_CONTEXT);
-        if (servletContext == null) {
-            getLogger().warn("no servlet-context in application context (making an absolute URL)");
+        Context envContext = (Context)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        if (envContext == null) {
+            getLogger().warn("no environment-context in application context (making an absolute URL)");
             return new URL(location);
         }
-        URL u = ((ServletContext)context.get("servlet-context")).getResource(location);
+        URL u = envContext.getResource(location);
         if (u != null)
             return u;
         else {
@@ -60,7 +58,7 @@ public class ContextURLFactory extends AbstractLoggable implements URLFactory, C
     /**
      * Get the context
      */
-    public void contextualize(Context context) {
+    public void contextualize(org.apache.avalon.Context context) {
         if (this.context == null) {
             this.context = context;
         }

@@ -28,7 +28,7 @@ import org.apache.cocoon.environment.Session;
  * to provide request information for HTTP servlets.
  *
  * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.1.2.9 2001-04-19 13:11:46 cziegeler Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.1.2.10 2001-04-20 13:05:02 cziegeler Exp $
  */
 
 public class HttpRequest implements Request {
@@ -187,8 +187,8 @@ public class HttpRequest implements Request {
 
     /**
      * @deprecated		As of Version 2.1 of the Java Servlet
-     *				API, use {@link #isRequestedSessionIdFromURL}
-     *				instead.
+     * API, use {@link #isRequestedSessionIdFromURL}
+     *instead.
      */
     public boolean isRequestedSessionIdFromUrl() {
         return this.req.isRequestedSessionIdFromUrl();
@@ -286,7 +286,7 @@ public class HttpRequest implements Request {
 
     /**
      * @deprecated 	As of Version 2.1 of the Java Servlet API,
-     * 			use {@link javax.servlet.ServletContext#getRealPath} instead.
+     * use {@link javax.servlet.ServletContext#getRealPath} instead.
      */
     public String getRealPath(String path) {
         return this.req.getRealPath(path);

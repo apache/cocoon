@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-02 13:53:06 $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-20 13:04:59 $
  */
 
 public interface Constants {
@@ -56,7 +56,7 @@ public interface Constants {
     String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/" + CONF_VERSION + "/error";
     String ERROR_NAMESPACE_PREFIX = "error";
 
-    String CONTEXT_SERVLET_CONTEXT = "servlet-context";
+    String CONTEXT_ENVIRONMENT_CONTEXT = "environment-context";
     String CONTEXT_ROOT_PATH       = "root-path";
     String CONTEXT_CLASS_LOADER    = "class-loader";
     String CONTEXT_WORK_DIR        = "work-directory";

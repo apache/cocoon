@@ -41,6 +41,8 @@ import org.apache.cocoon.Notification;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.environment.http.RequestWrapper;
+import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -63,7 +65,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.83 $ $Date: 2001-04-20 07:16:16 $
+ * @version CVS $Revision: 1.1.4.84 $ $Date: 2001-04-20 13:05:07 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -85,6 +87,8 @@ public class CocoonServlet extends HttpServlet {
     private static final boolean SILENTLY_RENAME = true;
     private File uploadDir;
 
+    protected ServletContext servletContext;
+
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
      * notice that I have broken the init into sub methods to make it
@@ -102,33 +106,32 @@ public class CocoonServlet extends HttpServlet {
 
         super.init(conf);
         ClassLoader classloader = buildInitClassLoader();
-        ServletContext context = conf.getServletContext();
+        this.servletContext = conf.getServletContext();
 
         ClassUtils.setClassLoader(classloader);
         this.appContext.put(Constants.CONTEXT_CLASS_LOADER, classloader);
 
-        this.appContext.put(Constants.CONTEXT_SERVLET_CONTEXT, context);
+        this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
+        this.initLogger(this.servletContext);
 
-        this.initLogger(context);
-
-        this.appContext.put(Constants.CONTEXT_CLASSPATH, this.getClassPath(context));
+        this.appContext.put(Constants.CONTEXT_CLASSPATH, this.getClassPath(this.servletContext));
 
         this.forceLoad(conf.getInitParameter("load-class"));
 
         File workDir = null;
         String workDirParam = conf.getInitParameter("work-directory");
         if ((workDirParam != null) && (workDirParam.trim().equals("") == false)) {
-            workDir = IOUtils.createFile( new File(context.getRealPath("/")) , workDirParam);
+            workDir = IOUtils.createFile( new File(this.servletContext.getRealPath("/")) , workDirParam);
             workDir.mkdirs();
         } else {
-            workDir = (File) context.getAttribute("javax.servlet.context.tempdir");
+            workDir = (File) this.servletContext.getAttribute("javax.servlet.context.tempdir");
         }
 
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
 
         String uploadDirParam = conf.getInitParameter("upload-directory");
         if ((uploadDirParam != null) && (uploadDirParam.trim().equals("") == false)) {
-            this.uploadDir = IOUtils.createFile( new File(context.getRealPath("/")) , uploadDirParam);
+            this.uploadDir = IOUtils.createFile( new File(this.servletContext.getRealPath("/")) , uploadDirParam);
         } else	{
             this.uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
         }
@@ -137,9 +140,9 @@ public class CocoonServlet extends HttpServlet {
         this.uploadDir.mkdirs();
 
         this.appContext.put(Constants.CONTEXT_CONFIG_URL,
-                this.getConfigFile(conf.getInitParameter("configurations"), context));
+                this.getConfigFile(conf.getInitParameter("configurations"), this.servletContext));
 
-        this.appContext.put(Constants.CONTEXT_ROOT_PATH, context.getRealPath("/"));
+        this.appContext.put(Constants.CONTEXT_ROOT_PATH, this.servletContext.getRealPath("/"));
 
         // get allow reload parameter, default is true
         String value = conf.getInitParameter("allow-reload");
@@ -499,7 +502,8 @@ public class CocoonServlet extends HttpServlet {
         env = new HttpEnvironment(uri,
                                   req,
                                   res,
-                                  (ServletContext) this.appContext.get(Constants.CONTEXT_SERVLET_CONTEXT));
+                                  this.servletContext,
+                                  (HttpContext)this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT));
         env.setLogger(this.log);
         return env;
     }

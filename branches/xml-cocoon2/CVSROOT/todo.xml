@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.30 2001-04-19 13:11:39 cziegeler Exp $
+  $Id: todo.xml,v 1.6.2.31 2001-04-20 13:04:57 cziegeler Exp $
 -->
 
 
@@ -27,10 +27,6 @@
  </devs>
 
  <actions priority="high">
-  <action context="code" assigned-to="open">
-   Remove dependencies to the javax.servlet classes.
-  </action>
-
   <action context="code" assigned-to="open">
    Reloading of jar-files.
    The class-path for the Cocoon-Servlet is only build once when the servlet

@@ -50,13 +50,14 @@ public class HttpEnvironment extends AbstractEnvironment {
      */
     public HttpEnvironment (String uri, HttpServletRequest req,
                             HttpServletResponse res,
-                            ServletContext servletContext)
+                            ServletContext servletContext,
+                            HttpContext context)
     throws MalformedURLException, IOException {
         super(uri, req.getParameter(Constants.VIEW_PARAM), servletContext.getRealPath("/"), req.getParameter(Constants.ACTION_PARAM));
 
         this.request = new HttpRequest (req, this);
         this.response = new HttpResponse (res);
-        this.context = new HttpContext (servletContext);
+        this.context = context;
         this.outputStream = response.getOutputStream();
         this.objectModel.put(Constants.REQUEST_OBJECT, this.request);
         this.objectModel.put(Constants.RESPONSE_OBJECT, this.response);

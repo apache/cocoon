@@ -20,7 +20,7 @@ import org.apache.xerces.dom.TreeWalkerImpl;
 import org.apache.cocoon.CodeFactory;
 
 /**
- * This class generates source code to implement a selector that 
+ * This class generates source code to implement a selector that
  * matches a string from within the host parameter of the HTTP request
  *
  *  <map:selector name="host" factory="org.apache.cocoon.selection.HostSelectorFactory">
@@ -37,8 +37,8 @@ import org.apache.cocoon.CodeFactory;
  *       </map:otherwise>
  *   </map:select>
  *
- * @author 
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-23 19:38:19 $
+ * @author <a href="mailto:cbritton@centervilletech.com">Colin Britton</a>
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 13:05:06 $
 */
 
 

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.34 2001-04-18 12:05:44 cziegeler Exp $
+  $Id: changes.xml,v 1.9.2.35 2001-04-20 13:04:56 cziegeler Exp $
 -->
 
 <changes title="History of Changes">
@@ -24,6 +24,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="update">
+  Finished cleanup of the environment. We are now as independant of 
+  the javax.servlet package as possible.
+  </action>
   <action dev="CZ" type="add">
    Creating wrappers for Session and Cookie.
    The creation of these wrapper classes allow us to be independent
