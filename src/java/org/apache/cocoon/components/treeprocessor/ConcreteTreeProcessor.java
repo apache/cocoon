@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,42 +45,41 @@ import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
 
-
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
- * 
- * @version CVS $Id: ConcreteTreeProcessor.java,v 1.2 2004/06/09 11:59:23 cziegeler Exp $
+ *
+ * @version CVS $Id: ConcreteTreeProcessor.java,v 1.3 2004/06/11 20:03:35 vgritsenko Exp $
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
 
 	/** The processor that wraps us */
 	private TreeProcessor wrappingProcessor;
-	
+
 	/** Component manager defined by the &lt;map:components&gt; of this sitemap */
     ComponentManager sitemapComponentManager;
-    
+
     private ServiceManager serviceManager;
- 
+
     	/** Processing nodes that need to be disposed with this processor */
     private List disposableNodes;
-   
+
     /** Root node of the processing tree */
     private ProcessingNode rootNode;
-    
+
     private Map sitemapComponentConfigurations;
-    
+
     private Configuration componentConfigurations;
-    
+
     /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
     private int requestCount;
-    
+
     /** The sitemap executor */
     private SitemapExecutor sitemapExecutor;
-    
+
     /** Release the executor */
     private boolean releaseSitemapExecutor;
-    
+
 	/** Builds a concrete processig, given the wrapping processor */
 	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor) {
 		this.wrappingProcessor = wrappingProcessor;
@@ -98,7 +97,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
                     this.getLogger().error("Unable to lookup sitemap executor.", ce);
                 }
             }
-            if ( this.sitemapExecutor == null ) {                
+            if ( this.sitemapExecutor == null ) {
                 try {
                     this.sitemapExecutor = (SitemapExecutor) this.getClass()
                                  .getClassLoader()
@@ -116,19 +115,19 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
             this.sitemapExecutor = this.wrappingProcessor.parent.concreteProcessor.sitemapExecutor;
         }
 	}
-	
+
 	/** Set the processor data, result of the treebuilder job */
 	public void setProcessorData(ComponentManager manager, ProcessingNode rootNode, List disposableNodes) {
 		if (this.sitemapComponentManager != null) {
 			throw new IllegalStateException("setProcessorData() can only be called once");
 		}
-		
+
 		this.sitemapComponentManager = manager;
 		this.serviceManager = new ComponentManagerWrapper(manager);
 		this.rootNode = rootNode;
 		this.disposableNodes = disposableNodes;
    	}
-	
+
 	/** Set the sitemap component configurations (called as part of the tree building process) */
     public void setComponentConfigurations(Configuration componentConfigurations) {
         this.componentConfigurations = componentConfigurations;
@@ -142,30 +141,30 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     public Map getComponentConfigurations() {
         // do we have the sitemap configurations prepared for this processor?
         if ( null == this.sitemapComponentConfigurations ) {
-            
+
             synchronized (this) {
 
                 if ( this.sitemapComponentConfigurations == null ) {
                     // do we have configurations?
-                    final Configuration[] childs = (this.componentConfigurations == null 
-                                                     ? null 
+                    final Configuration[] childs = (this.componentConfigurations == null
+                                                     ? null
                                                      : this.componentConfigurations.getChildren());
-                    
+
                     if ( null != childs ) {
-        
+
                         if ( null == this.wrappingProcessor.parent ) {
                             this.sitemapComponentConfigurations = new HashMap(12);
                         } else {
                             // copy all configurations from parent
                             this.sitemapComponentConfigurations = new HashMap(
-                            			this.wrappingProcessor.parent.getComponentConfigurations()); 
+                            			this.wrappingProcessor.parent.getComponentConfigurations());
                         }
-                        
+
                         // and now check for new configurations
                         for(int m = 0; m < childs.length; m++) {
-                            
+
                             final String r = this.wrappingProcessor.roleManager.getRoleForName(childs[m].getName());
-                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
+                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m],
                                                                              (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
                         }
                     } else {
@@ -174,14 +173,14 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
                             this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
                         } else {
                             // use configuration from parent
-                            this.sitemapComponentConfigurations = this.wrappingProcessor.parent.getComponentConfigurations(); 
+                            this.sitemapComponentConfigurations = this.wrappingProcessor.parent.getComponentConfigurations();
                         }
                     }
                 }
             }
         }
         return this.sitemapComponentConfigurations;    }
-	
+
     /**
      * Mark this processor as needing to be disposed. Actual call to {@link #dispose()} will occur when
      * all request processings on this processor will be terminated.
@@ -191,21 +190,21 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 		synchronized(this) {
 			this.requestCount--;
 		}
-		
+
 		if (this.requestCount < 0) {
 			// No more users : dispose right now
 			dispose();
 		}
 	}
-	
+
 	public TreeProcessor getWrappingProcessor() {
 		return this.wrappingProcessor;
 	}
-	
+
 	public Processor getRootProcessor() {
 		return this.wrappingProcessor.getRootProcessor();
 	}
-	
+
     /**
      * Process the given <code>Environment</code> producing the output.
      * @return If the processing is successfull <code>true</code> is returned.
@@ -259,14 +258,14 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
      */
     protected boolean process(Environment environment, InvokeContext context)
     throws Exception {
-    	
+
     		// Increment the concurrent requests count
     		synchronized(this) {
     			requestCount++;
     		}
 
     		try {
-    			
+
     	        // and now process
     	        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
 
@@ -279,57 +278,57 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
     	        try {
     	            boolean success = this.rootNode.invoke(environment, context);
-    	            
+
     	            return success;
 
     	        } finally {
     	            EnvironmentHelper.leaveProcessor();
-    	            // Restore old redirector 
+    	            // Restore old redirector
     	            context.setRedirector(oldRedirector);
     	        }
 
     		} finally {
-    			
+
     			// Decrement the concurrent request count
     			synchronized(this) {
     				requestCount--;
     			}
-    			
+
     			if(requestCount < 0) {
     				// Marked for disposal and no more concurrent requests.
     				dispose();
     			}
     		}
     }
-        
-    
+
+
     protected boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception {
-        
+
         // Build an environment wrapper
         // If the current env is a facade, change the delegate and continue processing the facade, since
         // we may have other redirects that will in turn also change the facade delegate
-        
+
         MutableEnvironmentFacade facade = environment instanceof MutableEnvironmentFacade ?
             ((MutableEnvironmentFacade)environment) : null;
-        
+
         if (facade != null) {
             // Consider the facade delegate (the real environment)
             environment = facade.getDelegate();
         }
-        
+
         // test if this is a call from flow
         boolean isRedirect = (environment.getObjectModel().remove("cocoon:forward") == null);
         Environment newEnv = new ForwardEnvironmentWrapper(environment, uri, getLogger());
         if ( isRedirect ) {
             ((ForwardEnvironmentWrapper)newEnv).setInternalRedirect(true);
         }
-        
+
         if (facade != null) {
             // Change the facade delegate
             facade.setDelegate((EnvironmentWrapper)newEnv);
             newEnv = facade;
         }
-        
+
         // Get the processor that should process this request
         ConcreteTreeProcessor processor;
         if ( newEnv.getURIPrefix().equals("") ) {
@@ -337,13 +336,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         } else {
             processor = this;
         }
-        
+
         // Process the redirect
 // No more reset since with TreeProcessorRedirector, we need to pop values from the redirect location
 //        context.reset();
         return processor.process(newEnv, context);
     }
-    
+
 	public void dispose() {
         if (this.disposableNodes != null) {
             // we must dispose the nodes in reverse order
@@ -353,7 +352,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
             }
             this.disposableNodes = null;
         }
-        
+
         // Ensure it won't be used anymore
         this.rootNode = null;
         if ( this.releaseSitemapExecutor ) {
@@ -361,15 +360,15 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
             this.sitemapExecutor = null;
         }
 	}
-    
+
     private class TreeProcessorRedirector extends ForwardRedirector {
-        
+
         private InvokeContext context;
         public TreeProcessorRedirector(Environment env, InvokeContext context) {
             super(env);
             this.context = context;
         }
-        
+
         protected void cocoonRedirect(String uri) throws IOException, ProcessingException {
             try {
                 ConcreteTreeProcessor.this.handleCocoonRedirect(uri, this.env, this.context);
@@ -384,7 +383,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
             }
         }
     }
-    
+
     /**
      * Local extension of EnvironmentWrapper to propagate otherwise blocked
      * methods to the actual environment.
@@ -415,7 +414,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         public boolean isResponseModified(long lastModified) {
             return environment.isResponseModified(lastModified);
         }
-        
+
         public void setResponseIsNotModified() {
             environment.setResponseIsNotModified();
         }
@@ -428,7 +427,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 	public String getContext() {
 		return wrappingProcessor.getContext();
 	}
-    
+
     /**
      * Return the sitemap executor
      */

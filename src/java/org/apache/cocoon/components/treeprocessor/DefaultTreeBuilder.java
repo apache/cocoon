@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,11 +53,12 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.11 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.12 2004/06/11 20:03:35 vgritsenko Exp $
  */
-
-public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
-  Recomposable, Configurable, Contextualizable, RoleManageable, Recyclable, Disposable {
+public class DefaultTreeBuilder
+        extends AbstractLogEnabled
+        implements TreeBuilder, Recomposable, Configurable, Contextualizable,
+                   RoleManageable, Recyclable, Disposable {
 
     protected Map attributes = new HashMap();
 
@@ -158,7 +159,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getAttribute(java.lang.String)
      */
@@ -214,7 +215,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
      *
      * @return a selector for node builders
      */
-    protected ComponentSelector createBuilderSelector(String sitemapVersion) 
+    protected ComponentSelector createBuilderSelector(String sitemapVersion)
     throws Exception {
 
         // Create the NodeBuilder selector.
@@ -257,7 +258,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
                 merged.addChild( lc[i] );
             }
         }
-        // Automagically initialize the selector        
+        // Automagically initialize the selector
         LifecycleHelper.setupComponent(selector,
             getLogger(),
             this.context,
@@ -379,15 +380,15 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             Configuration treeConfig = handler.getConfiguration();
 
             this.namespace = treeConfig.getNamespace();
-            
+
             // get the namespace version
             final int pos = this.namespace.lastIndexOf('/');
             if ( pos == -1 ) {
                 throw new ProcessingException("Namespace " + this.namespace + " does not have a version number.");
             }
             if ( !this.namespace.substring(0, pos).equals("http://apache.org/cocoon/sitemap") ) {
-                throw new ProcessingException("Namespace " + this.namespace + " is not a valid sitemap namespace.");                
-            }            
+                throw new ProcessingException("Namespace " + this.namespace + " is not a valid sitemap namespace.");
+            }
             return build(treeConfig, this.namespace.substring(pos+1));
         } catch (ProcessingException e) {
             throw e;
@@ -454,7 +455,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     public ComponentManager getSitemapComponentManager() {
         return this.manager;
     }
-    
+
     /**
      * Setup a <code>ProcessingNode</code> by setting its location, calling all
      * the lifecycle interfaces it implements and giving it the parameter map if
@@ -586,7 +587,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     public void dispose() {
         LifecycleHelper.dispose(this.builderSelector);
 
-        // Don't dispose manager or roles : they are used by the built tree
+        // Don't dispose manager or roles: they are used by the built tree
         // and thus must live longer than the builder.
     }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.6 2004/06/11 08:51:56 cziegeler Exp $
+ * @version CVS $Id: PreparableMatchNode.java,v 1.7 2004/06/11 20:03:35 vgritsenko Exp $
  */
 public class PreparableMatchNode extends SimpleSelectorProcessingNode
                                  implements ParameterizableProcessingNode, Composable, Disposable {
@@ -103,8 +103,8 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
      */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
-      
-      	// Perform any common invoke functionality 
+
+      	// Perform any common invoke functionality
       	super.invoke(env, context);
 
         Map objectModel = env.getObjectModel();
@@ -132,7 +132,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
         if (result != null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Matcher '" + this.componentName + "' matched prepared pattern '" +
-                    this.pattern + "' at " + this.getLocation());
+                                  this.pattern + "' at " + this.getLocation());
             }
 
             // Invoke children with the matcher results
