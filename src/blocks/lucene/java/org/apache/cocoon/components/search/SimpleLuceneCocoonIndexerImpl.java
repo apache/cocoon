@@ -83,58 +83,50 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
+ * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.4 2003/12/12 08:14:41 huber Exp $
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          implements LuceneCocoonIndexer, Configurable, Composable, Disposable
 {
 
     /**
-     *Description of the Field
-     *
-     * @since
+     * configuration tagname for specifying the analyzer class
      */
     public final static String ANALYZER_CLASSNAME_CONFIG = "analyzer-classname";
+    
     /**
-     *Description of the Field
-     *
-     * @since
+     * configuration default analyzer class
      */
     public final static String ANALYZER_CLASSNAME_DEFAULT = "org.apache.lucene.analysis.standard.StandardAnalyzer";
 
     /**
-     *Description of the Field
-     *
-     * @since
+     * configuration tagname for specifying lucene's index directory
      */
     public final static String DIRECTORY_CONFIG = "directory";
+    
     /**
-     *Description of the Field
-     *
-     * @since
+     * configuration default directory, ie. no default.
      */
     public final static String DIRECTORY_DEFAULT = null;
 
     /**
-     *Description of the Field
-     *
-     * @since
+     * configuration tagname for specifying lucene's merge factor.
      */
     public final static String MERGE_FACTOR_CONFIG = "merge-factor";
 
     /**
-     * http://www.mail-archive.com/lucene-user@jakarta.apache.org/msg00373.html
+     * configuration default value for lucene's merge factor.
+     * 
+     * @see http://www.mail-archive.com/lucene-user@jakarta.apache.org/msg00373.html
      */
     public final static int MERGE_FACTOR_DEFAULT = 10;
 
     /**
-     * The component manager instance
-     *
-     * @since
+     * The component manager for looking up components used.
      */
     protected ComponentManager manager = null;
 
-    Analyzer analyzer;
+    protected Analyzer analyzer;
     private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
     private int mergeFactor = MERGE_FACTOR_DEFAULT;
 
@@ -143,7 +135,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
      *Sets the analyzer attribute of the SimpleLuceneCocoonIndexerImpl object
      *
      * @param  analyzer  The new analyzer value
-     * @since
      */
     public void setAnalyzer(Analyzer analyzer) {
         this.analyzer = analyzer;
@@ -151,11 +142,10 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Method
+     * Configure this component.
      *
-     * @param  conf                        Description of Parameter
-     * @exception  ConfigurationException  Description of Exception
-     * @since
+     * @param  conf                        is the configuration
+     * @exception  ConfigurationException  is thrown iff configuring fails
      */
     public void configure(Configuration conf) throws ConfigurationException {
         Configuration child;
@@ -163,14 +153,17 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
 
         child = conf.getChild(ANALYZER_CLASSNAME_CONFIG, false);
         if (child != null) {
-            value = conf.getValue(ANALYZER_CLASSNAME_DEFAULT);
+            // fix Bugzilla Bug 25277, use child.getValue
+            // and in all following blocks
+            value = child.getValue(ANALYZER_CLASSNAME_DEFAULT);
             if (value != null) {
                 analyzerClassnameDefault = value;
             }
         }
         child = conf.getChild(MERGE_FACTOR_CONFIG, false);
         if (child != null) {
-            int int_value = conf.getValueAsInteger(MERGE_FACTOR_DEFAULT);
+            // fix Bugzilla Bug 25277, use child instead of conf
+            int int_value = child.getValueAsInteger(MERGE_FACTOR_DEFAULT);
             mergeFactor = int_value;
         }
     }
@@ -180,9 +173,8 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composable</code>.
      *
-     * @param  manager                 Description of Parameter
-     * @exception  ComponentException  Description of Exception
-     * @since
+     * @param  manager                 used by this component
+     * @exception  ComponentException  is never thrown
      */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
@@ -190,9 +182,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Method
-     *
-     * @since
+     * Dispose this component.
      */
     public void dispose() { }
 
@@ -205,8 +195,7 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
      *   update existing index.
      * @param  base_url                 index content of base_url, and crawl through all its
      *   links recursivly.
-     * @exception  ProcessingException  Description of Exception
-     * @since
+     * @exception  ProcessingException  is thrown iff indexing fails
      */
     public void index(Directory index, boolean create, URL base_url)
              throws ProcessingException {
@@ -276,13 +265,11 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
 
 
     /**
-     *Description of the Class
-     *
-     * @author     huberb1
-     * @version
+     * A document iterator deleting "old" documents form the index.
+     * 
+     * TODO: use this class before indexing, in non-creating mode.
      */
-    class DocumentDeletableIterator
-    {
+    static class DocumentDeletableIterator {
         private IndexReader reader;
         // existing index
         private TermEnum uidIter;
@@ -295,7 +282,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          *
          * @param  directory        Description of Parameter
          * @exception  IOException  Description of Exception
-         * @since
          */
         public DocumentDeletableIterator(Directory directory) throws IOException {
             reader = IndexReader.open(directory);
@@ -309,7 +295,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          *Description of the Method
          *
          * @exception  IOException  Description of Exception
-         * @since
          */
         public void deleteAllStaleDocuments() throws IOException {
             while (uidIter.term() != null && uidIter.term().field() == "uid") {
@@ -324,7 +309,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          *
          * @param  uid              Description of Parameter
          * @exception  IOException  Description of Exception
-         * @since
          */
         public void deleteModifiedDocuments(String uid) throws IOException {
             while (documentHasBeenModified(uidIter.term(), uid)) {
@@ -341,7 +325,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          *Description of the Method
          *
          * @exception  Throwable  Description of Exception
-         * @since
          */
         protected void finalize() throws Throwable {
             super.finalize();
@@ -363,7 +346,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          *
          * @param  term  Description of Parameter
          * @return       Description of the Returned Value
-         * @since
          */
         boolean documentIsDeletable(Term term) {
             return term != null && term.field() == "uid";
@@ -376,7 +358,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          * @param  term  Description of Parameter
          * @param  uid   Description of Parameter
          * @return       Description of the Returned Value
-         * @since
          */
         boolean documentHasBeenModified(Term term, String uid) {
             return documentIsDeletable(term) &&
@@ -390,7 +371,6 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
          * @param  term  Description of Parameter
          * @param  uid   Description of Parameter
          * @return       Description of the Returned Value
-         * @since
          */
         boolean documentHasNotBeenModified(Term term, String uid) {
             return documentIsDeletable(term) &&
