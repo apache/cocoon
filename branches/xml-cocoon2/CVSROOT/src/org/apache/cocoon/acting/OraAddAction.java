@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-12 20:52:05 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-12 22:12:33 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -69,13 +69,16 @@ public class OraAddAction extends DatabaseAddAction {
             }
 
             PreparedStatement statement = conn.prepareStatement(query);
+            getLogger().info(query);
 
             Configuration[] keys = conf.getChild("table").getChild("keys").getChildren("key");
             Configuration[] values = conf.getChild("table").getChild("values").getChildren("value");
             currentIndex = 1;
 
             for (int i = 0; i < keys.length; i++) {
-                if ("manual".equals(keys[i].getAttribute("mode", "automatic"))) {
+                String mode = keys[i].getAttribute("mode", "automatic");
+
+                if ("manual".equals(mode)) {
                     String selectQuery = this.getSelectQuery(keys[i]);
 
                     ResultSet set = conn.createStatement().executeQuery(selectQuery);
@@ -85,10 +88,14 @@ public class OraAddAction extends DatabaseAddAction {
                     statement.setInt(currentIndex, value);
 
                     request.setAttribute(keys[i].getAttribute("param"), String.valueOf(value));
-                    getLogger().info(currentIndex + ": " + keys[i].getAttribute("param"));
 
                     set.close();
                     set.getStatement().close();
+                    currentIndex++;
+                } else if ("form".equals(mode)) {
+                    String parameter = keys[i].getAttribute("param");
+                    request.setAttribute(parameter, request.getParameter(parameter));
+                    this.setColumn(statement, currentIndex, request, keys[i]);
                     currentIndex++;
                 }
             }
@@ -122,15 +129,19 @@ public class OraAddAction extends DatabaseAddAction {
             statement.close();
 
             query = this.getSelectLOBQuery(conf);
+            getLogger().info(query);
 
             if ("".equals(query) == false) {
                 PreparedStatement LOBstatement = conn.prepareStatement(query);
                 getLogger().info(query);
 
-                currentIndex = 1;
+                if (keys.length > 0) {
+                    currentIndex = 1;
 
-                for (int i = 0; i < keys.length; i++, currentIndex++) {
-                    this.setColumn(statement, currentIndex, request, keys[i]);
+                    for (int i = 0; i < keys.length; i++) {
+                        this.setColumn(statement, currentIndex, request, keys[i]);
+                        currentIndex++;
+                    }
                 }
 
                 OracleResultSet set = (OracleResultSet) LOBstatement.executeQuery();
@@ -236,13 +247,17 @@ public class OraAddAction extends DatabaseAddAction {
                 int numKeys = 0;
 
                 for (int i = 0; i < keys.length; i++) {
-                    if ("manual".equals(keys[i].getAttribute("mode", "automatic"))) {
-                        if (i > 0) {
+                    String mode = keys[i].getAttribute("mode", "automatic");
+                    if ("manual".equals(mode) || "form".equals(mode)) {
+                        if (numKeys > 0) {
                             queryBuffer.append(", ");
                         }
 
                         queryBuffer.append(keys[i].getAttribute("dbcol"));
-                        this.setSelectQuery(table.getAttribute("name"), keys[i]);
+
+                        if ("manual".equals(mode)) {
+                            this.setSelectQuery(table.getAttribute("name"), keys[i]);
+                        }
                         numKeys++;
                     }
                 }

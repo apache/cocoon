@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-12 18:16:58 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-12 22:12:32 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     protected static final Map addStatements = new HashMap();
@@ -75,7 +75,9 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             currentIndex = 1;
 
             for (int i = 0; i < keys.length; i++) {
-                if ("manual".equals(keys[i].getAttribute("mode", "automatic"))) {
+                String mode = keys[i].getAttribute("mode", "automatic");
+
+                if ("manual".equals(mode)) {
                     String selectQuery = this.getSelectQuery(keys[i]);
 
                     ResultSet set = conn.createStatement().executeQuery(selectQuery);
@@ -86,6 +88,9 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
                     set.close();
                     set.getStatement().close();
+                    currentIndex++;
+                } else if ("form".equals(mode)) {
+                    this.setColumn(statement, currentIndex, request, values[i]);
                     currentIndex++;
                 }
             }
@@ -145,7 +150,8 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
                 int numKeys = 0;
 
                 for (int i = 0; i < keys.length; i++) {
-                    if ("manual".equals(keys[i].getAttribute("mode", "automatic"))) {
+                    String mode = keys[i].getAttribute("mode", "automatic");
+                    if ("manual".equals(mode) || "form".equals(mode)) {
                         if (i > 0) {
                             queryBuffer.append(", ");
                         }
