@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: xsp.xsl,v 1.1 2003/03/09 00:08:57 pier Exp $-->
+<!-- $Id: xsp.xsl,v 1.2 2003/03/26 15:37:09 crafterm Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  *
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author <a href="sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:57 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/03/26 15:37:09 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -113,7 +113,6 @@
 
     import org.apache.cocoon.Constants;
     import org.apache.cocoon.ProcessingException;
-    import org.apache.cocoon.components.parser.Parser;
     import org.apache.cocoon.generation.Generator;
     //import org.apache.cocoon.util.*;
 
