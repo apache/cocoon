@@ -59,7 +59,7 @@ import org.apache.commons.jxpath.Pointer;
  * that narrows the binding scope to some xpath-context on the target
  * objectModel to load and save from.
  *
- * @version CVS $Id: ContextJXPathBinding.java,v 1.7 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: ContextJXPathBinding.java,v 1.8 2004/02/03 12:22:08 joerg Exp $
  */
 public class ContextJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -80,7 +80,7 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
      * Actively performs the binding from the ObjectModel wrapped in a jxpath
      * context to the Woody-form.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Pointer ptr = jxpc.getPointer(this.xpath);
         if (ptr.getNode() != null) {
             JXPathContext subContext = jxpc.getRelativeContext(ptr);

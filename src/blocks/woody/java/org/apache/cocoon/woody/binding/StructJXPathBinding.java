@@ -64,7 +64,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  *
  * @author Timothy Larson
- * @version CVS $Id: StructJXPathBinding.java,v 1.4 2004/01/21 20:18:19 tim Exp $
+ * @version CVS $Id: StructJXPathBinding.java,v 1.5 2004/02/03 12:22:08 joerg Exp $
  */
 public class StructJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -89,7 +89,7 @@ public class StructJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Struct structWidget = (Struct)getWidget(frmModel, this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doLoad(structWidget, subContext);

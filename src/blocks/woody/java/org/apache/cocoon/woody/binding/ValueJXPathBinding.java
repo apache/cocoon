@@ -64,7 +64,7 @@ import java.util.Locale;
  * (pointing to an attribute or text-node) to and from a specific Woody
  * widget as identified by its id.
  *
- * @version CVS $Id: ValueJXPathBinding.java,v 1.10 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: ValueJXPathBinding.java,v 1.11 2004/02/03 12:22:08 joerg Exp $
  */
 public class ValueJXPathBinding extends JXPathBindingBase {
 
@@ -114,8 +114,12 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      * Actively performs the binding from the ObjectModel wrapped in a jxpath
      * context to the Woody-form-widget specified in this object.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Widget widget = frmModel.getWidget(this.fieldId);
+        if (widget == null) {
+            throw new BindingException("The widget with the ID [" + this.fieldId
+                    + "] referenced in the binding does not exist in the form definition.");
+        }
         Object value = jxpc.getValue(this.xpath);
 
         if (value != null && convertor != null) {

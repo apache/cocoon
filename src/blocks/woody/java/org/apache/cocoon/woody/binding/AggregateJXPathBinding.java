@@ -63,7 +63,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * that contains other widgets.</li>
  * </ol>
  *
- * @version CVS $Id: AggregateJXPathBinding.java,v 1.6 2004/01/11 20:51:15 vgritsenko Exp $
+ * @version CVS $Id: AggregateJXPathBinding.java,v 1.7 2004/02/03 12:22:08 joerg Exp $
  */
 public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -88,7 +88,7 @@ public class AggregateJXPathBinding extends ComposedJXPathBindingBase {
      * narrows the scope on the object-model to the member xpath-context
      * before continuing the binding over the child-bindings.
      */
-    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+    public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         AggregateField aggregate = (AggregateField) frmModel.getWidget(this.widgetId);
         JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         super.doLoad(aggregate, subContext);
