@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -102,7 +102,7 @@ public class TreeProcessor
 
     /** The source resolver */
     protected SourceResolver resolver;
-    
+
     /** The actual processor (package-private as needs to be accessed by ConcreteTreeProcessor) */
     ConcreteTreeProcessor concreteProcessor;
 
@@ -185,13 +185,13 @@ public class TreeProcessor
         // Read the builtin languages definition file
         Configuration builtin;
         try {
-            Source source = this.resolver.resolveURI( xconfURL );
+            Source source = this.resolver.resolveURI(xconfURL);
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
                 SourceUtil.toSAX( this.manager, source, null, handler);
                 builtin = handler.getConfiguration();
             } finally {
-                this.resolver.release( source );
+                this.resolver.release(source);
             }
         } catch(Exception e) {
             String msg = "Error while reading " + xconfURL + ": " + e.getMessage();
@@ -202,15 +202,14 @@ public class TreeProcessor
         this.builderSelector = new ExtendedComponentSelector(Thread.currentThread().getContextClassLoader());
         try {
             LifecycleHelper.setupComponent(this.builderSelector,
-                getLogger(),
-                this.context,
-                this.manager,
-                this.roleManager,
-                builtin
-            );
-        } catch(ConfigurationException ce) {
-            throw ce;
-        } catch(Exception e) {
+                                           getLogger(),
+                                           this.context,
+                                           this.manager,
+                                           this.roleManager,
+                                           builtin);
+        } catch (ConfigurationException e) {
+            throw e;
+        } catch (Exception e) {
             throw new ConfigurationException("Could not setup builder selector", e);
         }
     }
@@ -226,9 +225,9 @@ public class TreeProcessor
      *         ConnectionResetException  If the connection was reset
      */
     public boolean process(Environment environment) throws Exception {
-    	
+
         this.setupConcreteProcessor(environment);
-    		
+
         return this.concreteProcessor.process(environment);
     }
 
@@ -239,12 +238,12 @@ public class TreeProcessor
      */
     public ProcessingPipeline buildPipeline(Environment environment)
     throws Exception {
-    	
+
     		setupConcreteProcessor(environment);
-    		
+
     		return this.concreteProcessor.buildPipeline(environment);
     }
-      
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getRootProcessor()
      */
@@ -253,7 +252,7 @@ public class TreeProcessor
         while(result.parent != null) {
             result = result.parent;
         }
-        
+
         return result;
     }
 
@@ -278,7 +277,7 @@ public class TreeProcessor
             buildConcreteProcessor(env);
         }
     }
-    
+
     private synchronized void buildConcreteProcessor(Environment env) throws Exception {
 
         // Now that we entered the synchronized area, recheck what's already
@@ -307,9 +306,10 @@ public class TreeProcessor
             }
 
             if (this.source == null) {
-                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName), lastModifiedDelay);
+                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName),
+                                                              lastModifiedDelay);
             }
-            
+
             newLastModified = this.source.getLastModified();
 
             ProcessingNode root = builder.build(this.source);
@@ -346,19 +346,22 @@ public class TreeProcessor
         ContainerUtil.dispose(this.concreteProcessor);
         this.concreteProcessor = null;
 
-        if ( this.manager != null ) {
-	        if ( this.source != null ) {
+        if (this.manager != null) {
+	        if (this.source != null) {
 	            this.resolver.release(this.source.getSource());
 	            this.source = null;
 	        }
+
             if (this.parent == null) {
                 // root processor : dispose the builder selector
                 this.builderSelector.dispose();
                 this.builderSelector = null;
-
-                this.manager.release(this.resolver);
-                this.resolver = null;
             }
+
+            // Release resolver looked up in compose()
+            this.manager.release(this.resolver);
+            this.resolver = null;
+
             this.manager = null;
 	    }
 	}
