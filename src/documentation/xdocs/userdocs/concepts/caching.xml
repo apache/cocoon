@@ -22,7 +22,7 @@
                how they can be configured and how to implement your own cacheable components.
             </p>
 	 </s1>
-	 <s1 title="How to configure caching">
+	 <s1 title="How to Configure Caching">
 	     <p>The caching can be turned on and off on a per pipeline setting in the sitemap.
 	      This means, for each <em>map:pipeline</em> section in a sitemap, it's possible to
 	      turn on/off caching and configure the caching algorithm.</p>
@@ -62,17 +62,49 @@
       override this whereever it makes sense.</p>
 	 </s1>
 <!-- FIXME: THe following is OLD -->	 
-	 <s1 title="Caching of event pipelines">
-		<p>The algorithm used for caching depends on the event pipeline configured. 
-               For more information about configuration see the chapter below.</p>
-            <p>The following subchapters describe the available caching algorithms.</p>
-		<s2 title="The CachingEventPipeline">
-			<p>The CachingEventPipeline uses a very easy but effective approach
-                     to cache the event pipelines of a request: The pipeline process
-                     is cached up to the most possible point.</p>
-                  <p>Each sitemap component (generator or transformer) which might be
-                     cacheable must implement the Cacheable interface. When the
-                     event pipeline is processed each sitemap component starting with
+	 <s1 title="The Default Caching Algorithm">
+		<p>The default algorithm uses a very easy but effective approach
+           to cache a request: The pipeline process is cached up to the most 
+           possible point.</p>
+        <p>Therefore each component in the pipeline is queried by Cocoon if it
+        supports caching. Several components, like the file generator or the xslt
+        transformer support caching. However, dynamic components like the sql transformer
+        or the cinclude transformer do not. Let's have a look at some examples:</p>
+		<s2 title="Simple Examples">
+		  <p>If you have the following pipeline:</p>
+          <p>Generator[type=file|src=a.xml] -> Transformer[type="xslt"|src=a.xsl] -> Serializer</p>
+		  <p>The file generator is cacheable and generates a key which uses the src 
+             (or the filename) to build the key. The cache uses the last modification date of the xml file
+             to test if the cached content is valid.</p>
+  		  <p>The xslt transformer is cacheable and generates a key which uses
+             the filename to build the unique key. The cache validity object
+             uses the last modification date of the xslt file.</p>
+          <p>The default serializer (html) supports the caching as well.</p>
+  		  <p>All three keys are used to build a unique key for this pipeline.
+             The first time it is invoked its response is cached. The second time
+             this pipeline is called, the cached content is get from the cache.
+             If it is still valid, the cached content is directly send to the client.</p>
+        </s2>
+        <s2 title="Complex Example">
+		   <p>Only part of the following pipeline is cached:</p>
+           <p>Generator[type=file|src=a.xml] -> Transformer[type="xslt"|src=a.xsl] -> Transformer[type=sql] -> Transformer[type="xslt"|src=b.xsl] -> Serializer</p>
+ 		  <p>The file generator is cacheable and generates a key which uses the src 
+             (or the filename) to build the key. The cache uses the last modification date of the xml file
+             to test if the cached content is valid.</p>
+   		  <p>The xslt transformer is cacheable and generates a key which uses
+             the filename to build the unique key. The cache validity object
+             uses the last modification date of the xslt file.</p>
+ 		  <p>The sql transformer is not cacheable, so the caching algorithm stops
+ 			   at this point although the last transformer is cacheable again.</p>
+ 		  <p>So the cached response is absolutely the same as in the first example
+                           and therefore the unique key build from the two keys (from the
+                           generator and the first transformer) is the same as in the first example.
+				   The only difference is when the cached response is used. It is not
+                           feed into the serializer but into the sql transformer.</p>
+			</s2>
+         <p>Each sitemap component (generator or transformer) which might be
+            cacheable must implement the CacheableProcessingComponent interface. When the
+            event pipeline is processed each sitemap component starting with
                      the generator is asked if it implements this interface. This
                      test stops either when the first component does not implement
                      the Cacheable interface or when the first cacheable component is
@@ -110,37 +142,6 @@
                      the pipeline. If they are not valid any more the cached response is removed
                      from the cache, the new response is generated and then stored together with
                      the new validity objects in the cache.</p>
-			<s3 title="Examples">
-				<p>If you have the following pipeline:</p>
-                        <p>Generator[type=file|src=a.xml] -> Transformer[type="xslt"|src=a.xsl] -> Serializer</p>
-				<p>The file generator is cacheable and generates a key which hashes the src 
-         			   (or the filename) to build the key. The cache
-                           validity object uses the last modification date of the xml file.</p>
-				<p>The xslt transformer is cacheable and generates a key which hashes
-                           the filename to build the unique key. The cache validity object
-                           uses the last modification date of the xml file.</p>
-				<p>Both keys are used to build a unique key for this pipeline,
-                           the first time it is invoked its response is cached. The second time
-                           this pipeline is called, the cached content is get from the cache.
-                           If it is still valid, the cached content is directly feed into
-                           the serializer.</p>
-				<p>Only part of the following pipeline is cached:</p>
-                        <p>Generator[type=file|src=a.xml] -> Transformer[type="xslt"|src=a.xsl] -> Transformer[type=sql] -> Transformer[type="xslt"|src=b.xsl] -> Serializer</p>
-				<p>The file generator is cacheable and generates a key which hashes the src 
-         			   (or the filename) to build the key. The cache
-                           validity object uses the last modification date of the xml file.</p>
-				<p>The xslt transformer is cacheable and generates a key which hashes
-                           the filename to build the unique key. The cache validity object
-                           uses the last modification date of the xml file.</p>
-				<p>The sql transformer is not cacheable, so the caching algorithm stops
- 				   at this point although the last transformer is cacheable.</p>
-				<p>So the cached response is absolutely the same as in the first example
-                           and therefore the unique key build from the two keys (from the
-                           generator and the first transformer) is the same as in the first example.
-				   The only difference is when the cached response is used. It is not
-                           feed into the serializer but into the sql transformer.</p>
-			</s3>
-		</s2>
 		<s2 title="The XMLSerializer/XMLDeserializer">
 			<p>The caching of the sax events is implemented by two Avalon components: 
                      The XMLSerializer and the XMLDeserializer. The XMLSerializer gets
