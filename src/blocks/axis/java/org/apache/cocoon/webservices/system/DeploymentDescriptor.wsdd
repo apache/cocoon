@@ -19,7 +19,7 @@
 
  <service name="Cocoon-JVM-System" provider="java:RPC">
   <parameter name="className" value="org.apache.cocoon.webservices.system.System"/>
-  <parameter name="allowedMethods" value="getProperties getArchitecture getCPUInfo getNumProcessors getOperatingSystem getOperatingSystemVersion"/>
+  <parameter name="allowedMethods" value="getProperties getArchitecture getOperatingSystem getOperatingSystemVersion"/>
  </service>
 
 </deployment>
