@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: list.pagesheet,v 1.1 2003/06/27 20:10:42 stefano Exp $ -->
+<!-- CVS: $Id: list.pagesheet,v 1.2 2004/02/16 23:50:09 joerg Exp $ -->
 
 <pagesheet xmlns="http://apache.org/cocoon/paginate/1.0">
   <rules>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.5 2003/05/08 13:42:07 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.6 2004/02/16 23:50:09 joerg Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
