@@ -1,10 +1,20 @@
 <?xml version="1.0"?>
-<!-- Sitemap Core logicsheet for the Java language -->
 <!--
- * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2000-08-31 14:56:31 $
+ *****************************************************************************
+ * Copyright (C) The Apache Software Foundation. All rights reserved.        *
+ * _________________________________________________________________________ *
+ * This software is published under the terms of the Apache Software License *
+ * version 1.1, a copy of which has been included  with this distribution in *
+ * the LICENSE file.                                                         *
+ ***************************************************************************** 
 -->
 
+<!--
+ * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2000-08-31 15:53:55 $
+-->
+
+<!-- Sitemap Core logicsheet for the Java language -->
 <xsl:stylesheet 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:map="http://apache.org/cocoon/sitemap/1.0" 
@@ -41,7 +51,6 @@
     import org.apache.cocoon.ProcessingException;
     import org.apache.cocoon.environment.Environment;
     import org.apache.cocoon.generation.Generator;
-    import org.apache.cocoon.generation.ErrorGenerator;
     import org.apache.cocoon.matching.Matcher;
     import org.apache.cocoon.reading.Reader;
     import org.apache.cocoon.selection.Selector;
@@ -49,6 +58,7 @@
     import org.apache.cocoon.sitemap.AbstractSitemap;
     import org.apache.cocoon.sitemap.ResourcePipeline;
     import org.apache.cocoon.sitemap.Sitemap;
+    import org.apache.cocoon.sitemap.ErrorNotifier;
     import org.apache.cocoon.sitemap.SitemapManager;
     import org.apache.cocoon.transformation.Transformer;
 
@@ -157,13 +167,13 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       this.sitemapManager.setConfiguration(conf);
       try {
       <!-- configure all components -->
-      /* Configure special ErrorGenerator */
+      /* Configure special ErrorNotifier */
       confBuilder.startDocument ();
       confBuilder.endDocument ();
       Configuration cconf2 = confBuilder.getConfiguration();
       generator_config_error_handler = cconf2;
       generator_error_handler =
-        (Generator) load_component ("org.apache.cocoon.generation.ErrorGenerator", cconf2);
+        (Generator) load_component ("org.apache.cocoon.sitemap.ErrorNotifier", cconf2);
 
       /* Configure generators */
       <xsl:call-template name="config-components">
@@ -284,7 +294,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           List list = null;
           Parameters param = null; 
           pipeline.setGenerator (generator_error_handler, e.getMessage(), null, emptyParam);
-          ErrorGenerator eg = (ErrorGenerator) pipeline.getGenerator();
+          ErrorNotifier eg = (ErrorNotifier) pipeline.getGenerator();
           eg.setException (e);
           <xsl:apply-templates select="./map:handle-errors/*"/>
         }
