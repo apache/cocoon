@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.89 2001-08-10 16:18:53 dims Exp $-->
+<!-- $Id: esql.xsl,v 1.90 2001-08-13 12:36:54 dims Exp $-->
 <!--
 
  ============================================================================
@@ -320,6 +320,14 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
         if (buffer == null) return "";
 
         return new String(buffer);
+      }
+
+      private final String getStringFromByteArray(byte[] bytes, String encoding) {
+        try {
+            return new String(bytes,encoding);
+        } catch (java.io.UnsupportedEncodingException uee) {
+            throw new RuntimeException("Unsupported Encoding Exception: " + uee.getMessage());
+        }
       }
 
       <xsl:choose>
@@ -758,11 +766,11 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
                       </xsp:logic>
                     </xsp:element>
                     break;
-		    
+
                  case java.sql.Types.OTHER: // This is what Informix uses for Sets, Bags, Lists
                     this._esql_printObject(_esql_query.resultset.getObject(_esql_i), xspAttr);
                     break;
-		    
+
                  default:
                     // standard type
                     <xsp:content>
@@ -1080,8 +1088,8 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
     </xsl:when>
     <xsl:otherwise>
       <xsl:value-of select="$resultset"/>.getBytes(<xsl:value-of select="$column-spec"/>)
-      != null ? new String (<xsl:value-of select="$resultset"/>.getBytes
-        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
+      != null ? getStringFromByteArray(<xsl:value-of select="$resultset"/>.getBytes
+        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>))
       : ""
     </xsl:otherwise>
   </xsl:choose>
