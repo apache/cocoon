@@ -23,6 +23,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -30,16 +31,21 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.thread.RunnableManager;
+import org.apache.cocoon.components.thread.ThreadPool;
 
 /**
  * This class runs an instance of HSQLDB Server.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ServerImpl.java,v 1.3 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ServerImpl extends AbstractLogEnabled
     implements Server,
@@ -47,6 +53,7 @@ public class ServerImpl extends AbstractLogEnabled
                Contextualizable,
                ThreadSafe,
                Runnable,
+               Serviceable,
                Startable {
 
     /** Port which HSQLDB server will listen to */
@@ -55,9 +62,15 @@ public class ServerImpl extends AbstractLogEnabled
     /** Arguments for running the server */
     private String arguments[] = new String[10];
 
+    /** The threadpool name to be used for daemon thread */
+    private String m_daemonThreadPoolName = "daemon";
+
     /** Check if the server has already been started */
     private boolean started = false;
 
+    /** The {@link ServiceManager} instance */
+    private ServiceManager m_serviceManager;
+    
     /**
      * Initialize the ServerImpl.
      * A few options can be used :
@@ -83,6 +96,7 @@ public class ServerImpl extends AbstractLogEnabled
                     + ", silent: " + arguments[3]
                     + ", trace: " +arguments[5]);
         }
+        m_daemonThreadPoolName = params.getParameter( "thread-pool-name", m_daemonThreadPoolName );
     }
 
     /** Contextualize this class */
@@ -108,6 +122,15 @@ public class ServerImpl extends AbstractLogEnabled
             getLogger().error("IOException - Could not get database directory ", e);
         }
     }
+    /**
+     * @param serviceManager The <@link ServiceManager} instance
+     * @throws ServiceException In case we cannot find a service needed
+     */
+    public void service( ServiceManager serviceManager )
+    throws ServiceException
+    {
+        m_serviceManager = serviceManager;
+    }
 
     /** Start the server */
     public void start() {
@@ -118,12 +141,24 @@ public class ServerImpl extends AbstractLogEnabled
                 getLogger().info("HSQLDB backup file has been deleted.");
             }
 
-            Thread server = new Thread(this);
+            RunnableManager runnableManager = null;
+            try
+            {
             this.getLogger().debug("Intializing hsqldb server thread");
-            server.setPriority(Thread.currentThread().getPriority());
-            server.setDaemon(true);
-            server.setName("hsqldb server");
-            server.start();
+                runnableManager = (RunnableManager)m_serviceManager.lookup(RunnableManager.ROLE);
+                runnableManager.execute( m_daemonThreadPoolName, this );
+            }
+            catch( final ServiceException se )
+            {
+                throw new CascadingRuntimeException( "Cannot get RunnableManager", se );
+            }
+            finally
+            {
+                if( null != runnableManager )
+                {
+                    m_serviceManager.release( runnableManager );
+                }
+            }
         }
     }
 
