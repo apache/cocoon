@@ -70,6 +70,8 @@ import org.xml.sax.SAXException;
 
 /**
  * See description of {@link WidgetReplacingPipe}.
+ * 
+ * @version CVS $Id: WoodyTemplateTransformer.java,v 1.5 2003/11/16 18:57:40 antonio Exp $
  */
 public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Transformer {
 
