@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.142 2004/04/13 09:43:08 joerg Exp $
+    | CVS $Id: gump.xml,v 1.143 2004/04/14 19:58:18 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -34,6 +34,8 @@
 
   <project name="cocoon">
     <package>org.apache.cocoon</package>
+
+    <mkdir dir="build/cocoon-@@DATE@@/test"/>
 
     <ant target="gump-core">
       <property name="version" value="@@DATE@@"/>
