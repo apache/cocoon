@@ -27,6 +27,9 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 
 /**
+ * Base class for converter tags.
+ * Can be extended to implement custom converters.
+ *
  * @version CVS $Id$
  */
 public class ConverterTag extends TagSupport {
@@ -53,7 +56,7 @@ public class ConverterTag extends TagSupport {
             return 0;
         }
 
-        Converter converter = getConverter();
+        Converter converter = createConverter();
 
         ValueHolder vh = (ValueHolder) tag.getComponentInstance();
         vh.setConverter(converter);
@@ -69,7 +72,10 @@ public class ConverterTag extends TagSupport {
         return SKIP_BODY;
     }
 
-    protected Converter getConverter() {
+    /**
+     * Override to create custom validator
+     */
+    protected Converter createConverter() {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
         String converterIdVal = (String) tag.evaluate(converterId);
         return tag.getApplication().createConverter(converterIdVal);

@@ -72,9 +72,9 @@ public class ConvertDateTimeTag extends ConverterTag {
         return super.doStartTag(namespaceURI, localName, qName, atts);
     }
 
-    protected Converter getConverter() {
+    protected Converter createConverter() {
         final UIComponentTag tag = FacesUtils.findParentUIComponentTag(this);
-        DateTimeConverter converter = (DateTimeConverter) super.getConverter();
+        DateTimeConverter converter = (DateTimeConverter) super.createConverter();
 
         converter.setDateStyle((String) tag.evaluate(dateStyle));
         converter.setPattern((String) tag.evaluate(pattern));
