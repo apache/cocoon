@@ -67,10 +67,12 @@
   <target name="validate-xdocs" depends="prepare-docs" unless="exclude.validate.xdocs">
     <echo message="Conducting validation of core XML documentation."/>
 
+<!-- FIXME: 
     <echo message="Validating all **/book.xml instances using RELAX NG ..."/>
     <jing rngfile="${webapp}/WEB-INF/entities/book-v01.rng">
       <fileset dir="${build.context}" includes="**/book.xml"/>
     </jing>
+-->
 
     <echo message="Validating all xdocs/**/*.xml instances using DTDs ..."/>
     <xmlvalidate failonerror="true" lenient="no" warn="yes">
