@@ -93,7 +93,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.20 2003/05/18 16:36:40 vgritsenko Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.21 2003/09/24 20:38:09 sylvain Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -524,11 +524,15 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         if (is == null) {
             throw new ResourceNotFoundException(src.getURI() + ": not found");
         }
-        Reader reader = new BufferedReader(new InputStreamReader(is));
-        Script compiledScript = cx.compileReader(scope, reader,
-                                                 src.getURI(),
-                                                 1, null);
-        return compiledScript;
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is));
+            Script compiledScript = cx.compileReader(scope, reader,
+                                                     src.getURI(),
+                                                     1, null);
+            return compiledScript;
+        } finally {
+            is.close();
+        }
     }
 
     /**
