@@ -110,7 +110,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.4 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.5 2003/08/04 03:44:05 joerg Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -292,10 +292,9 @@ public class EncodeURLTransformer
                     String value = new_attributes.getValue(i);
 
                     if (elementAttributeMatching.matchesElementAttribute(lname, attr_lname)) {
-                        // don't use simply response.encodeURL
+                        // don't use simply this.response.encodeURL(value)
                         // but be more smart about the url encoding
-                        //final String new_value = this.response.encodeURL( value );
-                        final String new_value = this.encodeURL( value, response );
+                        final String new_value = this.encodeURL(value);
                         if (getLogger().isDebugEnabled()) {
                             this.getLogger().debug("element/@attribute matches: " + name + "/@" + attr_lname);
                             this.getLogger().debug("encodeURL: " + value + " -> " + new_value);
@@ -320,11 +319,9 @@ public class EncodeURLTransformer
      * </p>
      *
      * @param  url       the URL probably without sessionid.
-     * @param  request   the http request
-     * @param  response  the http response
      * @return           String the original url inclusive the sessionid
      */
-    private String encodeURL(String url, Response response) {
+    private String encodeURL(String url) {
         String encoded_url;
         if (this.response != null) {
             // As some servlet-engine does not check if url has been already rewritten
@@ -350,7 +347,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.4 2003/03/19 15:42:14 cziegeler Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.5 2003/08/04 03:44:05 joerg Exp $
      */
     public class ElementAttributeMatching {
         /**
