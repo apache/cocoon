@@ -15,8 +15,15 @@
  */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.Map;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -29,6 +36,7 @@ import org.apache.cocoon.portal.layout.NamedItem;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.portal.transformation.ProxyTransformer;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -47,7 +55,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
         final CopletInstanceData coplet,
         final String uri,
         final ContentHandler contentHandler)
-        throws SAXException {
+    throws SAXException {
         try {
             super.streamContent(coplet, uri, contentHandler);
         } catch (SAXException se) {
@@ -82,7 +90,40 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
             } else {
                 // this is a normal link event, so save the url in the instance data
                 // for ProxyTransformer
-                coplet.setTemporaryAttribute(ProxyTransformer.LINK, event.getLink());
+                String linkValue = event.getLink();
+                Boolean addParams = (Boolean)this.getConfiguration(coplet, "appendParameters");
+                if ( addParams != null && addParams.booleanValue() ) {
+                    final StringBuffer uri = new StringBuffer(event.getLink());
+                    boolean hasParams = (uri.indexOf("?") != -1);
+                    
+                    // append parameters - if any
+                    final Map objectModel = ContextHelper.getObjectModel(this.context);
+                    final Request r = ObjectModelHelper.getRequest(objectModel);
+                    final Enumeration params = r.getParameterNames();
+                    while (params.hasMoreElements()) {
+                        final String name = (String)params.nextElement();
+                        if (!name.startsWith("cocoon-portal-")) {
+                            final String[] values = r.getParameterValues(name);
+                            for(int i = 0; i < values.length; i++) {
+                                if ( hasParams ) {
+                                    uri.append('&');
+                                } else {
+                                    uri.append('?');
+                                    hasParams = true;
+                                }
+                                uri.append(name);
+                                uri.append('=');
+                                try {
+                                    uri.append(NetUtils.decode(values[i], "utf-8"));
+                                } catch (UnsupportedEncodingException uee) {
+                                    // ignore this
+                                }
+                            }
+                        }
+                    }
+                    linkValue = uri.toString();
+                }
+                coplet.setTemporaryAttribute(ProxyTransformer.LINK, linkValue);
             }
         }
     }
@@ -94,7 +135,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
      * @trows	ProcessingException if something fails in the creation process
      */
     private void createNewInstance(CopletInstanceData coplet)
-        throws ProcessingException {
+    throws ProcessingException {
         ProfileManager profileManager = null;
         try {
             profileManager =
@@ -160,7 +201,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
     protected boolean renderErrorContent(
         CopletInstanceData coplet,
         ContentHandler handler)
-        throws SAXException {
+    throws SAXException {
         handler.startDocument();
         XMLUtils.startElement(handler, "p");
         XMLUtils.data(

@@ -102,7 +102,7 @@ public class ProxyTransformer
      */
     protected String link;
 
-    /** 
+    /**
      * The default value for the envelope Tag 
      */
     protected String defaultEnvelopeTag;
@@ -239,13 +239,20 @@ public class ProxyTransformer
             } catch (MalformedURLException ex) {
                 throw new SAXException(ex);
             }
-
-            StringBuffer query = new StringBuffer();
-
             boolean firstparameter = true;
-            Enumeration enumeration = request.getParameterNames();
-
             boolean post = ("POST".equals(request.getMethod()));
+            int pos = remoteURI.indexOf('?');
+            final StringBuffer query = new StringBuffer();
+            if ( pos != -1 ) {
+                if ( !post ) {
+                    query.append('?');                    
+                }
+                query.append(remoteURI.substring(pos+1));
+                firstparameter = true;
+                remoteURI = remoteURI.substring(0, pos);
+            }
+
+            Enumeration enumeration = request.getParameterNames();
 
             while (enumeration.hasMoreElements()) {
                 String paramName = (String) enumeration.nextElement();
@@ -274,6 +281,9 @@ public class ProxyTransformer
             Document result = null;
             try {
                 do {
+                    if ( this.getLogger().isDebugEnabled() ) {
+                        this.getLogger().debug("Invoking '" + remoteURI + query.toString() +"', post="+post);
+                    }
                     HttpURLConnection connection =
                         connect(request, remoteURI, query.toString(), post);
                     remoteURI = checkForRedirect(connection, documentBase);
@@ -334,7 +344,10 @@ public class ProxyTransformer
                     SESSIONTOKEN,
                     sessionToken);
             }
-            newURI = resolveURI(newURI, documentBase);
+
+            if (newURI != null) {
+                newURI = resolveURI(newURI, documentBase);
+            }
             return newURI;
         }
         return null;
@@ -398,7 +411,10 @@ public class ProxyTransformer
                             SESSIONTOKEN,
                             sessionToken);
                     }
-                    newURI = resolveURI(newURI, documentBase);
+
+                    if (newURI != null) {
+                        newURI = resolveURI(newURI, documentBase);
+                    }
                     return newURI;
                 }
             }
@@ -550,7 +566,11 @@ public class ProxyTransformer
     * @throws MalformedURLException if uri or document base is malformed.
     */
     public static String resolveURI(String uri, String documentBase)
-        throws MalformedURLException {
+    throws MalformedURLException {
+
+        if (uri == null) {
+            throw new IllegalArgumentException("URI to be resolved must not be null!");
+        }
 
         if (uri.indexOf("://") > -1) {
             return uri;
