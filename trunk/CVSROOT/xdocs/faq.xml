@@ -90,8 +90,7 @@
     <li>expand the <em>cocoon.jar</em> file and put that directory in your
      servlet context,</li>
     <li>or place the required resources in your classpath</li>
-    <li>or use a servlet engine that doesn't have this limitation 
-     (e.g. Tomcat 3.1).</li>
+    <li>or use a servlet engine that doesn't have this limitation.</li>
    </ul>
 
   </answer>
@@ -160,7 +159,68 @@
  </faq>
 </faqsection>
 
-<faqsection title="XSP Pages">
+<faqsection title="Dynamic Content and XSP Pages">
+
+ <faq id="faq-logicsheets">
+  <question>Why isn't there any information on logicsheets for Cocoon 1?</question>
+  <answer>
+   <p>(Apart from the source code, that is.)</p>
+
+   <p>Because hardly anyone can be bothered / has time to write one.</p>
+
+   <note>There is at least one logicsheet guide mentioned somewhere
+    in the mail archives, but this
+    hasn't been checked for accuracy yet.</note>
+
+   <p>&lt;moral-sermon&gt;
+   A lot of people (not everyone, but a lot of people)
+   just ask questions on the mailing lists and never 
+   contribute anything except bug reports and complaints.
+   If everyone who had some time
+   was prepared to contribute a little bit to the Cocoon
+   project, we would <strong>all</strong> benefit!
+   &lt;/moral-sermon&gt;</p>
+  </answer>
+ </faq>
+
+ <faq id="faq-nojit">
+  <question>How can I get line numbers to appear in Java error messages?</question>
+  <answer>
+   <p>First, don't confuse this question with the <jump anchor="faq-xmllinenums">similar
+    question below about line numbers in XML parsing</jump>.</p>
+
+   <p>This is really a Java configuration question. You need to disable JIT compilation or
+    Hotspot compilation, and this is a JDK command-line option. See your JDK documentation
+    for how to do this. You might have to read your servlet engine documentation for how
+    to pass arguments to the JDK.</p>
+  </answer>
+ </faq>
+
+ <faq id="faq-xsplinenums">
+  <question>
+   Why don't the line numbers reported in Java error messages match up to the line numbers in
+   my XSP code?
+  </question>
+  <answer>
+   <p>Because an XSP page is converted to Java code, which upsets the line numbers, and at the
+    moment we don't have a mechanism to convert the line numbers back again (although 
+    this is a <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=40">
+    request for enhancement</link> and we would welcome patches!)</p>
+
+   <p>So, in the meantime, you'll have to look at the <jump anchor="faq-generatedsrc">generated
+    source code</jump></p>
+  </answer>
+ </faq>
+
+ <faq id="faq-generatedsrc">
+  <question>
+   Where can I find the generated Java source code for an XSP page?
+  </question>
+  <answer>
+   <p>In the repository directory, specified in cocoon.properties. This should be an absolute path
+   so you know where to find it!</p>
+  </answer>
+ </faq>
 
  <faq id="faq-xspinsertxml">
   <question>Why does Cocoon escape my XML with &amp;lt; and &amp;gt; when I try to
@@ -601,16 +661,17 @@
     file extension at the end of the URL to determine what program should
     open it (unlike other browsers which are smarter and follow the Internet standards 
     correctly).
-    There is a trick that forces IE to look at the MIME type -
+    There is a trick that forces IE to treat it as a PDF -
     adding <code>?dummy=test.pdf</code> (or some similar parameter ending in .pdf)
     at the end of your URI. Cocoon should
-    ignore this, but IE won't, and will react to the MIME type and 
+    ignore this, but IE won't, and will
     trigger the correct plugin/application for that content.</p>
 
    <p>Russ Whyte has also developed a 
     <link href="http://archive.covalent.net/xml/cocoon-users/2000/09/0618.xml">
     simple servlet workaround</link> which should work for any browser;
-    however this is slightly less efficient because it requires a "servlet chain".</p>
+    however this is slightly less efficient because it requires a "servlet chain".
+    With Cocoon 1.8.1 and above, it should not be necessary to use this.</p>
 
    <p>In the last resort, renaming all your xml files to end in .pdf and 
     directing .pdf requests to Cocoon should always
@@ -768,6 +829,72 @@
     <link href="http://www.dpawson.freeserve.co.uk/xsl/xslfaq.html">XSL FAQ</link>
     for advice on optimizing stylesheets.
    </p>
+
+   <p>See also the next question.</p>
+  </answer>
+ </faq>
+
+ <faq id="faq-nocpu">
+  <question>
+   Cocoon seems to be pausing with no CPU activity during a request. What could cause this?
+  </question>
+  <answer>
+
+   <p>This answer is tailored towards 0% CPU problems, but it is also partly applicable to other pauses.</p>
+
+   <p>This is possibly caused by a DNS lookup in your own code. But that's just a guess.</p>
+
+   <p>There are a number of things you can try here to diagnose this problem:</p>
+
+   <ol>
+    <li>Make sure you have enough free threads available in your operating system, if using
+     a native-threads VM - or just don't use a native-threads VM. Some JDKs go dead when they
+     can't create threads, instead of throwing an error. Your servlet engine
+     documentation may provide more information on this. E.g. Tomcat 3.2 can use thread pooling
+     to alleviate this problem.</li>
+    <li>To diagnose if the pause occurs inside Cocoon or not: Change the log level to DEBUG
+     in cocoon.properties. If your servlet engine allows it, make logging echo to the terminal;
+     otherwise use a command like <code>less +F logfile</code> on Unix to instantly see log messages
+     appear as they are written. Then run your problematic request and see when Cocoon outputs
+     "response sent to client" to the log. If big no-CPU delay occurs
+     after this point, then the problem is not in
+     Cocoon but in the webserver or the servlet engine (or possibly in the JDK).
+     [Remember to change the log level back again after this test!]</li>
+    <li>Run a <jump anchor="faq-profiling">profiler</jump> (either the primitive built-in
+     Cocoon profiler or a third-party one) to find the pause point
+     in the code. However, this may not be easy because not all profilers are designed to
+     track down 0% CPU events. The built-in Cocoon profiler can do it, but it only
+     tells you which stage of the pipeline the problem occurs in, which is a start but not
+     necessarily very helpful.</li>
+    <li>When the pause occurs, send a SIGQUIT (or equivalent)
+     to the JDK running Cocoon, to generate a stack trace. If this works it will pinpoint
+     what method each thread is at, at the time of the pause.
+     See your JDK docs for more info. On Windows, the only known way to do this is to
+     start your servlet engine in a command-prompt window, NOT in the background, and
+     press <code>CTRL+/</code> at the time of the pause. On UNIX, you can either do as
+     just mentioned (except the key combination is usually <code>CTRL+\</code>), or
+     find out the PID of the servlet engine (e.g. using 
+     <code>ps -A -f -l | grep java | less </code>) and then type <code>kill -QUIT pid</code>
+     (where <code>pid</code> is the PID of the Java process).
+     If you get multiple PIDs (due to running a native-threads VM) try using the lowest -
+     but make sure you don't accidentally SIGQUIT the wrong VM! It's probably best to 
+     shutdown your servlet engine and do <code>killall java</code> before this, to avoid
+     getting mixed up. Note also that some JDKs don't respond
+     to SIGQUIT, or not very consistently.
+     Try it a few times (you should do this anyway to be sure you've found the real cause),
+     and be prepared to wait until the end of the pause for the stack trace to appear.</li>
+    <li>If you don't get line numbers in the stack trace from the previous method, you
+     need to <jump anchor="faq-nojit">disable JIT</jump> to get them.
+     However, this may make the
+     problem vanish. If so, that indicates a VM bug, and you probably ought to upgrade your
+     VM.</li>
+    <li>Try a different JDK, or a different Hotspot VM. It might be a JDK bug.</li>
+   </ol>
+
+   <p>If you think you've found a definite cause for this problem in Cocoon, 
+     please post <strong>full details</strong>, including a test case, configuration details, and
+     line numbers if possible, as a 
+    <link href="http://nagoya.apache.org/bugzilla/">bug report</link>.</p>
   </answer>
  </faq>
 
@@ -782,7 +909,8 @@
     add <code>ApJServVMTimeout 60</code> to your <code>jserv.conf</code> file to
     set the response timeout to 60 seconds,
     or increase that number if your machine is very slow.</p>
-   <p>Other servlet engines will have different ways of configuring the timeout.</p>
+   <p>Other servlet engines will have different ways of configuring the timeout.
+    Please don't ask about this on cocoon-users, it is offtopic.</p>
   </answer>
  </faq>
 </faqsection>
@@ -993,6 +1121,23 @@
     documentation for how to do this</strong>) to be
     <strong>as large as possible</strong> and <strong>the same as the heapsize
     line in cocoon.properties</strong>. Obviously, buying more RAM as well will also help!
+   </p>
+  </answer>
+ </faq>
+
+ <faq id="faq-xmllinenums">
+  <question>How can I get line and column numbers to appear in XML parsing errors</question>
+  <answer>
+   <p>Put <code>cocoon/lib/sax-bugfix.jar</code> on your CLASSPATH and ensure that is
+    <strong>before xerces</strong>. Dave Megginson, creator of SAX, has confirmed this
+    as a bug and the bugfix should work its way into Xerces at some point, if it
+    hasn't already.</p>
+
+   <p>Unfortunately some JDKs 
+    throw SealingViolations when you try this. Alas, this is probably the correct behaviour, for security
+    reasons! In this case you'll need to unjar (i.e. unzip) xerces, unjar sax-bugfix over the top
+    of it so as to replace the affected file(s), and then jar up xerces again, and remove sax-bugfix
+    from your CLASSPATH.
    </p>
   </answer>
  </faq>
