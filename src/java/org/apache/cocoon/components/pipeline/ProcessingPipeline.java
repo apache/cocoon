@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.pipeline;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -38,16 +36,15 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * <p>
  * A <code>ProcessingPipeline</code> is <code>Recomposable</code> since the
- * <code>ComponentManager</code> used to get the generato, transformers etc.
+ * <code>ComponentManager</code> used to get the generator, transformers etc.
  * depends on the pipeline assembly engine where they are defined (i.e. a given
  * sitemap file).
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ProcessingPipeline.java,v 1.5 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: ProcessingPipeline.java,v 1.6 2004/06/02 20:11:35 cziegeler Exp $
  */
-public interface ProcessingPipeline
-       extends   Component, Recomposable {
+public interface ProcessingPipeline {
 
     String ROLE = ProcessingPipeline.class.getName();
 

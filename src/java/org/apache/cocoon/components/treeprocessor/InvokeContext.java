@@ -16,6 +16,7 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
@@ -46,7 +47,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.7 2004/05/25 13:31:06 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.8 2004/06/02 20:11:35 cziegeler Exp $
  */
 
 public class InvokeContext 
@@ -125,7 +126,7 @@ implements Recomposable, Disposable {
         this.currentManager = manager;
 
         if (this.processingPipeline != null) {
-            this.processingPipeline.recompose(manager);
+            ((Recomposable)this.processingPipeline).recompose(manager);
         }
     }
 
@@ -151,7 +152,7 @@ implements Recomposable, Disposable {
 
             this.pipelineSelector = (ComponentSelector)this.pipelinesManager.lookup(ProcessingPipeline.ROLE+"Selector");
             this.processingPipeline = (ProcessingPipeline)this.pipelineSelector.select(this.processingPipelineName);
-            this.processingPipeline.recompose( this.pipelinesManager );
+            ((Recomposable)this.processingPipeline).recompose( this.pipelinesManager );
             this.processingPipeline.setup(
                   VariableResolver.buildParameters(this.processingPipelineParameters,
                                                    this, this.processingPipelineObjectModel)
@@ -315,7 +316,7 @@ implements Recomposable, Disposable {
         // Release pipelines, if any
         if (this.internalPipelineDescription == null && this.pipelinesManager != null) {
             if ( this.pipelineSelector != null) {
-                this.pipelineSelector.release(this.processingPipeline);
+                this.pipelineSelector.release( (Component)this.processingPipeline);
                 this.processingPipeline = null;
                 this.pipelinesManager.release( this.pipelineSelector );
                 this.pipelineSelector = null;

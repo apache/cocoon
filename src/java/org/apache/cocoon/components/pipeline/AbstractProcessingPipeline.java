@@ -20,6 +20,7 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -52,14 +53,16 @@ import java.util.StringTokenizer;
 
 /**
  * This is the base for all implementations of a <code>ProcessingPipeline</code>.
- *
+ * It is advisable to inherit from this base class instead of doing a complete
+ * own implementation!
+ * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.23 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.24 2004/06/02 20:11:35 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
-  implements ProcessingPipeline, Parameterizable, Recyclable {
+  implements ProcessingPipeline, Parameterizable, Recyclable, Recomposable, Component {
 
     // Generator stuff
     protected Generator generator;
