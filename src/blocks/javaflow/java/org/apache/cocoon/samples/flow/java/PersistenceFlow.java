@@ -23,7 +23,7 @@ import org.apache.cocoon.components.flow.java.VarMap;
 import org.apache.cocoon.forms.binding.*;
 import org.apache.cocoon.forms.flow.java.AbstractFormFlow;
 import org.apache.cocoon.forms.formmodel.Form;
-import org.apache.cocoon.ojb.jdo.components.JdoPMF;
+import org.apache.cocoon.ojb.broker.components.PBFactory;
 import org.apache.cocoon.ojb.samples.EmployeeDAO;
 import org.apache.cocoon.ojb.samples.bean.Employee;
 import org.apache.ojb.broker.*;
@@ -33,11 +33,10 @@ public class PersistenceFlow extends AbstractFormFlow {
 
     public void doInsertEmployee() throws BindingException {
 
-			  JdoPMF factory = (JdoPMF)getComponent(JdoPMF.ROLE);
+				PersistenceBroker broker = getPersistenceBroker();
 
         // Create a empty Bean
         Employee employee = new Employee();
-        EmployeeDAO dao = new EmployeeDAO();
         // Fill some initial data to the bean
         employee.setId(1);
         // Load form descriptor
@@ -51,7 +50,7 @@ public class PersistenceFlow extends AbstractFormFlow {
         // Update the Bean based on user input
         binding.saveFormToModel(form, employee);
         // Update Bean in Database
-        dao.insert(employee, factory);
+        broker.store(employee);
         // Send response to the user
         doShowEmployee();
     }
@@ -65,15 +64,14 @@ public class PersistenceFlow extends AbstractFormFlow {
         else
             throw new IllegalStateException("No parameter 'id'");
 
-        JdoPMF factory = (JdoPMF)getComponent(JdoPMF.ROLE);
+				PersistenceBroker broker = getPersistenceBroker();
 				
         // Create a empty Bean
         Employee employee = new Employee();
-        EmployeeDAO dao = new EmployeeDAO();
         // Fill some initial data to the bean
         employee.setId(id);
         // Load bean based on the given PrimaryKey
-        dao.retrieve(employee, factory);
+				employee = (Employee) broker.getObjectByIdentity(new Identity(employee, broker));
         // Load form descriptor
         Form form = loadForm("forms/employee.xml");
         // Load form binding
@@ -86,7 +84,7 @@ public class PersistenceFlow extends AbstractFormFlow {
         binding.saveFormToModel(form, employee);
 
         // Update Bean in Database
-        dao.update(employee, factory);
+				broker.store(employee);
 
         // Send response to the user
         doShowEmployee();
@@ -101,65 +99,35 @@ public class PersistenceFlow extends AbstractFormFlow {
         else
             throw new IllegalStateException("No parameter 'id'");
 
-				JdoPMF factory = (JdoPMF)getComponent(JdoPMF.ROLE);
+        PersistenceBroker broker = getPersistenceBroker();
 
         // Create a empty Bean
         Employee employee = new Employee();
-        EmployeeDAO dao = new EmployeeDAO();
         // Fill some initial data to the bean
         employee.setId(id);
+				// Load bean based on the given PrimaryKey
+			  employee = (Employee) broker.getObjectByIdentity(new Identity(employee, broker));
         // Remove bean
-        dao.remove(employee, factory);
+        broker.delete(employee);
         // Send response to the user
         doShowEmployee();
     }
 
     public void doShowEmployee() {
 
-			  JdoPMF factory = (JdoPMF)getComponent(JdoPMF.ROLE);
+        PersistenceBroker broker = getPersistenceBroker();
 
         // Query all objects
-        Set results = query(new Criteria(), factory);
+        Set results = new HashSet();
+				QueryByCriteria query = new QueryByCriteria(Employee.class, new Criteria());
+        for(Iterator i=broker.getCollectionByQuery(query).iterator(); i.hasNext();) {
+            results.add(i.next());
+				}
         // Send response to the user
         sendPage("page/employee-result", new VarMap().add("employee", results));
     }
 
-    public Set query(Criteria criteria, JdoPMF pmf) {
-
-        // 1. Get the PersistenceManager 
-        PersistenceManager persistenceManager = pmf.getPersistenceManager();
-        PersistenceBroker broker = PersistenceBrokerFactory.defaultPersistenceBroker();
-        // 2. start transaction
-        persistenceManager.currentTransaction().begin();
-        // 3. Get objects based on query
-        HashSet results = new HashSet();        
-        QueryByCriteria query = new QueryByCriteria(Employee.class, criteria);
-        for(Iterator i=broker.getCollectionByQuery(query).iterator(); i.hasNext();) {
-            Employee b = (Employee)i.next();
-            
-            Employee e = new Employee();
-            // 4. Copy data to bean
-            copyData(b, e);
-
-            results.add(e);
-        }
-        // 5. End transaction
-        persistenceManager.currentTransaction().commit();
-
-        return results;
-    }
-
-    private void copyData(Employee from, Employee to) {
-        to.setId(from.getId());
-        to.setDepartmentId(from.getDepartmentId());
-        to.setName(from.getName());
-    }
-
-/*    public void dispose() {
-        if (this.manager != null) {
-            // Release the factory
-            manager.release(factory);
-        }
-        super.dispose();
-    }*/
+    public PersistenceBroker getPersistenceBroker() {
+        return ((PBFactory)getComponent(PBFactory.ROLE)).defaultPersistenceBroker();
+		}
 }
