@@ -59,7 +59,7 @@ import java.util.Map;
  * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: PartOnDisk.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
+ * @version CVS $Id: PartOnDisk.java,v 1.2 2003/08/18 21:55:40 ghoward Exp $
  */
 public class PartOnDisk extends Part {
 
@@ -68,7 +68,7 @@ public class PartOnDisk extends Part {
     private int size;
 
     /**
-     * Constructor FilePartFile
+     * Constructor PartOnDisk
      *
      * @param headers
      * @param file
@@ -87,7 +87,7 @@ public class PartOnDisk extends Part {
     }
 
     /**
-     * Returns the file size
+     * Returns the file size in bytes
      */
     public int getSize() {
         return this.size;
