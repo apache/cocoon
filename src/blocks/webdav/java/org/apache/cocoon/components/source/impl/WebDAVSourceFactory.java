@@ -34,7 +34,7 @@ import org.apache.excalibur.source.SourceFactory;
 /**
  * A factory for WebDAV sources
  *
- * @version $Id: WebDAVSourceFactory.java,v 1.9 2004/03/27 15:51:21 unico Exp $
+ * @version $Id: WebDAVSourceFactory.java,v 1.10 2004/04/13 17:13:29 stephan Exp $
 */
 public class WebDAVSourceFactory extends AbstractLogEnabled 
 implements SourceFactory, Configurable, ThreadSafe {
@@ -69,13 +69,12 @@ implements SourceFactory, Configurable, ThreadSafe {
             location = location.substring(index+3);
         }
         
-		HttpURL url;
-		if (this.secure) {
-		    url = new HttpsURL("https://" + location);
-		}
-		else {
-		    url = new HttpURL("http://" + location);
-		}
+        HttpURL url;
+        if (this.secure) {
+            url = new HttpsURL("https://" + location);
+        } else {
+            url = new HttpURL("http://" + location);
+        }
         
         return WebDAVSource.newWebDAVSource(url, this.protocol, getLogger());
     }
@@ -83,6 +82,4 @@ implements SourceFactory, Configurable, ThreadSafe {
     public void release(Source source) {
         // do nothing
     }
-
-
 }
