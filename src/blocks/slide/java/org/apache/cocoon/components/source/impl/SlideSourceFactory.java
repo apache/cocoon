@@ -64,7 +64,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.slide.SlideRepository;
-import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceFactory;
@@ -77,7 +76,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.10 2003/12/14 15:25:02 unico Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.11 2003/12/22 13:35:06 joerg Exp $
  * 
  * @avalon.component
  * @avalon.service type="SourceFactory"
@@ -154,8 +153,6 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
         if (path == null || path.length() == 0) {
             path = "/";
         }
-        
-        SourceCredential credential;
         
         NamespaceAccessToken nat = m_repository.getNamespaceToken(namespace);
         if (nat == null) {
