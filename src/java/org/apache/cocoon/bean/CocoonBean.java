@@ -85,7 +85,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.16 2003/08/17 13:50:45 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.17 2003/08/27 19:18:18 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -454,7 +454,7 @@ public class CocoonBean extends CocoonWrapper {
                 status =
                     getPage(
                         deparameterizedURI,
-                        target.getLastModified(filename),
+                        getLastModified(target, filename),
                         parameters,
                         confirmExtension ? translatedLinks : null,
                         gatheredLinks,
@@ -498,7 +498,7 @@ public class CocoonBean extends CocoonWrapper {
             } finally {
                 if (output != null && status != -1) {
 
-                    ModifiableSource source = target.getSource(filename);
+                    ModifiableSource source = getSource(target, filename);
                     try {
                         OutputStream stream = source.getOutputStream();
 
@@ -508,7 +508,7 @@ public class CocoonBean extends CocoonWrapper {
                     } catch (IOException ioex) {
                         log.warn(ioex.toString());
                     } finally {
-                        target.releaseSource(source);
+                        releaseSource(source);
                     }
                 }
                 
@@ -585,7 +585,7 @@ public class CocoonBean extends CocoonWrapper {
             n.addExtraDescription(Notifying.EXTRA_REQUESTURI, uri);
             n.addExtraDescription("missing-file", uri);
 
-            ModifiableSource source = target.getSource(filename);
+            ModifiableSource source = getSource(target, filename);
             try {
                 OutputStream stream = source.getOutputStream();
 
@@ -594,7 +594,7 @@ public class CocoonBean extends CocoonWrapper {
                 out.flush();
                 out.close();
             } finally {
-                target.releaseSource(source);
+                releaseSource(source);
             }
         }
     }
@@ -620,137 +620,25 @@ public class CocoonBean extends CocoonWrapper {
         }
         return uri;
     }
+    
+	public ModifiableSource getSource(Target target, String filename)
+		throws IOException, ProcessingException {
+		final String finalDestinationURI = target.getFinalURI(filename);
+		Source src = sourceResolver.resolveURI(finalDestinationURI);
+		if (!(src instanceof ModifiableSource)) {
+			sourceResolver.release(src);
+			throw new ProcessingException(
+				"Source is not Modifiable: " + finalDestinationURI);
+		}
+		return (ModifiableSource) src;
+	}
 
-    public class Target {
-        // Defult type is append
-        private static final String APPEND_TYPE = "append";
-        private static final String REPLACE_TYPE = "replace";
-        private static final String INSERT_TYPE = "insert";
-
-        private final String type;
-        private final String root;
-        private final String sourceURI;
-        private final String destURI;
-
-        private transient int _hashCode;
-        private transient String _toString;
-
-        public Target(
-            String type,
-            String root,
-            String sourceURI,
-            String destURI)
-            throws IllegalArgumentException {
-            this.type = type;
-            this.root = root;
-            this.sourceURI = NetUtils.normalize(sourceURI);
-            if (destURI == null || destURI.length() == 0) {
-                throw new IllegalArgumentException("You must specify a destination directory when defining a target");
-            }
-            if (!destURI.endsWith("/")) {
-                destURI += "/";
-            }
-            this.destURI = destURI;
-        }
-
-        public Target(String type, String sourceURI, String destURI)
-            throws IllegalArgumentException {
-            this(type, "", sourceURI, destURI);
-        }
-
-        public Target(String sourceURI, String destURI)
-            throws IllegalArgumentException {
-            this(APPEND_TYPE, "", sourceURI, destURI);
-        }
-
-        public Target getDerivedTarget(String newURI)
-            throws IllegalArgumentException {
-            if (!newURI.startsWith(root)) {
-                return null;
-            }
-            newURI = newURI.substring(root.length());
-            return new Target(this.type, this.root, newURI, this.destURI);
-        }
-
-        public String getFinalURI(String actualSourceURI)
-            throws ProcessingException {
-            if (!actualSourceURI.startsWith(root)) {
-                throw new ProcessingException(
-                    "Derived target does not share same root: "
-                        + actualSourceURI);
-            }
-            actualSourceURI = actualSourceURI.substring(root.length());
-
-            if (APPEND_TYPE.equals(this.type)) {
-                return destURI + actualSourceURI;
-            } else if (REPLACE_TYPE.equals(this.type)) {
-                return destURI;
-            } else if (INSERT_TYPE.equals(this.type)) {
-                int starPos = destURI.indexOf("*");
-                if (starPos == -1) {
-                    throw new ProcessingException("Missing * in replace mapper uri");
-                } else if (starPos == destURI.length() - 1) {
-                    return destURI.substring(0, starPos) + actualSourceURI;
-                } else {
-                    return destURI.substring(0, starPos)
-                        + actualSourceURI
-                        + destURI.substring(starPos + 1);
-                }
-            } else {
-                throw new ProcessingException(
-                    "Unknown mapper type: " + this.type);
-            }
-        }
-
-        public String getSourceURI() {
-            return root + sourceURI;
-        }
-
-        public ModifiableSource getSource(String filename)
-            throws IOException, ProcessingException {
-            final String finalDestinationURI = this.getFinalURI(filename);
-            Source src = sourceResolver.resolveURI(finalDestinationURI);
-            if (!(src instanceof ModifiableSource)) {
-                sourceResolver.release(src);
-                throw new ProcessingException(
-                    "Source is not Modifiable: " + finalDestinationURI);
-            }
-            return (ModifiableSource) src;
-        }
-
-        public long getLastModified(String filename) throws IOException, ProcessingException {
-            return getSource(filename).getLastModified();
-        }
+	public long getLastModified(Target target, String filename) throws IOException, ProcessingException {
+		return getSource(target, filename).getLastModified();
+	}
         
-        public void releaseSource(ModifiableSource source) {
-            sourceResolver.release(source);
-        }
-
-        public boolean equals(Object o) {
-            return (o instanceof Target) && o.toString().equals(toString());
-        }
-
-        public int hashCode() {
-            if (_hashCode == 0) {
-                return _hashCode = toString().hashCode();
-            }
-            return _hashCode;
-        }
-
-        public String toString() {
-            if (_toString == null) {
-                return _toString =
-                    "<"
-                        + type
-                        + "|"
-                        + root
-                        + "|"
-                        + sourceURI
-                        + "|"
-                        + destURI
-                        + ">";
-            }
-            return _toString;
-        }
-    }
+	public void releaseSource(ModifiableSource source) {
+		sourceResolver.release(source);
+	}
+    
 }
