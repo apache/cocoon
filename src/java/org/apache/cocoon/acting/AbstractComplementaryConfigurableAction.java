@@ -18,7 +18,6 @@ package org.apache.cocoon.acting;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
@@ -34,9 +33,15 @@ import java.util.Map;
  * effective.  The name of the root configuration element is irrelevant.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: AbstractComplementaryConfigurableAction.java,v 1.5 2004/05/27 13:14:36 cziegeler Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractComplementaryConfigurableAction extends ConfigurableServiceableAction {
+
+    /**
+     * Should descriptors be reloaded?
+     */
+    public static final boolean DESCRIPTOR_RELOADABLE_DEFAULT = true;
+
     private static Map configurations = new HashMap();
 
     /**
@@ -48,7 +53,7 @@ public abstract class AbstractComplementaryConfigurableAction extends Configurab
      * Defaults to reload configuration file it has changed.
      */
     protected Configuration getConfiguration(String descriptor) throws ConfigurationException {
-        boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
+        boolean reloadable = DESCRIPTOR_RELOADABLE_DEFAULT;
         if (this.settings.containsKey("reloadable"))
             reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
         return this.getConfiguration(descriptor, null, reloadable);

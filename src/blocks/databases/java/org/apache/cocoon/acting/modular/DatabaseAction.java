@@ -33,7 +33,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.AbstractComplementaryConfigurableAction;
 import org.apache.cocoon.components.modules.database.AutoIncrementModule;
@@ -87,7 +86,7 @@ import org.apache.commons.lang.BooleanUtils;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.8 2004/04/27 22:23:08 haul Exp $
+ * @version CVS $Id$
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
@@ -629,7 +628,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
         boolean failed = false;
 
         // read global parameter settings
-        boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
+        boolean reloadable = DESCRIPTOR_RELOADABLE_DEFAULT;
 
         // call specific default modes apart from output mode are not supported
         // set request attribute

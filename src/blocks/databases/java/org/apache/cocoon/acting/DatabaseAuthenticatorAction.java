@@ -19,7 +19,6 @@ import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -71,7 +70,7 @@ import java.util.Map;
  * not verified.
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.7 2004/03/30 05:50:48 antonio Exp $
+ * @version CVS $Id$
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe
 {
@@ -86,7 +85,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
         ResultSet rs = null;
 
         // read global parameter settings
-        boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
+        boolean reloadable = DESCRIPTOR_RELOADABLE_DEFAULT;
 
         if (this.settings.containsKey("reloadable")) {
             reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
