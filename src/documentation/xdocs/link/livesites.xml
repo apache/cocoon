@@ -16,7 +16,7 @@
   <s1 title="Live Sites powered by Apache Cocoon">
    <p>
     Here are some web sites that are proudly powered by Cocoon 2.x
-    (in no particular order):
+    (in order of discovery or addition):
    </p>
    
    <ul>
@@ -65,6 +65,7 @@
     <li><link href="http://www.warnerbros.ch/">Warner Bros.,Inc. Switzerland</link></li>
     <li><link href="http://www.fox-warner.ch/">20th Century Fox Switzerland</link></li>
     <li><link href="http://www.ormaz.it">Ormaz s.r.l.</link></li>
+    <li><link href="http://www.linuxtag.org/">LinuxTag</link></li>
 <!--<li><link href=""></link></li>-->
    </ul>
 
