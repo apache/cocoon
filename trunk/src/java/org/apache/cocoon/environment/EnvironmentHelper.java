@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.11 2003/10/31 07:22:36 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.12 2004/01/05 08:16:00 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -140,7 +140,7 @@ implements SourceResolver, Serviceable, Disposable {
             } finally {
                 this.resolver.release(source);
             }
-            this.context = null;
+            //this.context = null;
         }
     }
 
@@ -214,6 +214,8 @@ implements SourceResolver, Serviceable, Disposable {
     
     public void setContext(Environment env) 
     throws ProcessingException {
+        //TODO
+        /*
         if ( this.prefix != null ) {
             String uris = env.getURI();
             if (!uris.startsWith(this.prefix)) {
@@ -226,13 +228,15 @@ implements SourceResolver, Serviceable, Disposable {
             final int l = this.prefix.length();
             env.setURI(this.prefix, uris.substring(l));
         }
+        */
     }
 
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */
-    public void changeContext(String newPrefix, String newContext)
+    public void changeContext(Source newSource, String newPrefix)
     throws IOException {
+        String newContext = newSource.getURI();
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Changing Cocoon context");
             getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");

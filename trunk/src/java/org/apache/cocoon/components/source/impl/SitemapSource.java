@@ -89,7 +89,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.17 2003/10/31 07:22:35 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.18 2004/01/05 08:16:00 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -381,6 +381,7 @@ implements Source, XMLizable {
             this.processKey = EnvironmentHelper.startProcessing(this.environment);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
             this.pipelineProcessor = EnvironmentHelper.getLastProcessor(this.environment);
+            //FIXME - set the context of the environment to the context of the pipeline processor
             this.pipelineProcessor.getEnvironmentHelper().setContext(this.environment);
 
             String redirectURL = this.environment.getRedirectURL();

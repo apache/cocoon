@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.classloader;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -63,7 +61,7 @@ import java.util.Vector;
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ClassLoaderManagerImpl.java,v 1.2 2003/12/29 13:27:37 unico Exp $
+ * @version CVS $Id: ClassLoaderManagerImpl.java,v 1.3 2004/01/05 08:16:00 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ClassLoaderManager

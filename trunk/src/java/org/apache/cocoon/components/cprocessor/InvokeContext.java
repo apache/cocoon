@@ -58,8 +58,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
@@ -79,7 +77,7 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.2 2004/01/05 08:16:00 cziegeler Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 

@@ -65,7 +65,6 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
@@ -90,7 +89,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.21 2003/12/28 22:11:19 unico Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.22 2004/01/05 08:16:01 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled

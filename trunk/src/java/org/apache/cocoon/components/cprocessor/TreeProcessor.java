@@ -51,7 +51,6 @@
 package org.apache.cocoon.components.cprocessor;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 
 import javax.xml.transform.sax.SAXResult;
@@ -68,7 +67,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -77,7 +75,6 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Modifiable;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -151,16 +148,19 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     public TreeProcessor() {
     }
     
-    private TreeProcessor(TreeProcessor parent, Source source, boolean checkReload) throws Exception {
+    private TreeProcessor(TreeProcessor parent, Source source, boolean checkReload, String prefix) throws Exception {
         m_parent = parent;
         m_transform = parent.m_transform;
         m_checkReload = checkReload;
         m_source = source;
-        m_environmentHelper = new EnvironmentHelper(parent.m_environmentHelper);
-        ContainerUtil.enableLogging(this,parent.getLogger());
-        ContainerUtil.contextualize(this,parent.m_context);
-        ContainerUtil.service(this,parent.m_container.getServiceManager());
+        ContainerUtil.enableLogging(this, parent.getLogger());
+        ContainerUtil.contextualize(this, parent.m_context);
+        ContainerUtil.service(this, parent.m_container.getServiceManager());
         ContainerUtil.initialize(this);
+        m_environmentHelper = new EnvironmentHelper(parent.m_environmentHelper);
+        ContainerUtil.enableLogging(m_environmentHelper, this.getLogger());
+        ContainerUtil.service(m_environmentHelper, this.m_manager);
+        m_environmentHelper.changeContext(source, prefix);
     }
     
     public void contextualize(Context context) {
@@ -438,10 +438,13 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
      * @param source  the location of the child sitemap.
      * @return  a new child processor.
      */
-    public TreeProcessor createChildProcessor(String src, boolean checkReload) throws Exception {
+    public TreeProcessor createChildProcessor(String src, 
+                                              boolean checkReload,
+                                              String  prefix) 
+    throws Exception {
         Source delayedSource = new DelayedRefreshSourceWrapper(
-            m_resolver.resolveURI(src),m_lastModifiedDelay);
-        return new TreeProcessor(this, delayedSource, checkReload);
+            m_resolver.resolveURI(src), m_lastModifiedDelay);
+        return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
     
     /**

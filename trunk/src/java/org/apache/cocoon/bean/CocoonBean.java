@@ -70,6 +70,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.CompilingProcessor;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.CocoonContainer;
+import org.apache.cocoon.components.ComponentContext;
 import org.apache.cocoon.components.SitemapConfigurableAccessor;
 
 /**
@@ -310,7 +311,7 @@ public class CocoonBean
         
         m_confBuilder.setLifecycleExtensionManager( getLifecycleExtensionManager() );
 
-        DefaultContext initContext = new DefaultContext( m_confBuilder.getContext() );
+        DefaultContext initContext = new ComponentContext( m_confBuilder.getContext() );
         Iterator it = m_properties.entrySet().iterator();
         while (it.hasNext())
         {

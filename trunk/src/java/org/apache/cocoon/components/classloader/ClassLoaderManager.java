@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.classloader;
 
-import org.apache.avalon.framework.component.Component;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -62,7 +60,7 @@ import java.io.IOException;
  * that it can be safely reinstantiated for dynamic class reloading
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ClassLoaderManager.java,v 1.2 2003/12/29 13:27:36 unico Exp $
+ * @version CVS $Id: ClassLoaderManager.java,v 1.3 2004/01/05 08:16:00 cziegeler Exp $
  */
 public interface ClassLoaderManager {
 

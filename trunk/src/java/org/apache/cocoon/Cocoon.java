@@ -60,7 +60,6 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -69,7 +68,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.ComponentContext;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
@@ -88,7 +86,7 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.31 2003/12/30 11:24:15 unico Exp $
+ * @version CVS $Id: Cocoon.java,v 1.32 2004/01/05 08:16:01 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=CompilingProcessor
@@ -168,7 +166,7 @@ public class Cocoon
      * @exception  ContextException if a required context entry is missing.
      */
     public void contextualize(Context context) throws ContextException {
-        this.context = new ComponentContext(context);
+        this.context = context;
         configUrl = (URL) context.get(Constants.CONTEXT_CONFIG_URL);
     }
     

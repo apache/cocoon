@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.cprocessor;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -59,7 +58,7 @@ import org.apache.cocoon.environment.Environment;
  * executed for the particular request.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: ProcessingNode.java,v 1.2 2004/01/05 08:16:00 cziegeler Exp $
  */
 public interface ProcessingNode {
 

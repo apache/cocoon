@@ -57,14 +57,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import org.apache.avalon.framework.thread.ThreadSafe;
-
 /**
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:proyal@apache.org">Peter Royal</a>
- * @version CVS $Id: NonStaticClassLoaderManager.java,v 1.2 2003/12/29 13:27:36 unico Exp $
+ * @version CVS $Id: NonStaticClassLoaderManager.java,v 1.3 2004/01/05 08:16:00 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ClassLoaderManager

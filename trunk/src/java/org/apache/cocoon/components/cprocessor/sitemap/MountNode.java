@@ -61,8 +61,6 @@ import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
@@ -72,14 +70,12 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 
 /**
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.2 2003/12/30 11:33:16 unico Exp $
+ * @version CVS $Id: MountNode.java,v 1.3 2004/01/05 08:16:00 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -126,14 +122,14 @@ implements ProcessingNode, Contextualizable, Disposable {
     }
 
     public final boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
+    throws Exception {
 
         Map objectModel = env.getObjectModel();
 
         String resolvedSource = m_source.resolve(context, objectModel);
         String resolvedPrefix = m_prefix.resolve(context, objectModel);
 
-        TreeProcessor processor = getProcessor(resolvedSource);
+        TreeProcessor processor = this.getProcessor(resolvedSource, resolvedPrefix);
 
         String oldPrefix = env.getURIPrefix();
         String oldURI    = env.getURI();
@@ -155,6 +151,7 @@ implements ProcessingNode, Contextualizable, Disposable {
             }
         } finally {
             // Restore context
+            //FIXME - Reset the context
             processor.getEnvironmentHelper().setContext(env);
 
             // Turning recomposing as a test, according to:
@@ -168,9 +165,9 @@ implements ProcessingNode, Contextualizable, Disposable {
      * Get the processor for the sub sitemap
      * FIXME Better synchronization strategy
      */
-    private synchronized TreeProcessor getProcessor(String source) 
+    private synchronized TreeProcessor getProcessor(String source, String prefix) 
     throws Exception {
-        
+        // FIXME - source is only relative, so we might get into name clashes, or?
         TreeProcessor processor = (TreeProcessor) m_processors.get(source);
         if (processor == null) {
             // Handle directory mounts
@@ -181,7 +178,7 @@ implements ProcessingNode, Contextualizable, Disposable {
                 actualSource = source;
             }
             
-            processor = this.m_parentProcessor.createChildProcessor(actualSource,m_checkReload);
+            processor = this.m_parentProcessor.createChildProcessor(actualSource, m_checkReload, prefix);
 
             // Associate to the original source
             m_processors.put(source, processor);

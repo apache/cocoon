@@ -53,7 +53,6 @@ package org.apache.cocoon.components.cprocessor;
 import org.apache.avalon.fortress.impl.ComponentHandlerMetaData;
 import org.apache.avalon.fortress.impl.DefaultContainer;
 import org.apache.avalon.fortress.util.CompositeException;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.service.ServiceException;
