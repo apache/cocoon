@@ -422,9 +422,6 @@
     </target>
 
     <target name="{@name}-patch-samples" unless="unless.exclude.block.{$block-name}">
-      <xpatch file="${{build.webapp}}/samples/block-samples.xml" srcdir="${{blocks}}">
-        <include name="{$block-name}/conf/*.xsamples"/>
-      </xpatch>
       <xpatch file="${{build.webapp}}/samples/sitemap.xmap" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.samplesxpipe"/>
       </xpatch>
@@ -448,8 +445,9 @@
       <if>
         <available file="${{blocks}}/{$block-name}/samples/sitemap.xmap"/>
         <then>
-          <copy filtering="on" todir="${{build.webapp}}/samples/{$block-name}">
+          <copy filtering="on" todir="${{build.webapp}}/samples/blocks/{$block-name}">
             <fileset dir="${{blocks}}/{$block-name}/samples"/>
+            <fileset dir="${{blocks}}/{$block-name}/conf" includes="*.xsamples"/>
           </copy>
 
           <!-- copy sample classes -->
