@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-09 16:10:27 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-09 17:00:08 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -102,7 +102,11 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
             statement.close();
         } catch (Exception e) {
             if (conn != null) {
-                conn.rollback();
+                try {
+                    conn.rollback();
+                } catch (SQLException se) {
+                    getLogger().debug("There was an error rolling back the transaction", se);
+                }
             }
 
             throw new ProcessingException("Could not add record :position = " + currentIndex, e);
