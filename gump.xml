@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.150 2004/05/07 07:43:45 cziegeler Exp $
+    | CVS $Id: gump.xml,v 1.151 2004/05/08 12:39:20 antonio Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1289,7 +1289,7 @@
       Streaming Transformation for XML (STX) library
     </description>
     <home nested="src/blocks/stx/lib"/>
-    <jar name="joost-20031219.jar"/>
+    <jar name="joost-20040330.jar"/>
   </project>
 
   <project name="cocoon-javac">

@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.212 2004/05/07 01:50:19 antonio Exp $
+    | CVS $Id: jars.xml,v 1.213 2004/05/08 12:39:21 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -911,7 +911,7 @@
     <title>Joost</title>
     <description>Streaming Transformation for XML (STX) library</description>
     <used-by>STX block</used-by>
-    <lib>stx/lib/joost-20031219.jar</lib>
+    <lib>stx/lib/joost-20040330.jar</lib>
     <homepage>http://joost.sourceforge.net/</homepage>
   </file>
 
