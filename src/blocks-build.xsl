@@ -229,7 +229,18 @@
         -->
         <tag name="avalon.context"     scope="methods" description="Requires entry:" />
         <tag name="avalon.dependency"  scope="methods" description="Requires component:" />
-      
+        <tag name="cocoon.sitemap.component.configuration" enabled="false"/>
+        <tag name="cocoon.sitemap.component.documentation" enabled="false"/>
+        <tag name="cocoon.sitemap.component.documentation.caching" enabled="false"/>
+        <tag name="cocoon.sitemap.component.label" enabled="false"/>
+        <tag name="cocoon.sitemap.component.logger" enabled="false"/>
+        <tag name="cocoon.sitemap.component.mimetype" enabled="false"/>
+        <tag name="cocoon.sitemap.component.name" enabled="false"/>
+        <tag name="cocoon.sitemap.component.parameter" enabled="false"/>
+        <tag name="cocoon.sitemap.component.pooling.grow" enabled="false"/>
+        <tag name="cocoon.sitemap.component.pooling.max" enabled="false"/>
+        <tag name="cocoon.sitemap.component.pooling.min" enabled="false"/>
+
         <packageset dir="${{java}}">
           <include name="**"/>
         </packageset>
