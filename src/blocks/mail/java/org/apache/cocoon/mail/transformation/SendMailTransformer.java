@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,10 +59,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * <p>
  *  The SendMailTransformer requires classes of the mail api from sun which comes
- *  with the mail.jar and activation.jar. 
- *  In order to use the SendMailtransformer, you have to download the mail.jar 
- *  from http://java.sun.com/products/javamail/ also like the activation.jar 
- *  from http://java.sun.com/products/javabeans/glasgow/jaf.html 
+ *  with the mail.jar and activation.jar.
+ *  In order to use the SendMailtransformer, you have to download the mail.jar
+ *  from http://java.sun.com/products/javamail/ also like the activation.jar
+ *  from http://java.sun.com/products/javabeans/glasgow/jaf.html
  *  and install it in the Cocoon lib directory.
  * </p>
  * <p>
@@ -174,7 +174,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer {
-    
+
     /*
      * constants, related to elements in configuration-file
      */
@@ -192,7 +192,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
     public static final String ELEMENT_SUCCESS            = "success";
     public static final String ELEMENT_FAILURE            = "failure";
     public static final String ELEMENT_RESULT             = "result";
-    
+
     public static final String DEFAULT_BODY_MIMETYPE      = "text/html";
 
     /*
@@ -238,12 +238,12 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 
     protected String defaultSmtpHost;
     protected String defaultFromAddress;
-    
+
     /**
      * create a new Transformer
      */
     public SendMailTransformer() {
-        this.defaultNamespaceURI = NAMESPACE;
+        super.defaultNamespaceURI = NAMESPACE;
     }
 
     /* (non-Javadoc)
@@ -255,7 +255,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         this.defaultSmtpHost = configuration.getChild("smtphost").getValue("");
         this.defaultFromAddress = configuration.getChild("from").getValue("");
     }
-    
+
     /**
      * invoked every time when the transformer is triggered by the pipeline
      */
@@ -263,7 +263,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                       Parameters par)
     throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
-        
+
         this.mailHost    = par.getParameter(PARAM_SMTPHOST, this.defaultSmtpHost);
         this.fromAddress = par.getParameter(PARAM_FROM, this.defaultFromAddress);
         this.port        = this.request.getServerPort();
@@ -279,7 +279,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         this.attachments = new ArrayList();
         this.defaultToAddresses = new ArrayList();
         appendToAddress(this.defaultToAddresses, par.getParameter(PARAM_TO, ""));
-        
+
   	    this.subject = par.getParameter(PARAM_SUBJECT, null);
    	    this.body = par.getParameter(PARAM_BODY, null);
     }
@@ -309,18 +309,18 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             this.mode = MODE_SUBJECT;
         } else if (name.equals(ELEMENT_MAILBODY)) {
             String strBody = attr.getValue("src");
-            
+
             if (strBody != null) {
                 this.bodyURI = strBody;
             }
-            
+
             String mType = attr.getValue("mime-type");
             if (mType != null) {
                 this.bodyMimeType = new String(mType);
             } else {
                 this.bodyMimeType = DEFAULT_BODY_MIMETYPE;
             }
-            
+
             this.startTextRecording();
             this.mode = MODE_BODY;
         } else if (name.equals(ELEMENT_ATTACHMENT)) {
@@ -525,10 +525,10 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         sm.setFrom(new InternetAddress(this.fromAddress));
         sm.setSubject(this.subject);
 
-        // process mail-body 					
+        // process mail-body
         BodyPart messageBodyPart = new MimeBodyPart();
 
-        // decide, if to take content from source or plain text 
+        // decide, if to take content from source or plain text
         // from variable to build mailbody
         if (this.bodyURI != null) {
             Source      inSrc   = resolver.resolveURI(this.bodyURI);
@@ -545,7 +545,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
 
-        // process attachments				
+        // process attachments
         Iterator iterAtt = this.attachments.iterator();
 
         while (iterAtt.hasNext()) {
@@ -634,7 +634,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
             super.sendStartElementEventNS("message");
             super.sendTextEvent(ex.getMessage());
             super.sendEndElementEventNS("message");
-            
+
             /* only with jdk 1.4
             super.sendStartElementEvent("email:stacktrace");
 
@@ -643,8 +643,8 @@ public class SendMailTransformer extends AbstractSAXTransformer {
                 super.sendTextEvent(s + "\n");
             }
 
-            super.sendEndElementEvent("email:stacktrace");*/ 
-            
+            super.sendEndElementEvent("email:stacktrace");*/
+
             super.sendEndElementEventNS("exception");
 	    this.ignoreHooksCount--;
         } catch (SAXException e) {
@@ -662,7 +662,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
         return iaArr;
     }
 
-	public void recycle() { 
+	public void recycle() {
         this.toAddresses = null;
         this.defaultToAddresses = null;
 	    this.attachments = null;
@@ -678,7 +678,7 @@ public class SendMailTransformer extends AbstractSAXTransformer {
 	    this.smtpMessage = null;
 	    super.recycle();
 	}
-	
+
     static class AttachmentDescriptor {
         String       strAttrName;
         String       strAttrMimeType;

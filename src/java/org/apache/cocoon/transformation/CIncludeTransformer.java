@@ -185,7 +185,7 @@ implements Disposable, CacheableProcessingComponent {
      * Set the namespace
      */
     public CIncludeTransformer() {
-        this.namespaceURI = CINCLUDE_NAMESPACE_URI;
+        super.defaultNamespaceURI = CINCLUDE_NAMESPACE_URI;
     }
 
     /**

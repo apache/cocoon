@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,30 +31,30 @@ import org.xml.sax.helpers.AttributesImpl;
  * elements replaces the URI form the attribute which is specified within
  * an attribute called "attribute" and renames the element as specified
  * within an attribute called "element".
- * 
+ *
  * Example:<br><br>
- * 
+ *
  * <pre>
  * &lt;root xmlns:ev="http://apache.org/cocoon/portal/eventlink/1.0"&gt;
  *   &lt;ev:eventlink href="http://eventlinkexample" element="a" attribute="href"&gt;linktext&lt;/ev:eventlink&gt;
  * &lt;/root&gt;<br></pre>
  *
  * will be replaced with something like:<br><br>
- * 
+ *
  * <pre>
  * &lt;root&gt;
  *   &lt;a href="portal?cocoon-portal-event=8"&gt;linktext&lt;/a&gt;
  * &lt;/root&gt;<br></pre>
- * 
- * The transformer will create two CopletLinkEvents and insert corresponding links 
- * to them to the XML instead of "http://eventlinkexample". If such a link is pressed 
+ *
+ * The transformer will create two CopletLinkEvents and insert corresponding links
+ * to them to the XML instead of "http://eventlinkexample". If such a link is pressed
  * the corresponding CopletLinkEvent is sent to the Subscribers to be handled.<br>
  * Please see also the documentation of superclass AbstractCopletTransformer for how
  * the coplet instance data are acquired.
- *   
+ *
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
- * 
- * @version CVS $Id: NewEventLinkTransformer.java,v 1.7 2004/03/16 09:16:59 cziegeler Exp $
+ *
+ * @version CVS $Id$
  */
 public class NewEventLinkTransformer extends AbstractCopletTransformer {
     /**
@@ -79,7 +79,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
     public static final String ELEMENT_ATTR = "element";
 
     /**
-     * Used to store elements' name between startTransformingElement and endTransformingElement. 
+     * Used to store elements' name between startTransformingElement and endTransformingElement.
      */
     private Stack elementStack = new Stack();
 
@@ -95,7 +95,7 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
      * @see java.lang.Object#Object()
      */
     public NewEventLinkTransformer() {
-        this.namespaceURI = NAMESPACE_URI;
+        super.defaultNamespaceURI = NAMESPACE_URI;
     }
 
     /**
