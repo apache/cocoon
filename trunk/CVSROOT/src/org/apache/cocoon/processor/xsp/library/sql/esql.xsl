@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.41 2001-01-11 04:56:20 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.42 2001-01-16 03:30:53 balld Exp $-->
 <!--
 
  ============================================================================
@@ -177,6 +177,9 @@
       <xsp:include>java.io.PrintWriter</xsp:include>
       <xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
       <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
+      <xsl:if test="$environment = 'cocoon2'">
+        <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
+      </xsl:if>
     </xsp:structure>
     <xsp:logic>
       /** environment - <xsl:value-of select="$environment"/> **/
@@ -462,6 +465,18 @@
         }
       </xsp:logic>
     </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsp:logic>
+        for (int _esql_i = 1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
+          String _esql_tagname = _esql_query.resultset_metadata.getColumnName(_esql_i);
+          <xsp:element>
+            <xsp:param name="name"><xsp:expr>_esql_tagname</xsp:expr></xsp:param>
+            <xsp:expr>_esql_query.resultset.getString(_esql_i)</xsp:expr>
+          </xsp:element>
+        }
+        this.characters("\n");
+      </xsp:logic>
+    </xsl:when>
     <xsl:otherwise>
       <xsp:logic>
         throw new RuntimeException("esql:get-columns is not supported in this environment: "+<xsl:value-of select="$environment"/>);
@@ -579,6 +594,7 @@
       </xsl:when>
       <xsl:otherwise>
         <!-- <xsl:call-template name="add-xml-decl"> not needed -->
+        <xsl:text>"&lt;?xml version=\"1.0\"?&gt;"+</xsl:text>
         <xsl:call-template name="get-string"/>
       </xsl:otherwise>
     </xsl:choose>
@@ -586,6 +602,24 @@
   <xsl:choose>
     <xsl:when test="$environment = 'cocoon1'">
       <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+    </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsp:logic>
+        {
+          /*
+          parser.setContentHandler(this.contentHandler);
+          parser.setLexicalHandler(this.lexicalHandler);
+          */
+          try {
+            XSPUtil.include(new InputSource(new StringReader(<xsl:copy-of select="$content"/>)),this.contentHandler,parser);
+            /*
+            parser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>)));
+            */
+          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            throw new RuntimeException("error parsing xml: "+_esql_exception_<xsl:value-of select="generate-id(.)"/>.getMessage()+": "+String.valueOf(<xsl:copy-of select="$content"/>));
+          }
+        }
+      </xsp:logic>
     </xsl:when>
     <xsl:otherwise>
       <xsp:logic>
@@ -673,10 +707,11 @@
 <xsl:template name="get-string-encoded">
   <xsl:param name="column-spec"/>
   <xsl:param name="resultset"/>
+  <xsl:variable name="encoding"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:encoding"/></xsl:call-template></xsl:variable>
   <xsl:choose>
-    <xsl:when test="@encoding">
+    <xsl:when test="$encoding">
       new String (<xsl:value-of select="$resultset"/>.getBytes 
-        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="@encoding"/>)
+        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
     </xsl:when>
     <xsl:otherwise>
       <xsl:value-of select="$resultset"/>.getString(<xsl:value-of select="$column-spec"/>)
