@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
+    <site signOn="${accountForm.signOn}" view="jexl">
+            <welcome>
+                <jexl:if test="${!accountForm.signOn}">
+                    <firstName><jexl:out value="${accountForm.account.firstName}"/></firstName>
+                </jexl:if>
+                <menu>
+                    <jexl:forEach var="item" items="${categoryList}" >
+                        <category name="${item.name}" id="${item.catId}"/>
+                    </jexl:forEach>
+                </menu>
+            </welcome>
+    </site>
+</page>
+
+
+
+
+

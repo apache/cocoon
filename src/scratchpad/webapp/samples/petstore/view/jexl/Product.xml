@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<page xmlns:jexl="http://cocoon.apache.org/transformation/jexl/1.0">
+    <site signOn="${accountForm.signOn}" view="jexl">
+        <backpointer name="${product.category}" do="viewCategory.do?categoryId=${product.category}"/>
+        <product name="${product.name}">
+            <jexl:forEach var="item" items="${itemList}" >
+                <item productId="${item.productId}" id="${item.itemId}">
+                    <desc>
+                        <jexl:out value="${item.attr1}"/> 
+                        <jexl:out value="${item.attr2}"/> 
+                        <jexl:out value="${item.attr3}"/> 
+                        <jexl:out value="${item.attr4}"/> 
+                        <jexl:out value="${item.attr5}"/> 
+                    </desc>
+                    <price><jexl:out value="${item.listPrice}"/></price>
+                </item>
+            </jexl:forEach>
+            <situation firstPage="${firstPage}" lastPage="${lastPage}" continuation="${continuation.id}"/>
+        </product>
+    </site>
+
+</page>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
+    <site signOn="{accountForm/signOn}" view="jxpath">
+        <cart name="Shopping Cart" >
+            <backpointer name="Main Menu" do="index.do" />
+            <jxpath:for-each select="{cartItems}" >
+                <item productId="{item/productId}" id="{item/itemid}"> 
+                    <desc>
+                        <jxpath:value-of select="item/attr1"/> 
+                        <jxpath:value-of select="item/attr2"/> 
+                        <jxpath:value-of select="item/attr3"/> 
+                        <jxpath:value-of select="item/attr4"/> 
+                        <jxpath:value-of select="item/attr5"/> 
+                        <jxpath:value-of select="item/product/name"/> 
+                    </desc>
+                    <price><jxpath:value-of select="{item/listPrice}"/></price>
+                    <quantity><jxpath:value-of select="{quantity}"/></quantity>
+                </item>
+            </jxpath:for-each>
+            <total><jxpath:value-of select="{cartForm/cart/subTotal}"/></total>
+            <nextpointer do="checkout.do" img="images/button_checkout.gif" />
+        </cart>
+    </site>
+
+</page>
+
+
+
+
