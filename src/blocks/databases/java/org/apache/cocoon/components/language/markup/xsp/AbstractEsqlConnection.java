@@ -59,7 +59,7 @@ import java.sql.DatabaseMetaData;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlConnection.java,v 1.3 2003/05/02 08:12:35 tcurdt Exp $
+ * @version CVS $Id: AbstractEsqlConnection.java,v 1.4 2003/05/15 16:18:32 tcurdt Exp $
  */
 public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
 
@@ -180,7 +180,9 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
             else if (database.indexOf("pervasive") > -1) {
                 query = new PervasiveEsqlQuery(connection,queryString);
             }
-            else if (database.indexOf("hsql") > -1 || database.indexOf("sybase sql server") > -1) {
+            else if (database.indexOf("hsql") > -1 ||
+                     database.indexOf("interbase") > -1 ||
+                     database.indexOf("sybase sql server") > -1) {
                 query = new JdbcEsqlQuery(getConnection(),queryString);
             }
             else {
