@@ -86,7 +86,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.11 2004/02/16 04:54:20 coliver Exp $
+ * @version $Id: ScriptableWidget.java,v 1.12 2004/02/18 17:37:33 coliver Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -161,15 +161,20 @@ public class ScriptableWidget extends ScriptableObject {
 
     public boolean has(String id, Scriptable start) {
         if (delegate != null) {
-            Widget sub = delegate.getWidget(id);
-            if (sub != null) {
-                return true;
+            if (!(delegate instanceof Repeater)) {
+                Widget sub = delegate.getWidget(id);
+                if (sub != null) {
+                    return true;
+                }
             }
         } 
         return super.has(id, start);
     }
 
     public boolean has(int index, Scriptable start) {
+        if (super.has(index, start)) {
+            return true;
+        }
         if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             return index >= 0 && index < repeater.getSize();
@@ -178,38 +183,50 @@ public class ScriptableWidget extends ScriptableObject {
             Object[] values = (Object[])delegate.getValue();
             return index >= 0 && index < values.length;
         }
-        return super.has(index, start);
+        return false;
     }
 
     public Object get(String id, Scriptable start) {
+        Object result = super.get(id, start);
+        if (result != NOT_FOUND) {
+            return result;
+        }
         if (delegate != null && !(delegate instanceof Repeater)) {
             Widget sub = delegate.getWidget(id);
             if (sub != null) {
                 return wrap(sub);
             }
         }
-        return super.get(id, start);
+        return NOT_FOUND;
     }
 
     public Object get(int index, Scriptable start) {
+        Object result = super.get(index, start);
+        if (result != NOT_FOUND) {
+            return result;
+        }
         if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             if (index >= 0) {
-                while (index >= repeater.getSize()) {
-                    repeater.addRow();
+                int count = index + 1 - repeater.getSize();
+                if (count > 0) {
+                    ScriptableWidget[] rows = new ScriptableWidget[count];
+                    for (int i = 0; i < count; i++) {
+                        rows[i] = wrap(repeater.addRow());
+                    }
+                    for (int i = 0; i < count; i++) {
+                        rows[i].notifyAddRow();
+                    }
                 }
                 return wrap(repeater.getRow(index));
             }
-        }
-        if (delegate instanceof MultiValueField) {
+        } else if (delegate instanceof MultiValueField) {
             Object[] values = (Object[])delegate.getValue();
             if (index >= 0 && index < values.length) {
                 return values[index];
-            } else {
-	      return NOT_FOUND;
-	    }
+            }
         }
-        return super.get(index, start);
+        return NOT_FOUND;
     }
 
     public Object[] getAllIds() {
@@ -240,8 +257,46 @@ public class ScriptableWidget extends ScriptableObject {
 
     private void deleteRow(Repeater repeater, int index) {
         Widget row = repeater.getRow(index);
+        ScriptableWidget s = wrap(row);
+        s.notifyRemoveRow();
         formWidget.deleteWrapper(row);
         repeater.removeRow(index);
+    }
+
+    private void notifyAddRow() {
+        ScriptableWidget repeater = wrap(delegate.getParent());
+        Object prop = getProperty(repeater, "onAddRow");
+        if (prop instanceof Function) {
+            try {
+                Function fun = (Function)prop;
+                Object[] args = new Object[1];
+                Scriptable scope = getTopLevelScope(this);
+                Scriptable thisObj = scope;
+                Context cx = Context.getCurrentContext();
+                args[0] = this;
+                fun.call(cx, scope, thisObj, args);
+            } catch (Exception exc) {
+                throw Context.reportRuntimeError(exc.getMessage());
+            }
+        }
+    }
+
+    private void notifyRemoveRow() {
+        ScriptableWidget repeater = wrap(delegate.getParent());
+        Object prop = getProperty(repeater, "onRemoveRow");
+        if (prop instanceof Function) {
+            try {
+                Function fun = (Function)prop;
+                Object[] args = new Object[1];
+                Scriptable scope = getTopLevelScope(this);
+                Scriptable thisObj = scope;
+                Context cx = Context.getCurrentContext();
+                args[0] = this;
+                fun.call(cx, scope, thisObj, args);
+            } catch (Exception exc) {
+                throw Context.reportRuntimeError(exc.getMessage());
+            }
+        }
     }
 
     public void delete(int index) {
@@ -293,7 +348,7 @@ public class ScriptableWidget extends ScriptableObject {
                 }
             } else {
                 for (int i = size; i < len; ++i) {
-                    repeater.addRow();
+                    wrap(repeater.addRow()).notifyAddRow();
                 }
             }
         }
@@ -527,10 +582,12 @@ public class ScriptableWidget extends ScriptableObject {
     }
 
     public ScriptableWidget jsFunction_addRow() {
+        ScriptableWidget result = null;
         if (delegate instanceof Repeater) {
-            return wrap(((Repeater)delegate).addRow());
+            result = wrap(((Repeater)delegate).addRow());
+            result.notifyAddRow();
         }
-        return null;
+        return result;
     }
 
     public ScriptableObject jsFunction_getRow(int index) {
