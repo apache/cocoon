@@ -49,6 +49,27 @@
   </map:serializers>
 
   <map:selectors default="browser">
+   <map:selector name="browser" factory="org.apache.cocoon.selection.BrowserSelectorFactory">
+    <!-- # NOTE: The appearance indicates the search order. This is very important since
+         #       some words may be found in more than one browser description. (MSIE is
+         #       presented as "Mozilla/4.0 (Compatible; MSIE 4.01; ...")
+    -->
+    <browser name="explorer" useragent="MSIE"/>
+    <browser name="pocketexplorer" useragent="MSPIE"/>
+    <browser name="handweb" useragent="HandHTTP"/>
+    <browser name="avantgo" useragent="AvantGo"/>
+    <browser name="imode" useragent="DoCoMo"/>
+    <browser name="opera" useragent="Opera"/>
+    <browser name="lynx" useragent="Lynx"/>
+    <browser name="java" useragent="Java"/>
+    <browser name="wap" useragent="Nokia"/>
+    <browser name="wap" useragent="UP"/>
+    <browser name="wap" useragent="Wapalizer"/>
+    <browser name="mozilla5" useragent="Mozilla/5"/>
+    <browser name="mozilla5" useragent="Netscape6/"/>
+    <browser name="netscape" useragent="Mozilla"/>
+   </map:selector>
+
   </map:selectors>
 
   <map:matchers default="uri">
@@ -73,13 +94,19 @@
 <!-- =========================== Resources ================================= -->
 
  <map:resources>
-
   <map:resource name="slides">
    <map:generate src="docs/samples/slides/slides.xml"/>
    <map:transform src="stylesheets/slides-navigation.xsl"/>
    <map:transform src="stylesheets/slides-apachecon.xsl"/>
    <map:serialize/>
   </map:resource>
+
+  <map:resource name="welcome">
+   <map:generate src="docs/samples/samples.xml"/>
+   <map:transform src="stylesheets/simple-samples2html.xsl"/>
+   <map:serialize/>
+  </map:resource>
+
  </map:resources>
 
 <!-- =========================== Pipelines ================================= -->
@@ -87,10 +114,12 @@
  <map:pipelines>
   <map:pipeline>
 
+   <map:match pattern="">
+    <map:redirect-to resource="welcome"/>
+   </map:match>
+
    <map:match pattern="welcome">
-    <map:generate src="docs/samples/samples.xml"/>
-    <map:transform src="stylesheets/simple-samples2html.xsl"/>
-    <map:serialize/>
+    <map:redirect-to resource="welcome"/>
    </map:match>
 
    <!-- ================  Hello  =========================== -->
