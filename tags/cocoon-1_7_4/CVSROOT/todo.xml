@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
+
+<!--
+  History of Cocoon changes
+  $Id: todo.xml,v 1.29 2000-04-27 17:53:48 stefano Exp $
+-->
+
+<todo title="Things To Do for Cocoon 1.x">
+ <devs>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+ </devs>
+
+ <actions priority="low">
+  <action context="docs">
+   Cleanup and improve documentation.
+  </action>
+  <action context="docs">
+   Play with the XML doclet a little and write the stylesheets for it.
+  </action>
+ </actions>
+
+</todo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document><header><title>SQL Taglib</title><authors><person name="Donald A. Ball Jr." email="balld@webslingerz.com"/></authors></header><body>
+
+	<s1 title="Description">
+		<p>SQL Taglib is an XSP taglibrary that performs sql queries and serializes their results as XML. This allows you to work with data from a wide variety of different sources when using Cocoon.</p>
+	</s1>
+
+	<s1 title="Installation">
+		<p>Check your cocoon.properties for this line and add it if it's not already there:</p>
+		<source>processor.xsp.logicsheet.sql.java = 
+  resource://org/apache/cocoon/processor/xsp/library/java/sql.xsl</source>
+  		<p>Note the line break is for formatting purposes, it should not appear in your cocoon.properties file.</p>
+	</s1>
+
+	<s1 title="Configuration">
+		<p>Map the</p>
+		<source>http://www.apache.org/1999/SQL</source>
+		<p>namespace to the sql prefix. Elements in the sql taglib namespace will be interpreted as input to the sql taglib and will be stripped from the output.</p>
+		<p>This is typically done like this:</p>
+		<source><![CDATA[
+<xsp:page
+	language="java"
+	xmlns:sql="http://www.apache.org/1999/SQL"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+>
+
+	. . .
+
+</xsp:page>
+]]></source>
+	</s1>
+	<s1 title="Usage">
+		<p>The only element in the sql taglib namespace that may appear as a descendent of an element in another namespace is the <code>execute-query</code> element. It indicates that a sql query should be executed. The result XML will replace this element.</p>
+		<p>The <code>execute-query</code> element will contain child elements in the sql taglib namespace which specify parameters for the query. It is an error if it contains children (not necessarily descendents) in another namespace. No other element in the sql taglib namespace may contain children in the sql taglib namespace.</p>
+		<p>The list of valid sql taglib configuration elements is:</p>
+		<dl>
+		<dt><code>driver</code> <strong>(mandatory)</strong></dt>
+		<dd>The fully qualified class name of the JDBC driver</dd>
+		<dt><code>dburl</code> <strong>(mandatory)</strong></dt>
+		<dd>The JDBC URL to the data source</dd>
+		<dt><code>query</code> <strong>(mandatory)</strong></dt>
+		<dd>The SQL query to execute.</dd>
+		<dt><code>username</code></dt>
+		<dd>The username for database authentication</dd>
+		<dt><code>password</code></dt>
+		<dd>The password for database authentication</dd>
+		<dt><code>doc-element</code></dt>
+		<dd>The name of the element which will wrap the entire resultset, if there are any results. If this is not set, there will be no top-level wrapper.</dd>
+		<dt><code>row-element</code></dt>
+		<dd>The name of the element which will wrap each row in the resultset. If this is not set, there will be no row-level wrapper.</dd>
+		<dt><code>null-indicator</code></dt>
+		<dd>If this is equal to 'y' or 'yes', null column values will be output as an element with attribute NULL="YES". Otherwise null columns will be skipped.</dd>
+		<dt><code>tag-case</code></dt>
+		<dd>The case the result column element names should be. Options are preserve (use whatever the database engine gives us), lower, and upper. The default is preserve.</dd>
+		<dt><code>id-attribute</code></dt>
+		<dd>The name of the attribute to set on the result's row elements to uniquely identify each row. if this is null, no unique attribute will be created.</dd>
+		<dt><code>id-attribute-column</code></dt>
+		<dd>The name of the column in the resultset to use for the id attribute. Typically this will be a primary key column. If this is not set, the id attribute value will be the row's position in the rowset.</dd>
+		<dt><code>max-rows</code></dt>
+		<dd>The maximum number of rows to return.</dd>
+		<dt><code>skip-rows</code></dt>
+		<dd>The number of rows to skip before returning rows.</dd>
+		<dt><code>count-attribute</code></dt>
+		<dd>The name of the attribute of the result doc element whose value will contain the total number of rows returned by the query. NOTE - this is not the same as the number of rows returned the taglib if the max-rows element is set.</dd>
+		<dt><code>query-attribute</code></dt>
+		<dd>The name of the attribute of the result doc element whose value will contain the actual SQL query that was executed.</dd>
+		<dt><code>skip-rows-attribute</code></dt>
+		<dd>The name of the attribute of the result doc element whose value will contain the actual number of rows skipped.</dd>
+		<dt><code>max-rows-attribute</code></dt>
+		<dd>The name of the attribute of the result doc element whose value will contain the actual maximum number of rows.</dd>
+		<dt><code>update-rows-attribute</code></dt>
+		<dd>The name of the attribute of the result doc element whose value will contain the actual number of rows updated (if this query was not a SELECT).</dd>
+		<dt><code>namespace</code></dt>
+		<dd>The namespace prefix to use when creating result elements. FIXME - we should ask for a namespace URI and prefix, right?</dd>
+		<dt><code>column-format</code></dt>
+		<dd>Indicates that a column needs special formatting. See the column formatting section.</dd>
+		</dl>
+		<p>Note that the query element may contain elements from other XSP-enabled namespaces, like request or session. The others may not right now, though I'm certainly willing to consider changing that if desired. I'm still new at this XSP thing too.</p>
+	</s1>
+	<s1 title="Column Formatting">
+		<p>Generally, column values are formatted naively - the taglib requests an Object from the ResultSet and invoked the toString() method. Some columns return byte or character arrays - in that case, we construct a new String using the array as a construction argument.</p>
+		<p>These defaults may be overridden by supplying one or more sql:column-format elements. Each sql:column-format element may contain these child elements:</p>
+		<dl>
+		<dt><code>name</code> <strong>(mandatory)</strong></dt>
+		<dd>The name of the column (after the case translation occurs) to which the formatting should be applied</dd>
+		<dt><code>class</code> <strong>(mandatory)</strong></dt>
+		<dd>The fully qualified class name of the formatter class. This must be a subclass of java.text.Format.</dd>
+		<dt><code>parameter</code></dt>
+		<dd>A construction parameter for the formatter class. There may be more than one parameters.</dd>
+		</dl>
+		<p>For each sql:column-format element, a new instance of the Format subclass specified by the sql:class element is constructed using the construction parameters specified by the sql:parameter elements. The constructor must accept only Strings as parameters; if other datatypes are required for a class you wish to use, you must provide your own decorator wrapper for that class. Values from the named column are formatting using the format method. Here is an example:</p>
+		<source><![CDATA[
+<sql:column-format>
+	<sql:name>my_date</sql:name>
+	<sql:class>java.text.SimpleDateFormat</sql:class>
+	<sql:parameter>MM/dd/yyyy</sql:parameter>
+</sql:column-format>
+]]></source>
+	</s1>
+
+</body></document>

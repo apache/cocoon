@@ -1,0 +1,242 @@
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd"> 
+
+<document>
+ <header>
+  <title>Cocoon</title>
+  <subtitle>An XML publishing Infrastructure</subtitle>
+  <authors>
+   <person name="Philippe Lavoie" email="philippe.lavoie@cactus.ca"/>
+  </authors>
+ </header>
+
+<body>
+
+<s1 title="A Publishing Infrastructure">
+
+<p>The Cocoon project aims at changing the way web information is
+created, rendered and served. This new paradigm is based on the fact
+that document content, style and logic are often created by different
+individuals or working groups. Cocoon's goal of a complete separation
+of the three layers, allows them to be independently designed, created
+and managed. This reduces management overhead, increases work reuse
+and reduces time to market.</p>
+
+<p>The Cocoon publishing model is heavily based on the XSLT
+transformation capabilities. XSLT allows complete separation of
+content and style (something that is much harder to obtain with HTML,
+even using CSS2 or other styling technologies). But Cocoon goes
+further and defines a way of separating content and style from the
+programming logic that drives server side behavior.</p>
+
+<p>This fact has been widely acknowledge by most major vendors:
+Microsoft, IBM, SUN, Oracle, etc. All of these vendors offer XML and
+XSL processors. Cocoon uses these technologies and incorporates them
+into a publishing infrastructure. </p>
+
+<p>An infrastructure must have these characteristics:</p>
+
+<ul>
+  <li>pervasive scope</li>
+  <li>standardize access points</li>
+  <li>minimal (almost zero) user intervention</li>
+  <li>transparent service provision</li>
+  <li>applicability to existing and future applications</li>
+</ul>
+
+<p>Cocoon has a pervasive scope as it address all aspects of the web
+publishing needs. Even if the most common use of Cocoon is the
+automatic creation of HTML (and XHTML) through the processing of
+statically or dynamically generated XML files, Cocoon is also able to
+perform more sophisticated formatting, such as XSL:FO rendering on
+PDF, client-depending transformations such as WML formatting for
+WAP-enabled devices or direct XML serving to XML and XSL aware
+clients. Cocoon can even apply different stylesheets to a unique XML
+content based on the requesting client.</p>
+
+<p>Once installed on a web server such as Site Server, Apache or
+Netscape. Cocoon doesn't require any user intervention. It is there
+and usable for content publishing. Only when creating custom XML
+processor does one need to touch Cocoon itself.</p>
+
+<p>Cocoon offers transparent services with its API available through a
+simple XML syntax suitable for most of any users needs. With the more
+specialized needs a simple and effective Java interface provides the
+access needed for a more powerful manipulation of XML elements.</p>
+
+<p>Finally, Cocoon is applicable to existing and future
+applications. This is due in part to the fact that XML is the glue
+used to connect most of the parts together; ensuring a long life to
+the content and an easy interface to current applications. The way
+Cocoon handles dynamic site creation also enhances Cocoon's
+applicability to current and future applications needs.</p>
+
+</s1>
+
+<s1 title="Publishing Static Content">
+
+<p>Cocoon can apply different stylesheets to different clients. In the
+more esoteric examples, it allows one to create a WML and HTML output
+version of the same content file. In most cases, HTML is the desired
+output. The reason is that unless the XML and XSL aware client can
+understand the same version of the standard as the one Cocoon is using
+(XML 1.0 and XSLT 1.0) then only HTML can be truly be seen as a
+suitable output for today's web publishing needs. </p>
+
+<p>This means that server side processing of the XML content files are
+needed. This is done by creating an XML and an appropriate XSL
+file. This is the standard way of generating HTML files from XML
+content.  What Cocoon offers is a transparent way of doing this
+processing. There is no need to write an ASP, JSP or CGI to call an
+XML parser and then process the output with an XSL processor. This is
+automatically handled by Cocoon's infrastructure.</p>
+
+<p>In that infrastructure, it is possible to chain calls to XSLT
+processors.  This has the possibly great advantage of separating all
+the layers of the publishing needs: flow, layout and display. A user
+concentrates on writing a content file. Cocoon can then call a first
+transformation that deals with the flow. The flow transformation
+usually adds menus suitable for a directory, a whole site or any
+special need of the content file. The flow transformation can then
+call a layout transformation sheet. That sheet will add more layout
+information such as headers, footers, color schemes, etc. Finally the
+display transformation would handle the actual HTML transformation
+from the output of all the previous processing.</p>
+
+<p>Although the previous example is overkill for most web sites
+needs, Cocoon's effective caching system ensures that multiple XSLT
+transformations do not hinder in any way the speed at which they are
+presented to the user. The transformation is done once and the
+resulting HTML output is presented many times.</p>
+
+<p>Cocoon's infrastructure can also be applied to an offline
+scenario. This generates HTML files in the case of web sites. However
+a very complex processing can be performed on the XML files, a
+processing that might be too time consuming on runtime scenarios:
+automatic image generation, flow generation by directory analysis,
+etc. An example of an offline scenario can be seen at Cocoon's site
+(<link href="http://xml.apache.org/cocoon">
+http://xml.apache.org/cocoon</link>). On that site, the menus and headers
+are automatically generated by processing XML content files, this
+allows for a more professional look and feel, yet it doesn't require
+an artist each time a label changes.</p>
+
+</s1>
+
+<s1 title="Publishing Dynamic Content">
+
+<p>In dynamic content generation technology, content and logic are
+combined: in every page there is a mix of static content and dynamic
+logic that work together to create the final result, usually using
+run-time or time-dependent input. XSP is no exception, since it
+defines a syntax to mix static content and programmatic logic in a way
+that is independent of both the programming language used and the
+binary results that the final source-rendering generated.</p>
+
+<p>But it must be understood that XSP is just a piece of the
+framework: exactly like how formatting objects mix style and content,
+XSP objects mix logic and content. On the other hand, since both are
+XML DTDs, XSLT can be used to move from pure content to these final
+DTDs, placing the style and logic on the transformation layers and
+guaranteeing complete separation and easier maintenance.</p>
+
+<p>Other ways to create dynamic content is through XSP taglib,
+processors and formatters. XSP taglib allows cocoon to map XML elements
+to processing instructions. The custom cocoon processors can go
+through an XML document and modify its content. Finally, the formatters
+are used to generate XML documents based on a user's request and
+its session information.</p>
+
+<p>Together these elements offer the equivalent of COM and CORBA. They
+offer a way to solve the interoperability problem between different
+applications. In the Cocoon infrastructure, XML becomes the API from
+which other components are called. Whether COM, CORBA, Java or any
+other language is actually called becomes transparent to the user. The
+user only needs to know about the XML API which, by definition, should
+strive to be human readable. This makes debugging and maintenance a
+lot easier.</p>
+
+<p>This approach to dynamic content generation is quite different from
+other methods. The typical method proposed by SUN and Microsoft is to
+generate and XML output from a servlet or ASP page, then process it
+with an XSLT processor. Some of the drawbacks of that method are:</p>
+
+<ul>
+
+<li>Logic and content are mixed. Editing such a file requires more
+senior programmers than editing a simple XML file.</li>
+
+<li>There is no proper multiple XSLT processing. This can be
+individually programmed, however it is a difficult problem and might
+prevent some web servers from effectively caching the output.</li>
+
+<li>The XML output must be display friendly. This means that the
+output XML must be easily understandable by the final XSLT file to
+generate a suitable HTML file. Sometimes, an XML element must be
+converted to be more suitable to a given display context. This process
+can be automated inside Cocoon by adding XSLT transformations and
+adding display <em>hints</em>. However, inside a JSP or ASP page,
+programmers will tend to write more in term of the display and less of
+the semantic.</li>
+
+<li>Reusability is limited. With Cocoon's approach, it is
+straightforward for a content writer to add a &lt;locale:date&gt; tag
+inside his document. That tag will call the proper functionality
+required to display the current date in the user's current
+locale. Without Cocoon, this becomes a lot more cumbersome since the
+programmer must explicitly call the proper functions and incorporate
+the result inside the XML output stream. In that case, locale
+considerations might not have been made across the site, this is
+difficult to check with the content mixed with the logic.</li>
+
+</ul>
+
+</s1>
+
+<s1 title="Conclusion">
+
+ <p>The Cocoon model allows web sites to be highly structured and well
+ designed, reducing duplication efforts and site management costs by
+ allowing different presentations of the same data depending on the
+ requesting client (HTML clients, PDF clients, WML clients) and
+ separating on different contexts different requirements, skills and
+ capacities. Cocoon allows a better human resource management by
+ giving to each individual its job and reducing to a minimum the
+ cross-talks between different working contexts.</p>
+
+<p>To do this, the Cocoon model divides the development of web content
+in three separate levels:</p>
+
+<dl>
+<dt>XML creation</dt>
+<dd>the XML file is created by the content
+owners. They do not require specific knowledge on how the XML content
+is further processed rather than the particular chosen
+DTD/namespace. This is done through human intervention or through
+dynamic generation.</dd>
+
+<dt>XML processing</dt>
+<dd>the requested XML file is processed and
+the logic contained in its logicsheet is applied. Unlike other dynamic
+content generators, the logic is separated from the content
+file.</dd>
+
+<dt>XSL rendering</dt>
+<dd>the created document is then rendered by
+applying an XSL stylesheet to it and formatting it to the specified
+resource type (HTML, PDF, XML, WML, XHTML)</dd>
+</dl>
+
+<p>Unlike other XML projects, Cocoon concentrates on solving the
+publishing infrastructure problem. In that respect it is ahead of a
+lot of the major vendors that up to now seem to only worry about the
+technology needed and less about how it integrates into a publishing
+framework.</p>
+
+</s1>
+
+</body>
+
+</document>
+
+

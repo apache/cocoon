@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Javadoc Documentation in XML</title>
+  <authors>
+   <person name="Kenneth Murphy" email="murphyk@umsystem.edu"/>
+   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+  <s1 title="Introduction">
+   <p>We are currently working on enhancing the documentation provided for the
+   Cocoon XML publishing framework by converting javadoc commented source code into
+   XML for use within Cocoon.</p>
+  </s1>
+
+  <s1 title="The plan">
+   <p>In order to do this we are currently planning to implement the following
+phases:</p>
+
+  <ol>
+  <li>Develop a JavaDoc XML DTD that acts as a data structure representing the
+    information provided by the rootDoc object of the SUN Javadoc program to a
+    plugged doclet. This DTD is intended to closely mirror the look of a raw
+    java source file.</li>
+  <li>Develop a JavaDoc doclet (JavaDocXML) that takes the information from the
+    JavaDoc rootDoc object and converts it into an XML file using the
+    javadoc.dtd.</li>
+  <li>Wrap the javadoc with XML doclet invocation into a cocoon producer as follows:</li>
+  <ul>
+   <li>reads the document from the file system</li>
+   <li>spawns the javadoc tool using the javadoc XML servlet and using the
+       parameters found in the "javadoc makefile"</li>
+   <li>produces the XML output as a single document</li>
+   <li>the Cocoon engine process it with the stylesheet indicated (from
+       command line or whatever)</li>
+   <li>formats it either as PDF or HTML or whatever depending on the chosen
+       stylesheet. (the HTML formatter will be able to split a single
+       XML document into several ones based on special page-break tags or PIs
+        or using FO directly)</li>
+   <li>formatter will also be able to react on the SVG namespace
+       inlining vector graphics or formatted as raster graphics.</li>
+  </ul>
+  <li>Some final formats we could produce are:</li>
+  <ul>
+    <li>javadoc.dtd ---&gt; javadoc_html.dtd ---&gt; HTML (this would create a
+        javadoc that looks like the current HTML javadoc standard).</li>
+    <li>javadoc.dtd ---&gt; docBook.dtd (this would facilitate printed
+        books based having heavy content about java API's. For example &quot;The
+        JDBC API Tutorial and Reference: 2nd Edition&quot; could make heavy use
+        of this.</li>
+    <li>javadoc.dtd ---&gt; ebook.dtd (this would facilitate the electronic
+        version of documentation)</li>
+    <li>javadoc.dtd ---&gt; ??? ---&gt; pdf</li>
+  </ul>
+  <li>Using this method we will then enhance the existing Cocoon documentation to provide rich documentation
+      using some subset of the above formats.</li>
+  <li>Finally, we can incorporate XML versions of UML vector diagrams to further enhance the
+      source code documentation.</li>
+  </ol>
+  </s1>
+
+  <s1 title="Progress to date">
+   <p>
+      The first phase has been complete and a complete javadoc DTD was
+      created. We feel confortable with the solidity of that DTD and we plan
+      to move over to the actual XML doclet implementation.
+   </p>
+   <p>
+      The XML Doclet code (consider it alpha at this point) is included in the
+      Cocoon distribution under <code>/src/org/apache/tools/doclet/xml/XMLDoclet.java</code>.
+   </p>
+  </s1>
+
+  <s1 title="To do">
+   <p>
+      Being the first two phases complete (the DTD is still in working-draft phase,
+      but it's complete and usable), we need to write the stylesheets that
+      generate HTML out of the javadoc XML files. <strong>Any help is
+      always welcome</strong>.
+   </p>
+  </s1>
+
+ </body>
+</document>
