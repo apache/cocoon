@@ -16,16 +16,17 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
+import org.apache.cocoon.components.treeprocessor.variables.VariableExpressionTokenizer;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.SourceResolver;
@@ -63,39 +64,42 @@ import java.util.StringTokenizer;
  * @cocoon.sitemap.component.documentation
  * Internationalization transformer is used to transform i18n markup into text
  * based on a particular locale.
- * 
+ *
  * @cocoon.sitemap.component.name   i18n
  * @cocoon.sitemap.component.documentation.caching TBD
  * @cocoon.sitemap.component.logger sitemap.transformer.i18n
  *
- *
  * <h3>i18n transformer</h3>
- * <p>The <strong>i18n transformer</strong> works by obtaining the users locale
- * based on request, session attributes or a cookie data. See
- * {@link org.apache.cocoon.acting.LocaleAction#getLocaleAttribute(Map, String) } for details.
- * It then attempts to find a <strong>message catalogue</strong> that satisifies
- * the particular locale, and use it for for text replacement within i18n markup.
+ * <p>The i18n transformer works by finding a translation for the user's locale
+ * in the configured catalogues. Locale is determined based on the request,
+ * session, or a cookie data. See {@link org.apache.cocoon.acting.LocaleAction}
+ * for details.</p>
  *
- * <p>Catalogues are maintained in separate files, with a naming convention
- * similar to that of ResourceBundle (See java.util.ResourceBundle).
- * ie.
- * <strong>basename</strong>_<strong>locale</strong>, where <i>basename</i>
- * can be any name, and <i>locale</i> can be any locale specified using
- * ISO 639/3166 characters (eg. en_AU, de_AT, es).<br/>
- * <strong>NOTE: </strong>ISO 639 is not a stable standard; some of the language
- * codes it defines (specifically iw, ji, and in) have changed
- * (see java.util.Locale for details).
+ * <p>For the passed local it then attempts to find a message catalogue that
+ * satisifies the locale, and uses it for for processing text replacement
+ * directed by i18n markup.</p>
  *
- * <h3>Catalogues</h3>
+ * <p>Message catalogues are maintained in separate files, with a naming
+ * convention similar to that of {@link java.util.ResourceBundle}. I.e.
+ * <code>basename_locale</code>, where <i>basename</i> can be any name,
+ * and <i>locale</i> can be any locale specified using ISO 639/3166
+ * characters (eg. <code>en_AU</code>, <code>de_AT</code>, <code>es</code>).</p>
+ *
+ * <p><strong>NOTE:</strong> ISO 639 is not a stable standard; some of the
+ * language codes it defines (specifically, iw, ji, and in) have changed
+ * (see {@link java.util.Locale} for details).
+ *
+ * <h3>Message Catalogues</h3>
  * <p>Catalogues are of the following format:
  * <pre>
  * &lt;?xml version="1.0"?&gt;
  * &lt;!-- message catalogue file for locale ... --&gt;
  * &lt;catalogue xml:lang=&quot;locale&quot;&gt;
- *        &lt;message key="key"&gt;text&lt;/message&gt;
- *        ....
+ *   &lt;message key="key"&gt;text &lt;i&gt;or&lt;/i&gt; markup&lt;/message&gt;
+ *   ....
  * &lt;/catalogue&gt;
- * </pre> Where <strong>key</strong> specifies a particular message for that
+ * </pre>
+ * Where <code>key</code> specifies a particular message for that
  * language.
  *
  * <h3>Usage</h3>
@@ -107,7 +111,8 @@ import java.util.StringTokenizer;
  * At runtime, the i18n transformer will find a message catalogue for the
  * user's locale, and will appropriately replace the text between the
  * <code>&lt;i18n:text&gt;</code> markup, using the value between the tags as
- * the lookup key.
+ * the lookup key.</p>
+ *
  * <p>If the i18n transformer cannot find an appropriate message catalogue for
  * the user's given locale, it will recursively try to locate a <i>parent</i>
  * message catalogue, until a valid catalogue can be found.
@@ -126,9 +131,9 @@ import java.util.StringTokenizer;
  *  <li><strong>messages</strong>.xml
  * </ul>
  * This allows the developer to write a hierarchy of message catalogues,
- * at each defining messages with increasing depth of variation.
+ * at each defining messages with increasing depth of variation.</p>
  *
- * In addition, catalogues can be split across multiple locations. For example,
+ * <p>In addition, catalogues can be split across multiple locations. For example,
  * there can be a default catalogue in one directory with a user or client specific
  * catalogue in another directory. The catalogues will be searched in the order of
  * the locations specified still following the locale ordering specified above.
@@ -142,10 +147,13 @@ import java.util.StringTokenizer;
  *   <li><i>translations/</i><strong>messages</strong>_<i>en</i.xml
  *   <li><i>translations/client/</i><strong>messages</strong>.xml
  *   <li><i>translations/</i><strong>messages</strong>.xml
+ * </ul>
+ * </p>
  *
- * <p>The i18n:text element can optionally take an attribute <strong>i18n:catalogue</strong>
- * to specify a specific catalogue to use. The value of this attribute should be
- * the id of the catalogue to use (see sitemap configuration).
+ * <p>The <code>i18n:text</code> element can optionally take an attribute
+ * <code>i18n:catalogue</code> to indicate which specific catalogue to use.
+ * The value of this attribute should be the id of the catalogue to use
+ * (see sitemap configuration).
  *
  * <h3>Sitemap configuration</h3>
  * <pre>
@@ -157,11 +165,13 @@ import java.util.StringTokenizer;
  *         [&lt;location&gt;translations/client&lt;/location&gt;]
  *         [&lt;location&gt;translations&lt;/location&gt;]
  *       &lt;/catalogue&gt;
+ *       ...
  *     &lt;/catalogues&gt;
  *     &lt;untranslated-text&gt;untranslated&lt;/untranslated-text&gt;
  *     &lt;cache-at-startup&gt;true&lt;/cache-at-startup&gt;
  * &lt;/map:transformer&gt;
- * </pre> where:
+ * </pre>
+ * Where:
  * <ul>
  *  <li><strong>catalogues</strong>: container element in which the catalogues
  *      are defined. It must have an attribute 'default' whose value is one
@@ -186,59 +196,68 @@ import java.util.StringTokenizer;
  *      messages at startup (false by default).
  * </ul>
  *
- * <p><strong>NOTE:</strong> before using multiple catalogues was supported,
- * the catalogue name and location was specified using elements named
- * <code>catalogue-name</code> and <code>catalogue-location</code>. This syntax is
- * <strong>NOT</strong> supported anymore.
- *
+ * <h3>Pipeline Usage</h3>
  * <p>To use the transformer in a pipeline, simply specify it in a particular
- * transform. eg:
+ * transform, and pass locale parameter:
  * <pre>
  * &lt;map:match pattern="file"&gt;
- *     &lt;map:generate src="file.xml"/&gt;
- *     &lt;map:transform type="i18n"/&gt;
- *     &lt;map:serialize/&gt;
+ *   &lt;map:generate src="file.xml"/&gt;
+ *   &lt;map:transform type="i18n"&gt;
+ *     &lt;map:parameter name="locale" value="..."/&gt;
+ *   &lt;/map:transform&gt;
+ *   &lt;map:serialize/&gt;
  * &lt;/map:match&gt;
  * </pre>
+ * You can use {@link org.apache.cocoon.acting.LocaleAction} or any other
+ * way to provide transformer with a locale.</p>
  *
  * <p>If in certain pipeline, you want to use a different catalogue as the
  * default catalogue, you can do so by specifying a parameter called
  * <strong>default-catalogue-id</strong>.
  *
  * <p>The <strong>untranslated-text</strong> can also be overridden at the
- * pipeline level by specifying it as a parameter.
+ * pipeline level by specifying it as a parameter.</p>
  *
- * <p>Note: before multiple catalogues were supported, the catalogue to use
- * could be overridden at the pipeline level by specifying parameters called
- * <strong>catalogue-name</strong>, <strong>catalogue-location</strong>. This
- * is still supported, but can't be used together with the new parameter default-catalogue-id.
+ *
+ * <h3>i18n markup</h3>
  *
  * <p>For date, time and number formatting use the following tags:
  * <ul>
  *  <li><strong>&lt;i18n:date/&gt;</strong> gives localized date.</li>
  *  <li><strong>&lt;i18n:date-time/&gt;</strong> gives localized date and time.</li>
  *  <li><strong>&lt;i18n:time/&gt;</strong> gives localized time.</li>
+ *  <li><strong>&lt;i18n:number/&gt;</strong> gives localized number.</li>
+ *  <li><strong>&lt;i18n:currency/&gt;</strong> gives localized currency.</li>
+ *  <li><strong>&lt;i18n:percent/&gt;</strong> gives localized percent.</li>
  * </ul>
- * For <code>date</code>, <code>date-time</code> and <code>time</code> the
- * <code>pattern</code> and <code>src-pattern</code> attribute may have also
- * values of: <code>short</code>, <code>medium</code>, <code>long</code> or
- * <code>full</code>. (See java.text.DateFormat for more info on this).
- * <p>For <code>date</code>, <code>date-time</code>, <code>time</code> and
- * <code>number</code> a different <code>locale</code> and
+ * Elements <code>date</code>, <code>date-time</code> and <code>time</code>
+ * accept <code>pattern</code> and <code>src-pattern</code> attribute, with
+ * values of:
+ * <ul>
+ *  <li><code>short</code>
+ *  <li><code>medium</code>
+ *  <li><code>long</code>
+ *  <li><code>full</code>
+ * </ul>
+ * See {@link java.text.DateFormat} for more info on these values.</p>
+ *
+ * <p>Elements <code>date</code>, <code>date-time</code>, <code>time</code> and
+ * <code>number</code>, a different <code>locale</code> and
  * <code>source-locale</code> can be specified:
  * <pre>
  * &lt;i18n:date src-pattern="short" src-locale="en_US" locale="de_DE"&gt;
- *      12/24/01
+ *   12/24/01
  * &lt;/i18n:date&gt;
- * </pre> will result in 24.12.2001.
+ * </pre>
+ * Will result in 24.12.2001.</p>
  *
  * <p>A given real <code>pattern</code> and <code>src-pattern</code> (not
- * <code>short, medium, long, full</code>) overwrites the
- * <code>locale</code> and <code>src-locale</code>
+ * keywords <code>short, medium, long, full</code>) overrides any value
+ * specified by <code>locale</code> and <code>src-locale</code> attributes.</p>
  *
  * <p>Future work coming:
  * <ul>
- *  <li>Introduce new &lt;get-locale /&gt; element
+ *  <li>Introduce new &lt;get-locale/&gt; element
  *  <li>Move all formatting routines to I18nUtils
  * </ul>
  *
@@ -249,8 +268,8 @@ import java.util.StringTokenizer;
  * @version CVS $Id$
  */
 public class I18nTransformer extends AbstractTransformer
-        implements CacheableProcessingComponent,
-                   Composable, Configurable, Disposable {
+                             implements CacheableProcessingComponent,
+                                        Serviceable, Configurable, Disposable {
 
     /**
      * The namespace for i18n is "http://apache.org/cocoon/i18n/2.1".
@@ -265,8 +284,8 @@ public class I18nTransformer extends AbstractTransformer
             "http://apache.org/cocoon/i18n/2.0";
 
     /**
-     * Did we already encountered an old namespace? This is static to ensure that
-     * the associated message will be logged only once.
+     * Did we already encountered an old namespace? This is static to ensure
+     * that the associated message will be logged only once.
      */
     private static boolean deprecationFound = false;
 
@@ -275,27 +294,28 @@ public class I18nTransformer extends AbstractTransformer
     //
 
     /**
-     * i18n:text element is used to translate any text, with or without markup,
-     * e.g.:<br/>
+     * <code>i18n:text</code> element is used to translate any text, with
+     * or without markup. Example:
      * <pre>
-     *  &lt;i18n:text&gt;This is a &lt;strong&gt;multilanguage&lt;/strong&gt; string&lt;/i18n:text&gt;
+     *   &lt;i18n:text&gt;
+     *     This is &lt;strong&gt;translated&lt;/strong&gt; string.
+     *   &lt;/i18n:text&gt;
      * </pre>
      */
     public static final String I18N_TEXT_ELEMENT            = "text";
 
     /**
-     * i18n:translate element is used to translate text with parameter
-     * substitution, e.g.:<br/>
+     * <code>i18n:translate</code> element is used to translate text with
+     * parameter substitution. Example:
      * <pre>
      * &lt;i18n:translate&gt;
-     *     &lt;i:text&gt;This is a multilanguage string with {0} param&lt;/i:text&gt;
-     *     &lt;i18n:param&gt;1&lt;/i18n:param&gt;
+     *   &lt;i18n:text&gt;This is translated string with {0} param&lt;/i18n:text&gt;
+     *   &lt;i18n:param&gt;1&lt;/i18n:param&gt;
      * &lt;/i18n:translate&gt;
      * </pre>
-     * The &lt;text&gt; fragment can include markup and parameters at any place.
-     * Also do parameters, which can also include i18n:text, i18n:date, etc.
-     * elements (without keys only).
-     * <p>
+     * The <code>i18n:text</code> fragment can include markup and parameters
+     * at any place. Also do parameters, which can include <code>i18n:text</code>,
+     * <code>i18n:date</code>, etc. elements (without keys only).
      *
      * @see #I18N_TEXT_ELEMENT
      * @see #I18N_PARAM_ELEMENT
@@ -303,13 +323,13 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_TRANSLATE_ELEMENT       = "translate";
 
     /**
-     * <strong>i18n:choose</strong> element is used to translate elements in-place.
-     * The first <strong>i18n:when</strong> element matching the current locale
+     * <code>i18n:choose</code> element is used to translate elements in-place.
+     * The first <code>i18n:when</code> element matching the current locale
      * is selected and the others are discarded.
      *
      * <p>To specify what to do if no locale matched, simply add a node with
-     * <code>locale="*"</code>.
-     * <em>Note that this element must be the last child of &lt;i18n:choose&gt;.</em>
+     * <code>locale="*"</code>. <em>Note that this element must be the last
+     * child of &lt;i18n:choose&gt;.</em></p>
      * <pre>
      * &lt;i18n:choose&gt;
      *   &lt;i18n:when locale="en"&gt;
@@ -326,9 +346,8 @@ public class I18nTransformer extends AbstractTransformer
      *   &lt;/jp&gt;
      * &lt;i18n:translate&gt;
      * </pre>
-     * <p>
-     * You can include any markup in i18n:when nodes, minus i18n:*.
-     * </p>
+     * <p>You can include any markup within <code>i18n:when</code> elements,
+     * with the exception of other <code>i18n:*</code> elements.</p>
      *
      * @see #I18N_IF_ELEMENT
      * @see #I18N_LOCALE_ATTRIBUTE
@@ -337,16 +356,17 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_CHOOSE_ELEMENT          = "choose";
 
     /**
-     * i18n:when is used to test a locale.
-     * It can be used within &lt;i18:choose&gt; elements or alone.
+     * <code>i18n:when</code> is used to test a locale.
+     * It can be used within <code>i18:choose</code> elements or alone.
      * <em>Note: Using <code>locale="*"</code> here has no sense.</em>
-     * e.g.:
+     * Example:
      * <pre>
      * &lt;greeting&gt;
      *   &lt;i18n:when locale="en"&gt;Hello&lt;/i18n:when&gt;
      *   &lt;i18n:when locale="fr"&gt;Bonjour&lt;/i18n:when&gt;
      * &lt;/greeting&gt;
      * </pre>
+     *
      * @see #I18N_LOCALE_ATTRIBUTE
      * @see #I18N_CHOOSE_ELEMENT
      * @since 2.1
@@ -354,14 +374,14 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_WHEN_ELEMENT            = "when";
 
     /**
-     * i18n:if is used to test a locale.
-     * e.g.:
+     * <code>i18n:if</code> is used to test a locale. Example:
      * <pre>
      * &lt;greeting&gt;
      *   &lt;i18n:if locale="en"&gt;Hello&lt;/i18n:when&gt;
      *   &lt;i18n:if locale="fr"&gt;Bonjour&lt;/i18n:when&gt;
      * &lt;/greeting&gt;
      * </pre>
+     *
      * @see #I18N_LOCALE_ATTRIBUTE
      * @see #I18N_CHOOSE_ELEMENT
      * @see #I18N_WHEN_ELEMENT
@@ -370,8 +390,9 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_IF_ELEMENT            = "if";
 
     /**
-     * i18n:otherwise is used to match any locale when no matching
-     * locale has been found inside an i18n:choose block.
+     * <code>i18n:otherwise</code> is used to match any locale when
+     * no matching locale has been found inside an <code>i18n:choose</code>
+     * block.
      *
      * @see #I18N_CHOOSE_ELEMENT
      * @see #I18N_WHEN_ELEMENT
@@ -380,34 +401,30 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_OTHERWISE_ELEMENT       = "otherwise";
 
     /**
-     * i18n:param is used with i18n:translate to provide substitution params.
-     * The param can have i18n:text as its value to provide multilungual value.
-     * Parameters can have additional attributes to be used for formatting:
+     * <code>i18n:param</code> is used with i18n:translate to provide
+     * substitution params. The param can have <code>i18n:text</code> as
+     * its value to provide multilungual value. Parameters can have
+     * additional attributes to be used for formatting:
      * <ul>
-     *      <li><code>type</code> - can be <code>date, date-time, time,
-     *      number, currency, currency-no-unit or percent</code>.
-     *      Used to format params before substitution.
-     *      </li>
-     *      <li><code>value</code> - the value of the param. If no value is
-     *      specified then the text inside of the param element will be used.
-     *      </li>
-     *      <li><code>locale</code> - used only with <code>number, date, time,
-     *      date-time</code> types and used to override the current locale to
-     *      format the given value.
-     *      </li>
-     *      <li><code>src-locale</code> - used with <code>number, date, time,
-     *      date-time</code> types and specify the locale that should be used to
-     *      parse the given value.
-     *      </li>
-     *      <li><code>pattern</code> - used with <code>number, date, time,
-     *      date-time</code> types and specify the pattern that should be used
-     *      to format the given value.
-     *      </li>
-     *      <li><code>src-pattern</code> - used with <code>number, date, time,
-     *      date-time</code> types and specify the pattern that should be used
-     *      to parse the given value.
-     *      </li>
+     *   <li><code>type</code>: can be <code>date, date-time, time,
+     *   number, currency, currency-no-unit or percent</code>.
+     *   Used to format params before substitution.</li>
+     *   <li><code>value</code>: the value of the param. If no value is
+     *   specified then the text inside of the param element will be used.</li>
+     *   <li><code>locale</code>: used only with <code>number, date, time,
+     *   date-time</code> types and used to override the current locale to
+     *   format the given value.</li>
+     *   <li><code>src-locale</code>: used with <code>number, date, time,
+     *   date-time</code> types and specify the locale that should be used to
+     *   parse the given value.</li>
+     *   <li><code>pattern</code>: used with <code>number, date, time,
+     *   date-time</code> types and specify the pattern that should be used
+     *   to format the given value.</li>
+     *   <li><code>src-pattern</code>: used with <code>number, date, time,
+     *   date-time</code> types and specify the pattern that should be used
+     *   to parse the given value.</li>
      * </ul>
+     *
      * @see #I18N_TRANSLATE_ELEMENT
      * @see #I18N_DATE_ELEMENT
      * @see #I18N_TIME_ELEMENT
@@ -419,26 +436,28 @@ public class I18nTransformer extends AbstractTransformer
     /**
      * This attribute affects a name to the param that could be used
      * for substitution.
+     *
      * @since 2.1
      */
     public static final String I18N_PARAM_NAME_ATTRIBUTE    = "name";
 
     /**
-     * i18n:date is used to provide a localized date string. Allowed attributes
-     * are: <code>pattern, src-pattern, locale, src-locale</code>
-     * Usage examples:
+     * <code>i18n:date</code> is used to provide a localized date string.
+     * Allowed attributes are: <code>pattern, src-pattern, locale,
+     * src-locale</code>. Usage examples:
      * <pre>
      *  &lt;i18n:date src-pattern="short" src-locale="en_US" locale="de_DE"&gt;
-     *      12/24/01
+     *    12/24/01
      *  &lt;/i18n:date&gt;
      *
-     * &lt;i18n:date pattern="dd/MM/yyyy" /&gt;
+     *  &lt;i18n:date pattern="dd/MM/yyyy" /&gt;
      * </pre>
      *
      * If no value is specified then the current date will be used. E.g.:
      * <pre>
-     * &lt;i18n:date /&gt;
-     * </pre> displays the current date formatted with default pattern for
+     *   &lt;i18n:date /&gt;
+     * </pre>
+     * Displays the current date formatted with default pattern for
      * the current locale.
      *
      * @see #I18N_PARAM_ELEMENT
@@ -449,14 +468,12 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_DATE_ELEMENT            = "date";
 
     /**
-     * i18n:date-time is used to provide a localized date and time string.
-     * Allowed attributes are: <code>pattern, src-pattern, locale,
-     * src-locale</code>
-     * Usage examples:
+     * <code>i18n:date-time</code> is used to provide a localized date and
+     * time string. Allowed attributes are: <code>pattern, src-pattern,
+     * locale, src-locale</code>. Usage examples:
      * <pre>
-     *  &lt;i18n:date-time src-pattern="short" src-locale="en_US" locale="de_DE"
-     *  &gt;
-     *      12/24/01 1:00 AM
+     *  &lt;i18n:date-time src-pattern="short" src-locale="en_US" locale="de_DE"&gt;
+     *    12/24/01 1:00 AM
      *  &lt;/i18n:date&gt;
      *
      *  &lt;i18n:date-time pattern="dd/MM/yyyy hh:mm" /&gt;
@@ -465,8 +482,9 @@ public class I18nTransformer extends AbstractTransformer
      * If no value is specified then the current date and time will be used.
      * E.g.:
      * <pre>
-     * &lt;i18n:date-time /&gt;
-     * </pre> displays the current date formatted with default pattern for
+     *  &lt;i18n:date-time /&gt;
+     * </pre>
+     * Displays the current date formatted with default pattern for
      * the current locale.
      *
      * @see #I18N_PARAM_ELEMENT
@@ -477,12 +495,12 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_DATE_TIME_ELEMENT       = "date-time";
 
     /**
-     * i18n:time is used to provide a localized time string. Allowed attributes
-     * are: <code>pattern, src-pattern, locale, src-locale</code>
-     * Usage examples:
+     * <code>i18n:time</code> is used to provide a localized time string.
+     * Allowed attributes are: <code>pattern, src-pattern, locale,
+     * src-locale</code>. Usage examples:
      * <pre>
      *  &lt;i18n:time src-pattern="short" src-locale="en_US" locale="de_DE"&gt;
-     *      1:00 AM
+     *    1:00 AM
      *  &lt;/i18n:time&gt;
      *
      * &lt;i18n:time pattern="hh:mm:ss" /&gt;
@@ -490,8 +508,9 @@ public class I18nTransformer extends AbstractTransformer
      *
      * If no value is specified then the current time will be used. E.g.:
      * <pre>
-     * &lt;i18n:time /&gt;
-     * </pre> displays the current time formatted with default pattern for
+     *  &lt;i18n:time /&gt;
+     * </pre>
+     * Displays the current time formatted with default pattern for
      * the current locale.
      *
      * @see #I18N_PARAM_ELEMENT
@@ -502,13 +521,12 @@ public class I18nTransformer extends AbstractTransformer
     public static final String I18N_TIME_ELEMENT            = "time";
 
     /**
-     * i18n:number is used to provide a localized number string. Allowed
-     * attributes are: <code>pattern, src-pattern, locale, src-locale, type
-     * </code>
-     * Usage examples:
+     * <code>i18n:number</code> is used to provide a localized number string.
+     * Allowed attributes are: <code>pattern, src-pattern, locale, src-locale,
+     * type</code>. Usage examples:
      * <pre>
      *  &lt;i18n:number src-pattern="short" src-locale="en_US" locale="de_DE"&gt;
-     *      1000.0
+     *    1000.0
      *  &lt;/i18n:number&gt;
      *
      * &lt;i18n:number type="currency" /&gt;
@@ -565,12 +583,25 @@ public class I18nTransformer extends AbstractTransformer
     /**
      * This attribute is used with <strong>any</strong> element (even not i18n)
      * to translate attribute values. Should contain whitespace separated
-     * attribute names that should be translated. E.g.
+     * attribute names that should be translated:
      * <pre>
-     * &lt;para title="first" name="article" i18n:attr="title name" /&gt;
+     * &lt;para title="first" name="article" i18n:attr="title name"/&gt;
      * </pre>
+     * Attribute value considered as key in message catalogue.
      */
     public static final String I18N_ATTR_ATTRIBUTE          = "attr";
+
+    /**
+     * This attribute is used with <strong>any</strong> element (even not i18n)
+     * to evaluate attribute values. Should contain whitespace separated
+     * attribute names that should be evaluated:
+     * <pre>
+     * &lt;para title="first" name="{one} {two}" i18n:attr="name"/&gt;
+     * </pre>
+     * Attribute value considered as expression containing text and catalogue
+     * keys in curly braces.
+     */
+    public static final String I18N_EXPR_ATTRIBUTE          = "expr";
 
     //
     // i18n number and date formatting attributes
@@ -626,7 +657,6 @@ public class I18nTransformer extends AbstractTransformer
      */
     public static final String I18N_SRC_LOCALE_ATTRIBUTE    = "src-locale";
 
-
     /**
      * This attribute is used with date and number formatting elements to
      * indicate the value that should be parsed and formatted. If value
@@ -678,17 +708,6 @@ public class I18nTransformer extends AbstractTransformer
      * This configuration parameter specifies the default locale to be used.
      */
     public static final String I18N_LOCALE      = "locale";
-
-    /**
-     * This configuration parameter specifies the message catalog name.
-     */
-    public static final String I18N_CATALOGUE_NAME      = "catalogue-name";
-
-    /**
-     * This configuration parameter specifies the message catalog location
-     * relative to the current sitemap.
-     */
-    public static final String I18N_CATALOGUE_LOCATION  = "catalogue-location";
 
     /**
      * This configuration parameter specifies the id of the catalogue to be used as
@@ -769,24 +788,56 @@ public class I18nTransformer extends AbstractTransformer
     }
 
 
-    /**
-     * Component Manager
-     */
-    protected ComponentManager manager;
-
     //
-    // i18n configuration variables
+    // Global configuration variables
     //
 
     /**
-     * Default catalogue id
+     * Component (service) manager
      */
-    private String defaultCatalogueId;
+    protected ServiceManager manager;
+
+    /**
+     * Message bundle loader factory component (service)
+     */
+    protected BundleFactory factory;
+
+    /**
+     * All catalogues (keyed by catalogue id). The values are instances
+     * of {@link CatalogueInfo}.
+     */
+    private Map catalogues;
+
+    /**
+     * Default (global) catalogue
+     */
+    private CatalogueInfo defaultCatalogue;
 
     /**
      * Default (global) untranslated message value
      */
-    private String globalUntranslated;
+    private String defaultUntranslated;
+
+    /**
+     * Cache at startup configuration parameter value
+     */
+    private boolean cacheAtStartup;
+
+    //
+    // Local configuration variables
+    //
+
+    protected Map objectModel;
+
+    /**
+     * Locale
+     */
+    protected Locale locale;
+
+    /**
+     * Catalogue (local)
+     */
+    private CatalogueInfo catalogue;
 
     /**
      * Current (local) untranslated message value
@@ -794,29 +845,13 @@ public class I18nTransformer extends AbstractTransformer
     private String untranslated;
 
     /**
-     * SaxBuffer containing the contents of {@link #untranslated}.
+     * {@link SaxBuffer} containing the contents of {@link #untranslated}.
      */
     private ParamSaxBuffer untranslatedRecorder;
-
-    /**
-     * Cache at startup configuration parameter value
-     */
-    private boolean cacheAtStartup;
-
-    // Default catalogue
-    private Bundle defaultCatalogue;
-
-    // All catalogues (hashed on catalgue id). The values are instances of CatalogueInfo.
-    private Map catalogues = new HashMap();
-
-    // Dictionary loader factory
-    protected BundleFactory factory;
 
     //
     // Current state of the transformer
     //
-
-    protected Map objectModel;
 
     /**
      * Current state of the transformer. Default value is STATE_OUTSIDE.
@@ -830,16 +865,11 @@ public class I18nTransformer extends AbstractTransformer
     private int prev_state;
 
     /**
-     * Character data buffer. used to concat chunked character data
-     */
-    private StringBuffer strBuffer;
-
-    /**
      * The i18n:key attribute is stored for the current element.
      * If no translation found for the key then the character data of element is
      * used as default value.
      */
-    private String current_key;
+    private String currentKey;
 
     /**
      * Contains the id of the current catalogue if it was explicitely mentioned
@@ -847,7 +877,14 @@ public class I18nTransformer extends AbstractTransformer
      */
     private String currentCatalogueId;
 
-    // A flag for copying the node when doing in-place translation
+    /**
+     * Character data buffer. used to concat chunked character data
+     */
+    private StringBuffer strBuffer;
+
+    /**
+     * A flag for copying the node when doing in-place translation
+     */
     private boolean translate_copy;
 
     // A flag for copying the _GOOD_ node and not others
@@ -875,9 +912,6 @@ public class I18nTransformer extends AbstractTransformer
     // Current parameter value (translated or not)
     private String param_value;
 
-    // Current locale
-    protected Locale locale;
-
     // Date and number elements and params formatting attributes with values.
     private HashMap formattingParams;
 
@@ -897,10 +931,9 @@ public class I18nTransformer extends AbstractTransformer
     public java.io.Serializable getKey() {
         // TODO: Key should be composed out of used catalogues locations, and locale.
         //       Right now it is hardcoded only to default catalogue location.
-        CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(defaultCatalogueId);
         StringBuffer key = new StringBuffer();
-        if (catalogueInfo != null) {
-            key.append(catalogueInfo.getLocation()[0]);
+        if (catalogue != null) {
+            key.append(catalogue.getLocation()[0]);
         }
         key.append("?");
         if (locale != null) {
@@ -925,15 +958,14 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     /**
-     * Implementation of composable interface.
-     * Looksup the Bundle Factory to be used.
+     * Look up the {@link BundleFactory} to be used.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         try {
-            this.factory = (BundleFactory)manager.lookup(BundleFactory.ROLE);
-        } catch (ComponentException e) {
-            getLogger().debug("Failed to load BundleFactory", e);
+            this.factory = (BundleFactory) manager.lookup(BundleFactory.ROLE);
+        } catch (ServiceException e) {
+            getLogger().debug("Failed to lookup <" + BundleFactory.ROLE + ">", e);
             throw e;
         }
     }
@@ -943,41 +975,42 @@ public class I18nTransformer extends AbstractTransformer
      * Configure this transformer.
      */
     public void configure(Configuration conf) throws ConfigurationException {
-        // read in the config options from the transformer definition
+        // Read in the config options from the transformer definition
         Configuration cataloguesConf = conf.getChild("catalogues", false);
-
         if (cataloguesConf == null) {
-            throw new ConfigurationException("I18NTransformer needs a 'catalogues' configuration at " + conf.getLocation());
+            throw new ConfigurationException("I18nTransformer requires <catalogues> configuration at " +
+                                             conf.getLocation());
         }
 
         // new configuration style
         Configuration[] catalogueConfs = cataloguesConf.getChildren("catalogue");
+        catalogues = new HashMap(catalogueConfs.length + 3);
         for (int i = 0; i < catalogueConfs.length; i++) {
             String id = catalogueConfs[i].getAttribute("id");
             String name = catalogueConfs[i].getAttribute("name");
+
             String[] locations = null;
             String location = catalogueConfs[i].getAttribute("location", null);
             Configuration[] locationConf =
                 catalogueConfs[i].getChildren("location");
             if (location != null) {
                 if (locationConf.length > 0) {
-                    String msg = "I18nTransformer: location attribute cannot be " +
+                    String msg = "I18nTransformer: Location attribute cannot be " +
                                  "specified with location elements";
                     getLogger().error(msg);
                     throw new ConfigurationException(msg);
                 }
+
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("I18nTransformer: name=" + name + ", location=" +
-                                  location);
+                    getLogger().debug("name=" + name + ", location=" +
+                                      location);
                 }
                 locations = new String[1];
                 locations[0] = location;
-            }
-            else
-            {
+            } else {
                 if (locationConf.length == 0) {
                     String msg = "I18nTransformer: A location attribute or location " +
-                        "elements must be specified";
+                                 "elements must be specified";
                     getLogger().error(msg);
                     throw new ConfigurationException(msg);
                 }
@@ -986,40 +1019,38 @@ public class I18nTransformer extends AbstractTransformer
                 for (int j=0; j < locationConf.length; ++j) {
                     locations[j] = locationConf[j].getValue();
                     if (getLogger().isDebugEnabled()) {
-                        getLogger().debug("I18nTransformer: name=" + name + ", location=" +
-                                      locations[j]);
+                        getLogger().debug("name=" + name + ", location=" +
+                                          locations[j]);
                     }
                 }
-
             }
-            CatalogueInfo newCatalogueInfo;
+
+            CatalogueInfo catalogueInfo;
             try {
-                newCatalogueInfo = new CatalogueInfo(name, locations);
+                catalogueInfo = new CatalogueInfo(name, locations);
             } catch (PatternException e) {
-                throw new ConfigurationException("I18nTransformer: error in name or location " +
+                throw new ConfigurationException("I18nTransformer: Error in name or location " +
                                                  "attribute on catalogue element with id " + id, e);
             }
-            catalogues.put(id, newCatalogueInfo);
+            catalogues.put(id, catalogueInfo);
         }
 
-        this.defaultCatalogueId = cataloguesConf.getAttribute("default");
-        if (!catalogues.containsKey(this.defaultCatalogueId)) {
-            throw new ConfigurationException("I18nTransformer: default catalogue id '" +
-                                             this.defaultCatalogueId + "' denotes a nonexisting catalogue");
+        String defaultCatalogueId = cataloguesConf.getAttribute("default");
+        defaultCatalogue = (CatalogueInfo) catalogues.get(defaultCatalogueId);
+        if (defaultCatalogue == null) {
+            throw new ConfigurationException("I18nTransformer: Default catalogue id '" +
+                                             defaultCatalogueId + "' denotes a nonexisting catalogue");
         }
 
-        // obtain default text to use for untranslated messages
-        globalUntranslated = conf.getChild(I18N_UNTRANSLATED).getValue(null);
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Default untranslated text is '" + globalUntranslated + "'");
-        }
+        // Obtain default text to use for untranslated messages
+        defaultUntranslated = conf.getChild(I18N_UNTRANSLATED).getValue(null);
 
-        // obtain config option, whether to cache messages at startup time
+        // Obtain config option, whether to cache messages at startup time
         cacheAtStartup = conf.getChild(I18N_CACHE_STARTUP).getValueAsBoolean(false);
+
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug((cacheAtStartup ? "will" : "won't") +
-              " cache messages during startup, by default"
-            );
+            getLogger().debug("Default untranslated text is '" + defaultUntranslated + "'");
+            getLogger().debug((cacheAtStartup ? "will" : "won't") + " cache messages during startup");
         }
     }
 
@@ -1032,59 +1063,53 @@ public class I18nTransformer extends AbstractTransformer
 
         this.objectModel = objectModel;
 
-        try {
-            untranslated = parameters.getParameter(I18N_UNTRANSLATED, globalUntranslated);
-            if (untranslated != null) {
-                untranslatedRecorder = new ParamSaxBuffer();
-                untranslatedRecorder.characters(untranslated.toCharArray(), 0, untranslated.length());
+        untranslated = parameters.getParameter(I18N_UNTRANSLATED, defaultUntranslated);
+        if (untranslated != null) {
+            untranslatedRecorder = new ParamSaxBuffer();
+            untranslatedRecorder.characters(untranslated.toCharArray(), 0, untranslated.length());
+        }
+
+        // Get current locale
+        String lc = parameters.getParameter(I18N_LOCALE, null);
+        Locale locale = I18nUtils.parseLocale(lc);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Using locale '" + locale + "'");
+        }
+
+        // Initialize instance state variables
+        this.locale             = locale;
+        this.current_state      = STATE_OUTSIDE;
+        this.prev_state         = STATE_OUTSIDE;
+        this.currentKey        = null;
+        this.currentCatalogueId = null;
+        this.translate_copy     = false;
+        this.tr_text_recorder   = null;
+        this.text_recorder      = new ParamSaxBuffer();
+        this.param_count        = 0;
+        this.param_name         = null;
+        this.param_value        = null;
+        this.param_recorder     = null;
+        this.indexedParams      = new HashMap(3);
+        this.formattingParams   = null;
+        this.strBuffer          = null;
+
+        // give the catalogue variable its value -- first look if it's locally overridden
+        // and otherwise use the component-wide defaults.
+        String catalogueId = parameters.getParameter(I18N_DEFAULT_CATALOGUE_ID, null);
+        if (catalogueId != null) {
+            CatalogueInfo catalogueInfo = (CatalogueInfo) catalogues.get(catalogueId);
+            if (catalogueInfo == null) {
+                throw new ProcessingException("I18nTransformer: '" +
+                                              catalogueId +
+                                              "' is not an existing catalogue id.");
             }
+            catalogue = catalogueInfo;
+        } else {
+            catalogue = defaultCatalogue;
+        }
 
-            String lc = parameters.getParameter(I18N_LOCALE, null);
-            String localDefaultCatalogueId = parameters.getParameter(I18N_DEFAULT_CATALOGUE_ID, null);
-
-            // Get current locale
-            Locale locale = I18nUtils.parseLocale(lc);
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Using locale '" + locale.toString() + "'");
-            }
-
-            // Initialize instance state variables
-            this.locale             = locale;
-            this.current_state      = STATE_OUTSIDE;
-            this.prev_state         = STATE_OUTSIDE;
-            this.current_key        = null;
-            this.currentCatalogueId = null;
-            this.translate_copy     = false;
-            this.tr_text_recorder   = null;
-            this.text_recorder      = new ParamSaxBuffer();
-            this.param_count        = 0;
-            this.param_name         = null;
-            this.param_value        = null;
-            this.param_recorder     = null;
-            this.indexedParams      = new HashMap(3);
-            this.formattingParams   = null;
-            this.strBuffer          = null;
-
-            // give the defaultCatalogue variable its value -- first look if it's locally overridden
-            // and otherwise use the component-wide defaults.
-            if (localDefaultCatalogueId != null) {
-                CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(localDefaultCatalogueId);
-                if (catalogueInfo == null) {
-                    throw new ProcessingException("I18nTransformer: '" +
-                                                  localDefaultCatalogueId +
-                                                  "' is not an existing catalogue id.");
-                }
-                defaultCatalogue = catalogueInfo.getCatalogue();
-            } else {
-                defaultCatalogue = ((CatalogueInfo)catalogues.get(defaultCatalogueId)).getCatalogue();
-            }
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Using default catalogue " + defaultCatalogue);
-            }
-
-        } catch (Exception e) {
-            getLogger().debug("exception generated, leaving unconfigured");
-            throw new ProcessingException(e.getMessage(), e);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Default catalogue is " + catalogue.getName());
         }
     }
 
@@ -1113,10 +1138,8 @@ public class I18nTransformer extends AbstractTransformer
         } else if (I18N_OLD_NAMESPACE_URI.equals(uri)) {
             if (!deprecationFound) {
                 deprecationFound = true;
-                getLogger().warn("The namespace '" +
-                                 I18N_OLD_NAMESPACE_URI +
-                                 "' for i18n is deprecated, use: '" +
-                                 I18N_NAMESPACE_URI + "'");
+                getLogger().warn("The namespace <" + I18N_OLD_NAMESPACE_URI +
+                                 "> is deprecated, use: <" + I18N_NAMESPACE_URI + ">");
             }
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Starting deprecated i18n element: " + name);
@@ -1142,7 +1165,7 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     public void endElement(String uri, String name, String raw)
-            throws SAXException {
+    throws SAXException {
 
         // Handle previously buffered characters
         if (current_state != STATE_OUTSIDE && strBuffer != null) {
@@ -1168,7 +1191,7 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     public void characters(char[] ch, int start, int len)
-            throws SAXException {
+    throws SAXException {
 
         if (current_state == STATE_OUTSIDE ||
                 ((current_state == STATE_INSIDE_WHEN ||
@@ -1189,7 +1212,7 @@ public class I18nTransformer extends AbstractTransformer
     //
 
     private void startI18NElement(String name, Attributes attr)
-            throws SAXException {
+    throws SAXException {
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Start i18n element: " + name);
@@ -1201,22 +1224,21 @@ public class I18nTransformer extends AbstractTransformer
                     && current_state != STATE_INSIDE_TRANSLATE) {
 
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": nested i18n:text elements are not allowed."
-                        + " Current state: " + current_state
-                );
+                        + " Current state: " + current_state);
             }
 
             prev_state = current_state;
             current_state = STATE_INSIDE_TEXT;
 
-            current_key = attr.getValue("", I18N_KEY_ATTRIBUTE);
-            if (current_key == null) {
+            currentKey = attr.getValue("", I18N_KEY_ATTRIBUTE);
+            if (currentKey == null) {
                 // Try the namespaced attribute
-                current_key = attr.getValue(I18N_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
-                if (current_key == null) {
+                currentKey = attr.getValue(I18N_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
+                if (currentKey == null) {
                     // Try the old namespace
-                    current_key = attr.getValue(I18N_OLD_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
+                    currentKey = attr.getValue(I18N_OLD_NAMESPACE_URI, I18N_KEY_ATTRIBUTE);
                 }
             }
 
@@ -1225,22 +1247,22 @@ public class I18nTransformer extends AbstractTransformer
                 // Try the namespaced attribute
                 currentCatalogueId = attr.getValue(I18N_NAMESPACE_URI, I18N_CATALOGUE_ATTRIBUTE);
             }
+
             if (prev_state != STATE_INSIDE_PARAM) {
                 tr_text_recorder = null;
             }
 
-            if (current_key != null) {
-                tr_text_recorder = getMessage(current_key, (ParamSaxBuffer)null);
+            if (currentKey != null) {
+                tr_text_recorder = getMessage(currentKey, (ParamSaxBuffer)null);
             }
 
         } else if (I18N_TRANSLATE_ELEMENT.equals(name)) {
             if (current_state != STATE_OUTSIDE) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:translate element must be used "
                         + "outside of other i18n elements. Current state: "
-                        + current_state
-                );
+                        + current_state);
             }
 
             prev_state = current_state;
@@ -1248,11 +1270,10 @@ public class I18nTransformer extends AbstractTransformer
         } else if (I18N_PARAM_ELEMENT.equals(name)) {
             if (current_state != STATE_INSIDE_TRANSLATE) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:param element can be used only inside "
                         + "i18n:translate element. Current state: "
-                        + current_state
-                );
+                        + current_state);
             }
 
             param_name = attr.getValue(I18N_PARAM_NAME_ATTRIBUTE);
@@ -1266,10 +1287,9 @@ public class I18nTransformer extends AbstractTransformer
         } else if (I18N_CHOOSE_ELEMENT.equals(name)) {
             if (current_state != STATE_OUTSIDE) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:choose elements cannot be used"
-                        + "inside of other i18n elements."
-                );
+                        + "inside of other i18n elements.");
             }
 
             translate_copy = false;
@@ -1282,27 +1302,24 @@ public class I18nTransformer extends AbstractTransformer
             if (I18N_WHEN_ELEMENT.equals(name) &&
                     current_state != STATE_INSIDE_CHOOSE) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:when elements are can be used only"
-                        + "inside of i18n:choose elements."
-                );
+                        + "inside of i18n:choose elements.");
             }
 
             if (I18N_IF_ELEMENT.equals(name) &&
                     current_state != STATE_OUTSIDE) {
                 throw new SAXException(
-                        this.getClass().getName()
-                        + ": i18n:if elements cannot be nested."
-                );
+                        getClass().getName()
+                        + ": i18n:if elements cannot be nested.");
             }
 
             String locale = attr.getValue(I18N_LOCALE_ATTRIBUTE);
             if (locale == null)
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:" + name
-                        + " element cannot be used without 'locale' attribute."
-                );
+                        + " element cannot be used without 'locale' attribute.");
 
             if ((!translate_end && current_state == STATE_INSIDE_CHOOSE)
                     || current_state == STATE_OUTSIDE) {
@@ -1322,10 +1339,9 @@ public class I18nTransformer extends AbstractTransformer
         } else if (I18N_OTHERWISE_ELEMENT.equals(name)) {
             if (current_state != STATE_INSIDE_CHOOSE) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:otherwise elements are not allowed "
-                        + "only inside i18n:choose."
-                );
+                        + "only inside i18n:choose.");
             }
 
             getLogger().debug("Matching any locale");
@@ -1341,10 +1357,9 @@ public class I18nTransformer extends AbstractTransformer
                     && current_state != STATE_INSIDE_TEXT
                     && current_state != STATE_INSIDE_PARAM) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:date elements are not allowed "
-                        + "inside of other i18n elements."
-                );
+                        + "inside of other i18n elements.");
             }
 
             setFormattingParams(attr);
@@ -1355,10 +1370,9 @@ public class I18nTransformer extends AbstractTransformer
                     && current_state != STATE_INSIDE_TEXT
                     && current_state != STATE_INSIDE_PARAM) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:date-time elements are not allowed "
-                        + "inside of other i18n elements."
-                );
+                        + "inside of other i18n elements.");
             }
 
             setFormattingParams(attr);
@@ -1369,10 +1383,9 @@ public class I18nTransformer extends AbstractTransformer
                     && current_state != STATE_INSIDE_TEXT
                     && current_state != STATE_INSIDE_PARAM) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:date elements are not allowed "
-                        + "inside of other i18n elements."
-                );
+                        + "inside of other i18n elements.");
             }
 
             setFormattingParams(attr);
@@ -1383,10 +1396,9 @@ public class I18nTransformer extends AbstractTransformer
                     && current_state != STATE_INSIDE_TEXT
                     && current_state != STATE_INSIDE_PARAM) {
                 throw new SAXException(
-                        this.getClass().getName()
+                        getClass().getName()
                         + ": i18n:number elements are not allowed "
-                        + "inside of other i18n elements."
-                );
+                        + "inside of other i18n elements.");
             }
 
             setFormattingParams(attr);
@@ -1397,7 +1409,8 @@ public class I18nTransformer extends AbstractTransformer
 
     // Get all possible i18n formatting attribute values and store in a Map
     private void setFormattingParams(Attributes attr) {
-        formattingParams = new HashMap(3);  // average number of attributes is 3
+        // average number of attributes is 3
+        formattingParams = new HashMap(3);
 
         String attr_value = attr.getValue(I18N_SRC_PATTERN_ATTRIBUTE);
         if (attr_value != null) {
@@ -1444,6 +1457,7 @@ public class I18nTransformer extends AbstractTransformer
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("End i18n element: " + name);
         }
+
         switch (current_state) {
             case STATE_INSIDE_TEXT:
                 endTextElement();
@@ -1535,77 +1549,150 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     // Translate all attributes that are listed in i18n:attr attribute
-    private Attributes translateAttributes(String name, Attributes attr) {
+    private Attributes translateAttributes(final String element, Attributes attr)
+    throws SAXException {
         if (attr == null) {
-            return attr;
+            return null;
         }
 
-        AttributesImpl temp_attr = new AttributesImpl(attr);
+        AttributesImpl tempAttr = null;
 
         // Translate all attributes from i18n:attr="name1 name2 ..."
-        // using their values as keys
-        int i18n_attr_index = temp_attr.getIndex(I18N_NAMESPACE_URI,I18N_ATTR_ATTRIBUTE);
-        if (i18n_attr_index == -1) {
+        // using their values as keys.
+        int attrIndex = attr.getIndex(I18N_NAMESPACE_URI, I18N_ATTR_ATTRIBUTE);
+        if (attrIndex == -1) {
             // Try the old namespace
-            i18n_attr_index = temp_attr.getIndex(I18N_OLD_NAMESPACE_URI,I18N_ATTR_ATTRIBUTE);
+            attrIndex = attr.getIndex(I18N_OLD_NAMESPACE_URI, I18N_ATTR_ATTRIBUTE);
         }
 
-        if (i18n_attr_index != -1) {
-            StringTokenizer st =
-                    new StringTokenizer(temp_attr.getValue(i18n_attr_index));
-            // remove the i18n:attr attribute - we don't need it anymore
-            temp_attr.removeAttribute(i18n_attr_index);
+        if (attrIndex != -1) {
+            StringTokenizer st = new StringTokenizer(attr.getValue(attrIndex));
 
-            // iterate through listed attributes and translate them
+            // Make a copy which we are going to modify
+            tempAttr = new AttributesImpl(attr);
+            // Remove the i18n:attr attribute - we don't need it anymore
+            tempAttr.removeAttribute(attrIndex);
+
+            // Iterate through listed attributes and translate them
             while (st.hasMoreElements()) {
-                String attr_name = st.nextToken();
+                final String name = st.nextToken();
 
-                int attr_index = temp_attr.getIndex(attr_name);
-                if (attr_index != -1) {
-                    String text2translate = temp_attr.getValue(attr_index);
-                    // check if the text2translate contains a colon, if so the text before
-                    // the colon denotes a catalogue id
-                    int colonPos = text2translate.indexOf(":");
-                    String catalogueID = null;
-                    if (colonPos != -1) {
-                        catalogueID = text2translate.substring(0, colonPos);
-                        text2translate = text2translate.substring(colonPos + 1, text2translate.length());
-                    }
-                    String result = getString(catalogueID, text2translate,
-                                              untranslated == null? text2translate : untranslated);
+                int index = tempAttr.getIndex(name);
+                if (index == -1) {
+                    getLogger().warn("Attribute " +
+                                     name + " not found in element <" + element + ">");
+                    continue;
+                }
 
-                    // set the translated value
-                    if (result != null) {
-                        temp_attr.setValue(attr_index, result);
-                    } else {
-                        getLogger().warn("translation not found for attribute "
-                                         + attr_name + " in element: " + name);
-                    }
-                } else {
-                    getLogger().warn("i18n attribute '" + attr_name
-                                     + "' not found in element: " + name);
+                String value = translateAttribute(element, name, tempAttr.getValue(index));
+                if (value != null) {
+                    // Set the translated value. If null, do nothing.
+                    tempAttr.setValue(index, value);
                 }
             }
 
-            return temp_attr;
+            attr = tempAttr;
+        }
+
+        // Translate all attributes from i18n:expr="name1 name2 ..."
+        // using their values as keys.
+        attrIndex = attr.getIndex(I18N_NAMESPACE_URI, I18N_EXPR_ATTRIBUTE);
+        if (attrIndex != -1) {
+            StringTokenizer st = new StringTokenizer(attr.getValue(attrIndex));
+
+            if (tempAttr == null) {
+                tempAttr = new AttributesImpl(attr);
+            }
+            tempAttr.removeAttribute(attrIndex);
+
+            // Iterate through listed attributes and evaluate them
+            while (st.hasMoreElements()) {
+                final String name = st.nextToken();
+
+                int index = tempAttr.getIndex(name);
+                if (index == -1) {
+                    getLogger().warn("Attribute " +
+                                     name + " not found in element <" + element + ">");
+                    continue;
+                }
+
+                final StringBuffer translated = new StringBuffer();
+
+                // Evaluate {..} expression
+                VariableExpressionTokenizer.TokenReciever tr = new VariableExpressionTokenizer.TokenReciever () {
+                    private String catalogueName;
+
+                    public void addToken(int type, String value) {
+                        if (type == MODULE) {
+                            this.catalogueName = value;
+                        } else if (type == VARIABLE) {
+                            translated.append(translateAttribute(element, name, value));
+                        } else if (type == TEXT) {
+                            if (this.catalogueName != null) {
+                                translated.append(translateAttribute(element,
+                                                                     name,
+                                                                     this.catalogueName + ":" + value));
+                                this.catalogueName = null;
+                            } else if (value != null) {
+                                translated.append(value);
+                            }
+                        }
+                    }
+                };
+
+                try {
+                    VariableExpressionTokenizer.tokenize(tempAttr.getValue(index), tr);
+                } catch (PatternException e) {
+                    throw new SAXException(e);
+                }
+
+                // Set the translated value.
+                tempAttr.setValue(index, translated.toString());
+            }
+
+            attr = tempAttr;
         }
 
         // nothing to translate, just return
         return attr;
     }
 
+    /**
+     * Translate attribute value.
+     * Value can be prefixed with catalogue ID and semicolon.
+     * @return Translated text, untranslated text, or null.
+     */
+    private String translateAttribute(String element, String name, String key) {
+        // Check if the key contains a colon, if so the text before
+        // the colon denotes a catalogue ID.
+        int colonPos = key.indexOf(":");
+        String catalogueID = null;
+        if (colonPos != -1) {
+            catalogueID = key.substring(0, colonPos);
+            key = key.substring(colonPos + 1, key.length());
+        }
+
+        final SaxBuffer text = getMessage(catalogueID, key);
+        if (text == null) {
+            getLogger().warn("Translation not found for attribute " +
+                             name + " in element <" + element + ">");
+            return untranslated;
+        }
+        return text.toString();
+    }
+
     private void endTextElement() throws SAXException {
         switch (prev_state) {
             case STATE_OUTSIDE:
                 if (tr_text_recorder == null) {
-                    if (current_key == null) {
+                    if (currentKey == null) {
                         // Use the text as key. Not recommended for large strings,
                         // especially if they include markup.
                         tr_text_recorder = getMessage(text_recorder.toString(), text_recorder);
                     } else {
                         // We have the key, but couldn't find a translation
                         if (getLogger().isDebugEnabled()) {
-                            getLogger().debug("Translation not found for key '" + current_key + "'");
+                            getLogger().debug("Translation not found for key '" + currentKey + "'");
                         }
 
                         // Use the untranslated-text only when the content of the i18n:text
@@ -1624,7 +1711,7 @@ public class I18nTransformer extends AbstractTransformer
 
                 text_recorder.recycle();
                 tr_text_recorder = null;
-                current_key = null;
+                currentKey = null;
                 currentCatalogueId = null;
                 break;
 
@@ -2055,47 +2142,33 @@ public class I18nTransformer extends AbstractTransformer
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Getting key " + key + " from catalogue " + catalogueID);
         }
-        try {
-            Bundle catalogue = defaultCatalogue;
-            if (catalogueID != null) {
-                CatalogueInfo catalogueInfo = (CatalogueInfo)catalogues.get(catalogueID);
-                if (catalogueInfo == null) {
-                    if (getLogger().isWarnEnabled()) {
-                        getLogger().warn("Catalogue not found: " + catalogueID +
-                                         ", will not translate key " + key);
-                    }
-                    return null;
+
+        CatalogueInfo catalogue = this.catalogue;
+        if (catalogueID != null) {
+            catalogue = (CatalogueInfo)catalogues.get(catalogueID);
+            if (catalogue == null) {
+                if (getLogger().isWarnEnabled()) {
+                    getLogger().warn("Catalogue not found: " + catalogueID +
+                                     ", will not translate key " + key);
                 }
-                try {
-                    catalogue = catalogueInfo.getCatalogue();
-                } catch (Exception e) {
-                    getLogger().error("Error getting catalogue " + catalogueInfo.getName() +
-                                      " from location " + catalogueInfo.getLocation() +
-                                      " for locale " + locale +
-                                      ", will not translate key " + key);
-                    return null;
-                }
+                return null;
             }
-            return (ParamSaxBuffer)catalogue.getObject(key);
-        } catch (MissingResourceException e)  {
+        }
+
+        Bundle bundle = catalogue.getCatalogue();
+        if (bundle == null) {
+            // Can't translate
             getLogger().debug("Untranslated key: '" + key + "'");
             return null;
         }
-    }
 
-    /**
-     * Helper method to retrieve a message from the dictionary.
-     * mattam: now only used for i:attr.
-     * A default value is returned if message is not found
-     *
-     * @param catalogueID if not null, this catalogue will be used instead of the default one.
-     */
-    private String getString(String catalogueID, String key, String defaultValue) {
-        final SaxBuffer res = getMessage(catalogueID, key);
-        if (res == null) {
-            return defaultValue;
+        try {
+            return (ParamSaxBuffer) bundle.getObject(key);
+        } catch (MissingResourceException e)  {
+            getLogger().debug("Untranslated key: '" + key + "'");
         }
-        return res.toString();
+
+        return null;
     }
 
     /**
@@ -2114,30 +2187,29 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     public void recycle() {
-        untranslatedRecorder = null;
+        this.untranslatedRecorder = null;
+        this.catalogue = null;
+        this.objectModel = null;
 
-        // clean up default catalogue
-        factory.release(defaultCatalogue);
-        defaultCatalogue = null;
-
-        // clean up the other catalogues
+        // Release catalogues which were selected for current locale
         Iterator i = catalogues.values().iterator();
         while (i.hasNext()) {
-            CatalogueInfo catalogueInfo = (CatalogueInfo)i.next();
+            CatalogueInfo catalogueInfo = (CatalogueInfo) i.next();
             catalogueInfo.releaseCatalog();
         }
 
-        objectModel = null;
         super.recycle();
     }
 
     public void dispose() {
         if (manager != null) {
-            manager.release(this.factory);
+            manager.release(factory);
         }
         factory = null;
         manager = null;
+        catalogues = null;
     }
+
 
     /**
      * Holds information about one catalogue. The location and name of the catalogue
@@ -2193,11 +2265,18 @@ public class I18nTransformer extends AbstractTransformer
             }
         }
 
-        public Bundle getCatalogue() throws Exception {
+        public Bundle getCatalogue() {
             if (catalogue == null) {
-                resolve();
-                catalogue = factory.select(resolvedLocations, resolvedName, locale);
+                try {
+                    resolve();
+                    catalogue = factory.select(resolvedLocations, resolvedName, locale);
+                } catch (Exception e) {
+                    getLogger().error("Error obtaining catalogue '" + getName() +
+                                      "' from  <" + getLocation() + "> for locale " +
+                                      locale, e);
+                }
             }
+
             return catalogue;
         }
 
