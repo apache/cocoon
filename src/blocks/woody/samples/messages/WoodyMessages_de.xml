@@ -18,7 +18,7 @@
 <catalogue xml:lang="de">
   <message key="general.field-required">Dieses Feld muss aufgefüllt werden.</message>
 
-  <message key="datatype.conversion-failed">Unültige(s) {0}.</message>
+  <message key="datatype.conversion-failed">Ungültige(s) {0}.</message>
   <message key="datatype.long">natürliche Zahl</message>
   <message key="datatype.date">Datum</message>
 
