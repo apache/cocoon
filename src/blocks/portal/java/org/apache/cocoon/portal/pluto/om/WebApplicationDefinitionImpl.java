@@ -45,11 +45,26 @@ import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.5 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.6 2004/06/07 13:10:41 cziegeler Exp $
  */
 public class WebApplicationDefinitionImpl 
 implements WebApplicationDefinition, Support {
 
+
+    // <not used variables - only for castor>
+    public String icon;
+    public String distributable;
+    public String sessionConfig;
+    private Collection mimeMappings = new ArrayList();
+    public String welcomeFileList;
+    public String errorPage;
+    public String resourceRef;
+    public String securityConstraint;
+    public String loginConfig;
+    public String securityRole;
+    public String envEntry;
+    public String ejbRef;
+    // </not used variables - only for castor>
 
     private String contextPath;        
     private DescriptionSet descriptions = new DescriptionSetImpl();
@@ -61,6 +76,7 @@ implements WebApplicationDefinition, Support {
     private Collection servletMappings = new ArrayList();
     private ServletDefinitionList servlets = new ServletDefinitionListImpl();
     private SecurityRoleSet securityRoles = new SecurityRoleSetImpl();
+    private Collection castorTagDefinitions = new ArrayList();
 
     /* (non-Javadoc)
      * @see org.apache.pluto.om.servlet.WebApplicationDefinition#getId()
@@ -240,4 +256,29 @@ implements WebApplicationDefinition, Support {
         this.displayNames = castorDisplayNames;
     }
 
+    /**
+     * @return
+     */
+    public Collection getCastorTagDefinitions() {
+        return castorTagDefinitions;
+    }
+
+    /**
+     * @param definition
+     */
+    public void setCastorTagDefinitions(Collection definition) {
+        castorTagDefinitions = definition;
+    }
+    /**
+     * @return Returns the mimeMappings.
+     */
+    public Collection getMimeMappings() {
+        return mimeMappings;
+    }
+    /**
+     * @param mimeMappings The mimeMappings to set.
+     */
+    public void setMimeMappings(Collection mimeMappings) {
+        this.mimeMappings = mimeMappings;
+    }
 }
