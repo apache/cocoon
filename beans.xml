@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright 2004, Ugo Cei
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!--+
+    | Spring's bean factory configuration file.
+    |
+    |  $Id: beans.xml,v 1.1 2004/07/23 08:47:20 ugo Exp $
+    +-->
+  
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+ 
+<beans>
+  
+  <bean id="fileSourceFactory" class="org.apache.butterfly.source.impl.FileSourceFactory"/>
+  <bean id="urlSourceFactory" class="org.apache.butterfly.source.impl.URLSourceFactory"/>
+  
+  <bean id="sourceResolver" class="org.apache.butterfly.source.SourceResolver">
+    <property name="factories">
+      <map>
+      	<entry key="file">
+      		<ref bean="fileSourceFactory"/>
+      	</entry>
+      	<entry key="*">
+      		<ref bean="urlSourceFactory"/>
+      	</entry>
+      </map>    
+    </property>
+  </bean>
+  
+  <!-- The XML Parser. Should probably be pooled. -->
+  <bean id="xmlParser" class="org.apache.butterfly.xml.Parser"
+     singleton="false" init-method="initialize">
+     <property name="saxDriver">
+       <value>org.apache.xerces.parsers.SAXParser</value>
+     </property>
+  </bean>
+  
+  <bean id="fileGenerator" class="org.apache.butterfly.generation.FileGenerator" singleton="false">
+    <property name="sourceResolver">
+      <ref bean="sourceResolver"/>
+    </property>  
+    <property name="parser">
+      <ref bean="xmlParser"/>
+    </property>
+  </bean>
+  
+  <bean id="traxTransformerFactory" class="org.apache.butterfly.xml.xslt.TraxTransformerFactory">
+    <property name="sourceResolver">
+      <ref bean="sourceResolver"/>
+    </property>  
+  </bean>
+
+  <bean id="xmlSerializer" class="org.apache.butterfly.serialization.XMLSerializer" singleton="false">
+    <property name="traxTransformerFactory">
+      <ref bean="traxTransformerFactory"/>
+    </property>
+    <property name="encoding">
+      <value>UTF-8</value>
+    </property>
+  </bean>
+    
+</beans>
