@@ -1,4 +1,4 @@
-/*-- $Id: ProducerFromFile.java,v 1.2 1999-12-16 11:45:07 stefano Exp $ -- 
+/*-- $Id: ProducerFromFile.java,v 1.3 2000-01-10 21:50:51 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * available, even if we should use getResource().
  * 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.2 $ $Date: 1999-12-16 11:45:07 $
+ * @version $Revision: 1.3 $ $Date: 2000-01-10 21:50:51 $
  */
 
 public class ProducerFromFile extends AbstractProducer implements Status {
@@ -117,7 +117,8 @@ public class ProducerFromFile extends AbstractProducer implements Status {
         } catch (MalformedURLException e) {
             throw new RuntimeException("Malformed request URL.");
         } catch (NullPointerException e) {
-            throw new RuntimeException("Context cannot be null.");
+            // if there is no context set, we must be called from the command line
+            return request.getPathTranslated().replace('\\','/');
         }
     }
     

@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.3 2000-01-09 23:46:13 stefano Exp $ -- 
+/*-- $Id: XSLTProcessor.java,v 1.4 2000-01-10 21:50:51 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-09 23:46:13 $
+ * @version $Revision: 1.4 $ $Date: 2000-01-10 21:50:51 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -97,7 +97,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         String browser = (String) parameters.get("browser");
         
         try {
-            URL resource = getResource(document, path, browser);
+            Object resource = getResource(document, path, browser);
             Document stylesheet = getStylesheet(resource, document, request);
             Document result = this.parser.createEmptyDocument();
             return transformer.transform(document, null, stylesheet, resource.toString(), result);
@@ -106,9 +106,9 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         }
     }
 
-    private URL getResource(Document document, String path, String browser) throws ProcessorException {
+    private Object getResource(Document document, String path, String browser) throws ProcessorException {
         
-        URL resource = null;
+        Object resource = null;
         
         Enumeration pis = Utils.getAllPIs(document, STYLESHEET_PI).elements();
         while (pis.hasMoreElements()) {
@@ -118,11 +118,11 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
             if ((type != null) && (type.equals("text/xsl"))) {
                 String url = (String) attributes.get("href");
                 if (url != null) {
-                    URL local = null;
+                    Object local = null;
                     
                     try {
                         if (url.indexOf("://") < 0) {
-                            local = new URL("file:///" + path + url);
+                            local = new File(path + url);
                         } else {
                             local = new URL(url);
                         }
@@ -147,14 +147,14 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         }
 
         if (resource == null) {
-            throw new ProcessorException("Could not assiciate stylesheet to document: "
+            throw new ProcessorException("Could not associate stylesheet to document: "
                 + " no matching stylesheet for: " + browser);
         } else {
             return resource;
         }
     }
      
-    private Document getStylesheet(URL resource, Document document, HttpServletRequest request) throws ProcessorException {
+    private Document getStylesheet(Object resource, Document document, HttpServletRequest request) throws ProcessorException {
 
         try {
             Document sheet;
@@ -180,10 +180,19 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
         }
     }
 
-    private Document getDocument(URL resource) throws Exception {
+    private Document getDocument(Object resource) throws Exception {
         InputSource input = new InputSource();
         input.setSystemId(resource.toString());
-        input.setCharacterStream(new InputStreamReader(resource.openStream()));
+        
+        if (resource instanceof File) {
+            input.setCharacterStream(new FileReader(((File) resource)));
+        } else if (resource instanceof URL) {
+            input.setCharacterStream(new InputStreamReader(((URL) resource).openStream()));
+        } else {
+            // should never happen
+            throw new Error("Fatal error: Could not elaborate given resource: " + resource);
+        }
+        
         return this.parser.parse(input);
     }
     

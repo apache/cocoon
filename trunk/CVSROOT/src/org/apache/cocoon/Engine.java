@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.8 2000-01-03 01:39:42 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.9 2000-01-10 21:50:50 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-01-03 01:39:42 $
+ * @version $Revision: 1.9 $ $Date: 2000-01-10 21:50:50 $
  */
 
 public class Engine implements Defaults {
@@ -119,12 +119,10 @@ public class Engine implements Defaults {
         // stores the engine context
         if ((context != null) && (context instanceof ServletContext)) {
             this.servletContext = (ServletContext) context;
-        } else {
-            throw new Exception("Engine can't work in given context.");
-        }
 
-        // register the context
-        manager.setRole("context", context);
+            // register the context
+            manager.setRole("context", context);
+        }
 
         // Create the parser and register it
         parser = (Parser) manager.create((String) configurations.get(PARSER_PROP,
