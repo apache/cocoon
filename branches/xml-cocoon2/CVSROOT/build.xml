@@ -59,7 +59,8 @@ project, no less and no more.
 These are the meaningful targets for this build file:
 
  - package [default] -> creates ./build/cocoon/cocoon.jar
- - webapp -> creates ./build/webapp/cocoon.war
+ - webapp -> creates ./build/cocoon/cocoon.war
+ - webapp-lib -> creates ./build/cocoon/cocoon.war with included libraries
  - docs -> generates the HTML documentation in ./build/cocoon/docs
  - printer-docs -> generates printer friendly HTML documentation in ./build/printer-docs
  - javadocs -> generates the API documentation in ./build/cocoon/javadocs
@@ -226,9 +227,9 @@ NOTE: the "site" target is only useful for site mantainers.
   </target>
 
   <!-- =================================================================== -->
-  <!-- Creates the war file                                                -->
+  <!-- Prapares the webapp directories                                     -->
   <!-- =================================================================== -->
-  <target name="webapp" depends="prepare">
+  <target name="prepare-webapp" depends="prepare">
     <mkdir dir="${build.war}"/>
 
     <copydir src="${webapp.dir}" dest="${build.war}" filtering="on">
@@ -242,10 +243,28 @@ NOTE: the "site" target is only useful for site mantainers.
       <include name="**/*.jpg"/>
       <include name="**/*.png"/>
     </copydir>
+  </target>
 
+  <!-- =================================================================== -->
+  <!-- Creates the war file                                                -->
+  <!-- =================================================================== -->
+  <target name="webapp" depends="prepare-webapp">
     <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Creates the war file                                                -->
+  <!-- =================================================================== -->
+  <target name="webapp-lib" depends="package, prepare-webapp">
+    <copydir src="${lib.dir}" dest="${build.war}/WEB-INF/lib" filtering="off">
+      <exclude name="ant*.jar"/>
+      <exclude name="**/bin/**"/>
+      <exclude name="stylebook*.jar"/>
+    </copydir>
+    <copyfile src="${build.dir}/${name}.jar" dest="${build.war}/WEB-INF/lib/${name}.jar"/>
+    <jar jarfile="${build.dir}/${name}.war" basedir="${build.war}" includes="**"/>
+  </target>
+  
   <!-- =================================================================== -->
   <!-- Prepares the docs                                                   -->
   <!-- =================================================================== -->
@@ -373,6 +392,7 @@ NOTE: the "site" target is only useful for site mantainers.
   </target>
 
   <target name="distclean" depends="clean">
+    <deltree dir="${build.root}"/>
     <delete file="${dist.target}/${Name}-${version}.tar.gz"/>
     <delete file="${dist.target}/${Name}-${version}.tar"/>
     <delete file="${dist.target}/${Name}-${version}.zip"/>
