@@ -106,7 +106,7 @@ By default XPath evaluation throws an exception if the supplied XPath does not m
 <p>
 Example:
 </p>
-<p><source>
+<source>
 <![CDATA[
     <map:match pattern="*.jx">
       <map:generate type="jx" src="documents/{1}.jx">
@@ -116,7 +116,6 @@ Example:
     </map:match>
 ]]>
 </source>
-</p>
 </s2>
 </s1>
 <s1 title ="Tags">
@@ -249,7 +248,6 @@ If unspecified it defaults to <code>0</code>. The <code>end</code>
 attribute specifies the item to end with (<code>0</code> = first item, 
 <code>1</code> = second item, ...). If unspecified it defaults to the last item in the list. Every <code>step</code> items are
 processed (defaults to <code>1</code> if <code>step</code> is absent). Either <code>items</code> or both <code>begin</code> and <code>end</code> must be present.</p>
-<p>
 
 <p>An alternate form of <code>forEach</code> is supported for convenience when using XPath (since you can specify the selection criteria for the collection using XPath itself):</p>
 <source>
@@ -273,7 +271,7 @@ processed (defaults to <code>1</code> if <code>step</code> is absent). Either <c
    &lt;td&gt;#{./productId}&lt;/td&gt;
 &lt;/jx:forEach&gt;
 </source>
- <p/>
+ <p>
 If the <code>varStatus</code> attribute is present a variable will be created to hold information about the current loop status. The variable named by the <code>varStatus</code> attribute will hold a reference to an object with the following properties:</p>
     <table>
      <tr>
@@ -374,7 +372,6 @@ If the <code>varStatus</code> attribute is present a variable will be created to
     end=#{$status.end}
 &lt;/jx:forEach&gt;
 </source>
-<p/>
 </s2>
 <s2 title="formatNumber">
 <p>
