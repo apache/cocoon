@@ -368,6 +368,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="update">
+     Updated iText to 1.1.
+   </action>
    <action dev="AG" type="fix" fixes-bug="32011" due-to="wchao@yahoo.com" due-to-email="wchao@yahoo.com">
      Fix: buildList() in AbstractDatabaseAction generates incorrect parameter list.
    </action>
