@@ -27,7 +27,7 @@ import org.apache.log.Logger;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-20 13:50:21 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-23 15:08:10 $
  */
 
 public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {
@@ -48,11 +48,11 @@ public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {
                                        NodeList conf)
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
+        String pat = correctPattern(pattern);
         try {
             RECompiler r = new RECompiler();
             String name         = prefix;
             String instructions = name + "PatternInstructions";
-            String pat = correctPattern (pattern);
             sb.append("\n    // Pre-compiled regular expression '")
               .append(pat).append("'\n")
               .append("    static char[] ");
@@ -78,7 +78,7 @@ public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {
               .append("));");
             return sb.toString();
         } catch (RESyntaxException rse) {
-            log.warn("RegexpTargetHostMatcherFactory:RESyntaxException", rse);
+            log.warn("Syntax exception while compiling regexp '" + pat + "'.", rse);
             throw new ConfigurationException (rse.getMessage(), rse);
         }
     }
@@ -87,9 +87,9 @@ public class RegexpTargetHostMatcherFactory implements CodeFactory, Loggable {
     throws ConfigurationException {
         StringBuffer sb = new StringBuffer ();
         sb.append("HashMap map = new HashMap ();")
-          .append("String uri = ((HttpServletRequest)objectModel.get(Constants.REQUEST_OBJECT)).getHeader(\"Host\");")
-          .append("if(uri.startsWith(\"/\")) uri = uri.substring(1);")
-          .append("if(pattern.match(uri)) {");
+          .append("String host = ((HttpServletRequest)objectModel.get(Constants.REQUEST_OBJECT)).getHeader(\"Host\");")
+          .append("getLogger().debug(\"Matching against host: \" + host + \".\");")
+          .append("if(pattern.match(host)) {");
         /* Handle parenthesised subexpressions. XXX: could be faster if we count
          * parens *outside* the generated code.
          * Note: *ONE* based, not zero.
