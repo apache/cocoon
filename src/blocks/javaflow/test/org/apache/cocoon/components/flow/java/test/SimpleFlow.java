@@ -20,7 +20,10 @@ import java.util.Locale;
 import junit.framework.Assert;
 
 import org.apache.cocoon.components.flow.java.*;
+import org.apache.cocoon.components.flow.javascript.ScriptablePropertyHandler;
 import org.apache.cocoon.forms.FormContext;
+import org.apache.commons.jxpath.JXPathIntrospector;
+import org.mozilla.javascript.Scriptable;
 /*import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;*/
@@ -130,6 +133,11 @@ public class SimpleFlow extends AbstractSimpleFlow {
     	Assert.assertEquals("abc", getParameters().getParameter("p1")); 
     	Assert.assertEquals("def", getParameters().getParameter("p2"));
     	Assert.assertEquals(2.3f, getParameters().getParameterAsFloat("p3"), 0.1f);
+    }
+    
+    public void doClassTest() {
+    	JXPathIntrospector.registerDynamicClass(Scriptable.class,
+    	    ScriptablePropertyHandler.class);
     }
 }
 

@@ -46,7 +46,7 @@ import java.util.Iterator;
 	 * 
 	 * WARNING! These classes are a fork of the bcel verifier.
 	 *
-	 * @version $Id: Subroutines.java,v 1.1 2004/06/03 12:43:27 stephan Exp $
+	 * @version $Id: Subroutines.java,v 1.2 2004/06/24 16:48:53 stephan Exp $
 	 * @author <A HREF="http://www.inf.fu-berlin.de/~ehaase"/>Enver Haase</A>
 	 * @see #getTopLevel()
 	 */
@@ -449,7 +449,7 @@ public class Subroutines{
 		
 		// Now make sure no instruction of a Subroutine is protected by exception handling code
 		// as is mandated by JustIces notion of subroutines.
-		for (int i=0; i<handlers.length; i++){
+		/*for (int i=0; i<handlers.length; i++){
 			InstructionHandle _protected = handlers[i].getStartPC();
 			while (_protected != handlers[i].getEndPC().getNext()){// Note the inclusive/inclusive notation of "generic API" exception handlers!
 				Enumeration subs = subroutines.elements();
@@ -463,7 +463,7 @@ public class Subroutines{
 				}
 				_protected = _protected.getNext();
 			}
-		}
+		}*/
 		
 		// Now make sure no subroutine is calling a subroutine
 		// that uses the same local variable for the RET as themselves

@@ -16,13 +16,15 @@
 
 package org.apache.cocoon.components.flow.javascript;
 
+import java.util.HashMap;
+
 import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: JavaScriptFlowTestCase.java,v 1.2 2004/06/14 14:53:57 stephan Exp $
+ * @version CVS $Id: JavaScriptFlowTestCase.java,v 1.3 2004/06/24 16:48:53 stephan Exp $
  */
 public class JavaScriptFlowTestCase extends SitemapComponentTestCase {
 
@@ -31,7 +33,7 @@ public class JavaScriptFlowTestCase extends SitemapComponentTestCase {
     }
     
     public void testCalculator() throws Exception {
-        /*String source = "resource://org/apache/cocoon/components/flow/javascript/calc.js";
-        callFunction("java", source, "calculator", new ArrayList());*/
+        String source = "resource://org/apache/cocoon/components/flow/javascript/calc.js";
+        callFunction("javascript", source, "calculator", new HashMap());
     }
 }

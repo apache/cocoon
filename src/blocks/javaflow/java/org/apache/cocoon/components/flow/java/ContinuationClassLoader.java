@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.flow.java;
 
+import java.io.FileOutputStream;
 import java.util.*;
 
 import org.apache.bcel.*;
@@ -34,7 +35,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.10 2004/06/14 15:08:35 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.11 2004/06/24 16:48:53 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -57,11 +58,17 @@ public class ContinuationClassLoader extends ClassLoader {
 
     private static boolean currentMethodStatic;
     
+    private boolean debug = false;
+	
     private List includes = new ArrayList();
 
     public ContinuationClassLoader(ClassLoader parent) {
         super(parent);
         Repository.setRepository(new ClassLoaderRepository(parent));
+    }
+    
+    public void setDebug(boolean debug) {
+    	this.debug = debug;
     }
     
     public void addIncludeClass(String pattern) {
@@ -106,12 +113,16 @@ public class ContinuationClassLoader extends ClassLoader {
     protected synchronized Class loadClass(String name, boolean resolve)
             throws ClassNotFoundException {
         // this finds also classes, which are already transformed, via findLoadedClass
+    	if (debug)
+    		System.out.println("load class "+name);
         Class c = super.loadClass(name, resolve);
 
         // transform class if class is continuable and not continuation capable
         if (isContinuable(c) && 
             (!ContinuationCapable.class.isAssignableFrom(c)) && 
             (!c.isInterface())) {
+        	if (debug)
+        		System.out.println("instrument class "+name);
             JavaClass clazz = Repository.lookupClass(c);
 
             byte data[] = transform(clazz);
@@ -127,9 +138,21 @@ public class ContinuationClassLoader extends ClassLoader {
     }
 
     private byte[] transform(JavaClass javaclazz) throws ClassNotFoundException {
+    	
         // make all methods of java class continuable
         ClassGen clazz = new ClassGen(javaclazz);
         ConstantPoolGen cp = clazz.getConstantPool();
+        
+        if (debug) {
+        	try {
+                FileOutputStream fos = new FileOutputStream(javaclazz.getClassName() + ".orig.j");
+                DecompilingVisitor v = new DecompilingVisitor(javaclazz, fos);
+                v.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
         // vistor to build the frame information
         ExecutionVisitor ev = new ExecutionVisitor();
         ev.setConstantPoolGen(cp);
@@ -144,11 +167,13 @@ public class ContinuationClassLoader extends ClassLoader {
                 // information about every instruction
                 ControlFlowGraph cfg = new ControlFlowGraph(method);
                 
-                //System.out.println("analyse " + methods[i].getName());
+                if (debug)
+                	System.out.println("analyse " + methods[i].getName());
                 analyse(clazz, method, cfg, ev);
                 
                 // add intercepting code
-                //System.out.println("rewriting " + methods[i].getName());
+                if (debug)
+                	System.out.println("rewriting " + methods[i].getName());
                 rewrite(method, cfg);
                 
                 // make last optional check for consistency
@@ -168,15 +193,25 @@ public class ContinuationClassLoader extends ClassLoader {
             }
         }
         
-        /*byte[] changed = clazz.getJavaClass().getBytes();
-        try {
-            java.io.FileOutputStream out = new java.io.FileOutputStream(clazz.getClassName() + ".rewritten.class");
-            out.write(changed);
-            out.flush();
-            out.close();
-        } catch (java.io.IOException ioe) {
-            ioe.printStackTrace();
-        }*/
+        if (debug) {
+        	byte[] changed = clazz.getJavaClass().getBytes();
+        	try {
+        		FileOutputStream out = new FileOutputStream(clazz.getClassName() + ".rewritten.class");
+        		out.write(changed);
+        		out.flush();
+        		out.close();
+        	} catch (java.io.IOException ioe) {
+        		ioe.printStackTrace();
+        	}
+        	
+        	try {
+                FileOutputStream fos = new FileOutputStream(clazz.getClassName() + ".rewritten.j");
+                DecompilingVisitor v = new DecompilingVisitor(clazz.getJavaClass(), fos);
+                v.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         
         clazz.addInterface(CONTINUATIONCAPABLE_CLASS);
         return clazz.getJavaClass().getBytes();
@@ -417,6 +452,8 @@ public class ContinuationClassLoader extends ClassLoader {
             insList.insert(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
 
             // test if the continuation should be restored
+            if (debug)
+            	insList.insert(insFactory.createPrintln("restoring invocation "+method));
             insList.insert(new IFEQ(firstIns));
             insList.insert(insFactory.createInvoke(CONTINUATION_CLASS, RESTORING_METHOD, Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
             insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
@@ -541,6 +578,8 @@ public class ContinuationClassLoader extends ClassLoader {
         boolean skipFirst = returnType.getSize() > 0;
 
         // save stack
+        if (debug)
+        	insList.append(insFactory.createPrintln("save stack"));
         OperandStack os = frame.getStack();
         for (int i = skipFirst ? 1 : 0; i < os.size(); i++) {
             Type type = os.peek(i);
@@ -572,15 +611,24 @@ public class ContinuationClassLoader extends ClassLoader {
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
         }
+        
         // add isCapturing test
+        if (debug)
+        	insList.insert(insFactory.createPrintln("capturing invocation "+method));
         insList.insert(new IFEQ(handle.getNext()));
+        
         // test if the continuation should be captured after the invocation
         insList.insert(insFactory.createInvoke(CONTINUATION_CLASS, CAPURING_METHOD, Type.BOOLEAN, Type.NO_ARGS, Constants.INVOKEVIRTUAL));
         insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
+        
         // test if continuation exists
         insList.insert(new IFNULL(handle.getNext()));
         insList.insert(InstructionFactory.createLoad(CONTINUATION_TYPE, method.getMaxLocals()));
+        
         // save local variables
+        if (debug)
+        	insList.append(insFactory.createPrintln("save local variables"));
+        
         LocalVariables lvs = frame.getLocals();
         for (int i = 0; i < lvs.maxLocals(); i++) {
             Type type = lvs.get(i);
@@ -619,7 +667,11 @@ public class ContinuationClassLoader extends ClassLoader {
     private InstructionList restoreFrame(MethodGen method, InstructionHandle handle,
             InstructionFactory insFactory, Frame frame, ObjectType objecttype) {
         InstructionList insList = new InstructionList();
+        
         // restore local variables
+        if (debug)
+        	insList.append(insFactory.createPrintln("restore local variables"));
+        
         LocalVariables lvs = frame.getLocals();
         for (int i = lvs.maxLocals() - 1; i >= 0; i--) {
             Type type = lvs.get(i);
@@ -649,8 +701,11 @@ public class ContinuationClassLoader extends ClassLoader {
         InvokeInstruction inv = (InvokeInstruction) handle.getInstruction();
         Type returnType = getReturnType(method.getConstantPool().getConstantPool(), inv.getIndex());
         boolean skipFirst = returnType.getSize() > 0;
-
+        
         // restore stack
+        if (debug)
+        	insList.append(insFactory.createPrintln("restore stack"));
+        
         OperandStack os = frame.getStack();
         for (int i = os.size() - 1; i >= (skipFirst ? 1 : 0); i--) {
             Type type = os.peek(i);

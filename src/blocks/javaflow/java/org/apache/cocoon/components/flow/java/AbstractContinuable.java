@@ -16,11 +16,14 @@
 package org.apache.cocoon.components.flow.java;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.util.PipelineUtil;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.excalibur.source.SourceUtil;
 
@@ -32,7 +35,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractContinuable.java,v 1.5 2004/06/23 09:16:31 stephan Exp $
+ * @version CVS $Id: AbstractContinuable.java,v 1.6 2004/06/24 16:48:53 stephan Exp $
  */
 public abstract class AbstractContinuable implements Continuable {
 
@@ -44,6 +47,18 @@ public abstract class AbstractContinuable implements Continuable {
   
     public Logger getLogger() {
         return getContext().getLogger();
+    }
+    
+    public Context getAvalonContext() {
+        return getContext().getAvalonContext();
+    }
+
+    public ServiceManager getServiceManager() {
+        return getContext().getServiceManager();
+    }
+ 
+    public Redirector getRedirector() {
+        return getContext().getRedirector();
     }
 
     public void sendPageAndWait(String uri) {
