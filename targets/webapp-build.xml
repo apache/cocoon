@@ -46,6 +46,7 @@
       <fileset dir="${webapp}/WEB-INF">
         <include name="entities/**"/>
         <include name="classes/**"/>
+        <include name="src/**"/>
         <include name="*.x*"/>
       </fileset>
     </copy>
