@@ -43,13 +43,13 @@ import org.apache.cocoon.kernel.startup.Logger;
  * interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class KernelDeployer implements Deployer {
 
     /** <p>The XML configuration namespace.</p> */
     public static final String NAMESPACE = 
-                            "http://cocoon.apache.org/kernel/deployer/1.0";
+                            "http://apache.org/cocoon/kernel/deployer/1.0";
     
     /* ====================================================================== */
 

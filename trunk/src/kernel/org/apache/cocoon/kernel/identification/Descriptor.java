@@ -27,13 +27,13 @@ import java.util.Iterator;
  * &quot;functional&quot; specification of the block.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Descriptor extends Identifier {
 
     /** <p>The XML namespace of all block {@link Descriptor}s.</p> */
     public static final String NAMESPACE = 
-                                "http://www.vnunet.com/blocks/descriptor/1.0";
+                                "http://apache.org/cocoon/blocks/descriptor/1.0";
 
     /** <p>Identifies a library with &quot;<b>private</b>&quot; access.</p> */
     public static final int ACCESS_PRIVATE = 0;
