@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.181 2004/02/25 13:08:16 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.182 2004/02/28 11:10:40 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Rewrote the request handling (external and internal).
+   </action>
+   <action dev="CZ" type="update">
+     Update Avalon Excalibur packages to released versions.
+   </action>
    <action dev="AG" type="update">
      Updated xerces to 2.6.2
    </action>
