@@ -84,7 +84,7 @@ import java.util.Map;
  * and on the content of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.14 2004/02/13 14:36:43 vgritsenko Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.15 2004/02/15 10:07:35 bruno Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
@@ -236,7 +236,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                     fallBackException = null;
                     fallbackLevel = 0;
                     getLogger().error("Exception occured during xinclude processing, and did not find a fallback element.", localFallBackException);
-                    throw new SAXException("Exception occured during xinclude processing, and did not find a fallback element: " + localFallBackException.getMessage());
+                    throw new SAXException("Exception occured during xinclude processing, and did not find a fallback element.", localFallBackException);
                 }
                 return;
             }
