@@ -89,10 +89,10 @@
   </xs:element>
   <xs:element name="property">
   	<xs:complexType>
-			<xs:sequence>
+			<xs:all>
 				<xs:element name="default" minOccurs="0" maxOccurs="1" type="xs:string"/>
-				<xs:element name="description" minOccurs="0" maxOccurs="1" type="xs:string"/>
-			</xs:sequence>
+				<xs:element name="description" minOccurs="1" maxOccurs="1" type="xs:string"/>
+			</xs:all>
 			<xs:attribute name="name" use="required"/>
   	</xs:complexType>  	
   </xs:element>
@@ -107,7 +107,8 @@
   </xs:element>
   <xs:element name="requires">
   	<xs:complexType>
-  		<xs:attribute name="block" type="xs:anyURI" use="required"/>
+  		<xs:attribute name="interface" type="xs:anyURI" use="required"/>
+  		<xs:attribute name="default" type="xs:anyURI" use="optional"/>
   		<xs:attribute name="name" type="xs:string" use="required"/>
   	</xs:complexType>  	
   </xs:element>
@@ -115,7 +116,14 @@
   <!-- implements -->
   <xs:element name="implements">
   	<xs:complexType>
-  		<xs:attribute name="block" type="xs:anyURI" use="required"/>
+			<xs:sequence>
+				<xs:element ref="interface" maxOccurs="unbounded"/>
+			</xs:sequence>
+  	</xs:complexType>  	
+  </xs:element>
+  <xs:element name="interface">
+  	<xs:complexType>
+  		<xs:attribute name="id" type="xs:anyURI" use="required"/>
   	</xs:complexType>  	  	
   </xs:element>
 
