@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.50 2003/04/25 08:34:56 stephan Exp $
+  CVS $Id: gump.xml,v 1.51 2003/04/25 09:25:24 stephan Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -883,7 +883,7 @@
       An expression language interpreter.
     </description>
     <home nested="src/blocks/woody/lib"/>
-    <jar name="xreporter-expression-20030418.jar.jar"/>
+    <jar name="xreporter-expression-20030418.jar"/>
   </project>
   
 </module>
