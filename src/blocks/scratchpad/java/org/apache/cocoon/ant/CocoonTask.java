@@ -58,25 +58,31 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
+
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.LogKitLogger;
-
-import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
+import org.apache.avalon.framework.logger.Logger;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.util.IOUtils;
+
+import org.apache.log.Hierarchy;
+import org.apache.log.Priority;
 
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -90,7 +96,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.1 2003/09/04 12:42:41 cziegeler Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.2 2003/09/09 19:03:44 joerg Exp $
  */
 public class CocoonTask extends Task {
 
@@ -324,7 +330,7 @@ public class CocoonTask extends Task {
     /**
      *   Execute the ant task launching Cocoon
      *
-     * @exception  BuildException  thrown iff Cocoon processing fails
+     * @exception  BuildException  thrown if Cocoon processing fails
      */
     public void execute() throws BuildException {
 
@@ -443,7 +449,7 @@ public class CocoonTask extends Task {
     /**
      *   Gets the contextDirFile attribute of the CocoonTask object.
      *   Try to locate a file name relative to Cocoon's context directory.
-     *   Check ${contextDir}/WEB-INF, ${contextDir}/ locations iff
+     *   Check ${contextDir}/WEB-INF, ${contextDir}/ locations if
      *   there is a file named name.
      *
      * @param  contextDir  Cocoon's context directory
@@ -477,9 +483,9 @@ public class CocoonTask extends Task {
      *
      * @param  dir                 a <code>String</code> with a directory name
      * @param  type                a <code>String</code> describing the type of directory
-     * @param  create              true iff directory should be created
+     * @param  create              true if directory should be created
      * @return                     a <code>File</code> value
-     * @exception  BuildException  throw iff checks fails
+     * @exception  BuildException  throw if checks fails
      */
     protected File getDir(String dir, boolean create, String type) throws BuildException {
 
@@ -508,7 +514,7 @@ public class CocoonTask extends Task {
     /**
      *   Check if all parameters for running Cocoon are set properly
      *
-     * @exception  BuildException  is thrown iff at least one parameter is invalid
+     * @exception  BuildException  is thrown if at least one parameter is invalid
      */
     protected void checkValidity() throws BuildException {
         if (destDir == null) {
@@ -569,8 +575,8 @@ public class CocoonTask extends Task {
     public static class CocoonFactory extends AbstractLogEnabled
              implements Contextualizable, Configurable {
 
-        private DefaultLogKitManager logKitManager;
-        private org.apache.log.Logger logger;
+        private LogKitLoggerManager logKitLoggerManager;
+        private Logger logger;
         private DefaultContext ctx;
         private ClassLoader classLoader;
 
@@ -596,7 +602,7 @@ public class CocoonTask extends Task {
          * </ul>
          *
          * @param  context               parent context
-         * @exception  ContextException  thrown iff parent context fails to provide
+         * @exception  ContextException  thrown if parent context fails to provide
          *   mandadory context entries
          */
         public void contextualize(Context context) throws ContextException {
@@ -620,7 +626,7 @@ public class CocoonTask extends Task {
          *   Configure the Cocoon factory
          *
          * @param  configuration               Cocoon factory configuration
-         * @exception  ConfigurationException  thrown iff configuration fails
+         * @exception  ConfigurationException  thrown if configuration fails
          */
         public void configure(Configuration configuration) throws ConfigurationException {
             Configuration child;
@@ -634,11 +640,11 @@ public class CocoonTask extends Task {
                 logLevel = "WARN";
             }
 
-            // configure the logKitManager, either by using a logkit.xconf file,
-            // or by a logger
-            final org.apache.log.Priority priority = org.apache.log.Priority.getPriorityForName(logLevel);
-            org.apache.log.Hierarchy.getDefaultHierarchy().setDefaultPriority(priority);
-            logger = org.apache.log.Hierarchy.getDefaultHierarchy().getLoggerFor("");
+            // configure the logKitManager,
+            // either by using a logkit.xconf file or by a logger
+            final Priority priority = Priority.getPriorityForName(logLevel);
+            Hierarchy.getDefaultHierarchy().setDefaultPriority(priority);
+            this.logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
 
             child = configuration.getChild("logKit", false);
             if (child != null) {
@@ -649,26 +655,25 @@ public class CocoonTask extends Task {
                     try {
                         final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
                         final Configuration logKitConf = builder.buildFromFile(logKit);
-                        logKitManager = new DefaultLogKitManager(org.apache.log.Hierarchy.getDefaultHierarchy());
+                        this.logKitLoggerManager = new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
 
                         final DefaultContext subcontext = new DefaultContext(this.ctx);
                         File contextDir = (File) this.ctx.get("context-root");
                         subcontext.put("context-root", contextDir);
-                        logKitManager.contextualize(subcontext);
-                        logKitManager.configure(logKitConf);
-                        logger = logKitManager.getLogger(logKitLogCategory);
+                        this.logKitLoggerManager.contextualize(subcontext);
+                        this.logKitLoggerManager.configure(logKitConf);
+                        logger = this.logKitLoggerManager.getLoggerForCategory(logKitLogCategory);
                     } catch (Exception e) {
                         getLogger().error("Cannot initialize log-kit-manager from logkit-xconf " + String.valueOf(logKit));
-
-                        // clean logKitManager, try init it without the logkit-xconf
-                        logKitManager = null;
+                        // clean logKitLoggerManager, try init it without the logkit-xconf
+                        this.logKitLoggerManager = null;
                     }
                 }
             }
 
-            if (logKitManager == null) {
-                logKitManager = new DefaultLogKitManager(org.apache.log.Hierarchy.getDefaultHierarchy());
-                logKitManager.setLogger(logger);
+            if (this.logKitLoggerManager == null) {
+                this.logKitLoggerManager = new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
+                this.logKitLoggerManager.enableLogging(logger);
             }
         }
 
@@ -677,15 +682,15 @@ public class CocoonTask extends Task {
          * create a new Cocoon instance
          *
          * @return                             Cocoon the Cocoon instance
-         * @exception  ContextException        thrown iff configuring of Cocoon instance fails
-         * @exception  ConfigurationException  thrown iff contextualizing of Cocoon instance fails
-         * @exception  Exception               thrown iff initializing of Cocoon instance fails
+         * @exception  ContextException        thrown if configuring of Cocoon instance fails
+         * @exception  ConfigurationException  thrown if contextualizing of Cocoon instance fails
+         * @exception  Exception               thrown if initializing of Cocoon instance fails
          */
         public Cocoon createCocoon() throws Exception, ContextException, ConfigurationException {
             Cocoon cocoon = new Cocoon();
-            cocoon.enableLogging(new LogKitLogger(logger));
+            cocoon.enableLogging(logger);
             cocoon.contextualize(this.ctx);
-            cocoon.setLogKitManager(logKitManager);
+            cocoon.setLoggerManager(logKitLoggerManager);
             cocoon.initialize();
             return cocoon;
         }
@@ -693,7 +698,7 @@ public class CocoonTask extends Task {
 
         /**
          *  Dispose a cocoon instance.
-         *  Don't forget to invoke this method iff you have retrieved a Cocoon
+         *  Don't forget to invoke this method if you have retrieved a Cocoon
          *  instance via <code>createCocoon()</code>.
          *
          * @param  cocoon  the Cocoon instance
@@ -712,12 +717,12 @@ public class CocoonTask extends Task {
          * @param  cocoon         Cocoon instance
          * @param  configuration  of the CocoonProcessorDelegate
          * @return                CocoonProcessorDelegate instance
-         * @exception  Exception  thrown iff contextualizing, configuring, or creating
+         * @exception  Exception  thrown if contextualizing, configuring, or creating
          *   of CocoonProcessorDelegate instance fails.
          */
         public CocoonProcessorDelegate createCocoonProcessorDelegate(Cocoon cocoon, Configuration configuration) throws Exception {
             CocoonProcessorDelegate cpd = new CocoonProcessorDelegate(cocoon);
-            cpd.enableLogging(new LogKitLogger(logger));
+            cpd.enableLogging(logger);
             cpd.contextualize(this.ctx);
             cpd.configure(configuration);
             cpd.initialize();
