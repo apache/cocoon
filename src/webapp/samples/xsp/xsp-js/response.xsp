@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: response.xsp,v 1.1 2003/03/26 21:21:38 stefano Exp $ -->
+<!-- CVS $Id: response.xsp,v 1.2 2003/05/07 04:57:16 vgritsenko Exp $ -->
 
 <xsp:page language="javascript"
           xmlns:xsp="http://apache.org/xsp"  

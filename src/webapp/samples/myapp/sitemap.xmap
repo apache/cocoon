@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
+
+<!-- CVS $Id: sitemap.xmap,v 1.2 2003/05/07 04:57:14 vgritsenko Exp $ -->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<!-- CVS: $Id: sitemap.xmap,v 1.1 2003/03/09 00:11:16 pier Exp $ -->
 <!--
     Minimal sitemap to start making XML/XSP/XSLT transformations.
 

@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 
+<!-- CVS $Id: sitemap.xmap,v 1.6 2003/05/07 04:57:13 vgritsenko Exp $ -->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
  <map:pipelines>
-
   <map:pipeline>
 
    <map:match pattern="">
@@ -14,6 +15,11 @@
      <map:serialize/>
    </map:match>
    
+   <map:match pattern="hello.xml">
+    <map:generate src="content/hello.xml"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
    <map:match pattern="hello.html">
     <map:generate src="content/hello.xml"/>
     <map:transform src="style/xsl/page2html.xsl"/>
@@ -67,7 +73,6 @@
    </map:match>
             
   </map:pipeline>
-  
  </map:pipelines>
 
 </map:sitemap>

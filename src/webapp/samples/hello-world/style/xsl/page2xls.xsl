@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- CVS $Id: page2xls.xsl,v 1.2 2003/05/07 04:57:13 vgritsenko Exp $ -->
+
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                               xmlns:sql="http://apache.org/cocoon/SQL/2.0"
                              xmlns:gmr="http://www.gnome.org/gnumeric/v7" >

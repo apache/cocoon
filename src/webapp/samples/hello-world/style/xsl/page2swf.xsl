@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <!--
-    convert a page so that is is usable as input for the SWFSerializer
-    $Id: page2swf.xsl,v 1.3 2003/05/05 08:22:11 bdelacretaz Exp $
+    Convert a page so that is is usable as input for the SWFSerializer
 
     Bugzilla 19619 note: (bdelacretaz@codeconsult.ch): the value of
     some Glyph.char attributes in this file seems to have been corrupted in CVS,
@@ -11,6 +10,8 @@
 
     Most probably, the font definition below is not correct over the
     whole character set.
+
+    CVS $Id: page2swf.xsl,v 1.4 2003/05/07 04:57:13 vgritsenko Exp $
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
