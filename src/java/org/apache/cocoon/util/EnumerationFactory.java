@@ -1,5 +1,5 @@
 /*
-* Copyright 1999-2004 The Apache Software Foundation
+* Copyright 1999-2005 The Apache Software Foundation
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -108,103 +108,105 @@ import java.util.Vector;
  */
 public class EnumerationFactory {
 
-  private static Vector allObjects =  // must be here JDK 1.1.3
-    new Vector (0, 1);  // empty, increment by 1
+    private static Vector allObjects =  // must be here JDK 1.1.3
+                    new Vector (0, 1);  // empty, increment by 1
 
-  private int pos;
-  private String image;
+    private int pos;
+    private String image;
 
-  /**
-   * Constructors with and without a string representation (image).
-   * Make constructors private upon derivation.
-   * Be careful: No check is made that the image string is unique!
-   * @param image
-   */
-  public EnumerationFactory(String image) {
-    this.pos = allObjects.size ();
-    this.image = image;
-    allObjects.addElement(this);
-  }
-
-  public EnumerationFactory () {
-    this ("");
-  }
-
-  //--------------------------------------------------------------------------
-  // Order relations:
-
-  /**
-   * Order relations Object.op (OtherObject) representing the relation
-   * Object op OtherObject.
-   * @param e the right operand
-   */
-  public boolean lt(EnumerationFactory e) {                   // "<"
-    return this.getPos() < e.getPos ();
-  }
-
-  public boolean le(EnumerationFactory e) {                   // "<="
-    return this.getPos() <= e.getPos ();
-  }
-
-  public boolean gt(EnumerationFactory e) {                   // ">"
-    return this.getPos() > e.getPos ();
-  }
-
-  public boolean ge(EnumerationFactory e) {                   // ">="
-    return this.getPos() >= e.getPos ();
-  }
-
-  // "==" and "equals" are inherited.
-
-  //--------------------------------------------------------------------------
-  // Numeric representation:
-
-  public int getPos() {                                          // Ada'Pos
-    return pos;
-  }
-
-  /**
-   * Access to the numeric representation.
-   * @param value the numeric value
-   */
-  public static EnumerationFactory getVal(int value) {           // Ada'Val
-    return (EnumerationFactory)allObjects.elementAt (value);
-  }
-
-  //--------------------------------------------------------------------------
-  // Iterator:
-
-  public static EnumerationFactory getFirst() {                  // Ada'First
-    return getVal(0);
-  }
-  public static EnumerationFactory getLast() {                   // Ada'Last
-    return getVal(allObjects.size() - 1);
-  }
-
-  public EnumerationFactory getNext () {                          // Ada'Succ
-    return getVal(this.getPos() + 1);
-  }
-  public EnumerationFactory getPrev () {                          // Ada'Pred
-    return getVal(this.getPos() - 1);
-  }
-
-  //--------------------------------------------------------------------------
-  // String representation:
-
-  public String toString() {                                     // Ada'Image
-    return image;
-  }
-
-  public static EnumerationFactory getObject(String image) {     // Ada'Value
-    EnumerationFactory found;
-    // Linear search seems good enough because there presumably
-    // will not be too many literals.
-    for (int i = 0 ; i < allObjects.size () ; i++) {
-      found = (EnumerationFactory) allObjects.elementAt (i);
-      if (found.toString().equals(image)) {
-        return found;
-      }
+    /**
+     * Constructors with and without a string representation (image).
+     * Make constructors private upon derivation.
+     * Be careful: No check is made that the image string is unique!
+     * @param image
+     */
+    public EnumerationFactory(String image) {
+        this.pos = allObjects.size();
+        this.image = image;
+        allObjects.addElement(this);
     }
-    return null;
-  }
+
+    public EnumerationFactory() {
+        this ("");
+    }
+
+    //--------------------------------------------------------------------------
+    // Order relations:
+
+    /**
+     * Order relations Object.op (OtherObject) representing the relation
+     * Object op OtherObject.
+     * @param e the right operand
+     */
+    public boolean lt(EnumerationFactory e) {                   // "<"
+        return this.getPos() < e.getPos();
+    }
+
+    public boolean le(EnumerationFactory e) {                   // "<="
+        return this.getPos() <= e.getPos();
+    }
+
+    public boolean gt(EnumerationFactory e) {                   // ">"
+        return this.getPos() > e.getPos();
+    }
+
+    public boolean ge(EnumerationFactory e) {                   // ">="
+        return this.getPos() >= e.getPos ();
+    }
+
+    // "==" and "equals" are inherited.
+
+    //--------------------------------------------------------------------------
+    // Numeric representation:
+
+    public int getPos() {                                          // Ada'Pos
+        return pos;
+    }
+
+    /**
+     * Access to the numeric representation.
+     * @param value the numeric value
+     */
+    public static EnumerationFactory getVal(int value) {           // Ada'Val
+        return (EnumerationFactory)allObjects.elementAt(value);
+    }
+
+    //--------------------------------------------------------------------------
+    // Iterator:
+
+    public static EnumerationFactory getFirst() {                  // Ada'First
+        return getVal(0);
+    }
+
+    public static EnumerationFactory getLast() {                   // Ada'Last
+        return getVal(allObjects.size() - 1);
+    }
+
+    public EnumerationFactory getNext () {                          // Ada'Succ
+        return getVal(this.getPos() + 1);
+    }
+
+    public EnumerationFactory getPrev () {                          // Ada'Pred
+        return getVal(this.getPos() - 1);
+    }
+
+    //--------------------------------------------------------------------------
+    // String representation:
+
+    public String toString() {                                     // Ada'Image
+        return image;
+    }
+
+    public static EnumerationFactory getObject(String image) {     // Ada'Value
+        EnumerationFactory found;
+        // Linear search seems good enough because there presumably
+        // will not be too many literals.
+        for (int i = 0 ; i < allObjects.size() ; i++) {
+            found = (EnumerationFactory) allObjects.elementAt(i);
+            if (found.toString().equals(image)) {
+                return found;
+            }
+        }
+        return null;
+    }
 }
