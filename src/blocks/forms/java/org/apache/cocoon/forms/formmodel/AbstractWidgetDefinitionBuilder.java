@@ -31,7 +31,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.DatatypeManager;
 import org.apache.cocoon.forms.event.CreateListener;
-import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
 import org.apache.cocoon.forms.expression.ExpressionManager;
@@ -46,7 +45,7 @@ import org.w3c.dom.NodeList;
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
  * common to many implementations.
  *
- * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.4 2004/06/15 07:33:44 sylvain Exp $
+ * @version $Id: AbstractWidgetDefinitionBuilder.java,v 1.5 2004/06/24 11:32:47 cziegeler Exp $
  */
 public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitionBuilder, Serviceable, Disposable {
     protected ServiceSelector widgetDefinitionBuilderSelector;

@@ -29,7 +29,6 @@ import org.apache.cocoon.forms.formmodel.DataWidget;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.MultiValueField;
 import org.apache.cocoon.forms.formmodel.Repeater;
-import org.apache.cocoon.forms.formmodel.Union;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.Attributes;
@@ -57,7 +56,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the single value rather than the fields as XML. For population of the
  * form both forms are however allowed.
  *
- * @version CVS $Id: XMLAdapter.java,v 1.2 2004/06/09 13:52:28 danielf Exp $
+ * @version CVS $Id: XMLAdapter.java,v 1.3 2004/06/24 11:32:47 cziegeler Exp $
  */
 public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
 
