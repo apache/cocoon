@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.portal.event.aspect.impl;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -61,13 +59,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
-import org.apache.cocoon.portal.event.EventManager;
-import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.Publisher;
-import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
-import org.apache.cocoon.portal.event.impl.FrameSourceEvent;
+import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
@@ -76,11 +71,11 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameEventAspect.java,v 1.3 2003/05/22 12:32:48 cziegeler Exp $
+ * @version CVS $Id: FrameEventAspect.java,v 1.4 2003/05/23 14:20:09 cziegeler Exp $
  */
 public class FrameEventAspect
     extends AbstractLogEnabled
-    implements EventAspect, ThreadSafe, Composable, Disposable, Subscriber, Initializable {
+    implements EventAspect, ThreadSafe, Composable {
 
     protected ComponentManager manager;
 
@@ -88,7 +83,8 @@ public class FrameEventAspect
      * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
      */
     public void process(EventAspectContext context, PortalService service) {
-        final String requestParameterName = FrameSourceEvent.URI_PARAMETER;
+        // TODO - make this configurable
+        final String requestParameterName = "frame";
         final Request request = ObjectModelHelper.getRequest(context.getObjectModel());
         String[] values = request.getParameterValues(requestParameterName);
         if (values != null) {
@@ -113,8 +109,20 @@ public class FrameEventAspect
                         if (index != (value.length() - 1)) {
                             uri = value.substring(index + 1);
                         }
-                        e = new FrameSourceEvent(id, uri);
-                        publisher.publish(e);
+                        
+                        ProfileManager profileManager = null;
+                        try {
+                            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+                            Layout layout = profileManager.getPortalLayout( id );
+                            if ( layout != null ) {
+                                e = new ChangeAspectDataEvent(layout, "frame", uri);
+                                publisher.publish(e);
+                            }
+                        } catch (ComponentException ignore) {
+                        } finally {
+                            this.manager.release( profileManager );
+                        }
+                        
                         if (uri != null) {
                             service.getLinkService().addEventToLink(e);
                         }
@@ -127,76 +135,10 @@ public class FrameEventAspect
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
-     */
-    public Class getEventType() {
-        return FrameSourceEvent.class;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
-     */
-    public Filter getFilter() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
-     */
-    public void inform(Event event) {
-        FrameSourceEvent statusEvent = (FrameSourceEvent) event;
-        final String layoutID = statusEvent.getLayoutId();
-        ProfileManager profileManager = null;
-        try {
-            profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
-            // TODO - does this work?
-            Layout layout = profileManager.getPortalLayout( layoutID );
-            String status = (String)layout.getAspectData("frame");
-            String link = statusEvent.getLink();
-            if (status == null) {
-                if (link != null) {
-                    layout.setAspectData("frame", link);
-                }
-            } else if (link != null) {
-                layout.setAspectData("frame", link);
-            }
-        } catch (ComponentException ce) {
-            // ignore
-        } finally {
-            this.manager.release(profileManager);
-        }
-    }
-
-    /* (non-Javadoc)
      * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
      */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize() throws Exception {
-        EventManager eventManager = null;
-        try {
-            eventManager = (EventManager) this.manager.lookup(EventManager.ROLE);
-            eventManager.getRegister().subscribe(this);
-        } finally {
-            this.manager.release(eventManager);
-        }
-    }
-
-    public void dispose() {
-        if (this.manager != null) {
-            EventManager eventManager = null;
-            try {
-                eventManager = (EventManager) this.manager.lookup(EventManager.ROLE);
-                eventManager.getRegister().unsubscribe(this);
-            } catch (Exception ignore) {
-            } finally {
-                this.manager.release(eventManager);
-            }
-        }
-    }
 }

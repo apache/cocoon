@@ -48,40 +48,51 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.event.impl;
+package org.apache.cocoon.portal.event.subscriber.impl;
 
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.cocoon.portal.aspect.Aspectalizable;
 import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.Filter;
+import org.apache.cocoon.portal.event.Subscriber;
+import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameSourceEvent.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: DefaultChangeAspectDataEventSubscriber.java,v 1.1 2003/05/23 14:20:09 cziegeler Exp $
  */
-public final class FrameSourceEvent 
-    implements Event {
+public final class DefaultChangeAspectDataEventSubscriber 
+    implements Subscriber {
 
-    // FIXME Do we want configurable parameter names?
-    public static String URI_PARAMETER = "frame-event";
-    
-    private String layoutID;
-    
-    private String link;
-    
-    public FrameSourceEvent(String layoutID, String link) {
-        this.layoutID = layoutID;
-        this.link = link;
+    private ComponentManager manager;
+
+    public DefaultChangeAspectDataEventSubscriber(ComponentManager manager) {
+        this.manager = manager;
     }
 
-    /**
-     * @return Layout The corresponding Layout
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
      */
-    public String getLayoutId() {
-        return this.layoutID;
+    public Class getEventType() {
+        return ChangeAspectDataEvent.class;
     }
 
-    public String getLink() {
-        return this.link;
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getFilter()
+     */
+    public Filter getFilter() {
+        return null;
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+     */
+    public void inform(Event e) {
+        final ChangeAspectDataEvent event = (ChangeAspectDataEvent)e;
+        final Aspectalizable target = event.getTarget();
+        target.setAspectData(event.getAspectName(), event.getData());
+    }
+
 }

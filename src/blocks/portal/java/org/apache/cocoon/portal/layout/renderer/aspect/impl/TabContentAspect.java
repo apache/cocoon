@@ -55,7 +55,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.event.impl.LayoutAspectDataEvent;
+import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.NamedItem;
@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.5 2003/05/22 15:19:38 cziegeler Exp $
+ * @version CVS $Id: TabContentAspect.java,v 1.6 2003/05/23 14:20:09 cziegeler Exp $
  */
 public class TabContentAspect extends CompositeContentAspect {
 
@@ -112,7 +112,7 @@ public class TabContentAspect extends CompositeContentAspect {
                     if (j == selected) {
                         attributes.addCDATAAttribute("selected", "true");
                     } else {
-                        LayoutAspectDataEvent event = new LayoutAspectDataEvent(tabLayout, "tab", new Integer(j));
+                        ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, "tab", new Integer(j));
                         attributes.addCDATAAttribute("parameter", portalService.getLinkService().getLinkURI(event));
                     }
                     XMLUtils.startElement(handler, "named-item", attributes);

@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FrameAspect.java,v 1.4 2003/05/22 12:32:46 cziegeler Exp $
+ * @version CVS $Id: FrameAspect.java,v 1.5 2003/05/23 14:20:09 cziegeler Exp $
  */
 public class FrameAspect extends AbstractCIncludeAspect {
 
@@ -73,8 +73,7 @@ public class FrameAspect extends AbstractCIncludeAspect {
             throw new SAXException("Wrong layout type, FrameLayout expected: " + layout.getClass().getName());
         }
 
-        String status = (String)layout.getAspectData("frame");
-        String source = (status == null ? null : status);
+        String source = (String)layout.getAspectData("frame");
         if (source == null) {
             source = ((FrameLayout) layout).getSource();
         }
