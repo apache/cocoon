@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.14 2000-05-01 23:53:16 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.15 2000-05-10 15:02:06 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.14 $ $Date: 2000-05-01 23:53:16 $
+ * @version $Revision: 1.15 $ $Date: 2000-05-10 15:02:06 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -126,6 +126,7 @@ public class Cocoon extends HttpServlet implements Defaults {
                } catch (Exception ex) {
                    exception = ex;
                    message = "Unable to open resource: " + confsName;
+                   return;
                }
             } else {
                confs = new Configurations(confsName);
