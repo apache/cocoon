@@ -48,7 +48,7 @@ cocoon.load("resource://org/apache/cocoon/components/flow/javascript/Database.js
 
 function OrderForm() {
     this.order = new Order();
-    this.shippingAddressRequired = false;        
+    this.shippingAddressRequired = false;
     this.confirmed = false;
 }
 
@@ -69,10 +69,10 @@ OrderForm.prototype.initOrder = function(accountForm, cartForm) {
     this.order.billZip = acct.zip;
     this.order.billCountry = acct.country;
     this.order.totalPrice = cartForm.cart.subTotal;
-    this.order.billToFirstName= acct.firstName;
-    this.order.billToLastName= acct.lastName;
-    this.order.shipToFirstName= acct.firstName;
-    this.order.shipToLastName= acct.lastName;
+    this.order.billToFirstName = acct.firstName;
+    this.order.billToLastName = acct.lastName;
+    this.order.shipToFirstName = acct.firstName;
+    this.order.shipToLastName = acct.lastName;
     this.order.shipDate = new java.util.Date();
     for (var i in cartForm.cart.cartItems) {
         var cartItem = cartForm.cart.cartItems[i];
@@ -82,53 +82,53 @@ OrderForm.prototype.initOrder = function(accountForm, cartForm) {
 
 function Order() {
     this.orderId = 0;
-    this.username= "";
-    this.orderDate =null;
-    this.shipAddress1= "";
-    this.shipAddress2= "";
-    this.shipCity= "";
-    this.shipState= "";
-    this.shipZip= "";
-    this.shipCountry= "";
-    this.billAddress1= "";
-    this.billAddress2= "";
-    this.billCity= "";
-    this.billState= "";
-    this.billZip= "";
-    this.billCountry= "";
-    this.courier= "";
-    this.totalPrice= 0;
-    this.billToFirstName= "";
-    this.billToLastName= "";
-    this.shipToFirstName= "";
-    this.shipToLastName= "";
-    this.creditCard= "";
-    this.expiryDate= "";
-    this.cardType= "";
-    this.locale= "";
-    this.status= "";
+    this.username = "";
+    this.orderDate = null;
+    this.shipAddress1 = "";
+    this.shipAddress2 = "";
+    this.shipCity = "";
+    this.shipState = "";
+    this.shipZip = "";
+    this.shipCountry = "";
+    this.billAddress1 = "";
+    this.billAddress2 = "";
+    this.billCity = "";
+    this.billState = "";
+    this.billZip = "";
+    this.billCountry = "";
+    this.courier = "";
+    this.totalPrice = 0;
+    this.billToFirstName = "";
+    this.billToLastName = "";
+    this.shipToFirstName = "";
+    this.shipToLastName = "";
+    this.creditCard = "";
+    this.expiryDate = "";
+    this.cardType = "";
+    this.locale = "";
+    this.status = "";
     this.lineItems = [];
 }
 
 function Account() {
-    this.username ="";
+    this.username = "";
     this.password = "";
     this.email = "";
     this.firstName = "";
     this.lastName = "";
     this.status = "";
     this.address1 = "";
-    this.address2= "";
-    this.city= "";
-    this.state= "";
-    this.zip= "";
-    this.country= "";
-    this.phone= "";
-    this.favouriteCategoryId= "";
-    this.languagePreference= "";
-    this.listOption= false;
-    this.bannerOption= false;
-    this.bannerName= "";
+    this.address2 = "";
+    this.city = "";
+    this.state = "";
+    this.zip = "";
+    this.country = "";
+    this.phone = "";
+    this.favouriteCategoryId = "";
+    this.languagePreference = "";
+    this.listOption = false;
+    this.bannerOption = false;
+    this.bannerName = "";
 }
 
 function AccountForm(username, password) {
@@ -226,10 +226,10 @@ var CREATE_SCRIPT =
 "    email varchar(80) not null," +
 "    firstname varchar(80) not null," +
 "    lastname varchar(80) not null," +
-"    status varchar(2)  null," +
+"    status varchar(2) null," +
 "    addr1 varchar(80) not null," +
 "    addr2 varchar(40) null," +
-"    city varchar(80) not  null," +
+"    city varchar(80) not null," +
 "    state varchar(80) not null," +
 "    zip varchar(20) not null," +
 "    country varchar(20) not null," +
@@ -248,61 +248,61 @@ var CREATE_SCRIPT =
 "" +
 "create table bannerdata (" +
 "    favcategory varchar(80) not null," +
-"    bannername varchar(255)  null" +
+"    bannername varchar(255) null" +
     //"    ,constraint pk_bannerdata primary key (favcategory)" +
 ");" +
 "" +
 "create table orders (" +
-"      orderid int not null," +
-"      userid varchar(80) not null," +
-"      orderdate date not null," +
-"      shipaddr1 varchar(80) not null," +
-"      shipaddr2 varchar(80) null," +
-"      shipcity varchar(80) not null," +
-"      shipstate varchar(80) not null," +
-"      shipzip varchar(20) not null," +
-"      shipcountry varchar(20) not null," +
-"      billaddr1 varchar(80) not null," +
-"      billaddr2 varchar(80)  null," +
-"      billcity varchar(80) not null," +
-"      billstate varchar(80) not null," +
-"      billzip varchar(20) not null," +
-"      billcountry varchar(20) not null," +
-"      courier varchar(80) not null," +
-"      totalprice decimal(10,2) not null," +
-"      billtofirstname varchar(80) not null," +
-"      billtolastname varchar(80) not null," +
-"      shiptofirstname varchar(80) not null," +
-"      shiptolastname varchar(80) not null," +
-"      creditcard varchar(80) not null," +
-"      exprdate varchar(7) not null," +
-"      cardtype varchar(80) not null," +
-"      locale varchar(80) not null" +
-    //"      ,constraint pk_orders primary key (orderid)" +
+"    orderid int not null," +
+"    userid varchar(80) not null," +
+"    orderdate date not null," +
+"    shipaddr1 varchar(80) not null," +
+"    shipaddr2 varchar(80) null," +
+"    shipcity varchar(80) not null," +
+"    shipstate varchar(80) not null," +
+"    shipzip varchar(20) not null," +
+"    shipcountry varchar(20) not null," +
+"    billaddr1 varchar(80) not null," +
+"    billaddr2 varchar(80)  null," +
+"    billcity varchar(80) not null," +
+"    billstate varchar(80) not null," +
+"    billzip varchar(20) not null," +
+"    billcountry varchar(20) not null," +
+"    courier varchar(80) not null," +
+"    totalprice decimal(10,2) not null," +
+"    billtofirstname varchar(80) not null," +
+"    billtolastname varchar(80) not null," +
+"    shiptofirstname varchar(80) not null," +
+"    shiptolastname varchar(80) not null," +
+"    creditcard varchar(80) not null," +
+"    exprdate varchar(7) not null," +
+"    cardtype varchar(80) not null," +
+"    locale varchar(80) not null" +
+    //"    ,constraint pk_orders primary key (orderid)" +
 ");" +
 "" +
 "create table orderstatus (" +
-"      orderid int not null," +
-"      linenum int not null," +
-"      timestamp date not null, " +
-"      status varchar(2) not null" +
-    //"      ,constraint pk_orderstatus primary key (orderid, linenum)" +
+"    orderid int not null," +
+"    linenum int not null," +
+"    timestamp date not null, " +
+"    status varchar(2) not null" +
+    //"    ,constraint pk_orderstatus primary key (orderid, linenum)" +
 ");" +
 "" +
 "create table lineitem (" +
-"      orderid int not null," +
-"      linenum int not null," +
-"      itemid varchar(10) not null," +
-"      quantity int not null," +
-"      unitprice decimal(10,2) not null" +
-    //"      ,constraint pk_lineitem primary key (orderid, linenum)" +
+"    orderid int not null," +
+"    linenum int not null," +
+"    itemid varchar(10) not null," +
+"    quantity int not null," +
+"    unitprice decimal(10,2) not null" +
+    //"    ,constraint pk_lineitem primary key (orderid, linenum)" +
 ");" +
 "" +
 "create table category (" +
-"        catid varchar(10) not null," +
-"        name varchar(80) null," +
-"        descn varchar(255) null" +
-    //",        constraint pk_category primary key (catid)" +
+"    catid varchar(10) not null," +
+"    name varchar(80) null," +
+"    descn varchar(255) null" +
+    //",    constraint pk_category primary key (catid)" +
 ");" +
 "" +
 "create table product (" +
@@ -311,8 +311,8 @@ var CREATE_SCRIPT =
 "    name varchar(80) null," +
 "    descn varchar(255) null" +
     //",    constraint pk_product primary key (productid)," +
-    //"        constraint fk_product_1 foreign key (category)" +
-    //"        references category (catid)" +
+    //"    constraint fk_product_1 foreign key (category)" +
+    //"    references category (catid)" +
 ");" +
 "" +
 "create index productCat on product (category);" +
@@ -331,10 +331,10 @@ var CREATE_SCRIPT =
 "    attr4 varchar(80) null," +
 "    attr5 varchar(80) null" +
     //",    constraint pk_item primary key (itemid)," +
-    //"        constraint fk_item_1 foreign key (productid)" +
-    //"        references product (productid)," +
-    //"        constraint fk_item_2 foreign key (supplier)" +
-    //"        references supplier (suppid)" +
+    //"    constraint fk_item_1 foreign key (productid)" +
+    //"    references product (productid)," +
+    //"    constraint fk_item_2 foreign key (supplier)" +
+    //"    references supplier (suppid)" +
 ");" +
 "" +
 "create index itemProd on item (productid);" +
@@ -347,8 +347,8 @@ var CREATE_SCRIPT =
 "" +
 "CREATE TABLE sequence" +
 "(" +
-"    name               varchar(30)  not null," +
-"    nextid             int          not null" +
+"    name varchar(30) not null," +
+"    nextid int not null" +
     //"    ,constraint pk_sequence primary key (name)" +
 ");" +
 "";
