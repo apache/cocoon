@@ -521,7 +521,7 @@
     <title>CyberNeko: Transform HTML to XML</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>NekoHTML generator (html block)</used-by>
-    <lib>optional/nekohtml-0.9.3.jar</lib>
+    <lib>optional/nekohtml-0.9.4.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>
 
@@ -529,7 +529,7 @@
     <title>CyberNeko DTD Converter</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
     <used-by>Forms block</used-by>
-    <lib>optional/nekodtd-0.1.10.jar</lib>
+    <lib>optional/nekodtd-0.1.11.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>
   
