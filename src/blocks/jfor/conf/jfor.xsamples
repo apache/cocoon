@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='jfor']">
 
   <group name="jfor">
-    <sample name="jfor RTF serializer" href="jfor/">
+    <sample name="jfor Block" href="jfor/">
       Examples of RTF document generation.
     </sample>
   </group>

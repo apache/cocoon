@@ -18,9 +18,9 @@
 <xsamples xpath="/samples" unless="group[@name='Chaperon']">
 
   <group name="Chaperon">
-    <sample name="Chaperon Text Parser" href="chaperon/">
-      Examples showing how to use the Chaperon Parser to parse common text files
-      like Wiki or Java files.
+    <sample name="Chaperon Block" href="chaperon/">
+      Examples showing how to use the Chaperon text parser to parse common text files
+      (like Wiki or Java files) into the XML.
     </sample>
   </group>
 </xsamples>

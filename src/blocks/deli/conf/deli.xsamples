@@ -17,7 +17,7 @@
 <xsamples xpath="/samples" unless="group[@name='DELI']">
   <group name="DELI">
 
-   <sample name="DELI" href="deli/">
+   <sample name="DELI Block" href="deli/">
 	DELI allows Cocoon to determine the delivery context of a client device, for example a mobile terminal, using CC/PP or UAProf.
    </sample>
       

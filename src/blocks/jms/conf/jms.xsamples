@@ -17,7 +17,8 @@
 
 <xsamples xpath="/samples" unless="group[@name='JMS']">
   <group name="JMS">
-  	<sample name="JMS invalidated Event Based Cache" href="jms/database/">
+    <sample name="JMS Block" href="jms/database/">
+      JMS invalidated Event Based Cache.
       A sample showing external cache invalidation using database triggers
       emitting either JMS messages or HTTP requests. For this sample, the
       HSQLDB block and the databases block need to be present. For the JMS

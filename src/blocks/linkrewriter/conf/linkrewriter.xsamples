@@ -18,10 +18,9 @@
 <xsamples xpath="/samples" unless="group[@name='Link Rewriter']">
 
   <group name="Link Rewriter">
-    <sample name="LinkRewriter Transformer" href="linkrewriter/">
+    <sample name="LinkRewriter Block" href="linkrewriter/">
       A demo of the LinkRewriterTransformer, which rewrites XML links (by
       default, href attributes) with values looked up from any Input Module.
-      See http://xml.apache.org/forrest/linking.html
     </sample>
   </group>
   

@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Portal Framework']">
 
   <group name="Portal Framework">
-    <sample name="Portal Framework" href="portal-fw/sunspotdemoportal">
+    <sample name="Portal Framework Block" href="portal-fw/sunspotdemoportal">
       This is a demo of the portal framework integrated into Cocoon.
     </sample>
   </group>

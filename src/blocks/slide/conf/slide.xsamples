@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Slide']">
 
   <group name="Slide">
-    <sample name="Slide Integration" href="slide/">
+    <sample name="Slide Block" href="slide/">
       Slide administration application showing the use of Slide inside Cocoon.
     </sample>
   </group>

@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Axis']">
 
   <group name="Axis">
-    <sample name="Axis" href="axis/">Examples using Apache Axis to give access to Cocoon via SOAP.</sample>
+    <sample name="Axis Block" href="axis/">Examples using Apache Axis to give access to Cocoon via SOAP.</sample>
   </group>
 
 </xsamples>

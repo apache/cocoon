@@ -18,12 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Web3']">
 
   <group name="Web3">
-    <note> 
-      For the examples of this block to work, an SAP R/3 system and some
-      SAP java classes need to be available and configured according to the docs that 
-      can be found in the developer section of the Apache Cocoon documentation.
-    </note>
-    <sample name="Samples" href="web3/samples">
+    <sample name="Web3 Block" href="web3/samples">
       Continue to Web3 block samples.
     </sample>
   </group>

@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Mail']">
 
   <group name="Mail">
-    <sample name="Samples" href="mail/samples">
+    <sample name="Mail Block" href="mail/samples">
       Continue to mail block samples.
     </sample>
   </group>

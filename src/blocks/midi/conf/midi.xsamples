@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Midi']">
 
   <group name="Midi">
-    <sample name="Midi" href="midi/">
+    <sample name="Midi Block" href="midi/">
       This demonstrates the generation of XMidi (an XML representation of MIDI) from MIDI files.
     </sample>
   </group>

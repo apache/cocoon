@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='WebDAV']">
 
   <group name="WebDAV">
-    <sample href="webdav/" name="WebDAV">
+    <sample href="webdav/" name="WebDAV Block">
       Using WebDAV with Cocoon
     </sample>
   </group>

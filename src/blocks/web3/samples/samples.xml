@@ -15,20 +15,25 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.4 2004/03/06 02:26:07 antonio Exp $ -->
+<!-- CVS: $Id: samples.xml,v 1.5 2004/04/01 19:01:04 vgritsenko Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="web3 block">
 
   <group name="web3">
-     <sample name="Documentation" href="../../docs/developing/web3.html">
-       Documentation for this component.
-     </sample>
+    <note> 
+      For the examples of this block to work, an SAP R/3 system and some
+      SAP java classes need to be available and configured according to the docs that 
+      can be found in the developer section of the Apache Cocoon documentation.
+    </note>
+    <sample name="Documentation" href="../../docs/developing/web3.html">
+      Documentation for this component.
+    </sample>
     <sample name="Connect to SAP R/3" href="info.html">
       Demo connection to <b>your</b> SAP system.   
     </sample>
     <sample name="Connect to SAP R/3 (XML)" href="info.xml">
-     Same as above but produces XML.
-   </sample>
+      Same as above but produces XML.
+    </sample>
   </group>
   
 </samples>

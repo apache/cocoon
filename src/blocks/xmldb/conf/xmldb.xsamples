@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='XML:DB']">
 
   <group name="XML:DB">
-    <sample name="XML:DB" href="xmldb/">
+    <sample name="XML:DB Block" href="xmldb/">
       XML database samples.
     </sample>
   </group>

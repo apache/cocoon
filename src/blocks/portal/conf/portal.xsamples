@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Portal Engine']">
 
   <group name="Portal Engine">
-    <sample name="Demo Portal" href="portal/portal">
+    <sample name="Portal Block" href="portal/portal">
       This is a demo of the new powerful portal engine based on Apache Cocoon.
     </sample>
   </group>

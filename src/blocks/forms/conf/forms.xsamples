@@ -18,7 +18,7 @@
 <xsamples xpath="/samples" unless="group[@name='Cocoon Forms']">
 
   <group name="Cocoon Forms">
-    <sample name="Cocoon Forms" href="forms/">
+    <sample name="Forms Block" href="forms/">
       Cocoon Forms examples.
     </sample>
   </group>
