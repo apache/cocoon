@@ -30,6 +30,7 @@ import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.MultiValueField;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -305,9 +306,10 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
                 data(datatype.convertToString(widget.getValue(), this.locale));
         } else if (widget instanceof BooleanField) {
             // FIXME: BooleanField should implement DataWidget, which
-            // would make this case unnesecary
-            if (widget.getValue() != null)
-                data((Boolean)widget.getValue() == Boolean.TRUE ? "true" : "false");
+            // would make this case unnecesary
+            if (widget.getValue() != null) {
+                data(BooleanUtils.toStringTrueFalse((Boolean)widget.getValue()));
+            }
         } else if (widget instanceof MultiValueField) {
             Datatype datatype = ((MultiValueField)widget).getDatatype();
             Object[] values = (Object[])widget.getValue();
