@@ -113,8 +113,8 @@ by the main ones.
 
     <echo message="------------------- ${fullname} ${version} [${year}] ----------------"/>
 
-    <property name="debug"          value="off"/>
-    <property name="optimize"       value="on"/>
+    <property name="debug"          value="on"/>
+    <property name="optimize"       value="off"/>
     <property name="deprecation"    value="off"/>
    <property name="build.compiler" value="classic"/>
     <property name="target.vm"      value="1.2"/>
