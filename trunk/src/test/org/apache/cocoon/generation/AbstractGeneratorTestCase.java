@@ -75,7 +75,7 @@ import org.xml.sax.InputSource;
  * by comparing the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.4 2003/04/16 10:56:44 stephan Exp $
+ * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.5 2003/04/19 16:37:58 stephan Exp $
  */
 public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 {
@@ -126,11 +126,12 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
             generator = (Generator) selector.select(type);
             assertNotNull("Test lookup of generator", generator);
 
+            generator.setup(new SourceResolverAdapter(resolver, this.manager),
+                            objectmodel, source, parameters);
+
             DOMBuilder builder = new DOMBuilder();
             generator.setConsumer(new WhitespaceFilter(builder));
 
-            generator.setup(new SourceResolverAdapter(resolver, this.manager),
-                            objectmodel, source, parameters);
             generator.generate();
 
             document = builder.getDocument();
