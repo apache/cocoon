@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.165 2003/10/02 23:29:47 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.166 2003/10/03 00:41:51 crossley Exp $:-->
 
 <status>
  <developers>
@@ -247,7 +247,7 @@
      output encoding in the Workbook to UTF-16.
    </action>
    <action dev="GP" type="fix">
-     Fixed issues the cron block had when cocoon (or the servlet contaier ?)
+     Fixed issues the cron block had when cocoon (or the servlet container ?)
      allows reloads.
    </action>
    <action dev="VG" type="remove">
@@ -595,7 +595,7 @@
   </action>
   <action dev="JH" type="fix" fixes-bug="15365" due-to="Maciek Kaminski" due-to-email="maciejka@tiger.com.pl">
     Added/fixed internationalization support for HSSFSerializer by setting the output encoding
-    hardcoded to UTF-16. It's obviously only a hack, but so it is at least usable for more people.
+    hardcoded to UTF-16. It is obviously only a hack, but so it is at least usable for more people.
   </action>
   <action dev="JH" type="fix" fixes-bug="20658" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
     Fixed usage of removed method XSPUtil.include() in ESQL logicsheet &lt;esql:get-xml/&gt;
@@ -797,7 +797,7 @@
   </action>
   <action dev="CZ" type="update">
     Correcting method names of new CacheableProcessingComponent interface.
-    It's now possible to write components that support the 2.0.x and the
+    It is now possible to write components that support the 2.0.x and the
     2.1.x caching algorithm.
   </action>
   <action dev="CZ" type="update">
