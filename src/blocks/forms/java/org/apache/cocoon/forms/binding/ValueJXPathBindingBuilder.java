@@ -29,15 +29,15 @@ import java.util.Locale;
  * actual {@link ValueJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:value id="<i>widget-id</i>" path="<i>xpath-expression</i>"&gt;
+ * &lt;fb:value id="<i>widget-id</i>" path="<i>xpath-expression</i>"&gt;
  *   &lt;!-- optional child binding to be executed upon 'save' of changed value --&gt;
- *   &lt;wb:on-update&gt;
+ *   &lt;fb:on-update&gt;
  *     &lt;!-- any childbinding --&gt;
- *   &lt;/wb:on-update&gt;
- * &lt;/wb:value&gt;
+ *   &lt;/fb:on-update&gt;
+ * &lt;/fb:value&gt;
  * </code></pre>
  *
- * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.3 2004/04/01 12:59:57 mpo Exp $
  */
 public class ValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

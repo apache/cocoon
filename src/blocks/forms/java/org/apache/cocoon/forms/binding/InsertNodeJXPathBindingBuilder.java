@@ -33,13 +33,13 @@ import org.w3c.dom.NodeList;
  * actual {@link InsertNodeJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:insert-node&gt;
+ * &lt;fb:insert-node&gt;
  *   &lt;!-- in here comes a template that will be inserted in the target
  *           document --&gt;
- * &lt;/wb:insert-node&gt;
+ * &lt;/fb:insert-node&gt;
  * </code></pre>
  *
- * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.2 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.3 2004/04/01 12:59:57 mpo Exp $
  */
 public class InsertNodeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

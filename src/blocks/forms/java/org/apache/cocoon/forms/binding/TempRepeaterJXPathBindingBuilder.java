@@ -23,15 +23,15 @@ import org.w3c.dom.Element;
  * (i.e. delete then re-add all) its content.
  * Based on SimpleRepeater code.
  * <pre>
- * &lt;wb:temp-repeater
+ * &lt;fb:temp-repeater
  *   id="contacts"
  *   parent-path="contacts"&gt;
- *   &lt;<em>... child bindings ...</em>
- * &lt;/wb:temp-repeater&gt;
+ *   &lt;<em>... child bindings ...</em>&gt;
+ * &lt;/fb:temp-repeater&gt;
  * </pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: TempRepeaterJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class TempRepeaterJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

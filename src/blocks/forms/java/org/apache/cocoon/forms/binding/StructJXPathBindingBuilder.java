@@ -24,14 +24,14 @@ import org.w3c.dom.Element;
  * actual {@link StructJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:struct id="<i>widget-id</i>" path="<i>xpath-expression</i>"
+ * &lt;fb:struct id="<i>widget-id</i>" path="<i>xpath-expression</i>"
  *     direction="<i>load|save</i>" lenient="<i>true|false</i>" &gt;
- *   &lt;wb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
- * &lt;/wb:struct&gt;
+ *   &lt;fb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
+ * &lt;/fb:struct&gt;
  * </code></pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: StructJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: StructJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class StructJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

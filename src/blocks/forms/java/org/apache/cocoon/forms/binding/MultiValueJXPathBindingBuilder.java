@@ -27,17 +27,17 @@ import org.w3c.dom.Element;
  * A simple multi field binding that will replace (i.e. delete then re-add all) its
  * content.
  * <pre><code>
- * &lt;wb:multi-value id="<i>widget-id</i>"
+ * &lt;fb:multi-value id="<i>widget-id</i>"
  *   parent-path="<i>xpath-expression</i>"&gt;
  *   row-path="<i>xpath-expression</i>"&gt;
  *   &lt;!-- optional child binding to be executed upon 'save' of changed value --&gt;
- *   &lt;wb:on-update&gt;
+ *   &lt;fb:on-update&gt;
  *     &lt;!-- any childbinding --&gt;
- *   &lt;/wb:on-update&gt;
- * &lt;/wb:multi-value&gt;
+ *   &lt;/fb:on-update&gt;
+ * &lt;/fb:multi-value&gt;
  * </code></pre>
  *
- * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.3 2004/04/01 12:59:57 mpo Exp $
  */
 public class MultiValueJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
