@@ -96,7 +96,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ResourceReader.java,v 1.2 2003/03/19 15:42:17 cziegeler Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.3 2003/12/12 09:40:47 huber Exp $
  */
 public class ResourceReader extends AbstractReader implements CacheableProcessingComponent {
 
@@ -289,9 +289,16 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
                 throw SourceUtil.handle("Error during resolving of the input stream", se);
             }
 
-            processStream();
-
-            inputStream.close();
+            // Bugzilla Bug 25069, close inputStream in finally block
+            // this will close inputStream even if processStream throws
+            // an exception
+            try {
+                processStream();
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            }
 
             if (!quickTest) {
                 // if everything is ok, add this to the list of generated documents
