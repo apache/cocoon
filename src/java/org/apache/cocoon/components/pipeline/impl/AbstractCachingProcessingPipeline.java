@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,10 +46,9 @@ import java.util.Date;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-public abstract class AbstractCachingProcessingPipeline
-        extends BaseCachingProcessingPipeline {
+public abstract class AbstractCachingProcessingPipeline extends BaseCachingProcessingPipeline {
 
     /** The role name of the generator */
     protected String generatorRole;
@@ -64,28 +63,33 @@ public abstract class AbstractCachingProcessingPipeline
     protected String readerRole;
 
     /** The cached response */
-    protected CachedResponse   cachedResponse;
+    protected CachedResponse cachedResponse;
 
     /** The index indicating the first transformer getting input from the cache */
     protected int firstProcessedTransformerIndex;
+
     /** Complete response is cached */
     protected boolean completeResponseIsCached;
 
 
     /** This key indicates the response that is fetched from the cache */
     protected PipelineCacheKey fromCacheKey;
+
     /** This key indicates the response that will get into the cache */
     protected PipelineCacheKey toCacheKey;
+
     /** The source validities used for caching */
     protected SourceValidity[] toCacheSourceValidities;
 
     /** The index indicating to the first transformer which is not cacheable */
     protected int firstNotCacheableTransformerIndex;
+
     /** Cache complete response */
     protected boolean cacheCompleteResponse;
 
     /** Smart caching ? */
     protected boolean doSmartCaching;
+
     /** Default setting for smart caching */
     protected boolean configuredDoSmartCaching;
 
@@ -93,11 +97,15 @@ public abstract class AbstractCachingProcessingPipeline
      * Abstract methods defined in subclasses
      */
     protected abstract void cacheResults(Environment environment,
-            OutputStream os)  throws Exception;
+                                         OutputStream os)
+    throws Exception;
+
     protected abstract ComponentCacheKey newComponentCacheKey(int type,
-            String role,Serializable key);
-    protected abstract void connectCachingPipeline(Environment   environment)
-            throws ProcessingException;
+                                                              String role,
+                                                              Serializable key);
+
+    protected abstract void connectCachingPipeline(Environment environment)
+    throws ProcessingException;
 
     /**
      * Parameterizable Interface - Configuration
@@ -105,8 +113,7 @@ public abstract class AbstractCachingProcessingPipeline
     public void parameterize(Parameters params)
     throws ParameterException {
         super.parameterize(params);
-        this.configuredDoSmartCaching =
-            params.getParameterAsBoolean("smart-caching", true);
+        this.configuredDoSmartCaching = params.getParameterAsBoolean("smart-caching", true);
     }
 
     /**
@@ -115,14 +122,14 @@ public abstract class AbstractCachingProcessingPipeline
     public void setup(Parameters params) {
         super.setup(params);
         this.doSmartCaching = params.getParameterAsBoolean("smart-caching",
-                                               this.configuredDoSmartCaching);
+                                                           this.configuredDoSmartCaching);
     }
 
     /**
      * Set the generator.
      */
     public void setGenerator (String role, String source, Parameters param,
-            Parameters hintParam)
+                              Parameters hintParam)
     throws ProcessingException {
         super.setGenerator(role, source, param, hintParam);
         this.generatorRole = role;
@@ -132,17 +139,18 @@ public abstract class AbstractCachingProcessingPipeline
      * Add a transformer.
      */
     public void addTransformer (String role, String source, Parameters param,
-            Parameters hintParam) throws ProcessingException {
+                                Parameters hintParam)
+    throws ProcessingException {
         super.addTransformer(role, source, param, hintParam);
         this.transformerRoles.add(role);
     }
-
 
     /**
      * Set the serializer.
      */
     public void setSerializer (String role, String source, Parameters param,
-            Parameters hintParam, String mimeType) throws ProcessingException {
+                               Parameters hintParam, String mimeType)
+    throws ProcessingException {
         super.setSerializer(role, source, param, hintParam, mimeType);
         this.serializerRole = role;
     }
@@ -151,7 +159,8 @@ public abstract class AbstractCachingProcessingPipeline
      * Set the Reader.
      */
     public void setReader (String role, String source, Parameters param,
-            String mimeType) throws ProcessingException {
+                           String mimeType)
+    throws ProcessingException {
         super.setReader(role, source, param, mimeType);
         this.readerRole = role;
     }
@@ -200,7 +209,6 @@ public abstract class AbstractCachingProcessingPipeline
 
             try {
                 OutputStream os = null;
-
                 if (this.cacheCompleteResponse && this.toCacheKey != null) {
                     os = new CachingOutputStream(environment.getOutputStream(this.outputBufferSize));
                 }
