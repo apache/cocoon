@@ -59,15 +59,18 @@ public class DefaultCacheManager
         String key = prefix + source.getURI();
         SourceValidity newValidity = source.getValidity();
 
+        // If source is not valid then remove object from cache and return null
         if (newValidity == null) {
             cache.remove(key);
             return null;
         }
 
+        // If object is not in cache then return null
         Object[] objectAndValidity = (Object[])cache.get(key);
         if (objectAndValidity == null)
             return null;
 
+       // Check stored validity against current source validity
         SourceValidity storedValidity = (SourceValidity)objectAndValidity[1];
         int valid = storedValidity.isValid();
         boolean isValid;
@@ -78,11 +81,13 @@ public class DefaultCacheManager
             isValid = (valid == 1);
         }
 
+        // If stored object is not valid then remove object from cache and return null
         if (!isValid) {
             cache.remove(key);
             return null;
         }
 
+        // If valid then return cached object
         return objectAndValidity[0];
     }
 
