@@ -23,6 +23,7 @@
     <menu-item label="Session" href="session.html"/>
     <menu-item label="ESQL" href="esql.html"/>
     <menu-item label="Forms" href="logicsheet-forms.html"/>
+    <menu-item label="Sendmail" href="sendmail.html"/>
   </menu>
 
 </book>
