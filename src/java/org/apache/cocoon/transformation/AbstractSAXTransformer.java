@@ -50,6 +50,14 @@
 */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -83,15 +91,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
-import java.io.IOException;
-import java.util.*;
-
-/**
- * @author CZiegeler
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 /**
  *  This class is the basis for all transformers. It provides various useful
  *  methods and hooks for implementing own custom transformers.<p>
@@ -129,7 +128,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.8 2004/02/13 11:50:30 cziegeler Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.9 2004/02/15 09:34:32 antonio Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -248,7 +247,8 @@ implements Serviceable, Configurable, Recyclable {
         this.isInitialized = false;
 
         // get the current namespace
-        this.namespaceURI = this.parameters.getParameter("namespaceURI", this.defaultNamespaceURI);
+        this.namespaceURI = this.parameters.getParameter("namespaceURI",
+                    this.defaultNamespaceURI);
 
         this.ignoreHooksCount = 0;
         this.ignoreEventsCount = 0;
@@ -313,7 +313,6 @@ implements Serviceable, Configurable, Recyclable {
     throws SAXException {
         if (this.ignoreEventsCount == 0) super.endDocument();
     }
-
 
     /**
      * Process the SAX event.
