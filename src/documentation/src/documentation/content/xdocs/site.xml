@@ -19,6 +19,7 @@
   
   <docs label="Documentation" href="" tab="docs">
     <index label="Overview" href="index.html"/>
+  	<status label="Changes" href="changes.html"/>
     <doc label="Core Technologies">
       <doc label="Concepts" href="concepts.html"/>      
       <doc label="Sitemap">
