@@ -63,7 +63,7 @@ import org.apache.log.Priority;
  * A simple test case for CommandLineContext.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CommandLineContextTestCase.java,v 1.4 2003/05/12 13:26:18 stephan Exp $
+ * @version CVS $Id: CommandLineContextTestCase.java,v 1.5 2003/05/31 12:42:39 jefft Exp $
  */
 public final class CommandLineContextTestCase
          extends TestCase
@@ -130,6 +130,7 @@ public final class CommandLineContextTestCase
      */
     public void setUp() throws Exception {
         commandLineContextDir = System.getProperty("java.io.tmpdir", "/tmp");
+        new File(commandLineContextDir, "foo"+File.separator+"bar").mkdirs();
         commandLineContext = new CommandLineContext(commandLineContextDir);
         commandLineContext.enableLogging( new ConsoleLogger() );
     }
@@ -141,7 +142,10 @@ public final class CommandLineContextTestCase
      * @exception  Exception  Description of Exception
      * @since
      */
-    public void tearDown() throws Exception { }
+    public void tearDown() throws Exception {
+        new File(commandLineContextDir, "foo"+File.separator+"bar").delete();
+        new File(commandLineContextDir, "foo").delete();
+    }
 
 
     /**
@@ -156,15 +160,17 @@ public final class CommandLineContextTestCase
                 new String[]{"", commandLineContextDir},
                 new String[]{"/", commandLineContextDir},
                 new String[]{"foo", commandLineContextDir + File.separator + "foo"},
-                new String[]{"foo/bar", commandLineContextDir + File.separator + "foo/bar"}
+                new String[]{"foo/bar", commandLineContextDir + File.separator + "foo/bar"},
+                new String[]{"foo/bar/nonexistent", null}
                 };
         for (int i = 0; i < test_values.length; i++) {
             String tests[] = (String[]) test_values[i];
             String test = tests[0];
-            File expected_file = new File(tests[1]);
-            URL expected = expected_file.toURL();
-
             URL result = commandLineContext.getResource(test);
+            URL expected = null;
+            if (result != null) {
+                expected = new File(tests[1]).toURL();
+            }
             String message = "Test " +
                     "'" + test + "'";
             assertEquals(message, expected, result);
