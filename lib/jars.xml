@@ -792,7 +792,7 @@
     <title>Slide WebDAV Client library</title>
     <description>The Jakarta Slide WebDAV client library.</description>
     <used-by>WebDAV block</used-by>
-    <lib>webdav/lib/jakarta-slide-webdavlib-2.0rc1.jar</lib>
+    <lib>webdav/lib/jakarta-slide-webdavlib-2.0.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
 
