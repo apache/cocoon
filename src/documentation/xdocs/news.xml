@@ -9,6 +9,11 @@
     </authors>
   </header>
   <body>
+  <s1 title="Milestone Release">
+    <p>We are proud to announce the release of Cocoon 2.1 Milestone 1. As the core and
+       most parts can be regards as beta, but some other parts only as alpha we
+       decided to title the release with 'milestone' rather than 'beta' or 'alpha'.</p>
+  </s1>
   <s1 title="Wiki Moving">
     <p>The popular Cocoon Wiki has moved: <link href="http://wiki.cocoondev.org/">http://wiki.cocoondev.org/</link> is the new place to be.</p>
   </s1>
