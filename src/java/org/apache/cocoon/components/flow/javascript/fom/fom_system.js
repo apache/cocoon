@@ -2,7 +2,10 @@ FOM_Cocoon.suicide = new Continuation();
 
 FOM_Cocoon.prototype.sendPageAndWait = function(uri, bizData, fun) {
     this.sendPage(uri, bizData, new Continuation());
-    if (fun instanceof Function) {
+    if (fun) {
+      if (!(fun instanceof Function)) {
+        throw "Expected a function instead of: " + fun;
+      }
       fun();
     }
     FOM_Cocoon.suicide();
