@@ -85,7 +85,7 @@ import org.apache.cocoon.caching.validity.NamedEvent;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSEventListener.java,v 1.8 2004/02/18 12:15:01 unico Exp $
+ * @version CVS $Id: JMSEventListener.java,v 1.9 2004/02/24 13:03:53 unico Exp $
  * @author <a href="mailto:chaul@apache.org">chaul</a>
  */
 public class JMSEventListener
@@ -125,19 +125,19 @@ public class JMSEventListener
             this.connection.registerListener(this, this.selector);
         } catch (ServiceException e) {
 			if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Could not obtain JMSConnection");
+                getLogger().warn("Could not obtain JMSConnection", e);
 			}
 		} catch (JMSException e) {
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Could not obtain JMSConnection");
+                getLogger().warn("Could not obtain JMSConnection", e);
             }
 		} catch (NamingException e) {
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Could not obtain JMSConnection");
+                getLogger().warn("Could not obtain JMSConnection", e);
             }
 		} catch (CascadingException e) {
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Could not obtain JMSConnection");
+                getLogger().warn("Could not obtain JMSConnection", e);
             }
 		}
     }
