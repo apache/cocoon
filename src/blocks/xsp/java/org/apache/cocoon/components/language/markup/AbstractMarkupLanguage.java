@@ -58,7 +58,7 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: AbstractMarkupLanguage.java,v 1.2 2004/05/01 00:05:44 joerg Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractMarkupLanguage
         extends AbstractLogEnabled
@@ -446,7 +446,7 @@ public abstract class AbstractMarkupLanguage
     //
 
     /** This class holds transient information about a target programming language. */
-    protected class LanguageDescriptor {
+    protected static class LanguageDescriptor {
         /** The progamming language name */
         protected String name;
 
