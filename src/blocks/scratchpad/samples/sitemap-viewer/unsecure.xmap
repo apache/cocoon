@@ -10,7 +10,11 @@
   <map:generators   default="file"/>
   <map:transformers default="xslt"/>
   <map:readers      default="resource"/>
-  <map:serializers  default="html"/>
+  <map:serializers  default="html">
+          <map:serializer logger="sitemap.serializer.svg2png" mime-type="image/jpeg" name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
+            <parameter name="quality" type="float" value="0.9"/>
+        </map:serializer>
+</map:serializers>
   <map:matchers     default="wildcard"/>
   <map:selectors    default="browser">
     <map:selector name="resource-exists"
@@ -51,7 +55,12 @@
         <map:read src="{src}" mime-type="{mime-type}"/>
     </map:resource>
     
-  
+
+    <map:resource name="svg-view">
+            <map:generate src="{src}"/>
+            <map:serialize type="svg2jpeg"/>
+    </map:resource>
+      
 </map:resources>
 
     <map:views>
@@ -66,23 +75,7 @@
 
         <map:pipeline>
     
-            <map:match pattern="**.descr01">
-                 <map:generate src="cocoon:/{1}/sitemap.xmap"/>
-                 <map:transform src="transforms/sitemap2descr01.xsl">
-                     <map:parameter name="location" value="{1}"/>
-                 </map:transform>
-
-                 <map:serialize type="xml"/>
-            </map:match>
-
-            <map:match pattern="**.descr">
-                 <map:generate src="cocoon:/{1}.descr01"/>
-                 <map:transform src="transforms/sitemap2descr02.xsl"/>
-                 <map:serialize type="xml"/>
-            </map:match>
-
-
-            <map:match pattern="*.xmap">
+            <map:match pattern="*._xmap">
                 <map:act type="request">
                      <map:parameter name="parameters" value="true"/>
                     <map:call resource="xml-view">
@@ -90,28 +83,6 @@
                     </map:call>
                  </map:act>
             </map:match>
-
-            <map:match pattern="descr">
-                <map:act type="request">
-                     <map:parameter name="parameters" value="true"/>
-                     <map:generate src="cocoon:/../{location}.descr"/>
-                     <map:serialize type="xml"/>
-                 </map:act>
-            </map:match>
-
-
-            <map:match pattern="**/descr">
-                <map:act type="request">
-                    <map:parameter name="parameters" value="true"/>
-                    <map:redirect-to uri="../descr?location={location}"/>
-                 </map:act>
-            </map:match>
-            
-            <map:match pattern="**.xmap">
-                 <map:generate src="../{1}/sitemap.xmap"/>
-                 <map:serialize type="xml"/>
-            </map:match>
-
 
         </map:pipeline>
         
@@ -126,11 +97,27 @@
                 </map:act>
             </map:match>
             
+            <map:match pattern="*.xsp">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="xml-view">
+                        <map:parameter name="src" value="../{location}/{../1}.xsp"/>
+                    </map:call>
+                </map:act>
+            </map:match>
             <map:match pattern="*.xsl">
                 <map:act type="request">
                     <map:parameter name="parameters" value="true"/>
                     <map:call resource="xml-view">
                         <map:parameter name="src" value="../{location}/{../1}.xsl"/>
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.xslt">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="xml-view">
+                        <map:parameter name="src" value="../{location}/{../1}.xslt"/>
                     </map:call>
                 </map:act>
             </map:match>
@@ -155,6 +142,14 @@
                     <map:parameter name="parameters" value="true"/>
                     <map:call resource="html-view">
                         <map:parameter name="src" value="../{location}/{../1}.htm"/>
+                    </map:call>
+                </map:act>
+            </map:match>
+            <map:match pattern="*.svg">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="svg-view">
+                        <map:parameter name="src" value="../{location}/{../1}.svg"/>
                     </map:call>
                 </map:act>
             </map:match>
@@ -213,6 +208,27 @@
                 </map:act>
             </map:match>
 
+            <map:match pattern="*.txt">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="text-view">
+                        <map:parameter name="src" value="../{location}/{../1}.txt"/>
+                        <map:parameter name="mime-type" value="text/txt" />
+                    </map:call>
+                </map:act>
+            </map:match>
+
+            <map:match pattern="*.xlex">
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:call resource="text-view">
+                        <map:parameter name="src" value="../{location}/{../1}.xlex"/>
+                        <map:parameter name="mime-type" value="text/txt" />
+                    </map:call>
+                </map:act>
+            </map:match>
+
+<!--
             <map:match pattern="**/*.xmap">
                 <map:act type="request">
                     <map:parameter name="parameters" value="true"/>
@@ -222,11 +238,14 @@
             
 
             <map:match pattern="**/*.*">
-                <map:redirect-to uri="{2}.{3}?location={1}"/>
+                <map:act type="request">
+                    <map:parameter name="parameters" value="true"/>
+                    <map:redirect-to uri="../{../2}.xmap?location={location}"/>
+                 </map:act>
+                <map:redirect-to uri="../{2}.{3}?location={1}"/>
             </map:match>
 
-            
-            
+-->            
 
         </map:pipeline>
 

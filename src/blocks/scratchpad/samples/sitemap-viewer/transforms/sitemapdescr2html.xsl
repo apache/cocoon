@@ -25,7 +25,6 @@
                 <link href="SitemapInfo.css" type="text/css" rel="stylesheet" />
             </head>
             <body>
-                
                 <script src="ie.js" type="text/javascript"/>
                 <table class="header">
                         <tr>
@@ -33,10 +32,10 @@
                                 <xsl:if test="$showsources=1">
                                     <pre><a>
                                             <xsl:call-template name="popup-attrs">
-                                                <xsl:with-param name="url" select="concat('src/sitemap.xmap?location=',@location)"/>
+                                                <xsl:with-param name="url" select="concat('src/',substring-before(@filename,'.xmap'),'._xmap?location=',@location)"/>
                                                 <xsl:with-param name="target" select="'sitemapSrc'"/>
                                             </xsl:call-template>
-                                            <xsl:value-of select="@location"/>/sitemap.xmap</a>
+                                            <xsl:value-of select="concat(@location,'/',@filename)"/></a>
                                     <xsl:if test="$debug">
                                         <a href="{concat('descr?location=',@location)}">.</a>
                                     </xsl:if>
@@ -371,19 +370,27 @@
             
         <td><table><tr>
             <td colspan="2">
+
+                <xsl:variable name="url">
+                    <xsl:call-template name="make-url">
+                        <xsl:with-param name="location" select="/*/sitemap/@location"/>
+                        <xsl:with-param name="subloc" select="$afterslashes"/>
+                    </xsl:call-template>
+                </xsl:variable> 
+
                 <xsl:choose>
                     <xsl:when test="$afterslashes=$nomatch">
                         <pre>[unknown]</pre>
                     </xsl:when>
                     <xsl:when test="name()='mount' and $afterslashes!='' and $files/*[.=$afterslashes]">
-                        <pre><a href="{$afterslashes}"><xsl:value-of select="$afterslashes"/> </a></pre>
+                        <pre><a href="{$url}"><xsl:value-of select="$afterslashes"/> </a></pre>
                     </xsl:when>
                     <xsl:when test="$afterslashes!='' and $showsources=1 and $files/*[.=$afterslashes]">
                         <!--xsl:variable name="url" select="concat('src/',$afterslashes)"/>
                         <xsl:variable name="target" select="srcpopup"/-->
                         <pre><a>
                             <xsl:call-template name="popup-attrs">
-                                <xsl:with-param name="url" select="concat('src/',$afterslashes)"/>
+                                <xsl:with-param name="url" select="$url"/> 
                               </xsl:call-template>
 
                             <xsl:value-of select="$afterslashes"/> 
@@ -396,7 +403,10 @@
                     <xsl:otherwise>
                     </xsl:otherwise>
                 </xsl:choose>
-                <xsl:if test="name()='serialize' or name()='act'"><xsl:value-of select="name()"/></xsl:if>
+                <xsl:choose>
+                    <xsl:when test="name()='serialize' or name()='act'"><xsl:value-of select="name()"/></xsl:when>
+                    <xsl:when test="name()='transform'">xlst</xsl:when>
+                </xsl:choose>
             </td></tr>
           <tr class="comments">
             <td>
@@ -408,7 +418,6 @@
                         <xsl:when test="$refinfo!=''">
                             <xsl:value-of select="$refinfo"/>
                         </xsl:when>
-                        <xsl:when test="name()='transform'">xslt</xsl:when>
                         <xsl:when test="@element">
                             <xsl:value-of select="@element"/>
                         </xsl:when>
@@ -458,5 +467,26 @@
     <xsl:attribute name="onclick"><xsl:value-of select="$urlscript"/></xsl:attribute>
 </xsl:template>
 
+<xsl:template name="make-url">
+    <xsl:param name="location"/>
+    <xsl:param name="subloc"/>
+    <xsl:choose>
+        <xsl:when test="contains($subloc,'/')">
+            <xsl:call-template name="make-url">
+                <xsl:with-param name="location">
+                    <xsl:choose>
+                        <xsl:when test="$location!=''"><xsl:value-of select="concat($location,'/',substring-before($subloc,'/'))"/></xsl:when>
+                        <xsl:otherwise><xsl:value-of select="substring-before($subloc,'/')"/></xsl:otherwise>
+                    </xsl:choose>
+                </xsl:with-param>
+                <xsl:with-param name="subloc" select="substring-after($subloc,'/')"/>
+            </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="contains($subloc,'.xmap')">
+            <xsl:value-of select="concat(substring-before($subloc,'.xmap'),'._xmap','?location=',$location)"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="concat('src/',$subloc,'?location=',$location)"/></xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
 
 </xsl:stylesheet>

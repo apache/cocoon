@@ -4,13 +4,14 @@
     <xsl:output indent="yes"/>
     
     <xsl:param name="location"/>
+    <xsl:param name="filename"/>
     
     <xsl:variable name="sitemapInfo" select="//SitemapInfo"/>
     <xsl:variable name="globals" select="0"/>
     <xsl:variable name="nomatch" select="'::::*****:::::'"/>
     
     <xsl:template match="/">
-        <sitemap location="{$location}"  >
+        <sitemap location="{$location}" filename="{$filename}" >
             <info>
                 <xsl:call-template name="normalize-path">
                     <xsl:with-param name="path"  select="'123/hoep/..'"/>

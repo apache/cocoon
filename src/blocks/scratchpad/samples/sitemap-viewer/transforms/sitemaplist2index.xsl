@@ -45,7 +45,7 @@
 
 <xsl:template match="file">
     <li>
-        <a href="{.}"><xsl:value-of select="."/></a>
+        <a href="{concat(substring-before(@filename,'.xmap'),'._xmap','?location=',@path)}"><xsl:value-of select="."/></a>
     </li>
 </xsl:template>
 

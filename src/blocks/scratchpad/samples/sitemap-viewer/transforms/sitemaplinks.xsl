@@ -10,13 +10,15 @@
 <xsl:template match="dir:directory">
 </xsl:template>
 
-<xsl:template match="dir:file[contains(@name,'.xmap') and substring-after(@name,'.xmap')='']">
-    <file>
-    <xsl:apply-templates select="." mode="print"/>
-    </file>
+<xsl:template match="dir:file[contains(@name,'.xmap') and substring-after(@name,'.xmap')='' and ../@name!='..']">
     <dir>
         <xsl:apply-templates select=".." mode="print"/>
     </dir>
+    <file>
+        <xsl:attribute name="filename"><xsl:value-of select="@name"/></xsl:attribute>
+        <xsl:attribute name="path"><xsl:apply-templates select=".." mode="print"/></xsl:attribute>
+    <xsl:apply-templates select="." mode="print"/>
+    </file>
 </xsl:template>
 
 
