@@ -56,6 +56,7 @@
       <include name="*.sh"/>
       <include name="KEYS"/>
       <include name="*.xml"/>
+      <include name="*.sample"/>
       <include name="*.properties"/>
       <include name="*.xconf"/>
       <exclude name="local.*"/>
