@@ -79,7 +79,7 @@ import java.io.IOException;
  * This source inspector inspects XML files with a xpath expression
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.3 2003/05/19 10:02:05 stephan Exp $
+ * @version CVS $Id: XPathSourceInspector.java,v 1.4 2003/05/19 10:35:03 stephan Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe, Parameterizable {
@@ -97,7 +97,7 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
 
     public void parameterize(Parameters params)  {
         this.propertynamespace = params.getParameter("namespace", 
-            "http://xml.apache.org/cocoon/XPathSourceInspector");
+            "http://apache.org/cocoon/inspector/xpath/1.0");
         this.propertyname = params.getParameter("name", "result");
         this.extension = params.getParameter("extension", ".xml");
         this.xpath = params.getParameter("xpath", "/*");
