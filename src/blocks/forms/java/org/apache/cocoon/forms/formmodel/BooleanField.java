@@ -25,6 +25,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.commons.lang.BooleanUtils;
 
 /**
  * A widget to select a boolean value. Usually rendered as a checkbox.
@@ -63,18 +64,14 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     }
 
     public void readFromRequest(FormContext formContext) {
-        if (!getCombinedState().isAcceptingInputs())
+        if (!getCombinedState().isAcceptingInputs()) {
             return;
-
+        }
         validationError = null;
         Object oldValue = value;
         String param = formContext.getRequest().getParameter(getRequestParameterName());
-        if (param != null && param.equalsIgnoreCase("true"))
-            value = Boolean.TRUE;
-        else
-            value = Boolean.FALSE;
-
-        if (value != oldValue) {
+        value = BooleanUtils.toBooleanObject(BooleanUtils.toBoolean(param));
+        if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
     }
@@ -141,14 +138,14 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         if (object == null) {
             object = Boolean.FALSE;
         }
-        
+
         if (!(object instanceof Boolean)) {
             throw new RuntimeException("Cannot set value of boolean field \"" + getRequestParameterName() + "\" to a non-Boolean value.");
         }
-        
+
         Object oldValue = value;
         value = (Boolean)object;
-        if (value != oldValue) {
+        if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
     }
