@@ -38,9 +38,9 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
 
 /**
@@ -49,7 +49,7 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.40 2004/03/10 17:58:04 unico Exp $
+ * @version CVS $Id: Cocoon.java,v 1.41 2004/03/23 15:19:22 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ModifiableProcessor
@@ -89,9 +89,6 @@ public class Cocoon
 
     private static final String lineSeparator = System.getProperty("line.separator");
 
-    /** The source resolver */
-    protected SourceResolver sourceResolver;
-
     /** The environment helper */
     protected EnvironmentHelper environmentHelper;
     
@@ -106,12 +103,10 @@ public class Cocoon
      * 
      * @param manager the parent service manager.
      * 
-     * @avalon.dependency type=SourceResolver
      */
     public void service(ServiceManager manager) 
     throws ServiceException {
         this.serviceManager = manager;
-        this.sourceResolver = (SourceResolver) this.serviceManager.lookup(SourceResolver.ROLE);
         try {
             this.environmentHelper = new EnvironmentHelper(
                          (String) this.context.get(Constants.CONTEXT_ROOT_URL));
@@ -434,7 +429,7 @@ public class Cocoon
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getEnvironmentHelper()
      */
-    public org.apache.cocoon.environment.SourceResolver getSourceResolver() {
+    public SourceResolver getSourceResolver() {
         return this.environmentHelper;
     }
 
