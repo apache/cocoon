@@ -24,9 +24,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.cocoon.environment.Request;
 
 /**
- *
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
  * to provide request information for HTTP servlets.
+ *
+ * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
+ * @version CVS $Id: HttpRequest22.java,v 1.1.2.7 2001-04-12 06:33:31 giacomo Exp $
  */
 
 public class HttpRequest implements HttpServletRequest, Request {

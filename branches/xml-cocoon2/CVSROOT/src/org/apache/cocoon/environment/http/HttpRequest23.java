@@ -15,9 +15,11 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.apache.cocoon.environment.Request;
 
 /**
- *
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
  * to provide request information for HTTP servlets.
+ *
+ * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
+ * @version CVS $Id: HttpRequest23.java,v 1.1.2.6 2001-04-12 06:33:31 giacomo Exp $
  */
 
 public class HttpRequest extends HttpServletRequestWrapper implements Request {
