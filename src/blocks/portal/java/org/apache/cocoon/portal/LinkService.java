@@ -60,7 +60,7 @@ import org.apache.cocoon.portal.event.Event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LinkService.java,v 1.3 2003/12/08 13:47:50 cziegeler Exp $
+ * @version CVS $Id: LinkService.java,v 1.4 2004/02/28 17:26:28 cziegeler Exp $
  */
 public interface LinkService extends Component {
 
@@ -70,7 +70,7 @@ public interface LinkService extends Component {
     
     /**
      * Get the uri for this coplet containing the additional event
-     * @param event The event to add
+     * @param event The event to add (null is also allowed for convenience)
      * @return A URI
      */
     String getLinkURI(Event event);

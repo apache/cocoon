@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.6 2004/02/12 09:32:37 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.7 2004/02/28 17:26:27 cziegeler Exp $
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
@@ -91,11 +91,27 @@ extends AbstractSAXTransformer {
      */
     public static final String PORTAL_NAME_PARAM = "portalName";
 
+    /**
+     * Try to get the coplet instance data belonging to the current request
+     * @return The coplet instance data
+     * @throws SAXException If an errors occurs or the instance data is not available
+     */
     protected CopletInstanceData getCopletInstanceData() 
     throws SAXException {
-        return this.getCopletInstanceData(null);
+        CopletInstanceData cid = this.getCopletInstanceData(null);
+        if ( cid == null ) {
+            throw new SAXException("Could not find coplet instance data for the current pipeline.");
+        }
+        return cid;
     }
     
+    /**
+     * Try to get the coplet instance data with the given id
+     * @param copletId  The id of the coplet instance or null if this transformer
+     *                   is used inside a coplet pipeline
+     * @return The coplet instance data or null
+     * @throws SAXException If an error occurs
+     */
     protected CopletInstanceData getCopletInstanceData(String copletId) 
     throws SAXException {
         PortalService portalService = null;
@@ -133,10 +149,6 @@ extends AbstractSAXTransformer {
 
 
             CopletInstanceData object = portalService.getComponentManager().getProfileManager().getCopletInstanceData( copletId );
-                
-            if (object == null) {
-                throw new SAXException("Could not find coplet instance data for " + copletId);
-            }
                 
             return object;
         } catch (ServiceException e) {

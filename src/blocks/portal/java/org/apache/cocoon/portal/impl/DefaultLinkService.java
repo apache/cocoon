@@ -77,7 +77,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.10 2003/12/11 13:31:55 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.11 2004/02/28 17:26:28 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -136,6 +136,9 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event)
      */
     public String getLinkURI(Event event) {
+        if ( event == null ) {
+            return this.getRefreshLinkURI();   
+        }
         final Info info = this.getInfo();
         final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
         boolean hasParams = info.hasParameters;
@@ -189,6 +192,9 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
      */
     public String getLinkURI(List events) {
+        if ( events == null || events.size() == 0) {
+            return this.getRefreshLinkURI();   
+        }
         final Info info = this.getInfo();
         boolean hasParams = info.hasParameters;
         final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
@@ -232,6 +238,9 @@ public class DefaultLinkService
      * @see org.apache.cocoon.portal.LinkService#addEventToLink(org.apache.cocoon.portal.event.Event)
      */
     public void addEventToLink(Event event) {
+        if ( event == null ) {
+            return;   
+        }
         String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
         if (event instanceof RequestEvent ) {
             final String eventParName = ((RequestEvent)event).getRequestParameterName();
