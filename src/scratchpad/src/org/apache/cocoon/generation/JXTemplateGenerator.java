@@ -2188,6 +2188,8 @@ public class JXTemplateGenerator extends AbstractGenerator {
                 boolean result = false;
                 if (val instanceof Boolean) {
                     result = ((Boolean)val).booleanValue();
+                } else {
+                    result = (val != null);
                 }
                 if (!result) {
                     ev = startIf.endIf.next;
@@ -2307,6 +2309,8 @@ public class JXTemplateGenerator extends AbstractGenerator {
                     boolean result = false;
                     if (val instanceof Boolean) {
                         result = ((Boolean)val).booleanValue();
+                    } else {
+                        result = (val != null);
                     }
                     if (result) {
                         execute(consumer,
