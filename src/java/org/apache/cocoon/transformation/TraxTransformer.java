@@ -50,8 +50,16 @@
 
 package org.apache.cocoon.transformation;
 
-import org.apache.excalibur.xml.xslt.XSLTProcessor;
-import org.apache.excalibur.xml.xslt.XSLTProcessorException;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.TransformerHandler;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -73,21 +81,13 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.xml.xslt.XSLTProcessor;
+import org.apache.excalibur.xml.xslt.XSLTProcessorException;
 import org.xml.sax.SAXException;
 
-import javax.xml.transform.sax.SAXResult;
-import javax.xml.transform.sax.TransformerHandler;
-
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 /**
- * This Transformer is used to transform this incoming SAX stream using
- * a XSLT stylesheet. Use the following sitemap declarations to define, configure
+ * This Transformer is used to transform the incoming SAX stream using
+ * a TrAXProcessor. Use the following sitemap declarations to define, configure
  * and parameterize it:
  *
  * <b>In the map:sitemap/map:components/map:transformers:</b><br>
@@ -96,6 +96,7 @@ import java.util.Set;
  *   &lt;use-request-parameters&gt;false&lt;/use-request-parameters&gt;
  *   &lt;use-browser-capabilities-db&gt;false&lt;/use-browser-capabilities-db&gt;
  *   &lt;use-session-info&gt;false&lt;/use-session-info&gt;
+ *   &lt;xslt-processor&gt;xslt&lt;/xslt-processor&gt;
  *   &lt;transformer-factory&gt;org.apache.xalan.processor.TransformerFactoryImpl&lt;/transformer-factory&gt;
  * &lt;/map:transformer&gt;
  * </pre>
@@ -121,13 +122,17 @@ import java.util.Set;
  * cacheability of the generated output of this transformer.<br>
  *
  *
- * The &lt;transformer-factory&gt; configuration allows to specify the TrAX transformer factory
- * implementation that willbe used to obtain the XSLT processor. This allows to have
- * several XSLT processors in the configuration
- * (e.g. Xalan, XSTLC, Saxon, ...) and choose one or the other depending on the needs of stylesheet
- * specificities.<br>
- * If no factory is specified, this transformer will use the XSLT implementation
+ * The &lt;xslt-processor-role&gt; configuration allows to specify the TrAX processor (defined in
+ * the cocoon.xconf) that will be used to obtain the XSLT processor. This allows to have
+ * several XSLT processors in the configuration (e.g. Xalan, XSTLC, Saxon, ...) and choose 
+ * one or the other depending on the needs of stylesheet specificities.<br>
+ * If no processor is specified, this transformer will use the XSLT implementation
  * that Cocoon uses internally.
+ * 
+ * The &lt;transformer-factory&gt; configuration allows to specify the TrAX transformer factory
+ * implementation that will be used to obtain the XSLT processor. This is only usefull for
+ * compatibility reasons. Please configure the xslt processor in the cocoon.xconf properly
+ * and use the xslt-processor-role configuration mentioned above.
  *
  * <p>
  * <b>In a map:sitemap/map:pipelines/map:pipeline:</b><br>
@@ -146,7 +151,7 @@ import java.util.Set;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.3 2003/04/19 20:38:22 cziegeler Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -171,9 +176,6 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
     /** Should we info about the session availalbe in the stylesheet? (default is off) */
     private boolean useSessionInfo = false;
     private boolean _useSessionInfo = false;
-
-    /** The trax TransformerFactory classname */
-    private String traxFactory;
 
     /** The trax TransformerHandler */
     TransformerHandler transformerHandler;
@@ -214,28 +216,31 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         this._useSessionInfo = this.useSessionInfo;
 
         child = conf.getChild("transformer-factory");
-
         // traxFactory is null, if transformer-factory config is unspecified
-        this.traxFactory = child.getValue(null);
+        final String traxFactory = child.getValue(null);
 
+        child = conf.getChild("xslt-processor-role");
+        String xsltProcessorRole = child.getValue(XSLTProcessor.ROLE);
+        if (!xsltProcessorRole.startsWith(XSLTProcessor.ROLE)) {
+            xsltProcessorRole = XSLTProcessor.ROLE + '/' + xsltProcessorRole;
+        }
         if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Use parameters is " + this.useParameters + " for " + this);
-            this.getLogger().debug("Use cookies is " + this.useCookies + " for " + this);
-            this.getLogger().debug("Use session info is " + this.useSessionInfo + " for " + this);
+            this.getLogger().debug("Use parameters is " + this.useParameters);
+            this.getLogger().debug("Use cookies is " + this.useCookies);
+            this.getLogger().debug("Use session info is " + this.useSessionInfo);
+            this.getLogger().debug("Use TrAX Processor " + xsltProcessorRole);
 
-            if (this.traxFactory != null) {
-                this.getLogger().debug("Use TrAX Transformer Factory " + this.traxFactory);
+            if (traxFactory != null) {
+                this.getLogger().debug("Use TrAX Transformer Factory " + traxFactory);
             } else {
                 this.getLogger().debug("Use default TrAX Transformer Factory.");
             }
         }
 
         try {
-            this.xsltProcessor = (XSLTProcessor) this.manager.lookup(XSLTProcessor.ROLE);
-            // override xsltProcessor setting only, in case of
-            // transformer-factory config is specified
-            if (this.traxFactory != null) {
-                this.xsltProcessor.setTransformerFactory(this.traxFactory);
+            this.xsltProcessor = (XSLTProcessor) this.manager.lookup(xsltProcessorRole);
+            if (traxFactory != null) {
+                this.xsltProcessor.setTransformerFactory(traxFactory);
             }
         } catch (ComponentException e) {
             throw new ConfigurationException("Cannot load XSLT processor", e);
