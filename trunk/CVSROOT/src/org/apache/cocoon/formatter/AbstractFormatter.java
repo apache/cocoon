@@ -1,4 +1,4 @@
-/*-- $Id: AbstractFormatter.java,v 1.4 2000-11-20 01:43:54 greenrd Exp $ -- 
+/*-- $Id: AbstractFormatter.java,v 1.5 2001-03-07 22:32:16 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-11-20 01:43:54 $
+ * @version $Revision: 1.5 $ $Date: 2001-03-07 22:32:16 $
  */
 
 public abstract class AbstractFormatter 
@@ -104,7 +104,7 @@ implements Configurable, Formatter, Status, Cacheable {
 
         preserveSpace = (String) conf.get("preserve-space");
         if (preserveSpace!= null) {
-            format.setPreserveSpace(Boolean.getBoolean(preserveSpace));
+            format.setPreserveSpace(Boolean.valueOf(preserveSpace).booleanValue());
         }
         
         lineWidth = (String) conf.get("line-width");
