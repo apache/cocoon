@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.5 2003/03/18 18:24:27 bruno Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.6 2003/03/20 13:11:28 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -466,6 +466,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     throws IOException {
         if (this.secureOutputStream != null) {
             this.secureOutputStream.realFlush();
+        } else if ( this.outputStream != null ){
+            this.outputStream.flush();
         }
     }
 
