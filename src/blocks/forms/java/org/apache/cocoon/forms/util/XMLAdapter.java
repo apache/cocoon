@@ -57,7 +57,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * the single value rather than the fields as XML. For population of the
  * form both forms are however allowed.
  *
- * @version CVS $Id: XMLAdapter.java,v 1.1 2004/06/08 15:40:08 danielf Exp $
+ * @version CVS $Id: XMLAdapter.java,v 1.2 2004/06/09 13:52:28 danielf Exp $
  */
 public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
 
@@ -89,7 +89,7 @@ public class XMLAdapter extends AbstractXMLConsumer implements XMLizable {
      */
     public XMLAdapter(Widget widget) {
         this.widget = widget;
-        this.locale = widget.getForm().getLocale();
+        this.locale = Locale.US;
     }
 
     /**
