@@ -83,7 +83,7 @@ import java.util.Map;
  * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.4 2003/05/17 15:44:57 stephan Exp $
+ * @version    CVS $Id: Paginator.java,v 1.5 2003/05/17 16:12:23 stephan Exp $
  */
 public class Paginator extends AbstractTransformer
   implements Composable, Disposable, CacheableProcessingComponent {
@@ -269,12 +269,8 @@ public class Paginator extends AbstractTransformer
                 atts.addAttribute(PAGINATE_URI, "item-group",
                                   PAGINATE_PREFIX_TOKEN+"item-group",
                                   "CDATA", itemGroup);
-                getLogger().fatalError("STACK0");
                 super.startElement(uri, loc, raw, atts);
-
-                getLogger().fatalError("STACK1");
             } else {
-                getLogger().fatalError("STACK2");
                 super.startElement(uri, loc, raw, a);
             }
         }
