@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.22 $ $Date: 2000-08-31 16:41:02 $
+ * @version CVS $Revision: 1.4.2.23 $ $Date: 2000-09-03 13:45:05 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -148,7 +148,7 @@ public class Cocoon
                 this.components.put(role, ClassUtils.getClass(className));
                 this.configurations.put(role, co);
             } catch (Exception ex) {
-                throw new ConfigurationException("Cannot load class " + className + ": " + ex.getMessage(), co);
+                // if the component is not found, there is no need to stop at this point.
             }
         }
 
