@@ -83,8 +83,8 @@ public class Form extends AbstractContainerWidget {
     }
 
     /**
-     * Fire the widget events that have been queued. Note that event handling can fire new
-     * events.
+     * Fire the events that have been queued.
+     * Note that event handling can fire new events.
      */
     private void fireWidgetEvents() {
         if (this.events != null) {
