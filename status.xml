@@ -202,6 +202,11 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="SW" type="add">
+     A flowscript's file encoding can now be specified by a comment on the script's
+     very first line, in the form "<code>// encoding = xxxx</code>". Otherwise, the
+     default platform encoding is used.
+   </action>
    <action dev="JQ" type="add">
      Added QueryBean as a standalone block, copied over from 2.2.0. Removed the original from the Lucene Block. Stores Favourites using OJB in HSQLDB.
    </action>

@@ -38,5 +38,12 @@ FOM_Cocoon.prototype.createWebContinuation = function(ttl) {
    return wk;
 }
 
-
+/**
+ * Halt the current script. Useful when we want to send a page and never allow going
+ * back, and exiting the current function isn't possible because it goes back to the
+ * caller.
+ */
+FOM_Cocoon.prototype.suicide() {
+    FOM_Cocoon.suicide();
+}
 

@@ -42,6 +42,9 @@ import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
+import org.apache.regexp.RE;
+import org.apache.regexp.RECompiler;
+import org.apache.regexp.REProgram;
 import org.mozilla.javascript.BaseFunction;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
@@ -65,9 +68,11 @@ import org.mozilla.javascript.tools.shell.Global;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PushbackInputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -644,14 +649,42 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     protected Script compileScript(Context cx, Scriptable scope, Source src)
     throws Exception {
-        InputStream is = src.getInputStream();
+        PushbackInputStream is = new PushbackInputStream(src.getInputStream(), ENCODING_BUF_SIZE);
         try {
-            Reader reader = new BufferedReader(new InputStreamReader(is));
+            String encoding = findEncoding(is);
+            Reader reader = encoding == null ? new InputStreamReader(is) : new InputStreamReader(is, encoding);
+            reader = new BufferedReader(reader);
             Script compiledScript = cx.compileReader(scope, reader,
                     src.getURI(), 1, null);
             return compiledScript;
         } finally {
             is.close();
+        }
+    }
+    
+    // A charset name can be up to 40 characters taken from the printable characters of US-ASCII
+    // (see http://www.iana.org/assignments/character-sets). So reading 100 bytes should be more than enough.
+    private final static int ENCODING_BUF_SIZE = 100;
+    // Match 'encoding = xxxx' on the first line
+    REProgram encodingRE = new RECompiler().compile("^.*encoding\\s*=\\s*([^\\s]*)");
+    
+    /**
+     * Find the encoding of the stream, or null if not specified
+     */
+    String findEncoding(PushbackInputStream is) throws IOException {
+        // Read some bytes
+        byte[] buffer = new byte[ENCODING_BUF_SIZE];
+        int len = is.read(buffer, 0, buffer.length);
+        // and push them back
+        is.unread(buffer, 0, len);
+        
+        // Interpret them as an ASCII string
+        String str = new String(buffer, 0, len, "ASCII");
+        RE re = new RE(encodingRE);
+        if (re.match(str)) {
+            return re.getParen(1);
+        } else {
+            return null;
         }
     }
 
