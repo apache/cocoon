@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.xscript;
 
-import org.apache.cocoon.ProcessingException;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +59,7 @@ import java.io.InputStream;
  * <code>Result</code> object.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XScriptObjectResult.java,v 1.1 2003/03/09 00:09:27 pier Exp $
+ * @version CVS $Id: XScriptObjectResult.java,v 1.2 2003/03/11 15:06:55 vgritsenko Exp $
  * @since   August 30, 2001
  */
 public class XScriptObjectResult extends XScriptObject {
@@ -75,8 +73,7 @@ public class XScriptObjectResult extends XScriptObject {
         this.content = content;
     }
 
-    public InputStream getInputStream()
-            throws ProcessingException, IOException {
+    public InputStream getInputStream() throws IOException {
         return new ByteArrayInputStream(content.getBytes());
     }
 
@@ -84,7 +81,7 @@ public class XScriptObjectResult extends XScriptObject {
         return content.length();
     }
 
-    public String getSystemId() {
+    public String getURI() {
         // FIXME: Return a real URL that identifies this object
         return "file:/";
     }
