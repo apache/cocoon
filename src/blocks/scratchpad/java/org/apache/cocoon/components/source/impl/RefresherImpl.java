@@ -63,16 +63,15 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.SimpleCacheKey;
 import org.apache.cocoon.components.cron.ConfigurableCronJob;
@@ -91,15 +90,15 @@ import org.apache.excalibur.source.SourceResolver;
  * 
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RefresherImpl.java,v 1.2 2003/09/24 22:34:52 cziegeler Exp $
+ * @version CVS $Id: RefresherImpl.java,v 1.3 2003/10/25 18:06:19 joerg Exp $
  */
 public class RefresherImpl 
     extends AbstractLogEnabled
-    implements Parameterizable, ThreadSafe, Refresher, Composable, Disposable, CronJob {
+    implements Parameterizable, ThreadSafe, Refresher, Serviceable, Disposable, CronJob {
     
     protected String schedulerTarget;
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
     protected JobScheduler   scheduler;
     
@@ -140,7 +139,7 @@ public class RefresherImpl
                     for(int i=0; i < childs.length; i++) {
                         try {
                             String uri = URLDecoder.decode(childs[i].getAttribute("uri"));
-                            int   expires = childs[i].getAttributeAsInteger("expires");
+                            int expires = childs[i].getAttributeAsInteger("expires");
                             String cache = childs[i].getAttribute("cache");                        
                             String key = URLDecoder.decode(childs[i].getAttribute("key"));
                             SimpleCacheKey cacheKey = new SimpleCacheKey(key, false);
@@ -189,17 +188,17 @@ public class RefresherImpl
             t = (ConfigurableCronJob)this.manager.lookup(this.schedulerTarget);
             t.setup(conf.parameters, conf.map);
             t.execute(name);
-        } catch (ComponentException ce) {
-            throw new SourceException("Unable to lookup target " + this.schedulerTarget, ce);
+        } catch (ServiceException se) {
+            throw new SourceException("Unable to lookup target " + this.schedulerTarget, se);
         } finally {
-            this.manager.release((Component)t);
+            this.manager.release(t);
         }
     }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.scheduler = (JobScheduler)this.manager.lookup(JobScheduler.ROLE);
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
@@ -209,14 +208,14 @@ public class RefresherImpl
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( (Component)this.scheduler );
+        if (this.manager != null) {
+            this.manager.release(this.scheduler);
             this.scheduler = null;
             this.manager = null;
-            if ( this.resolver != null ) {
-                this.resolver.release( this.writeSource );
+            if (this.resolver != null) {
+                this.resolver.release(this.writeSource);
                 this.writeSource = null;
-                this.manager.release( this.resolver );
+                this.manager.release(this.resolver);
                 this.resolver = null;
             }
         }

@@ -55,13 +55,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.repository.Repository;
 import org.apache.cocoon.components.repository.impl.SlideRepository;
@@ -77,22 +77,22 @@ import org.apache.slide.common.NamespaceAccessToken;
  * A factory for sources from a Jakarta Slide repository.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.3 2003/03/24 14:33:54 stefano Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.4 2003/10/25 18:06:20 joerg Exp $
  */
 public class SlideSourceFactory extends AbstractLogEnabled
-  implements SourceFactory, ThreadSafe, Composable, Contextualizable {
+  implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
 
-    /** The component manager instance */
-    private ComponentManager manager = null;
+    /** The ServiceManager instance */
+    private ServiceManager manager = null;
     private Context context;
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      *
-     * @param manager Component manager.
+     * @param manager ServiceManager.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -185,12 +185,12 @@ public class SlideSourceFactory extends AbstractLogEnabled
 
             source.enableLogging(getLogger());
             source.contextualize(this.context);
-            source.compose(this.manager);
+            source.service(this.manager);
 
             return source;
 
-        } catch (ComponentException ce) {
-            getLogger().error("Could not lookup for component.", ce);
+        } catch (ServiceException se) {
+            getLogger().error("Could not lookup for service.", se);
         } finally {
             if (repository!=null) {
                 this.manager.release(repository);

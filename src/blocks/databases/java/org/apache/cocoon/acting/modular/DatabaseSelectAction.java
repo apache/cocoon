@@ -57,9 +57,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
 
 import org.apache.cocoon.util.JDBCTypeConversions;
 
@@ -69,7 +69,7 @@ import org.apache.cocoon.util.JDBCTypeConversions;
  * time.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseSelectAction.java,v 1.1 2003/03/09 00:03:04 pier Exp $
+ * @version CVS $Id: DatabaseSelectAction.java,v 1.2 2003/10/25 18:06:19 joerg Exp $
  */
 public class DatabaseSelectAction extends DatabaseAction {
 
@@ -100,7 +100,7 @@ public class DatabaseSelectAction extends DatabaseAction {
      * @return the insert query as a string
      */
     protected CacheHelper getQuery( Configuration table, Map modeTypes, Map defaultModeNames )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         LookUpKey lookUpKey = new LookUpKey( table, modeTypes );
         CacheHelper queryData = null;
@@ -158,7 +158,7 @@ public class DatabaseSelectAction extends DatabaseAction {
      * database operation.
      */
     protected Object[][] getColumnValues( Configuration tableConf, CacheHelper queryData, Map objectModel )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         Object[][] columnValues = new Object[ queryData.columns.length ][];
         for ( int i = 0; i < queryData.columns.length; i++ ){

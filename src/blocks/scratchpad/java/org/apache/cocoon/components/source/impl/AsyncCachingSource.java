@@ -59,8 +59,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.ExtendedCachedResponse;
@@ -80,12 +80,12 @@ import org.xml.sax.SAXException;
  * a given period of time
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AsyncCachingSource.java,v 1.1 2003/09/04 12:42:34 cziegeler Exp $
+ * @version CVS $Id: AsyncCachingSource.java,v 1.2 2003/10/25 18:06:19 joerg Exp $
  * @since 2.1.1
  */
 public class AsyncCachingSource
 extends CachingSource
-implements Source, Composable, Initializable, Disposable, XMLizable {
+implements Source, Serviceable, Initializable, Disposable, XMLizable {
 
     protected SourceValidity validity;
     
@@ -179,8 +179,8 @@ implements Source, Composable, Initializable, Disposable, XMLizable {
                deserializer.setConsumer(new ContentHandlerWrapper(contentHandler));
            }
            deserializer.deserialize( this.cachedResponse.getAlternativeResponse() );
-       } catch (ComponentException ce ) {
-           throw new SAXException("Unable to lookup xml deserializer.", ce);
+       } catch (ServiceException se ) {
+           throw new SAXException("Unable to lookup xml deserializer.", se);
        } finally {
            this.manager.release(deserializer);
        }

@@ -64,10 +64,10 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 
@@ -95,12 +95,12 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: BlobSource.java,v 1.3 2003/09/24 21:54:48 cziegeler Exp $
+ * @version CVS $Id: BlobSource.java,v 1.4 2003/10/25 18:06:20 joerg Exp $
  */
-public class BlobSource extends AbstractLogEnabled implements Source, Composable {
+public class BlobSource extends AbstractLogEnabled implements Source, Serviceable {
 
-    /** The component manager instance */
-    private ComponentManager manager = null;
+    /** The ServiceManager instance */
+    private ServiceManager manager = null;
 
     /**
      * The system ID for this source
@@ -167,10 +167,10 @@ public class BlobSource extends AbstractLogEnabled implements Source, Composable
     }
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager)  {
+    public void service(ServiceManager manager)  {
         this.manager = manager;
     }
 

@@ -59,13 +59,13 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.AbstractComplementaryConfigurableAction;
@@ -119,7 +119,7 @@ import org.apache.cocoon.util.JDBCTypeConversions;
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.4 2003/09/24 21:54:48 cziegeler Exp $
+ * @version CVS $Id: DatabaseAction.java,v 1.5 2003/10/25 18:06:19 joerg Exp $
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
@@ -151,7 +151,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
     // instance vars
     // ========================================================================
 
-    protected ComponentSelector dbselector;
+    protected ServiceSelector dbselector;
     protected Map defaultModeNames = new HashMap( 3 );
     protected final HashMap cachedQueryData = new HashMap();
     protected String pathSeparator = ".";
@@ -259,9 +259,9 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
     /**
      * Compose the Actions so that we can select our databases.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.dbselector = (ComponentSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.dbselector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
     }
 
 
@@ -281,7 +281,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
      * Get the Datasource we need.
      */
     protected DataSourceComponent getDataSource( Configuration conf, Parameters parameters )
-        throws ComponentException {
+        throws ServiceException {
 
         String sourceName = parameters.getParameter( "connection", (String) settings.get( "connection" ) );
         if ( sourceName == null ) {
@@ -311,11 +311,11 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
      */
     protected void setOutputAttribute(Map objectModel, String outputMode, String key, Object value) {
 
-        ComponentSelector outputSelector = null;
+        ServiceSelector outputSelector = null;
         OutputModule output = null;
         try {
-            outputSelector=(ComponentSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
-            if (outputMode != null && outputSelector != null && outputSelector.hasComponent(outputMode)){
+            outputSelector = (ServiceSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
+            if (outputMode != null && outputSelector != null && outputSelector.isSelectable(outputMode)){
                 output = (OutputModule) outputSelector.select(outputMode);
             }
             output.setAttribute( null, objectModel, key, value );
@@ -484,7 +484,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
      *
      */
     protected Object[] getColumnValue( Configuration tableConf, Column column, Map objectModel )
-        throws ConfigurationException, ComponentException {
+        throws ConfigurationException, ServiceException {
 
         if ( column.isAutoIncrement ) {
             return new Object[1];
@@ -493,15 +493,15 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
             String cname = getOutputName( tableConf, column.columnConf );
 
             // obtain input module and read values
-            ComponentSelector inputSelector = null;
+            ServiceSelector inputSelector = null;
             InputModule input = null;
             try {
-                inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
-                if (column.mode != null && inputSelector != null && inputSelector.hasComponent(column.mode)){
+                inputSelector = (ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR);
+                if (column.mode != null && inputSelector != null && inputSelector.isSelectable(column.mode)){
                     input = (InputModule) inputSelector.select(column.mode);
                 }
 
-                if ( column.isSet ){
+                if (column.isSet) {
                     if (getLogger().isDebugEnabled())
                         getLogger().debug( "Trying to set column " + cname +" from "+column.mode+" using getAttributeValues method");
                     values = input.getAttributeValues( cname, column.modeConf, objectModel );
@@ -735,14 +735,14 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                 conn.commit();
 
             // obtain output mode module and rollback output
-            ComponentSelector outputSelector = null;
+            ServiceSelector outputSelector = null;
             OutputModule output = null;
             try {
-                outputSelector=(ComponentSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
-                if (outputMode != null && outputSelector != null && outputSelector.hasComponent(outputMode)){
+                outputSelector = (ServiceSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
+                if (outputMode != null && outputSelector != null && outputSelector.isSelectable(outputMode)){
                     output = (OutputModule) outputSelector.select(outputMode);
                 }
-                output.commit( null, objectModel );
+                output.commit(null, objectModel);
             } catch (Exception e) {
                 if (getLogger().isWarnEnabled()) {
                     getLogger().warn("Could not select output mode "
@@ -768,11 +768,11 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                     results = null;
 
                     // obtain output mode module and commit output
-                    ComponentSelector outputSelector = null;
+                    ServiceSelector outputSelector = null;
                     OutputModule output = null;
                     try {
-                        outputSelector=(ComponentSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
-                        if (outputMode != null && outputSelector != null && outputSelector.hasComponent(outputMode)){
+                        outputSelector = (ServiceSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR);
+                        if (outputMode != null && outputSelector != null && outputSelector.isSelectable(outputMode)){
                             output = (OutputModule) outputSelector.select(outputMode);
                         }
                         output.rollback( null, objectModel, e);
@@ -879,7 +879,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
      * implement other operations e.g. delete
      */
     abstract Object[][] getColumnValues( Configuration tableConf, CacheHelper queryData, Map objectModel )
-        throws ConfigurationException, ComponentException;
+        throws ConfigurationException, ServiceException;
 
     /**
      * Get the String representation of the PreparedStatement.  This is
@@ -893,6 +893,6 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
      * @return the insert query as a string
      */
     protected abstract CacheHelper getQuery( Configuration table, Map modeTypes, Map defaultModeNames )
-        throws ConfigurationException, ComponentException;
+        throws ConfigurationException, ServiceException;
 
 }

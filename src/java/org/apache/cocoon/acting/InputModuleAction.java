@@ -98,19 +98,15 @@ import java.util.Map;
  * @see org.apache.cocoon.components.modules.input.InputModule
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.2 2003/08/15 15:54:15 haul Exp $
+ * @version CVS $Id: InputModuleAction.java,v 1.3 2003/10/25 18:06:19 joerg Exp $
  */
-public class InputModuleAction extends ConfigurableComposerAction {
+public class InputModuleAction extends ConfigurableServiceableAction {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
-    public Map act(
-        Redirector redirector,
-        SourceResolver resolver,
-        Map objectModel,
-        String source,
-        Parameters parameters)
+    public Map act(Redirector redirector, SourceResolver resolver,
+                   Map objectModel, String source, Parameters parameters)
         throws Exception {
 
         HashMap map = null;
