@@ -59,7 +59,7 @@ import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Processor;
+import org.apache.cocoon.CompilingProcessor;
 import org.apache.cocoon.components.CocoonContainer;
 
 import java.io.File;
@@ -100,8 +100,24 @@ public class CocoonBean
         m_alreadyLoaded = false;
     }
 
-    public Processor getRootProcessor()
+    public CompilingProcessor getRootProcessor()
     {
+        ServiceManager manager = getServiceManager();
+
+        CompilingProcessor rootProcessor = null;
+        try
+        {
+            rootProcessor = (CompilingProcessor)manager.lookup( CompilingProcessor.ROLE);
+        }
+        catch ( ServiceException e )
+        {
+            throw new CascadingRuntimeException("Error retrieving root processor", e);
+        }
+
+        return rootProcessor;
+    }
+
+    protected ServiceManager getServiceManager(){
         if (null == m_contManager)
         {
             try
@@ -116,18 +132,7 @@ public class CocoonBean
 
         CocoonContainer container = (CocoonContainer)m_contManager.getContainer();
         ServiceManager manager = container.getServiceManager();
-
-        Processor rootProcessor = null;
-        try
-        {
-            rootProcessor = (Processor)manager.lookup(Processor.ROLE);
-        }
-        catch ( ServiceException e )
-        {
-            throw new CascadingRuntimeException("Error retrieving root processor", e);
-        }
-
-        return rootProcessor;
+        return manager;
     }
 
 
@@ -251,6 +256,9 @@ public class CocoonBean
 
     public void initialize() throws Exception
     {
+        // restart....
+        if (null != m_contManager) dispose();
+
         forceLoadClasses();
 
         m_initializationLogger.debug("Starting up Cocoon");
@@ -306,7 +314,7 @@ public class CocoonBean
         m_contManager = null;
     }
 
-    public void finalize() throws Throwable
+    protected void finalize() throws Throwable
     {
         dispose();
         super.finalize();

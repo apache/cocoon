@@ -94,7 +94,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OldCocoonBean.java,v 1.1 2003/10/17 17:49:24 bloritsch Exp $
+ * @version CVS $Id: OldCocoonBean.java,v 1.2 2003/10/17 22:05:14 bloritsch Exp $
  */
 public class OldCocoonBean extends OldCocoonWrapper {
 
@@ -112,7 +112,6 @@ public class OldCocoonBean extends OldCocoonWrapper {
     // Internal Objects
     private boolean initialized;
     private List listeners = new ArrayList();
-    private boolean verbose;
     SourceResolver sourceResolver;
 
     private Crawler crawler;
@@ -164,10 +163,6 @@ public class OldCocoonBean extends OldCocoonWrapper {
 
     public void setPrecompileOnly(boolean precompileOnly) {
         this.precompileOnly = precompileOnly;
-    }
-
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
     }
 
     public void setDefaultFilename(String filename) {
