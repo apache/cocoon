@@ -15,13 +15,15 @@
  */
 package org.apache.cocoon.portal.layout;
 
+import java.util.Map;
+
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Item.java,v 1.4 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class Item extends AbstractParameters {
 	
@@ -53,4 +55,31 @@ public class Item extends AbstractParameters {
     public final void setParent(CompositeLayout layout) {
         this.parentLayout = layout;
     }
+        
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        Item clone = (Item)super.clone();
+        
+        clone.layout = null;
+        clone.parentLayout = null;
+        
+        return clone;
+    }
+    
+    public Item copy(CompositeLayout parent, Map copletInstanceDatas) {
+        try {
+            Item clone = (Item)this.clone();
+            if ( this.layout != null ) {
+                clone.layout = this.layout.copy(copletInstanceDatas);
+            }
+            clone.parentLayout = parent;
+            return clone;
+        } catch (CloneNotSupportedException cnse) {
+            // ignore
+        }
+        return null;
+    }
+    
 }
