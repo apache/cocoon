@@ -20,9 +20,9 @@ public class FileSavingEnvironment extends AbstractEnvironment {
     private File destDir;
     private String extention;
 
-    public FileSavingEnvironment(String uri, File destDir)
+    public FileSavingEnvironment(String uri, File context, File destDir)
     throws MalformedURLException {
-        super(uri, null, "");
+        super(uri, null, context);
         this.destDir = destDir;
     }
 
