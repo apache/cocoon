@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: sample-static.xml,v 1.1 2003/03/09 00:10:53 pier Exp $ -->
+<!-- CVS: $Id: sample-static.xml,v 1.2 2003/03/14 03:41:49 crossley Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -22,7 +22,7 @@
   </group>
 
   <group name="CC/PP and UAProf">
-    <sample name="Quick Start" href="documents/developing/deliquick.html">
+    <sample name="Quick Start" href="../../docs/developing/deliquick.html">
 	Read this to find out how to enable DELI before trying the test pages.
     </sample>
     <sample name="DELI" href="deli.html">
