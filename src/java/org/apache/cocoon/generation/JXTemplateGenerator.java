@@ -334,7 +334,7 @@ import java.text.*;
  * &lt;/table&gt;
  * </pre></p>
  */
-public class JXTemplateGenerator extends ComposerGenerator {
+public class JXTemplateGenerator extends ServiceableGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();

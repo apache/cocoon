@@ -123,9 +123,11 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.7 2003/07/02 23:52:10 joerg Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.8 2003/09/03 15:00:56 cziegeler Exp $
  */
-public class DirectoryGenerator extends ComposerGenerator implements CacheableProcessingComponent {
+public class DirectoryGenerator 
+    extends ServiceableGenerator 
+    implements CacheableProcessingComponent {
 
     /** Constant for the file protocol. */
     private static final String FILE = "file:";

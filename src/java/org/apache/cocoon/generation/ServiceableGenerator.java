@@ -50,47 +50,36 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.SourceResolver;
-
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.Map;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 /**
- *
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ServletGenerator.java,v 1.2 2003/09/03 15:00:56 cziegeler Exp $
+ * A default implementation that can be used for writing own generators.
+ *  
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: ServiceableGenerator.java,v 1.1 2003/09/03 15:00:56 cziegeler Exp $
+ * @since 2.1.1
  */
-public abstract class ServletGenerator extends ComposerGenerator {
+public abstract class ServiceableGenerator extends AbstractGenerator
+implements Serviceable, Disposable {
 
-    protected Request request;
-    protected Response response;
-    protected Context context;
+    /** The service manager instance */
+    protected ServiceManager manager;
 
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-    throws ProcessingException, SAXException, IOException {
-
-        super.setup(resolver, objectModel, src, par);
-        this.request = ObjectModelHelper.getRequest(objectModel);
-        this.response = ObjectModelHelper.getResponse(objectModel);
-        this.context = ObjectModelHelper.getContext(objectModel);
+    /**
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 
     /**
-     * Recycle the generator by removing references
+     * Release all resources.
      */
-    public void recycle() {
-        super.recycle();
-        this.request = null;
-        this.response = null;
-        this.context = null;
+    public void dispose() {
+        this.manager = null;
     }
 }

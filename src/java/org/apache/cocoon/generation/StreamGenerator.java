@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -88,9 +87,9 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.3 2003/09/03 13:35:20 cziegeler Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
  */
-public class StreamGenerator extends ComposerGenerator
+public class StreamGenerator extends ServiceableGenerator
 {
     public static final String CLASS = StreamGenerator.class.getName();
 
@@ -182,7 +181,7 @@ public class StreamGenerator extends ComposerGenerator
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in StreamGenerator.generate()", e);
         } finally {
-            this.manager.release( (Component)parser);
+            this.manager.release( parser);
         }
     }
 

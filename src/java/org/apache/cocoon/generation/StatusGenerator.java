@@ -50,8 +50,8 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.StoreJanitor;
 import org.xml.sax.Attributes;
@@ -93,9 +93,9 @@ import java.util.*;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.2 2003/09/03 15:00:56 cziegeler Exp $
  */
-public class StatusGenerator extends ComposerGenerator {
+public class StatusGenerator extends ServiceableGenerator {
 
     /**
      * The StoreJanitor used to get cache statistics
@@ -122,18 +122,28 @@ public class StatusGenerator extends ComposerGenerator {
     protected static final String xlinkPrefix = "xlink";
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      * Need to get statistics about cache hits
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
         try {
             this.storejanitor = (StoreJanitor)manager.lookup(StoreJanitor.ROLE);
             this.store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
-        } catch(ComponentException ce) {
+        } catch(ServiceException ce) {
             getLogger().info("StoreJanitor is not available. Sorry, no cache statistics");
         }
+    }
+    
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.store_persistent );
+            this.manager.release( this.storejanitor );
+            this.store_persistent = null;
+            this.storejanitor = null;
+        }
+        super.dispose();
     }
 
     /** Generate the status information in XML format.
