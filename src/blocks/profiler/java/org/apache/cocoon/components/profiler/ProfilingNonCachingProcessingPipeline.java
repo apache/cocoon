@@ -60,11 +60,9 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -75,7 +73,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.2 2003/03/20 15:04:14 stephan Exp $
+ * @version CVS $Id: ProfilingNonCachingProcessingPipeline.java,v 1.3 2003/03/23 11:14:04 stefano Exp $
  */
 public class ProfilingNonCachingProcessingPipeline
   extends NonCachingProcessingPipeline implements Disposable {
