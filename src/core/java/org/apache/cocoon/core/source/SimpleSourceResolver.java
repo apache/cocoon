@@ -27,7 +27,10 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.source.impl.ContextSourceFactory;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.ResourceSourceFactory;
@@ -55,17 +58,32 @@ public final class SimpleSourceResolver extends AbstractLogEnabled
     // The base URI, initialized in contextualize()
     private String contextBase;
     
-    // The two factories we use (no need for a selector nor a Map)
+    // The three factories we use (no need for a selector nor a Map)
     private ResourceSourceFactory resourceFactory = new ResourceSourceFactory();
     private URLSourceFactory urlFactory = new URLSourceFactory();    
+    private ContextSourceFactory contextFactory = new ContextSourceFactory();
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
+     */
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
-        resourceFactory.enableLogging(logger);
-        urlFactory.enableLogging(logger);
+        this.resourceFactory.enableLogging(logger);
+        this.urlFactory.enableLogging(logger);
+        this.contextFactory.enableLogging(logger);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
+        this.contextFactory.contextualize(context);
+        try {
+            this.contextFactory.service(new SimpleServiceManager(this));            
+        } catch (ServiceException se) {
+            throw new ContextException("Unable to service context factory.", se);
+        }
+
         try {
             // Similar to Excalibur's SourceResolverImpl, and consistent with ContextHelper.CONTEXT_ROOT_URL
             if( context.get("context-root") instanceof URL) {
@@ -96,16 +114,21 @@ public final class SimpleSourceResolver extends AbstractLogEnabled
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String)
+     */
     public Source resolveURI(String uri) throws MalformedURLException, IOException {
         return resolveURI(uri, contextBase, null);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
+     */
     public Source resolveURI(String uri, String base, Map params) throws MalformedURLException, IOException {
         if (uri.startsWith("resource://")) {
             return resourceFactory.getSource(uri, null);
         } else if (uri.startsWith("context://")) {
-            // Strip "context://" and resolve relative to the context base
-            return resolveURI(uri.substring("context://".length()), this.contextBase, params);
+            return this.contextFactory.getSource(uri, params);
         } else {
             URL baseURL = new URL(base);
             URL url = new URL(baseURL, uri);
@@ -113,7 +136,44 @@ public final class SimpleSourceResolver extends AbstractLogEnabled
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.SourceResolver#release(org.apache.excalibur.source.Source)
+     */
     public void release(Source source) {
         // Don't care. The factories we use here don't need that
+        // TODO - We should check this!!!
+    }
+    
+    public static final class SimpleServiceManager implements ServiceManager {
+        
+        private final SourceResolver resolver;
+        
+        public SimpleServiceManager(SourceResolver resolver) {
+            this.resolver = resolver;
+        }
+                
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
+         */
+        public boolean hasService(String role) {
+            return SourceResolver.ROLE.equals(role);
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
+         */
+        public Object lookup(String role) throws ServiceException {
+            if ( !SourceResolver.ROLE.equals(role) ) {
+                throw new ServiceException("SimpleServiceManager", "Unable to lookup component with role: " + role);
+            }
+            return this.resolver;
+        }
+        
+        /* (non-Javadoc)
+         * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
+         */
+        public void release(Object component) {
+            // nothing to do
+        }
     }
 }
