@@ -1,4 +1,4 @@
-  <!-- Documentation Targets ================================================= -->
+<!-- === Documentation Targets ================================================= -->
 
   <target name="prepare-docs" depends="blocks">
 
@@ -139,7 +139,7 @@
     </java>
   </target>
 
-<!-- Javadoc/IDLDoc Targets ================================================ -->
+<!-- === Javadoc/IDLDoc Targets ================================================ -->
 
   <!-- Create IDL API documentation -->
   <target name="idldocs" depends="prepare-core" unless="unless.exclude.idldocs" description="Builds the IDL API documentation for non-java language bindings">
@@ -207,7 +207,7 @@
 
   </target>
 
-<!-- Admin targets ========================================================= -->
+<!-- === Admin targets ========================================================= -->
 
   <!-- Creates the web site  -->
   <target name="site" depends="docs, javadocs">

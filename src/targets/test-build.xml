@@ -1,4 +1,4 @@
-  <!-- Test targets =========================================================== -->
+<!-- === Test targets =========================================================== -->
 
   <!-- Runs all tests -->
   <target name="test" depends="junit.tests, anteater.tests" description="Runs all tests"/>

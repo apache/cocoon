@@ -1,4 +1,4 @@
-  <!-- Forrest Targets ================================================= -->
+<!-- === Forrest Targets ================================================= -->
 
   <target name="forrest" depends="prepare, forrest.init" description="Generates static HTML documentation">
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="site"/>
