@@ -119,11 +119,11 @@ public class ComponentPool extends AbstractLoggable implements Pool, Initializab
 
     /**
      * Allocates a resource when the pool is empty. By default, this method
-     * returns null, indicating that the requesting thread must wait. This
+     * returns null, indicating that the requesting. This
      * allows a thread pool to expand when necessary, allowing for spikes in
      * activity.
      *
-     * @return A new resource, or null to force the requester to wait
+     * @return A new resource
      */
     protected Poolable getOverflowResource() throws Exception {
         Poolable poolable = (Poolable) this.factory.newInstance();
@@ -134,7 +134,7 @@ public class ComponentPool extends AbstractLoggable implements Pool, Initializab
         return poolable;
     }
 
-    /** Requests a resource from the pool, waiting forever if one is not available.
+    /** Requests a resource from the pool.
      * No extra information is associated with the allocated resource.
      * @return The allocated resource
      */
