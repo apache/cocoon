@@ -59,7 +59,7 @@ import org.apache.avalon.Component;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-23 14:01:26 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-05 14:44:48 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 
@@ -141,30 +141,33 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
             if(cxml == null)
             {
                 Parser parser = (Parser)this.manager.lookup(Roles.PARSER);
-                // use the xmlcompiler for local files if storing is on
-                if (this.useStore == true && systemID.startsWith("file:") == true)
-                {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    XMLCompiler compiler = new XMLCompiler();
-                    compiler.setOutputStream(baos);
-                    XMLMulticaster multicaster = new XMLMulticaster(compiler, null,
+                try {
+                    // use the xmlcompiler for local files if storing is on
+                    if (this.useStore == true && systemID.startsWith("file:") == true)
+                    {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        XMLCompiler compiler = new XMLCompiler();
+                        compiler.setOutputStream(baos);
+                        XMLMulticaster multicaster = new XMLMulticaster(compiler, null,
                               this.contentHandler, this.lexicalHandler);
 
-                    parser.setContentHandler(multicaster);
-                    parser.setLexicalHandler(multicaster);
-                    parser.parse(src);
+                        parser.setContentHandler(multicaster);
+                        parser.setLexicalHandler(multicaster);
+                        parser.parse(src);
 
-                    // Stored is an array of the cxml and the current time
-                    Object[] cxmlAndTime = new Object[2];
-                    cxmlAndTime[0] = baos.toByteArray();
-                    cxmlAndTime[1] = new Long(System.currentTimeMillis());
-                    store.hold(systemID, cxmlAndTime);
-                } else {
-                    parser.setContentHandler(this.contentHandler);
-                    parser.setLexicalHandler(this.lexicalHandler);
-                    parser.parse(src);
+                        // Stored is an array of the cxml and the current time
+                        Object[] cxmlAndTime = new Object[2];
+                        cxmlAndTime[0] = baos.toByteArray();
+                        cxmlAndTime[1] = new Long(System.currentTimeMillis());
+                        store.hold(systemID, cxmlAndTime);
+                    } else {
+                        parser.setContentHandler(this.contentHandler);
+                        parser.setLexicalHandler(this.lexicalHandler);
+                        parser.parse(src);
+                    }
+                } finally {
+                    this.manager.release((Component) parser);
                 }
-                this.manager.release((Component) parser);
             } else {
                 // use the stored cxml
                 ByteArrayInputStream bais = new ByteArrayInputStream(cxml);
