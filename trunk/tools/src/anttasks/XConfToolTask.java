@@ -54,6 +54,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -78,6 +79,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 /**
  * Ant task to patch xmlfiles.
@@ -87,13 +89,15 @@ import java.io.IOException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.4 $ $Date: 2003/05/16 07:06:10 $
+ * @version CVS $Revision: 1.5 $ $Date: 2003/05/23 02:48:03 $
  */
 public final class XConfToolTask extends MatchingTask {
 
     private File file;
     private File directory;
     private File srcdir;
+    /** for resolving entities such as dtds */
+    private XMLCatalog xmlCatalog = new XMLCatalog();
 
     /**
      * Set file, which should be patched.
@@ -114,6 +118,25 @@ public final class XConfToolTask extends MatchingTask {
     }
 
     /**
+     * Add the catalog to our internal catalog
+     *
+     * @param xmlCatalog the XMLCatalog instance to use to look up DTDs
+     */
+    public void addConfiguredXMLCatalog(XMLCatalog xmlCatalog)
+    {
+      this.xmlCatalog.addConfiguredXMLCatalog(xmlCatalog);
+    }
+
+    /**
+     * Initialize internal instance of XMLCatalog
+     */
+    public void init() throws BuildException
+    {
+      super.init();
+      xmlCatalog.setProject(project);
+    }
+
+    /**
      * Execute task.
      */
     public void execute() throws BuildException {
@@ -124,7 +147,14 @@ public final class XConfToolTask extends MatchingTask {
         }
 
         try {
-            final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory.setValidating(false);
+            builderFactory.setExpandEntityReferences(false);
+            builderFactory.setNamespaceAware(false);
+            builderFactory.setAttribute(
+                "http://apache.org/xml/features/nonvalidating/load-external-dtd",
+                new Boolean(false));
+            final DocumentBuilder builder = builderFactory.newDocumentBuilder();
             final Transformer transformer = TransformerFactory.newInstance().newTransformer();
 
             // load xml
@@ -173,6 +203,8 @@ public final class XConfToolTask extends MatchingTask {
             throw new BuildException("SAXException: "+e);
         } catch (ParserConfigurationException e) {
             throw new BuildException("ParserConfigurationException: "+e);
+        } catch (UnknownHostException e) {
+            throw new BuildException("UnknownHostException.  Probable cause: The parser is " +                "trying to resolve a dtd from the internet and no connection exists.\n" +                "You can either connect to the internet during the build, or patch \n" +                "XConfToolTask.java to ignore DTD declarations when your parser is in use.");
         } catch (IOException ioe) {
             throw new BuildException("IOException: "+ioe);
         }
@@ -216,8 +248,13 @@ public final class XConfToolTask extends MatchingTask {
 
         // Test that 'root' node satisfies 'component' insertion criteria
         String test = component.getDocumentElement().getAttribute("unless");
-
-        if ((test!=null) && (test.length()>0) &&
+        String ifProp = component.getDocumentElement().getAttribute("if-prop");
+        boolean ifValue = Boolean.valueOf(project.getProperty(ifProp)).booleanValue();
+     
+        if (ifProp != null && (ifProp.length()>0) && !ifValue ) {
+            log("Skipping: " + file, Project.MSG_DEBUG);
+            return false;
+        } else if ((test!=null) && (test.length()>0) &&
             (XPathAPI.selectNodeList(root, test).getLength()!=0)) {
             log("Skipping: " + file, Project.MSG_DEBUG);
             return false;

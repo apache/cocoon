@@ -100,6 +100,13 @@
                <include name="{$block-name}/conf/**/*.xlog" unless="unless.exclude.block.{$block-name}"/>
             </xsl:for-each>
          </xpatch>
+         <xpatch file="{string('${build.webapp}')}/WEB-INF/web.xml"
+                 srcdir="{string('${blocks}')}">
+            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+               <include name="{$block-name}/conf/**/*.xweb" unless="unless.exclude.block.{$block-name}"/>
+            </xsl:for-each>
+         </xpatch>
       </target>
 
       <target name="patch-samples" depends="init">
