@@ -131,6 +131,15 @@
     </init-param>
 
     <!--
+      This parameter switches the logging system from LogKit to Log4J for Cocoon.
+      Log4J has to be configured already.
+      <init-param>
+        <param-name>logger-class</param-name>
+        <param-value>org.apache.avalon.excalibur.logger.Log4JLoggerManager</param-value>
+      </init-param>
+    -->
+
+    <!--
       Allow reinstantiating (reloading) of the cocoon instance. If this is
       set to "yes" or "true", a new cocoon instance can be created using
       the request parameter "cocoon-reload". Default is no for security reasons.
