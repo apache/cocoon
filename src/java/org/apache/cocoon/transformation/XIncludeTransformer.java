@@ -84,7 +84,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.5 2003/06/07 21:17:36 bruno Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.6 2003/07/04 09:45:17 bruno Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Composable {
     private SourceResolver resolver;
@@ -194,7 +194,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composab
             }
 
             xmlBaseSupport.startElement(uri, name, raw, attr);
-            if (XINCLUDE_NAMESPACE_URI.equals(uri) && XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
+            if (XINCLUDE_INCLUDE_ELEMENT.equals(name) && XINCLUDE_NAMESPACE_URI.equals(uri)) {
                 String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
                 String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
 
