@@ -94,7 +94,7 @@ import org.apache.slide.structure.Structure;
  * Manger for principals and groups of principals
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlidePrincipalProvider.java,v 1.1 2003/12/02 19:18:45 unico Exp $
+ * @version CVS $Id: SlidePrincipalProvider.java,v 1.2 2003/12/08 18:08:10 unico Exp $
  */
 public class SlidePrincipalProvider extends AbstractLogEnabled
   implements PrincipalProvider, Serviceable, Configurable, Initializable {
@@ -167,15 +167,7 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
 
         try {
             repository = (SlideRepository) this.manager.lookup(SlideRepository.ROLE);
-            getLogger().debug("repository: " + repository);
-            if ( !(repository instanceof SlideRepository)) {
-                getLogger().error("Can't get Slide repository");
-                return;
-            }
-
-            SlideRepository sliderepository = (SlideRepository) repository;
-
-            this.nat = sliderepository.getNamespaceToken(namespace);
+            this.nat = repository.getNamespaceToken(namespace);
 
             if (this.nat==null) {
                 throw new ProcessingException("Repository with the namespace '"+
@@ -430,8 +422,7 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
                 groupobject = structure.retrieve(slidetoken, group);
 
                 if (groupobject instanceof GroupNode) {
-                    String name = groupobject.getUri().substring(userspath.length()+
-                                      1);
+                    String name = groupobject.getUri().substring(userspath.length()+1);
 
                     principalgroups.add(new PrincipalGroup(name));
                 }
@@ -479,8 +470,7 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
                 // create a revision with the appropriate properties set
                 NodeRevisionDescriptor revision = new NodeRevisionDescriptor(0);
 
-                revision.setProperty(new NodeProperty("resourcetype",
-                                                      "<collection/>", true));
+                revision.setProperty(new NodeProperty("resourcetype","<collection/>", true));
                 revision.setCreationDate(new Date());
                 revision.setLastModified(new Date());
                 revision.setProperty(new NodeProperty("getcontentlength",
