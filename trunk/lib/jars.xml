@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.51 2003/06/23 18:14:39 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.52 2003/06/26 09:09:10 bruno Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -752,6 +752,16 @@
 	<used-by>Woody block</used-by>
   <lib>woody/lib/xreporter-expression-20030428.jar</lib>
   <homepage>http://xreporter.cocoondev.org</homepage>
+ </file>
+
+ <file>
+  <title>ORO</title>
+  <description>
+    Regular expression engine.
+  </description>
+  <used-by>Woody block</used-by>
+  <lib>woody/lib/jakarta-oro-2.0.7.jar</lib>
+  <homepage>http://jakarta.apache.org/oro</homepage>
  </file>
 
  <file>
