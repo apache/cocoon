@@ -10,6 +10,8 @@
     birthday: ${form2bean.birthday}
     <br/>
     number: ${form2bean.aNumber}
+    <br/>
+    I choose: ${form2bean.choose}
 
     <table border="1">
       <tr>

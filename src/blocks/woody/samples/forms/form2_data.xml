@@ -5,6 +5,7 @@
 	<info>
 	  <email boolBindingWorks="false">yourname@yourdomain.com</email>
     <number value="3"/>
+    <choose value="true"/>
     
     <phone cntr="32">
     	<zone>2</zone>

@@ -74,10 +74,14 @@
     </wd:selection-list>
   </wd:field>
 
+  <wd:booleanfield id="choose">
+    <wd:label>I choose</wd:label>
+  </wd:booleanfield>
+
   <wd:repeater id="contacts">
-    <wd:field id="id">
+    <wd:output id="id">
       <wd:datatype base="string"/>
-    </wd:field>
+    </wd:output>
     <wd:field id="firstname">
       <wd:label>Firstname</wd:label>
       <wd:datatype base="string"/>

@@ -11,41 +11,45 @@
 
   <wb:context path="info">
   	<!-- the email value will not be saved because of the @readonly -->
-    <wb:field id="email"   path="email"         readonly="true"/>
+    <wb:value id="email"   path="email"         readonly="true"/>
 
 		<!-- jxpath binds to nodes as well as to attributes -->
-    <wb:field id="number" path="number/@value">
+    <wb:value id="number" path="number/@value">
       <!-- for non-string datatypes, a convertor must be specified. These are
       the same convertors as can be used in form definitions, but require an
       extra datatype attribute. Here we use the default convertor for longs. -->
       <wd:convertor datatype="long"/>
-    </wb:field>
+    </wb:value>
+
+    <wb:value id="choose" path="choose/@value">
+      <wd:convertor datatype="boolean"/>
+    </wb:value>
 
 	  <!-- one entry field in the client maps through aggregate fields -->
     <wb:aggregate id="phone" path="phone" >
     	<!-- to multiple fields in the XML file -->
-      <wb:field id="number" path="number" />
-      <wb:field id="zone"   path="zone"   />
-      <wb:field id="cntr"   path="@cntr"  />
+      <wb:value id="number" path="number" />
+      <wb:value id="zone"   path="zone"   />
+      <wb:value id="cntr"   path="@cntr"  />
     </wb:aggregate>
     
   </wb:context>
   
   
-  <wb:field id="ipaddress" path="ipaddress">
+  <wb:value id="ipaddress" path="ipaddress">
     <wb:on-update>
     	<!-- if the value has changed, the attribute will be set -->
       <wb:set-attribute name="changed" value="true"/>
     </wb:on-update>
-  </wb:field>
+  </wb:value>
 
-  <wb:field id="birthday" path="birthday">
+  <wb:value id="birthday" path="birthday">
     <wd:convertor datatype="date" type="formatting">
       <wd:patterns>
         <wd:pattern>yyyy-MM-dd</wd:pattern>
       </wd:patterns>
     </wd:convertor>
-  </wb:field>
+  </wb:value>
 
 
   <!-- repeater requires unique identification mechanism of the row-nodes -->
@@ -60,10 +64,10 @@
 
     <wb:on-bind>
     	<!-- executed on updates AND right after the insert -->
-      <wb:field id="firstname" path="firstname" />
-      <wb:field id="lastname"  path="lastname"  />
-      <wb:field id="phone"     path="phone/@nr" />
-      <wb:field id="email"     path="email"     />
+      <wb:value id="firstname" path="firstname" />
+      <wb:value id="lastname"  path="lastname"  />
+      <wb:value id="phone"     path="phone/@nr" />
+      <wb:value id="email"     path="email"     />
     </wb:on-bind>
 
     <wb:on-delete-row>
