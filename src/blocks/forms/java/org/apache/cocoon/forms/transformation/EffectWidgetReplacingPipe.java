@@ -170,6 +170,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         contextWidgets = new LinkedList();
         chooseWidgets = new LinkedList();
         classes = new HashMap();
+    }
+
     protected String getLocation() {
         String location = null;
         if (locator != null) {
