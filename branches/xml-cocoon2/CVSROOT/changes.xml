@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.35 2001-04-20 13:04:56 cziegeler Exp $
+  $Id: changes.xml,v 1.9.2.36 2001-04-25 08:21:19 giacomo Exp $
 -->
 
 <changes title="History of Changes">
@@ -24,9 +24,41 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="GP" type="add">
+   Added a internal-only attribute to the map:pipeline element to protect them
+   from being accessed by normal user request. The only way to access them by
+   use of the src attribute of the map:part element or the xinclude:href of
+   the XIncludeSAXConnector which implements transparent xinclude capability
+  </action>
+  <action dev="GP" type="add">
+   Added a prefix attribute to both map:aggregate and map:part to have a
+   namespace prefix available.
+  </action>
+  <action dev="GP" type="add">
+   Added an optional strip-root attribute to the map:part element of the
+   map:aggregate element to indicate that the aggregator should strip off
+   the root element of the aggregated content. The values can be "yes" or "true"
+   to strip off and anything else to not.
+  </action>
+  <action dev="GP" type="update">
+   Made element attribute of map:part element in map:aggregate element optional
+  </action>
+  <action dev="GP" type="add">
+   Also added substitution for test/pattern attribute.
+  </action>
+  <action dev="GP" type="add">
+   Implementation of content aggregation at sitemap level.
+  </action>
+  <action dev="GP" type="add">
+   Enable a parallel calling path into the sitemap for internal requests
+   of resource.
+  </action>
+  <action dev="GP" type="fix">
+   Added missing methods on CommandLineRequest.
+  </action>
   <action dev="CZ" type="update">
-  Finished cleanup of the environment. We are now as independant of 
-  the javax.servlet package as possible.
+   Finished cleanup of the environment. We are now as independant of
+   the javax.servlet package as possible.
   </action>
   <action dev="CZ" type="add">
    Creating wrappers for Session and Cookie.
