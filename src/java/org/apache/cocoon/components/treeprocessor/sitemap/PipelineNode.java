@@ -63,7 +63,6 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
  * Handles &lt;map:pipeline&gt;
@@ -73,7 +72,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.6 2003/07/06 20:37:47 sylvain Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.7 2003/07/09 07:42:23 cziegeler Exp $
  */
 public class PipelineNode
     extends AbstractParentProcessingNode
