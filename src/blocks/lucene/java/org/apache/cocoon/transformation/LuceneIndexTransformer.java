@@ -56,7 +56,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -66,8 +65,6 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
@@ -97,10 +94,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.8 2003/08/19 23:04:04 joerg Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.9 2003/09/05 07:21:49 cziegeler Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
-    implements Disposable, CacheableProcessingComponent, Recyclable, Configurable, Contextualizable {
+    implements CacheableProcessingComponent, Configurable, Contextualizable {
 
     public static final String ANALYZER_CLASSNAME_CONFIG = "analyzer-classname";
     public static final String ANALYZER_CLASSNAME_PARAMETER = "analyzer-classname";
@@ -218,9 +215,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
         this.bodyDocument = null;
         this.bodyDocumentURL = null;
         this.elementStack.clear();
-    }
-
-    public void dispose() {
+        super.recycle();
     }
 
     /**
