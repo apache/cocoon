@@ -64,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.10 2003/11/15 04:21:30 joerg Exp $
+ * @version CVS $Id: Target.java,v 1.11 2003/11/17 03:01:12 vgritsenko Exp $
  */
 public class Target {
     // Defult type is append
@@ -110,6 +110,8 @@ public class Target {
         this.destURI = destURI;
         
         this.parameters = new TreeMap();
+        
+        // Normalize sourceURI, and make sure that parameters is always in the same order
         sourceURI = NetUtils.normalize(root + sourceURI);
         this.deparameterizedSourceURI = NetUtils.deparameterize(sourceURI, this.parameters);
         this.sourceURI = NetUtils.parameterize(this.deparameterizedSourceURI, this.parameters);
@@ -370,6 +372,7 @@ public class Target {
     public String getSourceURI() {
         return this.sourceURI;
     }
+    
     /**
      * Gets the source URI for this target, with 
      * parameters removed. This is the URI that is 

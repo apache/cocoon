@@ -96,7 +96,7 @@ import org.apache.log.Priority;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.9 2003/11/07 11:31:17 upayavira Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.10 2003/11/17 03:01:12 vgritsenko Exp $
  */
 public class CocoonWrapper {
 
@@ -515,14 +515,13 @@ public class CocoonWrapper {
      * @return a <code>String</code> value for the content
      * @exception Exception if an error occurs
      */
-    protected int getPage(
-        String deparameterizedURI,
-        long lastModified,
-        Map parameters,
-        Map links,
-        List gatheredLinks,
-        OutputStream stream)
-        throws Exception {
+    protected int getPage(String deparameterizedURI,
+                          long lastModified,
+                          Map parameters,
+                          Map links,
+                          List gatheredLinks,
+                          OutputStream stream)
+    throws Exception {
 
         parameters.put("user-agent", userAgent);
         parameters.put("accept", accept);
