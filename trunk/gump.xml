@@ -632,7 +632,6 @@
     </ant>
 
     <depend project="xml-cocoon2"/>
-    <depend project="cocoon-block-axis"/>
     <depend project="xml-axis" version="supplied"/>
 
     <work nested="tools/anttasks"/>
