@@ -122,8 +122,13 @@ public class ValueJXPathBinding extends JXPathBindingBase {
             Widget widget = frmModel.getWidget(this.fieldId);
             Object value = jxpc.getValue(this.xpath);
 
-            if (convertor != null)
-                value = convertor.convertFromString((String)value, convertorLocale, null);
+            if (value != null && convertor != null) {
+                if (value instanceof String) {
+                    value = convertor.convertFromString((String)value, convertorLocale, null);
+                } else {
+                    getLogger().warn("Convertor ignored on backend-value which isn't of type String.");   
+                }                
+            }
 
             widget.setValue(value);
 
