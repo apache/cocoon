@@ -129,3 +129,22 @@ function do_taskTree() {
     );
 }
 
+// import WidgetState for direct access in event handlers.
+// FIXME(SW) would be better to import it implicitely within Forms.js
+importClass(org.apache.cocoon.forms.formmodel.WidgetState);
+
+function do_multipage() {
+    var form = new Form("forms/multipage_model.xml");
+    form.showForm("multipage-display-pipeline.jx");
+    
+    var doc = Packages.javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+    doc.appendChild(doc.createElement("result"));
+    form.createBinding("forms/multipage_binding.xml");
+    form.save(doc);
+    
+    cocoon.sendPage("xmlresult-display-pipeline.jx",
+        {title: "Here's the resulting document", document: doc}
+    );
+}
+
+
