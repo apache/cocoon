@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
+import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.Roles;
 
@@ -35,7 +36,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-14 11:39:14 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-15 00:59:07 $
  */
 public class Handler extends AbstractLoggable implements Runnable, Configurable, Composer, Processor {
 
@@ -49,7 +50,11 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     private ComponentManager parentSitemapComponentManager;
 
     /** the source of this sitemap */
+    private String source;
     private File sourceFile;
+
+    /** the URLFactory */
+    private URLFactory urlFactory;
 
     /** the last error */
     private Exception exception;
@@ -69,6 +74,11 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
 
     public void compose (ComponentManager manager) {
         this.manager = manager;
+        try {
+            urlFactory = (URLFactory) manager.lookup(Roles.URL_FACTORY);
+        } catch (Exception e) {
+            getLogger().error ("cannot obtain URLFactory", e);
+        }
     }
 
     public void configure (Configuration conf) {
@@ -79,19 +89,7 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     throws FileNotFoundException {
         this.parentSitemapComponentManager = sitemapComponentManager;
         this.check_reload = check_reload;
-        String s = null;
-        if (source.charAt(source.length() - 1) == File.separatorChar) {
-            s = source + "sitemap.xmap";
-            this.sourceFile = new File (s);
-        } else {
-            this.sourceFile = new File (source);
-            if (!this.sourceFile.isFile()) {
-                this.sourceFile = new File (this.sourceFile, "sitemap.xmap");
-            }
-        }
-        if (!this.sourceFile.canRead()) {
-            throw new FileNotFoundException ("file " + this.sourceFile.toString() + " not found or cannot be opened for reading");
-        }
+        this.source = source;
     }
 
     protected boolean available () {
@@ -114,6 +112,22 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
 
     protected synchronized void regenerateAsynchronously (Environment environment)
     throws Exception {
+        String s;
+        if (this.source.charAt(this.source.length() - 1) == '/') {
+            s = this.source + "sitemap.xmap";
+        } else {
+            s = this.source;
+        }
+        this.sourceFile = new File (
+                urlFactory.getURL(
+                        environment.resolveEntity(
+                                null, s
+                        ).getSystemId()
+                ).getFile()
+        );
+        if (!this.sourceFile.canRead()) {
+            throw new FileNotFoundException ("file " + this.sourceFile.toString() + " not found or cannot be opened for reading");
+        }
         if (!this.isRegenerationRunning) {
             isRegenerationRunning = true;
             regeneration = new Thread (this);
@@ -147,18 +161,18 @@ public class Handler extends AbstractLoggable implements Runnable, Configurable,
     /** Generate the Sitemap class */
     public void run() {
         Sitemap smap;
-        InputSource inputSource = new InputSource (sourceFile.getPath());
-        String systemId = inputSource.getSystemId();
+        //InputSource inputSource = new InputSource (sourceFile.getPath());
+        //String systemId = inputSource.getSystemId();
 
-        File file = new File(systemId);
+        //File file = new File(systemId);
 
         String markupLanguage = "sitemap";
         String programmingLanguage = "java";
 
         try {
             ProgramGenerator programGenerator = (ProgramGenerator) this.manager.lookup(Roles.PROGRAM_GENERATOR);
-            smap = (Sitemap) programGenerator.load(file, markupLanguage, programmingLanguage, environment);
-            if (smap instanceof Loggable) ((Loggable) smap).setLogger(getLogger());
+            smap = (Sitemap) programGenerator.load(this.sourceFile, markupLanguage, programmingLanguage, environment);
+            if (smap instanceof Loggable) ((Loggable)smap).setLogger(getLogger());
             if (smap instanceof Composer) smap.compose(this.manager);
             smap.setParentSitemapComponentManager (this.parentSitemapComponentManager);
             if (smap instanceof Configurable) smap.configure(this.conf);

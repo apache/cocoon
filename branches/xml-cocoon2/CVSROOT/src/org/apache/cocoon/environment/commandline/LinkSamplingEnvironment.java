@@ -29,35 +29,24 @@ import org.apache.cocoon.Main;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
-
 
 /**
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-22 21:56:42 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-15 00:59:03 $
  */
 
-public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment implements Loggable {
-
-    private Logger log;
+public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
 
     private boolean skip = false;
 
     public LinkSamplingEnvironment(String uri, File contextFile, Map attributes, Map parameters)
     throws MalformedURLException, IOException {
         super(uri, Cocoon.LINK_VIEW, contextFile, new ByteArrayOutputStream());
-        log.debug("LinkSamplingEnvironment: uri=" + uri);
+        getLogger().debug("LinkSamplingEnvironment: uri=" + uri);
         this.objectModel.put(Cocoon.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
         this.objectModel.put(Cocoon.RESPONSE_OBJECT, new CommandLineResponse());
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
     }
 
     /**

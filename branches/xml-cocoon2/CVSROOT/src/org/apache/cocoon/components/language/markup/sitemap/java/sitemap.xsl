@@ -95,7 +95,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.75 2001-02-14 11:39:39 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.76 2001-02-15 00:58:59 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -193,6 +193,7 @@
       public void configure(Configuration conf) throws ConfigurationException {
         super.configure(conf);
         this.sitemapManager = new Manager(super.sitemapComponentManager);
+        this.sitemapManager.setLogger(getLogger());
         this.sitemapManager.compose(this.manager);
         this.sitemapManager.configure(conf);
         try {
@@ -837,23 +838,7 @@
     </xsl:variable>
 
     <!-- generate the code to invoke the sitemapManager which handles delegation of control to sub sitemaps -->
-    <!-- here we make sure the uri-prefix ends with a slash -->
-    <xsl:choose>
-      <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='/'">
-        if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
-      </xsl:when>
-      <xsl:when test="substring(@uri-prefix,string-length(@uri-prefix))='}'">
-        String uri_prefix<xsl:value-of select="count(.)"/>=substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>");
-        if (uri_prefix<xsl:value-of select="count(.)"/>.charAt(uri_prefix<xsl:value-of select="count(.)"/>.length()-1)=='/'){
-          if(true)return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>, substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
-        } else {
-          return sitemapManager.invoke (environment, uri_prefix<xsl:value-of select="count(.)"/>+"/", substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
-        }
-      </xsl:when>
-      <xsl:otherwise>
-        if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>/"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
-      </xsl:otherwise>
-    </xsl:choose>
+    if(true)return sitemapManager.invoke (environment, substitute(listOfMaps,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfMaps,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>);
   </xsl:template> <!-- match="map:mount" -->
 
   <!-- generate the code to redirect a request -->

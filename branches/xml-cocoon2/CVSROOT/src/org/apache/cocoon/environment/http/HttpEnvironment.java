@@ -19,6 +19,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.avalon.ComponentManager;
+
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
@@ -71,7 +73,7 @@ public class HttpEnvironment extends AbstractEnvironment {
         if (qs != null)
             redirect = redirect + "?" + qs;
 
-        log.debug("Sending redirect to '" + redirect + "'");
+        getLogger().debug("Sending redirect to '" + redirect + "'");
         this.response.sendRedirect (redirect);
     }
 

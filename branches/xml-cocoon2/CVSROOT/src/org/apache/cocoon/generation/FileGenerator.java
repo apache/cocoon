@@ -57,7 +57,7 @@ import org.apache.avalon.Parameters;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-02-12 14:17:33 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-15 00:59:06 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 
@@ -85,7 +85,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
     }
 
     /**
-     * Configure this transformer.
+     * Configure this generator.
      */
     public void configure(Configuration conf)
     throws ConfigurationException {
@@ -113,19 +113,21 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
             // Only local files are checked for modification
             // External files are never stored
             // Using the entity resolver we get the filename of the current file:
-            // The systemID if such a resource starts with file:/.
+            // The systemID of such a resource starts with file:.
+            getLogger().debug("processing file " + super.source);
             InputSource src = super.resolver.resolveEntity(null, super.source);
             String      systemID = src.getSystemId();
+            getLogger().debug("file resolved to " + systemID);
             byte[]      cxml = null;
 
             if (this.useStore == true)
             {
                 // Is this a local file
-                if (systemID.startsWith("file:/") == true) {
+                if (systemID.startsWith("file:") == true) {
                     // Stored is an array of the compiled xml and the caching time
                     if (store.containsKey(systemID) == true) {
                         Object[] cxmlAndTime = (Object[])store.get(systemID);
-                        File xmlFile = new File(systemID.substring(6));
+                        File xmlFile = new File(systemID.substring("file:".length()));
                         long storedTime = ((Long)cxmlAndTime[1]).longValue();
                         if (storedTime >= xmlFile.lastModified()) {
                             cxml = (byte[])cxmlAndTime[0];
@@ -137,7 +139,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
             if(cxml == null)
             {
                 // use the xmlcompiler for local files if storing is on
-                if (this.useStore == true && systemID.startsWith("file:/") == true)
+                if (this.useStore == true && systemID.startsWith("file:") == true)
                 {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     XMLCompiler compiler = new XMLCompiler();

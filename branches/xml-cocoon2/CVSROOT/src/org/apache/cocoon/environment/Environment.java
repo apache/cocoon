@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-30 21:33:10 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-15 00:59:01 $
  */
 
 public interface Environment extends EntityResolver {
@@ -43,7 +43,7 @@ public interface Environment extends EntityResolver {
     /**
      * Change the context from uriprefix to context
      */
-    void changeContext(String uriprefix, String context) throws MalformedURLException;
+    void changeContext(String uriprefix, String context) throws Exception;
 
     /**
      * Redirect to the given URL

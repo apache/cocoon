@@ -22,15 +22,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.environment.Environment;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public abstract class AbstractEnvironment implements Environment, Loggable {
-
-    protected Logger log;
+public abstract class AbstractEnvironment extends AbstractLoggable implements Environment {
 
     /** The current uri in progress */
     protected String uri = null;
@@ -86,12 +83,6 @@ public abstract class AbstractEnvironment implements Environment, Loggable {
         this.objectModel = new HashMap();
     }
 
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
     // Sitemap methods
 
     /**
@@ -106,17 +97,29 @@ public abstract class AbstractEnvironment implements Environment, Loggable {
      */
     public void changeContext(String prefix, String context)
     throws MalformedURLException {
+        getLogger().debug("Changing Cocoon context(" + context + ") to prefix(" + prefix + ")");
+        getLogger().debug("\tfrom context(" + this.context.toExternalForm() + ") and prefix(" + this.prefix + ")");
+        getLogger().debug("\tat URI " + uri);
         if (uri.startsWith(prefix)) {
             this.prefix.append(prefix);
             uri = uri.substring(prefix.length());
-            File f = new File(context);
+
+            // if we got a absolute context or one with a protocol resolve it
+            if (context.charAt(0) == '/') {
+                this.context = new URL("file:" + context);
+            }else if (context.indexOf(':') > 1) {
+                this.context = new URL(context);
+            }else {
+                this.context = new URL(this.context, context);
+            }
+            File f = new File(this.context.getFile());
             if (f.isFile()) {
                 this.context = f.getParentFile().toURL();
             } else {
                 this.context = f.toURL();
             }
         } else {
-            log.error("The current URI ("
+            getLogger().error("The current URI ("
                 + uri + ") doesn't start with given prefix ("
                 + prefix + ")"
             );
@@ -125,6 +128,7 @@ public abstract class AbstractEnvironment implements Environment, Loggable {
                 + prefix + ")"
             );
         }
+        getLogger().debug("New context is " + this.context.toExternalForm());
     }
 
     /**
@@ -176,7 +180,7 @@ public abstract class AbstractEnvironment implements Environment, Loggable {
 
         if (systemId.length() == 0)
             return new InputSource(this.context.toExternalForm());
-        if (systemId.indexOf(":/") > 0)
+        if (systemId.indexOf(":") > 1)
             return new InputSource(systemId);
         if (systemId.charAt(0) == '/')
             return new InputSource(this.context.getProtocol() + ":" + systemId);

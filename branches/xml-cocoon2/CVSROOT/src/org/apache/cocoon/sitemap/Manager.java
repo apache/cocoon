@@ -20,7 +20,8 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.AbstractLoggable;
+//import org.apache.log.Logger;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
@@ -34,10 +35,9 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-22 21:56:49 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-15 00:59:08 $
  */
-public class Manager implements Configurable, Composer, Loggable {
-    private Logger log;
+public class Manager extends AbstractLoggable implements Configurable, Composer {
 
     /** The vectors of sub sitemaps */
     private HashMap sitemaps = new HashMap();
@@ -55,12 +55,6 @@ public class Manager implements Configurable, Composer, Loggable {
         this.parentSitemapComponentManager = sitemapComponentManager;
     }
 
-    public void setLogger (Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
-
     public void configure (Configuration conf) {
         this.conf = conf;
     }
@@ -72,6 +66,12 @@ public class Manager implements Configurable, Composer, Loggable {
     public boolean invoke (Environment environment, String uri_prefix,
                            String source, boolean check_reload)
     throws Exception {
+        // make sure the uri_prefix ends with a slash
+        String prefix;
+        if (uri_prefix.length() > 0)
+            prefix = (uri_prefix.charAt(uri_prefix.length() - 1) == '/' ? uri_prefix : uri_prefix + "/");
+        else
+            prefix = uri_prefix;
         Handler sitemapHandler = (Handler) sitemaps.get(source);
 
         if (sitemapHandler != null) {
@@ -86,11 +86,11 @@ public class Manager implements Configurable, Composer, Loggable {
             }
         } else {
             sitemapHandler = new Handler(parentSitemapComponentManager, source, check_reload);
-            sitemapHandler.setLogger(this.log);
+            sitemapHandler.setLogger(getLogger());
             sitemapHandler.compose(this.manager);
             sitemapHandler.configure(this.conf);
-            sitemaps.put(source, sitemapHandler);
             sitemapHandler.regenerate(environment);
+            sitemaps.put(source, sitemapHandler);
         }
 
         environment.changeContext(uri_prefix, source);
