@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.6 2004/03/24 12:26:54 unico Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.7 2004/03/27 15:41:50 unico Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -214,7 +214,7 @@ public class XPathTraversableGenerator extends TraversableGenerator {
     protected void performXPathQuery(TraversableSource in) throws SAXException {
         doc = null;
         try {
-            doc = SourceUtil.toDOM(this.manager, in);
+            doc = SourceUtil.toDOM(this.manager, "text/xml", in);
         } catch (SAXException se) {
              this.getLogger().error("Warning:" + in.getName()
               + " is not a valid XML document. Ignoring");
