@@ -597,6 +597,18 @@
 
   </answer>
  </faq>
+
+ <faq id="ccexception">
+  <question>Why aren't LDAP tags processed?</question>
+  <answer>
+   <p>In versions of Cocoon prior to 1.8.1-dev, the LDAP processor had a bug
+    where binary attributes (eg., userpassword) were not handled properly. This
+    would result in the LDAP tags not being interpreted, and a single
+    "ClassCastException" error message appearing in the logs.</p>
+    <p>Typically one would encounter this bug when doing non-specific searches,
+    eg (objectclass=*).</p>
+    </answer>
+  </faq>
 </faqsection>
 
 <faqsection title="WAP">
@@ -773,7 +785,7 @@
 
        <page>
         <xsp:pi target="xml-stylesheet">
-          <xsp:expr>href="<request:get-parameter name="stylesheet">" type="text/xsl"</xsp:expr>
+          href="<xsp:expr><request:get-parameter name="stylesheet"></xsp:expr>" type="text/xsl"
         </xsp:pi> 
        </page>
      </xsp:page>
