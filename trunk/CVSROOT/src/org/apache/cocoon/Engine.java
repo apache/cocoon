@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.46 2001-01-18 23:40:18 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.47 2001-01-19 19:31:37 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.46 $ $Date: 2001-01-18 23:40:18 $
+ * @version $Revision: 1.47 $ $Date: 2001-01-19 19:31:37 $
  */
 
 public class Engine implements Defaults {
@@ -467,7 +467,7 @@ public class Engine implements Defaults {
                 // print some processing info as a comment
                 if (VERBOSE && (page.isText()) && !"HEAD".equals(request.getMethod())) {
                     time = System.currentTimeMillis() - time;
-                    String comment = "<!-- This page was served "
+                    String comment = "\n<!-- This page was served "
                         + (wasInCache ? "from cache " : "")
                         + "in " + time + " milliseconds by "
                         + Cocoon.version() + " -->";
