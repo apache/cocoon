@@ -73,7 +73,7 @@
         Cocoon. Exception to this rule are the auto increment modules: only the
         HSQL module is already setup.
       </p>
-      <s2 title="Step 1: Making a new module know to Apache Cocoon">
+      <s2 title="Step 1: Making a new module known to Apache Cocoon">
         <p>
           Like other core components of Apache Cocoon, modules are declared in
           <code>cocoon.xconf</code>. There are already too many to list here.
