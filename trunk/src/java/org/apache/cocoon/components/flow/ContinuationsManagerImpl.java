@@ -58,10 +58,10 @@ import java.util.TreeSet;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.excalibur.event.Queue;
 import org.apache.excalibur.event.Sink;
 import org.apache.excalibur.event.command.RepeatedCommand;
@@ -73,7 +73,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.11 2004/02/20 18:53:46 sylvain Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.12 2004/02/22 19:02:16 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ContinuationsManager
@@ -82,7 +82,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
-        implements ContinuationsManager, Configurable, Contextualizable {
+        implements ContinuationsManager, Serviceable, Configurable {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
@@ -127,6 +127,10 @@ public class ContinuationsManagerImpl
         }
         random.setSeed(System.currentTimeMillis());
         bytes = new byte[CONTINUATION_ID_LENGTH];
+    }
+
+    public void service(ServiceManager manager) throws ServiceException {
+        m_commandSink = (Sink) manager.lookup(Queue.ROLE);
     }
 
     public void configure(Configuration config) {
@@ -371,14 +375,6 @@ public class ContinuationsManagerImpl
         }
     }
 
-    /**
-     * Get the command sink so that we can be notified of changes
-     */
-    public void contextualize(Context context) throws ContextException {
-        m_commandSink = (Sink) context.get(Queue.ROLE);
-    }
-
-
     final class ContinuationInterrupt implements RepeatedCommand {
         private final long m_interval;
         private final long m_initialDelay;
@@ -422,4 +418,5 @@ public class ContinuationsManagerImpl
             expireContinuations();
         }
     }
+
 }
