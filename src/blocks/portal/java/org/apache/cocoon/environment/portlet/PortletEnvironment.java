@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,8 @@ import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 import javax.portlet.PortletContext;
-
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 
 /**
  * Implements {@link org.apache.cocoon.environment.Environment} interface for the JSR-168
@@ -31,7 +29,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletEnvironment.java,v 1.5 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id: PortletEnvironment.java,v 1.6 2004/06/18 16:45:57 vgritsenko Exp $
  */
 public class PortletEnvironment extends AbstractEnvironment {
 
@@ -64,6 +62,11 @@ public class PortletEnvironment extends AbstractEnvironment {
      */
     public static final String SESSION_APPLICATION_SCOPE = "portlet-application-";
 
+    /**
+     * This is the prefix for portlet scope session attributes.
+     */
+    public static final String SESSION_PORTLET_SCOPE = "portlet-portlet-";
+
 
     /**
      * The PortletRequest
@@ -88,19 +91,24 @@ public class PortletEnvironment extends AbstractEnvironment {
     private String contentType;
 
     /**
+     * @see #getDefaultSessionScope()
+     */
+    private int defaultSessionScope;
+
+    /**
      * Constructs a PortletEnvironment object from a PortletRequest
      * and PortletResponse objects
      */
     public PortletEnvironment(String servletPath,
                               String uri,
-                              String root,
                               javax.portlet.ActionRequest request,
                               javax.portlet.ActionResponse response,
                               PortletContext portletContext,
                               Context context,
                               String containerEncoding,
-                              String defaultFormEncoding)
-    throws MalformedURLException, IOException {
+                              String defaultFormEncoding,
+                              int defaultSessionScope)
+    throws IOException {
         super(uri, null, null);
 
         String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
@@ -110,6 +118,7 @@ public class PortletEnvironment extends AbstractEnvironment {
         this.request.setContainerEncoding(containerEncoding);
         this.response = new ActionResponse(response, request.getPreferences(), (ActionRequest) this.request, uri);
         this.context = context;
+        this.defaultSessionScope = defaultSessionScope;
 
         setView(extractView(this.request));
         setAction(extractAction(this.request));
@@ -123,14 +132,14 @@ public class PortletEnvironment extends AbstractEnvironment {
      */
     public PortletEnvironment(String servletPath,
                               String uri,
-                              String root,
                               javax.portlet.RenderRequest request,
                               javax.portlet.RenderResponse response,
                               PortletContext portletContext,
                               Context context,
                               String containerEncoding,
-                              String defaultFormEncoding)
-    throws MalformedURLException, IOException {
+                              String defaultFormEncoding,
+                              int defaultSessionScope)
+    throws IOException {
         super(uri, null, null);
 
         String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
@@ -140,6 +149,7 @@ public class PortletEnvironment extends AbstractEnvironment {
         this.request.setContainerEncoding(containerEncoding);
         this.response = new RenderResponse(response, request.getPreferences());
         this.context = context;
+        this.defaultSessionScope = defaultSessionScope;
 
         setView(extractView(this.request));
         setAction(extractAction(this.request));
@@ -264,5 +274,14 @@ public class PortletEnvironment extends AbstractEnvironment {
      */
     public boolean isExternal() {
         return true;
+    }
+
+    /**
+     * Default scope for the session attributes, either
+     * {@link javax.portlet.PortletSession#PORTLET_SCOPE} or
+     * {@link javax.portlet.PortletSession#APPLICATION_SCOPE}.
+     */
+    int getDefaultSessionScope() {
+        return this.defaultSessionScope;
     }
 }
