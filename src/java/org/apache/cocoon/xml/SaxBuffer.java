@@ -23,6 +23,7 @@ import org.xml.sax.ext.LexicalHandler;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.avalon.excalibur.pool.Recyclable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,9 +43,9 @@ import java.util.List;
  * that the setDocumentLocator event is not recorded.
  * 
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: SaxBuffer.java,v 1.10 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id: SaxBuffer.java,v 1.11 2004/03/08 13:38:20 cziegeler Exp $
  */
-public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
+public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializable {
 
     /**
      * Stores list of {@link SaxBit} objects.
@@ -189,21 +190,21 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         public void send(ContentHandler contentHandler) throws SAXException;
     }
 
-    final static class StartDocument implements SaxBit {
+    final static class StartDocument implements SaxBit, Serializable {
         static public final StartDocument SINGLETON = new StartDocument();
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.startDocument();
         }
     }
 
-    final static class EndDocument implements SaxBit {
+    final static class EndDocument implements SaxBit, Serializable {
         static public final EndDocument SINGLETON = new EndDocument();
         public void send(ContentHandler contentHandler) throws SAXException {
             contentHandler.endDocument();
         }
     }
 
-    final static class PI implements SaxBit {
+    final static class PI implements SaxBit, Serializable {
         private final String target;
         private final String data;
 
@@ -217,7 +218,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class StartDTD implements SaxBit {
+    final static class StartDTD implements SaxBit, Serializable {
         private final String name;
         private final String publicId;
         private final String systemId;
@@ -234,7 +235,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class EndDTD implements SaxBit {
+    final static class EndDTD implements SaxBit, Serializable {
         static public final EndDTD SINGLETON = new EndDTD();
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
@@ -242,7 +243,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class StartEntity implements SaxBit {
+    final static class StartEntity implements SaxBit, Serializable {
         private final String name;
 
         public StartEntity(String name) {
@@ -255,7 +256,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class EndEntity implements SaxBit {
+    final static class EndEntity implements SaxBit, Serializable {
         private final String name;
 
         public EndEntity(String name) {
@@ -268,7 +269,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class SkippedEntity implements SaxBit {
+    final static class SkippedEntity implements SaxBit, Serializable {
         private final String name;
 
         public SkippedEntity(String name) {
@@ -280,7 +281,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class StartPrefixMapping implements SaxBit {
+    final static class StartPrefixMapping implements SaxBit, Serializable {
         private final String prefix;
         private final String uri;
 
@@ -294,7 +295,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class EndPrefixMapping implements SaxBit {
+    final static class EndPrefixMapping implements SaxBit, Serializable {
         private final String prefix;
 
         public EndPrefixMapping(String prefix) {
@@ -306,7 +307,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class StartElement implements SaxBit {
+    final static class StartElement implements SaxBit, Serializable {
         private final String namespaceURI;
         private final String localName;
         private final String qName;
@@ -324,7 +325,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class EndElement implements SaxBit {
+    final static class EndElement implements SaxBit, Serializable {
         private final String namespaceURI;
         private final String localName;
         private final String qName;
@@ -340,7 +341,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class Characters implements SaxBit {
+    final static class Characters implements SaxBit, Serializable {
         private final char[] ch;
 
         public Characters(char[] ch, int start, int length) {
@@ -358,7 +359,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class Comment implements SaxBit {
+    final static class Comment implements SaxBit, Serializable {
         private final char[] ch;
 
         public Comment(char[] ch, int start, int length) {
@@ -373,7 +374,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class StartCDATA implements SaxBit {
+    final static class StartCDATA implements SaxBit, Serializable {
         static public final StartCDATA SINGLETON = new StartCDATA();
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
@@ -381,7 +382,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class EndCDATA implements SaxBit {
+    final static class EndCDATA implements SaxBit, Serializable {
         static public final EndCDATA SINGLETON = new EndCDATA();
         public void send(ContentHandler contentHandler) throws SAXException {
             if (contentHandler instanceof LexicalHandler)
@@ -389,7 +390,7 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable {
         }
     }
 
-    final static class IgnorableWhitespace implements SaxBit {
+    final static class IgnorableWhitespace implements SaxBit, Serializable {
         private final char[] ch;
 
         public IgnorableWhitespace(char[] ch, int start, int length) {
