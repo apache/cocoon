@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.297 2004/04/04 04:44:09 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.298 2004/04/10 13:49:33 bruno Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,16 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BRD" type="fix">
+     CForms: &lt;fi:styling type="date"/&gt; is not needed (nor supported)
+     anymore, the required information about the datatype and the pattern is
+     now included in the widget instance XML.
+   </action>
+   <action dev="BRD" type="add">
+     CForms: it is now possible to store arbitrary data with each widget
+     instance by using the new setAttribute and getAttribute methods of the
+     Widget interface.
+   </action>
    <action dev="AG" type="add">
      Groovy script generator support in BSF block
    </action>
