@@ -112,7 +112,18 @@
             <parameter name="dav">true</parameter>
             <parameter name="standalone">true</parameter>
             <parameter name="acl_inheritance_type">path</parameter>
-
+            
+            <!--
+            <content-interceptor class="org.apache.cocoon.components.slide.impl.JSMEventCacheContentInterceptor">
+              <parameter name="topic-factory">JmsTopicConnectionFactory</parameter>
+              <parameter name="topic">topic1</parameter>
+              <parameter name="ack-mode">dups</parameter>
+              <parameter name="persistent-delivery">false</parameter>
+              <parameter name="priority">4</parameter>
+              <parameter name="time-to-live">1000</parameter>
+            </content-interceptor>
+            -->
+            
         </configuration>
         <data>
             <objectnode classname="org.apache.slide.structure.SubjectNode" uri="/">
