@@ -92,7 +92,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.3 2003/05/27 14:07:16 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.4 2003/05/28 07:14:41 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractLogEnabled 
@@ -208,14 +208,15 @@ public class AuthenticationProfileManager
 			layout = (Layout)service.getAttribute(portalPrefix+"/Layout");
 			if (layout == null) {
 				this.lock.readLock();
+                HashMap map = new HashMap();
+                HashMap keyMap = new HashMap();
+                CopletDataManager copletDataManager = null;
 				try {
-					HashMap map = new HashMap();
 					map.put("portalname", service.getPortalName());
 					
 					// TODO Change to KeyManager usage
 					RequestState state = this.getRequestState();
 					UserHandler handler = state.getHandler();
-					HashMap keyMap = new HashMap();
 					keyMap.put("user", handler.getUserId());
 					keyMap.put("role", handler.getContext().getContextInfo().get("role"));
 					keyMap.put("config", state.getApplicationConfiguration().getConfiguration("portal"));
@@ -229,33 +230,33 @@ public class AuthenticationProfileManager
 					// load coplet data
 					map.put("profile", "copletdata");
 					map.put("objectmap", copletBaseDataManager.getCopletBaseData());
-					CopletDataManager copletDataManager = (CopletDataManager)this.getDeltaProfile(keyMap, map, portalPrefix+"/CopletData", service, copletFactory, ((Boolean)result[1]).booleanValue());
+					copletDataManager = (CopletDataManager)this.getDeltaProfile(keyMap, map, portalPrefix+"/CopletData", service, copletFactory, ((Boolean)result[1]).booleanValue());
 					
-					// load coplet instance data
-					map.put("profile", "copletinstancedata");
-					map.put("objectmap", copletDataManager.getCopletData());
-					CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)this.getOrCreateProfile(keyMap, map, portalPrefix+"/CopletInstanceData", service, copletFactory);
-					
-					// load layout
-					map.put("profile", "layout");
-					map.put("objectmap", copletInstanceDataManager.getCopletInstanceData());
-					layout = (Layout)this.getOrCreateProfile(keyMap, map, portalPrefix+"/Layout", service, factory);
-                    
-                    // now invoke login on each instance
-                    Iterator iter =  copletInstanceDataManager.getCopletInstanceData().values().iterator();
-                    while ( iter.hasNext() ) {
-                        CopletInstanceData cid = (CopletInstanceData) iter.next();
-                        CopletAdapter adapter = null;
-                        try {
-                            adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
-                            adapter.login( cid );
-                        } finally {
-                            adapterSelector.release( adapter );
-                        }
+                } finally {
+                    this.lock.releaseLocks();
+                }
+				// load coplet instance data
+				map.put("profile", "copletinstancedata");
+				map.put("objectmap", copletDataManager.getCopletData());
+				CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)this.getOrCreateProfile(keyMap, map, portalPrefix+"/CopletInstanceData", service, copletFactory);
+				
+				// load layout
+				map.put("profile", "layout");
+				map.put("objectmap", copletInstanceDataManager.getCopletInstanceData());
+				layout = (Layout)this.getOrCreateProfile(keyMap, map, portalPrefix+"/Layout", service, factory);
+                
+                // now invoke login on each instance
+                Iterator iter =  copletInstanceDataManager.getCopletInstanceData().values().iterator();
+                while ( iter.hasNext() ) {
+                    CopletInstanceData cid = (CopletInstanceData) iter.next();
+                    CopletAdapter adapter = null;
+                    try {
+                        adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                        adapter.login( cid );
+                    } finally {
+                        adapterSelector.release( adapter );
                     }
-				} finally {
-					this.lock.releaseLocks();
-				}
+                }
 			}
 			
             return layout;

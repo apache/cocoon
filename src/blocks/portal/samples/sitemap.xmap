@@ -113,6 +113,12 @@
     <map:match pattern="login">
         <map:act type="auth-loggedIn">
             <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="application" value="portal"/> 
+
+            <map:act type="portal-login">
+        	    <map:parameter name="portal-name" value="portal"/>
+            </map:act>
+                        
             <map:redirect-to uri="portal"/>
         </map:act>
         <map:generate src="resources/login.xml"/>
@@ -155,10 +161,14 @@
     <map:match pattern="logout">
 		<map:act type="auth-protect">
 		    <map:parameter name="handler" value="portalhandler"/> 
+            <map:parameter name="application" value="portal"/> 
 
+            <map:act type="portal-logout">
+        	    <map:parameter name="portal-name" value="portal"/>
+            </map:act>
 		    <map:act type="auth-logout"/>
         </map:act>
-<!-- TODO logout??? -->
+        <!-- TODO logout page -->
         <map:redirect-to uri="login"/>
     </map:match>
 

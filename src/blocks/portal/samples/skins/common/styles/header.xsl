@@ -23,9 +23,8 @@
 		</td>
 		</tr>
 		<tr> 
-		<td align="right" height="1%" noWrap="" bgcolor="#294563" width="1%"> 
+		<td align="center" height="1%" noWrap="" bgcolor="#294563" width="1%"> 
 			<img src="space.gif" width="300" height="10"/>
-            <a href="logout">LOGOUT</a>
 		</td>
 		</tr>
 	</tbody>

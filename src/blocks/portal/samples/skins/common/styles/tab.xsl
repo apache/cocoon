@@ -89,15 +89,21 @@
       </xsl:choose>
     </xsl:for-each>
 	<td width="99%" bgcolor="#294563">
-		<!-- ~~~~~ last "blank" tab, filling the rest of the tab row ~~~~~ -->
+		<!-- ~~~~~ last "blank" tab, contains logout button ~~~~~ -->
 		<table style="height: 2.0em" border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tr>
-				<td height="99%" bgcolor="#294563" width="100%">
-					<img height="5" src="space.gif" width="1"/>
+				<td height="99%" bgcolor="#294563" width="99%" align="right" valign="center">
+					<a href="logout"><img src="logout-door.gif" width="18" height="22" border="0"/></a><img height="10" src="sunspotdemoimg-space.gif" width="5"/>
+				</td>
+				<td height="99%" bgcolor="#294563" width="1%" align="right" valign="center">
+					<a href="logout" style="color:#4C6C8F;font-size:75%;">Logout</a>
 				</td>
 			</tr>
 			<tr>
-				<td height="1" bgcolor="#4C6C8F" width="100%">
+				<td height="1" bgcolor="#4C6C8F" width="99%">
+					<img height="10" src="space.gif" width="1"/>
+				</td>
+				<td height="1" bgcolor="#4C6C8F" width="1%">
 					<img height="10" src="space.gif" width="1"/>
 				</td>
 			</tr>
