@@ -357,7 +357,7 @@
       </attribute>
       <attribute>
       	<name>temporary:application-uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/portal/coplets/samples/form</value>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/blocks/portal/coplets/samples/form</value>
       </attribute>
    </coplet-data>
    <coplet-data id="app-test-two" name="standard">
