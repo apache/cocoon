@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.18 2000-12-12 16:08:02 greenrd Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.19 2000-12-13 03:38:39 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.18 $ $Date: 2000-12-12 16:08:02 $
+ * @version $Revision: 1.19 $ $Date: 2000-12-13 03:38:39 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -145,6 +145,14 @@ public class Cocoon extends HttpServlet implements Defaults {
             statusURL = (String) confs.get(STATUS_URL, STATUS_URL_DEFAULT);
             errorsInternally = ((String) confs.get(ERROR_INTERNALLY, "false")).toLowerCase().equals("true");
 
+            // Override configuration settings with the "zone" values
+            // This is most useful for pre-Servlet-2.2 engines such as JServ
+            Enumeration e = config.getInitParameterNames ();
+            while (e.hasMoreElements ()) {
+                String name = (String) e.nextElement ();
+                confs.put (name, config.getInitParameter (name));
+            }
+                                                                                                            
             // create the engine
             engine = Engine.getInstance(confs, this.getServletConfig().getServletContext());
         } catch (Exception e) {

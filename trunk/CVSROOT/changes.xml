@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.164 2000-12-12 16:07:59 greenrd Exp $ 
+  $Id: changes.xml,v 1.165 2000-12-13 03:38:39 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add" due-to="Nicolas Lichtmaier"
+   due-to-email="nick@technisys.com.ar">
+   You can now override options in cocoon.properties, in web.xml or zone.properties.
+  </action>
   <action dev="RDG" type="fix" due-to="Berin Loritsch" 
    due-to-email="bloritsch@infoplanning.com">
    Workaround for Websphere classloader: URL handler bug
