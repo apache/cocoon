@@ -50,17 +50,45 @@
 */
 package org.apache.cocoon.servlet;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.logger.NullLogger;
 import org.apache.cocoon.CompilingProcessor;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.Processor;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
@@ -75,22 +103,6 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.URL;
-import java.util.*;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
@@ -101,7 +113,7 @@ import java.util.jar.Manifest;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.23 2003/12/02 14:48:50 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.24 2003/12/26 18:38:44 unico Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -254,7 +266,7 @@ public class CocoonServlet extends HttpServlet {
         this.servletContext = conf.getServletContext();
         cocoonBean.setProperty(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
         this.servletContextPath = this.servletContext.getRealPath("/");
-
+        
         // first init the work-directory for the logger.
         // this is required if we are running inside a war file!
         final String workDirParam = getInitParameter("work-directory");
@@ -300,9 +312,8 @@ public class CocoonServlet extends HttpServlet {
                 getLogger().debug("Path for Root: " + path);
             }
         }
-
+        
         String servletContextURL;
-
         try {
             if (path.indexOf(':') > 1) {
                 servletContextURL = path;
@@ -322,11 +333,28 @@ public class CocoonServlet extends HttpServlet {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("URL for Root: " + servletContextURL);
         }
-        cocoonBean.setContextURI(servletContextURL);
+        
+        cocoonBean.setProperty(Constants.CONTEXT_ROOT_URL,servletContextURL);
+        cocoonBean.setContextURI(servletContextPath);
 
-        setForceLoad( getInitParameter("load-class", null) );
+        String cocoonConfig = getInitParameter("configurations","/WEB-INF/cocoon.xconf");
+        String cocoonConfigURI = servletContextURL + cocoonConfig;
+        cocoonBean.setConfigURI(cocoonConfigURI);
+        
+//        URL cocoonConfigURL = getConfigFile(cocoonConfigURI);
+//        cocoonBean.setProperty(Constants.CONTEXT_CONFIG_URL,cocoonConfigURL);
 
-        setForceProperty( getInitParameter("force-property", null) );
+        String logConfig = getInitParameter("log-config", "/WEB-INF/logkit.xconf");
+        String logConfigURI = servletContextURL + logConfig;
+        cocoonBean.setLogConfigURI(logConfigURI);
+        
+        String instrumentationConfig = 
+            getInitParameter("instrumentation-config", "/WEB-INF/instrumentation.xconf");
+        String instrumentationConfigURI = servletContextURL + logConfig;
+        cocoonBean.setInstrumentConfigURI(instrumentationConfigURI);
+        
+        setForceLoad(getInitParameter("load-class", null));
+        setForceProperty(getInitParameter("force-property", null));
 
         // add work directory
         if (workDirParam != null) {
@@ -412,14 +440,6 @@ public class CocoonServlet extends HttpServlet {
         }
         this.cacheDir.mkdirs();
         cocoonBean.setProperty(Constants.CONTEXT_CACHE_DIR, this.cacheDir);
-
-        cocoonBean.setProperty(Constants.CONTEXT_CONFIG_URL,
-                            getConfigFile(conf.getInitParameter("configurations")));
-        if (conf.getInitParameter("configurations") == null) {
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("configurations was not set - defaulting to... ?");
-            }
-        }
 
         // get allow reload parameter, default is true
 		this.allowReload = getInitParameterAsBoolean("allow-reload", ALLOW_RELOAD);
@@ -750,7 +770,7 @@ public class CocoonServlet extends HttpServlet {
      * file.
      */
     protected void initLogger() {
-        cocoonBean.setInitializationLogger(new NullLogger());
+        cocoonBean.setInitializationLogger(new ConsoleLogger(ConsoleLogger.LEVEL_DEBUG));
 
         /* I am leaving this all commented out.  Avalon no longer forces you to use
          * LogKit, so you can use Log4J all the way.  In order to make this work the
@@ -1415,8 +1435,7 @@ public class CocoonServlet extends HttpServlet {
     	}
     }
 
-    protected Logger getLogger()
-    {
+    protected Logger getLogger() {
         return cocoonBean.getInitializationLogger();
     }
 }
