@@ -79,9 +79,9 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.3 2003/05/06 12:09:20 cziegeler Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.4 2003/10/24 13:42:01 vgritsenko Exp $
  */
-public class XMLUtils{
+public class XMLUtils {
 
     public static final AttributesImpl EMPTY_ATTRIBUTES = new AttributesImpl();
 
@@ -158,9 +158,9 @@ public class XMLUtils{
      */
     public static XMLConsumer getConsumer(ContentHandler ch, LexicalHandler lh) {
         if (ch instanceof XMLConsumer)
-          return (XMLConsumer)ch;
+            return (XMLConsumer)ch;
         else
-          return new ContentHandlerWrapper(ch, lh);
+            return new ContentHandlerWrapper(ch, lh);
     }
 
     /**
@@ -223,18 +223,20 @@ public class XMLUtils{
     public static String serializeNode(Node node, Properties format)
     throws ProcessingException {
         try {
-            if (node == null) return "";
+            if (node == null) {
+                return "";
+            }
             StringWriter writer = new StringWriter();
             TransformerHandler transformerHandler;
             transformerHandler = ((SAXTransformerFactory)TransformerFactory.newInstance()).newTransformerHandler();
             transformerHandler.getTransformer().setOutputProperties(format);
             transformerHandler.setResult(new StreamResult(writer));
-            if ( node.getNodeType() != Node.DOCUMENT_NODE ) {
+            if (node.getNodeType() != Node.DOCUMENT_NODE) {
                 transformerHandler.startDocument();
             } 
             DOMStreamer domStreamer = new DOMStreamer(transformerHandler, transformerHandler);
             domStreamer.stream(node);
-            if ( node.getNodeType() != Node.DOCUMENT_NODE ) {
+            if (node.getNodeType() != Node.DOCUMENT_NODE) {
                 transformerHandler.endDocument();
             } 
             return writer.toString();
@@ -252,7 +254,7 @@ public class XMLUtils{
      * @param data The string data
      */
     public static void data(ContentHandler contentHandler,
-                                 String data)
+                            String data)
     throws SAXException {
         contentHandler.characters(data.toCharArray(), 0, data.length());
     }
@@ -278,8 +280,8 @@ public class XMLUtils{
      * @param contentHandler the SAX content handler
      * @param v the XML fragment
      */
-    public static void valueOf(ContentHandler contentHandler, 
-                                 org.apache.excalibur.xml.sax.XMLizable v)
+    public static void valueOf(ContentHandler contentHandler,
+                               org.apache.excalibur.xml.sax.XMLizable v)
     throws SAXException {
         if (v != null) {
             v.toSAX(contentHandler);
@@ -620,6 +622,4 @@ public class XMLUtils{
     throws SAXException {
         contentHandler.startElement(namespaceURI, localName, localName, atts);
     }
-     
-
 }
