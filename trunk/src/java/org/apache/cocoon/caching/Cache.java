@@ -57,12 +57,12 @@ import java.util.Map;
 /**
  * This is the Cocoon cache. This component is responsible for storing
  * and retrieving cached responses. It can be used to monitor the cache
- * or the investigate which responses are cached etc.
+ * or to investigate which responses are cached etc.
  * This interface will grow!
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cache.java,v 1.1 2003/03/09 00:08:43 pier Exp $
+ * @version CVS $Id: Cache.java,v 1.2 2003/07/13 03:10:10 ghoward Exp $
  */
 public interface Cache
 extends Component {
@@ -103,4 +103,8 @@ extends Component {
      */
     void clear();
 
+    /**
+     * See if a response is cached under this key.
+     */
+    boolean containsKey(PipelineCacheKey key);
 }
