@@ -3,7 +3,15 @@
 
 <!-- ===================== General Components =========================== -->
 
-  <store class="org.apache.cocoon.components.store.MRUMemoryStore"/>
+  <store class="org.apache.cocoon.components.store.MRUMemoryStore">
+     <parameter name="freememory" value="1000000"/>
+     <parameter name="heapsize" value="60000000"/>
+     <parameter name="objectlifetime" value="300"/>
+     <parameter name="interval" value="10"/>
+     <parameter name="maxobjects" value="100"/>
+     <parameter name="usethread" value="false"/>
+     <parameter name="threadpriority" value="5"/>
+  </store>
 
   <url-factory>
     <protocol name="resource" class="org.apache.cocoon.components.url.ResourceURLFactory"/>
