@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.6 2003/05/08 20:42:17 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.7 2003/05/09 09:47:54 crossley Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -39,8 +39,8 @@
     Given the power of XSLT and the fact that many presentation languages are
     based on the XML syntax, it is possible to generate even vector graphics
     from your content. Here is an example that renders to 
-    SVG (Scalable Vector Graphics). (you need an SVG plugin, or an SVG-capable
-    browser to see this)
+    SVG (Scalable Vector Graphics). (You need an SVG plugin, or an SVG-capable
+    browser to see this.)
    </sample>   
    <sample name="Plain Text" href="hello.txt">
     Sometimes you don't need to be very fancy, so here is a plain text
@@ -49,12 +49,24 @@
    <sample name="VRML" href="hello.wrl">
     But sometimes you need to be fancy to impress people, so here is a 3D
     version of your content (you need a VRML plugin in your browser to visualize
-    this)
+    this).
    </sample>
    <sample name="VoiceML" href="hello.vml">
     Or sometimes you don't even have a display in front of you, so you want to
     hear your content, so here is a VoiceML representation of your content (you 
     need a VoiceML-capable agent to hear this).
+   </sample>
+   <sample name="RTF" href="../jfor/hello.rtf">
+    Rich Text Format.
+    (Requires block-jfor.)
+   </sample>
+   <sample name="PDF" href="../fop/hello.pdf">
+    Portable Document Format.
+    (Requires block-fop.)
+   </sample>
+   <sample name="SWF" href="../swf/hello.swf">
+    Flash ... You need the appropriate plugin for your browser.
+    (Requires block-swf.)
    </sample>
   </group>
 
