@@ -17,8 +17,6 @@ This must be followed by a section title and a bullet list with some items.
 As of March  27th, 2003, the following tests fail: 
 
 * 0.1 This bullet list is invisible in the html output if there is no section title before it
-* Headings are not nested as they should (use cocoon-view=xdoc to check xdocs XML output)
-* 1.2, heading is interpreted as text under heading 1.1
 * 5.1 relative link points to wiki.cocoondev.org (but is it by design?)
 
 -- 1.HEADINGS --

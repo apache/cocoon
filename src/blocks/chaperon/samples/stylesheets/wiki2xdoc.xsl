@@ -25,7 +25,21 @@
  <xsl:template match="st:section">
   <section>
    <title><xsl:value-of select="st:title/st:textsequence"/></title>
-   <xsl:apply-templates select="st:paragraphs/st:paragraph/st:*" mode="paragraph"/>
+   <xsl:apply-templates select="st:paragraphs/st:paragraph/st:*|st:paragraphs/st:subsection" mode="paragraph"/>
+  </section>
+ </xsl:template>
+
+ <xsl:template match="st:subsection" mode="paragraph">
+  <section>
+   <title><xsl:value-of select="st:subtitle/st:textsequence"/></title>
+   <xsl:apply-templates select="st:subparagraphs/st:paragraph/st:*|st:subparagraphs/st:subsubsection" mode="paragraph"/>
+  </section>
+ </xsl:template>
+
+ <xsl:template match="st:subsubsection" mode="paragraph">
+  <section>
+   <title><xsl:value-of select="st:subsubtitle/st:textsequence"/></title>
+   <xsl:apply-templates select="st:subsubparagraphs/st:paragraph/st:*" mode="paragraph"/>
   </section>
  </xsl:template>
 
