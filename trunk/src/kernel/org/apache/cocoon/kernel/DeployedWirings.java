@@ -38,7 +38,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public class DeployedWirings implements Wirings, Lifecycle {
 
@@ -157,7 +157,7 @@ public class DeployedWirings implements Wirings, Lifecycle {
      */
     protected Wire newWire(Class role, Resolver resolver)
     throws WiringException {
-        return(new ProxyWire(this.composer, role, resolver).getWire());
+        return(new ProxyWire(this.composer, role, this, resolver).getWire());
     }
 
     /* ====================================================================== */
