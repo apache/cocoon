@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.106 2003/09/26 14:04:51 butlermh Exp $
+    | CVS $Id: jars.xml,v 1.107 2003/09/27 12:50:23 joerg Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -708,7 +708,7 @@
     <description>???</description>
     <used-by>Axis block</used-by>
     <lib>axis/lib/excalibur-util-1.0.jar</lib>
-    <homepage>#</homepage>
+    <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
   <file>
