@@ -86,7 +86,7 @@ import org.w3c.dom.Element;
  * &lt;/wb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.12 2004/02/29 12:36:19 antonio Exp $
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.13 2004/03/02 18:48:18 antonio Exp $
  */
 public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
@@ -112,9 +112,9 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
             String rowPathForInsert =
                 DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
             String uniqueRowId =
-                DomHelper.getAttribute(bindingElm, "unique-row-id");
+                DomHelper.getAttribute(bindingElm, "unique-row-id", null);
             String uniqueRowIdPath =
-                DomHelper.getAttribute(bindingElm, "unique-path");
+                DomHelper.getAttribute(bindingElm, "unique-path", null);
 
             Convertor convertor = null;
             Locale convertorLocale = Locale.US;
@@ -140,9 +140,9 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
                       "RepeaterBinding misses '<on-bind>' child definition. " +
                       DomHelper.getLocation(bindingElm));
             }
-
             JXPathBindingBase[] childBindings =
                 assistant.makeChildBindings(childWrapElement);
+
             Element deleteWrapElement = DomHelper.getChildElement(bindingElm,
                     BindingManager.NAMESPACE, "on-delete-row");
             JXPathBindingBase[] deleteBindings = null;
@@ -158,12 +158,29 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 insertBinding =
                     assistant.makeChildBindings(insertWrapElement)[0];
             }
+            /* New <wb:unique-row> child element builder */
+            Element uniqueFieldWrapElement = DomHelper.getChildElement(bindingElm,
+                    BindingManager.NAMESPACE, "unique-row");
+            JXPathBindingBase[] uniqueFieldBinding = null;
+            if (uniqueFieldWrapElement != null) {
+                uniqueFieldBinding = assistant.makeChildBindings(uniqueFieldWrapElement);
+            } else if (uniqueRowId == null || uniqueRowIdPath == null) {
+                throw new BindingException(
+                      "RepeaterBinding misses '<unique-row>' child definition. " +
+                      DomHelper.getLocation(bindingElm));
+            } else {
+                if (this.getLogger().isInfoEnabled()) {
+                this.getLogger().info("<wb:repeater>: The attributes 'unique-row-id' and " +
+                        "'unique-path' are deprecated. Use <unique-row> child element instead." +
+                        " Located at " + DomHelper.getLocation(bindingElm));
+                }
+            }
 
             RepeaterJXPathBinding repeaterBinding =
                 new RepeaterJXPathBinding(commonAtts, repeaterId, parentPath,
                         rowPath, rowPathForInsert, uniqueRowId,
                         uniqueRowIdPath, convertor, convertorLocale,
-                        childBindings, insertBinding, deleteBindings);
+                        childBindings, insertBinding, deleteBindings, uniqueFieldBinding);
             return repeaterBinding;
         } catch (BindingException e) {
             throw e;
