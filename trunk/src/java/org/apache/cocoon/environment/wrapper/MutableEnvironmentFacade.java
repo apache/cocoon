@@ -52,14 +52,10 @@ package org.apache.cocoon.environment.wrapper;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Source;
-import org.xml.sax.SAXException;
 
 /**
  * Enviroment facade, whose delegate object can be changed. This class is required to handle internal redirects
@@ -73,7 +69,7 @@ import org.xml.sax.SAXException;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.2 2003/10/01 08:53:49 sylvain Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.3 2003/10/15 19:25:47 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -316,31 +312,4 @@ public class MutableEnvironmentFacade implements Environment {
 		return env.isExternal();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.apache.cocoon.environment.SourceResolver#resolve(java.lang.String)
-	 */
-	public Source resolve(String systemID) throws ProcessingException, SAXException, IOException {
-		return env.resolve(systemID);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String)
-	 */
-	public org.apache.excalibur.source.Source resolveURI(String arg0) throws MalformedURLException, IOException {
-		return env.resolveURI(arg0);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.excalibur.source.SourceResolver#resolveURI(java.lang.String, java.lang.String, java.util.Map)
-	 */
-	public org.apache.excalibur.source.Source resolveURI(String arg0, String arg1, Map arg2) throws MalformedURLException, IOException {
-		return env.resolveURI(arg0, arg1, arg2);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.apache.excalibur.source.SourceResolver#release(org.apache.excalibur.source.Source)
-	 */
-	public void release(org.apache.excalibur.source.Source arg0) {
-        env.release(arg0);
-	}
 }

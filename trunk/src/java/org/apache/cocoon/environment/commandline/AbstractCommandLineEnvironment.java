@@ -71,7 +71,7 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.4 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.5 2003/10/15 19:25:48 cziegeler Exp $
  */
 
 public abstract class AbstractCommandLineEnvironment
@@ -101,6 +101,9 @@ implements Redirector {
     public void redirect(boolean sessionmode, String newURL)
     throws IOException {
 
+        if ( !this.initializedComponents) {
+            this.initComponents();
+        }
         this.hasRedirected = true;
 
         if (sessionmode) {
@@ -133,7 +136,7 @@ implements Redirector {
 
             Source redirectSource = null;
             try {
-                redirectSource = this.resolveURI(newURL);
+                redirectSource = this.sourceResolver.resolveURI(newURL);
                 SourceUtil.parse( this.manager, redirectSource, ls);
             } catch (SourceException se) {
                 throw new CascadingIOException("SourceException: " + se, se);
@@ -142,12 +145,12 @@ implements Redirector {
             } catch (ProcessingException pe) {
                 throw new CascadingIOException("ProcessingException: " + pe, pe);
             } finally {
-                this.release( redirectSource );
+                this.sourceResolver.release( redirectSource );
             }
         } else {
             Source redirectSource = null;
             try {
-                redirectSource = this.resolveURI(newURL);
+                redirectSource = this.sourceResolver.resolveURI(newURL);
                 InputStream is = redirectSource.getInputStream();
                 byte[] buffer = new byte[8192];
                 int length = -1;
@@ -158,7 +161,7 @@ implements Redirector {
             } catch (SourceException se) {
                 throw new CascadingIOException("SourceException: " + se, se);
             } finally {
-                this.release( redirectSource);
+                this.sourceResolver.release( redirectSource);
             }
         }
     }
