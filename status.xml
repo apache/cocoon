@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.154 2003/09/25 03:18:36 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.155 2003/09/25 05:15:00 antonio Exp $:-->
 
 <status>
  <developers>
@@ -192,7 +192,7 @@
 
  <release version="@version@" date="@date@">
    <action dev="AG" type="update">
-     Update lib commons-lang to 2.0
+     Update lib commons-lang to 2.0, iText to 1.00
    </action>
    <action dev="SW" type="add">
      New event-handling system for Woody. Value change and action event handlers
