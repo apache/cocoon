@@ -117,7 +117,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.16 2004/01/13 11:32:54 unico Exp $
+ * @version CVS $Id: SlideSource.java,v 1.17 2004/01/27 14:31:40 unico Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -549,7 +549,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
             return true;
         }
         NodeProperty property = m_descriptor.getProperty("resourcetype");
-        if (property != null && property.getValue().equals("<collection/>")) {
+        if (property != null && ((String) property.getValue()).startsWith("<collection/>")) {
             return true;
         }
         return false;
