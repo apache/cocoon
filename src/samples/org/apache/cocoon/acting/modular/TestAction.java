@@ -16,11 +16,11 @@
 
 package org.apache.cocoon.acting.modular;
 
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.components.modules.input.InputModule;
@@ -43,7 +43,7 @@ import java.util.Map;
  * from the input component to the output component or, if a specific
  * parameter is specified through parameter-name, just one parameter.
  *
- * @version CVS $Id: TestAction.java,v 1.4 2004/05/24 12:42:44 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class TestAction extends ServiceableAction 
     implements Configurable, ThreadSafe {
@@ -90,18 +90,18 @@ public class TestAction extends ServiceableAction
         boolean useGetValues = param.getParameterAsBoolean("use-getValues",this.useGetValues);
         InputModule input = null;
         OutputModule output = null;
-        ComponentSelector inputSelector = null;
-        ComponentSelector outputSelector = null;
+        ServiceSelector inputSelector = null;
+        ServiceSelector outputSelector = null;
 
         try {
             if (getLogger().isDebugEnabled()) getLogger().debug("start...");
             // obtain input and output components
-            inputSelector=(ComponentSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
-            if (inputName != null && inputSelector != null && inputSelector.hasComponent(inputName)){
+            inputSelector=(ServiceSelector) this.manager.lookup(INPUT_MODULE_SELECTOR); 
+            if (inputName != null && inputSelector != null && inputSelector.isSelectable(inputName)){
                 input = (InputModule) inputSelector.select(inputName);
             }
-            outputSelector=(ComponentSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR); 
-            if (outputName != null && outputSelector != null && outputSelector.hasComponent(outputName)){
+            outputSelector=(ServiceSelector) this.manager.lookup(OUTPUT_MODULE_SELECTOR); 
+            if (outputName != null && outputSelector != null && outputSelector.isSelectable(outputName)){
                 output = (OutputModule) outputSelector.select(outputName);
             }
 
