@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.91 2003/07/13 17:16:54 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.92 2003/07/17 12:24:52 gianugo Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="GR" type="update">
+    Added URL encoding of user/password in the WebDAV source 
+    (webdav://user:password@host/path)
+  </action>
   <action dev="VG" type="update">
     Decouple core XSP logicsheet from database classes to allow XSP deployment
     without excalibur datasource JAR file. If your XSP pages use datasources
