@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.3 2000-10-26 21:03:40 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.4 2000-10-27 19:03:53 balld Exp $-->
 <!--
 
  ============================================================================
@@ -158,7 +158,6 @@
 
  <xspdoc:desc>indicates that a sql connection is going to be defined and one or more queries may be executed</xspdoc:desc>
 <xsl:template match="esql:execute-query">
- <para>This is a " quoted string.</para>
  <xsl:choose>
   <xsl:when test="@inner-method='no'">
    <xsl:call-template name="generate-code">
