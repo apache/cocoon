@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.23 2003/04/03 13:20:54 bloritsch Exp $
+    | CVS $Id: jars.xml,v 1.24 2003/04/03 13:34:54 bloritsch Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -98,7 +98,7 @@
    event based programming.
   </description>
   <used-by>Cocoon Flow</used-by>
-  <lib>core/excalibur-event-1.0.2.jar</lib>
+  <lib>core/excalibur-event-20030403.jar</lib>
   <homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
 
