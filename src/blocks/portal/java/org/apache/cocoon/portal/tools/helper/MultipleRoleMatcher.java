@@ -17,7 +17,7 @@ package org.apache.cocoon.portal.tools.helper;
 
 import java.util.StringTokenizer;
 
-import org.apache.cocoon.portal.tools.model.User;
+import org.apache.cocoon.portal.profile.PortalUser;
 
 /**
  * A role matcher matching against several role.
@@ -62,11 +62,11 @@ implements RoleMatcher {
      * 
      * @see com.vodafone.veap.util.RoleMatcher#matches(com.vodafone.veap.model.User)
      */
-    public boolean matches(User user) {
+    public boolean matches(PortalUser user) {
         // The user must have all roles
         int length = this.roles.length;
         for (int i = 0; i < length; i++) {
-            if (!user.hasRole(this.roles[i])) {
+            if (!user.isUserInRole(this.roles[i])) {
                 return false;
             }
         }

@@ -27,7 +27,6 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 public class PortalObjects {
 	
 	private PortalService portalService;
-	private String portalName;
 	private PortalComponentManager componentManager;
 	private ProfileManager profileManager;
 	private Layout portalLayout;
