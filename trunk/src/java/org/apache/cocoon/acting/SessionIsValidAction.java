@@ -66,9 +66,15 @@ import java.util.Map;
  * seesion is still valid.
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: SessionIsValidAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: SessionIsValidAction.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="session-isvalid"
+ * 
  */
-public class SessionIsValidAction extends AbstractAction implements ThreadSafe
+public class SessionIsValidAction extends AbstractAction
 {
     /**
      * Main invocation routine.

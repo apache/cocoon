@@ -61,6 +61,9 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
@@ -72,27 +75,51 @@ import org.apache.excalibur.store.Store;
  * and retrieving cached responses. It can be used to monitor the cache
  * or the investigate which responses are cached etc.
  * This component will grow!
- *
+ * 
+ * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.7 2003/08/08 11:15:11 cziegeler Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.8 2003/10/25 17:46:39 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Cache"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="cache"
+ * 
  */
 public class CacheImpl
 extends AbstractLogEnabled
-implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
+implements Cache, Serviceable, Disposable, Parameterizable {
 
     /** The store containing the cached responses */
     protected Store store;
 
     /** The component manager */
-    protected ComponentManager manager;
+    protected ServiceManager manager;
+
 
     /**
-     * Composable Interface
+     * Serviceable stage.
+     * 
+     * @avalon.dependency type="Store"
      */
-    public void compose (ComponentManager manager)
-    throws ComponentException {
+    public void service (ServiceManager manager) {
         this.manager = manager;
+    }
+
+    /**
+     * Reads the value of the <code>store</code> parameter that specifies the
+     * lookup hint of the Store service to use and looks it up on the service
+     * manager. If the parameter is not present the default transient store 
+     * is attempted.
+     */
+    public void parameterize(Parameters parameters) throws ParameterException {
+        String storeName = parameters.getParameter("store", Store.TRANSIENT_STORE);
+        try {
+            this.store = (Store)this.manager.lookup(storeName);
+        } catch (ServiceException ce) {
+            throw new ParameterException("Unable to lookup store: " + storeName, ce);
+        }
     }
 
     /**
@@ -168,17 +195,5 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
 	public boolean containsKey(Serializable key) {
 		return this.store.containsKey(key);
 	}
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
-     */
-    public void parameterize(Parameters parameters) throws ParameterException {
-        String storeName = parameters.getParameter("store", Store.TRANSIENT_STORE);
-        try {
-            this.store = (Store)this.manager.lookup(storeName);
-        } catch (ComponentException ce) {
-            throw new ParameterException("Unable to lookup store: " + storeName, ce);
-        }
-    }
 
 }

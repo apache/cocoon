@@ -70,9 +70,15 @@ import java.util.Map;
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SessionValidatorAction.java,v 1.2 2003/08/15 15:53:20 haul Exp $
+ * @version CVS $Id: SessionValidatorAction.java,v 1.3 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="session-validator"
+ * 
  */
-public class SessionValidatorAction extends AbstractValidatorAction implements ThreadSafe {
+public class SessionValidatorAction extends AbstractValidatorAction {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.acting.AbstractValidatorAction#createMapOfParameters(java.util.Map, java.util.Collection)

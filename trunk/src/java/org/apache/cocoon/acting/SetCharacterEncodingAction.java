@@ -75,9 +75,15 @@ import java.util.Map;
  * <p>If no encoding specified, the action does nothing.
  *
  * @author <a href="mailto:miyabe@jzf.co.jp">MIYABE Tatsuhiko</a>
- * @version CVS $Id: SetCharacterEncodingAction.java,v 1.3 2003/10/15 20:09:50 cziegeler Exp $
+ * @version CVS $Id: SetCharacterEncodingAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="char-encoding"
+ * 
  */
-public class SetCharacterEncodingAction extends ServiceableAction implements ThreadSafe, Parameterizable {
+public class SetCharacterEncodingAction extends ServiceableAction implements Parameterizable {
     private String global_form_encoding = null;
 
     public void parameterize(Parameters parameters)

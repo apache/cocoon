@@ -60,9 +60,9 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: Action.java,v 1.1 2003/03/09 00:08:38 pier Exp $
+ * @version CVS $Id: Action.java,v 1.2 2003/10/25 17:46:38 unico Exp $
  */
-public interface Action extends Component {
+public interface Action {
 
     String ROLE = Action.class.getName();
 

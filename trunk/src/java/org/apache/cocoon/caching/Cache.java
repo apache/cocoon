@@ -63,10 +63,9 @@ import org.apache.cocoon.ProcessingException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cache.java,v 1.4 2003/08/07 08:52:15 cziegeler Exp $
+ * @version CVS $Id: Cache.java,v 1.5 2003/10/25 17:46:39 unico Exp $
  */
-public interface Cache
-extends Component {
+public interface Cache {
 
     /** The Avalon Role **/
     String ROLE = Cache.class.getName();

@@ -145,9 +145,15 @@ import org.apache.cocoon.i18n.I18nUtils;
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
- * @version CVS $Id: LocaleAction.java,v 1.2 2003/10/15 20:09:50 cziegeler Exp $
+ * @version CVS $Id: LocaleAction.java,v 1.3 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="locale"
+ * 
  */
-public class LocaleAction extends ServiceableAction implements ThreadSafe, Configurable {
+public class LocaleAction extends ServiceableAction implements Configurable {
 
     /**
      * Constant representing the language parameter

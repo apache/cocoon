@@ -112,11 +112,15 @@ import java.util.Map;
  * @see org.apache.cocoon.selection.SessionAttributeSelector
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: SessionStateAction.java,v 1.1 2003/03/09 00:08:40 pier Exp $
+ * @version CVS $Id: SessionStateAction.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="session-state"
+ * 
  */
-public class SessionStateAction
-    extends AbstractConfigurableAction
-    implements ThreadSafe {
+public class SessionStateAction extends AbstractConfigurableAction {
 
     protected String statekey = "org.apache.cocoon.SessionState";
     protected String newstate = null;

@@ -112,7 +112,13 @@ import org.apache.excalibur.mpool.ObjectFactory;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.5 2003/10/19 16:13:36 cziegeler Exp $
+ * @version CVS $Id: ServerPagesAction.java,v 1.6 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="serverpages"
+ * 
  */
 public class ServerPagesAction
         extends ConfigurableServiceableAction

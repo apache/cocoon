@@ -51,6 +51,8 @@
 package org.apache.cocoon.acting;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
@@ -62,15 +64,27 @@ import java.util.Map;
  * Simple action which ensures the persistent store is cleared.
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: ClearPersistentStoreAction.java,v 1.3 2003/10/16 14:50:22 bloritsch Exp $
+ * @version CVS $Id: ClearPersistentStoreAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="clear-persistent-store"
  */
-public class ClearPersistentStoreAction extends ServiceableAction implements ThreadSafe {
+public class ClearPersistentStoreAction extends ServiceableAction {
 
+    /**
+     * @avalon.dependency type="Store"
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+    }
+    
     public Map act(Redirector redirector,
-                    SourceResolver resolver,
-                    Map objectModel,
-                    String src,
-                    Parameters par
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String src,
+                   Parameters par
     ) throws Exception {
         Store store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
 
@@ -84,4 +98,6 @@ public class ClearPersistentStoreAction extends ServiceableAction implements Thr
             this.manager.release( store_persistent );
         }
     }
+
+
 }

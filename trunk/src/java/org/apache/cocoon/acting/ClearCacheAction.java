@@ -51,6 +51,8 @@
 package org.apache.cocoon.acting;
 
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.environment.Redirector;
@@ -63,10 +65,23 @@ import java.util.Map;
  * cached results
  *
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: ClearCacheAction.java,v 1.4 2003/10/16 14:50:22 bloritsch Exp $
+ * @version CVS $Id: ClearCacheAction.java,v 1.5 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="clear-cache"
  */
-public class ClearCacheAction extends ServiceableAction implements ThreadSafe {
+public class ClearCacheAction extends ServiceableAction {
 
+
+    /**
+     * @avalon.dependency type="Cache"
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+    }
+    
     public Map act(Redirector redirector,
                     SourceResolver resolver,
                     Map objectModel,
@@ -89,4 +104,5 @@ public class ClearCacheAction extends ServiceableAction implements ThreadSafe {
             this.manager.release( cache );
         }
     }
+
 }

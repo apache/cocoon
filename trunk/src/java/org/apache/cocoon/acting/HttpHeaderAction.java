@@ -67,11 +67,14 @@ import java.util.Map;
  * This action adds HTTP headers to the response.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: HttpHeaderAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: HttpHeaderAction.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="set-header"
  */
-public class HttpHeaderAction
-extends AbstractConfigurableAction
-implements ThreadSafe {
+public class HttpHeaderAction extends AbstractConfigurableAction {
 
     /**
      * Stores keys of global configuration.

@@ -65,9 +65,14 @@ import java.util.Map;
  * empty map if everything is ok, null otherwise.
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: SessionInvalidatorAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: SessionInvalidatorAction.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="session-invalidator"
  */
-public class SessionInvalidatorAction extends AbstractAction implements ThreadSafe
+public class SessionInvalidatorAction extends AbstractAction
 {
     /**
      * Main invocation routine.

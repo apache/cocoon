@@ -70,9 +70,15 @@ import java.util.Map;
  * match the supplied functionality.
  *
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: ResourceExistsAction.java,v 1.3 2003/10/15 20:09:50 cziegeler Exp $
+ * @version CVS $Id: ResourceExistsAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="resource-exists"
+ * 
  */
-public class ResourceExistsAction extends ServiceableAction implements ThreadSafe {
+public class ResourceExistsAction extends AbstractAction {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) throws Exception {
         String urlstring = parameters.getParameter("url", source);

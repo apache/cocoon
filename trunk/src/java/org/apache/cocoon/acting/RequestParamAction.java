@@ -115,9 +115,14 @@ import org.apache.cocoon.environment.SourceResolver;
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:tcurdt@dff.st">Torsten Curdt</a>
- * @version CVS $Id: RequestParamAction.java,v 1.3 2003/10/15 20:09:50 cziegeler Exp $
+ * @version CVS $Id: RequestParamAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="request"
  */
-public class RequestParamAction extends ServiceableAction implements ThreadSafe {
+public class RequestParamAction implements Action {
 
     public final static String MAP_URI         = "requestURI";
     public final static String MAP_QUERY       = "requestQuery";

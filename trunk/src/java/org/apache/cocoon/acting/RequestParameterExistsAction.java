@@ -84,7 +84,13 @@ import org.apache.cocoon.environment.SourceResolver;
  * "name_1" must also exist and vice versa.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestParameterExistsAction.java,v 1.1 2003/03/09 00:08:39 pier Exp $
+ * @version CVS $Id: RequestParameterExistsAction.java,v 1.2 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="request-exists"
+ * 
  */
 public class RequestParameterExistsAction extends AbstractConfigurableAction
 {

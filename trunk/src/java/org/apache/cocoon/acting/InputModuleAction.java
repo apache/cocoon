@@ -53,6 +53,8 @@ package org.apache.cocoon.acting;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
@@ -98,7 +100,13 @@ import java.util.Map;
  * @see org.apache.cocoon.components.modules.input.InputModule
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.3 2003/10/16 14:50:22 bloritsch Exp $
+ * @version CVS $Id: InputModuleAction.java,v 1.4 2003/10/25 17:46:38 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Action"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="input-module"
+ * 
  */
 public class InputModuleAction extends ConfigurableServiceableAction {
 
@@ -151,6 +159,13 @@ public class InputModuleAction extends ConfigurableServiceableAction {
             }
         }
         return map;
+    }
+
+    /**
+     * @avalon.dependency type="org.apache.cocoon.components.modules.input.InputModule"
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
     }
 
     /* (non-Javadoc)
