@@ -182,12 +182,25 @@
   </xsl:template>
 
   <xsl:template match="xsp:pi">
-    xspCurrentNode.appendChild(
-      document.createProcessingInstruction(
-        "<xsl:value-of select="@target"/>",
-        "<xsl:value-of select="."/>"
-      )
-    );
+    <!-- Appending to xspCurrentNode doesn't work for Cocoon PIs,
+         because Cocoon expects its PIs to be at the top level. -->
+    document.appendChild(
+       document.createProcessingInstruction(
+         "<xsl:value-of select="@target"/>",
+         <xsl:for-each select="xsp:text|xsp:expr">
+           <xsl:choose>
+             <xsl:when test="name(.) = 'xsp:text'">
+               "<xsl:value-of select="."/>"
+             </xsl:when>
+             <xsl:when test="name(.) = 'xsp:expr'">
+              String.valueOf(<xsl:value-of select="."/>)
+             </xsl:when>
+           </xsl:choose>
+          +
+         </xsl:for-each>
+         ""
+       )
+     );
   </xsl:template>
 
   <xsl:template match="xsp:comment">

@@ -1183,13 +1183,15 @@ xspCurrentNode.appendChild(
           </p>
 
           <p>
-            <code>&lt;xsp:expr&gt;</code> is not yet
-            supported to provide a value for a processing
-            instruction's <em>data</em>. Only textual, constant
-            values are allowed:
+           <code>&lt;xsp:expr&gt;</code> is supported within xsp:pi -
+           for example:
           </p>
 
-          <source>&lt;xsp:pi name="cocoon-process"&gt;type="xslt"&lt;/xsp:pi&gt;</source>
+          <source>&lt;xsp:pi name="xml-stylesheet"&gt;
+  href="&lt;xsp:expr&gt;request.getQueryString()&lt;/xsp:expr&gt;"
+  type="text/xsl"
+&lt;/xsp:pi&gt;
+          </source>
     
           <p>
             In the future, <code>&lt;xsp:pi&gt;</code> may be
