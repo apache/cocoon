@@ -54,13 +54,11 @@ import org.apache.excalibur.source.SourceException;
 
 import org.apache.cocoon.components.source.helpers.SourceLock;
 
-import java.util.Enumeration;
-
 /**
  * A source, which could be locked
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: LockableSource.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
+ * @version CVS $Id: LockableSource.java,v 1.2 2003/12/14 15:22:54 unico Exp $
  */
 public interface LockableSource extends Source {
 
@@ -74,10 +72,10 @@ public interface LockableSource extends Source {
     public void addSourceLocks(SourceLock sourcelock) throws SourceException;
 
     /**
-     * Returns a enumeration of the existing locks
+     * Returns a list of locks on the source.
      *
      * @return Enumeration of SourceLock
      */
-    public Enumeration getSourceLocks() throws SourceException;
+    public SourceLock[] getSourceLocks() throws SourceException;
 }
 
