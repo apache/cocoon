@@ -18,19 +18,46 @@
 
 <document>
   <header>
-    <title>Apache Cocoon Forms: Validation Rules</title>
+    <title>Cocoon Forms: Validation</title>
     <authors>
       <person name="The Apache Cocoon Team" email="dev@cocoon.apache.org"/>
     </authors>
   </header>
   <body>
-    <s1 title="General">
-      <p>For each validation rule, the failmessage (i.e. the message displayed
-      to the user in case the validation failed) can be overridden by specifying
-      a child <strong>fd:failmessage</strong> element inside the validation rule element. The
-      failmessage can contain mixed content. Example:</p>
+    <s1 title="Concept">
+      <p>For each widget you can define a number of widget validators. A
+      widget validator can perform some checks on the widget and if these
+      fail, set a validation error on the widget.</p>
 
-      <source><![CDATA[<fd:datatype base="string">
+      <p>Note that technically, it is not required that really each widget
+      supports widget validators, but all the ones supplied with CForms do.</p>
+
+      <p>Implementation-wise, a widget validator is an object implementing
+      the <code>WidgetValidator</code> interface. [insert javadoc link
+      once those are published]</p>
+
+      <p>Validation errors can only be set on widgets implementing
+      the interface <code>ValidationErrorAware</code>, which currently is not
+      implemented by all widgets. For example, a repeater widget does not
+      implement ValidationErrorAware. However, a validator attached to
+      a repeater could perform inter-row checks on the fields in the
+      different rows of the repeater, and set validation errors on these
+      fields (instead of on the repeater itself).</p>
+
+      <p>CForms supplies a number of widget validators, mostly for performing
+      checks on the value of field widgets. Additionally you can write your
+      own ones in Java or in Javascript.</p>
+    </s1>
+
+    <s1 title="Reference">
+      <s2 title="General remarks">
+        <p>For most widget validators, the failmessage (i.e. the message displayed
+        to the user in case the validation failed) can be overridden by specifying
+        a child <strong>fd:failmessage</strong> element inside the validator element. The
+        failmessage can contain mixed content. Example:</p>
+
+        <source><![CDATA[<fd:field id="yourmail">
+  <fd:datatype base="string"/>
   <fd:validation>
     <fd:email>
       <fd:failmessage>Not a valid email address!</fd:failmessage>
@@ -38,52 +65,54 @@
   </fd:validation>
 </fd:datatype>]]></source>
 
-      <p>To provide locale-dependent messages, use i18n tags in
-      combination with the I18nTransformer.</p>
+        <p>To provide locale-dependent messages, use i18n tags in
+        combination with the I18nTransformer.</p>
 
-      <p>Often the values that validation rules will check are specified as
-      expressions. CForms uses for this the <link href="http://xreporter.cocoondev.org/en/expressions.html">xReporter expression interpreter</link>.</p>
-    </s1>
+        <p>Often the values that validators will check are specified as
+        expressions. CForms uses for this the <link href="http://xreporter.cocoondev.org/en/expressions.html">xReporter expression interpreter</link>.</p>
 
-    <s1 title="Summary">
-      <table>
-        <tr>
-          <th>Validator</th>
-          <th>Allowed datatypes</th>
-        </tr>
-        <tr>
-          <td>assert</td>
-          <td>all datatypes</td>
-        </tr>
-        <tr>
-          <td>email</td>
-          <td>string</td>
-        </tr>
-        <tr>
-          <td>length</td>
-          <td>string</td>
-        </tr>
-        <tr>
-          <td>mod10</td>
-          <td>string</td>
-        </tr>
-        <tr>
-          <td>range</td>
-          <td>integer, long, decimal</td>
-        </tr>
-        <tr>
-          <td>regexp</td>
-          <td>string</td>
-        </tr>
-        <tr>
-          <td>value-count</td>
-          <td>all datatypes as part of multivaluefield</td>
-        </tr>
-      </table>
-    </s1>
+        <p>Note that you cannot use each validator with each widget. Most validators
+        only work with certain types of widgets, in case of field widgets
+        often expecting a specific datatype. The below table shows the supported combinations
+        for the default validators.</p>
 
-    <s1 title="Description">
-      <s2 title="assert">
+        <table>
+          <tr>
+            <th>Validator</th>
+            <th>Allowed datatypes</th>
+          </tr>
+          <tr>
+            <td>fd:assert</td>
+            <td>all datatypes</td>
+          </tr>
+          <tr>
+            <td>fd:email</td>
+            <td>string</td>
+          </tr>
+          <tr>
+            <td>fd:length</td>
+            <td>string</td>
+          </tr>
+          <tr>
+            <td>fd:mod10</td>
+            <td>string</td>
+          </tr>
+          <tr>
+            <td>fd:range</td>
+            <td>integer, long, decimal</td>
+          </tr>
+          <tr>
+            <td>fd:regexp</td>
+            <td>string</td>
+          </tr>
+          <tr>
+            <td>fd:value-count</td>
+            <td>all array types (use this with multivaluefield)</td>
+          </tr>
+        </table>
+      </s2>
+
+      <s2 title="fd:assert">
         <p>Evaluates the expression specified in the "test" attribute. This expression
         should have a boolean result, it should evaluate to either true or false.
         Example: Suppose there are 2 fields widgets <code>password</code> and <code>confirmPassword</code>.
@@ -94,14 +123,18 @@
 </fd:assert>]]></source>
       </s2>
 
-      <s2 title="email">
+      <s2 title="fd:email">
         <p>Checks that a value is a valid email address. Example:</p>
 
         <source><![CDATA[<fd:email/>]]></source>
+
+        <p>Currently this checks the email does not contain any spaces,
+        contains exactly one <code>@</code> symbol with at least one character
+        before it and at least one dot after it.</p>
       </s2>
 
-      <s2 title="length">
-        <p>Checks the length of strings. This validation rule can take 3 attributes:
+      <s2 title="fd:length">
+        <p>Checks the length of strings. This validator can take 3 attributes:
         min, max and exact. You can use either of these three separately or
         min and max together. The values of these attributes are expressions. Example:</p>
 
@@ -114,9 +147,9 @@ Another example:
 </fd:length>]]></source>
       </s2>
 
-      <s2 title="mod10">
+      <s2 title="fd:mod10">
         <p>Uses the "mod10" algorithm used to check the validity of credit card
-        numbers such as VISA. This validation rule does not require any additional
+        numbers such as VISA. This validator does not require any additional
         attributes. Example:</p>
 
         <source><![CDATA[<fd:mod10>
@@ -124,8 +157,8 @@ Another example:
 </fd:mod10>]]></source>
       </s2>
 
-      <s2 title="range">
-        <p>Checks the numeric range. This validation rule can take 3 attributes:
+      <s2 title="fd:range">
+        <p>Checks the numeric range. This validator can take 3 attributes:
         min, max and exact. You can use either of these three separately or
         min and max together. The values of these attributes are expressions. Example:</p>
 
@@ -136,7 +169,7 @@ Another example:
 <fd:range exact="2*2"/>]]></source>
       </s2>
 
-      <s2 title="regexp">
+      <s2 title="fd:regexp">
         <p>Checks that a string matches a regular expression. It requires a "pattern"
         attribute specifying the regexp. The regular expression library used is
         Jakarta ORO, see <link href="http://jakarta.apache.org/oro/api/org/apache/oro/text/regex/package-summary.html">here</link> for some information. Example:</p>
@@ -146,7 +179,7 @@ Another example:
 </fd:regexp>]]></source>
       </s2>
 
-      <s2 title="value-count">
+      <s2 title="fd:value-count">
         <p>Checks the number of items selected in a multivaluefield.
         Again works with min, max and exact attributes. Example:</p>
 
@@ -155,6 +188,14 @@ Another example:
 Another example:
 
 <fd:value-count exact="2"/>]]></source>
+      </s2>
+
+      <s2 title="fd:javascript">
+        <p>Allows to write a validator using Javascript, embedded directly in the
+        form definition. The widget in question is available in the Javascript
+        snippet as a variable called <code>widget</code>.</p>
+
+        <p>Checkout the samples of Cocoon for an example.</p>
       </s2>
     </s1>
   </body>

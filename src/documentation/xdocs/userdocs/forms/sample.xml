@@ -50,49 +50,44 @@
   <fd:widgets>
     <fd:field id="name" required="true">
       <fd:label>Name:</fd:label>
-      <fd:datatype base="string">
-        <fd:validation>
-          <fd:length min="2"/>
-        </fd:validation>
-      </fd:datatype>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:length min="2"/>
+      </fd:validation>
     </fd:field>
 
     <fd:field id="email" required="true">
       <fd:label>Email address:</fd:label>
-      <fd:datatype base="string">
-        <fd:validation>
-          <fd:email/>
-        </fd:validation>
-      </fd:datatype>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:email/>
+      </fd:validation>
     </fd:field>
 
     <fd:field id="age">
       <fd:label>Your age:</fd:label>
-      <fd:datatype base="long">
-        <fd:validation>
-          <fd:range min="0" max="150"/>
-        </fd:validation>
-      </fd:datatype>
+      <fd:datatype base="long"/>
+      <fd:validation>
+        <fd:range min="0" max="150"/>
+      </fd:validation>
     </fd:field>
 
     <fd:field id="password" required="true">
       <fd:label>Password:</fd:label>
-      <fd:datatype base="string">
-        <fd:validation>
-          <fd:length min="5" max="20"/>
-        </fd:validation>
-      </fd:datatype>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:length min="5" max="20"/>
+      </fd:validation>
     </fd:field>
 
     <fd:field id="confirmPassword" required="true">
       <fd:label>Re-enter password:</fd:label>
-      <fd:datatype base="string">
-        <fd:validation>
-          <fd:assert test="password = confirmPassword">
-            <fd:failmessage>The two passwords are not equal.</fd:failmessage>
-          </fd:assert>
-        </fd:validation>
-      </fd:datatype>
+      <fd:datatype base="string"/>
+      <fd:validation>
+        <fd:assert test="password = confirmPassword">
+          <fd:failmessage>The two passwords are not equal.</fd:failmessage>
+        </fd:assert>
+      </fd:validation>
     </fd:field>
 
     <fd:booleanfield id="spam">

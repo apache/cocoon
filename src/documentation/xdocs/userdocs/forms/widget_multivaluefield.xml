@@ -69,7 +69,7 @@
       as for the <link href="widget_field.html">field</link> widget.</p>
 
       <p>Note: A multivaluefield cannot have a required attribute,
-      instead you should use the value-count validation rule to
+      instead you should use the value-count validator to
       check the number of values the user has selected.</p> 
     </s1>
   </body>

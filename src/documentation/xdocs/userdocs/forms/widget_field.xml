@@ -29,7 +29,7 @@
       text boxes or selection lists. It can be associated with different
       datatypes such as string, long or date to ask for different types of data.</p>
 
-      <figure src="images/forms_field_datatype_relation.png" alt="Diagram showing the associations between field, datatype, convertor, selection list and validation rules."/>
+      <figure src="images/forms_field_datatype_relation.png" alt="Diagram showing the associations between field, datatype, convertor, selection list and validators."/>
 
       <s2 title="Datatypes">
         <p>A datatype represents a certain type of data, such as a
