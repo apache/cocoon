@@ -22,10 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Pool implementation for JdbcConnections.
+ * The Pool implementation for JdbcConnections.  It uses a background
+ * thread to manage the number of SQL Connections.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-09 14:15:23 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-10 13:44:00 $
  */
 public class JdbcConnectionPool implements Pool, Runnable, Disposable {
     private final String dburl;

@@ -9,6 +9,7 @@ package org.apache.cocoon.components.datasource;
 
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.ThreadSafe;
 import org.apache.log.LogKit;
 import org.apache.log.Logger;
@@ -21,12 +22,8 @@ import java.sql.SQLException;
  * normal <code>java.sql.Connection</code> object and
  * <code>java.sql.DriverManager</code>.
  *
- * TODO: Implement a configurable closed end Pool, where the Connection
- * acts like JDBC PooledConnections work.  That means we can limit the
- * total number of Connection objects that are created.
- *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-08 20:20:47 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-01-10 13:44:00 $
  */
 public class JdbcDataSource implements DataSourceComponent, ThreadSafe {
     Logger log = LogKit.getLoggerFor("cocoon");
@@ -70,5 +67,11 @@ public class JdbcDataSource implements DataSourceComponent, ThreadSafe {
         }
 
         return conn;
+    }
+
+    /** Dispose properly of the pool */
+    public void dispose() {
+        this.pool.dispose();
+        this.pool = null;
     }
 }
