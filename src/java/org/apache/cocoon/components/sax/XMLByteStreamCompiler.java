@@ -63,7 +63,7 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.2 2003/07/09 17:53:03 cziegeler Exp $
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.3 2003/11/07 14:28:27 joerg Exp $
  */
 
 public final class XMLByteStreamCompiler
@@ -312,8 +312,14 @@ implements XMLSerializer, Recyclable {
             }
         }
 
-        if (utflen > 0x00007FFF)
-            throw new SAXException("UTFDataFormatException: String cannot be longer than 32k.");
+        if (utflen > 0x00007FFF) {
+            // handling "UTFDataFormatException: String cannot be longer than 32k."
+            int split = length / 2;
+            writeChars(ch, start, length - split);
+            writeEvent(CHARACTERS);
+            writeChars(ch, start + length - split, split);
+            return;
+        }
 
         byte[] bytearr = new byte[utflen+2];
         bytearr[count++] = (byte) ((utflen >>> 8) & 0xFF);
