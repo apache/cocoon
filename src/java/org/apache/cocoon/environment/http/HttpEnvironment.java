@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,6 @@ package org.apache.cocoon.environment.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +27,10 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.util.NetUtils;
 
 /**
- * 
- * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
- * @version CVS $Id: HttpEnvironment.java,v 1.18 2004/07/05 07:42:50 cziegeler Exp $
+ * HTTP Servlet environment.
+ *
+ * @author <a herf="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
+ * @version CVS $Id$
  */
 public class HttpEnvironment extends AbstractEnvironment {
 
@@ -62,7 +62,7 @@ public class HttpEnvironment extends AbstractEnvironment {
                            HttpContext context,
                            String containerEncoding,
                            String defaultFormEncoding)
-     throws MalformedURLException, IOException {
+    throws IOException {
         super(uri, null, null);
 
         this.request = new HttpRequest(req, this);
@@ -70,14 +70,14 @@ public class HttpEnvironment extends AbstractEnvironment {
         this.request.setContainerEncoding(containerEncoding);
         this.response = new HttpResponse(res);
         this.webcontext = context;
-        
+
         setView(extractView(this.request));
         setAction(extractAction(this.request));
-        
+
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, this.response);
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, this.webcontext);
-        
+
         // This is a kind of a hack for the components that need
         // the real servlet objects to pass them along to other
         // libraries.
@@ -87,13 +87,13 @@ public class HttpEnvironment extends AbstractEnvironment {
     }
 
     /**
-     *  Redirect the client to new URL 
+     *  Redirect the client to new URL
      */
-    public void redirect(String newURL, 
-                         boolean global, 
-                         boolean permanent) 
+    public void redirect(String newURL,
+                         boolean global,
+                         boolean permanent)
     throws IOException {
-        // redirect
+        // Redirect
         String redirect = this.response.encodeRedirectURL(newURL);
 
         // FIXME (VG): WebSphere 4.0/4.0.1 bug
@@ -115,7 +115,7 @@ public class HttpEnvironment extends AbstractEnvironment {
         if (permanent) {
             this.response.sendPermanentRedirect(redirect);
         } else {
-            this.response.sendRedirect (redirect);
+            this.response.sendRedirect(redirect);
         }
     }
 
@@ -211,12 +211,12 @@ public class HttpEnvironment extends AbstractEnvironment {
      */
     public OutputStream getOutputStream(final int bufferSize)
     throws IOException {
-        if ( this.outputStream == null) {
+        if (this.outputStream == null) {
             this.outputStream = this.response.getOutputStream();
         }
-        return super.getOutputStream( bufferSize );
+        return super.getOutputStream(bufferSize);
     }
-    
+
     /**
      * Always return <code>true</code>.
      */
