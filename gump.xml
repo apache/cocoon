@@ -21,7 +21,6 @@
     | $Id$
     +-->
 <module name="cocoon">
-
   <url href="http://cocoon.apache.org/"/>
   <description>Java XML Framework</description>
   <svn repository="cocoon" dir="trunk/"/>
@@ -159,6 +158,7 @@
     <depend project="cocoon-block-xsp"/>
     <depend project="cocoon-block-javaflow"/>
     <depend project="cocoon-block-repository"/>
+    <depend project="cocoon-block-faces"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1168,6 +1168,31 @@
     <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 
+  <project name="cocoon-block-faces" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="faces-block">
+      <property name="block-name" value="faces"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="cocoon-block-taglib"/>
+    <depend project="cocoon-block-portal"/>
+    <depend project="commons-beanutils-core" inherit="all"/>
+    <depend project="commons-digester" inherit="all"/>
+    <!-- FIXME Add commons-el dependency -->
+    <depend project="jakarta-servletapi-5" inherit="all"/>
+    <!-- FIXME Add myfaces dependency -->
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/faces-block.jar"/>
+
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
+  </project>
+
 <!--
   <project name="cocoon-block-jcr" status="unstable">
     <package>org.apache.cocoon</package>
@@ -1184,8 +1209,7 @@
 
     <jar name="blocks/jcr-block.jar"/>
 
-    <nag from="Gump" to="dev@cocoon.apache.org"/>
-
+    <nag from="Gump &lt;general@gump.apache.org&gt;" to="dev@cocoon.apache.org"/>
   </project>
 -->
 
