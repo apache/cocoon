@@ -181,6 +181,10 @@
   <changes>
 
  <release version="@version@" date="@date@"> 
+  <action dev="BRD" type="update">
+    Upgraded Xalan (includes XSLTC) from a CVS snapshot (20030506) to version
+    2.5.1.
+  </action>
   <action dev="SW" type="update">
     Updated ParanoidCocoonServlet, which is now an easy solution to the
     well-known endorsed library problem (incompatible version of Xalan in
