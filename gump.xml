@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.146 2004/04/21 09:33:22 pier Exp $
+    | CVS $Id: gump.xml,v 1.147 2004/04/21 22:03:53 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -78,7 +78,6 @@
     <depend project="rhino-cocoondev"/>
     <depend project="jisp"/>
     <depend project="jing"/>
-    <depend project="jstyle"/>
     <depend project="pizza"/>
     <depend project="junit"/>
     <depend project="eclipse-jtd"/>
@@ -1167,16 +1166,6 @@
     </description>
     <home nested="lib/optional"/>
     <jar name="pizza-1.1.jar"/>
-  </project>
-
-  <project name="jstyle">
-    <url href="http://astyle.sourceforge.net/"/>
-    <package>jstyle</package>
-    <description>
-      Automatic Indentation Filter
-    </description>
-    <home nested="src/blocks/xsp/lib"/>
-    <jar name="jstyle.jar"/>
   </project>
 
   <project name="deli">
