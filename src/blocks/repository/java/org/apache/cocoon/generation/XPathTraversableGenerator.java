@@ -130,7 +130,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.3 2003/10/10 17:48:09 gcasper Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.1 2003/10/23 07:55:49 gcasper Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
