@@ -60,7 +60,7 @@ import org.apache.cocoon.portal.event.RequestEvent;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ChangeAspectDataEvent.java,v 1.4 2003/05/28 13:47:30 cziegeler Exp $
+ * @version CVS $Id: ChangeAspectDataEvent.java,v 1.5 2003/07/03 09:26:02 cziegeler Exp $
  */
 public class ChangeAspectDataEvent
     extends AbstractActionEvent
@@ -80,21 +80,21 @@ public class ChangeAspectDataEvent
     }
 
     /**
-     * @return
+     * @return The aspect name
      */
     public String getAspectName() {
         return this.aspectName;
     }
 
     /**
-     * @return
+     * @return The value to set
      */
     public Object getData() {
         return this.data;
     }
 
     /**
-     * @return
+     * @return The target to change
      */
     public Object getTarget() {
         return this.target;

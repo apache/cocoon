@@ -99,7 +99,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  * 
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/05/06 08:49:59 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/07/03 09:26:04 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -234,7 +234,7 @@ public final class QDoxSource
     }
     
     /**
-     * @see org.apache.avalon.excalibur.xml.XMLizable#toSAX(org.xml.sax.ContentHandler)
+     * @see XMLizable#toSAX(org.xml.sax.ContentHandler)
      * @throws SAXException if any error occurs during SAX outputting.
      */
     public void toSAX(ContentHandler handler) throws SAXException {
@@ -335,7 +335,7 @@ public final class QDoxSource
     }
     
     /**
-     * @see org.apache.excalibur.source.Recyclable#recycle()
+     * @see Recyclable#recycle()
      */
     public void recycle() {
         if (logger != null && logger.isDebugEnabled()) {

@@ -91,7 +91,7 @@ import java.util.Map;
  * Torsten Curdt.
  *
  * @author Ivelin Ivanov <ivelin@apache.org>
- * @version CVS $Id: AbstractXMLFormAction.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
+ * @version CVS $Id: AbstractXMLFormAction.java,v 1.4 2003/07/03 09:26:03 cziegeler Exp $
  */
 public abstract class AbstractXMLFormAction
   extends ConfigurableComposerAction
@@ -263,7 +263,6 @@ public abstract class AbstractXMLFormAction
      * Get the command which was submitted with the form.
      * It is extracted from the standard cocoon-action-* request parameter
      *
-     * @return
      */
     public String getCommand() {
         return command_;
@@ -319,8 +318,6 @@ public abstract class AbstractXMLFormAction
      * Semanticly similar to Struts Action.perform()
      *
      * Take appropriate action based on the command.
-     *
-     * @return
      */
     public abstract Map perform();
 

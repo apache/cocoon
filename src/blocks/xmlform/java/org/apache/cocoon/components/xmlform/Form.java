@@ -77,7 +77,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com
- * @version CVS $Id: Form.java,v 1.4 2003/07/03 08:27:46 cziegeler Exp $
+ * @version CVS $Id: Form.java,v 1.5 2003/07/03 09:26:02 cziegeler Exp $
  */
 public class Form {
 
@@ -785,7 +785,6 @@ public class Form {
      *
      * @param viewName   
      *
-     * @return
      */
     protected FormViewState getFormViewState(String viewName) {
         FormViewState formViewState = (FormViewState) viewStateMap_.get(viewName);

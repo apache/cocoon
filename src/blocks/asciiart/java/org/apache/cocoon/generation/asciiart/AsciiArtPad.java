@@ -61,7 +61,7 @@ import org.apache.regexp.RESyntaxException;
  *
  * @author huber@apache.org
  * @since 18. Dezember 2002
- * @version CVS $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
+ * @version CVS $Id: AsciiArtPad.java,v 1.3 2003/07/03 09:26:04 cziegeler Exp $
  */
 public class AsciiArtPad {
 
@@ -202,9 +202,6 @@ public class AsciiArtPad {
     /**
      *  An AsciiArtElement describing a line.
      *
-     *@author     huber@apache.org
-     *@created    18. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtLine implements AsciiArtElement {
         double xStart;
@@ -326,9 +323,6 @@ public class AsciiArtPad {
     /**
      *  An AsciiArtElement describing a rectangle.
      *
-     *@author     huber@apache.org
-     *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtRect implements AsciiArtElement {
         double xUpperLeft;
@@ -470,9 +464,6 @@ public class AsciiArtPad {
     /**
      *  An AsciiArtElement describing a string of text.
      *
-     *@author     huber@apache.org
-     *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtString implements AsciiArtElement {
         private double x;
@@ -571,9 +562,6 @@ public class AsciiArtPad {
     /**
      *  Helper class describing a coordinate of AsciiArtPad elements.
      *
-     *@author     huber@apache.org
-     *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtCoordinate {
         int x, y;
@@ -667,9 +655,6 @@ public class AsciiArtPad {
      *  Helper class containing the ascii text data,
      *  acting as input of an AsciiArtPad
      *
-     *@author     huber@apache.org
-     *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArt {
         private String[] s;
@@ -753,9 +738,6 @@ public class AsciiArtPad {
     /**
      *  Builder of AsciiArtElements from an AsciiArt input.
      *
-     *@author     huber@apache.org
-     *@created    21. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static class AsciiArtPadBuilder {
         private AsciiArtPad asciiArtPad;
@@ -951,9 +933,6 @@ public class AsciiArtPad {
     /**
      *  Marker interface of objects addable to the AsciiArtPad
      *
-     *@author     huber@apache.org
-     *@created    22. Dezember 2002
-     *@version    CVS Version: $Id: AsciiArtPad.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
      */
     public static interface AsciiArtElement {
     }
