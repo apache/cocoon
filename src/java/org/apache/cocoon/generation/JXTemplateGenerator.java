@@ -117,7 +117,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.48 2004/06/27 17:40:10 antonio Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.49 2004/06/28 02:40:10 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -1039,39 +1039,30 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                             } else {
                                 buf.append(c);
                             }
-                        } else {
-                            if (c == '\\') {
-                                ch = in.read();
-                                if (ch == -1) {
-                                    buf.append('\\');
-                                } else {
-                                    buf.append((char)ch);
-                                }
-                            } else if (c == '$' || c == '#') {
-                                ch = in.read();
-                                if (ch == '{') {
-                                    xpath = c == '#';
-                                    inExpr = true;
-                                    if (buf.length() > 0) {
-                                        char[] charArray =
-                                            new char[buf.length()];
+                        } else if (c == '$' || c == '#') {
+                            ch = in.read();
+                            if (ch == '{') {
+                                xpath = c == '#';
+                                inExpr = true;
+                                if (buf.length() > 0) {
+                                    char[] charArray =
+                                        new char[buf.length()];
 
-                                        buf.getChars(0, buf.length(),
-                                                     charArray, 0);
-                                        substitutions.add(charArray);
-                                        buf.setLength(0);
-                                    }
-                                    continue top;
-                                } else {
-                                    buf.append(c);
-                                    if (ch != -1) {
-                                        c = (char)ch;
-                                        continue processChar;
-                                    }
+                                    buf.getChars(0, buf.length(),
+                                                 charArray, 0);
+                                    substitutions.add(charArray);
+                                    buf.setLength(0);
                                 }
+                                continue top;
                             } else {
                                 buf.append(c);
+                                if (ch != -1) {
+                                    c = (char)ch;
+                                    continue processChar;
+                                }
                             }
+                        } else {
+                            buf.append(c);
                         }
                         break;
                     }
@@ -1273,34 +1264,25 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                 } else {
                                     buf.append(c);
                                 }
-                            } else {
-                                if (c == '\\') {
-                                    ch = in.read();
-                                    if (ch == -1) {
-                                        buf.append('\\');
-                                    } else {
-                                        buf.append((char)ch);
+                            } else if (c == '$' || c == '#') {
+                                ch = in.read();
+                                if (ch == '{') {
+                                    if (buf.length() > 0) {
+                                        substEvents.add(new Literal(buf.toString()));
+                                        buf.setLength(0);
                                     }
-                                } if (c == '$' || c == '#') {
-                                    ch = in.read();
-                                    if (ch == '{') {
-                                        if (buf.length() > 0) {
-                                            substEvents.add(new Literal(buf.toString()));
-                                            buf.setLength(0);
-                                        }
-                                        inExpr = true;
-                                        xpath = c == '#';
-                                        continue top;
-                                    } else {
-                                        buf.append(c);
-                                        if (ch != -1) {
-                                            c = (char)ch;
-                                            continue processChar;
-                                        }
-                                    }
+                                    inExpr = true;
+                                    xpath = c == '#';
+                                    continue top;
                                 } else {
                                     buf.append(c);
+                                    if (ch != -1) {
+                                        c = (char)ch;
+                                        continue processChar;
+                                    }
                                 }
+                            } else {
+                                buf.append(c);
                             }
                             break;
                         }
@@ -3161,15 +3143,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
                                                 ev.location, exc);
                 }
                 if (value == null) {
-                    DOMBuilder builder = new DOMBuilder();
-                    builder.startDocument();
-                    builder.startElement(NS, "set", "set", EMPTY_ATTRS);
-                    execute(builder, jexlContext, jxpathContext, macroCall,
-                            startSet.next, startSet.endInstruction);
-                    builder.endElement(NS, "set", "set");
-                    builder.endDocument();
-                    Node node = builder.getDocument().getDocumentElement();
-                    NodeList nodeList = node.getChildNodes();
+                    NodeList nodeList = toDOMNodeList("set", startSet, jexlContext, macroCall);
                     // JXPath doesn't handle NodeList, so convert it to an array
                     int len = nodeList.getLength();
                     Node[] nodeArr = new Node[len];
@@ -3384,17 +3358,8 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             } else if (ev instanceof StartComment) {
                 StartComment startJXComment = (StartComment)ev;
                 // Parse the body of the comment
-                DOMBuilder builder = new DOMBuilder();
-                builder.startDocument();
-                builder.startElement(NS, "comment", "comment", EMPTY_ATTRS);
-                execute(builder, jexlContext, jxpathContext, macroCall,
-                        startJXComment.next, startJXComment.endInstruction);
-                builder.endElement(NS, "comment", "comment");
-                builder.endDocument();
-                Node node = builder.getDocument().getDocumentElement();
-                NodeList nodeList = node.getChildNodes();
-                // JXPath doesn't handle NodeList, so convert
-                // it to an array
+                NodeList nodeList = toDOMNodeList("comment", startJXComment, jexlContext, macroCall);
+                // JXPath doesn't handle NodeList, so convert it to an array
                 int len = nodeList.getLength();
                 final StringBuffer buf = new StringBuffer();
                 Properties omit = XMLUtils.createPropertiesForXML(true);
@@ -3669,5 +3634,18 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         if (startEvent == null)
         	return null;
         return startEvent.templateProperties.get(propertyName);
+	}
+	
+	private NodeList toDOMNodeList(String elementName, StartInstruction si,
+	        MyJexlContext jexlContext, StartElement macroCall) throws SAXException{
+        DOMBuilder builder = new DOMBuilder();
+        builder.startDocument();
+        builder.startElement(NS, elementName, elementName, EMPTY_ATTRS);
+        execute(builder, jexlContext, jxpathContext, macroCall,
+                si.next, si.endInstruction);
+        builder.endElement(NS, elementName, elementName);
+        builder.endDocument();
+        Node node = builder.getDocument().getDocumentElement();
+        return node.getChildNodes();
 	}
 }

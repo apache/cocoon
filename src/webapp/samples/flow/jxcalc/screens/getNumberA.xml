@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS: $Id: getNumberA.xml,v 1.5 2004/06/27 17:40:10 antonio Exp $
+    | CVS: $Id: getNumberA.xml,v 1.6 2004/06/28 02:40:10 antonio Exp $
     | Author: Ovidiu Predescu "ovidiu@cup.hp.com"
     | Date: March 23, 2002
     +-->
@@ -32,8 +32,10 @@
     <content>
       <jx:comment>
       	The "comment" tag allows to insert comments in the result file.
-      	JXTemplate Expresions are parsed. Sample:
-	This is the continuation id: #{$cocoon/continuation/id}
+      	JXTemplate Expresions are parsed. Samples:
+
+	    This is the continuation id: #{$cocoon/continuation/id}
+	    A backslash dir reference: d:\cocoon\
       </jx:comment>
       <form method="post" action="continue.#{$cocoon/continuation/id}">
         <para>Enter value of <strong>a</strong>: <input type="text" name="a"/></para>
