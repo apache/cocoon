@@ -17,7 +17,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:47 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-25 18:48:31 $
  */
 public class FileGenerator extends ComposerGenerator {
 
@@ -27,9 +27,9 @@ public class FileGenerator extends ComposerGenerator {
     public void generate()
     throws IOException, SAXException {
         Parser parser=(Parser)this.manager.getComponent("parser");
-        Cocoon cocoon=(Cocoon)this.manager.getComponent("cocoon");
+        //Cocoon cocoon=(Cocoon)this.manager.getComponent("cocoon");
         parser.setContentHandler(this.contentHandler);
         parser.setLexicalHandler(this.lexicalHandler);
-        parser.parse(cocoon.resolveEntity(this.source));
+        parser.parse(super.environment.resolveEntity(this.source));
     }    
 }

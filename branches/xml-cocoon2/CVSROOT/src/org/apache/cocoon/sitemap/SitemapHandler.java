@@ -28,7 +28,7 @@ import org.apache.avalon.ComponentManager;
  * Handles the manageing and stating of one <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-23 00:04:12 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-25 18:48:45 $
  */
 public class SitemapHandler implements Runnable, Configurable, Composer {
 
@@ -39,8 +39,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
     private ComponentManager manager = null;
 
     /** the source of this sitemap */
-    private File source = null;
-    private long changeDate = -1L;
+    private File sourceFile = null;
 
     /** the last error */
     private Exception exception = null;
@@ -65,24 +64,22 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
 
     protected SitemapHandler (String source) throws FileNotFoundException {
         System.out.println("SitemapHandler: Instantiating sitemap \""+source+"\"");
-        File f = null;
+        System.out.println("SitemapHandler: last char of source is \""+source.charAt(source.length()-1)+"\"");
         String s = null;
         if (source.charAt(source.length()-1) == '/') {
             s = source+"sitemap.xmap";
-            f = new File (s);
+            this.sourceFile = new File (s);
         } else {
-            f = new File (source);
-            if (!f.isFile()) {
+            sourceFile = new File (source);
+            if (!sourceFile.isFile()) {
                 s = source+File.separatorChar+"sitemap.xmap";
-                f = new File (s);
+                sourceFile = new File (s);
             }
-            if (!f.canRead()) {
+            if (!sourceFile.canRead()) {
                 throw new FileNotFoundException ("file "+s+" not found or cannot be opened for reading");
             }
         }
-        this.source = f;
-        changeDate = f.lastModified();
-        System.out.println("SitemapHandler: Instantiatet sitemap \""+f.getPath()+"\"");
+        System.out.println("SitemapHandler: Instantiatet sitemap \""+sourceFile.getPath()+"\"");
     }
 
     protected void throwError () 
@@ -113,8 +110,8 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
     protected boolean hasChanged () {
         System.out.print("SitemapHandler.hasChanged() = ");
         if (sitemap != null) {
-            System.out.println((sitemap.modifiedSince(this.changeDate)?"true":"false"));
-            return sitemap.modifiedSince(this.changeDate);
+            System.out.println((sitemap.modifiedSince(this.sourceFile.lastModified())?"true":"false"));
+            return sitemap.modifiedSince(this.sourceFile.lastModified());
         }
         System.out.println("true");
         return true;
@@ -144,7 +141,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
             regeneration.start();
             regeneration.join();
             throwError();
-        }else {
+        } else {
             System.out.println("SitemapHandler.regenerate(): regenerating already in progress");
         }
     }
@@ -165,7 +162,7 @@ public class SitemapHandler implements Runnable, Configurable, Composer {
                    org.apache.cocoon.ProcessingException {
 */
 
-        InputSource inputSource = new InputSource (source.getPath());
+        InputSource inputSource = new InputSource (sourceFile.getPath());
         String systemId = inputSource.getSystemId();
         System.out.println ("C2 generateSitemap: "+systemId);
 

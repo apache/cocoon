@@ -10,6 +10,7 @@ package org.apache.cocoon.sitemap;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException; 
 import java.util.Hashtable;
 
 import org.apache.avalon.ComponentManager;
@@ -29,7 +30,7 @@ import org.xml.sax.SAXException;
  * checking regeneration of the sub <code>Sitemap</code>
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:41:57 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-25 18:48:45 $
  */
 public class SitemapManager implements Configurable, Composer {
 
@@ -58,7 +59,9 @@ public class SitemapManager implements Configurable, Composer {
     throws SAXException, ProcessingException, IOException, InterruptedException,
            FileNotFoundException {
         SitemapHandler sitemapHandler = (SitemapHandler) sitemaps.get (source);
+        System.out.println ("SitemapManager.invoke(\""+uri_prefix+"\",\""+source+"\")");
         if (sitemapHandler != null) {
+            System.out.println ("SitemapManager.invoke: SitemapHandler found");
             sitemapHandler.throwError();
             if (sitemapHandler.available()) {
                 if (check_reload 
@@ -66,23 +69,23 @@ public class SitemapManager implements Configurable, Composer {
                  && !sitemapHandler.isRegenerating()) {
                     sitemapHandler.regenerateAsynchroniously();
                 }
-                environment.addUriPrefix (uri_prefix);
+                environment.changeContext (uri_prefix, source);
                 return sitemapHandler.process (environment, out);
             } else {
                 sitemapHandler.regenerate();
             }
-            environment.addUriPrefix (uri_prefix);
+            System.out.println ("SitemapManager.invoke: setting uri prefix");
+            environment.changeContext (uri_prefix, source);
             return sitemapHandler.process (environment, out);
         } else {
-            String basePath = source.substring(0,source.lastIndexOf('/')+1);
-            System.out.println ("BasePath is \""+basePath+"\"");
+            System.out.println ("SitemapManager.invoke: instantiating SitemapHandler");
             sitemapHandler = new SitemapHandler(source);
             if (sitemapHandler instanceof Composer) sitemapHandler.setComponentManager (this.manager);
             if (sitemapHandler instanceof Configurable) sitemapHandler.setConfiguration (this.conf); 
-            sitemapHandler.setBasePath (basePath); 
             sitemaps.put(source, sitemapHandler);
             sitemapHandler.regenerate(); 
-            environment.addUriPrefix (uri_prefix);
+            System.out.println ("SitemapManager.invoke: setting uri prefix");
+            environment.changeContext (uri_prefix, source);
             return sitemapHandler.process (environment, out);
         }
     }

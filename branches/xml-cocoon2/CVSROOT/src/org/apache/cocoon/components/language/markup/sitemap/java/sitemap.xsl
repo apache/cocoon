@@ -53,7 +53,7 @@
 /**
  *
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-07-23 00:04:10 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-07-25 18:48:25 $
  *
 /
 -->
@@ -375,7 +375,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), makeAbsolute(substitute(listOfLists,"<xsl:value-of select="@src"/>")), <xsl:value-of select="$check-reload"/>, out);
+    return sitemapManager.invoke (environment, substitute(listOfLists,"<xsl:value-of select="@uri-prefix"/>"), substitute(listOfLists,"<xsl:value-of select="@src"/>"), <xsl:value-of select="$check-reload"/>, out);
   </xsl:template> <!-- match="map:mount" -->
 
   <xsl:template match="map:redirect-to">
@@ -394,10 +394,14 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:redirect-to" -->
-
-  <xsl:template match="map:param">
-    param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@map:value"/>");
-  </xsl:template> <!-- match="map:param" -->
+ 
+  <xsl:template match="parameter"> 
+    param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@value"/>"); 
+  </xsl:template> 
+ 
+  <xsl:template match="map:param"> 
+    param.setParameter ("<xsl:value-of select="@name"/>", "<xsl:value-of select="@map:value"/>"); 
+  </xsl:template> 
 
   <!-- Sitemap Utility templates --> 
 
@@ -490,18 +494,18 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         <xsl:with-param name="default"><xsl:value-of select="$default-component"/></xsl:with-param> 
       </xsl:call-template> 
     </xsl:variable> 
-    <xsl:variable name="component-source"> 
-      <xsl:call-template name="get-parameter"> 
-        <xsl:with-param name="parname">src</xsl:with-param> 
-        <xsl:with-param name="default">null</xsl:with-param> 
-      </xsl:call-template> 
-    </xsl:variable> 
-    <xsl:if test="descendant::map:param">
+    <xsl:variable name="component-source">  
+      <xsl:call-template name="get-parameter">  
+        <xsl:with-param name="parname">src</xsl:with-param>  
+        <xsl:with-param name="default">null</xsl:with-param>  
+      </xsl:call-template>  
+    </xsl:variable>  
+    <xsl:if test="count(parameter)>0"> 
       param = new Parameters (); 
     </xsl:if>
     <xsl:variable name="component-param">
       <xsl:choose>
-        <xsl:when test="descendant::map:param">
+        <xsl:when test="count(parameter)>0"> 
           param
         </xsl:when>
         <xsl:otherwise>
@@ -509,7 +513,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:apply-templates select="./map:param"/> 
+    <xsl:apply-templates select="parameter"/>
     <xsl:choose> 
       <xsl:when test="$component-source='null'"> 
         pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>, 
@@ -517,7 +521,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       </xsl:when> 
       <xsl:otherwise> 
         pipeline.<xsl:value-of select="$method"/> (<xsl:value-of select="$prefix"/>_<xsl:value-of select="$component-type"/>,  
-            makeAbsolute(substitute(listOfLists,"<xsl:value-of select="$component-source"/>")), <xsl:value-of select="$component-param"/>); 
+            substitute(listOfLists,"<xsl:value-of select="$component-source"/>"), <xsl:value-of select="$component-param"/>); 
       </xsl:otherwise> 
     </xsl:choose> 
   </xsl:template>

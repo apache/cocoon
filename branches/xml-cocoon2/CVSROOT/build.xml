@@ -60,6 +60,7 @@ These are the meaningful targets for this build file:
  - package [default] -> creates ./build/cocoon/cocoon.jar
  - webapp -> creates ./build/webapp/cocoon.war
  - docs -> generates the HTML documentation in ./build/cocoon/docs
+ - printer-docs -> generates printer friendly HTML documentation in ./build/printer-docs
  - javadocs -> generates the API documentation in ./build/cocoon/javadocs
  - dist-zip -> generates the Cocoon distribution in ./dist
  - dist-tgz -> generates the Cocoon distribution in ./dist
@@ -88,7 +89,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="build.compiler" value="classic"/>
     <property name="debug"          value="on"/>
     <property name="optimize"       value="on"/>
-    <property name="deprecation"    value="on"/>
+    <property name="deprecation"    value="off"/>
 
     <property name="src.dir"     value="./src"/>
     <property name="lib.dir"     value="./lib"/>
@@ -100,7 +101,8 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="samples.dir" value="./samples"/>
     <property name="packages"    value="org.apache.*"/>
 
-    <property name="skin" value="./skins/xml.apache.org/"/>
+    <property name="browser.skin" value="${skins.dir}/xml.apache.org/"/>
+    <property name="printer.skin" value="${skins.dir}/printer/"/>
     <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
     <property name="doc.generator.package" value="${lib.dir}/stylebook-1.0-b2.jar"/>
 
@@ -109,6 +111,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <property name="build.src"      value="${build.dir}/src"/>
     <property name="build.dest"     value="${build.dir}/classes"/>
     <property name="build.docs"     value="${build.dir}/docs"/>
+    <property name="build.docs.printer" value="${build.dir}/printer-docs"/>
     <property name="build.war"      value="${build.dir}/webapp"/>
     <property name="build.javadocs" value="${build.dir}/javadocs"/>
 
@@ -159,6 +162,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <echo message="   webapp    --> generates the cocoon.war file"/>
     <echo message="   compile   --> compiles the source code"/>
     <echo message="   docs      --> generates the HTML documentation"/>
+    <echo message="   printer-docs --> generates printer-friendly HTML documentation"/>
     <echo message="   javadocs  --> generates the API documentation"/>
     <echo message="   dist-zip  --> generates the Cocoon distribution as .zip"/>
     <echo message="   dist-tgz  --> generates the Cocoon distribution as .tar.gz"/>
@@ -248,7 +252,19 @@ NOTE: the "site" target is only useful for site mantainers.
     <java fork="yes" 
           classpath="${java.class.path}:${doc.generator.package}" 
           classname="${doc.generator}"
-          args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}"/>
+          args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${browser.skin}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Generate printer-friendly HTML docs                                 -->
+  <!-- =================================================================== -->
+  <target name="printer-docs" depends="prepare-docs">
+    <mkdir dir="${build.docs.printer}"/>
+    <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml" filtering="on"/>
+    <java fork="yes" 
+          classpath="${java.class.path}:${doc.generator.package}" 
+          classname="${doc.generator}"
+          args="targetDirectory=${build.docs.printer} ${docs.dir}/book.xml ${printer.skin}"/>
   </target>
 
   <!-- =================================================================== -->

@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-22 20:41:57 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-25 18:48:44 $
  */
 public class ResourcePipeline {
     private Generator generator = null;
@@ -99,7 +99,7 @@ public class ResourcePipeline {
                 producer = transformer;
             }
 
-            serializer.setup (environment, serializerSource, generatorParam);
+            serializer.setup (environment, serializerSource, serializerParam);
             serializer.setOutputStream (out);
             producer.setConsumer (serializer);
             generator.generate();

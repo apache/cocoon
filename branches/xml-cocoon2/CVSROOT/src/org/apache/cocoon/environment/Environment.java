@@ -7,8 +7,18 @@
  *****************************************************************************/
 package org.apache.cocoon.environment;
 
-public interface Environment {
-    public void addUriPrefix (String prefix);
+import java.io.IOException; 
+import java.net.MalformedURLException; 
+
+import org.xml.sax.EntityResolver; 
+import org.xml.sax.SAXException; 
+import org.xml.sax.InputSource; 
+ 
+public interface Environment extends EntityResolver {
+    public void changeContext (String uriprefix, String context) 
+        throws MalformedURLException;
     public String getView ();
-    public String getUri ();
+    public String getUri (); 
+    public InputSource resolveEntity (String systemId) 
+        throws SAXException, IOException; 
 }

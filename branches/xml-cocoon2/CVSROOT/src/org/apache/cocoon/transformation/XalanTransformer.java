@@ -39,7 +39,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-22 20:42:01 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-25 18:48:47 $
  */
 public class XalanTransformer extends DocumentHandlerWrapper
 implements Transformer, Composer {
@@ -63,11 +63,11 @@ implements Transformer, Composer {
         if (xsluri==null) throw new ProcessingException("No stylesheet");
 
         // Load the stylesheet (we should cache it in the STORE!)
-        Cocoon cocoon=(Cocoon)this.manager.getComponent("cocoon");
+        //Cocoon cocoon=(Cocoon)this.manager.getComponent("cocoon");
         StylesheetRoot stylesheet=null;
         if (true) {
             XSLTProcessor loaderprocessor=XSLTProcessorFactory.getProcessor();
-            InputSource xslsrc=cocoon.resolveEntity(xsluri);
+            InputSource xslsrc=environment.resolveEntity(xsluri);
             XSLTInputSource style=new XSLTInputSource(xslsrc);
             stylesheet=loaderprocessor.processStylesheet(style);
         }
