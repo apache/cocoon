@@ -20,6 +20,12 @@
 
 // HISTORY
 // ------------------------------------------------------------------
+// March 24, 2004: Fixed bug - when month name and abbreviations were
+//      changed, date format still used original values.
+// January 26, 2004: Added support for drop-down month and year
+//      navigation (Thanks to Chris Reid for the idea)
+// September 22, 2003: Fixed a minor problem in YEAR calendar with
+//      CSS prefix.
 // August 19, 2003: Renamed the function to get styles, and made it
 //      work correctly without an object reference
 // August 18, 2003: Changed showYearNavigation and 
@@ -46,7 +52,7 @@
 DESCRIPTION: This object implements a popup calendar to allow the user to
 select a date, month, quarter, or year.
 
-COMPATIBILITY: Works with Netscape 4.x, 6.x, IE 5.x on Windows. Some small
+COMPATABILITY: Works with Netscape 4.x, 6.x, IE 5.x on Windows. Some small
 positioning errors - usually with Window positioning - occur on the 
 Macintosh platform.
 The calendar can be modified to work for any location in the world by 
@@ -95,6 +101,12 @@ cal.setMonthNames("January","February","March",...);
 // Set the month abbreviations to be used. Default are English month abbreviations
 cal.setMonthAbbreviations("Jan","Feb","Mar",...);
 
+// Show navigation for changing by the year, not just one month at a time
+cal.showYearNavigation();
+
+// Show month and year dropdowns, for quicker selection of month of dates
+cal.showNavigationDropdowns();
+
 // Set the text to be used above each day column. The days start with 
 // sunday regardless of the value of WeekStartDay
 cal.setDayHeaders("S","M","T",...);
@@ -124,6 +136,7 @@ cal.addDisabledDates("January 01, 2003", "Dec 31, 2003");
 
 // When the 'year' select is displayed, set the number of years back from the 
 // current year to start listing years. Default is 2.
+// This is also used for year drop-down, to decide how many years +/- to display
 cal.setYearSelectStartOffset(2);
 
 // Text for the word "Today" appearing on the calendar
@@ -200,10 +213,13 @@ function CalendarPopup() {
 	c.currentDate = null;
 	c.todayText="Today";
 	c.cssPrefix="";
+	c.isShowNavigationDropdowns=false;
 	c.isShowYearNavigationInput=false;
+	window.CP_calendarObject = null;
 	window.CP_targetInput = null;
 	window.CP_dateFormat = "MM/dd/yyyy";
 	// Method mappings
+	c.copyMonthNamesToWindow = CP_copyMonthNamesToWindow;
 	c.setReturnFunction = CP_setReturnFunction;
 	c.setReturnMonthFunction = CP_setReturnMonthFunction;
 	c.setReturnQuarterFunction = CP_setReturnQuarterFunction;
@@ -225,15 +241,29 @@ function CalendarPopup() {
 	c.getCalendar = CP_getCalendar;
 	c.select = CP_select;
 	c.setCssPrefix = CP_setCssPrefix;
-	c.showYearNavigationInput = CP_showYearNavigationInput
+	c.showNavigationDropdowns = CP_showNavigationDropdowns;
+	c.showYearNavigationInput = CP_showYearNavigationInput;
+	c.copyMonthNamesToWindow();
 	// Return the object
 	return c;
 	}
-
+function CP_copyMonthNamesToWindow() {
+	// Copy these values over to the date.js 
+	if (typeof(window.MONTH_NAMES)!="undefined" && window.MONTH_NAMES!=null) {
+		window.MONTH_NAMES = new Array();
+		for (var i=0; i<this.monthNames.length; i++) {
+			window.MONTH_NAMES[window.MONTH_NAMES.length] = this.monthNames[i];
+		}
+		for (var i=0; i<this.monthAbbreviations.length; i++) {
+			window.MONTH_NAMES[window.MONTH_NAMES.length] = this.monthAbbreviations[i];
+		}
+	}
+}
 // Temporary default functions to be called when items clicked, so no error is thrown
 function CP_tmpReturnFunction(y,m,d) { 
 	if (window.CP_targetInput!=null) {
 		var dt = new Date(y,m-1,d,0,0,0);
+		if (window.CP_calendarObject!=null) { window.CP_calendarObject.copyMonthNamesToWindow(); }
 		window.CP_targetInput.value = formatDate(dt,window.CP_dateFormat);
 		}
 	else {
@@ -259,11 +289,13 @@ function CP_setReturnYearFunction(name) { this.returnYearFunction = name; }
 // Over-ride the built-in month names
 function CP_setMonthNames() {
 	for (var i=0; i<arguments.length; i++) { this.monthNames[i] = arguments[i]; }
+	this.copyMonthNamesToWindow();
 	}
 
 // Over-ride the built-in month abbreviations
 function CP_setMonthAbbreviations() {
 	for (var i=0; i<arguments.length; i++) { this.monthAbbreviations[i] = arguments[i]; }
+	this.copyMonthNamesToWindow();
 	}
 
 // Over-ride the built-in column headers for each day
@@ -316,9 +348,11 @@ function CP_setCssPrefix(val) {
 	this.cssPrefix = val; 
 	}
 
+// Show the navigation as an dropdowns that can be manually changed
+function CP_showNavigationDropdowns() { this.isShowNavigationDropdowns = (arguments.length>0)?arguments[0]:true; }
+
 // Show the year navigation as an input box that can be manually changed
 function CP_showYearNavigationInput() { this.isShowYearNavigationInput = (arguments.length>0)?arguments[0]:true; }
-
 
 // Hide a calendar object
 function CP_hideCalendar() {
@@ -369,6 +403,7 @@ function CP_select(inputobj, linkname, format) {
 		return;
 		}
 	window.CP_targetInput = inputobj;
+	window.CP_calendarObject = this;
 	this.currentDate=null;
 	var time=0;
 	if (selectedDate!=null) {
@@ -462,25 +497,45 @@ function CP_getCalendar() {
 			result += "<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>";
 			}
 		result += '<TR>\n';
-		var refresh = 'javascript:'+windowref+'CP_refreshCalendar';
-		if (this.isShowYearNavigation) {
-			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refresh+'('+this.index+','+last_month+','+last_month_year+');">&lt;</A></TD>';
-			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="58"><SPAN CLASS="'+this.cssPrefix+'cpMonthNavigation">'+this.monthNames[month-1]+'</SPAN></TD>';
-			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refresh+'('+this.index+','+next_month+','+next_month_year+');">&gt;</A></TD>';
+		var refresh = windowref+'CP_refreshCalendar';
+		var refreshLink = 'javascript:' + refresh;
+		if (this.isShowNavigationDropdowns) {
+			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="78" COLSPAN="3"><select CLASS="'+this.cssPrefix+'cpMonthNavigation" name="cpMonth" onChange="'+refresh+'('+this.index+',this.options[this.selectedIndex].value-0,'+(year-0)+');">';
+			for( var monthCounter=1; monthCounter<=12; monthCounter++ ) {
+				var selected = (monthCounter==month) ? 'SELECTED' : '';
+				result += '<option value="'+monthCounter+'" '+selected+'>'+this.monthNames[monthCounter-1]+'</option>';
+				}
+			result += '</select></TD>';
 			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="10">&nbsp;</TD>';
-			result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="'+refresh+'('+this.index+','+month+','+(year-1)+');">&lt;</A></TD>';
-			if (this.isShowYearNavigationInput) {
-				result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="36"><INPUT NAME="cpYear" CLASS="'+this.cssPrefix+'cpYearNavigation" SIZE="4" MAXLENGTH="4" VALUE="'+year+'" onBlur="'+refresh+'('+this.index+','+month+',this.value-0);"></TD>';
+
+			result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="56" COLSPAN="3"><select CLASS="'+this.cssPrefix+'cpYearNavigation" name="cpYear" onChange="'+refresh+'('+this.index+','+month+',this.options[this.selectedIndex].value-0);">';
+			for( var yearCounter=year-this.yearSelectStartOffset; yearCounter<=year+this.yearSelectStartOffset; yearCounter++ ) {
+				var selected = (yearCounter==year) ? 'SELECTED' : '';
+				result += '<option value="'+yearCounter+'" '+selected+'>'+yearCounter+'</option>';
 				}
-			else {
-				result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="36"><SPAN CLASS="'+this.cssPrefix+'cpYearNavigation">'+year+'</SPAN></TD>';
-				}
-			result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="'+refresh+'('+this.index+','+month+','+(year+1)+');">&gt;</A></TD>';
+			result += '</select></TD>';
 			}
 		else {
-			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="22"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refresh+'('+this.index+','+last_month+','+last_month_year+');">&lt;&lt;</A></TD>\n';
-			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="100"><SPAN CLASS="'+this.cssPrefix+'cpMonthNavigation">'+this.monthNames[month-1]+' '+year+'</SPAN></TD>\n';
-			result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="22"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refresh+'('+this.index+','+next_month+','+next_month_year+');">&gt;&gt;</A></TD>\n';
+			if (this.isShowYearNavigation) {
+				result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refreshLink+'('+this.index+','+last_month+','+last_month_year+');">&lt;</A></TD>';
+				result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="58"><SPAN CLASS="'+this.cssPrefix+'cpMonthNavigation">'+this.monthNames[month-1]+'</SPAN></TD>';
+				result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refreshLink+'('+this.index+','+next_month+','+next_month_year+');">&gt;</A></TD>';
+				result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="10">&nbsp;</TD>';
+
+				result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="'+refreshLink+'('+this.index+','+month+','+(year-1)+');">&lt;</A></TD>';
+				if (this.isShowYearNavigationInput) {
+					result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="36"><INPUT NAME="cpYear" CLASS="'+this.cssPrefix+'cpYearNavigation" SIZE="4" MAXLENGTH="4" VALUE="'+year+'" onBlur="'+refresh+'('+this.index+','+month+',this.value-0);"></TD>';
+					}
+				else {
+					result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="36"><SPAN CLASS="'+this.cssPrefix+'cpYearNavigation">'+year+'</SPAN></TD>';
+					}
+				result += '<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="10"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="'+refreshLink+'('+this.index+','+month+','+(year+1)+');">&gt;</A></TD>';
+				}
+			else {
+				result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="22"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refreshLink+'('+this.index+','+last_month+','+last_month_year+');">&lt;&lt;</A></TD>\n';
+				result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="100"><SPAN CLASS="'+this.cssPrefix+'cpMonthNavigation">'+this.monthNames[month-1]+' '+year+'</SPAN></TD>\n';
+				result += '<TD CLASS="'+this.cssPrefix+'cpMonthNavigation" WIDTH="22"><A CLASS="'+this.cssPrefix+'cpMonthNavigation" HREF="'+refreshLink+'('+this.index+','+next_month+','+next_month_year+');">&gt;&gt;</A></TD>\n';
+				}
 			}
 		result += '</TR></TABLE>\n';
 		result += '<TABLE WIDTH=120 BORDER=0 CELLSPACING=0 CELLPADDING=1 ALIGN=CENTER>\n';
@@ -612,8 +667,8 @@ function CP_getCalendar() {
 		var yearColumnSize = 4;
 		result += "<TABLE WIDTH=144 BORDER=0 BORDERWIDTH=0 CELLSPACING=0 CELLPADDING=0>";
 		result += '<TR>\n';
-		result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="50%"><A CLASS="cpYearNavigation" HREF="javascript:'+windowref+'CP_refreshCalendar('+this.index+','+(year-(yearColumnSize*2))+');">&lt;&lt;</A></TD>\n';
-		result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="50%"><A CLASS="cpYearNavigation" HREF="javascript:'+windowref+'CP_refreshCalendar('+this.index+','+(year+(yearColumnSize*2))+');">&gt;&gt;</A></TD>\n';
+		result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="50%"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="javascript:'+windowref+'CP_refreshCalendar('+this.index+','+(year-(yearColumnSize*2))+');">&lt;&lt;</A></TD>\n';
+		result += '	<TD CLASS="'+this.cssPrefix+'cpYearNavigation" WIDTH="50%"><A CLASS="'+this.cssPrefix+'cpYearNavigation" HREF="javascript:'+windowref+'CP_refreshCalendar('+this.index+','+(year+(yearColumnSize*2))+');">&gt;&gt;</A></TD>\n';
 		result += '</TR></TABLE>\n';
 		result += '<TABLE WIDTH=120 BORDER=0 CELLSPACING=1 CELLPADDING=0 ALIGN=CENTER>\n';
 		for (var i=0; i<yearColumnSize; i++) {

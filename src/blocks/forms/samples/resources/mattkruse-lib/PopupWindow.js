@@ -21,7 +21,7 @@
 /* 
 PopupWindow.js
 Author: Matt Kruse
-Last modified: 05/15/03
+Last modified: 02/16/04
 
 DESCRIPTION: This object allows you to easily and quickly popup a window
 in a certain place. The window can either be a DIV or a separate browser
@@ -158,8 +158,8 @@ function PopupWindow_showPopup(anchorname) {
 	if (this.divName != null) {
 		// Show the DIV object
 		if (this.use_gebi) {
-			document.getElementById(this.divName).style.left = this.x;
-			document.getElementById(this.divName).style.top = this.y;
+			document.getElementById(this.divName).style.left = this.x + "px";
+			document.getElementById(this.divName).style.top = this.y + "px";
 			document.getElementById(this.divName).style.visibility = "visible";
 			}
 		else if (this.use_css) {
@@ -188,7 +188,8 @@ function PopupWindow_showPopup(anchorname) {
 					this.x = screen.availWidth - this.width;
 					}
 				}
-			this.popupWindow = window.open("about:blank","window_"+anchorname,this.windowProperties+",width="+this.width+",height="+this.height+",screenX="+this.x+",left="+this.x+",screenY="+this.y+",top="+this.y+"");
+			var avoidAboutBlank = window.opera || ( document.layers && !navigator.mimeTypes['*'] ) || navigator.vendor == 'KDE' || ( document.childNodes && !document.all && !navigator.taintEnabled );
+			this.popupWindow = window.open(avoidAboutBlank?"":"about:blank","window_"+anchorname,this.windowProperties+",width="+this.width+",height="+this.height+",screenX="+this.x+",left="+this.x+",screenY="+this.y+",top="+this.y+"");
 			}
 		this.refresh();
 		}
@@ -235,7 +236,7 @@ function PopupWindow_isClicked(e) {
 				}
 			return false;
 			}
-		else if (this.use_gebi) {
+		else if (this.use_gebi && e) {
 			var t = e.originalTarget;
 			while (t.parentNode != null) {
 				if (t.id==this.divName) {
@@ -333,4 +334,3 @@ function PopupWindow() {
 	this.autoHide = PopupWindow_autoHide;
 	this.hideIfNotClicked = PopupWindow_hideIfNotClicked;
 	}
-
