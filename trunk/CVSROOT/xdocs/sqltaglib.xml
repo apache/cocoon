@@ -10,7 +10,9 @@
 
 	<s1 title="Installation">
 		<p>Check your cocoon.properties for this line and add it if it's not already there:</p>
-		<source>processor.xsp.logicsheet.sql.java = resource://org/apache/cocoon/processor/xsp/library/java/sql.xsl</source>
+		<source>processor.xsp.logicsheet.sql.java = 
+  resource://org/apache/cocoon/processor/xsp/library/java/sql.xsl</source>
+  		<p>Note the line break is for formatting purposes, it should not appear in your cocoon.properties file.</p>
 	</s1>
 
 	<s1 title="Configuration">
@@ -35,10 +37,12 @@
 		<p>The <code>execute-query</code> element will contain child elements in the sql taglib namespace which specify parameters for the query. It is an error if it contains children (not necessarily descendents) in another namespace. No other element in the sql taglib namespace may contain children in the sql taglib namespace.</p>
 		<p>The list of valid sql taglib configuration elements is:</p>
 		<dl>
-		<dt><code>driver</code> <strong>mandatory</strong></dt>
+		<dt><code>driver</code> <strong>(mandatory)</strong></dt>
 		<dd>The fully qualified class name of the JDBC driver</dd>
-		<dt><code>dburl</code> <strong>mandatory</strong></dt>
+		<dt><code>dburl</code> <strong>(mandatory)</strong></dt>
 		<dd>The JDBC URL to the data source</dd>
+		<dt><code>query</code> <strong>(mandatory)</strong></dt>
+		<dd>The SQL query to execute.</dd>
 		<dt><code>username</code></dt>
 		<dd>The username for database authentication</dd>
 		<dt><code>password</code></dt>
@@ -71,8 +75,6 @@
 		<dd>The name of the attribute of the result doc element whose value will contain the actual number of rows updated (if this query was not a SELECT).</dd>
 		<dt><code>namespace</code></dt>
 		<dd>The namespace prefix to use when creating result elements. FIXME - we should ask for a namespace URI and prefix, right?</dd>
-		<dt><code>query</code></dt>
-		<dd>The SQL query to execute.</dd>
 		</dl>
 		<p>Note that the query element may contain elements from other XSP-enabled namespaces, like request or session. The others may not right now, though I'm certainly willing to consider changing that if desired. I'm still new at this XSP thing too.</p>
 	</s1>
