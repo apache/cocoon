@@ -66,7 +66,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: DefaultSitemapComponentSelector.java,v 1.1 2003/03/09 00:09:38 pier Exp $
+ * @version CVS $Id: DefaultSitemapComponentSelector.java,v 1.2 2003/08/12 15:48:02 sylvain Exp $
  */
 public class DefaultSitemapComponentSelector extends ExcaliburComponentSelector
   implements SitemapComponentSelector {
@@ -155,34 +155,34 @@ public class DefaultSitemapComponentSelector extends ExcaliburComponentSelector
     }
 
     public boolean hasLabel(Object hint, String label) {
-        String[] labels = (String[])this.hintLabels.get(hint);
+        String[] labels = this.getLabels(hint);
         if (labels != null) {
             for (int i = 0; i < labels.length; i++) {
                 if (labels[i].equals(label))
                     return true;
             }
-        } else if (parentSelector != null) {
-            return parentSelector.hasLabel(hint, label);
         }
         return false;
     }
 
     public String[] getLabels(Object hint) {
-        String[] labels = (String[])this.hintLabels.get(hint);
-        // Labels can be inherited or completely overrided
-        if (labels == null && parentSelector != null) {
+        // If this hint is declared locally, use its labels (if any), otherwise inherit
+        // those of the parent.
+        if (super.hasComponent(hint)) {
+            return (String[])this.hintLabels.get(hint);
+        } else {
             return parentSelector.getLabels(hint);
-        }
-        return labels;
+        }   
     }
 
     public String getPipelineHint(Object hint) {
-        String pipelineHint = (String)this.pipelineHints.get(hint);
-        // Pipeline-hints can be inherited or completely overrided
-        if (pipelineHint == null && parentSelector != null) {
+        // If this hint is declared locally, use its hints (if any), otherwise inherit
+        // those of the parent.
+        if (super.hasComponent(hint)) {
+            return (String)this.pipelineHints.get(hint);
+        } else {
             return parentSelector.getPipelineHint(hint);
-        }
-        return pipelineHint;
+        }   
     }
 
     public void addComponent(Object hint, Class component, Configuration conf)

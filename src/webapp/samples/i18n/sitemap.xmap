@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.5 2003/07/29 03:15:47 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.6 2003/08/12 15:48:02 sylvain Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- =========================== Components ================================ -->
   <map:components>
+    <map:generators default="file">
+      <!-- redefine the generators to remove their labels (otherwise aggregated parts also go through views) -->
+      <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator" logger="sitemap.generator.file"/>
+      <map:generator name="serverpages" src="org.apache.cocoon.generation.ServerPagesGenerator" logger="sitemap.generator.serverpages"/>
+    </map:generators>
     <map:transformers default="xslt">
       <!-- Configure i18n transformer -->
       <map:transformer name="i18n" logger="sitemap.transformer.i18n" src="org.apache.cocoon.transformation.I18nTransformer">

@@ -79,7 +79,7 @@ import org.apache.cocoon.transformation.Transformer;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: ComponentsSelector.java,v 1.4 2003/07/29 07:41:26 cziegeler Exp $
+ * @version CVS $Id: ComponentsSelector.java,v 1.5 2003/08/12 15:48:02 sylvain Exp $
  */
 
 public class ComponentsSelector extends ExtendedComponentSelector
@@ -134,7 +134,7 @@ implements OutputComponentSelector, SitemapComponentSelector {
 
     /** The parent selector, if it's of the current class */
     private SitemapComponentSelector parentSitemapSelector;
-
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.ParentAware#setParentInformation(org.apache.avalon.framework.component.ComponentManager, java.lang.String)
      */
@@ -165,8 +165,8 @@ implements OutputComponentSelector, SitemapComponentSelector {
 
 
     public void configure(Configuration config) throws ConfigurationException {
-
-        // How are we ?
+        
+        // Who are we ?
         String role = getRoleName(config);
         this.roleId = UNKNOWN; // unknown
         for (int i = 0; i < SELECTOR_ROLES.length; i++) {
@@ -295,17 +295,16 @@ implements OutputComponentSelector, SitemapComponentSelector {
     public String getMimeTypeForHint(Object hint) {
 
         if (this.hintMimeTypes == null) {
+            // Not a component that has mime types
             return null;
 
         } else {
-            String mimeType = (String)this.hintMimeTypes.get(hint);
-
-            if (mimeType != null) {
-                return mimeType;
-
+            if (this.hasDeclaredComponent(hint)) {
+                return (String)this.hintMimeTypes.get(hint);
+                
             } else if (this.parentSitemapSelector != null) {
                 return this.parentSitemapSelector.getMimeTypeForHint(hint);
-
+                
             } else {
                 return null;
             }
@@ -313,34 +312,40 @@ implements OutputComponentSelector, SitemapComponentSelector {
     }
 
     public boolean hasLabel(Object hint, String label) {
-        String[] labels = (String[])this.hintLabels.get(hint);
+        String[] labels = this.getLabels(hint);
         if (labels != null) {
             for (int i = 0; i < labels.length; i++) {
                 if (labels[i].equals(label))
                     return true;
             }
-        } else if (parentSitemapSelector != null) {
-            return parentSitemapSelector.hasLabel(hint, label);
         }
         return false;
     }
 
     public String[] getLabels(Object hint) {
-        String[] labels = (String[])this.hintLabels.get(hint);
-        // Labels can be inherited or completely overrided
-        if (labels == null && parentSitemapSelector != null) {
+        // If this hint is declared locally, use its labels (if any), otherwise inherit
+        // those of the parent.
+        if (this.hasDeclaredComponent(hint)) {
+            return (String[])this.hintLabels.get(hint);
+            
+        } else if (this.parentSitemapSelector != null) {
             return parentSitemapSelector.getLabels(hint);
+            
+        } else {
+            return null;
         }
-        return labels;
     }
 
     public String getPipelineHint(Object hint) {
-        String pipelineHint = (String)this.pipelineHints.get(hint);
-        // Pipeline-hints can be inherited or completely overrided
-        if (pipelineHint == null && parentSitemapSelector != null) {
-            return parentSitemapSelector.getPipelineHint(hint);
+        // If this hint is declared locally, use its hints (if any), otherwise inherit
+        // those of the parent.
+        if (this.hasDeclaredComponent(hint)) {
+            return (String)this.pipelineHints.get(hint);
+        } else if (this.parentSitemapSelector != null) {
+            return this.parentSitemapSelector.getPipelineHint(hint);
+        } else {
+            return null;
         }
-        return pipelineHint;
     }
 
     public void dispose() {
