@@ -820,7 +820,11 @@ public class JXFormsGenerator extends ComposerGenerator {
             throws SAXException {
             if (charBuf == null) {
                 charBuf = new StringBuffer();
-                charLocation = new LocatorImpl(locator);
+                if (locator != null) {
+                    charLocation = new LocatorImpl(locator);
+                } else {
+                    charLocation = NULL_LOCATOR;
+                }
             }
             charBuf.append(ch, start, length);
         }
