@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.8 1999-12-23 01:28:58 stefano Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.9 2000-01-03 01:39:41 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 1999-12-23 01:28:58 $
+ * @version $Revision: 1.9 $ $Date: 2000-01-03 01:39:41 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -149,9 +149,9 @@ public class Cocoon extends HttpServlet implements Defaults {
                     } else {
                         response.sendError(404);
                     }
-                } catch (Exception e) {
+                } catch (Throwable t) {
                     if (errorsInternally) {
-                        Frontend.error(response, "Error found handling the request.", e);
+                        Frontend.error(response, "Error found handling the request.", t);
                     } else {
                         response.sendError(500);
                     }
