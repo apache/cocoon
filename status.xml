@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.216 2003/12/18 14:29:03 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.217 2003/12/19 14:01:34 antonio Exp $:-->
 
 <status>
  <developers>
@@ -190,6 +190,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated Ant to 1.6.0
+   </action>
    <action dev="CZ" type="update">
       Remove dependencies to Xalan (from portal-fw, authentication-fw, session-fw and core)
    </action> 
