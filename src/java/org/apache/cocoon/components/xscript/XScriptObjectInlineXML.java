@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XScriptObjectInlineXML.java,v 1.3 2003/07/05 04:32:05 joerg Exp $
+ * @version CVS $Id: XScriptObjectInlineXML.java,v 1.4 2003/07/13 01:31:45 vgritsenko Exp $
  * @since July 7, 2001
  */
 public class XScriptObjectInlineXML extends XScriptObject {
@@ -91,6 +91,9 @@ public class XScriptObjectInlineXML extends XScriptObject {
     }
 
     public InputStream getInputStream() throws IOException {
+        // FIXME(VG): This method should never be used because it
+        // always converts content into system encoding. This will
+        // ruin i18n documents. Use getInputSource() instead.
         return new ByteArrayInputStream(stringBuffer.toString().getBytes());
     }
 
