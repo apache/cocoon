@@ -1,0 +1,32 @@
+Generic installation notes for Cocoon
+-----------------------------------
+
+1. Please read the Release Notes in the file README which
+contains important issues to be aware of, especially if you're
+upgrading from an earlier version of Cocoon.
+
+2. If you're installing Cocoon from CVS, you first need to
+generate cocoon.jar (and optionally the documentation).
+ Read build.xml for building instructions. If you don't know
+what CVS is you can skip this step.
+
+3. Read the detailed installation instructions at docs/install.html
+or http://xml.apache.org/cocoon/install.html (the latter will be at
+least as up-to-date as the docs version, possibly more up-to-date - but
+if a new version of Cocoon has been released since you downloaded Cocoon,
+the installation instructions on the website may no longer be valid for
+the release you downloaded.)
+
+DO NOT DO NOT DO NOT rely completely on the "installation examples for Solaris/Win2000"
+because they are not longer totally correct. If in doubt refer to install.html which
+is the canonical installation instructions.
+
+4. If you have problems, PLEASE read http://xml.apache.org/cocoon/mail-lists.html
+- especially the bit about reading the FAQ first. It will save everyone's time,
+including yours, because 99% of installation problems are documented in the FAQ or
+mail archives.
+
+--
+Robin Green
+Cocoon 1.x Maintainer
+8/12/2000
