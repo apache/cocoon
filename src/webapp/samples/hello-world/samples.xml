@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.8 2003/06/04 22:45:07 joerg Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.9 2003/06/16 10:44:53 upayavira Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -70,6 +70,10 @@
     Flash ... You need the appropriate plugin for your browser.
     (Requires block-swf.)
    </sample>
+   <sample name="Zip archive" href="hello.zip">
+    Or you might want your information nicely packaged as a zip file.
+   </sample>
+
   </group>
 
   <group name="Hello Office!">
