@@ -66,20 +66,20 @@ import java.util.Map;
  * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractGenerator.java,v 1.2 2003/09/03 15:00:56 cziegeler Exp $
+ * @version CVS $Id: AbstractGenerator.java,v 1.3 2004/01/07 11:27:27 cziegeler Exp $
  */
 public abstract class AbstractGenerator 
     extends AbstractXMLProducer 
     implements Generator {
 
     /** The current <code>SourceResolver</code>. */
-    protected SourceResolver resolver=null;
+    protected SourceResolver resolver;
     /** The current <code>Map</code> objectModel. */
-    protected Map objectModel=null;
+    protected Map objectModel;
     /** The current <code>Parameters</code>. */
-    protected Parameters parameters=null;
+    protected Parameters parameters;
     /** The source URI associated with the request or <b>null</b>. */
-    protected String source=null;
+    protected String source;
 
     /**
      * Set the <code>SourceResolver</code>, object model <code>Map</code>,
