@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.142 2003/09/04 12:42:43 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.143 2003/09/05 09:10:17 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -190,6 +190,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="open" type="add">DUMMY PLACEHOLDER</action>
+ </release>
+ <release version="2.1.1" date="September 05 2003">
    <action dev="CZ" type="update">
      Moved scratchpad into an own block. This allows that code in the
      scratchpad can depend on other blocks. The scratchpad can now also
