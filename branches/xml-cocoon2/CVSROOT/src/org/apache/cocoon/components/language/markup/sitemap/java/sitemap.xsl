@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.99 2001-04-20 20:49:53 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.100 2001-04-21 18:33:21 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -179,9 +179,6 @@
                 <xsl:with-param name="prefix">selector_</xsl:with-param>
                 <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
               </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="this-test">
-              <xsl:value-of select="@test"/>
             </xsl:variable>
             <!-- produce a definition for this test string -->
             <xsl:value-of select="java:getClassSource($factory-loader,string($src),string($selector-name),string(@test),$config)"/>
@@ -510,9 +507,6 @@
     <!-- check if this matcher is a factory ? -->
     <xsl:variable name="is-factory">
       <xsl:choose>
-        <xsl:when test="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]">
-          <xsl:value-of select="false()"/>
-        </xsl:when>
         <xsl:when test="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]/@factory">
           <xsl:value-of select="true()"/>
         </xsl:when>
@@ -525,24 +519,23 @@
       </xsl:choose>
     </xsl:variable>
 
-
-    <!-- gets the string how the matcher is to be invoced in java code -->
+    <!-- gets the string how the matcher is to be invoked in java code -->
     <xsl:variable name="matcher-name">
       <!-- check if we have a matcher definition in this sitemap otherwise get it from the parent -->
       <xsl:choose>
-        <xsl:when test="$is-factory">
-          <xsl:value-of select="$matcher-name2"/>
+        <xsl:when test="string($is-factory)='true'">
+          <xsl:value-of select="translate($matcher-type, '- ', '__')"/>Match(<xsl:value-of select="$matcher-name2"/>_expr, objectModel)
         </xsl:when>
         <xsl:otherwise>
-          ((Matcher)this.matchers.select("<xsl:value-of select="$matcher-type"/>")).match
+          ((Matcher)this.matchers.select("<xsl:value-of select="$matcher-type"/>")).match(substitute(listOfMaps,"<xsl:value-of select="$pattern-value"/>"), objectModel)
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
 
+
     <!-- this is the actual code produced -->
-    if ((map = <xsl:value-of select="translate($matcher-type, '- ', '__')"/>Match(<xsl:value-of select="$matcher-name"/>_expr,
-          objectModel)) != null) {
-      getLogger().debug("Matched <xsl:value-of select="$matcher-name"/>");
+    if ((map = <xsl:value-of select="$matcher-name"/>) != null) {
+      getLogger().debug("Matched <xsl:value-of select="$matcher-type"/> <xsl:value-of select="$matcher-name2"/>");
       listOfMaps.add (map);
       <xsl:apply-templates/>
       listOfMaps.remove (listOfMaps.size()-1);
@@ -584,9 +577,6 @@
       <!-- check if this selector is a factory ? -->
       <xsl:variable name="is-factory">
         <xsl:choose>
-          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$selector-type]">
-            <xsl:value-of select="false()"/>
-          </xsl:when>
           <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$selector-type]/@factory">
             <xsl:value-of select="true()"/>
           </xsl:when>
@@ -603,11 +593,11 @@
       <xsl:variable name="selector-name">
         <!-- check if we have a selector definition in this sitemap otherwise get it from the parent -->
         <xsl:choose>
-          <xsl:when test="$is-factory">
-            <xsl:value-of select="$selector-name2"/>
+          <xsl:when test="string($is-factory)='true'">
+            <xsl:value-of select="translate($selector-type, '- ', '__')"/>Select(<xsl:value-of select="$selector-name2"/>_expr, objectModel)
           </xsl:when>
           <xsl:otherwise>
-            ((Selector)this.selectors.select("<xsl:value-of select="$selector-type"/>")).select
+            ((Selector)this.selectors.select("<xsl:value-of select="$selector-type"/>")).select(substitute(listOfMaps,"<xsl:value-of select="$test-value"/>"), objectModel)
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
@@ -616,8 +606,8 @@
       <xsl:if test="position() > 1">
         else
       </xsl:if>
-      if (<xsl:value-of select="translate($selector-type, '- ', '__')"/>Select (<xsl:value-of select="$selector-name"/>_expr, objectModel)) {
-       getLogger().debug("Select <xsl:value-of select="$selector-name"/>");
+      if (<xsl:value-of select="$selector-name"/>) {
+       getLogger().debug("Select <xsl:value-of select="$selector-type"/>");
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -1068,7 +1058,7 @@
         <!-- get nested configuration definitions -->
         <xsl:call-template name="nested-config-components">
           <xsl:with-param name="name" select="$name"/>
-      <xsl:with-param name="level" select="2"/>
+          <xsl:with-param name="level" select="2"/>
           <xsl:with-param name="config-name"><xsl:value-of select="concat(local-name(.),'/',@name)"/></xsl:with-param>
           <xsl:with-param name="components" select="*"/>
           <xsl:with-param name="type" select="@name"/>
