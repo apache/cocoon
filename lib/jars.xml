@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.218 2004/05/25 14:07:15 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.219 2004/05/28 12:45:00 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -622,7 +622,7 @@
   </file>
 
   <file>
-    <title>XML DB APIs</title>
+    <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>xmldb/lib/xmldb-api-20030701.jar</lib>
@@ -630,7 +630,7 @@
   </file>
 
   <file>
-    <title>XML DB APIs</title>
+    <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>xmldb/lib/xmldb-common-20030701.jar</lib>
@@ -638,7 +638,7 @@
   </file>
 
   <file>
-    <title>XML DB APIs</title>
+    <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>xmldb/lib/xmldb-xupdate-20040205.jar</lib>
@@ -651,6 +651,17 @@
     <used-by>xmldb block</used-by>
     <lib>xmldb/lib/xindice-1.1b4.jar</lib>
     <homepage>http://xml.apache.org/xindice/</homepage>
+  </file>
+
+  <file>
+    <title>XML-RPC</title>
+    <description>
+      Java implementation of XML-RPC, a popular protocol that uses XML over
+      HTTP to implement remote procedure calls.
+    </description>
+    <used-by>xmldb block</used-by>
+    <lib>xmldb/lib/xmlrpc-1.1.jar</lib>
+    <homepage>http://ws.apache.org/xmlrpc/</homepage>
   </file>
 
   <file>
@@ -1017,6 +1028,7 @@
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
+
   <!-- JMS block begin -->
   <file>
     <title>JMS Spec</title>
@@ -1077,7 +1089,9 @@
     <lib>jms/lib/jndi-1.2.1.jar</lib>
     <homepage>http://java.sun.com/jndi</homepage>
   </file>
-  JMS block end -->
+  -->
+  <!-- JMS block end -->
+
   <file>
     <title>JSR-168 Portlet Spec</title>
     <description>
@@ -1100,6 +1114,7 @@
     <lib>portal/lib/pluto-20040310.jar</lib>
     <homepage>http://jakarta.apache.org/pluto/</homepage>
   </file>
+
   <file>
     <title>Jakarta BCEL</title>
     <description>

@@ -47,6 +47,8 @@
              Default is `pwd` (current working directory).
         <db-home>/var/xindice/db</db-home>
         -->
+
+        <managed>true</managed>
       </driver>
 
       <!-- Add here other XML:DB compliant databases' drivers -->
