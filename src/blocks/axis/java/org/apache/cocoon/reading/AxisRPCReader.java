@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpUtils;
 import javax.xml.soap.SOAPException;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -76,7 +75,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  *
- * @version CVS $Id: AxisRPCReader.java,v 1.6 2004/03/05 13:01:42 bdelacretaz Exp $
+ * @version CVS $Id: AxisRPCReader.java,v 1.7 2004/07/12 13:34:42 cziegeler Exp $
  */
 public class AxisRPCReader extends ServiceableReader
     implements Configurable, Disposable
@@ -203,7 +202,7 @@ public class AxisRPCReader extends ServiceableReader
 
             // Set the request(incoming) message field in the context
             msgContext.setRequestMessage(requestMsg);
-            String url = HttpUtils.getRequestURL(req).toString();
+            String url = req.getRequestURL().toString(); 
             msgContext.setProperty(MessageContext.TRANS_URL, url);
             
             try
