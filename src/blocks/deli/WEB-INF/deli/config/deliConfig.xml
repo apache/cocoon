@@ -16,7 +16,7 @@
 -->
 <deli>
 	
- <localProfilesFile>WEB-INF/deli/config/localProfiles.xml</localProfilesFile>
+ <localProfilesFile>WEB-INF/deli/config/profiles.rdf</localProfilesFile>
 
  <localProfilesPath>WEB-INF/deli/legacyProfiles</localProfilesPath>
 

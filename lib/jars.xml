@@ -437,7 +437,7 @@
       delivery context.
     </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/deli-0.9.8.jar</lib>
+    <lib>deli/lib/deli-x020904.jar</lib>
     <homepage>http://delicon.sourceforge.net</homepage>
   </file>
 
@@ -532,8 +532,8 @@
     <title>Jena RDF framework</title>
     <description>Jena is a java API for manipulating RDF models.</description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/jena-2.0.0.jar</lib>
-    <homepage>http://www.hpl.hp.com/semweb/jena.htm</homepage>
+    <lib>deli/lib/jena-2.1.jar</lib>
+    <homepage>http://jena.sourceforge.net/</homepage>
   </file>
 
   <file>
@@ -542,8 +542,8 @@
     provides robust and full-featured Unicode services on a wide variety 
     of platforms. </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/icu4j.jar</lib>
-    <homepage>http://oss.software.ibm.com/icu4j/index.html</homepage>
+    <lib>deli/lib/icu4j-2.6.jar</lib>
+    <homepage>http://oss.software.ibm.com/icu4j/</homepage>
   </file>
 
   <file>
