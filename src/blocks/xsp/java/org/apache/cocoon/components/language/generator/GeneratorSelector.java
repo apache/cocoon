@@ -43,11 +43,11 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: GeneratorSelector.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id$
  */
 public class GeneratorSelector extends ExcaliburComponentSelector implements Disposable {
 
-    public static String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
+    public final static String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
 
     private ClassLoaderManager classManager;
 
