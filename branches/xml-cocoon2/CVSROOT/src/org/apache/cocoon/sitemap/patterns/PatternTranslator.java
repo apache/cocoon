@@ -19,7 +19,7 @@ package org.apache.cocoon.sitemap.patterns;
  * 
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-02-27 12:56:21 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-02-27 14:57:59 $
  */
 public class PatternTranslator extends PatternMatcher {
 
@@ -69,7 +69,7 @@ public class PatternTranslator extends PatternMatcher {
         if (this.identityTranslation) return(data);
         if ((this.targetPattern==null) || (super.sourcePattern==null))
             throw new IllegalStateException("Null internals");
-        if (!super.match(data)) throw new IllegalArgumentException("No match");
+        if (!super.match(data)) return(null);
         
         char x[]=data.toCharArray();
         return(this.translatePattern(x,super.sourcePattern,this.targetPattern));
