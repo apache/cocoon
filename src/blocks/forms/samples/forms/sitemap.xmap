@@ -71,7 +71,6 @@
     <map:script src="flow/binding_example.js"/>
     <map:script src="flow/upload_example.js"/>
     <map:script src="flow/registration.js"/>
-    <map:script src="flow/customvalidationdemo.js"/>
     <map:script src="flow/bindings.js"/>
     <map:script src="flow/form_model_gui.js"/>
     <map:script src="flow/htmlarea.js"/>
@@ -304,14 +303,6 @@
        </map:select>
      </map:match>
      
-     <!--
-        | Custom validation example
-         -->
-
-     <map:match pattern="customvalidationdemo">
-       <map:call function="customValidationDemo"/>
-     </map:match>
-
      <!--
         | HTMLArea example
         -->

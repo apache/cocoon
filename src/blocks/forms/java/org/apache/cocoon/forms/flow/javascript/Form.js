@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.7 2004/04/27 12:06:49 bruno Exp $
+ * @version CVS $Id: Form.js,v 1.8 2004/05/06 14:23:04 vgritsenko Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -37,7 +37,6 @@ function Form(uri) {
         src = resolver.resolveURI(uri);
         this.form = formMgr.createForm(src);
         this.binding = null;
-        this.validator = null;
         this.eventHandler = null;
         // TODO : do we keep this ?
         this.formWidget = new Widget(this.form);
@@ -71,10 +70,6 @@ Form.prototype.getWidget = function(name) {
  *
  * This uses some additionnal propertied on the form object :
  * - "locale" : the form locale (default locale is used if not set)
- * - "validator" : additional validation function. This function receives
- *   the form object as parameter and should return a boolean indicating
- *   if the form handling is finished (true) or if the form should be
- *   redisplayed again (false)
  *
  * On return, the calling code can check some properties to know the form result :
  * - "isValid" : true if the form was sucessfully validated
@@ -112,15 +107,8 @@ Form.prototype.showForm = function(uri, bizData) {
         org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData);
 
         finished = this.form.process(formContext);
-        
-        // Additional flow-level validation
         if (finished) {
-            if (this.validator == null) {
-                this.isValid = this.form.isValid();
-            } else {
-                this.isValid = this.form.isValid() & this.validator(this.form, bizData);
-                finished = this.isValid;
-            }
+            this.isValid = this.form.isValid();
         }
         
         // FIXME: Theoretically, we should clone the form widget (this.form) to ensure it keeps its
