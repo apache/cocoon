@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.environment.internal;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.apache.avalon.framework.logger.Logger;
@@ -35,7 +34,7 @@ public final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
                                      SitemapSourceInfo info, 
                                      Logger logger) 
     throws MalformedURLException {
-        super(env, info, logger);
+        super(env, info, logger, false);
     }
 
     /* (non-Javadoc)
