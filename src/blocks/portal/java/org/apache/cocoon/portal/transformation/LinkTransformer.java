@@ -105,6 +105,9 @@ public class LinkTransformer
     /** The prefix */
     protected String prefix;
 
+    /** Handle target self as no target? */
+    protected boolean ignoreTargetSelf;
+    
     /**
      * @see AbstractTransformer#setup(SourceResolver, Map, String, Parameters)
      */
@@ -113,6 +116,8 @@ public class LinkTransformer
                       String src,
                       Parameters par)
     throws ProcessingException, SAXException, IOException {
+        this.ignoreTargetSelf = par.getParameterAsBoolean("ignore-target-self", false);
+        
         this.copletInstanceData =
             ProxyTransformer.getInstanceData(
                 this.manager,
@@ -183,14 +188,14 @@ public class LinkTransformer
         } else if ("link".equalsIgnoreCase(name)) {
             handleTag("href", uri, name, raw, attributes, false, false);
         } else if ("a".equalsIgnoreCase(name)) {
-            handleTag(
-                "href",
-                uri,
-                name,
-                raw,
-                attributes,
-                true,
-                (attributes.getIndex("target") > -1));
+            boolean direct;
+            final String v = attributes.getValue("target");
+            if ( v == null || (this.ignoreTargetSelf && v.equals("self")) ) {
+                direct = false;
+            } else {
+                direct = true;
+            }
+            handleTag("href", uri, name, raw, attributes, true, direct);
         } else if ("menu-item".equalsIgnoreCase(name)) {
             handleTag("href", uri, name, raw, attributes, true, false);
         } else if ("input".equalsIgnoreCase(name)) {
@@ -277,7 +282,14 @@ public class LinkTransformer
             || remoteURI.startsWith("mailto:")) {
             super.startElement(uri, elementName, raw, attributes);
         } else {
-            if (attributes.getIndex("target") > -1 || direct) {
+            boolean evalTarget;
+            final String v = attributes.getValue("target");
+            if ( v == null || (this.ignoreTargetSelf && v.equals("self")) ) {
+                evalTarget = false;
+            } else {
+                evalTarget = true;
+            }
+            if (evalTarget || direct) {
                 try {
                     remoteURI =
                         ProxyTransformer.resolveURI(remoteURI, documentBase);
