@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2002,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,13 +40,13 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  * Default {@link PortalComponentManager} implementation
- * 
+ *
  * @see org.apache.cocoon.portal.PortalComponentManager
- * 
+ *
  * TODO Handle non ThreadSafe components
- * 
+ *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * 
+ *
  * @version CVS $Id$
  */
 public class DefaultPortalComponentManager
@@ -60,25 +60,25 @@ public class DefaultPortalComponentManager
     protected ProfileManager profileManager;
 
     protected String profileManagerRole;
-    
+
     protected String linkServiceRole;
-    
+
     protected String rendererSelectorRole;
-    
+
     protected ServiceSelector rendererSelector;
-    
+
     protected Map renderers;
-    
+
     protected String copletFactoryRole;
-    
+
     protected String layoutFactoryRole;
-    
+
     protected CopletFactory copletFactory;
-    
+
     protected LayoutFactory layoutFactory;
-    
+
     protected EventManager eventManager;
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
@@ -127,32 +127,32 @@ public class DefaultPortalComponentManager
         }
         return this.eventManager;
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         if (this.manager != null) {
-            if ( this.rendererSelector != null) {
+            if (this.rendererSelector != null) {
                 Iterator i = this.renderers.values().iterator();
                 while (i.hasNext()) {
                     this.rendererSelector.release(i.next());
                 }
-                this.manager.release( this.rendererSelector );
+                this.manager.release(this.rendererSelector);
                 this.rendererSelector = null;
                 this.renderers = null;
             }
-            this.manager.release( this.profileManager );
-            this.manager.release( this.linkService );
+            this.manager.release(this.profileManager);
             this.profileManager = null;
+            this.manager.release(this.linkService);
             this.linkService = null;
             this.manager.release(this.copletFactory);
-            this.manager.release(this.layoutFactory);
             this.copletFactory = null;
+            this.manager.release(this.layoutFactory);
             this.layoutFactory = null;
-            this.manager = null;
             this.manager.release(this.eventManager);
             this.eventManager = null;
+            this.manager = null;
         }
     }
 
