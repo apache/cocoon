@@ -184,7 +184,7 @@ public class DOMStreamer implements XMLProducer {
      * @author Bruno Dumon (bruno at outerthought dot org)
      * @author Xalan team
      */
-    public class NamespaceNormalizingDOMStreamer extends AbstractXMLProducer {
+    public static class NamespaceNormalizingDOMStreamer extends AbstractXMLProducer {
         /**
          * Information about the current element. Used to remember the localName, qName
          * and namespaceURI for generating the endElement event, and holds the namespaces
@@ -598,7 +598,7 @@ public class DOMStreamer implements XMLProducer {
             }
         }
 
-        public class ElementInfo {
+        public static class ElementInfo {
             public String localName;
             public String namespaceURI;
             public String qName;
@@ -689,7 +689,7 @@ public class DOMStreamer implements XMLProducer {
      * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
      *         (Apache Software Foundation)
      */
-    public class DefaultDOMStreamer extends AbstractXMLProducer {
+    public static class DefaultDOMStreamer extends AbstractXMLProducer {
 
         /** The private transformer for this instance */
         protected Transformer transformer;

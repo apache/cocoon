@@ -234,7 +234,7 @@ public class AvalonProvider extends RPCProvider
      *  on the scope of the service (ie. Request, Session & Application).
      * </p>
      */
-    final class Handler implements InvocationHandler
+    final static class Handler implements InvocationHandler
     {
         // Constants describing the ServiceLifecycle.destroy method
         private final static String SL_DESTROY = "destroy";

@@ -401,7 +401,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
      * @author     HuberB1
      * @version
      */
-    class CocoonFilterGeneratorRequestWrapper extends HttpServletRequestWrapper {
+    static class CocoonFilterGeneratorRequestWrapper extends HttpServletRequestWrapper {
         /**
          * put xml-data into request-attribute under this name, ie. org.apache.cocoon.xml-data
          *
@@ -450,7 +450,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
      * @author     HuberB1
      * @version
      */
-    class CocoonFilterGeneratorConfig implements ServletConfig {
+    static class CocoonFilterGeneratorConfig implements ServletConfig {
         ServletContext c;
 
 
@@ -610,7 +610,7 @@ public class CocoonFilterGeneratorImpl implements Filter {
      * @author     HuberB1
      * @version
      */
-    class CocoonFilterGeneratorOutputStream extends ServletOutputStream {
+    static class CocoonFilterGeneratorOutputStream extends ServletOutputStream {
 
         private DataOutputStream stream;
 

@@ -279,7 +279,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Keep track of repeater status.
      */
-    protected class RepeaterStatus {
+    protected static class RepeaterStatus {
         public String var = null;
         public String expr = null;
         public int count = 0;

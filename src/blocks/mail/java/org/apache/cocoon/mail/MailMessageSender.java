@@ -101,7 +101,7 @@ public class MailMessageSender
      * @author haul
      * @since 2.1
      */
-    private class Attachment {
+    private static class Attachment {
         private Object obj = null;
         private String type = null;
         private String name = null;

@@ -477,7 +477,7 @@ public class AuthenticationProfileManager
         return key;
     }
 
-    class ReadWriteLock {
+    static class ReadWriteLock {
     	private Thread activeWriter = null;
     	private HashSet activeReaders = new HashSet();
     	private int waitingWriters = 0;

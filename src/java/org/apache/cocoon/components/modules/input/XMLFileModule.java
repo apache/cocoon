@@ -114,7 +114,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
     /**
      * Takes care of (re-)loading and caching of sources.
      */
-    protected class DocumentHelper {
+    protected static class DocumentHelper {
         private boolean reloadable;
         private boolean cacheable;
         /** Source location */

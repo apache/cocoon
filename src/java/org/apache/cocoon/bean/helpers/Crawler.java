@@ -28,7 +28,7 @@ import org.apache.cocoon.ProcessingException;
  *   A simple Cocoon crawler
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Crawler.java,v 1.4 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class Crawler {
@@ -91,7 +91,7 @@ public class Crawler {
         return new CrawlingIterator(visitedAlready, stillNotVisited);
     }
     
-    public class CrawlingIterator implements Iterator {
+    public static class CrawlingIterator implements Iterator {
 
         private Map stillNotVisited;
         private Set visitedAlready;

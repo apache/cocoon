@@ -457,7 +457,7 @@ public final class DefaultIncludeCacheManager
         }
     }
 
-    final class PreemptiveBooter implements Runnable {
+    final static class PreemptiveBooter implements Runnable {
 
         private final String uri;
         

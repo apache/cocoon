@@ -49,17 +49,17 @@ import org.apache.cocoon.environment.SourceResolver;
  * "name_1" must also exist and vice versa.</p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestParameterExistsAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RequestParameterExistsAction extends AbstractConfigurableAction
 {
 
-    protected class StringParts {
+    protected static class StringParts {
         String prefix = null;
         String pstfix = null;
         int count = 0;
 
-        public StringParts ( String pre, String post ) {
+        public StringParts (String pre, String post) {
             prefix = pre;
             pstfix = post;
         }

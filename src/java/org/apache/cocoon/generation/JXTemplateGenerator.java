@@ -190,7 +190,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
      * Facade to the Locator to be set on the consumer prior to
      * sending other events, location member changeable
      */
-    public class LocatorFacade implements Locator {
+    public static class LocatorFacade implements Locator {
         private Locator locator;
 
         public LocatorFacade(Locator initialLocator) {

@@ -152,7 +152,7 @@ public class PropagatorAction
      * A private helper holding default parameter entries.
      * 
      */
-	private class Entry {
+	private static class Entry {
 		public String key = null;
 		public String value = null;
 

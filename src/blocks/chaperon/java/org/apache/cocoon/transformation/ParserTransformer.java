@@ -78,7 +78,7 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformer.java,v 1.12 2004/03/05 13:01:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ParserTransformer extends ParserProcessor
         implements Transformer, LogEnabled, Serviceable, Parameterizable,
@@ -274,8 +274,7 @@ public class ParserTransformer extends ParserProcessor
   /**
    * This class represent a entry in a store to cache the parser automaton.
    */
-  public class ParserAutomatonEntry implements Serializable
-  {
+  public static class ParserAutomatonEntry implements Serializable {
     private SourceValidity validity = null;
     private ParserAutomaton automaton = null;
 

@@ -337,7 +337,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
         super.destroy();
     }
 
-    private class JarFileFilter implements FilenameFilter {
+    private static class JarFileFilter implements FilenameFilter {
         public boolean accept(File dir, String name) {
             return name.endsWith(".zip") || name.endsWith(".jar");
         }

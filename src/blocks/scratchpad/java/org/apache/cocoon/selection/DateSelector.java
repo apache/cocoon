@@ -333,7 +333,7 @@ implements Configurable, ThreadSafe {
      *  reducing the comparsion effort.
      * </p>
      */
-    private class DateSelectorContext {
+    private static class DateSelectorContext {
         Date now;
         HashSet set;
         Logger logger;

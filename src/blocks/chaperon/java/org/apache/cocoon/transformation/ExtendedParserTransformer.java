@@ -56,7 +56,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ExtendedParserTransformer.java,v 1.6 2004/03/05 13:01:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ExtendedParserTransformer extends ExtendedDirectParserProcessor
         implements Transformer, LogEnabled, Serviceable, Parameterizable,
@@ -254,8 +254,7 @@ public class ExtendedParserTransformer extends ExtendedDirectParserProcessor
   /**
    * This class represent a entry in a store to cache the parser automaton.
    */
-  public class GrammarEntry implements Serializable
-  {
+  public static class GrammarEntry implements Serializable {
     private SourceValidity validity = null;
     private ExtendedGrammar grammar = null;
 

@@ -29,7 +29,7 @@ import java.util.StringTokenizer;
  * for the <code>Request</code> object.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestParameters.java,v 1.5 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class RequestParameters
 implements Serializable {
@@ -167,7 +167,7 @@ implements Serializable {
         return new EnumerationFromIterator(names.keySet().iterator());
     }
 
-    final class EnumerationFromIterator implements Enumeration {
+    final static class EnumerationFromIterator implements Enumeration {
         private Iterator iter;
         EnumerationFromIterator(Iterator iter) {
             this.iter = iter;

@@ -25,14 +25,14 @@ import java.util.ArrayList;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerData.java,v 1.4 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ProfilerData {
 
     /**
      * Entry, which stores the role and source of a component from a pipeline.
      */
-    public class Entry {
+    public static class Entry {
 
         public String role;
         public String source;

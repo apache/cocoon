@@ -573,7 +573,7 @@ public class ContinuationsManagerImpl
      * holder. This information is needed to cleanup a proper holder after
      * continuation's expiration time.
      */
-    private class HolderAwareWebContinuation extends WebContinuation {
+    private static class HolderAwareWebContinuation extends WebContinuation {
         private WebContinuationsHolder continuationsHolder;
 
         public HolderAwareWebContinuation(String id, Object continuation,

@@ -98,7 +98,7 @@ public abstract class ForEachSupport extends LoopTagSupport {
      * an Iterator.  This is appropriate for cases where hasNext() and
      * next() don't need to throw SAXException.  Such cases are common.core.
      */
-    protected class SimpleForEachIterator implements ForEachIterator {
+    protected static class SimpleForEachIterator implements ForEachIterator {
         private Iterator i;
         public SimpleForEachIterator(Iterator i) {
             this.i = i;

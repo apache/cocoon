@@ -41,7 +41,7 @@ import org.apache.cocoon.environment.SourceResolver;
  *  variable in the Map.
  *
  * @author     <a href="mailto:sergio.carvalho@acm.org">Sergio Carvalho</a>
- * @version CVS $Id: SectionCutterAction.java,v 1.3 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class SectionCutterAction extends ConfigurableServiceableAction implements ThreadSafe {
@@ -126,7 +126,7 @@ public class SectionCutterAction extends ConfigurableServiceableAction implement
      * @author     subzero
      * @version
      */
-    class Section extends Object {
+    static class Section extends Object {
         String matchExpression;
         Dictionary mapVars = new Hashtable();
 

@@ -44,7 +44,7 @@ import org.apache.commons.lang.SystemUtils;
  */
 public class CommandLineRequest implements Request {
 
-    private class EmptyEnumeration implements Enumeration {
+    private static class EmptyEnumeration implements Enumeration {
         public boolean hasMoreElements() {
             return false;
         }
