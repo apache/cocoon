@@ -25,6 +25,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,7 +112,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: PropagatorAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PropagatorAction
 	extends  ServiceableAction
@@ -195,10 +196,9 @@ public class PropagatorAction
 		String outputName =
 			param.getParameter(ACTION_PREFIX + CONFIG_OUTPUT_MODULE, null);
 		Boolean storeEmpty =
-			new Boolean(
+			BooleanUtils.toBooleanObject(
 				param.getParameterAsBoolean(
-					ACTION_PREFIX + CONFIG_STORE_EMPTY,
-					this.storeEmpty));
+					ACTION_PREFIX + CONFIG_STORE_EMPTY, this.storeEmpty));
 		param.removeParameter(ACTION_PREFIX + CONFIG_OUTPUT_MODULE);
 		param.removeParameter(ACTION_PREFIX + CONFIG_STORE_EMPTY);
 		return new Object[] { outputName, storeEmpty };
