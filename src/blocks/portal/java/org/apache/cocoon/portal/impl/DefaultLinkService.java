@@ -77,22 +77,26 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.7 2003/10/20 13:36:56 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.8 2003/12/08 13:47:51 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
     implements ThreadSafe, LinkService, Serviceable, Disposable, Contextualizable {
 
-
+    /**
+     * Helper class containing the information about the request uri
+     */
     class Info {
         StringBuffer  linkBase = new StringBuffer();
         boolean      hasParameters = false;
         ArrayList     comparableEvents = new ArrayList(5);
     }
     
-    
+    /** The converter used to convert an event into a request parameter */
     protected EventConverter   converter;
+    /** The service manager */
     protected ServiceManager manager;
+    /** The cocoon context */
     protected Context context;
     
     /* (non-Javadoc)
@@ -103,6 +107,10 @@ public class DefaultLinkService
         this.converter = (EventConverter)this.manager.lookup(EventConverter.ROLE);
     }
 
+    /**
+     * Return the current info for the request
+     * @return An Info object
+     */
     protected Info getInfo() {
         final Request request = ContextHelper.getRequest( this.context );
         Info info = (Info)request.getAttribute(DefaultLinkService.class.getName());
@@ -124,19 +132,28 @@ public class DefaultLinkService
         return info;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.LinkService#getLinkURI(org.apache.cocoon.portal.event.Event)
+     */
     public String getLinkURI(Event event) {
         final Info info = this.getInfo();
         final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
         boolean hasParams = info.hasParameters;
 
         // add comparable events
+        final boolean comparableEvent = event instanceof ComparableEvent;        
         Iterator iter = info.comparableEvents.iterator();
         while (iter.hasNext()) {
-            ComparableEvent current = (ComparableEvent)iter.next();
-            if (!(event instanceof ComparableEvent)
-                 || ( !current.equalsEvent((ComparableEvent)event))) {
-
-                hasParams = this.addEvent(buffer, current, hasParams);
+            Object[] objects = (Object[])iter.next();
+            ComparableEvent current = (ComparableEvent)objects[0];
+            if ( !comparableEvent || !current.equalsEvent((ComparableEvent)event)) {
+                if ( hasParams ) {
+                    buffer.append('&');
+                } else {
+                    buffer.append('?');
+                }
+                buffer.append((String)objects[1]).append('=').append(SourceUtil.encode((String)objects[2]));
+                hasParams = true;
             }
         }
         
@@ -146,6 +163,10 @@ public class DefaultLinkService
         return buffer.toString();
     }
 
+    /**
+     * Add one event to the buffer
+     * @return Returns true, if the link contains a parameter
+     */
     protected boolean addEvent(StringBuffer buffer, Event event, boolean hasParams) {
         if ( hasParams ) {
             buffer.append('&');
@@ -164,6 +185,9 @@ public class DefaultLinkService
         return true;
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.LinkService#getLinkURI(java.util.List)
+     */
     public String getLinkURI(List events) {
         final Info info = this.getInfo();
         boolean hasParams = info.hasParameters;
@@ -172,7 +196,8 @@ public class DefaultLinkService
         // add comparable events
         Iterator iter = info.comparableEvents.iterator();
         while (iter.hasNext()) {
-            ComparableEvent current = (ComparableEvent)iter.next();
+            Object[] objects = (Object[])iter.next();
+            ComparableEvent current = (ComparableEvent)objects[0];
             
             Iterator eventIterator = events.iterator();
             boolean found = false;
@@ -184,7 +209,13 @@ public class DefaultLinkService
                 }
             }
             if (!found) {
-                hasParams = this.addEvent(buffer, current, hasParams);
+                if ( hasParams ) {
+                    buffer.append('&');
+                } else {
+                    buffer.append('?');
+                }
+                buffer.append((String)objects[1]).append('=').append(SourceUtil.encode((String)objects[2]));
+                hasParams = true;
             }
         }
 
@@ -197,23 +228,30 @@ public class DefaultLinkService
         return buffer.toString();
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.LinkService#addEventToLink(org.apache.cocoon.portal.event.Event)
+     */
     public void addEventToLink(Event event) {
+        String parameterName = DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
+        if (event instanceof RequestEvent ) {
+            final String eventParName = ((RequestEvent)event).getRequestParameterName();
+            if ( eventParName != null ) {
+                parameterName = eventParName;
+            }
+        }
+        final String value = this.converter.encode( event );
+
         final Info info = this.getInfo();
         if ( event instanceof ComparableEvent) {
-            info.comparableEvents.add( event );
+            info.comparableEvents.add( new Object[] {event, parameterName, value} );
         } else {
-            final String value = converter.encode(event);
-            String parameterName = LinkService.DEFAULT_REQUEST_EVENT_PARAMETER_NAME;
-            if (event instanceof RequestEvent) {
-                final String eventParName = ((RequestEvent)event).getRequestParameterName();
-                if ( eventParName != null ) {
-                    parameterName = eventParName;
-                }
-            }
             this.addParameterToLink(parameterName, value);
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.LinkService#addParameterToLink(java.lang.String, java.lang.String)
+     */
     public void addParameterToLink(String name, String value) {
         final Info info = this.getInfo();
         if ( info.hasParameters ) {
@@ -225,9 +263,28 @@ public class DefaultLinkService
         info.hasParameters = true;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.LinkService#getRefreshLinkURI()
+     */
     public String getRefreshLinkURI() {
         final Info info = this.getInfo();
-        return info.linkBase.toString();
+
+        final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
+
+        // add comparable events
+        Iterator iter = info.comparableEvents.iterator();
+        boolean hasParams = info.hasParameters;
+        while (iter.hasNext()) {
+            Object[] objects = (Object[])iter.next();
+            if ( hasParams ) {
+                buffer.append('&');
+            } else {
+                buffer.append('?');
+            }
+            buffer.append((String)objects[1]).append('=').append(SourceUtil.encode((String)objects[2]));
+            hasParams = true;
+        }
+        return buffer.toString();
     }
     
     /* (non-Javadoc)

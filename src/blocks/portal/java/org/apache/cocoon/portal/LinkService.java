@@ -60,7 +60,7 @@ import org.apache.cocoon.portal.event.Event;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LinkService.java,v 1.2 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: LinkService.java,v 1.3 2003/12/08 13:47:50 cziegeler Exp $
  */
 public interface LinkService extends Component {
 
@@ -68,13 +68,36 @@ public interface LinkService extends Component {
     
     String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
     
+    /**
+     * Get the uri for this coplet containing the additional event
+     * @param event The event to add
+     * @return A URI
+     */
     String getLinkURI(Event event);
 
+    /**
+     * Get the uri for this coplet containing the additional events
+     * @param events The events to add
+     * @return A URI
+     */
     String getLinkURI(List events);
     
+    /**
+     * Add this event to the list of events contained in the uri
+     * @param event Event to add
+     */
     void addEventToLink(Event event);
     
+    /**
+     * Add this parameter to every link
+     * @param name  The request parameter name
+     * @param value The value for the parameter
+     */
     void addParameterToLink(String name, String value);
     
+    /**
+     * Get a link that simply refreshs the portal
+     * @return A URI
+     */
     String getRefreshLinkURI();
 }
