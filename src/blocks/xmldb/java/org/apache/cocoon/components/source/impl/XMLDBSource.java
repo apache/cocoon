@@ -86,7 +86,7 @@ import org.xmldb.api.modules.XPathQueryService;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.4 2003/05/16 23:24:32 gianugo Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.5 2003/07/04 11:20:51 cziegeler Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled  
     implements Source, XMLizable {
@@ -384,8 +384,38 @@ public class XMLDBSource extends AbstractLogEnabled
     }
 
     public boolean exists() {
-        // FIXME
-        return true;
+        final String col = url.substring(0, url.lastIndexOf('/'));
+        final String res = url.substring(url.lastIndexOf('/') + 1);
+        boolean result = true;
+        
+        /* Ignore the query: we're just testing if the document exists. */
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Testing existence of resource `" + res + "' from collection `" + url + "'; query (ignored) = `" + this.query + "'");
+        }
+
+        Collection collection = null;
+        try {
+            collection = DatabaseManager.getCollection(col, user, password);
+            if (collection == null) {
+                result = false;
+            } else {
+                XMLResource xmlResource = (XMLResource) collection.getResource(res);
+                if (xmlResource == null) {
+                    result = false;
+                }
+            }
+        } catch (XMLDBException xde) {
+            result = false; 
+        } finally {
+            if (collection != null) {
+                try {
+                    collection.close();
+                } catch (XMLDBException ignored) {
+                }
+            }
+        }
+        
+        return result;
     }
 
     public String getMimeType() {
