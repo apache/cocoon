@@ -51,8 +51,8 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.Attributes;
@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.18 2004/03/16 10:35:33 cziegeler Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.19 2004/03/28 14:28:04 antonio Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -547,7 +547,7 @@ public class SQLTransformer
                 }
                 String substitute = parameters.getParameter( name, null );
                 //escape single quote
-                substitute = replaceCharWithString( substitute, '\'', "''" );
+                substitute = StringEscapeUtils.escapeSql(substitute);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug( "SUBSTITUTE VALUE " + substitute );
                 }
@@ -598,8 +598,8 @@ public class SQLTransformer
         case SQLTransformer.STATE_INSIDE_ESCAPE_STRING:
             String value = this.endTextRecording();
             if ( value.length() > 0 ) {
-                value = replaceCharWithString( value, '\'', "''" );
-                value = replaceCharWithString( value, '\\', "\\\\" );
+                value = StringEscapeUtils.escapeSql(value);
+                value = StringUtils.replace( value, "\\", "\\\\" );
                 this.getCurrentQuery().addQueryPart( value );
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug( "QUERY IS \"" + value + "\"" );
@@ -669,25 +669,6 @@ public class SQLTransformer
         return (Query) queries.elementAt( i );
     }
 
-    private String replaceCharWithString( String in, char c, String with ) {
-        Tokenizer tok;
-        StringBuffer replaced = null;
-        if ( in.indexOf( c ) > -1 ) {
-            tok = new Tokenizer( in, c );
-            replaced = new StringBuffer();
-            while ( tok.hasMoreTokens() ) {
-                replaced.append( tok.nextToken() );
-                if ( tok.hasMoreTokens() )
-                    replaced.append( with );
-            }
-        }
-        if ( replaced != null ) {
-            return replaced.toString();
-        } else {
-            return in;
-        }
-    }
-
     /**
      * Qualifies an element name by giving it a prefix.
      * @param name the element name
@@ -695,10 +676,10 @@ public class SQLTransformer
      * @return a namespace qualified name that is correct
      */
     protected String nsQualify( String name, String prefix ) {
-        if ( name == null || "".equals( name ) ) {
+        if (StringUtils.isEmpty(name)) {
             return name;
         }
-        if ( prefix != null && !"".equals( prefix ) ) {
+        if (StringUtils.isNotEmpty(prefix)) {
             return new StringBuffer( prefix ).append( ":" ).append( name ).toString();
         } else {
             return name;
@@ -1365,5 +1346,4 @@ public class SQLTransformer
             this.name = name;
         }
     }
-
 }

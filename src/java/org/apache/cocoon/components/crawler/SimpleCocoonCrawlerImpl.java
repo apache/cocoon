@@ -22,7 +22,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.util.Tokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
 
@@ -41,7 +41,7 @@ import java.util.List;
  * A simple cocoon crawler.
  *
  * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.4 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.5 2004/03/28 14:28:04 antonio Exp $
  */
 public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
 implements CocoonCrawler, Configurable, Disposable, Recyclable {
@@ -183,9 +183,9 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             for (int i = 0; i < children.length; i++) {
                 String pattern = children[i].getValue();
                 try {
-                    Tokenizer t = new Tokenizer(pattern, ", ");
-                    while (t.hasMoreTokens()) {
-                        String tokenized_pattern = t.nextToken();
+                    String params[] = StringUtils.split(pattern, ", ");
+                    for (int index = 0; index < params.length; index++) {
+                        String tokenized_pattern = params[index];
                         this.includeCrawlingURL.add(new RE(tokenized_pattern));
                     }
                 } catch (RESyntaxException rese) {
@@ -205,9 +205,9 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
             for (int i = 0; i < children.length; i++) {
                 String pattern = children[i].getValue();
                 try {
-                    Tokenizer t = new Tokenizer(pattern, ", ");
-                    while (t.hasMoreTokens()) {
-                        String tokenized_pattern = t.nextToken();
+                    String params[] = StringUtils.split(pattern, ", ");
+                    for (int index = 0; index < params.length; index++) {
+                        String tokenized_pattern = params[index];
                         this.excludeCrawlingURL.add(new RE(tokenized_pattern));
                     }
                 } catch (RESyntaxException rese) {
@@ -568,7 +568,7 @@ implements CocoonCrawler, Configurable, Disposable, Recyclable {
      * </p>
      *
      * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
-     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.4 2004/03/05 13:02:46 bdelacretaz Exp $
+     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.5 2004/03/28 14:28:04 antonio Exp $
      */
     public static class CocoonCrawlerIterator implements Iterator {
         private SimpleCocoonCrawlerImpl cocoonCrawler;

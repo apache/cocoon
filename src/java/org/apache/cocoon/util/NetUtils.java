@@ -27,13 +27,14 @@ import java.util.Map;
 
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.cocoon.environment.Request;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.9 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version CVS $Id: NetUtils.java,v 1.10 2004/03/28 14:28:04 antonio Exp $
  */
 
 public class NetUtils {
@@ -195,7 +196,6 @@ public class NetUtils {
                 buf.reset();
             }
         }
-
         return rewrittenPath.toString();
     }
 
@@ -256,23 +256,16 @@ public class NetUtils {
      * @return The absolutized resource path
      */
     public static String absolutize(String path, String resource) {
-        if (path == null || path.length() == 0) {
-            // Base path is empty
+        if (StringUtils.isEmpty(path)) {
             return resource;
-        }
-        
-        if (resource == null || resource.length() == 0) {
-            // Resource path is empty
+        } else if (StringUtils.isEmpty(resource)) {
             return path;
-        }
-
-        if (resource.charAt(0) == '/') {
+        } else if (resource.charAt(0) == '/') {
             // Resource path is already absolute
             return resource;
         }
-        
-        int length = path.length() - 1;
-        boolean slash = (path.charAt(length) == '/');
+
+        boolean slash = (path.charAt(path.length() - 1) == '/');
         
         StringBuffer b = new StringBuffer();
         b.append(path);
@@ -291,27 +284,27 @@ public class NetUtils {
      * @return the resource relative to the given path
      */
     public static String relativize(String path, String absoluteResource) {
-        if (path == null || "".equals(path)) {
+        if (StringUtils.isEmpty(path)) {
             return absoluteResource;
         }
-        
+
         if (path.charAt(path.length() - 1) != '/') {
             path += "/";
         }
-        
+
         if (absoluteResource.startsWith(path)) {
             // resource is direct descentant
             return absoluteResource.substring(path.length());
         } else {
             // resource is not direct descendant
-            int index = StringUtils.matchStrings(path, absoluteResource);
+            int index = StringUtils.indexOfDifference(path, absoluteResource);
             if (index > 0 && path.charAt(index-1) != '/') {
                 index = path.substring(0, index).lastIndexOf('/');
                 index++;
             }
             String pathDiff = path.substring(index);
             String resource = absoluteResource.substring(index);
-            int levels = StringUtils.count(pathDiff, '/');
+            int levels = StringUtils.countMatches(pathDiff, "/");
             StringBuffer b = new StringBuffer();
             for (int i = 0; i < levels; i++) {
                 b.append("../");
@@ -328,7 +321,7 @@ public class NetUtils {
      * @return The normalized uri
      */
     public static String normalize(String uri) {
-        String[] dirty = StringUtils.split(uri, "/");
+        String[] dirty = StringUtils.split(uri, '/');
         int length = dirty.length;
         String[] clean = new String[length];
 
@@ -384,8 +377,8 @@ public class NetUtils {
         if (i == -1) {
             return uri;
         }
-        
-        String[] params = StringUtils.split(uri.substring(i + 1), "&");
+
+        String[] params = StringUtils.split(uri.substring(i + 1), '&');
         for (int j = 0; j < params.length; j++) {
             String p = params[j];
             int k = p.indexOf('=');

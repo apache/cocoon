@@ -32,6 +32,7 @@ import java.text.Collator;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log.Hierarchy;
 
 /**
@@ -40,7 +41,7 @@ import org.apache.log.Hierarchy;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: IOUtils.java,v 1.3 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version CVS $Id: IOUtils.java,v 1.4 2004/03/28 14:28:04 antonio Exp $
  */
 public class IOUtils {
 
@@ -227,7 +228,7 @@ public class IOUtils {
           buffer.append('_');
 
         for (int j = 0; j < chars.length; j++) {
-          if (StringUtils.isAlphaNumeric(chars[j])) {
+          if (org.apache.cocoon.util.StringUtils.isAlphaNumeric(chars[j])) {
             buffer.append(chars[j]);
           } else {
             buffer.append('_');
