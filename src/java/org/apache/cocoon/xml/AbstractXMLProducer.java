@@ -26,7 +26,7 @@ import org.xml.sax.ext.LexicalHandler;
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: AbstractXMLProducer.java,v 1.2 2004/03/05 13:03:01 bdelacretaz Exp $
+ * @version CVS $Id: AbstractXMLProducer.java,v 1.3 2004/03/18 18:33:13 joerg Exp $
  */
 public abstract class AbstractXMLProducer
 extends AbstractLogEnabled
@@ -49,8 +49,8 @@ implements XMLProducer, Recyclable {
      */
     public void setConsumer(XMLConsumer consumer) {
         this.xmlConsumer = consumer;
-        this.contentHandler = consumer;
-        this.lexicalHandler = consumer;
+        setContentHandler(consumer);
+        setLexicalHandler(consumer);
     }
 
     /**
@@ -68,10 +68,6 @@ implements XMLProducer, Recyclable {
      * <br>
      * Subclasses may retrieve this <code>LexicalHandler</code> instance
      * accessing the protected <code>super.lexicalHandler</code> field.
-     *
-     * @exception IllegalStateException If the <code>LexicalHandler</code> or
-     *                                  the <code>XMLConsumer</code> were
-     *                                  already set.
      */
     public void setLexicalHandler(LexicalHandler handler) {
         this.lexicalHandler = handler;
