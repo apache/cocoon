@@ -78,8 +78,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
-import org.apache.avalon.excalibur.logger.LogKitManager;
+import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
+import org.apache.avalon.excalibur.logger.LoggerManager;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -89,6 +90,8 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
+import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
@@ -105,13 +108,15 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
+
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
+
 import org.apache.log.ContextMap;
 import org.apache.log.Hierarchy;
-import org.apache.log.Logger;
 import org.apache.log.Priority;
 import org.apache.log.output.ServletOutputLogTarget;
+import org.apache.log.util.DefaultErrorHandler;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -123,7 +128,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.13 2003/08/01 10:28:38 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.14 2003/09/09 19:03:44 joerg Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -137,7 +142,7 @@ public class CocoonServlet extends HttpServlet {
     static final float HOUR   = 60 * MINUTE;
 
     protected Logger log;
-    protected LogKitManager logKitManager;
+    protected LoggerManager loggerManager;
 
     /**
      * The time the cocoon instance was created
@@ -800,9 +805,9 @@ public class CocoonServlet extends HttpServlet {
         servTarget.setFormatter(formatter);
         Hierarchy.getDefaultHierarchy().setDefaultLogTarget(servTarget);
         Hierarchy.getDefaultHierarchy().setDefaultPriority(logPriority);
-        final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor("");
-        final DefaultLogKitManager logKitManager = new DefaultLogKitManager(Hierarchy.getDefaultHierarchy());
-        logKitManager.setLogger(logger);
+        final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
+        final LogKitLoggerManager logKitLoggerManager = new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
+        logKitLoggerManager.enableLogging(logger);
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("servlet-context", this.servletContext);
         if (this.servletContextPath == null) {
@@ -817,8 +822,8 @@ public class CocoonServlet extends HttpServlet {
         }
 
         try {
-            logKitManager.contextualize(subcontext);
-            this.logKitManager = logKitManager;
+            logKitLoggerManager.contextualize(subcontext);
+            this.loggerManager = logKitLoggerManager;
 
             //Configure the logkit management
             String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
@@ -834,15 +839,15 @@ public class CocoonServlet extends HttpServlet {
             }
             final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
             final Configuration conf = builder.build(is);
-            logKitManager.configure(conf);
+            logKitLoggerManager.configure(conf);
         } catch (Exception e) {
-            Hierarchy.getDefaultHierarchy().log("Could not set up Cocoon Logger, will use screen instead", e);
+            new DefaultErrorHandler().error("Could not set up Cocoon Logger, will use screen instead", e, null);
         }
 
         if (accesslogger != null) {
-            this.log = logKitManager.getLogger(accesslogger);
+            this.log = logKitLoggerManager.getLoggerForCategory(accesslogger);
         } else {
-            this.log = logKitManager.getLogger("cocoon");
+            this.log = logKitLoggerManager.getLoggerForCategory("cocoon");
         }
 
     }
@@ -1271,7 +1276,7 @@ public class CocoonServlet extends HttpServlet {
                                   (HttpContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
                                   this.containerEncoding,
                                   formEncoding);
-        env.enableLogging(new LogKitLogger(this.log));
+        env.enableLogging(this.log);
         return env;
     }
 
@@ -1294,7 +1299,7 @@ public class CocoonServlet extends HttpServlet {
                 parentComponentManager = (ComponentManager) pcmc.newInstance(new Object[]{parentComponentManagerInitParam});
 
                 if (parentComponentManager instanceof LogEnabled) {
-                    ((LogEnabled) parentComponentManager).enableLogging(new LogKitLogger(log));
+                    ((LogEnabled) parentComponentManager).enableLogging(this.log);
                 }
                 if (parentComponentManager instanceof Contextualizable) {
                     ((Contextualizable) parentComponentManager).contextualize(this.appContext);
@@ -1339,13 +1344,13 @@ public class CocoonServlet extends HttpServlet {
             Cocoon c = (Cocoon) ClassUtils.newInstance("org.apache.cocoon.Cocoon");
             final String rootlogger = getInitParameter("cocoon-logger");
             if (rootlogger != null) {
-                c.enableLogging(new LogKitLogger(this.logKitManager.getLogger(rootlogger)));
+                c.enableLogging(this.loggerManager.getLoggerForCategory(rootlogger));
             } else {
-                c.enableLogging(new LogKitLogger(log));
+                c.enableLogging(log);
             }
             c.contextualize(this.appContext);
             c.compose(getParentComponentManager());
-            c.setLogKitManager(this.logKitManager);
+            c.setLoggerManager(this.loggerManager);
             if (this.enableInstrumentation) {
                 c.setInstrumentManager(getInstrumentManager());
             }
@@ -1393,12 +1398,12 @@ public class CocoonServlet extends HttpServlet {
         final Configuration conf = builder.build(is);
 
         // Get the logger for the instrument manager
-        Logger imLogger =
-            this.logKitManager.getLogger(conf.getAttribute( "logger", "core.instrument" ));
+        final String imLoggerCategory = conf.getAttribute("logger", "core.instrument");
+        Logger imLogger = this.loggerManager.getLoggerForCategory(imLoggerCategory);
 
         // Set up the Instrument Manager
         DefaultInstrumentManager instrumentManager = new DefaultInstrumentManager();
-        instrumentManager.enableLogging(new LogKitLogger(imLogger));
+        instrumentManager.enableLogging(imLogger);
         instrumentManager.configure(conf);
         instrumentManager.initialize();
 

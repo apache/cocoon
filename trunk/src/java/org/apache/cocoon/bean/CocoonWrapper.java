@@ -50,41 +50,43 @@
 */
 package org.apache.cocoon.bean;
 
-import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.Constants;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
+import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.LogKitLogger;
+import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
-import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
 import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
+import org.apache.cocoon.environment.commandline.LinkSamplingEnvironment;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.NetUtils;
 
-import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
-import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
-import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.logger.LogKitLogger;
-import org.apache.log.Priority;
 import org.apache.log.Hierarchy;
-import org.apache.log.Logger;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.TreeMap;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Arrays;
-import java.util.List;
+import org.apache.log.Priority;
 
 /**
  * The Cocoon Wrapper simplifies usage of the Cocoon object. Allows to create, 
@@ -94,7 +96,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.5 2003/09/04 11:38:44 upayavira Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.6 2003/09/09 19:03:44 joerg Exp $
  */
 public class CocoonWrapper {
 
@@ -145,53 +147,44 @@ public class CocoonWrapper {
                 Constants.CONTEXT_CLASS_LOADER,
                 CocoonWrapper.class.getClassLoader());
             cliContext = new CommandLineContext(contextDir);
-            cliContext.enableLogging(new LogKitLogger(log));
+            cliContext.enableLogging(log);
             appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
-            DefaultLogKitManager logKitManager = null;
-            if (logKit != null) {
+            LogKitLoggerManager logKitLoggerManager =
+                    new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
+            logKitLoggerManager.enableLogging(log);
+
+            if (this.logKit != null) {
                 final FileInputStream fis = new FileInputStream(logKit);
                 final DefaultConfigurationBuilder builder =
                     new DefaultConfigurationBuilder();
                 final Configuration logKitConf = builder.build(fis);
-                logKitManager =
-                    new DefaultLogKitManager(Hierarchy.getDefaultHierarchy());
-                logKitManager.setLogger(log);
-                final DefaultContext subcontext =
-                    new DefaultContext(appContext);
+                final DefaultContext subcontext = new DefaultContext(appContext);
                 subcontext.put("context-root", contextDir);
-                logKitManager.contextualize(subcontext);
-                logKitManager.configure(logKitConf);
+                logKitLoggerManager.contextualize(subcontext);
+                logKitLoggerManager.configure(logKitConf);
                 if (logger != null) {
-                    log = logKitManager.getLogger(logger);
+                    log = logKitLoggerManager.getLoggerForCategory(logger);
                 } else {
-                    log = logKitManager.getLogger("cocoon");
+                    log = logKitLoggerManager.getLoggerForCategory("cocoon");
                 }
-            } else {
-                logKitManager =
-                    new DefaultLogKitManager(Hierarchy.getDefaultHierarchy());
-                logKitManager.setLogger(log);
             }
-            appContext.put(
-                Constants.CONTEXT_CLASSPATH,
-                getClassPath(contextDir));
+
+            appContext.put(Constants.CONTEXT_CLASSPATH, getClassPath(contextDir));
             appContext.put(Constants.CONTEXT_WORK_DIR, work);
-            appContext.put(
-                Constants.CONTEXT_UPLOAD_DIR,
-                contextDir + "upload-dir");
-            File cacheDir =
-                getDir(workDir + File.separator + "cache-dir", "cache");
+            appContext.put(Constants.CONTEXT_UPLOAD_DIR, contextDir + "upload-dir");
+            File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
             appContext.put(Constants.CONTEXT_CACHE_DIR, cacheDir);
             appContext.put(Constants.CONTEXT_CONFIG_URL, conf.toURL());
 
             loadClasses(classList);
 
             cocoon = new Cocoon();
-            ContainerUtil.enableLogging(cocoon, new LogKitLogger(log));
+            ContainerUtil.enableLogging(cocoon, log);
             ContainerUtil.contextualize(cocoon, appContext);
-            cocoon.setLogKitManager(logKitManager);
+            cocoon.setLoggerManager(logKitLoggerManager);
             ContainerUtil.initialize(cocoon);
 
-            } catch (Exception e) {
+        } catch (Exception e) {
             log.fatalError("Exception caught", e);
             throw e;
         }
@@ -338,7 +331,7 @@ public class CocoonWrapper {
     public void setLogLevel(String logLevel) {
         final Priority priority = Priority.getPriorityForName(logLevel);
         Hierarchy.getDefaultHierarchy().setDefaultPriority(priority);
-        CocoonWrapper.log = Hierarchy.getDefaultHierarchy().getLoggerFor("");
+        CocoonWrapper.log = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
     }
 
     /**
@@ -466,8 +459,8 @@ public class CocoonWrapper {
     protected void processXSP(String uri) throws Exception {
         String markupLanguage = "xsp";
         String programmingLanguage = "java";
-        Environment env = new LinkSamplingEnvironment("/", context, attributes, null, cliContext,
-                                                      new LogKitLogger(log));
+        Environment env = new LinkSamplingEnvironment("/", context, attributes,
+                                                      null, cliContext, log);
         cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
     }
 
@@ -480,8 +473,8 @@ public class CocoonWrapper {
     protected void processXMAP(String uri) throws Exception {
         String markupLanguage = "sitemap";
         String programmingLanguage = "java";
-        Environment env = new LinkSamplingEnvironment("/", context, attributes, null, cliContext,
-                                                      new LogKitLogger(log));
+        Environment env = new LinkSamplingEnvironment("/", context, attributes,
+                                                      null, cliContext, log);
         cocoon.precompile(uri, env, markupLanguage, programmingLanguage);
     }
 
@@ -501,13 +494,8 @@ public class CocoonWrapper {
         parameters.put("accept", accept);
 
         LinkSamplingEnvironment env =
-            new LinkSamplingEnvironment(
-                deparameterizedURI,
-                context,
-                attributes,
-                parameters,
-                cliContext,
-                new LogKitLogger(log));
+            new LinkSamplingEnvironment(deparameterizedURI, context, attributes,
+                                        parameters, cliContext, log);
         processLenient(env);
         return env.getLinks();
     }
@@ -535,17 +523,9 @@ public class CocoonWrapper {
         parameters.put("accept", accept);
 
         FileSavingEnvironment env =
-            new FileSavingEnvironment(
-                deparameterizedURI,
-                lastModified,
-                context,
-                attributes,
-                parameters,
-                links,
-                gatheredLinks,
-                cliContext,
-                stream,
-                new LogKitLogger(log));
+            new FileSavingEnvironment(deparameterizedURI, lastModified, context,
+                                      attributes, parameters, links,
+                                      gatheredLinks, cliContext, stream, log);
 
         // Here Cocoon can throw an exception if there are errors in processing the page
         cocoon.process(env);
@@ -583,16 +563,9 @@ public class CocoonWrapper {
         parameters.put("accept", accept);
 
         FileSavingEnvironment env =
-            new FileSavingEnvironment(
-                deparameterizedURI,
-                context,
-                attributes,
-                parameters,
-                empty,
-                null,
-                cliContext,
-                new NullOutputStream(),
-                new LogKitLogger(log));
+            new FileSavingEnvironment(deparameterizedURI, context, attributes,
+                                      parameters, empty, null, cliContext,
+                                      new NullOutputStream(), log);
         processLenient(env);
         return env.getContentType();
     }
@@ -610,7 +583,6 @@ public class CocoonWrapper {
         } catch (ProcessingException pe) {
             return false;
         }
-
         return true;
     }
 
