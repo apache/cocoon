@@ -55,13 +55,12 @@ import java.io.StringReader;
 import java.util.Locale;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
-import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.commons.jxpath.JXPathException;
 import org.xml.sax.Attributes;
@@ -89,8 +88,8 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected Widget contextWidget;
     /** Indicates whether we're currently in a widget element. */
     protected boolean inWidgetElement;
-    /** Compiler used to record the XML inside wi:widget elements. */
-    protected XMLByteStreamCompiler xmlCompiler = new XMLByteStreamCompiler();
+    /** Buffer used to temporarily record SAX events. */
+    protected SaxBuffer saxBuffer;
     /** Counts the element nesting. */
     protected int elementNestingCounter;
     /**
@@ -128,7 +127,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             inWidgetElement = true;
             widgetElementNesting = elementNestingCounter;
             gotStylingElement = false;
-            xmlCompiler.recycle();
+            saxBuffer = new SaxBuffer();
 
             // retrieve widget here, but its XML will only be streamed in the endElement call
             widget = getWidget(attributes);
@@ -140,7 +139,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 Constants.WI_NS.equals(namespaceURI) && STYLING_EL.equals(localName)) {
                 gotStylingElement = true;
             }
-            xmlCompiler.startElement(namespaceURI, localName, qName, attributes);
+            saxBuffer.startElement(namespaceURI, localName, qName, attributes);
         } else if (namespaceURI.equals(Constants.WT_NS)) {
             if (localName.equals("widget-label")) {
                 checkContextWidgetAvailable(qName);
@@ -334,22 +333,18 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             if (repeaterWidget) {
                 Repeater repeater = (Repeater)widget;
                 WidgetReplacingPipe rowPipe = new WidgetReplacingPipe();
-                XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
                 int rowCount = repeater.getSize();
-                Object saxFragment = xmlCompiler.getSAXFragment();
                 for (int i = 0; i < rowCount; i++) {
                     Repeater.RepeaterRow row = repeater.getRow(i);
                     rowPipe.init(row, pipeContext);
                     rowPipe.setContentHandler(contentHandler);
                     rowPipe.setLexicalHandler(lexicalHandler);
-                    interpreter.setConsumer(rowPipe);
-                    interpreter.deserialize(saxFragment);
-                    interpreter.recycle();
+                    saxBuffer.toSAX(rowPipe);
                     rowPipe.recycle();
                 }
             } else {
                 stylingHandler.recycle();
-                stylingHandler.setSaxFragment(xmlCompiler.getSAXFragment());
+                stylingHandler.setSaxFragment(saxBuffer);
                 stylingHandler.setContentHandler(contentHandler);
                 stylingHandler.setLexicalHandler(lexicalHandler);
                 contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
@@ -360,7 +355,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             inWidgetElement = false;
             widget = null;
         } else if (inWidgetElement) {
-            xmlCompiler.endElement(namespaceURI, localName, qName);
+            saxBuffer.endElement(namespaceURI, localName, qName);
         } else if (namespaceURI.equals(Constants.WT_NS) &&
                 (localName.equals("widget-label") || localName.equals("repeater-widget-label")
                 || localName.equals("repeater-size"))) {
@@ -380,7 +375,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void startPrefixMapping(String prefix, String uri)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.startPrefixMapping(prefix, uri);
+            saxBuffer.startPrefixMapping(prefix, uri);
         else
             super.startPrefixMapping(prefix, uri);
     }
@@ -388,7 +383,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void endPrefixMapping(String prefix)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.endPrefixMapping(prefix);
+            saxBuffer.endPrefixMapping(prefix);
         else
             super.endPrefixMapping(prefix);
     }
@@ -396,7 +391,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void characters(char c[], int start, int len)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.characters(c, start, len);
+            saxBuffer.characters(c, start, len);
         else
             super.characters(c, start, len);
     }
@@ -404,7 +399,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void ignorableWhitespace(char c[], int start, int len)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.ignorableWhitespace(c, start, len);
+            saxBuffer.ignorableWhitespace(c, start, len);
         else
             super.ignorableWhitespace(c, start, len);
     }
@@ -412,7 +407,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void processingInstruction(String target, String data)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.processingInstruction(target, data);
+            saxBuffer.processingInstruction(target, data);
         else
             super.processingInstruction(target, data);
     }
@@ -420,7 +415,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void skippedEntity(String name)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.skippedEntity(name);
+            saxBuffer.skippedEntity(name);
         else
             super.skippedEntity(name);
     }
@@ -428,7 +423,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void startEntity(String name)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.startEntity(name);
+            saxBuffer.startEntity(name);
         else
             super.startEntity(name);
     }
@@ -436,7 +431,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void endEntity(String name)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.endEntity(name);
+            saxBuffer.endEntity(name);
         else
             super.endEntity(name);
     }
@@ -444,7 +439,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void startCDATA()
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.startCDATA();
+            saxBuffer.startCDATA();
         else
             super.startCDATA();
     }
@@ -452,7 +447,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void endCDATA()
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.endCDATA();
+            saxBuffer.endCDATA();
         else
             super.endCDATA();
     }
@@ -460,7 +455,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     public void comment(char ch[], int start, int len)
             throws SAXException {
         if (inWidgetElement)
-            xmlCompiler.comment(ch, start, len);
+            saxBuffer.comment(ch, start, len);
         else
             super.comment(ch, start, len);
     }
@@ -471,18 +466,16 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
      */
     public class InsertStylingContentHandler extends AbstractXMLPipe implements Recyclable {
         private int elementNesting = 0;
-        private XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
-        private Object saxFragment;
+        private SaxBuffer saxBuffer;
 
-        public void setSaxFragment(Object saxFragment) {
-            this.saxFragment = saxFragment;
+        public void setSaxFragment(SaxBuffer saxBuffer) {
+            this.saxBuffer = saxBuffer;
         }
 
         public void recycle() {
             super.recycle();
             elementNesting = 0;
-            interpreter.recycle();
-            saxFragment = null;
+            saxBuffer = null;
         }
 
         public void startElement(String uri, String loc, String raw, Attributes a)
@@ -494,16 +487,14 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         public void endElement(String uri, String loc, String raw)
                 throws SAXException {
             elementNesting--;
-            if (elementNesting == 0 && saxFragment != null) {
-                interpreter.setContentHandler(contentHandler);
-                interpreter.setLexicalHandler(lexicalHandler);
+            if (elementNesting == 0 && saxBuffer != null) {
                 if (gotStylingElement) {
                     // Just deserialize
-                    interpreter.deserialize(saxFragment);
+                    saxBuffer.toSAX(contentHandler);
                 } else {
                     // Insert an enclosing <wi:styling>
                     contentHandler.startElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
-                    interpreter.deserialize(saxFragment);
+                    saxBuffer.toSAX(contentHandler);
                     contentHandler.endElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL);
                 } 
             }
