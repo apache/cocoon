@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.7 2004/05/07 20:54:21 mpo Exp $
+    | CVS $Id: form1.xml,v 1.8 2004/06/29 13:06:04 sylvain Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
@@ -281,6 +281,12 @@
         <fd:field id="firstname">
           <fd:label>Firstname</fd:label>
           <fd:datatype base="string"/>
+          <!-- very simple example of creation events (should really find something better) -->
+          <fd:on-create>
+            <fd:javascript>
+              java.lang.System.err.println("Creating a new contact row");
+            </fd:javascript>
+          </fd:on-create>
         </fd:field>
         <fd:field id="lastname">
           <fd:label>Lastname</fd:label>

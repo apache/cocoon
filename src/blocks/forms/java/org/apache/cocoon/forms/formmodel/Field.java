@@ -42,7 +42,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.17 2004/06/01 16:40:48 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.18 2004/06/29 13:06:04 sylvain Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
@@ -55,12 +55,59 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     protected String enteredValue;
     protected Object value;
+    
+    /**
+     * Value state indicating that a new value has been read from the request,
+     * but has not yet been parsed.
+     */
+    protected final static int VALUE_UNPARSED = 0;
+    
+    /**
+     * Value state indicating that a value has been parsed, but needs to be
+     * validated (that must occur before the value is given to the application)
+     */
+    protected final static int VALUE_PARSED = 1;
+    
+    /**
+     * Value state indicating that a parse error was encountered but should not
+     * yet be displayed.
+     */
+    protected final static int VALUE_PARSE_ERROR = 2;
+    
+    /**
+     * Value state indicating that validate() has been called when state was
+     * VALUE_PARSE_ERROR. This makes the error visible on output.
+     */
+    protected final static int VALUE_DISPLAY_PARSE_ERROR = 3;
+    
+    /**
+     * Transient value state indicating that validation is going on.
+     * 
+     * @see #validate()
+     */
+    protected final static int VALUE_VALIDATING = 4;
+    
+    /**
+     * Value state indicating that validation has occured, but that any error should not
+     * yet be displayed.
+     */
+    protected final static int VALUE_VALIDATED = 5;
+    
+    /**
+     * Value state indicating that value validation has occured, and the
+     * validation error, if any, should be displayed.
+     */
+    protected final static int VALUE_DISPLAY_VALIDATION = 6;
+    
+    // At startup, we have no value to parse (both enteredValue and value are null),
+    // but need to validate (e.g. error if field is required)
+    protected int valueState = VALUE_PARSED;
 
-    // At startup, we don't need to parse (both enteredValue and value are null),
-    // but need to validate (error if field is required)
-    protected boolean needsParse = true;
-    protected boolean needsValidate = true;
-    private boolean isValidating;
+    
+    /**
+     * Transient widget processing state indicating that the widget is currently validating
+     * (used to avoid endless loops when a validator calls getValue)
+     */
     protected ValidationError validationError;
 
 
@@ -77,53 +124,22 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     }
 
     public Object getValue() {
-        // Parse the value
-        if (this.needsParse) {
-            // Clear value, it will be recomputed
-            this.value = null;
-            if (this.enteredValue != null) {
-                // Parse the value
-                ConversionResult conversionResult = getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
-                if (conversionResult.isSuccessful()) {
-                    this.value = conversionResult.getResult();
-                    this.needsParse = false;
-                    this.needsValidate = true;
-                } else {        // Conversion failed
-                    this.validationError = conversionResult.getValidationError();
-                    // No need for further validation (and need to keep the above error)
-                    this.needsValidate = false;
-                }
-            } else {
-                this.needsParse = false;
-                this.needsValidate = true;
-            }
-        }
-
         // if getValue() is called on this field while we're validating, then it's because a validation
-        // rule called getValue(), so then we just return the parsed (but not validated) value to avoid an endless loop
-        if (isValidating) {
-            return value;
+        // rule called getValue(), so then we just return the parsed (but not VALUE_VALIDATED) value to avoid an endless loop
+        if (this.valueState == VALUE_VALIDATING) {
+            return this.value;
+        }
+        
+        // Parse the value
+        if (this.valueState == VALUE_UNPARSED) {
+            doParse();
         }
 
-        // Validate the value
-        if (this.needsValidate) {
-            isValidating = true;
-            try {
-                if (super.validate()) {
-                    // New-style validators were successful. Check the old-style ones.
-                    if (this.value != null) {
-                        this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));
-                    } else {        // No value : is it required ?
-                        if (getFieldDefinition().isRequired()) {
-                            this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
-                        }
-                    }
-                }
-                this.needsValidate = false;
-            } finally {
-                isValidating = false;
-            }
+        // Validate the value if it was successfully parsed
+        if (this.valueState == VALUE_PARSED) {
+            doValidate();
         }
+
         return this.validationError == null ? this.value : null;
     }
 
@@ -139,16 +155,15 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         // (null allows to reset validation error)
         if (changed || newValue == null) {
             this.value = newValue;
-            this.needsParse = false;
             this.validationError = null;
             // Force validation, even if set by the application
-            this.needsValidate = true;
+            this.valueState = VALUE_PARSED;
             if (newValue != null) {
                 this.enteredValue = getDatatype().convertToString(newValue, getForm().getLocale());
             } else {
                 this.enteredValue = null;
             }
-            if (changed) {
+            if (changed && hasValueChangedListeners()) {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
         }
@@ -156,7 +171,12 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     public void readFromRequest(FormContext formContext) {
         String newEnteredValue = formContext.getRequest().getParameter(getRequestParameterName());
-        readFromRequest(newEnteredValue);
+        // FIXME: Should we consider only non-null values, which allows to
+        // split a form across several screens?
+        //if (newEnteredValue != null) {
+            readFromRequest(newEnteredValue);
+        //}
+        
     }
 
     protected void readFromRequest(String newEnteredValue) {
@@ -172,22 +192,100 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
-            // TODO: Hmmm...
-            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
             enteredValue = newEnteredValue;
             validationError = null;
             value = null;
-            needsParse = true;
+            this.valueState = VALUE_UNPARSED;
+            
+            if (hasValueChangedListeners()) {
+	        	    // Throw an event that will parse the value only if needed.
+	    	        getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
+    	        }
         }
-
-        // Always revalidate, as validation may depend on the value of other fields
-        this.needsValidate = true;
     }
 
     public boolean validate() {
-        // If needed, getValue() will do the validation
-        getValue();
+        if (this.valueState == VALUE_UNPARSED) {
+            doParse();
+        }
+        
+        // Force validation on already validated values (but keep invalid parsings)
+        if (this.valueState >= VALUE_VALIDATED) {
+            this.valueState = VALUE_PARSED;
+        }
+        
+        if (this.valueState == VALUE_PARSED) {
+            doValidate();
+            this.valueState = VALUE_DISPLAY_VALIDATION;
+        } else if (this.valueState == VALUE_PARSE_ERROR) {
+            this.valueState = VALUE_DISPLAY_PARSE_ERROR;
+        }
+        
         return this.validationError == null;
+    }
+    
+    /**
+     * Parse the value that has been read from the request.
+     * Should be called when valueState is VALUE_UNPARSED.
+     * On exit, valueState is set to either:
+     * - VALUE_PARSED: successful parsing or null value. Value is set and ValidationError
+     *   is cleared.
+     * - VALUE_PARSE_ERROR: datatype parsing error. In that case, value is null and
+     *   validationError is set.
+     */
+    private void doParse() {
+        if (this.valueState != VALUE_UNPARSED) {
+            throw new IllegalStateException("Field is not in UNPARSED state (" + this.valueState + ")");
+        }
+        // Clear value, it will be recomputed
+        this.value = null;
+        this.validationError = null;
+        if (this.enteredValue != null) {
+            // Parse the value
+            ConversionResult conversionResult = getDatatype().convertFromString(this.enteredValue, getForm().getLocale());
+            if (conversionResult.isSuccessful()) {
+                this.value = conversionResult.getResult();
+                this.valueState = VALUE_PARSED;
+            } else {
+                   // Conversion failed
+                this.validationError = conversionResult.getValidationError();
+                // No need for further validation (and need to keep the above error)
+                this.valueState = VALUE_PARSE_ERROR;
+            }
+        } else {
+               // No value: needs to be validated
+               this.valueState = VALUE_PARSED;
+        }
+    }
+    
+    /**
+     * Validate the value once it has been parsed.
+     * Should be called when valueState is VALUE_PARSED.
+     * On exit, valueState is set to VALUE_VALIDATED, and validationError is set if
+     * validation failed.
+     */
+    private void doValidate() {
+        if (this.valueState != VALUE_PARSED) {
+            throw new IllegalStateException("Field is not in PARSED state (" + this.valueState + ")");
+        }
+        
+        // Go to transient validating state
+        this.valueState = VALUE_VALIDATING;
+        
+        try {
+            if (this.value == null && getFieldDefinition().isRequired()) {
+                // Field is required
+                this.validationError = new ValidationError(new I18nMessage("general.field-required", Constants.I18N_CATALOGUE));
+            } else {
+                if (super.validate()) {
+                    // New-style validators were successful. Check the old-style ones.
+                    this.validationError = getDatatype().validate(value, new ExpressionContextImpl(this));                
+                }
+            }
+        } finally {
+            // Consider validation finished even in case of exception
+            this.valueState = VALUE_VALIDATED;
+        }
     }
 
     /**
@@ -195,7 +293,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      * {@link #validate()} method returned false.
      */
     public ValidationError getValidationError() {
-        return validationError;
+        // If needed, getValue() will do the validation
+        getValue();
+        return this.validationError;
     }
 
     /**
@@ -206,6 +306,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
      */
     public void setValidationError(ValidationError error) {
         this.validationError = error;
+        this.valueState = VALUE_DISPLAY_VALIDATION;
     }
 
     public boolean isRequired() {
@@ -248,7 +349,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
         }
 
         // validation message element: only present if the value is not valid
-        if (validationError != null) {
+        if (validationError != null && (this.valueState == VALUE_DISPLAY_VALIDATION || this.valueState == VALUE_DISPLAY_PARSE_ERROR)) {
             contentHandler.startElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL, XMLUtils.EMPTY_ATTRIBUTES);
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
@@ -327,6 +428,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     public void removeValueChangedListener(ValueChangedListener listener) {
         this.listener = WidgetEventMulticaster.remove(this.listener, listener);
+    }
+    
+    private boolean hasValueChangedListeners() {
+        return this.listener != null || this.fieldDefinition.hasValueChangedListeners();
     }
 
     private void fireValueChangedEvent(ValueChangedEvent event) {
