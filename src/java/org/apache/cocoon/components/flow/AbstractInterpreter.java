@@ -67,6 +67,7 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Map;
+
 /**
  * Abstract superclass for various scripting languages used by Cocoon
  * for flow control. Defines some useful behavior like the ability to
@@ -76,152 +77,149 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.3 2003/05/07 04:36:33 coliver Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.4 2003/05/18 16:36:40 vgritsenko Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,
              SingleThreaded, Configurable
 {
-  /**
-   * List of source locations that need to be resolved.
-   */
-  protected ArrayList needResolve = new ArrayList();
+    /**
+     * List of source locations that need to be resolved.
+     */
+    protected ArrayList needResolve = new ArrayList();
 
-  protected org.apache.cocoon.environment.Context context;
-  protected ComponentManager manager;
-  protected ContinuationsManager continuationsMgr;
+    protected org.apache.cocoon.environment.Context context;
+    protected ComponentManager manager;
+    protected ContinuationsManager continuationsMgr;
 
-  /**
-   * Whether reloading of scripts should be done. Specified through
-   * the "reload-scripts" attribute in <code>flow.xmap</code>.
-   */
-  protected boolean reloadScripts;
+    /**
+     * Whether reloading of scripts should be done. Specified through
+     * the "reload-scripts" attribute in <code>flow.xmap</code>.
+     */
+    protected boolean reloadScripts;
 
-  /**
-   * Interval between two checks for modified script files. Specified
-   * through the "check-time" XML attribute in <code>flow.xmap</code>.
-   */
-  protected long checkTime;
+    /**
+     * Interval between two checks for modified script files. Specified
+     * through the "check-time" XML attribute in <code>flow.xmap</code>.
+     */
+    protected long checkTime;
 
-  public void configure(Configuration config)
-    throws ConfigurationException
-  {
-    reloadScripts = config.getChild("reload-scripts").getValueAsBoolean(false);
-    checkTime = config.getChild("check-time").getValueAsLong(1000L);
-  }
-
-  public void compose(ComponentManager manager)
-    throws ComponentException
-  {
-    this.manager = manager;
-
-    // FIXME: Why is the manager null here?
-    if (manager != null)
-      continuationsMgr
-        = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
-  }
-
-  public void contextualize(org.apache.avalon.framework.context.Context context)
-    throws ContextException
-  {
-    this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-  }
-
-  /**
-   * Registers a source file with the interpreter. Using this method
-   * an implementation keeps track of all the script files which are
-   * compiled. This allows them to reload the script files which get
-   * modified on the file system.
-   *
-   * <p>The parsing/compilation of a script file by an interpreter
-   * happens in two phases. In the first phase the file's location is
-   * registered in the <code>needResolve</code> array.
-   *
-   * <p>The second is possible only when a Cocoon
-   * <code>Environment</code> is passed to the Interpreter. This
-   * allows the file location to be resolved using Cocoon's
-   * <code>SourceFactory</code> class.
-   *
-   * <p>Once a file's location can be resolved, it is removed from the
-   * <code>needResolve</code> array and placed in the
-   * <code>scripts</code> hash table. The key in this hash table is
-   * the file location string, and the value is a
-   * DelayedRefreshSourceWrapper instance which keeps track of when
-   * the file needs to re-read.
-   *
-   * @param source the location of the script
-   *
-   * @see org.apache.cocoon.components.source.SourceFactory
-   * @see org.apache.cocoon.environment.Environment
-   * @see org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper
-   */
-  public void register(String source)
-  {
-    synchronized(this) {
-      needResolve.add(source);
-    }
-  }
-
-  /**
-   * Call the Cocoon sitemap for the given URI, sending the output of the
-   * eventually matched pipeline to the specified outputstream.
-   *
-   * @param uri The URI for which the request should be generated.
-   * @param biz Extra data associated with the subrequest.
-   * @param out An OutputStream where the output should be written to.
-   * @param env The environment of the original request.
-   * @return Whatever the Cocoon processor returns (????).
-   * @exception Exception If an error occurs.
-   */
-  public boolean process(String uri, Object biz, OutputStream out, Environment env)
-  throws Exception {
-    if (out == null) {
-        throw new NullPointerException("No outputstream specified for process");
+    public void configure(Configuration config) throws ConfigurationException {
+        reloadScripts = config.getChild("reload-scripts").getValueAsBoolean(false);
+        checkTime = config.getChild("check-time").getValueAsLong(1000L);
     }
 
-    // Create a wrapper environment for the subrequest to be processed.
-    EnvironmentWrapper wrapper = new EnvironmentWrapper(env, uri, "", getLogger());
-    wrapper.setURI("",uri);
-    wrapper.setOutputStream(out);
-    wrapper.setAttribute("bean-dict", biz);
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
 
-    // Attermpt to start processing the wrapper environment
-    Object key = CocoonComponentManager.startProcessing(wrapper);
-
-    Processor processor = null;
-    boolean result = false;
-    try {
-        // Retrieve a processor instance
-        processor = (Processor)this.manager.lookup(Processor.ROLE);
-
-        // Enter the environment
-        CocoonComponentManager.enterEnvironment(wrapper, this.manager, processor);
-
-        // Process the subrequest
-        result = processor.process(wrapper);
-        wrapper.commitResponse();
-        out.flush();
-
-        // Return whatever the processor returned us
-        return(result);
-    } catch (Exception any) {
-        throw(any);
-    } finally {
-        // Leave the environment, terminate processing and release processor
-        CocoonComponentManager.leaveEnvironment();
-        CocoonComponentManager.endProcessing(wrapper, key);
-        this.manager.release(processor);
+        // FIXME: Why is the manager null here?
+        if (manager != null) {
+            continuationsMgr
+                    = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
+        }
     }
-  }
 
-  public void forwardTo(String uri, Object bizData,
-                        WebContinuation continuation,
-                        Environment environment)
-    throws Exception
-  {
-    Map objectModel = environment.getObjectModel();
-    Flow.setContextObject(objectModel, bizData);
-    Flow.setWebContinuation(objectModel, continuation);
-    PipelinesNode.getRedirector(environment).redirect(false, uri);
-  }
+    public void contextualize(org.apache.avalon.framework.context.Context context)
+            throws ContextException
+    {
+        this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+    }
+
+    /**
+     * Registers a source file with the interpreter. Using this method
+     * an implementation keeps track of all the script files which are
+     * compiled. This allows them to reload the script files which get
+     * modified on the file system.
+     *
+     * <p>The parsing/compilation of a script file by an interpreter
+     * happens in two phases. In the first phase the file's location is
+     * registered in the <code>needResolve</code> array.
+     *
+     * <p>The second is possible only when a Cocoon
+     * <code>Environment</code> is passed to the Interpreter. This
+     * allows the file location to be resolved using Cocoon's
+     * <code>SourceFactory</code> class.
+     *
+     * <p>Once a file's location can be resolved, it is removed from the
+     * <code>needResolve</code> array and placed in the
+     * <code>scripts</code> hash table. The key in this hash table is
+     * the file location string, and the value is a
+     * DelayedRefreshSourceWrapper instance which keeps track of when
+     * the file needs to re-read.
+     *
+     * @param source the location of the script
+     *
+     * @see org.apache.cocoon.components.source.SourceFactory
+     * @see org.apache.cocoon.environment.Environment
+     * @see org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper
+     */
+    public void register(String source)
+    {
+        synchronized(this) {
+            needResolve.add(source);
+        }
+    }
+
+    /**
+     * Call the Cocoon sitemap for the given URI, sending the output of the
+     * eventually matched pipeline to the specified outputstream.
+     *
+     * @param uri The URI for which the request should be generated.
+     * @param biz Extra data associated with the subrequest.
+     * @param out An OutputStream where the output should be written to.
+     * @param env The environment of the original request.
+     * @return Whatever the Cocoon processor returns (????).
+     * @exception Exception If an error occurs.
+     */
+    public boolean process(String uri, Object biz, OutputStream out, Environment env)
+            throws Exception {
+        if (out == null) {
+            throw new NullPointerException("No outputstream specified for process");
+        }
+
+        // Create a wrapper environment for the subrequest to be processed.
+        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, uri, "", getLogger());
+        wrapper.setURI("",uri);
+        wrapper.setOutputStream(out);
+        wrapper.setAttribute("bean-dict", biz);
+
+        // Attermpt to start processing the wrapper environment
+        Object key = CocoonComponentManager.startProcessing(wrapper);
+
+        Processor processor = null;
+        boolean result = false;
+        try {
+            // Retrieve a processor instance
+            processor = (Processor)this.manager.lookup(Processor.ROLE);
+
+            // Enter the environment
+            CocoonComponentManager.enterEnvironment(wrapper, this.manager, processor);
+
+            // Process the subrequest
+            result = processor.process(wrapper);
+            wrapper.commitResponse();
+            out.flush();
+
+            // Return whatever the processor returned us
+            return(result);
+        } catch (Exception any) {
+            throw(any);
+        } finally {
+            // Leave the environment, terminate processing and release processor
+            CocoonComponentManager.leaveEnvironment();
+            CocoonComponentManager.endProcessing(wrapper, key);
+            this.manager.release(processor);
+        }
+    }
+
+    public void forwardTo(String uri, Object bizData,
+                          WebContinuation continuation,
+                          Environment environment)
+            throws Exception
+    {
+        Map objectModel = environment.getObjectModel();
+        FlowHelper.setContextObject(objectModel, bizData);
+        FlowHelper.setWebContinuation(objectModel, continuation);
+        PipelinesNode.getRedirector(environment).redirect(false, uri);
+    }
 }

@@ -62,7 +62,7 @@ import javax.xml.transform.sax.SAXResult;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.jxdom.DocumentAdapter;
 import org.apache.cocoon.environment.Context;
@@ -80,17 +80,22 @@ import org.xml.sax.SAXException;
 /**
  * <p>XSLT Generator: works by taking a Java Bean as an input "document"</p>
  */
-
 public class TraxGenerator extends TraxTransformer implements Generator {
-    
+
+    //
+    // VG: Caching aspect: DocumentAdapter will have to dynamically generate
+    // cache validity depending on what resources had been used during
+    // generation phase. Another option is to leave it uncacheable.
+    //
+
     DocumentAdapter doc;
 
     public void setup(SourceResolver resolver, Map objectModel,
                       String src, Parameters parameters)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, parameters);
-        Object bean = Flow.getContextObject(objectModel);
-        WebContinuation kont = Flow.getWebContinuation(objectModel);
+        Object bean = FlowHelper.getContextObject(objectModel);
+        WebContinuation kont = FlowHelper.getWebContinuation(objectModel);
         Map map = new HashMap();
         Request request = ObjectModelHelper.getRequest(objectModel);
         Response response = ObjectModelHelper.getResponse(objectModel);
@@ -169,5 +174,4 @@ public class TraxGenerator extends TraxTransformer implements Generator {
         super.recycle();
         doc = null;
     }
-
 }

@@ -66,7 +66,7 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.JavaScriptFlow;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -1947,8 +1947,8 @@ public class JXTemplateGenerator extends ComposerGenerator {
                 }
             }
         }
-        Object bean = Flow.getContextObject(objectModel);
-        WebContinuation kont = Flow.getWebContinuation(objectModel);
+        Object bean = FlowHelper.getContextObject(objectModel);
+        WebContinuation kont = FlowHelper.getWebContinuation(objectModel);
         setContexts(bean, kont,
                     ObjectModelHelper.getRequest(objectModel),
                     ObjectModelHelper.getResponse(objectModel),
@@ -2025,7 +2025,8 @@ public class JXTemplateGenerator extends ComposerGenerator {
         if (contextObject != null) {
             map.put("flowContext", contextObject);
             map.put("continuation", kont);
-            // Here I use Rhino's live-connect objects to allow Jexl to call 
+            // FIXME (VG): Is this required (what it's used for - examples)?
+            // Here I use Rhino's live-connect objects to allow Jexl to call
             // java constructors
             Object javaPkg = JavaScriptFlow.getJavaPackage(objectModel);
             Object pkgs = JavaScriptFlow.getPackages(objectModel);

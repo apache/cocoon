@@ -57,7 +57,7 @@ import java.util.Map;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.Flow;
+import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.jxpath.JXPathContext;
@@ -88,7 +88,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: JPathTransformer.java,v 1.3 2003/05/07 11:27:59 cziegeler Exp $
+ * @version CVS $Id: JPathTransformer.java,v 1.4 2003/05/18 16:36:41 vgritsenko Exp $
  */
 public class JPathTransformer
 extends AbstractSAXTransformer implements Initializable {
@@ -160,8 +160,8 @@ extends AbstractSAXTransformer implements Initializable {
         super.setup(resolver, objectModel, src, parameters);
 
         // setup the jpath transformer for this thread
-        Object bean = Flow.getContextObject(objectModel);
-        m_kont = Flow.getWebContinuation(objectModel);
+        Object bean = FlowHelper.getContextObject(objectModel);
+        m_kont = FlowHelper.getWebContinuation(objectModel);
         m_jxpathContext = JXPathContext.newContext(bean);
     }
 
