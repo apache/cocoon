@@ -47,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.11 $ $Date: 2004/05/03 13:07:26 $
+ * @version CVS $Revision: 1.12 $ $Date: 2004/05/03 14:23:56 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -299,6 +299,33 @@ public final class SitemapTask extends AbstractQdoxTask {
             
             // generate the doc
             component.generateDocs(template, docFile, this.getProject());
+            
+            // generate the index
+            final File indexFile = new File(componentsDir, "book.xml");
+            final Document indexDoc = DocumentCache.getDocument(indexFile, this);
+            final String section;
+            if ( this.blockName == null ) {
+                section = "Core";
+            } else {
+                section = this.blockName + " Block";
+            }
+            Node sectionNode = XPathAPI.selectSingleNode(indexDoc, "/book/menu[@label='"+section+"']");
+            if ( sectionNode == null ) {
+                sectionNode = indexDoc.createElement("menu");
+                ((Element)sectionNode).setAttribute("label", section);
+                indexDoc.getDocumentElement().appendChild(sectionNode);
+            }
+            final String htmlName = docFile.getName().substring(0, docFile.getName().length()-3) + "html";
+            Node oldEntry = XPathAPI.selectSingleNode(sectionNode, "menu-item[@href='"+htmlName+"']");
+            Node newEntry = indexDoc.createElement("menu-item");
+            ((Element)newEntry).setAttribute("href", htmlName);
+            ((Element)newEntry).setAttribute("label", component.getName() + " " + component.getType());
+            if ( oldEntry != null ) {
+                oldEntry.getParentNode().replaceChild(newEntry, oldEntry);
+            } else {
+                sectionNode.appendChild(newEntry);
+            }
+            DocumentCache.writeDocument(indexFile, indexDoc, this);
         }
         
     }
@@ -530,7 +557,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             this.merge(body, docFile);
             
             // finally write the doc
-            DocumentCache.writeDocument(docFile, template, null);            
+            DocumentCache.writeDocument(docFile, template, SitemapTask.this);            
         }
         
         /**
@@ -541,7 +568,7 @@ public final class SitemapTask extends AbstractQdoxTask {
         private void merge(Node body, File docFile) throws TransformerException {            
             final Document mergeDocument;
             try {
-                mergeDocument = DocumentCache.getDocument(docFile, null);
+                mergeDocument = DocumentCache.getDocument(docFile, SitemapTask.this);
             } catch (Exception ignore) {
                 return;
             }
