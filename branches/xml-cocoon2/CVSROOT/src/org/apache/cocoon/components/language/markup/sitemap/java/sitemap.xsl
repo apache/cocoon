@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.67 $ $Date: 2000-12-05 22:03:29 $
+     * @version CVS $Revision: 1.1.2.68 $ $Date: 2000-12-07 13:53:35 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -116,7 +116,7 @@
                 <xsl:with-param name="suffix"><xsl:value-of select="$type"/>_<xsl:value-of select="generate-id(.)"/></xsl:with-param>
               </xsl:call-template>
             </xsl:variable>
-            /** The generated matcher for a pattern of "<xsl:value-of select="@pattern"/>" */
+            // The generated matcher for a pattern of "<xsl:value-of select="@pattern"/>" 
             <xsl:value-of select="java:getClassSource($factory-loader,string($src),string($matcher-name),string(@pattern),$config)"/>
           </xsl:for-each>
         </xsl:if>
