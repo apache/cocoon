@@ -121,10 +121,6 @@
     </xmlvalidate>
 -->
 
-<!--    <echo message="Validating all documentation stylesheets using RELAX NG ..."/>
-    <jing rngfile="${webapp}/WEB-INF/entities/xslt-20020523.rng">
-      <fileset dir="${build.context}/stylesheets" includes="**/*.xsl"/>
-    </jing>-->
   </target>
 
   <target name="validate-sitemaps" depends="init-tasks"
@@ -144,6 +140,15 @@ Blocks sitemaps are deliberately excluded.
 <!--
       <fileset dir="${docs}" includes="**/drafts/sitemap-working-draft.xmap"/>
 -->
+    </jing>
+  </target>
+
+  <target name="validate-stylesheets" depends="init-tasks"
+          description="Standalone target to validate all stylesheets">
+    <echo message="Validating all XSLT stylesheets using RELAX NG ..."/>
+    <jing rngfile="${webapp}/WEB-INF/entities/xslt-20020523.rng">
+      <fileset dir="${src}" includes="**/*.xsl*"
+        excludes="webapp/samples/catalog/*.xsl"/>
     </jing>
   </target>
 </project>
