@@ -40,7 +40,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.20 $ $Date: 2000-09-22 12:19:36 $
+ * @version CVS $Revision: 1.1.4.21 $ $Date: 2000-09-22 20:27:36 $
  */
  
 public class CocoonServlet extends HttpServlet {
@@ -51,7 +51,7 @@ public class CocoonServlet extends HttpServlet {
     private Exception exception;
     private ServletContext context;
     private String classpath;
-    private File workpath;
+    private String workDir;
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.
@@ -79,7 +79,7 @@ public class CocoonServlet extends HttpServlet {
             this.classpath = (String) context.getAttribute(Cocoon.TOMCAT_SERVLET_CLASSPATH);
         }
 
-        this.workpath = (File) this.context.getAttribute("javax.servlet.context.tempdir");
+        this.workDir = ((File) this.context.getAttribute("javax.servlet.context.tempdir")).toString();
         
         String configFileName = conf.getInitParameter("configurations");
         if (configFileName == null) {
@@ -286,7 +286,7 @@ public class CocoonServlet extends HttpServlet {
         try {
             this.context.log("Reloading from: " + this.configFile);
 
-            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workpath);
+            Cocoon c = new Cocoon(this.configFile, this.classpath, this.workDir);
 
             this.creationTime = System.currentTimeMillis();
 

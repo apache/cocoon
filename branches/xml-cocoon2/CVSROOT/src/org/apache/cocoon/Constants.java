@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-22 12:21:04 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-22 20:27:23 $
  */
 
 public interface Constants {
@@ -47,5 +47,8 @@ public interface Constants {
 
     public static final String CATALINA_SERVLET_CLASSPATH = "org.apache.catalina.jsp_classpath";
     public static final String TOMCAT_SERVLET_CLASSPATH = "org.apache.tomcat.jsp_classpath";
+
+    public final static String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/" + CONF_VERSION + "/error";
+    public final static String ERROR_NAMESPACE_PREFIX = "error";
 
 }

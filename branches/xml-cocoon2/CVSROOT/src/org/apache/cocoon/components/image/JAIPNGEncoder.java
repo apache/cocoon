@@ -35,7 +35,7 @@ public class JAIPNGEncoder implements ImageEncoder, Configurable {
 		interlaced = p.getParameterAsBoolean("interlaced", true);
 		alpha = p.getParameterAsBoolean("alpha", true);
 		// TODO: colour depth
-        System.err.println("Interlaced set to " + interlaced);
+        //System.err.println("Interlaced set to " + interlaced);
     }
 
     public String getMimeType() {

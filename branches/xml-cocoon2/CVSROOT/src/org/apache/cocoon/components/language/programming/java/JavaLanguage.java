@@ -5,10 +5,11 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.components.language.programming.java;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,10 +28,10 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-19 00:27:17 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-22 20:27:31 $
  */
 public class JavaLanguage extends CompiledProgrammingLanguage {
-    
+
   /** The class loader */
   ClassLoaderManager classLoaderManager;
 
@@ -105,7 +106,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
     throws LanguageException
   {
     try {
-      this.classLoaderManager.addDirectory(baseDirectory); 
+      this.classLoaderManager.addDirectory(baseDirectory);
       return
         this.classLoaderManager.loadClass(name.replace(File.separatorChar, '.'));
     } catch (Exception e) {
@@ -127,7 +128,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
   ) throws LanguageException {
 
     try {
-      
+
       AbstractJavaCompiler compiler = (AbstractJavaCompiler) this.compilerClass.newInstance();
 
       int pos = name.lastIndexOf(File.separatorChar);
@@ -135,25 +136,32 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
       String pathname =
         baseDirectory + File.separator +
         name.substring(0, pos).replace(File.separatorChar, '/');
-    
+
       compiler.setFile(
         pathname + File.separator +
         filename + "." + this.getSourceExtension()
       );
-    
+
       compiler.setSource(pathname);
-    
+
       compiler.setDestination(baseDirectory);
-    
-      compiler.setClasspath(classpath + File.pathSeparator + baseDirectory);
-      
+
+      String systemClasspath = System.getProperty("java.class.path");
+      String systemExtDirs = System.getProperty("java.ext.dirs");
+      compiler.setClasspath(
+        baseDirectory +
+        ((classpath != null) ? File.pathSeparator + classpath : "") +
+        ((systemClasspath != null) ? File.pathSeparator + systemClasspath : "") +
+        ((systemExtDirs != null) ? File.pathSeparator + expandDirs(systemExtDirs) : "")
+      );
+
       if (encoding != null) {
         compiler.setEncoding(encoding);
       }
 
       if (!compiler.compile()) {
         StringBuffer message = new StringBuffer("Error compiling " + filename + ":\n");
-        
+
         List errors = compiler.getErrors();
         int count = errors.size();
         for (int i = 0; i < count; i++) {
@@ -162,7 +170,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
             + ", column " + error.getStartColumn()
             + ": " + error.getMessage());
         }
-        
+
         throw new LanguageException(message.toString());
       }
 
@@ -171,7 +179,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
     } catch (IllegalAccessException e) {
       throw new LanguageException("Could not access the compiler class: " + e.getMessage());
     } catch (IOException e) {
-      throw new LanguageException("Error during compilation: " + e.getMessage());   
+      throw new LanguageException("Error during compilation: " + e.getMessage());
     }
   }
 
@@ -235,5 +243,22 @@ public class JavaLanguage extends CompiledProgrammingLanguage {
     }
 
     return buffer.toString();
+  }
+  
+  private String expandDirs(String d) {
+    File dir = new File(d);
+    File[] files = dir.listFiles(new JavaArchivesFilter());
+    StringBuffer buffer = new StringBuffer();
+    for (int i = 0; i < files.length; i++) {
+        buffer.append(files[i] + File.pathSeparator);
+    }
+    return buffer.toString();
+  }
+  
+  class JavaArchivesFilter implements FileFilter {
+    public boolean accept(File file) {
+        String name = file.getName();
+        return (name.endsWith(".jar") || name.endsWith("zip"));
+    }
   }
 }

@@ -49,11 +49,14 @@ import org.xml.sax.SAXException;
  * The default implementation of <code>ProgramGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-09-19 00:26:26 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-09-22 20:27:29 $
  */
 public class ProgramGeneratorImpl
   implements ProgramGenerator, Composer, Configurable
 {
+  /** The auto-reloading option */
+  protected boolean autoReload = true;
+
   /** The in-memory store */
   protected MemoryStore cache = new MemoryStore();
 
@@ -63,11 +66,8 @@ public class ProgramGeneratorImpl
   /** The named component manager */
   protected NamedComponentManager factory;
 
-  /** The filesystem-based store */
-  protected String repositoryName = null;
-
-  /** The auto-reloading option */
-  protected boolean autoReload = true;
+  /** The working directory */
+  protected String workDir;
 
   /**
    * Set the global component manager. This method also sets the
@@ -79,6 +79,7 @@ public class ProgramGeneratorImpl
   public void setComponentManager(ComponentManager manager) {
     this.manager = manager;
     this.factory = (NamedComponentManager) this.manager.getComponent("factory");
+    this.workDir = ((Cocoon) this.manager.getComponent("cocoon")).getWorkDir();
   }
 
   /**
@@ -92,10 +93,6 @@ public class ProgramGeneratorImpl
     throws ConfigurationException
   {
     Parameters params = Parameters.fromConfiguration(conf);
-
-    if (this.repositoryName == null) {
-        this.repositoryName = System.getProperty(Cocoon.TEMPDIR_PROPERTY, Cocoon.DEFAULT_TEMP_DIR);
-    }
     this.autoReload = params.getParameterAsBoolean("auto-reload", autoReload);
   }
 
@@ -131,7 +128,7 @@ public class ProgramGeneratorImpl
     }
     
     // Create filesystem store
-    FilesystemStore repository = new FilesystemStore(this.repositoryName);
+    FilesystemStore repository = new FilesystemStore(this.workDir);
 
     // Set filenames
     String filename = IOUtils.getFullFilename(file);
@@ -153,7 +150,7 @@ public class ProgramGeneratorImpl
              recompilation under certain circumstances!
           */
           program = programmingLanguage.load(
-            normalizedName, this.repositoryName, null
+            normalizedName, this.workDir, null
           );
   
           // Store loaded program in cache
@@ -177,7 +174,7 @@ public class ProgramGeneratorImpl
       {
         // Unload program
         programmingLanguage.unload(
-          program, normalizedName, this.repositoryName
+          program, normalizedName, this.workDir
         );
   
         // Invalidate previous program/instance pair
@@ -214,7 +211,7 @@ public class ProgramGeneratorImpl
   
         // [Compile]/Load generated program
         program = programmingLanguage.load(
-          normalizedName, this.repositoryName, encoding
+          normalizedName, this.workDir, encoding
         );
 
         // Store generated program in cache

@@ -36,7 +36,7 @@ public class PNGEncoder implements ImageEncoder, Configurable {
 		Parameters p = Parameters.fromConfiguration(conf);
 		compression = p.getParameterAsInteger("compression", 7);
 		alpha = p.getParameterAsBoolean("alpha", true);
-		System.err.println("PNG Encoder[compression: " + compression + ", alpha: " + alpha + "]");
+		//System.err.println("PNG Encoder[compression: " + compression + ", alpha: " + alpha + "]");
     }
 
     public String getMimeType() {

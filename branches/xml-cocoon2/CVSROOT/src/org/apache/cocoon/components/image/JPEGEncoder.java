@@ -35,7 +35,7 @@ public class JPEGEncoder implements ImageEncoder, Configurable {
 		Parameters p = Parameters.fromConfiguration(conf);
 		quality = p.getParameterAsFloat("quality", 0.75f);
 		baseline = p.getParameterAsBoolean("baseline", true);
-		System.err.println("JPEG Encoder[quality: " + quality + ", baseline: " + baseline + "]");
+		//System.err.println("JPEG Encoder[quality: " + quality + ", baseline: " + baseline + "]");
     }
 
     public String getMimeType() {

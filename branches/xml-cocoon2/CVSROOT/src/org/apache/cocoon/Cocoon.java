@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.27 $ $Date: 2000-09-22 12:21:03 $
+ * @version CVS $Revision: 1.4.2.28 $ $Date: 2000-09-22 20:27:23 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -71,7 +71,7 @@ public class Cocoon
     private String classpath;
 
     /** The working directory (null if not available) */
-    private File workDir;
+    private String workDir;
             
     /**
      * Create a new <code>Cocoon</code> instance.
@@ -91,7 +91,7 @@ public class Cocoon
      * Create a new <code>Cocoon</code> object, parsing configuration from
      * the specified file.
      */
-    public Cocoon(File configurationFile, String classpath, File workDir)
+    public Cocoon(File configurationFile, String classpath, String workDir)
     throws SAXException, IOException, ConfigurationException {
         this();
 
@@ -135,7 +135,7 @@ public class Cocoon
      * Get the local workpath
      * @return the workpath available to this instance or null if not available.
      */
-    public File getWorkDir() {
+    public String getWorkDir() {
         return this.workDir;
     }
 

@@ -32,7 +32,7 @@ public class JAIJPEGEncoder implements ImageEncoder, Configurable {
 		// Using the passed Configuration, generate a far more friendly Parameters object.
 		Parameters p = Parameters.fromConfiguration(conf);
 		quality = p.getParameterAsFloat("quality", 0.75f);
-		System.err.println("Quality set to " + quality);
+		//System.err.println("Quality set to " + quality);
     }
 
     public String getMimeType() {
