@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.99 2003/09/25 05:15:00 antonio Exp $
+    | CVS $Id: jars.xml,v 1.100 2003/09/25 05:35:03 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -437,9 +437,8 @@
   <file>
     <title>Create proprietary file formats</title>
     <description>
-      The POI project consists of APIs for manipulating
-      various file formats based upon Microsoft's OLE 2 Compound Document
-      format using pure Java.
+      The POI project consists of APIs for manipulating various file formats
+      based upon Microsoft's OLE 2 Compound Document format using pure Java.
     </description>
     <used-by>MS Excel serializer (poi block)</used-by>
     <lib>poi/lib/jakarta-poi-1.10.0-dev-20030222.jar</lib>
@@ -451,7 +450,7 @@
     <description>Jena is a java API for manipulating RDF models.</description>
     <used-by>DELI (deli block)</used-by>
     <lib>deli/lib/jena-1.4.0.jar</lib>
-    <homepage>http://www.hpl.hp.com/semweb/jena-top.html</homepage>
+    <homepage>http://www.hpl.hp.com/semweb/jena.htm</homepage>
   </file>
 
   <file>
