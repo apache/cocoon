@@ -43,13 +43,13 @@
 
   <group name="ImageReader - Color Scaling">
     <sample href="image-color-scale-2-1-1" name="Image tinted red.">
-      The values for the color red are duplicated.
+      The values for the color red are doubled.
     </sample>
     <sample href="image-color-scale-1-2-1" name="Image tinted green.">
-      The values for the color green are duplicated.
+      The values for the color green are doubled.
     </sample>
     <sample href="image-color-scale-1-1-2" name="Image tinted blue.">
-      The values for the color blue are duplicated.
+      The values for the color blue are doubled.
     </sample>
   </group>
 
