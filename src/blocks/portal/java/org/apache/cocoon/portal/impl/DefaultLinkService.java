@@ -53,7 +53,6 @@ package org.apache.cocoon.portal.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
@@ -65,6 +64,7 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.event.ComparableEvent;
 import org.apache.cocoon.portal.event.Event;
@@ -77,7 +77,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.4 2003/05/28 13:47:30 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.5 2003/06/01 19:30:36 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -98,11 +98,23 @@ public class DefaultLinkService
     // FIXME - comparable events are not completly implemented yet
     
     protected Info getInfo() {
-        final Map objectModel = ContextHelper.getObjectModel(this.context);
-        Info info = (Info)objectModel.get(DefaultLinkService.class.getName());
+        // TODO - add portal name to allow several portals at the same time
+        final Request request = ContextHelper.getRequest( this.context );
+        Info info = (Info)request.getAttribute(DefaultLinkService.class.getName());
         if ( info == null ) {
-            info = new Info();
-            objectModel.put(DefaultLinkService.class.getName(), info);
+            synchronized ( this ) {
+                info = (Info)request.getAttribute(DefaultLinkService.class.getName());
+                if ( info == null ) {
+                    info = new Info();
+                    request.setAttribute(DefaultLinkService.class.getName(), info);
+                    String baseURI = request.getSitemapURI();
+                    final int pos = baseURI.lastIndexOf('/');
+                    if ( pos != -1 ) {
+                        baseURI = baseURI.substring(pos+1);
+                    }
+                    info.linkBase.append(baseURI);
+                }
+            }
         }
         return info;
     }
