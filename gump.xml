@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!-- module name will change into "cocoon" -->
-<module name="xml-cocoon2">
+<module name="cocoon-2.1">
 
   <url href="http://cocoon.apache.org/"/>
   <description>Java XML Framework</description>
 
   <!-- repository name will change into "cocoon" -->
-  <cvs repository="xml"/>
+  <cvs repository="cocoon"/>
 
   <!--
     *******************************
