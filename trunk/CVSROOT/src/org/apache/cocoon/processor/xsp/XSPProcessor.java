@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.37 2001-01-10 21:25:12 greenrd Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.38 2001-01-18 23:06:40 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.37 $ $Date: 2001-01-10 21:25:12 $
+ * @version $Revision: 1.38 $ $Date: 2001-01-18 23:06:40 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status, Cacheable
@@ -677,8 +677,7 @@ public class XSPProcessor extends AbstractActor
     // Get page from Cocoon store
     PageEntry pageEntry = getPageEntry (request);
 
-    // New page?
-    if (pageEntry == null) return true;
+    if (pageEntry == null) return false;
 
     // NOT pageEntry.isCacheable ()! We are calling the isCacheable method
     // of the XSP page itself.
