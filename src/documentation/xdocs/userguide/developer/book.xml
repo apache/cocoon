@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide - Developer" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../intro.html"/>
+  </menu>
+
+  <menu label="4. Developer Basics">
+
+    <menu-item label="4.1 Intro" href="preface.html"/>
+    <menu-item label="4.2 Avalon" href="avalon/preface.html"/>
+    <menu-item label="4.3 Internals" href="httprequest.html"/>
+    <menu-item label="4.4 Extending" href="extending.html"/>
+    <menu-item label="4.5 Using Databases" href="datasources.html"/>
+    <menu-item label="4.6 DELI Quick Start" href="deliquick.html"/>
+    <menu-item label="4.7 DELI" href="deli.html"/>
+    <menu-item label="4.8 Connect to SAP R/3" href="web3.html"/>
+  </menu>
+  
+</book>

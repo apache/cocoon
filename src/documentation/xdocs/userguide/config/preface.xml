@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Apache Cocoon User Guide</title>
+    <subtitle>User Basics</subtitle>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Configuration">
+      <p>Cocoon it assembled of several components. Each components has
+       a specific function. You can tweak and configure each of these
+       components to get more out of Cocoon.</p>
+       <p>This chapter explains some basic configuration possibilities.</p>
+    </s1>
+
+  </body>
+</document>

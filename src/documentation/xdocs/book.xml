@@ -18,6 +18,7 @@
     <menu-item label="Introduction" href="introduction.html"/>
     <menu-item label="Installing" href="installing/index.html"/>
     <menu-item label="Overview" href="overview.html"/>
+    <menu-item label="Manual" href="userguide/intro.html"/>
     <menu-item label="User Guide" href="userdocs/index.html"/>
     <menu-item label="Dev Guide" href="developing/index.html"/>
     <menu-item label="Tutorials" href="tutorial/index.html"/>

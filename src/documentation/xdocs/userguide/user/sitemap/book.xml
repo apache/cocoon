@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "../dtd/book-cocoon-v10.dtd">
+<book software="Apache Cocoon" 
+      title="Apache Cocoon User Guide" 
+      copyright="@year@ The Apache Software Foundation">
+
+  <menu label="User Basics">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="1. Basics" href="../preface.html"/>
+  </menu>
+  
+  <menu label="1.3 The Sitemap">
+    <menu-item label="1.3.1 Intro" href="preface.html"/>
+    <menu-item label="1.3.2 Sitemap" href="sitemap.html"/>
+    <menu-item label="1.3.3 Examples" href="sitemap-examples.html"/>
+  </menu>
+  
+</book>
