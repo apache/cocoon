@@ -13,10 +13,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-var a, b, op;
-
 function calculator()
 {
+  var a, b, op;
+
   a = getNumber("a");
   b = getNumber("b", a);
   op = getOperator(a, b);
