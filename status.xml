@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.121 2003/08/14 13:20:35 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.122 2003/08/15 05:47:41 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -116,7 +116,7 @@
     </action>
 
     <action context="code" assigned-to="SW">
-      For 2.1: Views must start not from the first encountered label, but from the last one
+      For 2.2: Views must start not from the first encountered label, but from the last one
       (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172&amp;w=2)
     </action>
 
