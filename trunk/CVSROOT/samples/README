@@ -18,6 +18,7 @@ how to XML-ize your web-serving environment.
       - xsp ................... examples to show XML compiled server pages
       - ldap .................. how to XML-ize your LDAP data
       - vrml .................. how to use Cocoon to generate VRML
+      - rss ................... how to use RSS information in your site
       - fromServlet ........... how to call Cocoon from another servlet
 
 

@@ -30,6 +30,14 @@
   </sample>
  </group>
 
+ <group name="Cross-site information">
+  <sample name="RSS Example" url="rss/publishing-rss.xml">
+   This page shows the use of Netscape RSS format for site description. This
+   creates a simple way for one site to have headlines for news or items on
+   other sites.
+  </sample>
+ </group>
+
  <group name="Dynamic content Generation">
   <sample name="First XSP Page" url="xsp/page.xml?message=Hello%20World!">
    This page shows the power of XSP technology with Java logic. In this page
