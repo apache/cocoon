@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-   <xsl:output method="xml" version="1.0" indent="yes" />
+   <xsl:output method="xml" indent="yes" />
 
    <xsl:template match="/">
       <project default="compile" basedir="." name="blocks">
@@ -73,7 +73,7 @@
       
       <target name="{@name}-compile" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-compile</xsl:for-each></xsl:attribute>
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-compile</xsl:for-each></xsl:attribute>
          </xsl:if>
 
          <!-- Test if this block has special build -->
@@ -95,7 +95,7 @@
 
       <target name="{@name}-patch" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:attribute>
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-patch</xsl:for-each></xsl:attribute>
          </xsl:if>
 
          <antcall target="{$block-name}-patches"/>
@@ -103,7 +103,7 @@
       
       <target name="{@name}-roles" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
          </xsl:if>
 
          <antcall target="{$block-name}-roles"/>
@@ -111,7 +111,7 @@
            
       <target name="{@name}-samples" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-samples</xsl:for-each></xsl:attribute>
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-samples</xsl:for-each></xsl:attribute>
          </xsl:if>
 
          <!-- Test if this block has samples -->
@@ -122,7 +122,7 @@
       
       <target name="{@name}-lib" unless="unless.exclude.block.{$block-name}">
          <xsl:if test="depend">
-            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[not(@version or contains(@project,'cocoon'))]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-lib</xsl:for-each></xsl:attribute>
+            <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-lib</xsl:for-each></xsl:attribute>
          </xsl:if>
 
          <!-- Test if this block has libraries -->
