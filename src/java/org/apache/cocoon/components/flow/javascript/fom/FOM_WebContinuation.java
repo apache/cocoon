@@ -65,10 +65,9 @@ import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
 
-
 /**
  *
- * @version CVS $Id: FOM_WebContinuation.java,v 1.4 2004/01/28 05:46:21 coliver Exp $
+ * @version CVS $Id: FOM_WebContinuation.java,v 1.5 2004/01/28 15:33:21 vgritsenko Exp $
  */
 public class FOM_WebContinuation extends ScriptableObject {
 
@@ -97,7 +96,7 @@ public class FOM_WebContinuation extends ScriptableObject {
     }
 
     // new FOM_WebContinuation([Continuation] continuation,
-    //                         [FOM_WebContinuation] parent, 
+    //                         [FOM_WebContinuation] parent,
     //                         [Number] timeToLive)
     public static Object jsConstructor(Context cx, Object[] args,
                                        Function ctorObj,
@@ -114,7 +113,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         }
         int timeToLive = 0;
         if (args.length > 2) {
-            timeToLive = 
+            timeToLive =
                 (int)org.mozilla.javascript.Context.toNumber(args[2]);
         }
         WebContinuation wk;
@@ -145,7 +144,7 @@ public class FOM_WebContinuation extends ScriptableObject {
     public Continuation jsGet_continuation() {
         return (Continuation)wk.getContinuation();
     }
-    
+
     public FOM_WebContinuation jsFunction_getParent() {
         WebContinuation parent = wk.getParentContinuation();
         if (parent == null) return null;
@@ -155,7 +154,7 @@ public class FOM_WebContinuation extends ScriptableObject {
                                            pwk.getClassName()));
         return pwk;
     }
-    
+
     public NativeArray jsFunction_getChildren() throws Exception {
         List list = wk.getChildren();
         NativeArray arr =
@@ -250,7 +249,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         if (c == null) return null;
         FOM_WebContinuation pwk = new FOM_WebContinuation(c);
         pwk.setParentScope(getParentScope());
-        pwk.setPrototype(getClassPrototype(getParentScope(), 
+        pwk.setPrototype(getClassPrototype(getParentScope(),
                                            pwk.getClassName()));
         return pwk;
 
