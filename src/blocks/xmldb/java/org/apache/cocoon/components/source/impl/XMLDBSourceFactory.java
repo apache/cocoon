@@ -48,7 +48,12 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source;
+package org.apache.cocoon.components.source.impl;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -56,23 +61,16 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Source;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceFactory;
 
 /**
  * This class implements the xmldb:// pseudo-protocol and allows to get XML
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.1 2003/03/09 00:06:48 pier Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.1 2003/03/12 09:35:38 cziegeler Exp $
  */
 
 public final class XMLDBSourceFactory
@@ -126,12 +124,8 @@ public final class XMLDBSourceFactory
         this.m_manager = cm;
     }
 
-    /**
-     * Resolve the source
-     */
-    public Source getSource(Environment environment, String location)
-            throws ProcessingException, IOException, MalformedURLException {
-
+    public Source getSource(String location, Map parameters)
+    throws MalformedURLException, IOException {
         int start = location.indexOf(':') + 1;
         int end = location.indexOf(':', start);
 
@@ -146,19 +140,20 @@ public final class XMLDBSourceFactory
         credential = (SourceCredential)credentialMap.get(type);
 
         if (driver == null) {
-            throw new ProcessingException("Unable to find a driver for the \"" +
+            throw new IOException("Unable to find a driver for the \"" +
                                           type + " \" database type, please check the configuration");
         }
 
-        return new XMLDBSource(environment, m_manager, this.getLogger(),
-                               driver, credential, location);
+        return new XMLDBSource(this.getLogger(),
+                               driver, credential, location, location.substring(0, start-1), 
+                               this.m_manager);
     }
 
-    /**
-     * Resolve the source
-     */
-    public Source getSource(Environment environment, URL base, String location)
-            throws ProcessingException, IOException, MalformedURLException {
-        return getSource(environment, base.toExternalForm() + location);
+    public void release(org.apache.excalibur.source.Source source) {
+        // nothing to do here
+        if (null != source ) {
+            ((XMLDBSource)source).recycle();
+        }
     }
+
 }

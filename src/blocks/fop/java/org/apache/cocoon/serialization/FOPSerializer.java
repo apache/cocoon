@@ -60,10 +60,10 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.renderer.ExtendableRendererFactory;
 import org.apache.cocoon.components.renderer.RendererFactory;
-import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.environment.URLFactorySourceResolver;
-import org.apache.cocoon.environment.Source;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.fop.apps.Driver;
@@ -80,7 +80,7 @@ import java.net.MalformedURLException;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.1 2003/03/09 00:03:50 pier Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.2 2003/03/12 09:35:36 cziegeler Exp $
  */
 public class FOPSerializer
 extends AbstractSerializer
@@ -180,25 +180,24 @@ implements Composable, Configurable, CacheableProcessingComponent {
             // New syntax: Element user-config contains URL
             configUrl = conf.getChild("user-config").getValue(null);
         }
-        if(configUrl != null) {
-            URLFactory urlFactory = null;
+        
+        if (configUrl != null) {
             Source configSource = null;
+            SourceResolver resolver = null;
             try {
-                // FIXME: How to do without URLFactory but relative to context?
-                urlFactory = (URLFactory)manager.lookup(URLFactory.ROLE);
-                URLFactorySourceResolver urlResolver = new URLFactorySourceResolver(urlFactory, manager);
-                configSource = urlResolver.resolve(configUrl);
+                resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+                configSource = resolver.resolveURI(configUrl);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Loading configuration from " + configSource.getSystemId());
+                    getLogger().debug("Loading configuration from " + configSource.getURI());
                 }
-                configSource.toSAX(new ConfigurationParser());
+                SourceUtil.toSAX(configSource, new ConfigurationParser());
             } catch (Exception e) {
                 getLogger().warn("Cannot load configuration from " + configUrl);
                 throw new ConfigurationException("Cannot load configuration from " + configUrl, e);
             } finally {
-                manager.release(urlFactory);
-                if (configSource != null) {
-                    configSource.recycle();
+                if ( null != resolver ) {
+                    resolver.release(configSource);
+                    manager.release(resolver);
                 }
             }
         }

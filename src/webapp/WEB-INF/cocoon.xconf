@@ -278,7 +278,7 @@
       |
       |     <parameter name="verbosity" value="2"/>
       +-->
-  <entity-resolver class="org.apache.cocoon.components.resolver.ResolverImpl" logger="core.resolver">
+  <entity-resolver logger="core.resolver">
    <parameter name="catalog" value="/WEB-INF/entities/catalog"/>
    <parameter name="verbosity" value="1"/>
   </entity-resolver>

@@ -78,9 +78,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.URLFactorySourceResolver;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.PostInputStream;
 import org.apache.cocoon.xml.XMLUtils;
@@ -99,7 +97,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.1 2003/03/09 00:04:01 pier Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.2 2003/03/12 09:35:38 cziegeler Exp $
  */
 public class HTMLGenerator extends ComposerGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -133,14 +131,13 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         String configUrl = config.getChild("jtidy-config").getValue(null);
 
         if(configUrl != null) {
-            URLFactory urlFactory = null;
-            org.apache.cocoon.environment.Source configSource = null;
+            org.apache.excalibur.source.SourceResolver resolver = null;
+            Source configSource = null;
             try {
-                urlFactory = (URLFactory)this.manager.lookup(URLFactory.ROLE);
-                URLFactorySourceResolver urlResolver = new URLFactorySourceResolver(urlFactory, this.manager);
-                configSource = urlResolver.resolve(configUrl);
+                resolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
+                configSource = resolver.resolveURI(configUrl);
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Loading configuration from " + configSource.getSystemId());
+                    getLogger().debug("Loading configuration from " + configSource.getURI());
                 }
                 
                 this.properties = new Properties();
@@ -150,9 +147,9 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 getLogger().warn("Cannot load configuration from " + configUrl);
                 throw new ConfigurationException("Cannot load configuration from " + configUrl, e);
             } finally {
-                this.manager.release(urlFactory);
-                if (configSource != null) {
-                    configSource.recycle();
+                if ( null != resolver ) {
+                    this.manager.release(resolver);
+                    resolver.release(configSource);
                 }
             }
         }
