@@ -19,7 +19,12 @@ import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ExtendedSitemapComponentTestCase;
 import org.apache.cocoon.el.GenericExpressionCompiler;
-import org.apache.cocoon.template.tag.samples.DuplicateTag;
+import org.apache.cocoon.template.v2.script.Script;
+import org.apache.cocoon.template.v2.script.ScriptCompiler;
+import org.apache.cocoon.template.v2.script.ScriptContext;
+import org.apache.cocoon.template.v2.script.ScriptInvoker;
+import org.apache.cocoon.template.v2.script.TagRepository;
+import org.apache.cocoon.template.v2.tag.samples.DuplicateTag;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 

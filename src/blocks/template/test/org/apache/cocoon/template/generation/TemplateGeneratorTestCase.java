@@ -18,7 +18,8 @@ package org.apache.cocoon.template.generation;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ExtendedSitemapComponentTestCase;
-import org.apache.cocoon.template.tag.samples.DuplicateTag;
+import org.apache.cocoon.template.v2.generation.TemplateGenerator;
+import org.apache.cocoon.template.v2.tag.samples.DuplicateTag;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 
 public class TemplateGeneratorTestCase extends ExtendedSitemapComponentTestCase {
