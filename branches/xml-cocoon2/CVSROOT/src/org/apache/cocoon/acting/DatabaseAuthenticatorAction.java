@@ -1,4 +1,4 @@
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.5 2001-04-20 20:49:44 bloritsch Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.6 2001-04-24 17:32:55 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
@@ -51,9 +51,14 @@ import java.sql.SQLException;
  * Additionally all parameters that are
  * propagated to the session are made available to the sitemap via {name}
  * expression.
+ * 
+ * If there is no need to touch the session object, providing just one-time
+ * verification, you can specify action parameter "create-session" to "no" or
+ * "false". No values are then propagated to the sesion and session object is
+ * not verified.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-20 20:49:44 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-24 17:32:55 $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
 {
@@ -68,17 +73,27 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
         try {
             Configuration conf = this.getConfiguration (
                     parameters.getParameter ("descriptor", null));
+            boolean cs = true;
+            String create_session = parameters.getParameter ("create-session", null);
+            if (create_session != null && 
+                    ("no".equals (create_session.trim ()) || "false".equals (create_session.trim ()))) {
+                cs = false;
+            }
+
             datasource = this.getDataSource(conf);
             conn = datasource.getConnection();
             Request req = (Request) objectModel.get(Constants.REQUEST_OBJECT);
 
             /* check request validity */
-            if (req == null)
+            if (req == null) {
+                getLogger ().debug ("DBAUTH: no request object");
                 return null;
+            }
 
 
             String query = this.getAuthQuery (conf, req);
             if (query == null) {
+                getLogger ().debug ("DBAUTH: have not got query");
                 return null;
             }
 
@@ -88,12 +103,18 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                 ResultSet rs = st.executeQuery (query);
                 if (rs.next ()) {
                     getLogger ().debug ("DBAUTH: authorized successfully");
-                    Session session = req.getSession (false);
-                    if (session != null)
-                        session.invalidate ();
-                    session = req.getSession (true);
-                    if (session == null)
-                        return null;
+                    Session session = null;
+                    if (cs) {
+                        session = req.getSession (false);
+                        if (session != null)
+                            session.invalidate ();
+                        session = req.getSession (true);
+                        if (session == null)
+                            return null;
+                        getLogger ().debug ("DBAUTH: session created");
+                    } else {
+                        getLogger ().debug ("DBAUTH: leaving session untouched");
+                    }
                     HashMap actionMap = this.propagateParameters (conf, rs,
                             session);
                     rs.close ();
@@ -139,6 +160,8 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                 request_value = req.getParameter (
                         request_param);
                 if (request_value == null || request_value.trim().equals ("")) {
+                    getLogger ().debug ("DBAUTH: request-param " 
+                            + request_param + " does not exist");
                     return null;
                 }
                 if (!first_constraint)
@@ -152,6 +175,7 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                 queryBuffer.append (" WHERE ").append (queryBufferEnd);
             return queryBuffer.toString ();
         } catch (Exception e) {
+            getLogger ().debug ("DBAUTH: got exception: " + e);
             return null;
         }
     }
@@ -170,8 +194,6 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                     if (session_param != null &&
                             !session_param.trim().equals ("")) {
                         String s = rs.getString (i + 1);
-                        getLogger ().debug ("DBAUTH: propagating param "
-                                + session_param + "=" + s);
                         /* propagate to session */
                         try {
                             type = select[i].getAttribute ("type");
@@ -191,7 +213,11 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
                             Double d = Double.valueOf (s);
                             o = d;
                         }
-                        session.setAttribute (session_param, o);
+                        if (session != null) {
+                            session.setAttribute (session_param, o);
+                            getLogger ().debug ("DBAUTH: propagating param "
+                                    + session_param + "=" + s);
+                        }
                         map.put (session_param, o);
                     }
                 } catch (Exception e) {
@@ -205,5 +231,5 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 }
 
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.5 2001-04-20 20:49:44 bloritsch Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.6 2001-04-24 17:32:55 dims Exp $
 // vim: set et ts=4 sw=4:

@@ -1,4 +1,4 @@
-// $Id: SessionInvalidatorAction.java,v 1.1.2.4 2001-04-20 20:49:45 bloritsch Exp $
+// $Id: SessionInvalidatorAction.java,v 1.1.2.5 2001-04-24 17:32:59 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
@@ -23,7 +23,7 @@ import org.apache.cocoon.environment.Session;
  * empty map if everything is ok, null otherwise.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-20 20:49:45 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-24 17:32:59 $
  */
 public class SessionInvalidatorAction extends AbstractAction
 {
@@ -37,17 +37,23 @@ public class SessionInvalidatorAction extends AbstractAction
         HashMap actionMap = new HashMap ();
 
         /* check request validity */
-        if (req == null)
+        if (req == null) {
+            getLogger ().debug ("SESSIONINVALIDATOR: no request object");
             return null;
+        }
 
         /* check session validity */
         Session session = req.getSession (false);
-        if (session != null)
+        if (session != null) {
             session.invalidate ();
+            getLogger ().debug ("SESSIONINVALIDATOR: session invalidated");
+        } else {
+            getLogger ().debug ("SESSIONINVALIDATOR: no session object");
+        }
 
         return Collections.unmodifiableMap (actionMap);
     }
 }
 
-// $Id: SessionInvalidatorAction.java,v 1.1.2.4 2001-04-20 20:49:45 bloritsch Exp $
+// $Id: SessionInvalidatorAction.java,v 1.1.2.5 2001-04-24 17:32:59 dims Exp $
 // vim: set et ts=4 sw=4:

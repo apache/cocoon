@@ -1,4 +1,4 @@
-// $Id: FormValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.4 2001-04-24 17:32:57 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
@@ -35,7 +35,7 @@ import org.apache.cocoon.environment.Request;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-20 20:49:44 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-24 17:32:57 $
  */
 public class FormValidatorAction extends AbstractValidatorAction
 {
@@ -48,8 +48,10 @@ public class FormValidatorAction extends AbstractValidatorAction
             objectModel.get (Constants.REQUEST_OBJECT);
 
         /* check request validity */
-        if (req == null)
+        if (req == null) {
+            getLogger ().debug ("FORMVALIDATOR: no request object");
             return null;
+        }
 
         try {
             Configuration conf = this.getConfiguration (
@@ -83,5 +85,5 @@ public class FormValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: FormValidatorAction.java,v 1.1.2.3 2001-04-20 20:49:44 bloritsch Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.4 2001-04-24 17:32:57 dims Exp $
 // vim: set et ts=4 sw=4:
