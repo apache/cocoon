@@ -69,36 +69,12 @@ public class Invoker {
                     char[] chars;
                     if (subst instanceof Literal) {
                         chars = ((Literal)subst).getCharArray();
+			consumer.characters(chars, 0, chars.length);
                     } else {
                         JXTExpression expr = (JXTExpression) subst;
                         try {
                             Object val = expr.getNode(expressionContext);
-                            if (val instanceof Node) {
-                                executeDOM(consumer, (Node) val);
-                                continue;
-                            } else if (val instanceof NodeList) {
-                                NodeList nodeList = (NodeList) val;
-                                int len = nodeList.getLength();
-                                for (int i = 0; i < len; i++) {
-                                    Node n = nodeList.item(i);
-                                    executeDOM(consumer, n);
-                                }
-                                continue;
-                            } else if (val instanceof Node[]) {
-                                Node[] nodeList = (Node[]) val;
-                                int len = nodeList.length;
-                                for (int i = 0; i < len; i++) {
-                                    Node n = nodeList[i];
-                                    executeDOM(consumer, n);
-                                }
-                                continue;
-                            } else if (val instanceof XMLizable) {
-                                ((XMLizable) val).toSAX(new IncludeXMLConsumer(
-                                        consumer));
-                                continue;
-                            }
-                            chars = val != null ? val.toString().toCharArray()
-                                    : ArrayUtils.EMPTY_CHAR_ARRAY;
+			    executeNode(consumer, val);
                         } catch (Exception e) {
                             throw new SAXParseException(e.getMessage(),
                                                         ev.getLocation(), e);
@@ -108,7 +84,6 @@ public class Invoker {
                                                         new ErrorHolder(err));
                         }
                     }
-                    consumer.characters(chars, 0, chars.length);
                 }
             } else if (ev instanceof EndDocument) {
                 consumer.endDocument();
@@ -335,6 +310,35 @@ public class Invoker {
             }
             handler.characters(chars, 0, chars.length);
         }
+    }
+
+    public static void executeNode(final XMLConsumer consumer, Object val)
+	throws SAXException {
+
+	if (val instanceof Node) {
+	    executeDOM(consumer, (Node) val);
+	} else if (val instanceof NodeList) {
+	    NodeList nodeList = (NodeList) val;
+	    int len = nodeList.getLength();
+	    for (int i = 0; i < len; i++) {
+		Node n = nodeList.item(i);
+		executeDOM(consumer, n);
+	    }
+	} else if (val instanceof Node[]) {
+	    Node[] nodeList = (Node[]) val;
+	    int len = nodeList.length;
+	    for (int i = 0; i < len; i++) {
+		Node n = nodeList[i];
+		executeDOM(consumer, n);
+	    }
+	} else if (val instanceof XMLizable) {
+	    ((XMLizable) val).toSAX(new IncludeXMLConsumer(consumer));
+	} else {
+	    char[] ch =
+		val == null ? ArrayUtils.EMPTY_CHAR_ARRAY
+		: val.toString().toCharArray();
+	    consumer.characters(ch, 0, ch.length);
+	}
     }
 
     /**
