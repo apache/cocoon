@@ -11,14 +11,20 @@ import org.apache.cocoon.framework.Configurable;
 import org.apache.cocoon.framework.ConfigurationException;
 
 /**
+ * The <code>ProducerFactory</code> interface must be implemented by all those
+ * factories creating instances of <code>Producer</code> objects.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:40 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 01:11:14 $
+ * @since Cocoon 2.0
  */
 public interface ProducerFactory extends Configurable {
+    /**
+     * Return a non configured instance of a <code>Producer</code>.
+     */
     public Producer getProducer()
     throws ConfigurationException;
 }
