@@ -52,10 +52,10 @@ cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 /** 
  * Disclaimer: 
  *   To make this flowscript quite generic we've applied some typical javascript 
- *   hacks here and there. Don't let them overwhelm you, the prupose of this tutorial
- *   is _not_ to get into the depths of woody and flowscript. In stead you should 
+ *   hacks here and there. Don't let them overwhelm you, the purpose of this tutorial
+ *   is _not_ to get into the depths of woody and flowscript. Instead you should 
  *   focus on the effects of the applied definitions in the binding files:
- *   see ../forms/bindings/*-bind.xml.  And how to shape you backend-models:
+ *   see ../forms/bindings/*-bind.xml.  And how to shape your backend-models:
  *    - for JS see here: createJSBeanfor*() functions
  *    - for Java see the org.apache.cocoon.woody.samples.bindings.* classes
  *    - for XML see ../forms/bindings/*-data.xml.
@@ -83,7 +83,7 @@ cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody2.js");
 /**
  *  Generic entry-function for all binding samples.  This uses the 
  *   'sample-code' and the 'backend-type' to effectively select the form 
- *   and specific back-end-model to use.
+ *   and specific backend-model to use.
  */
 function bindingSample(sampleCode, backendType) {
 	// sample-code holds the number-and-name of this binding sample in the tutorial
