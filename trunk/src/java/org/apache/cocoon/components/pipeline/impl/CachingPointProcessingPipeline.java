@@ -78,7 +78,7 @@ import java.util.ListIterator;
  *
  * @since 2.1
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.1 2003/03/09 00:09:08 pier Exp $
+ * @version CVS $Id: CachingPointProcessingPipeline.java,v 1.2 2003/03/13 05:58:28 jefft Exp $
  */
 public class CachingPointProcessingPipeline
     extends AbstractCachingProcessingPipeline implements Configurable {
@@ -205,7 +205,7 @@ public class CachingPointProcessingPipeline
     }
 
     /**
-     * Cache longest cachable path plus cache points.
+     * Cache longest cacheable path plus cache points.
      */
     protected void cacheResults(Environment environment, OutputStream os)  throws Exception {
 
@@ -332,8 +332,8 @@ public class CachingPointProcessingPipeline
                         }
 
 
-                // Serializer is not cachable,
-            // but we  have the longest cachable key. Do default longest key caching
+                // Serializer is not cacheable,
+            // but we  have the longest cacheable key. Do default longest key caching
                         if (localXMLSerializer != null) {
                             if (cacheableTransformerCount == 0) {
                                 next = new XMLTeePipe(next, localXMLSerializer);
@@ -351,7 +351,7 @@ public class CachingPointProcessingPipeline
                     next = super.lastConsumer;
 
 
-            // if the serializer is not cachable, but all the transformers are:
+            // if the serializer is not cacheable, but all the transformers are:
             // (this is default longest key caching)
                     if (localXMLSerializer != null) {
                         next = new XMLTeePipe(next, localXMLSerializer);
@@ -359,7 +359,7 @@ public class CachingPointProcessingPipeline
                         localXMLSerializer = null;
                     }
 
-            // else if the serializer is cachable and has cocoon views
+            // else if the serializer is cacheable and has cocoon views
                     else if ((currentTransformerIndex == this.firstNotCacheableTransformerIndex) &&
                             this.nextIsCachePoint) {
                         cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));
@@ -395,8 +395,8 @@ public class CachingPointProcessingPipeline
                                 }
                             }
 
-                    // Serializer is not cachable,
-                // but we  have the longest cachable key. Do default longest key caching
+                    // Serializer is not cacheable,
+                // but we  have the longest cacheable key. Do default longest key caching
                             if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)
                                     && cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
                                 next = new XMLTeePipe(next, localXMLSerializer);
@@ -410,14 +410,14 @@ public class CachingPointProcessingPipeline
                     }
                     next = super.lastConsumer;
 
-            //*all* the transformers are cachable, but the serializer is not!! this is longest key
+            //*all* the transformers are cacheable, but the serializer is not!! this is longest key
                     if (localXMLSerializer != null && !(prev instanceof XMLDeserializer)) {
                         next = new XMLTeePipe(next, localXMLSerializer);
                         this.xmlSerializerArray.add(localXMLSerializer);
                         localXMLSerializer = null;
 
             }
-            //	else the serializer is cachable but has views
+            //	else the serializer is cacheable but has views
             else if (this.nextIsCachePoint && !(prev instanceof XMLDeserializer) &&
                             cacheableTransformerCount == this.firstNotCacheableTransformerIndex) {
                         cachePointXMLSerializer = ((XMLSerializer)this.manager.lookup( XMLSerializer.ROLE ));

@@ -237,7 +237,7 @@
       |   The non caching implementation of cocoon pipelines.
       | 
       | CACHING:
-      |   Traditional longest cachable key caching.
+      |   Traditional longest cacheable key caching.
       | 
       | CACHING-POINT:
       |   The caching-point pipeline implements an extended             
@@ -247,7 +247,7 @@
       | 
       | The autoCachingPoint algorithim (if enabled) will automatically
       | cache common elements of the pipeline currently being processed - as well
-      | as the entire cachable pipeline according to the "longest cachable key"
+      | as the entire cacheable pipeline according to the "longest cacheable key"
       | algorithm.
       | 
       | Consider the following simple pipeline, where generator G is labelled with
@@ -257,7 +257,7 @@
       | |__ T -  S(pdf)
       | 
       | If cocoon-view=html, then the caching-point algorithm will not only cache 
-      | the longest cachable path, which would be GTS(html) but also the
+      | the longest cacheable path, which would be GTS(html) but also the
       | *common element* which in this case would be the results from G. If the
       | next request to this pipeline was cocoon-view=pdf, then there would be no
       | need to invoke the generator a second time, as it's value has already been
