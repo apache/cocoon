@@ -106,7 +106,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2, 2002
- * @version CVS $Id: WebServiceProxyGenerator.java,v 1.4 2003/09/25 19:59:24 tony Exp $
+ * @version CVS $Id: WebServiceProxyGenerator.java,v 1.5 2003/12/15 07:47:42 tony Exp $
  */
 public class WebServiceProxyGenerator extends ServiceableGenerator {
 
@@ -228,7 +228,14 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
             String submitQryString = method.getQueryString();
 
             // set final web service query string
-            method.setQueryString(urlQryString + "&" + submitQryString);
+            
+            // sometimes the querystring is null here...
+            if (null == urlQryString) {
+            	method.setQueryString(submitQryString);
+            } else {
+				method.setQueryString(urlQryString + "&" + submitQryString);	
+            }
+            
         } // if there are submit parameters
 
         byte[] response = null;
@@ -280,6 +287,12 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
                 config = new HostConfiguration();
             }
             
+            
+            /* TODO: fixme!
+             * When the specified source sent to the wsproxy is not "http" 
+             * (e.g. "cocoon:/"), the HttpClient throws an exception.  Does the source
+             * here need to be resolved before being set in the HostConfiguration?
+             */
             try {
                 uri = new URI(this.source);
                 host = uri.getHost();
