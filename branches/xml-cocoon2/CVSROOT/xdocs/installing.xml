@@ -21,13 +21,13 @@
 
   <ul>
    <li><strong>Java Virtual Machine</strong>
-    A Java 1.1 or greater compatible virtual machine must be present for both
+    A Java 1.2 or later compatible virtual machine must be present for both
     command line and servlet type usage of Cocoon. Note that all servlet engines
     require a JVM to run so if you are already using servlets you already have
     one installed.
    </li>
    <li><strong>Servlet Engine</strong>
-    A Servlet 2.x compliant servlet engine  must be present in order to support
+    A Servlet 2.2 compliant servlet engine  must be present in order to support
     servlet operation and dynamic request handling. Note that this requirement
     is optional for command line operation.
    </li>
