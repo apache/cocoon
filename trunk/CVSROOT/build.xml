@@ -118,13 +118,13 @@ Here is a list of such modules and what you have to download to build them:
 
  org.apache.cocoon.processor.dcp.DCPProcessor ===>
        FESI 1.21+ (http://home.worldcom.ch/jmlugrin/fesi/download.html)
-       
+
 2) The "docs" target doesn't work. What's wrong?
 
 You are probably using a Java 1.1.x environment. Since Stylebook renders also
 the page images from the XML documents, it needs extended image rendering
 and graphic capabilities that were included in Java 1.2. For this reason,
-a Java 1.2 compatible JVM is required for this target.       
+a Java 1.2 compatible JVM is required for this target.
 
 ============================================================================ -->
 
@@ -137,7 +137,7 @@ a Java 1.2 compatible JVM is required for this target.
     <tstamp/>
     <property name="Name" value="Cocoon"/>
     <property name="name" value="cocoon"/>
-    <property name="version" value="1.6.2"/>
+    <property name="version" value="1.7-dev"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
@@ -174,7 +174,7 @@ a Java 1.2 compatible JVM is required for this target.
     <available property="xt.present" class="com.jclark.xsl.sax.XSLProcessor"/>
     <available property="fesi.present" class="FESI.jslib.JSGlobalObject"/>
     <available property="jndi.present" class="javax.naming.Name"/>
-    
+
     <filter token="year" value="${year}"/>
     <filter token="version" value="${version}"/>
   </target>

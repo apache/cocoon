@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.28 2000-02-13 18:29:12 stefano Exp $
+  $Id: changes.xml,v 1.29 2000-02-14 01:03:23 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -15,6 +15,9 @@
   </devs>
 
  <release version="1.7-dev" date="Not yet released">
+  <action dev="SM" type="fix">
+    Patched memory usage and tested under heavy load.
+  </action>
   <action dev="SM" type="fix">
     Fixed installation instructions to make it easier for newbies to get
     going. Anyway, if you still find it hard, help us instead of complaining :)
@@ -28,7 +31,7 @@
     Added library with all the required jar files for ease of installation.
   </action>
   <action dev="SM" type="remove">
-    Leave DCP out in configurations by default. Now DCP is considered obsolete 
+    Leave DCP out in configurations by default. Now DCP is considered obsolete
     and will be removed in future versions.
   </action>
   <action dev="SM" type="remove">
@@ -41,7 +44,7 @@
     Added infrastructure document.
   </action>
   <action dev="SM" type="fix">
-    Fixed problem with xml parser performing validation but nobody catching the 
+    Fixed problem with xml parser performing validation but nobody catching the
     validation errors triggered. Now if validation is turned on, an invalid
     document throws an exception at parse time.
   </action>
