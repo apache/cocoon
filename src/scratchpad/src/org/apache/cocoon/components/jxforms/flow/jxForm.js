@@ -22,6 +22,7 @@ function JXForm(id, validatorNS, validatorDoc, scope) {
     this.validatorNS = validatorNS;
     this.validatorDoc = validatorDoc;
     this.submitId = undefined;
+    this.rootContinuation = null;
     this.dead = false;
 }
 
@@ -49,7 +50,7 @@ JXForm.prototype.getSubmitId = function() {
  */
 JXForm.prototype.setModel = function(model) {
     this.form = 
-       new Packages.org.apache.cocoon.components.xmlform.Form(this.id, 
+       new Packages.org.apache.cocoon.components.jxforms.xmlform.Form(this.id, 
                                                                model);
     this.context = JXForm.jxpathContextFactory.newContext(null, model);
     this.form.setAutoValidate(false);
@@ -85,6 +86,9 @@ JXForm.prototype._start = function(lastWebCont, timeToLive) {
     var k = new Continuation();
     var kont = new WebContinuation(this.cocoon, k, 
                                    lastWebCont, timeToLive);
+    if (this.rootContinuation == null) {
+	this.rootContinuation = kont;
+    }
     return {kont: kont};
 } 
 
@@ -95,7 +99,7 @@ JXForm.prototype._start = function(lastWebCont, timeToLive) {
  */
 JXForm.prototype.addViolation = function(xpath, message) {
     var violation = 
-       new Packages.org.apache.cocoon.components.validation.Violation();
+       new Packages.org.apache.cocoon.components.jxforms.validation.Violation();
     violation.path = xpath;
     violation.message = message;
     var list = new java.util.LinkedList();
@@ -210,7 +214,7 @@ JXForm.prototype._setValidator = function(schNS, schDoc) {
     var schemaSrc = resolver.resolveURI( schDoc );
     try {
         var is = Packages.org.apache.cocoon.components.source.SourceUtil.getInputSource(schemaSrc);
-        var schf = Packages.org.apache.cocoon.components.validation.SchemaFactory.lookup ( schNS );
+        var schf = Packages.org.apache.cocoon.components.jxforms.validation.SchemaFactory.lookup ( schNS );
         var sch = schf.compileSchema ( is );
         this.form.setValidator(sch.newValidator());
     } finally {
@@ -231,9 +235,10 @@ JXForm.prototype.finish = function(uri) {
                           this.form.getModel(), 
                           null);
     this.dead = true;
-    if (this.lastWebContinuation != null) {
-        this.lastWebContinuation.invalidate();
-        this.lastWebContinuation = null;
+    if (this.rootContinuation != null) {
+        this.rootContinuation.invalidate();
+        this.rootContinuation = null;
+	this.lastContinuation = null;
     }
     
 }
