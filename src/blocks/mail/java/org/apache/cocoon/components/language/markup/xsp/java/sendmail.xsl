@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: sendmail.xsl,v 1.1 2003/04/17 20:32:53 haul Exp $-->
+<!-- $Id: sendmail.xsl,v 1.2 2003/07/01 22:22:03 haul Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author Donald A. Ball Jr.
  * @author Christian Haul
  * @author Frank Riddersbusch
- * @version CVS $Revision: 1.1 $ $Date: 2003/04/17 20:32:53 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/07/01 22:22:03 $
 -->
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -137,8 +137,6 @@
          _sendmail_mms.setBody(String.valueOf(<xsl:copy-of select="$body"/>));
 
       <xsl:apply-templates select="sendmail:attachment"/>
-
-      <p>setup done</p>
 
          if(_sendmail_mms.sendIt(resolver)){
             <xsl:apply-templates select="sendmail:on-success"/>
