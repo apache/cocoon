@@ -359,7 +359,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.34 2004/01/31 15:57:32 bruno Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.35 2004/02/01 19:32:33 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -382,14 +382,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         };
 
     private static final Iterator NULL_ITER = new Iterator() {
-        public boolean hasNext() {
-            return true;
-        }
-        public Object next() {
-            return null;
-        }
-        public void remove() {
-        }
+            public boolean hasNext() {
+                return true;
+            }
+            public Object next() {
+                return null;
+            }
+            public void remove() {
+            }
     };
 
     private static final Locator NULL_LOCATOR = new LocatorImpl();
@@ -1195,8 +1195,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             int ch;
             boolean inExpr = false;
             boolean xpath = false;
-            // int line = this.location.getLineNumber();
-            // int column = this.location.getColumnNumber();
             try {
                 top: while ((ch = in.read()) != -1) {
                     // column++;
@@ -1223,7 +1221,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                     }
                                 } catch (Exception exc) {
                                     throw new SAXParseException(exc.getMessage(),
-                                                                location,
+                                                                this.location,
                                                                 exc);
                                 }
                                 substitutions.add(new Expression(str,
@@ -3823,7 +3821,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                             doc.next, doc.endDocument);
                 } catch (Exception exc) {
                         throw new SAXParseException(
-                                "Exception occured in imported template "
+                                "Exception occurred in imported template "
                                 + uri + ": "+ exc.getMessage(),
                                 ev.location, exc);
                 }
