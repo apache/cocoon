@@ -62,16 +62,15 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.8 2003/10/15 21:02:24 cziegeler Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.9 2003/10/29 14:52:09 vgritsenko Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
-    /** Was there a call to <code>redirect()</code> ? */
+    /**
+     * Was there a call to <code>redirect()</code> ?
+     */
     private boolean hasRedirected = false;
     
-    /** Was the redirect to a "cocoon:/" (and not "cocoon://") ?
-    private boolean hasLocalRedirect = false;
-
     /** The <code>Environment to use for redirection (either internal or external) */
     private Environment env;
 
@@ -85,16 +84,16 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
      * environment.
      */
     public void redirect(boolean sessionMode, String url) throws IOException, ProcessingException {
-
         if (getLogger().isInfoEnabled()) {
             getLogger().info("Redirecting to '" + url + "'");
         }
 
         if (url.startsWith("cocoon:")) {
-            cocoonRedirect(sessionMode, url);
+            cocoonRedirect(url);
         } else {
-            env.redirect(sessionMode, url);
+            this.env.redirect(sessionMode, url);
         }
+
         this.hasRedirected = true;
     }
 
@@ -104,14 +103,14 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
         }
 
         if (url.startsWith("cocoon:")) {
-            cocoonRedirect(sessionMode, url);
+            cocoonRedirect(url);
         } else if (env instanceof PermanentRedirector) {
             ((PermanentRedirector)env).permanentRedirect(sessionMode, url);
         } else {
-            env.redirect(sessionMode, url);
+            this.env.redirect(sessionMode, url);
         }
-        this.hasRedirected = true;
 
+        this.hasRedirected = true;
     }
 
     /**
@@ -119,27 +118,22 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
      * subpipeline.
      */
     public void globalRedirect(boolean sessionMode, String url) throws IOException, ProcessingException {
-
         if (getLogger().isInfoEnabled()) {
             getLogger().info("Redirecting to '" + url + "'");
         }
 
         // FIXME : how to handle global redirect to cocoon: ?
         if (url.startsWith("cocoon:")) {
-            cocoonRedirect(sessionMode, url);
+            cocoonRedirect(url);
+        } else if (env instanceof EnvironmentWrapper) {
+            ((EnvironmentWrapper)env).globalRedirect(sessionMode,url);
         } else {
-            if (env instanceof EnvironmentWrapper) {
-              ((EnvironmentWrapper)env).globalRedirect(sessionMode,url);
-            }
-            else {
-              env.redirect(sessionMode, url);
-            }
+            this.env.redirect(sessionMode, url);
         }
         this.hasRedirected = true;
     }
 
-    private void cocoonRedirect(boolean sessionMode, String uri)
-    throws IOException, ProcessingException {
+    private void cocoonRedirect(String uri) {
         // Simply notify the Processor.
         this.env.setAttribute(TreeProcessor.COCOON_REDIRECT_ATTR, uri);
     }
