@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.36 2000-10-21 14:19:34 greenrd Exp $
+  $Id: todo.xml,v 1.37 2000-10-23 10:44:08 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,6 +16,9 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Track down cause of OutOfMemoryError.
+  </action>
   <action context="code">
    Work out how to integrate inline XSP docs (such as inline esql docs)
    into the build docs procedure. This will fix a dead link which leads
