@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.276 2004/03/12 14:57:58 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.277 2004/03/12 15:14:19 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="27602" due-to="Gunnar Brand" due-to-email="g.brand@interface-business.de">
+     Improvement for AbstractReader: Don't wrap an already buffered stream.
+   </action>
    <action dev="CZ" type="fix" fixes-bug="25437" due-to="Marco Rolappe" due-to-email="m_rolappe@web.de">
      ForwardEnvironmentWrapper delegates isResponseModified/setResponseIsNotModified to wrapped environment.
    </action>
