@@ -607,6 +607,8 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    <s3 title="BEA WebLogic version 5.1 / Enterprise 5.1 J-Engine">
     <p>WLS 5.1 implements Servlet 2.2. so it plugs in easily. Here's a quick recipe:</p>
 
+    <note>To avoid problems, apply the latest WebLogic Service Pack before installing Cocoon.</note>
+
     <p>(The following will also work for installing Cocoon in the BEA WebLogic
      Enterprise 5.1 J-Engine.)</p>
 
