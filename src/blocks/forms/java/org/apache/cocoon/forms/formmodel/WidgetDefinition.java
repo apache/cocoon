@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import org.apache.cocoon.forms.FormContext;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -24,7 +25,7 @@ import org.xml.sax.SAXException;
  * usually won't have to bother with the WidgetDefinition's, but will rather use
  * the Widget's themselves.
  * 
- * @version CVS $Id: WidgetDefinition.java,v 1.2 2004/03/11 02:56:33 joerg Exp $
+ * @version CVS $Id: WidgetDefinition.java,v 1.3 2004/04/09 16:43:21 mpo Exp $
  */
 public interface WidgetDefinition {
 
@@ -47,6 +48,17 @@ public interface WidgetDefinition {
      * Gets id of this widget definition.
      */
     public String getId();
+    
+    /**
+     * Validate a widget using the validators that were defined in its definition. If validation
+     * fails, the validator has set a validation error on the widget or one of its children.
+     * 
+     * @param widget the widget
+     * @param context the form context
+     * @return <code>true</code> if validation was successful.
+     */
+    public boolean validate(Widget widget, FormContext context);
+    
 
     /**
      * Creates and returns a widget based on this widget definition.

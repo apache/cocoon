@@ -29,15 +29,15 @@ import org.xml.sax.SAXException;
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
  * @author Timothy Larson
- * @version $Id: AbstractContainerWidget.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: AbstractContainerWidget.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
+    
     protected ContainerDelegate widgets;
 
-    public AbstractContainerWidget(AbstractWidgetDefinition definition) {
-        setDefinition(definition);
-        setLocation(definition.getLocation());
-        widgets = new ContainerDelegate(definition);
+    public AbstractContainerWidget() {
+//    public AbstractContainerWidget(AbstractWidgetDefinition definition) {
+        widgets = new ContainerDelegate();
     }
 
     public void addWidget(Widget widget) {
@@ -78,8 +78,8 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
             attrs.addCDATAAttribute("id", getFullyQualifiedId());
             contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
         }
-        if (definition != null)
-            definition.generateDisplayData(contentHandler);
+        if (getDefinition() != null)
+            getDefinition().generateDisplayData(contentHandler);
         // The child widgets
         widgets.generateSaxFragment(contentHandler, locale);
         contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);

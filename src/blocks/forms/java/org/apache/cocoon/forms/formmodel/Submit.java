@@ -20,7 +20,7 @@ package org.apache.cocoon.forms.formmodel;
  * 
  * @see SubmitDefinitionBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Submit.java,v 1.1 2004/03/09 10:33:49 reinhard Exp $
+ * @version CVS $Id: Submit.java,v 1.2 2004/04/09 16:43:21 mpo Exp $
  */
 public class Submit extends Action {
 
@@ -28,7 +28,6 @@ public class Submit extends Action {
     
     public Submit(ActionDefinition definition, boolean validateForm) {
         super(definition);
-        setLocation(definition.getLocation());
         this.validateForm = validateForm;
     }
     

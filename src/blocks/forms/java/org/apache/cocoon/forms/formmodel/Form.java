@@ -39,14 +39,15 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.5 2004/03/25 16:41:48 bruno Exp $
+ * @version CVS $Id: Form.java,v 1.6 2004/04/09 16:43:21 mpo Exp $
  */
 public class Form extends AbstractContainerWidget {
+    
+    private final FormDefinition definition;
     
     private Boolean endProcessing;
     private Locale locale = Locale.getDefault();
     private CursorableLinkedList events;
-//    private FormDefinition definition;
     private FormHandler formHandler;
     private Widget submitWidget;
     private ProcessingPhase phase = ProcessingPhase.LOAD_MODEL;
@@ -54,10 +55,13 @@ public class Form extends AbstractContainerWidget {
     private ProcessingPhaseListener listener;
 
     public Form(FormDefinition definition) {
-        super(definition);
-        setLocation(definition.getLocation());
+        this.definition = definition;
     }
 
+    protected WidgetDefinition getDefinition() {
+        return this.definition;
+    }
+    
     /**
      * Events produced by child widgets should not be fired immediately, but queued in order to ensure
      * an overall consistency of the widget tree before being handled.

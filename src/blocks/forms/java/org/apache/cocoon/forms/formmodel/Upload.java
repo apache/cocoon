@@ -35,25 +35,23 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.4 2004/03/11 02:56:33 joerg Exp $
+ * @version CVS $Id: Upload.java,v 1.5 2004/04/09 16:43:21 mpo Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
-    private UploadDefinition uploadDefinition;
+    private final UploadDefinition uploadDefinition;
     private Part part;
     private ValidationError validationError;
 
     public Upload(UploadDefinition uploadDefinition) {
         this.uploadDefinition = uploadDefinition;
-        this.setDefinition(uploadDefinition);
-        setLocation(uploadDefinition.getLocation());
     }
 
     public UploadDefinition getUploadDefinition() {
         return this.uploadDefinition;
     }
 
-    public String getId() {
-        return definition.getId();
+    protected WidgetDefinition getDefinition() {
+        return uploadDefinition;
     }
 
     public Object getValue() {
@@ -164,12 +162,12 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
         }
 
         // the display data
-        this.definition.generateDisplayData(contentHandler);
+        this.uploadDefinition.generateDisplayData(contentHandler);
 
         contentHandler.endElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
+        this.uploadDefinition.generateLabel(contentHandler);
     }
 }

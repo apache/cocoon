@@ -24,13 +24,19 @@ import org.xml.sax.SAXException;
  * A container {@link Widget} which can hold zero or more child widgets.
  *
  * @author Timothy Larson
- * @version $Id: Struct.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: Struct.java,v 1.2 2004/04/09 16:43:21 mpo Exp $
  */
 public class Struct extends AbstractContainerWidget {
     private static final String ELEMENT = "struct";
+    
+    private final StructDefinition definition; 
 
     public Struct(StructDefinition definition) {
-        super(definition);
+        this.definition = definition;
+    }
+    
+    protected WidgetDefinition getDefinition() {
+        return this.definition;
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {

@@ -20,14 +20,14 @@ package org.apache.cocoon.forms.formmodel;
  * 
  * @see RepeaterActionDefinitionBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RepeaterAction.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: RepeaterAction.java,v 1.2 2004/04/09 16:43:21 mpo Exp $
  */
 public class RepeaterAction extends Action {
     
     private Repeater repeater;
     
 
-    public RepeaterAction(ActionDefinition definition) {
+    public RepeaterAction(RepeaterActionDefinition definition) {
         super(definition);
     }
     
@@ -36,7 +36,7 @@ public class RepeaterAction extends Action {
      */
     public Repeater getRepeater() {
         if (this.repeater == null) {
-            String name = ((RepeaterActionDefinition)this.definition).getRepeaterName();
+            String name = ((RepeaterActionDefinition)getDefinition()).getRepeaterName();
             Widget widget;
             if (name != null) {
                 // Get the corresponding sibling

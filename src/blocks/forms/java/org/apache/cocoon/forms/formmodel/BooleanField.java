@@ -37,21 +37,20 @@ import java.util.Locale;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version $Id: BooleanField.java,v 1.4 2004/04/09 16:43:21 mpo Exp $
  */
 public class BooleanField extends AbstractWidget {
     // FIXME(SW) : should the initial value be false or null ? This would allow
     // event listeners to be triggered at bind time.
     private Boolean value = Boolean.FALSE;
-    private BooleanFieldDefinition definition;
+    private final BooleanFieldDefinition definition;
 
     public BooleanField(BooleanFieldDefinition definition) {
         this.definition = definition;
-        setLocation(definition.getLocation());
     }
 
-    public String getId() {
-        return definition.getId();
+    protected WidgetDefinition getDefinition() {
+        return this.definition;
     }
 
     public void readFromRequest(FormContext formContext) {
