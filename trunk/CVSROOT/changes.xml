@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.69 2000-05-07 22:35:26 stefano Exp $
+  $Id: changes.xml,v 1.70 2000-05-09 10:27:17 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   Added SVG formatting properties.
+  </action>
   <action dev="SM" type="fix">
    Changed behavior for absolute stylesheet hrefs which now point to absolute URI addresses.
   </action>
