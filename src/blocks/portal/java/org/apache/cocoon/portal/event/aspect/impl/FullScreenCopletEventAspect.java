@@ -69,13 +69,15 @@ import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.impl.CopletLayout;
+import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.4 2003/10/20 13:36:42 cziegeler Exp $
+ * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.5 2003/12/08 15:56:26 cziegeler Exp $
  */
 public class FullScreenCopletEventAspect
 	extends AbstractLogEnabled
@@ -139,17 +141,23 @@ public class FullScreenCopletEventAspect
      */
     public void inform(Event event) {
         FullScreenCopletEvent e = (FullScreenCopletEvent) event;
-        final Layout startingLayout = e.getLayout();
-        if ( null != startingLayout ) {
-            PortalService portalService = null;
-            try {
-                portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
-                portalService.getComponentManager().getProfileManager().setEntryLayout( startingLayout );
-            } catch (ServiceException ce) {
-                // ignore
-            } finally {
-                this.manager.release(portalService);
+        final Layout startingLayout = (CopletLayout)e.getLayout();
+        PortalService portalService = null;
+        try {
+            portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
+            ProfileManager pm = portalService.getComponentManager().getProfileManager();
+            final Layout old = pm.getEntryLayout();
+            if ( old != null && old instanceof CopletLayout) {
+                ((CopletLayout)old).getCopletInstanceData().setAspectData("fullScreen", Boolean.FALSE);
             }
+            pm.setEntryLayout( startingLayout );
+            if ( startingLayout != null && startingLayout instanceof CopletLayout) {
+                ((CopletLayout)startingLayout).getCopletInstanceData().setAspectData("fullScreen", Boolean.TRUE);
+            }
+        } catch (ServiceException ce) {
+            // ignore
+        } finally {
+            this.manager.release(portalService);
         }
     }
 

@@ -68,6 +68,7 @@
  <!-- Aspect Storage configuration -->
  <component class="org.apache.cocoon.components.ExtendedComponentSelector" 
             role="org.apache.cocoon.portal.aspect.AspectDataStoreSelector">
+    <store name="temporary" class="org.apache.cocoon.portal.aspect.impl.TemporaryAspectDataStore"/>
     <store name="request" class="org.apache.cocoon.portal.aspect.impl.RequestAspectDataStore"/>
     <store name="session" class="org.apache.cocoon.portal.aspect.impl.SessionAspectDataStore"/>
     <store name="persistent" class="org.apache.cocoon.portal.aspect.impl.PersistentAspectDataStore"/>

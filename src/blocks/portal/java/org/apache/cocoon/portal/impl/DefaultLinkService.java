@@ -77,7 +77,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.8 2003/12/08 13:47:51 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.9 2003/12/08 15:56:26 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -88,7 +88,7 @@ public class DefaultLinkService
      */
     class Info {
         StringBuffer  linkBase = new StringBuffer();
-        boolean      hasParameters = false;
+        boolean       hasParameters = false;
         ArrayList     comparableEvents = new ArrayList(5);
     }
     
@@ -243,6 +243,16 @@ public class DefaultLinkService
 
         final Info info = this.getInfo();
         if ( event instanceof ComparableEvent) {
+            // search if we already have an event for this!
+            final Iterator iter = info.comparableEvents.iterator();
+            boolean found = false;
+            while ( !found && iter.hasNext() ) {
+                Object[] objects = (Object[])iter.next();
+                if ( ((ComparableEvent)objects[0]).equalsEvent((ComparableEvent)event) ) {
+                    found = true;
+                    info.comparableEvents.remove(objects[0]);
+                }
+            }
             info.comparableEvents.add( new Object[] {event, parameterName, value} );
         } else {
             this.addParameterToLink(parameterName, value);
