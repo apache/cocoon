@@ -106,7 +106,7 @@
     </xsl:apply-templates>
   </xsl:template>
   
-  <xsl:template match="map:pipeline|map:handle-errors">
+  <xsl:template match="map:pipeline">
     <xsl:param name="parent-id"/>
     <xsl:variable name="id">
       <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
@@ -125,6 +125,31 @@
       </xsl:for-each>
     </pipeline-node>
     <xsl:apply-templates select="map:match|map:select|map:act|map:handle-errors">
+      <xsl:with-param name="parent-id">
+        <xsl:value-of select="$id" />
+      </xsl:with-param>
+    </xsl:apply-templates>
+  </xsl:template>
+  
+  <xsl:template match="map:handle-errors">
+    <xsl:param name="parent-id"/>
+    <xsl:variable name="id">
+      <xsl:value-of select="$parent-id"/>-<xsl:value-of select="position()"/>
+    </xsl:variable>
+    <handle-errors-node id="{$id}" logger="sitemap.processor">
+      <xsl:apply-templates select="@*|map:parameter" mode="copy" />
+      <!-- TODO:
+      allow map:call|map:aggregate|map:generate|map:transform|map:serialize|map:read|map:mount|map:redirect-to ?
+      -->
+      <xsl:for-each select="map:match|map:select|map:act">
+        <xsl:element name="{local-name()}">
+          <xsl:attribute name="id-ref">
+            <xsl:value-of select="$id"/>-<xsl:value-of select="position()" />
+          </xsl:attribute>
+        </xsl:element>
+      </xsl:for-each>
+    </handle-errors-node>
+    <xsl:apply-templates select="map:match|map:select|map:act">
       <xsl:with-param name="parent-id">
         <xsl:value-of select="$id" />
       </xsl:with-param>

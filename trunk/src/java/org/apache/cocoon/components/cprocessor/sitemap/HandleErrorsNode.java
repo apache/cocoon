@@ -55,6 +55,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
+import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
 import org.apache.cocoon.environment.Environment;
 
@@ -62,9 +63,15 @@ import org.apache.cocoon.environment.Environment;
  * Handles &lt;map:handle-errors&gt;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: HandleErrorsNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: HandleErrorsNode.java,v 1.3 2004/01/26 16:07:18 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ProcessingNode
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=handle-errors-node
  */
-public final class HandleErrorsNode extends SimpleParentProcessingNode {
+public final class HandleErrorsNode extends SimpleParentProcessingNode 
+implements ProcessingNode {
 
     private int statusCode;
 

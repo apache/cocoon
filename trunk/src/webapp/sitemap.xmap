@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.37 2003/12/30 11:27:51 unico Exp $
+    | CVS $Id: sitemap.xmap,v 1.38 2004/01/26 16:07:18 unico Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -646,7 +646,6 @@
         | error to be displayed on screen. The "exception" selector can help
         | you to define different screens for different error types.
         +-->
-    <!--
     <map:handle-errors>
       <map:select type="exception">
 
@@ -677,7 +676,6 @@
       </map:select>
 
     </map:handle-errors>
-    -->
 
   </map:pipeline>
  </map:pipelines>

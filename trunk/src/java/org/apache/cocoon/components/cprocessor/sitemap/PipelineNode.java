@@ -54,6 +54,8 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
@@ -70,7 +72,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: PipelineNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.3 2004/01/26 16:07:18 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -106,7 +108,12 @@ public class PipelineNode extends SimpleParentProcessingNode implements Initiali
         this.errorHandlerHelper.enableLogging(logger);
         handledErrorsLogger = logger.getChildLogger("handled-errors");
     }
-    
+
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.errorHandlerHelper.service(manager);
+    }
+
     public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
         m_type = config.getAttribute("type", null);

@@ -239,7 +239,8 @@
     logger="core.modules.input" 
   />
   <global-variables id="global-variables"/>
-
+  
+  <notifying-builder id="notifying" />
   
 <!-- TODO: entries below are still 2.1 configuration -->
 
