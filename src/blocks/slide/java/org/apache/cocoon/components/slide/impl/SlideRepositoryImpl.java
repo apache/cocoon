@@ -54,7 +54,6 @@ package org.apache.cocoon.components.slide.impl;
 import java.util.Hashtable;
 
 import org.apache.avalon.framework.activity.Disposable;
-
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -68,26 +67,26 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.slide.SlideRepository;
 import org.apache.cocoon.environment.Context;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
-
 import org.apache.slide.common.Domain;
 import org.apache.slide.common.EmbeddedDomain;
 import org.apache.slide.common.NamespaceAccessToken;
-
 import org.xml.sax.InputSource;
 
 /**
  * The class represent a manger for slide repositories
- *
+ * 
+ * IMPORTANT: do not remove Component interface as this cause ECM to
+ * throw an exception during startup. (Due to dynamic proxy generation 
+ * and the fact that JTA is not on the classpath).
+ * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepositoryImpl.java,v 1.2 2003/12/03 12:06:05 unico Exp $
+ * @version CVS $Id: SlideRepositoryImpl.java,v 1.3 2003/12/08 18:07:42 unico Exp $
  */
 public class SlideRepositoryImpl
 implements SlideRepository, LogEnabled, Serviceable, Configurable,
