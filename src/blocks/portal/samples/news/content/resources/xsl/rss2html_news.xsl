@@ -2,33 +2,57 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<!-- $Id: rss2html_news.xsl,v 1.1 2003/05/07 06:22:28 cziegeler Exp $ 
+<!-- $Id: rss2html_news.xsl,v 1.2 2003/07/12 17:02:47 cziegeler Exp $ 
 
 -->
 
-<!--<xsl:template match="*|/"><xsl:apply-templates/></xsl:template>
-<xsl:template match="text()|@*"><xsl:value-of select="."/></xsl:template>
--->
+
+<xsl:template match="rss">
+  <xsl:apply-templates select="channel"/>
+</xsl:template>
 
 <xsl:template match="channel">
-	<table>
-		<xsl:apply-templates select ="item">
-		</xsl:apply-templates>
-	</table>
+  <xsl:if test="title">
+    <b><a href="{link}"><xsl:value-of select="title"/></a></b>
+    <br/>
+  </xsl:if>
+  <xsl:if test="description">
+    <font size="-3">&#160;(<xsl:value-of select="description"/>)</font>
+  </xsl:if>
+  <table>
+    <xsl:apply-templates select="item"/>
+  </table>
 </xsl:template>
 
 <xsl:template match="item">
-			<xsl:if test="position() &lt; 6">
-				<tr bgcolor="#ffffff"><td><font face="Arial, Helvetica, sans-serif">
-    			<a target="_blank"><xsl:attribute name="href"><xsl:value-of select="link"/></xsl:attribute>
-				<font size="-1" color="#333333"><b><xsl:value-of select="title"/></b></font></a><br/>
-	<!--			<a target="_blank"><xsl:attribute name="href"><xsl:value-of select="authorlink"/></xsl:attribute> 
-    			<font size="-2" color="#46627A"><xsl:value-of select = "author"/></font></a>-->
-				<font size="-2" color="#46627A">&#160;&#160;<xsl:value-of select="description"/></font>
-    			</font></td></tr>
-				<tr bgcolor="#ffffff"><td bgcolor="#ffffff" height="5"></td></tr>
-			</xsl:if>
+  <!-- Display the first 5 entries -->
+  <xsl:if test="position() &lt; 6">
+    <tr>
+      <td>
+        <a target="_blank" href="{link}">
+          <font size="-1"> 
+            <b><xsl:value-of select="title"/></b>
+          </font>
+        </a>
+        <xsl:apply-templates select="description"/>
+      </td>
+    </tr>
+    <tr><td height="5">&#160;</td></tr>
+  </xsl:if>
 </xsl:template>
 
+<xsl:template match="description">
+  <font size="-2">
+    <br/>
+    &#160;&#160;<xsl:apply-templates/>
+  </font>
+</xsl:template>
+
+<xsl:template match="node()|@*" priority="-1">
+  <xsl:copy>
+    <xsl:apply-templates select="@*"/>
+    <xsl:apply-templates/>
+  </xsl:copy>
+</xsl:template>
 
 </xsl:stylesheet>
