@@ -14,6 +14,7 @@
 #  cd /usr/local/svn/cocoon-2_1_X
 #  tools/review-sitemap-docs/correlate-table.sh
 
+echo
 echo "Scanning Cocoon javadocs to find sitemap components java source files."
 echo " (See components-source.txt and do diff with that file from last run.)"
 find build/cocoon-2.1.7-dev/javadocs -name *.html \
@@ -22,6 +23,7 @@ find build/cocoon-2.1.7-dev/javadocs -name *.html \
 | sed 's/build\/.*org\//org\//;s/\.html//' \
 | sort > components-source.txt
 
+echo
 echo "Scanning the coordinaton table xdoc and list the javadoc sources."
 echo " (See components-table.txt and do diff with last time.)"
 grep "<\!-- 1 -->" src/documentation/xdocs/plan/review-sitemap-docs.xml \
@@ -29,12 +31,22 @@ grep "<\!-- 1 -->" src/documentation/xdocs/plan/review-sitemap-docs.xml \
 | sed 's/<link href="\.\.\/apidocs\///;s/\.html.*$//' \
 | sort > components-table.txt
 
-echo "Comparing the lists."
+echo
+echo "Comparing the table list with the list obtained via javadocs."
 echo "Whitespace lines are table entries which are missing a javadoc reference."
-echo "diff components-source.txt components-table.txt"
-echo "----------"
-diff components-source.txt components-table.txt
-echo "----------"
+echo "doing 'diff components-source.txt components-table.txt'"
+echo " (See components-javadoc-diff.txt)"
+diff components-source.txt components-table.txt > components-javadoc-diff.txt
 
+echo
+echo "Comparing the list obtained via javadocs with that obtained via SitemapTask."
+echo "doing 'diff components-source.txt components-sitemaptask.txt'"
+echo " (See components-javadoc-sitemaptask-diff.txt)"
+cat build/all-sitemap-components.txt build/all-sitemap-components-blocks.txt \
+| sed 's/\./\//g' | sort > components-sitemaptask.txt
+diff components-source.txt components-sitemaptask.txt \
+> components-javadoc-sitemaptask-diff.txt
+
+echo
 echo "Counting the number of components in the table."
 wc -l components-table.txt

@@ -1,0 +1,10 @@
+See other notes at:
+http://cocoon.apache.org/2.1/plan/review-sitemap-docs.html
+
+* Ensure that the SitemapTask is finding all possible components.
+
+* The script tools/review-sitemap-docs/correlate-table.sh
+also attempts to compare the lists obtained from SitemapTask
+with a list obtained from scanning javadocs. The latter list
+is also finding some junk, so more exclusions may need to
+be added to find-component-java-files-exclude.txt
