@@ -30,7 +30,7 @@ import java.util.Collection;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: Compiler.java,v 1.2 2004/03/05 10:07:22 bdelacretaz Exp $
+ * @version CVS $Id: Compiler.java,v 1.3 2004/04/19 18:49:58 pier Exp $
  */
 public class Compiler extends CompiledCharset {
 
@@ -87,54 +87,21 @@ public class Compiler extends CompiledCharset {
     throws IOException {
         PrintStream out = new PrintStream(new BufferedOutputStream(stream));
 
-
-        out.println("/* ============================================================================ *");
-        out.println(" *                   The Apache Software License, Version 1.1                   *");
-        out.println(" * ============================================================================ *");
-        out.println(" *                                                                              *");
-        out.println(" * Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved. *");
-        out.println(" *                                                                              *");
-        out.println(" * Redistribution and use in source and binary forms, with or without modifica- *");
-        out.println(" * tion, are permitted provided that the following conditions are met:          *");
-        out.println(" *                                                                              *");
-        out.println(" * 1. Redistributions of  source code must  retain the above copyright  notice, *");
-        out.println(" *    this list of conditions and the following disclaimer.                     *");
-        out.println(" *                                                                              *");
-        out.println(" * 2. Redistributions in binary form must reproduce the above copyright notice, *");
-        out.println(" *    this list of conditions and the following disclaimer in the documentation *");
-        out.println(" *    and/or other materials provided with the distribution.                    *");
-        out.println(" *                                                                              *");
-        out.println(" * 3. The end-user documentation included with the redistribution, if any, must *");
-        out.println(" *    include  the following  acknowledgment:  \"This product includes  software *");
-        out.println(" *    developed  by the  Apache Software Foundation  (http://www.apache.org/).\" *");
-        out.println(" *    Alternately, this  acknowledgment may  appear in the software itself,  if *");
-        out.println(" *    and wherever such third-party acknowledgments normally appear.            *");
-        out.println(" *                                                                              *");
-        out.println(" * 4. The names \"Apache Cocoon\" and  \"Apache Software Foundation\" must  not  be *");
-        out.println(" *    used to  endorse or promote  products derived from  this software without *");
-        out.println(" *    prior written permission. For written permission, please contact          *");
-        out.println(" *    apache@apache.org.                                                        *");
-        out.println(" *                                                                              *");
-        out.println(" * 5. Products  derived from this software may not  be called \"Apache\", nor may *");
-        out.println(" *    \"Apache\" appear  in their name,  without prior written permission  of the *");
-        out.println(" *    Apache Software Foundation.                                               *");
-        out.println(" *                                                                              *");
-        out.println(" * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, *");
-        out.println(" * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND *");
-        out.println(" * FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE *");
-        out.println(" * APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT, *");
-        out.println(" * INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU- *");
-        out.println(" * DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS *");
-        out.println(" * OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON *");
-        out.println(" * ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT *");
-        out.println(" * (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF *");
-        out.println(" * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.            *");
-        out.println(" *                                                                              *");
-        out.println(" * This software  consists of voluntary contributions made  by many individuals *");
-        out.println(" * on  behalf of the Apache Software  Foundation.  For more  information on the *");
-        out.println(" * Apache Software Foundation, please see <http://www.apache.org/>.             *");
-        out.println(" *                                                                              *");
-        out.println(" * ============================================================================ */");
+        out.println("/*");
+        out.println(" * Copyright 1999-2004 The Apache Software Foundation.");
+        out.println(" *");
+        out.println(" * Licensed under the Apache License, Version 2.0 (the \"License\");");
+        out.println(" * you may not use this file except in compliance with the License.");
+        out.println(" * You may obtain a copy of the License at");
+        out.println(" *");
+        out.println(" *      http://www.apache.org/licenses/LICENSE-2.0");
+        out.println(" *");
+        out.println(" * Unless required by applicable law or agreed to in writing, software");
+        out.println(" * distributed under the License is distributed on an \"AS IS\" BASIS,");
+        out.println(" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.");
+        out.println(" * See the License for the specific language governing permissions and");
+        out.println(" * limitations under the License.");
+        out.println(" */");
         out.println("/* Generated by " + this.getClass().getName() + " */");
         out.println();
         out.println("package org.apache.garbage.serializer.encoding;");

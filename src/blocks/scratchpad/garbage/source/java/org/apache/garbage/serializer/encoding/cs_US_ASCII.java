@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,15 +29,16 @@ class cs_US_ASCII extends CompiledCharset {
 
     /** The array of alias names of this charset. */
     public static final String CS_ALIASES[] = {
-        "IBM367",
         "ISO646-US",
-        "ANSI_X3.4-1986",
-        "cp367",
+        "IBM367",
         "ASCII",
-        "iso_646.irv:1983",
-        "646",
-        "us",
+        "cp367",
+        "ascii7",
+        "ANSI_X3.4-1986",
         "iso-ir-6",
+        "us",
+        "646",
+        "iso_646.irv:1983",
         "csASCII",
         "ANSI_X3.4-1968",
         "ISO_646.irv:1991",
