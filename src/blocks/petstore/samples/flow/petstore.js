@@ -16,7 +16,7 @@
 
 // Page Flow for PetStore Application
 
-// load WOODY support
+// load CForms support
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
 var MAX_RESULTS = 5;

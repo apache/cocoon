@@ -17,7 +17,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:include href="ps-woody-default.xsl"/>
+  <xsl:include href="ps-cforms-default.xsl"/>
 
   <xsl:template match="site">
     <html>
@@ -38,9 +38,9 @@
                 <form method="post" action="index.do">
                   <input type="image" border="0" src="images/logo-topbar.gif" />
                   <select name="view" width="14" align="left" onchange="document.forms[0].submit()">
-                    <xsl:if test="@view='woody'">
+                    <xsl:if test="@view='cforms'">
                       <xsl:attribute name="disabled">disabled</xsl:attribute>
-                      <option value="woody" selected="selected">woody</option>
+                      <option value="cforms" selected="selected">cforms</option>
                     </xsl:if>
                     <option value="jexl"><xsl:if test="@view='jexl'"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>Jexl</option>
                     <option value="jxpath"><xsl:if test="@view='jxpath'"><xsl:attribute name="selected">selected</xsl:attribute></xsl:if>JXPath</option>
