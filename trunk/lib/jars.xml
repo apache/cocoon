@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.31 2003/04/23 13:36:03 bruno Exp $
+    | CVS $Id: jars.xml,v 1.32 2003/04/24 09:39:12 stephan Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -98,7 +98,7 @@
    event based programming.
   </description>
   <used-by>Cocoon Flow</used-by>
-  <lib>core/excalibur-event-20030403.jar</lib>
+  <lib>core/excalibur-event-1.0.2.jar</lib>
   <homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
 
@@ -175,7 +175,7 @@
    support high level server development.
   </description>
   <used-by>Cocoon</used-by>
-  <lib>core/excalibur-monitor-20020820.jar</lib>
+  <lib>core/excalibur-monitor-1.0.1.jar</lib>
   <homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
 
@@ -208,7 +208,7 @@
    support high level server development.
   </description>
   <used-by>Cocoon</used-by>
-  <lib>core/excalibur-sourceresolve-20030404.jar</lib>
+  <lib>core/excalibur-sourceresolve-1.0.jar</lib>
   <homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
 
