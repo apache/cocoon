@@ -60,7 +60,6 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.InspectableSource;
-import org.apache.cocoon.components.source.ModifiableTraversableSource;
 import org.apache.cocoon.components.source.RestrictableSource;
 import org.apache.cocoon.components.source.helpers.GroupSourcePermission;
 import org.apache.cocoon.components.source.helpers.PrincipalSourcePermission;
@@ -73,6 +72,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.servlet.multipart.Part;
 import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
@@ -80,7 +80,7 @@ import org.apache.excalibur.source.SourceException;
  * Multiple actions for upload files, change properties and permissions.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceMultiAction.java,v 1.2 2003/04/04 13:19:06 stefano Exp $
+ * @version CVS $Id: SourceMultiAction.java,v 1.3 2003/12/08 18:06:44 unico Exp $
  */ 
 public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe {
 
@@ -193,17 +193,14 @@ public class SourceMultiAction extends AbstractMultiAction implements ThreadSafe
 
         try {
             Source source = resolver.resolveURI(uri);
-
-            if (source instanceof RestrictableSource)
-                ((RestrictableSource)source).setSourceCredential(new SourceCredential(principal, password));
-
+            
             if (source instanceof ModifiableTraversableSource) {
-                ModifiableTraversableSource modifiabletraversablesource = (ModifiableTraversableSource)source;
-
-                modifiabletraversablesource.createCollection(collectionname);
+                ModifiableTraversableSource modifiabletraversablesource = 
+                    (ModifiableTraversableSource) source;
+                modifiabletraversablesource.makeCollection();
 
             } else
-                throw new ProcessingException("Source isn't writeable");
+                throw new ProcessingException("Source isn't modifiable traversable");
 
         } catch (SourceException se) {
             if (getLogger().isDebugEnabled())

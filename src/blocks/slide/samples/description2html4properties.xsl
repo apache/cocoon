@@ -1,35 +1,41 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:source="http://apache.org/cocoon/description/2.0" xmlns:dav="DAV:" version="1.0">
+<xsl:stylesheet 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  xmlns:collection="http://apache.org/cocoon/collection/1.0" 
+  xmlns:dav="DAV:" 
+  version="1.0">
 
   <xsl:output indent="yes"/>
-  <xsl:param name="contextPath" select="'/cocoon'"/>
+  <xsl:param name="path" />
+  <xsl:param name="namespace">cocoon</xsl:param>
+  <xsl:param name="principal">guest</xsl:param>
 
   <xsl:template match="/">
     <document>
       <header>
         <title>Jakarta Slide example</title>
-        <tab title="users" href="{$contextPath}/samples/slide/users/"/>
-        <tab title="content" href="{$contextPath}/samples/slide/content/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="properties" href="{$contextPath}/samples/slide/properties/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="permissions" href="{$contextPath}/samples/slide/permissions/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="locks" href="{$contextPath}/samples/slide/locks/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="logout" href="{$contextPath}/samples/slide/logout.html"/>
+        <tab title="users" href="../users/"/>
+        <tab title="content" href="../content/{$path}"/>
+        <tab title="properties" href="../properties/{$path}"/>
+        <tab title="permissions" href="../permissions/{$path}"/>
+        <tab title="locks" href="../locks/{$path}"/>
+        <tab title="logout" href="../logout.html"/>
       </header>
       <body>
         <row>
-          <xsl:apply-templates select="source:source"/>
+          <xsl:apply-templates select="collection:collection|collection:resource"/>
         </row>
       </body>
     </document>
   </xsl:template>
 
-  <xsl:template match="source:source">
+  <xsl:template match="collection:collection|collection:resource">
     <column title="Navigation">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
         <xsl:if test="@parent">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
-              <a href="{$contextPath}/samples/slide/properties/{substring-after(@parent,'://')}">Back</a>
+              <a href="../properties/{$path}">Back</a>
             </td>
           </tr>
         </xsl:if>
@@ -38,11 +44,11 @@
             <br/>
           </td>
         </tr>
-        <xsl:for-each select="source:children/source:source">
+        <xsl:for-each select="collection:collection|collection:resource">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
               <font size="+0" face="arial,helvetica,sanserif" color="#000000">
-                <a href="{$contextPath}/samples/slide/properties/{substring-after(@uri,'://')}">
+                <a href="../properties/{$path}/{@name}">
                   <xsl:value-of select="@name"/>
                 </a>
               </font>
@@ -67,9 +73,7 @@
             </td>
             <td align="right"/>
           </tr>
-          <xsl:for-each select="source:properties/*[local-name()!='children' and
-                                local-name()!='permissions' and local-name()!='locks' and
-                                local-name()!='parent']">
+          <xsl:for-each select="collection:properties/child::node()">
             <tr>
               <td align="left">
                 <xsl:value-of select="namespace-uri(.)"/>
@@ -81,11 +85,11 @@
                 <xsl:value-of select="."/>
               </td>
               <td align="right">
-                <xsl:if test="namespace-uri()!='DAV:' and ../@type='live'">
-                  <form action="" method="post">
-                    <input type="hidden" name="cocoon-source-uri" value="{../../@uri}"/>
-                    <input type="hidden" name="cocoon-source-property-namespace" value="{namespace-uri()}"/>
-                    <input type="hidden" name="cocoon-source-property-name" value="{local-name()}"/>
+                <xsl:if test="namespace-uri()!='DAV:'">
+                  <form action="../removeproperty.do" method="post">
+                    <input type="hidden" name="resourcePath" value="/{$path}"/>
+                    <input type="hidden" name="namespace" value="{namespace-uri()}"/>
+                    <input type="hidden" name="name" value="{local-name()}"/>
                     <input type="submit" name="doDeleteProperty" value="Delete"/>
                   </form>
                 </xsl:if>
@@ -93,16 +97,16 @@
             </tr>
           </xsl:for-each>
           <tr>
-            <form action="" method="post">
-              <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
+            <form action="../addproperty.do" method="post">
+              <input type="hidden" name="resourcePath" value="/{$path}"/>
               <td align="left">
-                <input name="cocoon-source-property-namespace" type="text" size="15" maxlength="40"/>
+                <input name="namespace" type="text" size="15" maxlength="40"/>
               </td>
               <td align="left">
-                <input name="cocoon-source-property-name" type="text" size="15" maxlength="40"/>
+                <input name="name" type="text" size="15" maxlength="40"/>
               </td>
               <td align="left">
-                <input name="cocoon-source-property-value" type="text" size="15" maxlength="40"/>
+                <input name="value" type="text" size="15" maxlength="40"/>
               </td>
               <td align="right">
                 <input type="submit" name="doAddProperty" value="Add/Modify"/>

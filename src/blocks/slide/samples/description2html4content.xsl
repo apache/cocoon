@@ -1,36 +1,42 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:source="http://apache.org/cocoon/description/2.0" xmlns:dav="DAV:" xmlns:xi="http://www.w3.org/2001/XInclude" version="1.0">
+<xsl:stylesheet 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+  xmlns:collection="http://apache.org/cocoon/collection/1.0" 
+  xmlns:dav="DAV:" 
+  xmlns:xi="http://www.w3.org/2001/XInclude" 
+  version="1.0">
 
   <xsl:output indent="yes"/>
-  <xsl:param name="cocoon-source-principal">guest</xsl:param>
-  <xsl:param name="contextPath" select="'/cocoon'"/>
+  <xsl:param name="path" />
+  <xsl:param name="namespace">cocoon</xsl:param>
+  <xsl:param name="principal">guest</xsl:param>
 
   <xsl:template match="/">
     <document>
       <header>
         <title>Jakarta Slide example</title>
-        <tab title="users" href="{$contextPath}/samples/slide/users/"/>
-        <tab title="content" href="{$contextPath}/samples/slide/content/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="properties" href="{$contextPath}/samples/slide/properties/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="permissions" href="{$contextPath}/samples/slide/permissions/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="locks" href="{$contextPath}/samples/slide/locks/{substring-after(source:source/@uri,'://')}"/>
-        <tab title="logout" href="{$contextPath}/samples/slide/logout.html"/>
+        <tab title="users" href="../users/"/>
+        <tab title="content" href="../content/{$path}"/>
+        <tab title="properties" href="../properties/{$path}"/>
+        <tab title="permissions" href="../permissions/{$path}"/>
+        <tab title="locks" href="../locks/{$path}"/>
+        <tab title="logout" href="../logout.html"/>
       </header>
       <body>
         <row>
-          <xsl:apply-templates select="source:source"/>
+          <xsl:apply-templates select="collection:collection|collection:resource"/>
         </row>
       </body>
     </document>
   </xsl:template>
 
-  <xsl:template match="source:source">
+  <xsl:template match="collection:collection|collection:resource">
     <column title="Navigation">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
         <xsl:if test="@parent">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
-              <a href="{$contextPath}/samples/slide/content/{substring-after(@parent,'://')}">Back</a>
+              <a href="../content/">Back</a>
             </td>
           </tr>
         </xsl:if>
@@ -39,11 +45,11 @@
             <br/>
           </td>
         </tr>
-        <xsl:for-each select="source:children/source:source">
+        <xsl:for-each select="collection:collection|collection:resource">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
               <font size="+0" face="arial,helvetica,sanserif" color="#000000">
-                <a href="{$contextPath}/samples/slide/content/{substring-after(@uri,'://')}">
+                <a href="{@name}">
                   <xsl:value-of select="@name"/>
                 </a>
               </font>
@@ -54,7 +60,7 @@
     </column>
     <column title="Content">
       <xsl:choose>
-        <xsl:when test="@collection='true'">
+        <xsl:when test="local-name() = 'collection'">
           <table width="100%" cellspacing="0" cellpadding="5" align="center">
             <font size="+0" face="arial,helvetica,sanserif" color="#000000">
               <tr>
@@ -72,10 +78,10 @@
                 </td>
                 <td align="right"/>
               </tr>
-              <xsl:for-each select="source:children/source:source">
+              <xsl:for-each select="collection:collection|collection:resource">
                 <tr>
                   <td align="left">&#xA0;&#xA0;
-                   <a href="{$contextPath}/samples/slide/content/{substring-after(@uri,'://')}"><xsl:value-of select="@name"/></a>
+                   <a href="{@name}"><xsl:value-of select="@name"/></a>
                   </td>
                   <td align="left">
                     <xsl:value-of select="@mime-type"/>
@@ -84,23 +90,24 @@
                     <xsl:value-of select="@contentlength"/>
                   </td>
                   <td align="left">
-                    <xsl:value-of select="source:properties/dav:getlastmodified"/>
+                    <xsl:value-of select="@date"/>
                   </td>
                   <td align="right">
-                    <form action="" method="post">
-                      <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
+                    <form action="../delete.do" method="post">
+                      <input type="hidden" name="parentPath" value="/{$path}" />
+                      <input type="hidden" name="resourceName" value="{@name}"/>
                       <input type="submit" name="doDeleteSource" value="Delete"/>
                     </form>
                   </td>
                 </tr>
               </xsl:for-each>
               <tr>
-                <form action="" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
-                  <td align="left"><input type="text" name="cocoon-source-name" size="15" maxlength="40"/>(optional)</td>
+                <form action="../upload.do" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="parentPath" value="/{$path}"/>
+                  <td align="left"><input type="text" name="resourceName" size="15" maxlength="40"/></td>
                   <td align="left" colspan="3">
                    File:
-                   <input type="file" name="cocoon-upload-file" size="15" maxlength="40"/>
+                   <input type="file" name="uploadFile" size="15" maxlength="40"/>
                   </td>
                   <td align="right">
                     <input type="submit" name="doUploadSource" value="Upload File"/>
@@ -108,10 +115,10 @@
                 </form>
               </tr>
               <tr>
-                <form action="" method="post">
-                  <input type="hidden" name="cocoon-source-uri" value="{@uri}"/>
+                <form action="../mkcol.do" method="post">
+                  <input type="hidden" name="parentPath" value="/{$path}"/>
                   <td align="left" colspan="4">
-                    <input type="text" name="cocoon-source-name" size="15" maxlength="40"/>
+                    <input type="text" name="collectionName" size="15" maxlength="40"/>
                   </td>
                   <td align="right">
                     <input type="submit" name="doCreateCollection" value="Create collection"/>
@@ -122,19 +129,19 @@
           </table>
         </xsl:when>
         <xsl:when test="@mime-type='image/gif'">
-          <img src="{$contextPath}/samples/slide/view/{substring-after(@uri,'://')}"/>
+          <img src="../view/{$path}"/>
         </xsl:when>
         <xsl:when test="@mime-type='image/jpeg'">
-          <img src="{$contextPath}/samples/slide/view/{substring-after(@uri,'://')}"/>
+          <img src="../view/{$path}"/>
         </xsl:when>
         <xsl:when test="@mime-type='text/plain'">
           <pre>
-            <xi:include href="{@uri}?cocoon-source-principal={$cocoon-source-principal}" parse="text"/>
+            <xi:include href="slide://{$principal}@{$namespace}/{$path}" parse="text"/>
           </pre>
         </xsl:when>
         <xsl:when test="@mime-type='text/xml'">
           <pre>
-            <xi:include href="{@uri}?cocoon-source-principal={$cocoon-source-principal}" parse="text"/>
+            <xi:include href="slide://{$principal}@{$namespace}/{$path}" parse="text"/>
           </pre>
         </xsl:when>
         <xsl:otherwise>
