@@ -1,3 +1,6 @@
+//
+// SVN $Id:$
+//
 cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
 // This function is invoked by every coplet to check if the basket is already full
