@@ -81,7 +81,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.10 2004/01/27 08:26:25 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.11 2004/01/27 11:42:51 joerg Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -100,7 +100,8 @@ public class PipelineAuthenticator
     throws ProcessingException {
         // calling method is synced
         if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN isValidAuthenticationFragment fragment=" + XMLUtils.serializeNodeToXML(authenticationFragment));
+            this.getLogger().debug("BEGIN isValidAuthenticationFragment fragment="
+                                   + XMLUtils.serializeNodeToXML(authenticationFragment));
         }
         boolean isValid = false;
 
@@ -145,7 +146,7 @@ public class PipelineAuthenticator
             }
         }
         if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END isValidAuthenticationFragment valid="+isValid);
+            this.getLogger().debug("END isValidAuthenticationFragment valid=" + isValid);
         }
         return isValid;
     }
@@ -153,14 +154,14 @@ public class PipelineAuthenticator
     /* (non-Javadoc)
      * @see org.apache.cocoon.webapps.authentication.components.Authenticator#authenticate(org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration, org.apache.excalibur.source.SourceParameters)
      */
-    public AuthenticationResult authenticate( HandlerConfiguration configuration,
-                                              SourceParameters      parameters)
+    public AuthenticationResult authenticate(HandlerConfiguration configuration,
+                                             SourceParameters parameters)
     throws ProcessingException {
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("start authenticator using handler " + configuration.getName());
         }
 
-        final String   authenticationResourceName = configuration.getAuthenticationResource();
+        final String authenticationResourceName = configuration.getAuthenticationResource();
         final SourceParameters authenticationParameters = configuration.getAuthenticationResourceParameters();
         if (parameters != null) {
             parameters.add(authenticationParameters);
@@ -175,11 +176,8 @@ public class PipelineAuthenticator
         try {
             Source source = null;
             try {
-                source = SourceUtil.getSource(authenticationResourceName, 
-                                                                                  null, 
-                                                                                  parameters, 
-                                                                                  this.resolver);
-                
+                source = SourceUtil.getSource(authenticationResourceName, null, 
+                                              parameters, this.resolver);
                 doc = SourceUtil.toDOM(source);
             } catch (SAXException se) {
                 throw new ProcessingException(se);
@@ -190,7 +188,6 @@ public class PipelineAuthenticator
 			} finally {
                 this.resolver.release(source);
             }
-
         } catch (ProcessingException local) {
             this.getLogger().error("authenticator: " + local.getMessage(), local);
             exceptionMsg = local.getMessage();
@@ -204,7 +201,8 @@ public class PipelineAuthenticator
 
             if ( isValid ) {
                 if (this.getLogger().isInfoEnabled() ) {
-                    this.getLogger().info("Authenticator: User authenticated using handler '" + configuration.getName()+"'");
+                    this.getLogger().info("Authenticator: User authenticated using handler '"
+                                          + configuration.getName() + "'");
                 }
                 
                 MediaManager mediaManager = null;
@@ -244,13 +242,16 @@ public class PipelineAuthenticator
         
         if ( !isValid ) {
             if (this.getLogger().isInfoEnabled() ) {
-                this.getLogger().info("Authenticator: Failed authentication using handler '" +  configuration.getName()+"'");
+                this.getLogger().info("Authenticator: Failed authentication using handler '"
+                                      +  configuration.getName()+ "'");
             }
             // get the /authentication/data Node if available
             Node data = null;
 
             if (doc != null) {
-                data = DOMUtil.getFirstNodeFromPath(doc, new String[] {"authentication","data"}, false);
+                data = DOMUtil.getFirstNodeFromPath(doc,
+                                                    new String[] {"authentication","data"},
+                                                    false);
             }
             doc = DOMUtil.createDocument();
 
@@ -329,7 +330,6 @@ public class PipelineAuthenticator
                 // This allows arbitrary business logic to be called. Whatever is returned
                 // is ignored.
                 source = SourceUtil.getSource(logoutResourceName, null, parameters, this.resolver);
-                Document doc = SourceUtil.toDOM(source);
             } catch (Exception ignore) {
                 this.getLogger().error("logout: " + ignore.getMessage(), ignore);
             } finally {
