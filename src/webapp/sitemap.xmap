@@ -27,7 +27,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.52 2004/06/23 19:14:34 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.53 2004/06/23 19:32:03 vgritsenko Exp $
     +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -251,64 +251,65 @@
       | compared with a java switch statement.
       +-->
   <map:selectors default="browser">
-   <map:selector logger="sitemap.selector.browser" name="browser" src="org.apache.cocoon.selection.BrowserSelector">
+    <map:selector logger="sitemap.selector.browser" name="browser" src="org.apache.cocoon.selection.BrowserSelector">
+      <!--+
+          | NOTE: The appearance indicates the search order. This is very important since
+          |       some words may be found in more than one browser description. (MSIE is
+          |       presented as "Mozilla/4.0 (Compatible; MSIE 4.01; ...")
+          +-->
+      <browser name="explorer" useragent="MSIE"/>
+      <browser name="pocketexplorer" useragent="MSPIE"/>
+      <browser name="handweb" useragent="HandHTTP"/>
+      <browser name="avantgo" useragent="AvantGo"/>
+      <browser name="imode" useragent="DoCoMo"/>
+      <browser name="opera" useragent="Opera"/>
+      <browser name="lynx" useragent="Lynx"/>
+      <browser name="java" useragent="Java"/>
+      <browser name="wap" useragent="Nokia"/>
+      <browser name="wap" useragent="UP"/>
+      <browser name="wap" useragent="Wapalizer"/>
+      <browser name="mozilla5" useragent="Mozilla/5"/>
+      <browser name="mozilla5" useragent="Netscape6/"/>
+      <browser name="netscape" useragent="Mozilla"/>
+    </map:selector>
+
     <!--+
-        | NOTE: The appearance indicates the search order. This is very important since
-        |       some words may be found in more than one browser description. (MSIE is
-        |       presented as "Mozilla/4.0 (Compatible; MSIE 4.01; ...")
+        | Exception selector : used in <map:handle> errors to build different pipelines
+        | depending on the error that occured.
+        | The configuration allows to associate a symbolic name to exception classes
+        | which is used in the <map:when> tests.
+        | An exception can also be "unrolled", meaning that cascaded exception will be checked.
         +-->
-    <browser name="explorer" useragent="MSIE"/>
-    <browser name="pocketexplorer" useragent="MSPIE"/>
-    <browser name="handweb" useragent="HandHTTP"/>
-    <browser name="avantgo" useragent="AvantGo"/>
-    <browser name="imode" useragent="DoCoMo"/>
-    <browser name="opera" useragent="Opera"/>
-    <browser name="lynx" useragent="Lynx"/>
-    <browser name="java" useragent="Java"/>
-    <browser name="wap" useragent="Nokia"/>
-    <browser name="wap" useragent="UP"/>
-    <browser name="wap" useragent="Wapalizer"/>
-    <browser name="mozilla5" useragent="Mozilla/5"/>
-    <browser name="mozilla5" useragent="Netscape6/"/>
-    <browser name="netscape" useragent="Mozilla"/>
-   </map:selector>
+    <map:selector logger="sitemap.selector.exception" name="exception" src="org.apache.cocoon.selection.ExceptionSelector">
+      <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
+      <exception name="invalid-continuation" class="org.apache.cocoon.components.flow.InvalidContinuationException"/>
+      <!-- The statement below tells the selector to unroll as much exceptions as possible -->
+      <exception class="java.lang.Throwable" unroll="true"/>
+    </map:selector>
 
-   <!--+
-       | Exception selector : used in <map:handle> errors to build different pipelines
-       | depending on the error that occured.
-       | The configuration allows to associate a symbolic name to exception classes
-       | which is used in the <map:when> tests.
-       | An exception can also be "unrolled", meaning that cascaded exception will be checked.
-       +-->
-   <map:selector logger="sitemap.selector.exception" name="exception" src="org.apache.cocoon.selection.ExceptionSelector">
-     <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
-     <exception name="invalid-continuation" class="org.apache.cocoon.components.flow.InvalidContinuationException"/>
-     <!-- The statement below tells the selector to unroll as much exceptions as possible -->
-     <exception class="java.lang.Throwable" unroll="true"/>
-   </map:selector>
-
-   <map:selector logger="sitemap.selector.request-method" name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
-   <map:selector logger="sitemap.selector.resource-exists" name="resource-exists" src="org.apache.cocoon.selection.ResourceExistsSelector"/>
-   <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
-     <!--+
-         | Define now which request parameter to use; or do it later,
-         | when using this selector, via "parameter-name" parameter.
-     <parameter-name>myparam</parameter-name>
-         +-->
-   </map:selector>
-   <map:selector logger="sitemap.selector.request-attribute" name="request-attribute" src="org.apache.cocoon.selection.RequestAttributeSelector">
-    <!-- <attribute-name>myparam</attribute-name> -->
-   </map:selector>
-   <map:selector logger="sitemap.selector.session-attribute" name="session-attribute" src="org.apache.cocoon.selection.SessionAttributeSelector">
-    <!-- <attribute-name>myparam</attribute-name> -->
-   </map:selector>
-   <map:selector logger="sitemap.selector.parameter" name="parameter" src="org.apache.cocoon.selection.ParameterSelector"/>
-   <map:selector logger="sitemap.selector.header" name="header" src="org.apache.cocoon.selection.HeaderSelector">
-    <!-- <header-name>myparam</header-name> -->
-   </map:selector>
-   <map:selector logger="sitemap.selector.host" name="host" src="org.apache.cocoon.selection.HostSelector"/>
-   <map:selector logger="sitemap.selector.simple" name="simple" src="org.apache.cocoon.selection.SimpleSelector"/>
+    <map:selector logger="sitemap.selector.request-method" name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
+    <map:selector logger="sitemap.selector.resource-exists" name="resource-exists" src="org.apache.cocoon.selection.ResourceExistsSelector"/>
+    <map:selector logger="sitemap.selector.request-parameter" name="request-parameter" src="org.apache.cocoon.selection.RequestParameterSelector">
+      <!--+
+          | Define now which request parameter to use; or do it later,
+          | when using this selector, via "parameter-name" parameter.
+      <parameter-name>myparam</parameter-name>
+          +-->
+    </map:selector>
+    <map:selector logger="sitemap.selector.request-attribute" name="request-attribute" src="org.apache.cocoon.selection.RequestAttributeSelector">
+      <!-- <attribute-name>myparam</attribute-name> -->
+    </map:selector>
+    <map:selector logger="sitemap.selector.session-attribute" name="session-attribute" src="org.apache.cocoon.selection.SessionAttributeSelector">
+      <!-- <attribute-name>myparam</attribute-name> -->
+    </map:selector>
+    <map:selector logger="sitemap.selector.parameter" name="parameter" src="org.apache.cocoon.selection.ParameterSelector"/>
+    <map:selector logger="sitemap.selector.header" name="header" src="org.apache.cocoon.selection.HeaderSelector">
+      <!-- <header-name>myparam</header-name> -->
+    </map:selector>
+    <map:selector logger="sitemap.selector.host" name="host" src="org.apache.cocoon.selection.HostSelector"/>
+    <map:selector logger="sitemap.selector.simple" name="simple" src="org.apache.cocoon.selection.SimpleSelector"/>
   </map:selectors>
+
 
   <!--+
       | Actions are executed during pipeline setup. Their purpose is to
@@ -320,19 +321,20 @@
       | entirely and execution proceeds from the element right below the action.
       +-->
   <map:actions>
-   <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
-   <map:action logger="sitemap.action.requestParamExists" name="req-params" src="org.apache.cocoon.acting.RequestParameterExistsAction"/>
-   <map:action logger="sitemap.action.form-validator" name="form-validator" src="org.apache.cocoon.acting.FormValidatorAction"/>
-   <map:action logger="sitemap.action.session-state" name="session-state" src="org.apache.cocoon.acting.SessionStateAction"/>
-   <map:action logger="sitemap.action.session-isvalid" name="session-isvalid" src="org.apache.cocoon.acting.SessionIsValidAction"/>
-   <map:action logger="sitemap.action.session-validator" name="session-validator" src="org.apache.cocoon.acting.SessionValidatorAction"/>
-   <map:action logger="sitemap.action.session-invalidator" name="session-invalidator" src="org.apache.cocoon.acting.SessionInvalidatorAction"/>
-   <map:action logger="sitemap.action.resource-exists" name="resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"/>
-   <map:action logger="sitemap.action.set-header" name="set-header" src="org.apache.cocoon.acting.HttpHeaderAction"/>
-   <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
-   <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
-   <map:action logger="sitemap.action.locale" name="locale" src="org.apache.cocoon.acting.LocaleAction"/>
+    <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/>
+    <map:action logger="sitemap.action.requestParamExists" name="req-params" src="org.apache.cocoon.acting.RequestParameterExistsAction"/>
+    <map:action logger="sitemap.action.form-validator" name="form-validator" src="org.apache.cocoon.acting.FormValidatorAction"/>
+    <map:action logger="sitemap.action.session-state" name="session-state" src="org.apache.cocoon.acting.SessionStateAction"/>
+    <map:action logger="sitemap.action.session-isvalid" name="session-isvalid" src="org.apache.cocoon.acting.SessionIsValidAction"/>
+    <map:action logger="sitemap.action.session-validator" name="session-validator" src="org.apache.cocoon.acting.SessionValidatorAction"/>
+    <map:action logger="sitemap.action.session-invalidator" name="session-invalidator" src="org.apache.cocoon.acting.SessionInvalidatorAction"/>
+    <map:action logger="sitemap.action.resource-exists" name="resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"/>
+    <map:action logger="sitemap.action.set-header" name="set-header" src="org.apache.cocoon.acting.HttpHeaderAction"/>
+    <map:action logger="sitemap.action.clear-cache" name="clear-cache" src="org.apache.cocoon.acting.ClearCacheAction"/>
+    <map:action logger="sitemap.action.clear-persistent-store" name="clear-persistent-store" src="org.apache.cocoon.acting.ClearPersistentStoreAction"/>
+    <map:action logger="sitemap.action.locale" name="locale" src="org.apache.cocoon.acting.LocaleAction"/>
   </map:actions>
+
 
   <!--+
       | The different pipe implementations
@@ -399,6 +401,7 @@
 
  </map:components>
 
+
 <!-- =========================== Views =================================== -->
 
   <!--+
@@ -424,6 +427,7 @@
     </map:view>
   </map:views>
 
+
 <!-- =========================== Resources ================================= -->
 
   <!--+
@@ -435,6 +439,7 @@
  <map:resources>
  </map:resources>
 
+
 <!-- ========================== Action sets ================================ -->
 
  <!--+
@@ -444,6 +449,7 @@
      +-->
   <map:action-sets>
   </map:action-sets>
+
 
 <!-- =========================== Pipelines ================================= -->
 
