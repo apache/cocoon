@@ -155,11 +155,27 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                            "\" (expected " + getDatatype().getTypeClass() +
                            ", got " + newValue.getClass() + ").");
         }
-        Object oldValue = this.value;
-        boolean changed = ! (oldValue == null ? "" : oldValue).equals(newValue == null ? "" : newValue);
+
+        // Is it a new value?
+        boolean changed;
+        if (this.valueState == VALUE_UNPARSED) {
+            // Current value was not parsed
+            changed = true;
+        } else if (this.value == null) {
+            // Is current value not null?
+            changed = (newValue != null);
+        } else {
+            // Is current value different?
+            changed = !this.value.equals(newValue);
+        }
+
         // Do something only if value is different or null
         // (null allows to reset validation error)
         if (changed || newValue == null) {
+            // Do we need to call listeners? If yes, keep (and parse if needed) old value.
+            boolean callListeners = changed && hasValueChangedListeners();
+            Object oldValue = callListeners ? getValue() : null;
+            
             this.value = newValue;
             this.validationError = null;
             // Force validation, even if set by the application
@@ -169,7 +185,8 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             } else {
                 this.enteredValue = null;
             }
-            if (changed && hasValueChangedListeners()) {
+
+            if (callListeners) {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
         }
@@ -200,7 +217,13 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
-        if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
+        boolean changed;
+        if (enteredValue == null) {
+            changed = (newEnteredValue != null);
+        } else {
+            changed = !enteredValue.equals(newEnteredValue);
+        }
+        if (changed) {
             
             // If we have some value-changed listeners, we must make sure the current value has been
             // parsed, to fill the event. Otherwise, we don't need to spend that extra CPU time.
