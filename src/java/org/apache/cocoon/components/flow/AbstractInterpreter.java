@@ -73,6 +73,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
 import org.apache.excalibur.source.SourceUtil;
+import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 
 /**
  * Abstract superclass for various scripting languages used by Cocoon
@@ -83,7 +84,7 @@ import org.apache.excalibur.source.SourceUtil;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.13 2004/01/15 00:36:18 joerg Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.14 2004/01/19 04:37:36 coliver Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Serviceable, Contextualizable, Interpreter,
@@ -261,8 +262,13 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
                           Environment environment)
         throws Exception
     {
+        if (SourceUtil.indexOfSchemeColon(uri) != -1) {
+            throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
+        }
         Map objectModel = environment.getObjectModel();
         FlowHelper.setWebContinuation(objectModel, continuation);
-        process(uri, bizData, null, environment);
+        FlowHelper.setContextObject(objectModel, bizData);
+        PipelinesNode.getRedirector(environment).redirect(false, uri);
+        //process(uri, bizData, null, environment);
     }
 }

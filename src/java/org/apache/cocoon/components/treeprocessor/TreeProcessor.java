@@ -95,7 +95,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.17 2004/01/18 22:27:14 sylvain Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.18 2004/01/19 04:37:37 coliver Exp $
  */
 
 public class TreeProcessor
@@ -109,6 +109,7 @@ public class TreeProcessor
                Disposable {
 
     public static final String REDIRECTOR_ATTR = "sitemap:redirector";
+    public static final String COCOON_REDIRECT_ATTR = "sitemap:cocoon-redirect";
 
     private static final String OBJECT_SOURCE_RESOLVER = "sitemap:sourceresolver";
 
