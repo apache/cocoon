@@ -199,7 +199,7 @@ public class WebServiceProxyGenerator extends ComposerGenerator
     {
       
 
-      // @todo: Write a log entry detailing which httpMethod was configured
+      // TODO: Write a log entry detailing which httpMethod was configured
      
       HttpUrlMethod method = null;
    
@@ -253,14 +253,13 @@ public class WebServiceProxyGenerator extends ComposerGenerator
       int htcode = httpClient.executeMethod( method );
        
       // meaningful reaction to htcodes different than 200
-       // @todo: We should probably be logging this, as well.
+       // TODO: We should probably be logging this, as well.
        if (htcode >= 400) {
            throw new ProcessingException( "The remote returned error " + htcode + " when attempting to access remote URL:"  + method.getUrl() );
        }
 
       
-      // @todo: fix-me
-      // This sleep() is a temporary workaround 
+      // FIXME: This sleep() is a temporary workaround 
       // to avoid NullPointerException in the next line.
       Thread.sleep( 100 ); 
 

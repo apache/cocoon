@@ -82,7 +82,7 @@ public abstract class SchemaFactory {
 		throws InstantiationException {
 		// currently hardcoded implementation for Schematron
 		// until another schema validator is implemented
-		/* @todo create SchematronValidatorFactory */
+		/* TODO: create SchematronValidatorFactory */
 		if (ns.equals(NAMESPACE_SCHEMATRON))
 			return new org
 				.apache
