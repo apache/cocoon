@@ -1,14 +1,32 @@
 <?xml version="1.0"?>
 
-<!--
-    FOP block samples sitemap
-    $Id: sitemap.xmap,v 1.5 2003/05/05 09:30:12 bdelacretaz Exp $
- -->
+<!--+
+    | FOP block samples sitemap
+    | CVS $Id: sitemap.xmap,v 1.6 2003/06/10 23:58:43 vgritsenko Exp $
+    +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-    <map:pipelines>
+<!-- =========================== Views =================================== -->
 
+  <map:views>
+    <map:view from-label="content" name="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view name="pretty-content" from-label="data">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view from-position="last" name="links">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
+
+<!-- =========================== Pipelines ================================= -->
+
+    <map:pipelines>
         <map:pipeline type="caching">
 
             <map:match pattern="">
@@ -54,7 +72,5 @@
             </map:match>
 
         </map:pipeline>
-
     </map:pipelines>
-
 </map:sitemap>
