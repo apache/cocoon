@@ -50,6 +50,10 @@
  */
 package org.apache.cocoon.portal.layout.impl;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.cocoon.portal.factory.impl.AbstractProducibleDescription;
 import org.apache.cocoon.portal.layout.LayoutDescription;
 
@@ -59,26 +63,38 @@ import org.apache.cocoon.portal.layout.LayoutDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultLayoutDescription.java,v 1.2 2003/05/20 14:06:42 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutDescription.java,v 1.3 2003/06/14 16:58:02 cziegeler Exp $
  */
 public class DefaultLayoutDescription
     extends AbstractProducibleDescription
     implements LayoutDescription  {
 
-    protected String rendererName;
+    protected String defaultRendererName;
+    
+    protected List rendererNames = new ArrayList(2);
     
     /**
      * @return
      */
-    public String getRendererName() {
-        return rendererName;
+    public String getDefaultRendererName() {
+        return defaultRendererName;
     }
 
     /**
      * @param string
      */
-    public void setRendererName(String string) {
-        rendererName = string;
+    public void setDefaultRendererName(String string) {
+        defaultRendererName = string;
     }
 
+    /**
+     * @return the names of all allowed renderers
+     */
+    public Iterator getRendererNames() {
+        return this.rendererNames.iterator();
+    }
+
+    public void addRendererName(String name) {
+        this.rendererNames.add( name );
+    }
 }

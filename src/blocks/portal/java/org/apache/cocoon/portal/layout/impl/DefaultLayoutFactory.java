@@ -93,7 +93,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.10 2003/06/06 11:33:37 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.11 2003/06/14 16:58:02 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -132,8 +132,27 @@ public class DefaultLayoutFactory
                 desc.setName(name);
                 desc.setClassName(layoutsConf[i].getAttribute("class"));        
                 desc.setCreateId(layoutsConf[i].getAttributeAsBoolean("create-id", false));
-                desc.setRendererName(layoutsConf[i].getAttribute("renderer")); 
                 
+                // the renderers
+                final String defaultRenderer = layoutsConf[i].getChild("renderers").getAttribute("default");
+                desc.setDefaultRendererName(defaultRenderer); 
+                                
+                final Configuration[] rendererConfs = layoutsConf[i].getChild("renderers").getChildren("renderer");
+                if ( rendererConfs != null ) {
+                    boolean found = false;
+                    for(int m=0; m < rendererConfs.length; m++) {
+                        final String rName = rendererConfs[m].getAttribute("name");
+                        desc.addRendererName(rName);
+                        if ( defaultRenderer.equals(rName) ) {
+                            found = true;
+                        }
+                    }
+                    if ( !found ) {
+                        throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
+                    }
+                } else {
+                    throw new ConfigurationException("Default renderer '" + defaultRenderer + "' is not configured for layout '" + name + "'");
+                }
                 // and now the aspects
                 final Configuration[] aspectsConf = layoutsConf[i].getChild("aspects").getChildren("aspect");
                 if (aspectsConf != null) {
@@ -160,12 +179,12 @@ public class DefaultLayoutFactory
      
             final String layoutName = layout.getName();
             if ( layoutName == null ) {
-                throw new ProcessingException("Layout "+layout.getId()+" has no associated name.");
+                throw new ProcessingException("Layout '"+layout.getId()+"' has no associated name.");
             }
             Object[] o = (Object[]) this.layouts.get( layoutName );
             
             if ( o == null ) {
-                throw new ProcessingException("LayoutDescription with name " + layoutName + " not found.");
+                throw new ProcessingException("LayoutDescription with name '" + layoutName + "' not found.");
             }
             DefaultLayoutDescription layoutDescription = (DefaultLayoutDescription)o[0];
 
@@ -188,7 +207,7 @@ public class DefaultLayoutFactory
         Object[] o = (Object[]) this.layouts.get( layoutName );
             
         if ( o == null ) {
-            throw new ProcessingException("LayoutDescription with name " + layoutName + " not found.");
+            throw new ProcessingException("LayoutDescription with name '" + layoutName + "' not found.");
         }
         DefaultLayoutDescription layoutDescription = (DefaultLayoutDescription)o[0];
         
