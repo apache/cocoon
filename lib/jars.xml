@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.230 2004/06/27 13:42:25 sylvain Exp $
+    | CVS $Id: jars.xml,v 1.231 2004/06/29 12:14:06 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -305,8 +305,8 @@
     <title>Jakarta Commons Collections</title>
     <description>Common implementations of collection classes.</description>
     <used-by>Cocoon, OJB</used-by>
-    <lib>core/commons-collections-3.0.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/collections/index.html</homepage>
+    <lib>core/commons-collections-3.1.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/collections/</homepage>
   </file>
 
   <file>
