@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
  * Base class for XSP-generated <code>SitemapProcessor</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-11 03:10:03 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-17 21:06:14 $
  */
 public abstract class AbstractSitemapProcessor
          implements SitemapProcessor {      
@@ -47,42 +47,46 @@ public abstract class AbstractSitemapProcessor
         this.manager=manager; 
     } 
 
-  /**
-   * Determines whether this generator's source files have changed
-   *
-   * @return Whether any of the files this generator depends on has changed
-   * since it was created
-   */
-  public final boolean modifiedSince(long date) {
-    if (dateCreated < date) {
-      return true;
+    /**
+     * Determines whether this generator's source files have changed
+     *
+     * @return Whether any of the files this generator depends on has changed
+     * since it was created
+     */
+    public final boolean modifiedSince(long date) {
+        if (dateCreated < date) {
+            return true;
+        }
+
+        for (int i = 0; i < dependencies.length; i++) {
+            if (dateCreated < dependencies[i].lastModified()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    for (int i = 0; i < dependencies.length; i++) {
-      if (dateCreated < dependencies[i].lastModified()) {
+    /**
+     * Determines whether generated content has changed since
+     * last invocation. Users may override this method to take
+     * advantage of SAX event cacheing
+     *
+     * @param request The request whose data must be inspected to assert whether
+     * dynamically generated content has changed
+     * @return Whether content has changes for this request's data
+     */
+    public boolean hasContentChanged(Request request) {
         return true;
-      }
     }
 
-    return false;
-  }
-
-  /**
-   * Determines whether generated content has changed since
-   * last invocation. Users may override this method to take
-   * advantage of SAX event cacheing
-   *
-   * @param request The request whose data must be inspected to assert whether
-   * dynamically generated content has changed
-   * @return Whether content has changes for this request's data
-   */
-  public boolean hasContentChanged(Request request) {
-    return true;
-  }
      /** 
      * Loads a class specified in a sitemap component definition
      */ 
-    protected Object load_component (String ClassURL, Configuration conf) {         return ("");     } 
+    protected Object load_component (String ClassURL, Configuration conf) {
+        return (""); 
+    } 
+
     /**
      * Resolve a link against a source into the target URI space.
      */
@@ -92,8 +96,11 @@ public abstract class AbstractSitemapProcessor
     } 
 
     /**
-     * Constructs a <code>ResourcePipeline</code> for the <code>Request</code>.
+     * Constructs a resource to the supplied <code>OutputStream</code>
+     * for the <code>Request</code> and <code>Response</code> arguments.
      * This method is supplied by the generated SitemapProcessor .
      */
-    protected abstract ResourcePipeline constructPipeline (Request request, Response resposne);
-     /** Following methods are for testing purposes only and should later be deleted */     protected boolean uri_wildcard_matcher (String pattern) {        return (true);     }     protected boolean uri_regexp_matcher (String pattern) {        return (true);     }     protected boolean browser_matcher (String pattern) {        return (true);     } } 
+/*
+    public abstract boolean process (Request request, Response resposne, OutputStream out);
+*/
+} 

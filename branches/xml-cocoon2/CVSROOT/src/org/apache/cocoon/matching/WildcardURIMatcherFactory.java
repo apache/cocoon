@@ -9,13 +9,15 @@ package org.apache.cocoon.matching;
 
 import org.apache.cocoon.sitemap.patterns.PatternTranslator; 
 import org.apache.cocoon.sitemap.patterns.PatternException; 
+
+import org.w3c.dom.DocumentFragment;
  
 /** 
  * This class generates source code which represents a specific pattern matcher
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:44 $ 
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:12 $ 
  */ 
 
 public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements MatcherFactory {
@@ -33,7 +35,7 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
     /**
      * Generates the matcher method source code
      */
-    public String generate (String pattern) 
+    public String generate (String pattern, DocumentFragment conf) 
     throws PatternException {
         StringBuffer result = new StringBuffer();
         this.setPattern (pattern);
@@ -51,7 +53,7 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
         result.append (sourcePattern[j]);
         result.append ("};");
         result.append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (stack, request.getUri(), expr))");
-        result.append ("return stack;");
+        result.append ("return (Map) stack;");
         result.append ("else return null;");
         return result.toString();
     }
@@ -140,7 +142,7 @@ public class WildcardURIMatcherFactory /*extends PatternTranslator*/ implements 
             if (argv.length<1) return;
             System.out.println("Matching Expr.    \""+argv[0]+"\"");
             WildcardURIMatcherFactory wm = new WildcardURIMatcherFactory();
-            System.out.println(wm.generate (argv[0]));
+            System.out.println(wm.generate (argv[0], null));
         } catch (Exception e) {
             System.out.println(e.getClass().getName());
             System.out.println(e.getMessage());

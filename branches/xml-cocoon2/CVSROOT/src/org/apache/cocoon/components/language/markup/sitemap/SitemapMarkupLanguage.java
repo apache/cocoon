@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * <a href="http://xml.apache.org/cocoon/sitemap.html">Sitemap</a>.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-06 18:53:20 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-17 21:06:10 $
  */
 public class SitemapMarkupLanguage extends AbstractMarkupLanguage {
   /**

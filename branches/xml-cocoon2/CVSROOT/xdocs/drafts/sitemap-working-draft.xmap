@@ -234,7 +234,11 @@ The following goals were identified as engineering constraints:
    </map:matcher>
 
    <map:matcher name="browser" factory="org.apache.cocoon.matching.BrowserMatcherFactory">
-    ...
+    <foo value="bar">baz</foo>
+    <lines>
+     <left>red</left>
+     <right>white</right>
+    </lines>
    </map:matcher>
   </map:matchers>
 
@@ -359,7 +363,7 @@ The following goals were identified as engineering constraints:
         match some of their parameters
      -->
    <map:match pattern="cocoon/dist/*"> 
-    <map:choose type="ip-filter">
+    <map:select type="ip-filter">
      <map:when test="allowsAddress()">
       <!-- 
           the <redirect-to> element is used to redirect one requested URI 
@@ -370,7 +374,7 @@ The following goals were identified as engineering constraints:
      <map:otherwise>
       <map:redirect-to resource="Access refused"/>
      </map:otherwise>
-    </map:choose>
+    </map:select>
    </map:match>
    
    <!-- 
@@ -385,7 +389,7 @@ The following goals were identified as engineering constraints:
    </map:match>
   
    <map:match pattern="images/logo">
-    <map:choose>
+    <map:select>
      <map:when test="accepts('image/svg')">
       <!-- 
          the <map:read> element is used to read the src directly without 
@@ -396,20 +400,20 @@ The following goals were identified as engineering constraints:
      </map:when>
      <map:otherwise>
       <map:generate src="./images/logo.svg"/>
-      <map:choose>
+      <map:select>
        <map:when test="accepts('image/png')">
         <map:serialize type="svg2png"/>
        </map:when>
        <map:otherwise>
         <map:serialize type="svg2jpg"/>
        </map:otherwise>
-      </map:choose>
+      </map:select>
      </map:otherwise>
-    </map:choose>
+    </map:select>
    </map:match>
   
    <map:match pattern="restricted/*">
-    <map:choose type="user">
+    <map:select type="user">
      <map:when test="is('administrator')">
       <map:generate src="./restricted/{1}"/>
       <map:transform src="./stylesheets/restricted.xsl"/>
@@ -418,7 +422,7 @@ The following goals were identified as engineering constraints:
      <map:otherwise>
       <map:redirect-to resource="Access refused"/>
      </map:otherwise>
-    </map:choose>
+    </map:select>
    </map:match>
 
    <!--
@@ -445,7 +449,7 @@ The following goals were identified as engineering constraints:
     </map:match>
    </map:match>
   
-   <map:match type="uri-regexp" pattern="/\([0-9]\{4\}\)/\([0-9]\{2\}\)/\([0-9]\{2\}\)/">
+   <map:match type="uri-regexp" pattern="([0-9]{4})/([0-9]{2})/([0-9]{2})/">
     <!--
          Here we implement the ability to indicate semantic information
          on the processed URI. This is mostly used to avoid to encode
@@ -458,33 +462,33 @@ The following goals were identified as engineering constraints:
     <map:param name="month" value="{2}"/>
     <map:param name="day" value="{3}"/>
     
-    <map:generate name="serverpages" src="./dailynews.xsp"/>
+    <map:generate type="serverpages" src="./dailynews.xsp"/>
     <map:transform src="./stylesheet/{1}/news.xsl"/>
     <map:serialize/>
    </map:match>
   
    <map:match pattern="*">
     <map:generate src="{1}.xml"/>
-    <map:choose type="load">
+    <map:select type="load">
      <map:when test="greaterThen('2.5')">
       <map:transform src="./stylesheet/low-graphics.xsl"/>
      </map:when>
      <map:otherwise>
-      <map:choose>
+      <map:select>
        <map:when test="is('Mozilla5')">
         <map:transform src="./stylesheet/xul-enabled.xsl"/>
        </map:when>
        <map:otherwise>
         <map:transform src="./stylesheet/general-browser.xsl"/>
        </map:otherwise>
-      </map:choose>
+      </map:select>
      </map:otherwise>
-    </map:choose>
+    </map:select>
     <map:serialize/>
    </map:match>
  
    <map:handle-errors>
-    <map:choose>
+    <map:select>
      <map:when test="accepts('text/vnd.wap.wml')">
       <map:transform src="./styles/Pipeline2WML.xsl"/>
       <map:serialize type="wap"/>
@@ -493,7 +497,7 @@ The following goals were identified as engineering constraints:
       <map:transform src="./styles/Pipeline2HTML.xsl"/>
       <map:serialize/>
      </map:otherwise>
-    </map:choose>
+    </map:select>
    </map:handle-errors>
   
   </map:pipeline>

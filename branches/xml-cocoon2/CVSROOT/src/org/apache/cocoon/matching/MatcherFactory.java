@@ -6,6 +6,8 @@
  * the LICENSE file.                                                         * 
  *****************************************************************************/ 
 package org.apache.cocoon.matching; 
+
+import org.w3c.dom.DocumentFragment;
  
 /** 
  * Interface a class has to implement that produces java source code 
@@ -16,9 +18,9 @@ package org.apache.cocoon.matching;
  * sitemap code generation.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:43 $ 
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:11 $ 
  */ 
 
 public interface MatcherFactory {
-    public String generate (String pattern) throws Exception;
+    public String generate (String pattern, DocumentFragment conf) throws Exception;
 }

@@ -8,6 +8,8 @@
 package org.apache.cocoon.sitemap; 
 
 import org.apache.cocoon.matching.MatcherFactory;
+
+import org.w3c.dom.DocumentFragment;
   
 /** 
  * This class is used as a XSLT extension class. It is used by the sitemap 
@@ -15,15 +17,15 @@ import org.apache.cocoon.matching.MatcherFactory;
  * generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-12 22:15:17 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-17 21:06:14 $ 
  */ 
 
 public class XSLTMatcherFactoryLoader {
 
-    public String getSource (String matcherFactoryClassname, String pattern) 
+    public String getSource (String matcherFactoryClassname, String pattern, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
         Class cl = this.getClass().getClassLoader().loadClass(matcherFactoryClassname);
         MatcherFactory factory = (MatcherFactory) cl.newInstance();
-        return factory.generate (pattern);
+        return factory.generate (pattern, conf);
     }
 }

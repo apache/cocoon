@@ -8,6 +8,8 @@
 package org.apache.cocoon.sitemap; 
 
 import org.apache.cocoon.selection.SelectorFactory;
+
+import org.w3c.dom.DocumentFragment;
   
 /** 
  * This class is used as a XSLT extension class. It is used by the sitemap 
@@ -15,15 +17,15 @@ import org.apache.cocoon.selection.SelectorFactory;
  * generated source code.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-12 22:15:18 $ 
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:14 $ 
  */ 
 
 public class XSLTSelectorFactoryLoader {
 
-    public String getSource (String selectorFactoryClassname, String test) 
+    public String getSource (String selectorFactoryClassname, String test, DocumentFragment conf) 
     throws ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
         Class cl = this.getClass().getClassLoader().loadClass(selectorFactoryClassname);
         SelectorFactory factory = (SelectorFactory) cl.newInstance();
-        return factory.generate (test);
+        return factory.generate (test, conf);
     }
 }

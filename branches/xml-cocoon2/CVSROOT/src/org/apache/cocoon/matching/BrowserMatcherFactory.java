@@ -6,17 +6,37 @@
  * the LICENSE file.                                                         * 
  *****************************************************************************/ 
 package org.apache.cocoon.matching; 
+
+import java.util.Stack;
+
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import org.apache.xerces.dom.
  
 /** 
  * This class generates source code which matches a specific browser pattern
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-12 22:15:11 $ 
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-07-17 21:06:11 $ 
  */ 
 
 public class BrowserMatcherFactory implements MatcherFactory {
-    public String generate (String test_expression) {
-        return "return null;";
+    public String generate (String test_expression, DocumentFragment conf) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("/*\n");
+
+        Stack st = new Stack();        
+        Node node = conf.getFirstChild();
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node node = nl.item(i);
+            sb.append("name="+node.getNodeName()
+                     +" type="+node.getNodeType()
+                     +" value="+node.getNodeValue()+"\n");
+        }
+        sb.append("*/return null;");
+        return (sb.toString());
     }
 }

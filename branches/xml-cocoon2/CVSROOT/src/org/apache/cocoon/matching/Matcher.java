@@ -15,7 +15,7 @@ import org.apache.cocoon.Request;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-11 23:46:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:11 $
  */
 public interface Matcher extends SitemapComponent {
     /**

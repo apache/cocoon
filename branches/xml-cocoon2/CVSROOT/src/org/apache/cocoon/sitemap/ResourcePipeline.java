@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-11 23:46:54 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-07-17 21:06:14 $
  */
 public class ResourcePipeline {
     private Generator generator = null;
@@ -60,7 +60,7 @@ public class ResourcePipeline {
         this.transformerParams.add (param);
     }
 
-    public boolean startPipeline (Request req, Response res, OutputStream out)
+    public boolean process (Request req, Response res, OutputStream out)
                             throws ProcessingException, IOException, SAXException {
         if (generator == null) {
             throw new ProcessingException ("Generator not specified");

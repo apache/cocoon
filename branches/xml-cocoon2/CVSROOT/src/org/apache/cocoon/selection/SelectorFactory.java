@@ -6,6 +6,8 @@
  * the LICENSE file.                                                         * 
  *****************************************************************************/ 
 package org.apache.cocoon.selection; 
+
+import org.w3c.dom.DocumentFragment;
  
 /** 
  * Interface a class has to implement that produces java source code 
@@ -16,9 +18,9 @@ package org.apache.cocoon.selection;
  * sitemap code generation.
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-07-12 22:15:13 $ 
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-07-17 21:06:13 $ 
  */ 
 
 public interface SelectorFactory {
-    public String generate (String test) throws Exception;
+    public String generate (String test, DocumentFragment conf) throws Exception;
 }
