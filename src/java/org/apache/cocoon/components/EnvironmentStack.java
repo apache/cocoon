@@ -16,14 +16,11 @@
 package org.apache.cocoon.components;
 
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.environment.Environment;
 
 import org.apache.commons.collections.ArrayStack;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-
-import java.util.Map;
 
 /**
  * The stack for the processing environment.
