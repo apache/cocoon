@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.44 2000-11-09 15:35:56 greenrd Exp $
+  $Id: todo.xml,v 1.45 2000-11-10 14:32:20 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -83,6 +83,10 @@
  </actions>
 
  <actions priority="low">
+  <action context="code">
+   Add hooks for user-defined error-handling (better than just handle.errors.internally
+   flag in cocoon.properties).
+  </action>
   <action context="docs">
    Make &lt;connect&gt; tags work correctly when xdocs are transformed to HTML docs.
   </action>
