@@ -24,6 +24,8 @@
         <exclude name="images/**"/>
       </fileset>
     </copy>
+    <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
+    overwrite it with the old Cocoon-specific sitemap here -->
     <move file="${build.context}/sitemap-localdocs.xmap"
       tofile="${build.context}/sitemap.xmap"/>
 
