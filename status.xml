@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.185 2003/11/07 09:29:51 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.186 2003/11/07 10:49:58 bdelacretaz Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BD" type="add" fixes-bug="24294" due-to="Jelle Alten" due-to-email="jelle@ordina.nl">
+     sitemap-viewer added to the scratchpad samples
+  </action>
  <action dev="AG" type="fix" fixes-bug="19638" due-to-email="Grigorios.Merenidis@Dresdner-Bank.com" due-to="Grigorios Merenidis">
      Fix HSSFSerializer Bug: Same cell definitions blows document. Applying
      patch from Grigorios Merenidis (Grigorios.Merenidis@Dresdner-Bank.com).
