@@ -502,8 +502,17 @@
      modification date is in the future and occasional ECM-related exceptions
      when a sitemap is reloaded.
    </action>
+   <action dev="BD" type="add" due-to="Stavros Kounis" fixes-bug="28834">
+     Tour block: added Java shapes sample.
+   </action>
    <action dev="AG" type="update">
      Updated Groovy to 1.0-beta5, qdox to 1.4 and util.concurrent to 1.3.4.
+   </action>
+   <action dev="TC" type="fix">
+     Serializers block: Fixed the namespace handling of the XMLSerializer.
+   </action>
+   <action dev="TC" type="add">
+     Serializers block: Added support for indentation to the XMLSerializer.
    </action>
    <action dev="DC" type="update" fixes-bug="28809" due-to="Dave Brondsema">
      Chaperon block: Improvements for Chaperon JSPWiki to xdocs conversion:
