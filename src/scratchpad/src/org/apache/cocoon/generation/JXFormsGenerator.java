@@ -999,6 +999,9 @@ public class JXFormsGenerator extends AbstractGenerator {
                     newEvent = startInputControl;
                 } else if (isInputControl(localName)) {
                     String refStr = attrs.getValue("ref");
+                    if (refStr == null) {
+                        throw new SAXParseException("\""+localName + "\" requires a \"ref\" attribute", locator, null);
+                    }
                     XPathExpr ref = 
                         compileExpr(refStr, locator);
                     StartInputControl startInputControl = 
@@ -1479,10 +1482,17 @@ public class JXFormsGenerator extends AbstractGenerator {
                     (StartInputControl)ev;
                 XPathExpr ref = startInputControl.ref;
                 StartElement startElement = startInputControl.startElement;
+                Attributes attrs = startElement.attributes;
+                if (!ref.absolute && contextPath != null) {
+                    AttributesImpl impl = new AttributesImpl(attrs);
+                    int index = impl.getIndex(REF);
+                    impl.setValue(index, contextPath + "/" + ref.string);
+                    attrs = impl;
+                }
                 consumer.startElement(startElement.namespaceURI,
                                       startElement.localName,
                                       startElement.raw,
-                                      startElement.attributes);
+                                      attrs);
                 if (ref != null) {
                     Iterator iter = ref.iterate(rootContext,
                                                 currentContext);
