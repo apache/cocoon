@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<xconf xpath="/cocoon" unless="component[@class='org.apache.cocoon.caching.impl.EventAwareCacheImpl']">
+	<!-- Override default Cache impl and use the event aware version -->
+	<component role="org.apache.cocoon.caching.Cache"
+               class="org.apache.cocoon.caching.impl.EventAwareCacheImpl"/>
+</xconf>
