@@ -17,6 +17,8 @@ package org.apache.cocoon.components.store.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -29,22 +31,27 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.store.Store;
+import org.apache.excalibur.store.StoreJanitor;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.apache.jcs.engine.memory.MemoryCache;
 
 
 /**
  * This is the default store implementation based on JCS
  * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
  * 
- * @version CVS $Id: JCSDefaultStore.java,v 1.2 2004/05/19 08:43:05 cziegeler Exp $
+ * @version CVS $Id: JCSDefaultStore.java,v 1.3 2004/05/20 10:48:16 cziegeler Exp $
  */
 public class JCSDefaultStore 
     extends AbstractLogEnabled
@@ -53,7 +60,8 @@ public class JCSDefaultStore
                Parameterizable,
                Initializable,
                Disposable, 
-               ThreadSafe {
+               ThreadSafe,
+               Serviceable {
 
     /** The JCS configuration properties */
     protected Properties properties;
@@ -73,11 +81,25 @@ public class JCSDefaultStore
     /** The context containing the work and the cache directory */
     private Context context;
 
+    /** Service Manager */
+    private ServiceManager manager;
+    
+    /** Store janitor */
+    private StoreJanitor janitor;
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context aContext) throws ContextException {
         this.context = aContext;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
+        this.janitor = (StoreJanitor)this.manager.lookup(StoreJanitor.ROLE);
     }
     
     /* (non-Javadoc)
@@ -155,12 +177,16 @@ public class JCSDefaultStore
         this.cacheManager = CompositeCacheManager.getUnconfiguredInstance();
         this.cacheManager.configure(this.properties);
         this.jcs = new JCSCacheAccess(cacheManager.getCache(region));
+        this.janitor.register(this);
     }
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
+        if( this.janitor != null ) {
+            this.janitor.unregister( this );
+        }
         if ( this.jcs != null ) {
             this.jcs.dispose();
             this.jcs = null;
@@ -170,6 +196,11 @@ public class JCSDefaultStore
             this.cacheManager = null;            
         }
         this.properties = null;
+        if ( this.manager != null ) {
+            this.manager.release( this.janitor );
+            this.janitor = null;
+            this.manager = null;
+        }
     }
     
     protected String getDefaultPropertiesFile() {
@@ -246,7 +277,16 @@ public class JCSDefaultStore
      * @see org.apache.excalibur.store.Store#free()
      */
     public void free() {
-        // TODO
+        // TODO Find a better way
+        MemoryCache memoryCache = this.cacheManager.getCache(region).getMemoryCache();
+        Object[] keys = memoryCache.getKeyArray();
+        if ( keys != null && keys.length > 0 ) {
+            final Object key = keys[0];
+            try {
+                memoryCache.remove((Serializable)key);
+            } catch (Exception ignore) {                
+            }
+        }
     }
     
     /* (non-Javadoc)
@@ -291,14 +331,21 @@ public class JCSDefaultStore
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
-      return new IteratorEnumeration(this.jcs.getGroupKeys("").iterator());
+        // TODO Find a better way
+        final MemoryCache memoryCache = this.cacheManager.getCache(region).getMemoryCache();
+        final Object[] keys = memoryCache.getKeyArray();
+        return new IteratorEnumeration(Arrays.asList(keys).iterator());
+        //return new IteratorEnumeration(this.jcs.getGroupKeys("").iterator());
     }
     
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#size()
      */
     public int size() {
-        return this.jcs.getSize();
+        // TODO Find a better way
+        MemoryCache memoryCache = this.cacheManager.getCache(region).getMemoryCache();
+        return memoryCache.getSize();
+        //return this.jcs.getSize();
     }
     
 
