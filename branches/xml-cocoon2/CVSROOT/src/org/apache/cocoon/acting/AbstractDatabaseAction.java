@@ -32,6 +32,7 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 import org.apache.avalon.Component;
+import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Configurable;
@@ -44,6 +45,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.http.HttpRequest;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.components.parser.Parser;
@@ -139,7 +141,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-26 22:53:39 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-27 16:49:15 $
  */
 public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
     private static Map configurations = new HashMap();
@@ -165,6 +167,15 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
         constants.put("now", new Integer(Types.OTHER));
 
         typeConstants = Collections.unmodifiableMap(constants);
+    }
+
+    /**
+     * Compose the Actions so that we can select our databases.
+     */
+    public void compose(ComponentManager manager) throws ComponentManagerException {
+        this.dbselector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
+
+        super.compose(manager);
     }
 
     /**
@@ -238,16 +249,26 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
     /**
      * Set the Statement column so that the results are mapped correctly.
      */
-    protected final void setColumn(PreparedStatement statement, int position, Object value, Configuration entry) throws Exception {
+    protected final void setColumn(PreparedStatement statement, int position, HttpRequest request, Configuration entry) throws Exception {
         Integer typeObject = (Integer) AbstractDatabaseAction.typeConstants.get(entry.getAttribute("type"));
 
         if (typeObject == null) {
             throw new SQLException("Can't set column because the type is invalid");
         }
 
+        String attribute = entry.getAttribute("param", "");
+        String value = request.getParameter(attribute);
+
+        getLogger().info("Setting parameter '" + attribute + "' to: " + value);
+
+        if (value == null) {
+            statement.setNull(position, typeObject.intValue());
+            return;
+        }
+
         switch (typeObject.intValue()) {
             case Types.CLOB:
-                File asciiFile = (File) value;
+                File asciiFile = (File) request.get(attribute);
                 FileInputStream asciiStream = new FileInputStream(asciiFile);
                 statement.setAsciiStream(position, asciiStream, (int) asciiFile.length());
                 break;
@@ -255,39 +276,39 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
                 statement.setBigDecimal(position, new BigDecimal((String) value));
                 break;
             case Types.BLOB:
-                File binaryFile = (File) value;
+                File binaryFile = (File) request.get(attribute);
                 FileInputStream binaryStream = new FileInputStream(binaryFile);
                 statement.setBinaryStream(position, binaryStream, (int) binaryFile.length());
                 break;
             case Types.TINYINT:
-                statement.setByte(position, (new Byte((String) value)).byteValue());
+                statement.setByte(position, (new Byte(value)).byteValue());
                 break;
             case Types.VARCHAR:
-                statement.setString(position, (String) value);
+                statement.setString(position, value);
                 break;
             case Types.DATE:
-                statement.setDate(position, new Date(this.dateValue((String) value, entry.getAttribute("format", "M/d/yyyy"))));
+                statement.setDate(position, new Date(this.dateValue(value, entry.getAttribute("format", "M/d/yyyy"))));
                 break;
             case Types.DOUBLE:
-                statement.setDouble(position, (new Double((String) value)).doubleValue());
+                statement.setDouble(position, (new Double(value)).doubleValue());
                 break;
             case Types.FLOAT:
-                statement.setFloat(position, (new Float((String) value)).floatValue());
+                statement.setFloat(position, (new Float(value)).floatValue());
                 break;
             case Types.INTEGER:
-                statement.setInt(position, (new Integer((String) value)).intValue());
+                statement.setInt(position, (new Integer(value)).intValue());
                 break;
             case Types.NUMERIC:
-                statement.setLong(position, (new Long((String) value)).longValue());
+                statement.setLong(position, (new Long(value)).longValue());
                 break;
             case Types.SMALLINT:
-                statement.setShort(position, (new Short((String) value)).shortValue());
+                statement.setShort(position, (new Short(value)).shortValue());
                 break;
             case Types.TIME:
-                statement.setTime(position, new Time(this.dateValue((String) value, entry.getAttribute("format", "h:m:s a"))));
+                statement.setTime(position, new Time(this.dateValue(value, entry.getAttribute("format", "h:m:s a"))));
                 break;
             case Types.TIMESTAMP:
-                statement.setTimestamp(position, new Timestamp(this.dateValue((String) value, entry.getAttribute("format", "M/d/yyyy h:m:s a"))));
+                statement.setTimestamp(position, new Timestamp(this.dateValue(value, entry.getAttribute("format", "M/d/yyyy h:m:s a"))));
                 break;
             case Types.OTHER:
                 statement.setTimestamp(position, new Timestamp((new java.util.Date()).getTime()));

@@ -43,7 +43,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-26 21:13:39 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-27 16:49:13 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();
@@ -70,9 +70,7 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
 
             for (int i = 1; keys.hasNext(); i++) {
                 Configuration itemConf = (Configuration) keys.next();
-                String parameter = itemConf.getAttribute("param");
-                Object value = request.get(parameter);
-                this.setColumn(statement, i, value, itemConf);
+                this.setColumn(statement, i, request, itemConf);
             }
 
             statement.execute();
@@ -124,6 +122,8 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
                     queryBuffer.append(((Configuration) keys.next()).getAttribute("dbcol"));
                     queryBuffer.append(" = ?");
                 }
+
+                query = queryBuffer.toString();
             }
 
             DatabaseDeleteAction.deleteStatements.put(conf, query);

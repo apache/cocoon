@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-26 22:23:33 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-27 16:49:12 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -58,7 +58,13 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
             Configuration conf = this.getConfiguration(param.getParameter("form-descriptor", null));
             String query = this.getUpdateQuery(conf);
             datasource = this.getDataSource(conf);
+
+            getLogger().info("The datasource used is: " + datasource);
+
             conn = datasource.getConnection();
+
+            getLogger().info("The connection used is: " + conn);
+
             HttpRequest request = (HttpRequest) objectModel.get(Constants.REQUEST_OBJECT);
 
             PreparedStatement statement = conn.prepareStatement(query);
@@ -69,17 +75,13 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
 
             for (int i = currentIndex; values.hasNext(); i++) {
                 Configuration itemConf = (Configuration) values.next();
-                String parameter = itemConf.getAttribute("param");
-                Object value = request.get(parameter);
-                this.setColumn(statement, i, value, itemConf);
+                this.setColumn(statement, i, request, itemConf);
                 currentIndex = i;
             }
 
             for (int i = currentIndex; keys.hasNext(); i++) {
                 Configuration itemConf = (Configuration) keys.next();
-                String parameter = itemConf.getAttribute("param");
-                Object value = request.get(parameter);
-                this.setColumn(statement, i, value, itemConf);
+                this.setColumn(statement, i, request, itemConf);
             }
 
             statement.execute();
@@ -146,6 +148,8 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
                     queryBuffer.append(((Configuration) keys.next()).getAttribute("dbcol"));
                     queryBuffer.append(" = ?");
                 }
+
+                query = queryBuffer.toString();
             }
 
             DatabaseUpdateAction.updateStatements.put(conf, query);

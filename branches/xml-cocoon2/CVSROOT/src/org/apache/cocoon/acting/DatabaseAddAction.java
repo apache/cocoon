@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-26 22:22:08 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-27 16:49:13 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -68,9 +68,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
             for (int i = currentIndex; values.hasNext(); i++) {
                 Configuration itemConf = (Configuration) values.next();
-                String parameter = itemConf.getAttribute("param");
-                Object value = request.get(parameter);
-                this.setColumn(statement, i, value, itemConf);
+                this.setColumn(statement, i, request, itemConf);
                 currentIndex = i;
             }
 
@@ -137,6 +135,8 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
 
                     queryBuffer.append("?");
                 }
+
+                query = queryBuffer.toString();
             }
 
             DatabaseAddAction.addStatements.put(conf, query);
