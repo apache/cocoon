@@ -50,15 +50,23 @@
 */
 package org.apache.cocoon.portal.source;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.CascadingIOException;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
@@ -72,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSource.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
+ * @version CVS $Id: CopletSource.java,v 1.5 2004/02/02 08:39:09 cziegeler Exp $
  */
 public class CopletSource 
     implements Source, XMLizable, Serviceable {
@@ -105,7 +113,26 @@ public class CopletSource
 	 * @see org.apache.excalibur.source.Source#getInputStream()
 	 */
 	public InputStream getInputStream() throws IOException, SourceNotFoundException {
-		return null;
+        ComponentManager sitemapManager = CocoonComponentManager.getSitemapComponentManager();
+        ComponentSelector serializerSelector = null;
+        Serializer serializer = null;
+        try {
+            serializerSelector = (ComponentSelector) sitemapManager.lookup(Serializer.ROLE+"Selector");
+            serializer = (Serializer) serializerSelector.select("html");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            serializer.setOutputStream(os);
+            this.toSAX(serializer);
+            return new ByteArrayInputStream(os.toByteArray());
+        } catch (SAXException se) {
+            throw new CascadingIOException("Unable to stream content.", se);
+        } catch (ComponentException ce) {
+            throw new CascadingIOException("Unable to get components for serializing.", ce);
+        } finally {
+            if ( serializer != null ) {
+                serializerSelector.release(serializer);
+            }
+            sitemapManager.release(serializerSelector);
+        }
 	}
 
 	/**
