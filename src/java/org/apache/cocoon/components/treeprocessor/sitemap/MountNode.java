@@ -63,12 +63,14 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 
 /**
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.6 2003/09/29 21:06:39 sylvain Exp $
+ * @version CVS $Id: MountNode.java,v 1.7 2003/10/06 16:42:39 sylvain Exp $
  */
 public class MountNode extends AbstractProcessingNode implements Composable {
 
@@ -106,7 +108,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         Map objectModel = env.getObjectModel();
 
         String resolvedSource = this.source.resolve(context, objectModel);
-        TreeProcessor processor = getProcessor(env, resolvedSource);
+        TreeProcessor processor = getProcessor(resolvedSource);
 
         String resolvedPrefix = this.prefix.resolve(context, objectModel);
 
@@ -138,7 +140,7 @@ public class MountNode extends AbstractProcessingNode implements Composable {
         }
     }
 
-    private synchronized TreeProcessor getProcessor(Environment env, String source) throws Exception {
+    private synchronized TreeProcessor getProcessor(String source) throws Exception {
 
         TreeProcessor processor = (TreeProcessor)processors.get(source);
 
@@ -150,9 +152,15 @@ public class MountNode extends AbstractProcessingNode implements Composable {
             } else {
                 actualSource = source;
             }
-
-            processor = this.parentProcessor.createChildProcessor(
-                this.manager, this.language, env.resolveURI(actualSource));
+            
+            SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+            Source src = resolver.resolveURI(actualSource);
+            try {
+                processor = this.parentProcessor.createChildProcessor(this.manager, this.language, src);
+            } finally {
+                resolver.release(src);
+                this.manager.release(resolver);
+            }
 
             // Associate to the original source
             processors.put(source, processor);
