@@ -86,7 +86,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.5 2003/09/24 22:34:53 cziegeler Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.6 2003/11/08 17:42:36 haul Exp $
  */
 public class MailMessageSender {
 
@@ -97,6 +97,8 @@ public class MailMessageSender {
     private String bcc;
     private String subject;
     private String charset;
+    private String src;
+    private String srcMimeType;
     private String body;
     private List attachmentList;
     private Exception exception = null;
@@ -215,7 +217,8 @@ public class MailMessageSender {
      * @throws AddressException when problems with email addresses are found
      * @throws MessagingException when message could not be send.
      */
-    public void send(SourceResolver resolver) throws AddressException, MessagingException {
+    public void send(SourceResolver resolver)
+        throws AddressException, MessagingException {
         List sourcesList = new ArrayList();
 
         if (this.from == null) {
@@ -224,7 +227,8 @@ public class MailMessageSender {
             try {
                 this.message.setFrom(new InternetAddress(this.from));
             } catch (AddressException e) {
-                throw new AddressException("invalid from address: " + this.from + ": " + e.getMessage());
+                throw new AddressException(
+                    "invalid from address: " + this.from + ": " + e.getMessage());
             }
         }
 
@@ -232,25 +236,34 @@ public class MailMessageSender {
             throw new AddressException("no to address");
         } else {
             try {
-                this.message.setRecipients(RecipientType.TO, InternetAddress.parse(this.to));
+                this.message.setRecipients(
+                    RecipientType.TO,
+                    InternetAddress.parse(this.to));
             } catch (AddressException e) {
-                throw new AddressException("invalid to address: " + this.to + ": " + e.getMessage());
+                throw new AddressException(
+                    "invalid to address: " + this.to + ": " + e.getMessage());
             }
         }
 
         if (this.cc != null) {
             try {
-                this.message.setRecipients(RecipientType.CC, InternetAddress.parse(this.cc));
+                this.message.setRecipients(
+                    RecipientType.CC,
+                    InternetAddress.parse(this.cc));
             } catch (AddressException e) {
-                throw new AddressException("invalid cc address: " + this.cc + ": " + e.getMessage());
+                throw new AddressException(
+                    "invalid cc address: " + this.cc + ": " + e.getMessage());
             }
         }
 
         if (this.bcc != null) {
             try {
-                this.message.setRecipients(RecipientType.BCC, InternetAddress.parse(this.bcc));
+                this.message.setRecipients(
+                    RecipientType.BCC,
+                    InternetAddress.parse(this.bcc));
             } catch (AddressException e) {
-                throw new AddressException("invalid bcc address: " + this.bcc + ": " + e.getMessage());
+                throw new AddressException(
+                    "invalid bcc address: " + this.bcc + ": " + e.getMessage());
             }
         }
 
@@ -264,7 +277,24 @@ public class MailMessageSender {
         try {
 
             if (this.attachmentList.isEmpty()) {
-                if (this.body != null) {
+                if (this.src != null) {
+                    DataSource ds = null;
+
+                    Source source = resolver.resolveURI(this.src);
+                    sourcesList.add(source);
+                    if (source.exists()) {
+                        ds =
+                            new SourceDataSource(
+                                source,
+                                (this.srcMimeType == null
+                                    ? source.getMimeType()
+                                    : this.srcMimeType),
+                                this.src.substring(this.src.lastIndexOf('/') + 1));
+                    }
+
+                    this.message.setDataHandler(new DataHandler(ds));
+
+                } else if (this.body != null) {
                     if (this.charset != null) {
                         this.message.setText(this.body, this.charset);
                     } else {
@@ -274,7 +304,28 @@ public class MailMessageSender {
             } else {
                 Multipart multipart = new MimeMultipart();
                 BodyPart bodypart = null;
-                if (this.body != null) {
+
+                if (this.src != null) {
+                    DataSource ds = null;
+
+                    Source source = resolver.resolveURI(this.src);
+                    sourcesList.add(source);
+                    if (source.exists()) {
+                        ds =
+                            new SourceDataSource(
+                                source,
+                                (this.srcMimeType == null
+                                    ? source.getMimeType()
+                                    : this.srcMimeType),
+                                this.src.substring(this.src.lastIndexOf('/') + 1));
+                    }
+
+                    bodypart.setDataHandler(new DataHandler(ds));
+                    bodypart.setFileName(ds.getName());
+
+                    multipart.addBodyPart(bodypart);
+
+                } else if (this.body != null) {
                     bodypart = new MimeBodyPart();
                     bodypart.setText(this.body);
                     multipart.addBodyPart(bodypart);
@@ -289,21 +340,24 @@ public class MailMessageSender {
                         Source src = resolver.resolveURI(name);
                         sourcesList.add(src);
                         if (src.exists()) {
-                            ds = new SourceDataSource(
+                            ds =
+                                new SourceDataSource(
                                     src,
-                                    a.getType(src.getMimeType()), 
+                                    a.getType(src.getMimeType()),
                                     a.getName(name.substring(name.lastIndexOf('/') + 1)));
                         }
                     } else {
                         if (a.getObject() instanceof Part) {
                             Part part = (Part) a.getObject();
-                            ds = new FilePartDataSource(
+                            ds =
+                                new FilePartDataSource(
                                     part,
                                     a.getType(part.getMimeType()),
                                     a.getName(part.getUploadName()));
                         } else {
                             // TODO: other classes?
-                            throw new AddressException("Not yet supported: " + a.getObject());
+                            throw new AddressException(
+                                "Not yet supported: " + a.getObject());
                         }
                     }
 
@@ -318,10 +372,17 @@ public class MailMessageSender {
         } catch (MessagingException me) {
             throw new MessagingException(me.getMessage());
         } catch (MalformedURLException e) {
-            throw new AddressException("Malformed attachment URL: " + a.getObject() + " error " + e.getMessage());
+            throw new AddressException(
+                "Malformed attachment URL: "
+                    + a.getObject()
+                    + " error "
+                    + e.getMessage());
         } catch (IOException e) {
             throw new AddressException(
-                "IOException accessing attachment URL: " + a.getObject() + " error " + e.getMessage());
+                "IOException accessing attachment URL: "
+                    + a.getObject()
+                    + " error "
+                    + e.getMessage());
         } finally {
             if (sourcesList != null) {
                 for (Iterator j = sourcesList.iterator(); j.hasNext();) {
@@ -424,11 +485,35 @@ public class MailMessageSender {
     }
 
     /** Sets the body text of the email message.
+     * If both a text body and a body read from a source are set,
+     * only the latter will be used.
+     *
      * @param body The body text of the email message
      */
     public void setBody(String body) {
         if (!("".equals(body) || "null".equals(body))) {
             this.body = body;
+        }
+    }
+
+    /** Sets the body source URL of the email message.
+     * If both a text body and a body read from a source are set,
+     * only the latter will be used.
+     *
+     * @param src The body source URL of the email message
+     */
+    public void setBodyFromSrc(String src) {
+        if (!("".equals(src) || "null".equals(src))) {
+            this.src = src;
+        }
+    }
+
+    /** Sets the optional body source Mime Type of the email message.
+     * @param srcMimeTyoe The optional body source Mime Type of the email message
+     */
+    public void setBodyFromSrcMimeType(String srcMimeType) {
+        if (!("".equals(srcMimeType) || "null".equals(srcMimeType))) {
+            this.srcMimeType = srcMimeType;
         }
     }
 
