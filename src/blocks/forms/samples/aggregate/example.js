@@ -30,7 +30,7 @@ function example() {
         form.createBinding("binding-" + template + ".xml");
 
         // java.lang.System.out.println("Loading. Date: " + bean.date + ", Day: " + bean.day + ", Month: " + bean.month + ", Year: " + bean.year);
-	form.load(bean);
+        form.load(bean);
         form.showForm(template + "-display-pipeline", bean);
         form.save(bean);
         // java.lang.System.out.println("Saved. Date: " + bean.date + ", Day: " + bean.day + ", Month: " + bean.month + ", Year: " + bean.year);
