@@ -53,6 +53,7 @@ import org.apache.cocoon.woody.formmodel.AggregateField;
 import org.apache.cocoon.woody.formmodel.BooleanField;
 import org.apache.cocoon.woody.formmodel.Field;
 import org.apache.cocoon.woody.formmodel.MultiValueField;
+import org.apache.cocoon.woody.formmodel.Output;
 import org.apache.cocoon.woody.formmodel.Repeater;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.mozilla.javascript.Context;
@@ -140,7 +141,8 @@ public class ScriptableWidget extends ScriptableObject {
             if (sub != null) {
                 if (sub instanceof Field ||
                     sub instanceof BooleanField ||
-                    sub instanceof AggregateField) {
+                    sub instanceof AggregateField ||
+                    sub instanceof Output) {
                     return sub.getValue();
                 }
                 return wrap(sub);
@@ -240,6 +242,10 @@ public class ScriptableWidget extends ScriptableObject {
                 return;
             } else if (sub instanceof BooleanField) {
                 BooleanField field = (BooleanField)sub;
+                value = unwrap(value);
+                field.setValue(value);
+            } else if (sub instanceof Output) {
+                Output field = (Output)sub;
                 value = unwrap(value);
                 field.setValue(value);
             } else if (sub instanceof Repeater) {
