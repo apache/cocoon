@@ -23,19 +23,17 @@ import org.apache.cocoon.portal.tools.model.User;
  * @version CVS $Id$
  */
 public class SingleRoleMatcher
-implements
-    RoleMatcher
-{
+implements RoleMatcher {
+    
     /**
      * The role.
      */
-    private String role;
+    private final String role;
 
     /**
      * Creates a new SingleRoleMatcher.
      */
-    public SingleRoleMatcher(String role)
-    {
+    public SingleRoleMatcher(String role) {
         this.role = role;
     }
 
@@ -44,8 +42,7 @@ implements
      * 
      * @see com.vodafone.veap.util.RoleMatcher#matches(com.vodafone.veap.model.User)
      */
-    public boolean matches(User user)
-    {
+    public boolean matches(User user) {
         return user.hasRole(this.role);
     }
 }

@@ -27,16 +27,13 @@ import org.w3c.dom.Node;
  */
 public class ContextGrabber {
 	
-	public ContextGrabber () { /* NOP */ }
-	
 	/**
 	 * Grabbing the context of the current user
 	 * 
 	 * @param context the instantiated class AuthenticationContext
 	 * @return Object of context information
 	 */
-	public UserBean grab (AuthenticationContext context)
-	{
+	public UserBean grab (AuthenticationContext context) {
 		UserBean ub = new UserBean ();
 		DocumentFragment df = null;
 		try {
@@ -48,19 +45,17 @@ public class ContextGrabber {
 		return ub;
 	}
 	
-	private void grabAuthContext (Node node, UserBean ub){
+	private void grabAuthContext (Node node, UserBean ub) {
 		
-		while (node != null){
+		while (node != null) {
 			
-			if (!node.getNodeName().equals("#text"))
-			{
-				if (node.getFirstChild() != null)
-				{
+			if (!node.getNodeName().equals("#text")) {
+				if (node.getFirstChild() != null) {
 					grabAuthContext  (node.getFirstChild () ,ub);
 					ub.addContext(node.getNodeName(),node.getFirstChild().getNodeValue());
-				}
-				else
+				} else {
 					ub.addContext(node.getNodeName(),"");
+                }
 			}
 			node = node.getNextSibling();
 		}

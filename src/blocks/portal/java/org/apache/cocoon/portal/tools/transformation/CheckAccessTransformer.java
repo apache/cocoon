@@ -96,7 +96,11 @@ public class CheckAccessTransformer extends AbstractSAXTransformer implements Pa
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        this.manager.release(ptm);
+        if ( this.manager != null ) {
+            this.manager.release(ptm);
+            ptm = null;
+            this.manager = null;
+        }
     }
 
 }
