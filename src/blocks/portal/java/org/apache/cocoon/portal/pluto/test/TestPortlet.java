@@ -61,7 +61,7 @@ import javax.portlet.RenderResponse;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: TestPortlet.java,v 1.1 2004/01/27 08:05:35 cziegeler Exp $
+ * @version CVS $Id: TestPortlet.java,v 1.2 2004/02/10 08:42:45 cziegeler Exp $
  */
 public class TestPortlet implements Portlet  {
     
@@ -69,14 +69,14 @@ public class TestPortlet implements Portlet  {
      * @see javax.portlet.Portlet#destroy()
      */
     public void destroy() {
-        System.out.println("Destroying TestPortlet");
+        // nothing to do
     }
 
     /* (non-Javadoc)
      * @see javax.portlet.Portlet#init(javax.portlet.PortletConfig)
      */
     public void init(PortletConfig config) throws PortletException {
-        System.out.println("Initializing TestPortlet");
+        // nothing to do
     }
 
     /* (non-Javadoc)
@@ -84,6 +84,7 @@ public class TestPortlet implements Portlet  {
      */
     public void processAction(ActionRequest req, ActionResponse res)
     throws PortletException, IOException {
+        // nothing to do
     }
 
     /* (non-Javadoc)
