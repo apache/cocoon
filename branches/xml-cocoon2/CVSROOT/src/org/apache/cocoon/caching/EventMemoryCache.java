@@ -5,16 +5,19 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
-package org.apache.cocoon.transformation;
+package org.apache.cocoon.caching;
 
-import org.apache.cocoon.sitemap.SitemapModelComponent;
-import org.apache.cocoon.xml.XMLPipe;
+import org.apache.cocoon.components.store.MemoryStore;
 
 /**
+ * An implementation for the EventCache which simply uses stores the
+ * cached objects in the memory.
  *
- * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
- *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-11 10:53:03 $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:52:21 $
  */
-public interface Transformer extends XMLPipe, SitemapModelComponent {
+public final class EventMemoryCache
+extends MemoryStore
+implements EventCache {
+
 }

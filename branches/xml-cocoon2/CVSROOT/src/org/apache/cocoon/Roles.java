@@ -12,7 +12,7 @@ package org.apache.cocoon;
  * Created this interface to specify the Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-05 15:18:42 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-04-11 10:52:00 $
  */
 
 public interface Roles {
@@ -43,4 +43,9 @@ public interface Roles {
 
     String EVENT_PIPELINE       = "org.apache.cocoon.components.pipeline.EventPipeline";
     String STREAM_PIPELINE      = "org.apache.cocoon.components.pipeline.StreamPipeline";
+
+    String XML_SERIALIZER = "org.apache.cocoon.components.sax.XMLSerializer";
+    String XML_DESERIALIZER = "org.apache.cocoon.components.sax.XMLDeserializer";
+    String EVENT_CACHE = "org.apache.cocoon.caching.EventCache";
+
 }

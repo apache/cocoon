@@ -13,6 +13,9 @@ import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.ProcessingException;
@@ -21,6 +24,7 @@ import org.apache.cocoon.Roles;
 import org.apache.cocoon.xml.XMLCompiler;
 import org.apache.cocoon.xml.XMLInterpreter;
 import org.apache.cocoon.xml.XMLMulticaster;
+import org.apache.cocoon.util.HashUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -58,10 +62,11 @@ import org.apache.avalon.Component;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-03-19 21:20:32 $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-11 10:52:59 $
  */
-public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
+public class FileGenerator extends ComposerGenerator
+implements Configurable, Cacheable {
 
     /** The store service instance */
     private Store store = null;
@@ -71,6 +76,10 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
 
     /** The default configuration for useStore */
     private boolean defaultUseStore;
+
+    /** The input source */
+    private InputSource inputSource;
+    private String      systemID;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -84,6 +93,12 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
         } catch (Exception e) {
             getLogger().error("Could not find component", e);
         }
+    }
+
+    public void recycle() {
+        super.recycle();
+        this.inputSource = null;
+        this.systemID = null;
     }
 
     /**
@@ -103,10 +118,40 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
+        this.inputSource = super.resolver.resolveEntity(null, super.source);
+        this.systemID = this.inputSource.getSystemId();
         this.useStore = par.getParameterAsBoolean("use-store", this.defaultUseStore);
     }
 
     /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public long generateKey() {
+        if (this.systemID.startsWith("file:") == true) {
+            return HashUtil.hash(super.source);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        if (this.systemID.startsWith("file:") == true) {
+            File xmlFile = new File(this.systemID.substring("file:".length()));
+            return new TimeStampCacheValidity(xmlFile.lastModified());
+        }
+        return null;
+    }
+
+   /**
      * Generate XML data.
      */
     public void generate()
@@ -117,19 +162,17 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
             // Using the entity resolver we get the filename of the current file:
             // The systemID of such a resource starts with file:.
             getLogger().debug("processing file " + super.source);
-            InputSource src = super.resolver.resolveEntity(null, super.source);
-            String      systemID = src.getSystemId();
-            getLogger().debug("file resolved to " + systemID);
+            getLogger().debug("file resolved to " + this.systemID);
             byte[]      cxml = null;
 
             if (this.useStore == true)
             {
                 // Is this a local file
-                if (systemID.startsWith("file:") == true) {
+                if (this.systemID.startsWith("file:") == true) {
                     // Stored is an array of the compiled xml and the caching time
-                    if (store.containsKey(systemID) == true) {
-                        Object[] cxmlAndTime = (Object[])store.get(systemID);
-                        File xmlFile = new File(systemID.substring("file:".length()));
+                    if (store.containsKey(this.systemID) == true) {
+                        Object[] cxmlAndTime = (Object[])store.get(this.systemID);
+                        File xmlFile = new File(this.systemID.substring("file:".length()));
                         long storedTime = ((Long)cxmlAndTime[1]).longValue();
                         if (storedTime >= xmlFile.lastModified()) {
                             cxml = (byte[])cxmlAndTime[0];
@@ -143,7 +186,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
                 Parser parser = (Parser)this.manager.lookup(Roles.PARSER);
                 try {
                     // use the xmlcompiler for local files if storing is on
-                    if (this.useStore == true && systemID.startsWith("file:") == true)
+                    if (this.useStore == true && this.systemID.startsWith("file:") == true)
                     {
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
                         XMLCompiler compiler = new XMLCompiler();
@@ -153,17 +196,17 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
 
                         parser.setContentHandler(multicaster);
                         parser.setLexicalHandler(multicaster);
-                        parser.parse(src);
+                        parser.parse(this.inputSource);
 
                         // Stored is an array of the cxml and the current time
                         Object[] cxmlAndTime = new Object[2];
                         cxmlAndTime[0] = baos.toByteArray();
                         cxmlAndTime[1] = new Long(System.currentTimeMillis());
-                        store.hold(systemID, cxmlAndTime);
+                        store.hold(this.systemID, cxmlAndTime);
                     } else {
                         parser.setContentHandler(this.contentHandler);
                         parser.setLexicalHandler(this.lexicalHandler);
-                        parser.parse(src);
+                        parser.parse(this.inputSource);
                     }
                 } finally {
                     this.manager.release((Component) parser);

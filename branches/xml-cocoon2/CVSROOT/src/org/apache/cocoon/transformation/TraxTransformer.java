@@ -34,6 +34,10 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
+import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 
@@ -57,11 +61,11 @@ import javax.xml.transform.TransformerException;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:40 $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-11 10:53:04 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
-implements Transformer, Composer, Poolable, Recyclable, Configurable {
+implements Transformer, Composer, Recyclable, Configurable, Cacheable {
     private static String FILE = "file:/";
 
     /** The store service instance */
@@ -76,15 +80,21 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
     /** Is the store turned on? (default is on) */
     private boolean useStore = true;
 
-    TransformerHandler getTransformerHandler(EntityResolver resolver, String xsluri)
+    /** The InputSource */
+    private InputSource inputSource;
+    private String systemID;
+    private String xsluri;
+    private Parameters par;
+    private Map objectModel;
+    private EntityResolver resolver;
+
+    TransformerHandler getTransformerHandler(EntityResolver resolver)
       throws SAXException, ProcessingException, IOException, TransformerConfigurationException
     {
         // Only local files are checked for modification for compatibility reasons!
         // Using the entity resolver we get the filename of the current file:
         // The systemID if such a resource starts with file://.
         Templates templates = null;
-        InputSource src = resolver.resolveEntity(null, xsluri);
-        String      systemID = src.getSystemId();
 
         if (this.useStore == true)
         {
@@ -160,21 +170,71 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
     throws SAXException, ProcessingException, IOException {
 
+        // Check the stylesheet uri
+        this.xsluri = src;
+        if (this.xsluri == null) {
+            throw new ProcessingException("Stylesheet URI can't be null");
+        }
+        this.par = par;
+        this.objectModel = objectModel;
+        this.inputSource = resolver.resolveEntity(null, this.xsluri);
+        this.systemID = inputSource.getSystemId();
+        this.resolver = resolver;
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public long generateKey() {
+        if (this.systemID.startsWith("file:") == true) {
+            return HashUtil.hash(this.xsluri);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        if (this.systemID.startsWith("file:") == true) {
+            File xslFile = new File(this.systemID.substring("file:".length()));
+            return new TimeStampCacheValidity(xslFile.lastModified());
+        }
+        return null;
+    }
+
+    /**
+     * Set the <code>XMLConsumer</code> that will receive XML data.
+     * <br>
+     * This method will simply call <code>setContentHandler(consumer)</code>
+     * and <code>setLexicalHandler(consumer)</code>.
+     */
+    public void setConsumer(XMLConsumer consumer) {
         /** The Request object */
         Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
 
-        // Check the stylesheet uri
-        String xsluri = src;
-        if (xsluri == null) {
-            throw new ProcessingException("Stylesheet URI can't be null");
-        }
-
         /** Get a Transformer Handler */
         try {
-            transformerHandler = getTransformerHandler(resolver,xsluri);
+            transformerHandler = getTransformerHandler(resolver);
         } catch (TransformerConfigurationException e){
             log.error("Problem in getTransformer:", e);
-            throw new ProcessingException("Problem in getTransformer:" + e.getMessage(), e);
+            throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
+        } catch (SAXException e){
+            log.error("Problem in getTransformer:", e);
+            throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
+        } catch (IOException e){
+            log.error("Problem in getTransformer:", e);
+            throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
+        } catch (ProcessingException e){
+            log.error("Problem in getTransformer:", e);
+            throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
         }
 
         if (request != null) {
@@ -209,15 +269,7 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
         }
         if(transformerHandler instanceof org.xml.sax.ext.LexicalHandler)
             this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)transformerHandler);
-    }
 
-    /**
-     * Set the <code>XMLConsumer</code> that will receive XML data.
-     * <br>
-     * This method will simply call <code>setContentHandler(consumer)</code>
-     * and <code>setLexicalHandler(consumer)</code>.
-     */
-    public void setConsumer(XMLConsumer consumer) {
         this.setContentHandler(consumer);
     }
 
@@ -287,6 +339,12 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
             log.debug("Exception in recycle:", e);
         }
         this.transformerHandler = null;
+        this.objectModel = null;
+        this.inputSource = null;
+        this.par = null;
+        this.systemID = null;
+        this.xsluri = null;
+        this.resolver = null;
         super.recycle();
     }
 }
