@@ -54,10 +54,6 @@ package org.apache.cocoon.components.repository.impl;
 import java.util.Hashtable;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -66,6 +62,9 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.Constants;
@@ -86,14 +85,14 @@ import org.xml.sax.InputSource;
  * The class represent a manger for slide repositories
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepository.java,v 1.2 2003/03/16 17:49:06 vgritsenko Exp $
+ * @version CVS $Id: SlideRepository.java,v 1.3 2003/11/15 13:26:00 joerg Exp $
  */
 public class SlideRepository
-  implements Repository, ThreadSafe, Composable, Configurable, LogEnabled,
+  implements Repository, ThreadSafe, Serviceable, Configurable, LogEnabled,
              Contextualizable, Disposable {
 
-    /** The component manager instance */
-    protected ComponentManager manager = null;
+    /** The service manager instance */
+    protected ServiceManager manager = null;
 
     /**
      * The SlideRepository will handle the domain lifecycle only,
@@ -116,12 +115,12 @@ public class SlideRepository
     }
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      *
-     * @param manager Component manager.
+     * @param manager Service manager.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -192,7 +191,7 @@ public class SlideRepository
                 resolver.release(source);
             }
             if (parser!=null) {
-                this.manager.release((Component) parser);
+                this.manager.release(parser);
             }
             if (resolver!=null) {
                 this.manager.release(resolver);

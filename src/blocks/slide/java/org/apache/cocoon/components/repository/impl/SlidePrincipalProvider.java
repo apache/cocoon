@@ -56,13 +56,13 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.repository.Principal;
 import org.apache.cocoon.components.repository.PrincipalGroup;
@@ -94,13 +94,13 @@ import org.apache.slide.structure.Structure;
  * Manger for principals and groups of principals
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlidePrincipalProvider.java,v 1.4 2003/09/24 22:34:53 cziegeler Exp $
+ * @version CVS $Id: SlidePrincipalProvider.java,v 1.5 2003/11/15 13:26:00 joerg Exp $
  */
 public class SlidePrincipalProvider extends AbstractLogEnabled
-  implements PrincipalProvider, Composable, Configurable, Initializable {
+  implements PrincipalProvider, Serviceable, Configurable, Initializable {
 
-    /** The component manager instance */
-    private ComponentManager manager = null;
+    /** The service manager instance */
+    private ServiceManager manager = null;
 
     /** Namespace access token. */
     private NamespaceAccessToken nat;
@@ -129,14 +129,14 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
     private String namespace = null;
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      *
      * @param manager
      *
-     * @throws ComponentException
+     * @throws ServiceException
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -190,8 +190,8 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
             // this.lock = nat.getLockHelper();
             // this.macro = nat.getMacroHelper();
 
-        } catch (ComponentException ce) {
-            getLogger().error("Could not lookup for component.", ce);
+        } catch (ServiceException se) {
+            getLogger().error("Could not lookup for component.", se);
         } finally {
             if (repository!=null) {
                 this.manager.release(repository);
