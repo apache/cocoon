@@ -152,6 +152,15 @@
           <parameter name="uri" value="http://apache.org/xsp/session-fw/1.0"/>
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session-fw.xsl"/>
         </builtin-logicsheet>
+
+        <!-- The ESQL logicsheet is an XSP logicsheet that performs sql queries and 
+             serializes their results as XML. This allows you to work with data from a 
+             wide variety of different sources when using Apache Cocoon. -->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="esql"/>
+          <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/>
+        </builtin-logicsheet>
       </target-language>
 
       <!--+

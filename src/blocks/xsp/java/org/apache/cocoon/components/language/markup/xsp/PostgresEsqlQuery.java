@@ -16,20 +16,18 @@
 
 package org.apache.cocoon.components.language.markup.xsp;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 
 /**
- * Database specific EsqlQuery
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: PervasiveEsqlQuery.java,v 1.5 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-final public class PervasiveEsqlQuery extends AbstractEsqlQuery {
+final public class PostgresEsqlQuery extends AbstractEsqlQuery {
 
-    public PervasiveEsqlQuery(Connection connection, String query) {
+    public PostgresEsqlQuery(Connection connection, String query) {
         super(connection, query);
     }
 
@@ -37,7 +35,7 @@ final public class PervasiveEsqlQuery extends AbstractEsqlQuery {
      * Only newInstance may use this contructor
      * @param resultSet
      */
-    private PervasiveEsqlQuery(final ResultSet resultSet) {
+    private PostgresEsqlQuery(ResultSet resultSet) {
         super(resultSet);
     }
 
@@ -46,26 +44,17 @@ final public class PervasiveEsqlQuery extends AbstractEsqlQuery {
      * @param resultSet
      */
     public AbstractEsqlQuery newInstance(final ResultSet resultSet) {
-        return(new PervasiveEsqlQuery(resultSet));
+        return(new PostgresEsqlQuery(resultSet));
     }
 
-    public PreparedStatement prepareStatement() throws SQLException {
-        return (
-                setPreparedStatement(
-                        getConnection().prepareStatement(
-                                getQueryString()
-                                )
-                ));
+    public String getQueryString() throws SQLException {
+        StringBuffer sb = new StringBuffer(super.getQueryString());
+        if (getMaxRows() > -1) sb.append(" LIMIT ").append(getMaxRows()+1);
+        if (getSkipRows() > 0) sb.append(" OFFSET ").append(getSkipRows());
+        return(sb.toString());
     }
 
-    public CallableStatement prepareCall() throws SQLException {
-        return (
-                (CallableStatement) setPreparedStatement(
-                        getConnection().prepareCall(
-                                getQueryString()
-                        )
-                )
-                );
+    public void getResultRows() throws SQLException {
+        setPosition(getSkipRows());
     }
-
 }

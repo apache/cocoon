@@ -30,7 +30,7 @@ import java.sql.Connection;
  * Unfortunately it seems NOT to work with mssql
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: JdbcEsqlQuery.java,v 1.6 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 final public class JdbcEsqlQuery extends AbstractEsqlQuery {
 

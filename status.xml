@@ -203,6 +203,9 @@
   <changes>
  <release version="@version@" date="@date@">
    <action dev="CZ" type="update">
+    Move XSP logicsheets from the databases block to the xsp block.
+   </action>
+   <action dev="CZ" type="update">
     Move XSP logicsheets from the session-fw block to the xsp block.
    </action>
    <action dev="TC" type="add">

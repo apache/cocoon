@@ -317,7 +317,6 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="excalibur-datasource"/>
-    <depend project="cocoon-block-xsp"/>
 
     <library name="excalibur-datasource"/>
 
@@ -1182,6 +1181,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-session-fw"/>
+    <depend project="cocoon-block-databases"/>
     <depend project="concurrent"/>
     <depend project="pizza"/>
     <depend project="jdtcore"/>

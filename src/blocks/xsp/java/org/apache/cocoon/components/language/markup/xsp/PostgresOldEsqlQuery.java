@@ -16,19 +16,17 @@
 
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.cocoon.components.language.markup.xsp.AbstractEsqlQuery;
-
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Connection;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: MysqlEsqlQuery.java,v 1.5 2004/03/05 13:01:53 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-final public class MysqlEsqlQuery extends AbstractEsqlQuery {
+final public class PostgresOldEsqlQuery extends AbstractEsqlQuery {
 
-    public MysqlEsqlQuery(Connection connection, String query) {
+    public PostgresOldEsqlQuery(Connection connection, String query) {
         super(connection, query);
     }
 
@@ -36,7 +34,7 @@ final public class MysqlEsqlQuery extends AbstractEsqlQuery {
      * Only newInstance may use this contructor
      * @param resultSet
      */
-    private MysqlEsqlQuery(final ResultSet resultSet) {
+    private PostgresOldEsqlQuery(ResultSet resultSet) {
         super(resultSet);
     }
 
@@ -44,20 +42,22 @@ final public class MysqlEsqlQuery extends AbstractEsqlQuery {
      * Create a EsqlQuery of the same type
      * @param resultSet
      */
-    public AbstractEsqlQuery newInstance(ResultSet resultSet) {
-        return( new MysqlEsqlQuery(resultSet) );
+    public AbstractEsqlQuery newInstance(final ResultSet resultSet) {
+        return(new PostgresOldEsqlQuery(resultSet));
     }
 
     public String getQueryString() throws SQLException {
         if (getSkipRows() > 0) {
             if (getMaxRows() > -1) {
                 return (new StringBuffer(super.getQueryString())
-                        .append(" LIMIT ").append(getSkipRows())
-                        .append(",").append(getMaxRows()+1)
+                        .append(" LIMIT ").append(getMaxRows()+1)
+                        .append(",").append(getSkipRows())
                         .toString());
             }
             else {
-                throw new SQLException("MySQL does not support a skip of rows only. Please also provide the max amount of rows");
+                return (new StringBuffer(super.getQueryString())
+                        .append(" OFFSET ").append(getSkipRows())
+                        .toString());
             }
         }
         else {
