@@ -105,7 +105,7 @@ import org.w3c.dom.Text;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.16 2004/01/15 13:26:39 unico Exp $
+ *  @version $Id: WebDAVSource.java,v 1.17 2004/01/15 13:29:14 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled implements Source,
     RestrictableSource, ModifiableTraversableSource, InspectableSource {
@@ -185,7 +185,6 @@ public class WebDAVSource extends AbstractLogEnabled implements Source,
         try {
             source = new WebDAVSource(location, principal, password, protocol, false);
         }  catch (HttpException he) {
-            he.printStackTrace();
             try {
                 source = new WebDAVSource(location, principal, password, protocol, true);
             } catch (HttpException finalHe) {
