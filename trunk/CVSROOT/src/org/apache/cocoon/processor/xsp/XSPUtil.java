@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.14 2000-03-19 00:59:33 stefano Exp $ --
+/*-- $Id: XSPUtil.java,v 1.15 2000-04-13 10:42:56 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.14 $ $Date: 2000-03-19 00:59:33 $
+ * @version $Revision: 1.15 $ $Date: 2000-04-13 10:42:56 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -90,7 +90,11 @@ public class XSPUtil {
   }
 
   public static String normalizedBaseName(String filename) {
-    filename = baseName(filename);
+     filename = baseName(filename);
+     return normalizedName(filename);
+  }
+
+  public static String normalizedName(String filename) {
     String[] path = split(filename, File.separator);
     int start = (path[0].length() == 0) ? 1 : 0;
 
