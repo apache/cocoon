@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.12 2000-09-06 19:35:43 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.13 2000-09-14 20:44:46 balld Exp $-->
 <!--
 
  ============================================================================
@@ -263,10 +263,12 @@
 	       if (!_esql_results) {
                 <xsl:apply-templates select="esql:no-results/*"/>
 	       }
-	       } catch (Exception _esql_e) {
-		<exception>
-		 <message><xsp:expr>_esql_e.getMessage()</xsp:expr></message>
-		</exception>
+	       } catch (Exception _esql_exception) {
+		<xsl:if test="esql:error-results//esql:get-stacktrace">
+		 StringWriter _esql_exception_writer = new StringWriter();
+		 _esql_exception.printStackTrace(new PrintWriter(_esql_exception_writer));
+		</xsl:if>
+		<xsl:apply-templates select="esql:error-results/*"/>
 	       } finally {
 	       if (_esql_session.close_connection) {
 	        if (_esql_session.connection != null) _esql_session.connection.close();
@@ -365,6 +367,18 @@
 
 <xsl:template match="esql:results//esql:get-column-type-name">
  <xsp:expr>_esql_session.resultset_metadata.getColumnTypeName(<xsl:call-template name="get-column"/>)</xsp:expr>
+</xsl:template>
+
+<xsl:template match="esql:error-results//esql:get-message">
+ <xsp:expr>_esql_exception.getMessage()</xsp:expr>
+</xsl:template>
+
+<xsl:template match="esql:error-results//esql:to-string">
+ <xsp:expr>_esql_exception.toString()</xsp:expr>
+</xsl:template>
+
+<xsl:template match="esql:error-results//esql:get-stacktrace">
+ <xsp:expr>_esql_exception_writer.toString()</xsp:expr>
 </xsl:template>
 
 <xsl:template name="get-resultset">

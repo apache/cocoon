@@ -37,6 +37,10 @@
 <esql:no-results>
  <error>no results were found</error>
 </esql:no-results>
+<esql:error-results>
+ <message><esql:get-message/></message>
+ <stacktrace><esql:get-stacktrace/></stacktrace>
+</esql:error-results>
 </esql:execute-query>
 
 </page>
