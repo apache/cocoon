@@ -97,7 +97,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.7 2003/08/19 01:34:20 joerg Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.8 2003/08/19 23:04:04 joerg Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements Disposable, CacheableProcessingComponent, Recyclable, Configurable, Contextualizable {
@@ -182,10 +182,14 @@ public class LuceneIndexTransformer extends AbstractTransformer
      * Called when the pipeline is assembled.
      * The parameters are those specified as child elements of the
      * <code>&lt;map:transform&gt;</code> element in the sitemap.
+     * These parameters are optional: 
+     * If no parameters are specified here then the defaults are 
+     * supplied by the component configuration.
+     * Any parameters specified here may be over-ridden by attributes
+     * of the lucene:index element in the input document.
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
-        // TODO: We don't need all this stuff
         setupConfiguration = new IndexerConfiguration(
             parameters.getParameter(ANALYZER_CLASSNAME_PARAMETER, configureConfiguration.analyzerClassname),
             parameters.getParameter(DIRECTORY_PARAMETER, configureConfiguration.indexDirectory),
@@ -389,7 +393,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
 
                 Attributes atts = tos.getAttributes();
                 boolean attributesToText = atts.getIndex(LUCENE_URI, LUCENE_ELEMENT_ATTR_TO_TEXT_ATTRIBUTE) != -1;
-                for (int i = 0; atts != null && i < atts.getLength(); i++) {
+                for (int i = 0; i < atts.getLength(); i++) {
                     // Ignore Lucene attributes
                     if (LUCENE_URI.equals(atts.getURI(i)))
                         continue;
