@@ -25,7 +25,7 @@
    <p><link href="#HTML">Conversion to HTML</link></p>
   </s2>
   </s1>
-  <s1 title="Overview"><anchor id="Overview"/>
+  <anchor id="Overview"/><s1 title="Overview">
 
 <p>W3C XForms defines a device-neutral, platform-independent set of
 form controls suitable for general-purpose use. JXForms supports a subset of these controls. The controls are
@@ -96,7 +96,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
    </p>
   </s1>
 
- <s1 title="Form Controls"><anchor id="Controls"/>
+ <anchor id="Controls"/><s1 title="Form Controls">
  <p>The JXForms tags are defined in the following namespace:</p>
  <source>http://apache.org/cocoon/jxforms/1.0</source>
  <p>JXForms supports the following controls:</p>
@@ -104,17 +104,17 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <p>The JXForms <code>&lt;form&gt;</code> element represents the overall form. It also corresponds to a validation <em>phase</em> in your <link href="#Validation">validation</link> rules. It has no direct counterpart in W3C XForms.</p>
  <p>Example:</p>
       <source><![CDATA[
-  <xf:form id="form-feedback" view="userIdentity">
-    <xf:label>Personal Information</xf:label>
+  <form id="form-feedback" view="userIdentity">
+    <label>Personal Information</label>
     <error>
-      <xf:violations class="error"/>
+      <violations class="error"/>
     </error>
-    <xf:input ref="/firstName">
-      <xf:label>First Name</xf:label>
-      <xf:violations class="error"/>
-    </xf:input>
+    <input ref="/firstName">
+      <label>First Name</label>
+      <violations class="error"/>
+    </input>
      ...
-  </xf:form>
+  </form>
       ]]></source> 
  <p></p>
  <p>It supports the following attributes:</p>
@@ -130,19 +130,66 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <p>The JXForms <code>&lt;error&gt;</code> element has no counterpart in W3C XForms. If present under the <code>form</code> element it serves as a placeholder for validation error messages associated with the entire form.
  </p>
  </s2>
- <s2 title="violations">
- <p>The JXForms <code>&lt;violations&gt;</code> element has no counterpart in W3C XForms. It is a placeholder used by the JXForms generator. For each validation error that occur with respect to its containing element, the JXForms generator inserts a <link href="violation">violation</link> element containing the validation error message.</p>
+ <anchor id="label"/><s2 title="label">
+ <p>JXForms <code>&lt;label&gt;</code> element is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-commonelems-label">label</link> element. This required element labels the containing form control with a descriptive label.</p>
  <p>Example:</p>
       <source><![CDATA[
-    <xf:input ref="/age">
-      <xf:label>Age</xf:label>
-      <xf:violations class="error"/>
-    </xf:input>
+    <input ref="/firstName">
+      <label>First Name</label>
+    </input>
+      ]]></source> 
+ <p></p>
+ </s2>
+ <s2 title="help">
+ <p>JXForms <code>&lt;help&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-commonelems-help">help</link> element. The optional element <code>help</code> provides a convenient way to attach help information to a form control. </p>
+ <p>Example:</p>
+    <source><![CDATA[
+    <input ref="/email">
+      <label>Email</label>
+      <help>Please check this carefully</help>
+    </input>
+      ]]></source> 
+ <p></p>
+ </s2>
+ <s2 title="hint">
+ <p>JXForms <code>&lt;hint&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-commonelems-hint">hint</link> element.The optional element <code>hint</code> provides a convenient way to attach hint information to a form control.</p> 
+ <p>Example:</p>
+    <source><![CDATA[
+    <submit id="next" phase="userIdentity" continuation="forward" class="button">
+      <label>Next</label>
+      <hint>Go to next page</hint>    
+    </submit>
+      ]]></source> 
+ <p></p>
+ </s2>
+ <anchor id="value"/><s2 title="value">
+ <p>JXForms <code>&lt;value&gt;</code> element is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-common-choices-value">value</link> element. This element provides a storage value to be used when an item is selected.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+ </s2>
+ <anchor id="item"/><s2 title="item">
+ <p>JXForms <code>&lt;item&gt;</code> element is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-common-elements-item">item</link> element. This element specifies the storage <link href="#value">value</link> and <link href="#label">label</link> to represent an item in a list. It is found within elements <link href="#select1">select1</link> and <link href="#select">select</link>.</p>
+
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
+ </s2>
+ <s2 title="violations">
+ <p>The JXForms <code>&lt;violations&gt;</code> element has no counterpart in W3C XForms. It is a placeholder used by the JXForms generator. For each validation error that occur with respect to its containing element, the JXForms generator inserts a <link href="violation"><code>violation</code></link> element containing the validation error message.</p>
+ <p>Example:</p>
+      <source><![CDATA[
+    <input ref="/age">
+      <label>Age</label>
+      <violations class="error"/>
+    </input>
       ]]></source> 
  <p></p>
  </s2>
  <anchor id="violation"/><s2 title="violation">
- <p>The JXForms <code>&lt;violation&gt;</code> element has no counterpart in W3C XForms. The JXForms generator inserts a <code>violation</code> element for each validation error that occurs with respect to a <code>violations</code> element.</p>
+ <p>The JXForms <code>&lt;violation&gt;</code> element has no counterpart in W3C XForms. The JXForms generator inserts a <code>violation</code> element for each validation error that occurs into the corresponding <code>&lt;violations&gt;</code> element.</p>
  <p>Example:</p>
     <p>Assuming you had a Schematron validation rule such as:</p>
       <source><![CDATA[
@@ -155,22 +202,22 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       <p>
       And a JXForms element such as:</p>
       <source><![CDATA[
-    <xf:input ref="/age">
-      <xf:label>Age</xf:label>
-      <xf:violations class="error"/>
-    </xf:input>
+    <input ref="/age">
+      <label>Age</label>
+      <violations class="error"/>
+    </input>
       ]]></source> 
       <p>
       After executing the JXForms generator the element would be transformed into the following:</p>
       <source><![CDATA[
-    <xf:input ref="/age">
-      <xf:label>Age</xf:label>
-      <xf:violations class="error">
-       <xf:violation>
+    <input ref="/age">
+      <label>Age</label>
+      <violations class="error">
+       <violation>
 Age should be a reasonably big positive number.
-       </xf:violation>
-      </xf:violations>
-    </xf:input>
+       </violation>
+      </violations>
+    </input>
       ]]></source> 
  <p></p>
  </s2>
