@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.3 2003/05/07 04:57:13 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.4 2003/05/07 14:22:47 cziegeler Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -11,7 +11,7 @@
   </group>
 
   <group name="About">
-   <note>All examples on this page has been created using single data source,
+   <note>All examples on this page have been created using a single data source,
    hello.xml file.
    </note>
    <sample name="XML" href="hello.xml">
@@ -24,14 +24,14 @@
     This page shows how a simple XML page can be presented in HTML.
    </sample>
    <sample name="XHTML" href="hello.xhtml">
-    This is the same page above, but rendered in XHTML (which is the 
+    This is the same page as above, but rendered in XHTML (which is the 
     well-formed XML version of HTML). Note that both the page and the
     stylesheet used to transform it didn't change from the previous
     example, Cocoon does everything for you by setting a different serializer.
    </sample>
    <sample name="WML" href="hello.wml">
     By changing the stylesheet, it's possible to render the same content
-    for consumption on different devices. Here, for example, is rendered
+    for consumption on different devices. Here, for example, it's rendered
     in WML (Wireless Markup Language) which is the markup language used
     in WAP-enabled agents (such as PDA or cell phones).
    </sample>
@@ -47,7 +47,7 @@
     version of your content.
    </sample>
    <sample name="VRML" href="hello.wrl">
-    But sometimes you need to ve fancy to impress people, so here is a 3D
+    But sometimes you need to be fancy to impress people, so here is a 3D
     version of your content (you need a VRML plugin in your browser to visualize
     this)
    </sample>
@@ -63,7 +63,7 @@
     Here is a super-simple web service that says hi!
    </sample>
    <sample name="Web Service WSDL Descriptor" href="hello.service/WSDL">
-    And this is its WSDL descriptor.
+    And this is the corresponding WSDL descriptor.
    </sample>
   </group>
    
