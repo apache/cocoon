@@ -1,4 +1,4 @@
-/*
+/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -59,7 +59,7 @@ import org.mozilla.javascript.Wrapper;
 
 /**
  *
- * @version CVS $Id: ScriptablePropertyPointer.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: ScriptablePropertyPointer.java,v 1.3 2003/05/01 09:32:34 coliver Exp $
  */
 public class ScriptablePropertyPointer extends DynamicPropertyPointer {
 
@@ -86,6 +86,29 @@ public class ScriptablePropertyPointer extends DynamicPropertyPointer {
             }
         }
         return super.getLength();
+    }
+
+    public Object getImmediateNode() {
+        Object value;
+        if (index == WHOLE_COLLECTION) {
+            value = getBaseValue();
+        }
+        else {
+            value = getBaseValue();
+            if (value instanceof Scriptable) {
+                Object property = 
+                    ScriptableObject.getProperty((Scriptable)value, index);
+                if (property != ScriptableObject.NOT_FOUND) { 
+                    value = property; // hack?
+                } 
+            } else {
+                return super.getImmediateNode();
+            }
+        }
+        if (value instanceof Wrapper) {
+            value = ((Wrapper)value).unwrap();
+        }
+        return value;
     }
 
     public Object getValue() {
@@ -178,27 +201,6 @@ public class ScriptablePropertyPointer extends DynamicPropertyPointer {
             index = string.indexOf('\"');
         }
         return string;
-    }
-
-    public Object getImmediateNode() {
-        Object value;
-        if (index == WHOLE_COLLECTION) {
-            value = handler.getProperty(getBean(), getPropertyName());
-        }
-        else {
-            value = handler.getProperty(getBean(), getPropertyName());
-            if (value instanceof Scriptable) {
-                value = ScriptableObject.getProperty((Scriptable)value, index);
-                if (value == ScriptableObject.NOT_FOUND) {
-                    value = null;
-                } else if (value instanceof Wrapper) {
-                    value = ((Wrapper)value).unwrap();
-                } 
-            } else {
-                return super.getImmediateNode();
-            }
-        }
-        return value;
     }
 
 }

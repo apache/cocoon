@@ -72,6 +72,7 @@ import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
@@ -90,7 +91,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.16 2003/04/27 08:37:28 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.17 2003/05/01 09:32:34 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -584,6 +585,18 @@ public class JavaScriptInterpreter extends AbstractInterpreter
 
                                                                         ex.getMessage()));
             throw new CascadingRuntimeException(ee.getMessage(), unwrap(ex));
+        } catch (EcmaError ee) {
+            String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+            if (ee.getSourceName() != null) {
+                Context.reportRuntimeError(msg, 
+                                           ee.getSourceName(),
+                                           ee.getLineNumber(),
+                                           ee.getLineSource(),
+                                           ee.getColumnNumber());
+            } else {
+                Context.reportRuntimeError(msg);
+            }
+            throw new CascadingRuntimeException(ee.getMessage(), ee);
         } finally {
             exitContext(thrScope);
         }
@@ -646,6 +659,18 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
                                                                         ex.getMessage()));
             throw new CascadingRuntimeException(ee.getMessage(), unwrap(ex));
+        } catch (EcmaError ee) {
+            String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+            if (ee.getSourceName() != null) {
+                Context.reportRuntimeError(msg, 
+                                           ee.getSourceName(),
+                                           ee.getLineNumber(),
+                                           ee.getLineSource(),
+                                           ee.getColumnNumber());
+            } else {
+                Context.reportRuntimeError(msg);
+            }
+            throw new CascadingRuntimeException(ee.getMessage(), ee);
         } finally {
             Context.exit();
         }
