@@ -150,6 +150,7 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
             else if (database.indexOf("hsql") > -1 ||
                      database.indexOf("interbase") > -1 ||
                      database.indexOf("access") > -1 ||
+                     database.indexOf("ingres") > -1 ||
                      database.indexOf("sap db") > -1 ||
                      database.indexOf("firebird") > -1 ||
                      database.indexOf("informix-online") > -1 ||
