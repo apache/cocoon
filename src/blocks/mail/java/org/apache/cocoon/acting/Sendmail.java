@@ -26,7 +26,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.mail.MailMessageSender;
 import org.apache.cocoon.mail.MailSender;
 
 import org.apache.commons.lang.StringUtils;
@@ -108,7 +107,7 @@ import javax.mail.internet.AddressException;
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:andrzej@chaeron.com">Andrzej Taramina</a>
  * @since 2.1
- * @version CVS $Id: Sendmail.java,v 1.8 2004/05/09 20:05:59 haul Exp $
+ * @version CVS $Id: Sendmail.java,v 1.9 2004/05/17 08:18:09 antonio Exp $
  */
 public class Sendmail extends ServiceableAction implements ThreadSafe, Configurable {
     private final static String STATUS = "status";
