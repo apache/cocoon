@@ -157,24 +157,24 @@
       InternetAddress[] _sendmail_addr = null;
       _sendmail_addr = (InternetAddress[])_sendmail_message.getFrom();
       if (_sendmail_addr != null)
-        for (int i=0; i&lt;_sendmail_addr.length; i++)
-         {  <sendmail:from><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:from>  }
+        for (int _sendmail_i=0; _sendmail_i&lt;_sendmail_addr.length; _sendmail_i++)
+         {  <sendmail:from><xsp:expr>_sendmail_addr[_sendmail_i].toString()</xsp:expr></sendmail:from>  }
       _sendmail_addr = (InternetAddress[])_sendmail_message.getReplyTo();
       if (_sendmail_addr != null)
-        for (int i=0; i&lt;_sendmail_addr.length; i++)
-         {  <sendmail:reply-to><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:reply-to>  }
+        for (int _sendmail_i=0; _sendmail_i&lt;_sendmail_addr.length; _sendmail_i++)
+         {  <sendmail:reply-to><xsp:expr>_sendmail_addr[_sendmail_i].toString()</xsp:expr></sendmail:reply-to>  }
       _sendmail_addr = (InternetAddress[])_sendmail_message.getRecipients (Message.RecipientType.TO);
       if (_sendmail_addr != null)
-        for (int i=0; i&lt;_sendmail_addr.length; i++)
-         {  <sendmail:to><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:to>  }
+        for (int _sendmail_i=0; _sendmail_i&lt;_sendmail_addr.length; _sendmail_i++)
+         {  <sendmail:to><xsp:expr>_sendmail_addr[_sendmail_i].toString()</xsp:expr></sendmail:to>  }
       _sendmail_addr = (InternetAddress[])_sendmail_message.getRecipients (Message.RecipientType.CC);
       if (_sendmail_addr != null)
-        for (int i=0; i&lt;_sendmail_addr.length; i++)
-         {  <sendmail:cc><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:cc> }
+        for (int _sendmail_i=0; _sendmail_i&lt;_sendmail_addr.length; _sendmail_i++)
+         {  <sendmail:cc><xsp:expr>_sendmail_addr[_sendmail_i].toString()</xsp:expr></sendmail:cc> }
       _sendmail_addr = (InternetAddress[])_sendmail_message.getRecipients(Message.RecipientType.BCC);
       if (_sendmail_addr != null)
-        for (int i=0; i&lt;_sendmail_addr.length; i++)
-         {  <sendmail:bcc><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:bcc>  }
+        for (int _sendmail_i=0; _sendmail_i&lt;_sendmail_addr.length; _sendmail_i++)
+         {  <sendmail:bcc><xsp:expr>_sendmail_addr[_sendmail_i].toString()</xsp:expr></sendmail:bcc>  }
         <sendmail:subject><xsp:expr>_sendmail_message.getSubject()</xsp:expr></sendmail:subject>
         <sendmail:content><xsp:expr>(String)_sendmail_message.getContent()</xsp:expr></sendmail:content>
       </xsp:logic>
