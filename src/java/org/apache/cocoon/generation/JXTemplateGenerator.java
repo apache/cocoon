@@ -3212,11 +3212,15 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 	public SourceValidity getValidity() {
     	JXTExpression validityExpr = (JXTExpression)getCurrentTemplateProperty(VALIDITY);
         try {
-			return (SourceValidity)getValue(validityExpr, globalJexlContext, jxpathContext);
+            final SourceValidity sourceValidity = this.inputSource.getValidity();
+            final SourceValidity templateValidity = (SourceValidity) getValue(validityExpr, globalJexlContext, jxpathContext);
+            if (sourceValidity != null && templateValidity != null) {
+                return new JXSourceValidity(sourceValidity, templateValidity);
+            }
 		} catch (Exception e) {
-			getLogger().error( "error evaluating cache key", e );
-			return null;
+			getLogger().error( "error evaluating cache validity", e );
 		}
+		return null;
 	}
 	
 	private Object getCurrentTemplateProperty(String propertyName) {
@@ -3239,7 +3243,7 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         Node node = builder.getDocument().getDocumentElement();
         return node.getChildNodes();
 	}
-	
+
 	static final class JXCacheKey implements Serializable {
 	    private final String templateUri;
 	    private final Serializable templateKey;
@@ -3262,4 +3266,50 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
 	        return false;
 	    }
 	}
+
+    static final class JXSourceValidity implements SourceValidity, Serializable {
+        private final SourceValidity sourceValidity;
+        private final SourceValidity templateValidity;
+        private JXSourceValidity(SourceValidity sourceValidity, SourceValidity templateValidity) {
+            this.sourceValidity = sourceValidity;
+            this.templateValidity = templateValidity;
+        }
+
+        public int isValid() {
+            switch (sourceValidity.isValid()) {
+                case SourceValidity.INVALID: return SourceValidity.INVALID;
+                case SourceValidity.UNKNOWN: {
+                    if (templateValidity.isValid() == SourceValidity.INVALID) {
+                        return SourceValidity.INVALID;
+                    }
+                    else {
+                        return SourceValidity.UNKNOWN;
+                    }
+                }
+                case SourceValidity.VALID: return templateValidity.isValid();
+            }
+            return SourceValidity.UNKNOWN;
+        }
+
+        public int isValid(SourceValidity otherValidity) {
+            if (otherValidity instanceof JXSourceValidity) {
+                JXSourceValidity otherJXValidity = (JXSourceValidity) otherValidity;
+                switch (sourceValidity.isValid(otherJXValidity.sourceValidity)) {
+                	case SourceValidity.INVALID: return SourceValidity.INVALID;
+                	case SourceValidity.UNKNOWN: {
+                	    if (templateValidity.isValid(otherJXValidity.templateValidity) == SourceValidity.INVALID) {
+                	        return SourceValidity.INVALID;
+                	    }
+                	    else {
+                	        return SourceValidity.UNKNOWN;
+                	    }
+                	}
+                	case SourceValidity.VALID: return templateValidity.isValid(otherJXValidity.templateValidity);
+                }
+            }
+            return 0;
+        }
+
+    }
+
 }
