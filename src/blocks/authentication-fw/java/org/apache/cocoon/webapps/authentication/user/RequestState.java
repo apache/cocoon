@@ -27,7 +27,7 @@ import org.apache.excalibur.source.SourceResolver;
  * is currently used for this request.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestState.java,v 1.6 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @version CVS $Id: RequestState.java,v 1.7 2004/03/19 13:59:21 cziegeler Exp $
 */
 public final class RequestState
 implements java.io.Serializable {
@@ -81,8 +81,7 @@ implements java.io.Serializable {
     /**
      * Get the configuration if available
      */
-    public Configuration getModuleConfiguration(String name)
-    throws ProcessingException  {
+    public Configuration getModuleConfiguration(String name) {
         Configuration conf = null;
 
         if (this.handler != null && this.application != null) {

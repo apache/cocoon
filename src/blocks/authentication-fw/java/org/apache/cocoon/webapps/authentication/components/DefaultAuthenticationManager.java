@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.23 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.24 2004/03/19 13:59:22 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -116,19 +116,11 @@ implements AuthenticationManager,
     throws ProcessingException {
         Map configs = (Map) this.holder.getPreparedConfiguration();
         if ( null == configs ) {
-            // prepare the configs
-            SourceResolver resolver = null;
             try {       
-                resolver = (SourceResolver) this.manager.lookup( SourceResolver.ROLE );
-                configs = DefaultHandlerManager.prepareHandlerConfiguration(resolver, 
-                                                                            ContextHelper.getObjectModel(this.context), 
+                configs = DefaultHandlerManager.prepareHandlerConfiguration(ContextHelper.getObjectModel(this.context), 
                                                                             this.holder);
-            } catch (ServiceException se) {
-                throw new ProcessingException("Unable to lookup source resolver.", se);
             } catch (ConfigurationException ce) {
                 throw new ProcessingException("Configuration error.", ce);
-            } finally {
-                this.manager.release( resolver );
             }
         }
         return configs;

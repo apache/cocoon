@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.webapps.authentication.configuration;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -26,14 +25,12 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.webapps.authentication.components.PipelineAuthenticator;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.SAXException;
 
 /**
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HandlerConfiguration.java,v 1.5 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @version CVS $Id: HandlerConfiguration.java,v 1.6 2004/03/19 13:59:22 cziegeler Exp $
 */
 public final class HandlerConfiguration
 implements java.io.Serializable {
@@ -91,10 +88,9 @@ implements java.io.Serializable {
     /**
      * Configure
      */
-    public void configure(SourceResolver resolver,
-                          Request        request,
+    public void configure(Request        request,
                           Configuration  conf)
-    throws ProcessingException, SAXException, IOException, ConfigurationException {
+    throws ProcessingException, ConfigurationException {
         // get login (required)
         Configuration child = conf.getChild("redirect-to", false);
         if (child == null)
@@ -170,7 +166,7 @@ implements java.io.Serializable {
                     this.applications.put(appName, apphandler);
 
                     // configure
-                    apphandler.configure(resolver, appconf);
+                    apphandler.configure(appconf);
                 }
             }
         }

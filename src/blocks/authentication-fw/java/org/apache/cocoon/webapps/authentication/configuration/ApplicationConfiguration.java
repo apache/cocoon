@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.webapps.authentication.configuration;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,15 +22,13 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.excalibur.source.SourceParameters;
-import org.apache.excalibur.source.SourceResolver;
-import org.xml.sax.SAXException;
 
 /**
  * This object stores information about an application configuration
  * inside a handler configuration.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ApplicationConfiguration.java,v 1.3 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @version CVS $Id: ApplicationConfiguration.java,v 1.4 2004/03/19 13:59:22 cziegeler Exp $
 */
 public final class ApplicationConfiguration
 implements java.io.Serializable {
@@ -81,8 +78,8 @@ implements java.io.Serializable {
     /**
      * Configure an application
      */
-    public void configure(SourceResolver resolver, Configuration appconf)
-    throws ProcessingException, SAXException, IOException, ConfigurationException {
+    public void configure(Configuration appconf)
+    throws ConfigurationException {
         Configuration child = null;
 
         // test for loadondemand attribute

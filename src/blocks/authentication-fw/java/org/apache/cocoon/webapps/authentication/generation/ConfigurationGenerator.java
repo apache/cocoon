@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.8 2004/03/17 12:09:52 cziegeler Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.9 2004/03/19 13:59:22 cziegeler Exp $
 */
 public final class ConfigurationGenerator
 extends ServiceableGenerator {
@@ -742,7 +742,7 @@ final class UserManagementHandler {
      */
     public UserManagementHandler(Configuration   conf,
                                   String          appName)
-    throws ProcessingException, SAXException, IOException, ConfigurationException {
+    throws ConfigurationException {
         Configuration child;
         
         this.applicationName = appName;

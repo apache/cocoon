@@ -49,7 +49,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.15 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.16 2004/03/19 13:59:22 cziegeler Exp $
 */
 public class AuthenticationContext
 implements SessionContext {
@@ -464,36 +464,26 @@ implements SessionContext {
             // load all: first authentication then application
             this.loadAuthenticationXML("/authentication",
                                        parameters,
-                                       objectModel,
-                                       resolver,
-                                       manager);
+                                       resolver);
             if (applicationName != null) {
                 this.loadApplicationXML("/",
                                         parameters,
-                                        objectModel,
-                                        resolver,
-                                        manager);
+                                        resolver);
             }
 
         } else if (path.startsWith("/authentication") ) {
             this.loadAuthenticationXML(path,
                                        parameters,
-                                       objectModel,
-                                       resolver,
-                                       manager);
+                                       resolver);
 
         } else if (path.equals("/application") && applicationName != null) {
             this.loadApplicationXML("/",
                                     parameters,
-                                    objectModel,
-                                    resolver,
-                                    manager);
+                                    resolver);
         } else if (path.startsWith("/application/") && applicationName != null) {
             this.loadApplicationXML(path.substring(12), // start path with '/'
                                     parameters,
-                                    objectModel,
-                                    resolver,
-                                    manager);
+                                    resolver);
         } else {
             throw new ProcessingException("loadXML: Path is not valid: " + path);
         }
@@ -518,36 +508,26 @@ implements SessionContext {
             // save all: first authentication then application
             this.saveAuthenticationXML("/authentication",
                                        parameters,
-                                       objectModel,
-                                       resolver,
-                                       manager);
+                                       resolver);
             if (applicationName != null) {
                 this.saveApplicationXML("/",
                                         parameters,
-                                        objectModel,
-                                        resolver,
-                                        manager);
+                                        resolver);
             }
 
         } else if (path.startsWith("/authentication") ) {
             this.saveAuthenticationXML(path,
                                        parameters,
-                                       objectModel,
-                                       resolver,
-                                       manager);
+                                       resolver);
 
         } else if (path.equals("/application") && applicationName != null) {
             this.saveApplicationXML("/",
                                     parameters,
-                                    objectModel,
-                                    resolver,
-                                    manager);
+                                    resolver);
         } else if (path.startsWith("/application/") && applicationName != null) {
             this.saveApplicationXML(path.substring(12), // start path with '/'
                                     parameters,
-                                    objectModel,
-                                    resolver,
-                                    manager);
+                                    resolver);
         } else {
             throw new ProcessingException("saveXML: Path is not valid: " + path);
         }
@@ -567,9 +547,7 @@ implements SessionContext {
      */
     private void saveAuthenticationXML(String             path,
                                        SourceParameters parameters,
-                                       Map                objectModel,
-                                       SourceResolver     resolver,
-                                       ServiceManager   manager)
+                                       SourceResolver     resolver)
     throws ProcessingException {
         String authSaveResource = this.handler.getHandlerConfiguration().getSaveResource();
         SourceParameters authSaveResourceParameters = this.handler.getHandlerConfiguration().getSaveResourceParameters();
@@ -607,9 +585,7 @@ implements SessionContext {
      */
     private void loadAuthenticationXML(String             path,
                                        SourceParameters parameters,
-                                       Map                objectModel,
-                                       SourceResolver     resolver,
-                                       ServiceManager   manager)
+                                       SourceResolver     resolver)
     throws ProcessingException {
         String authLoadResource = this.handler.getHandlerConfiguration().getLoadResource();
         SourceParameters authLoadResourceParameters = this.handler.getHandlerConfiguration().getLoadResourceParameters();
@@ -646,9 +622,7 @@ implements SessionContext {
      */
     private void loadApplicationXML(String             path,
                                     SourceParameters parameters,
-                                    Map                objectModel,
-                                    SourceResolver     resolver,
-                                    ServiceManager   manager)
+                                    SourceResolver     resolver)
     throws ProcessingException {
         final String applicationName = this.getState().getApplicationName();
 
@@ -686,9 +660,7 @@ implements SessionContext {
      */
     private void saveApplicationXML(String path,
                                     SourceParameters parameters,
-                                    Map                objectModel,
-                                    SourceResolver     resolver,
-                                    ServiceManager   manager)
+                                    SourceResolver     resolver)
     throws ProcessingException {
         final String applicationName = this.getState().getApplicationName();
         final ApplicationConfiguration conf = (ApplicationConfiguration)this.handler.getHandlerConfiguration().getApplications().get( applicationName );
