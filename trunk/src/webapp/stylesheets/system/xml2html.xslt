@@ -4,13 +4,11 @@
     | XSLT REC Compliant Version of IE5 Default Stylesheet
     |
     | Original version by Jonathan Marsh (jmarsh@microsoft.com)
-    | http://msdn.microsoft.com/xml/samples/defaultss/defaultss.xsl
-    |
     | Conversion to XSLT 1.0 REC Syntax by Steve Muench (smuench@oracle.com)
     | Added script support by Andrew Timberlake (andrew@timberlake.co.za)
-    | Cleaned up and ported to standard HTML/DOM/CSS by Stefano Mazzocchi (stefano@apache.org)
+    | Cleaned up and ported to standard DOM by Stefano Mazzocchi (stefano@apache.org)
     |
-    | CVS $Id: xml2html.xslt,v 1.4 2003/03/18 11:44:18 stefano Exp $
+    | CVS $Id: xml2html.xslt,v 1.5 2003/03/26 21:21:29 stefano Exp $
     +-->
     
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -19,7 +17,7 @@
       <HTML>
          <HEAD>
             <STYLE>
-              BODY  {background-color: white; color: black; font:small monospace;}
+              BODY  {background-color: white; color: black; font: monospace;}
                 .b  {cursor:pointer; color:red; font-weight:bold; text-decoration:none}
                 .e  {border: 0px; padding: 0px; margin: 0px 2em 0px 2em; text-indent:-1em;}
                 .en {color:#000088; font-weight:bold;}
@@ -32,8 +30,7 @@
                 PRE {margin:0px; display:inline}
                 DIV {border:0; padding:0; margin:0;}
             </STYLE>
-            <SCRIPT>
-               <xsl:comment><![CDATA[
+            <SCRIPT><xsl:comment><![CDATA[
 
 function click(event) {
 
@@ -51,7 +48,7 @@ function click(event) {
     
     if (mark.childNodes[0].nodeValue == "+") {
         mark.childNodes[0].nodeValue = "-";
-        for (var i = 1; i < e.childNodes.length; i++) {
+        for (var i = 2; i < e.childNodes.length; i++) {
             var name = e.childNodes[i].nodeName;
             if (name != "#text") {
                 if (name == "PRE" || name == "SPAN") {
@@ -64,16 +61,16 @@ function click(event) {
         }
     } else if (mark.childNodes[0].nodeValue == "-") {
         mark.childNodes[0].nodeValue = "+";
-        for (var i = 1; i < e.childNodes.length; i++) {
+        for (var i = 2; i < e.childNodes.length; i++) {
             if (e.childNodes[i].nodeName != "#text") {
                 e.childNodes[i].style.display = "none";
             }
         }
     }
-}
-]]>
-              </xsl:comment>
-            </SCRIPT>
+}  
+  
+]]></xsl:comment>
+         </SCRIPT>
          </HEAD>
          <BODY>
             <xsl:apply-templates/>

@@ -170,7 +170,7 @@ function edit()
     // and print an indicator close to where the errors
     // are. `errorMsg' if not null is printed at the top of the page
     // as an error message.
-    sendPageAndWait("userInf",
+    sendPageAndWait("userInfo",
                     { "check" : check, "errorMsg" : errorMsg,
                     "title": "Edit account",
                     "button" : "Change", "cancel" : true,

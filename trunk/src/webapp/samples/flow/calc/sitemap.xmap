@@ -2,14 +2,6 @@
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
-  <map:components>
-    <map:generators default="file"/>
-    <map:transformers default="xslt"/>
-    <map:readers default="resource"/>
-    <map:serializers default="html"/>
-    <map:matchers default="wildcard"/>
-  </map:components>
-
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="JavaScript">
     <map:script src="calc.js"/>
@@ -56,7 +48,7 @@
           | produces the screens called by the flowscript
           +-->     
       <map:match pattern="*">
-        <map:generate type="server-pages" src="screens/{1}.xsp"/>
+        <map:generate type="serverpages" src="screens/{1}.xsp"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl"/>
         <map:serialize/>
       </map:match>

@@ -18,7 +18,7 @@
     </header>
     <body>
       <s1 title="Calculator">
-        <form action="../calc/">
+        <form action="../../calc/" method="post">
           <p>a = <strong><jpath:value-of select="a"/></strong></p>
           <p>b = <strong><jpath:value-of select="b"/></strong></p>
           <p>Operator = <strong><jpath:value-of select="operator"/></strong></p>

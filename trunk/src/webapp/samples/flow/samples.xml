@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.1 2003/03/25 15:11:27 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.2 2003/03/26 21:21:43 stefano Exp $ -->
 
 <samples>
 
@@ -10,7 +10,7 @@
     to describe the web application flow between screens in a coherent 
     unique location and continuations to maintain state between requests.
    </sample>
-   <sample name="User Preferences" href="pref/">
+   <sample name="User Preferences" href="prefs/">
     A common portion of an application which requires users to be
 	registered. This example shows how to use java objects from the 
 	javascript flow as it is best practice to put business logic into

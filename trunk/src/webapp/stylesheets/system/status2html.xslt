@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- 
-  Author: Nicola Ken Barozzi "barozzi@nicolaken.com" 
-  CVS $Id: status2html.xslt,v 1.2 2003/03/17 00:47:43 vgritsenko Exp $
+  CVS $Id: status2html.xslt,v 1.3 2003/03/26 21:21:30 stefano Exp $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -12,141 +11,49 @@
   <xsl:template match="status:statusinfo">
     <html>
       <head>
-        <title>Cocoon2 status [<xsl:value-of select="@status:host"/>]</title>
+        <title>Cocoon Status [<xsl:value-of select="@status:host"/>]</title>
+        <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
+        <script src="/scripts/main.js" type="text/javascript"/>
       </head>
-      <body bgcolor="white">
 
-      <table bgcolor="#000000" cellspacing="0" cellpadding="2" width="97%">
-        <tr>
-          <td>
-    
-           <table border="0" bgcolor="#000000" cellpadding="0" cellspacing="0" width="100%">
-             <tr>
-              <td>   
-              
-                <table bgcolor="#ffffff" noshade="noshade" cellspacing="0" cellpadding="6" width="100%">
-                  <tr>
-                    <td bgcolor="#0086b2" valign="top" align="left">
-                      <img src="images/cocoon.gif" border="0"/>
-                    </td>
-                    <td bgcolor="#0086b2" valign="top" align="right">
-                     <FONT face="arial,helvetica,sanserif" color="#ffffff">
-                       [<xsl:value-of select="@status:host"/>] <xsl:value-of select="@status:date"/>
-                     </FONT>
-                    </td>
-                  </tr>
-                 </table>
-
-                </td>
-               </tr>
-             </table>      
-        
-            </td>
-          </tr>
-         </table>
- 
-      <xsl:call-template name="spacer">
-       <xsl:with-param name="height" select="number(10)"/>
-      </xsl:call-template>
-      
-      <xsl:apply-templates />
-        
+      <body>
+        <h1><xsl:value-of select="@status:host"/> - <xsl:value-of select="@status:date"/></h1>
+        <xsl:apply-templates/>    
       </body>
     </html>
   </xsl:template>
 
   <xsl:template match="status:group">
-       <table border="0" bgcolor="#000000" cellpadding="0" cellspacing="0" width="100%">
-         <tr>
-          <td>    
-          
-           <table bgcolor="#000000" border="0" cellspacing="2" cellpadding="6" width="100%">
-            <tr>
-              <td bgcolor="#0086b2" valign="top" align="left" colspan="2">
-               <FONT color="#ffffff" face="arial,helvetica,sanserif" size="+1">
-                -<xsl:value-of select="@status:name"/>
-               </FONT>
-              </td>
-            </tr>
-            <tr>
-   
-          <td bgcolor="#ffffff">
-      
-            <table border="0" bgcolor="#000000" cellpadding="0" cellspacing="0" width="100%">
-             <tr>
-              <td>    
- 
-                <table width="100%" bgcolor="#000000" border="0" cellspacing="2" cellpadding="6">
-                  <xsl:apply-templates select="status:value"/>
-                  <xsl:call-template name="spacer">
-                   <xsl:with-param name="height" select="number(8)"/>
-                  </xsl:call-template>
-                  <xsl:apply-templates select="status:group"/>
-                </table>
-        
-             </td>
-            </tr>
-          </table>    
-        
-        </td>
-      
-      
-       </tr>
-     </table>
-
-    </td>
-   </tr>
- </table>
-
-   
-  <xsl:call-template name="spacer">
-   <xsl:with-param name="height" select="number(6)"/>
-  </xsl:call-template>
-
+    <h2><xsl:value-of select="@status:name"/></h2>
+    <ul><xsl:apply-templates select="status:value"/></ul>
+    <xsl:apply-templates select="status:group"/>
   </xsl:template>
 
-	<xsl:template match="status:value">
-   <tr>
-    <td bgcolor="#0086b2" valign="top" align="left" width="1%">
-     <font face="arial,helvetica,sanserif" color="#ffffff">
-        <xsl:value-of select="@status:name"/>
-     </font>
-    </td>
-    
-    <td bgcolor="#eeeeee" width="100%">
-      
-    <xsl:choose>
-      <xsl:when test="../@status:name='memory' and ( @status:name='total' or @status:name='free')">
-          <font face="arial,helvetica,sanserif">
+  <xsl:template match="status:value">
+    <li>
+      <span class="description"><xsl:value-of select="@status:name"/><xsl:text>: </xsl:text></span>    
+      <xsl:choose>
+        <xsl:when test="contains(@status:name,'memory')">	
           <xsl:call-template name="suffix">
-            <xsl:with-param 
-              name="bytes" 
-              select="number(.)"/>
+            <xsl:with-param name="bytes" select="number(.)"/>
           </xsl:call-template>
-          </font>
-      </xsl:when>    
-      <xsl:when test="count(status:line) &lt;= 1">
-          <font face="arial,helvetica,sanserif">
-            <xsl:value-of select="status:line" />
-          </font>
-      </xsl:when>
-      <xsl:otherwise>
-          <ul>
-            <xsl:apply-templates />
+        </xsl:when>      
+        <xsl:when test="count(status:line) &lt;= 1">
+          <xsl:value-of select="status:line"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <span class="switch" id="{@status:name}-switch" onclick="toggle('{@status:name}')">[show]</span>
+          <ul id="{@status:name}" style="display: none">
+             <xsl:apply-templates />
           </ul>
-      </xsl:otherwise>
-    </xsl:choose>
-    </td>
-   </tr>
+        </xsl:otherwise>
+      </xsl:choose>
+    </li>
   </xsl:template>
 
-	<xsl:template match="status:line">
-		<li>
-			<font face="arial,helvetica,sanserif">
-				<xsl:value-of select="." />
-			</font>
-		</li>
-	</xsl:template>
+  <xsl:template match="status:line">
+    <li><xsl:value-of select="."/></li>
+  </xsl:template>
 
 	<xsl:template name="suffix">
 		<xsl:param name="bytes"/>
@@ -154,12 +61,10 @@
 			<!-- More than 4 MB (=4194304) -->
 			<xsl:when test="$bytes &gt;= 4194304">
 				<xsl:value-of select="round($bytes div 10485.76) div 100"/> MB
-				<small>(<xsl:value-of select="$bytes"/>)</small>
 			</xsl:when>
 			<!-- More than 4 KB (=4096) -->
 			<xsl:when test="$bytes &gt; 4096">
 				<xsl:value-of select="round($bytes div 10.24) div 100"/> KB
-				<small>(<xsl:value-of select="$bytes"/>)</small>
 			</xsl:when>
 			<!-- Less -->
 			<xsl:otherwise>
@@ -168,24 +73,5 @@
 		</xsl:choose>
 	</xsl:template>
   
-  <xsl:template name="spacer">
-  	<xsl:param name="height"/>
-    <table bgcolor="#ffffff" cellspacing="0" cellpadding="2" width="100%">
-      <tr>
-        <td bgcolor="#ffffff"> 
-              
-          <table bgcolor="#ffffff" cellspacing="0" cellpadding="2" width="100%">
-           <tr>
-            <td width="100%" bgcolor="#ffffff" valign="top" align="left" height="$height"> 
-            </td>
-          </tr>
-         </table>
-    
-        </td>
-      </tr>
-    </table>
-	</xsl:template>
-
-
 </xsl:stylesheet>
 

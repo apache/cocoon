@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: error2html.xslt,v 1.3 2003/03/17 00:47:43 vgritsenko Exp $ -->
+<!-- CVS $Id: error2html.xslt,v 1.4 2003/03/26 21:21:29 stefano Exp $ -->
 
 <xsl:stylesheet version="1.0"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -12,37 +12,14 @@
    <title>
     <xsl:value-of select="error:title"/>
    </title>
+   <link href="/styles/main.css" type="text/css" rel="stylesheet"/>
    <style>
-        body { background-color: white; color: black; font-family: verdana, helvetica, sanf serif; }
-        h1 { color: #336699; margin: 0px 0px 30px 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
-        a:link { font-weight: bold; color: #336699; }
-        a:visited { color: #336699; }
-        a:hover { color: #800000; background-color: #ffff80; }
-        a:active { color: #006666; }
-        p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 130%; border-width: 1px; border-style: dashed; border-color: #336699; }
-        p.description { padding: 10px 30px 20px 30px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
-        p.topped { padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
-        span.description { color: #336699; font-weight: bold; }
-        span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
+		h1 { color: #336699; text-align: left; margin: 0px 0px 30px 0px; padding: 0px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
+		p.message { padding: 10px 30px 10px 30px; font-weight: bold; font-size: 130%; border-width: 1px; border-style: dashed; border-color: #336699; }
+		p.description { padding: 10px 30px 20px 30px; border-width: 0px 0px 1px 0px; border-style: solid; border-color: #336699;}
+		p.topped { padding-top: 10px; border-width: 1px 0px 0px 0px; border-style: solid; border-color: #336699; }
    </style>
-   <script>
-        function toggle(id) {
-            var element = document.getElementById(id);
-            with (element.style) {
-                if ( display == "none" ){
-                    display = ""
-                } else{
-                    display = "none"
-                }
-            }
-            var text = document.getElementById(id + "-switch").firstChild;
-            if (text.nodeValue == "[show]") {
-                text.nodeValue = "[hide]";
-            } else {
-                text.nodeValue = "[show]";
-            }
-        }
-   </script>
+   <script src="/scripts/main.js" type="text/javascript"/>
   </head>
   <body>
    <h1><xsl:value-of select="error:title"/></h1>
