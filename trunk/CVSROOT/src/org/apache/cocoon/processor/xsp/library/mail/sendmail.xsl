@@ -4,7 +4,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2001 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -54,172 +54,159 @@
 
  <author>Donald A. Ball Jr.</author>
  <version>1.0</version>
+ <release version="1.1" author="Drasko Kokic"/>
 -->
-<xsl:stylesheet
- xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
- xmlns:xsp="http://www.apache.org/1999/XSP/Core"
- xmlns:sendmail="http://apache.org/cocoon/sendmail/v1"
- version="1.0"
->
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+                xmlns:sendmail="http://apache.org/cocoon/sendmail/v1">
 
-<xsl:param name="XSP-ENVIRONMENT"/>
-<xsl:param name="XSP-VERSION"/>
-<xsl:param name="filename"/>
-<xsl:param name="language"/>
+  <xsl:template match="xsp:page">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <xsp:structure>
+        <xsp:include>javax.mail.Message</xsp:include>
+        <xsp:include>javax.mail.Transport</xsp:include>
+        <xsp:include>javax.mail.Session</xsp:include>
+        <xsp:include>javax.mail.MessagingException</xsp:include>
+        <xsp:include>javax.mail.internet.InternetAddress</xsp:include>
+        <xsp:include>javax.mail.internet.MimeMessage</xsp:include>
+        <xsp:include>javax.mail.internet.AddressException</xsp:include>
+        <xsp:include>java.util.Date</xsp:include>
+        <xsp:include>java.util.Properties</xsp:include>
+      </xsp:structure>
+      <xsp:logic>
+        static Properties _sendmail_properties;
+        static
+         {
+          _sendmail_properties = new Properties();
+          _sendmail_properties.put ("mail.smtp.host", "127.0.0.1");
+         }
+      </xsp:logic>
+      <xsl:apply-templates/>
+    </xsl:copy>
+  </xsl:template>
 
-<xsl:variable name="cocoon1-environment">Cocoon 1</xsl:variable>
-<xsl:variable name="cocoon2-environment">Cocoon 2</xsl:variable>
 
-<xsl:variable name="cocoon1-xsp-namespace-uri">http://www.apache.org/1999/XSP/Core</xsl:variable>
-<xsl:variable name="cocoon2-xsp-namespace-uri">http://apache.org/xsp</xsl:variable>
-
-<xsl:variable name="environment">
-  <xsl:choose>
-    <xsl:when test="starts-with($XSP-ENVIRONMENT,$cocoon1-environment)">
-      <xsl:text>cocoon1</xsl:text>
-    </xsl:when>
-    <xsl:when test="starts-with($XSP-ENVIRONMENT,$cocoon2-environment)">
-      <xsl:text>cocoon2</xsl:text>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:text>cocoon2</xsl:text>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:variable>
-
-<xsl:variable name="xsp-namespace-uri">
-  <xsl:choose>
-    <xsl:when test="$environment = 'cocoon1'">
-      <xsl:value-of select="$cocoon1-xsp-namespace-uri"/>
-    </xsl:when>
-    <xsl:when test="$environment = 'cocoon2'">
-      <xsl:value-of select="$cocoon2-xsp-namespace-uri"/>
-    </xsl:when>
-  </xsl:choose>
-</xsl:variable>
-
-<xsl:template name="get-nested-content">
-  <xsl:param name="content"/>
-  <xsl:choose>
-    <xsl:when test="$content/*">
-      <xsl:apply-templates select="$content/*"/>
-    </xsl:when>
-    <xsl:otherwise>
-      <xsl:value-of select="$content"/>
-    </xsl:otherwise>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template name="get-nested-string">
-  <xsl:param name="content"/>
-  <xsl:choose>
-    <xsl:when test="$environment = 'cocoon1'">
-      <xsl:choose>
-        <xsl:when test="$content/*">
-          ""
-          <xsl:for-each select="$content/node()">
-            <xsl:choose>
-              <xsl:when test="name(.)">
-                + <xsl:apply-templates select="."/>
-              </xsl:when>
-              <xsl:otherwise>
-                + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:for-each>
-        </xsl:when>
-        <xsl:otherwise>
-          "<xsl:value-of select="normalize-space($content)"/>"
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:when>
-    <xsl:when test="$environment = 'cocoon2'">
-      <xsl:choose>
-        <xsl:when test="$content/*">
-          ""
-          <xsl:for-each select="$content/node()">
-            <xsl:choose>
-              <xsl:when test="name(.)">
-                <xsl:choose>
-                  <xsl:when test="namespace-uri(.)='http://apache.org/xsp' and local-name(.)='text'">
-                    + "<xsl:value-of select="."/>"
-                  </xsl:when>
-                  <xsl:otherwise>
-                    + <xsl:apply-templates select="."/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:when>
-              <xsl:otherwise>
-                + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:for-each>
-        </xsl:when>
-        <xsl:otherwise>"<xsl:value-of select="normalize-space($content)"/>"</xsl:otherwise>
-      </xsl:choose>
-    </xsl:when>
-  </xsl:choose>
-</xsl:template>
-
-<xsl:template match="xsp:page">
-  <xsl:copy>
-    <xsl:apply-templates select="@*"/>
-    <xsp:structure>
-      <xsp:include>javax.mail.Message</xsp:include>
-      <xsp:include>javax.mail.Transport</xsp:include>
-      <xsp:include>javax.mail.Session</xsp:include>
-      <xsp:include>javax.mail.MessagingException</xsp:include>
-      <xsp:include>javax.mail.internet.InternetAddress</xsp:include>
-      <xsp:include>javax.mail.internet.MimeMessage</xsp:include>
-      <xsp:include>javax.mail.internet.AddressException</xsp:include>
-      <xsp:include>java.util.Date</xsp:include>
-      <xsp:include>java.util.Properties</xsp:include>
-    </xsp:structure>
+  <xsl:template match="sendmail:send-mail">
+    <xsl:variable name="subject"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:subject"/></xsl:call-template></xsl:variable>
+    <xsl:variable name="body"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:body"/></xsl:call-template></xsl:variable>
+    <xsl:variable name="smtphost"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:smtphost"/></xsl:call-template></xsl:variable>
     <xsp:logic>
-      static Properties _sendmail_properties;
-      static {
-        _sendmail_properties = new Properties();
-        _sendmail_properties.put("mail.smtp.host","127.0.0.1");
-      }
+      try
+       {
+        Properties _sendmail_properties = new Properties (this._sendmail_properties);
+        if (!"null".equals (String.valueOf (<xsl:copy-of select="$smtphost"/>)))
+         {
+          _sendmail_properties.put ("mail.smtp.host", String.valueOf (<xsl:copy-of select="$smtphost"/>));
+         }
+        Session _sendmail_session = Session.getDefaultInstance (_sendmail_properties,null);
+        Message _sendmail_message = new MimeMessage (_sendmail_session);
+        _sendmail_message.setFrom (new InternetAddress (String.valueOf (<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:from"/></xsl:call-template>)));
+
+        <xsl:if test="sendmail:reply-to">
+          InternetAddress[] _sendmail_ias = new InternetAddress[<xsl:value-of select="count(sendmail:reply-to)"/>];
+          <xsl:for-each select="sendmail:reply-to">
+            _sendmail_ias[<xsl:value-of select="position()-1"/>] = new InternetAddress (String.valueOf (<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+          </xsl:for-each>
+          _sendmail_message.setReplyTo (_sendmail_ias);
+        </xsl:if>
+
+        InternetAddress _sendmail_ia = null;
+        <xsl:for-each select="sendmail:to">
+          _sendmail_ia = new InternetAddress (String.valueOf (<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+          _sendmail_message.addRecipient (Message.RecipientType.TO, _sendmail_ia);
+        </xsl:for-each>
+        <xsl:for-each select="sendmail:cc">
+          _sendmail_ia = new InternetAddress (String.valueOf (<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+          _sendmail_message.addRecipient (Message.RecipientType.CC, _sendmail_ia);
+        </xsl:for-each>
+        <xsl:for-each select="sendmail:bcc">
+          _sendmail_ia = new InternetAddress (String.valueOf (<xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="."/></xsl:call-template>));
+          _sendmail_message.addRecipient (Message.RecipientType.BCC, _sendmail_ia);
+        </xsl:for-each>
+
+        _sendmail_message.setSentDate (new Date());
+        _sendmail_message.setSubject (String.valueOf (<xsl:copy-of select="$subject"/>));
+        _sendmail_message.setText (String.valueOf (<xsl:copy-of select="$body"/>));
+
+        <xsl:apply-templates select="sendmail:debug"/>
+        Transport.send (_sendmail_message);
+       }
+      catch (AddressException _sendmail_e)
+       {
+        <sendmail:error type="user">
+          <xsp:attribute name="string"><xsp:expr>_sendmail_e.getRef()</xsp:expr></xsp:attribute>
+          <xsp:attribute name="position"><xsp:expr>_sendmail_e.getPos()</xsp:expr></xsp:attribute>
+          The email address is invalid.
+        </sendmail:error>
+       }
+      catch (MessagingException _sendmail_e)
+       {
+        <sendmail:error type="server">
+          <xsp:expr>_sendmail_e.getMessage()</xsp:expr>
+        </sendmail:error>
+       }
     </xsp:logic>
-    <xsl:apply-templates/>
-  </xsl:copy>
-</xsl:template>
+  </xsl:template>
 
-<xsl:template match="sendmail:send-mail">
-  <xsl:variable name="from"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:from"/></xsl:call-template></xsl:variable>
-  <xsl:variable name="to"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:to"/></xsl:call-template></xsl:variable>
-  <xsl:variable name="subject"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:subject"/></xsl:call-template></xsl:variable>
-  <xsl:variable name="body"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:body"/></xsl:call-template></xsl:variable>
-  <xsl:variable name="smtphost"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:smtphost"/></xsl:call-template></xsl:variable>
-  <xsp:logic>
-    try {
-      Properties _sendmail_properties = new Properties(this._sendmail_properties);
-      if (!"null".equals(String.valueOf(<xsl:copy-of select="$smtphost"/>))) {
-        _sendmail_properties.put("mail.smtp.host",String.valueOf(<xsl:copy-of select="$smtphost"/>));
-      }
-      Session _sendmail_session = Session.getDefaultInstance(_sendmail_properties,null);
-      Message _sendmail_message = new MimeMessage(_sendmail_session);
-      InternetAddress _sendmail_from = new InternetAddress(String.valueOf(<xsl:copy-of select="$from"/>));
-      _sendmail_message.setFrom(_sendmail_from);
-      InternetAddress _sendmail_to = new InternetAddress(String.valueOf(<xsl:copy-of select="$to"/>));
-      _sendmail_message.setRecipient(Message.RecipientType.TO,_sendmail_to);
-      _sendmail_message.setSentDate(new Date());
-      _sendmail_message.setSubject(String.valueOf(<xsl:copy-of select="$subject"/>));
-      _sendmail_message.setText(String.valueOf(<xsl:copy-of select="$body"/>));
-      Transport.send(_sendmail_message);
-    } catch (AddressException _sendmail_exception) {
-      <error type="user">Your email address is invalid.</error>
-    } catch (MessagingException _sendmail_exception) {
-      <error type="server">An error occured while sending email.</error>
-    }
-  </xsp:logic>
-</xsl:template>
 
-<xsl:template match="@*|node()" priority="-1">
-  <xsl:copy>
-    <xsl:apply-templates select="@*|node()"/>
-  </xsl:copy>
-</xsl:template>
+  <xsl:template match="sendmail:debug">
+    <sendmail:debug sendmail:version="1.1">
+      <xsp:logic>
+      InternetAddress[] _sendmail_addr = null;
+      _sendmail_addr = (InternetAddress[])_sendmail_message.getFrom();
+      if (_sendmail_addr != null)
+        for (int i=0; i&lt;_sendmail_addr.length; i++)
+         {  <sendmail:from><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:from>  }
+      _sendmail_addr = (InternetAddress[])_sendmail_message.getReplyTo();
+      if (_sendmail_addr != null)
+        for (int i=0; i&lt;_sendmail_addr.length; i++)
+         {  <sendmail:reply-to><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:reply-to>  }
+      _sendmail_addr = (InternetAddress[])_sendmail_message.getRecipients (Message.RecipientType.TO);
+      if (_sendmail_addr != null)
+        for (int i=0; i&lt;_sendmail_addr.length; i++)
+         {  <sendmail:to><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:to>  }
+      _sendmail_addr = (InternetAddress[])_sendmail_message.getRecipients (Message.RecipientType.CC);
+      if (_sendmail_addr != null)
+        for (int i=0; i&lt;_sendmail_addr.length; i++)
+         {  <sendmail:cc><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:cc> }
+      _sendmail_addr = (InternetAddress[])_sendmail_message.getRecipients(Message.RecipientType.BCC);
+      if (_sendmail_addr != null)
+        for (int i=0; i&lt;_sendmail_addr.length; i++)
+         {  <sendmail:bcc><xsp:expr>_sendmail_addr[i].toString()</xsp:expr></sendmail:bcc>  }
+        <sendmail:subject><xsp:expr>_sendmail_message.getSubject()</xsp:expr></sendmail:subject>
+        <sendmail:content><xsp:expr>(String)_sendmail_message.getContent()</xsp:expr></sendmail:content>
+      </xsp:logic>
+    </sendmail:debug>
+  </xsl:template>
+
+
+  <xsl:template match="@*|node()" priority="-1">
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+
+
+  <xsl:template name="get-nested-string">
+    <xsl:param name="content"/>
+    <xsl:choose>
+      <xsl:when test="$content/*">
+        ""
+        <xsl:for-each select="$content/node()">
+          <xsl:choose>
+            <xsl:when test="name(.)"> 
+              + <xsl:apply-templates select="."/>
+            </xsl:when>
+            <xsl:otherwise>
+              + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>"<xsl:value-of select="normalize-space($content)"/>"</xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 
 </xsl:stylesheet>
