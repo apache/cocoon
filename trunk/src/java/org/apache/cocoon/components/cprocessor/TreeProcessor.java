@@ -575,6 +575,14 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         public String getContentType() {
             return environment.getContentType();
         }
+
+        public boolean isResponseModified(long lastModified) {
+            return environment.isResponseModified(lastModified);
+        }
+        
+        public void setResponseIsNotModified() {
+            environment.setResponseIsNotModified();
+        }
     }
 
 }
