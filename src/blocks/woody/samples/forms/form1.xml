@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--+
-    | CVS $Id: form1.xml,v 1.20 2004/02/04 23:30:34 joerg Exp $
+    | CVS $Id: form1.xml,v 1.21 2004/02/29 06:18:28 vgritsenko Exp $
     +-->
 
 <wd:form xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
@@ -122,8 +122,10 @@
     <wd:aggregatefield id="visa" required="true">
       <wd:label>Enter your (16-digit) visa number (without spaces)
         <br/>Your credit card will be billed.
-        <br/><small>Valid test number is: 4111111111111111</small></wd:label>
+        <br/><small>Valid test number is: 4111111111111111</small>
+      </wd:label>
       <wd:help>Use a fake number if <a href="http://cocoon.apache.org">Cocoon</a> is not running on your local computer</wd:help>
+      <wd:datatype base="string"/>
       <wd:split pattern="([0-9]{4})([0-9]{4})([0-9]{4})([0-9]{4})">
         <wd:map group="1" field="part1"/>
         <wd:map group="2" field="part2"/>
