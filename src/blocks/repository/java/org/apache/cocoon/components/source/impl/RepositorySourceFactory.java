@@ -61,9 +61,9 @@ implements SourceFactory, Serviceable, Configurable, ThreadSafe {
                 throw new IOException("Resolver service is not available: " + e.toString());
             }
         }
-        if (m_manager.hasService(SourceDescriptorManager.ROLE)) {
+        if (m_manager.hasService(SourceDescriptor.ROLE)) {
             try {
-                m_descriptor = (SourceDescriptor) m_manager.lookup(SourceDescriptorManager.ROLE);
+                m_descriptor = (SourceDescriptor) m_manager.lookup(SourceDescriptor.ROLE);
             }
             catch (ServiceException e) {
                 // impossible

@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.6 2004/03/19 14:16:54 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.7 2004/05/26 01:55:30 joerg Exp $
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
@@ -339,7 +339,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         // set the portal-page uri:
         StringBuffer buffer = new StringBuffer(requestURI);
         buffer.append((requestURI.indexOf('?') == -1 ? '?' : '&'))
-            .append(PortalManagerImpl.REQ_PARAMETER_PROFILE)
+            .append(PortalManager.REQ_PARAMETER_PROFILE)
             .append('=')
             .append(profileID);
         String uri = response.encodeURL(buffer.toString());
@@ -386,14 +386,14 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         Request request = ContextHelper.getRequest(this.componentContext);
         try {
             String profileID = "global";
-            String copletID = request.getParameter(PortalManagerImpl.REQ_PARAMETER_COPLET);
+            String copletID = request.getParameter(PortalManager.REQ_PARAMETER_COPLET);
 
             SessionContext context = this.getContext(true);
 
             Map configuration = this.getConfiguration();
 
             DocumentFragment copletsFragment = (DocumentFragment)context.getAttribute(ATTRIBUTE_ADMIN_COPLETS);
-            String command = request.getParameter(PortalManagerImpl.REQ_PARAMETER_ADMIN_COPLETS);
+            String command = request.getParameter(PortalManager.REQ_PARAMETER_ADMIN_COPLETS);
             if (command != null && copletsFragment != null) {
                 try {
                     this.getTransactionManager().startWritingTransaction(context);
@@ -570,7 +570,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 this.cleanUpCache(null, null, configuration);
             }
 
-            String state = request.getParameter(PortalManagerImpl.REQ_PARAMETER_STATE);
+            String state = request.getParameter(PortalManager.REQ_PARAMETER_STATE);
             if (state == null) {
                 state = (String)context.getAttribute(ATTRIBUTE_ADMIN_STATE, PortalConstants.STATE_MAIN);
             }
@@ -599,7 +599,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 if (rolesDF != null) roles = DOMUtil.getSingleNode(rolesDF, "roles", this.xpathProcessor);
                 IncludeXMLConsumer.includeNode(roles, consumer, consumer);
 
-                String role = request.getParameter(PortalManagerImpl.REQ_PARAMETER_ROLE);
+                String role = request.getParameter(PortalManager.REQ_PARAMETER_ROLE);
                 if (role == null) {
                     role = (String)context.getAttribute(ATTRIBUTE_ADMIN_ROLE);
                 }
@@ -618,17 +618,17 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
             }
 
             if (state.equals(PortalConstants.STATE_GLOBAL)) {
-                profileID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, true);
+                profileID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, true);
                 Map profile = this.retrieveProfile(profileID);
                 if (profile == null) {
-                    this.createProfile(context, PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, true);
+                    this.createProfile(context, PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, true);
                     profile = this.retrieveProfile(profileID);
                 }
                 this.showPortal(consumer, true, context, profile, profileID);
             }
 
             if (state.equals(PortalConstants.STATE_ROLE) ) {
-                String role = request.getParameter(PortalManagerImpl.REQ_PARAMETER_ROLE);
+                String role = request.getParameter(PortalManager.REQ_PARAMETER_ROLE);
                 if (role == null) {
                     role = (String)context.getAttribute(ATTRIBUTE_ADMIN_ROLE);
                 }
@@ -637,18 +637,18 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     consumer.startElement("", PortalConstants.ELEMENT_ROLE, PortalConstants.ELEMENT_ROLE, attr);
                     consumer.characters(role.toCharArray(), 0, role.length());
                     consumer.endElement("", PortalConstants.ELEMENT_ROLE, PortalConstants.ELEMENT_ROLE);
-                    profileID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ROLE, role, null, true);
+                    profileID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ROLE, role, null, true);
                     Map profile = this.retrieveProfile(profileID);
                     if (profile == null) {
-                        this.createProfile(context, PortalManagerImpl.BUILDTYPE_VALUE_ROLE, role, null, true);
+                        this.createProfile(context, PortalManager.BUILDTYPE_VALUE_ROLE, role, null, true);
                         profile = this.retrieveProfile(profileID);
                     }
                     this.showPortal(consumer, true, context, profile, profileID);
                 }
             }
             if (state.equals(PortalConstants.STATE_USER) ) {
-                String role = request.getParameter(PortalManagerImpl.REQ_PARAMETER_ROLE);
-                String id   = request.getParameter(PortalManagerImpl.REQ_PARAMETER_ID);
+                String role = request.getParameter(PortalManager.REQ_PARAMETER_ROLE);
+                String id   = request.getParameter(PortalManager.REQ_PARAMETER_ID);
                 if (role == null) {
                     role = (String)context.getAttribute(ATTRIBUTE_ADMIN_ROLE);
                 }
@@ -665,10 +665,10 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     consumer.characters(id.toCharArray(), 0, id.length());
                     consumer.endElement("", PortalConstants.ELEMENT_ID, PortalConstants.ELEMENT_ID);
 
-                    profileID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ID, role, id, true);
+                    profileID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ID, role, id, true);
                     Map profile = this.retrieveProfile(profileID);
                     if (profile == null) {
-                        this.createProfile(context, PortalManagerImpl.BUILDTYPE_VALUE_ID, role, id, true);
+                        this.createProfile(context, PortalManager.BUILDTYPE_VALUE_ID, role, id, true);
                         profile = this.retrieveProfile(profileID);
                     }
                     this.showPortal(consumer, true, context, profile, profileID);
@@ -736,10 +736,10 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         Map storedProfile = null;
         Element statusProfile = null;
 
-        if (context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE) != null) {
-            profileID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ID,
-                  (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE),
-                  (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ID), false);
+        if (context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE) != null) {
+            profileID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ID,
+                  (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE),
+                  (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ID), false);
             storedProfile = this.retrieveProfile(profileID);
         }
 
@@ -778,10 +778,10 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("start portal generation");
         }
-        if (context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE) != null) {
-            profileID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ID,
-                  (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE),
-                  (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ID), adminProfile);
+        if (context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE) != null) {
+            profileID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ID,
+                  (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE),
+                  (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ID), adminProfile);
             storedProfile = this.retrieveProfile(profileID);
         }
         if (storedProfile == null) {
@@ -789,11 +789,11 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
             if (this.getLogger().isDebugEnabled()) {
                 this.getLogger().debug("start building profile");
             }
-            this.createProfile(context, PortalManagerImpl.BUILDTYPE_VALUE_ID, null, null, adminProfile);
+            this.createProfile(context, PortalManager.BUILDTYPE_VALUE_ID, null, null, adminProfile);
             // get the profileID
-            profileID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ID,
-                    (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE),
-                    (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ID), adminProfile);
+            profileID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ID,
+                    (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE),
+                    (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ID), adminProfile);
             storedProfile = this.retrieveProfile(profileID);
             if (storedProfile == null) {
                 throw new ProcessingException("portal: No portal profile found.");
@@ -1184,14 +1184,14 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
             if (type == null) {
                 throw new ProcessingException("buildProfile: Type is required");
             }
-            if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL) ||
-                type.equals(PortalManagerImpl.BUILDTYPE_VALUE_BASIC)) {
+            if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL) ||
+                type.equals(PortalManager.BUILDTYPE_VALUE_BASIC)) {
                 // nothing to do here
-            } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ROLE)) {
+            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
                 if (role == null) {
                     throw new ProcessingException("buildProfile: Role is required");
                 }
-            } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                 if (role == null) {
                     throw new ProcessingException("buildProfile: Role is required");
                 }
@@ -1216,7 +1216,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 }
 
                 // is the ID profile cached?
-                if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID) ) {
+                if (type.equals(PortalManager.BUILDTYPE_VALUE_ID) ) {
                     theProfile = this.getCachedProfile(profileID, config);
                 }
 
@@ -1228,37 +1228,37 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     boolean doID = false;
                     String previousID;
 
-                    if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                         doID = true;
-                        previousID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ROLE, role, null, adminProfile);
+                        previousID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ROLE, role, null, adminProfile);
                         theProfile = this.getCachedProfile(previousID, config);
                         if (theProfile == null) {
                             doRole = true;
-                            previousID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, adminProfile);
+                            previousID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, adminProfile);
                             theProfile = this.getCachedProfile(previousID, config);
                             if (theProfile == null) {
                                 doGlobal = true;
-                                previousID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_BASIC, null, null, adminProfile);
+                                previousID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_BASIC, null, null, adminProfile);
                                 theProfile = this.getCachedProfile(previousID, config);
                             }
                         }
-                    } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ROLE)) {
+                    } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
                         theProfile = this.getCachedProfile(profileID, config);
                         if (theProfile == null) {
                             doRole = true;
-                            previousID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, adminProfile);
+                            previousID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, adminProfile);
                             theProfile = this.getCachedProfile(previousID, config);
                             if (theProfile == null) {
                                 doGlobal = true;
-                                previousID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_BASIC, null, null, adminProfile);
+                                previousID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_BASIC, null, null, adminProfile);
                                 theProfile = this.getCachedProfile(previousID, config);
                             }
                         }
-                    } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL)) {
+                    } else if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
                         theProfile = this.getCachedProfile(profileID, config);
                         if (theProfile == null) {
                             doGlobal = true;
-                            previousID = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_BASIC, null, null, adminProfile);
+                            previousID = this.getProfileID(PortalManager.BUILDTYPE_VALUE_BASIC, null, null, adminProfile);
                             theProfile = this.getCachedProfile(previousID, config);
                         }
                     } else { // basic profile
@@ -1279,7 +1279,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         profile = this.buildBaseProfile(config, adminProfile);
                         profileRoot = (Element)profile.getFirstChild();
                         theProfile.put(PortalConstants.PROFILE_PROFILE, profile);
-                        this.cacheProfile(this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_BASIC, null, null, adminProfile), theProfile, config);
+                        this.cacheProfile(this.getProfileID(PortalManager.BUILDTYPE_VALUE_BASIC, null, null, adminProfile), theProfile, config);
                     } else {
                         profile = (DocumentFragment)theProfile.get(PortalConstants.PROFILE_PROFILE);
                         profileRoot = (Element)profile.getFirstChild();
@@ -1288,13 +1288,13 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     // load the global delta if type is global, role or user (but not basic!)
                     if (doGlobal) {
                         this.buildGlobalProfile(profileRoot, config, adminProfile);
-                        this.cacheProfile(this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, adminProfile), theProfile, config);
+                        this.cacheProfile(this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, adminProfile), theProfile, config);
                     }
 
                     // load the role delta if type is role or user
                     if (doRole) {
                         this.buildRoleProfile(profileRoot, config, role, adminProfile);
-                        this.cacheProfile(this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ROLE, role, null, adminProfile), theProfile, config);
+                        this.cacheProfile(this.getProfileID(PortalManager.BUILDTYPE_VALUE_ROLE, role, null, adminProfile), theProfile, config);
                     }
 
                     // load the user delta if type is user
@@ -1303,11 +1303,11 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     }
 
                     // load the status profile when type is user
-                    if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                         this.buildUserStatusProfile(profileRoot, config, role, id);
                     }
 
-                    if (!type.equals(PortalManagerImpl.BUILDTYPE_VALUE_BASIC)) {
+                    if (!type.equals(PortalManager.BUILDTYPE_VALUE_BASIC)) {
                         this.buildRunProfile(theProfile, context, profile);
 
                         theProfile.put(PortalConstants.PROFILE_PORTAL_LAYOUTS,
@@ -1324,7 +1324,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     }
                 } else {
                     // load the status profile when type is user
-                    if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                         DocumentFragment profile = (DocumentFragment)theProfile.get(PortalConstants.PROFILE_PROFILE);
                         Element profileRoot = (Element)profile.getFirstChild();
                         this.buildUserStatusProfile(profileRoot, config, role, id);
@@ -1335,10 +1335,10 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 this.storeProfile(profileID, theProfile);
 
                 // now put role and id into the context if type is ID
-                if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)
+                if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)
                     && !adminProfile) {
-                    context.setAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE, role);
-                    context.setAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ID, id);
+                    context.setAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE, role);
+                    context.setAttribute(PortalManager.ATTRIBUTE_PORTAL_ID, id);
                 }
             } finally {
                 this.getTransactionManager().stopWritingTransaction(context);
@@ -1378,18 +1378,18 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                    type + " - " + role + " - " + id + ".");
         }
 
-        if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
-            baseType = PortalManagerImpl.BUILDTYPE_VALUE_ROLE;
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
+            baseType = PortalManager.BUILDTYPE_VALUE_ROLE;
             baseRole = role;
             baseID   = null;
             rootElementName = "user-delta";
-        } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ROLE)) {
-            baseType = PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL;
+        } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
+            baseType = PortalManager.BUILDTYPE_VALUE_GLOBAL;
             baseRole = null;
             baseID   = null;
             rootElementName = "role-delta";
-        } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL)) {
-            baseType = PortalManagerImpl.BUILDTYPE_VALUE_BASIC;
+        } else if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
+            baseType = PortalManager.BUILDTYPE_VALUE_BASIC;
             baseRole = null;
             baseID   = null;
             rootElementName = "global-delta";
@@ -1421,7 +1421,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                   (DocumentFragment)baseProfile.get(PortalConstants.PROFILE_PROFILE),
                   "profile/coplets-profile",
                   (Element)delta.getFirstChild());
-        if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL)) {
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
             profileDelta = DOMUtil.getFirstNodeFromPath(originalFragment, new String[] {"profile","personal-profile"}, false).cloneNode(true);
             delta.getFirstChild().appendChild(profileDelta);
         } else {
@@ -1620,12 +1620,12 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
            .append(':')
            .append(type);
 
-        if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ROLE)
-            || type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)
+            || type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
             role = XMLUtil.encode(role);
             key.append('_').append(role.length()).append('_').append(role);
         }
-        if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+        if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
             id = XMLUtil.encode(id);
             key.append('_').append(id);
         }
@@ -1820,7 +1820,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         }
         if (configuration != null
             && type != null
-            && !type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+            && !type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
             String storePrefix = (String)configuration.get(PortalConstants.CONF_PROFILE_CACHE);
             if (storePrefix != null) {
                 Store store = this.getProfileStore();
@@ -1830,18 +1830,18 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 String  deleteRole = null;
                 String  deleteUser = null;
 
-                if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_BASIC) ||
-                    type.equals(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL)) {
-                    if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_BASIC)) {
-                        deleteGlobal = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, false).substring(1);
+                if (type.equals(PortalManager.BUILDTYPE_VALUE_BASIC) ||
+                    type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
+                    if (type.equals(PortalManager.BUILDTYPE_VALUE_BASIC)) {
+                        deleteGlobal = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false).substring(1);
                     }
-                    deleteRole = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, false);
-                    deleteRole = deleteRole.substring(1, deleteRole.lastIndexOf(':')+1) + PortalManagerImpl.BUILDTYPE_VALUE_ROLE;
-                    deleteUser = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, false);
-                    deleteUser = deleteUser.substring(1, deleteUser.lastIndexOf(':')+1) + PortalManagerImpl.BUILDTYPE_VALUE_ID;
+                    deleteRole = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false);
+                    deleteRole = deleteRole.substring(1, deleteRole.lastIndexOf(':')+1) + PortalManager.BUILDTYPE_VALUE_ROLE;
+                    deleteUser = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false);
+                    deleteUser = deleteUser.substring(1, deleteUser.lastIndexOf(':')+1) + PortalManager.BUILDTYPE_VALUE_ID;
                 } else { // role
-                    deleteGlobal = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ROLE, role, null, false).substring(1);
-                    deleteUser = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ID, role, "a", false);
+                    deleteGlobal = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ROLE, role, null, false).substring(1);
+                    deleteUser = this.getProfileID(PortalManager.BUILDTYPE_VALUE_ID, role, "a", false);
                     deleteUser = deleteUser.substring(1, deleteUser.length()-1);
                 }
 
@@ -1868,7 +1868,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 String currentKey;
                 String delete;
 
-                delete = this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL, null, null, false);
+                delete = this.getProfileID(PortalManager.BUILDTYPE_VALUE_GLOBAL, null, null, false);
                 delete = delete.substring(1, delete.lastIndexOf(':') + 1);
                 while (keys.hasMoreElements()) {
                     Object k = keys.nextElement();
@@ -2297,7 +2297,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
                             ((Element)currentNode).setAttributeNS(null, "formtype", value);
                             ((Element)currentNode).setAttributeNS(null, "formpath",
-                                     PortalManagerImpl.REQ_PARAMETER_CONF + '.' + i + '.' + m);
+                                     PortalManager.REQ_PARAMETER_CONF + '.' + i + '.' + m);
                             ((Element)currentNode).setAttributeNS(null, "formdescription", description);
                             changed = true;
                         }
@@ -2312,7 +2312,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                             currentNode = nodes.item(m);
                             if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
                                 ((Element)currentNode).setAttributeNS(null, "formpath",
-                                     PortalManagerImpl.REQ_PARAMETER_CONF + '.' + i + '.' + m);
+                                     PortalManager.REQ_PARAMETER_CONF + '.' + i + '.' + m);
                             }
                         }
                     }
@@ -3017,7 +3017,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
             }
 
             // create a new coplet: in the given column, header or footer
-            if (requestString.startsWith(PortalManagerImpl.REQ_CMD_NEW)
+            if (requestString.startsWith(PortalManager.REQ_CMD_NEW)
                 && this.isCopletAvailable(context, copletID,
                                  (Map)theProfile.get(PortalConstants.PROFILE_DEFAULT_COPLETS),
                                  (Map)theProfile.get(PortalConstants.PROFILE_MEDIA_COPLETS))) {
@@ -3103,27 +3103,27 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                                     copletNr,
                                     (Node[])theProfile.get(PortalConstants.PROFILE_MISC_POINTER));
                 if (coplet != null) {
-                    if (requestString.startsWith(PortalManagerImpl.REQ_CMD_CLOSE) ||
-                        requestString.startsWith(PortalManagerImpl.REQ_CMD_HIDE)) {
+                    if (requestString.startsWith(PortalManager.REQ_CMD_CLOSE) ||
+                        requestString.startsWith(PortalManager.REQ_CMD_HIDE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/visible", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "false");
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_OPEN) ||
-                        requestString.startsWith(PortalManagerImpl.REQ_CMD_SHOW)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_OPEN) ||
+                        requestString.startsWith(PortalManager.REQ_CMD_SHOW)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/visible", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "true");
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_MINIMIZE)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MINIMIZE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/size", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "min");
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_MAXIMIZE)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MAXIMIZE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/size", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "max");
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_CUSTOMIZE)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_CUSTOMIZE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/customize", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "true");
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_UPDATE)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_UPDATE)) {
                          Node node = DOMUtil.selectSingleNode(coplet, "status/customize", this.xpathProcessor);
                          DOMUtil.setValueOfNode(node, "false");
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_DELETE)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_DELETE)) {
                         // delete the status of the coplet
                         Node statusNode = DOMUtil.getSingleNode(profile,
                              "profile/status-profile/customization/coplet[@id='"+copletID+"' and @number='"+copletNr+"']", this.xpathProcessor);
@@ -3150,7 +3150,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                                 ((Element)followUps.item(i)).setAttributeNS(null, "position", "" + value);
                            }
                         }
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_MOVE)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVE)) {
                         if (argument != null) {
                             Element  copletsElement = (Element)DOMUtil.getSingleNode(profile,
                                   "profile/portal-profile/content/column[@position='"+argument+"']/coplets", this.xpathProcessor);
@@ -3175,7 +3175,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                                  }
                             }
                         }
-                    } else if (requestString.startsWith(PortalManagerImpl.REQ_CMD_MOVEROW)) {
+                    } else if (requestString.startsWith(PortalManager.REQ_CMD_MOVEROW)) {
                         if (argument != null) {
                             Element newCoplet = (Element)DOMUtil.getSingleNode(coplet.getParentNode(),
                                                  "coplet[@position='"+argument+"']", this.xpathProcessor);
@@ -3244,13 +3244,13 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         boolean result = false;
         SessionContext context = this.getContext(false);
         if (context != null
-            && (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE) != null) {
+            && (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE) != null) {
 
             try {
                 this.getTransactionManager().startReadingTransaction(context);
-                Map theProfile = this.retrieveProfile(this.getProfileID(PortalManagerImpl.BUILDTYPE_VALUE_ID,
-                     (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ROLE),
-                     (String)context.getAttribute(PortalManagerImpl.ATTRIBUTE_PORTAL_ID), false));
+                Map theProfile = this.retrieveProfile(this.getProfileID(PortalManager.BUILDTYPE_VALUE_ID,
+                     (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ROLE),
+                     (String)context.getAttribute(PortalManager.ATTRIBUTE_PORTAL_ID), false));
 
                 if (theProfile != null) {
                     if (copletID == null || copletID.trim().length() == 0) {
@@ -3483,7 +3483,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         pars.setSingleParameterValue("type", type);
         pars.setSingleParameterValue("admin", (adminProfile ? "true" : "false"));
 
-        if (!type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID) || role != null) {
+        if (!type.equals(PortalManager.BUILDTYPE_VALUE_ID) || role != null) {
             pars.setSingleParameterValue("ID", id);
             pars.setSingleParameterValue("role", role);
         } else {
@@ -3902,7 +3902,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         if (context != null) {
             try {
                 Map theProfile = null;
-                String profileID = request.getParameter(PortalManagerImpl.REQ_PARAMETER_PROFILE);
+                String profileID = request.getParameter(PortalManager.REQ_PARAMETER_PROFILE);
                 if (profileID != null) {
                     theProfile = this.retrieveProfile(profileID);
                 }
@@ -3919,7 +3919,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         // first iteration: all changing commands
                         while (enum.hasMoreElements()) {
                             current = (String)enum.nextElement();
-                            if (current.startsWith(PortalManagerImpl.REQ_PARAMETER_CONF)) {
+                            if (current.startsWith(PortalManager.REQ_PARAMETER_CONF)) {
                                 int pos1, pos2;
                                 pos1 = current.indexOf('.');
                                 pos2 = current.indexOf('.', pos1+1);
@@ -3950,7 +3950,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         while (enum.hasMoreElements()) {
 
                             current = (String)enum.nextElement();
-                            if (current.startsWith(PortalManagerImpl.REQ_PARAMETER_CONF)) {
+                            if (current.startsWith(PortalManager.REQ_PARAMETER_CONF)) {
                                 int pos1, pos2;
                                 pos1 = current.indexOf('.');
                                 pos2 = current.indexOf('.', pos1+1);
@@ -3982,11 +3982,11 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                                     }
                                 }
 
-                            } else if (current.equals(PortalManagerImpl.REQ_PARAMETER_CMD)) {
+                            } else if (current.equals(PortalManager.REQ_PARAMETER_CMD)) {
                                 String[] cmds = request.getParameterValues(current);
                                 if (cmds != null && cmds.length > 0) {
                                     for(int i = 0; i < cmds.length; i++) {
-                                        if (cmds[i].equals(PortalManagerImpl.REQ_CMD_SAVEPROFILE)) {
+                                        if (cmds[i].equals(PortalManager.REQ_CMD_SAVEPROFILE)) {
                                             saveProfile = true;
                                         } else {
                                             if (this.modifyCoplet(cmds[i], context, theProfile, profile)) {
@@ -4023,13 +4023,13 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                             String   saveResource;
                             String   profileType;
 
-                            if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_GLOBAL)) {
+                            if (type.equals(PortalManager.BUILDTYPE_VALUE_GLOBAL)) {
                                 saveResource = (String)conf.get(PortalConstants.CONF_GLOBALDELTA_SAVERESOURCE);
                                 profileType = "global-delta";
-                            } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ROLE)) {
+                            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ROLE)) {
                                 saveResource = (String)conf.get(PortalConstants.CONF_ROLEDELTA_SAVERESOURCE);
                                 profileType = "role-delta";
-                            } else if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
+                            } else if (type.equals(PortalManager.BUILDTYPE_VALUE_ID)) {
                                 saveResource = (String)conf.get(PortalConstants.CONF_USERDELTA_SAVERESOURCE);
                                 profileType = "user-delta";
                             } else {
