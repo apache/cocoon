@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.54 2000-04-13 10:40:14 stefano Exp $
+  $Id: changes.xml,v 1.55 2000-04-14 10:20:55 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update">
+   Updated Xalan to version 1.0.1.
+  </action>
+  <action dev="SM" type="add">
+   Added new samples.
+  </action>
   <action dev="SM" type="fix" due-to="Rapha&euml;l Luta" due-to-email="luta.raphael@networks.vivendi.net">
    Fixed a problem with XSP where PIs contained the string <em>xsp</em>.
   </action>
