@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.30 2004/03/10 12:58:13 stephan Exp $
+    | CVS $Id: samples.xml,v 1.31 2004/03/10 14:26:29 stephan Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -86,12 +86,6 @@
     </sample>
     <sample href="components" name="Components">
       Samples of different components included with the core
-    </sample> 
-    <sample href="soap/" name="SOAP">
-      Cocoon ships with facilities for immediate connection to SOAP resources.
-      These examples show you how to connect to any web service with a few
-      lines of XML markup using SOAP XSP Logicsheet. See also axis block that
-      integrates Axis into Cocoon. 
     </sample> 
     <sample href="text-wrap/" name="Text wrap">
       Addresses the problem of wrapping long lines of text in source elements.
