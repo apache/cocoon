@@ -213,9 +213,10 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      *         {@link #startProcessing(Environment)}.
      */
     public static void endProcessing(Environment env, Object key) {
-        ((EnvironmentDescription) key).release();
+		env.finishingProcessing();
+        final EnvironmentDescription desc = (EnvironmentDescription)key;
+        desc.release();
         env.getObjectModel().remove(PROCESS_KEY);
-        env.finishingProcessing();
     }
 
     /**
@@ -290,10 +291,12 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
             return this;
         }
 
-        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
-        if (stack != null && !stack.isEmpty()) {
-            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
-            if (null != desc) {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if ( null != stack && !stack.empty()) {
+            final Object[] objects = (Object[])stack.getCurrent();
+            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
+            if ( null != desc ) {
                 Component component = desc.getRequestLifecycleComponent(role);
                 if (null != component) {
                     return component;
@@ -413,10 +416,12 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
                                                        final Component         component,
                                                        final ComponentManager  manager)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
-        if (null != stack && !stack.empty()) {
-            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
-            if (null != desc) {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if ( null != stack && !stack.empty()) {
+            final Object[] objects = (Object[])stack.get(0);
+            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
+            if ( null != desc ) {
                 desc.addToAutoRelease(selector, component, manager);
             }
         } else {
@@ -430,10 +435,12 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
     public static void addComponentForAutomaticRelease(final ComponentManager manager,
                                                        final Component        component)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
-        if (null != stack && !stack.empty()) {
-            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
-            if (null != desc) {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if ( null != stack && !stack.empty()) {
+            final Object[] objects = (Object[])stack.get(0);
+            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
+            if ( null != desc ) {
                 desc.addToAutoRelease(manager, component);
             }
         } else {
@@ -446,21 +453,17 @@ public final class CocoonComponentManager extends ExcaliburComponentManager
      */
     public static void removeFromAutomaticRelease(final Component component)
     throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
-        if (null != stack && !stack.empty()) {
-            final EnvironmentDescription desc = getCurrentEnvironmentDescriptor(stack);
-            if (null != desc) {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if ( null != stack && !stack.empty()) {
+            final Object[] objects = (Object[])stack.get(0);
+            final Map objectModel = ((Environment)objects[0]).getObjectModel();
+            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
+            if ( null != desc ) {
                 desc.removeFromAutoRelease(component);
             }
         } else {
             throw new ProcessingException("Unable to remove component from automatic release: no environment available.");
         }
-    }
-
-    private static EnvironmentDescription getCurrentEnvironmentDescriptor(final EnvironmentStack stack) {
-        final Object[] objects = (Object[]) stack.getCurrent();
-        final Map objectModel = ((Environment) objects[0]).getObjectModel();
-        return (EnvironmentDescription) objectModel.get(CocoonComponentManager.PROCESS_KEY);
     }
 
     /**
@@ -591,8 +594,8 @@ final class EnvironmentDescription {
      * All RequestLifecycleComponents and autoreleaseComponents are
      * released.
      */
-    synchronized void release() {
-        if (this.requestLifecycleComponents != null) {
+    void release() {
+        if ( this.requestLifecycleComponents != null ) {
             final Iterator iter = this.requestLifecycleComponents.values().iterator();
             while (iter.hasNext()) {
                 final Object[] o = (Object[])iter.next();
@@ -685,24 +688,24 @@ final class EnvironmentDescription {
     /**
      * Add an automatically released component
      */
-    synchronized void addToAutoRelease(final ComponentSelector selector,
-                                       final Component         component,
-                                       final ComponentManager  manager) {
+    void addToAutoRelease(final ComponentSelector selector,
+                          final Component         component,
+                          final ComponentManager  manager) {
         this.autoreleaseComponents.add(new Object[] {component, selector, manager});
     }
 
     /**
      * Add an automatically released component
      */
-    synchronized void addToAutoRelease(final ComponentManager manager,
-                                       final Component        component) {
+    void addToAutoRelease(final ComponentManager manager,
+                          final Component        component) {
         this.autoreleaseComponents.add(new Object[] {component, manager});
     }
 
     /**
      * Remove from automatically released components
      */
-    synchronized void removeFromAutoRelease(final Component component)
+    void removeFromAutoRelease(final Component component)
     throws ProcessingException {
         int i = 0;
         boolean found = false;
