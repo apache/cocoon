@@ -55,7 +55,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.270 2004/03/09 11:32:41 bdelacretaz Exp $:-->
+<!-- CVS $Id: status.xml,v 1.271 2004/03/10 11:06:20 reinhard Exp $:-->
 
 <status>
  <developers>
@@ -230,20 +230,22 @@
    </action>
    <action dev="RP" type="update">
      Renaming Woody to CocoonForms
-      - The Woody block (src/blocks/woody) has moved into the new Cocoon Forms 
-        block (src/blocks/forms).
-      - new namespaces:
-           * from xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
-             to   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
-           * from xmlns:wb="http://apache.org/cocoon/woody/binding/1.0"
-             to   xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"
-           * from xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
-             to   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
-           * from xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
-             to   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"     
-      - Java packages moved from org.apache.cocoon.woody to 
-        org.apache.cocoon.forms
-      - Petstore and Apples examples have been renamed
+     <ul>
+       <li>The Woody block (src/blocks/woody) has moved into the new Cocoon Forms 
+           block (src/blocks/forms).</li>
+       <li>new namespaces:<br/>
+           <ul>
+               <li>from xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+                   to   xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"</li>
+               <li>from xmlns:wb="http://apache.org/cocoon/woody/binding/1.0"
+                   to   xmlns:fb="http://apache.org/cocoon/forms/1.0#binding"</li>
+               <li>from xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+                   to   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"</li>
+               <li>from xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
+                   to   xmlns:ft="http://apache.org/cocoon/forms/1.0#template"</li>
+           </ul></li>
+       <li>Java packages moved from org.apache.cocoon.woody to org.apache.cocoon.forms</li>
+     </ul>
    </action> 
    <action dev="AG" type="update">
      Updated Velocity engine to 1.4-rc1
