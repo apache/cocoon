@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.5 2000-01-23 23:14:11 stefano Exp $ -- 
+/*-- $Id: Utils.java,v 1.6 2000-01-24 21:36:42 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 2000-01-23 23:14:11 $
+ * @version $Revision: 1.6 $ $Date: 2000-01-24 21:36:42 $
  */
 
 public final class Utils {
@@ -88,7 +88,10 @@ public final class Utils {
             if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
                 if (((ProcessingInstruction) node).getTarget().equals(name)) {
                     pis.addElement(node);
-                    if (remove) node.getParentNode().removeChild(node);
+                    if (remove) {
+                        node.getParentNode().removeChild(node);
+                        i--;
+                    }
                 }
             }
         }
