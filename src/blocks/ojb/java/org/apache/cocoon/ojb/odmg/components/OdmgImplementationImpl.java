@@ -58,8 +58,8 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ojb.components.AbstractOjbImpl;
 import org.apache.ojb.odmg.OJB;
 import org.odmg.Database;
 import org.odmg.Implementation;
@@ -70,10 +70,10 @@ import org.odmg.ODMGException;
  * Implementation of the OdmgImplementation. Create a ODMG Implementation and store it for future use
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: OdmgImplementationImpl.java,v 1.1 2004/01/27 06:15:14 giacomo Exp $
+ * @version CVS $Id: OdmgImplementationImpl.java,v 1.2 2004/02/01 21:37:30 giacomo Exp $
  */
 public class OdmgImplementationImpl
-    extends AbstractLogEnabled
+    extends AbstractOjbImpl
     implements OdmgImplementation, Configurable, Initializable, Disposable, ThreadSafe {
 
     private final static String DEFAULT_CONNECTION ="default";
@@ -96,6 +96,7 @@ public class OdmgImplementationImpl
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
+        super.dispose();
         synchronized(this.databases) {
             final Set keys = this.databases.keySet();
             for( Iterator i = keys.iterator(); i.hasNext(); )
@@ -121,6 +122,7 @@ public class OdmgImplementationImpl
      */
     public void initialize()
         throws Exception {
+        super.initialize();
         try {
             // Get the Implementation
             this.odmg = OJB.getInstance();

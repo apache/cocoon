@@ -16,7 +16,7 @@ different user/password.
 Ditto it is possible to add jdbc-connection-descriptor at runtime
 using the MetadataManager.
 -->
-<jdbc-connection-descriptor
+    <jdbc-connection-descriptor
         jcd-alias="default"
         default-connection="true"
         platform="Hsqldb"
@@ -40,7 +40,13 @@ using the MetadataManager.
         <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
             <attribute attribute-name="grabSize" attribute-value="5"/>
         </sequence-manager>
-   </jdbc-connection-descriptor>
+    </jdbc-connection-descriptor>
+
+    <jdbc-connection-descriptor jcd-alias="personnel">
+        <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
+            <attribute attribute-name="grabSize" attribute-value="5"/>
+        </sequence-manager>
+    </jdbc-connection-descriptor>
 
     <class-descriptor class="org.apache.cocoon.ojb.samples.Department" table="DEPARTMENT">
         <field-descriptor name="id"   column="ID"   jdbc-type="INTEGER" primarykey="true"/>

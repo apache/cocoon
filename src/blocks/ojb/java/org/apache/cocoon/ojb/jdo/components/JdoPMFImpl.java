@@ -60,15 +60,16 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ojb.components.AbstractOjbImpl;
 import org.apache.ojb.jdori.sql.OjbStorePMF;
 
 /**
 * Implementation of the JdoPMF. Create one PMF and store it for future use
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: JdoPMFImpl.java,v 1.1 2003/09/28 04:31:11 antonio Exp $
+ * @version CVS $Id: JdoPMFImpl.java,v 1.2 2004/02/01 21:37:30 giacomo Exp $
 */
-public class JdoPMFImpl extends AbstractLogEnabled implements JdoPMF, Configurable, Initializable,
+public class JdoPMFImpl extends AbstractOjbImpl implements JdoPMF, Configurable, Initializable,
 Disposable, ThreadSafe
 {
 	protected PersistenceManagerFactory factory = null;
@@ -87,6 +88,7 @@ Disposable, ThreadSafe
      */
     public void dispose()
     {
+        super.dispose();
 		if (this.getLogger().isDebugEnabled())
 			this.getLogger().debug("OJB-JDO: Disposed OK!");
     }
@@ -103,6 +105,7 @@ Disposable, ThreadSafe
 	 */
 	public void initialize() throws Exception
 	{
+        super.initialize();
 		try
 		{
 			// Create the factory

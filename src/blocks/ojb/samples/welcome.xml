@@ -19,7 +19,7 @@
      Object Data Management Group (ODMG) 3 standard for binding databases. Uses Object Query Language (OQL).
      ODMG has been superceded by JDO.
   </note>
-  <sample name="XSP" href="">Sample using in a XSP page. To be done.</sample>
+  <sample name="XSP" href="odmg/xspdemo">Sample using in a XSP page.</sample>
   <sample name="Woody" href="">Sample using Woody binding. To be done.</sample>
   <sample name="JXForm" href="">Sample using JXForms. To be done.</sample>
  </group>
