@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: date-selector.xml,v 1.3 2003/10/12 13:04:51 cziegeler Exp $ 
+  <![CDATA[ CVS Version: $Id: date-selector.xml,v 1.4 2003/12/11 09:27:00 huber Exp $ 
   ]]>
 -->
 <document>
@@ -11,7 +11,7 @@
     <version>0.9</version>
     <type>Technical document</type>
     <authors>
-      <person name="Your Name" email="your-email"/>
+      <person name="Bernhard Huber" email="huber@apache.org"/>
     </authors>
     <abstract>This document describes the DateSelector of Cocoon.</abstract>
   </header>
@@ -23,27 +23,20 @@
         </tr>
         <tr>
           <td>WHAT</td><td>The <code>DateSelector</code> component is used to 
-            select...
+            select appropriate sitemap processing depending on the current date, and time.
           </td>
         </tr>
         <tr>
           <td>TYPE</td><td>Selector, Sitemap Component</td>
         </tr>
         <tr>
-          <!-- choose Core, the block name, or Scratchpad 
-            depending on where DateSelector sources live
-          -->
           <td>BLOCK</td><td>Scratchpad</td>
         </tr>
         <tr>
-          <td>CLASS</td><td>org.apache.cocoon.reading.DateSelector</td>
+          <td>CLASS</td><td>org.apache.cocoon.selection.DateSelector</td>
         </tr>
-        <!-- uncomment following tr if DateSelector is deprecated -->
-        <!--tr>
-          <td>DEPRECATED</td><td>Cocoon 2.0, 2.1</td>
-        </tr-->
         <tr>
-          <td>SINCE</td><td>Cocoon X.Y</td>
+          <td>SINCE</td><td>Cocoon 2.1</td>
         </tr>
         <tr>
           <td>CACHEABLE</td><td>not applicable</td>
@@ -52,36 +45,53 @@
     </s1>
     <s1 title="Description">
       <p>
-        A general description of DateSelector
+        The <code>DateSelector</code> tests the current date, and time
+        against the test attribute of the selectors when clause.
       </p>
     </s1>
     <s1 title="Usage">
       <p>
-        A usage scenario of DateSelector
+        The <code>DateSelector</code> allows to define date, and time specific sitemap
+        processing. This way Cocoon can do date, and time specific sitemap processing.
       </p>
       <s2 title="Sitemap pipeline examples">
         <p></p>
         <source><![CDATA[
-<map:match pattern="*.xyz">
-  <map:read type="date" src="{1}" mime-type="type/sub-type">
-    <!-- option sitemap parameters -->
-  </map:read>
-</map:match>
-        ]]></source>
+<map:select type="daytime">
+  <map:when test="night">
+    <!-- do something for night publishing -->
+    <map:read src="resources/{2}-night.css" mime-type="text/css>
+  </map:when>
+  <map:when test="morning">
+    <!-- do something for night publishing -->
+    <map:read src="resources/{2}-morning.css" mime-type="text/css>
+  </map:when>
+  ...
+  <map:otherwise>
+    <!-- define for completness, and if selecting fails due to errors -->
+  </map:otherwise>
+</map:select>
+]]></source>
       </s2>
       
       <s2 title="Sitemap component configuration example">
-        <p></p>
+        <p>
+          The following snippet defines a DateSelector named daytime. 
+          A day is partioned into four daytime areas: night, morning, afternoon, and evening.
+          These daytime names are used to define daytime specific pipeline processing for each
+          daytime area.
+        </p>
         <source><![CDATA[
-<map:selectors...
-  <map:selector name="date" 
-    src="org.apache.cocoon.reading.DateSelector"
-    logger="sitemap.selector.date" 
-  />
-    <!-- optional selector configuration -->
-    ...
-  </map:selectors>
+<map:selectors default="browser">
+  ...
+  <map:selector type="daytime" src="org.apache.cocoon.selection.DateSelector">
+    <before name="night" date="06:00:00" dateformat="HH:mm:ss"/>
+    <before name="morning" date="12:00:00" dateformat="HH:mm:ss"/>
+    <before name="afternoon" date="18:00:00" dateformat="HH:mm:ss"/>
+    <before name="evening" date="23:59:59" dateformat="HH:mm:ss"/>
+  </map:selector>
 ...
+</map:selectors>
 ]]></source>
       </s2>
       <s2 title="Configuration">
@@ -107,7 +117,7 @@
     </s1>
     <s1 title="History">
       <p>
-        MM-DD-YY: initial creation
+        11-28-03: initial creation
       </p>
     </s1>
     <s1 title="Copyright">
