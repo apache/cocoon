@@ -57,6 +57,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Stack;
 
 import org.apache.avalon.framework.activity.Initializable;
@@ -78,6 +79,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
@@ -111,11 +113,16 @@ extends AbstractSAXTransformer implements Initializable, Generator {
     public static final String JXPATH_OTHERWISE      = "otherwise";
     public static final String JXPATH_VALUEOF        = "value-of";
     public static final String JXPATH_VALUEOF_SELECT = "select";
+    public static final String JXPATH_VALUEOF_DEFAULT = "default";
     public static final String JXPATH_CONTINUATION   = "continuation";
     public static final String JXPATH_CONTINUATION_SELECT = "select";
     public static final String JXPATH_IF             = "if";
     public static final String JXPATH_IF_TEST        = "test";
     public static final String JXPATH_WHEN_TEST      = "test";
+    public static final String JXPATH_SET      = "set";
+    public static final String JXPATH_REMOVE      = "remove";
+    public static final String JXPATH_SET_REMOVE_VARNAME    = "var";
+    public static final String JXPATH_SET_VALUE      = "value";
 
     // web contination
     private WebContinuation kont;
@@ -156,6 +163,11 @@ extends AbstractSAXTransformer implements Initializable, Generator {
     // Run as a generator for debugging: to get line numbers in error messages
 
     private Source inputSource;
+    private Locator locator = null;
+
+    public void setDocumentLocator(Locator loc) {
+        this.locator = loc;
+    }
 
     public void generate()
         throws IOException, SAXException, ProcessingException {
@@ -285,8 +297,11 @@ extends AbstractSAXTransformer implements Initializable, Generator {
                 if (c == '}') {
                     String str = expr.toString();
                     expr.setLength(0);
-                    str = String.valueOf(getValue(str));
-                    out.write(str);
+                    Object val = getValue(str);
+                    if (val == null) {
+                        val = "";
+                    }
+                    out.write(String.valueOf(val));
                     inExpr = false;
                 } else if (c == '\\') {
                     ch = in.read();
@@ -338,7 +353,8 @@ extends AbstractSAXTransformer implements Initializable, Generator {
                     try {
                         substitute(reader, writer);
                     } catch (Exception exc) {
-                        throw new SAXException(exc.getMessage(), exc);
+                        throw new SAXParseException(exc.getMessage(), 
+                                                    locator, exc);
                     }
                     impl.setValue(i, writer.toString());
                 }
@@ -377,6 +393,14 @@ extends AbstractSAXTransformer implements Initializable, Generator {
             if (ignoreEventsCount == 0) {
                 doContinuation(attr);
             } 
+        } else if (JXPATH_SET.equals(name)) {
+            if (ignoreEventsCount == 0) {
+                doSet(attr);
+            } 
+        } else if (JXPATH_REMOVE.equals(name)) {
+            if (ignoreEventsCount == 0) {
+                doRemove(attr);
+            } 
         } else if (JXPATH_IF.equals(name)) {
             doIf(attr);
         } else if (JXPATH_FOR_EACH.equals(name)) {
@@ -387,16 +411,17 @@ extends AbstractSAXTransformer implements Initializable, Generator {
             return;
         } else if (JXPATH_WHEN.equals(name)) {
             if (!inChoose) {
-                throw new ProcessingException("<when> must be contained in <choose>");
+                throw new SAXParseException("<when> must be contained in <choose>", locator, null);
             }
             doWhen(attr);
         } else if (JXPATH_OTHERWISE.equals(name)) {
             if (!inChoose) {
-                throw new ProcessingException("<otherwise> must be contained in <choose>");
+                throw new SAXParseException("<otherwise> must be contained in <choose>", locator, null);
             }
             doOtherwise(attr);
         } else {
-            throw new ProcessingException("unknown jxpath element: " + name);
+            throw new SAXParseException("unknown tag: " + name,
+                                        locator, null);
         }
         inChoose = false;
     }
@@ -446,6 +471,8 @@ extends AbstractSAXTransformer implements Initializable, Generator {
 
     static class MyVariables implements Variables {
 
+        Map myVariables = new HashMap();
+
         static final String[] VARIABLES = new String[] {
             "continuation",
             "flowContext",
@@ -478,7 +505,7 @@ extends AbstractSAXTransformer implements Initializable, Generator {
                     return true;
                 }
             }
-            return false;
+            return myVariables.containsKey(varName);
         }
         
         public Object getVariable(String varName) {
@@ -497,13 +524,15 @@ extends AbstractSAXTransformer implements Initializable, Generator {
             } else if (varName.equals("parameters")) {
                 return parameters;
             }
-            return null;
+            return myVariables.get(varName);
         }
         
         public void declareVariable(String varName, Object value) {
+            myVariables.put(varName, value);
         }
         
         public void undeclareVariable(String varName) {
+            myVariables.remove(varName);
         }
     }
 
@@ -549,15 +578,20 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         throws SAXException, ProcessingException {
 
         final String select = a.getValue(JXPATH_VALUEOF_SELECT);
+        final String def = a.getValue(JXPATH_VALUEOF_DEFAULT);
 
         if (null != select) {
             Object value = getValue(getExpr(select));
             if (value == null) {
-                value = "";
+                value = def;
+                if (value == null) {
+                    value = "";
+                }
             }
             sendTextEvent(value.toString());
         } else {
-            throw new ProcessingException("jxpath: " + JXPATH_VALUEOF + " specified without a "+JXPATH_VALUEOF_SELECT+" attribute");
+            throw new SAXParseException("value-of: \"select\" is required", 
+                                        locator, null);
         }
     }
 
@@ -577,6 +611,29 @@ extends AbstractSAXTransformer implements Initializable, Generator {
             : kont.getContinuation(0).getId();
 
         sendTextEvent(id);
+    }
+
+
+    private void doSet(final Attributes a)
+        throws SAXException {
+
+        final String varName = a.getValue(JXPATH_SET_REMOVE_VARNAME);
+        if (varName == null) {
+            throw new SAXParseException("set: \"var\" is required",
+                                        locator, null);
+        }
+        final String value = a.getValue(JXPATH_SET_VALUE);
+        variables.declareVariable(varName, getValue(getExpr(value)));
+    }
+
+    private void doRemove(final Attributes a)
+        throws SAXException {
+        final String varName = a.getValue(JXPATH_SET_REMOVE_VARNAME);
+        if (varName == null) {
+            throw new SAXParseException("set: \"var\" is required",
+                                        locator, null);
+        }
+        variables.undeclareVariable(varName);
     }
 
     /**

@@ -122,7 +122,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
- * @version CVS $Id: JexlTransformer.java,v 1.5 2003/04/12 23:35:29 coliver Exp $
+ * @version CVS $Id: JexlTransformer.java,v 1.6 2003/04/13 00:24:45 coliver Exp $
  */
 
 public class JexlTransformer
@@ -431,6 +431,10 @@ public class JexlTransformer
     public static final String JEXL_FOREACH_VAR = "var";
     public static final String JEXL_FOREACH_VAR_STATUS = "varStatus";
     public static final String JEXL_FOREACH_SELECT = "select";
+    public static final String JEXL_SET      = "set";
+    public static final String JEXL_REMOVE      = "remove";
+    public static final String JEXL_SET_REMOVE_VAR    = "var";
+    public static final String JEXL_SET_VALUE      = "value";
 
     static {
         // Hack: there's no _nice_ way to add my introspector to Jexl right now
@@ -575,6 +579,7 @@ public class JexlTransformer
 
     private Object eval(String inStr, boolean iterate) throws SAXException {
         try {
+            if (inStr == null) return null;
             StringReader in = new StringReader(inStr.trim());
             int ch;
             StringBuffer expr = new StringBuffer();
@@ -641,8 +646,11 @@ public class JexlTransformer
                     if (c == '}') {
                         String str = expr.toString();
                         expr.setLength(0);
-                        str = String.valueOf(getValue(str, xpath, false));
-                        out.write(str);
+                        Object val = getValue(str, xpath, false);
+                        if (val == null) {
+                            val = "";
+                        }
+                        out.write(String.valueOf(val));
                         inExpr = false;
                         xpath = false;
                     } else if (c == '\\') {
@@ -738,6 +746,10 @@ public class JexlTransformer
             }
         } else if (JEXL_IF.equals(name)) {
             doIf(attr);
+        } else if (JEXL_SET.equals(name)) {
+            doSet(attr);
+        } else if (JEXL_REMOVE.equals(name)) {
+            doRemove(attr);
         } else if (JEXL_FOREACH.equals(name)) {
             doForEach(attr);
         } else if (JEXL_CHOOSE.equals(name)) {
@@ -806,6 +818,8 @@ public class JexlTransformer
 
     static class MyVariables implements Variables {
 
+        Map myVariables = new HashMap();
+
         static final String[] VARIABLES = new String[] {
             "continuation",
             "flowContext",
@@ -838,7 +852,7 @@ public class JexlTransformer
                     return true;
                 }
             }
-            return false;
+            return myVariables.containsKey(varName);
         }
         
         public Object getVariable(String varName) {
@@ -857,13 +871,15 @@ public class JexlTransformer
             } else if (varName.equals("parameters")) {
                 return parameters;
             }
-            return null;
+            return myVariables.get(varName);
         }
         
         public void declareVariable(String varName, Object value) {
+            myVariables.put(varName, value);
         }
         
         public void undeclareVariable(String varName) {
+            myVariables.remove(varName);
         }
     }
     
@@ -1026,7 +1042,8 @@ public class JexlTransformer
         // get the test variable
         String expr = a.getValue(JEXL_IF_TEST);
         if (expr == null) {
-            throw new SAXParseException("if: \"test\" is required", locator, null);
+            throw new SAXParseException("if: \"test\" is required", 
+                                        locator, null);
         }
         final Object value = eval(expr);
         final boolean isTrueBoolean =
@@ -1046,6 +1063,31 @@ public class JexlTransformer
         }
     }
 
+    private void doSet(final Attributes a)
+        throws SAXException {
+
+        final String varName = a.getValue(JEXL_SET_REMOVE_VAR);
+        if (varName == null) {
+            throw new SAXParseException("set: \"var\" is required",
+                                        locator, null);
+        }
+        final String value = a.getValue(JEXL_SET_VALUE);
+        Object result = eval(value);
+        variables.declareVariable(varName, result);
+        getJexlContext().getVars().put(varName, result);
+    }
+
+    private void doRemove(final Attributes a)
+        throws SAXException {
+
+        final String varName = a.getValue(JEXL_SET_REMOVE_VAR);
+        if (varName == null) {
+            throw new SAXParseException("remove: \"var\" is required",
+                                        locator, null);
+        }
+        variables.undeclareVariable(varName);
+        getJexlContext().getVars().remove(varName);
+    }
 
     /**
      * Helper method to process a &lt;jexl-transformer:if test="..."&gt; element.
