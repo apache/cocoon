@@ -57,6 +57,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -72,7 +73,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.2 2003/05/26 09:52:59 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.3 2003/05/26 10:15:01 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -89,6 +90,19 @@ public abstract class AbstractCopletAdapter
         this.manager = componentManager;
     }
 
+    /**
+     * Get a configuration value
+     * First the coplet data is queried and if it doesn't provide an
+     * attribute with the given name, the coplet base data is used.
+     */
+    protected Object getConfiguration(CopletInstanceData coplet, String key) {
+        CopletData copletData = coplet.getCopletData();
+        Object data = copletData.getAttribute( key );
+        if ( data == null) {
+            data = copletData.getCopletBaseData().getCopletConfig().get( key );
+        }
+        return data;
+    }
     
     /**
      * Implement this and not toSAX()
@@ -99,10 +113,7 @@ public abstract class AbstractCopletAdapter
     
     public void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
-        Boolean bool = (Boolean)coplet.getCopletData().getAttribute("buffer");
-        if ( bool == null) {
-            bool = (Boolean)coplet.getCopletData().getCopletBaseData().getCopletConfig().get("buffer");
-        }
+        Boolean bool = (Boolean) this.getConfiguration( coplet, "buffer" );
         // FIXME - remove this
         bool = new Boolean(true);
         
