@@ -48,7 +48,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * at this time.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-23 21:36:37 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-23 22:34:45 $
  */
 public class ImageUploadAction extends ComposerAction implements Contextualizable {
     private final static int SIZE = 0;
@@ -90,6 +90,15 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
     /**
      * Uses the passed <code>Context</code> to find the upload directory.
      * NOTE: This might not be necessary any longer.
+     */
+    public void contextualize(Context context) {
+        this.workDir = new File((File) context.get(Constants.CONTEXT_WORK_DIR), "image-dir" + File.separator);
+    }
+
+    /**
+     * Process the request and populate the database records with the
+     * uploaded image and it's associated attributes.  Please note that
+     * there are several required parameters to use this action:
      *
      * <pre>
      *   &lt;parameter name="table" value="database_table_name"/&gt;
@@ -116,15 +125,6 @@ public class ImageUploadAction extends ComposerAction implements Contextualizabl
      * The image attributes are automatically derived from the image itself,
      * but only included in the database if the attributes are set to
      * column names in the table.
-     */
-    public void contextualize(Context context) {
-        this.workDir = new File((File) context.get(Constants.CONTEXT_WORK_DIR), "image-dir" + File.separator);
-    }
-
-    /**
-     * Process the request and populate the database records with the
-     * uploaded image and it's associated attributes.  Please note that
-     * there are several required parameters to use this action:
      */
     public Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
         DataSourceComponent datasource = (DataSourceComponent) this.dbselector.select(this.database);
