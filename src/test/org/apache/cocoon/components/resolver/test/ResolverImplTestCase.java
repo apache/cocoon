@@ -59,12 +59,12 @@ import junit.swingui.TestRunner;
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
-import org.apache.excalibur.xml.EntityResolver;
-import org.apache.excalibur.xml.DefaultEntityResolver;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.excalibur.xml.EntityResolver;
 import org.xml.sax.InputSource;
 
 /**
@@ -72,7 +72,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:crossley@apache.org">David Crossley</a>
- * @version CVS $Id: ResolverImplTestCase.java,v 1.7 2003/09/30 13:36:33 cziegeler Exp $
+ * @version CVS $Id: ResolverImplTestCase.java,v 1.8 2003/10/09 12:01:08 ugo Exp $
  */
 public final class ResolverImplTestCase
          extends ExcaliburTestCase
@@ -231,7 +231,7 @@ public final class ResolverImplTestCase
         "<!ENTITY shy    \"&#173;\" ><!--=soft hyphen-->\n" +
         "";
     private DefaultContext context;
-    private DefaultEntityResolver resolverImpl;
+    private EntityResolver resolverImpl;
     private File workDir;
     private File commandlineContextDir;
 
@@ -279,7 +279,7 @@ public final class ResolverImplTestCase
         super.setUp();
 
         String role = EntityResolver.ROLE;
-        resolverImpl = (DefaultEntityResolver) manager.lookup(role);
+        resolverImpl = (EntityResolver) manager.lookup(role);
         assertNotNull("ResolverImpl is null", resolverImpl);
     }
 
@@ -346,7 +346,7 @@ public final class ResolverImplTestCase
         super.tearDown();
 
         if (resolverImpl != null) {
-            manager.release(resolverImpl);
+            manager.release((Component) resolverImpl);
             resolverImpl = null;
         }
     }
