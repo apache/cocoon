@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -64,7 +63,7 @@ import java.io.IOException;
  * content.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPContent.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
+ * @version CVS $Id: EPContent.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
  */
 public class EPContent
     extends BaseElementProcessor

@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -62,7 +61,7 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * This element has no attributes, but it does have character content
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_Name.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
+ * @version CVS $Id: EP_Name.java,v 1.3 2003/09/05 07:31:40 cziegeler Exp $
  */
 public class EP_Name
     extends BaseElementProcessor

@@ -1,4 +1,3 @@
-
 /*
 
  ============================================================================
@@ -61,7 +60,7 @@ import org.apache.cocoon.components.elementprocessor.impl.AbstractElementProcess
  * objects.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: HSSFElementProcessorFactory.java,v 1.3 2003/07/02 12:49:59 bruno Exp $
+ * @version CVS $Id: HSSFElementProcessorFactory.java,v 1.4 2003/09/05 07:31:45 cziegeler Exp $
  */
 public class HSSFElementProcessorFactory
     extends AbstractElementProcessorFactory

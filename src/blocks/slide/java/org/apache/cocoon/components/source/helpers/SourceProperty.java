@@ -1,10 +1,9 @@
 /*
-
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -17,7 +16,7 @@
     and/or other materials provided with the distribution.
 
  3. The end-user documentation included with the redistribution, if any, must
-    include  the following  acknowledgment:   "This product includes software
+    include  the following  acknowledgment:  "This product includes  software
     developed  by the  Apache Software Foundation  (http://www.apache.org/)."
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
@@ -48,7 +47,6 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-
 package org.apache.cocoon.components.source.helpers;
 
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -67,7 +65,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:holz@fiz-chemie.de">Martin Holz</a>
- * @version CVS $Id: SourceProperty.java,v 1.3 2003/07/03 11:36:10 cziegeler Exp $
+ * @version CVS $Id: SourceProperty.java,v 1.4 2003/09/05 07:31:44 cziegeler Exp $
  */
 public class SourceProperty implements XMLizable {
 
