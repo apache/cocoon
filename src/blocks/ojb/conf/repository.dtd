@@ -1,8 +1,8 @@
+<!-- @version $Id: repository.dtd,v 1.1 2004/02/03 11:12:04 antonio Exp $ -->
 <!--
 	ObJectRelationalBridge - Bridging Java objects and relational dabatases
 	This DTD describes the grammar of the Descriptor repository
 	Author: Thomas Mahler, (c) 2000, 2001, 2002, 2003
-    @version $Id: $
   -->
 
 <!--
@@ -19,7 +19,8 @@
 	class-descriptor elements specify o/r mapping information for
 	persistent classes.
   -->
-<!ELEMENT descriptor-repository (documentation?, attribute*, jdbc-connection-descriptor*, class-descriptor*)>
+<!ELEMENT descriptor-repository (documentation?, attribute*,
+        jdbc-connection-descriptor*, class-descriptor*)>
 
 <!--
 	The version attribute is used to bind a repository.xml
@@ -35,6 +36,7 @@
 	version (1.0) #REQUIRED
 	isolation-level (read-uncommitted | read-committed | repeatable-read |
 	                 serializable | optimistic) "read-uncommitted"
+	proxy-prefetching-limit CDATA "50"
 >
 
 <!--
@@ -49,6 +51,9 @@
     The jdbc-connection-descriptor element specifies the a jdbc
 	connection for the repository.
 
+    The object-cache element specifies the object-cache implementation
+    class associated with this class.
+
 	A connection-pool element may be used to define connection pool
 	properties for the specified JDBC connection.
 
@@ -56,7 +61,8 @@
     define which sequence manager implementation should be used within
     the defined connection.
   -->
-<!ELEMENT jdbc-connection-descriptor (documentation?, attribute*, object-cache?, connection-pool?, sequence-manager?)>
+<!ELEMENT jdbc-connection-descriptor (documentation?, attribute*,
+                object-cache?, connection-pool?, sequence-manager?)>
 
 <!--
     The jcdAlias attribute is a shortcut name for the defined connection
@@ -78,7 +84,8 @@
 	level of the used Jdbc driver.
 
     The eager-release attribute was adopt to solve a problem occured when
-    using OJB within JBoss (>=3.0). Only use within JBoss.
+    using OJB within JBoss (3.0 <= version < 3.2.2, seems to be fixed in jboss 3.2.2).
+    Only use within JBoss.
 
     The batch-mode attribute allow to set batch mode modus global
     from the used connection. It is also possible to change
@@ -118,7 +125,7 @@
     platform (Db2 | Hsqldb | Informix | MsAccess | MsSQLServer |
 	          MySQL | Oracle | PostgreSQL | Sybase | SybaseASE |
               SybaseASA | Sapdb | Firebird | Axion | NonstopSql |
-              Oracle9i ) "Hsqldb"
+              Oracle9i | MaxDB ) "Hsqldb"
 	jdbc-level (1.0 | 2.0 | 3.0) "1.0"
 	eager-release (true | false) "false"
     batch-mode (true | false) "false"
@@ -139,7 +146,7 @@
 
 <!--
     The object-cache element can be used to specify the ObjectCache
-    implementation used by OJB. There are three levels for
+    implementation used by OJB. There are three levels of
     declaration:
         1. in OJB.properties file, to declare the standard (default)
         ObjectCache implementation.
@@ -337,6 +344,13 @@
 	If set to another value this value is interpreted as the full-qualified
 	name of the proxy class to use.
 
+    If the proxy-prefetching-limit attribute (used with the proxy attribute)
+    is set to the value > 0, the collections of objects of this class are materialized
+    by groups of the specified size, say when user tries to access the first
+    object of the collection, next proxy-prefetching-limit objects are loaded
+    by one database query.
+    Set this parameter to 0 if you want to turn this feature off.
+
 	The schema attribute may contain the database schema owning the table
 	mapped to this class.
 
@@ -362,13 +376,13 @@
 
 	The refresh attribute can be set to true to force OJB to refresh
 	instances when loaded from cache. It's set to false by default.
-
   -->
 <!ATTLIST class-descriptor
 	class ID #REQUIRED
 	isolation-level (read-uncommitted | read-committed | repeatable-read |
 	                 serializable | optimistic) "read-uncommitted"
 	proxy CDATA #IMPLIED
+	proxy-prefetching-limit CDATA #IMPLIED
 	schema CDATA #IMPLIED
 	table CDATA #IMPLIED
 	row-reader CDATA #IMPLIED
@@ -488,7 +502,8 @@
 	jdbc-type (BIT | TINYINT | SMALLINT | INTEGER | BIGINT | DOUBLE |
 	           FLOAT | REAL | NUMERIC | DECIMAL | CHAR | VARCHAR |
 	           LONGVARCHAR | DATE | TIME | TIMESTAMP | BINARY |
-	           VARBINARY | LONGVARBINARY | CLOB | BLOB | BOOLEAN) #IMPLIED
+	           VARBINARY | LONGVARBINARY | CLOB | BLOB | STRUCT |
+               ARRAY | REF | BOOLEAN | DATALINK) #IMPLIED
 	primarykey (true | false) "false"
 	nullable (true | false) "true"
 	indexed (true | false) "false"
@@ -546,6 +561,12 @@
 	The proxy attribute can be set to true to specify that proxy based
 	lazy loading should be used for this attribute.
 
+    If the proxy-prefetching-limit attribute (used with the proxy attribute)
+    is set to the value > 0, then loading of the reference for the first
+    object of some collection causes loading of the references for
+    the next proxy-prefetching-limit objects.
+    Set this parameter to 0 if you want to turn this feature off.
+
 	The refresh attribute can be set to true to force OJB to refresh
 	object references on instance loading.
 
@@ -574,6 +595,7 @@
 	class-ref IDREF #REQUIRED
 
 	proxy (true | false) "false"
+	proxy-prefetching-limit CDATA #IMPLIED
 	refresh (true | false) "false"
 
 	auto-retrieve (true | false) "true"
@@ -651,6 +673,12 @@
 	The proxy attribute can be set to true to specify that proxy based
 	lazy loading should be used for this attribute.
 
+    If the proxy-prefetching-limit attribute (used with the proxy attribute)
+    is set to the value > 0, then loading of the collection for the first
+    object of some other collection causes loading of the collections for
+    the next proxy-prefetching-limit objects.
+    Set this parameter to 0 if you want to turn this feature off.
+
 	The refresh attribute can be set to true to force OJB to refresh
 	object and collection references on instance loading.
 
@@ -686,6 +714,7 @@
 	indirection-table CDATA #IMPLIED
 
 	proxy (true | false) "false"
+	proxy-prefetching-limit CDATA #IMPLIED
 	refresh (true | false) "false"
 
 	auto-retrieve (true | false) "true"
@@ -795,7 +824,7 @@
     information in the nested 'argument' elements.
   -->
 <!ELEMENT insert-procedure
-	(documentation?, (runtime-argument | constant-argument)?, attribute*)>
+	(documentation?, (runtime-argument | constant-argument)*, attribute*)>
 <!ATTLIST insert-procedure
 	name CDATA #REQUIRED
     return-field-ref CDATA #IMPLIED
@@ -827,7 +856,7 @@
     information in the nested 'argument' elements.
   -->
 <!ELEMENT update-procedure
-	(documentation?, (runtime-argument | constant-argument)?, attribute*)>
+	(documentation?, (runtime-argument | constant-argument)*, attribute*)>
 <!ATTLIST update-procedure
 	name CDATA #REQUIRED
     return-field-ref CDATA #IMPLIED
@@ -861,7 +890,7 @@
     function based on the information in the nested 'argument' elements.
   -->
 <!ELEMENT delete-procedure
-	(documentation?, (runtime-argument | constant-argument)?, attribute*)>
+	(documentation?, (runtime-argument | constant-argument)*, attribute*)>
 <!ATTLIST delete-procedure
 	name CDATA #REQUIRED
     return-field-ref CDATA #IMPLIED

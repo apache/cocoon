@@ -1,0 +1,51 @@
+<project default="main" >
+
+<property name="jdoEnhancer" value="com.sun.jdori.enhancer.Main"/>
+<property name="jdobuildpath" value="${build.webapp.webinf}/classes"/>
+<property name="packagebuildpath" value="${jdobuildpath}/org/apache/cocoon/ojb/samples"/>
+<property name="jdofile" value="${packagebuildpath}/package.jdo"/>
+
+   <path id="ojb.classpath">
+<!--       <path refid="classpath"/> -->
+		<pathelement path="${jdobuildpath}"/>
+		<fileset dir="${block.dir}/lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${basedir}/lib/local">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+    <available classname="${jdoEnhancer}" classpathref="ojb.classpath" property="jdo.present"/>
+
+    <target name="main" unless="unless.exclude.webapp.samples" depends="compile, jdo"/>
+
+    <target name="compile" unless="unless.exclude.webapp.samples">
+        <copy file="${block.dir}/conf/package.jdo" tofile="${jdofile}"/>
+        <copy file="${block.dir}/conf/repository.dtd" tofile="${jdobuildpath}/repository.dtd"/>
+        <copy file="${block.dir}/conf/OJB.properties" tofile="${jdobuildpath}/OJB.properties"/>
+        <copy file="${block.dir}/conf/EmployeeImpl.java" tofile="${build.blocks}/ojb/dest/java/EmployeeImpl.java"/>
+        <!-- Build the Bean samples classes -->
+        <mkdir dir="${jdobuildpath}"/>
+        <javac destdir="${jdobuildpath}"
+             debug="${compiler.debug}"
+             optimize="${compiler.optimize}"
+             deprecation="${compiler.deprecation}"
+             target="${target.vm}"
+             nowarn="${compiler.nowarn}"
+             compiler="${compiler}">
+                <src path="${block.dir}/conf/java"/>
+        </javac>
+    </target>
+
+    <target name="jdo" if="jdo.present" unless="unless.exclude.webapp.samples">
+      <!-- Run the JDO Enhancer -->
+      <echo>Running JDO Enhancer because ${jdo.present} ...</echo>
+      <java fork="yes" failonerror="yes" classname="${jdoEnhancer}" classpathref="ojb.classpath">
+        <arg line="-f -d ${jdobuildpath} ${jdofile} ${packagebuildpath}/Employee.class"/>
+      </java>
+      <java fork="yes" failonerror="yes" classname="${jdoEnhancer}" classpathref="ojb.classpath">
+        <arg line="-f -d ${jdobuildpath} ${jdofile} ${packagebuildpath}/Department.class"/>
+      </java>
+    </target>
+</project>

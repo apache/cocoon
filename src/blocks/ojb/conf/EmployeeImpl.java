@@ -61,7 +61,7 @@ import org.apache.ojb.broker.PersistenceBrokerFactory;
  *  Employee's Impl
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: EmployeeImpl.java,v 1.4 2003/10/10 16:00:46 antonio Exp $
+ * @version CVS $Id: EmployeeImpl.java,v 1.1 2004/02/03 11:12:04 antonio Exp $
 */
 public class EmployeeImpl {
 
