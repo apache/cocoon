@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.avalon.excalibur.component.ComponentProxyGenerator;
 import org.apache.avalon.excalibur.component.DefaultRoleManager;
@@ -172,15 +173,15 @@ public class Cocoon
             this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
             this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
             try {
-                // FIXME : add a configuration option for the refresh delay.
+                // FIXME: add a configuration option for the refresh delay.
                 // for now, hard-coded to 1 second.
                 URLSource urlSource = new URLSource();
                 urlSource.init((URL) context.get(Constants.CONTEXT_CONFIG_URL), null);
                 this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
                                                                          1000L);
 
-            } catch (IOException ioe) {
-                throw new ContextException("Could not open configuration file.", ioe);
+            } catch (IOException e) {
+                throw new ContextException("Could not open configuration file.", e);
             } catch (Exception e) {
                 throw new ContextException("contextualize(..) Exception", e);
             }
@@ -233,12 +234,12 @@ public class Cocoon
         // Setup the default parser, for parsing configuration.
         // If one need to use a different parser, set the given system property
         // first check for deprecated property to be compatible:
-        String parser = System.getProperty(Constants.DEPRECATED_PARSER_PROPERTY, Constants.DEFAULT_PARSER);
-        if ( !Constants.DEFAULT_PARSER.equals( parser ) ) {
+        String parser = getSystemProperty(Constants.DEPRECATED_PARSER_PROPERTY, Constants.DEFAULT_PARSER);
+        if (!Constants.DEFAULT_PARSER.equals(parser)) {
             getLogger().warn("Deprecated property " +
                              Constants.DEPRECATED_PARSER_PROPERTY + " is used. Please use " +
                              Constants.PARSER_PROPERTY + " instead.");
-            if ( "org.apache.cocoon.components.parser.XercesParser".equals(parser) ) {
+            if ("org.apache.cocoon.components.parser.XercesParser".equals(parser)) {
                 parser = XercesParser.class.getName();
             } else {
                 getLogger().warn("Unknown value for deprecated property: " +
@@ -246,7 +247,7 @@ public class Cocoon
                                  ". If you experience problems during startup, check the parser configuration section of the documentation.");
             }
         } else {
-            parser = System.getProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
+            parser = getSystemProperty(Constants.PARSER_PROPERTY, Constants.DEFAULT_PARSER);
         }
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Using parser: " + parser);
@@ -426,29 +427,45 @@ public class Cocoon
     }
 
     /**
+     * Helper method to retrieve system property.
+     * Returns default value if SecurityException is caught.
+     */
+    public static String getSystemProperty(String property, String value) {
+        try {
+            return System.getProperty(property, value);
+        } catch (SecurityException e) {
+            System.err.println("Caught a SecurityException reading the system property '" + property + "';" +
+                               " Cocoon will default to '" + value + "' value.");
+            return value;
+        }
+    }
+
+    /**
      * Sets required system properties.
      */
     protected void setSystemProperties() {
-        java.util.Properties props = new java.util.Properties();
-        // FIXME We shouldn't have to specify the SAXParser...
-        // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
-        // to locate the SAX2 driver.
-        props.put("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
-        java.util.Properties systemProps = System.getProperties();
-        Enumeration propEnum = props.propertyNames();
-        while (propEnum.hasMoreElements()) {
-            String prop = (String)propEnum.nextElement();
-            if (!systemProps.containsKey(prop)) {
-                systemProps.put(prop, props.getProperty(prop));
+        try {
+            // FIXME We shouldn't have to specify the SAXParser...
+            // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
+            // to locate the SAX2 driver.
+            if (getSystemProperty("org.xml.sax.driver", null) == null) {
+                System.setProperty("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
             }
+        } catch (SecurityException e) {
+            // Ignore security exceptions
+            System.out.println("Caught a SecurityException writing the system property: " + e);
         }
-        // FIXME We shouldn't have to specify these. Needed to override jaxp implementation of weblogic.
-        if (systemProps.containsKey("javax.xml.parsers.DocumentBuilderFactory") &&
-            systemProps.getProperty("javax.xml.parsers.DocumentBuilderFactory").startsWith("weblogic")) {
-            systemProps.put("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-            systemProps.put("javax.xml.parsers.SAXParserFactory","org.apache.xerces.jaxp.SAXParserFactoryImpl");
+
+        try {
+            // FIXME We shouldn't have to specify these. Needed to override jaxp implementation of weblogic.
+            if (getSystemProperty("javax.xml.parsers.DocumentBuilderFactory", "").startsWith("weblogic")) {
+                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+                System.setProperty("javax.xml.parsers.SAXParserFactory","org.apache.xerces.jaxp.SAXParserFactoryImpl");
+            }
+        } catch (SecurityException e) {
+            // Ignore security exceptions
+            System.out.println("Caught a SecurityException writing the system property: " + e);
         }
-        System.setProperties(systemProps);
     }
 
     /**
