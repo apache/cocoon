@@ -47,10 +47,11 @@
       | fi:field with either
       | - explicit styling @type = 'date' or
       | - implicit if no styling @type is specified,
-      |   but datatype @type = 'date', selection lists must be excluded here
+      |   but datatype/@type = 'date' and datatype/convertor/@variant = 'date',
+      |   selection lists must be excluded here
       +-->
   <xsl:template match="fi:field[fi:styling/@type='date'] |
-                       fi:field[not(fi:styling/@type)][fi:datatype[@type='date']][not(fi:selection-list)]">
+                       fi:field[not(fi:styling/@type)][fi:datatype[@type='date'][fi:convertor/@variant='date']][not(fi:selection-list)]">
     <xsl:variable name="id" select="generate-id()"/>
     
     <xsl:variable name="format">

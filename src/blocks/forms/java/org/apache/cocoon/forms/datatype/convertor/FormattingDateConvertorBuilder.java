@@ -26,7 +26,7 @@ import java.util.Locale;
 /**
  * Builds {@link FormattingDateConvertor}s.
  *
- * @version CVS $Id: FormattingDateConvertorBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: FormattingDateConvertorBuilder.java,v 1.3 2004/07/04 14:35:41 joerg Exp $
  */
 public class FormattingDateConvertorBuilder implements ConvertorBuilder {
     public Convertor build(Element configElement) throws Exception {
@@ -51,14 +51,13 @@ public class FormattingDateConvertorBuilder implements ConvertorBuilder {
 
         String variant = configElement.getAttribute("variant");
         if (!variant.equals("")) {
-            if (variant.equals("date"))
-                convertor.setVariant(FormattingDateConvertor.DATE);
-            else if (variant.equals("time"))
-                convertor.setVariant(FormattingDateConvertor.TIME);
-            else if (variant.equals("datetime"))
-                convertor.setVariant(FormattingDateConvertor.DATE_TIME);
-            else
+            if (variant.equals(FormattingDateConvertor.DATE) ||
+                    variant.equals(FormattingDateConvertor.TIME) ||
+                    variant.equals(FormattingDateConvertor.DATE_TIME)) {
+                convertor.setVariant(variant);
+            } else {
                 throw new Exception("Invalid value \"" + variant + "\" for variant attribute at " + DomHelper.getLocation(configElement));
+            }
         }
 
         Element patternsEl = DomHelper.getChildElement(configElement, Constants.DEFINITION_NS, "patterns", false);
