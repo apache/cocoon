@@ -36,7 +36,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FormsPipelineConfig {
 
