@@ -21,7 +21,7 @@
   </description>
   
   <!-- Creates the web site  -->
-  <target name="site" depends="forrest" description="[admin] Builds the site">
+  <target name="site-docs" depends="do-forrest" description="[admin] Builds the site">
     <mkdir dir="${site}"/>
     <copy todir="${site}" filtering="off">
       <fileset dir="${build.site}"/>
