@@ -52,6 +52,7 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.FormHandler;
 import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -66,6 +67,7 @@ public class Form extends AbstractWidget implements ContainerWidget {
     private List widgets;
     private Map widgetsById;
     private FormDefinition definition;
+    private FormHandler formHandler;
 
     public Form(FormDefinition definition) {
         widgets = new ArrayList();
@@ -77,6 +79,10 @@ public class Form extends AbstractWidget implements ContainerWidget {
         widgets.add(widget);
         widget.setParent(this);
         widgetsById.put(widget.getId(), widget);
+    }
+
+    public void setFormHandler(FormHandler formHandler) {
+        this.formHandler = formHandler;
     }
 
     /**
@@ -94,8 +100,8 @@ public class Form extends AbstractWidget implements ContainerWidget {
      */
     public boolean process(FormContext formContext) {
         readFromRequest(formContext);
-        if (formContext.getActionEvent() != null && formContext.getFormHandler() != null) {
-            formContext.getFormHandler().handleActionEvent(formContext.getActionEvent());
+        if (formContext.getActionEvent() != null && formHandler != null) {
+            formHandler.handleActionEvent(formContext.getActionEvent());
         }
         if (formContext.doValidation())
             return validate(formContext);
