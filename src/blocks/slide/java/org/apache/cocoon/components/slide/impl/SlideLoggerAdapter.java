@@ -55,7 +55,7 @@ import org.apache.avalon.framework.logger.Logger;
  * The class represent an adapter for the logger for jakarta slide
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SlideLoggerAdapter.java,v 1.1 2003/12/02 19:18:45 unico Exp $
+ * @version CVS $Id: SlideLoggerAdapter.java,v 1.2 2004/01/19 16:32:25 unico Exp $
  */
 public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
     private Logger logger;
@@ -63,6 +63,22 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
 
     public SlideLoggerAdapter(Logger logger) {
         this.logger = logger;
+    }
+
+    public void log(Object data, Throwable t, String channel, int level) {
+        if (level==CRITICAL) {
+            this.logger.fatalError(data.toString(),t);
+        } else if (level==ERROR) {
+            this.logger.error(data.toString(),t);
+        } else if (level==WARNING) {
+            this.logger.warn(data.toString(),t);
+        } else if (level==INFO) {
+            this.logger.info(data.toString(),t);
+        } else if (level==DEBUG) {
+            this.logger.debug(data.toString(),t);
+        } else {
+            this.logger.error(data.toString(),t);
+        }
     }
 
     /**
@@ -222,5 +238,6 @@ public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
             return ERROR<=level;
         }
     }
+
 }
 
