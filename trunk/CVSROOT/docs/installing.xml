@@ -66,11 +66,6 @@
      <td>TR2</td>
      <td><link href="http://java.sun.com/xml/">java.sun.com</link></td>
     </tr>
-    <tr>
-     <td>OpenXML</td>
-     <td>1.1build5</td>
-     <td><link href="http://www.openxml.org/">www.openxml.org</link></td>
-    </tr>
    </tbody>
    <tfoot>
     <tr>
@@ -99,11 +94,6 @@
      <td>19991102</td>
      <td><link href="http://www.jclark.com/">www.jclark.com</link></td>
     </tr>
-    <tr>
-     <td>Keith Visco's XSL:P</td>
-     <td>19991111</td>
-     <td><link href="http://xslp.kvisco.com/">xslp.kvisco.com</link></td>
-    </tr>
    </tbody>
    <tfoot>
     <tr>
@@ -126,6 +116,11 @@
      <td>Apache FOP</td>
      <td>0.12.0</td>
      <td><link href="http://xml.apache.org/dist/">xml.apache.org</link></td>
+    </tr>
+    <tr>
+     <td>FESI EcmaScript Engine</td>
+     <td>1.2.1</td>
+     <td><link href="http://home.worldcom.ch/jmlugrin/fesi/download.html">home.worldcom.ch/jmlugrin/fesi</link></td>
     </tr>
     <tr>
      <td>GNU Regexp</td>
