@@ -1,2 +1,3 @@
 src/blocks/woody
 src/documentation/xdocs/tutorial
+src/java/org/apache/cocoon/components/ExtendedComponentSelector.java
