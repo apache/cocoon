@@ -61,7 +61,7 @@ import org.apache.cocoon.caching.validity.Event;
  *  
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: EventRegistry.java,v 1.1 2003/07/14 02:50:45 ghoward Exp $
+ * @version CVS $Id: EventRegistry.java,v 1.2 2003/07/20 21:08:06 ghoward Exp $
  */
 public interface EventRegistry extends Component {
     
@@ -108,9 +108,8 @@ public interface EventRegistry extends Component {
     public void clear();
     
     /**
-     * Request that the registry get ready for normal operation.  Depending 
-     * on the implementation, the component may need this opportunity to 
-     * retrieve persisted data.
+     * Returns whether the registry was successful in retrieving its 
+     * persisted state during startup.
      * 
      * If recovering persisted data was not successful, the component must 
      * signal that the Cache may contain orphaned EventValidity objects by 
@@ -121,5 +120,5 @@ public interface EventRegistry extends Component {
      * @return true if the Component recovered its state successfully, 
      *          false otherwise.
      */
-    public boolean init();
+    public boolean wasRecoverySuccessful();
 }

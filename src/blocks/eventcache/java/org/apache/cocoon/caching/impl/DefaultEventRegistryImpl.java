@@ -62,6 +62,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -81,15 +82,17 @@ import org.apache.commons.collections.MultiHashMap;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.2 2003/07/15 02:02:02 ghoward Exp $
+ * @version CVS $Id: DefaultEventRegistryImpl.java,v 1.3 2003/07/20 21:08:06 ghoward Exp $
  */
 public class DefaultEventRegistryImpl 
         extends AbstractLogEnabled
         implements EventRegistry, 
+           Initializable,
            ThreadSafe,
            Disposable,
            Contextualizable {
 
+	private boolean m_init_success = false;
 	private File m_persistentFile;
 	private static final String PERSISTENT_FILE = "ev_cache.ser";
 	private File m_workDir;
@@ -199,9 +202,27 @@ public class DefaultEventRegistryImpl
      * 
      * @return true if de-serializing was successful, false otherwise.
      */
-	public boolean init() {
+	/*public boolean init() {
         return recover();
-	}
+	}*/
+
+    /**
+     * Recover state by de-serializing the data wrapper.  If this fails 
+     * a new empty mapping is initialized and the Cache is signalled of 
+     * the failure so it can clean up.
+     */
+    public void initialize() throws Exception {
+        if (recover()) {
+            m_init_success = true;
+        }
+    }
+
+    /**
+     * @return true if persistent state existed and was recovered successfully.
+     */
+    public boolean wasRecoverySuccessful() {
+        return m_init_success;
+    }
 
     /** 
      * Clean up resources at container shutdown.  An EventRegistry must persist 
@@ -281,4 +302,5 @@ public class DefaultEventRegistryImpl
         this.m_eventMMap = new MultiHashMap(100); 
         this.m_keyMMap = new MultiHashMap(100); 
     }
+
 }
