@@ -40,6 +40,7 @@ import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 
 import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.CocoonAccess;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -100,6 +101,7 @@ public class CocoonWrapper {
     private HashMap empty = new HashMap();
 
     private boolean initialized = false;
+    private boolean useExistingCocoon = false;
 
     //
     // INITIALISATION METHOD
@@ -164,12 +166,16 @@ public class CocoonWrapper {
 
             loadClasses(classList);
 
-            cocoon = new Cocoon();
-            ContainerUtil.enableLogging(cocoon, log);
-            ContainerUtil.contextualize(cocoon, appContext);
-            cocoon.setLoggerManager(logManager);
-            ContainerUtil.initialize(cocoon);
-
+            if (this.useExistingCocoon) {
+                cocoon = getCocoon();
+            }
+            if (cocoon == null) {
+                cocoon = new Cocoon();
+                ContainerUtil.enableLogging(cocoon, log);
+                ContainerUtil.contextualize(cocoon, appContext);
+                cocoon.setLoggerManager(logManager);
+                ContainerUtil.initialize(cocoon);
+            }
         } catch (Exception e) {
             log.fatalError("Exception caught", e);
             throw e;
@@ -177,6 +183,14 @@ public class CocoonWrapper {
         initialized = true;
     }
 
+    private Cocoon getCocoon() {
+        return new CocoonAccess() {
+            final Cocoon instance() {
+                return super.getCocoon();
+            }
+        }.instance();
+    }
+    
     protected ExcaliburComponentManager getComponentManager() {
         return cocoon.getComponentManager();
     }
@@ -367,6 +381,11 @@ public class CocoonWrapper {
     public void addLoadedClasses(List classList) {
         this.classList.addAll(classList);
     }
+
+    public void setUseExistingCocoon(boolean useExistingCocoon) {
+        this.useExistingCocoon = useExistingCocoon;
+    }
+    
     /**
      * Process single URI into given output stream.
      *
