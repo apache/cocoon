@@ -88,6 +88,7 @@ public class ValidationError {
     }
 
     /**
+     * @param errorMessageKey a message key, to be translated by the I18nTransformer
      * @param parameters parameters to be substituted in the errorMessage (will be
      * done by the I18nTransformer)
      */
@@ -99,6 +100,9 @@ public class ValidationError {
     }
 
     /**
+     * @param errorMessageKey a message key, to be translated by the I18nTransformer
+     * @param parameters parameters to be substituted in the errorMessage (will be
+     * done by the I18nTransformer)
      * @param keys Each element in the keys array corresponds to a string in the parameters array
      * and indicates whether that parameter is in itself again a key.
      */
@@ -109,6 +113,10 @@ public class ValidationError {
         this.i18n = true;
     }
 
+    /**
+     * @param errorMessage the errormessages as precompiled XML produced by the
+     *        {@link org.apache.cocoon.components.sax.XMLByteStreamCompiler XMLByteStreamCompiler}.
+     */
     public ValidationError(Object errorMessage) {
         this.saxFragment = errorMessage;
     }
