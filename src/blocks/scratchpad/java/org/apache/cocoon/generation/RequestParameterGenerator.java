@@ -221,6 +221,8 @@ implements CacheableProcessingComponent  {
      */
     private static class Parameters implements SourceValidity {
 
+        static final long serialVersionUID = -7107410785427668969L;
+
         /** <p>An array of characters holding our NULL-separated parameters.</p> */
         private char array[] = null;
         /** <p>The {@link String} representation of this instance.</p> */
