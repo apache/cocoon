@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 /**
  * Test case for the {@link EnumConvertor} class.
  * 
- * @version CVS $Id: EnumConvertorTestCase.java,v 1.1 2004/03/09 13:03:13 cziegeler Exp $
+ * @version CVS $Id: EnumConvertorTestCase.java,v 1.2 2004/03/10 09:13:22 stephan Exp $
  */
 public class EnumConvertorTestCase extends TestCase {
 
@@ -33,22 +33,22 @@ public class EnumConvertorTestCase extends TestCase {
     }
 
     /**
-     * Test the {@link EnumConvertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
+     * Test the {@link EnumConvertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.forms.datatype.convertor.Convertor.FormatCache)
      * method.
      */
     public void testConvertFromString() {
-        EnumConvertor convertor = new EnumConvertor("org.apache.cocoon.woody.datatype.Sex");
+        EnumConvertor convertor = new EnumConvertor("org.apache.cocoon.forms.datatype.Sex");
         Object sex = convertor.convertFromString
             (Sex.class.getName() + ".FEMALE", Locale.getDefault(), null);
         assertSame("Returned sex must be FEMALE", Sex.FEMALE, sex);
     }
     
     /**
-     * Test the {@link EnumConvertor##convertToString(java.lang.Object, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
+     * Test the {@link EnumConvertor##convertToString(java.lang.Object, java.util.Locale, org.apache.cocoon.forms.datatype.convertor.Convertor.FormatCache)
      * method.
      */
     public void testConvertToString() {
-        EnumConvertor convertor = new EnumConvertor("org.apache.cocoon.woody.datatype.Sex");
+        EnumConvertor convertor = new EnumConvertor("org.apache.cocoon.forms.datatype.Sex");
         assertEquals("Converted value must match string",
                 Sex.class.getName() + ".MALE",
                 convertor.convertToString

@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for Woody's FlowModelSelectionList datatype.
- * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.3 2004/03/10 09:13:22 stephan Exp $
  */
 public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
 
@@ -103,7 +103,7 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
         Context context = new DefaultContext(contextObjectModel);
-        Source sampleSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCase.source.xml");
+        Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
         Document sample = parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(Constants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
@@ -111,7 +111,7 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
             (context, "beans", "key", "value", datatype);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
-        Source expectedSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCase.dest.xml");
+        Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.dest.xml");
         Document expected = parser.parse(expectedSource.getInputStream());
         assertEqual("Test if generated list matches expected",
             expected, dest.getDocument());
@@ -134,7 +134,7 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
         Map contextObjectModel = new HashMap();
         contextObjectModel.put(ContextHelper.CONTEXT_OBJECT_MODEL, objectModel);
         Context context = new DefaultContext(contextObjectModel);
-        Source sampleSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCase.source.xml");
+        Source sampleSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCase.source.xml");
         Document sample = parser.parse(sampleSource.getInputStream());
         Element datatypeElement = (Element) sample.getElementsByTagNameNS(Constants.DEFINITION_NS, "datatype").item(0);
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
@@ -142,7 +142,7 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
             (context, "beans", "key", "value", datatype);
         DOMBuilder dest = new DOMBuilder();
         list.generateSaxFragment(dest, Locale.ENGLISH);
-        Source expectedSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
+        Source expectedSource = new ResourceSource("resource://org/apache/cocoon/forms/datatype/FlowJXPathSelectionListTestCaseWithNull.dest.xml");
         Document expected = parser.parse(expectedSource.getInputStream());
         assertEqual("Test if generated list matches expected",
                 expected, dest.getDocument());

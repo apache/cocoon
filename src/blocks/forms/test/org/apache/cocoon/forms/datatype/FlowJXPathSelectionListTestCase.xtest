@@ -42,66 +42,66 @@
 
  <roles>
 
-  <role name="org.apache.cocoon.woody.datatype.DatatypeManager"
-    shorthand="woody-datatype"
-    default-class="org.apache.cocoon.woody.datatype.DefaultDatatypeManager"/>
+  <role name="org.apache.cocoon.forms.datatype.DatatypeManager"
+    shorthand="forms-datatype"
+    default-class="org.apache.cocoon.forms.datatype.DefaultDatatypeManager"/>
 
-  <role name="org.apache.cocoon.woody.expression.ExpressionManager"
-    shorthand="woody-expression"
-    default-class="org.apache.cocoon.woody.expression.DefaultExpressionManager"/>
+  <role name="org.apache.cocoon.forms.expression.ExpressionManager"
+    shorthand="forms-expression"
+    default-class="org.apache.cocoon.forms.expression.DefaultExpressionManager"/>
 
  </roles>
 
  <components>
-  <woody-datatype logger="woody">
+  <forms-datatype logger="forms">
     <datatypes>
-      <datatype name="string" src="org.apache.cocoon.woody.datatype.typeimpl.StringTypeBuilder">
+      <datatype name="string" src="org.apache.cocoon.forms.datatype.typeimpl.StringTypeBuilder">
         <convertors default="dummy" plain="dummy">
-          <convertor name="dummy" src="org.apache.cocoon.woody.datatype.convertor.DummyStringConvertorBuilder"/>
+          <convertor name="dummy" src="org.apache.cocoon.forms.datatype.convertor.DummyStringConvertorBuilder"/>
         </convertors>
       </datatype>
-      <datatype name="long" src="org.apache.cocoon.woody.datatype.typeimpl.LongTypeBuilder">
+      <datatype name="long" src="org.apache.cocoon.forms.datatype.typeimpl.LongTypeBuilder">
         <convertors default="formatting" plain="plain">
-          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainLongConvertorBuilder"/>
-          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingLongConvertorBuilder"/>
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainLongConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingLongConvertorBuilder"/>
         </convertors>
       </datatype>
-      <datatype name="decimal" src="org.apache.cocoon.woody.datatype.typeimpl.DecimalTypeBuilder">
+      <datatype name="decimal" src="org.apache.cocoon.forms.datatype.typeimpl.DecimalTypeBuilder">
         <convertors default="formatting" plain="plain">
-          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainDecimalConvertorBuilder"/>
-          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingDecimalConvertorBuilder"/>
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainDecimalConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDecimalConvertorBuilder"/>
         </convertors>
       </datatype>
-      <datatype name="date" src="org.apache.cocoon.woody.datatype.typeimpl.DateTypeBuilder">
+      <datatype name="date" src="org.apache.cocoon.forms.datatype.typeimpl.DateTypeBuilder">
         <convertors default="formatting" plain="millis">
-          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingDateConvertorBuilder"/>
-          <convertor name="millis" src="org.apache.cocoon.woody.datatype.convertor.MillisDateConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDateConvertorBuilder"/>
+          <convertor name="millis" src="org.apache.cocoon.forms.datatype.convertor.MillisDateConvertorBuilder"/>
         </convertors>
       </datatype>
-      <datatype name="boolean" src="org.apache.cocoon.woody.datatype.typeimpl.BooleanTypeBuilder">
+      <datatype name="boolean" src="org.apache.cocoon.forms.datatype.typeimpl.BooleanTypeBuilder">
         <convertors default="plain" plain="plain">
-          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainBooleanConvertorBuilder"/>
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainBooleanConvertorBuilder"/>
         </convertors>
       </datatype>  
-      <datatype name="integer" src="org.apache.cocoon.woody.datatype.typeimpl.IntegerTypeBuilder">
+      <datatype name="integer" src="org.apache.cocoon.forms.datatype.typeimpl.IntegerTypeBuilder">
         <convertors default="formatting" plain="plain">
-          <convertor name="plain" src="org.apache.cocoon.woody.datatype.convertor.PlainIntegerConvertorBuilder"/>
-          <convertor name="formatting" src="org.apache.cocoon.woody.datatype.convertor.FormattingIntegerConvertorBuilder"/>
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainIntegerConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingIntegerConvertorBuilder"/>
         </convertors>
       </datatype>  
     </datatypes>
     <validation-rules>
-      <validation-rule name="length" src="org.apache.cocoon.woody.datatype.validationruleimpl.LengthValidationRuleBuilder"/>
-      <validation-rule name="email" src="org.apache.cocoon.woody.datatype.validationruleimpl.EmailValidationRuleBuilder"/>
-      <validation-rule name="value-count" src="org.apache.cocoon.woody.datatype.validationruleimpl.ValueCountValidationRuleBuilder"/>
-      <validation-rule name="range" src="org.apache.cocoon.woody.datatype.validationruleimpl.RangeValidationRuleBuilder"/>
-      <validation-rule name="assert" src="org.apache.cocoon.woody.datatype.validationruleimpl.AssertValidationRuleBuilder"/>
-      <validation-rule name="mod10" src="org.apache.cocoon.woody.datatype.validationruleimpl.Mod10ValidationRuleBuilder"/>
-      <validation-rule name="regexp" src="org.apache.cocoon.woody.datatype.validationruleimpl.RegExpValidationRuleBuilder"/>
+      <validation-rule name="length" src="org.apache.cocoon.forms.datatype.validationruleimpl.LengthValidationRuleBuilder"/>
+      <validation-rule name="email" src="org.apache.cocoon.forms.datatype.validationruleimpl.EmailValidationRuleBuilder"/>
+      <validation-rule name="value-count" src="org.apache.cocoon.forms.datatype.validationruleimpl.ValueCountValidationRuleBuilder"/>
+      <validation-rule name="range" src="org.apache.cocoon.forms.datatype.validationruleimpl.RangeValidationRuleBuilder"/>
+      <validation-rule name="assert" src="org.apache.cocoon.forms.datatype.validationruleimpl.AssertValidationRuleBuilder"/>
+      <validation-rule name="mod10" src="org.apache.cocoon.forms.datatype.validationruleimpl.Mod10ValidationRuleBuilder"/>
+      <validation-rule name="regexp" src="org.apache.cocoon.forms.datatype.validationruleimpl.RegExpValidationRuleBuilder"/>
     </validation-rules>
-  </woody-datatype>
+  </forms-datatype>
 
-  <woody-expression logger="woody.expression"/>
+  <forms-expression logger="forms.expression"/>
 
  </components>
 

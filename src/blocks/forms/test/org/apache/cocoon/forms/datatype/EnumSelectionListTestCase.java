@@ -38,7 +38,7 @@ import org.w3c.dom.Document;
 
 /**
  * Test case for Woody's DynamicSelectionList datatype.
- * @version CVS $Id: EnumSelectionListTestCase.java,v 1.3 2004/03/10 07:55:55 cziegeler Exp $
+ * @version CVS $Id: EnumSelectionListTestCase.java,v 1.4 2004/03/10 09:13:22 stephan Exp $
  */
 public class EnumSelectionListTestCase extends ExcaliburTestCase {
 
@@ -87,7 +87,7 @@ public class EnumSelectionListTestCase extends ExcaliburTestCase {
             new EnumSelectionList(Sex.class.getName(), new EnumType(), false);
         list.generateSaxFragment(dest, Locale.ENGLISH);
         ResourceSource expectedSource =
-            new ResourceSource("resource://org/apache/cocoon/woody/datatype/EnumSelectionListTestCase.dest-no-null.xml");
+            new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest-no-null.xml");
         Document expected = parser.parse(expectedSource.getInputStream());
         assertEqual("Test if output is what is expected",
                 expected, dest.getDocument());
@@ -104,7 +104,7 @@ public class EnumSelectionListTestCase extends ExcaliburTestCase {
             new EnumSelectionList(Sex.class.getName(), new EnumType(), true);
         list.generateSaxFragment(dest, Locale.ENGLISH);
         ResourceSource expectedSource =
-            new ResourceSource("resource://org/apache/cocoon/woody/datatype/EnumSelectionListTestCase.dest.xml");
+            new ResourceSource("resource://org/apache/cocoon/forms/datatype/EnumSelectionListTestCase.dest.xml");
         Document expected = parser.parse(expectedSource.getInputStream());
         assertEqual("Test if output is what is expected",
                 expected, dest.getDocument());
