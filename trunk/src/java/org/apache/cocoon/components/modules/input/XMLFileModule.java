@@ -86,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.7 2003/05/18 14:00:43 jefft Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.8 2003/05/19 00:25:51 jefft Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
@@ -280,7 +280,7 @@ public class XMLFileModule extends AbstractJXPathModule
             hasDynamicConf = true;
         }
 
-        if (hasDynamicConf) {
+        if (hasDynamicConf && fileConf != null) {
             src = fileConf.getAttribute("src");
         }
 
