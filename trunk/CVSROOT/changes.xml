@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.46 2000-03-26 13:15:29 stefano Exp $
+  $Id: changes.xml,v 1.47 2000-03-30 00:32:10 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="update" due-to="Paul Lamb" due-to-email="paul@oil-law.com">
+   Fixed problem with basename evaluation when included into a JSP.
+  </action>
+  <action dev="SM" type="fix">
+   Updated cocoon.properties and added hook to SQL XSP taglib.
+  </action>
   <action dev="SM" type="update">
    Improved syntax highlighting capabilities of viewsource.xsp.
   </action>

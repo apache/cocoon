@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.23 2000-03-19 00:57:27 stefano Exp $
+  $Id: todo.xml,v 1.24 2000-03-30 00:32:11 stefano Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,8 +16,8 @@
  </devs>
 
  <actions priority="low">
-  <action context="code">
-   none
+  <action context="docs">
+   write some more docs
   </action>
  </actions>
 

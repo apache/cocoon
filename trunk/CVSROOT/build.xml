@@ -137,7 +137,7 @@ a Java 1.2 compatible JVM is required for this target.
     <tstamp/>
     <property name="Name" value="Cocoon"/>
     <property name="name" value="cocoon"/>
-    <property name="version" value="1.7.1-dev"/>
+    <property name="version" value="1.7.1"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
@@ -377,7 +377,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- Packages the distribution as .zip                                   -->
   <!-- =================================================================== -->
   <target name="dist-zip" depends="dist">
-    <zip zipfile="${Name}-${version}.zip" basedir="${dist.dir}" includes="**"/>
+    <zip zipfile="${Name}-${version}.zip" basedir="${dist.root}" includes="**"/>
   </target>
 
   <!-- =================================================================== -->
