@@ -66,7 +66,7 @@ public class ExternalContextImpl extends ExternalContext {
     public String encodeActionURL(String url) {
         FacesRedirector redirector = (FacesRedirector)request.getAttribute(FacesAction.REQUEST_REDIRECTOR_ATTRIBUTE);
         if (redirector == null) {
-            throw new RuntimeException("Can not dispatch to <" + url + ">: Redirector missing.");
+            throw new RuntimeException("Can not encode action URL <" + url + ">: Redirector missing.");
         }
 
         return redirector.encodeActionURL(url);
@@ -79,7 +79,7 @@ public class ExternalContextImpl extends ExternalContext {
     public String encodeResourceURL(String url) {
         FacesRedirector redirector = (FacesRedirector)request.getAttribute(FacesAction.REQUEST_REDIRECTOR_ATTRIBUTE);
         if (redirector == null) {
-            throw new RuntimeException("Can not dispatch to <" + url + ">: Redirector missing.");
+            throw new RuntimeException("Can not encode resource URL <" + url + ">: Redirector missing.");
         }
 
         return redirector.encodeResourceURL(url);
@@ -156,11 +156,45 @@ public class ExternalContextImpl extends ExternalContext {
     }
 
     public String getRequestPathInfo() {
-        return this.request.getPathInfo();
+        // HACK (VG):
+        // Emulate servlet prefix mapping. This allows to bypass suffix mapping calculations,
+        // as well as helps with WebSphere servlet container bugs (it treats default servlet
+        // as prefix mapped servlet).
+
+        // JSF Specification, 2.2.1 Restore View:
+        //   o Derive the view identifier that corresponds to this request, as follows:
+        //     o If prefix mapping (such as ?/faces/*?) is used for FacesServlet, the viewId
+        //       is set from the extra path information of the request URI.
+
+        StringBuffer path = new StringBuffer();
+
+        boolean slash = false;
+        String s = request.getServletPath();
+        if (s != null) {
+            path.append(s);
+            slash = s.endsWith("/");
+        }
+
+        s = request.getPathInfo();
+        if (s != null) {
+            if (s.startsWith("/")) {
+                if (slash){
+                    s = s.substring(1);
+                }
+            } else {
+                if (!slash) {
+                    path.append('/');
+                }
+            }
+            path.append(s);
+        }
+
+        return path.toString();
     }
 
     public String getRequestServletPath() {
-        return this.request.getServletPath();
+        // See #getRequestPathInfo
+        return "";
     }
 
     public URL getResource(String resource) throws MalformedURLException {
@@ -210,7 +244,7 @@ public class ExternalContextImpl extends ExternalContext {
     public void redirect(String url) throws IOException {
         FacesRedirector redirector = (FacesRedirector)request.getAttribute(FacesAction.REQUEST_REDIRECTOR_ATTRIBUTE);
         if (redirector == null) {
-            throw new IOException("Can not dispatch to " + url + ": Redirector missing.");
+            throw new IOException("Can not redirect to <" + url + ">: Redirector missing.");
         }
 
         redirector.redirect(url);

@@ -19,6 +19,10 @@
 <xweb xpath="/web-app" unless="listener" insert-before="node()[1]">
 
   <listener>
+    <!--
+      - JavaServer Faces configuration loader. For Sun's RI implementation use
+      - com.sun.faces.config.ConfigureListener class.
+      -->
     <listener-class>net.sourceforge.myfaces.webapp.StartupServletContextListener</listener-class>
   </listener>
 
