@@ -1,4 +1,4 @@
-/*-- $Id: Monitor.java,v 1.6 2000-03-06 11:46:00 stefano Exp $ --
+/*-- $Id: Monitor.java,v 1.7 2000-03-13 21:26:17 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import java.util.*;
  * This class watches over the changes of indicated resources.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000-03-06 11:46:00 $
+ * @version $Revision: 1.7 $ $Date: 2000-03-13 21:26:17 $
  */
 
 public class Monitor {
@@ -160,7 +160,7 @@ public class Monitor {
      * Create a timestamp indicating the last modified time
      * of the given resource.
      */
-    private long timestamp(Object resource) {
+    public long timestamp(Object resource) {
         long timestamp;
         if (resource instanceof File) {
             timestamp = ((File) resource).lastModified();
