@@ -34,7 +34,7 @@ import org.apache.log.Hierarchy;
  * This class wraps the Sun's Javac Compiler.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: Javac.java,v 1.1 2004/03/10 12:58:07 stephan Exp $
+ * @version CVS $Id$
  * @since 2.0
  */
 
@@ -116,8 +116,7 @@ public class Javac extends AbstractJavaCompiler {
 
       // most errors terminate with the '^' char
       do {
-        if ((line = input.readLine()) == null)
-        {
+        if ((line = input.readLine()) == null) {
             if (buffer.length() > 0) {
                 // There's an error which doesn't end with a '^'
                 errors.add(new CompilerError("\n" + buffer.toString()));
@@ -180,13 +179,17 @@ public class Javac extends AbstractJavaCompiler {
 
       // each error has 3 lines
       for (int i = 0; i < 3 ; i++) {
-        if ((line = input.readLine()) == null) return errors;
+        if ((line = input.readLine()) == null) {
+            return errors;
+        }
         buffer.append(line);
         buffer.append('\n');
       }
 
       // if error is found create the vector
-      if (errors == null) errors = new ArrayList();
+      if (errors == null) {
+          errors = new ArrayList();
+      }
 
       // add the error bean
       errors.add(parseClassicError(buffer.toString()));
@@ -204,15 +207,17 @@ public class Javac extends AbstractJavaCompiler {
     StringTokenizer tokens = new StringTokenizer(error, ":");
     try {
       String file = tokens.nextToken();
-      if (file.length() == 1) file = new StringBuffer(file).append(":").append(tokens.nextToken()).toString();
+      if (file.length() == 1) {
+          file = new StringBuffer(file).append(":").append(tokens.nextToken()).toString();
+      }
       int line = Integer.parseInt(tokens.nextToken());
 
-      String last = tokens.nextToken();
+      StringBuffer last = new StringBuffer(tokens.nextToken());
       // In case the message contains ':', it should be reassembled
       while (tokens.hasMoreElements()) {
-        last += tokens.nextToken();
+        last.append(tokens.nextToken());
       }
-      tokens = new StringTokenizer(last.trim(), "\n");
+      tokens = new StringTokenizer(last.toString().trim(), "\n");
       String message = tokens.nextToken();
       String context = tokens.nextToken();
       String pointer = tokens.nextToken();
