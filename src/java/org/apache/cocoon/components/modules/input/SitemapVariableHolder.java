@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,15 +34,15 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  * sitemap base
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapVariableHolder.java,v 1.6 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id: SitemapVariableHolder.java,v 1.7 2004/07/07 02:37:01 vgritsenko Exp $
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
     implements Component, Configurable, SitemapConfigurable, ThreadSafe
 {
- 
+
     public static final String ROLE = SitemapVariableHolder.class.getName();
-    
+
     /**
      * Stores (global) configuration parameters as <code>key</code> /
      * <code>value</code> pairs from the component configuration
@@ -62,7 +62,7 @@ public final class SitemapVariableHolder
      *
      * For nested configurations override this function.
      * */
-    public void configure(Configuration conf) 
+    public void configure(Configuration conf)
     throws ConfigurationException {
         final Configuration[] parameters = conf.getChildren();
         this.globalValues = new HashMap(parameters.length);
@@ -76,8 +76,7 @@ public final class SitemapVariableHolder
     /**
      * Set the <code>Configuration</code> from a sitemap
      */
-    public void configure(SitemapConfigurationHolder holder)
-    throws ConfigurationException {
+    public void configure(SitemapConfigurationHolder holder) {
         this.holder = holder;
     }
 
@@ -87,42 +86,40 @@ public final class SitemapVariableHolder
     public Object get(String key) {
         return this.getValues().get(key);
     }
-    
+
     /**
      * Get keys
      */
     public Iterator getKeys() {
         return this.getValues().keySet().iterator();
     }
-    
+
     protected Map getValues() {
         Map values = (Map)this.holder.getPreparedConfiguration();
-        if ( null == values ) {
+        if (null == values) {
             values = new HashMap(this.globalValues);
             ChainedConfiguration conf = this.holder.getConfiguration();
-            if ( conf != null ) {
+            if (conf != null) {
                 this.prepare(conf, values);
                 this.holder.setPreparedConfiguration(conf, values);
             }
         }
         return values;
     }
-    
+
     protected void prepare(ChainedConfiguration conf, Map values) {
         ChainedConfiguration parent = conf.getParent();
-        if ( null != parent) {
+        if (null != parent) {
             this.prepare(parent, values);
         }
         final Configuration[] parameters = conf.getChildren();
         final int len = parameters.length;
-        for ( int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
             final String key = parameters[i].getName();
             final String value = parameters[i].getValue("");
-            if ( key != null && value != null) {
+            if (key != null && value != null) {
                 values.put(key, value);
             }
         }
     }
-    
 }
-

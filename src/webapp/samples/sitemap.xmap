@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: sitemap.xmap,v 1.27 2004/06/11 21:38:10 vgritsenko Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.28 2004/07/07 02:37:01 vgritsenko Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -48,6 +48,16 @@
   <!-- ========================== Pipelines ================================ -->
 
   <map:pipelines>
+    <map:component-configurations>
+      <global-variables>
+         <!--+
+             | Define global parameters, used in the input modules GlobalInputModule demo.
+             +-->
+         <global-sitemap>This value is defined in the samples/sitemap.xmap</global-sitemap>
+         <global-sitemap-override>This value is defined in the samples/sitemap.xmap, should be overridden by samples/modules/sitemap.xmap</global-sitemap-override>
+      </global-variables>
+    </map:component-configurations>
+
     <map:pipeline>
       <map:match pattern="">
         <map:generate src="samples.xml"/>
