@@ -47,47 +47,42 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source;
+package org.apache.cocoon.components.source.impl;
 
-import org.apache.avalon.framework.component.Component;
+import org.apache.cocoon.components.source.SourceDescriptor;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * A source inspector exposes source properties.
- *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
+ * Abstract base class for configurable SourceInspectors.
+ * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceInspector.java,v 1.3 2003/10/27 09:30:07 unico Exp $
  */
-public interface SourceInspector extends Component {
+public abstract class AbstractConfigurableSourceDescriptor 
+extends AbstractConfigurableSourceInspector implements SourceDescriptor {
 
-    public final static String ROLE = "org.apache.cocoon.components.source.SourceInspector";
-
-    /**
-     * Gets the SourceProperty associated with the given Source identified 
-     * by the requested namespace and name.
-     * 
-     * @param source  the source for which to compute the property
-     * @param namespace  the namespace uri of the property
-     * @param name  the name of the property
-     * @return  the SourceProperty associated with the Source, <code>null</code>
-     * if the inspector does not provide this property.
-     * @throws SourceException
-     */
-    public SourceProperty getSourceProperty(Source source, String namespace, String name) 
+    
+    public final void removeSourceProperty(Source source, String namespace, String name)
+        throws SourceException {
+        
+        if (handlesProperty(namespace,name)) {
+            doRemoveSourceProperty(source,namespace,name);
+        }
+    }
+    
+    public final void setSourceProperty(Source source, SourceProperty property) 
+        throws SourceException {
+        
+        if (handlesProperty(property.getNamespace(),property.getName())) {
+            doSetSourceProperty(source,property);
+        }
+    }
+    
+    protected abstract void doRemoveSourceProperty(Source source, String namespace,String name) 
+        throws SourceException;
+    
+    protected abstract void doSetSourceProperty(Source source, SourceProperty property) 
         throws SourceException;
 
-    /**
-     * Gets all the SourceProperties associated with the given Source.
-     * 
-     * @param source  the Source for wich to compute the property.
-     * @return  the collection of all SourceProperties that could be computed
-     * by this SourceInspector.
-     * @throws SourceException  
-     */
-    public SourceProperty[] getSourceProperties(Source source) throws SourceException;
-    
 }
-

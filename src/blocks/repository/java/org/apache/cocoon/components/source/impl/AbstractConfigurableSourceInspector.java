@@ -47,47 +47,80 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source;
+package org.apache.cocoon.components.source.impl;
 
-import org.apache.avalon.framework.component.Component;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * A source inspector exposes source properties.
- *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
+ * Abstract base class for configurable SourceInspectors.
+ * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceInspector.java,v 1.3 2003/10/27 09:30:07 unico Exp $
  */
-public interface SourceInspector extends Component {
+public abstract class AbstractConfigurableSourceInspector extends AbstractLogEnabled 
+    implements SourceInspector, Configurable {
 
-    public final static String ROLE = "org.apache.cocoon.components.source.SourceInspector";
-
+    // the set of properties this inspector is configured to handle
+    private Set m_properties;
+    
+    public AbstractConfigurableSourceInspector() {
+    }
+    
     /**
-     * Gets the SourceProperty associated with the given Source identified 
-     * by the requested namespace and name.
-     * 
-     * @param source  the source for which to compute the property
-     * @param namespace  the namespace uri of the property
-     * @param name  the name of the property
-     * @return  the SourceProperty associated with the Source, <code>null</code>
-     * if the inspector does not provide this property.
-     * @throws SourceException
+     * Configure this source inspector to handle properties of required types.
      */
-    public SourceProperty getSourceProperty(Source source, String namespace, String name) 
+    public void configure(Configuration configuration) throws ConfigurationException {
+        final Configuration[] properties = configuration.getChildren("property");
+        m_properties = new HashSet(properties.length);
+        for (int i = 0; i < properties.length; i++) {
+            String namespace = properties[i].getAttribute("namespace");
+            String name = properties[i].getAttribute("name");
+            if (namespace.indexOf('#') != -1 || name.indexOf('#') != -1) {
+                final String message = "Illegal character '#' in definition at " 
+                    + properties[i].getLocation();
+                throw new ConfigurationException(message);
+            }
+            m_properties.add(namespace + "#" + name);
+        }
+    }
+    
+    public SourceProperty[] getSourceProperties(Source source) throws SourceException {
+        final Set result = new HashSet();
+        final Iterator properties = m_properties.iterator();
+        while (properties.hasNext()) {
+            String property = (String) properties.next();
+            int index = property.indexOf('#');
+            String namespace = property.substring(0,index);
+            String name      = property.substring(index+1);
+            result.add(getSourceProperty(source,namespace,name));
+        }
+        return (SourceProperty[]) result.toArray(new SourceProperty[result.size()]);
+    }
+    
+    public final SourceProperty getSourceProperty(Source source, String namespace, String name) 
+        throws SourceException {
+        
+        if (handlesProperty(namespace,name)) {
+            return doGetSourceProperty(source,namespace,name);
+        }
+        return null;
+    }
+    
+    protected final boolean handlesProperty(String namespace, String name) {
+        return m_properties.contains(namespace + "#" + name);
+    }
+    
+    protected abstract SourceProperty doGetSourceProperty(Source source, String ns, String name)
         throws SourceException;
-
-    /**
-     * Gets all the SourceProperties associated with the given Source.
-     * 
-     * @param source  the Source for wich to compute the property.
-     * @return  the collection of all SourceProperties that could be computed
-     * by this SourceInspector.
-     * @throws SourceException  
-     */
-    public SourceProperty[] getSourceProperties(Source source) throws SourceException;
     
 }
-
