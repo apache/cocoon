@@ -48,64 +48,30 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-
-package org.apache.cocoon.components.request;
-
-import org.apache.avalon.framework.component.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+package org.apache.cocoon.servlet.multipart;
 
 /**
- * This is the interface of Request Wrapper in Cocoon.
+ * Exception thrown when on a parse error such as
+ * a malformed stream.
  *
- * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: RequestFactory.java,v 1.2 2003/04/03 14:16:31 stefano Exp $
+ * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
+ * @version CVS $Id: MultipartException.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
-public abstract class RequestFactory implements Component {
+public class MultipartException extends Exception {
 
-    public static RequestFactory getRequestFactory(String className) {
-
-        RequestFactory factory = null;
-
-        try {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            Class clazz = loader.loadClass(className);
-            factory = (RequestFactory) clazz.newInstance();
-        } catch (Throwable t) {
-            // the try/catch mechanism is used because there is no way
-            // to know if a classloader contains a class without asking for it
-        }
-        
-        if (factory == null) {
-            try {
-                Class clazz = Class.forName(className);
-                factory = (RequestFactory) clazz.newInstance();
-            } catch (Throwable t) {
-                // the try/catch mechanism is used because there is no way
-                // to know if a classloader contains a class without asking for it
-            }
-        }
-
-        if (factory == null) {
-            factory = new SimpleRequestFactoryImpl();
-        }
-
-        return factory;
+    /**
+     * Constructor MultipartException
+     */
+    public MultipartException() {
+        super();
     }
 
     /**
-     * Return a wrapped request object
+     * Constructor MultipartException
+     *
+     * @param text
      */
-    public abstract HttpServletRequest getServletRequest(HttpServletRequest request,
-                                                boolean saveUploadedFilesToDisk,
-                                                File uploadDirectory,
-                                                boolean allowOverwrite,
-                                                boolean silentlyRename,
-                                                int maxUploadSize);
-
-    /**
-     * Implementation of the get method
-     */
-    public abstract Object get(HttpServletRequest request, String name);
+    public MultipartException(String text) {
+        super(text);
+    }
 }

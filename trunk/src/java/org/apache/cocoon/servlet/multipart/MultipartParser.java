@@ -48,20 +48,22 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.request.multipart;
+package org.apache.cocoon.servlet.multipart;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * This class is used to implement a multipart request wrapper.
@@ -72,33 +74,30 @@ import java.util.Vector;
  * FilePart: file part
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartParser.java,v 1.1 2003/03/09 00:09:10 pier Exp $
+ * @version CVS $Id: MultipartParser.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
-public class MultipartParser extends Hashtable {
+public class MultipartParser {
 
-    /** Field FILE_BUFFER_SIZE           */
     private final static int FILE_BUFFER_SIZE = 4096;
 
-    /** Field INLINE_BUFFER_SIZE           */
     private final static int INLINE_BUFFER_SIZE = 256;
 
-    /** Field MAX_BOUNDARY_SIZE           */
     private static final int MAX_BOUNDARY_SIZE = 128;
 
-    /** Field saveUploadedFilesToDisk           */
     private boolean saveUploadedFilesToDisk;
 
-    /** Field uploadDirectory           */
     private File uploadDirectory = null;
 
-    /** Field allowOverwrite           */
     private boolean allowOverwrite;
 
-    /** Field silentlyRename           */
     private boolean silentlyRename;
+    
+    private int maxUploadSize;
 
-    /** Field characterEncoding       */
     private String characterEncoding;
+    
+    private Hashtable parts;
+    
     /**
      * Constructor, parses given request
      *
@@ -111,34 +110,44 @@ public class MultipartParser extends Hashtable {
      * @param allowOverwrite Allow existing files to be overwritten.
      * @param silentlyRename If file exists rename file (using filename+number).
      * @param maxUploadSize The maximum content length accepted.
+     * @param characterEncoding The character encoding to be used.
      *
      * @throws IOException
      * @throws MultipartException
      */
     public MultipartParser(
-            HttpServletRequest request, boolean saveUploadedFilesToDisk, File uploadDirectory, boolean allowOverwrite, boolean silentlyRename, int maxUploadSize)
-            throws IOException, MultipartException {
-
+            boolean saveUploadedFilesToDisk, 
+            File uploadDirectory, 
+            boolean allowOverwrite, 
+            boolean silentlyRename, 
+            int maxUploadSize,
+            String characterEncoding)
+    {
         this.saveUploadedFilesToDisk = saveUploadedFilesToDisk;
         this.uploadDirectory = uploadDirectory;
         this.allowOverwrite = allowOverwrite;
         this.silentlyRename = silentlyRename;
-        this.characterEncoding = request.getCharacterEncoding();
-        if (this.characterEncoding == null) {
-            this.characterEncoding = "ISO-8859-1";
-        }
-
-        if (request.getContentLength() > maxUploadSize) {
-            throw new IOException("Content length exceeds maximum upload size");
-        }
-
-        parseMultiPart(
-                new TokenStream(
-                        new PushbackInputStream(
-                                new BufferedInputStream(request.getInputStream()),
-                                MAX_BOUNDARY_SIZE)), getBoundary(request.getContentType()));
+        this.maxUploadSize = maxUploadSize;
+        this.characterEncoding = characterEncoding;
     }
 
+    public Hashtable getParts(HttpServletRequest request) throws IOException, MultipartException {
+        if (request.getContentLength() > this.maxUploadSize) {
+             throw new IOException("Content length exceeds maximum upload size");
+         }
+
+         this.parts = new Hashtable();
+
+         InputStream requestStream = request.getInputStream();
+         BufferedInputStream bufferedStream = new BufferedInputStream(requestStream);
+         PushbackInputStream pushbackStream = new PushbackInputStream(bufferedStream, MAX_BOUNDARY_SIZE);
+         TokenStream stream = new TokenStream(pushbackStream);
+                        
+         parseMultiPart(stream,getBoundary(request.getContentType()));
+
+         return this.parts;    
+    }
+    
     /**
      * Parse a multipart block
      *
@@ -206,6 +215,7 @@ public class MultipartParser extends Hashtable {
         } catch (IOException e) {
             throw new MultipartException("Malformed stream: " + e.getMessage());
         } catch (NullPointerException e) {
+            e.printStackTrace();
             throw new MultipartException("Malformed header");
         }
     }
@@ -267,10 +277,10 @@ public class MultipartParser extends Hashtable {
         if (file == null) {
             byte[] bytes = ((ByteArrayOutputStream) out).toByteArray();
 
-            put(headers.get("name"),
-                    new FilePartArray(headers, new ByteArrayInputStream(bytes),bytes.length));
+            this.parts.put(headers.get("name"),
+                    new PartInMemory(headers, new ByteArrayInputStream(bytes),bytes.length));
         } else {
-            put(headers.get("name"), new FilePartFile(headers, file));
+            this.parts.put(headers.get("name"), new PartOnDisk(headers, file));
         }
     }
 
@@ -294,11 +304,11 @@ public class MultipartParser extends Hashtable {
         }
 
         String field = (String) headers.get("name");
-        Vector v = (Vector) get(field);
+        Vector v = (Vector) this.parts.get(field);
 
         if (v == null) {
             v = new Vector();
-            put(field, v);
+            this.parts.put(field, v);
         }
 
         v.add(value.toString());

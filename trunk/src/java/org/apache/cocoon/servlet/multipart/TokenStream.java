@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.request.multipart;
+package org.apache.cocoon.servlet.multipart;
 
 import java.io.IOException;
 import java.io.PushbackInputStream;
@@ -59,7 +59,7 @@ import java.io.PushbackInputStream;
  *
  * A newline is espected after each boundary and is parsed away.
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: TokenStream.java,v 1.1 2003/03/09 00:09:10 pier Exp $
+ * @version CVS $Id: TokenStream.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
 class TokenStream extends PushbackInputStream {
 
@@ -101,20 +101,20 @@ class TokenStream extends PushbackInputStream {
      * Creates a new pushback token stream from in.
      *
      * @param in The input stream
-     * @param pushbackSize Size (in bytes) of the pushback buffer
-     */
-    public TokenStream(PushbackInputStream in, int pushbackSize) {
-        super(in, pushbackSize);
-        this.in = in;
-    }
-
-    /**
-     * Creates a new pushback token stream from in with pushback buffer size 1.
-     *
-     * @param in The input stream
      */
     public TokenStream(PushbackInputStream in) {
-        this(in, 1);
+        this(in,1);
+    }
+    
+    /**
+     * Creates a new pushback token stream from in.
+     *
+     * @param in The input stream
+     * @param pushbackSize Size (in bytes) of the pushback buffer
+     */
+    public TokenStream(PushbackInputStream in, int size) {
+        super(in,size);
+        this.in = in;
     }
 
     /**

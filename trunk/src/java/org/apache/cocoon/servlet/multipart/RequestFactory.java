@@ -48,70 +48,82 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.request.multipart;
 
-import java.io.InputStream;
-import java.util.Map;
+package org.apache.cocoon.servlet.multipart;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Hashtable;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * This (abstract) class represents a file part parsed from a http post stream.
- * It is subclassed by FilePartFile (which is a file allready written to disk) and
- * FilePartArray (which is a file in memory)
+ * This is the interface of Request Wrapper in Cocoon.
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: FilePart.java,v 1.1 2003/03/09 00:09:09 pier Exp $
+ * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
+ * @version CVS $Id: RequestFactory.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
-public abstract class FilePart {
+public class RequestFactory {
 
-    /** Field headers */
-    protected Map headers;
+    private boolean saveUploadedFilesToDisk;
 
-    protected FilePart(Map headers) {
-	    this.headers = headers;
-    }
+    private File uploadDirectory;
 
-    /**
-     * Returns the part headers
-     *
-     */
-    public Map getHeaders() {
-        return headers;
-    }
+    private boolean allowOverwrite;
 
-    /**
-     * Returns the filename
-     *
-     */
-    public abstract String getFileName();
+    private boolean silentlyRename;
+
+    private String defaultCharEncoding;
     
-    /**
-     * Returns the length of the file content
-     * 
-     */
-    public abstract int getSize();
-
-    /**
-     * Returns the filepath
-     *
-     */
-    public String getFilePath() {
-        return (String) headers.get("filename");
+    private int maxUploadSize;
+    
+    public RequestFactory (boolean saveUploadedFilesToDisk, 
+                           File uploadDirectory, 
+                           boolean allowOverwrite, 
+                           boolean silentlyRename, 
+                           int maxUploadSize,
+                           String defaultCharEncoding) {
+       this.saveUploadedFilesToDisk = saveUploadedFilesToDisk;
+       this.uploadDirectory = uploadDirectory;
+       this.allowOverwrite = allowOverwrite;
+       this.silentlyRename = silentlyRename;
+       this.maxUploadSize = maxUploadSize;
+       this.defaultCharEncoding = defaultCharEncoding;    
     }
 
     /**
-     * Returns the mime type (or null if unknown)
-     *
+     * If the request includes a "multipart/form-data", then wrap it with
+     * methods that allow easier connection to those objects since the servlet
+     * API doesn't provide those methods directly.
      */
-    public String getMimeType() {
-        return (String) headers.get("content-type");
-    }
+    public HttpServletRequest getServletRequest(HttpServletRequest request) throws IOException, MultipartException {
+        HttpServletRequest req = request;
+        String contentType = request.getContentType();
+        
+        if ((contentType != null) && (contentType.toLowerCase().indexOf("multipart/form-data") > -1)) {
+            if (request.getContentLength() > maxUploadSize) {
+                throw new IOException("Content length exceeds maximum upload size.");
+            }
+ 
+            String charEncoding = request.getCharacterEncoding();
+            if (charEncoding == null || charEncoding.equals("")) {
+                charEncoding = this.defaultCharEncoding;
+            }
+            
+            MultipartParser parser = new MultipartParser(
+                    this.saveUploadedFilesToDisk, 
+                    this.uploadDirectory, 
+                    this.allowOverwrite, 
+                    this.silentlyRename, 
+                    this.maxUploadSize,
+                    charEncoding);
+                    
+            Hashtable parts = parser.getParts(request);
+            
+            req = new MultipartHttpServletRequest(request,parts);
+        }
 
-    /**
-     * Returns an InputStream containing the file data
-     *
-     *
-     * @throws Exception
-     */
-    public abstract InputStream getInputStream() throws Exception;
+        return req;
+    }
+    
 }

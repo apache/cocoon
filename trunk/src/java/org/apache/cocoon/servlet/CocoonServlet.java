@@ -50,38 +50,24 @@
 */
 package org.apache.cocoon.servlet;
 
-import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
-import org.apache.avalon.excalibur.logger.LogKitManager;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.LogKitLogger;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
-import org.apache.cocoon.components.notification.Notifier;
-import org.apache.cocoon.components.request.RequestFactory;
-import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.ConnectionResetException;
-import org.apache.cocoon.Cocoon;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.http.HttpContext;
-import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.IOUtils;
-import org.apache.cocoon.util.StringUtils;
-import org.apache.cocoon.util.log.CocoonLogFormatter;
-import org.apache.excalibur.instrument.InstrumentManager;
-import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
-import org.apache.log.ContextMap;
-import org.apache.log.Hierarchy;
-import org.apache.log.Logger;
-import org.apache.log.Priority;
-import org.apache.log.output.ServletOutputLogTarget;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -90,24 +76,40 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
+
+import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
+import org.apache.avalon.excalibur.logger.LogKitManager;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.LogKitLogger;
+import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.ConnectionResetException;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
+import org.apache.cocoon.components.notification.Notifier;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.servlet.multipart.RequestFactory;
+import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.StringUtils;
+import org.apache.cocoon.util.log.CocoonLogFormatter;
+import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
+import org.apache.excalibur.instrument.InstrumentManager;
+import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
+import org.apache.log.ContextMap;
+import org.apache.log.Hierarchy;
+import org.apache.log.Logger;
+import org.apache.log.Priority;
+import org.apache.log.output.ServletOutputLogTarget;
 
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
@@ -119,7 +121,7 @@ import java.util.jar.Attributes;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.3 2003/03/16 16:38:29 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.4 2003/04/04 13:19:06 stefano Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -150,10 +152,12 @@ public class CocoonServlet extends HttpServlet {
     protected boolean showTime;
     protected boolean hiddenShowTime;
 
+    private static final boolean ENABLE_UPLOADS = false;
     private static final boolean SAVE_UPLOADS_TO_DISK = true;
     private static final int MAX_UPLOAD_SIZE = 10000000; // 10Mb
 
     private int maxUploadSize;
+    private boolean enableUploads;
     private boolean autoSaveUploads;
     private boolean allowOverwrite;
     private boolean silentlyRename;
@@ -202,10 +206,10 @@ public class CocoonServlet extends HttpServlet {
      * This is the url to the servlet context directory
      */
     protected URL servletContextURL;
-
-
+    
     /**
-     * The requestFactory to use for incoming HTTP requests.
+     * The RequestFactory is responsible for wrapping multipart-encoded
+     * forms and for handing the file payload of incoming requests
      */
     protected RequestFactory requestFactory;
 
@@ -366,6 +370,16 @@ public class CocoonServlet extends HttpServlet {
         this.uploadDir.mkdirs();
         this.appContext.put(Constants.CONTEXT_UPLOAD_DIR, this.uploadDir);
 
+        value = conf.getInitParameter("enable-uploads");
+        if (value != null) {
+            this.enableUploads = ("yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value));
+        } else {
+            this.enableUploads = ENABLE_UPLOADS;
+            if (log.isDebugEnabled()) {
+               log.debug("enable-uploads was not set - defaulting to " + this.enableUploads);
+            }
+        }
+        
         value = conf.getInitParameter("autosave-uploads");
         if (value != null) {
             this.autoSaveUploads = ("yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value));
@@ -461,18 +475,9 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        value = conf.getInitParameter("request-factory");
-        if (value == null) {
-            value = "org.apache.cocoon.components.request.MultipartRequestFactoryImpl";
-            if (log.isDebugEnabled()) {
-                log.debug("request-factory was not set - defaulting to " + value);
-            }
-        }
-        this.requestFactory = RequestFactory.getRequestFactory(value);
-
         this.containerEncoding = conf.getInitParameter("container-encoding");
         if (containerEncoding == null) {
-            containerEncoding = "ISO-8859-1";
+            this.containerEncoding = "ISO-8859-1";
             if (log.isDebugEnabled()) {
                 log.debug("container-encoding was not set - defaulting to ISO-8859-1.");
             }
@@ -480,8 +485,9 @@ public class CocoonServlet extends HttpServlet {
 
         this.defaultFormEncoding = conf.getInitParameter("form-encoding");
         if (defaultFormEncoding == null) {
+            this.defaultFormEncoding = "ISO-8859-1";
             if (log.isDebugEnabled()) {
-                log.debug("form-encoding was not set - defaulting to null.");
+                log.debug("form-encoding was not set - defaulting to ISO-8859-1.");
             }
         }
 
@@ -502,6 +508,13 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
+        this.requestFactory = new RequestFactory(this.autoSaveUploads,
+                                                 this.uploadDir,
+                                                 this.allowOverwrite,
+                                                 this.silentlyRename,
+                                                 this.maxUploadSize,
+                                                 this.defaultFormEncoding);
+                                                 
         this.createCocoon();
     }
 
@@ -984,16 +997,32 @@ public class CocoonServlet extends HttpServlet {
             } catch (Exception e){}
         }
 
-        // This is more scalable
+        // remember when we started (used for timing the processing)
         long start = System.currentTimeMillis();
+    
+        // add the cocoon header timestamp
         res.addHeader("X-Cocoon-Version", Constants.VERSION);
-        HttpServletRequest request = requestFactory.getServletRequest(req,
-                                         this.autoSaveUploads,
-                                         this.uploadDir,
-                                         this.allowOverwrite,
-                                         this.silentlyRename,
-                                         this.maxUploadSize);
+        
+        // get the request (wrapped if contains multipart-form data)
+        HttpServletRequest request;
+        try{
+            if (this.enableUploads) {
+                request = requestFactory.getServletRequest(req);
+            } else {
+                request = req;
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Problem with Cocoon servlet", e);
+            }
 
+            manageException(req, res, null, null,
+                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                            "Problem in creating the Request", null, null, e);
+            return;
+        }        
+
+        // Get the cocoon engine instance
         getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
 
         // Check if cocoon was initialized
@@ -1140,6 +1169,13 @@ public class CocoonServlet extends HttpServlet {
             }
         } finally {
             if (ctxMap != null) ctxMap.clear();
+            try {            
+                if (request instanceof MultipartHttpServletRequest) {
+                    ((MultipartHttpServletRequest) request).cleanup();
+                }
+            } catch (IOException e) {
+                log.error("Cocoon got an Exception while trying to cleanup the uploaded files.", e);
+            }
             try {
                 ServletOutputStream out = res.getOutputStream();
                 out.flush();
@@ -1222,8 +1258,7 @@ public class CocoonServlet extends HttpServlet {
                                   this.servletContext,
                                   (HttpContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
                                   this.containerEncoding,
-                                  formEncoding,
-                                  this.requestFactory);
+                                  formEncoding);
         env.enableLogging(new LogKitLogger(this.log));
         return env;
     }

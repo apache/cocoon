@@ -136,6 +136,16 @@
     </init-param>
 
     <!--
+      Causes all files in multipart requests to be processed.
+      Default is false for security reasons.  
+      Unsupported values will be interpreted as false.
+    -->
+    <init-param>
+      <param-name>enable-uploads</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    
+    <!--
       This parameter allows to specify where Cocoon should put uploaded files.
       The path specified can be either absolute or relative to the context 
       path of the servlet. On windows platform, absolute directory must start
@@ -151,11 +161,12 @@
 
     <!--
       Causes all files in multipart requests to be saved to upload-dir.
-      Default is true.  Unsupported values will be interpreted as false.
+      Default is true for security reasons.  
+      Unsupported values will be interpreted as false.
     -->
     <init-param>
       <param-name>autosave-uploads</param-name>
-      <param-value>false</param-value>
+      <param-value>true</param-value>
     </init-param>
 
     <!--
@@ -240,19 +251,6 @@
     -->
 
     <!--
-      This parameter allows you to select the request factory. Possible
-      choices are as follows:
-        - org.apache.cocoon.components.request.MultipartRequestFactoryImpl
-          This is the default factory.
-        - org.apache.cocoon.components.request.SimpleRequestFactoryImpl
-          This factory does not allow uploads.
-    -->
-    <init-param>
-      <param-name>request-factory</param-name>
-      <param-value>org.apache.cocoon.components.request.MultipartRequestFactoryImpl</param-value>
-    </init-param>
-
-    <!--
       If you set this parameter to 'true' or 'yes', Cocoon will add processing
       time to the end of each response. Value 'hide' adds processing time as an HTML
       comment. By default, processing time is not added (corresponds to value 'no').
@@ -303,7 +301,8 @@
     -->
 
     <!--
-      Set form encoding. This will be the character set used to decode request parameters 
+      Set form encoding. This will be the character set used to decode request parameters.
+      If not set the ISO-8859-1 encoding will be assumed. 
     -->
     <!--
     <init-param>

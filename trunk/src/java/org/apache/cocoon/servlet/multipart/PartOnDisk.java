@@ -48,30 +48,71 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.request.multipart;
+package org.apache.cocoon.servlet.multipart;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
- * Exception thrown when on a parse error such as
- * a malformed stream.
+ * This class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartException.java,v 1.1 2003/03/09 00:09:10 pier Exp $
+ * @version CVS $Id: PartOnDisk.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
-public class MultipartException extends Exception {
+public class PartOnDisk extends Part {
+
+    /** Field file           */
+    private File file = null;
+    private int size;
 
     /**
-     * Constructor MultipartException
+     * Constructor FilePartFile
+     *
+     * @param headers
+     * @param file
      */
-    public MultipartException() {
-        super();
+    protected PartOnDisk(Map headers, File file) {
+        super(headers);
+        this.file = file;
+        this.size = (int) file.length();
     }
 
     /**
-     * Constructor MultipartException
-     *
-     * @param text
+     * Returns the file name
      */
-    public MultipartException(String text) {
-        super(text);
+    public String getFileName() {
+        return file.getName();
+    }
+
+    /**
+     * Returns the file size
+     */
+    public int getSize() {
+        return this.size;
+    }
+
+    /**
+     * Returns the file
+     */
+    public File getFile() {
+        return file;
+    }
+
+    /**
+     * Returns a (ByteArray)InputStream containing the file data
+     *
+     * @throws Exception
+     */
+    public InputStream getInputStream() throws Exception {
+        return new FileInputStream(file);
+    }
+
+    /**
+     * Returns the filename
+     */
+    public String toString() {
+        return file.getPath();
     }
 }

@@ -48,68 +48,54 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.request.multipart;
+package org.apache.cocoon.servlet.multipart;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
+
 /**
- * This class represents a file part parsed from a http post stream.
+ * This (abstract) class represents a file part parsed from a http post stream.
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: FilePartFile.java,v 1.1 2003/03/09 00:09:09 pier Exp $
+ * @version CVS $Id: Part.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
  */
-public class FilePartFile extends FilePart {
+public abstract class Part {
 
-    /** Field file           */
-    private File file = null;
-    private int size;
+    /** Field headers */
+    protected Map headers;
+
+    protected Part(Map headers) {
+	    this.headers = headers;
+    }
 
     /**
-     * Constructor FilePartFile
-     *
-     * @param headers
-     * @param file
+     * Returns the part headers
      */
-    protected FilePartFile(Map headers, File file) {
-        super(headers);
-        this.file = file;
-        this.size = (int) file.length();
+    public Map getHeaders() {
+        return headers;
     }
 
     /**
      * Returns the filename
      */
-    public String getFileName() {
-        return file.getName();
-    }
-
-    public int getSize() {
-        return this.size;
-    }
-
+    public abstract String getFileName();
+    
     /**
-     * Returns the file
+     * Returns the length of the file content
      */
-    public File getFile() {
-        return file;
+    public abstract int getSize();
+
+    /**
+     * Returns the mime type (or null if unknown)
+     */
+    public String getMimeType() {
+        return (String) headers.get("content-type");
     }
 
     /**
-     * Returns a (ByteArray)InputStream containing the file data
-     *
+     * Returns an InputStream containing the file data
      * @throws Exception
      */
-    public InputStream getInputStream() throws Exception {
-        return new FileInputStream(file);
-    }
-
-    /**
-     * Returns the filename
-     */
-    public String toString() {
-        return file.getPath();
-    }
+    public abstract InputStream getInputStream() throws Exception;
 }
