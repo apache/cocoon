@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-11 16:06:59 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-06 20:29:32 $
  */
 public class NamespacesTable {
     /** The initial namespace declaration. */
@@ -31,6 +31,7 @@ public class NamespacesTable {
         // Set the previous declaration of this namespace as self, so it will
         // not be possible to remove it :)
         this.entry.previousDeclaration=this.entry;
+        this.addDeclaration("xml", "http://www.w3.org/XML/1998/namespace");
     }
 
     /**
