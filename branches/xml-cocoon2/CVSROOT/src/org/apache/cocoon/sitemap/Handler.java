@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-13 16:44:08 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-16 16:16:56 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor {
     protected Logger log = LogKit.getLoggerFor("cocoon");
@@ -125,9 +125,11 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
 
     protected synchronized void regenerate (Environment environment)
     throws Exception {
+		log.debug("Beginning sitemap regeneration");
         regenerateAsynchronously(environment);
         if (regeneration != null)
             regeneration.join();
+		log.debug("Sitemap regeneration complete");
     }
 
     public boolean process (Environment environment)
@@ -170,6 +172,8 @@ public class Handler implements Runnable, Configurable, Composer, Processor {
         } catch (Exception e) {
             log.error("Error compiling sitemap", e);
             this.exception = e;
+		} catch (Throwable t) {
+			log.error("Error compiling sitemap, caught " + t.getClass().getName() + ": " + t.getMessage());
         } finally {
             this.regeneration = null;
             this.environment = null;
