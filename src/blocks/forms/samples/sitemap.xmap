@@ -21,9 +21,9 @@
 
   <map:transformers default="xalan">    
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
-      <catalogues default="forms">
+      <catalogues default="other">
         <catalogue id="other" name="OtherMessages" location="messages"/>
-        <catalogue id="forms" name="FormMessages" location="messages"/>
+        <catalogue id="form" name="FormMessages" location="messages"/>
       </catalogues>
       <cache-at-startup>true</cache-at-startup>
     </map:transformer>
@@ -144,7 +144,7 @@
     <!-- Flowscript Sample -->
 
      <map:match pattern="form1.flow">
-       <map:call function="forms">
+       <map:call function="handleForm">
          <map:parameter name="function" value="form1"/>
          <map:parameter name="form-definition" value="forms/form1.xml"/>
        </map:call>
@@ -201,7 +201,7 @@
         -->
 
      <map:match pattern="form2xml.flow">
-       <map:call function="forms">
+       <map:call function="handleForm">
          <map:parameter name="function" value="form2xml"/>
          <map:parameter name="form-definition" value="forms/form2_model.xml"/>
          <map:parameter name="documentURI" value="forms/form2_data.xml"/>
@@ -210,7 +210,7 @@
      </map:match>
 
      <map:match pattern="form2bean.flow">
-       <map:call function="forms">
+       <map:call function="handleForm">
          <map:parameter name="function" value="form2bean"/>
          <map:parameter name="form-definition" value="forms/form2_model.xml"/>
          <map:parameter name="bindingURI" value="forms/form2_bind_bean.xml"/>
@@ -362,7 +362,7 @@
         -->
 
      <map:match pattern="form_model_gui.flow">
-       <map:call function="forms">
+       <map:call function="handleForm">
          <map:parameter name="function" value="form_model_gui"/>
          <map:parameter name="form-definition" value="forms/form_model_gui_model.xml"/>
          <map:parameter name="attribute-name" value="form_model_gui"/>
