@@ -181,6 +181,10 @@
   <changes>
 
  <release version="@version@" date="@date@"> 
+  <action dev="CZ" type="fix" fixes-bug="11533">
+    The deprecated source implementations are now wrapped by proxies.
+    Modified patch from Jens Lorenz (jens.lorenz@interface-business.de)
+  </action>
   <action dev="JH" type="fix" fixes-bug="15302">
    For non-existant files XSPUtil.relativeFilename() now throws FileNotFoundException instead of NPE.
   </action>
