@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.1 2003/03/09 00:01:33 pier Exp $:
+       CVS: $Id: build.xml,v 1.2 2003/03/10 16:41:07 stefano Exp $:
 
 ============================================================================ -->
 
@@ -98,9 +98,9 @@
         <include name="*.jar"/>
       </fileset>
     </path>
-
-    <!-- Build and prepare the loader =================== -->
-
+  </target>
+  
+  <target name="init-loader" depends="init">
     <!-- compile the loader -->
     <mkdir dir="${tools.loader.dest}"/>
     <javac srcdir="${tools.loader.src}"
@@ -111,9 +111,9 @@
            target="1.2"
            nowarn="on"
            compiler="${compiler}"/>
-           
-    <!-- Build and prepare the cocoon-specific ant tasks =================== -->
-
+  </target>
+  
+  <target name="init-tasks" depends="init">
     <!-- compile the ant tasks -->
     <mkdir dir="${tools.tasks.dest}"/>
     <javac srcdir="${tools.tasks.src}"
@@ -125,14 +125,16 @@
            nowarn="on"
            compiler="${compiler}"
            classpathref="tasks.classpath"/>
-
+  </target>
+  
+  <target name="init-xpatch" depends="init-tasks">
     <!-- A task to patch xml files -->
     <taskdef name="xpatch" classname="XConfToolTask" classpath="${tools.tasks.dest}"/>
-
+  </target>
+  
+  <target name="init-jing" depends="init">
     <!-- Jing is used in various targets for XML validation with RELAX NG -->
-    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"
-             classpathref="classpath"/>
-
+    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="classpath"/>
   </target>
 
 <!-- Preparation Targets =================================================== -->
@@ -166,7 +168,7 @@
   <target name="compile" depends="compile-core, compile-scratchpad, compile-deprecated"/>
 
   <!-- compiles the core -->
-  <target name="compile-core" depends="validate-core-config,prepare-core">
+  <target name="compile-core" depends="prepare-core">
 
     <!-- copy those files that need to be in the classpath -->
     <copy todir="${build.dest}">
@@ -201,7 +203,7 @@
            classpathref="classpath">
          <src>
           <!-- [FIXME] THE DEPENDENCY ON DEPRECATED SHOULD GO AWAY!!!! -->
-          <path location="${deprecated.src}"/> 
+          <!--path location="${deprecated.src}"/--> 
           <path location="${java}"/>
          </src>
     </javac>
@@ -243,7 +245,7 @@
   </target>
 
   <!-- compiles deprecated code -->
-  <target name="compile-deprecated" depends="prepare" unless="exclude.deprecated">
+  <target name="compile-deprecated" depends="prepare,init-xpatch" unless="exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
     <xpatch configuration="${build.dest}/org/apache/cocoon/cocoon.roles" 
@@ -522,7 +524,7 @@
 
 <!-- Samples Targets ======================================================= -->
 
-  <target name="samples" depends="prepare" unless="exclude.webapp.samples">
+  <target name="samples" depends="prepare, init-xpatch" unless="exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
 
     <javac srcdir="${samples}"
@@ -638,7 +640,7 @@
   <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples" unless="exclude.webapp.samples">
   </target>
 
-  <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="exclude.deprecated">
+  <target name="prepare-webapp-deprecated" depends="prepare-webapp,init-xpatch" unless="exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
     <xpatch directory="${deprecated.conf}" extension="xconf" configuration="${build.webapp}/WEB-INF/cocoon.xconf"/>
   </target>
@@ -649,7 +651,7 @@
     </copy>
   </target>
   
-  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-deprecated,validate-config"/>
+  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-deprecated,validate-config,init-loader"/>
 
   <target name="war" depends="webapp">
     <!-- A task to create manifest for webapp. -->
@@ -700,7 +702,7 @@
        default config files here, then do them again later in validate-config
        after the blocks have been processed and fragments added.
   -->
-  <target name="validate-core-config" depends="prepare"
+  <target name="validate-core-config" depends="prepare,init-jing"
           description="Validation of default core configuration files using RELAX NG"
           if="validate.config">
     <echo message="Conducting validation of default core configuration files."/>
@@ -721,7 +723,7 @@
   <!-- Validate some important final configuration files. At this stage
        the fragments from blocks have been added to the default core config.
   -->
-  <target name="validate-config" if="validate.config">
+  <target name="validate-config" depends="init-jing" if="validate.config">
     <echo message="Conducting validation of final configuration files."/>
     <echo message="(You can turn validation off if you must - comment out the validate.config property in build.properties)"/>
     <jing rngfile="${build.webapp}/WEB-INF/entities/any.rng">
@@ -747,7 +749,7 @@
        to declare a ruleset. -->
   <target name="validate-xdocs"
           description="Validation of all core XML documentation"
-          depends="prepare-docs"
+          depends="prepare-docs,init-jing"
           if="validate.xdocs">
     <echo message="Conducting validation of core XML documentation."/>
     <echo message="(You can turn validation off if you must - comment out the validate.xdocs property in build.properties)"/>
@@ -875,13 +877,8 @@
     </path>
 
     <path id="mockss">
-      <!-- main mocks dir -->
-      <pathelement path="${mocks}"/>
-      <!-- scratchpad mocks dir -->
-      <pathelement path="${src}/scratchpad/mocks"/>
-      <!-- blocks mocks dirs -->
-      <dirset dir="${blocks}">
-        <include name="*/mocks"/>
+      <dirset dir="${src}">
+        <include name="**/mocks"/>
       </dirset>
     </path>
 
@@ -898,16 +895,15 @@
       <fileset dir="${scratchpad}/lib">
         <include name="*.jar"/>
       </fileset>
-      <!-- tools libs -->
-      <fileset dir="${tools}/lib">
-        <include name="*.jar"/>
-        <!-- exclude xerces, xalan, xmlapis -->
-        <exclude name="x*.jar"/>
-      </fileset>
       <!-- blocks lib -->
       <fileset dir="${blocks}">
         <include name="**/*.jar"/>
       </fileset>
+      <!-- tools libs -->
+      <fileset dir="${tools}/lib">
+        <include name="*.jar"/>
+        <exclude name="x*.jar"/>
+      </fileset>      
     </path>
 
     <!-- convert paths to properties -->
@@ -924,6 +920,7 @@
         <filter token="SRC_DIRS" value="${srcs}"/>
         <filter token="LIBS" value="${libs}"/>
         <filter token="MOCKS_DIRS" value="${mockss}"/>
+        <filter token="OUTPUT_DIR" value="${build.root}/eclipse/classes"/>
       </filterset>
     </copy>
 
