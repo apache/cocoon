@@ -54,14 +54,11 @@ import java.util.Vector;
  * getAttributeNames() will return an Iterator to an empty collection.</p>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: LocateResource.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LocateResource extends AbstractInputModule implements Composable, ThreadSafe {
 
-    protected static Collection col = null;
-    static {
-        col = new TreeSet();
-    }
+    protected static final Collection col = new TreeSet();
 
     protected ComponentManager manager = null;
 

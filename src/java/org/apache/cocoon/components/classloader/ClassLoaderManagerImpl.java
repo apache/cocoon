@@ -28,7 +28,7 @@ import java.util.Vector;
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ClassLoaderManagerImpl.java,v 1.2 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**
