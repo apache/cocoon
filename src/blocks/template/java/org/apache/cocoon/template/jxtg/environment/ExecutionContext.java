@@ -19,19 +19,16 @@ import java.util.Map;
 
 import org.apache.cocoon.template.jxtg.expression.MyJexlContext;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Variables;
 
 public class ExecutionContext {
     private MyJexlContext jexlContext;
     private JXPathContext jxpathContext;
-    private Variables variables;
     private Map definitions;
 
     public ExecutionContext(MyJexlContext jexlContext,
-            JXPathContext jxpathContext, Variables variables, Map definitions) {
+            JXPathContext jxpathContext, Map definitions) {
         this.jexlContext = jexlContext;
         this.jxpathContext = jxpathContext;
-        this.variables = variables;
         this.definitions = definitions;
     }
 
@@ -43,17 +40,12 @@ public class ExecutionContext {
         return this.jxpathContext;
     }
 
-    public Variables getVariables() {
-        return this.variables;
-    }
-
     public Map getDefinitions() {
         return this.definitions;
     }
 
     public ExecutionContext getChildContext(MyJexlContext jexlContext,
             JXPathContext jxpathContext) {
-        return new ExecutionContext(jexlContext, jxpathContext, this.variables,
-                this.definitions);
+        return new ExecutionContext(jexlContext, jxpathContext, this.definitions);
     }
 }

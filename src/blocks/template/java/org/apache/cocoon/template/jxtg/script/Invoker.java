@@ -24,7 +24,6 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
 import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
-import org.apache.cocoon.template.jxtg.environment.JSIntrospector;
 import org.apache.cocoon.template.jxtg.environment.LocatorFacade;
 import org.apache.cocoon.template.jxtg.environment.MyVariables;
 import org.apache.cocoon.template.jxtg.environment.ValueHelper;
@@ -38,17 +37,12 @@ import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.util.Introspector;
-import org.apache.commons.jexl.util.introspection.Info;
-import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathContextFactory;
 import org.apache.commons.jxpath.Pointer;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
-import org.mozilla.javascript.NativeArray;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
@@ -61,34 +55,6 @@ public class Invoker {
     private static final JXPathContextFactory jxpathContextFactory = JXPathContextFactory
             .newInstance();
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
-
-    private static final Iterator EMPTY_ITER = new Iterator() {
-        public boolean hasNext() {
-            return false;
-        }
-
-        public Object next() {
-            return null;
-        }
-
-        public void remove() {
-            // EMPTY
-        }
-    };
-
-    private static final Iterator NULL_ITER = new Iterator() {
-        public boolean hasNext() {
-            return true;
-        }
-
-        public Object next() {
-            return null;
-        }
-
-        public void remove() {
-            // EMPTY
-        }
-    };
 
     public static void execute(final XMLConsumer consumer,
             ExecutionContext executionContext, StartElement macroCall,
@@ -196,63 +162,14 @@ public class Invoker {
                 }
             } else if (ev instanceof StartForEach) {
                 StartForEach startForEach = (StartForEach) ev;
-                final Object items = startForEach.getItems();
+                final JXTExpression items = startForEach.getItems();
                 Iterator iter = null;
                 int begin, end, step;
                 String var, varStatus;
                 try {
-                    if (items != null) {
-                        JXTExpression expr = (JXTExpression) items;
-                        if (expr.getCompiledExpression() instanceof CompiledExpression) {
-                            CompiledExpression compiledExpression = (CompiledExpression) expr
-                                    .getCompiledExpression();
-                            Object val = compiledExpression.getPointer(
-                                    jxpathContext, expr.getRaw()).getNode();
-                            // FIXME: workaround for JXPath bug
-                            iter = val instanceof NativeArray ? new JSIntrospector.NativeArrayIterator(
-                                    (NativeArray) val)
-                                    : compiledExpression
-                                            .iteratePointers(jxpathContext);
-                        } else if (expr.getCompiledExpression() instanceof Expression) {
-                            Expression e = (Expression) expr
-                                    .getCompiledExpression();
-                            Object result = e.evaluate(jexlContext);
-                            if (result != null) {
-                                iter = Introspector.getUberspect().getIterator(
-                                        result,
-                                        new Info(
-                                                ev.getLocation().getSystemId(),
-                                                ev.getLocation()
-                                                        .getLineNumber(), ev
-                                                        .getLocation()
-                                                        .getColumnNumber()));
-                            }
-                            if (iter == null) {
-                                iter = EMPTY_ITER;
-                            }
-                        } else {
-                            // literal value
-                            iter = new Iterator() {
-                                Object val = items;
-
-                                public boolean hasNext() {
-                                    return val != null;
-                                }
-
-                                public Object next() {
-                                    Object res = val;
-                                    val = null;
-                                    return res;
-                                }
-
-                                public void remove() {
-                                    // EMPTY
-                                }
-                            };
-                        }
-                    } else {
-                        iter = NULL_ITER;
-                    }
+                    iter = ValueHelper.getIterator(items,
+                                                   jexlContext, jxpathContext,
+                                                   ev.getLocation());
                     begin = startForEach.getBegin() == null ? 0 : ValueHelper
                             .getIntValue(startForEach.getBegin(), jexlContext,
                                     jxpathContext);
@@ -756,7 +673,7 @@ public class Invoker {
                                 .getSelect(), jexlContext, jxpathContext);
                         selectJXPath = jxpathContextFactory.newContext(null,
                                 obj);
-                        selectJXPath.setVariables(executionContext
+                        selectJXPath.setVariables(jxpathContext
                                 .getVariables());
                         selectJexl = new MyJexlContext(jexlContext);
                         JXTemplateGenerator.fillContext(obj, selectJexl);
