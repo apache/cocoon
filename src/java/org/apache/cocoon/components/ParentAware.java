@@ -59,9 +59,10 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * This is for example used for selectors.
  * Note: For the current implementation to work, the parent aware 
  * component and the parent have to be both ThreadSafe!
+ * @deprecated
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ParentAware.java,v 1.1 2003/06/18 11:06:31 cziegeler Exp $
+ * @version CVS $Id: ParentAware.java,v 1.2 2004/01/10 14:20:03 cziegeler Exp $
  */
 public interface ParentAware
     extends ThreadSafe {
