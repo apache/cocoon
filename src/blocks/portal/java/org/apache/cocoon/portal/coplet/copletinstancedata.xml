@@ -37,6 +37,16 @@
 		</field>
 	</class>
 
+	<class name="org.exolab.castor.mapping.MapItem">
+		<field name="key" type="java.lang.String">
+			<bind-xml name="name"/>
+		</field>
+
+		<field name="value">
+			<bind-xml name="value"/>
+		</field>
+	</class>
+
 	<class name="org.apache.cocoon.portal.util.MapItem">
 		<field name="key" type="java.lang.String">
 			<bind-xml name="name"/>
