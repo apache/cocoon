@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Vector;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.RequestDispatcher;
@@ -20,10 +21,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
+
 /**
  *
  * Implements the {@link javax.servlet.http.HttpServletRequest} interface
- * to provide request information for HTTP servlets. 
+ * to provide request information for HTTP servlets.
  */
 
 public class HttpRequest implements HttpServletRequest {
@@ -45,24 +48,50 @@ public class HttpRequest implements HttpServletRequest {
 
     /* The HttpServletRequest interface methods */
 
+    public Object get(String name) {
+        if (this.req instanceof MaybeUploadRequestWrapper) {
+            return ((MaybeUploadRequestWrapper) this.req).get(name);
+        } else {
+            String[] values = this.getParameterValues(name);
+
+            if (values == null) return null;
+
+            if (values.length == 1) {
+                return values[0];
+            }
+
+            if (values.length > 1) {
+                Vector vect = new Vector(values.length);
+
+                for (int i = 0; i < values.length; i++) {
+                    vect.add(values[i]);
+                }
+
+                return vect;
+            }
+        }
+
+        return null;
+    }
+
     public String getAuthType() {
         return this.req.getAuthType();
     }
 
     public Cookie[] getCookies() {
         return this.req.getCookies();
-    }    
+    }
 
     public long getDateHeader(String name) {
         return this.req.getDateHeader(name);
     }
 
     public String getHeader(String name) {
-        return this.req.getHeader(name); 
+        return this.req.getHeader(name);
     }
 
     public Enumeration getHeaders(String name) {
-        return this.req.getHeaders(name); 
+        return this.req.getHeaders(name);
     }
 
     public Enumeration getHeaderNames() {
@@ -76,7 +105,7 @@ public class HttpRequest implements HttpServletRequest {
     public String getMethod() {
         return this.req.getMethod();
     }
-     
+
     public String getPathInfo() {
         return this.req.getPathInfo();
     }
@@ -132,7 +161,7 @@ public class HttpRequest implements HttpServletRequest {
     public boolean isRequestedSessionIdFromCookie()  {
         return this.req.isRequestedSessionIdFromCookie();
     }
-    
+
     public boolean isRequestedSessionIdFromURL() {
         return this.req.isRequestedSessionIdFromURL();
     }
@@ -169,13 +198,13 @@ public class HttpRequest implements HttpServletRequest {
     }
 
     public ServletInputStream getInputStream() throws IOException {
-        return this.req.getInputStream(); 
+        return this.req.getInputStream();
     }
 
     public String getParameter(String name) {
         return this.req.getParameter(name);
     }
-     
+
     public Enumeration getParameterNames() {
         return this.req.getParameterNames();
     }
@@ -183,7 +212,7 @@ public class HttpRequest implements HttpServletRequest {
     public String[] getParameterValues(String name) {
         return this.req.getParameterValues(name);
     }
-    
+
     public String getProtocol() {
         return this.req.getProtocol();
     }
@@ -203,7 +232,7 @@ public class HttpRequest implements HttpServletRequest {
     public BufferedReader getReader() throws IOException {
         return this.req.getReader();
     }
-    
+
     public String getRemoteAddr() {
         return this.req.getRemoteAddr();
     }

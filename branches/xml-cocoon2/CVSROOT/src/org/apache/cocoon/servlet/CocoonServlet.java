@@ -52,6 +52,8 @@ import org.apache.log.Category;
 import org.apache.log.output.FileOutputLogTarget;
 import org.apache.log.LogTarget;
 
+import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
+
 /**
  * This is the entry point for Cocoon execution as an HTTP Servlet.
  *
@@ -60,7 +62,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.64 $ $Date: 2001-02-22 13:34:34 $
+ * @version CVS $Revision: 1.1.4.65 $ $Date: 2001-02-22 14:03:48 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -75,6 +77,10 @@ public class CocoonServlet extends HttpServlet {
     protected Cocoon cocoon;
     protected Exception exception;
     protected DefaultContext appContext = new DefaultContext();
+
+    private static final boolean ALLOW_OVERWRITE = false;
+    private static final boolean SILENTLY_RENAME = true;
+    private File uploadDir;
 
     /**
      * Initialize this <code>CocoonServlet</code> instance.  You will
@@ -106,8 +112,10 @@ public class CocoonServlet extends HttpServlet {
 
         this.forceLoad(conf.getInitParameter("load-class"));
 
-        this.appContext.put(Constants.CONTEXT_WORK_DIR,
-                context.getAttribute("javax.servlet.context.tempdir"));
+        File workDir = (File) context.getAttribute("javax.servlet.context.tempdir");
+        this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
+        this.uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
+        this.uploadDir.mkdirs();
 
         this.appContext.put(Constants.CONTEXT_CONFIG_URL,
                 this.getConfigFile(conf.getInitParameter("configurations"), context));
@@ -236,6 +244,29 @@ public class CocoonServlet extends HttpServlet {
         }
     }
 
+    private HttpServletRequest getServletRequest(HttpServletRequest request) {
+        HttpServletRequest req = request;
+        String contentType = req.getContentType();
+
+        if (contentType == null) {
+            contentType = "application/x-www-form-urlencoded";
+        }
+
+        if (contentType.startsWith("multipart/form-data")) {
+            try {
+                req = new MaybeUploadRequestWrapper(request,
+                                                    this.uploadDir,
+                                                    CocoonServlet.ALLOW_OVERWRITE,
+                                                    CocoonServlet.SILENTLY_RENAME);
+            } catch (Exception e) {
+                log.warn("Could not create MaybeUploadRequestWrapper", e);
+                req = request;
+            }
+        }
+
+        return req;
+    }
+
     /**
      * Handle the "force-load" parameter.  This overcomes limits in
      * many classpath issues.  One of the more notorious ones is a
@@ -278,8 +309,9 @@ public class CocoonServlet extends HttpServlet {
 
         // This is more scalable
         long start = new Date().getTime();
+        HttpServletRequest request = this.getServletRequest(req);
 
-        Cocoon cocoon = getCocoon(req.getPathInfo(), req.getParameter(Constants.RELOAD_PARAM));
+        Cocoon cocoon = getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
 
         // Check if cocoon was initialized
         if (this.cocoon == null) {
@@ -291,16 +323,16 @@ public class CocoonServlet extends HttpServlet {
             n.setSource("Cocoon servlet");
             n.setMessage("Internal servlet error");
             n.setDescription("Cocoon was not initialized.");
-            n.addExtraDescription("request-uri", req.getRequestURI());
-            Notifier.notify(n, req, res);
+            n.addExtraDescription("request-uri", request.getRequestURI());
+            Notifier.notify(n, request, res);
 
             return;
         }
 
         // We got it... Process the request
-        String uri = req.getServletPath();
+        String uri = request.getServletPath();
         if (uri == null) uri = "";
-        String pathInfo = req.getPathInfo();
+        String pathInfo = request.getPathInfo();
         if (pathInfo != null) uri += pathInfo;
 
         if (uri.length() == 0) {
@@ -310,7 +342,7 @@ public class CocoonServlet extends HttpServlet {
                     "".charAt(0)
                else process URI normally
             */
-            String prefix = req.getRequestURI();
+            String prefix = request.getRequestURI();
 
             if (prefix == null) prefix = "";
 
@@ -323,7 +355,7 @@ public class CocoonServlet extends HttpServlet {
                 uri = uri.substring(1);
             }
 
-            Environment env = this.getEnvironment(uri, req, res);
+            Environment env = this.getEnvironment(uri, request, res);
 
             if (!this.cocoon.process(env)) {
 
@@ -337,11 +369,11 @@ public class CocoonServlet extends HttpServlet {
                 n.setSource("Cocoon servlet");
                 n.setMessage("Resource not found");
                 n.setDescription("The requested URI \""
-                                 + req.getRequestURI()
+                                 + request.getRequestURI()
                                  + "\" was not found.");
-                n.addExtraDescription("request-uri", req.getRequestURI());
+                n.addExtraDescription("request-uri", request.getRequestURI());
                 n.addExtraDescription("path-info", uri);
-                Notifier.notify(n, req, res);
+                Notifier.notify(n, request, res);
             }
         } catch (ResourceNotFoundException rse) {
             log.warn("The resource was not found", rse);
@@ -353,11 +385,11 @@ public class CocoonServlet extends HttpServlet {
             n.setSource("Cocoon servlet");
             n.setMessage("Resource not found");
             n.setDescription("The requested URI \""
-                             + req.getRequestURI()
+                             + request.getRequestURI()
                              + "\" was not found.");
-            n.addExtraDescription("request-uri", req.getRequestURI());
+            n.addExtraDescription("request-uri", request.getRequestURI());
             n.addExtraDescription("path-info", uri);
-            Notifier.notify(n, req, res);
+            Notifier.notify(n, request, res);
         } catch (Exception e) {
             log.error("Problem with servlet", e);
             //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);
@@ -365,9 +397,9 @@ public class CocoonServlet extends HttpServlet {
             n.setType("internal-server-error");
             n.setTitle("Internal server error");
             n.setSource("Cocoon servlet");
-            n.addExtraDescription("request-uri", req.getRequestURI());
+            n.addExtraDescription("request-uri", request.getRequestURI());
             n.addExtraDescription("path-info", uri);
-            Notifier.notify(n, req, res);
+            Notifier.notify(n, request, res);
         }
 
         ServletOutputStream out = res.getOutputStream();
@@ -376,7 +408,7 @@ public class CocoonServlet extends HttpServlet {
         String timeString = processTime(end - start);
         log.info("'" + uri + "' " + timeString);
 
-        String showTime = req.getParameter(Constants.SHOWTIME_PARAM);
+        String showTime = request.getParameter(Constants.SHOWTIME_PARAM);
 
         if ((showTime != null) && !showTime.equalsIgnoreCase("no")) {
             boolean hide = showTime.equalsIgnoreCase("hide");
