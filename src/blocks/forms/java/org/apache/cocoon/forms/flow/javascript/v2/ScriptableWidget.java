@@ -492,7 +492,7 @@ public class ScriptableWidget extends ScriptableObject {
         return delegate.getRequestParameterName();
     }
 
-    public Scriptable jsFunction_getParent() {
+    public Object jsFunction_getParent() {
         if (delegate != null) {
             return wrap(delegate.getParent());
         }
