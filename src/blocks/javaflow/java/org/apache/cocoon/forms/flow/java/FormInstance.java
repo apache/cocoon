@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.8 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: FormInstance.java,v 1.9 2004/05/01 00:05:44 joerg Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
@@ -163,8 +163,8 @@ public class FormInstance extends AbstractContinuable {
      * - "isValid" : true if the form was sucessfully validated
      * - "submitId" : the id of the widget that triggered the form submit (can be null)
      *
-     * @parameter uri the page uri (like in cocoon.sendPageAndWait())
-     * @parameter bizdata some business data for the view (like in cocoon.sendPageAndWait()).
+     * @param uri the page uri (like in cocoon.sendPageAndWait())
+     * @param bizData some business data for the view (like in cocoon.sendPageAndWait()).
      *            The "{FormsPipelineConfig.CFORMSKEY}" and "locale" properties are added to this object.
      */
     public void show(String uri, Object bizData) {
@@ -209,18 +209,18 @@ public class FormInstance extends AbstractContinuable {
         
         } while(!finished);
     }
-
+    /*
     /**
      * Manages the display of a form and its validation.
-     * @parameter uri the page uri (like in cocoon.sendPageAndWait())
-     * @parameter fun optional function which will be executed after pipeline
+     * @param uri the page uri (like in cocoon.sendPageAndWait())
+     * @param fun optional function which will be executed after pipeline
      *  processing. Useful for releasing resources needed during pipeline
      *  processing but which should not become part of the continuation
-     * @parameter ttl Time to live (in milliseconds) for the continuation
+     * @param ttl Time to live (in milliseconds) for the continuation
      *  created
-     * @returns The web continuation associated with submitting this form
-     */
-/*    public showForm(String uri, Object fun, ttl) {
+     * @return The web continuation associated with submitting this form
+     *
+    public showForm(String uri, Object fun, ttl) {
         if (!this.getBookmark()) {
             this.setBookmark();
         }

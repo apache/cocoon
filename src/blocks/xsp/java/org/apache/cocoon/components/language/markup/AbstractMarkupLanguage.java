@@ -58,7 +58,7 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: AbstractMarkupLanguage.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id: AbstractMarkupLanguage.java,v 1.2 2004/05/01 00:05:44 joerg Exp $
  */
 public abstract class AbstractMarkupLanguage
         extends AbstractLogEnabled
@@ -294,7 +294,9 @@ public abstract class AbstractMarkupLanguage
      * tested for change on each invocation; this information is used to assert whether regeneration is necessary.
      *
      * @param location The file path of the dependent file
-     * @see AbstractMarkupLanguage, ServerPagesGenerator, AbstractServerPage
+     * @see AbstractMarkupLanguage
+     * @see org.apache.cocoon.generation.ServerPagesGenerator
+     * @see org.apache.cocoon.generation.AbstractServerPage
      */
     protected abstract void addDependency(String location);
 

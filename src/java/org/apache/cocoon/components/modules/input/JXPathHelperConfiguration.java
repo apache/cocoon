@@ -19,7 +19,7 @@ import org.apache.commons.jxpath.FunctionLibrary;
 
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: JXPathHelperConfiguration.java,v 1.2 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id: JXPathHelperConfiguration.java,v 1.3 2004/05/01 00:05:45 joerg Exp $
  */
 public class JXPathHelperConfiguration {
 
@@ -45,16 +45,10 @@ public class JXPathHelperConfiguration {
         this.lenient = lenient;
     }
 
-    /**
-     * @return
-     */
     public boolean isLenient() {
         return lenient;
     }
 
-    /**
-     * @return
-     */
     public FunctionLibrary getLibrary() {
         return library;
     }

@@ -24,12 +24,12 @@ import java.util.NoSuchElementException;
  * Provides access to the JSR-168 (Portlet) environment session.
  *
  * Portlet scope and application scope session attributes are differentiated
- * using attribute name prefix, {@see PortletEnvironment#SESSION_APPLICATION_SCOPE}.
+ * using attribute name prefix, {@link PortletEnvironment#SESSION_APPLICATION_SCOPE}.
  *
  * @see javax.portlet.PortletSession
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletSession.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id: PortletSession.java,v 1.3 2004/05/01 00:05:44 joerg Exp $
  */
 public final class PortletSession implements Session {
 

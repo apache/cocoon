@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
 /**
  * A general-purpose abstract Widget which can hold zero or more widgets.
  *
- * @version $Id: AbstractContainerWidget.java,v 1.10 2004/04/30 08:37:45 bruno Exp $
+ * @version $Id: AbstractContainerWidget.java,v 1.11 2004/05/01 00:05:44 joerg Exp $
  */
 public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
     
@@ -100,7 +100,7 @@ public abstract class AbstractContainerWidget extends AbstractWidget implements 
      * Subclass container widgets can call this super.generateItemSaxFragment(..) 
      * to just insert the child-widget content wrapped in a @lt;fi:widgets@gt; 
      * 
-     * @param contentHandler where the SAX is sent to via {@link Widget#generateSaxFragment(ContentHandler, Locale)
+     * @param contentHandler where the SAX is sent to via {@link Widget#generateSaxFragment(ContentHandler, Locale)}
      * @param locale
      * @throws SAXException
      */

@@ -34,7 +34,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletEnvironment.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id: PortletEnvironment.java,v 1.3 2004/05/01 00:05:44 joerg Exp $
  */
 public class PortletEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -202,7 +202,7 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
     }
 
     /**
-     * In portlet environment this is the same as {@see #redirect(boolean, String)}
+     * In portlet environment this is the same as {@link #redirect(boolean, String)}
      */
     public void permanentRedirect(boolean sessionmode, String newURL) throws IOException {
         redirect(sessionmode, newURL);

@@ -49,7 +49,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
      * This unwraps the value from the model by removing the 2 prefix and suffix-chars 
      * before setting it onto the model
      * 
-     * Method signature and semantics complies to {@see AbstractCustomBinding#doLoad(Widget, JXPathContext)}
+     * Method signature and semantics complies to {@link AbstractCustomBinding#doLoad(Widget, JXPathContext)}
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         String appValue = (String)jxpc.getValue(".");
@@ -67,7 +67,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
      * This wraps the value from the form between 2 prefix and suffix-chars 
      * before saving to the model 
      * 
-     * Method signature and semantics complies to {@see AbstractCustomBinding#doSave(Widget, JXPathContext)}
+     * Method signature and semantics complies to {@link AbstractCustomBinding#doSave(Widget, JXPathContext)}
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Object formValue = frmModel.getValue();       
@@ -78,7 +78,7 @@ public class CustomValueWrapBinding extends AbstractCustomBinding {
     /** 
      * Builds the actual binding class based on its XML config.
      * 
-     * @param config the {@see Element} holding the config for the binding to create.
+     * @param config the {@link Element} holding the config for the binding to create.
      * @return the configured binding
      * @throws BindingException when the creation fails
      */
