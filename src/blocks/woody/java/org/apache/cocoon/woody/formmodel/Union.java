@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * with the desired case id.
  *
  * @author Timothy Larson
- * @version $Id: Union.java,v 1.6 2004/03/09 13:53:56 reinhard Exp $
+ * @version $Id: Union.java,v 1.7 2004/04/14 09:26:40 sylvain Exp $
  */
 public class Union extends AbstractContainerWidget {
     private static final String ELEMENT = "field";
@@ -62,18 +62,16 @@ public class Union extends AbstractContainerWidget {
         return ELEMENT;
     }
 
-    public Object getOldValue() {
-        return ((Field)caseWidget).getOldValue();
-    }
-
     public Object getValue() {
         return caseWidget.getValue();
     }
 
     public void readFromRequest(FormContext formContext) {
+        // Ensure the case widgets got its value
+        caseWidget.readFromRequest(formContext);
         Widget widget;
         // Read current case from request
-        String value = (String)getOldValue();
+        String value = (String)getValue();
         if (value != null && !value.equals(""))
             if ((widget = getWidget(value)) != null)
                 widget.readFromRequest(formContext);
@@ -87,7 +85,7 @@ public class Union extends AbstractContainerWidget {
         Widget widget;
         boolean valid = true;
         // Read current case from request
-        String value = (String)getOldValue();
+        String value = (String)getValue();
         if (value != null && !value.equals(""))
             if ((widget = getWidget(value)) != null)
                 valid = valid & widget.validate(formContext);
