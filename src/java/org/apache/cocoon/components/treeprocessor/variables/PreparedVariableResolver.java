@@ -35,7 +35,7 @@ import java.util.Stack;
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.5 2004/04/03 20:41:26 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.6 2004/04/03 20:57:08 upayavira Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
@@ -60,8 +60,6 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static Token COLON_TOKEN = new Token(COLON);
     private static Token OPEN_TOKEN = new Token(OPEN);
     private static Token CLOSE_TOKEN = new Token(CLOSE);    
-
-//  @TODO Allow escaping braces.
 
     public PreparedVariableResolver(String expr, ComponentManager manager) throws PatternException {
         
