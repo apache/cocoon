@@ -1,19 +1,4 @@
 /*
-* Copyright 1999-2004 The Apache Software Foundation
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
-/*
  * I wish I was a digital artist, but, in fact, I'm not.
  *
  * Great designers create, poor designers blatantly copy, so/so designers, well, 
@@ -61,7 +46,7 @@
 body {
     margin: 0px;
     padding: 0px;
-    font-family: "georgia", "times", "times new roman", serif;
+	font-family: "georgia", "times", "times new roman", serif;
     color: #222;
     background-color: #fff;
     font-size: 12px;
@@ -94,8 +79,8 @@ h1 {
     font-size: 28px;
     text-transform: uppercase;
     letter-spacing: 0.25em;
-    padding: 20px 0px 20px 0px;
-    margin: 0px 0px 0px 0px;
+    padding: 5px 0px 20px 0px;
+    margin: 5px 0px 0px 0px;
     color: #000;
     font-weight: normal;
 }
@@ -108,12 +93,27 @@ h2 {
     color: #666;
     font-weight: normal;
     padding: 0px 0px 0px 0px;
-    margin: -20px 0px 20px 0px; 
+    margin: -20px 0px 30px 0px; 
+}
+
+h3 {
+	padding: 0px 0px 6px 0px;
+	margin: 30px 0px 30px 0px;
+}
+
+h3 .separator {
+	margin: 0px 10px 0px 10px;
+	color: #bbb;
 }
 
 p { 
 	padding: 1px; 
 	margin: 5px 0px 5px 0px; 
+}
+
+div.separator {
+	text-align: center;
+	margin: 15px 0px 15px 0px;
 }
       
 blockquote { 
@@ -199,8 +199,16 @@ input[type="submit"] {
 /* ----------------------------- Footer ---------------------------- */
 
 #footer {
-	margin: 10px 20px 20px 220px;
+	margin: 30px 20px 20px 220px;
 	text-align: center;
+}
+
+/* ----------------------------- Path ---------------------------- */
+
+#path {
+	margin: 10px 20px 10px 220px;
+	padding: 0px;
+	text-align: left;
 }
 	
 /* ----------------------------- Page ---------------------------- */
@@ -210,6 +218,11 @@ input[type="submit"] {
 }
 
 /* ----------------------------- News ---------------------------- */
+
+.news {
+	padding: 3px 0px 3px 0px;
+	margin: 10px 0px 10px 0px;
+}
 
 .news a {
 	text-decoration: none;
@@ -248,8 +261,9 @@ input[type="submit"] {
     text-transform: none;
     color: #333;
     font-weight: bold;
-    padding: 10px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
 }
 
 .news h1 img {
@@ -263,27 +277,32 @@ input[type="submit"] {
     font-size: 10px;
     color: #666;
     font-weight:normal;
-    padding: 2px 0px 5px 0px;
-    margin: 0px 0px 0px 0px;
+    padding-top: 2px;
+    margin: 0px;
+    border: 0px;
 }
 
-.news[online=''] {
-	background-color: #eee;
-}
-
-.news div.info {
+.news .info {
     font-family: "verdana", "helvetica", "arial", sans-serif;
     font-size: 10px;
-    margin-top: 10px;
 }
 
-.news div.separator {
+.news .separator {
 	text-align: center;
-	margin-top: 10px;
-	margin-bottom: 20px;
+	margin: 10px 0px 10px 0px;
+}
+
+.template {
+	background-color: #eee;
+	border: 1px dashed #ccc;
+	padding-left: 5px;
 }
 
 /* ----------------------------- Body ---------------------------- */
+
+.body {
+	margin: 10px 0px 10px 0px;
+}
 
 .body h1, .body h2, .body h3, .body h4 {
 	font-family: "georgia", "times", "times new roman", serif;
@@ -328,19 +347,18 @@ input[type="submit"] {
 	font-style: italic;
 }
 
-.body .first:first-letter {
-	position: relative;
-	top: -4px;
+.body .first { 
+	text-transform: uppercase 
+}
+ 
+.body .firstletter {
 	font-size: 38px;
-	padding-right: 6px; 
+	line-height: 30px;
     font-weight: normal; 
-    color: #000;    
+    color: #111;    
 	text-transform: uppercase;
 	float: left;
-}
-
-.body .first:first-line { 
-	text-transform: uppercase 
+	margin: 0px 5px 0px 0px;
 }
 
 .body img.floating-left {
@@ -354,13 +372,15 @@ input[type="submit"] {
 }
 
 .body blockquote {
-	margin: 10px 35px 10px 35px;
+	margin: 10px 20px 10px 20px;
 	padding: 5px;
 }
 	
 .body blockquote.quote {
 	text-align: justify;
 	font-style: italic;
+	border: 1px solid #ddd;
+	background-color: #eee;
 }
 
 .body blockquote.code {
@@ -388,8 +408,8 @@ input[type="submit"] {
 }
 
 .body ul, .body ol {
-	margin: 5px 35px 5px 35px;
-	padding: 5px;
+	margin: 10px 35px 10px 35px;
+	padding: 0px;
 	counter-reset: item;
 }
 
@@ -399,9 +419,8 @@ input[type="submit"] {
 }
 
 .body li {
-	padding: 1px; 
-	font-size: 12px;
-    line-height: 16px;
+	margin: 0px;
+	padding: 0px; 
 }
 
 .body strong {

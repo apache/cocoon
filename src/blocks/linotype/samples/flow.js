@@ -1,35 +1,22 @@
-/*
-* Copyright 1999-2004 The Apache Software Foundation
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-*     http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
 var repo = new Packages.org.apache.cocoon.components.Repository.getInstance();
 
 var users;
 var home;
+var base;
 var userid = "";
 var username = "";
 
 /*
  * Main entry point for the flow. This is where user authorization takes place.
  */
-function main() {
-    var action = cocoon.parameters["action"];
-    home = cocoon.parameters["home"];
-    var args = new Array(3);
-    args[0] = cocoon.parameters["id"];
-    args[1] = cocoon.parameters["type"];
-    args[2] = cocoon.parameters["subpage"];
+function main(action,root,baseURL) {
+ 	home = root + "/";
+  	base = baseURL;
+
+    var args = new Array(arguments.length - 3);
+    for (var i = 3; i < arguments.length; i++) {
+        args[i-3] = arguments[i];
+    }            
 
     if ((userid == undefined) || (userid == "")) {
         login(action, args);
@@ -39,7 +26,7 @@ function main() {
 }
 
 /*
- * If the user is not yet authorized, then authentication takes place
+ * If the user is not yet authorized, than authentication takes place
  */
 function login(action, args) {
     var name = "";
@@ -48,7 +35,7 @@ function login(action, args) {
     var passError = "";
 
     while (true) {
-        cocoon.sendPageAndWait("screen/login", { username : name, userError : userError, passError : passError});
+        cocoon.sendPageAndWait("screen/login", { base : base, username : name, userError : userError, passError : passError});
 
         name = cocoon.request.getParameter("username");
         password = cocoon.request.getParameter("password");
@@ -72,8 +59,6 @@ function login(action, args) {
             passError = "";
         }
     }
-        
-    // cocoon.createSession();
 }
 
 /*
@@ -88,7 +73,7 @@ function invoke(action, args) {
     if (func != undefined) {
         func.apply(this,args);
     } else {
-        cocoon.sendPage("screen/" + action, {"user" : username});
+        cocoon.sendPage("screen/" + action, { base : base, user : username});
     }
 }
 
@@ -100,7 +85,7 @@ function invoke(action, args) {
  */
 function logout() {
     userid = "";
-    cocoon.sendPage("screen/logout");
+    cocoon.sendPage("screen/logout", { base : base });
 }
    
 /*
@@ -108,9 +93,9 @@ function logout() {
  */
 function edit(id,type,subpage) {
     var repository = home + "repository/" + type + "/";
-    
+
     if (id == "template") {
-        id = repo.getID(repository);
+        id += "-" + getID(repository);
         repo.copy(repository + "template", repository + id);
         cocoon.redirectTo("../" + id + "/");
     } else if ((subpage != undefined) && (subpage != "")) {
@@ -135,10 +120,20 @@ function edit(id,type,subpage) {
                 repo.revertFrom(document,version);
             } else {
                 var output = repo.getOutputStream(document);
-                cocoon.processPipelineTo("/samples/blocks/linotype/action/save-" + type,{},output);
+                cocoon.processPipelineTo("action/save-" + type,{},output);
                 output.close();
                 repo.fomSave(cocoon, document);
-                if (action == "finish") break;
+                if (action == "finish") {
+                	break;
+                }
+                if (action == "publish") {
+                	if (id.indexOf("template-") > -1) {
+                		var realID = id.substring(id.indexOf("-") + 1);
+			        	repo.copy(document, repository + realID);
+			        	repo.remove(document);
+			        }
+                	break;
+                }
             }                   
         }
 
@@ -146,3 +141,21 @@ function edit(id,type,subpage) {
     }
 }
 
+function getID(repository) {
+
+	var dirs = new java.io.File(repository).listFiles();
+	var id = 0;
+
+	for (i = 0; i < dirs.length; i++) {
+		if (dirs[i].isDirectory()) {
+			var name = dirs[i].getName();
+            if (name.indexOf("template-") > -1) {
+            	name = name.substring(name.indexOf("-") + 1);
+            }
+			var localid = parseInt(name);
+			if (localid > id) id = localid;
+		}
+	}
+	
+	return ++id;
+}

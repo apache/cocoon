@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright 1999-2004 The Apache Software Foundation
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
     
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -55,13 +40,13 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <!-- Xalan -->
-      <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+      <!--transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory-->
       <!-- XSLTC -->
       <!--transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory-->
       <!-- Old (6.5.2) Saxon: -->
       <!--transformer-factory>com.icl.saxon.TransformerFactoryImpl</transformer-factory-->
       <!--  New (7.x?) Saxon: --> 
-      <!--transformer-factory>net.sf.saxon.TransformerFactoryImpl</transformer-factory-->
+      <transformer-factory>net.sf.saxon.TransformerFactoryImpl</transformer-factory>
     </map:transformer>
     <map:transformer name="cinclude" 
       src="org.apache.cocoon.transformation.CIncludeTransformer"
@@ -126,6 +111,7 @@
   </map:matchers>
 
   <map:selectors default="exception">
+   <map:selector name="parameter" src="org.apache.cocoon.selection.ParameterSelector"/>
    <map:selector name="exception" logger="sitemap.selector.exception" src="org.apache.cocoon.selection.ExceptionSelector">
      <exception name="not-found" class="org.apache.cocoon.ResourceNotFoundException"/>
      <exception class="java.lang.Throwable" unroll="true"/>
@@ -138,6 +124,9 @@
      <autoCachingPoint>On</autoCachingPoint>
    </map:pipe>
    <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
+   <!--map:pipe name="event-aware" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
+     <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
+   </map:pipe-->
   </map:pipes>
 
  </map:components>
@@ -171,14 +160,14 @@
 
   <map:component-configurations>
     <global-variables>
-      <home>/samples/blocks/linotype/</home>
+      <home>/~stefano/linotype</home>
       <count>3</count>
     </global-variables>
   </map:component-configurations>
 
 <!-- ============================ Flow Hooks =============================== -->
 
-  <map:pipeline>
+  <map:pipeline type="noncaching">
   
      <map:match pattern="**/*.kont">
       <map:call continuation="{2}"/>
@@ -190,23 +179,33 @@
 
   <map:pipeline>
 
-    <map:match pattern="news">
-     <map:generate src="cocoon:/news.xml"/>
+    <map:match pattern="news.html">
+     <map:generate src="cocoon:/news[{global:count}].public.xml"/>
      <map:transform src="stylesheets/news2html-homepage.xslt">
-       <map:parameter name="home" value="{request:contextPath}{global:home}"/>
-       <map:parameter name="count" value="3"/>
+       <map:parameter name="home" value="{global:home}"/>
      </map:transform>
      <map:serialize/>
     </map:match>
     	
-    <map:match pattern="news.xml">
+    <map:match pattern="news[*].*.xml">
      <map:generate type="directory" src="repository/news/">
       <map:parameter name="sort" value="lastmodified"/>
       <map:parameter name="reverse" value="true"/>
      </map:generate>
-     <map:transform src="stylesheets/directory2cinclude.xslt">
-      <map:parameter name="prefix" value="news"/>
-     </map:transform>
+     <map:select type="parameter">
+       <map:parameter name="parameter-selector-test" value="{2}"/>
+       <map:when test="private">
+        <map:transform src="stylesheets/private-directory2cinclude.xslt">
+         <map:parameter name="prefix" value="news"/>
+        </map:transform>
+       </map:when>
+       <map:otherwise>
+        <map:transform src="stylesheets/public-directory2cinclude.xslt">
+         <map:parameter name="prefix" value="news"/>
+         <map:parameter name="count" value="{1}"/>
+        </map:transform>
+       </map:otherwise>
+     </map:select>     
      <map:transform type="cinclude"/>
      <map:serialize type="xml"/>
     </map:match>
@@ -219,7 +218,8 @@
     <map:match pattern="edit/news/*/">
      <map:generate src="cocoon:/news/{1}.xml"/>
      <map:transform src="stylesheets/news2edit.xslt">
-      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
+      <map:parameter name="home" value="{global:home}"/>
+      <map:parameter name="id" value="{1}"/>
      </map:transform>
      <map:transform type="jx"/>
      <map:serialize/>
@@ -228,7 +228,7 @@
     <map:match pattern="edit/news/*/content">
      <map:generate src="cocoon:/news/{1}.xml"/>
      <map:transform src="stylesheets/news2html-content.xslt">
-      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
+      <map:parameter name="home" value="{global:home}"/>
      </map:transform>
      <map:serialize/>
     </map:match>
@@ -246,9 +246,9 @@
     </map:match>
    
    <map:match pattern="screen/news">
-     <map:generate src="cocoon:/news.xml"/>
+     <map:generate src="cocoon:/news[].private.xml"/>
      <map:transform src="stylesheets/news2html-private.xslt">
-      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
+      <map:parameter name="home" value="{global:home}"/>
      </map:transform>
      <map:serialize/>
     </map:match>
@@ -277,9 +277,9 @@
     </map:match>
 
     <map:match pattern="history">
-     <map:generate src="cocoon:/news.xml"/>
+     <map:generate src="cocoon:/news[1000].public.xml"/>
      <map:transform src="stylesheets/news2html-history.xslt">
-      <map:parameter name="home" value="{request:contextPath}{global:home}"/>
+      <map:parameter name="home" value="{global:home}"/>
      </map:transform>
      <map:serialize/>
     </map:match>
@@ -291,31 +291,38 @@
     </map:match>
 
     <map:match pattern="rss/0.91/index.rss">
-     <map:generate src="cocoon:/news.xml"/>
+     <map:generate src="cocoon:/news[{global:count}].public.xml"/>
      <map:transform src="stylesheets/news2rss-0.91.xslt">
        <map:parameter name="home" value="{global:home}/news"/>
-       <map:parameter name="count" value="5"/>
-     </map:transform>
-     <map:serialize type="xml"/>
-    </map:match>
-
-    <map:match pattern="rss/2.0/index.rss">
-     <map:generate src="cocoon:/news.xml"/>
-     <map:transform src="stylesheets/news2rss-2.0.xslt">
-       <map:parameter name="home" value="{global:home}/news"/>
-       <map:parameter name="count" value="5"/>
      </map:transform>
      <map:serialize type="xml"/>
     </map:match>
     
+    <map:match pattern="rss/2.0/index.rss">
+     <map:generate src="cocoon:/news[{global:count}].public.xml"/>
+     <map:transform src="stylesheets/news2rss-2.0.xslt">
+       <map:parameter name="home" value="{global:home}/news"/>
+     </map:transform>
+     <map:serialize type="xml"/>
+    </map:match>
+
+    <map:match pattern="news/*/">
+      <map:generate src="cocoon://news/{1}.xml"/>
+      <map:transform src="stylesheets/news2html-single.xslt">
+       <map:parameter name="home" value="{global:home}"/>
+      </map:transform>
+      <map:serialize/>
+    </map:match>
+         
     <map:match pattern="private/">
       <map:redirect-to uri="news"/>
     </map:match>
 
     <map:match pattern="private/edit/news/*/*">
       <map:call function="main">
-        <map:parameter name="action" value="edit"/>
-        <map:parameter name="home" value="{realpath:/}{global:home}"/>
+        <map:parameter name="page" value="edit"/>
+        <map:parameter name="root" value="{realpath:/}"/>
+        <map:parameter name="base" value="{global:home}"/>
         <map:parameter name="id" value="{1}"/>
         <map:parameter name="type" value="news"/>
         <map:parameter name="subpage" value="{2}"/>
@@ -324,8 +331,9 @@
 
     <map:match pattern="private/**">
       <map:call function="main">
-        <map:parameter name="action" value="{1}"/>
-        <map:parameter name="home" value="{realpath:/}{global:home}"/>
+        <map:parameter name="page" value="{1}"/>
+        <map:parameter name="root" value="{realpath:/}"/>
+        <map:parameter name="base" value="{global:home}"/>
       </map:call>
     </map:match>
 
@@ -338,14 +346,6 @@
        <map:parameter name="width" value="{3}"/>
        <map:parameter name="height" value="{4}"/>
      </map:read>
-    </map:match>
-
-    <map:match pattern="news/*/">
-      <map:generate src="repository/news/{1}/document.xml"/>
-      <map:transform src="stylesheets/news2html-single.xslt">
-       <map:parameter name="home" value="{request:contextPath}{global:home}"/>
-      </map:transform>
-      <map:serialize/>
     </map:match>
                    
     <map:match pattern="images/**.*">
@@ -371,7 +371,7 @@
         <map:generate type="notifying"/>
         <map:transform src="stylesheets/system/error2html-debug.xslt">
          <map:parameter name="uri" value="{request:requestURI}"/>
-         <map:parameter name="home" value="{request:contextPath}{global:home}"/>
+         <map:parameter name="home" value="{global:home}"/>
         </map:transform>
       </map:otherwise>
     </map:select>

@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright 1999-2004 The Apache Software Foundation
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                               xmlns:n="http://www.betaversion.org/linotype/news/1.0">
@@ -28,6 +13,13 @@
     </head>
     <body>
 
+     <div id="page">
+      <h1>News List</h1>
+      <h2>where the juice is</h2>
+      <h3><a href="edit/news/template/">Write a news</a><span class="separator">|</span><a href="logout">Logout</a></h3>
+      <xsl:apply-templates select="//n:news"/>
+     </div>
+
      <div id="sidebar">
       <a href="{$home}/"><img alt="Linotype" src="{$home}/images/linotype.jpg" width="156px" height="207px" /></a>
      </div>
@@ -36,20 +28,21 @@
       <a href="http://cocoon.apache.org" title="Apache Cocoon"><img alt="Powered by Cocoon" src="{$home}/images/cocoon.jpg"/></a>
      </div>
 
-     <div id="page">
-      <h1>News List</h1>
-      <h2>where the juice is</h2>
-      <h3><a href="edit/news/template/">Write a news</a> | <a href="logout">Logout</a></h3>
-      <xsl:apply-templates select="//n:news"/>
-     </div>
-
     </body>
    </html>
   </xsl:template>
 
   <xsl:template match="n:news">
    <xsl:variable name="id" select="../@id"/>
-   <div class="news" online="{@online}">
+   <div>
+    <xsl:choose>
+     <xsl:when test="starts-with($id,'template-')">
+      <xsl:attribute name="class">news template</xsl:attribute>
+     </xsl:when>
+     <xsl:otherwise>
+      <xsl:attribute name="class">news</xsl:attribute>
+     </xsl:otherwise>
+    </xsl:choose>
     <h1><img src="{$home}/images/hand.jpg" alt=""/><a href="edit/news/{$id}/"><xsl:value-of select="n:title"/></a></h1>
     <h2><xsl:value-of select="@creation-date"/> ~ <xsl:value-of select="@creation-time"/></h2>
    </div>
