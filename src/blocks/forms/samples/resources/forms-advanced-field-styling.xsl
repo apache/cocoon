@@ -86,7 +86,7 @@
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="fi:values/fi:value/text()"/>
 
-    <span class="forms-doubleList" title="{fi:hint}">
+    <div class="forms-doubleList" title="{fi:hint}">
       <table>
         <xsl:if test="fi:styling/fi:available-label|fi:styling/fi:selected-label">
           <tr>
@@ -156,7 +156,7 @@
       <script type="text/javascript">
         var opt<xsl:value-of select="generate-id()"/> = forms_createOptionTransfer('<xsl:value-of select="@id"/>', <xsl:value-of select="fi:styling/@submit-on-change = 'true'"/>);
       </script>
-    </span>
+    </div>
   </xsl:template>
 
   <xsl:template match="fi:multivaluefield/fi:styling[@list-type='double-listbox']/@submit-on-change" mode="styling"/>
