@@ -63,7 +63,7 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.AbstractTransformer;
+import org.apache.cocoon.acting.AbstractTransformer;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 import org.apache.regexp.RE;
@@ -110,7 +110,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre></tt>
  *
  * @author <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
- * @version CVS $Id: EncodeURLTransformer.java,v 1.7 2003/12/06 21:22:07 cziegeler Exp $
+ * @version CVS $Id: EncodeURLTransformer.java,v 1.8 2003/12/08 10:17:01 cziegeler Exp $
  */
 public class EncodeURLTransformer
   extends AbstractTransformer
@@ -347,7 +347,7 @@ public class EncodeURLTransformer
      * </p>
      *
      * @author     <a href="mailto:bh22351@i-one.at">Bernhard Huber</a>
-     * @version    CVS $Id: EncodeURLTransformer.java,v 1.7 2003/12/06 21:22:07 cziegeler Exp $
+     * @version    CVS $Id: EncodeURLTransformer.java,v 1.8 2003/12/08 10:17:01 cziegeler Exp $
      */
     public class ElementAttributeMatching {
         /**

@@ -48,74 +48,33 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.sitemap;
+package org.apache.cocoon.reading;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.caching.CacheableProcessingComponent;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.acting.Transformer;
-import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
-import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.NOPValidity;
-
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.Map;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 
 /**
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkTranslator.java,v 1.4 2003/12/08 10:17:01 cziegeler Exp $
+ * The <code>ComposerReader</code> will allow any <code>Reader</code>
+ * that extends this to access SitemapComponents.
+ *
+ * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
+ * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
+ * 
+ * @deprecated Use the ServiceableReader instead
+ * @version CVS $Id: ComposerReader.java,v 1.1 2003/12/08 10:17:01 cziegeler Exp $
  */
-public class LinkTranslator extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
-    
-    private Map links;
+public abstract class ComposerReader extends AbstractReader
+    implements Composable {
+
+    /** The component manager instance */
+    protected ComponentManager manager;
 
     /**
-     * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
-     * the source and sitemap <code>Parameters</code> used to process the request.
+     * Set the current <code>ComponentManager</code> instance used by this
+     * <code>Composable</code>.
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) 
-    throws ProcessingException, SAXException, IOException {
-        this.links = (Map)objectModel.get(Constants.LINK_OBJECT);
-    }
-
-    /**
-     * Generate the unique key.
-     * This key must be unique inside the space of this component.
-     *
-     * @return The generated key hashes the src
-     */
-    public java.io.Serializable getKey() {
-        return "1";
-    }
-
-    /**
-     * Generate the validity object.
-     *
-     * @return The generated validity object or <code>null</code> if the
-     *         component is currently not cacheable.
-     */
-    public SourceValidity getValidity() {
-        return NOPValidity.SHARED_INSTANCE;
-    }
-
-    public void simpleLink(String href, String role, String arcrole, 
-                           String title, String show, String actuate, String uri,
-                           String name, String raw, Attributes attr) 
-    throws SAXException {
-        final String newHref = (String)this.links.get(href);
-        super.simpleLink((newHref != null) ? newHref : href, role, arcrole, title, show, actuate, uri, name, raw, attr);
-    }
-
-    public void startLocator(String href, String role, String title, 
-                             String label, String uri, String name, String raw,
-                             Attributes attr) 
-    throws SAXException {
-        final String newHref = (String)this.links.get(href);
-        super.startLocator((newHref != null) ? newHref : href, role, title, label, uri, name, raw, attr);
+    public void compose(final ComponentManager manager) throws ComponentException {
+        this.manager = manager;
     }
 }

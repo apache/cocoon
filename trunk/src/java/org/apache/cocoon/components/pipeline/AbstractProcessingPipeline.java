@@ -79,7 +79,7 @@ import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
-import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.acting.Transformer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.excalibur.source.SourceValidity;
@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.17 2003/12/06 21:22:10 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.18 2003/12/08 10:17:01 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
