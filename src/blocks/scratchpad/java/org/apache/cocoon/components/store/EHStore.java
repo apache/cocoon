@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
@@ -47,20 +48,29 @@ import org.apache.excalibur.store.StoreJanitor;
 /**
  * Store implementation based on EHCache.
  * (http://ehcache.sourceforge.net/)
- * 
- * <p>
- *  IMPORTANT:<br>
- *  (from http://ehcache.sourceforge.net/documentation/) 
- *  Persistence:
- *  The Disk Cache used by EHCache is not meant to be persistence mechanism. 
- *  The data file for each cache is deleted, if it exists, on startup.
- *  No data from a previous instance of an application is persisted through the disk cache. 
- *  The data file for each cache is also deleted on shutdown.
- * </p>
  */
 public class EHStore extends AbstractLogEnabled 
-implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Serviceable, Contextualizable {
-    
+implements Store, Contextualizable, Serviceable, Parameterizable, Initializable, Disposable, ThreadSafe {
+
+	// ---------------------------------------------------- Constants
+
+	private static final String CACHE_NAME_PARAM = "cache-name";
+	private static final String MAXOBJECTS_PARAM = "maxobjects";
+	private static final String OVERFLOW_TO_DISK_PARAM = "overflow-to-disk";
+	private static final String ETERNAL_PARAM = "eternal";
+	private static final String TIME_TO_IDLE_PARAM = "time-to-idle-seconds";
+    private static final String TIME_TO_LIVE_PARAM = "time-to-live-seconds";
+	private static final String THREAD_INTERVAL_PARAM = "thread-interval";
+    private static final String CONFIG_FILE_PARAM = "config-file";
+
+	private static final String DEFAULT_CACHE_NAME = "main";
+	private static final long DEFAULT_TIME_TO_IDLE = 120;
+	private static final long DEFAULT_TIME_TO_LIVE = 120;
+	private static final long DEFAULT_THREAD_INTERVAL = 120;
+	private static final String DEFAULT_CONFIG_FILE = "org/apache/cocoon/components/store/ehcache-defaults.xml";
+
+	// ---------------------------------------------------- Instance variables
+
     private Cache cache;
     private CacheManager cacheManager;
     
@@ -68,8 +78,11 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
     private String cacheName;
     private int maximumSize;
     private boolean overflowToDisk;
+	private boolean eternal;
+    private long timeToIdle;
+	private long timeToLive;
     private String configFile;
-    
+
     /** The service manager */
     private ServiceManager manager;
     
@@ -78,7 +91,13 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
 
     /** The context containing the work and the cache directory */
     private Context context;
-    
+	private long threadInterval;
+
+	// ---------------------------------------------------- Lifecycle
+
+    public EHStore() {
+    }
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -91,7 +110,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
      */
     public void service(ServiceManager aManager) throws ServiceException {
         this.manager = aManager;
-        this.storeJanitor = (StoreJanitor)this.manager.lookup(StoreJanitor.ROLE);
+        this.storeJanitor = (StoreJanitor) this.manager.lookup(StoreJanitor.ROLE);
     }
     
     /**
@@ -101,22 +120,33 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
      *  EHStore intances you must specify a different name for each.</li>
      *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
      *  <li><code>overflow-to-disk</disk> (true) - Whether to spool elements to disk after
-     *   maxobjects has been exceeded.
+     *   maxobjects has been exceeded.</li>
+     *  <li><code>eternal</code> (true) - If eternal, 
+     *   timeouts are ignored and the elements are never expired.
+     *  <li><code>time-to-idle-seconds</code> (120) - Idle time before an element expires. Only
+     *   relevant if the cache is not eternal.
+     *  <li><code>time-to-live-seconds</code> (120) - Time to live before an element expires. Only
+     *   relevant if the cache is not eternal.
+     *  <li><code>thread-interval</code> (120) - The number of seconds between runs of the disk 
+     *   expiry thread.
      *  <li><code>config-file</code> (org/apache/cocoon/components/store/ehcache-defaults.xml) -
      *   The default configuration file to use. This file is the only way to specify the path where
      *   the disk store puts its .cache files. The current default value is <code>java.io.tmp</code>.
      *   (On a standard Linux system this will be /tmp). Note that since the EHCache manager is
      *   a singleton object the value of this parameter will only have effect when this store is the
      *   first to create it. Configuring different stores with different values for this parameter
-     *   will have no effect.
+     *   will have no effect.</li>
      * </ul>
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        this.cacheName = parameters.getParameter("cache-name", "main");
-        this.maximumSize = parameters.getParameterAsInteger("maxobjects", 10000);
-        this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
-        this.configFile = parameters.getParameter("config-file", 
-            "org/apache/cocoon/components/store/ehcache-defaults.xml");
+        this.cacheName = parameters.getParameter(CACHE_NAME_PARAM, DEFAULT_CACHE_NAME);
+        this.maximumSize = parameters.getParameterAsInteger(MAXOBJECTS_PARAM, 10000);
+        this.overflowToDisk = parameters.getParameterAsBoolean(OVERFLOW_TO_DISK_PARAM, true);
+        this.eternal = parameters.getParameterAsBoolean(ETERNAL_PARAM, true);
+        this.timeToIdle = parameters.getParameterAsLong(TIME_TO_IDLE_PARAM, DEFAULT_TIME_TO_IDLE);
+        this.timeToLive = parameters.getParameterAsLong(TIME_TO_LIVE_PARAM, DEFAULT_TIME_TO_LIVE);
+        this.threadInterval = parameters.getParameterAsLong(THREAD_INTERVAL_PARAM, DEFAULT_THREAD_INTERVAL);
+        this.configFile = parameters.getParameter(CONFIG_FILE_PARAM, DEFAULT_CONFIG_FILE);
     }
     
     /**
@@ -129,7 +159,14 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         if (cacheDir != null) System.setProperty("java.io.tmpdir", cacheDir.toString());
         this.cacheManager = CacheManager.create(configFileURL);
         if (tempDir != null) System.setProperty("java.io.tmpdir", tempDir);
-        this.cache = new Cache(this.cacheName, this.maximumSize, this.overflowToDisk, true, 0, 0);
+        this.cache = new Cache(this.cacheName,
+        		               this.maximumSize,
+							   this.overflowToDisk,
+							   this.eternal,
+							   this.timeToLive,
+							   this.timeToIdle,
+							   true,
+							   this.threadInterval);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
     }
@@ -236,14 +273,32 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
-        return Collections.enumeration(this.cache.getKeys());
+    	List keys = null;
+		try {
+			keys = this.cache.getKeys();
+		}
+		catch (CacheException e) {
+			if (getLogger().isWarnEnabled()) {
+				getLogger().warn("Error while getting cache keys", e);
+			}
+			keys = Collections.EMPTY_LIST;
+		}
+        return Collections.enumeration(keys);
     }
 
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#size()
      */
     public int size() {
-        return this.cache.getSize();
+        try {
+			return this.cache.getSize();
+		}
+        catch (CacheException e) {
+			if (getLogger().isWarnEnabled()) {
+				getLogger().warn("Error while getting cache size", e);
+			}
+			return 0;
+		}
     }
 
 }
