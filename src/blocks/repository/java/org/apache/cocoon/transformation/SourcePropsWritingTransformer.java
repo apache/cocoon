@@ -85,14 +85,14 @@ import org.xml.sax.SAXException;
  * </pre>
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SourcepropsWritingTransformer.java,v 1.3 2003/08/27 17:36:07 gcasper Exp $
+ * @version CVS $Id: SourcePropsWritingTransformer.java,v 1.1 2003/10/24 19:33:46 unico Exp $
  */
-public class SourcepropsWritingTransformer
+public class SourcePropsWritingTransformer
     extends AbstractSAXTransformer {
 
     public static final String SPWT_URI = "http://apache.org/cocoon/propwrite/1.0";
 
-        /** incoming elements */
+    /** incoming elements */
     public static final String PATCH_ELEMENT = "patch";
     public static final String SOURCE_ELEMENT = "source";
     public static final String PROPS_ELEMENT = "props";
@@ -109,7 +109,7 @@ public class SourcepropsWritingTransformer
      * Constructor
      * Set the namespace
      */
-    public SourcepropsWritingTransformer() {
+    public SourcePropsWritingTransformer() {
         this.namespaceURI = SPWT_URI;
     }
 
