@@ -26,13 +26,18 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.avalon.excalibur.datasource.DataSourceComponent;
+import org.apache.cocoon.caching.Cacheable;
+import org.apache.cocoon.caching.CacheValidity;
+import org.apache.cocoon.caching.NOPCacheValidity;
+import org.apache.cocoon.caching.TimeStampCacheValidity;
+import org.apache.cocoon.util.HashUtil;
 import org.xml.sax.SAXException;
 
 /**
@@ -42,9 +47,14 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="bloritsch@apache.org">Berin Loritsch</a>
  */
-public class DatabaseReader extends AbstractReader implements Composable, Configurable, Disposable {
-    ComponentSelector dbselector;
-    String dsn;
+public class DatabaseReader extends AbstractReader implements Composable, Configurable, Disposable, Cacheable {
+    private ComponentSelector dbselector;
+    private String dsn;
+    private long lastModified = 0;
+    private Blob resource = null;
+    private Connection con = null;
+    private DataSourceComponent datasource = null;
+    private boolean doCommit = false;
 
     private ComponentManager manager;
 
@@ -63,6 +73,48 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.dsn = conf.getChild("use-connection").getValue();
+    }
+
+    /**
+     * Set the <code>EntityResolver</code> the object model <code>Map</code>,
+     * the source and sitemap <code>Parameters</code> used to process the request.
+     */
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+        throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, par);
+
+        try {
+            this.datasource = (DataSourceComponent) dbselector.select(dsn);
+            this.con = datasource.getConnection();
+
+            if (this.con.getAutoCommit() == true) {
+                this.con.setAutoCommit(false);
+            }
+
+            PreparedStatement statement = con.prepareStatement(getQuery());
+            statement.setString(1, this.source);
+            ResultSet set = statement.executeQuery();
+            if (set.next() == false) throw new ResourceNotFoundException("There is no image with that key");
+
+            Response response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
+            Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
+
+            if (this.modifiedSince(set, request, response)) {
+                this.resource = set.getBlob(1);
+
+                if (this.resource == null) {
+                    throw new ResourceNotFoundException("There is no image with that key");
+                }
+            }
+
+            this.doCommit = true;
+        } catch (Exception e) {
+            getLogger().warn("Could not get resource from Database", e);
+
+            this.doCommit = false;
+
+            throw new ResourceNotFoundException("DatabaseReader error:", e);
+        }
     }
 
     /**
@@ -92,58 +144,22 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
      * the <code>source</code> string.
      */
     public int generate() throws ProcessingException, SAXException, IOException {
-        DataSourceComponent datasource = null;
-        Connection con = null;
         int contentLength = 0;
 
         try {
-            datasource = (DataSourceComponent) dbselector.select(dsn);
-            con = datasource.getConnection();
-
-            if (con.getAutoCommit() == true) {
-                con.setAutoCommit(false);
-            }
-
-            PreparedStatement statement = con.prepareStatement(getQuery());
-            statement.setString(1, this.source);
-            ResultSet set = statement.executeQuery();
-            if (set.next() == false) throw new ResourceNotFoundException("There is no image with that key");
-
-            Response response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
-            Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
-
-            if (this.modifiedSince(set, request, response)) {
-                Blob object = set.getBlob(1);
-
-                if (object == null) {
-                    throw new ResourceNotFoundException("There is no image with that key");
-                }
-
-                contentLength = this.serialize(object, response);
-            }
-
-            con.commit();
+            return this.serialize(object, response);
         } catch (IOException ioe) {
             getLogger().debug("Assuming client reset stream");
 
-            if (con != null) try {con.rollback();} catch (SQLException se) {}
+            this.doCommit = false;
         } catch (Exception e) {
             getLogger().warn("Could not get resource from Database", e);
 
-            if (con != null) try {con.rollback();} catch (SQLException se) {}
+            this.doCommit = false;
 
             throw new ResourceNotFoundException("DatabaseReader error:", e);
-        } finally {
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException sqe) {
-                    getLogger().warn("Could not close connection", sqe);
-                }
-            }
-
-            if (datasource != null) this.dbselector.release((Component) datasource);
         }
+
         return contentLength; // length is unknown
     }
 
@@ -194,8 +210,9 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
 
         if (lastModified != null) {
             Timestamp modified = set.getTimestamp(lastModified, null);
+            this.lastModified = modified.getTime();
 
-            response.setDateHeader("Last-Modified", modified.getTime());
+            response.setDateHeader("Last-Modified", this.lastModified);
 
             return modified.getTime() > request.getDateHeader("if-modified-since");
         }
@@ -208,9 +225,9 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
     /**
      * This method actually performs the serialization.
      */
-    public int serialize(Blob object, Response response)
+    public int serialize(Response response)
     throws IOException, SQLException {
-        if (object == null) {
+        if (this.resource == null) {
             throw new SQLException("The Blob is empty!");
         }
 
@@ -235,6 +252,57 @@ public class DatabaseReader extends AbstractReader implements Composable, Config
         out.flush();
 
         return contentLength;
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public long generateKey() {
+        return HashUtil.hash(this.source);
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public CacheValidity generateValidity() {
+        if (this.lastModified > 0) {
+            return new TimeStampCacheValidity(this.lastModified);
+        } else {
+            return new NOPCacheValidity();
+        }
+    }
+
+    public void recycle() {
+        super.recycle();
+        this.resource = null;
+        this.lastModified = 0;
+
+        if (this.con != null) {
+            if (this.doCommit) {
+                this.con.commit();
+            } else {
+                this.con.rollback();
+            }
+
+            try {
+                this.con.close();
+            } catch (SQLException se) {
+                getLogger().warn("Could not close connection", se);
+            }
+
+            this.con = null;
+        }
+
+        if (this.datasource != null) {
+            this.dbselector.release(this.datasource);
+            this.datasource = null;
+        }
     }
 
     /**
