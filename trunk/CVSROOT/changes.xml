@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.47 2000-03-30 00:32:10 stefano Exp $
+  $Id: changes.xml,v 1.48 2000-03-31 11:26:16 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,15 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="fix">
+   Changed log setting.
+  </action>
+  <action dev="DB" type="fix">
+   Fixed problem with SQLlib.
+  </action>
+ </release>
+
+ <release version="1.7.1" date="March 29, 2000">
   <action dev="SM" type="update" due-to="Paul Lamb" due-to-email="paul@oil-law.com">
    Fixed problem with basename evaluation when included into a JSP.
   </action>
