@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.346 2004/06/03 13:01:53 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.347 2004/06/04 00:12:30 tcurdt Exp $:-->
 
 <status>
  <developers>
@@ -205,11 +205,15 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="TC" type="remove">
+     Removed the deprecated SWF block and added
+     a flash sample in the hello world section.
+   </action>
    <action dev="TC" type="fix">
-     Serializers: Fixed the namespace handling.
+     Fixed the namespace handling of the new XMLSerializer.
    </action>
    <action dev="TC" type="add">
-     Serializers: Added support for indentation to the new XML Serializer.
+     Added support for indentation to the new XMLSerializer.
    </action>
    <action dev="CZ" type="update">
      Remove deprecated methods from SimpleCharStream, Notifier,
