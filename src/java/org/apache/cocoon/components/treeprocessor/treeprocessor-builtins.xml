@@ -148,7 +148,7 @@
       <node name="components" builder="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsNodeBuilder"/>
       
       <node name="pipelines" builder="org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNodeBuilder">
-        <allowed-children>pipeline</allowed-children>
+        <allowed-children>pipeline, handle-errors</allowed-children>
         <ignored-children>component-configurations</ignored-children>
       </node>
 

@@ -50,65 +50,89 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.treeprocessor.ContainerNodeBuilder;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.components.notification.NotifyingBuilder;
+import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
 
 /**
- * Builds a &lt;map:pipelines&gt;
+ * Helps to call error handlers from PipelineNode and PipelinesNode.
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">Jürgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNodeBuilder.java,v 1.2 2003/04/11 13:14:51 cziegeler Exp $
+ * @version CVS $Id: ErrorHandlerHelper.java,v 1.1 2003/04/11 13:14:51 cziegeler Exp $
  */
+public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable {
 
-public class PipelinesNodeBuilder extends ContainerNodeBuilder implements ThreadSafe {
+    private ComponentManager manager;
 
-    public ProcessingNode buildNode(Configuration config)
+    /**
+     * The component manager is used to create notifying builders.
+     */
+    public void compose(ComponentManager manager) {
+        this.manager = manager;
+    }
+
+    public boolean invokeErrorHandler(ProcessingNode node, Exception ex, Environment env)
     throws Exception {
-        // check for component configurations
-        Configuration child = config.getChild("component-configurations", false);
-        if (child != null) {
-            this.checkNamespace(child);
-            this.treeBuilder.getProcessor().setComponentConfigurations(child);
-        }
-        PipelinesNode node = new PipelinesNode(this.treeBuilder.getProcessor());
-        this.treeBuilder.setupNode(node, config);
-
-		Configuration[] childConfigs = config.getChildren();
-		List children = new ArrayList();
-		HandleErrorsNode handler = null;
+		Map objectModel = env.getObjectModel();
+  	
+        InvokeContext errorContext = null;
+		boolean nodeSuccesfull = false;
 		
-		for (int i = 0; i < childConfigs.length; i++) {
+        try {
+        	if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
+				// error has not been processed by another handler before
+				
+	            // Try to reset the response to avoid mixing already produced output
+	            // and error page.
+	            env.tryResetResponse();
+	
+	            // Create a Notifying
+	            NotifyingBuilder notifyingBuilder= (NotifyingBuilder)this.manager.lookup(NotifyingBuilder.ROLE);
+	            Notifying currentNotifying = null;
+	            try {
+	                currentNotifying = notifyingBuilder.build(this, ex);
+	            } finally {
+	                this.manager.release(notifyingBuilder);
+	            }
+	
+	            // Add it to the object model
+	            objectModel.put(Constants.NOTIFYING_OBJECT, currentNotifying);
+	            
+	            // Also add the exception
+	            objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, ex);
+        	}
 
-			Configuration childConfig = childConfigs[i];
-			if (isChild(childConfig)) {
-
-				ProcessingNodeBuilder builder = this.treeBuilder.createNodeBuilder(childConfig);
-				if (builder instanceof HandleErrorsNodeBuilder) {
-					handler = (HandleErrorsNode)builder.buildNode(childConfig);
-				} else {
-					// Regular builder
-					children.add(builder.buildNode(childConfig));
-				}
-			}
-		}
-        if (children.size() == 0) {
-            String msg = "There must be at least one pipeline at " + config.getLocation();
-            throw new ConfigurationException(msg);
+			// Build a new context
+			errorContext = new InvokeContext();
+			errorContext.enableLogging(getLogger());
+			errorContext.compose(this.manager);
+			
+			nodeSuccesfull = node.invoke(env, errorContext);
+        } catch (Exception subEx) {
+            getLogger().error("An exception occured in while handling errors at " + node.getLocation(), subEx);
+            // Rethrow it : it will either be handled by the parent sitemap or by the environment (e.g. Cocoon servlet)
+            throw subEx;
+        } finally {
+            if (errorContext != null) {
+                errorContext.dispose();
+            }
         }
-
-		node.setChildren(toNodeArray(children));
-		node.setErrorHandler(handler);
-
-        return node;
+        
+        if (nodeSuccesfull) {
+        	return true;
+        } else {
+			throw ex;
+        }
     }
 }
+
