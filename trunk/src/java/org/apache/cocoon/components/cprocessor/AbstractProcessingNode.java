@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.cprocessor;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -23,12 +22,13 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapParameters;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.5 2004/03/08 13:57:39 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingNode.java,v 1.6 2004/03/11 14:48:30 cziegeler Exp $
  */
 public abstract class AbstractProcessingNode extends AbstractNode 
 implements ProcessingNode, Configurable {
@@ -68,9 +68,11 @@ implements ProcessingNode, Configurable {
     private final void setParameters(Configuration config) throws ConfigurationException {
         final Configuration[] children = config.getChildren(PARAMETER_ELEMENT);
         if (children.length == 0) {
+            // TODO Optimize this
+            m_parameters = new SitemapParameters.ExtendedHashMap(config);
             return;
         }
-        m_parameters = new HashMap();
+        m_parameters = new SitemapParameters.ExtendedHashMap(config, children.length+1);
         for (int i = 0; i < children.length; i++) {
             Configuration child = children[i];
             String name = child.getAttribute(PARAMETER_NAME_ATTR);

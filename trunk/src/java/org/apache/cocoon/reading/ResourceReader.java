@@ -64,7 +64,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ResourceReader.java,v 1.7 2004/03/08 14:03:32 cziegeler Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.8 2004/03/11 14:52:04 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Reader
@@ -266,12 +266,12 @@ implements CacheableProcessingComponent, Parameterizable {
             else {
                 response.addHeader("Vary", "Host");
             }
-
+            
             long lastModified = getLastModified();
             if (lastModified > 0) {
                 response.setDateHeader("Last-Modified", lastModified);
             }
-
+            
             try {
                 inputStream = inputSource.getInputStream();
             }

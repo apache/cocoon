@@ -19,15 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapParameters;
 
 /**
  * Base class for wildcard matchers
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractWildcardMatcher.java,v 1.5 2004/03/08 14:02:41 cziegeler Exp $
+ * @version CVS $Id: AbstractWildcardMatcher.java,v 1.6 2004/03/11 14:48:30 cziegeler Exp $
  */
 
 public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher {
@@ -47,7 +47,7 @@ public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher 
 
         if(preparedPattern == null) {
             throw new PatternException("A pattern is needed at " +
-                parameters.getParameter(Constants.SITEMAP_PARAMETERS_LOCATION, "unknown location"));
+                    SitemapParameters.getStatementLocation(parameters));
         }
 
         String match = getMatchString(objectModel, parameters);

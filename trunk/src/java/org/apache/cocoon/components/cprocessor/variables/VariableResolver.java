@@ -15,9 +15,11 @@
  */
 package org.apache.cocoon.components.cprocessor.variables;
 
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapParameters;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ import java.util.Map;
  * Utility class for handling {...} pattern substitutions in sitemap statements.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: VariableResolver.java,v 1.2 2004/03/08 13:57:37 cziegeler Exp $
+ * @version CVS $Id: VariableResolver.java,v 1.3 2004/03/11 14:48:29 cziegeler Exp $
  */
 public abstract class VariableResolver {
 
@@ -88,8 +90,10 @@ public abstract class VariableResolver {
             return Parameters.EMPTY_PARAMETERS;
         }
 
-        Parameters result = new Parameters();
-
+        SitemapParameters result = new SitemapParameters();
+        if ( expressions instanceof SitemapParameters.ExtendedHashMap ) {
+            result.setStatementLocation(((SitemapParameters.ExtendedHashMap)expressions).getLocation());    
+        }
         Iterator iter = expressions.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry entry = (Map.Entry)iter.next();
@@ -114,7 +118,13 @@ public abstract class VariableResolver {
             return EMPTY_MAP;
         }
 
-        Map result = new HashMap(size);
+        Map result;
+        if ( expressions instanceof SitemapParameters.ExtendedHashMap ) {
+            Configuration config = ((SitemapParameters.ExtendedHashMap)expressions).getConfiguration();
+            result = new SitemapParameters.ExtendedHashMap(config, size );   
+        } else {
+            result = new HashMap(size);
+        }
 
         Iterator iter = expressions.entrySet().iterator();
         while (iter.hasNext()) {

@@ -16,7 +16,12 @@
 package org.apache.cocoon.environment.wrapper;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * This class is used by the <code>RequestWrapper</code>. It parses
@@ -24,7 +29,7 @@ import java.util.*;
  * for the <code>Request</code> object.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestParameters.java,v 1.4 2004/03/08 14:02:47 cziegeler Exp $
+ * @version CVS $Id: RequestParameters.java,v 1.5 2004/03/11 14:48:29 cziegeler Exp $
  */
 public final class RequestParameters
 implements Serializable {

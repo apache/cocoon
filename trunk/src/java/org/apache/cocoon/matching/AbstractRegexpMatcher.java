@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.regexp.RE;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
@@ -32,7 +32,7 @@ import org.apache.regexp.RESyntaxException;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractRegexpMatcher.java,v 1.5 2004/03/08 14:02:41 cziegeler Exp $
+ * @version CVS $Id: AbstractRegexpMatcher.java,v 1.6 2004/03/11 14:48:30 cziegeler Exp $
  */
 
 public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher {
@@ -73,8 +73,7 @@ public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher {
     public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException {
 
         if(preparedPattern == null) {
-            throw new PatternException("A pattern is needed at " +
-                parameters.getParameter(Constants.SITEMAP_PARAMETERS_LOCATION, "unknown location"));
+            throw new PatternException("A pattern is needed at " + SitemapParameters.getStatementLocation(parameters));
         }
 
         RE re = new RE((REProgram)preparedPattern);
