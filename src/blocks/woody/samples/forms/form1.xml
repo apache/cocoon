@@ -2,6 +2,10 @@
 <wd:form
   xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
   xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+  
+  <wd:field id="tab-state">
+    <wd:datatype base="string"/>
+  </wd:field>
 
   <wd:field id="email" required="true">
     <wd:datatype base="string">
@@ -204,12 +208,12 @@
     </wd:booleanfield>
   </wd:repeater>
 
-  <wd:action id="addcontact" action-command="add-contact">
+  <wd:button id="addcontact" action-command="add-contact">
     <wd:label>Add contact</wd:label>
-  </wd:action>
+  </wd:button>
 
-  <wd:action id="removecontacts" action-command="remove-selected-contacts">
+  <wd:button id="removecontacts" action-command="remove-selected-contacts">
     <wd:label>Remove selected contacts</wd:label>
-  </wd:action>
+  </wd:button>
 
 </wd:form>

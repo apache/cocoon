@@ -12,6 +12,7 @@
            frame if there is a <wi:label> -->
       <wi:group>
         <wi:label>String fields</wi:label>
+        <wi:styling type="fieldset" layout="columns"/>
         <wi:items>
           <wt:widget id="email"/>
           <wt:widget id="fourchars">
@@ -23,6 +24,7 @@
       
       <wi:group>
         <wi:label>Number fields</wi:label>
+        <wi:styling type="fieldset" layout="columns"/>
         <wi:items>
           <wt:widget id="number1"/>
           <wt:widget id="number2"/>
@@ -36,6 +38,7 @@
       <!-- wi:group with no label : columnized layout without a surrounding frame -->
       <wi:group>
         <wi:label>Boolean fields</wi:label>
+        <wi:styling type="fieldset" layout="columns"/>
         <wi:items>
           <wt:widget id="somebool"/>
           <wt:widget id="drinks"/>
@@ -44,6 +47,7 @@
 
 
       <wi:group>
+        <wi:styling layout="columns"/>
         <wi:items>
           <wt:widget id="visa"/>
           <wt:widget id="ipaddress"/>
