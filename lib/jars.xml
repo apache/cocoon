@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.193 2004/03/23 19:29:02 tcurdt Exp $
+    | CVS $Id: jars.xml,v 1.194 2004/03/28 00:09:03 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -371,7 +371,7 @@
       the Scalable Vector Graphics (SVG) format for various purposes, such as
       viewing, generation or manipulation.</description>
     <used-by>SVG serializer (batik block)</used-by>
-    <lib>batik/lib/batik-all-1.5.jar</lib>
+    <lib>batik/lib/batik-all-1.5.1.jar</lib>
     <homepage>http://xml.apache.org/batik/</homepage>
   </file>
 
