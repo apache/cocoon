@@ -17,9 +17,6 @@
                   src="org.apache.cocoon.samples.xmlform.CalculatorAction"/>
     </map:actions>
 
-    <!--
-    <map:flow-interpreters default="JavaScript"/>
-    -->
     <map:serializers default="html"/>
 
     <map:matchers default="wildcard"/>

@@ -29,7 +29,6 @@
     <map:generator label="content,data" logger="sitemap.generator.jx"
                    name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
   </map:generators>
-  <map:flow-interpreters default="JavaScript"/>
   <map:transformers default="xslt"/>
   <map:serializers default="html"/>
   <map:matchers default="wildcard"/>
