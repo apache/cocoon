@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.portal.profile.PortalUser;
 import org.apache.cocoon.portal.tools.helper.MultipleRoleMatcher;
@@ -121,7 +122,7 @@ public class UserrightsService {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new CascadingRuntimeException(e.getMessage(), e);
         }
     }
 
