@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.16 2000-02-13 18:29:16 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.17 2000-02-14 00:59:18 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.16 $ $Date: 2000-02-13 18:29:16 $
+ * @version $Revision: 1.17 $ $Date: 2000-02-14 00:59:18 $
  */
 
 public class Engine implements Defaults {
@@ -253,47 +253,67 @@ public class Engine implements Defaults {
         // disabled, we need to process it
         if (page == null) {
 
-            // create the Page wrapper
-            page = new Page();
+            // continue until the page is done.
+            for (int i = 0; i < LOOPS; i++) {
+                // catch if any OutOfMemoryError is thrown
+                try {
+                    // create the Page wrapper
+                    page = new Page();
 
-            // get the document producer
-            Producer producer = producers.getProducer(request);
+                    // get the document producer
+                    Producer producer = producers.getProducer(request);
 
-            // set the producer as a page changeable point
-            page.setChangeable(producer);
+                    // set the producer as a page changeable point
+                    page.setChangeable(producer);
 
-            // pass the produced stream to the parser
-            Document document = producer.getDocument(request);
+                    // pass the produced stream to the parser
+                    Document document = producer.getDocument(request);
 
-            // pass needed parameters to the processor pipeline
-            Hashtable environment = new Hashtable();
-            environment.put("path", producer.getPath(request));
-            environment.put("browser", browsers.map(agent));
-            environment.put("request", request);
-            environment.put("response", response);
+                    // pass needed parameters to the processor pipeline
+                    Hashtable environment = new Hashtable();
+                    environment.put("path", producer.getPath(request));
+                    environment.put("browser", browsers.map(agent));
+                    environment.put("request", request);
+                    environment.put("response", response);
 
-            // process the document through the document processors
-            while (true) {
-                Processor processor = processors.getProcessor(document);
-                if (processor == null) break;
-                document = processor.process(document, environment);
-                page.setChangeable(processor);
+                    // process the document through the document processors
+                    while (true) {
+                        Processor processor = processors.getProcessor(document);
+                        if (processor == null) break;
+                        document = processor.process(document, environment);
+                        page.setChangeable(processor);
+                    }
+
+                    // get the right formatter for the page
+                    Formatter formatter = formatters.getFormatter(document);
+
+                    // FIXME: I know it sucks to encapsulate a nice stream into
+                    // a long String to push it into the cache. In the future,
+                    // we'll find a smarter way to do it.
+
+                    // format the page
+                    StringWriter writer = new StringWriter();
+                    formatter.format(document, writer, environment);
+
+                    // fill the page bean with content
+                    page.setContent(writer.toString());
+                    page.setContentType(formatter.getMIMEType());
+
+                    // page is done without memory errors so exit the loop
+                    break;
+                } catch (OutOfMemoryError e) {
+                    // force the cache to free some of its content.
+                    cache.flush();
+                    // reset the page to signal the error
+                    page = null;
+                }
             }
+        }
 
-            // get the right formatter for the page
-            Formatter formatter = formatters.getFormatter(document);
-
-            // FIXME: I know it sucks to encapsulate a nice stream into
-            // a long String to push it into the cache. In the future,
-            // we'll find a smarter way to do it.
-
-            // format the page
-            StringWriter writer = new StringWriter();
-            formatter.format(document, writer, environment);
-
-            // fill the page bean with content
-            page.setContent(writer.toString());
-            page.setContentType(formatter.getMIMEType());
+        if (page == null) {
+            throw new Exception("FATAL ERROR: the system ran out of memory when"
+                + " processing the request. Increase your JVM memory as well"
+                + " as the 'store.memory' value in your configuratios.");
         }
 
         if (DEBUG) {
@@ -319,6 +339,7 @@ public class Engine implements Defaults {
                     + (page.isCached() ? "from cache " : "")
                     + "in " + time + " milliseconds by "
                     + Cocoon.version() + " -->");
+                out.println("<!-- free memory: " + Runtime.getRuntime().freeMemory() + " -->");
             }
 
             // send all content so that client doesn't wait while caching.
