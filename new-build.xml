@@ -16,67 +16,63 @@
 -->
 <!-- ===========================================================================
 
-                       * =========================== *
-                       |  Apache Cocoon Build System |
-                       * =========================== *
+                     * ================================ *
+                     |  TEST Apache Cocoon Build System |
+                     * ================================ *
 
-       CVS $Id: new-build.xml,v 1.1 2004/05/26 10:04:13 nicolaken Exp $:
+       CVS $Id: new-build.xml,v 1.2 2004/05/26 10:08:55 nicolaken Exp $:
 
 ============================================================================ -->
 
 <project default="webapp" basedir="." name="Apache Cocoon">
 
-  <!-- ==================  Apache Cocoon targets  ======================== -->
+  <property name="builds.dir" location="tools/new-targets"/>
 
   <!-- =================================================================== -->
   <!-- Initialization targets  -->
-  <import file="tools/targets/init-build.xml" />
+  <import file="${builds.dir}/init-build.xml" />
   <!-- =================================================================== -->
   <!-- Compile targets         -->
-  <import file="tools/targets/compile-build.xml" />
+  <import file="${builds.dir}/compile-build.xml" />
   <!-- =================================================================== -->  
   <!-- Validation targets      -->
-  <import file="tools/targets/validate-build.xml" />
+  <import file="${builds.dir}/validate-build.xml" />
   <!-- =================================================================== -->
   <!-- Samples targets         -->
-  <import file="tools/targets/samples-build.xml" />
+  <import file="${builds.dir}/samples-build.xml" />
   <!-- =================================================================== -->
   <!-- Web application targets -->
-  <import file="tools/targets/webapp-build.xml" />
+  <import file="${builds.dir}/webapp-build.xml" />
   <!-- =================================================================== -->
   <!-- IDE targets             -->
-  <import file="tools/targets/ide-build.xml" />
+  <import file="${builds.dir}/ide-build.xml" />
   <!-- =================================================================== -->
   <!-- Testcases targets       -->
-  <import file="tools/targets/test-build.xml" />
+  <import file="${builds.dir}/test-build.xml" />
   <!-- =================================================================== -->
   <!-- Documentation targets   -->
-  <import file="tools/targets/docs-build.xml" />
+  <import file="${builds.dir}/docs-build.xml" />
   <!-- =================================================================== -->
   <!-- Distribution targets    -->
-  <import file="tools/targets/dist-build.xml" />
+  <import file="${builds.dir}/dist-build.xml" />
   <!-- =================================================================== -->
   <!-- Administration targets  -->
-  <import file="tools/targets/admin-build.xml" />
+  <import file="${builds.dir}/admin-build.xml" />
   <!-- =================================================================== -->
   <!-- Standalone-demo targets -->
-  <import file="tools/targets/standalone-demo-build.xml" />
+  <import file="${builds.dir}/standalone-demo-build.xml" />
   <!-- =================================================================== -->
   <!-- Instrumentation targets -->
-  <import file="tools/targets/instrumentation-build.xml" />
+  <import file="${builds.dir}/instrumentation-build.xml" />
   <!-- =================================================================== -->
   <!-- Upgrade targets -->
-  <import file="tools/targets/upgrade-build.xml" />
+  <import file="${builds.dir}/upgrade-build.xml" />
   <!-- =================================================================== -->  
   <!-- Tools targets -->
-  <import file="tools/targets/tools-build.xml" />
+  <import file="${builds.dir}/tools-build.xml" />
   <!-- =================================================================== -->    
-
-  <!-- ==================  Apache Forrest targets  ======================= -->
-
-  <!-- =================================================================== -->
   <!-- Forrest targets         -->
-  <import file="tools/targets/forrest-build.xml" />
+  <import file="${builds.dir}/forrest-build.xml" />
   <!-- =================================================================== -->
 
 </project>
