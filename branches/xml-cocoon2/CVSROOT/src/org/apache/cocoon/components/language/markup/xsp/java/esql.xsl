@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.31 2001-01-17 02:36:51 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.32 2001-01-17 14:30:08 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -267,8 +267,13 @@
           _esql_connection.connection = _esql_connection.db_connection.getConnection();
         </xsl:when>
         <xsl:when test="esql:pool and $environment = 'cocoon2'">
-          _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
-          _esql_connection.connection = _esql_connection.datasource.getConnection();
+          try {
+              _esql_connection.datasource = (DataSourceComponent) _esql_selector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
+              _esql_connection.connection = _esql_connection.datasource.getConnection();
+          } catch (Exception cmse) {
+              cocoonLogger.error("Could not get the datasource", cmse);
+              throw new RuntimeException("Could not get the datasource" + cmse.toString());
+          }
         </xsl:when>
         <xsl:otherwise>
           <xsl:if test="esql:driver">
