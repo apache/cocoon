@@ -341,7 +341,7 @@ public final class SitemapTask extends AbstractQdoxTask {
                     i++;
                 }
                 if ( nextLabel == null ) {
-                sectionNode.appendChild(newEntry);
+                    sectionNode.appendChild(newEntry);
                 } else {
                     sectionNode.insertBefore(newEntry, nextLabel);
                 }

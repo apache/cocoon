@@ -64,7 +64,7 @@
 
   <!-- compiles deprecated code -->
   <target name="compile-deprecated" depends="prepare"
-      unless="internal.exclude.deprecated">
+          unless="internal.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
     <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
