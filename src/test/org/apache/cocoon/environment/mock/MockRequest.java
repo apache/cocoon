@@ -22,6 +22,7 @@ import java.util.Hashtable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -66,8 +67,22 @@ public class MockRequest implements Request {
     private boolean isRequestedSessionIdFromCookie = true;
     private boolean isRequestedSessionIdFromURL = false;
     
-    public Object get(String name) {
-        return getAttribute(name);
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#get(java.lang.String)
+     */
+    public Object get(String name) { 
+        String[] values = this.getParameterValues(name);
+        if (values == null || values.length == 0) {
+            return null;
+        } else if (values.length == 1) {
+            return values[0];
+        } else {
+            Vector vect = new Vector(values.length);
+            for (int i = 0; i < values.length; i++) {
+                vect.add(values[i]);
+            }
+            return vect;
+        }
     }
     
     public String getAuthType() {

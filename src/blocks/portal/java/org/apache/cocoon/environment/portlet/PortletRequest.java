@@ -41,7 +41,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletRequest.java,v 1.5 2004/07/11 13:59:12 cziegeler Exp $
+ * @version CVS $Id: PortletRequest.java,v 1.6 2004/07/12 13:27:57 cziegeler Exp $
  */
 public abstract class PortletRequest implements Request {
 
@@ -86,6 +86,9 @@ public abstract class PortletRequest implements Request {
         this.environment = environment;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#get(java.lang.String)
+     */
     public Object get(String name) {
         // if the request has been wrapped then access its method
         if (request instanceof MultipartActionRequest) {

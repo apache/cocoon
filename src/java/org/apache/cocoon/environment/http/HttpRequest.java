@@ -40,7 +40,7 @@ import org.apache.commons.collections.IteratorUtils;
  * to provide request information in the HTTP servlets environment.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.10 2004/07/11 13:59:12 cziegeler Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.11 2004/07/12 13:27:57 cziegeler Exp $
  */
 
 public final class HttpRequest implements Request {
@@ -71,6 +71,9 @@ public final class HttpRequest implements Request {
         this.env = env;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#get(java.lang.String)
+     */
     public Object get(String name) {
         // if the request has been wrapped then access its method
         if (req instanceof MultipartHttpServletRequest) {
