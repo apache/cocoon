@@ -28,7 +28,7 @@
           <td>
             <pre>
               <util:get-source>
-                <util:param name="uri">cocoon://samples/view-source?filename=<xsp-request:get-servlet-path/>.xsp</util:param>
+                <util:param name="uri">cocoon:/view-source?filename=<xsp-request:get-servlet-path/>.xsp</util:param>
               </util:get-source>
             </pre>		  
           </td>
@@ -40,7 +40,7 @@
         <tr>
           <td>
             <util:include-source>
-              <util:param name="uri">cocoon://samples/view-source?filename=<xsp-request:get-servlet-path/>.xsp&amp;cocoon-view=content</util:param>
+              <util:param name="uri">cocoon:/view-source?filename=<xsp-request:get-servlet-path/>.xsp&amp;cocoon-view=content</util:param>
             </util:include-source>
           </td>
         </tr>
