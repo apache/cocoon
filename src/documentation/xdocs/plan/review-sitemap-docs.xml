@@ -91,8 +91,8 @@
   <th>E</th>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/AbstractAction.html">AbstractAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractAction.html">AbstractAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -100,8 +100,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/AbstractComplementaryConfigurableAction.html">AbstractComplementaryConfigurableAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractComplementaryConfigurableAction.html">AbstractComplementaryConfigurableAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -109,8 +109,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/AbstractConfigurableAction.html">AbstractConfigurableAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractConfigurableAction.html">AbstractConfigurableAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -118,8 +118,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/AbstractDatabaseAction.html">AbstractDatabaseAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractDatabaseAction.html">AbstractDatabaseAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -127,8 +127,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/forms/acting/AbstractFormsAction.html">AbstractFormsAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/acting/AbstractFormsAction.html">AbstractFormsAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>forms</td>
   <!-- C --><td>n</td>
@@ -136,8 +136,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/AbstractMultiAction.html">AbstractMultiAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractMultiAction.html">AbstractMultiAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -145,8 +145,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/AbstractValidatorAction.html">AbstractValidatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/AbstractValidatorAction.html">AbstractValidatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -154,8 +154,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/AuthAction.html">AuthAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/AuthAction.html">AuthAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>authentication-fw</td>
   <!-- C --><td>n</td>
@@ -163,8 +163,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/portal/acting/AuthAction.html">AuthAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/portal/acting/AuthAction.html">AuthAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal-fw</td>
   <!-- C --><td>n</td>
@@ -172,8 +172,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/acting/BookmarkAction.html">BookmarkAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/BookmarkAction.html">BookmarkAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -181,8 +181,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/CacheEventAction.html">CacheEventAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CacheEventAction.html">CacheEventAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>eventcache</td>
   <!-- C --><td>n</td>
@@ -190,8 +190,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ClearCacheAction.html">ClearCacheAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ClearCacheAction.html">ClearCacheAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -199,8 +199,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ClearPersistentStoreAction.html">ClearPersistentStoreAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ClearPersistentStoreAction.html">ClearPersistentStoreAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -208,8 +208,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/CommandAction.html">CommandAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CommandAction.html">CommandAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -217,8 +217,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ComposerAction.html">ComposerAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ComposerAction.html">ComposerAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -226,8 +226,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ConfigurableComposerAction.html">ConfigurableComposerAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ConfigurableComposerAction.html">ConfigurableComposerAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -235,8 +235,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ConfigurableServiceableAction.html">ConfigurableServiceableAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ConfigurableServiceableAction.html">ConfigurableServiceableAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -244,8 +244,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ConfigurationHelper.html">ConfigurationHelper</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ConfigurationHelper.html">ConfigurationHelper</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -253,8 +253,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/CookieCreatorAction.html">CookieCreatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CookieCreatorAction.html">CookieCreatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -262,8 +262,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/CookieValidatorAction.html">CookieValidatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CookieValidatorAction.html">CookieValidatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -271,8 +271,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/acting/CopletSetDataAction.html">CopletSetDataAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/CopletSetDataAction.html">CopletSetDataAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -280,8 +280,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/CopySourceAction.html">CopySourceAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/CopySourceAction.html">CopySourceAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -289,8 +289,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/DatabaseAddAction.html">DatabaseAddAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseAddAction.html">DatabaseAddAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -298,8 +298,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/DatabaseAuthenticatorAction.html">DatabaseAuthenticatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseAuthenticatorAction.html">DatabaseAuthenticatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -307,8 +307,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/DatabaseCookieAuthenticatorAction.html">DatabaseCookieAuthenticatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseCookieAuthenticatorAction.html">DatabaseCookieAuthenticatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -316,8 +316,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/DatabaseDeleteAction.html">DatabaseDeleteAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseDeleteAction.html">DatabaseDeleteAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -325,8 +325,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/DatabaseSelectAction.html">DatabaseSelectAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseSelectAction.html">DatabaseSelectAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -334,8 +334,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/DatabaseUpdateAction.html">DatabaseUpdateAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DatabaseUpdateAction.html">DatabaseUpdateAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -343,8 +343,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/DbXMLAuthenticatorAction.html">DbXMLAuthenticatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/DbXMLAuthenticatorAction.html">DbXMLAuthenticatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xmldb</td>
   <!-- C --><td>n</td>
@@ -352,8 +352,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/faces/FacesAction.html">FacesAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/faces/FacesAction.html">FacesAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>faces</td>
   <!-- C --><td>n</td>
@@ -361,8 +361,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ExpiresPipelineAction.html">ExpiresPipelineAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ExpiresPipelineAction.html">ExpiresPipelineAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -370,8 +370,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/FormManagerAction.html">FormManagerAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/FormManagerAction.html">FormManagerAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -379,8 +379,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/FormValidatorAction.html">FormValidatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/FormValidatorAction.html">FormValidatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -388,8 +388,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/forms/acting/HandleFormSubmitAction.html">HandleFormSubmitAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/acting/HandleFormSubmitAction.html">HandleFormSubmitAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>forms</td>
   <!-- C --><td>n</td>
@@ -397,8 +397,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/HelloAction.html">HelloAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/HelloAction.html">HelloAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -406,8 +406,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/HttpCacheAction.html">HttpCacheAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/HttpCacheAction.html">HttpCacheAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -415,8 +415,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/HttpHeaderAction.html">HttpHeaderAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/HttpHeaderAction.html">HttpHeaderAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -424,8 +424,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/InputModuleAction.html">InputModuleAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/InputModuleAction.html">InputModuleAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -433,8 +433,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/JMSPublisherAction.html">JMSPublisherAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/JMSPublisherAction.html">JMSPublisherAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>jms</td>
   <!-- C --><td>n</td>
@@ -442,8 +442,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/LinkTranslatorMapAction.html">LinkTranslatorMapAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/LinkTranslatorMapAction.html">LinkTranslatorMapAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -451,8 +451,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/LocaleAction.html">LocaleAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/LocaleAction.html">LocaleAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -460,8 +460,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LoggedInAction.html">LoggedInAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LoggedInAction.html">LoggedInAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>authentication-fw</td>
   <!-- C --><td>n</td>
@@ -469,8 +469,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LoginAction.html">LoginAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LoginAction.html">LoginAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>authentication-fw</td>
   <!-- C --><td>n</td>
@@ -478,8 +478,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/acting/LoginAction.html">LoginAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/LoginAction.html">LoginAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -487,8 +487,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LogoutAction.html">LogoutAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/acting/LogoutAction.html">LogoutAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>authentication-fw</td>
   <!-- C --><td>n</td>
@@ -496,8 +496,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/acting/LogoutAction.html">LogoutAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/LogoutAction.html">LogoutAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -505,8 +505,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/mail/MailAction.html">MailAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/mail/MailAction.html">MailAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>mail</td>
   <!-- C --><td>n</td>
@@ -514,8 +514,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/forms/acting/MakeFormAction.html">MakeFormAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/acting/MakeFormAction.html">MakeFormAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>forms</td>
   <!-- C --><td>n</td>
@@ -523,8 +523,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseAction.html">modular/DatabaseAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseAction.html">modular/DatabaseAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -532,8 +532,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseAddAction.html">modular/DatabaseAddAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseAddAction.html">modular/DatabaseAddAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -541,8 +541,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseDeleteAction.html">modular/DatabaseDeleteAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseDeleteAction.html">modular/DatabaseDeleteAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -550,8 +550,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseSelectAction.html">modular/DatabaseSelectAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseSelectAction.html">modular/DatabaseSelectAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -559,8 +559,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseQueryAction.html">modular/DatabaseQueryAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseQueryAction.html">modular/DatabaseQueryAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -568,8 +568,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseUpdateAction.html">modular/DatabaseUpdateAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/DatabaseUpdateAction.html">modular/DatabaseUpdateAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -577,8 +577,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/acting/ObjectModelAction.html">ObjectModelAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/ObjectModelAction.html">ObjectModelAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -586,8 +586,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/OraAddAction.html">OraAddAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/OraAddAction.html">OraAddAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -595,8 +595,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/OraUpdateAction.html">OraUpdateAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/OraUpdateAction.html">OraUpdateAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -604,8 +604,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/helpers/PreemptiveLoaderAction.html">PreemptiveLoaderAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/helpers/PreemptiveLoaderAction.html">PreemptiveLoaderAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -613,8 +613,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/PropagatorAction.html">PropagatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/PropagatorAction.html">PropagatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -622,8 +622,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/RequestParamAction.html">RequestParamAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/RequestParamAction.html">RequestParamAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -631,8 +631,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/RequestParameterExistsAction.html">RequestParameterExistsAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/RequestParameterExistsAction.html">RequestParameterExistsAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -640,8 +640,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ResourceExistsAction.html">ResourceExistsAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ResourceExistsAction.html">ResourceExistsAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -649,8 +649,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/acting/SaveAction.html">SaveAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/acting/SaveAction.html">SaveAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -658,8 +658,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ScriptAction.html">ScriptAction</link></td>
-  <td><link href="../userdocs/actions/script-action.html">script</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ScriptAction.html">ScriptAction</link></td>
+  <!-- 2 --><td><link href="../userdocs/actions/script-action.html">script</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>bsf</td>
   <!-- C --><td>n</td>
@@ -667,8 +667,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SectionCutterAction.html">SectionCutterAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SectionCutterAction.html">SectionCutterAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -676,8 +676,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SendmailAction.html">SendmailAction</link></td>
-  <td><link href="../userdocs/actions/sendmail-action.html">sendmail</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SendmailAction.html">SendmailAction</link></td>
+  <!-- 2 --><td><link href="../userdocs/actions/sendmail-action.html">sendmail</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>mail</td>
   <!-- C --><td>n</td>
@@ -685,8 +685,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ServerPagesAction.html">ServerPagesAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ServerPagesAction.html">ServerPagesAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -694,8 +694,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ServiceableAction.html">ServiceableAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ServiceableAction.html">ServiceableAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -703,8 +703,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/SessionAction.html">SessionAction</link></td>
-  <td><link href="../userdocs/actions/session-action.html">session</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/SessionAction.html">SessionAction</link></td>
+  <!-- 2 --><td><link href="../userdocs/actions/session-action.html">session</link></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -712,8 +712,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/SessionFormAction.html">SessionFormAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/acting/SessionFormAction.html">SessionFormAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -721,8 +721,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SessionInvalidatorAction.html">SessionInvalidatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionInvalidatorAction.html">SessionInvalidatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -730,8 +730,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SessionIsValidAction.html">SessionIsValidAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionIsValidAction.html">SessionIsValidAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -739,8 +739,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SessionPropagatorAction.html">SessionPropagatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionPropagatorAction.html">SessionPropagatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -748,8 +748,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SessionStateAction.html">SessionStateAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionStateAction.html">SessionStateAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -757,8 +757,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SessionValidatorAction.html">SessionValidatorAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SessionValidatorAction.html">SessionValidatorAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -766,8 +766,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/SetCharacterEncodingAction.html">SetCharacterEncodingAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/SetCharacterEncodingAction.html">SetCharacterEncodingAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -775,8 +775,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/taglib/acting/TagtestAction.html">TagtestAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/taglib/acting/TagtestAction.html">TagtestAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>taglib</td>
   <!-- C --><td>n</td>
@@ -784,8 +784,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/modular/TestAction.html">modular/TestAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/modular/TestAction.html">modular/TestAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core/samples</td>
   <!-- C --><td>n</td>
@@ -793,8 +793,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/samples/castor/TestBeanAction.html">castor/TestBeanAction</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/samples/castor/TestBeanAction.html">castor/TestBeanAction</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -802,8 +802,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ValidatorActionHelper.html">ValidatorActionHelper</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ValidatorActionHelper.html">ValidatorActionHelper</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -811,8 +811,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/acting/ValidatorActionResult.html">ValidatorActionResult</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/acting/ValidatorActionResult.html">ValidatorActionResult</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -834,8 +834,8 @@
   <th>E</th>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/generation/AbstractCopletGenerator.html">AbstractCopletGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/generation/AbstractCopletGenerator.html">AbstractCopletGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -843,8 +843,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/AbstractGenerator.html">AbstractGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/AbstractGenerator.html">AbstractGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -852,8 +852,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/ant/AntBuildGenerator.html">AntBuildGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/ant/AntBuildGenerator.html">AntBuildGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -861,8 +861,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/asciiart/AsciiArtSVGGenerator.html">AsciiArtSVGGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/asciiart/AsciiArtSVGGenerator.html">AsciiArtSVGGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>asciiart</td>
   <!-- C --><td>n</td>
@@ -870,8 +870,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/portal/coplets/basket/BasketContentGenerator.html">BasketContentGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/portal/coplets/basket/BasketContentGenerator.html">BasketContentGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -879,8 +879,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/portal/coplets/basket/BasketGenerator.html">BasketGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/portal/coplets/basket/BasketGenerator.html">BasketGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -888,8 +888,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/CalendarGenerator.html">CalendarGenerator</link></td>
-  <td><link href="../userdocs/generators/calendar-generator.html">calendar</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/CalendarGenerator.html">CalendarGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/calendar-generator.html">calendar</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -897,8 +897,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/flow/ws/ClientBindingGenerator.html">ClientBindingGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/flow/ws/ClientBindingGenerator.html">ClientBindingGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad/flow</td>
   <!-- C --><td>n</td>
@@ -906,8 +906,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ComposerGenerator.html">ComposerGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ComposerGenerator.html">ComposerGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -915,8 +915,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/authentication/generation/ConfigurationGenerator.html">ConfigurationGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/authentication/generation/ConfigurationGenerator.html">ConfigurationGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>authentication-fw</td>
   <!-- C --><td>n</td>
@@ -924,8 +924,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/portal/generation/ConfigurationGenerator.html">ConfigurationGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/portal/generation/ConfigurationGenerator.html">ConfigurationGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal-fw</td>
   <!-- C --><td>n</td>
@@ -933,8 +933,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/DirectoryGenerator.html">DirectoryGenerator</link></td>
-  <td><link href="../userdocs/generators/directory-generator.html">directory</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/DirectoryGenerator.html">DirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/directory-generator.html">directory</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -942,8 +942,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/generators/error-generator.html">error</link></td>
+  <!-- 2 --><td></td>
+  <!-- 1 --><td><link href="../userdocs/generators/error-generator.html">error</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -951,8 +951,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/EventCacheGenerator.html">EventCacheGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/EventCacheGenerator.html">EventCacheGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>eventcache</td>
   <!-- C --><td>n</td>
@@ -960,8 +960,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/samples/errorhandling/ExceptionGenerator.html">ExceptionGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/samples/errorhandling/ExceptionGenerator.html">ExceptionGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core/samples</td>
   <!-- C --><td>n</td>
@@ -969,8 +969,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/generators/extractor-generator.html">extractor</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/extractor-generator.html">extractor</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -978,8 +978,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/FileGenerator.html">FileGenerator</link></td>
-  <td><link href="../userdocs/generators/file-generator.html">file</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/FileGenerator.html">FileGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/file-generator.html">file</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -987,8 +987,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/forms/generation/FormsGenerator.html">FormsGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/generation/FormsGenerator.html">FormsGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>mail</td>
   <!-- C --><td>n</td>
@@ -996,8 +996,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/FragmentExtractorGenerator.html">FragmentExtractorGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/FragmentExtractorGenerator.html">FragmentExtractorGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>batik</td>
   <!-- C --><td>n</td>
@@ -1005,8 +1005,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/GarbageGenerator.html">GarbageGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/GarbageGenerator.html">GarbageGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1014,8 +1014,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/GenericProxyGenerator.html">GenericProxyGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/GenericProxyGenerator.html">GenericProxyGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>proxy</td>
   <!-- C --><td>n</td>
@@ -1023,8 +1023,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/HTMLGenerator.html">HTMLGenerator</link></td>
-  <td><link href="../userdocs/generators/html-generator.html">html</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/HTMLGenerator.html">HTMLGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/html-generator.html">html</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>html</td>
   <!-- C --><td>n</td>
@@ -1032,8 +1032,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/HttpProxyGenerator.html">HttpProxyGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/HttpProxyGenerator.html">HttpProxyGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>proxy</td>
   <!-- C --><td>n</td>
@@ -1041,8 +1041,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ImageDirectoryGenerator.html">ImageDirectoryGenerator</link></td>
-  <td><link href="../userdocs/generators/imagedirectory-generator.html">imagedirectory</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ImageDirectoryGenerator.html">ImageDirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/imagedirectory-generator.html">imagedirectory</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1050,8 +1050,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/IMAPGenerator.html">IMAPGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/IMAPGenerator.html">IMAPGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>mail</td>
   <!-- C --><td>n</td>
@@ -1059,8 +1059,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/JellyGenerator.html">JellyGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/JellyGenerator.html">JellyGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1068,8 +1068,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/JSGenerator.html">JSGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/JSGenerator.html">JSGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -1077,8 +1077,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/JSPGenerator.html">JSPGenerator</link></td>
-  <td><link href="../userdocs/generators/jsp-generator.html">jsp</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/JSPGenerator.html">JSPGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/jsp-generator.html">jsp</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>jsp</td>
   <!-- C --><td>n</td>
@@ -1086,8 +1086,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/JXTemplateGenerator.html">JXTemplateGenerator</link></td>
-  <td><link href="../userdocs/generators/jx-generator.html">jx</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/JXTemplateGenerator.html">JXTemplateGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/jx-generator.html">jx</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1095,8 +1095,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/LinkStatusGenerator.html">LinkStatusGenerator</link></td>
-  <td><link href="../userdocs/generators/linkstatus-generator.html">linkstatus</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/LinkStatusGenerator.html">LinkStatusGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/linkstatus-generator.html">linkstatus</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1104,8 +1104,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/language/markup/LogicsheetCodeGenerator.html">LogicsheetCodeGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/LogicsheetCodeGenerator.html">LogicsheetCodeGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -1113,8 +1113,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/language/markup/MarkupCodeGenerator.html">MarkupCodeGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/MarkupCodeGenerator.html">MarkupCodeGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -1122,8 +1122,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/MP3DirectoryGenerator.html">MP3DirectoryGenerator</link></td>
-  <td><link href="../userdocs/generators/mp3directory-generator.html">mp3directory</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/MP3DirectoryGenerator.html">MP3DirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/mp3directory-generator.html">mp3directory</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1131,8 +1131,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/NekoHTMLGenerator.html">NekoHTMLGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/NekoHTMLGenerator.html">NekoHTMLGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>html</td>
   <!-- C --><td>n</td>
@@ -1140,8 +1140,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/sitemap/NotifyingGenerator.html">NotifyingGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/sitemap/NotifyingGenerator.html">NotifyingGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1149,8 +1149,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ParseExceptionGenerator.html">ParseExceptionGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ParseExceptionGenerator.html">ParseExceptionGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>chaperon</td>
   <!-- C --><td>n</td>
@@ -1158,8 +1158,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/PauseGenerator.html">PauseGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/PauseGenerator.html">PauseGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core/test</td>
   <!-- C --><td>n</td>
@@ -1167,8 +1167,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/PhpGenerator.html">PhpGenerator</link></td>
-  <td><link href="../userdocs/generators/php-generator.html">php</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/PhpGenerator.html">PhpGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/php-generator.html">php</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>php</td>
   <!-- C --><td>n</td>
@@ -1176,8 +1176,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/generation/PortalGenerator.html">PortalGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/generation/PortalGenerator.html">PortalGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -1185,8 +1185,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/portal/generation/PortalGenerator.html">PortalGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/portal/generation/PortalGenerator.html">PortalGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal-fw</td>
   <!-- C --><td>n</td>
@@ -1194,8 +1194,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/generators/profile-generator.html">profile</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/profile-generator.html">profile</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -1203,8 +1203,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ProfilerGenerator.html">ProfilerGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ProfilerGenerator.html">ProfilerGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>profiler</td>
   <!-- C --><td>n</td>
@@ -1212,8 +1212,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">ProgramGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/generator/ProgramGenerator.html">ProgramGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -1221,8 +1221,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/PythonGenerator.html">xsp/PythonGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/PythonGenerator.html">xsp/PythonGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>python</td>
   <!-- C --><td>n</td>
@@ -1230,8 +1230,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/RequestAttributeGenerator.html">RequestAttributeGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/RequestAttributeGenerator.html">RequestAttributeGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1239,8 +1239,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/RequestGenerator.html">RequestGenerator</link></td>
-  <td><link href="../userdocs/generators/request-generator.html">request</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/RequestGenerator.html">RequestGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/request-generator.html">request</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1248,8 +1248,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/RequestParameterGenerator.html">RequestParameterGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/RequestParameterGenerator.html">RequestParameterGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1257,8 +1257,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ScriptGenerator.html">ScriptGenerator</link></td>
-  <td><link href="../userdocs/generators/script-generator.html">script</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ScriptGenerator.html">ScriptGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/script-generator.html">script</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>bsf</td>
   <!-- C --><td>n</td>
@@ -1266,8 +1266,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/SearchGenerator.html">SearchGenerator</link></td>
-  <td><link href="../userdocs/generators/search-generator.html">search</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/SearchGenerator.html">SearchGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/search-generator.html">search</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>lucene</td>
   <!-- C --><td>n</td>
@@ -1275,8 +1275,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ServerPagesGenerator.html">ServerPagesGenerator</link></td>
-  <td><link href="../userdocs/generators/serverpages-generator.html">serverpages</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ServerPagesGenerator.html">ServerPagesGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/serverpages-generator.html">serverpages</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -1284,8 +1284,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ServiceableGenerator.html">ServiceableGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ServiceableGenerator.html">ServiceableGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1293,8 +1293,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/ServletGenerator.html">ServletGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/ServletGenerator.html">ServletGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1302,8 +1302,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/SessionAttributeGenerator.html">SessionAttributeGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/SessionAttributeGenerator.html">SessionAttributeGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1311,8 +1311,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/slop/generation/SlopGenerator.html">SlopGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/slop/generation/SlopGenerator.html">SlopGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>slop</td>
   <!-- C --><td>n</td>
@@ -1320,8 +1320,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/StatusGenerator.html">StatusGenerator</link></td>
-  <td><link href="../userdocs/generators/status-generator.html">status</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/StatusGenerator.html">StatusGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/status-generator.html">status</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1329,8 +1329,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/StreamGenerator.html">StreamGenerator</link></td>
-  <td><link href="../userdocs/generators/stream-generator.html">stream</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/StreamGenerator.html">StreamGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/stream-generator.html">stream</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1338,8 +1338,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/SWFGenerator.html">SWFGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/SWFGenerator.html">SWFGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>swf</td>
   <!-- C --><td>n</td>
@@ -1347,8 +1347,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/TextGenerator.html">TextGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TextGenerator.html">TextGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>chaperon</td>
   <!-- C --><td>n</td>
@@ -1356,8 +1356,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/TraversableGenerator.html">TraversableGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraversableGenerator.html">TraversableGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>repository</td>
   <!-- C --><td>n</td>
@@ -1365,8 +1365,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/TraversableSourceDescriptionGenerator.html">TraversableSourceDescriptionGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraversableSourceDescriptionGenerator.html">TraversableSourceDescriptionGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>repository</td>
   <!-- C --><td>n</td>
@@ -1374,8 +1374,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/TraversableSourceGenerator.html">TraversableSourceGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraversableSourceGenerator.html">TraversableSourceGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>repository</td>
   <!-- C --><td>n</td>
@@ -1383,8 +1383,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/TraxGenerator.html">TraxGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/TraxGenerator.html">TraxGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1392,8 +1392,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/VelocityGenerator.html">VelocityGenerator</link></td>
-  <td><link href="../userdocs/generators/velocity-generator.html">velocity</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/VelocityGenerator.html">VelocityGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/velocity-generator.html">velocity</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>velocity</td>
   <!-- C --><td>n</td>
@@ -1401,8 +1401,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/generators/wsproxy-generator.html">wsproxy</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/generators/wsproxy-generator.html">wsproxy</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -1410,8 +1410,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/WebServiceProxyGenerator.html">WebServiceProxyGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/WebServiceProxyGenerator.html">WebServiceProxyGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>proxy</td>
   <!-- C --><td>n</td>
@@ -1419,8 +1419,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/XMidiGenerator.html">XMidiGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XMidiGenerator.html">XMidiGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>midi</td>
   <!-- C --><td>n</td>
@@ -1428,8 +1428,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/XMLDBGenerator.html">XMLDBGenerator</link></td>
-  <td><link href="../userdocs/generators/xmldb-generator.html">xmldb</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XMLDBGenerator.html">XMLDBGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/xmldb-generator.html">xmldb</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>xmldb</td>
   <!-- C --><td>n</td>
@@ -1437,8 +1437,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/XMLDBCollectionGenerator.html">XMLDBCollectionGenerator</link></td>
-  <td><link href="../userdocs/generators/xmldbcollection-generator.html">xmldbcollection</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XMLDBCollectionGenerator.html">XMLDBCollectionGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/xmldbcollection-generator.html">xmldbcollection</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>xmldb</td>
   <!-- C --><td>n</td>
@@ -1446,8 +1446,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/XPathDirectoryGenerator.html">XPathDirectoryGenerator</link></td>
-  <td><link href="../userdocs/generators/xpathdirectory-generator.html">xpathdirectory</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XPathDirectoryGenerator.html">XPathDirectoryGenerator</link></td>
+  <!-- 2 --><td><link href="../userdocs/generators/xpathdirectory-generator.html">xpathdirectory</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -1455,8 +1455,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/generation/XPathTraversableGenerator.html">XPathTraversableGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/generation/XPathTraversableGenerator.html">XPathTraversableGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>repository</td>
   <!-- C --><td>n</td>
@@ -1464,8 +1464,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/XSPGenerator.html">XSPGenerator</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/markup/xsp/XSPGenerator.html">XSPGenerator</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -1487,8 +1487,8 @@
   <th>E</th>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/AbstractPreparableMatcher.html">AbstractPreparableMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/AbstractPreparableMatcher.html">AbstractPreparableMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1496,8 +1496,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/AbstractRegexpMatcher.html">AbstractRegexpMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/AbstractRegexpMatcher.html">AbstractRegexpMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1505,8 +1505,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/AbstractWildcardMatcher.html">AbstractWildcardMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/AbstractWildcardMatcher.html">AbstractWildcardMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1514,8 +1514,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/CookieMatcher.html">CookieMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/CookieMatcher.html">CookieMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1523,8 +1523,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/HeaderMatcher.html">HeaderMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/HeaderMatcher.html">HeaderMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1532,8 +1532,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/LocaleMatcher.html">LocaleMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/LocaleMatcher.html">LocaleMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1541,8 +1541,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/modular/CachingRegexpMatcher.html">modular/CachingRegexpMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/modular/CachingRegexpMatcher.html">modular/CachingRegexpMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1550,8 +1550,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/modular/CachingWildcardMatcher.html">modular/CachingWildcardMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/modular/CachingWildcardMatcher.html">modular/CachingWildcardMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1559,8 +1559,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/modular/WildcardMatcher.html">modular/WildcardMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/modular/WildcardMatcher.html">modular/WildcardMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1568,8 +1568,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/MountTableMatcher.html">MountTableMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/MountTableMatcher.html">MountTableMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1577,8 +1577,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/ParameterMatcher.html">ParameterMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/ParameterMatcher.html">ParameterMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1586,8 +1586,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/PreparableMatcher.html">PreparableMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/PreparableMatcher.html">PreparableMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1595,8 +1595,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpHeaderMatcher.html">RegexpHeaderMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpHeaderMatcher.html">RegexpHeaderMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1604,8 +1604,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpHostMatcher.html">RegexpHostMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpHostMatcher.html">RegexpHostMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1613,8 +1613,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpParameterMatcher.html">RegexpParameterMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpParameterMatcher.html">RegexpParameterMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1622,8 +1622,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpRequestAttributeMatcher.html">RegexpRequestAttributeMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpRequestAttributeMatcher.html">RegexpRequestAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1631,8 +1631,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpRequestParameterMatcher.html">RegexpRequestParameterMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpRequestParameterMatcher.html">RegexpRequestParameterMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1640,8 +1640,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpSessionAttributeMatcher.html">RegexpSessionAttributeMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpSessionAttributeMatcher.html">RegexpSessionAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1649,8 +1649,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpURIMatcher.html">RegexpURIMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpURIMatcher.html">RegexpURIMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1658,8 +1658,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RegexpURIDefaultsMatcher.html">RegexpURIDefaultsMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RegexpURIDefaultsMatcher.html">RegexpURIDefaultsMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1667,8 +1667,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RequestAttributeMatcher.html">RequestAttributeMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RequestAttributeMatcher.html">RequestAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1676,8 +1676,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/RequestParameterMatcher.html">RequestParameterMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/RequestParameterMatcher.html">RequestParameterMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1685,8 +1685,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/SessionAttributeMatcher.html">SessionAttributeMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/SessionAttributeMatcher.html">SessionAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1694,8 +1694,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/WildcardHeaderMatcher.html">WildcardHeaderMatcher</link></td>
-  <td><link href="../userdocs/matchers/wildcardheader-matcher.html">wildcardheader</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardHeaderMatcher.html">WildcardHeaderMatcher</link></td>
+  <!-- 2 --><td><link href="../userdocs/matchers/wildcardheader-matcher.html">wildcardheader</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1703,8 +1703,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/WildcardHostMatcher.html">WildcardHostMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardHostMatcher.html">WildcardHostMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1712,8 +1712,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/WildcardParameterMatcher.html">WildcardParameterMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardParameterMatcher.html">WildcardParameterMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1721,8 +1721,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/WildcardRequestAttributeMatcher.html">WildcardRequestAttributeMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardRequestAttributeMatcher.html">WildcardRequestAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1730,8 +1730,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/WildcardRequestParameterMatcher.html">WildcardRequestParameterMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardRequestParameterMatcher.html">WildcardRequestParameterMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1739,8 +1739,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/WildcardSessionAttributeMatcher.html">WildcardSessionAttributeMatcher</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardSessionAttributeMatcher.html">WildcardSessionAttributeMatcher</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1748,8 +1748,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/matching/WildcardURIMatcher.html">WildcardURIMatcher</link></td>
-  <td><link href="../userdocs/matchers/wildcarduri-matcher.html">wildcarduri</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/matching/WildcardURIMatcher.html">WildcardURIMatcher</link></td>
+  <!-- 2 --><td><link href="../userdocs/matchers/wildcarduri-matcher.html">wildcarduri</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1771,8 +1771,8 @@
   <th>E</th>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/AbstractReader.html">AbstractReader</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/AbstractReader.html">AbstractReader</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1780,8 +1780,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/AxisRPCReader.html">AxisRPCReader</link></td>
-  <td><link href="../userdocs/readers/axisrpc-reader.html">axisrpc</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/AxisRPCReader.html">AxisRPCReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/axisrpc-reader.html">axisrpc</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>axis</td>
   <!-- C --><td>n</td>
@@ -1789,8 +1789,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/ComposerReader.html">ComposerReader</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ComposerReader.html">ComposerReader</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1798,8 +1798,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/DatabaseReader.html">DatabaseReader</link></td>
-  <td><link href="../userdocs/readers/database-reader.html">database</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/DatabaseReader.html">DatabaseReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/database-reader.html">database</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -1807,8 +1807,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/DirectoryZipArchiver.html">DirectoryZipArchiver</link></td>
-  <td><link href="../userdocs/readers/directoryziparchiver-reader.html">directoryziparchiver</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/DirectoryZipArchiver.html">DirectoryZipArchiver</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/directoryziparchiver-reader.html">directoryziparchiver</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1816,8 +1816,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/ImageReader.html">ImageReader</link></td>
-  <td><link href="../userdocs/readers/image-reader.html">image</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ImageReader.html">ImageReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/image-reader.html">image</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1825,8 +1825,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/JSPReader.html">JSPReader</link></td>
-  <td><link href="../userdocs/readers/jsp-reader.html">jsp</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/JSPReader.html">JSPReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/jsp-reader.html">jsp</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>jsp</td>
   <!-- C --><td>n</td>
@@ -1834,8 +1834,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/reading/ProxyReader.html">ProxyReader</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/reading/ProxyReader.html">ProxyReader</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -1843,8 +1843,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/ResourceReader.html">ResourceReader</link></td>
-  <td><link href="../userdocs/readers/resource-reader.html">resource</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ResourceReader.html">ResourceReader</link></td>
+  <!-- 2 --><td><link href="../userdocs/readers/resource-reader.html">resource</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1852,8 +1852,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/reading/ServiceableReader.html">ServiceableReader</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/reading/ServiceableReader.html">ServiceableReader</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1875,8 +1875,8 @@
   <th>E</th>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/AbstractRegexpSelector.html">AbstractRegexpSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/AbstractRegexpSelector.html">AbstractRegexpSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1884,8 +1884,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/AbstractSwitchSelector.html">AbstractSwitchSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/AbstractSwitchSelector.html">AbstractSwitchSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1893,8 +1893,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/BrowserSelector.html">BrowserSelector</link></td>
-  <td><link href="../userdocs/selectors/browser-selector.html">browser</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/BrowserSelector.html">BrowserSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/browser-selector.html">browser</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1902,8 +1902,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/CookieSelector.html">CookieSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/CookieSelector.html">CookieSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1911,8 +1911,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/treeprocessor/sitemap/ComponentsSelector.html">ComponentsSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/treeprocessor/sitemap/ComponentsSelector.html">ComponentsSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1920,8 +1920,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/DateSelector.html">DateSelector</link></td>
-  <td><link href="../userdocs/selectors/date-selector.html">date</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/DateSelector.html">DateSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/date-selector.html">date</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -1929,8 +1929,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/ExceptionSelector.html">ExceptionSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/ExceptionSelector.html">ExceptionSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1938,8 +1938,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/language/generator/GeneratorSelector.html">GeneratorSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/language/generator/GeneratorSelector.html">GeneratorSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xsp</td>
   <!-- C --><td>n</td>
@@ -1947,8 +1947,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/HeaderSelector.html">HeaderSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/HeaderSelector.html">HeaderSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1956,8 +1956,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/HostSelector.html">HostSelector</link></td>
-  <td><link href="../userdocs/selectors/host-selector.html">host</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/HostSelector.html">HostSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/host-selector.html">host</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1965,8 +1965,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/mail/MailCommandSelector.html">MailCommandSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/mail/MailCommandSelector.html">MailCommandSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>mail</td>
   <!-- C --><td>n</td>
@@ -1974,8 +1974,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/selection/MediaSelector.html">MediaSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/selection/MediaSelector.html">MediaSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -1983,8 +1983,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/NamedPatternsSelector.html">NamedPatternsSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/NamedPatternsSelector.html">NamedPatternsSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -1992,8 +1992,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/pipeline/OutputComponentSelector.html">OutputComponentSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/pipeline/OutputComponentSelector.html">OutputComponentSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2001,8 +2001,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/ParameterSelector.html">ParameterSelector</link></td>
-  <td><link href="../userdocs/selectors/parameter-selector.html">parameter</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/ParameterSelector.html">ParameterSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/parameter-selector.html">parameter</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2010,8 +2010,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/RegexpHeaderSelector.html">RegexpHeaderSelector</link></td>
-  <td><link href="../userdocs/selectors/regular-expression-header-selector.html">regular-expression-header</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RegexpHeaderSelector.html">RegexpHeaderSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/regular-expression-header-selector.html">regular-expression-header</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2019,8 +2019,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/RegexpRequestParameterSelector.html">RegexpRequestParameterSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RegexpRequestParameterSelector.html">RegexpRequestParameterSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2028,8 +2028,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/RequestAttributeSelector.html">RequestAttributeSelector</link></td>
-  <td><link href="../userdocs/selectors/requestattribute-selector.html">requestattribute</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RequestAttributeSelector.html">RequestAttributeSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/requestattribute-selector.html">requestattribute</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2037,8 +2037,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/RequestMethodSelector.html">RequestMethodSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RequestMethodSelector.html">RequestMethodSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2046,8 +2046,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/RequestParameterSelector.html">RequestParameterSelector</link></td>
-  <td><link href="../userdocs/selectors/requestparameter-selector.html">requestparameter</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/RequestParameterSelector.html">RequestParameterSelector</link></td>
+  <!-- 2 --><td><link href="../userdocs/selectors/requestparameter-selector.html">requestparameter</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2055,8 +2055,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/ResourceExistsSelector.html">ResourceExistsSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/ResourceExistsSelector.html">ResourceExistsSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2064,8 +2064,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/SessionAttributeSelector.html">SessionAttributeSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/SessionAttributeSelector.html">SessionAttributeSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2073,8 +2073,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/SimpleSelector.html">SimpleSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/SimpleSelector.html">SimpleSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2082,8 +2082,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/sitemap/SitemapComponentSelector.html">SitemapComponentSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/sitemap/SitemapComponentSelector.html">SitemapComponentSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2091,8 +2091,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/SwitchSelector.html">SwitchSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/SwitchSelector.html">SwitchSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2100,8 +2100,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/selection/XPathExceptionSelector.html">XPathExceptionSelector</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/selection/XPathExceptionSelector.html">XPathExceptionSelector</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2123,8 +2123,8 @@
   <th>E</th>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/AbstractSerializer.html">AbstractSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/AbstractSerializer.html">AbstractSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2132,8 +2132,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/garbage/serializer/AbstractSerializer.html">AbstractSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/AbstractSerializer.html">AbstractSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad/garbage</td>
   <!-- C --><td>n</td>
@@ -2141,8 +2141,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/AbstractTextSerializer.html">AbstractTextSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/AbstractTextSerializer.html">AbstractTextSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2150,8 +2150,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/ElementProcessorSerializer.html">ElementProcessorSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/ElementProcessorSerializer.html">ElementProcessorSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>poi</td>
   <!-- C --><td>n</td>
@@ -2159,8 +2159,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/serializers/EncodingSerializer.html">EncodingSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/EncodingSerializer.html">EncodingSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>serializers</td>
   <!-- C --><td>n</td>
@@ -2168,8 +2168,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/garbage/serializer/EncodingSerializer.html">EncodingSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/EncodingSerializer.html">EncodingSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad/garbage</td>
   <!-- C --><td>n</td>
@@ -2177,8 +2177,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/FOPSerializer.html">FOPSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/FOPSerializer.html">FOPSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>fop</td>
   <!-- C --><td>n</td>
@@ -2186,8 +2186,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/HSSFSerializer.html">HSSFSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/HSSFSerializer.html">HSSFSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>poi</td>
   <!-- C --><td>n</td>
@@ -2195,8 +2195,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/HTMLSerializer.html">HTMLSerializer</link></td>
-  <td><link href="../userdocs/serializers/html-serializer.html">html</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/HTMLSerializer.html">HTMLSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/html-serializer.html">html</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2204,8 +2204,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/serializers/HTMLSerializer.html">HTMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/HTMLSerializer.html">HTMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>serializers</td>
   <!-- C --><td>n</td>
@@ -2213,8 +2213,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/garbage/serializer/HTMLSerializer.html">HTMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/HTMLSerializer.html">HTMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad/garbage</td>
   <!-- C --><td>n</td>
@@ -2222,8 +2222,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/serialization/IncludingHTMLSerializer.html">IncludingHTMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/serialization/IncludingHTMLSerializer.html">IncludingHTMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2231,8 +2231,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/iTextSerializer.html">iTextSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/iTextSerializer.html">iTextSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>itext</td>
   <!-- C --><td>n</td>
@@ -2240,8 +2240,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/LinkSerializer.html">LinkSerializer</link></td>
-  <td><link href="../userdocs/serializers/link-serializer.html">link</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/LinkSerializer.html">LinkSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/link-serializer.html">link</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2249,8 +2249,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/pcl-serializer.html">pcl</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/pcl-serializer.html">pcl</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2258,8 +2258,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/pdf-serializer.html">pdf</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/pdf-serializer.html">pdf</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2267,8 +2267,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/POIFSSerializer.html">POIFSSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/POIFSSerializer.html">POIFSSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>poi</td>
   <!-- C --><td>n</td>
@@ -2276,8 +2276,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/ps-serializer.html">ps</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/ps-serializer.html">ps</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2285,8 +2285,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/RTFSerializer.html">RTFSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/RTFSerializer.html">RTFSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>jfor</td>
   <!-- C --><td>n</td>
@@ -2294,8 +2294,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/garbage/serializer/Serializer.html">Serializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/Serializer.html">Serializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad/garbage</td>
   <!-- C --><td>n</td>
@@ -2303,8 +2303,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/SVGSerializer.html">SVGSerializer</link></td>
-  <td><link href="../userdocs/serializers/svg-serializer.html">svg</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/SVGSerializer.html">SVGSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svg-serializer.html">svg</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>batik</td>
   <!-- C --><td>n</td>
@@ -2312,8 +2312,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/svgjpeg-serializer.html">svgjpeg</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgjpeg-serializer.html">svgjpeg</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2321,8 +2321,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/svgpng-serializer.html">svgpng</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgpng-serializer.html">svgpng</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2330,8 +2330,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/svgtiff-serializer.html">svgtiff</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgtiff-serializer.html">svgtiff</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2339,8 +2339,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/svgxml-serializer.html">svgxml</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/svgxml-serializer.html">svgxml</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2348,8 +2348,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/SWFSerializer.html">SWFSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/SWFSerializer.html">SWFSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>swf</td>
   <!-- C --><td>n</td>
@@ -2357,8 +2357,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/TextSerializer.html">TextSerializer</link></td>
-  <td><link href="../userdocs/serializers/text-serializer.html">text</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/TextSerializer.html">TextSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/text-serializer.html">text</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2366,8 +2366,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/vrml-serializer.html">vrml</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/vrml-serializer.html">vrml</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2375,8 +2375,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/wap-serializer.html">wap</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/wap-serializer.html">wap</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2384,8 +2384,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/xhtml-serializer.html">xhtml</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/xhtml-serializer.html">xhtml</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2393,8 +2393,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/serializers/XHTMLSerializer.html">XHTMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/XHTMLSerializer.html">XHTMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>serializers</td>
   <!-- C --><td>n</td>
@@ -2402,8 +2402,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/garbage/serializer/XHTMLSerializer.html">XHTMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/XHTMLSerializer.html">XHTMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad/garbage</td>
   <!-- C --><td>n</td>
@@ -2411,8 +2411,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/serializers/xls-serializer.html">xls</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/xls-serializer.html">xls</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2420,8 +2420,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/XMidiSerializer.html">XMidiSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/XMidiSerializer.html">XMidiSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>midi</td>
   <!-- C --><td>n</td>
@@ -2429,8 +2429,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/XMLSerializer.html">XMLSerializer</link></td>
-  <td><link href="../userdocs/serializers/xml-serializer.html">xml</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/XMLSerializer.html">XMLSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/xml-serializer.html">xml</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2438,8 +2438,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/sax/XMLSerializer.html">sax/XMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/sax/XMLSerializer.html">sax/XMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>serializers</td>
   <!-- C --><td>n</td>
@@ -2447,8 +2447,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/components/serializers/XMLSerializer.html">XMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/components/serializers/XMLSerializer.html">XMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>serializers</td>
   <!-- C --><td>n</td>
@@ -2456,8 +2456,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/garbage/serializer/XMLSerializer.html">XMLSerializer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/garbage/serializer/XMLSerializer.html">XMLSerializer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad/garbage</td>
   <!-- C --><td>n</td>
@@ -2465,8 +2465,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/serialization/ZipArchiveSerializer.html">ZipArchiveSerializer</link></td>
-  <td><link href="../userdocs/serializers/ziparchive-serializer.html">ziparchive</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/serialization/ZipArchiveSerializer.html">ZipArchiveSerializer</link></td>
+  <!-- 2 --><td><link href="../userdocs/serializers/ziparchive-serializer.html">ziparchive</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2488,8 +2488,8 @@
   <th>E</th>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/constrained/AbstractConstrainedTransformer.html">AbstractConstrainedTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/constrained/AbstractConstrainedTransformer.html">AbstractConstrainedTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -2497,8 +2497,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/AbstractCopletTransformer.html">AbstractCopletTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/AbstractCopletTransformer.html">AbstractCopletTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2506,8 +2506,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/AbstractDOMTransformer.html">AbstractDOMTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractDOMTransformer.html">AbstractDOMTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2515,8 +2515,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/AbstractExtractionTransformer.html">AbstractExtractionTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractExtractionTransformer.html">AbstractExtractionTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2524,8 +2524,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/AbstractSAXTransformer.html">AbstractSAXTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractSAXTransformer.html">AbstractSAXTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2533,8 +2533,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/AbstractSessionTransformer.html">AbstractSessionTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/AbstractSessionTransformer.html">AbstractSessionTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -2542,8 +2542,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/AbstractTransformer.html">AbstractTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AbstractTransformer.html">AbstractTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2551,8 +2551,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/AugmentTransformer.html">AugmentTransformer</link></td>
-  <td><link href="../userdocs/transformers/augment-transformer.html">augment</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/AugmentTransformer.html">AugmentTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/augment-transformer.html">augment</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2560,8 +2560,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/portal/coplets/basket/BasketTransformer.html">BasketTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/portal/coplets/basket/BasketTransformer.html">BasketTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2569,8 +2569,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/BetwixtTransformer.html">BetwixtTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/BetwixtTransformer.html">BetwixtTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -2578,8 +2578,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/CastorTransformer.html">CastorTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/CastorTransformer.html">CastorTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -2587,8 +2587,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/CIncludeTransformer.html">CIncludeTransformer</link></td>
-  <td><link href="../userdocs/transformers/cinclude-transformer.html">cinclude</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/CIncludeTransformer.html">CIncludeTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/cinclude-transformer.html">cinclude</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2596,8 +2596,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/CopletTransformer.html">CopletTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/CopletTransformer.html">CopletTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2605,8 +2605,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/DASLTransformer.html">DASLTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/DASLTransformer.html">DASLTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>webdav</td>
   <!-- C --><td>n</td>
@@ -2614,8 +2614,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/DeliTransformer.html">DeliTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/DeliTransformer.html">DeliTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>deli</td>
   <!-- C --><td>n</td>
@@ -2623,8 +2623,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/EncodeURLTransformer.html">EncodeURLTransformer</link></td>
-  <td><link href="../userdocs/transformers/encodeurl-transformer.html">encodeurl</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/EncodeURLTransformer.html">EncodeURLTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/encodeurl-transformer.html">encodeurl</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2632,8 +2632,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/ErrorAwareTraxTransformer.html">ErrorAwareTraxTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ErrorAwareTraxTransformer.html">ErrorAwareTraxTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -2641,8 +2641,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/EventLinkTransformer.html">EventLinkTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/EventLinkTransformer.html">EventLinkTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2650,8 +2650,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/ExtendedParserTransformer.html">ExtendedParserTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ExtendedParserTransformer.html">ExtendedParserTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>chaperon</td>
   <!-- C --><td>n</td>
@@ -2659,8 +2659,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td></td>
-  <td><link href="../userdocs/transformers/extractor-transformer.html">extractor</link></td>
+  <!-- 1 --><td></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/extractor-transformer.html">extractor</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td></td>
   <!-- C --><td>n</td>
@@ -2668,8 +2668,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/FragmentExtractorTransformer.html">FragmentExtractorTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/FragmentExtractorTransformer.html">FragmentExtractorTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>batik</td>
   <!-- C --><td>n</td>
@@ -2677,8 +2677,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/FilterTransformer.html">FilterTransformer</link></td>
-  <td><link href="../userdocs/transformers/filter-transformer.html">filter</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/FilterTransformer.html">FilterTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/filter-transformer.html">filter</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2686,8 +2686,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/forms/transformation/FormsTemplateTransformer.html">FormsTemplateTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/forms/transformation/FormsTemplateTransformer.html">FormsTemplateTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>forms</td>
   <!-- C --><td>n</td>
@@ -2695,8 +2695,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/HTMLEventLinkTransformer.html">HTMLEventLinkTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/HTMLEventLinkTransformer.html">HTMLEventLinkTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2704,8 +2704,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/HTMLRootTransformer.html">HTMLRootTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/HTMLRootTransformer.html">HTMLRootTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2713,8 +2713,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/HTMLTransformer.html">HTMLTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/HTMLTransformer.html">HTMLTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>html</td>
   <!-- C --><td>n</td>
@@ -2722,8 +2722,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/I18nTransformer.html">I18nTransformer</link></td>
-  <td><link href="../userdocs/transformers/i18n-transformer.html">i18n</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/I18nTransformer.html">I18nTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/i18n-transformer.html">i18n</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2731,8 +2731,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/IncludeTransformer.html">IncludeTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/IncludeTransformer.html">IncludeTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>scratchpad</td>
   <!-- C --><td>n</td>
@@ -2740,8 +2740,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/JPathTransformer.html">JPathTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/JPathTransformer.html">JPathTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2749,8 +2749,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/JXTemplateTransformer.html">JXTemplateTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/JXTemplateTransformer.html">JXTemplateTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2758,8 +2758,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/LDAPTransformer.html">LDAPTransformer</link></td>
-  <td><link href="../userdocs/transformers/ldap-transformer.html">ldap</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LDAPTransformer.html">LDAPTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/ldap-transformer.html">ldap</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>naming</td>
   <!-- C --><td>n</td>
@@ -2767,8 +2767,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/LuceneIndexTransformer.html">LuceneIndexTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LuceneIndexTransformer.html">LuceneIndexTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>lucene</td>
   <!-- C --><td>n</td>
@@ -2776,8 +2776,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/LexicalTransformer.html">LexicalTransformer</link></td>
-  <td><link href="../userdocs/transformers/lexer-transformer.html">lexer</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LexicalTransformer.html">LexicalTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/lexer-transformer.html">lexer</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>chaperon</td>
   <!-- C --><td>n</td>
@@ -2785,8 +2785,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/LinkTransformer.html">LinkTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/LinkTransformer.html">LinkTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2794,8 +2794,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/LinkRewriterTransformer.html">LinkRewriterTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LinkRewriterTransformer.html">LinkRewriterTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>linkrewriter</td>
   <!-- C --><td>n</td>
@@ -2803,8 +2803,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/LogTransformer.html">LogTransformer</link></td>
-  <td><link href="../userdocs/transformers/log-transformer.html">log</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/LogTransformer.html">LogTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/log-transformer.html">log</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2812,8 +2812,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/NewEventLinkTransformer.html">NewEventLinkTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/NewEventLinkTransformer.html">NewEventLinkTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2821,8 +2821,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/ParserTransformer.html">ParserTransformer</link></td>
-  <td><link href="../userdocs/transformers/parser-transformer.html">parser</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ParserTransformer.html">ParserTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/parser-transformer.html">parser</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>chaperon</td>
   <!-- C --><td>n</td>
@@ -2830,8 +2830,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/PatternTransformer.html">PatternTransformer</link></td>
-  <td><link href="../userdocs/transformers/pattern-transformer.html">pattern</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/PatternTransformer.html">PatternTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/pattern-transformer.html">pattern</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>chaperon</td>
   <!-- C --><td>n</td>
@@ -2839,8 +2839,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/ProxyTransformer.html">ProxyTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/ProxyTransformer.html">ProxyTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2848,8 +2848,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/ReadDOMSessionTransformer.html">ReadDOMSessionTransformer</link></td>
-  <td><link href="../userdocs/transformers/readdomsession-transformer.html">readdomsession</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ReadDOMSessionTransformer.html">ReadDOMSessionTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/readdomsession-transformer.html">readdomsession</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2857,8 +2857,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/RoleFilterTransformer.html">RoleFilterTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/RoleFilterTransformer.html">RoleFilterTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2866,8 +2866,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/portal/transformation/RSSTransformer.html">RSSTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/portal/transformation/RSSTransformer.html">RSSTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>portal</td>
   <!-- C --><td>n</td>
@@ -2875,8 +2875,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/mail/transformation/SendMailTransformer.html">SendMailTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/mail/transformation/SendMailTransformer.html">SendMailTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>mail</td>
   <!-- C --><td>n</td>
@@ -2884,8 +2884,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/ServiceableTransformer.html">ServiceableTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/ServiceableTransformer.html">ServiceableTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2893,8 +2893,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionTransformer.html">SessionTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionTransformer.html">SessionTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -2902,8 +2902,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionPostTransformer.html">SessionPostTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionPostTransformer.html">SessionPostTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -2911,8 +2911,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionPreTransformer.html">SessionPreTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/webapps/session/transformation/SessionPreTransformer.html">SessionPreTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>session-fw</td>
   <!-- C --><td>n</td>
@@ -2920,17 +2920,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/SimpleFormInstanceExtractionTransformer.html">SimpleFormInstanceExtractionTransformer</link></td>
-  <td></td>
-  <!-- A --><td>n</td>
-  <!-- B --><td>core</td>
-  <!-- C --><td>y</td>
-  <!-- D --><td></td>
-  <!-- E --><td></td>
-</tr>
-<tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/SimpleFormTransformer.html">SimpleFormTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SimpleFormInstanceExtractionTransformer.html">SimpleFormInstanceExtractionTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2938,8 +2929,17 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/SourcePropsWritingTransformer.html">SourcePropsWritingTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SimpleFormTransformer.html">SimpleFormTransformer</link></td>
+  <!-- 2 --><td></td>
+  <!-- A --><td>n</td>
+  <!-- B --><td>core</td>
+  <!-- C --><td>y</td>
+  <!-- D --><td></td>
+  <!-- E --><td></td>
+</tr>
+<tr>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SourcePropsWritingTransformer.html">SourcePropsWritingTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>repository</td>
   <!-- C --><td>n</td>
@@ -2947,8 +2947,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/SourceWritingTransformer.html">SourceWritingTransformer</link></td>
-  <td><link href="../userdocs/transformers/sourcewriting-transformer.html">sourcewriting</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SourceWritingTransformer.html">SourceWritingTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/sourcewriting-transformer.html">sourcewriting</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -2956,8 +2956,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/SQLTransformer.html">SQLTransformer</link></td>
-  <td><link href="../userdocs/transformers/sql-transformer.html">sql</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/SQLTransformer.html">SQLTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/sql-transformer.html">sql</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>databases</td>
   <!-- C --><td>n</td>
@@ -2965,8 +2965,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/TagTransformer.html">TagTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/TagTransformer.html">TagTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>taglib</td>
   <!-- C --><td>n</td>
@@ -2974,8 +2974,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/TraxTransformer.html">TraxTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/TraxTransformer.html">TraxTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>core</td>
   <!-- C --><td>n</td>
@@ -2983,8 +2983,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/VariableRewriterTransformer.html">VariableRewriterTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/VariableRewriterTransformer.html">VariableRewriterTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>linkrewriter</td>
   <!-- C --><td>n</td>
@@ -2992,8 +2992,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/Web3RfcTransformer.html">Web3RfcTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/Web3RfcTransformer.html">Web3RfcTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>web3</td>
   <!-- C --><td>n</td>
@@ -3001,8 +3001,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/WriteDOMSessionTransformer.html">WriteDOMSessionTransformer</link></td>
-  <td><link href="../userdocs/transformers/writedomsession-transformer.html">writedomsession</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/WriteDOMSessionTransformer.html">WriteDOMSessionTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/writedomsession-transformer.html">writedomsession</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -3010,8 +3010,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/XIncludeTransformer.html">XIncludeTransformer</link></td>
-  <td><link href="../userdocs/transformers/xinclude-transformer.html">xinclude</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/XIncludeTransformer.html">XIncludeTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/xinclude-transformer.html">xinclude</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -3019,8 +3019,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/XMLDBTransformer.html">XMLDBTransformer</link></td>
-  <td></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/XMLDBTransformer.html">XMLDBTransformer</link></td>
+  <!-- 2 --><td></td>
   <!-- A --><td>n</td>
   <!-- B --><td>xmldb</td>
   <!-- C --><td>n</td>
@@ -3028,8 +3028,8 @@
   <!-- E --><td></td>
 </tr>
 <tr>
-  <td><link href="../apidocs/org/apache/cocoon/transformation/TraxTransformer.html">TraxTransformer</link></td>
-  <td><link href="../userdocs/transformers/xslt-transformer.html">xslt</link></td>
+  <!-- 1 --><td><link href="../apidocs/org/apache/cocoon/transformation/TraxTransformer.html">TraxTransformer</link></td>
+  <!-- 2 --><td><link href="../userdocs/transformers/xslt-transformer.html">xslt</link></td>
   <!-- A --><td>y</td>
   <!-- B --><td>core</td>
   <!-- C --><td>y</td>
@@ -3066,7 +3066,8 @@
           Enhance the SitemapTask.java
         </li>
         <li>
-          Add basic SitemapTask attributes to the java code. This could be
+          Add basic SitemapTask attributes to the java code for each compoent.
+          This could be
           automated. Check if the SitemapTask.java copes with empty default
           values. Add to column C.
         </li>
