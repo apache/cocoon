@@ -21,205 +21,205 @@
 	<description>The version of excalibur-threadcontext-1.0.jar that comes with cornerstone src</description>
 	<used-by>Avalon Cornerstone Scheduler</used-by>
 	<lib>core/cornerstone-excalibur-threadcontext-20021213.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/cornerstone/index.html</homepage>
+	<homepage>http://avalon.apache.org/cornerstone/index.html</homepage>
  </file>
  <file>
 	<title>Cornerstone Excalibur Thread</title>
 	<description>The version of excalibur-thread-1.0.jar that comes with cornerstone src</description>
 	<used-by>Avalon Cornerstoner Scheduler</used-by>
 	<lib>core/cornerstone-excalibur-thread-20021213.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/cornerstone/index.html</homepage>
+	<homepage>http://avalon.apache.org/cornerstone/index.html</homepage>
  </file>
  <file>
 	<title>Avalon Cornerstone</title>
 	<description>Contains the avalon-cornerstone scheduler, threadManager and other classes (This JAR has been compiled on Java 1.3 to be run on JVM 1.3 or earlier.)</description>
 	<used-by>Cocoon-Flow</used-by>
 	<lib>core/cornerstone-20021213.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/cornerstone/index.html</homepage>
+	<homepage>http://avalon.apache.org/cornerstone/index.html</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur DataSource</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development. (This JAR has been compiled on Java 1.3 to be run on JVM 1.3 or earlier.)</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/jvm1.2/excalibur-datasource-vm12-20021121.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur DataSource</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development. (This JAR has been compiled on Java 1.4 to be run on JVM 1.4.)</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/jvm1.4/excalibur-datasource-vm14-20021121.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
-	<title>Avalon Excalibur CLI</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
-       support high level server development.</description>
+	<title>Jakarta Commons CLI</title>
+	<description>Part of jakarta-commons, it's a package that
+       is used to manage commandline options.</description>
 	<used-by>Cocoon</used-by>
-	<lib>core/excalibur-cli-1.0.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<lib>core/commons-cli-1.0.jar</lib>
+	<homepage>http://jakarta.apache.org/commons/cli/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Collections</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-collections-20020820.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Component</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-component-20020916.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Concurrent</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-concurrent-20020820.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur I18n</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-i18n-1.0.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Instrument</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-instrument-20021108.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Instrument Manager</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-instrument-manager-20021108.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Instrument Manager Interfaces</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-instrument-manager-interfaces-20021108.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur IO</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-io-1.1.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Logger</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-logger-20020820.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Monitor</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-monitor-20020820.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Naming</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-naming-1.0.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Pool</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-pool-20020820.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur SourceResolve</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-sourceresolve-20030130.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur Store</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-store-20030317.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Excalibur XMLUtil</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/excalibur-xmlutil-20030313.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon Framework</title>
-	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+	<description>Part of avalon, it is a set of classes and patterns that
        support high level server development.</description>
 	<used-by>Cocoon</used-by>
 	<lib>core/avalon-framework-4.1.3.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/framework/</homepage>
+	<homepage>http://avalon.apache.org/framework/</homepage>
  </file>
  <file>
 	<title>Avalon AltRMI Common</title>
-	<description>Part of jakarta-avalon for communicating with a remote
+	<description>Part of avalon for communicating with a remote
        server.</description>
 	<used-by>Cocoon</used-by>
 	<lib>optional/excalibur-altrmi-common-20030116.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/framework/</homepage>
+	<homepage>http://avalon.apache.org/framework/</homepage>
  </file>
  <file>
 	<title>Avalon AltRMI Server implementation</title>
-	<description>Part of jakarta-avalon for communicating with a remote
+	<description>Part of avalon for communicating with a remote
        server.</description>
 	<used-by>Cocoon</used-by>
 	<lib>optional/excalibur-altrmi-server-impl-20030116.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/framework/</homepage>
+	<homepage>http://avalon.apache.org/framework/</homepage>
  </file>
  <file>
 	<title>Avalon AltRMI Server interfaces</title>
-	<description>Part of jakarta-avalon for communicating with a remote
+	<description>Part of avalon for communicating with a remote
        server.</description>
 	<used-by>Cocoon</used-by>
 	<lib>optional/excalibur-altrmi-server-interfaces-20030116.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Avalon AltRMI Registry</title>
-	<description>Part of jakarta-avalon for communicating with a remote
+	<description>Part of avalon for communicating with a remote
        server.</description>
 	<used-by>Cocoon</used-by>
 	<lib>optional/excalibur-altrmi-registry-20030116.jar</lib>
-	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+	<homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
  <file>
 	<title>Jakarta Commons Collections</title>

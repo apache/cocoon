@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.2 2003/03/16 11:19:54 stefano Exp $
+ * @version CVS $Id: Constants.java,v 1.3 2003/03/18 15:23:30 nicolaken Exp $
  */
 public final class Constants {
 
@@ -284,6 +284,16 @@ public final class Constants {
     public static final String LINK_OBJECT = "link";
 
     /**
+     * Key of the List for collecting links.
+     * <p>Presence of this Map in the ObjectModel indicates to the Sitemap that link
+     * gathering mode has been requested by the environment. Sitemap adds LinkGatherer
+     * transformer to the pipeline, which gathers the links in the input document into
+     * this List.
+     * <p>
+     */
+    public static final String LINK_COLLECTION_OBJECT = "link-collection";
+
+    /**
      * The name of a <code>NotifyingObject</code> in the so called objectModel <code>Map</code>.
      */
     public static final String NOTIFYING_OBJECT = "notifying-object";
@@ -337,5 +347,17 @@ public final class Constants {
      */
     public static final boolean DESCRIPTOR_RELOADABLE_DEFAULT = true;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 

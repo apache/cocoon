@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: changes.xml,v 1.6 2003/03/17 00:47:42 vgritsenko Exp $
+  CVS $Id: changes.xml,v 1.7 2003/03/18 15:23:28 nicolaken Exp $
 -->
 
 <changes title="History of Changes">
@@ -42,6 +42,16 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="NKB" type="add" fixes-bug="17671" due-to="Upayavira" due-to-email="uv@upaya.co.uk">
+    Enhancements to the CLI to reduce the number of times it 
+    needs to render a page. Using the option to prevent checking of extensions, it 
+    is now possible to generate a site generating each page only once. 
+
+    Allow the configuration of the CLI using 
+    an xconf file.
+
+    Switch cli to using the Jakarta Commons CLI package.
+  </action>
   <action dev="MC" type="add">
    Added support for the LogFactor5 graphical log event browser.
   </action>

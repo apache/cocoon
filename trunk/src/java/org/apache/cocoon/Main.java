@@ -50,17 +50,31 @@
 */
 package org.apache.cocoon;
 
-import org.apache.avalon.excalibur.cli.CLArgsParser;
-import org.apache.avalon.excalibur.cli.CLOption;
-import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
-import org.apache.avalon.excalibur.cli.CLUtil;
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.util.NetUtils;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.NamedNodeMap;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.PosixParser;
+import org.apache.commons.cli.HelpFormatter;
+
+import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.NetUtils;
 
 import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.bean.destination.FileDestination;
@@ -72,121 +86,208 @@ import org.apache.cocoon.bean.destination.FileDestination;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: Main.java,v 1.1 2003/03/09 00:08:36 pier Exp $
+ * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
+ * @version CVS $Id: Main.java,v 1.2 2003/03/18 15:23:30 nicolaken Exp $
  */
 public class Main {
 
-    protected static final int HELP_OPT =         'h';
-    protected static final int VERSION_OPT =      'v';
-    protected static final int VERBOSE_OPT =      'V';
-    protected static final int LOG_KIT_OPT =      'k';
-    protected static final int LOGGER_OPT =       'l';
-    protected static final int LOG_LEVEL_OPT =    'u';
-    protected static final int CONTEXT_DIR_OPT =  'c';
-    protected static final int DEST_DIR_OPT =     'd';
-    protected static final int WORK_DIR_OPT =     'w';
-    protected static final int AGENT_OPT =        'a';
-    protected static final int ACCEPT_OPT =       'p';
-    protected static final int URI_FILE =         'f';
-    protected static final int FOLLOW_LINKS_OPT = 'r';
-    protected static final int CONFIG_FILE =      'C';
-    protected static final int BROKEN_LINK_FILE = 'b';
-    protected static final int PRECOMPILE_OPT =   'P';
+    protected static final String HELP_OPT =               "h";
+    protected static final String VERSION_OPT =            "v";
+    protected static final String VERBOSE_OPT =            "V";
+    protected static final String LOG_KIT_OPT =            "k";
+    protected static final String LOGGER_OPT =             "l";
+    protected static final String LOG_LEVEL_OPT =          "u";
+    protected static final String CONTEXT_DIR_OPT =        "c";
+    protected static final String DEST_DIR_OPT =           "d";
+    protected static final String WORK_DIR_OPT =           "w";
+    protected static final String CONFIG_FILE_OPT =        "C";
+    protected static final String BROKEN_LINK_FILE_OPT =   "b";
+    protected static final String URI_FILE_OPT =           "f";
+    protected static final String XCONF_OPT =              "x";
+    protected static final String AGENT_OPT =              "a";
+    protected static final String ACCEPT_OPT =             "p";
+    protected static final String FOLLOW_LINKS_OPT =       "r";
+    protected static final String PRECOMPILE_ONLY_OPT =    "P";
+    protected static final String CONFIRM_EXTENSIONS_OPT = "e";
+    protected static final String LOAD_CLASS_OPT =         "L";
+    protected static final String DEFAULT_FILENAME_OPT =   "D";
 
-    protected static final CLOptionDescriptor [] OPTIONS = new CLOptionDescriptor [] {
-        new CLOptionDescriptor("brokenLinkFile",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               BROKEN_LINK_FILE,
-                               "send a list of broken links to a file (one URI per line)"),
-        new CLOptionDescriptor("uriFile",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               URI_FILE,
-                               "use a text file with uris to process (one URI per line)"),
-        new CLOptionDescriptor("help",
-                               CLOptionDescriptor.ARGUMENT_DISALLOWED,
-                               HELP_OPT,
-                               "print this message and exit"),
-        new CLOptionDescriptor("version",
-                               CLOptionDescriptor.ARGUMENT_DISALLOWED,
-                               VERSION_OPT,
-                               "print the version information and exit"),
-        new CLOptionDescriptor("verbose",
-                               CLOptionDescriptor.ARGUMENT_DISALLOWED,
-                               VERBOSE_OPT,
-                               "enable verbose messages to System.out"),
-        new CLOptionDescriptor("logKitconfig",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               LOG_KIT_OPT,
-                               "use given file for LogKit Management configuration"),
-        new CLOptionDescriptor("Logger",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               LOGGER_OPT,
-                               "use given logger category as default logger for the Cocoon engine"),
-        new CLOptionDescriptor("logLevel",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               LOG_LEVEL_OPT,
-                               "choose the minimum log level for logging (DEBUG, INFO, WARN, ERROR, FATAL_ERROR) for startup logging"),
-        new CLOptionDescriptor("contextDir",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               CONTEXT_DIR_OPT,
-                               "use given dir as context"),
-        new CLOptionDescriptor("destDir",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               DEST_DIR_OPT,
-                               "use given dir as destination"),
-        new CLOptionDescriptor("workDir",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               WORK_DIR_OPT,
-                               "use given dir as working directory"),
-        new CLOptionDescriptor("precompileOnly",
-                               CLOptionDescriptor.ARGUMENT_DISALLOWED,
-                               PRECOMPILE_OPT,
-                               "generate java code for xsp and xmap files"),
-        new CLOptionDescriptor("userAgent",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               AGENT_OPT,
-                               "use given string for user-agent header"),
-        new CLOptionDescriptor("accept",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               ACCEPT_OPT,
-                               "use given string for accept header"),
-        new CLOptionDescriptor("followLinks",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               FOLLOW_LINKS_OPT,
-                               "process pages linked from starting page or not"
-                               + " (boolean argument is expected, default is true)"),
-        new CLOptionDescriptor("configFile",
-                               CLOptionDescriptor.ARGUMENT_REQUIRED,
-                               CONFIG_FILE,
-                               "specify alternate location of the configuration"
-                               + " file (default is ${contextDir}/cocoon.xconf)")
-    };
+    protected static final String HELP_LONG =               "help";
+    protected static final String VERSION_LONG =            "version";
+    protected static final String VERBOSE_LONG =            "verbose";
+    protected static final String LOG_KIT_LONG =            "logKitconfig";
+    protected static final String LOGGER_LONG =             "Logger";
+    protected static final String LOG_LEVEL_LONG =          "logLevel";
+    protected static final String CONTEXT_DIR_LONG =        "contextDir";
+    protected static final String DEST_DIR_LONG =           "destDir";
+    protected static final String WORK_DIR_LONG =           "workDir";
+    protected static final String CONFIG_FILE_LONG =        "configFile";
+    protected static final String BROKEN_LINK_FILE_LONG =   "brokenLinkFile";
+    protected static final String URI_FILE_LONG =           "uriFile";
+    protected static final String XCONF_LONG =              "xconf";
+    protected static final String AGENT_LONG =              "userAgent";
+    protected static final String ACCEPT_LONG =             "accept";
+    protected static final String FOLLOW_LINKS_LONG =       "followLinks";
+    protected static final String PRECOMPILE_ONLY_LONG =    "precompileOnly";
+    protected static final String CONFIRM_EXTENSIONS_LONG = "confirmExtensions";
+    protected static final String LOAD_CLASS_LONG =         "loadClass";
+    protected static final String DEFAULT_FILENAME_LONG =   "defaultFilename";
+    protected static final String URI_LONG =                "uri";
 
-    /**
-     * <code>processFile</code> method.
-     *
-     * @param filename a <code>String</code> value
-     * @param uris a <code>List</code> of URIs
-     */
-    public static void processFile(String filename, List uris) {
-        try {
-            BufferedReader uriFile = new BufferedReader(new FileReader(filename));
-            boolean eof = false;
+    private static final String NODE_ROOT = "cocoon";
+    private static final String ATTR_VERBOSE = "verbose";
 
-            while (!eof) {
-                String uri = uriFile.readLine();
+    private static final String NODE_LOGGING = "logging";
+    private static final String ATTR_LOG_KIT = "log-kit";
+    private static final String ATTR_LOG_LEVEL = "level";
+    private static final String ATTR_LOGGER = "logger";
 
-                if (null == uri) {
-                    eof = true;
-                } else {
-                    uris.add(NetUtils.normalize(uri.trim()));
-                }
-            }
+    private static final String NODE_CONTEXT_DIR = "context-dir";
+    private static final String NODE_DEST_DIR = "dest-dir";
+    private static final String NODE_WORK_DIR = "work-dir";
+    private static final String NODE_CONFIG_FILE = "config-file";
+    private static final String NODE_BROKEN_LINK_FILE = "broken-link-file";
+    private static final String NODE_URI_FILE = "uri-file";
 
-            uriFile.close();
-        } catch (Exception e) {
-            // ignore errors.
-        }
+    private static final String NODE_AGENT = "user-agent";
+    private static final String NODE_ACCEPT = "accept";
+
+    private static final String ATTR_FOLLOW_LINKS = "follow-links";
+    private static final String ATTR_PRECOMPILE_ONLY = "precompile-only";
+    private static final String ATTR_CONFIRM_EXTENSIONS = "confirm-extensions";
+    private static final String NODE_LOAD_CLASS = "load-class";
+    private static final String NODE_DEFAULT_FILENAME = "default-filename";
+    private static final String NODE_URI = "uri";
+
+    private static Options options;
+
+    private static boolean verbose = false;
+    private static String logKit = null;
+    private static String logger = null;
+    private static String logLevel = "ERROR";
+    private static String contextDir = Constants.DEFAULT_CONTEXT_DIR;
+    private static String destDir = Constants.DEFAULT_DEST_DIR;
+    private static String workDir = Constants.DEFAULT_WORK_DIR;
+    private static String configFile = Constants.DEFAULT_CONF_FILE;
+    private static String brokenLinkFile = null;
+    private static String agentOptions = null;
+    private static String acceptOptions = null;
+    private static String defaultFilename = Constants.INDEX_URI;
+    private static boolean precompileOnly = false;
+    private static boolean followLinks = true;
+    private static boolean confirmExtensions = true;
+    private static List loadedClasses = new ArrayList();
+    private static List targets = new ArrayList();
+
+    private static void setOptions() {
+        options = new Options();
+
+        options.addOption(new Option(HELP_OPT,
+                                     HELP_LONG,
+                                     false,
+                                     "print this message and exit"));
+
+        options.addOption(new Option(VERSION_OPT,
+                                     VERSION_LONG,
+                                     false,
+                                     "print the version information and exit"));
+
+        options.addOption(new Option(VERBOSE_OPT,
+                                     VERBOSE_LONG,
+                                     false,
+                                     "enable verbose messages to System.out"));
+
+        options.addOption(new Option(LOG_KIT_OPT,
+                                     LOG_KIT_LONG,
+                                     true,
+                                     "use given file for LogKit Management configuration"));
+
+        options.addOption(new Option(LOGGER_OPT,
+                                     LOGGER_LONG,
+                                     true,
+                                     "use given logger category as default logger for the Cocoon engine"));
+
+        options.addOption(new Option(LOG_LEVEL_OPT,
+                                     LOG_LEVEL_LONG,
+                                     true,
+                                     "choose the minimum log level for logging (DEBUG, INFO, WARN, ERROR, FATAL_ERROR) for startup logging"));
+
+        options.addOption(new Option(CONTEXT_DIR_OPT,
+                                     CONTEXT_DIR_LONG,
+                                     true,
+                                     "use given dir as context"));
+
+        options.addOption(new Option(DEST_DIR_OPT,
+                                     DEST_DIR_LONG,
+                                     true,
+                                     "use given dir as destination"));
+
+        options.addOption(new Option(WORK_DIR_OPT,
+                                     WORK_DIR_LONG,
+                                     true,
+                                     "use given dir as working directory"));
+
+        options.addOption(new Option(CONFIG_FILE_OPT,
+                                     CONFIG_FILE_LONG,
+                                     true,
+                                     "specify alternate location of the configuration"
+                                     + " file (default is ${contextDir}/cocoon.xconf)"));
+
+        options.addOption(new Option(BROKEN_LINK_FILE_OPT,
+                                     BROKEN_LINK_FILE_LONG,
+                                     true,
+                                     "send a list of broken links to a file (one URI per line)"));
+
+        options.addOption(new Option(URI_FILE_OPT,
+                                     URI_FILE_LONG,
+                                     true,
+                                     "use a text file with uris to process (one URI per line)"));
+
+        options.addOption(new Option(XCONF_OPT,
+                                     XCONF_LONG,
+                                     true,
+                                     "specify a file containing XML configuration details"
+                                     + " for the command line interface"));
+
+        options.addOption(new Option(AGENT_OPT,
+                                     AGENT_LONG,
+                                     true,
+                                     "use given string for user-agent header"));
+
+        options.addOption(new Option(ACCEPT_OPT,
+                                     ACCEPT_LONG,
+                                     true,
+                                     "use given string for accept header"));
+
+        options.addOption(new Option(FOLLOW_LINKS_OPT,
+                                     FOLLOW_LINKS_LONG,
+                                     true,
+                                     "process pages linked from starting page or not"
+                                     + " (boolean argument is expected, default is true)"));
+
+        options.addOption(new Option(PRECOMPILE_ONLY_OPT,
+                                     PRECOMPILE_ONLY_LONG,
+                                     true,
+                                     "generate java code for xsp and xmap files"));
+
+        options.addOption(new Option(CONFIRM_EXTENSIONS_OPT,
+                                     CONFIRM_EXTENSIONS_LONG,
+                                     true,
+                                     "confirm that file extensions match mime-type of"
+                                     + " pages and amend filename accordingly (default"
+                                     + " is true)"));
+
+        options.addOption(new Option(LOAD_CLASS_OPT,
+                                     LOAD_CLASS_LONG,
+                                     true,
+                                     "specify a class to be loaded at startup (specifically"
+                                     + " for use with JDBC). Can be used multiple times"));
+
+        options.addOption(new Option(DEFAULT_FILENAME_OPT,
+                                     DEFAULT_FILENAME_LONG,
+                                     true,
+                                     "specify a filename to be appended to a URI when the"
+                                     + " URI refers to a directory"));
     }
 
     /**
@@ -196,113 +297,83 @@ public class Main {
      * @exception Exception if an error occurs
      */
     public static void main(String[] args) throws Exception {
-        String destDir = Constants.DEFAULT_DEST_DIR;
-        String contextDir = Constants.DEFAULT_CONTEXT_DIR;
-        String configFile = null;
-        String brokenLinkFile = null;
-        String workDir = Constants.DEFAULT_WORK_DIR;
-        List targets = new ArrayList();
-        String logKit = null;
-        String logger = null;
-        String logLevel = "ERROR";
-        String agentOptions = null;
-        String acceptOptions = null;
-        boolean precompileOnly = false;
-        boolean followLinks = true;
-        boolean verbose = false;
 
-        CLArgsParser parser = new CLArgsParser(args, OPTIONS);
-        List clOptions = parser.getArguments();
-        int size = clOptions.size();
+        long startTimeMillis = System.currentTimeMillis();
 
-        for (int i = 0; i < size; i++) {
-            CLOption option = (CLOption) clOptions.get(i);
+        Main.setOptions();
+        CommandLineParser parser = new PosixParser();
+        CommandLine line = parser.parse( options, args );
 
-            switch (option.getId()) {
-                case 0:
-                    targets.add(NetUtils.normalize(option.getArgument()));
-                    break;
+        if (line.hasOption(HELP_OPT)) {
+             printUsage();
+        }
 
-                case Main.CONFIG_FILE:
-                    configFile = option.getArgument();
-                    break;
+        if (line.hasOption(VERSION_OPT)) {
+             printVersion();
+        }
 
-                case Main.HELP_OPT:
-                    printUsage();
-                    break;
+        if (line.hasOption(XCONF_OPT)) {
+            Main.processXConf(line.getOptionValue(XCONF_OPT));
+        }
+        if (line.hasOption(VERBOSE_OPT)) {
+            verbose = true;
+        }
+        if (line.hasOption(PRECOMPILE_ONLY_OPT)) {
+            precompileOnly=true;
+        }
+        destDir = line.getOptionValue(DEST_DIR_OPT, destDir);
+        workDir = line.getOptionValue(WORK_DIR_OPT, workDir);
+        contextDir = line.getOptionValue(CONTEXT_DIR_OPT, contextDir);
+        configFile = line.getOptionValue(CONFIG_FILE_OPT, configFile);
+        logKit = line.getOptionValue(LOG_KIT_OPT, logKit);
+        logger = line.getOptionValue(LOGGER_OPT, logger);
+        logLevel = line.getOptionValue(LOG_LEVEL_OPT, logLevel);
+        agentOptions = line.getOptionValue(AGENT_OPT, agentOptions);
+        acceptOptions = line.getOptionValue(ACCEPT_OPT, acceptOptions);
+        defaultFilename = line.getOptionValue(DEFAULT_FILENAME_OPT, defaultFilename);
+        brokenLinkFile = line.getOptionValue(BROKEN_LINK_FILE_OPT, brokenLinkFile);
 
-                case Main.VERSION_OPT:
-                    printVersion();
-                    break;
+        if (line.hasOption(URI_FILE_OPT)) {
+            Main.processURIFile(line.getOptionValue(URI_FILE_OPT), targets);
+        }
+        if (line.hasOption(FOLLOW_LINKS_OPT)) {
+            followLinks = "yes".equals(line.getOptionValue(FOLLOW_LINKS_OPT, "yes"))
+                          || "true".equals(line.getOptionValue(FOLLOW_LINKS_OPT, "true"));
+        }
+        if (line.hasOption(CONFIRM_EXTENSIONS_OPT)) {
+            confirmExtensions = "yes".equals(line.getOptionValue(CONFIRM_EXTENSIONS_OPT, "yes"))
+                                || "true".equals(line.getOptionValue(CONFIRM_EXTENSIONS_OPT, "true"));
+        }
+        if (line.hasOption(LOAD_CLASS_OPT)){
+            loadedClasses.add(Arrays.asList(line.getOptionValues(LOAD_CLASS_OPT)));
+        }
 
-                case Main.VERBOSE_OPT:
-                    verbose = true;
-                    break;
-
-                case Main.DEST_DIR_OPT:
-                    destDir = option.getArgument();
-                    break;
-
-                case Main.WORK_DIR_OPT:
-                    workDir = option.getArgument();
-                    break;
-
-                case Main.CONTEXT_DIR_OPT:
-                    contextDir = option.getArgument();
-                    break;
-
-                case Main.LOG_KIT_OPT:
-                    logKit = option.getArgument();
-                    break;
-
-                case Main.LOGGER_OPT:
-                    logger = option.getArgument();
-                    break;
-
-                case Main.LOG_LEVEL_OPT:
-                    logLevel = option.getArgument();
-                    break;
-
-                case Main.PRECOMPILE_OPT:
-                    precompileOnly = true;
-                    break;
-
-                case Main.AGENT_OPT:
-                    agentOptions = option.getArgument();
-                    break;
-
-                case Main.ACCEPT_OPT:
-                    acceptOptions = option.getArgument();
-                    break;
-
-                case Main.URI_FILE:
-                    Main.processFile(option.getArgument(), targets);
-                    break;
-
-                case Main.FOLLOW_LINKS_OPT:
-                    followLinks = "yes".equals(option.getArgument())
-                        || "true".equals(option.getArgument());
-                    break;
-
-                case Main.BROKEN_LINK_FILE:
-                    brokenLinkFile = option.getArgument();
-                    break;
-            }
+        for (Iterator i = line.getArgList().iterator(); i.hasNext();) {
+            targets.add(NetUtils.normalize((String) i.next()));
         }
 
         CocoonBean cocoon = new CocoonBean(workDir, contextDir, configFile);
         cocoon.setLogKit(logKit);
         cocoon.setLogger(logger);
         cocoon.setLogLevel(logLevel);
+        
+        if (loadedClasses.size()!=0) {
+            cocoon.setLoadedClasses(loadedClasses);
+        }
+
         if (agentOptions != null) {
             cocoon.setAgentOptions(agentOptions);
         }
         if (acceptOptions != null) {
             cocoon.setAcceptOptions(acceptOptions);
         }
+        if (defaultFilename != null) {
+            cocoon.setDefaultFilename(defaultFilename);
+        }        
         cocoon.setBrokenLinkFile(brokenLinkFile);
         cocoon.setPrecompileOnly(precompileOnly);
         cocoon.setFollowLinks(followLinks);
+        cocoon.setConfirmExtensions(confirmExtensions);
         cocoon.setVerbose(verbose);
 
         if (destDir.equals("")) {
@@ -340,7 +411,169 @@ public class Main {
         cocoon.process(targets, new FileDestination(destDir));
         cocoon.dispose();
 
+        long duration = System.currentTimeMillis() - startTimeMillis;
+        System.out.println("Total time: " + (duration / 60000) + " minutes " + (duration % 60000)/1000 + " seconds");
         System.exit(0);
+    }
+
+    /**
+     * <code>processURIFile</code> method.
+     *
+     * @param filename a <code>String</code> value
+     * @param uris a <code>List</code> of URIs
+     */
+    public static void processURIFile(String filename, List uris) {
+        try {
+            BufferedReader uriFile = new BufferedReader(new FileReader(filename));
+            boolean eof = false;
+
+            while (!eof) {
+                String uri = uriFile.readLine();
+
+                if (null == uri) {
+                    eof = true;
+                } else {
+                    uris.add(NetUtils.normalize(uri.trim()));
+                }
+            }
+
+            uriFile.close();
+        } catch (Exception e) {
+            // ignore errors.
+        }
+    }
+
+    /**
+     * <code>processXConf</code> method. Reads in XML configuration from
+     * specified xconf file.
+     *
+     * @param filename a <code>String</code> value
+     */
+    private static void processXConf(String filename) {
+
+        try {
+            final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            final Document conf = builder.parse(new File(filename).toURL().toExternalForm());
+
+            Node root = conf.getDocumentElement();
+
+            if (!NODE_ROOT.equals(root.getNodeName())) {
+                throw new IllegalArgumentException("Expected root node of "+ NODE_ROOT);
+            }
+
+            verbose = Main.getBooleanAttributeValue(root, ATTR_VERBOSE, verbose);
+            followLinks = Main.getBooleanAttributeValue(root, ATTR_FOLLOW_LINKS, followLinks);
+            precompileOnly = Main.getBooleanAttributeValue(root, ATTR_PRECOMPILE_ONLY, precompileOnly);
+            confirmExtensions = Main.getBooleanAttributeValue(root, ATTR_CONFIRM_EXTENSIONS, confirmExtensions);
+
+            NodeList nodes = root.getChildNodes();
+
+            for (int i=0; i<nodes.getLength();i++) {
+                Node node = nodes.item(i);
+                if (node.getNodeType()== Node.ELEMENT_NODE) {
+                    String nodeName = node.getNodeName();
+                    if (nodeName.equals(NODE_BROKEN_LINK_FILE)) {
+                        brokenLinkFile = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_LOAD_CLASS)) {
+                        loadedClasses.add(getNodeValue(node));
+
+                    } else if (nodeName.equals(NODE_LOGGING)) {
+                        parseLoggingNode(node);
+
+                    } else if (nodeName.equals(NODE_CONTEXT_DIR)) {
+                        contextDir = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_CONFIG_FILE)) {
+                        configFile = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_DEST_DIR)) {
+                        destDir = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_WORK_DIR)) {
+                        workDir = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_AGENT)) {
+                        agentOptions = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_ACCEPT)) {
+                        acceptOptions = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_DEFAULT_FILENAME)) {
+                        defaultFilename = getNodeValue(node);
+
+                    } else if (nodeName.equals(NODE_URI)) {
+                        targets.add(NetUtils.normalize(getNodeValue(node)));
+
+                    } else if (nodeName.equals(NODE_URI_FILE)) {
+                        Main.processURIFile(getNodeValue(node), targets);
+
+                    } else {
+                        throw new IllegalArgumentException("Unknown element: " + nodeName);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("ERROR: "+e.getMessage());
+        }
+    }
+
+    private static void parseLoggingNode(Node node) throws IllegalArgumentException {
+        logKit = Main.getAttributeValue(node, ATTR_LOG_KIT, logKit);
+        logger = Main.getAttributeValue(node, ATTR_LOGGER, logger);
+        logLevel = Main.getAttributeValue(node, ATTR_LOG_LEVEL, logLevel);
+
+        NodeList nodes = node.getChildNodes();
+        if (nodes.getLength()!=0) {
+            throw new IllegalArgumentException("Unexpected children of "+NODE_LOGGING+" node");
+        }
+    }
+
+    private static String getNodeValue(Node node) throws IllegalArgumentException {
+        StringBuffer s = new StringBuffer();
+        NodeList children = node.getChildNodes();
+        boolean found = false;
+
+        for (int i=0; i< children.getLength(); i++) {
+            Node child = children.item(i);
+            if (child.getNodeType() == Node.TEXT_NODE) {
+                s.append(child.getNodeValue());
+                found = true;
+            } else {
+                throw new IllegalArgumentException("Unexpected node:" + child.getLocalName());
+            }
+        }
+        if (!found) {
+            throw new IllegalArgumentException("Expected value for " + node.getLocalName() + " node");
+        }
+        return s.toString();
+    }
+
+    private static String getAttributeValue(Node node, String attr, String defaultValue) {
+        NamedNodeMap nodes = node.getAttributes();
+        if (nodes != null) {
+            Node attribute = nodes.getNamedItem(attr);
+            if (attribute != null) {
+                return attribute.getNodeValue();
+            }
+        }
+        return defaultValue;
+    }
+
+    private static boolean getBooleanAttributeValue(Node node, String attr, boolean defaultValue) {
+        NamedNodeMap nodes = node.getAttributes();
+        if (nodes != null) {
+            Node attribute = nodes.getNamedItem(attr);
+
+            if (attribute != null) {
+                String value = attribute.getNodeValue();
+                return "yes".equals(value)
+                        || "true".equals(value);
+            }
+        }
+        return defaultValue;
     }
 
     /**
@@ -360,14 +593,12 @@ public class Main {
      * Print the usage message and exit
      */
     private static void printUsage() {
-        String lSep = System.getProperty("line.separator");
-        StringBuffer msg = new StringBuffer();
-        msg.append(getProlog());
-        msg.append("Usage: java org.apache.cocoon.Main [options] [targets]").append(lSep).append(lSep);
-        msg.append("Options: ").append(lSep);
-        msg.append(CLUtil.describeOptions(Main.OPTIONS).toString());
-        msg.append("Note: the context directory defaults to '").append(Constants.DEFAULT_CONTEXT_DIR + "'").append(lSep);
-        System.out.println(msg.toString());
+        HelpFormatter formatter = new HelpFormatter();
+
+        formatter.printHelp("cocoon cli [options] [targets]",
+                            getProlog().toString(),
+                            options,
+                            "Note: the context directory defaults to '"+ Constants.DEFAULT_CONTEXT_DIR + "'");
         System.exit(0);
     }
     
@@ -379,3 +610,16 @@ public class Main {
         System.exit(0);
     }    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
