@@ -59,6 +59,7 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.EnvironmentStack;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
@@ -88,7 +89,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.2 2003/03/12 12:55:16 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.3 2003/05/16 07:04:56 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -393,7 +394,7 @@ implements Source, XMLizable {
         }
         try {
             if (this.redirectSource != null) {
-                this.environment.toSAX(this.redirectSource, contentHandler);
+                SourceUtil.parse(this.manager, this.redirectSource, contentHandler);
             } else {
 	            XMLConsumer consumer;
 	            if (contentHandler instanceof XMLConsumer) {

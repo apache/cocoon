@@ -60,19 +60,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.AbstractEnvironment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.NetUtils;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.7 2003/05/07 20:35:43 cziegeler Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.8 2003/05/16 07:04:56 cziegeler Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector {
 
@@ -297,17 +293,6 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector {
     }
 
 
-    public void toSAX( org.apache.excalibur.source.Source source,
-                String         mimeTypeHint,
-                ContentHandler handler )
-    throws SAXException, IOException, ProcessingException {
-        // Allow to retrieve the mime-type from the context.
-        if (mimeTypeHint==null)
-          super.toSAX(source, webcontext.getMimeType(SourceUtil.getPath(source.getURI())), handler);
-        else
-          super.toSAX(source, mimeTypeHint, handler);
-    }    
-    
     /**
      * Get the output stream where to write the generated resource.
      * The returned stream is buffered by the environment. If the

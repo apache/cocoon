@@ -51,6 +51,9 @@
 package org.apache.cocoon.sitemap;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -78,11 +81,11 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContentAggregator.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
+ * @version CVS $Id: ContentAggregator.java,v 1.3 2003/05/16 07:04:56 cziegeler Exp $
  */
 public class ContentAggregator
 extends ContentHandlerWrapper
-implements Generator, CacheableProcessingComponent, Recyclable {
+implements Generator, CacheableProcessingComponent, Composable, Recyclable {
 
     /** the root element of the aggregated content */
     protected Element rootElement;
@@ -102,6 +105,9 @@ implements Generator, CacheableProcessingComponent, Recyclable {
     /** The SourceResolver */
     protected SourceResolver resolver;
 
+    /** The component manager */
+    protected ComponentManager manager;
+    
     /** This object holds the part parts :) */
     protected final class Part {
         public String uri;
@@ -151,7 +157,7 @@ implements Generator, CacheableProcessingComponent, Recyclable {
                 }
 
                 try {
-                    this.resolver.toSAX(part.source, this);
+                    SourceUtil.parse(this.manager, part.source, this);
                 } finally {
                     if (part.element != null) {
                         this.endElem(part.element);
@@ -391,4 +397,12 @@ implements Generator, CacheableProcessingComponent, Recyclable {
             this.contentHandler.endElement(namespaceURI, localName, raw);
         }
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager manager) throws ComponentException {
+        this.manager = manager;
+    }
+
 }
