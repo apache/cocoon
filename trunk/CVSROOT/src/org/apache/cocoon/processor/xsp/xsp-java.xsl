@@ -203,7 +203,7 @@
          because Cocoon expects its PIs to be at the top level. -->
     document.appendChild(
        document.createProcessingInstruction(
-         "<xsl:value-of select="@target"/>",
+         "<xsl:value-of select="@name"/>",
          <xsl:for-each select="xsp:text|xsp:expr">
            <xsl:choose>
              <xsl:when test="name(.) = 'xsp:text'">
