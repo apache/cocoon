@@ -64,9 +64,11 @@ import java.util.Map;
 
 /**
  * Consume elements start/end and characters events and reproduce them.
+ * 
+ * WARNING: THIS CLASS DOES NOT WORK PROPERLY WITH NAMESPACES
  *
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
- * @version CVS $Id: MirrorRecorder.java,v 1.1 2003/03/09 00:09:41 pier Exp $
+ * @version CVS $Id: MirrorRecorder.java,v 1.2 2003/11/23 17:06:05 vgritsenko Exp $
  */
 public class MirrorRecorder
     extends NOPRecorder
@@ -75,7 +77,7 @@ public class MirrorRecorder
     private ArrayList events;
 
     // Used for indexing (parameters)
-    class NullEvent implements EventRecorder {
+    static class NullEvent implements EventRecorder {
         private String s;
 
         public NullEvent(String s) {
@@ -87,9 +89,8 @@ public class MirrorRecorder
         }
 
         public void send(ContentHandler handler)
-                throws SAXException
-        { }
-
+        throws SAXException {
+        }
 
         public Object clone() {
             return new NullEvent(s);
@@ -100,42 +101,41 @@ public class MirrorRecorder
         }
     }
 
-    class StartEvent implements EventRecorder {
-        protected String uri, name, raw;
-        protected Attributes attr;
+    static class StartEvent implements EventRecorder {
+        private String uri, name, raw;
+        private Attributes attr;
 
         public StartEvent(String namespace, String name, String raw,
-                          Attributes attr)
-        {
+                          Attributes attr) {
             this.uri = namespace;
             this.name = name;
             this.raw = raw;
-            this.attr = attr;
+            this.attr = new AttributesImpl(attr);
         }
 
         public void send(ContentHandler handler)
-                throws SAXException {
+        throws SAXException {
             handler.startElement(uri, name, raw, attr);
         }
 
         public Object clone() {
-            return new StartEvent(uri, name, raw, new AttributesImpl(attr));
+            return new StartEvent(uri, name, raw, attr);
         }
 
         public String toString() {
             StringBuffer str = new StringBuffer("<" + raw);
-            if(attr != null) {
-                for(int i = 0; i < attr.getLength(); ++i)
+            if (attr != null) {
+                for(int i = 0; i < attr.getLength(); ++i) {
                     str.append(" " + attr.getQName(i) + "=\"" + attr.getValue(i) + "\"");
+                }
             }
 
             return str.append(">").toString();
         }
     }
 
-    class EndEvent implements EventRecorder
-    {
-        protected String uri, name, raw;
+    static class EndEvent implements EventRecorder {
+        private String uri, name, raw;
 
         public EndEvent(String namespace, String name, String raw) {
             this.uri = namespace;
@@ -148,8 +148,7 @@ public class MirrorRecorder
         }
 
         public void send(ContentHandler handler)
-                throws SAXException
-        {
+        throws SAXException {
             handler.endElement(uri, name, raw);
         }
 
@@ -158,26 +157,23 @@ public class MirrorRecorder
         }
     }
 
-    class CharacterEvent implements EventRecorder
-    {
+    static class CharacterEvent implements EventRecorder {
         private String ch;
 
         public CharacterEvent(char ary[], int start, int length) {
             ch = new String(ary, start, length);
         }
 
-        public Object clone() {
-            return new CharacterEvent(ch.toCharArray(), 0, ch.length());
+        public CharacterEvent(String ch) {
+            this.ch = ch;
         }
 
-        public CharacterEvent(String str)
-        {
-            ch = str;
+        public Object clone() {
+            return new CharacterEvent(ch);
         }
 
         public void send(ContentHandler handler)
-                throws SAXException
-        {
+        throws SAXException {
             handler.characters(ch.toCharArray(), 0, ch.length());
         }
 
@@ -186,6 +182,7 @@ public class MirrorRecorder
         }
     }
 
+    
     public MirrorRecorder() {
         this.events = new ArrayList();
     }
@@ -206,34 +203,38 @@ public class MirrorRecorder
     }
 
     private void nodeToEvents(Node n) throws SAXException {
-        Attributes attrs;
-
         switch(n.getNodeType()) {
             case Node.ELEMENT_NODE:
-                if(n.getAttributes() instanceof AttributeMap) {
+                Attributes attrs;
+                if(n.getAttributes() instanceof Attributes) {
+                    attrs = (Attributes) n.getAttributes();
+                } else {
                     NamedNodeMap map = n.getAttributes();
-                    Node node;
                     attrs = new AttributesImpl();
 
                     for(int i = 0; i < map.getLength(); ++i) {
-                        node = map.item(i);
-                        ((AttributesImpl) attrs).addAttribute(node.getNamespaceURI(),
-                                                              node.getLocalName(),
+                        Node node = map.item(i);
+                        final String ns = node.getNamespaceURI() == null? "" : node.getNamespaceURI();
+                        final String ln = node.getLocalName() == null? node.getNodeName() : node.getLocalName();
+                        ((AttributesImpl) attrs).addAttribute(ns,
+                                                              ln,
                                                               node.getNodeName(),
                                                               "CDATA",
                                                               node.getNodeValue());
                     }
-                } else {
-                    attrs = (Attributes) n.getAttributes();
                 }
-                startElement(n.getNamespaceURI(), n.getNodeName(), n.getNodeName(), attrs);
+
+                final String ns = n.getNamespaceURI() == null? "" : n.getNamespaceURI();
+                final String ln = n.getLocalName() == null? n.getNodeName() : n.getLocalName();
+                startElement(ns, ln, n.getNodeName(), attrs);
                 if (n.hasChildNodes()) {
                     NodeList childs = n.getChildNodes();
                     for(int i = 0; i < childs.getLength(); ++i) {
                         nodeToEvents(childs.item(i));
                     }
                 }
-                endElement(n.getNamespaceURI(), n.getNodeName(), n.getNodeName());
+
+                endElement(ns, ln, n.getNodeName());
                 break;
             case Node.CDATA_SECTION_NODE:
             case Node.TEXT_NODE:
