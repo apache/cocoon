@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0"
+  xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
+  <title>HTMLArea</title>
+  <content>
+    <wt:form-template action="#{$continuation/id}.continue" method="POST">
+      <wt:widget-label id="data"/><br/>
+      <wt:widget id="data">
+        <wi:styling type="htmlarea" style="width: 100%;" rows="20" />
+	  </wt:widget>      
+      <br/>
+      <input type="submit"/>
+    </wt:form-template>
+  </content>
+</page>
