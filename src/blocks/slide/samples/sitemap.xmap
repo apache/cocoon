@@ -4,31 +4,29 @@
 
 <!-- =========================== Components =================================== -->
 
- <map:components>
-  <map:generators default="file">
-   <map:generator name="traverse" 
-                  src="org.apache.cocoon.generation.TraversableSourceDescriptionGenerator" 
-                  logger="sitemap.generator.traverse"
-                  label="content"/>
-  </map:generators>
+  <map:components>
+    <map:generators default="file">
+      <map:generator 
+        name="traverse" 
+        src="org.apache.cocoon.generation.TraversableSourceDescriptionGenerator" 
+        logger="sitemap.generator.traverse"
+        label="content"
+      />
+    </map:generators>
 
-  <map:transformers default="xslt"/>
-  <map:readers default="resource"/>
-  <map:serializers default="html"/>
-  <map:matchers default="wildcard"/>
-  <map:selectors default="browser"/>
-
-  <map:actions>
-   <map:action name="auth-protect" logger="sitemap.action.auth-protect" 
-               src="org.apache.cocoon.webapps.authentication.acting.AuthAction"/>
-   <map:action name="auth-login" logger="sitemap.action.auth-login"
-               src="org.apache.cocoon.webapps.authentication.acting.LoginAction"/>
-   <map:action name="auth-logout" logger="sitemap.action.auth-logout"
-               src="org.apache.cocoon.webapps.authentication.acting.LogoutAction"/>
-   <map:action name="auth-loggedIn" logger="sitemap.action.auth-loggedIn"
-               src="org.apache.cocoon.webapps.authentication.acting.LoggedInAction"/>
-  </map:actions>
- </map:components>
+    <map:transformers default="xslt"/>
+    <map:readers default="resource"/>
+    <map:serializers default="html"/>
+    <map:matchers default="wildcard"/>
+    <map:selectors default="browser"/>
+  
+    <map:pipes default="noncaching">
+      <map:pipe name="event-caching" 
+                src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
+        <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
+      </map:pipe>
+    </map:pipes>
+  </map:components>
 
 <!-- ========================== Flowscript ================================= -->
 
@@ -38,140 +36,71 @@
   
 <!-- =========================== Views =================================== -->
 
- <map:views>
-  <map:view name="content" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
-  <map:view from-label="content" name="pretty-content">
-   <map:transform src="context://stylesheets/system/xml2html.xslt"/>
-   <map:serialize type="html"/>
-  </map:view>
- </map:views>
-
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+  </map:views>
 
 <!-- =========================== Pipelines ================================= -->
 
  <map:pipelines>
    
    <map:component-configurations>
-     <authentication-manager>
-       <handlers>
-         <handler name="slidehandler" xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-           <redirect-to    uri="cocoon://slide-samples/login.html"/>
-           <authentication uri="cocoon:/screens/authenticate/none/"/>
-         </handler>
-       </handlers>
-     </authentication-manager>
      <global-variables>
        <namespace>cocoon</namespace>
-       <base>/samples/slide</base>
+       <base>/slide-samples</base>
      </global-variables>
-  </map:component-configurations>
-
-
-  <map:pipeline internal-only="false" type="noncaching">
+   </map:component-configurations>
    
-   <map:match pattern="screens/*/*/**">
-     <map:call function="screen_{1}">
-       <map:parameter name="caller" value="{2}" />
-       <map:parameter name="path" value="{3}" />
-     </map:call>
-   </map:match>
+   <map:pipeline internal-only="true" type="noncaching">
+     <map:match pattern="screens/*/**">
+       <map:call function="screen_{1}">
+         <map:parameter name="path" value="{2}" />
+       </map:call>
+     </map:match>
+     
+     <map:match pattern="screens/*.jx">
+       <map:generate type="jx" src="screens/{1}.jx" />
+       <map:serialize type="xml" />
+     </map:match>
+     
+     <map:match pattern="screens/login.html">
+       <map:generate type="jx" src="screens/login.jx"/>
+       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+       </map:transform>
+       <map:serialize/>
+     </map:match>
+   </map:pipeline>
    
-   <map:match pattern="screens/*.jx">
-     <map:generate type="jx" src="screens/{1}.jx" />
-     <map:serialize type="xml" />
-   </map:match>
-    
-   <map:match pattern="users/*/*">
-     <map:generate type="traverse" src="slide://{2}@{global:namespace}/{1}?scope=/">
-       <map:parameter name="properties" value="true"/>
-       <map:parameter name="permissions" value="false"/>
-       <map:parameter name="locks" value="false"/>
-       <map:parameter name="version" value="false"/>
-       <map:parameter name="depth" value="1"/>
-     </map:generate>
-     <map:serialize type="xml"/>
-    </map:match>
-    
-   <!-- =============  Source description ============= -->
-   <map:match pattern="description/*/**">
-    <map:generate type="traverse" src="slide://{1}@{global:namespace}/{2}">
-     <map:parameter name="properties" value="true"/>
-     <map:parameter name="permissions" value="false"/>
-     <map:parameter name="locks" value="true"/>
-     <map:parameter name="version" value="false"/>
-     <map:parameter name="depth" value="1"/>
-    </map:generate>
-    <map:serialize type="xml"/>
-   </map:match>
-
-  
-  </map:pipeline>
-
-
-  <map:pipeline type="noncaching">
-    <map:match pattern="">
-      <map:redirect-to uri="content/"/>
-    </map:match>
- 
-    <map:match pattern="login.html">
-      <map:generate src="screens/login.xml"/>
-      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize/>
-    </map:match>
-
-    <map:match pattern="login">
-      <map:act type="auth-login">
-        <map:parameter name="handler" value="slidehandler"/>
-        <map:parameter name="parameter_name" value="{request-param:userid}"/>
-        <map:parameter name="parameter_password" value="{request-param:password}"/>
-        <map:redirect-to uri="{request-param:resource}"/>
-      </map:act>
-
-      <map:generate src="screens/login-failed.xml"/>
-      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-        <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize/>
-    </map:match>
-
-    <map:match pattern="logout.html">
-      <map:act type="auth-logout">
-        <map:parameter name="handler" value="slidehandler"/>
-
-        <map:generate src="screens/logout.xml"/>
-        <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-          <map:parameter name="contextPath" value="{request:contextPath}"/>
-        </map:transform>
-        <map:serialize/>
-      </map:act>
-
-      <map:redirect-to uri="login.html"/>
-    </map:match>
-
-    <map:match pattern="**">
-      <map:act type="auth-protect">
-        <map:parameter name="handler" value="slidehandler"/>
-        
-        <map:match pattern="*.do">
-          <map:call function="public_{1}">
-            <map:parameter name="caller"    value="{../ID}" />
-            <map:parameter name="namespace" value="{global:namespace}" />
-          </map:call>
-        </map:match>
-
-     <!-- ============= Source content ================== -->
-
+   <map:pipeline internal-only="true" type="noncaching">
+     <!-- ========== general description ========== -->
+     <map:match pattern="description/**">
+       <map:generate type="traverse" src="slide://{session-attr:slide-principal}@{global:namespace}/{1}">
+         <map:parameter name="properties" value="true"/>
+         <map:parameter name="permissions" value="false"/>
+         <map:parameter name="locks" value="false"/>
+         <map:parameter name="version" value="false"/>
+         <map:parameter name="depth" value="1"/>
+       </map:generate>
+       <map:serialize type="xml"/>
+     </map:match>
+     
+     <!-- ============= content ================== -->
      <map:match pattern="content/**">
-       <map:generate src="cocoon:/description/{../ID}/{1}"/>
-       <map:transform src="styles/description2html4content.xsl">
+       <map:aggregate element="document" label="content">
+         <map:part src="cocoon:/description/{1}" />
+       </map:aggregate>
+       <map:transform src="styles/content2html.xsl">
          <map:parameter name="base" value="{request:contextPath}{global:base}"/>
          <map:parameter name="path" value="{1}" />
          <map:parameter name="namespace" value="{global:namespace}" />
-         <map:parameter name="principal" value="{../ID}"/>
+         <map:parameter name="principal" value="{session-attr:slide-principal}"/>
        </map:transform>
        <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
          <map:parameter name="base" value="{global:base}"/>
@@ -180,31 +109,13 @@
        <map:transform type="xinclude"/>
        <map:serialize type="html"/>
      </map:match>
-
-     <!-- ============= Source properties =============== -->
+     
+     <!-- ============= properties =============== -->
      <map:match pattern="properties/**">
-      <map:generate src="cocoon:/description/{../ID}/{1}"/>
-      <map:transform src="styles/description2html4properties.xsl">
-         <map:parameter name="base" value="{request:contextPath}{global:base}"/>
-         <map:parameter name="path" value="{1}" />
-      </map:transform>
-      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize type="html"/>
-     </map:match>
-
-     <!-- ============= Source permissions ============== -->
-     <map:match pattern="permissions/**">
        <map:aggregate element="document" label="content">
-         <map:part src="cocoon:/screens/permissions/{../ID}/{1}" />
-         <map:part src="cocoon:/screens/actions/{../ID}/{1}" />
-         <map:part src="cocoon:/screens/groups/{../ID}/{1}" />
-         <map:part src="cocoon:/screens/users/{../ID}/{1}" />
-         <map:part src="cocoon:/screens/roles/{../ID}/{1}" />
-         <map:part src="cocoon:/description/{../ID}/{1}" />
+         <map:part src="cocoon:/description/{1}" />
        </map:aggregate>
-       <map:transform src="styles/permissions2html.xsl">
+       <map:transform src="styles/properties2html.xsl">
          <map:parameter name="base" value="{request:contextPath}{global:base}"/>
          <map:parameter name="path" value="{1}" />
        </map:transform>
@@ -213,39 +124,87 @@
        </map:transform>
        <map:serialize type="html"/>
      </map:match>
-
-     <!-- ============= Source locks ==================== -->
-     <map:match pattern="locks/**">
-      <map:generate src="cocoon:/description/{../ID}/{1}"/>
-      <map:transform src="styles/description2html4locks.xsl">
-       <map:parameter name="base" value="{request:contextPath}{global:base}"/>
-       <map:parameter name="path" value="{1}" />
-      </map:transform>
-      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize type="html"/>
-     </map:match>
-
-     <!-- ============= Repository users =============== -->
-     <map:match pattern="users/">
-      <map:aggregate element="users" label="content">
-        <map:part element="users" src="cocoon:/users/users/{../ID}"/>
-        <map:part element="groups" src="cocoon:/users/groups/{../ID}" />
-        <map:part element="roles" src="cocoon:/users/roles/{../ID}" />
-      </map:aggregate>
-      <map:transform src="styles/description2html4users.xsl">
-       <map:parameter name="base" value="{request:contextPath}{global:base}"/>
-      </map:transform>
-      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
-       <map:parameter name="contextPath" value="{request:contextPath}"/>
-      </map:transform>
-      <map:serialize type="html"/>
+     
+     <!-- ============= permissions ============== -->
+     <map:match pattern="permissions/**">
+       <map:aggregate element="document" label="content">
+         <map:part src="cocoon:/screens/permissions/{1}" />
+         <map:part src="cocoon:/screens/privileges/{1}" />
+         <map:part src="cocoon:/screens/groups/{1}" />
+         <map:part src="cocoon:/screens/users/{1}" />
+         <map:part src="cocoon:/screens/roles/{1}" />
+         <map:part src="cocoon:/description/{1}" />
+       </map:aggregate>
+       <map:transform src="styles/permissions2html.xsl">
+         <map:parameter name="base" value="{request:contextPath}{global:base}"/>
+         <map:parameter name="path" value="{1}" />
+         <map:parameter name="userspath" value="{slide-config:/userspath}" />
+         <map:parameter name="rolespath" value="{slide-config:/rolespath}" />
+         <map:parameter name="groupspath" value="{slide-config:/groupspath}" />
+         <map:parameter name="actionspath" value="{slide-config:/actionspath}" />
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+       </map:transform>
+       <map:serialize type="html"/>
      </map:match>
      
-    </map:act>
-   </map:match>
-			
-  </map:pipeline>
+     <!-- ============= locks ==================== -->
+     <map:match pattern="locks/**">
+       <map:aggregate element="document" label="content">
+         <map:part src="cocoon:/screens/locks/{1}" />
+         <map:part src="cocoon:/description/{1}" />
+       </map:aggregate>
+       <map:transform src="styles/locks2html.xsl">
+         <map:parameter name="base" value="{request:contextPath}{global:base}"/>
+         <map:parameter name="path" value="{1}" />
+       </map:transform>
+       <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+       </map:transform>
+       <map:serialize type="html"/>
+     </map:match>
+     
+     <!-- ============= users ==================== -->
+     <map:match pattern="users">
+      <map:aggregate element="document" label="content">
+        <map:part src="cocoon:/screens/users/"/>
+        <map:part src="cocoon:/screens/groups/" />
+        <map:part src="cocoon:/screens/roles/" />
+      </map:aggregate>
+      <map:transform src="styles/users2html.xsl">
+       <map:parameter name="base" value="{request:contextPath}{global:base}"/>
+       <map:parameter name="userspath" value="{slide-config:/userspath}" />
+       <map:parameter name="rolespath" value="{slide-config:/rolespath}" />
+       <map:parameter name="groupspath" value="{slide-config:/groupspath}" />
+      </map:transform>
+      <map:transform src="context://samples/common/style/xsl/html/complex-page2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
+      <map:serialize type="html"/>
+     </map:match>
+   </map:pipeline>
+   
+   <map:pipeline type="noncaching">
+     <map:match pattern="">
+       <map:redirect-to uri="content/"/>
+     </map:match>
+     
+     <map:match pattern="**.cont">
+       <map:call continuation="{request-param:continuationId}" />
+     </map:match>
+     
+     <map:match pattern="logout">
+       <map:call function="logout"/>
+     </map:match>
+          
+     <map:match pattern="**">
+       <map:call function="protect">
+         <map:parameter name="path" value="{1}" />
+       </map:call>
+     </map:match>
+   </map:pipeline>
+   
  </map:pipelines>
+
 </map:sitemap>

@@ -2,59 +2,26 @@
 <xsl:stylesheet 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
   xmlns:col="http://apache.org/cocoon/collection/1.0" 
-  xmlns:dav="DAV:" 
+  xmlns:DAV="DAV:"
   version="1.0">
 
+  <xsl:import href="layout.xsl" />
   <xsl:output indent="yes"/>
-  <xsl:param name="base">/samples/slide</xsl:param>
-  <xsl:param name="path" />
-  <xsl:param name="namespace">cocoon</xsl:param>
-  <xsl:param name="principal">guest</xsl:param>
+  
+  <xsl:param name="base"/>
+  <xsl:param name="path"/>
+  
+  <xsl:param name="type">properties</xsl:param>
 
-  <xsl:template match="/">
-    <document>
-      <header>
-        <title>Jakarta Slide example</title>
-        <tab title="users" href="{$base}/users/"/>
-        <tab title="content" href="{$base}/content/{$path}"/>
-        <tab title="properties" href="{$base}/properties/{$path}"/>
-        <tab title="permissions" href="{$base}/permissions/{$path}"/>
-        <tab title="locks" href="{$base}/locks/{$path}"/>
-        <tab title="logout" href="{$base}/logout.html"/>
-      </header>
-      <body>
-        <row>
-          <xsl:apply-templates select="col:collection|col:resource"/>
-        </row>
-      </body>
-    </document>
+  <xsl:template name="middle">
+    <column title="Properties">
+      <xsl:apply-templates select="/document/col:resource|/document/col:collection" />
+    </column>
   </xsl:template>
 
-  <xsl:template match="col:collection|col:resource">
-    <column title="Navigation">
+  <xsl:template match="col:resource|col:collection">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
-        <tr>
-          <td width="100%" bgcolor="#ffffff" align="left">
-            <br/>
-          </td>
-        </tr>
-        <xsl:for-each select="col:collection|col:resource">
-          <tr>
-            <td width="100%" bgcolor="#ffffff" align="left">
-              <font size="+0" face="arial,helvetica,sanserif" color="#000000">
-                <a href="{$base}/properties/{$path}/{@name}">
-                  <xsl:value-of select="@name"/>
-                </a>
-              </font>
-            </td>
-          </tr>
-        </xsl:for-each>
-      </table>
-    </column>
-
-    <column title="Properties">
-      <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
-        <font size="+0" face="arial,helvetica,sanserif" color="#000000">
+        <font size="+1" face="arial,helvetica,sanserif" color="#000000">
           <tr>
             <td align="left">
               <b>Namespace</b>
@@ -80,7 +47,7 @@
               </td>
               <td align="right">
                 <xsl:if test="namespace-uri()!='DAV:'">
-                  <form action="{$base}/removeproperty.do" method="post">
+                  <form action="{$base}/removeproperty" method="post">
                     <input type="hidden" name="resourcePath" value="{$path}"/>
                     <input type="hidden" name="namespace" value="{namespace-uri()}"/>
                     <input type="hidden" name="name" value="{local-name()}"/>
@@ -91,7 +58,7 @@
             </tr>
           </xsl:for-each>
           <tr>
-            <form action="{$base}/addproperty.do" method="post">
+            <form action="{$base}/addproperty" method="post">
               <input type="hidden" name="resourcePath" value="{$path}"/>
               <td align="left">
                 <input name="namespace" type="text" size="15" maxlength="40"/>
@@ -109,6 +76,5 @@
           </tr>
         </font>
       </table>
-    </column>
   </xsl:template>
 </xsl:stylesheet>

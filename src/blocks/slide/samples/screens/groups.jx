@@ -2,7 +2,10 @@
 <groups xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:forEach var="group" items="${groups}">
     <group>
-      <name>${group}</name>
+      <uri>${group.uri}</uri>
+      <jx:forEach var="member" items="${group.members}">
+        <member>${member}</member>
+      </jx:forEach>
     </group>
   </jx:forEach>
 </groups>

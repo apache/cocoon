@@ -2,7 +2,7 @@
 <users xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:forEach var="user" items="${users}">
     <user>
-      <name>${user}</name>
+      <uri>${user}</uri>
     </user>
   </jx:forEach>
 </users>

@@ -1,62 +1,109 @@
 
 importPackage(Packages.org.apache.cocoon.components.slide);
-importPackage(Packages.org.apache.cocoon.samples.slide);
 importPackage(Packages.org.apache.cocoon.components.source.helpers);
+importPackage(Packages.org.apache.cocoon.samples.slide);
 importPackage(Packages.org.apache.excalibur.source);
-importPackage(Packages.org.apache.excalibur.xml.dom);
 
 var repository = cocoon.getComponent("org.apache.cocoon.components.repository.SourceRepository");
 var resolver = cocoon.getComponent(SourceResolver.ROLE);
 var slide = cocoon.getComponent(SlideRepository.ROLE);
 var nat = slide.getNamespaceToken("cocoon");
 
+// these variables need to be available in the sitemap as well
+// is/should there be a simple way to share these? an input module?
+var principal;
+var namespace = "cocoon";
+var base = "/slide-samples/";
+
 // ---------------------------------------------- utility functions
 
 function getBaseURI() {
-  var namespace = cocoon.parameters["namespace"];
-  var caller    = cocoon.parameters["caller"];
-  return "slide://" + caller + "@" + namespace + "/";
+  return "slide://" + principal + "@" + namespace + "/";
+}
+
+// ---------------------------------------------- authentication
+
+function protect() {
+  var path = cocoon.parameters["path"];
+  if (principal == undefined){
+    login(path);
+  }
+  else {
+    invoke(path);
+  }
+}
+
+function invoke(path) {
+  var func = this["protected_" + path];
+  if (func != undefined) {
+    func.apply(this);
+  }
+  else {
+    cocoon.sendPage(path,null);
+  }
+}
+
+function login(path) {
+  cocoon.session;
+  var userid = "";
+  while (principal == undefined) {
+    cocoon.sendPageAndWait("screens/login.html",{userid:userid,prefix:"/slide-samples"});
+    userid       = cocoon.request.getParameter("userid");
+    var password = cocoon.request.getParameter("password");
+    if (AdminHelper.login(nat,userid,password)) {
+      principal = userid;
+      // also put it in the session so it can be accessed 
+      // from the sitemap throuhg the session attribute module
+      cocoon.session.setAttribute("slide-principal",principal);
+    }
+  }
+  cocoon.redirectTo(base + path);
+}
+
+function logout() {
+  cocoon.session.invalidate();
+  cocoon.redirectTo(base + "content/");
 }
 
 // ---------------------------------------------- file management
 
 // make a new collection
-function public_mkcol() {
+function protected_mkcol() {
   var baseUri        = getBaseURI();
   var parentPath     = cocoon.request.getParameter("parentPath");
   var collectionName = cocoon.request.getParameter("collectionName");
-  var location = baseUri + parentPath + collectionName;
+  var location = baseUri + parentPath + "/" + collectionName;
   var status = repository.makeCollection(location);
 
-  cocoon.redirectTo("content/" + parentPath);
+  cocoon.redirectTo(base + "content/" + parentPath);
 }
 
 // upload a file
-function public_upload() {
+function protected_upload() {
   var baseUri      = getBaseURI();
   var parentPath   = cocoon.request.getParameter("parentPath");
   var resourceName = cocoon.request.getParameter("resourceName");
-  var dest = baseUri + parentPath + resourceName;
+  var dest = baseUri + parentPath + "/" + resourceName;
   var src  = "upload://uploadFile";
   
   var status = repository.save(src,dest);
-  cocoon.redirectTo("content/" + parentPath);
+  cocoon.redirectTo(base + "content/" + parentPath);
 }
 
 // delete a resource
-function public_delete() {
+function protected_delete() {
   var baseUri = getBaseURI();
   var parentPath = cocoon.request.getParameter("parentPath");
   var resourceName = cocoon.request.getParameter("resourceName");
-  var location = baseUri + parentPath + resourceName;
+  var location = baseUri + parentPath + "/" + resourceName;
   
   var status = repository.remove(location);
-  cocoon.redirectTo("content/" + parentPath);
+  cocoon.redirectTo(base + "content/" + parentPath);
 }
 
 // ---------------------------------------------- property management
 
-function public_addproperty() {
+function protected_addproperty() {
   var baseUri      = getBaseURI();
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var location     = baseUri + resourcePath;
@@ -67,7 +114,7 @@ function public_addproperty() {
     var namespace = cocoon.request.getParameter("namespace");
     var value     = cocoon.request.getParameter("value");
     var property = new SourceProperty(namespace,name,value);
-    cocoon.log.info("setting property " + property + " on source " + location);
+    
     source.setSourceProperty(property);
   }
   finally {
@@ -75,10 +122,10 @@ function public_addproperty() {
       resolver.release(source);
     }
   }
-  cocoon.redirectTo("properties/" + resourcePath);
+  cocoon.redirectTo(base + "properties/" + resourcePath);
 }
 
-function public_removeproperty() {
+function protected_removeproperty() {
   var baseUri = getBaseURI();
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var location = baseUri + resourcePath;
@@ -87,166 +134,132 @@ function public_removeproperty() {
     source = resolver.resolveURI(location);
     var name      = cocoon.request.getParameter("name");
     var namespace = cocoon.request.getParameter("namespace");
-    cocoon.log.info("removing property " + namespace + "#" + name + " from source " + location);
+    
     source.removeSourceProperty(namespace,name);
   } finally {
     if (source != null) {
       resolver.release(source);
     }
   }
-  cocoon.redirectTo("properties/" + resourcePath);
-}
-
-// ---------------------------------------------- lock management
-
-function public_removelock() {
-  var baseUri = getBaseURI();
-  var resourcePath = cocoon.request.getParameter("resourcePath");
-  var subject = cocoon.request.getParameter("subject");
-  var location = baseUri + resourcePath;
-  
-  cocoon.log.info("removing lock " + subject + " from source " + location);
-  
-  // TODO: remove lock
-  
-  cocoon.redirectTo("locks/" + resourcePath);
-}
-
-function public_addlock() {
-  var baseUri = getBaseURI();
-  var resourcePath = cocoon.request.getParameter("resourcePath");
-  var subject      = cocoon.request.getParameter("subject");
-  var type         = cocoon.request.getParameter("type");
-  var inheritable  = cocoon.request.getParameter("inheritable");
-  var exclusive    = cocoon.request.getParameter("exclusive");
-  var location = baseUri + resourcePath;
-  
-  cocoon.log.info("adding lock " + subject + " to source " + location);
-  
-  // TODO: add lock
-  
-  cocoon.redirectTo("locks/" + resourcePath);
-}
-
-// ---------------------------------------------- user management
-
-function public_adduser() {
-  var username = cocoon.request.getParameter("username");
-  var password = cocoon.request.getParameter("password");
-  var role     = cocoon.request.getParameter("role");
-  var caller   = cocoon.parameters["caller"];
-  
-  AdminHelper.addUser(nat,caller,username,password,role);
-  cocoon.redirectTo("users/");
-}
-
-function public_removeuser() {
-  var username = cocoon.request.getParameter("username");
-  var caller   = cocoon.parameters["caller"];
-  
-  AdminHelper.removeUser(nat,caller,username);
-  cocoon.redirectTo("users/");
-}
-
-function public_addgroup() {
-  var groupname = cocoon.request.getParameter("groupname");
-  var caller    = cocoon.parameters["caller"];
-  
-  AdminHelper.addGroup(nat,caller,groupname);
-  cocoon.redirectTo("users/");
-}
-
-function public_removegroup() {
-  var groupname = cocoon.request.getParameter("groupname");
-  var caller    = cocoon.parameters["caller"];
-  
-  AdminHelper.removeGroup(nat,caller,groupname);
-  cocoon.redirectTo("users/");
-}
-
-function public_addmember() {
-  var username  = cocoon.request.getParameter("username");
-  var groupname = cocoon.request.getParameter("groupname");
-  var caller    = cocoon.parameters["caller"];
-  
-  AdminHelper.addGroupMember(nat,caller,groupname,username);
-  cocoon.redirectTo("users/");
-}
-
-function public_removemember() {
-  var username  = cocoon.request.getParameter("username");
-  var groupname = cocoon.request.getParameter("groupname");
-  var caller    = cocoon.parameters["caller"];
-  
-  AdminHelper.removeGroupMember(nat,caller,groupname,username);
-  cocoon.redirectTo("users/");
+  cocoon.redirectTo(base + "properties/" + resourcePath);
 }
 
 // ---------------------------------------------- permission management
 
-function public_removePermission() {
-  var caller       = cocoon.parameters["caller"];
+function protected_removePermission() {
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var subject      = cocoon.request.getParameter("subject");
-  var action       = cocoon.request.getParameter("action");
+  var privilege    = cocoon.request.getParameter("privilege");
   
-  AdminHelper.removePermission(nat,caller,resourcePath,subject,action);
-  cocoon.redirectTo("permissions/" + resourcePath);
+  AdminHelper.removePermission(nat,principal,resourcePath,subject,privilege);
+  cocoon.redirectTo(base + "permissions/" + resourcePath);
 }
 
-function public_addPermission() {
-  var caller       = cocoon.parameters["caller"];
+function protected_addPermission() {
   var resourcePath = cocoon.request.getParameter("resourcePath");
   var subject      = cocoon.request.getParameter("subject");
   var action       = cocoon.request.getParameter("action");
   var inheritable  = cocoon.request.getParameter("inheritable");
   var negative     = cocoon.request.getParameter("negative");
   
-  AdminHelper.addPermission(nat,caller,resourcePath,subject,action,inheritable,negative);
-  cocoon.redirectTo("permissions/" + resourcePath);
+  AdminHelper.addPermission(nat,principal,resourcePath,subject,action,inheritable,negative);
+  cocoon.redirectTo(base + "permissions/" + resourcePath);
 }
+
+// ---------------------------------------------- lock management
+
+function protected_removelock() {
+  var resourcePath = cocoon.request.getParameter("resourcePath");
+  var objectUri    = cocoon.request.getParameter("objectUri");
+  var lockId       = cocoon.request.getParameter("lockId");
+  
+  AdminHelper.removeLock(nat,principal,objectUri,lockId);
+  cocoon.redirectTo(base + "locks/" + resourcePath);
+}
+
+function protected_addlock() {
+  var resourcePath = cocoon.request.getParameter("resourcePath");
+  var subject      = cocoon.request.getParameter("subject");
+  var type         = cocoon.request.getParameter("type");
+  var exclusive    = cocoon.request.getParameter("exclusive");
+  var inheritable  = cocoon.request.getParameter("inheritable");
+  
+  AdminHelper.addLock(nat,principal,resourcePath,subject,type,exclusive,inheritable);
+  
+  cocoon.redirectTo(base + "locks/" + resourcePath);
+}
+
+// ---------------------------------------------- user management
+
+function protected_adduser() {
+  var username = cocoon.request.getParameter("username");
+  var password = cocoon.request.getParameter("password");
+  
+  AdminHelper.addUser(nat,principal,username,password);
+  cocoon.redirectTo(base + "users");
+}
+
+function protected_addgroup() {
+  var groupname = cocoon.request.getParameter("groupname");
+  
+  AdminHelper.addGroup(nat,principal,groupname);
+  cocoon.redirectTo("users");
+}
+
+function protected_removeobject() {
+  var objecturi = cocoon.request.getParameter("objecturi");
+  
+  AdminHelper.removeObject(nat,principal,objecturi);
+  cocoon.redirectTo(base + "users");
+}
+
+function protected_addmember() {
+  var objecturi  = cocoon.request.getParameter("objecturi");
+  var subjecturi = cocoon.request.getParameter("subjecturi");
+  
+  AdminHelper.addMember(nat,principal,objecturi,subjecturi);
+  cocoon.redirectTo(base + "users");
+}
+
+function protected_removemember() {
+  var objecturi  = cocoon.request.getParameter("objecturi");
+  var subjecturi = cocoon.request.getParameter("subjecturi");
+  
+  AdminHelper.removeMember(nat,principal,objecturi,subjecturi);
+  cocoon.redirectTo(base + "users");
+}
+
 
 // ---------------------------------------------- screens
 
-function screen_authenticate() {
-  var userid = cocoon.request.getParameter("userid");
-  var password = cocoon.request.getParameter("password");
-  cocoon.sendPage("screens/authentication.jx",{id:userid,role:"root"});
-}
-
 function screen_permissions() {
-  var caller = cocoon.parameters["caller"];
   var path   = cocoon.parameters["path"];
-  
-  var permissions = AdminHelper.listPermissions(nat,caller,path);
+  var permissions = AdminHelper.listPermissions(nat,principal,path);
   cocoon.sendPage("screens/permissions.jx",{permissions:permissions});
 }
 
-function screen_actions() {
-  var caller = cocoon.parameters["caller"];
-  
-  var actions = AdminHelper.listActions(nat,caller);
-  cocoon.sendPage("screens/actions.jx",{actions:actions});
+function screen_locks() {
+  var path   = cocoon.parameters["path"];
+  var locks = AdminHelper.listLocks(nat,principal,path);
+  cocoon.sendPage("screens/locks.jx",{locks:locks});
+}
+
+function screen_privileges() {
+  var privileges = AdminHelper.listPrivileges(nat,principal);
+  cocoon.sendPage("screens/privileges.jx",{privileges:privileges});
 }
 
 function screen_groups() {
-  var caller = cocoon.parameters["caller"];
-  
-  var groups = AdminHelper.listGroups(nat,caller);
+  var groups = AdminHelper.listGroups(nat,principal,"/groups");
   cocoon.sendPage("screens/groups.jx",{groups:groups});
 }
 
 function screen_roles() {
-  var caller = cocoon.parameters["caller"];
-  
-  var roles = AdminHelper.listRoles(nat,caller);
+  var roles = AdminHelper.listGroups(nat,principal,"/roles");
   cocoon.sendPage("screens/roles.jx",{roles:roles});
 }
 
 function screen_users() {
-  var caller = cocoon.parameters["caller"];
-  
-  var users = AdminHelper.listUsers(nat,caller);
+  var users = AdminHelper.listUsers(nat,principal);
   cocoon.sendPage("screens/users.jx",{users:users});
 }
-

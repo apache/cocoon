@@ -52,6 +52,7 @@
 package org.apache.cocoon.samples.slide;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -64,6 +65,8 @@ import org.apache.slide.content.Content;
 import org.apache.slide.content.NodeProperty;
 import org.apache.slide.content.NodeRevisionDescriptor;
 import org.apache.slide.content.NodeRevisionDescriptors;
+import org.apache.slide.lock.Lock;
+import org.apache.slide.lock.NodeLock;
 import org.apache.slide.macro.Macro;
 import org.apache.slide.macro.MacroParameters;
 import org.apache.slide.security.NodePermission;
@@ -80,16 +83,38 @@ import org.apache.slide.structure.SubjectNode;
  */
 public class AdminHelper {
     
+    private static final SlideToken ROOT = new SlideTokenImpl(new CredentialsToken("root"));
+    
+    public static boolean login(NamespaceAccessToken nat,
+                                String userId,
+                                String password) throws Exception {
+        
+        String usersPath = nat.getNamespaceConfig().getUsersPath();
+        String userUri = usersPath + "/" + userId;
+        
+        Content content = nat.getContentHelper();
+        
+        try {
+            NodeRevisionDescriptors revisions = content.retrieve(ROOT,userUri);
+            NodeRevisionDescriptor revision = content.retrieve(ROOT,revisions);
+            NodeProperty property = revision.getProperty(
+                "password",NodeProperty.SLIDE_NAMESPACE);
+            
+            return property.getValue().equals(password);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+    
     public static void addUser(NamespaceAccessToken nat, 
                                String caller, 
                                String username, 
-                               String password, 
-                               String rolename) throws Exception {
+                               String password) throws Exception {
         
         String usersPath = nat.getNamespaceConfig().getUsersPath();
         String userUri = usersPath + "/" + username;
-        String rolesPath = nat.getNamespaceConfig().getRolesPath();
-        String roleUri = rolesPath + "/" + rolename;
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Structure structure = nat.getStructureHelper();
@@ -97,8 +122,6 @@ public class AdminHelper {
         
         try {
             
-            // make sure the role exists
-            structure.retrieve(slideToken,roleUri);
             nat.begin();
             
             ObjectNode user = new SubjectNode();
@@ -112,23 +135,6 @@ public class AdminHelper {
                 "password",password,NodeProperty.SLIDE_NAMESPACE));
             content.create(slideToken,userUri,descriptor,null);
             
-            if (rolename != null && !rolename.equals("")) {
-                // modify the role descriptor
-                NodeRevisionDescriptors descriptors = content.retrieve(slideToken,roleUri);
-                descriptor = content.retrieve(slideToken,descriptors);
-                NodeProperty property = descriptor.getProperty("group-member-set","DAV:");
-                String value;
-                if (property != null) {
-                    value = (String) property.getValue();
-                }
-                else {
-                    value = "";
-                }
-                value += "<D:href xmlns:D=\"DAV:\">" + userUri + "</D:href>";
-                descriptor.setProperty("group-member-set","DAV:",value);
-                content.store(slideToken,roleUri,descriptor,null);
-            }
-            
             nat.commit();
         }
         catch (Exception e) {
@@ -141,44 +147,6 @@ public class AdminHelper {
             throw e;
         }
         
-    }
-    
-    public static void removeUser(NamespaceAccessToken nat,
-                                  String caller,
-                                  String username) throws Exception {
-        
-        String usersPath = nat.getNamespaceConfig().getUsersPath();
-        String userUri = usersPath + "/" + username;
-        String callerUri = usersPath + "/" + caller;
-        
-        // user cannot delete itself
-        if (callerUri.equals(userUri)) {
-            return;
-        }
-        
-        SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
-        Macro macro = nat.getMacroHelper();
-        
-        try {
-            nat.begin();
-            
-            boolean recursive = true;
-            boolean overwrite = false;
-            MacroParameters parameters = new MacroParameters(recursive,overwrite);
-            
-            macro.delete(slideToken,userUri,parameters);
-            
-            nat.commit();
-        }
-        catch (Exception e) {
-            try {
-                nat.rollback();
-            }
-            catch (Exception f) {
-                f.printStackTrace();
-            }
-            throw e;
-        }
     }
     
     public static void addGroup(NamespaceAccessToken nat,
@@ -218,25 +186,30 @@ public class AdminHelper {
         
     }
     
-    public static void removeGroup(NamespaceAccessToken nat,
-                                   String caller,
-                                   String groupname) throws Exception {
+    public static void removeObject(NamespaceAccessToken nat,
+                                    String caller,
+                                    String objectUri) throws Exception {
         
-        String groupsPath = nat.getNamespaceConfig().getGroupsPath();
-        String groupUri = groupsPath + "/" + groupname;
-        
+        String usersPath = nat.getNamespaceConfig().getUsersPath();
+        String callerUri = usersPath + "/" + caller;
+                                        
+        // user cannot delete itself
+        if (callerUri.equals(objectUri)) {
+            return;
+        }
+    
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Macro macro = nat.getMacroHelper();
-        
+    
         try {
             nat.begin();
-            
+    
             boolean recursive = true;
             boolean overwrite = false;
             MacroParameters parameters = new MacroParameters(recursive,overwrite);
-            
-            macro.delete(slideToken,groupUri,parameters);
-            
+    
+            macro.delete(slideToken,objectUri,parameters);
+    
             nat.commit();
         }
         catch (Exception e) {
@@ -250,15 +223,10 @@ public class AdminHelper {
         }
     }
     
-    public static void addGroupMember(NamespaceAccessToken nat,
-                                      String caller,
-                                      String groupname,
-                                      String username) throws Exception {
-        
-        String groupsPath = nat.getNamespaceConfig().getGroupsPath();
-        String groupUri = groupsPath + "/" + groupname;
-        String usersPath = nat.getNamespaceConfig().getUsersPath();
-        String userUri = usersPath + "/" + username;
+    public static void addMember(NamespaceAccessToken nat,
+                                 String caller,
+                                 String objectUri,
+                                 String subjectUri) throws Exception {
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Structure structure = nat.getStructureHelper();
@@ -266,17 +234,17 @@ public class AdminHelper {
         
         try {
             
-            // check if the user exists
-            structure.retrieve(slideToken,userUri);
+            // check if the subject exists
+            structure.retrieve(slideToken,subjectUri);
             
-            NodeRevisionDescriptors descriptors = content.retrieve(slideToken,groupUri);
+            NodeRevisionDescriptors descriptors = content.retrieve(slideToken,objectUri);
             NodeRevisionDescriptor descriptor = content.retrieve(slideToken,descriptors);
             NodeProperty property = descriptor.getProperty("group-member-set","DAV:");
             
             String value = null;
             if (property != null) {
                 value = (String) property.getValue();
-                if (value.indexOf(userUri) != -1) {
+                if (value.indexOf(subjectUri) != -1) {
                     // user already a member of this group
                     return;
                 }
@@ -284,11 +252,11 @@ public class AdminHelper {
             else {
                 value = "";
             }
-            value = value + "<D:href xmlns:D='DAV:'>" + userUri + "</D:href>";
+            value = value + "<D:href xmlns:D='DAV:'>" + subjectUri + "</D:href>";
             
             descriptor.setProperty("group-member-set","DAV:",value);
             nat.begin();
-            content.store(slideToken,groupUri,descriptor,null);
+            content.store(slideToken,objectUri,descriptor,null);
             nat.commit();
         }
         catch (ObjectNotFoundException e) {
@@ -305,24 +273,19 @@ public class AdminHelper {
         }
     }
     
-    public static void removeGroupMember(NamespaceAccessToken nat,
-                                         String caller,
-                                         String groupname,
-                                         String username) throws Exception {
-        
-        String groupsPath = nat.getNamespaceConfig().getGroupsPath();
-        String groupUri = groupsPath + "/" + groupname;
-        String usersPath = nat.getNamespaceConfig().getUsersPath();
-        String userUri = usersPath + "/" + username;
+    public static void removeMember(NamespaceAccessToken nat,
+                                    String caller,
+                                    String objectUri,
+                                    String subjectUri) throws Exception {
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Content content = nat.getContentHelper();
         
         try {
             
-            NodeRevisionDescriptors descriptors = content.retrieve(slideToken,groupUri);
-            NodeRevisionDescriptor descriptor = content.retrieve(slideToken,descriptors);
-            NodeProperty property = descriptor.getProperty("group-member-set","DAV:");
+            NodeRevisionDescriptors revisions = content.retrieve(slideToken,objectUri);
+            NodeRevisionDescriptor revision = content.retrieve(slideToken,revisions);
+            NodeProperty property = revision.getProperty("group-member-set","DAV:");
             
             if (property == null) {
                 // group has no members
@@ -330,20 +293,20 @@ public class AdminHelper {
             }
             String value = (String) property.getValue();
             
-            int index = value.indexOf(userUri);
+            int index = value.indexOf(subjectUri);
             if (index == -1) {
-                // user is not a member of this group
+                // subject is not a member of this group
                 return;
             }
             
-            // looking for the end of </D:href> after userUri
-            int end = index + userUri.length();
+            // looking for the end of </D:href> after subjectUri
+            int end = index + subjectUri.length();
             do {
                 end++;
             } 
             while (value.charAt(end) != '>');
             
-            // looking for the start of <D:href> before userUri
+            // looking for the start of <D:href> before subjectUri
             int from = index;
             do {
                 from--;
@@ -355,9 +318,9 @@ public class AdminHelper {
             String after  = value.substring(end+1);
             value = before + after;
             
-            descriptor.setProperty("group-member-set","DAV:",value);
+            revision.setProperty("group-member-set","DAV:",value);
             nat.begin();
-            content.store(slideToken,groupUri,descriptor,null);
+            content.store(slideToken,objectUri,revision,null);
             nat.commit();
         }
         catch (ObjectNotFoundException e) {
@@ -373,40 +336,109 @@ public class AdminHelper {
             throw e;
         }
     }
-    
+        
     public static List listPermissions(NamespaceAccessToken nat,
                                        String caller,
                                        String path) throws Exception {
-        String filesPath = nat.getNamespaceConfig().getFilesPath();
-        String uri = filesPath + "/" + path;
+                                           
+        String uri = getUriFromPath(nat,path);
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Security security = nat.getSecurityHelper();
         
         List result = new ArrayList();
-        Enumeration permissions = security.enumeratePermissions(slideToken,uri,false);
-        while (permissions.hasMoreElements()) {
-            result.add(permissions.nextElement());
+        try {
+            nat.begin();
+            Enumeration permissions = security.enumeratePermissions(slideToken,uri,false);
+            while (permissions.hasMoreElements()) {
+                result.add(permissions.nextElement());
+            }
+            nat.commit();
+            return result;
         }
+        catch (Exception e) {
+            try {
+                nat.rollback();
+            }
+            catch (Exception f) {
+                f.printStackTrace();
+            }
+            throw e;
+        }
+    }
+    
+    public static List listLocks(NamespaceAccessToken nat,
+                                 String caller,
+                                 String path) throws Exception {
+
+        String uri = getUriFromPath(nat,path);
+        
+        SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
+        Lock lock = nat.getLockHelper();
+        
+        List result = new ArrayList();
+        try {
+            nat.begin();
+            Enumeration locks = lock.enumerateLocks(slideToken,uri,false);
+            while(locks.hasMoreElements()) {
+                result.add(locks.nextElement());
+            }
+            nat.commit();
+            return result;
+        } catch (Exception e) {
+            try {
+                nat.rollback();
+            }
+            catch (Exception f) {
+                f.printStackTrace();
+            }
+            throw e;
+        }
+    }
+    
+    public static List listGroups(NamespaceAccessToken nat, String caller, String path) throws Exception {
+        List result = new ArrayList();
+
+        SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
+        Structure structure = nat.getStructureHelper();
+        Content content = nat.getContentHelper();
+        
+        ObjectNode object = structure.retrieve(slideToken,path);
+        Enumeration enum = structure.getChildren(slideToken,object);
+        while (enum.hasMoreElements()) {
+            String uri = ((ObjectNode) enum.nextElement()).getUri();
+            NodeRevisionDescriptors revisions = content.retrieve(slideToken, uri);
+            NodeRevisionDescriptor revision = content.retrieve(slideToken, revisions);
+            NodeProperty property = revision.getProperty("group-member-set","DAV:");
+            List members;
+            if (property != null) {
+                String value = (String) property.getValue();
+                members = new ArrayList(10);
+                int start = value.indexOf('>'), end = 0;
+                while (start != -1) {
+                    end = value.indexOf('<',start);
+                    if (end != -1) {
+                        members.add(value.substring(start+1,end));
+                    }
+                    end = value.indexOf('>',start+1);
+                    start = value.indexOf('>',end+1);
+                }
+            }
+            else {
+                members = Collections.EMPTY_LIST;
+            }
+            result.add(new Group(uri,members));
+        }
+
         return result;
     }
     
     public static List listUsers(NamespaceAccessToken nat,
-                                      String caller) throws Exception {
+                                 String caller) throws Exception {
         return listObjects(nat,caller,nat.getNamespaceConfig().getUsersPath());
     }
     
-    public static List listRoles(NamespaceAccessToken nat,
-                                 String caller) throws Exception {
-        return listObjects(nat,caller,nat.getNamespaceConfig().getRolesPath());
-    }
-    
-    public static List listGroups(NamespaceAccessToken nat,
-                                  String caller) throws Exception {
-        return listObjects(nat,caller,nat.getNamespaceConfig().getGroupsPath());
-    }
-    
-    public static List listActions(NamespaceAccessToken nat,
+    public static List listPrivileges(NamespaceAccessToken nat,
                                    String caller) throws Exception {
         return listObjects(nat,caller,nat.getNamespaceConfig().getActionsPath());
     }
@@ -423,7 +455,7 @@ public class AdminHelper {
         ObjectNode object = structure.retrieve(slideToken,path);
         Enumeration enum = structure.getChildren(slideToken,object);
         while (enum.hasMoreElements()) {
-            result.add(enum.nextElement());
+            result.add(((ObjectNode) enum.nextElement()).getUri());
         }
         
         return result;
@@ -435,20 +467,7 @@ public class AdminHelper {
                                         String subject,
                                         String action) throws Exception {
 
-        String filesPath = nat.getNamespaceConfig().getFilesPath();
-        String uri;
-        if (path.equals("/")) {
-            uri = filesPath;
-        }
-        else {
-            uri = filesPath + "/" + path;
-        }
-        
-        
-        System.out.println("uri: " + uri);
-        System.out.println("subject: " + subject);
-        System.out.println("action: " + action);
-        System.out.println("caller: " + caller);
+        String uri = getUriFromPath(nat,path);
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Security security = nat.getSecurityHelper();
@@ -478,14 +497,8 @@ public class AdminHelper {
                                      String action,
                                      String inheritable,
                                      String negative) throws Exception {
-        String filesPath = nat.getNamespaceConfig().getFilesPath();
-        String uri;
-        if (path.equals("/")) {
-            uri = filesPath;
-        }
-        else {
-            uri = filesPath + "/" + path;
-        }
+                                         
+        String uri = getUriFromPath(nat,path);
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
         Security security = nat.getSecurityHelper();
@@ -512,6 +525,98 @@ public class AdminHelper {
                 f.printStackTrace();
             }
             throw e;
+        }
+    }
+    
+    public static void removeLock(NamespaceAccessToken nat,
+                                  String caller,
+                                  String uri,
+                                  String lockId) throws Exception {
+        
+        SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
+        Lock lock = nat.getLockHelper();
+        
+        try {
+            nat.begin();
+            lock.unlock(slideToken,uri,lockId);
+            nat.commit();
+        }
+        catch (Exception e) {
+            try {
+                nat.rollback();
+            }
+            catch (Exception f) {
+                f.printStackTrace();
+            }
+            throw e;
+        }
+    }
+    
+    public static void addLock(NamespaceAccessToken nat,
+                               String caller,
+                               String path,
+                               String subject,
+                               String type,
+                               String exclusive,
+                               String inherit) throws Exception {
+
+       String uri = getUriFromPath(nat,path);
+       boolean isExclusive = Boolean.valueOf(exclusive).booleanValue();
+       boolean isInherit = Boolean.valueOf(inherit).booleanValue();
+       // expires after one minute
+       Date expire = new Date(System.currentTimeMillis() + 1000*60);
+       
+       SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
+       Lock lock = nat.getLockHelper();
+       
+       try {
+           nat.begin();
+           lock.lock(slideToken,new NodeLock(uri,subject,type,expire,isExclusive,isInherit));
+           nat.commit();
+       }
+       catch (Exception e) {
+           try {
+               nat.rollback();
+           }
+           catch (Exception f) {
+               f.printStackTrace();
+           }
+           throw e;
+       }
+    }
+    
+    private static String getUriFromPath(NamespaceAccessToken nat,
+                                         String path) {
+        String filesPath = nat.getNamespaceConfig().getFilesPath();
+        String uri;
+        if (path.equals("/") || path.length() == 0) {
+            uri = filesPath;
+        }
+        else {
+            uri = filesPath + "/" + path;
+        }
+        return uri;
+    }
+    
+    public static class Group {
+        private final String m_uri;
+        private final List m_members;
+        
+        private Group(String uri, List members) {
+            m_uri = uri;
+            m_members = members;
+        }
+        
+        public String getUri() {
+            return m_uri;
+        }
+        
+        public List getMembers() {
+            return m_members;
+        }
+        
+        public String toString() {
+            return m_uri;
         }
     }
 }

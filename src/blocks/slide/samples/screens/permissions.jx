@@ -2,7 +2,7 @@
 <permissions xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:forEach var="permission" items="${permissions}">
     <permission>
-      <action>${permission.actionUri}</action>
+      <privilege>${permission.actionUri}</privilege>
       <object>${permission.objectUri}</object>
       <subject>${permission.subjectUri}</subject>
       <inheritable>${permission.inheritable}</inheritable>
