@@ -203,24 +203,12 @@
 
    <map:match pattern="quote.html">
     <map:generate type="text" src="misc/quote.txt"/>
-    <map:transform type="log">
-     <map:parameter name="logfile" value="logfile1.log"/>
-     <map:parameter name="append" value="no"/>
-    </map:transform>
 <!--
     <map:transform type="lexer"   src="cocoon:/quote.xlex"/>
     <map:transform type="parser"  src="cocoon:/quote.xgrm"/>
 -->
     <map:transform type="lexer"   src="grammars/quote.xlex"/>
-    <map:transform type="log">
-     <map:parameter name="logfile" value="logfile2.log"/>
-     <map:parameter name="append" value="no"/>
-    </map:transform>
     <map:transform type="parser"  src="grammars/quote.xgrm"/>
-    <map:transform type="log">
-     <map:parameter name="logfile" value="logfile3.log"/>
-     <map:parameter name="append" value="no"/>
-    </map:transform>
     <map:transform                src="stylesheets/quote2html.xsl"/>
     <map:serialize type="html"/>
    </map:match>
