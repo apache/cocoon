@@ -41,9 +41,12 @@
     </s1>
     <s1 title="The Readers in Apache Cocoon">
       <ul>
+        <li><link href="axisrpc-reader.html">AxisRPC Reader</link> (Optional: Axis block)</li>
+        <li><link href="database-reader.html">Database Reader</link> (Optional: Database block)</li>
+        <li><link href="directoryziparchiver-reader.html">Directory ZIP Archiver</link> (Scratchpad)</li>
+        <li><link href="image-reader.html">Image Reader</link></li>
+        <li><link href="jsp-reader.html">JSP Reader</link> (Optional: JSP block)</li>
         <li><link href="resource-reader.html">Resource Reader</link> (The default reader)</li>
-        <li><link href="database-reader.html">Database Reader</link></li>
-        <li><link href="jsp-reader.html">JSP Reader</link></li>
       </ul>
     </s1>
   </body>
