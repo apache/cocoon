@@ -54,6 +54,7 @@
   <map:flow language="javascript">
     <map:script src="flow/woody_flow_example.js"/>
     <map:script src="flow/binding_example.js"/>
+    <map:script src="flow/registration.js"/>
   </map:flow>
 
  <map:pipelines>
@@ -229,38 +230,16 @@
      </map:match>
 
      <!--
-        | Registration form example (used in the documentation)
+        | Registration form example
         -->
+
      <map:match pattern="registration">
-       <map:select type="request-method">
-         <map:when test="GET">
-           <map:act type="woody-make-form">
-             <map:parameter name="form-definition" value="forms/registration.xml"/>
-             <map:parameter name="attribute-name" value="registrationform"/>
-           </map:act>
-         </map:when>
-         <map:otherwise>
-           <map:act type="woody-handle-form-submit">
-             <map:parameter name="form-definition" value="forms/registration.xml"/>
-             <map:parameter name="attribute-name" value="registrationform"/>
+       <map:call function="registration"/>
+     </map:match>
 
-             <map:generate type="serverpages" src="forms/registration_success.xsp"/>
-             <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
-               <map:parameter name="contextPath" value="{request:contextPath}"/>
-               <map:parameter name="servletPath" value="{request:servletPath}"/>
-               <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
-               <map:parameter name="file" value="forms/registration_success.xsp"/>
-               <map:parameter name="remove" value="{../0}"/>
-             </map:transform>
-             <map:serialize/>
-           </map:act>
-         </map:otherwise>
-       </map:select>
-
+     <map:match pattern="registration-display-pipeline">
        <map:generate src="forms/registration_template.xml"/>
-       <map:transform type="woody">
-         <map:parameter name="attribute-name" value="registrationform"/>
-       </map:transform>
+       <map:transform type="woody"/>
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
@@ -272,6 +251,18 @@
          <map:parameter name="remove" value="{0}"/>
        </map:transform>
        <map:transform src="resources/woody-samples-styling.xsl"/>
+       <map:serialize/>
+     </map:match>
+
+     <map:match pattern="registration-success-pipeline">
+       <map:generate type="jx" src="forms/registration_success.jx"/>
+       <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+         <map:parameter name="servletPath" value="{request:servletPath}"/>
+         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+         <map:parameter name="file" value="forms/registration_success.jx"/>
+         <map:parameter name="remove" value="{../0}"/>
+       </map:transform>
        <map:serialize/>
      </map:match>
 

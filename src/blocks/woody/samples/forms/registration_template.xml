@@ -3,7 +3,7 @@
   xmlns:wi="http://apache.org/cocoon/woody/instance/1.0">
   <title>Registration</title>
   <content>
-    <wt:form-template action="registration" method="POST">
+    <wt:form-template action="#{$continuation/id}.continue" method="POST">
       <wt:widget-label id="name"/>
       <wt:widget id="name"/>
       <br/>
