@@ -33,10 +33,11 @@
  <s1 title="Timeframe">
   <p>This is the current time frame for the next releases:</p>
   <ul>
-   <li>July/August 2004   : 2.1.6 (maintenance release)</li>
-   <li>Not schedulded yet : 2.2 Milestone 1</li>
+   <li>Not schedulded yet: 2.1.7 (maintenance release)</li>
+   <li>Not schedulded yet: 2.2M1 (Milestone 1)</li>
   </ul>
  </s1>
+
  <s1 title="Roadmap">
    <p>
      In general, the next Cocoon version 2.2 can be seen as the 
@@ -66,20 +67,20 @@
    </p>
    <ul>
      <li>Official Versioning Guide (will be published soon).</li>
-     <li>Move source repository to Subversion.</li>
-     <li>Virtual sitemap components.</li>
+     <li>Virtual Sitemap Components.</li>
      <li>First finished version of CForms.</li>
      <li>Deprecate (not remove!) XSP (and provide a viable alternative).</li>
      <li>Cleaning up the caching/store mess.</li>
      <li>Deprecate blocks that haven't been maintained in a long while 
-        or don't serve any evident purpose. Web3, apples, python, php, 
-        asciiart might be some candidates. We will decide this on a 
+        or don't serve any evident purpose. Web3, Apples, Python,
+        Asciiart might be some candidates. We will decide this on a 
         case-by-case basis.
      </li>
      <li>Differentiate between blocks that provide a service to other 
         blocks and blocks that contain just samples or small applications 
         built upon cocoon (petstore, tour, linotpye). Maybe "samples-only" 
-        blocks should be a separate download. Perhaps remove deprecated blocks etc.</li>
+        blocks should be a separate download. Perhaps remove deprecated blocks etc.
+     </li>
      <li>
        Review the implications and the implementation of pooling.
      </li>
@@ -97,10 +98,11 @@
    </ul>
    <p>
      The <link href="updating.html">updating to 2.2</link> document contains 
-     more information on how to prepare your application for the next mino 
+     more information on how to prepare your application for the next minor
      release.
    </p>
   </s1>
+
   <s1 title="The Future">
     <p>
       We already have plans for further versions of Cocoon that might be 
@@ -108,7 +110,7 @@
     </p>
     <ul>
       <li>Design and implement blocks.</li>
-      <li>Move to a new Avalon container implementation (Fortress).</li>
+      <li>Integrate Kernel into the Cocoon core.</li>
     </ul>
   </s1>
   
