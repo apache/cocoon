@@ -7,6 +7,8 @@
  *****************************************************************************/
 package org.apache.cocoon.matching;
 
+import org.apache.cocoon.CodeFactory;
+
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
@@ -25,10 +27,10 @@ import org.apache.log.Logger;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-15 20:35:12 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-15 20:41:15 $
  */
 
-public class RegexpTargetHostMatcherFactory implements MatcherFactory {
+public class RegexpTargetHostMatcherFactory implements CodeFactory {
     protected Logger log = LogKit.getLoggerFor("cocoon");
 
     public String generateParameterSource (NodeIterator conf)
