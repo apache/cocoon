@@ -139,11 +139,11 @@
           <tr>
             <td>height</td>
             <td>Image height in pixels</td>
+            <td>
               This parameter is optional. When specified it determines the
               height of the binary image.
               If no width parameter is specified, the aspect ratio
               of the image is kept.
-            <td>
             </td>
           </tr>
           <tr>
