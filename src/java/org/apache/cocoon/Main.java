@@ -87,7 +87,7 @@ import org.apache.cocoon.bean.BeanListener;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.11 2003/07/21 09:37:40 jefft Exp $
+ * @version CVS $Id: Main.java,v 1.12 2003/08/27 19:18:18 upayavira Exp $
  */
 public class Main {
 
@@ -325,10 +325,24 @@ public class Main {
         }
 
         if (line.hasOption(WORK_DIR_OPT)) {
-            cocoon.setWorkDir(line.getOptionValue(WORK_DIR_OPT));
+            String workDir = line.getOptionValue(WORK_DIR_OPT);
+            if (workDir.equals("")) {
+                listener.messageGenerated(
+                    "Careful, you must specify a work dir when using the -w/--workDir argument");
+                System.exit(1);
+            } else {
+                cocoon.setWorkDir(line.getOptionValue(WORK_DIR_OPT));
+            }
         }
         if (line.hasOption(CONTEXT_DIR_OPT)) {
-            cocoon.setContextDir(line.getOptionValue(CONTEXT_DIR_OPT));
+            String contextDir = line.getOptionValue(CONTEXT_DIR_OPT);
+            if (contextDir.equals("")) {
+                listener.messageGenerated(
+                    "Careful, you must specify a configuration file when using the -c/--contextDir argument");
+                System.exit(1);
+            } else {  
+                cocoon.setContextDir(contextDir);
+            }
         }
         if (line.hasOption(CONFIG_FILE_OPT)) {
             cocoon.setConfigFile(line.getOptionValue(CONFIG_FILE_OPT));

@@ -94,7 +94,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.1 2003/08/17 13:50:45 upayavira Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.2 2003/08/27 19:18:18 upayavira Exp $
  */
 public class CocoonWrapper {
 
@@ -124,11 +124,11 @@ public class CocoonWrapper {
     private Map attributes = new HashMap();
     private HashMap empty = new HashMap();
 
-    private boolean initialized;
+    private boolean initialized = false;
+
     //
     // INITIALISATION METHOD
     //
-
     public void initialize() throws Exception {
         // @todo@ when does the logger get initialised? uv
         // @todo@ these should log then throw exceptions back to the caller, not use system.exit()
