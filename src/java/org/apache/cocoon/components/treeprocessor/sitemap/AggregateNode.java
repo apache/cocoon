@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,9 +15,8 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.Map;
-
 import org.apache.avalon.framework.parameters.Parameters;
+
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
@@ -25,11 +24,13 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.ContentAggregator;
-import org.apache.cocoon.sitemap.PatternException;
+
+import java.util.Map;
 
 /**
+ * Aggregate sitemap node.
  *
- * View-handling in aggregation :
+ * <h3>View handling in aggregation</h3>
  * <ul>
  * <li>map:aggregate can have a label, but doesn't match view from-position="first" like generators
  * </li>
@@ -44,9 +45,8 @@ import org.apache.cocoon.sitemap.PatternException;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.5 2004/06/09 11:59:23 cziegeler Exp $
+ * @version $Id$
  */
-
 public class AggregateNode extends AbstractProcessingNode {
 
     private VariableResolver element;
@@ -62,7 +62,7 @@ public class AggregateNode extends AbstractProcessingNode {
     /** View nodes to jump to */
     private Map viewNodes;
 
-    public AggregateNode(VariableResolver element, VariableResolver nsURI, VariableResolver nsPrefix) throws PatternException {
+    public AggregateNode(VariableResolver element, VariableResolver nsURI, VariableResolver nsPrefix) {
         super(null);
         this.element = element;
         this.nsURI = nsURI;
@@ -79,23 +79,19 @@ public class AggregateNode extends AbstractProcessingNode {
     }
 
     public boolean invoke(Environment env, InvokeContext context)
-      throws Exception {
-
-        boolean infoEnabled = getLogger().isInfoEnabled();
+    throws Exception {
+        final boolean infoEnabled = getLogger().isInfoEnabled();
 
         Map objectModel = env.getObjectModel();
 
         // Setup aggregator
         ProcessingPipeline processingPipeline = context.getProcessingPipeline();
-
         processingPipeline.setGenerator("<aggregator>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS);
 
-        ContentAggregator aggregator = (ContentAggregator)processingPipeline.getGenerator();
-        aggregator.setRootElement(
-            this.element.resolve(context, objectModel),
-            this.nsURI.resolve(context, objectModel),
-            this.nsPrefix.resolve(context, objectModel)
-        );
+        ContentAggregator aggregator = (ContentAggregator) processingPipeline.getGenerator();
+        aggregator.setRootElement(this.element.resolve(context, objectModel),
+                                  this.nsURI.resolve(context, objectModel),
+                                  this.nsPrefix.resolve(context, objectModel));
 
         // Get actual parts, potentially filtered by the view
         Part[] actualParts;
@@ -129,7 +125,7 @@ public class AggregateNode extends AbstractProcessingNode {
             }
         }
 
-        // Bug #7196 : Some parts matched the view : jump to that view
+        // Bug #7196 : Some parts matched the view: jump to that view
         if (actualParts != this.allParts) {
             ProcessingNode viewNode = (ProcessingNode)this.viewNodes.get(cocoonView);
             if (viewNode != null) {
@@ -156,25 +152,22 @@ public class AggregateNode extends AbstractProcessingNode {
     }
 
     public static class Part {
-        public Part(
-            VariableResolver source,
-            VariableResolver element,
-            VariableResolver nsURI,
-            VariableResolver nsPrefix,
-            VariableResolver stripRoot)
-          throws PatternException {
+        protected VariableResolver source;
+        protected VariableResolver element;
+        protected VariableResolver nsURI;
+        protected VariableResolver nsPrefix;
+        protected VariableResolver stripRoot;
+
+        public Part(VariableResolver source,
+                    VariableResolver element,
+                    VariableResolver nsURI,
+                    VariableResolver nsPrefix,
+                    VariableResolver stripRoot) {
             this.source = source;
             this.element = element;
             this.nsURI = nsURI;
             this.nsPrefix = nsPrefix;
             this.stripRoot = stripRoot;
         }
-
-        protected VariableResolver source;
-        protected VariableResolver element;
-        protected VariableResolver nsURI;
-        protected VariableResolver nsPrefix;
-        protected VariableResolver stripRoot;
-        
     }
 }

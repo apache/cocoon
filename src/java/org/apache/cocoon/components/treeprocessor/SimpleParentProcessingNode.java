@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,11 +21,9 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
 
 /**
- *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleParentProcessingNode.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
+ * @version $Id$
  */
-
 public abstract class SimpleParentProcessingNode extends AbstractParentProcessingNode {
 
     /** The childrens of this matcher */
@@ -40,27 +38,22 @@ public abstract class SimpleParentProcessingNode extends AbstractParentProcessin
     }
 
     /**
-     * Boolean method with returns true if this Node has children 
-     * and false otherwise
+     * Boolean method with returns true if this Node has children
+     * and false otherwise.
      *
-     * @return boolean 
+     * @return boolean true if has children.
      */
     public boolean hasChildren() {
-        if ((this.children == null) || (this.children.length > 0))
-            return true;
-        return false;
+        return this.children != null && this.children.length > 0;
     }
-
 
     /**
      * Define common invoke behavior here
      */
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
-
-
-        // inform the pipeline (if available) that we have come across
+        // Inform the pipeline (if available) that we have come across
         // a possible branch point
-        if (context.pipelineIsSet() && this.hasChildren() ) {
+        if (context.pipelineIsSet() && hasChildren()) {
             context.getProcessingPipeline().informBranchPoint();
         }
 
