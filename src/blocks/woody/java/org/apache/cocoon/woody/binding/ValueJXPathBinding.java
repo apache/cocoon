@@ -152,7 +152,7 @@ public class ValueJXPathBinding extends JXPathBindingBase {
 
                 if ((value == null && oldValue != null) || value != null && !value.equals(oldValue)) {
                     // first update the value itself
-                    jxpc.setValue(this.xpath, value);
+                    jxpc.createPathAndSetValue(this.xpath, value);
 
                     // now perform any other bindings that need to be performed when the value is updated
                     JXPathContext subContext = null;
