@@ -31,9 +31,9 @@ import org.apache.cocoon.kernel.composition.Wire;
 /**
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
-public class WirableConnection implements Connection {
+public class WirableConnection implements Component, Connection {
 
     /** <p>Our {@link Connection} instance.</p> */
     private Connection connection = null;
