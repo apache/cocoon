@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.57 2001-01-18 21:23:20 greenrd Exp $
+  $Id: todo.xml,v 1.58 2001-01-18 22:53:36 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -22,9 +22,9 @@
   <action context="docs" assigned-to="RDG" bugid="6">
    Fix dead links in docs.
   </action>
-  <action context="code" bugid="33">
+<!-- audit <action context="code" bugid="33">
    Fix XSP string escaping bug.
-  </action>
+  </action>-->
   <action context="code" bugid="30">
    Fix cache problem with SSI and JSP including [first-pass patch is in bug report]
   </action>
@@ -33,9 +33,6 @@
  <actions priority="medium">
   <action context="code" assigned-to="DB">
    Add StoredProcedure support to esql.
-  </action>
-  <action context="code" bugid="38">
-   (UNCONFIRMED) Fix XInclude bug with including content from servlets/CGIs.
   </action>
   <action context="code" bugid="5" assigned-to="RDG">
    Work out how to integrate inline XSP docs (such as inline esql docs)
