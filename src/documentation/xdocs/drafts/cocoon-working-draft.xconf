@@ -52,8 +52,8 @@ draft and may be updated at any time.
 -->
 
 <cocoon 
-   xmlns="http://xml.apache.org/cocoon/2.0" 
-   xmlns:src="http://xml.apache.org/cocoon/loaders/1.0"
+   xmlns="http://apache.org/cocoon/2.0" 
+   xmlns:src="http://apache.org/cocoon/loaders/1.0"
 >
 
  <!-- NOTE (SM): what should we place here? -->
