@@ -66,16 +66,18 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 
 /**
- * This is the entry point for Cocoon execution as an HTTP Servlet.
- * It also creates a buffer by loading the whole servlet inside a ClassLoader.
- * It has been changed to extend <code>CocoonServlet</code> so that it is
- * easier to add and change functionality between the two servlets.
- * The only real differences are the ClassLoader and instantiating Cocoon inside
- * of it.
+ * This servlet builds a classloading sandbox and runs another servlet inside that
+ * sandbox. The purpose is to shield the libraries and classes shipped with the web
+ * application from any other classes with the same name that may exist in the system,
+ * such as Xerces and Xalan versions included in JDK 1.4.
+ * <p>
+ * This servlet propagates all initialisation parameters to the sandboxed servlet, and
+ * accept only one additional parameter, <code>servlet-class</code>, which defined the
+ * sandboxed servlet class. The default is {@link CocoonServlet}.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.2 2003/06/03 13:25:42 sylvain Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.3 2003/06/05 16:33:59 sylvain Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -83,7 +85,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
 	/**
 	 * The name of the actual servlet class.
 	 */
-	public static final String SERVLET_CLASS = "org.apache.cocoon.servlet.CocoonServlet";
+	public static final String DEFAULT_SERVLET_CLASS = "org.apache.cocoon.servlet.CocoonServlet";
     
 	private Servlet servlet;
     
@@ -96,14 +98,19 @@ public class ParanoidCocoonServlet extends HttpServlet {
 		// Create the classloader in which we will load the servlet
 		this.classloader = getClassLoader(this.getContextDir());
         
+        String servletName = config.getInitParameter("servlet-class");
+        if (servletName == null) {
+            servletName = DEFAULT_SERVLET_CLASS;
+        }
+        
         // Create the servlet
 		try {
-			Class servletClass = this.classloader.loadClass(SERVLET_CLASS);
+			Class servletClass = this.classloader.loadClass(servletName);
             
 			this.servlet = (Servlet)servletClass.newInstance();
 
 		} catch(Exception e) {
-			throw new ServletException("Cannot load servlet " + SERVLET_CLASS, e);
+			throw new ServletException("Cannot load servlet " + servletName, e);
 		}
         
 		// Always set the context classloader. JAXP uses it to find a ParserFactory,
