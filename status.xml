@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.233 2004/01/31 00:07:01 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.234 2004/02/01 21:37:30 giacomo Exp $:-->
 
 <status>
  <developers>
@@ -196,7 +196,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
-     <action dev="AG" type="update">
+   <action dev="GP" type="add" >
+     OJB-Block: Added our own OJB ConnectionFactory which uses the 
+     DataSources configured in cocoon.xconf
+   </action>
+   <action dev="AG" type="update">
      Updated POI to 2.0-final
    </action>
    <action dev="CZ" type="fix" fixes-bug="26186" due-to-email="michael.gerzabek@gmx.net" due-to="Michael Gerzabek">

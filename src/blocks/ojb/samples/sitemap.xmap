@@ -59,9 +59,9 @@
             <map:parameter name="contextPath" value="{request:contextPath}"/>
             <map:parameter name="file" value="jdo/xsp/xspdemo.xsp"/>
             <map:parameter name="remove" value="{0}"/>
-    </map:transform>
-    <map:serialize/>
-   </map:match>
+        </map:transform>
+        <map:serialize/>
+     </map:match>
 
      <!--
         | "Form1" example, demonstrates usage of flow and woody
@@ -107,6 +107,19 @@
      <!-- Manages continuations -->
      <map:match pattern="jdo/woody/*.continue">
        <map:call continuation="{1}"/>
+     </map:match>
+
+     <!-- odmg samples -->    
+     <map:match pattern="odmg/xspdemo">
+        <map:generate src="odmg/xsp/demo1.xsp" type="serverpages"/>
+        <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+            <map:parameter name="servletPath" value="{request:servletPath}"/>
+            <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+            <map:parameter name="file" value="odmg/xsp/xspdemo.xsp"/>
+            <map:parameter name="remove" value="{0}"/>
+        </map:transform>
+        <map:serialize/>
      </map:match>
 
    </map:pipeline>
