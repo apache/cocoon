@@ -47,20 +47,81 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
-package org.apache.cocoon.portal.aspect;
+ */
+package org.apache.cocoon.portal.layout.impl;
+
+import java.util.List;
 
 
 /**
- *
+ * A configured layout
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.2 2003/05/07 13:28:35 cziegeler Exp $
+ * @version CVS $Id: LayoutDescription.java,v 1.1 2003/05/07 13:28:00 cziegeler Exp $
  */
-public interface Aspectalizable {
+public class LayoutDescription  {
 
-    Object getAspectData(String aspectName);
+    protected String name;
     
-    void setAspectData(String aspectName, Object data);
+    protected String className;
+    
+    protected String rendererName;
+    
+    protected List aspects;
+
+    /**
+     * @return
+     */
+    public List getAspects() {
+        return aspects;
+    }
+
+    public void addAspect(LayoutAspectDescription aspect) {
+        this.aspects.add(aspect);
+    }
+    
+    /**
+     * @return
+     */
+    public String getClassName() {
+        return className;
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param string
+     */
+    public void setClassName(String string) {
+        className = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setName(String string) {
+        name = string;
+    }
+
+    /**
+     * @return
+     */
+    public String getRendererName() {
+        return rendererName;
+    }
+
+    /**
+     * @param string
+     */
+    public void setRendererName(String string) {
+        rendererName = string;
+    }
+
 }

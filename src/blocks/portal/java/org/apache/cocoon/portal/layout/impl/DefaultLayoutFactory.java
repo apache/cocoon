@@ -48,19 +48,60 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.aspect;
+package org.apache.cocoon.portal.layout.impl;
 
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.layout.LayoutFactory;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.2 2003/05/07 13:28:35 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.1 2003/05/07 13:28:00 cziegeler Exp $
  */
-public interface Aspectalizable {
+public class DefaultLayoutFactory
+	extends AbstractLogEnabled
+    implements ThreadSafe, Component, LayoutFactory, Configurable {
 
-    Object getAspectData(String aspectName);
-    
-    void setAspectData(String aspectName, Object data);
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration configuration) 
+    throws ConfigurationException {
+        final Configuration[] layoutsConf = configuration.getChild("layouts").getChildren("layout");
+        if ( layoutsConf != null ) {
+            for(int i=0; i < layoutsConf.length; i++ ) {
+                LayoutDescription desc = new LayoutDescription();
+                // TODO unique name test
+                desc.setName(layoutsConf[i].getAttribute("name"));
+                desc.setClassName(layoutsConf[i].getAttribute("class"));        
+                desc.setRendererName(layoutsConf[i].getAttribute("renderer")); 
+                
+                // and now the aspects
+                final Configuration[] aspectsConf = layoutsConf[i].getChild("aspects").getChildren("aspect");
+                if (aspectsConf != null) {
+                    for(int m=0; m < aspectsConf.length; m++) {
+                        LayoutAspectDescription adesc = new LayoutAspectDescription();
+                        adesc.setClassName(aspectsConf[m].getAttribute("class"));
+                        adesc.setName(aspectsConf[m].getAttribute("name"));
+                        adesc.setPersistence(aspectsConf[m].getAttribute("persistence"));
+                    }
+                }
+            }
+        }
+    }
+
+    public void prepareLayout(Layout layout) {
+        if ( layout != null ) {
+            // TODO do something here
+        }
+    }
+
 }
