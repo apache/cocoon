@@ -617,38 +617,34 @@ public class ScriptableWidget extends ScriptableObject {
         }
     }
 
-    public void jsFunction_setSelectionList(Object arg) throws Exception {
+    public void jsFunction_setSelectionList(Object arg, Object valuePathArg, Object labelPathArg) throws Exception {
         if (delegate instanceof Field ||
             delegate instanceof MultiValueField) {
             arg = unwrap(arg);
-            if (arg instanceof SelectionList) {
-                SelectionList selectionList = (SelectionList)arg;
+            if (valuePathArg != Undefined.instance && labelPathArg != Undefined.instance) {
+                String valuePath = Context.toString(valuePathArg);
+                String labelPath = Context.toString(labelPathArg);
                 if (delegate instanceof Field) {
-                    ((Field)delegate).setSelectionList(selectionList);
+                    ((Field)delegate).setSelectionList(arg, valuePath, labelPath);
                 } else {
-                    ((MultiValueField)delegate).setSelectionList(selectionList);
+                    ((MultiValueField)delegate).setSelectionList(arg, valuePath, labelPath);
                 }
             } else {
-                String str = Context.toString(arg);
-                if (delegate instanceof Field) {
-                    ((Field)delegate).setSelectionList(str);
+                if (arg instanceof SelectionList) {
+                    SelectionList selectionList = (SelectionList)arg;
+                    if (delegate instanceof Field) {
+                        ((Field)delegate).setSelectionList(selectionList);
+                    } else {
+                        ((MultiValueField)delegate).setSelectionList(selectionList);
+                    }
                 } else {
-                    ((MultiValueField)delegate).setSelectionList(str);
+                    String str = Context.toString(arg);
+                    if (delegate instanceof Field) {
+                        ((Field)delegate).setSelectionList(str);
+                    } else {
+                        ((MultiValueField)delegate).setSelectionList(str);
+                    }
                 }
-            }
-        }
-    }
-
-    public void jsFunction_setSelectionList(Object objectArg, Object valuePathArg, Object labelPathArg) throws Exception {
-        if (delegate instanceof Field ||
-            delegate instanceof MultiValueField) {
-            Object object = unwrap(objectArg);
-            String valuePath = Context.toString(valuePathArg);
-            String labelPath = Context.toString(labelPathArg);
-            if (delegate instanceof Field) {
-                ((Field)delegate).setSelectionList(object, valuePath, labelPath);
-            } else {
-                ((MultiValueField)delegate).setSelectionList(object, valuePath, labelPath);
             }
         }
     }
