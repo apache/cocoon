@@ -33,7 +33,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-01-22 21:56:33 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-30 17:25:21 $
  */
 class RepositoryClassLoader extends URLClassLoader implements Loggable {
   /**
@@ -46,6 +46,20 @@ class RepositoryClassLoader extends URLClassLoader implements Loggable {
    */
   public RepositoryClassLoader() {
     super(new URL[] {}, ClassUtils.getClassLoader());
+  }
+
+  /**
+   * Create an empty new class loader.
+   */
+  public RepositoryClassLoader(URL[] urls) {
+    super(urls, ClassUtils.getClassLoader());
+  }
+
+  /**
+   * Create an empty new class loader.
+   */
+  public RepositoryClassLoader(URL[] urls, ClassLoader parentClassLoader) {
+    super(urls, parentClassLoader);
   }
 
   public void setLogger(Logger logger) {

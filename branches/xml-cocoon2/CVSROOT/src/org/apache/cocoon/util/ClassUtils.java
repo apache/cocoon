@@ -21,7 +21,7 @@ import javax.servlet.ServletContext;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-18 16:17:02 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-30 17:25:41 $
  */
 public class ClassUtils {
 
@@ -30,6 +30,10 @@ public class ClassUtils {
      */
     private static ClassLoader loader = null;
 
+    /**
+     * Reference for global Cocoon Jar URL that Cocoon uses throughout.
+     */
+    private static URL cocoonURL = null;
     /**
      * Create a new instance given a class name
      *
@@ -80,7 +84,7 @@ public class ClassUtils {
             setClassLoader(ClassUtils.class.getClassLoader());
         }
 
-        return loader;
+        return ClassUtils.loader;
     }
 
     /**
@@ -92,6 +96,34 @@ public class ClassUtils {
     public static void setClassLoader(ClassLoader loader) {
         if (ClassUtils.loader == null) {
             ClassUtils.loader = loader;
+        }
+    }
+
+    /**
+     * Return the context classloader.
+     * BL: if this is command line operation, the classloading issues
+     *     are more sane.  During servlet execution, we explicitly set
+     *     the ClassLoader.
+     *
+     * @return The context classloader.
+     */
+    public static URL getCocoonURL() throws MalformedURLException {
+        if (ClassUtils.cocoonURL == null) {
+            throw new MalformedURLException("The cocoon jar URL was never set.");
+        }
+
+        return ClassUtils.cocoonURL;
+    }
+
+    /**
+     * Set the context CocoonURL
+     * BL: if this is command line operation, the classloading issues
+     *     are more sane.  During servlet execution, we explicitly set
+     *     the CocoonURL.
+     */
+    public static void setCocoonURL(URL location) {
+        if (ClassUtils.cocoonURL == null) {
+            ClassUtils.cocoonURL = location;
         }
     }
 

@@ -53,7 +53,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.45 $ $Date: 2001-01-23 16:44:51 $
+ * @version CVS $Revision: 1.1.4.46 $ $Date: 2001-01-30 17:25:35 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -105,6 +105,8 @@ public class CocoonServlet extends HttpServlet {
         this.root = this.context.getRealPath("/");
 
         ClassUtils.setClassLoader(this.getClass().getClassLoader());
+
+        this.setupCocoonJar(conf.getInitParameter("cocoon-jar"), this.context);
 
         this.createCocoon();
     }
@@ -162,25 +164,43 @@ public class CocoonServlet extends HttpServlet {
             StringTokenizer classpathTokenizer = new StringTokenizer(classpathAttribute, " \t\r\n\f;,", false);
 
             while (classpathTokenizer.hasMoreTokens()) {
-                final String localClasspath = classpathTokenizer.nextToken().trim();
+                final String attributeName = classpathTokenizer.nextToken().trim();
+                final String localClasspath = (String) context.getAttribute(attributeName);
 
                 if (localClasspath != null) {
                     if (buildClassPath.length() > 0) {
                         buildClassPath.append(";");
                     }
 
-                    log.debug("Using attribute: " + localClasspath.trim());
-                    buildClassPath.append((String) context.getAttribute(localClasspath.trim()));
+                    log.debug("Using attribute: " + attributeName);
+                    buildClassPath.append(localClasspath.trim());
+                } else {
+                    log.debug("Attribute was empty: " + attributeName);
                 }
             }
         }
 
-        if (buildClassPath.length() == 0) {
-            buildClassPath.append(System.getProperty("java.class.path"));
+        if (buildClassPath.length() > 0) {
+            buildClassPath.append(";");
         }
+
+        buildClassPath.append(System.getProperty("java.class.path"));
 
         this.classpath = buildClassPath.toString();
      }
+
+    /**
+     * Set up the Cocoon Jar path.  That way it can be loaded by the Cocoon
+     * classloader instead of the servlet classloader.  This is to protect
+     * Cocoon from broken classloaders.
+     */
+    private void setupCocoonJar(String cocoonJar, ServletContext context) {
+        try {
+            ClassUtils.setCocoonURL(context.getResource(cocoonJar));
+        } catch (MalformedURLException mue) {
+            log.debug("Could not set the Cocoon URL for the jar file.", mue);
+        }
+    }
 
     /**
      * Set up the log level and path.  The default log level is
@@ -340,7 +360,7 @@ public class CocoonServlet extends HttpServlet {
             }
 
             HttpEnvironment env = new HttpEnvironment(uri, req, res, this.context);
-			env.setLogger(this.log);
+            env.setLogger(this.log);
 
             if (!this.cocoon.process(env)) {
 
@@ -376,7 +396,7 @@ public class CocoonServlet extends HttpServlet {
 
         long end = new Date().getTime();
         String timeString = processTime(end - start);
-        log.debug("'" + uri + "' " + timeString);
+        log.info("'" + uri + "' " + timeString);
 
         String showTime = req.getParameter(Cocoon.SHOWTIME_PARAM);
 

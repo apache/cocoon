@@ -9,6 +9,9 @@ package org.apache.cocoon.components.classloader;
 
 import java.io.IOException;
 import java.io.File;
+import java.net.URL;
+import java.net.MalformedURLException;
+import org.apache.cocoon.util.ClassUtils;
 
 import org.apache.avalon.ThreadSafe;
 
@@ -16,7 +19,7 @@ import org.apache.avalon.ThreadSafe;
  * A singleton-like implementation of <code>ClassLoaderManager</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-07 17:10:35 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-01-30 17:25:18 $
  */
 public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
   /**
@@ -30,7 +33,7 @@ public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
    */
   public ClassLoaderManagerImpl() {
     if (instance == null) {
-      instance = new RepositoryClassLoader();
+      this.reinstantiate();
     }
   }
 
@@ -60,6 +63,10 @@ public class ClassLoaderManagerImpl implements ClassLoaderManager, ThreadSafe {
    *
    */
   public synchronized void reinstantiate() {
-    instance = new RepositoryClassLoader();
+    try {
+      instance = new RepositoryClassLoader(new URL[] {ClassUtils.getCocoonURL()}, ClassUtils.getClassLoader());
+    } catch (MalformedURLException mue) {
+      instance = new RepositoryClassLoader();
+    }
   }
 }
