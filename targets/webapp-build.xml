@@ -155,17 +155,32 @@
   <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-deprecated,validate-jars,validate-config,custom-conf" description="Builds web application folder">
     <!-- Filter the patched files again to eventually apply filtering to patched blocks -->
     <copy file="${build.webapp}/sitemap.xmap"
-          tofile="${build.webapp}/sitemap.xmap"
+          tofile="${build.webapp}/sitemap.xmap.tmp"
           overwrite="true" filtering="on"/>
+    <delete file="${build.webapp}/sitemap.xmap"/>
+    <move file="${build.webapp}/sitemap.xmap.tmp" 
+          tofile="${build.webapp}/sitemap.xmap"/>
+          
     <copy file="${build.webapp}/WEB-INF/cocoon.xconf"
-          tofile="${build.webapp}/WEB-INF/cocoon.xconf"
+          tofile="${build.webapp}/WEB-INF/cocoon.xconf.tmp"
           overwrite="true" filtering="on"/>
+    <delete file="${build.webapp}/WEB-INF/cocoon.xconf"/>
+    <move file="${build.webapp}/WEB-INF/cocoon.xconf.tmp" 
+          tofile="${build.webapp}/WEB-INF/cocoon.xconf"/>
+          
     <copy file="${build.webapp}/WEB-INF/logkit.xconf"
-          tofile="${build.webapp}/WEB-INF/logkit.xconf"
+          tofile="${build.webapp}/WEB-INF/logkit.xconf.tmp"
           overwrite="true" filtering="on"/>
+    <delete file="${build.webapp}/WEB-INF/logkit.xconf"/>
+    <move file="${build.webapp}/WEB-INF/logkit.xconf.tmp" 
+          tofile="${build.webapp}/WEB-INF/logkit.xconf"/>
+          
     <copy file="${build.webapp}/WEB-INF/web.xml"
-          tofile="${build.webapp}/WEB-INF/web.xml"
+          tofile="${build.webapp}/WEB-INF/web.xml.tmp"
           overwrite="true" filtering="on"/>
+    <delete file="${build.webapp}/WEB-INF/web.xml"/>
+    <move file="${build.webapp}/WEB-INF/web.xml.tmp" 
+          tofile="${build.webapp}/WEB-INF/web.xml"/>
   </target>
 
   <target name="war" depends="webapp" description="Builds web application archive">
