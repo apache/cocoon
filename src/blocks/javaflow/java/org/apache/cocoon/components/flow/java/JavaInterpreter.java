@@ -68,9 +68,12 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
         super.configure(config);
     }
 
-    public void initialize() throws Exception {
+    public synchronized void initialize() throws Exception {
 
-        if (getLogger().isDebugEnabled()) 
+        if (initialized) {
+            return;
+        }
+        if (getLogger().isDebugEnabled())
             getLogger().debug("initialize java flow interpreter");
 
         classloader = new ContinuationClassLoader(Thread.currentThread().getContextClassLoader());
