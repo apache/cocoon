@@ -50,13 +50,16 @@
  */
 package org.apache.cocoon.environment.commandline;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
@@ -66,7 +69,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSamplingEnvironment.java,v 1.4 2003/08/17 13:43:00 upayavira Exp $
+ * @version CVS $Id: LinkSamplingEnvironment.java,v 1.5 2003/08/19 23:27:03 joerg Exp $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
