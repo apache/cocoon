@@ -50,9 +50,7 @@
 
     <copy todir="${dist}" filtering="on">
      <fileset dir=".">
-      <include name="README.txt"/>
-      <include name="INSTALL.txt"/>
-      <include name="CREDITS.txt"/>
+      <include name="*.txt"/>
       <include name="DESKTOP.INI"/>
       <include name="*.bat"/>
       <include name="*.sh"/>
