@@ -56,13 +56,10 @@ import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -96,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.8 2003/09/25 12:54:21 vgritsenko Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.9 2003/10/19 17:46:19 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -153,7 +150,7 @@ public final class SourceUtil {
      * @param  source    the data
      * @throws ProcessingException if no suitable converter is found
      */
-    static public void toSAX( ComponentManager manager, Source source,
+    static public void toSAX( ServiceManager manager, Source source,
                                 String mimeTypeHint,
                                 ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
@@ -171,39 +168,10 @@ public final class SourceUtil {
                                handler );
             } catch (SourceException se) {
                 throw SourceUtil.handle(se);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new ProcessingException("Exception during streaming source.", ce);
             } finally {
-                manager.release( (Component)xmlizer );
-            }
-        }
-    }
-
-    /**
-     * Generates SAX events from the given source by parsing it.
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     */
-    static public void parse( ComponentManager manager, 
-                                Source source,
-                                ContentHandler handler)
-    throws SAXException, IOException, ProcessingException {
-        if ( source instanceof XMLizable ) {
-            ((XMLizable)source).toSAX( handler );
-        } else {
-            SAXParser parser = null;
-            try {
-                parser = (SAXParser) manager.lookup( SAXParser.ROLE);
-                parser.parse( getInputSource( source ), handler );
-            } catch (SourceException se) {
-                throw SourceUtil.handle(se);
-            } catch (ComponentException ce) {
-                throw new ProcessingException("Exception during parsing source.", ce);
-            } finally {
-                manager.release( (Component)parser );
+                manager.release( xmlizer );
             }
         }
     }
@@ -482,13 +450,13 @@ public final class SourceUtil {
                 frag.normalize();
 
                 if ( null != serializerName) {
-					ComponentManager manager = CocoonComponentManager.getSitemapComponentManager();
+					ServiceManager manager = CocoonComponentManager.getSitemapComponentManager();
 
-	                ComponentSelector selector = null;
+	                ServiceSelector selector = null;
 	                Serializer serializer = null;
 	                OutputStream oStream = null;
 	                try {
-	                     selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
+	                     selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
 	                     serializer = (Serializer)selector.select(serializerName);
 	                     oStream = ws.getOutputStream();
 	                     serializer.setOutputStream(oStream);
@@ -496,7 +464,7 @@ public final class SourceUtil {
 	                     DOMStreamer streamer = new DOMStreamer(serializer);
 	                     streamer.stream(frag);
                          serializer.endDocument();
-	                } catch (ComponentException e) {
+	                } catch (ServiceException e) {
 	                	throw new ProcessingException("Unable to lookup serializer.", e);
 					} finally {
 	                    if (oStream != null) {
@@ -523,20 +491,20 @@ public final class SourceUtil {
             } else {
             	String content;
 				if ( null != serializerName) {
-					ComponentManager  manager = CocoonComponentManager.getSitemapComponentManager();
+					ServiceManager  manager = CocoonComponentManager.getSitemapComponentManager();
                     
-                    ComponentSelector selector = null;
+                    ServiceSelector selector = null;
                     Serializer serializer = null;
                     ByteArrayOutputStream oStream = new ByteArrayOutputStream();
                     try {
-                        selector = (ComponentSelector)manager.lookup(Serializer.ROLE + "Selector");
+                        selector = (ServiceSelector)manager.lookup(Serializer.ROLE + "Selector");
                         serializer = (Serializer)selector.select(serializerName);
                         serializer.setOutputStream(oStream);
                         serializer.startDocument();
                         DOMStreamer streamer = new DOMStreamer(serializer);
                         streamer.stream(frag);
                         serializer.endDocument();
-					} catch (ComponentException e) {
+					} catch (ServiceException e) {
 						throw new ProcessingException("Unable to lookup serializer.", e);
                     } finally {
                         if (oStream != null) {
