@@ -103,16 +103,16 @@
       When defining subcategory manually, it is required to specify log
       targets, because they are not inherited in this case.
     -->
-    <category name="" log-level="INFO">
+    <category name="" log-level="@loglevel@">
       
-      <category name="system" log-level="INFO">
+      <category name="system" log-level="@loglevel@">
         <log-target id-ref="system"/>
         <log-target id-ref="error"/>
-        <category name="meta" log-level="INFO">
+        <category name="meta" log-level="@loglevel@">
           <log-target id-ref="system"/>
           <log-target id-ref="error"/>
         </category>
-        <category name="roles" log-level="INFO">
+        <category name="roles" log-level="@loglevel@">
           <log-target id-ref="system"/>
           <log-target id-ref="error"/>
           <category name="defaults" log-level="ERROR">
@@ -120,28 +120,28 @@
             <log-target id-ref="error"/>
           </category>
         </category>
-        <category name="instrument" log-level="INFO">
+        <category name="instrument" log-level="@loglevel@">
           <log-target id-ref="system"/>
           <log-target id-ref="error"/>
         </category>
-        <category name="extensions" log-level="INFO">
+        <category name="extensions" log-level="@loglevel@">
           <log-target id-ref="system"/>
           <log-target id-ref="error"/>
         </category>
-        <category name="factory" log-level="INFO">
+        <category name="factory" log-level="@loglevel@">
           <log-target id-ref="system"/>
           <log-target id-ref="error"/>
         </category>
-        <category name="handler" log-level="INFO">
+        <category name="handler" log-level="@loglevel@">
           <log-target id-ref="system"/>
           <log-target id-ref="error"/>
         </category>
       </category>
       
-      <category name="core" log-level="INFO">
+      <category name="core" log-level="@loglevel@">
         <!-- Cocoon cache and stores logger -->
-        <category name="store" log-level="INFO">
-          <category name="janitor" log-level="INFO">
+        <category name="store" log-level="@loglevel@">
+          <category name="janitor" log-level="@loglevel@">
             <log-target id-ref="core"/>
             <log-target id-ref="error"/>
           </category>
@@ -153,23 +153,23 @@
         <log-target id-ref="error"/>
       </category>
 
-      <category name="sitemap" log-level="INFO">
+      <category name="sitemap" log-level="@loglevel@">
         <log-target id-ref="sitemap"/>
         <log-target id-ref="error"/>
 
-        <category name="handled-errors" log-level="INFO">
+        <category name="handled-errors" log-level="@loglevel@">
           <!-- Exceptions that will be handled by a sitemap errorhandler are
                logged to this target. -->
           <log-target id-ref="handled-errors"/>
         </category>
       </category>
 
-      <category name="access" log-level="INFO">
+      <category name="access" log-level="@loglevel@">
         <log-target id-ref="access"/>
         <log-target id-ref="error"/>
       </category>
 
-      <category name="flow" log-level="INFO">
+      <category name="flow" log-level="@loglevel@">
         <log-target id-ref="flow"/>
         <log-target id-ref="error"/>
       </category>
