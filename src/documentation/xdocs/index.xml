@@ -35,8 +35,8 @@
       </p>
       <p>
         Cocoon interacts with many data sources, including filesystems, RDBMS,
-        LDAP, native XML databases, and network-based data sources. It adapts
-        content delivery to the capabilities of different devices like HTML, WML,
+        LDAP, native XML databases, SAP&#174; systems and network-based data sources. 
+        It adapts content delivery to the capabilities of different devices like HTML, WML,
         PDF, SVG, and RTF, to name just a few. You can run Cocoon as a Servlet as well as
         through a powerful, commandline interface. The deliberate design of its abstract 
         environment gives you the freedom to extend its functionality to meet your 
