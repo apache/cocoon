@@ -405,9 +405,6 @@
    <action dev="CZ" type="update">
      Remove deprecated getOutputStream() method from Environment.
    </action>
-   <action dev="CZ" type="fix" fixes-bug="10277">
-     Change the mime-type setting of a reader.
-   </action>
    <action dev="CZ" type="update">
      Remove deprecated methods from SimpleCharStream, Notifier,
      AbstractComplementaryConfigurableAction, StringUtils. Remove deprecated
@@ -419,6 +416,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="CZ" type="fix" fixes-bug="10277">
+     Change the mime-type setting of a reader. See also bug #25121.
+   </action>
    <action dev="VG" type="fix">
      Runnable Manager: Fix bug preventing scheduling of two different jobs at the same time.
    </action>
