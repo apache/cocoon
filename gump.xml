@@ -1282,7 +1282,7 @@
       Java Development Tools from the Eclipse IDE Project
     </description>
     <home nested="lib/optional"/>
-    <jar name="jdtcore-3.0.0.jar"/>
+    <jar name="jdtcore-3.0.1.jar"/>
   </project>
 
   <project name="xreporter-expression">
