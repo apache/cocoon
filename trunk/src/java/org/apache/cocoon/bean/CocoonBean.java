@@ -103,7 +103,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: CocoonBean.java,v 1.4 2003/05/12 13:26:17 stephan Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.5 2003/05/27 12:09:01 jefft Exp $
  */
 public class CocoonBean {
 
@@ -627,8 +627,10 @@ public class CocoonBean {
                 final String type = getType(deparameterizedURI, parameters);
                 final String ext = NetUtils.getExtension(filename);
                 final String defaultExt = MIMEUtils.getDefaultExtension(type);
-                if ((ext == null) || (!ext.equals(defaultExt))) {
-                    filename += defaultExt;
+                if (defaultExt != null) {
+                    if ((ext == null) || (!ext.equals(defaultExt))) {
+                        filename += defaultExt;
+                    }
                 }
             }
             allTranslatedLinks.put(suri, filename);
@@ -752,8 +754,10 @@ public class CocoonBean {
             String type = getType(deparameterizedURI, parameters);
             String ext = NetUtils.getExtension(filename);
             String defaultExt = MIMEUtils.getDefaultExtension(type);
-            if ((ext == null) || (!ext.equals(defaultExt))) {
-                filename += defaultExt;
+            if (defaultExt != null) {
+                if ((ext == null) || (!ext.equals(defaultExt))) {
+                    filename += defaultExt;
+                }
             }
         }
 
