@@ -12,11 +12,10 @@
 
   <xsp:structure>
    <xsp:include>java.net.*</xsp:include>
-   <xsp:include>org.apache.cocoon.xml.XMLConsumer</xsp:include>
    <xsp:include>org.apache.cocoon.xml.dom.DOMStreamer</xsp:include>
-   <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
-   <xsp:include>javax.servlet.ServletContext</xsp:include>
-   <xsp:include>javax.servlet.http.HttpServletRequest</xsp:include>
+   <xsp:include>org.apache.cocoon.xml.dom.DOMBuilder</xsp:include>
+   <xsp:include>org.apache.cocoon.components.parser.Parser</xsp:include>
+   <xsp:include>org.apache.cocoon.components.url.URLFactory</xsp:include>
   </xsp:structure>
 
   <xsp:logic><![CDATA[
@@ -39,63 +38,6 @@
       element.appendChild(doColorize(node, factory, 0, TEXT_COLOR));
       DOMStreamer ds = new DOMStreamer (contentHandler);
       ds.stream (element);
-    }
-
-
-    protected String relativeFilename(String filename, HttpServletRequest request, ServletContext context)
-        throws IOException {
-      File file = new File(filename);
-
-      if (file.isAbsolute()) {
-        return filename;
-      }
-
-      return
-        (
-          new File(
-            new File(
-              getBasename(request, context)
-            ).getParent(),
-            filename
-          )
-        ).getCanonicalPath();
-    }
-
-    protected String getBasename(HttpServletRequest request, Object context) {
-      String path;
-
-      try {
-        // detect if the engine supports at least Servlet API 2.2
-        request.getContextPath();
-        // we need to check this in case we've been included in a servlet or jsp
-        path = (String) request.getAttribute("javax.servlet.include.servlet_path");
-        // otherwise, we find it out ourselves
-        if (path == null) path = request.getServletPath();
-
-        // FIXME (SM): we should use getResource() instead when we are
-        // able to handle remote resources.
-        String resource = ((ServletContext) context).getRealPath(path);
-
-        if (resource != null) {
-          return resource.replace('\\', '/');
-        } else {
-          throw new RuntimeException("Cannot access non-file/war resources");
-        }
-      } catch (NoSuchMethodError e) {
-        // if there is no such method we must be in Servlet API 2.1
-        if (request.getPathInfo() != null) {
-          // this must be Apache JServ
-          path = request.getPathTranslated();
-        } else {
-          // otherwise use the deprecated method on all other servlet engines.
-          path = request.getRealPath(request.getRequestURI());
-        }
-
-        return (path == null) ? "" : path.replace('\\','/');
-      } catch (NullPointerException e) {
-        // if there is no context set, we must be called from the command line
-        return request.getPathTranslated().replace('\\','/');
-      }
     }
 
     protected static DocumentFragment
@@ -280,7 +222,6 @@
 
   <html>
     <xsp:logic>
-      Document document = parser.newDocument();
     </xsp:logic>
     <head>
       <title>Source Code</title>
@@ -290,52 +231,33 @@
     <body>
       <xsp:logic>
         String filename = request.getParameter("filename");
-        String resourcename = request.getParameter("url");
-
         if (filename != null) {
-          String filepath = null;
-          try {
-            filepath = relativeFilename(filename, request, (ServletContext) context);
-          } catch (IOException ioe) {
-            throw new SAXException (ioe);
-          }
 
           <h3 style="color:navy; text-align: center">
             <xsp:expr>filename</xsp:expr>
           </h3>
+        
+          Parser newParser = null;
+          URLFactory factory = null;
 
-          InputSource is = null;
           try {
-            org.apache.xerces.parsers.DOMParser parser = 
-                        new org.apache.xerces.parsers.DOMParser();
-            parser.parse( filepath ); 
-            this.colorize(parser.getDocument(), document, this.contentHandler);
-          } catch (FileNotFoundException fnfe) {
-            throw new SAXException (fnfe);
-          } catch (IOException ie) {
-            throw new SAXException (ie);
-          }
+              newParser = (Parser) this.manager.lookup(Roles.PARSER);
+              factory = (URLFactory) this.manager.lookup(org.apache.cocoon.Roles.URL_FACTORY);
+              Document document = newParser.newDocument();
 
-        } else if (resourcename != null) {
-          URL resource = null;
-          try {
-            resource = new URL(resourcename);
-          } catch (MalformedURLException mue) {
-            throw new SAXException (mue);
-          }
+              DOMBuilder builder = new DOMBuilder(newParser);
+              newParser.setContentHandler(builder);
+              newParser.setLexicalHandler(builder);
+              URL url = factory.getURL(filename);
+              InputSource is = new InputSource(url.openStream());
+              newParser.parse(is);
 
-          <h3 style="color:navy; text-align: center">
-            <xsp:expr>resourcename</xsp:expr>
-          </h3>
-
-          InputSource is = null;
-          try {
-            is = new InputSource (resource.openStream());
-            this.colorize(XSPUtil.getDocument(is,parser), document, this.contentHandler);
-          } catch (FileNotFoundException fnfe) {
-            throw new SAXException (fnfe);
-          } catch (IOException ie) {
-            throw new SAXException (ie);
+              this.colorize(builder.getDocument(), document, this.contentHandler);    
+          } catch (Exception e) {
+              getLogger().error("Could not include page", e);
+          } finally {
+              this.manager.release((Component) factory);
+              this.manager.release((Component) newParser);
           }
         } else {
           <h3 style="color:navy; text-align: center">
