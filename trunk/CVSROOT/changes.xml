@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.70 2000-05-09 10:27:17 stefano Exp $
+  $Id: changes.xml,v 1.71 2000-05-11 10:31:49 ricardo Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RR" type="fix" due-to="Ulrich Mayring" due-to-email="ulim@denic.de">
+    Fixed invalid code for &lt;util:include-file&gt;. Added debug info to &lt;util:include-uri&gt;
+  </action>
   <action dev="SM" type="fix">
    Added SVG formatting properties.
   </action>
