@@ -44,7 +44,7 @@
     one change which shouldn't affect anybody (see below).
   </p>
   <s2 title="Source Resolving">
-    <p>Mention changes and update strategy...</p>
+<p>Under Cocoon 2.0.x, the SourceResolver was not an Avalon component, so it could not be looked up using a component manager. Under 2.1, the SourceResolver is now an Avalon component and can be requested using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em></p>  
   </s2>
   <s2 title="XSLT Processor">
     <p>Mention changes and update strategy...</p>
