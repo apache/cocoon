@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.Map;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
@@ -47,7 +49,8 @@ import org.apache.cocoon.util.IOUtils;
  * Base implementation of <code>MarkupLanguage</code>. This class uses
  * logicsheets as the only means of code generation. Code generation should be decoupled from this context!!!
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-12 12:30:33 $
+ * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-12 21:12:35 $
  */
 public abstract class AbstractMarkupLanguage extends AbstractLoggable implements MarkupLanguage, Composer, Configurable {
     /** The supported language table */
@@ -273,7 +276,7 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
      * @exception IOException IO Error
      * @exception SAXException Logicsheet parse error
      */
-    protected void addLogicsheet(LogicsheetCodeGenerator codeGenerator, String logicsheetLocation, EntityResolver entityResolver)
+    protected void addLogicsheet(LogicsheetCodeGenerator codeGenerator, LanguageDescriptor language, String logicsheetLocation, EntityResolver entityResolver)
         throws MalformedURLException, IOException, SAXException {
             String systemId = null;
             InputSource inputSource = null;
@@ -315,6 +318,22 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
                 this.addDependency(IOUtils.getFullFilename(entry.getFile()));
             }
             codeGenerator.addLogicsheet(logicsheet);
+            Map namespaces = logicsheet.getNamespaces();
+            if(!logicsheetLocation.equals(language.getLogicsheet()))
+            {
+                if(namespaces != null && namespaces.size()>0) {
+                    Iterator iter = namespaces.keySet().iterator();
+                    while(iter.hasNext()) {
+                        String namespace = (String) iter.next();
+                        String namedLogicsheetName = language.getNamedLogicsheet(namespace);
+                        if(namedLogicsheetName!= null && !logicsheetLocation.equals(namedLogicsheetName)) {
+                            getLogger().debug("Adding embedded logic sheet for " + namespace + ":" + namedLogicsheetName);
+                            // Add embedded logic sheets too.
+                            addLogicsheet(codeGenerator, language, namedLogicsheetName, entityResolver);
+                        }
+                    }
+                }
+            }
     }
     //
     // Inner classes
@@ -529,12 +548,12 @@ public abstract class AbstractMarkupLanguage extends AbstractLoggable implements
                         String[] prefixNamingArray = (String[]) this.startPrefixes.get(i);
                         String namedLogicsheetName = this.language.getNamedLogicsheet(prefixNamingArray[0]);
                         if (namedLogicsheetName != null) {
-                            AbstractMarkupLanguage.this.addLogicsheet(this.logicsheetMarkupGenerator,
-                                namedLogicsheetName, resolver);
+                            AbstractMarkupLanguage.this.addLogicsheet(this.logicsheetMarkupGenerator, language, 
+                                                namedLogicsheetName, resolver);
                         }
                     }
                     // Add the language stylesheet (Always the last one)
-                    AbstractMarkupLanguage.this.addLogicsheet(this.logicsheetMarkupGenerator, this.language.getLogicsheet(), resolver);
+                    AbstractMarkupLanguage.this.addLogicsheet(this.logicsheetMarkupGenerator, language, this.language.getLogicsheet(), resolver);
                 } catch (IOException ioe) {
                     throw new SAXException(ioe);
                 }

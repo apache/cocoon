@@ -46,7 +46,7 @@ import org.apache.avalon.AbstractLoggable;
  * transformed into an equivalent XSLT stylesheet anyway... This class should probably be based on an interface...
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-01 18:44:39 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-12 21:12:36 $
  */
 public class Logicsheet extends AbstractLoggable {
     /** The trax TransformerFactory */
@@ -54,6 +54,20 @@ public class Logicsheet extends AbstractLoggable {
 
     /** The trax templates */
     protected Templates templates;
+
+    /**
+    * the template namespace's list
+    */
+    protected Map namespaces = new HashMap();
+
+
+    /**
+     * This will return the list of namespaces in this logicsheet.
+     */
+    public Map getNamespaces()
+    {
+        return namespaces;
+    }
 
     /**
      * The constructor. It does preserve the namespace from the stylesheet.
@@ -64,7 +78,31 @@ public class Logicsheet extends AbstractLoggable {
     public void setInputSource(InputSource inputSource) throws SAXException, IOException {
         try {
             tfactory = (SAXTransformerFactory)TransformerFactory.newInstance();
-            templates = tfactory.newTemplates(new SAXSource(inputSource));
+            //templates = tfactory.newTemplates(new SAXSource(inputSource));
+
+            // Create a Templates ContentHandler to handle parsing of the 
+            // stylesheet.
+            javax.xml.transform.sax.TemplatesHandler templatesHandler = 
+                                                tfactory.newTemplatesHandler();
+
+            // Create an XMLReader and set its ContentHandler.
+            org.xml.sax.XMLReader reader = 
+                           org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
+            reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+
+            // Create a XMLFilter that save the namespace hold in the stylesheet
+            XMLFilter saveNSFilter = new SaveNamespaceFilter(namespaces);
+            saveNSFilter.setParent(reader);
+
+            saveNSFilter.setContentHandler(templatesHandler);
+            //reader.setContentHandler(templatesHandler);
+    
+            // Parse the stylesheet.                       
+            reader.parse(inputSource);
+
+            // Get the Templates object (generated during the parsing of the stylesheet)
+            // from the TemplatesHandler.
+            templates = templatesHandler.getTemplates();
         } catch (TransformerConfigurationException e) {
             getLogger().error("Logicsheet.setInputSource", e);
         }
@@ -84,4 +122,53 @@ public class Logicsheet extends AbstractLoggable {
         }
         return null;
     }
+
+    /**
+     * This filter listen for source SAX events, and register the declared
+     * namespaces into a <code>Map</code> object.
+     *
+     */
+    protected class SaveNamespaceFilter extends XMLFilterImpl {
+
+        private Map originalNamepaces;
+
+        /**
+         * The contructor needs an initialized <code>Map</code> object where it
+         * can store the found namespace declarations.
+         * @param originalNamepaces a initialized <code>Map</code> instance.
+         */
+        public SaveNamespaceFilter(Map originalNamepaces) {
+            this.originalNamepaces = originalNamepaces;
+        }
+
+        /**
+         * @param reader the parent reader
+         * @see XMLFilter
+         */
+        public void setParent(XMLReader reader) {
+            super.setParent(reader);
+            reader.setContentHandler(this);
+        }
+
+        /**
+         * @see ContentHandler
+         */
+        public void startDocument () throws SAXException {
+            super.startDocument();
+        }
+
+        /**
+         * @see ContentHandler
+         */
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            originalNamepaces.put(prefix,uri);
+            super.startPrefixMapping(prefix, uri);
+        }
+
+        public void startElement (String namespaceURI, String localName,
+        			      String qName, Attributes atts) throws SAXException {
+            super.startElement(namespaceURI, localName, qName, atts);
+        }
+    }
+
 }

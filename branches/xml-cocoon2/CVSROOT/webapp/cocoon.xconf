@@ -68,6 +68,12 @@
           <parameter name="uri" value="http://apache.org/xsp/log"/>
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/log.xsl"/>
         </builtin-logicsheet>
+
+        <builtin-logicsheet>
+          <parameter name="prefix" value="util"/>
+          <parameter name="uri" value="http://apache.org/xsp/util"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/util.xsl"/>
+        </builtin-logicsheet>
       </target-language>
     </component-instance>
 
