@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.52 2001-03-26 20:28:58 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.53 2001-03-26 20:30:26 balld Exp $-->
 <!--
 
  ============================================================================
@@ -53,7 +53,7 @@
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://apache.org/xsp"
+  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
   xmlns:esql="http://apache.org/cocoon/SQL/v2"
   xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
 >
@@ -576,7 +576,17 @@
       }
       _esql_query.position++;
     }
+    if (_esql_query.resultset.next()) {
+      <xsl:apply-templates select="following-sibling::esql:more-results" mode="more"/>
+      _esql_query.position++;
+    }
   </xsp:logic>
+</xsl:template>
+
+<xsl:template match="esql:results//esql:more-results"/>
+
+<xsl:template match="esql:results//esql:more-results" mode="more">
+  <xsl:apply-templates/>
 </xsl:template>
 
 <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
@@ -807,6 +817,11 @@
       </xsp:logic>
     </xsl:otherwise>
   </xsl:choose>
+</xsl:template>
+
+<xspdoc:desc>returns the number of columns in the resultset.</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-column-count">
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnCount()</xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>returns the position of the current row in the result set</xspdoc:desc>
