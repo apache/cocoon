@@ -46,8 +46,8 @@
 <separator/>
   <external label="Bug Database" href="http://nagoya.apache.org/bugzilla/"/>  
   <external label="Code Repository" href="http://cvs.apache.org/viewcvs.cgi/cocoon-1/"/>
-  <external label="Mail Lists" source="http://cocoon.apache.org/community/mail-lists.html"/>
-  <external label="Mail Archives" source="http://cocoon.apache.org/community/mail-archives.html"/>
+  <external label="Mail Lists" href="http://cocoon.apache.org/community/mail-lists.html"/>
+  <external label="Mail Archives" href="http://cocoon.apache.org/community/mail-archives.html"/>
 <separator/>
   <external label="Cocoon 2.0 Site" href="http://cocoon.apache.org/2.0/"/>
   <external label="Cocoon 2.1 Site" href="http://cocoon.apache.org/2.1/"/>
