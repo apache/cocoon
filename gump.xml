@@ -78,6 +78,7 @@
     <depend project="cocoon-javac"/>
     <depend project="cocoon-javacImpl"/>
     <depend project="rhino-cocoondev"/>
+    <depend project="ehcache"/>
     <depend project="jing"/>
     <depend project="pizza"/>
     <depend project="junit"/>
