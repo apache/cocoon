@@ -63,7 +63,7 @@
   	
 		<!-- mount query bean pipelines -->
 		<map:match pattern="query/**">
-			<map:mount check-reload="yes" src="query.xmap" uri-prefix="query"/>
+			<map:mount check-reload="yes" src="query/sitemap.xmap" uri-prefix="query"/>
 		</map:match>
 
     <map:match pattern="images/*.gif">
