@@ -16,7 +16,7 @@ import org.apache.cocoon.components.language.programming.*;
  * This class wraps IBM's <i>Jikes</i> Java compiler
  * NOTE: inspired by the Apache Jasper implementation.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.5 $ $Date: 2000-09-27 16:15:14 $
+ * @version $Revision: 1.1.2.6 $ $Date: 2000-11-24 14:40:42 $
  * @since 2.0
  */
 
@@ -63,6 +63,35 @@ public class Jikes extends AbstractJavaCompiler {
     }
 
     /**
+     * Copy arguments to a string array
+     *
+     * @param arguments The compiler arguments
+     * @return A string array containing compilation arguments
+     */
+    protected String[] toStringArray(List arguments) {
+      int i;
+    
+      for (i = 0; i < arguments.size(); i++) {
+        String arg = (String) arguments.get(i);
+        if (arg.equals("-sourcepath")) {
+          // Remove -sourcepath option. Jikes does not understand that.
+          arguments.remove(i);
+          arguments.remove(i);
+          break;
+        }
+      }
+      
+      String[] args = new String[arguments.size() + 1];
+      for (i = 0; i < arguments.size(); i++) {
+        args[i] = (String) arguments.get(i);
+      } 
+
+      args[i] = file;
+
+      return args;
+    } 
+
+    /**
      * Execute the compiler
      */
     public boolean compile() throws IOException {
@@ -73,7 +102,8 @@ public class Jikes extends AbstractJavaCompiler {
         // indicate Emacs output mode must be used
         args.add("+E");
         // avoid warnings
-        args.add("--nowarn");
+        // Option nowarn with one hyphen only
+        args.add("-nowarn");
 
         int exitValue;
         ByteArrayOutputStream tmpErr = new ByteArrayOutputStream(OUTPUT_BUFFER_SIZE);
@@ -105,7 +135,9 @@ public class Jikes extends AbstractJavaCompiler {
 
         // Jikes returns 0 even when there are some types of errors.
         // Check if any error output as well
-        return ((exitValue == 0) && (tmpErr.size() > 0));
+        // Return should be OK when both exitValue and
+        // tmpErr.size() are 0 ?!
+        return ((exitValue == 0) && (tmpErr.size() == 0));    
     }
 
     /**
