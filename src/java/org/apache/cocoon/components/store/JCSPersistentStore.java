@@ -15,28 +15,24 @@
  */
 package org.apache.cocoon.components.store;
 
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.context.Contextualizable;
 
 
-public class JCSTransientStore extends AbstractJCSStore {
+/**
+ * This is the persistent store implementation based on JCS
+ * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
+ * 
+ * @version CVS $Id: JCSPersistentStore.java,v 1.1 2004/05/17 07:53:41 cziegeler Exp $
+ */
+public class JCSPersistentStore 
+    extends JCSDefaultStore
+    implements Contextualizable {
 
     /** The location of the JCS default properties file */
-    private static final String DEFAULT_PROPERTIES = "org/apache/cocoon/components/store/transient.ccf";
-    
-    public JCSTransientStore() {
-    }
+    private static final String DEFAULT_PROPERTIES = "org/apache/cocoon/components/store/persistent.ccf";
 
-    public void parameterize(Parameters parameters) throws ParameterException {
-        super.parameterize(parameters);
-        int maxobjects = parameters.getParameterAsInteger("maxobjects",-1);
-        if (maxobjects != -1) {
-            String key = "jcs.region." + m_region + ".cacheattributes.MaxObjects";
-            m_properties.setProperty(key,String.valueOf(maxobjects));
-        }
-    }
-    
     protected String getDefaultPropertiesFile() {
         return DEFAULT_PROPERTIES;
     }
+    
 }

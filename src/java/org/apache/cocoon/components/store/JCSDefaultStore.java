@@ -22,50 +22,47 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
 
 
-public class JCSDefaultStore extends JCSTransientStore implements Contextualizable, Parameterizable {
+/**
+ * This is the default store implementation based on JCS
+ * http://jakarta.apache.org/turbine/jcs/BasicJCSConfiguration.html
+ * 
+ * @version CVS $Id: JCSDefaultStore.java,v 1.1 2004/05/17 07:53:41 cziegeler Exp $
+ */
+public class JCSDefaultStore 
+    extends JCSTransientStore
+    implements Contextualizable {
 
     /** The location of the JCS default properties file */
     private static final String DEFAULT_PROPERTIES = "org/apache/cocoon/components/store/default.ccf";
 
     /** The context containing the work and the cache directory */
-    private Context m_context;
+    private Context context;
 
-    // ---------------------------------------------------- Lifecycle
-    
-    public JCSDefaultStore() {
-    }
-
-    /**
-     * Contextualize the Component
-     *
-     * @param  context the Context of the Application
-     * @exception  ContextException
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context context) throws ContextException {
-        m_context = context;
+    public void contextualize(Context aContext) throws ContextException {
+        this.context = aContext;
     }
     
-    /**
-     *  TODO: describe options
-     * 
-     * @param parameters the configuration parameters
-     * @exception  ParameterException
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
-    public void parameterize(Parameters parameters) throws ParameterException {
-        
+    public void parameterize(Parameters parameters) 
+    throws ParameterException {
+        // TODO describe options
         super.parameterize(parameters);
         
         // get the directory to use
         try {
-            final File workDir = (File) m_context.get(Constants.CONTEXT_WORK_DIR);
+            final File workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
             if (parameters.getParameterAsBoolean("use-cache-directory", false)) {
-                final File cacheDir = (File) m_context.get(Constants.CONTEXT_CACHE_DIR);
+                final File cacheDir = (File) context.get(Constants.CONTEXT_CACHE_DIR);
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("Using cache directory: " + cacheDir);
                 }
@@ -104,35 +101,31 @@ public class JCSDefaultStore extends JCSTransientStore implements Contextualizab
      * Sets the disk cache location.
      */
     private void setDirectory(final File directory)
-    throws IOException 
-    {
+    throws IOException {
 
         /* Does directory exist? */
-        if (!directory.exists()) 
-        {
+        if (!directory.exists()) {
             /* Create it anew */
-            if (!directory.mkdirs()) 
-            {
+            if (!directory.mkdirs()) {
                 throw new IOException(
                 "Error creating store directory '" + directory.getAbsolutePath() + "'. ");
             }
         }
 
         /* Is given file actually a directory? */
-        if (!directory.isDirectory()) 
-        {
+        if (!directory.isDirectory()) {
             throw new IOException("'" + directory.getAbsolutePath() + "' is not a directory");
         }
 
         /* Is directory readable and writable? */
-        if (!(directory.canRead() && directory.canWrite())) 
-        {
+        if (!(directory.canRead() && directory.canWrite())) {
             throw new IOException(
                 "Directory '" + directory.getAbsolutePath() + "' is not readable/writable"
             );
         }
         
-        m_properties.setProperty("jcs.auxiliary.DC.attributes.DiskPath",directory.getAbsolutePath());
+        this.properties.setProperty("jcs.auxiliary.DC.attributes.DiskPath",
+                                    directory.getAbsolutePath());
     }
 
 }

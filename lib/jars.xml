@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.213 2004/05/08 12:39:21 antonio Exp $
+    | CVS $Id: jars.xml,v 1.214 2004/05/17 07:53:41 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -548,7 +548,7 @@
     <title>JCS</title>
     <description>Java Caching System</description>
     <used-by>JCS Store</used-by>
-    <lib>scratchpad/lib/jcs-1.0-dev-20040303.jar</lib>
+    <lib>core/jcs-1.0-dev-20040303.jar</lib>
     <homepage>http://jakarta.apache.org/turbine/jcs</homepage>
   </file>
 
