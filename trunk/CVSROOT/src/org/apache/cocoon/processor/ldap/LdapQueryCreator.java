@@ -1,4 +1,4 @@
-/*-- $Id: LdapQueryCreator.java,v 1.2 2000-02-13 18:29:31 stefano Exp $ -- 
+/*-- $Id: LdapQueryCreator.java,v 1.3 2000-08-18 22:46:11 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -69,25 +69,62 @@ import org.w3c.dom.*;
 
 public class LdapQueryCreator {
 
-		public static String getQuery(String query, Properties query_props, Dictionary parameters) throws Exception {
-			HttpServletRequest req = (HttpServletRequest)parameters.get("request");
-			String ldelim = query_props.getProperty("variable-left-delimiter");
-			int llength = ldelim.length();
-			String rdelim = query_props.getProperty("variable-right-delimiter");
-			int rlength = rdelim.length();
-			int offset = 0;
-			while (true) {
-				int lindex = query.indexOf(ldelim,offset);
-				if (lindex < 0) break;
-				int rindex = query.indexOf(rdelim,offset+llength);
-				if (rindex < 0 || rindex < lindex) break;
-				String name = query.substring(lindex+llength,rindex);
-				String value = req.getParameter(name);
-				if (value == null) break;
-				query = query.substring(0,lindex)+value+query.substring(rindex+rlength);
-				offset = lindex+value.length();
-			}
-			return query.trim();
+	public static String getQuery(String query, Properties query_props, Dictionary parameters) throws Exception {
+		HttpServletRequest req = (HttpServletRequest)parameters.get("request");
+		String ldelim = query_props.getProperty("variable-left-delimiter");
+		int llength = ldelim.length();
+		String rdelim = query_props.getProperty("variable-right-delimiter");
+		int rlength = rdelim.length();
+		int offset = 0;
+		while (true) {
+			int lindex = query.indexOf(ldelim,offset);
+			if (lindex < 0) break;
+			int rindex = query.indexOf(rdelim,offset+llength);
+			if (rindex < 0 || rindex < lindex) break;
+			String name = query.substring(lindex+llength,rindex);
+            String value = null;
+            // attempt to identify if the is a "named" variable request
+            if (name.indexOf(":") > 0) {
+                // Yes, it is. split the varaible name from the request space it's 
+                // supposed to be in
+                String getValueFrom = name.substring(0,name.indexOf(":"));
+                name = name.substring(name.indexOf(":") + 1,name.length());
+                // sanity check for debugging
+                // System.err.println("LDAP DEBUG -- name is '"+name+"' and from is '"+getValueFrom+"'");
+                if (getValueFrom.equalsIgnoreCase("header")) {
+                    // This is a value in the Request header. 
+                    // The servlet 2.0 API doesn't always allow direct acces to all variables
+                    // we'll hard-code in some special cases. 
+                    // The first of these is the REMOTE_USER
+                    if (name.equalsIgnoreCase("remote_user")) {
+                        value = req.getRemoteUser();
+                    } else if (name.equalsIgnoreCase("auth_type")) {
+                        value = req.getAuthType();
+                    } else if (name.equalsIgnoreCase("method")) {
+                        value = req.getMethod();
+                    } else {
+                        // no special handler for the requested information
+                        // so we'll just ask for it here.
+                        value = req.getHeader(name);
+                    }
+                } else if (getValueFrom.equalsIgnoreCase("parameter")) {
+                  // OK, it's not a header, so we chack to see if it's a parameter request.
+                    value = req.getParameter(name);
+                } else {
+                 // the failsafe is to assume it's a parameter request if not explicitly 
+                 // specified as such.
+                    value = req.getParameter(name);  
+                }
+            } else {
+               // No specific request area to review, therefor it must be a parameter 
+               // request.
+               value = req.getParameter(name);
+            }
+			
+			if (value == null) break;
+			query = query.substring(0,lindex)+value+query.substring(rindex+rlength);
+			offset = lindex+value.length();
 		}
-
+		return query.trim();
+	}
 }
