@@ -52,7 +52,6 @@
 package org.apache.cocoon.components.modules.input;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 
@@ -74,52 +73,59 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 public class BaseLinkModule extends AbstractInputModule implements ThreadSafe {
 
     final static Vector returnNames = new Vector() {
-            {
-                add("RequestBaseLink");
-                add("SitemapBaseLink");
-            }
-        };
-    
-    public Object getAttribute(final String name, final Configuration modeConf, final Map objectModel ) throws ConfigurationException {
-        
-	String uri;
-	if (name.equals("SitemapBaseLink"))
+        {
+            add("RequestBaseLink");
+            add("SitemapBaseLink");
+        }
+    };
+
+    public Object getAttribute(
+        final String name,
+        final Configuration modeConf,
+        final Map objectModel)
+        throws ConfigurationException {
+
+        String uri;
+        if (name.equals("SitemapBaseLink"))
             uri = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
-	else if (name.equals("RequestBaseLink"))
+        else if (name.equals("RequestBaseLink"))
             uri = ObjectModelHelper.getRequest(objectModel).getRequestURI();
-	else uri = "";
-        
+        else
+            uri = "";
+
         if (uri.startsWith("/")) {
             uri = uri.substring(1);
         }
-        
+
         StringBuffer result = new StringBuffer(uri.length());
-        
+
         int nextIndex = 0;
-        while ((nextIndex = uri.indexOf ('/', nextIndex) + 1) > 0) {
+        while ((nextIndex = uri.indexOf('/', nextIndex) + 1) > 0) {
             result.append("../");
         }
-        
+
         if (getLogger().isDebugEnabled())
-            getLogger().debug ("Returns " + result + " for uri " + uri + " and attribute " + name);
-        
+            getLogger().debug("Returns " + result + " for uri " + uri + " and attribute " + name);
+
         return result.toString();
     }
-    
-    
-    public Iterator getAttributeNames(final Configuration modeConf, final Map objectModel) throws ConfigurationException {
-        
+
+    public Iterator getAttributeNames(final Configuration modeConf, final Map objectModel)
+        throws ConfigurationException {
+
         return RequestURIModule.returnNames.iterator();
     }
-    
-    public Object[] getAttributeValues(final String name, final Configuration modeConf, final Map objectModel )
+
+    public Object[] getAttributeValues(
+        final String name,
+        final Configuration modeConf,
+        final Map objectModel)
         throws ConfigurationException {
-        
-        return (new LinkedList() {
-                {
-                    add(getAttribute(name, modeConf, objectModel) );
-                }
-            }).toArray();
+
+        Object[] result = new Object[1];
+        result[0] = getAttribute(name, modeConf, objectModel);
+        return result;
+
     }
-    
+
 }
