@@ -96,16 +96,18 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
                 return this.wrappingProcessor.parent.getComponentConfigurations();
             }
             return null;
-        } else {
-            if (this.wrappingProcessor.parent == null) {
-                return new Configuration[]{this.componentConfigurations};
-            }
-            final Configuration[] parentArray = this.wrappingProcessor.parent.getComponentConfigurations();
+        }
+        if (this.wrappingProcessor.parent == null) {
+            return new Configuration[]{this.componentConfigurations};
+        }
+        final Configuration[] parentArray = this.wrappingProcessor.parent.getComponentConfigurations();
+        if ( parentArray != null ) {
             final Configuration[] newArray = new Configuration[parentArray.length + 1];
             System.arraycopy(parentArray, 0, newArray, 1, parentArray.length);
             newArray[0] = this.componentConfigurations;
             return newArray;
-        }
+        } 
+        return new Configuration[] {this.componentConfigurations};
     }
 
     /**
