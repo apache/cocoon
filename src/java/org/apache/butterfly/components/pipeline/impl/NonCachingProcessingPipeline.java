@@ -34,6 +34,8 @@ import org.apache.butterfly.source.SourceValidity;
 import org.apache.butterfly.transformation.Transformer;
 import org.apache.butterfly.xml.XMLConsumer;
 import org.apache.butterfly.xml.XMLProducer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Implementation of the non-caching pipeline.
@@ -43,6 +45,8 @@ import org.apache.butterfly.xml.XMLProducer;
  * @version CVS $Id$
  */
 public class NonCachingProcessingPipeline implements ProcessingPipeline {
+
+    protected static final Log logger = LogFactory.getLog(NonCachingProcessingPipeline.class);
     
     /** The generator */
     protected Generator generator;
@@ -166,10 +170,10 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
         if (null == this.lastConsumer) {
             this.lastConsumer = this.serializer;
         } else {
-            this.preparePipeline(environment);
+            preparePipeline(environment);
         }
         if ( this.reader != null ) {
-            // TODO: implement this.preparePipeline(environment);   
+            preparePipeline(environment);   
             reader.setObjectModel(environment.getObjectModel());
         }
         
@@ -214,7 +218,7 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
             throw new PipelineProcessingException("Attempted to process incomplete pipeline.");
         }
         if (this.reader != null) {
-            // TODO setupReader(environment);
+            setupReader(environment);
         } else {
             setupPipeline(environment);
         }
@@ -229,6 +233,16 @@ public class NonCachingProcessingPipeline implements ProcessingPipeline {
             environment.setContentType("text/xml");
         } else {
             environment.setContentType(this.serializer.getMimeType());
+        }
+    }
+
+    /**
+     * Setup the reader
+     */
+    protected void setupReader(Environment environment) {
+        final String mimeType = this.reader.getMimeType();
+        if (mimeType != null) {
+            environment.setContentType(mimeType);                    
         }
     }
 

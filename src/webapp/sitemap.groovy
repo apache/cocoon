@@ -33,7 +33,7 @@ class Sitemap extends Pipeline {
             serialize "xml", [ "encoding": "UTF-8", "mimeType": "text/html" ] 
         } else if (m = (uri =~ "images/(.*)\.gif")) {
             read "resource", "resources/images/" + m.group(1) + ".gif", 
-                [ "mimeType": "image/gif" ]
+                [ "mimeType": "image/png" ]
         } else if (m = (uri =~ "styles/(.*)\.css")) {
             read "resource", "resources/styles/" + m.group(1) + ".css",
                 [ "mimeType": "text/css" ]
