@@ -750,7 +750,7 @@
   <question>Is is possible to specify the stylesheet to be used by means
    of a request parameter?</question>
   <answer>
-   <p>Yes. You'll need to use XSP, as follows:</p>
+   <p>Yes. You can either use XSP, as follows...</p>
 
    <source>
     <![CDATA[
@@ -765,6 +765,48 @@
         </xsp:pi> 
        </page>
      </xsp:page>
+    ]]>
+   </source>
+
+   <p>... or XSLT, as follows:</p>
+
+   <source>
+    <![CDATA[
+  <?xml version="1.0"?>
+  <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  version="1.0">
+
+    <xsl:param name="style"/>
+      <xsl:template match="/">
+        <xsl:choose>
+          <!-- when style is specified -->
+          <xsl:when test="$style">
+            <xsl:processing-instruction name="xml-stylesheet">
+              href="<xsl:value-of select="$style"/>" type="text/xsl"
+            </xsl:processing-instruction>
+            <xsl:processing-instruction name="cocoon-process">
+              type="xslt"
+            </xsl:processing-instruction>
+          </xsl:when>
+          <!-- Otherwise use default.xsl -->
+          <xsl:otherwise>
+            <xsl:processing-instruction name="xml-stylesheet">
+              href="default.xsl" type="text/xsl"
+            </xsl:processing-instruction>
+            <xsl:processing-instruction name="cocoon-process">
+              type="xslt"
+            </xsl:processing-instruction>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:apply-templates/>
+      </xsl:template>
+
+      <!-- copy all elements -->
+      <xsl:template match="@*|*|text">
+        <xsl:copy-of select="."/>
+      </xsl:template>
+    </xsl:stylesheet>
     ]]>
    </source>
   </answer>
