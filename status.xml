@@ -373,6 +373,11 @@
      Scratchpad block: Restored CastorTransformer support for context beans,
      restored bean lookup logic, fixed sample.
    </action>
+   <action dev="SW" type="fix">
+     The CocoonBean now creates its own private logger hierarchy, thus avoiding to
+     pollute the CocoonServlet hierarchy when called in that context (e.g. when
+     generating a static site from a CMS)
+   </action>
    <action dev="GP" type="add">
      Added replacement for Excalibur Event package in
      org.apache.cocoon.components.thread and migrated most classes using their own
@@ -387,9 +392,19 @@
    <action dev="TC" type="add">
      Javaflow block: Add parameter support
    </action>
+   <action dev="SW" type="add">
+     CForms block: added widget states. All widgets can now have an "active" (default), "disabled" or "invisible"
+     state. Updated the stylesheets accordingly to use HTML's disabled inputs.
+   </action>
    <action dev="AG" type="fix" fixes-bug="29945" due-to="Christoph Gaffga" due-to-email="cgaffga@triplemind.com">
      Scratchpad block: BetwixtTransformer: removed deprecation warning with
      latest betwixt
+   </action>
+   <action dev="SW" type="fix" fixes-bug="25951">
+     Flowscript: enforce the explicit declaration of variables in the global
+     scope (attached to the session). This avoids the implicit declaration of
+     variables in the global scope when the 'var' keyword is missing, which
+     leads to weird bugs difficult to track down, especially with continuations.
    </action>
    <action dev="ATC" type="update">
      Deprecated the PHP block since the PHP servlet the generator depends on
@@ -623,7 +638,7 @@
      custom publish/subscribe components.
    </action>
    <action dev="UH" type="add">
-     Still in the scratchpad area at the time of this writing, added a 
+     Still in the scratchpad area at the time of this writing, added a
      CachedSource proxy subclass for Sources that implement TraversableSource and
      InspectableSource (for instance WebDAVSource).
    </action>

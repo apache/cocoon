@@ -77,6 +77,7 @@ public class CocoonWrapper {
     private String workDir = Constants.DEFAULT_WORK_DIR;
     private String logKit = null;
     protected String logger = null;
+    protected String logLevel = "ERROR";
     private String userAgent = DEFAULT_USER_AGENT;
     private String accept = DEFAULT_ACCEPT;
     private List classList = new ArrayList();
@@ -88,8 +89,9 @@ public class CocoonWrapper {
 
     // Internal Objects
     private CommandLineContext cliContext;
+    private LogKitLoggerManager logManager;
     private Cocoon cocoon;
-    protected static Logger log;
+    protected Logger log;
     private Map attributes = new HashMap();
     private HashMap empty = new HashMap();
 
@@ -99,27 +101,30 @@ public class CocoonWrapper {
     // INITIALISATION METHOD
     //
     public void initialize() throws Exception {
-        // @todo@ when does the logger get initialised? uv
         // @todo@ these should log then throw exceptions back to the caller, not use system.exit()
-        setLogLevel("ERROR");
 
-        this.context = getDir(this.contextDir, "context");
-        this.work = getDir(workDir, "working");
-
-        this.conf = getConfigurationFile(this.context, this.configFile);
+        // Create a new hierarchy. This is needed when CocoonBean is called from
+        // within a CocoonServlet call, in order not to mix logs
+        final Hierarchy hierarchy = new Hierarchy();
+        
+        final Priority priority = Priority.getPriorityForName(logLevel);
+        hierarchy.setDefaultPriority(priority);
+        
+        // Install a temporary logger so that getDir() can log if needed
+        this.log = new LogKitLogger(hierarchy.getLoggerFor(""));
 
         try {
+            // First of all, initialize the logging system
+            
+            // Setup the application context with context-dir and work-dir that
+            // can be used in logkit.xconf
+            this.context = getDir(this.contextDir, "context");
+            this.work = getDir(workDir, "working");
             DefaultContext appContext = new DefaultContext();
-            appContext.put(Constants.CONTEXT_CLASS_LOADER,
-                           CocoonWrapper.class.getClassLoader());
-            cliContext = new CommandLineContext(contextDir);
-            cliContext.enableLogging(log);
-            appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
             appContext.put(Constants.CONTEXT_WORK_DIR, work);
 
-            LogKitLoggerManager logKitLoggerManager =
-                    new LogKitLoggerManager(Hierarchy.getDefaultHierarchy());
-            logKitLoggerManager.enableLogging(log);
+            this.logManager = new LogKitLoggerManager(hierarchy);
+            this.logManager.enableLogging(log);
 
             if (this.logKit != null) {
                 final FileInputStream fis = new FileInputStream(logKit);
@@ -128,15 +133,24 @@ public class CocoonWrapper {
                 final Configuration logKitConf = builder.build(fis);
                 final DefaultContext subcontext = new DefaultContext(appContext);
                 subcontext.put("context-root", this.contextDir);
-                logKitLoggerManager.contextualize(subcontext);
-                logKitLoggerManager.configure(logKitConf);
+                subcontext.put("context-work", this.workDir);
+                this.logManager.contextualize(subcontext);
+                this.logManager.configure(logKitConf);
                 if (logger != null) {
-                    log = logKitLoggerManager.getLoggerForCategory(logger);
+                    log = this.logManager.getLoggerForCategory(logger);
                 } else {
-                    log = logKitLoggerManager.getLoggerForCategory("cocoon");
+                    log = this.logManager.getLoggerForCategory("cocoon");
                 }
             }
 
+            this.conf = getConfigurationFile(this.context, this.configFile);
+
+            cliContext = new CommandLineContext(contextDir);
+            cliContext.enableLogging(log);
+
+            appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
+            appContext.put(Constants.CONTEXT_CLASS_LOADER,
+                    CocoonWrapper.class.getClassLoader());
             appContext.put(Constants.CONTEXT_CLASSPATH, getClassPath(contextDir));
             appContext.put(Constants.CONTEXT_UPLOAD_DIR, contextDir + "upload-dir");
             File cacheDir = getDir(workDir + File.separator + "cache-dir", "cache");
@@ -150,7 +164,7 @@ public class CocoonWrapper {
             cocoon = new Cocoon();
             ContainerUtil.enableLogging(cocoon, log);
             ContainerUtil.contextualize(cocoon, appContext);
-            cocoon.setLoggerManager(logKitLoggerManager);
+            cocoon.setLoggerManager(logManager);
             ContainerUtil.initialize(cocoon);
 
         } catch (Exception e) {
@@ -171,7 +185,7 @@ public class CocoonWrapper {
      * @return a <code>File</code> representing the configuration
      * @exception IOException if an error occurs
      */
-    private static File getConfigurationFile(File dir, String configFile)
+    private File getConfigurationFile(File dir, String configFile)
         throws IOException {
         File conf;
         if (configFile == null) {
@@ -209,7 +223,7 @@ public class CocoonWrapper {
     /**
      * Try loading the configuration file from a single location
      */
-    private static File tryConfigurationFile(String filename) {
+    private File tryConfigurationFile(String filename) {
         if (log.isDebugEnabled()) {
             log.debug("Trying configuration file at: " + filename);
         }
@@ -237,19 +251,16 @@ public class CocoonWrapper {
 
         if (!d.exists()) {
             if (!d.mkdirs()) {
-                log.error("Error creating " + type + " directory '" + d + "'");
                 throw new IOException(
                     "Error creating " + type + " directory '" + d + "'");
             }
         }
 
         if (!d.isDirectory()) {
-            log.error("'" + d + "' is not a directory.");
             throw new IOException("'" + d + "' is not a directory.");
         }
 
         if (!(d.canRead() && d.canWrite())) {
-            log.error("Directory '" + d + "' is not readable/writable");
             throw new IOException(
                 "Directory '" + d + "' is not readable/writable");
         }
@@ -298,9 +309,7 @@ public class CocoonWrapper {
      * @param logLevel log level
      */
     public void setLogLevel(String logLevel) {
-        final Priority priority = Priority.getPriorityForName(logLevel);
-        Hierarchy.getDefaultHierarchy().setDefaultPriority(priority);
-        CocoonWrapper.log = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
+        this.logLevel = logLevel;
     }
 
     /**
@@ -384,6 +393,7 @@ public class CocoonWrapper {
             this.initialized = false;
             ContainerUtil.dispose(this.cocoon);
             this.cocoon = null;
+            this.logManager.dispose();
             if (log.isDebugEnabled()) {
                 log.debug("Disposed");
             }
@@ -509,7 +519,7 @@ public class CocoonWrapper {
      * @param context  The context path
      * @return a <code>String</code> value
      */
-    protected static String getClassPath(final String context) {
+    protected String getClassPath(final String context) {
         StringBuffer buildClassPath = new StringBuffer();
 
         String classDir = context + "/WEB-INF/classes";
