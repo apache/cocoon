@@ -87,7 +87,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.6 2003/07/31 03:54:22 vgritsenko Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.7 2003/08/06 10:07:30 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -184,6 +184,7 @@ public abstract class AbstractProcessingPipeline
      * Setup this component
      */
     public void setup(Parameters params) {
+        this.parameters = params;
         final String expiresValue = params.getParameter("expires", null);
         if (expiresValue != null) {
             this.expires = this.parseExpires(expiresValue);
