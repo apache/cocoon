@@ -24,6 +24,7 @@ import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.XMLProducer;
 
 import org.xml.sax.SAXException;
@@ -31,7 +32,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-08-16 05:08:19 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-09-10 19:57:45 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator = null;
@@ -59,10 +60,10 @@ public class ResourcePipeline implements Composer {
         this.manager = manager;
     }
 
-    public void setGenerator (Generator generator, String source, 
-                              Configuration conf, Parameters param) 
-    throws InstantiationException, IllegalAccessException {
-        this.generator = (Generator)generator.getClass().newInstance();
+    public void setGenerator (Generator generator, String source,
+                              Configuration conf, Parameters param)
+    throws Exception {
+        this.generator = (Generator)ClassUtils.newInstance(generator.getClass().getName());
         this.initComponent (this.generator, conf);
         this.generatorSource = source;
         this.generatorParam = param;
@@ -72,42 +73,42 @@ public class ResourcePipeline implements Composer {
         return this.generator;
     }
 
-    public void setReader (Reader reader, String source, 
-                           Configuration conf, Parameters param) 
-    throws InstantiationException, IllegalAccessException {
+    public void setReader (Reader reader, String source,
+                           Configuration conf, Parameters param)
+    throws Exception {
         this.setReader (reader, source, conf, param, null);
     }
 
-    public void setReader (Reader reader, String source, 
-                           Configuration conf, Parameters param, String mimeType) 
-    throws InstantiationException, IllegalAccessException {
-        this.reader = (Reader)reader.getClass().newInstance();
+    public void setReader (Reader reader, String source,
+                           Configuration conf, Parameters param, String mimeType)
+    throws Exception {
+        this.reader = (Reader)ClassUtils.newInstance(reader.getClass().getName());
         this.initComponent (this.reader, conf);
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
     }
 
-    public void setSerializer (Serializer serializer, String source, 
-                               Configuration conf, Parameters param) 
-    throws InstantiationException, IllegalAccessException {
+    public void setSerializer (Serializer serializer, String source,
+                               Configuration conf, Parameters param)
+    throws Exception {
         this.setSerializer (serializer, source, conf, param, null);
     }
 
-    public void setSerializer (Serializer serializer, String source, 
-                               Configuration conf, Parameters param, String mimeType) 
-    throws InstantiationException, IllegalAccessException {
-        this.serializer = (Serializer)serializer.getClass().newInstance();
+    public void setSerializer (Serializer serializer, String source,
+                               Configuration conf, Parameters param, String mimeType)
+    throws Exception {
+        this.serializer = (Serializer)ClassUtils.newInstance(serializer.getClass().getName());
         this.initComponent (this.serializer, conf);
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
     }
 
-    public void addTransformer (Transformer transformer, String source, 
-                               Configuration conf, Parameters param) 
-    throws InstantiationException, IllegalAccessException {
-        Transformer transfmr = (Transformer)transformer.getClass().newInstance();
+    public void addTransformer (Transformer transformer, String source,
+                               Configuration conf, Parameters param)
+    throws Exception {
+        Transformer transfmr = (Transformer)ClassUtils.newInstance(transformer.getClass().getName());
         this.initComponent (transfmr, conf);
         this.transformers.add (transfmr);
         this.transformerSources.add (source);
@@ -126,6 +127,8 @@ public class ResourcePipeline implements Composer {
                 } else if (readerMimeType != null) {
                     environment.setContentType (readerMimeType);
                 } else {
+                    /* (GP)FIXME: Reaching here we havn't set a mime-type. This
+                     * case should be prevented by the sitemap generating stylesheet */
                 }
                 reader.setOutputStream (environment.getOutputStream());
                 reader.generate();
@@ -143,7 +146,7 @@ public class ResourcePipeline implements Composer {
             int i = transformers.size();
             for (int j=0; j < i; j++) {
                 transformer = (Transformer) transformers.elementAt (j);
-                transformer.setup ((EntityResolver)environment, environment.getObjectModel(), 
+                transformer.setup ((EntityResolver)environment, environment.getObjectModel(),
                                (String)transformerSources.elementAt (j),
                                (Parameters)transformerParams.elementAt (j));
                 producer.setConsumer (transformer);
@@ -154,7 +157,7 @@ public class ResourcePipeline implements Composer {
             if (mime_type != null)
                     environment.setContentType (mime_type);
             else if (serializerMimeType != null)
-                    environment.setContentType (serializerMimeType); 
+                    environment.setContentType (serializerMimeType);
             serializer.setOutputStream (environment.getOutputStream());
             producer.setConsumer (serializer);
             generator.generate();
@@ -169,9 +172,9 @@ public class ResourcePipeline implements Composer {
      * @param conf <code>Configuration</code> of the <code>Component</code>
      */
     private void initComponent (Component comp, Configuration conf) {
-        if (comp instanceof Composer) 
+        if (comp instanceof Composer)
             ((Composer)comp).setComponentManager (manager);
-        if (comp instanceof Configurable) 
+        if (comp instanceof Configurable)
             ((Configurable)comp).setConfiguration (conf);
     }
-} 
+}

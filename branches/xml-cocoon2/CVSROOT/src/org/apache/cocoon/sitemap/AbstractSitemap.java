@@ -17,37 +17,37 @@ import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
-import org.apache.cocoon.ProcessingException; 
-import org.apache.cocoon.Processor; 
-import org.apache.cocoon.environment.Environment; 
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.util.ClassUtils;
 
-import org.xml.sax.SAXException; 
+import org.xml.sax.SAXException;
 
 /**
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-06 23:22:25 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-10 19:57:45 $
  */
 public abstract class AbstractSitemap
-         implements Sitemap {      
-    /** The component manager instance */  
-    protected ComponentManager manager=null;  
- 
-    /** The sitemap manager instance */  
-    protected SitemapManager sitemapManager=null;  
+         implements Sitemap {
+    /** The component manager instance */
+    protected ComponentManager manager=null;
+
+    /** The sitemap manager instance */
+    protected SitemapManager sitemapManager=null;
 
     /** The creation date */
     protected static long dateCreated = -1L;
-  
-    /**  
-     * Set the current <code>ComponentManager</code> instance used by this  
-     * <code>Composer</code>.  
-     */  
-    public void setComponentManager(ComponentManager manager) {  
-        this.manager=manager;  
-    }  
+
+    /**
+     * Set the current <code>ComponentManager</code> instance used by this
+     * <code>Composer</code>.
+     */
+    public void setComponentManager(ComponentManager manager) {
+        this.manager=manager;
+    }
 
     /**
      * Determines whether this generator's source files have changed
@@ -75,29 +75,33 @@ public abstract class AbstractSitemap
         return true;
     }
 
-     /** 
+     /**
       * Loads a class specified in a sitemap component definition and
       * initialize it
-      */ 
+      */
     protected Component load_component(String classURL, Configuration conf) throws Exception {
         Object comp = ClassUtils.newInstance(classURL);
         if (!(comp instanceof Component)) {
             throw new IllegalAccessException ("Object " + classURL + " is not a Component");
         }
+        /* (GP)FIXME: The new AvalonAware release should contain Interfaces to mark classes
+           an ThreadSafe, Recyclable or Poolable and depending on that should instanciate
+           and configurate these objects accordingly
         if (comp instanceof Composer) {
             ((Composer) comp).setComponentManager(this.manager);
         }
         if (comp instanceof Configurable) {
             ((Configurable) comp).setConfiguration(conf);
         }
-        return ((Component) comp); 
-    } 
+        */
+        return ((Component) comp);
+    }
 
-     /** 
+     /**
       * Replaces occurences of xpath like expressions in an argument String
       * with content from a List of Lists
-      */ 
-    protected String substitute (List list, String expr) 
+      */
+    protected String substitute (List list, String expr)
     throws PatternException, NumberFormatException {
         StringBuffer result = new StringBuffer();
         String s = null;
@@ -112,10 +116,10 @@ public abstract class AbstractSitemap
             while (ii <= expr.length() && (i = expr.indexOf('{', ii)) != -1) {
                 result.append(expr.substring(ii, i));
                 j = expr.indexOf('}', i);
-                if (j < i) 
+                if (j < i)
                     throw new PatternException ("invalid expression in \""+expr+"\"");
                 ii = j+1;
-                if (j == -1) 
+                if (j == -1)
                     throw new PatternException ("invalid expression in URL "+expr);
                 k = list.size() - 1;
                 s = expr.substring (i+1,j);
@@ -131,12 +135,12 @@ public abstract class AbstractSitemap
             if (ii < expr.length()) {
                 result.append(expr.substring(ii));
             }
-            return (result.toString()); 
+            return (result.toString());
         } catch (Exception e) {
-            throw new PatternException 
+            throw new PatternException
                     ("error occurred during evaluation of expression \""
                      +expr+"\" at position "+(i+1)+"\n"
-                     + e.getMessage());        
+                     + e.getMessage());
         }
     }
 
@@ -146,4 +150,4 @@ public abstract class AbstractSitemap
      */
     public abstract boolean process (Environment environment)
     throws Exception;
-} 
+}
