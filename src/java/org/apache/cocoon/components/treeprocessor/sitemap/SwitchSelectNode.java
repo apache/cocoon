@@ -71,7 +71,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SwitchSelectNode.java,v 1.2 2003/07/29 06:28:54 cziegeler Exp $
+ * @version CVS $Id: SwitchSelectNode.java,v 1.3 2003/07/29 08:46:00 cziegeler Exp $
  */
 
 public class SwitchSelectNode extends SimpleSelectorProcessingNode
@@ -128,9 +128,6 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
         if (this.threadSafeSelector != null) {
 
             Object ctx = this.threadSafeSelector.getSelectorContext(objectModel, resolvedParams);
-            if ( ctx == null ) {
-                return false;
-            }
 
             for (int i = 0; i < this.whenTests.length; i++) {
                 if (this.threadSafeSelector.select(whenTests[i].resolve(context, objectModel), ctx)) {
@@ -150,10 +147,6 @@ public class SwitchSelectNode extends SimpleSelectorProcessingNode
             Object ctx = selector.getSelectorContext(objectModel, resolvedParams);
            
             try {
-                if ( ctx == null ) {
-                    return false;
-                }
-                
                 for (int i = 0; i < this.whenTests.length; i++) {
                     if (selector.select(whenTests[i].resolve(context, objectModel), ctx)) {
                         return invokeNodes(this.whenNodes[i], env, context);
