@@ -68,10 +68,33 @@ import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * Makes accessible coplet instance data by using JXPath expressions.
+ * Makes accessible coplet instance data by using JXPath expressions.<br><br>
+ *
+ * Example:<br><br>
+ * 
+ * <pre>&lt;map:action type="foo"&gt;
+ * 	&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
+ * &lt;/map:action&gt;<br></pre>
+ * 
+ * The module will insert the boolean value specifying whether the coplet is 
+ * maxpageable or not as value of attribute "value" in &lt;map:parameter&gt;. 
+ * There are two possibilities how the module obtains the information required for 
+ * getting the coplet instance data:<br><br>
+ * 1) If it is used within a coplet pipeline and this pipeline is called using the "cocoon:" protocol,
+ * all required information are passed automatically.<br>
+ * 2) Otherwise the portal name and the coplet id must be passed in the object model 
+ * which can be done by using the ObjectModelAction:
+ *
+ * <pre>&lt;map:action type="objectModel"&gt;
+ *	&lt;map:parameter name="portalName" value="exampleportal"/&gt;
+ *	&lt;map:parameter name="copletId" value="examplecoplet"/&gt;
+ *	&lt;map:action type="foo"&gt;
+ *		&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
+ *	&lt;/map:action&gt;
+ * &lt;/map:action&gt;</pre>
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.1 2003/05/08 11:54:01 cziegeler Exp $
+ * @version CVS $Id: CopletModule.java,v 1.2 2003/05/27 11:54:18 cziegeler Exp $
  */
 public class CopletModule 
 implements InputModule, Composable, ThreadSafe {

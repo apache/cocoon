@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.CascadingThrowable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -81,6 +82,7 @@ import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
 import org.exolab.castor.mapping.Mapping;
+import org.xml.sax.SAXException;
 
 /**
  * The profile manager using the authentication framework
@@ -88,12 +90,11 @@ import org.exolab.castor.mapping.Mapping;
  * FIXME - create abstract base class
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: SimpleProfileManager.java,v 1.13 2003/05/27 09:15:07 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.1 2003/05/27 11:54:18 cziegeler Exp $
  */
-public class SimpleProfileManager 
+public class AuthenticationProfileManager 
     extends AbstractLogEnabled 
     implements Composable, ProfileManager, ThreadSafe {
 
@@ -147,7 +148,7 @@ public class SimpleProfileManager
                 }
             }
             
-            String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
             Layout layout = null;
 
             if ( key != null ) {
@@ -247,7 +248,7 @@ public class SimpleProfileManager
 			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
 			service = (PortalService) this.manager.lookup(PortalService.ROLE);
             
-			String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+			String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
 
 			HashMap map = new HashMap();
 			map.put("portalname", service.getPortalName());
@@ -467,9 +468,16 @@ public class SimpleProfileManager
 
 	private boolean isSourceNotFoundException(Throwable t) {
 		while (t != null) {
-			if (t instanceof SourceNotFoundException)
-				return true;
-			t = t.getCause();
+			if (t instanceof SourceNotFoundException) {
+                return true;
+			}
+            if (t instanceof CascadingThrowable) {
+                t = ((CascadingThrowable)t).getCause();
+            } else if ( t instanceof SAXException ) {
+                t = ((SAXException)t).getCause();
+            } else {
+                t = null;
+            }
 		}
 		return false;
 	}
@@ -506,7 +514,7 @@ public class SimpleProfileManager
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
-			attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+			attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
 			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
 
             return copletInstanceDataManager.getCopletInstanceData(copletID);
@@ -524,7 +532,7 @@ public class SimpleProfileManager
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
-            attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
 
             Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
@@ -548,7 +556,7 @@ public class SimpleProfileManager
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
-            attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
             
             copletInstanceDataManager.putCopletInstanceData( coplet );
@@ -566,7 +574,7 @@ public class SimpleProfileManager
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
 
-            attribute = SimpleProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
+            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
             CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
             
             copletInstanceDataManager.getCopletInstanceData().remove(coplet.getId());
@@ -582,7 +590,7 @@ public class SimpleProfileManager
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
 
             Map layoutMap = (Map)service.getAttribute("layout-map");
             if ( layoutMap == null ) {
@@ -609,7 +617,7 @@ public class SimpleProfileManager
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            String portalPrefix = SimpleProfileManager.class.getName()+"/"+service.getPortalName();
+            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
 
             Map layoutMap = (Map)service.getAttribute("layout-map");
             

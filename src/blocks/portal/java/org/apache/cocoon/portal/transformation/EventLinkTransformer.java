@@ -64,11 +64,28 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * This transformer searches for event descriptions in the XML. 
  * For each one an event is created and the event link is inserted into the XML 
- * instead of the description.
+ * instead of the description.<br><br>
  *  
+ * Example:<br><br>
+ * 
+ * <pre>&lt;root xmlns:event="http://apache.org/cocoon/portal/eventlink/1.0"&gt;
+ * 	&lt;event:event attribute="href"&gt;
+ * 		&lt;a href="http://eventlinkexample"/&gt;
+ * 	&lt;/event:event&gt;
+ * 	&lt;event:event element="uri"&gt;
+ * 		&lt;link>&lt;uri&gt;http://eventlinkexample&lt;/uri&gt;&lt;/link&gt;
+ * 	&lt;/event:event&gt;
+ * &lt;/root&gt;<br></pre>
+ *
+ * The transformer will create two CopletLinkEvents and insert corresponding links 
+ * to them to the XML instead of "http://eventlinkexample". If such a link is pressed 
+ * the corresponding CopletLinkEvent is sent to the Subscribers to be handled.<br>
+ * Please see also the documentation of superclass AbstractCopletTransformer for how
+ * the coplet instance data are acquired.
+ *   
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: EventLinkTransformer.java,v 1.3 2003/05/26 13:18:20 cziegeler Exp $
+ * @version CVS $Id: EventLinkTransformer.java,v 1.4 2003/05/27 11:54:17 cziegeler Exp $
  */
 public class EventLinkTransformer 
 extends AbstractCopletTransformer {

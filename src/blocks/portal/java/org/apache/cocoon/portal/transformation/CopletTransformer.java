@@ -60,9 +60,22 @@ import org.xml.sax.SAXException;
 
 /**
  * Includes coplet instance data by using JXPath expressions.
+ * The transformer searches for tags &lt;coplet:coplet xmlns:coplet="http://apache.org/cocoon/portal/coplet/1.0"&gt;.
+ * They must have an attribute "select" that contains a valid JXPath expression applying to the coplet instance data.<br><br>
+ *
+ * Example:<br><br>
+ * 
+ * <pre>&lt;maxpageable xmlns:coplet="http://apache.org/cocoon/portal/coplet/1.0"&gt;
+ * 	&lt;coplet:coplet select="copletData.maxpageable"/&gt;
+ * &lt;/maxpageable&gt;<br></pre>
+ * 
+ * The transformer will insert the boolean value specifying whether the coplet is 
+ * maxpageable or not.<br> 
+ * Please see also the documentation of superclass AbstractCopletTransformer for how
+ * the coplet instance data are acquired.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.3 2003/05/27 11:54:17 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {

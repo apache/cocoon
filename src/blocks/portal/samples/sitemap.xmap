@@ -98,12 +98,12 @@
           <map:generate type="portal" label="content">
         	<map:parameter name="portal-name" value="portal" />
           </map:generate>
-<!--
+
           <map:transform type="cinclude"/> 
 
           <map:transform src="{global:skin}styles/header.xsl"/>
           <map:transform src="{global:skin}styles/portal_layout.xsl"/>
--->
+
 <!--
           <map:transform type="htmlroot" />
 -->

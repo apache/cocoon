@@ -59,7 +59,6 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -71,70 +70,83 @@ import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.w3c.dom.Element;
 
 /**
- *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: MapSourceAdapter.java,v 1.4 2003/05/27 07:38:33 cziegeler Exp $
+ * @version CVS $Id: MapSourceAdapter.java,v 1.5 2003/05/27 11:54:18 cziegeler Exp $
  */
 public class MapSourceAdapter
     extends AbstractLogEnabled
-    implements Component, Composable, Configurable, ProfileLS, ThreadSafe {
+    implements Component, Composable, ProfileLS, ThreadSafe {
 
     public static final String ROLE = MapSourceAdapter.class.getName();
-    private ComponentManager manager;
+    /** The component manager */
+    protected ComponentManager manager;
 
+
+    protected String getURI(Map mapKey, Map map, String postFix) 
+    throws Exception{
+        Object type = map.get("type");
+        String profile = (String)map.get("profile");
+        Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
+        String uri = null;
+        try {
+            if (type == null) {
+                uri = config.getChild(profile+"-"+postFix).getAttribute("uri");
+            } else if (type.equals("global")) {
+                uri = config.getChild(profile+"-global-"+postFix).getAttribute("uri");
+            } else if (type.equals("role")) {
+                uri = config.getChild(profile+"-role-"+postFix).getAttribute("uri");
+            } else if (type.equals("user")) {
+                uri = config.getChild(profile+"-user-"+postFix).getAttribute("uri");
+            }
+        } catch (Exception e) {
+            throw new ConfigurationException("Error reading URI from configuration.", e);
+        }
+        return uri;
+    }
+    
+    protected StringBuffer getCompleteURI(String baseURI, Map keyMap, Map map) {
+        StringBuffer buffer = new StringBuffer(baseURI);
+
+        if (baseURI.indexOf("?") == -1) {
+            buffer.append("?portal=");
+        } else {
+            buffer.append("&portal=");
+        }
+        buffer.append(map.get("portalname"));
+
+        if ( keyMap.containsKey("role")) {
+            buffer.append("&role=");
+            buffer.append(keyMap.get("role"));
+        }
+        
+        if ( keyMap.containsKey("user")) {
+            buffer.append("&user=");
+            buffer.append(keyMap.get("user"));
+        }
+        return buffer;
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileLS#loadProfile(java.lang.Object)
      */
     public Object loadProfile(Object key, Map map) throws Exception {
-		Map mapKey = (Map) key;
-		StringBuffer buffer = new StringBuffer();
-
-		String profile = (String)map.get("profile");
-
-		Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
-		Object type = map.get("type");
-		String uri = null, configKey = null;
-		try {
-			if (type == null) {
-				configKey = profile+"-load";
-				uri = config.getChild(configKey).getAttribute("uri");
-			} else if (type.equals("global")) {
-				configKey = profile+"-global-load";
-				uri = config.getChild(configKey).getAttribute("uri");
-			} else if (type.equals("role")) {
-				configKey = profile+"-role-load";
-				uri = config.getChild(configKey).getAttribute("uri");
-			} else if (type.equals("user")) {
-				configKey = profile+"-user-load";
-				uri = config.getChild(configKey).getAttribute("uri");
-			}
-		} catch (Exception e) {
-			throw new ConfigurationException("Error reading URI from configuration "+configKey, e);
-		}
-		buffer.append(uri);
-
-		if (uri.indexOf("?") == -1) {
-			buffer.append("?portal=");
-		} else {
-			buffer.append("&portal=");
-		}
-		buffer.append(map.get("portalname"));
-
-		buffer.append("&role=");
-		buffer.append(mapKey.get("role"));
+		final Map keyMap = (Map) key;
         
-		buffer.append("&user=");
-		buffer.append(mapKey.get("user"));
+        final String uri = this.getURI( keyMap, map , "load");
+        final String profile = (String)map.get("profile");
 
-		String sourceURI = buffer.toString();
+		final StringBuffer buffer = this.getCompleteURI(uri, keyMap, map );
+
+		final String sourceURI = buffer.toString();
 		Source source = null;
 		CastorSourceConverter converter = null;
         SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
@@ -155,32 +167,11 @@ public class MapSourceAdapter
      * @see org.apache.cocoon.portal.profile.ProfileLS#saveProfile(java.lang.Object, java.lang.Object)
      */
     public void saveProfile(Object key, Map map, Object profile) throws Exception {
-		Map mapKey = (Map) key;
-
-		String profileName = (String)map.get("profile");
-
-		Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
-		Object type = map.get("type");
-		String uri = null;
-        String configKey = null;
-		try {
-			if (type == null) {
-				configKey = profileName+"-save";
-				uri = config.getChild(configKey).getAttribute("uri");
-			} else if (type.equals("global")) {
-				configKey = profileName+"-global-save";
-				uri = config.getChild(configKey).getAttribute("uri");
-			} else if (type.equals("role")) {
-				configKey = profileName+"-role-save";
-				uri = config.getChild(configKey).getAttribute("uri");
-			} else if (type.equals("user")) {
-				configKey = profileName+"-user-save";
-				uri = config.getChild(configKey).getAttribute("uri");
-			}
-		} catch (Exception e) {
-			throw new ConfigurationException("Error reading URI from configuration "+configKey, e);
-		}
+        final Map keyMap = (Map) key;
         
+        final String uri = this.getURI( keyMap, map , "save");
+        final String profileName = (String)map.get("profile");
+
         // first test: modifiable source?
         SourceResolver resolver = null;
         CastorSourceConverter converter = null;
@@ -203,21 +194,7 @@ public class MapSourceAdapter
             resolver = null;
         }
         
-        StringBuffer buffer = new StringBuffer();
-		buffer.append(uri);
-
-		if (uri.indexOf("?") == -1) {
-			buffer.append("?portal=");
-		} else {
-			buffer.append("&portal=");
-		}
-		buffer.append(map.get("portalname"));
-
-		buffer.append("&role=");
-		buffer.append(mapKey.get("role"));
-        
-		buffer.append("&user=");
-		buffer.append(mapKey.get("user"));
+        final StringBuffer buffer = this.getCompleteURI(uri, keyMap, map );
 
 		SAXParser parser = null;
 		try {
@@ -229,7 +206,7 @@ public class MapSourceAdapter
             converter.storeObject(writer, profileName, profile);
 
             buffer.append("&content=");
-            buffer.append(writer.toString());
+            buffer.append(SourceUtil.encode(writer.toString()));
 
             source = resolver.resolveURI(buffer.toString());
 
@@ -254,47 +231,15 @@ public class MapSourceAdapter
 		SourceResolver resolver = null;
 		Source source = null;
 		try {
-			Map mapKey = (Map) key;
-			StringBuffer buffer = new StringBuffer();
-
-			String profile = (String)map.get("profile");
-
-			Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
-			Object type = map.get("type");
-			String uri = null, configKey = null;
-			try {
-				if (type == null) {
-					configKey = profile+"-load";
-					uri = config.getChild(configKey).getAttribute("uri");
-				} else if (type.equals("global")) {
-					configKey = profile+"-global-load";
-					uri = config.getChild(configKey).getAttribute("uri");
-				} else if (type.equals("role")) {
-					configKey = profile+"-role-load";
-					uri = config.getChild(configKey).getAttribute("uri");
-				} else if (type.equals("user")) {
-					configKey = profile+"-user-load";
-					uri = config.getChild(configKey).getAttribute("uri");
-				}
-			} catch (Exception e) {
-				throw new ConfigurationException("Error reading URI from configuration "+configKey, e);
-			}
-			buffer.append(uri);
-
-			if (uri.indexOf("?") == -1) {
-				buffer.append("?portal=");
-			} else {
-				buffer.append("&portal=");
-			}
-			buffer.append(map.get("portalname"));
-
-			buffer.append("&role=");
-			buffer.append(mapKey.get("role"));
+            final Map keyMap = (Map) key;
         
-			buffer.append("&user=");
-			buffer.append(mapKey.get("user"));
+            final String uri = this.getURI( keyMap, map, "load" );
+            final String profile = (String)map.get("profile");
 
-			String sourceURI = buffer.toString();
+            final StringBuffer buffer = this.getCompleteURI(uri, keyMap, map );
+
+            final String sourceURI = buffer.toString();
+
 			resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 			source = resolver.resolveURI(sourceURI);
 			return source.getValidity();
@@ -306,14 +251,6 @@ public class MapSourceAdapter
 				resolver.release(source);
 			manager.release(resolver);
 		}
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
