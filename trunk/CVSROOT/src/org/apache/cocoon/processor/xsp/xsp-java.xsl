@@ -61,7 +61,7 @@
   <xsl:output method="text"/>
 
   <xsl:template match="/">
-    <code>
+    <code xml:space="preserve">
       <xsl:apply-templates select="xsp:page" />
     </code>
   </xsl:template>
