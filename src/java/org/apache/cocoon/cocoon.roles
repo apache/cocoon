@@ -136,6 +136,10 @@
         shorthand="xscript"
         default-class="org.apache.cocoon.components.xscript.XScriptManagerImpl"/>
 
+  <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
+        shorthand="notifying-builder"
+        default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>
+
   <role name="org.apache.cocoon.caching.Cache"
         shorthand="cache"
         default-class="org.apache.cocoon.caching.impl.CacheImpl"/>
