@@ -51,6 +51,12 @@
           <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingFloatConvertorBuilder"/>
         </convertors>
       </datatype>
+      <datatype name="double" src="org.apache.cocoon.forms.datatype.typeimpl.DoubleTypeBuilder">
+        <convertors default="formatting" plain="plain">
+          <convertor name="plain" src="org.apache.cocoon.forms.datatype.convertor.PlainDoubleConvertorBuilder"/>
+          <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDoubleConvertorBuilder"/>
+        </convertors>
+      </datatype>
       <datatype name="date" src="org.apache.cocoon.forms.datatype.typeimpl.DateTypeBuilder">
         <convertors default="formatting" plain="millis">
           <convertor name="formatting" src="org.apache.cocoon.forms.datatype.convertor.FormattingDateConvertorBuilder"/>
