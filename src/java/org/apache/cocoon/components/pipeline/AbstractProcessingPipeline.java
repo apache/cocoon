@@ -564,14 +564,30 @@ public abstract class AbstractProcessingPipeline
      * Set the mime-type for a reader
      * @param environment The current environment
      */
-    protected void setMimeTypeForReader(Environment environment) {
-        String mimeType = this.reader.getMimeType();
-        if ( mimeType != null ) {
-            environment.setContentType(mimeType);
-        } else if ( readerMimeType != null ) {
+    protected void setMimeTypeForReader(Environment environment)
+    throws ProcessingException {
+        // Set the mime-type
+        // the behaviour has changed from 2.1.6 to 2.1.7 according to bugs #10277 and #25121:
+        // MIME type declared in the sitemap (instance or declaration, in this order)
+        // Ask the Reader for a MIME type:
+        //     A *.doc reader could peek into the file
+        //     and return either text/plain or application/vnd.msword or
+        //     the reader can use MIME type declared in WEB-INF/web.xml or
+        //     by the server.
+        if ( this.readerMimeType != null ) {
+            // there was a mime-type defined on map:read in the sitemap 
             environment.setContentType(this.readerMimeType);
-        } else {
+        } else if ( this.sitemapReaderMimeType != null ) {
+            // there was a mime-type defined on map:reader in the sitemap
             environment.setContentType(this.sitemapReaderMimeType);
+        } else {
+            // ask to the component itself
+            final String mimeType = this.reader.getMimeType();
+            if (mimeType != null) {
+                environment.setContentType(mimeType);
+            }
+            // If no mimeType available, leave to to upstream proxy
+            // or browser to deduce content-type from URL extension.    
         }
     }
 
@@ -585,21 +601,25 @@ public abstract class AbstractProcessingPipeline
             // internal processing: text/xml
             environment.setContentType("text/xml");
         } else {
-            String mimeType = this.serializer.getMimeType();
-            if (mimeType != null) {
-                // we have a mimeType from the component itself
-                environment.setContentType (mimeType);
-            } else if (serializerMimeType != null) {
-                // there was a mimeType specified in the sitemap pipeline
-                environment.setContentType (serializerMimeType);
-            } else if (this.sitemapSerializerMimeType != null) {
-                // use the mimeType specified in the sitemap component declaration
-                environment.setContentType (this.sitemapSerializerMimeType);
+            // Set the mime-type
+            // the behaviour has changed from 2.1.6 to 2.1.7 according to bugs #10277 and #25121:
+            if (serializerMimeType != null) {
+                // there was a mime-type defined on map:serialize in the sitemap
+                environment.setContentType(serializerMimeType);
+            } else if (sitemapSerializerMimeType != null) {
+                // there was a mime-type defined on map:serializer in the sitemap
+                environment.setContentType(sitemapSerializerMimeType);
             } else {
-                // No mimeType available
-                String message = "Unable to determine MIME type for " +
-                    environment.getURIPrefix() + "/" + environment.getURI();
-                throw new ProcessingException(message);
+                // ask to the component itself
+                String mimeType = this.serializer.getMimeType();
+                if (mimeType != null) {
+                    environment.setContentType (mimeType);
+                } else {
+                    // No mimeType available
+                    final String message = "Unable to determine MIME type for " +
+                          environment.getURIPrefix() + "/" + environment.getURI();
+                    throw new ProcessingException(message);
+                }
             }
         }
     }
