@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<project name="reader-mime-type" default="reader-mime-type">
+
+    <group id="default">
+        <property name="usetidy" value="false"/>
+    </group>
+
+    <!-- Check mime-types (bugzilla 25212) -->
+    <target name="reader-mime-type">
+        <property name="baseUrl" value="${cocoon}/samples/test/reader-mime-type"/>
+
+        <httpRequest href="${baseUrl}/test10.html" description="Check content-type">
+            <match>
+                <header name="Content-type" pattern="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test20.html" description="Check content-type">
+            <match>
+                <header name="Content-type" pattern="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test30.html" description="Check content-type">
+            <match>
+                <header name="Content-type" pattern="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test40.html" description="Check content-type">
+            <match>
+                <header name="Content-type" pattern="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test50.html" description="Check content-type">
+            <match>
+                <header name="Content-type" pattern="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test60.html" description="Check content-type">
+            <match>
+                <header name="Content-type" pattern="text/html"/>
+            </match>
+        </httpRequest>
+
+        <httpRequest href="${baseUrl}/test70.html" description="Check content-type">
+            <match>
+                <header name="Content-type" pattern="text/html"/>
+            </match>
+        </httpRequest>
+
+    </target>
+
+</project>
