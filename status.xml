@@ -202,15 +202,19 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="JH" type="fix" fixes-bug="32342">
+     Batik block: Fixed handling for empty extract URIs when matching on null
+     namespace URIs.
+   </action>
    <action dev="GP" type="add">
     Allow attribute values to be matches as well for EncodeURLTransformer.
    </action>
-  <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
-    I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
-  </action>
-  <action dev="LG" type="fix">
-    Fix: Continuation can only be invoked for the interpreter it was originally created for.
-  </action>
+   <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
+     I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
+   </action>
+   <action dev="LG" type="fix">
+     Fix: Continuation can only be invoked for the interpreter it was originally created for.
+   </action>
    <action dev="CZ" type="add" due-to="Sascha-Matthias Kulawik" due-to-email="sascha@kulawik.de">
      Authentication block: Add authenticator for JAAS.
    </action>
@@ -263,7 +267,7 @@
      </code>
    </action>
    <action dev="ATC" type="remove">
-    Removed the PHP block.
+     Removed the PHP block.
    </action>
    <action dev="CZ" type="update">
      Remove support for Excalibur instrumentation.

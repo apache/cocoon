@@ -67,7 +67,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorTransformer.java,v 1.11 2004/03/28 05:29:04 antonio Exp $
+ * @version CVS $Id$
  */
 public class FragmentExtractorTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Serviceable, Disposable, Recyclable {
@@ -213,7 +213,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
      */
     public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        if (this.extractURI.equals(uri) && this.extractElement.equals(loc)) {
+        if ((uri == null || this.extractURI.equals(uri)) && this.extractElement.equals(loc)) {
             extractLevel++;
             fragmentID++;
             if (getLogger().isDebugEnabled()) {
@@ -264,7 +264,7 @@ public class FragmentExtractorTransformer extends AbstractTransformer
             super.endElement(uri, loc, raw);
         } else {
             this.serializer.endElement(uri, loc, raw);
-            if (this.extractURI.equals(uri) && this.extractElement.equals(loc)) {
+            if ((uri == null || this.extractURI.equals(uri)) && this.extractElement.equals(loc)) {
                 extractLevel--;
                 if (getLogger().isDebugEnabled()) {
                     getLogger().debug("extractLevel now " + extractLevel + ".");
