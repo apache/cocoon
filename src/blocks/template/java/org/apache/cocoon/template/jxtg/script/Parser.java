@@ -127,15 +127,13 @@ public class Parser implements ContentHandler, LexicalHandler {
             EndInstruction endInstruction = new EndInstruction(locator,
                     startInstruction);
             newEvent = endInstruction;
+            addEvent(newEvent);
+            startInstruction.endNotify();
         } else {
             StartElement startElement = (StartElement) start;
             newEvent = new EndElement(locator, startElement);
             startElement.setEndElement((EndElement) newEvent);
-        }
-        addEvent(newEvent);
-        if (start instanceof StartDefine) {
-            StartDefine startDefine = (StartDefine) start;
-            startDefine.finish();
+            addEvent(newEvent);
         }
     }
 
