@@ -109,11 +109,11 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private final SkipHandler                skipHandler            = new SkipHandler();
     private final StructHandler              structHandler          = new StructHandler();
     private final StylingContentHandler      stylingHandler         = new StylingContentHandler();
-    private final WidgetHandler              widgetHandler          = new WidgetHandler();
-    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
     private final UnionHandler               unionHandler           = new UnionHandler();
     private final UnionPassThruHandler       unionPassThruHandler   = new UnionPassThruHandler();
     private final ValidationErrorHandler     validationErrorHandler = new ValidationErrorHandler();
+    private final WidgetHandler              widgetHandler          = new WidgetHandler();
+    private final WidgetLabelHandler         widgetLabelHandler     = new WidgetLabelHandler();
 
     /**
      * Map containing all handlers
