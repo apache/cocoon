@@ -49,7 +49,7 @@
 
 */
 
-package org.apache.cocoon.components.repository.impl;
+package org.apache.cocoon.components.slide.impl;
 
 import java.util.Date;
 import java.util.Enumeration;
@@ -64,10 +64,10 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.repository.Principal;
-import org.apache.cocoon.components.repository.PrincipalGroup;
-import org.apache.cocoon.components.repository.PrincipalProvider;
-import org.apache.cocoon.components.repository.Repository;
+import org.apache.cocoon.components.slide.Principal;
+import org.apache.cocoon.components.slide.PrincipalGroup;
+import org.apache.cocoon.components.slide.PrincipalProvider;
+import org.apache.cocoon.components.slide.SlideRepository;
 import org.apache.slide.authenticate.CredentialsToken;
 import org.apache.slide.common.NamespaceAccessToken;
 import org.apache.slide.common.NamespaceConfig;
@@ -94,7 +94,7 @@ import org.apache.slide.structure.Structure;
  * Manger for principals and groups of principals
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlidePrincipalProvider.java,v 1.7 2003/11/15 13:34:43 joerg Exp $
+ * @version CVS $Id: SlidePrincipalProvider.java,v 1.1 2003/12/02 19:18:45 unico Exp $
  */
 public class SlidePrincipalProvider extends AbstractLogEnabled
   implements PrincipalProvider, Serviceable, Configurable, Initializable {
@@ -163,11 +163,11 @@ public class SlidePrincipalProvider extends AbstractLogEnabled
      */
     public void initialize() throws Exception {
 
-        Repository repository = null;
+        SlideRepository repository = null;
 
         try {
-            repository = (Repository) this.manager.lookup(Repository.ROLE);
-
+            repository = (SlideRepository) this.manager.lookup(SlideRepository.ROLE);
+            getLogger().debug("repository: " + repository);
             if ( !(repository instanceof SlideRepository)) {
                 getLogger().error("Can't get Slide repository");
                 return;

@@ -62,9 +62,9 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.repository.Principal;
-import org.apache.cocoon.components.repository.PrincipalGroup;
-import org.apache.cocoon.components.repository.PrincipalProvider;
+import org.apache.cocoon.components.slide.Principal;
+import org.apache.cocoon.components.slide.PrincipalGroup;
+import org.apache.cocoon.components.slide.PrincipalProvider;
 import org.apache.cocoon.environment.SourceResolver;
 
 import org.xml.sax.SAXException;
@@ -75,7 +75,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * principals from a PrincipalProvider.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalListGenerator.java,v 1.4 2003/09/23 18:41:39 joerg Exp $
+ * @version CVS $Id: PrincipalListGenerator.java,v 1.5 2003/12/02 19:18:46 unico Exp $
  */
 public class PrincipalListGenerator extends ServiceableGenerator 
         implements Recyclable {

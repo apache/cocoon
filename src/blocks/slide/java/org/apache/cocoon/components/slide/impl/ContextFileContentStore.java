@@ -49,7 +49,7 @@
 
 */
 
-package org.apache.cocoon.components.repository.impl;
+package org.apache.cocoon.components.slide.impl;
 
 import java.util.Hashtable;
 import java.io.File;
@@ -65,7 +65,7 @@ import slidestore.reference.FileContentStore;
  * Jakarta Slide project, which respects the context directory.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ContextFileContentStore.java,v 1.1 2003/03/09 00:06:17 pier Exp $
+ * @version CVS $Id: ContextFileContentStore.java,v 1.1 2003/12/02 19:18:45 unico Exp $
  */
 public class ContextFileContentStore extends FileContentStore {
 

@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.repository.Repository']">
 
-  <role name="org.apache.cocoon.components.repository.Repository"
-        shorthand="repository"
-        default-class="org.apache.cocoon.components.repository.impl.SlideRepository"/>
+  <role name="org.apache.cocoon.components.slide.SlideRepository"
+    shorthand="repository"
+    default-class="org.apache.cocoon.components.slide.impl.SlideRepositoryImpl"
+  />
 
-  <role name="org.apache.cocoon.components.repository.PrincipalProviderSelector"
-        shorthand="principal-provider"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector">
-    <hint shorthand="slide" class="org.apache.cocoon.components.repository.impl.SlidePrincipalProvider"/>
+  <role name="org.apache.cocoon.components.slide.PrincipalProviderSelector"
+      shorthand="principal-provider"
+      default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector">
+    <hint shorthand="slide" class="org.apache.cocoon.components.slide.impl.SlidePrincipalProvider"/>
   </role>
+  
 </xroles>

@@ -47,7 +47,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.repository.impl;
+package org.apache.cocoon.components.slide.impl;
 
 import org.apache.avalon.framework.logger.Logger;
 
@@ -55,7 +55,7 @@ import org.apache.avalon.framework.logger.Logger;
  * The class represent an adapter for the logger for jakarta slide
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SlideLoggerAdapter.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: SlideLoggerAdapter.java,v 1.1 2003/12/02 19:18:45 unico Exp $
  */
 public class SlideLoggerAdapter implements org.apache.slide.util.logger.Logger {
     private Logger logger;

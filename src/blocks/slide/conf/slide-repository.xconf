@@ -14,13 +14,17 @@
       | The principal providers handles principals/users, should be used for 
       | user management.
       +-->
-  <principal-provider role="org.apache.cocoon.components.repository.PrincipalProviderSelector" 
-                      class="org.apache.cocoon.components.ExtendedComponentSelector"
-                      logger="core.principalprovider" default="slide">
+  <principal-provider
+      class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"
+      logger="core.principalprovider" 
+      default="slide">
 
     <!-- Default implementation via Jakarta Slide -->
-    <component-instance class="org.apache.cocoon.components.repository.impl.SlidePrincipalProvider" 
-                        name="slide" logger="slide.principalprovider"
-                        namespace="myrepository"/>
+    <slide
+      name="slide" 
+      logger="slide.principalprovider"
+      namespace="myrepository"
+    />
   </principal-provider>
+  
 </xconf>

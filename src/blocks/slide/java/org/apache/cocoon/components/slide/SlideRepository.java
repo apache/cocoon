@@ -1,10 +1,9 @@
 /*
-
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
 
- Copyright (C) 1999-2002 The Apache Software Foundation. All rights reserved.
+ Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -17,7 +16,7 @@
     and/or other materials provided with the distribution.
 
  3. The end-user documentation included with the redistribution, if any, must
-    include  the following  acknowledgment:   "This product includes software
+    include  the following  acknowledgment:  "This product includes  software
     developed  by the  Apache Software Foundation  (http://www.apache.org/)."
     Alternately, this  acknowledgment may  appear in the software itself,  if
     and wherever such third-party acknowledgments normally appear.
@@ -48,49 +47,24 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
+package org.apache.cocoon.components.slide;
 
-package org.apache.cocoon.components.repository.impl;
-
-import java.util.Hashtable;
-import java.io.File;
-
-import org.apache.slide.common.Domain;
-import org.apache.slide.common.ServiceParameterErrorException;
-import org.apache.slide.common.ServiceParameterMissingException;
-
-import slidestore.file.XMLFileDescriptorsStore;
+import org.apache.slide.common.NamespaceAccessToken;
 
 /**
- * Specialized version of the XMLFileDescriptorsStore from the
- * Jakarta Slide project, which respects the context directory.
+ * This interface represents a repository from a CMS.
  *
- * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ContextFileDescriptorsStore.java,v 1.1 2003/03/09 00:06:17 pier Exp $
+ * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
+ * @version CVS $Id: SlideRepository.java,v 1.1 2003/12/02 19:18:46 unico Exp $
  */
-public class ContextFileDescriptorsStore extends XMLFileDescriptorsStore {
+public interface SlideRepository {
 
-    /**
-     * Initializes the descriptors store with a set of parameters.
-     * Those could be :
-     * <li>User name, login info
-     * <li>Host name on which to connect
-     * <li>Remote port
-     * <li>JDBC driver whoich is to be used :-)
-     * <li>Anything else ...
-     *
-     * @param parameters Hashtable containing the parameters' name
-     * and associated value
-     */
-    public void setParameters(Hashtable parameters)
-      throws ServiceParameterErrorException,
-             ServiceParameterMissingException {
-
-        // A parameter will tell were serialization files are.
-        String rootpath = (String) parameters.get("rootpath");
-
-        rootpath = new File(Domain.getParameter("contextpath"),
-                            rootpath).toString();
-        parameters.put("rootpath", rootpath);
-        super.setParameters(parameters);
-    }
+    /** Role for the object */
+    public final static String ROLE = SlideRepository.class.getName();
+    
+    public NamespaceAccessToken getDefaultNamespaceToken();
+    
+    public NamespaceAccessToken getNamespaceToken(String namespaceName);
+    
 }
+
