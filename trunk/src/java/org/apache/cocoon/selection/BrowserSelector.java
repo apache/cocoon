@@ -64,9 +64,12 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: BrowserSelector.java,v 1.1 2003/03/09 00:09:35 pier Exp $
+ * @version CVS $Id: BrowserSelector.java,v 1.2 2003/12/28 20:59:12 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Selector
+ * @x-avalon.lifestyle type=pooled
  */
-
 public class BrowserSelector extends NamedPatternsSelector {
 
     public void configure(Configuration conf) throws ConfigurationException {

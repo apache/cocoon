@@ -61,9 +61,12 @@ import java.io.OutputStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: HTMLSerializer.java,v 1.1 2003/03/09 00:09:36 pier Exp $
+ * @version CVS $Id: HTMLSerializer.java,v 1.2 2003/12/28 20:59:12 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Serializer
+ * @x-avalon.lifestyle type=pooled
  */
-
 public class HTMLSerializer extends AbstractTextSerializer {
 
     /**

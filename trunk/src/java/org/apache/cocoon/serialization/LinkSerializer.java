@@ -61,12 +61,13 @@ import java.io.PrintStream;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: LinkSerializer.java,v 1.5 2003/12/06 21:22:09 cziegeler Exp $
+ * @version CVS $Id: LinkSerializer.java,v 1.6 2003/12/28 20:59:12 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Serializer
+ * @x-avalon.lifestyle type=pooled
  */
-
-public class LinkSerializer
-    extends ExtendedXLinkPipe
-    implements Serializer {
+public class LinkSerializer extends ExtendedXLinkPipe implements Serializer {
 
     private PrintStream out;
 

@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.components.resolver;
 
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.xml.DefaultEntityResolver;
 
 
@@ -65,19 +67,22 @@ import org.apache.excalibur.xml.DefaultEntityResolver;
  * &lt;/entity-resolver&gt;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultResolver.java,v 1.6 2003/10/27 01:46:58 ghoward Exp $
+ * @version CVS $Id: DefaultResolver.java,v 1.7 2003/12/28 20:54:24 unico Exp $
  * @since 2.1
  * 
- * TODO: what does DefaultEntityResolver lookup in service()?  Do I 
- * need to overload that here to declare the dependencies?
- * 
  * @avalon.component
- * @avalon.service type="org.apache.excalibur.xml.EntityResolver"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="entity-resolver"
+ * @avalon.service type=org.apache.excalibur.xml.EntityResolver
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=entity-resolver
  */
-public class DefaultResolver
-  extends DefaultEntityResolver {
+public class DefaultResolver extends DefaultEntityResolver {
+
+    /**
+     * @avalon.dependency type=org.apache.excalibur.source.SourceResolver
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+    }
 
     /**
      * Parse a catalog
@@ -103,4 +108,5 @@ public class DefaultResolver
     protected String defaultCatalog() {
         return "WEB-INF/entities/catalog";
     }
+
 }

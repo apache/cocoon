@@ -87,9 +87,12 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.6 2003/07/30 08:21:25 cziegeler Exp $
+ * @version CVS $Id: ExceptionSelector.java,v 1.7 2003/12/28 20:59:12 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Selector
+ * @x-avalon.lifestyle type=pooled
  */
-
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {
 
 	/** Exception classes */
