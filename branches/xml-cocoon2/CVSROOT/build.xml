@@ -318,7 +318,7 @@ by the main ones.
         <include name="*.jar"/>
         <exclude name="ant*.jar"/>
         <exclude name="stylebook*.jar"/>
-        <!-- <exclude name="servlet*.jar"/> -->
+        <exclude name="servlet*.jar"/>
       </fileset>
     </copy>
 
