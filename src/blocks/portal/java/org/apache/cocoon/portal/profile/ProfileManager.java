@@ -125,4 +125,9 @@ public interface ProfileManager extends Component {
      * one.
      */
     void storeProfile(Layout rootLayout, String layoutKey);
+    
+    /**
+     * Get current user information
+     */
+    PortalUser getUser();
 }
