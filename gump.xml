@@ -816,7 +816,6 @@
     <depend project="cocoon" inherit="all"/>
     <depend project="xreporter-expression"/>
     <depend project="jakarta-oro"/>
-    <depend project="cocoon-block-xsp" type="samples"/>
     <depend project="nekohtml"/>
     <depend project="nekodtd"/>
     <depend project="daisy-util"/>
