@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.4 2003/09/10 14:57:12 reinhard Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.5 2003/10/31 17:13:50 tony Exp $ -->
 
 <samples>
 
@@ -32,6 +32,13 @@
   <group name="Intercepted Flow">
     <sample name="Example" href="intercepted-flow/">
       Show the usage intercepted JavaScript flow functions
+    </sample>
+  </group>
+  
+  <group name="Image-Based Authentication">
+    <sample name="Image Auth" href="image-auth/">
+      An example of image-based authentication using the Flow layer.  
+      Make sure the Batik block is included before testing this sample.
     </sample>
   </group>
 
