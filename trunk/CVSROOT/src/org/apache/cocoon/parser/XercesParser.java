@@ -1,4 +1,4 @@
-/*-- $Id: XercesParser.java,v 1.1 1999-11-30 16:30:08 stefano Exp $ -- 
+/*-- $Id: XercesParser.java,v 1.2 1999-12-24 17:01:19 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -63,7 +63,7 @@ import org.apache.cocoon.framework.*;
  * This class implements an XML parser using the Apache Xerces XML parser.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1 $ $Date: 1999-11-30 16:30:08 $
+ * @version $Revision: 1.2 $ $Date: 1999-12-24 17:01:19 $
  */
 
 public class XercesParser extends AbstractParser implements Status {
@@ -75,6 +75,7 @@ public class XercesParser extends AbstractParser implements Status {
         DOMParser parser = new DOMParser();
 	    // parser.setEntityResolver(resolver);
         parser.setFeature("http://xml.org/sax/features/validation", validate);
+        parser.setFeature("http://apache.org/xml/features/dom/create-entity-ref-nodes", true );
         parser.parse(input);
         return parser.getDocument();
     }        
