@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.31 2000-11-12 21:10:32 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.32 2000-11-13 03:56:14 balld Exp $-->
 <!--
 
  ============================================================================
@@ -145,7 +145,7 @@
     Stack _esql_queries = new Stack();
     EsqlQuery _esql_query = null; 
     SQLException _esql_exception = null;
-    StringWriter _esql_exception_writer = null;
+    PrintWriter _esql_exception_writer = null;
   </xsp:logic>
  <xsl:apply-templates/>
  </xsl:copy>
@@ -284,12 +284,12 @@
           _esql_exception.printStackTrace(_esql_exception_writer);
           <xsl:apply-templates select="esql:error-results"/>
           if (!_esql_connection.connection.getAutoCommit()) {
-            _esql_connection.rollback();
+            _esql_connection.connection.rollback();
           }
         </xsl:when>
         <xsl:otherwise>
           if (!_esql_connection.connection.getAutoCommit()) {
-            _esql_connection.rollback();
+            _esql_connection.connection.rollback();
           }
           throw(_esql_exception_<xsl:value-of select="generate-id(.)"/>);
         </xsl:otherwise>
@@ -305,7 +305,7 @@
 
 <xsl:template match="esql:query//esql:parameter">"?"</xsl:template>
 
-<xsl:template match="esql:execute-query/esql:results" priority="2">
+<xsl:template match="esql:execute-query//esql:results" priority="2">
   <xsl:for-each select="esql:row-results[1]">
     <xsl:apply-templates select="preceding-sibling::*[not(name()='esql:no-results')]"/>
     <xsp:logic>
@@ -318,10 +318,10 @@
       }
     </xsp:logic>
     <xsl:apply-templates select="following-sibling::*[not(name()='esql:no-results')]"/>
-    <xsl:if test="esql:no-results">
+    <xsl:if test="../esql:no-results">
       <xsp:logic>
         if (_esql_query.position == _esql_query.skip_rows) {
-          <xsl:apply-templates select="esql:no-results/*"/>
+          <xsl:apply-templates select="../esql:no-results/*"/>
         }
       </xsp:logic>
     </xsl:if>
