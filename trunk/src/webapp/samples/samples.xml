@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.6 2003/03/17 00:47:43 vgritsenko Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.7 2003/03/25 17:10:34 stefano Exp $ -->
 
 <samples>
 
@@ -72,6 +72,13 @@
    </sample>
   </group>
   
+  <group name="DTD and Entity Catalogs">
+   <sample name="Catalog entity resolver" href="catalog/">
+    Resolve network resources (e.g. DTDs, symbols, character entity sets,
+    images) to local copies.
+   </sample>
+  </group>
+  
   <group name="More Samples">
     <sample name="Static Content" href="sample-static">
     How to produce different type of static content.
@@ -82,22 +89,13 @@
     <sample name="Dynamic Content" href="sample-dynamic">
     More ways of implementing dynamic content.
    </sample>
-    <sample name="Sources" href="sub/">
-    Samples showing possible ways how to use Cocoon sources in sitemap.
-    (These samples are served by sub-sitemap)
-   </sample>
-   <sample name="Catalog entity resolver" href="catalog/">
-    Resolve network resources (e.g. DTDs, symbols, character entity sets,
-    images) to local copies.
-   </sample>
   </group>
   
   <group name="Block samples">
     <sample name="Blocks with samples" href="blocks">
     Functionality outside the core has been moved to units called "blocks".
-    This will lead to a more modular Cocoon. Some samples depend on additional
-    components that need to be installed and configured correctly.
-    Look here ... samples for more and more blocks are in this section.
+    This will lead to a more modular Cocoon. Here you find the samples 
+    provided by the currently installed blocks. 
    </sample>
   </group>
  

@@ -99,15 +99,9 @@
           <map:redirect-to uri="login"/>
         </map:act>
       </map:match>
-
-      <!-- Let parent sitemap treat it 
-      <map:handle-errors>
-        <map:transform src="context://samples/stylesheets/system/error2html.xsl"/>
-        <map:serialize status-code="500"/>
-      </map:handle-errors>
-      -->
  
     </map:pipeline>
+
   </map:pipelines>
 
 </map:sitemap>

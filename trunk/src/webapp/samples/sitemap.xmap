@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- CVS $Id: sitemap.xmap,v 1.7 2003/03/25 16:13:44 stefano Exp $ -->
+<!-- CVS $Id: sitemap.xmap,v 1.8 2003/03/25 17:10:34 stefano Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -260,18 +260,6 @@
    </map:match>
 
    <!-- ================  Hello  =========================== -->
-
-   <map:match pattern="deli.html">
-     <map:generate src="docs/samples/hello-page.xml"/>
-     <map:transform src="stylesheets/deli_test.xsl" type="xslt"/>
-     <map:serialize type="html"/>
-   </map:match>
-
-   <map:match pattern="deli.wml">
-     <map:generate src="docs/samples/hello-page.xml"/>
-     <map:transform src="stylesheets/deli_test.xsl" type="xslt"/>
-     <map:serialize type="wml"/>
-   </map:match>
 
    <map:match pattern="hello.html">
     <map:generate src="docs/samples/hello-page.xml"/>
