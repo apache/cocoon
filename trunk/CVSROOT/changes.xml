@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.102 2000-08-22 14:58:50 ricardo Exp $
+  $Id: changes.xml,v 1.103 2000-08-23 22:52:26 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add" due-to="Paul Terray" due-to-email="terray@4dconcept.fr">
+   Added installation instructions for iPlanet.
+  </action>
   <action dev="RR" type="fix" due-to="Jens Lorenz" due-to-email="jens.lorenz@interface-business.de">
    Fixed a typo in session taglib
   </action>
