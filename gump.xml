@@ -854,9 +854,15 @@
     <depend project="xreporter-expression"/>
     <depend project="jakarta-oro"/>
     <depend project="cocoon-block-xsp" type="samples"/>
+    <depend project="nekohtml"/>
+    <depend project="nekodtd"/>
+    <depend project="daisy-util"/>
+    <depend project="daisy-htmlcleaner"/>
 
     <library name="xreporter-expression"/>
     <library name="jakarta-oro"/>
+    <library name="neko"/>
+    <library name="daisy"/>    
 
     <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
     <work nested="tools/anttasks"/>
@@ -1474,5 +1480,20 @@
   <project name="cocoon-serializers-charsets">
     <jar name="lib/optional/cocoon-serializers-charsets-0.1.jar"/>
   </project>
+
+  <project name="nekodtd">
+    <package>org.cyberneko.dtd</package>
+    <jar name="lib/optional/nekodtd-0.1.10.jar"/>
+  </project>  
+
+  <project name="daisy-htmlcleaner">
+    <package>org.outerj.daisy.htmlcleaner</package>
+    <jar name="lib/optional/daisy-htmlcleaner-1.1.jar"/>
+  </project>  
+  
+  <project name="daisy-util">
+    <package>org.outerj.daisy.xmlutil</package>
+    <jar name="lib/optional/daisy-util-1.1.jar"/>
+  </project>     
 
 </module>

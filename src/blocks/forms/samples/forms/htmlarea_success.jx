@@ -14,11 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<page>
-  <title>Editing successful</title>
-  <content>
-    Editing was successful:<br/>
-    <br/>
-    ${data}
-  </content>
-</page>
+<result>
+  <data1>#{data1}</data1>
+  <data2>#{data2}</data2>
+</result>
