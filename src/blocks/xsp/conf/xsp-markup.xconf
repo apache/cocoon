@@ -142,6 +142,16 @@
           <parameter name="uri" value="http://apache.org/cocoon/xsp/input/1.0"/>
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/input.xsl"/>
         </builtin-logicsheet>
+
+        <!--+
+            |  The session-fw logicsheet is an XSP logicsheet that allows access to the session
+            | context
+            +-->
+        <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-session-fw"/>
+          <parameter name="uri" value="http://apache.org/xsp/session-fw/1.0"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/session-fw.xsl"/>
+        </builtin-logicsheet>
       </target-language>
 
       <!--+
