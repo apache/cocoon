@@ -161,6 +161,13 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
     //
 
     /**
+     * Add a bit containing XMLizable object
+     */
+    public void xmlizable(XMLizable xml) {
+        saxbits.add(new XMLizableBit(xml));
+    }
+
+    /**
      * @return true if buffer is empty
      */
     public boolean isEmpty() {
@@ -534,6 +541,28 @@ public class SaxBuffer implements XMLConsumer, XMLizable, Recyclable, Serializab
 
         public void dump(Writer writer) throws IOException {
             writer.write("[IgnorableWhitespace] ch=" + new String(ch) + "\n");
+        }
+    }
+
+    public final static class XMLizableBit implements SaxBit, Serializable {
+        public final XMLizable xml;
+
+        public XMLizableBit(XMLizable xml) {
+            this.xml = xml;
+        }
+
+        public void send(ContentHandler contentHandler) throws SAXException {
+            this.xml.toSAX(new EmbeddedXMLPipe(contentHandler));
+        }
+
+        public void dump(Writer writer) throws IOException {
+            if (xml instanceof SaxBuffer) {
+                writer.write("[XMLizable] Begin nested SaxBuffer\n");
+                ((SaxBuffer)xml).dump(writer);
+                writer.write("[XMLizable] End nested SaxBuffer\n");
+            } else {
+                writer.write("[XMLizable] xml=" + xml + "\n");
+            }
         }
     }
 }
