@@ -63,7 +63,12 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.3 2003/10/22 18:15:49 bloritsch Exp $
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.4 2003/10/23 08:37:44 cziegeler Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="XMLSerializer"
+ * @x-avalon.lifestyle type="pooled"
+ * @x-avalon.info name="xml-serializer"
  */
 
 public final class XMLByteStreamCompiler
