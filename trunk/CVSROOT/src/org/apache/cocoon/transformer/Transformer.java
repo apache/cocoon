@@ -1,4 +1,4 @@
-/*-- $Id: Transformer.java,v 1.4 2000-03-04 02:36:00 stefano Exp $ --
+/*-- $Id: Transformer.java,v 1.5 2000-03-05 22:24:38 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,7 +58,7 @@ import org.apache.cocoon.framework.*;
  * This interface is implemented by all XSLT tranformers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-03-04 02:36:00 $
+ * @version $Revision: 1.5 $ $Date: 2000-03-05 22:24:38 $
  */
 
 public interface Transformer extends Actor {
@@ -69,6 +69,6 @@ public interface Transformer extends Actor {
      */
     public Document transform(Document document, String documentBase,
                               Document sheet, String sheetBase,
-                              Document result, Hashtable parameters) throws Exception;
+                              Document result, Dictionary parameters) throws Exception;
 
 }

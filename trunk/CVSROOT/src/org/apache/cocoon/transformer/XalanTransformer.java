@@ -1,4 +1,4 @@
-/*-- $Id: XalanTransformer.java,v 1.9 2000-03-04 02:36:00 stefano Exp $ --
+/*-- $Id: XalanTransformer.java,v 1.10 2000-03-05 22:24:39 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * Xalan XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-03-04 02:36:00 $
+ * @version $Revision: 1.10 $ $Date: 2000-03-05 22:24:39 $
  */
 
 public class XalanTransformer extends AbstractActor implements Transformer, Status {
@@ -82,14 +82,14 @@ public class XalanTransformer extends AbstractActor implements Transformer, Stat
     }
 
     public Document transform(Document in, String inBase, Document sheet,
-        String sheetBase, Document out, Hashtable params)
+        String sheetBase, Document out, Dictionary params)
     throws Exception {
         XSLTProcessor processor = XSLTProcessorFactory.getProcessor(new XMLParser(parser));
 
         Enumeration enum = params.keys();
         while (enum.hasMoreElements()) {
             String name = (String) enum.nextElement();
-            processor.setStylesheetParam(name, processor.createXString((String) params.get(name)));
+            processor.setStylesheetParam(name, (String) params.get(name));
         }
 
         XSLTInputSource i = new XSLTInputSource(in);

@@ -1,4 +1,4 @@
-/*-- $Id: XTTransformer.java,v 1.5 2000-03-04 02:36:00 stefano Exp $ --
+/*-- $Id: XTTransformer.java,v 1.6 2000-03-05 22:24:39 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
 public class XTTransformer extends AbstractActor implements Transformer, Status {
 
     public Document transform(Document document, String documentBase,
-        Document sheet, String sheetBase, Document result, Hashtable params)
+        Document sheet, String sheetBase, Document result, Dictionary params)
     throws Exception {
         Transform transformer = new XSLTransformEngine().createTransform(sheet);
         transformer.transform(document, result);
