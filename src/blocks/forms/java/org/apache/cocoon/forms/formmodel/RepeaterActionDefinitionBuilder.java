@@ -17,6 +17,7 @@ package org.apache.cocoon.forms.formmodel;
 
 import java.util.Iterator;
 
+import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.util.DomHelper;
 import org.w3c.dom.Element;
@@ -49,7 +50,14 @@ public class RepeaterActionDefinitionBuilder extends AbstractWidgetDefinitionBui
 
         definition.setActionCommand(actionCommand);
 
-        Iterator iter = buildEventListeners(widgetElement, "on-activate", ActionListener.class).iterator();
+        // Warn of the mis-named 'on-action' that existed initially
+        Element buggyOnActivate = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "on-activate", false);
+        if (buggyOnActivate != null) {
+            throw new Exception("Use 'on-action' instead of 'on-activate' on row-action at " +
+                DomHelper.getLocation(buggyOnActivate));
+        }
+
+        Iterator iter = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
         while (iter.hasNext()) {
             definition.addActionListener((ActionListener)iter.next());
         }

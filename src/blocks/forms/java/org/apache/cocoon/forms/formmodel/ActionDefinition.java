@@ -22,7 +22,7 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 /**
  * The {@link WidgetDefinition} part of a Action widget, see {@link Action} for more information.
  * 
- * @version $Id: ActionDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id$
  */
 public class ActionDefinition extends AbstractWidgetDefinition {
     private String actionCommand;
