@@ -50,15 +50,19 @@
 */
 package org.apache.cocoon.webapps.authentication.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
-import org.apache.cocoon.webapps.session.context.SessionContext;
+import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 
 /**
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.2 2003/04/27 14:45:03 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -69,16 +73,17 @@ implements java.io.Serializable {
     /** Are all apps loaded? */
     private boolean appsLoaded = false;
 
+    /** The context */
+    private AuthenticationContext context;
+    
+    /** Loaded List */
+    private List loadedApps = new ArrayList(3);
+    
    /**
      * Create a new handler object.
      */
     public UserHandler(HandlerConfiguration handler) {
         this.handler = handler;
-    }
-
-    public void setApplicationsLoaded(boolean value)
-    throws ProcessingException {
-        this.appsLoaded = value;
     }
 
     public boolean getApplicationsLoaded()
@@ -93,11 +98,15 @@ implements java.io.Serializable {
     /**
      * Add a handler context
      */
-    public SessionContext getContext() {
-        // TODO
-        return null;
+    public AuthenticationContext getContext() {
+        return this.context;
     }
 
+    public AuthenticationContext createContext() {
+        this.context = new AuthenticationContext();
+        return this.context;                                                  
+    }
+    
     /**
      * Get the handler name
      */
@@ -110,5 +119,14 @@ implements java.io.Serializable {
      */
     public HandlerConfiguration getHandlerConfiguration() {
         return this.handler;
+    }
+    
+    public boolean isApplicationLoaded(ApplicationConfiguration appConf) {
+        return this.loadedApps.contains( appConf );
+    }
+    
+    public void setApplicationIsLoaded(ApplicationConfiguration appConf) {
+        this.loadedApps.add( appConf );
+        this.appsLoaded = (this.loadedApps.size() == this.handler.getApplications().size());
     }
 }

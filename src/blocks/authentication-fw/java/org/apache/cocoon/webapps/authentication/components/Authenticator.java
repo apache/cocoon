@@ -86,7 +86,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.2 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: Authenticator.java,v 1.3 2003/04/27 14:45:04 cziegeler Exp $
 */
 public final class Authenticator 
     extends AbstractLogEnabled
@@ -257,14 +257,11 @@ public final class Authenticator
                     while ( applications.hasNext() ) {
                         ApplicationConfiguration appHandler = (ApplicationConfiguration)applications.next();
                         if ( !appHandler.getLoadOnDemand() ) {
-                            // FIXME - loadApplication
-                            //this.loadApplicationXML((SessionContextImpl)this.getSessionManager().getContext(AuthenticationConstants.SESSION_CONTEXT_NAME),
-                            //                        appHandler, "/");
+                            handler.getContext().loadApplicationXML( appHandler, this.resolver );
                         } else {
                             loaded = false;
                         }
                     }
-                    handler.setApplicationsLoaded( loaded );
 
                 } // end sync
             }
