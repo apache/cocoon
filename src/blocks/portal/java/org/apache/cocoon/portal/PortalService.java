@@ -16,7 +16,7 @@
 package org.apache.cocoon.portal;
 
 import java.util.Iterator;
-
+import java.util.List;
 import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.portal.layout.Layout;
 
@@ -111,4 +111,8 @@ public interface PortalService extends Component {
      */
     String getDefaultLayoutKey();
     
+    /**
+     * Return all skins
+     */
+    List getSkinDescriptions();
 }
