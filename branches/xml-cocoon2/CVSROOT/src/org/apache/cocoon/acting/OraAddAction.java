@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-12 22:12:33 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-13 17:01:34 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -75,6 +75,7 @@ public class OraAddAction extends DatabaseAddAction {
             Configuration[] values = conf.getChild("table").getChild("values").getChildren("value");
             currentIndex = 1;
 
+            // Insert the keys into the query
             for (int i = 0; i < keys.length; i++) {
                 String mode = keys[i].getAttribute("mode", "automatic");
 
@@ -100,6 +101,7 @@ public class OraAddAction extends DatabaseAddAction {
                 }
             }
 
+            // insert the values into the query
             for (int i = 0; i < values.length; i++) {
                 String type = values[i].getAttribute("type");
                 String parameter = values[i].getAttribute("param");
@@ -131,7 +133,8 @@ public class OraAddAction extends DatabaseAddAction {
             query = this.getSelectLOBQuery(conf);
             getLogger().info(query);
 
-            if ("".equals(query) == false) {
+            // Process the large objects if they exist
+            if (query != null) {
                 PreparedStatement LOBstatement = conn.prepareStatement(query);
                 getLogger().info(query);
 
@@ -258,27 +261,33 @@ public class OraAddAction extends DatabaseAddAction {
                         if ("manual".equals(mode)) {
                             this.setSelectQuery(table.getAttribute("name"), keys[i]);
                         }
+
                         numKeys++;
                     }
                 }
 
-                int numValues = 0;
-
                 for (int i = 0; i < values.length; i++) {
-                    if (i > 0) {
+                    if ((numKeys + i) > 0) {
                         queryBuffer.append(", ");
                     }
 
                     queryBuffer.append(values[i].getAttribute("dbcol"));
-                    numValues++;
                 }
 
                 queryBuffer.append(") VALUES (");
 
-                int numParams = numValues + numKeys;
+                numKeys = 0;
 
-                for (int i = 0; i < numParams; i++) {
-                    if (i > 0) {
+                for (int i = 0; i < keys.length; i++) {
+                    if (numKeys > 0) queryBuffer.append(", ");
+                    if ("automatic".equals(keys[i].getAttribute("mode", "automatic")) == false) {
+                        queryBuffer.append("?");
+                        numKeys++;
+                    }
+                }
+
+                for (int i = 0; i < values.length; i++) {
+                    if ((numKeys + i) > 0) {
                         queryBuffer.append(", ");
                     }
 
@@ -316,6 +325,7 @@ public class OraAddAction extends DatabaseAddAction {
         synchronized (OraAddAction.selectLOBStatements) {
             query = (String) OraAddAction.selectLOBStatements.get(conf);
 
+            // executes only if query is null.
             if (query == null) {
                 StringBuffer queryBuffer = new StringBuffer("SELECT ");
                 Configuration table = conf.getChild("table");
@@ -323,6 +333,7 @@ public class OraAddAction extends DatabaseAddAction {
                 Configuration[] keys = table.getChild("keys").getChildren("key");
                 int numLobs = 0;
 
+                // Add the values to the query
                 for (int i = 0; i < values.length; i++) {
                     if (this.isLargeObject(values[i].getAttribute("type"))) {
                         numLobs++;
@@ -337,15 +348,18 @@ public class OraAddAction extends DatabaseAddAction {
 
                 if (numLobs == 0) {
                     query = "";
+                    // if query is set to "", then it won't try to process it again.
                     OraAddAction.selectLOBStatements.put(conf, query);
                     return query;
                 }
 
                 queryBuffer.append(" FROM ").append(table.getAttribute("name"));
 
+                // Process the WHERE clause
                 if (keys.length > 0) {
                     queryBuffer.append(" WHERE ");
 
+                    // Add the keys to the query
                     for (int i = 0; i < keys.length; i++) {
                         if (i > 0) {
                             queryBuffer.append(" AND ");
@@ -360,6 +374,8 @@ public class OraAddAction extends DatabaseAddAction {
                 OraAddAction.selectLOBStatements.put(conf, query);
             }
         }
+
+        if ("".equals(query)) return null;
 
         return query;
     }

@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-03-12 22:12:32 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-03-13 17:01:34 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     protected static final Map addStatements = new HashMap();
@@ -165,7 +165,7 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
                 int numValues = 0;
 
                 for (int i = 0; i < values.length; i++) {
-                    if (i > 0) {
+                    if ((numKeys + numValues) > 0) {
                         queryBuffer.append(", ");
                     }
 
