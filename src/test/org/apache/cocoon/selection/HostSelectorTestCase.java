@@ -26,10 +26,6 @@ public class HostSelectorTestCase extends SitemapComponentTestCase {
 
     private final String HOST_SELECTOR = "host";
 
-    public HostSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

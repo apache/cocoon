@@ -22,10 +22,6 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 public class WildcardURIMatcherTestCase extends SitemapComponentTestCase {
 
-    public WildcardURIMatcherTestCase(String name) {
-        super(name);
-    }
-
     public void testWildcardURIMatch() throws Exception {
         getRequest().setRequestURI("/test/foo/bla/end");
 

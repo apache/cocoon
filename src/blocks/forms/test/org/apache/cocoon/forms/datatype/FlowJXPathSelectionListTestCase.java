@@ -29,13 +29,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.mock.MockRequest;
@@ -49,29 +47,19 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for CForms's FlowModelSelectionList datatype.
- * @version CVS $Id: FlowJXPathSelectionListTestCase.java,v 1.5 2004/04/26 21:29:50 bruno Exp $
+ * @version CVS $Id$
  */
-public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
+public class FlowJXPathSelectionListTestCase extends ContainerTestCase {
 
-    protected ServiceManager serviceManager;
     protected DatatypeManager datatypeManager;
     protected DocumentBuilder parser;
-
-    /**
-     * Construct a new test case.
-     * @param name The test case's name.
-     */
-    public FlowJXPathSelectionListTestCase(String name) {
-        super(name);
-    }
 
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        serviceManager = new WrapperServiceManager(manager); 
-        datatypeManager = (DatatypeManager) serviceManager.lookup(DatatypeManager.ROLE);
+        datatypeManager = (DatatypeManager) this.lookup(DatatypeManager.ROLE);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         parser = factory.newDocumentBuilder();
@@ -82,7 +70,7 @@ public class FlowJXPathSelectionListTestCase extends ExcaliburTestCase {
      */
     protected void tearDown() throws Exception {
         if (datatypeManager != null) {
-            serviceManager.release(datatypeManager);
+            this.release(datatypeManager);
         }
         super.tearDown();
     }

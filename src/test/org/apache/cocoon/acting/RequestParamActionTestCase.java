@@ -25,13 +25,9 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: RequestParamActionTestCase.java,v 1.5 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class RequestParamActionTestCase extends SitemapComponentTestCase {
-
-    public RequestParamActionTestCase(String name) {
-        super(name);
-    }
 
     public void testRequestAction() throws Exception {
 

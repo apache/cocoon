@@ -26,10 +26,6 @@ public class HeaderSelectorTestCase extends SitemapComponentTestCase {
 
     private final String HEADER_SELECTOR = "header";
 
-    public HeaderSelectorTestCase(String name) {
-        super(name);
-    }
-
     /**
      * Run this test suite from commandline
      *

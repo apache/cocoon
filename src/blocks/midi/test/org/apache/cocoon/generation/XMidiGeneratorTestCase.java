@@ -23,21 +23,14 @@ import org.apache.cocoon.SitemapComponentTestCase;
  * Test case for the MIDIGenerator
  * @author Mark Leicester
  */
-public class XMidiGeneratorTestCase extends SitemapComponentTestCase
-{
+public class XMidiGeneratorTestCase extends SitemapComponentTestCase {
 
-  public XMidiGeneratorTestCase(String name)
-  {
-    super(name);
-  }
-
-  public void testMIDIGenerator() throws Exception
-  {
-    String type = "midi";
-    String src = "resource://org/apache/cocoon/generation/prelude.mid";
-    Parameters parameters = new Parameters();
-    String result = "resource://org/apache/cocoon/generation/prelude.xmi";
-
-    assertEqual(load(result), generate(type, src, parameters));
-  }
+    public void testMIDIGenerator() throws Exception {
+        String type = "midi";
+        String src = "resource://org/apache/cocoon/generation/prelude.mid";
+        Parameters parameters = new Parameters();
+        String result = "resource://org/apache/cocoon/generation/prelude.xmi";
+        
+        assertEqual(load(result), generate(type, src, parameters));
+    }
 }

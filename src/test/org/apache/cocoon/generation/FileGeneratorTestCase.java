@@ -21,13 +21,9 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  *
- * @version CVS $Id: FileGeneratorTestCase.java,v 1.8 2004/03/05 13:03:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class FileGeneratorTestCase extends SitemapComponentTestCase {
-
-    public FileGeneratorTestCase(String name) {
-        super(name);
-    }
 
     public void testFileGenerator() throws Exception {
 
