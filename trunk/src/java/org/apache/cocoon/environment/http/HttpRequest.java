@@ -74,7 +74,7 @@ import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
  * to provide request information for HTTP servlets.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.4 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: HttpRequest.java,v 1.5 2003/10/29 14:48:56 vgritsenko Exp $
  */
 
 public final class HttpRequest implements Request {
@@ -299,7 +299,11 @@ public final class HttpRequest implements Request {
     }
 
     public String getCharacterEncoding() {
-        return this.req.getCharacterEncoding();
+        if (this.form_encoding == null) {
+            return this.req.getCharacterEncoding();
+        } else {
+            return this.form_encoding;
+        }
     }
 
     public void setCharacterEncoding(String form_encoding)
