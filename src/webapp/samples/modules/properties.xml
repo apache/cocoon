@@ -18,7 +18,7 @@
 <!--+
     | Prints out all passed parameters.
     |
-    | $Id$
+    | SVN $Id$
     +-->
 <properties xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
   <jx:forEach var="name" items="${parameters.names}">

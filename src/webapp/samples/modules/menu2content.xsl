@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -17,7 +17,8 @@
 
 <!--+
     | Transforms menu.xml to the index page
-    | CVS $Id: menu2content.xsl 36239 2004-08-11 18:28:06Z vgritsenko $
+    |
+    | SVN $Id: menu2content.xsl 36239 2004-08-11 18:28:06Z vgritsenko $
     +-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 

@@ -19,7 +19,7 @@
     | Input Modules sample sitemap.
     | Author: Konstantin Piroumian "kpiroumian@apache.org"
     |
-    | $Id$
+    | SVN $Id$
     +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 

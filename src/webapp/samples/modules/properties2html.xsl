@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,6 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!--+
+    | Transforms properties.xml to result page.
+    |
+    | SVN $Id$
+    +-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:param name="title">Input Module</xsl:param>
@@ -24,7 +29,7 @@
     <title><xsl:value-of select="$title"/></title>
     <table class="content">
         <tr>
-            <td>    
+            <td>
                 <h3><xsl:value-of select="$title"/></h3>
                 <p><xsl:value-of select="$description"/></p>
                 <xsl:apply-templates />
@@ -38,7 +43,7 @@
     <table class="table">
         <tr>
             <th>Accessor</th>
-            <th>Value</th>            
+            <th>Value</th>
         </tr>
         <xsl:apply-templates>
             <xsl:sort select="name" />
@@ -51,7 +56,7 @@
         <td><xsl:value-of select="name"/></td>
         <td>
             <xsl:value-of select="value"/>&#160;
-        </td>    
+        </td>
     </tr>
 </xsl:template>
 

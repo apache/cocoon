@@ -14,6 +14,11 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!--+
+    | Transforms to HTML page.
+    |
+    | SVN $Id$
+    +-->
 <!DOCTYPE html [
 <!ENTITY nbsp "&#160;">
 <!ENTITY copy "&#0169;">
@@ -36,10 +41,10 @@
         <table class="path">
           <tr>
             <td>
-              <a href="../../">Apache Cocoon Main</a>&#160;&gt;&#160;<a href="../">Samples</a>&#160;&gt;&#160;<a href="./">Modules</a>&#160;&gt;&#160;<span class="current"><xsl:value-of select="page/title"/></span>                        
+              <a href="../../">Apache Cocoon Main</a>&#160;&gt;&#160;<a href="../">Samples</a>&#160;&gt;&#160;<a href="./">Modules</a>&#160;&gt;&#160;<span class="current"><xsl:value-of select="page/title"/></span>
             </td>
           </tr>
-        </table>            
+        </table>
         <table class="topline"><tr><td>&#160;</td></tr></table>
         <table cellspacing="0" cellpadding="0" summary="content pane">
           <tr>
@@ -64,7 +69,7 @@
         <table>
           <tr>
             <td class="copyright">
-              Copyright (c) 1999-2004 <a href="http://www.apache.org/">Apache Software Foundation</a>. All Rights Reserved.
+              Copyright (c) 1999-2004 <a href="http://www.apache.org/">The Apache Software Foundation</a>. All Rights Reserved.
             </td>
           </tr>
         </table>
