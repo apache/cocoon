@@ -32,7 +32,7 @@ import java.io.OutputStream;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletEnvironment.java,v 1.3 2004/05/01 00:05:44 joerg Exp $
+ * @version CVS $Id$
  */
 public class PortletEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -108,6 +108,7 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
      * and PortletResponse objects
      */
     public PortletEnvironment(String servletPath,
+                              String pathInfo,
                               String uri,
                               String root,
                               javax.portlet.ActionRequest request,
@@ -119,8 +120,6 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
                               int defaultSessionScope)
     throws IOException {
         super(uri, null, root, null);
-
-        String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
 
         this.request = new ActionRequest(servletPath, pathInfo, request, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
@@ -140,6 +139,7 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
      * and PortletResponse objects
      */
     public PortletEnvironment(String servletPath,
+                              String pathInfo,
                               String uri,
                               String root,
                               javax.portlet.RenderRequest request,
@@ -151,8 +151,6 @@ public class PortletEnvironment extends AbstractEnvironment implements Redirecto
                               int defaultSessionScope)
     throws IOException {
         super(uri, null, root, null);
-
-        String pathInfo = request.getParameter(PARAMETER_PATH_INFO);
 
         this.request = new RenderRequest(servletPath, pathInfo, request, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
