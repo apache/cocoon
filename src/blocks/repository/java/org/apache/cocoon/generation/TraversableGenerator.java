@@ -101,7 +101,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.13 2004/04/04 12:09:02 gcasper Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.14 2004/04/19 19:36:43 ugo Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -193,7 +193,7 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         if (dateFormatString != null) {
             String locale = par.getParameter("locale", null);
             if (locale != null) {
-                this.dateFormatter = new SimpleDateFormat(dateFormatString, new Locale(locale));
+                this.dateFormatter = new SimpleDateFormat(dateFormatString, new Locale(locale, ""));
             } else {
                 this.dateFormatter = new SimpleDateFormat(dateFormatString);
             }
