@@ -103,6 +103,8 @@ public class FormattingDecimalConvertor implements Convertor {
             Number decimalValue = decimalFormat.parse(value);
             if (decimalValue instanceof BigDecimal)
                 ;
+			else if (decimalValue instanceof Integer)
+				decimalValue = new BigDecimal(decimalValue .intValue());
             else if (decimalValue instanceof Long)
                 decimalValue = new BigDecimal(decimalValue.longValue());
             else if (decimalValue instanceof Double)
