@@ -26,8 +26,13 @@ import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.apache.cocoon.Constants;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -47,14 +52,14 @@ import org.apache.excalibur.store.StoreJanitor;
  *  IMPORTANT:<br>
  *  (from http://ehcache.sourceforge.net/documentation/) 
  *  Persistence:
- *  The Disk Cache used by EHCache is not meant to be a persistence mechanism. 
+ *  The Disk Cache used by EHCache is not meant to be persistence mechanism. 
  *  The data file for each cache is deleted, if it exists, on startup.
  *  No data from a previous instance of an application is persisted through the disk cache. 
  *  The data file for each cache is also deleted on shutdown.
  * </p>
  */
 public class EHStore extends AbstractLogEnabled 
-implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Serviceable {
+implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Serviceable, Contextualizable {
     
     private Cache cache;
     private CacheManager cacheManager;
@@ -70,8 +75,18 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
     
     /** The store janitor */
     private StoreJanitor storeJanitor;
+
+    /** The context containing the work and the cache directory */
+    private Context context;
     
-    /*
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context aContext) throws ContextException {
+        this.context = aContext;
+    }
+
+    /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager aManager) throws ServiceException {
@@ -109,7 +124,11 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
      */
     public void initialize() throws Exception {
         URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(this.configFile);
+        String tempDir = System.getProperty("java.io.tmpdir");
+        Object cacheDir = this.context.get(Constants.CONTEXT_CACHE_DIR);
+        if (cacheDir != null) System.setProperty("java.io.tmpdir", cacheDir.toString());
         this.cacheManager = CacheManager.create(configFileURL);
+        if (tempDir != null) System.setProperty("java.io.tmpdir", tempDir);
         this.cache = new Cache(this.cacheName, this.maximumSize, this.overflowToDisk, true, 0, 0);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
@@ -132,7 +151,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
     
     // ---------------------------------------------------- Store implementation
     
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#free()
      */
     public Object get(Object key) {
@@ -157,7 +176,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         return value;
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#free()
      */
     public void store(Object key, Object value) throws IOException {
@@ -168,14 +187,14 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         this.cache.put(element);
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#free()
      */
     public void free() {
-        // FIXME: we have to implement this!
+        // FIXME - we have to implement this!
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#remove(java.lang.Object)
      */
     public void remove(Object key) {
@@ -185,7 +204,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         this.cache.remove((Serializable) key);
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#clear()
      */
     public void clear() {
@@ -200,7 +219,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         }
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#containsKey(java.lang.Object)
      */
     public boolean containsKey(Object key) {
@@ -213,14 +232,14 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Servic
         return false;
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
         return Collections.enumeration(this.cache.getKeys());
     }
 
-    /*
+    /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#size()
      */
     public int size() {
