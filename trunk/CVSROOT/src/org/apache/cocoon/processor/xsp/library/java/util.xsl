@@ -103,7 +103,10 @@
       } catch (Exception e) {
         xspCurrentNode.appendChild(
           document.createTextNode(
-            "{" + __name + "}"
+            "{" +
+	      __name + ": \n" +
+	      e.getMessage()
+	    "}"
           )
         );
       }
@@ -132,7 +135,8 @@
                    <xsl:copy-of select="$name"/>,
                    request
                  )
-            )
+               )
+	     )
            ).getDocumentElement(),
            document
          )
