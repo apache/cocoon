@@ -50,13 +50,10 @@
 */
 package org.apache.cocoon.selection;
 
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import java.util.Map;
 
 /**
  * A very simple selector that operates on string literals, useful especially 
@@ -82,7 +79,7 @@ import java.util.Map;
  * </pre>
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleSelector.java,v 1.1 2003/07/01 11:18:51 haul Exp $
+ * @version CVS $Id: SimpleSelector.java,v 1.2 2003/07/01 18:23:19 cziegeler Exp $
  * @since 2.1
  */
 public class SimpleSelector extends AbstractSwitchSelector implements ThreadSafe {
