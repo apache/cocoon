@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -113,14 +113,14 @@ public abstract class AbstractProcessingPipeline
 
     /** Configured Output Buffer Size */
     protected int  configuredOutputBufferSize;
-    
+
     /** Output Buffer Size */
     protected int  outputBufferSize;
 
     /**
      * Composable Interface
      */
-    public void compose (ComponentManager manager)
+    public void compose(ComponentManager manager)
     throws ComponentException {
         this.manager = manager;
         this.newManager = manager;
@@ -129,7 +129,7 @@ public abstract class AbstractProcessingPipeline
     /**
      * Recomposable Interface
      */
-    public void recompose (ComponentManager manager)
+    public void recompose(ComponentManager manager)
     throws ComponentException {
         this.newManager = manager;
     }
@@ -137,7 +137,7 @@ public abstract class AbstractProcessingPipeline
     /**
      * Parameterizable Interface - Configuration
      */
-    public void parameterize(Parameters params) 
+    public void parameterize(Parameters params)
     throws ParameterException {
         this.configuration = params;
         final String expiresValue = params.getParameter("expires", null);
@@ -387,7 +387,7 @@ public abstract class AbstractProcessingPipeline
                     this.serializerParam
                 );
             }
-            
+
             if (this.lastConsumer == null) {
                 // internal processing: text/xml
                 environment.setContentType("text/xml");
@@ -464,9 +464,9 @@ public abstract class AbstractProcessingPipeline
             this.preparePipeline(environment);
         }
         if ( this.reader != null ) {
-            this.preparePipeline(environment);            
+            this.preparePipeline(environment);
         }
-        
+
         // See if we need to set an "Expires:" header
         if (this.expires != 0) {
             Response res = ObjectModelHelper.getResponse(environment.getObjectModel());
@@ -492,7 +492,7 @@ public abstract class AbstractProcessingPipeline
     }
 
     /**
-     * Prepare the pipeline 
+     * Prepare the pipeline
      */
     protected void preparePipeline(Environment environment)
     throws ProcessingException {
@@ -506,7 +506,7 @@ public abstract class AbstractProcessingPipeline
             this.setupPipeline(environment);
         }
     }
-    
+
     /**
      * Prepare an internal processing
      * @param environment          The current environment.
@@ -517,7 +517,7 @@ public abstract class AbstractProcessingPipeline
         this.lastConsumer = null;
         this.preparePipeline(environment);
     }
-    
+
     /**
      * Process the SAX event pipeline
      */
@@ -533,7 +533,7 @@ public abstract class AbstractProcessingPipeline
                     // set the output stream
                     ByteArrayOutputStream os = new ByteArrayOutputStream();
                     this.serializer.setOutputStream(os);
-    
+
                     // execute the pipeline:
                     this.generator.generate();
                     environment.setContentLength(os.size());
@@ -578,7 +578,7 @@ public abstract class AbstractProcessingPipeline
         } catch (SAXException e){
             throw new ProcessingException("Failed to execute reader pipeline.", e);
         } catch (ParameterException e) {
-            throw new ProcessingException("Expires parameter needs to be of type long.",e);            
+            throw new ProcessingException("Expires parameter needs to be of type long.",e);
         } catch (IOException e){
             throw new ProcessingException("Failed to execute reader pipeline.", e);
         }
@@ -614,19 +614,10 @@ public abstract class AbstractProcessingPipeline
                 this.reader.setOutputStream(environment.getOutputStream(this.outputBufferSize));
                 this.reader.generate();
             }
-        } catch ( SocketException se ) {
-            if (se.getMessage().indexOf("reset") > 0
-                    || se.getMessage().indexOf("aborted") > 0
-                    || se.getMessage().indexOf("connection abort") > 0) {
-                throw new ConnectionResetException("Connection reset by peer", se);
-            } else {
-                throw new ProcessingException("Failed to execute reader pipeline.", se);
-            }
-        } catch ( ProcessingException e ) {
-            throw e;
-        } catch ( Exception e ) {
-            throw new ProcessingException("Error executing reader pipeline.",e);
+        } catch (Exception e) {
+            handleException(e);
         }
+
         return true;
     }
 
@@ -777,7 +768,7 @@ public abstract class AbstractProcessingPipeline
     public String getKeyForEventPipeline() {
         return null;
     }
-    
+
     protected String getLocation(Parameters param) {
         String value = null;
         if ( param instanceof SitemapParameters ) {
@@ -787,5 +778,29 @@ public abstract class AbstractProcessingPipeline
             value = "[unknown location]";
         }
         return value;
+    }
+
+    /**
+     * Handles exception which can happen during pipeline processing.
+     * @throws ConnectionResetException if connection reset detected
+     * @throws ProcessingException in all other cases
+     */
+    protected void handleException(Exception e) throws ProcessingException {
+        if (e instanceof SocketException) {
+            if (e.getMessage().indexOf("reset") > 0
+                    || e.getMessage().indexOf("aborted") > 0
+                    || e.getMessage().indexOf("connection abort") > 0) {
+                throw new ConnectionResetException("Connection reset by peer", e);
+            }
+        } else if (e instanceof IOException) {
+            // Tomcat5 wraps SocketException into ClientAbortException which extends IOException.
+            if (e.getClass().getName().endsWith("ClientAbortException")) {
+                throw new ConnectionResetException("Connection reset by peer", e);
+            }
+        } else if (e instanceof ProcessingException) {
+            throw (ProcessingException) e;
+        }
+
+        throw new ProcessingException("Error executing pipeline.", e);
     }
 }
