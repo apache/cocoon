@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  *  like XMLizable and a toString() method.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DocumentWrapper.java,v 1.4 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id: DocumentWrapper.java,v 1.5 2004/03/17 12:09:52 cziegeler Exp $
 */
 public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
@@ -71,7 +71,7 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
     public String toString() {
         try {
-            return XMLUtils.serializeNodeToXML(this.document);
+            return XMLUtils.serializeNode(this.document, XMLUtils.createPropertiesForXML(false));
         } catch (ProcessingException e) {
         }
         return "";

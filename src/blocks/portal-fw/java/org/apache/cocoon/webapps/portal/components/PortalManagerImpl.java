@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.4 2004/03/05 13:02:18 bdelacretaz Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.5 2004/03/17 12:09:51 cziegeler Exp $
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
@@ -752,7 +752,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         }
 
         if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END getStatusProfile statusProfile="+(statusProfile == null ? "null" : XMLUtils.serializeNodeToXML(statusProfile)));
+            this.getLogger().debug("END getStatusProfile statusProfile="+(statusProfile == null ? "null" : XMLUtils.serializeNode(statusProfile, XMLUtils.createPropertiesForXML(false))));
         }
         return statusProfile;
     }
@@ -4230,7 +4230,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
         }
             
         if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END getUsers fragment="+(frag == null ? "null" : XMLUtils.serializeNodeToXML(frag)));
+            this.getLogger().debug("END getUsers fragment="+(frag == null ? "null" : XMLUtils.serializeNode(frag, XMLUtils.createPropertiesForXML(false))));
         }
         return frag;
     }

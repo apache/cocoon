@@ -223,7 +223,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: SourceWritingTransformer.java,v 1.10 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: SourceWritingTransformer.java,v 1.11 2004/03/17 12:09:52 cziegeler Exp $
  */
 public class SourceWritingTransformer
     extends AbstractSAXTransformer
@@ -582,7 +582,7 @@ public class SourceWritingTransformer
                               ", create="+create+
                               ", overwrite="+overwrite+
                               ", reinsert="+reinsertPath+
-                              ", fragment="+(fragment == null ? "null" : XMLUtils.serializeNodeToXML(fragment)));
+                              ", fragment="+(fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
         }
         // test parameter
         if (systemID == null) {
