@@ -30,7 +30,7 @@ package org.apache.cocoon.kernel.composition;
  * is implemented by a normal component, it will be silently ignored.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public interface Lifecycle {
 
@@ -76,4 +76,18 @@ public interface Lifecycle {
      */
     public void destroy()
     throws Exception;
+    
+    /**
+     * <p>Notify this instance that the framework initialized all blocks.</p>
+     * 
+     * <p>The framework calls this method to notify an object implementing
+     * the {@link Lifecycle} interface that all blocks have been initalized
+     * correctly. This might be helpful to event triggers, to instruct that
+     * all configured listeners have been created.</p>
+     * 
+     * <p><b>TODO:</b> This method needs to be thought out more in the scope of
+     * event handling. Should the framework provide event dispatching between
+     * wired block instances?</p>
+     */
+    public void start();
 }

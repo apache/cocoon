@@ -40,7 +40,7 @@ import org.apache.cocoon.kernel.resolution.Resource;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.11 $)
+ * @version 1.0 (CVS $Revision: 1.12 $)
  */
 public class DeployedWirings implements Wirings, Lifecycle {
 
@@ -261,6 +261,15 @@ public class DeployedWirings implements Wirings, Lifecycle {
     throws Exception {
         if (this.composer instanceof Lifecycle) {
             ((Lifecycle)this.composer).destroy();
+        }
+    }
+
+    /**
+     * <p>Notify this {@link DeployedWirings} of framework startup.</p>
+     */
+    public void start() {
+        if (this.composer instanceof Lifecycle) {
+            ((Lifecycle)this.composer).start();
         }
     }
 }

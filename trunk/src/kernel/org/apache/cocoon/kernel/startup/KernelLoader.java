@@ -22,9 +22,19 @@ import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.3 $)
  */
-public class KernelLoader {
+public class KernelLoader implements Runnable {
+
+    private KernelDeployer deployer = null;
+
+    private KernelLoader(KernelDeployer deployer) {
+        this.deployer = deployer;
+    }
+
+    public void run() {
+        this.deployer.stop();
+    }
 
     public static void main(String args[]) {
         if (args.length < 1) {
@@ -45,6 +55,13 @@ public class KernelLoader {
             /* Instantiate an installer and process deployment */
             Installer installer = new Installer(deployer);
             installer.process(ConfigurationBuilder.parse(args[1]));
+
+            /* Start the framework */
+            deployer.start();
+            
+            /* Register a shutdown hook */
+            Thread thread = new Thread(new KernelLoader(deployer));
+            Runtime.getRuntime().addShutdownHook(thread);
 
         } catch (Throwable t) {
             logger.fatal("An error occurred initializing", t);

@@ -36,7 +36,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
  * <p>.</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class KernelServlet implements Servlet {
 
@@ -122,6 +122,9 @@ public class KernelServlet implements Servlet {
             this.wirings = new CoreWirings(this.deployer);
             KernelServlet.instance = this;
 
+            /* Start the framework */
+            this.deployer.start();
+
         } catch (Throwable throwable) {
             String message = "An error occurred initializing the kernel";
             logger.fatal(message, throwable);
@@ -131,6 +134,7 @@ public class KernelServlet implements Servlet {
 
     public void destroy() {
         this.logger.info("Kernel shutdown");
+        this.deployer.stop();
     }
 
     public void service(ServletRequest request, ServletResponse response)

@@ -43,7 +43,7 @@ import org.apache.cocoon.kernel.logging.Logging;
  * interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.11 $)
+ * @version 1.0 (CVS $Revision: 1.12 $)
  */
 public class KernelDeployer implements Deployer, Logging {
 
@@ -270,6 +270,46 @@ public class KernelDeployer implements Deployer, Logging {
         this.wiringsByInstance.put(deployable, deployed);
         this.wiringsByName.put(instance.name(), deployed);
         deployable.deployed(true);
+    }
+
+    /* ====================================================================== */
+
+    /**
+     * <p>Notify all blocks of the framework startup.</p>
+     * 
+     * @see org.apache.cocoon.kernel.composition.Composer#start()
+     */
+    public void start() {
+        Iterator iterator = this.wiringsByInstance.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            DeployableInstance instance = (DeployableInstance) entry.getKey();
+            DeployedWirings wirings = (DeployedWirings) entry.getValue();
+            try {
+                wirings.start();
+                this.log.info("Started instance \"" + instance + "\"");
+            } catch (Throwable t) {
+                this.log.warn("Exception starting \"" + instance + "\"", t);
+            }
+        }
+    }
+
+    /**
+     * <p>Stop and destroy all blocks.</p>
+     */
+    public void stop() {
+        Iterator iterator = this.wiringsByInstance.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            DeployableInstance instance = (DeployableInstance) entry.getKey();
+            DeployedWirings wirings = (DeployedWirings) entry.getValue();
+            try {
+                wirings.destroy();
+                this.log.info("Stopped instance \"" + instance + "\"");
+            } catch (Throwable t) {
+                this.log.warn("Exception stopping \"" + instance + "\"", t);
+            }
+        }
     }
 
     /* ====================================================================== */
