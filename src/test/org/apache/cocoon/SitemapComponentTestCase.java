@@ -470,12 +470,12 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             ((AbstractInterpreter)interpreter).register(source);
             
             ArrayList parameters = new ArrayList();
-            for (Iterator i = params.keySet().iterator(); i.hasNext();) {
-                String name = (String)i.next();
-                String value = (String)params.get(name);
+            for (Iterator i = params.entrySet().iterator(); i.hasNext();) {
+                Map.Entry me = (Map.Entry)i.next();
+                String name = (String)me.getKey();
+                String value = (String)me.getValue();
                 parameters.add(new Interpreter.Argument(name, value));
             }
-            
             interpreter.callFunction(function, parameters, getRedirector());
             
         } catch (ServiceException ce) {
@@ -513,12 +513,12 @@ public abstract class SitemapComponentTestCase extends ContainerTestCase {
             ((AbstractInterpreter)interpreter).register(source);
             
             ArrayList parameters = new ArrayList();
-            for (Iterator i = params.keySet().iterator(); i.hasNext();) {
-                String name = (String)i.next();
-                String value = (String)params.get(name);
+            for (Iterator i = params.entrySet().iterator(); i.hasNext();) {
+                Map.Entry me = (Map.Entry)i.next();
+                String name = (String)me.getKey();
+                String value = (String)me.getValue();
                 parameters.add(new Interpreter.Argument(name, value));
             }
-            
             interpreter.handleContinuation(id, parameters, getRedirector());
 
         } catch (ServiceException ce) {
