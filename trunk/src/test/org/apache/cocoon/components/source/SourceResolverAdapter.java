@@ -55,7 +55,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -63,13 +62,13 @@ import org.apache.excalibur.source.SourceException;
 /**
  * An adapter for the Excalibur SourceResolver.
  *
- * @version CVS $Id: SourceResolverAdapter.java,v 1.9 2003/10/15 20:54:43 cziegeler Exp $
+ * @version CVS $Id: SourceResolverAdapter.java,v 1.10 2003/12/20 23:32:06 unico Exp $
  */
 public class SourceResolverAdapter implements SourceResolver
 {
     private org.apache.excalibur.source.SourceResolver resolver;
 
-    public SourceResolverAdapter(org.apache.excalibur.source.SourceResolver resolver, ComponentManager manager) {
+    public SourceResolverAdapter(org.apache.excalibur.source.SourceResolver resolver) {
         this.resolver = resolver;
     }
 

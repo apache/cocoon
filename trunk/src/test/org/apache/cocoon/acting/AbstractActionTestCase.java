@@ -54,10 +54,9 @@ package org.apache.cocoon.acting;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.fortress.testcase.FortressTestCase;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.mock.MockContext;
@@ -70,9 +69,9 @@ import org.apache.excalibur.source.SourceResolver;
  * Testcase for  action components. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractActionTestCase.java,v 1.2 2003/07/10 00:25:25 ghoward Exp $
+ * @version CVS $Id: AbstractActionTestCase.java,v 1.3 2003/12/20 23:32:07 unico Exp $
  */
-public abstract class AbstractActionTestCase extends ExcaliburTestCase
+public abstract class AbstractActionTestCase extends FortressTestCase
 {
     private MockRequest request = new MockRequest();
     private MockResponse response = new MockResponse();
@@ -124,38 +123,33 @@ public abstract class AbstractActionTestCase extends ExcaliburTestCase
      */
     public final Map act(String type, String source, Parameters parameters) {
 
-        ComponentSelector selector = null;
         Action action = null;
         SourceResolver resolver = null;
 
         Map result = null;
         try {
-            selector = (ComponentSelector) this.manager.lookup(Action.ROLE +
-                "Selector");
-            assertNotNull("Test lookup of action selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if action name is not null", type);
-            action = (Action) selector.select(type);
+            action = (Action) lookup(Action.ROLE + "/" + type);
             assertNotNull("Test lookup of action", action);
 
-            result = action.act(redirector, new SourceResolverAdapter(resolver, this.manager),
+            result = action.act(redirector, new SourceResolverAdapter(resolver),
                                 objectmodel, source, parameters);
 
-        } catch (ComponentException ce) {
-            getLogger().error("Could not retrieve generator", ce);
-            fail("Could not retrieve generator: " + ce.toString());
+        } catch (ServiceException ce) {
+            getLogger().error("Could not retrieve action", ce);
+            fail("Could not retrieve action: " + ce.toString());
         } catch (Exception e) {
             getLogger().error("Could not execute test", e);
             fail("Could not execute test: " + e);
         } finally {
             if (action != null) {
-                selector.release(action);
+                release(action);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
+            release(resolver);
         }
         return result;
     }

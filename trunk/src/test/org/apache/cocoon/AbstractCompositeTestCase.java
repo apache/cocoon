@@ -52,8 +52,8 @@
 package org.apache.cocoon;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,11 +62,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.fortress.testcase.FortressTestCase;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.acting.Action;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -75,8 +73,8 @@ import org.apache.cocoon.environment.mock.MockRedirector;
 import org.apache.cocoon.environment.mock.MockRequest;
 import org.apache.cocoon.environment.mock.MockResponse;
 import org.apache.cocoon.generation.Generator;
-import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -93,9 +91,9 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: AbstractCompositeTestCase.java,v 1.10 2003/12/08 10:23:46 cziegeler Exp $
+ * @version CVS $Id: AbstractCompositeTestCase.java,v 1.11 2003/12/20 23:32:06 unico Exp $
  */
-public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
+public abstract class AbstractCompositeTestCase extends FortressTestCase
 {
     public final static Parameters EMPTY_PARAMS = Parameters.EMPTY_PARAMETERS;
 
@@ -104,7 +102,7 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
     private MockContext context = new MockContext();
     private MockRedirector redirector = new MockRedirector();
     private HashMap objectmodel = new HashMap();
-
+    
     /**
      * Create a new composite test case.
      *
@@ -158,27 +156,23 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
      */
     public final Map act(String type, String source, Parameters parameters) {
 
-        ComponentSelector selector = null;
         Action action = null;
         SourceResolver resolver = null;
 
         Map result = null;
         try {
-            selector = (ComponentSelector) this.manager.lookup(Action.ROLE +
-                "Selector");
-            assertNotNull("Test lookup of action selector", selector);
-
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if action name is not null", type);
-            action = (Action) selector.select(type);
+            action = (Action) lookup(Action.ROLE + "/" + type);
             assertNotNull("Test lookup of action", action);
 
-            result = action.act(redirector, new SourceResolverAdapter(resolver, this.manager),
+            result = action.act(redirector, new SourceResolverAdapter(resolver),
                                 objectmodel, source, parameters);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
         } catch (Exception e) {
@@ -186,10 +180,9 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             fail("Could not execute test: " + e);
         } finally {
             if (action != null) {
-                selector.release(action);
+                release(action);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
+            release(resolver);
         }
         return result;
     }
@@ -203,29 +196,25 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
      */
     public final Document generate(String type, String source, Parameters parameters) {
 
-        ComponentSelector selector = null;
         Generator generator = null;
         SourceResolver resolver = null;
         SAXParser parser = null;
 
         Document document = null;
         try {
-            selector = (ComponentSelector) this.manager.lookup(Generator.ROLE +
-                "Selector");
-            assertNotNull("Test lookup of generator selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if generator name is not null", type);
 
-            generator = (Generator) selector.select(type);
+            generator = (Generator) lookup(Generator.ROLE + "/" + type);
             assertNotNull("Test lookup of generator", generator);
 
-            generator.setup(new SourceResolverAdapter(resolver, this.manager),
+            generator.setup(new SourceResolverAdapter(resolver),
                             objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
@@ -237,7 +226,7 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
 
             assertNotNull("Test for generator document", document);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
         } catch (Exception e) {
@@ -245,11 +234,10 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             fail("Could not execute test: " + e);
         } finally {
             if (generator != null) {
-                selector.release(generator);
+                release(generator);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return document;
@@ -265,32 +253,26 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
      */ 
     public final Document transform(String type, String source, Parameters parameters, Document input) {
 
-        ComponentSelector selector = null;
         Transformer transformer = null;
         SourceResolver resolver = null;
         SAXParser parser = null;
         Source inputsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
-
         Document document = null;
         try {
-            selector = (ComponentSelector) this.manager.lookup(Transformer.ROLE+
-                "Selector");
-            assertNotNull("Test lookup of transformer selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
 
             assertNotNull("Test if transformer name is not null", type);
-            transformer = (Transformer) selector.select(type);
+            transformer = (Transformer) lookup(Transformer.ROLE + "/" + type);
             assertNotNull("Test lookup of transformer", transformer);
 
-            transformer.setup(new SourceResolverAdapter(resolver, this.manager),
+            transformer.setup(new SourceResolverAdapter(resolver),
                                   objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
@@ -303,7 +285,7 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             document = builder.getDocument();
             assertNotNull("Test for transformer document", document);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve transformer", ce);
             ce.printStackTrace();
             fail("Could not retrieve transformer:"+ce.toString());
@@ -318,20 +300,18 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             pe.printStackTrace();
             fail("Could not execute test:"+pe.toString());
         } finally {
-            if (transformer!=null)
-                selector.release(transformer);
-
-            if (selector!=null)
-                this.manager.release(selector);
-
-            if (inputsource!=null)
+            if (transformer!=null) {
+                release(transformer);
+            }
+            if (inputsource!=null) {
                 resolver.release(inputsource);
-
-            if (resolver!=null)
-                this.manager.release(resolver);
-
-            if (parser!=null)
-                this.manager.release((Component) parser);
+            }
+            if (resolver!=null) {
+                release(resolver);
+            }
+            if (parser!=null) {
+                release(parser);
+            }
         }
 
         return document; 
@@ -349,25 +329,19 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
     public final byte[] serialize(String type, Parameters parameters,
                                   Document input) {
 
-        ComponentSelector selector = null;
         Serializer serializer = null;
         SourceResolver resolver = null;
         Source inputsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
-
         ByteArrayOutputStream document = null;
 
         try {
-            selector = (ComponentSelector) this.manager.lookup(Serializer.ROLE+
-                "Selector");
-            assertNotNull("Test lookup of serializer selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
             assertNotNull("Test if serializer name is not null", type);
-            serializer = (Serializer) selector.select(type);
+            serializer = (Serializer) lookup(Serializer.ROLE + "/" + type);
             assertNotNull("Test lookup of serializer", serializer);
 
             document = new ByteArrayOutputStream();
@@ -377,7 +351,7 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             DOMStreamer streamer = new DOMStreamer(serializer);
 
             streamer.stream(input);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve serializer", ce);
             ce.printStackTrace();
             fail("Could not retrieve serializer:"+ce.toString());
@@ -389,19 +363,13 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             fail("Could not execute test:"+ioe.toString());
         } finally {
             if (serializer!=null) {
-                selector.release(serializer);
+                release(serializer);
             }
-
-            if (selector!=null) {
-                this.manager.release(selector);
-            }
-
             if (inputsource!=null) {
                 resolver.release(inputsource);
             }
-
             if (resolver!=null) {
-                this.manager.release(resolver);
+                release(resolver);
             }
         }
 
@@ -428,21 +396,17 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         SAXParser parser = null;
         Source assertionsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
-
         Document assertiondocument = null;
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
-            assertNotNull("Test if assertion document is not null",
-                          source);
+            assertNotNull("Test if assertion document is not null",source);
             assertionsource = resolver.resolveURI(source);
-            assertNotNull("Test lookup of assertion source",
-                          assertionsource);
+            assertNotNull("Test lookup of assertion source",assertionsource);
             assertTrue("Test if source exist", assertionsource.exists());
 
             DOMBuilder builder = new DOMBuilder();
@@ -456,7 +420,7 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             assertiondocument = builder.getDocument();
             assertNotNull("Test if assertion document exists", assertiondocument);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
         } catch (Exception e) {
@@ -466,8 +430,8 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             if (resolver != null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return assertiondocument;
@@ -486,15 +450,13 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         SAXParser parser = null;
         Source assertionsource = null;
 
-        assertNotNull("Test for component manager", this.manager);
-
         byte[] assertiondocument = null;
 
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if assertion document is not null", source);
@@ -517,7 +479,7 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
                 i++;
             }
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: "+ce.toString());
         } catch (Exception e) {
@@ -527,8 +489,8 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
             if (resolver!=null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return assertiondocument;
@@ -630,4 +592,5 @@ public abstract class AbstractCompositeTestCase extends ExcaliburTestCase
         }
 
     }
+        
 }

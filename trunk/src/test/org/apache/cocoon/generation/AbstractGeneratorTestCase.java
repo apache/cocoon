@@ -54,11 +54,9 @@ package org.apache.cocoon.generation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.fortress.testcase.FortressTestCase;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -74,9 +72,9 @@ import org.xml.sax.InputSource;
  * by comparing the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.7 2003/08/04 03:06:30 joerg Exp $
+ * @version CVS $Id: AbstractGeneratorTestCase.java,v 1.8 2003/12/20 23:37:05 unico Exp $
  */
-public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
+public abstract class AbstractGeneratorTestCase extends FortressTestCase
 {
     private HashMap objectmodel = new HashMap();
 
@@ -102,29 +100,25 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
      */
     public final Document generate(String type, String source, Parameters parameters) {
 
-        ComponentSelector selector = null;
         Generator generator = null;
         SourceResolver resolver = null;
         SAXParser parser = null;
 
         Document document = null;
         try {
-            selector = (ComponentSelector) this.manager.lookup(Generator.ROLE +
-                "Selector");
-            assertNotNull("Test lookup of generator selector", selector);
 
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if generator name is not null", type);
 
-            generator = (Generator) selector.select(type);
+            generator = (Generator) lookup(Generator.ROLE + "/" + type);
             assertNotNull("Test lookup of generator", generator);
 
-            generator.setup(new SourceResolverAdapter(resolver, this.manager),
+            generator.setup(new SourceResolverAdapter(resolver),
                             objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
@@ -136,7 +130,7 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 
             assertNotNull("Test for generator document", document);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
         } catch (Exception e) {
@@ -144,11 +138,10 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
             fail("Could not execute test: " + e);
         } finally {
             if (generator != null) {
-                selector.release(generator);
+                release(generator);
             }
-            this.manager.release(selector);
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return document;
@@ -162,10 +155,10 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
 
         Document assertiondocument = null;
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if assertion document is not null",
@@ -185,7 +178,7 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
             assertiondocument = builder.getDocument();
             assertNotNull("Test if assertion document exists", assertiondocument);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
         } catch (Exception e) {
@@ -195,8 +188,8 @@ public abstract class AbstractGeneratorTestCase extends ExcaliburTestCase
             if (resolver != null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return assertiondocument;

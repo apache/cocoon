@@ -51,19 +51,17 @@
 package org.apache.cocoon.transformation;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.fortress.testcase.FortressTestCase;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceResolverAdapter;
 import org.apache.cocoon.xml.WhitespaceFilter;
@@ -82,9 +80,9 @@ import org.xml.sax.SAXException;
  * and compares the output with asserted documents.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractTransformerTestCase.java,v 1.8 2003/10/15 20:54:43 cziegeler Exp $
+ * @version CVS $Id: AbstractTransformerTestCase.java,v 1.9 2003/12/20 23:37:05 unico Exp $
  */
-public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
+public abstract class AbstractTransformerTestCase extends FortressTestCase
 {
     private HashMap objectmodel = new HashMap();
 
@@ -111,7 +109,6 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
      */ 
     public final Document transform(String type, String source, Parameters parameters, Document input) {
 
-        ComponentSelector selector = null;
         Transformer transformer = null;
         SourceResolver resolver = null;
         SAXParser parser = null;
@@ -119,22 +116,19 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 
         Document document = null;
         try {
-            selector = (ComponentSelector) this.manager.lookup(Transformer.ROLE+
-                "Selector");
-            assertNotNull("Test lookup of transformer selector", selector);
-
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
 
             assertNotNull("Test if transformer name is not null", type);
-            transformer = (Transformer) selector.select(type);
+            transformer = (Transformer) lookup(Transformer.ROLE + "/" + type);
             assertNotNull("Test lookup of transformer", transformer);
 
-            transformer.setup(new SourceResolverAdapter(resolver, this.manager),
+            transformer.setup(new SourceResolverAdapter(resolver),
                                   objectmodel, source, parameters);
 
             DOMBuilder builder = new DOMBuilder();
@@ -147,7 +141,7 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
             document = builder.getDocument();
             assertNotNull("Test for transformer document", document);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve transformer", ce);
             ce.printStackTrace();
             fail("Could not retrieve transformer:"+ce.toString());
@@ -163,19 +157,16 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
             fail("Could not execute test:"+pe.toString());
         } finally {
             if (transformer!=null)
-                selector.release(transformer);
-
-            if (selector!=null)
-                this.manager.release(selector);
+                release(transformer);
 
             if (inputsource!=null)
                 resolver.release(inputsource);
 
             if (resolver!=null)
-                this.manager.release(resolver);
+                release(resolver);
 
             if (parser!=null)
-                this.manager.release((Component) parser);
+                release(parser);
         }
 
         return document; 
@@ -214,10 +205,10 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
 
         Document assertiondocument = null;
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) lookup(SourceResolver.ROLE);
             assertNotNull("Test lookup of source resolver", resolver);
 
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) lookup(SAXParser.ROLE);
             assertNotNull("Test lookup of parser", parser);
 
             assertNotNull("Test if assertion document is not null",
@@ -237,7 +228,7 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
             assertiondocument = builder.getDocument();
             assertNotNull("Test if assertion document exists", assertiondocument);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
         } catch (Exception e) {
@@ -247,8 +238,8 @@ public abstract class AbstractTransformerTestCase extends ExcaliburTestCase
             if (resolver != null) {
                 resolver.release(assertionsource);
             }
-            this.manager.release(resolver);
-            this.manager.release((Component) parser);
+            release(resolver);
+            release(parser);
         }
 
         return assertiondocument;
