@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="fix" fixes-bug="31493" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
+     XSP logicsheet jpath.xsl: incorrect call to JXPathContext.compile
+   </action>
    <action dev="VG" type="fix" fixes-bug="28485">
      Mail block: Support multiple SMTP servers, not only default one.
    </action>
