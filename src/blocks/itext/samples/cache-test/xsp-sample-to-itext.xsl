@@ -20,14 +20,12 @@
     in order to test caching of the whole pipeline, up to PDF
 
     @author tcurdt@apache.org
-
-    CVS $Id:
+    CVS $Id: xsp-sample-to-itext.xsl,v 1.4 2004/04/22 12:26:00 vgritsenko Exp $
 -->
 
 <xsl:stylesheet
     version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    >
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     <xsl:param name="pages" select="'10'"/>
 

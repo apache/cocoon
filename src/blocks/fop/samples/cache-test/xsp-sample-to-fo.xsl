@@ -20,15 +20,13 @@
     in order to test caching of the whole pipeline, up to PDF
 
     @author bdelacretaz@codeconsult.ch
-
-    CVS $Id:
+    CVS $Id: xsp-sample-to-fo.xsl,v 1.5 2004/04/22 12:26:00 vgritsenko Exp $
 -->
 
 <xsl:stylesheet
     version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:fo="http://www.w3.org/1999/XSL/Format"
-    >
+    xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
     <xsl:param name="pages" select="'10'"/>
 
