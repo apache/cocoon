@@ -64,9 +64,6 @@ import net.sourceforge.chaperon.process.PatternProcessor;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
@@ -75,6 +72,9 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -108,10 +108,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PatternTransformer.java,v 1.4 2003/09/05 07:10:53 cziegeler Exp $
+ * @version CVS $Id: PatternTransformer.java,v 1.5 2003/10/24 23:44:26 joerg Exp $
  */
 public class PatternTransformer extends AbstractTransformer
-  implements LogEnabled, Composable, Recyclable, Disposable, Parameterizable,
+  implements LogEnabled, Serviceable, Recyclable, Disposable, Parameterizable,
              CacheableProcessingComponent {
 
     /** Namespace for the SAX events. */
@@ -121,7 +121,7 @@ public class PatternTransformer extends AbstractTransformer
     private Source lexiconSource = null;
 
     private Logger logger = null;
-    private ComponentManager manager = null;
+    private ServiceManager manager = null;
     private SourceResolver resolver = null;
 
     private LexicalAutomaton automaton = null;
@@ -142,13 +142,13 @@ public class PatternTransformer extends AbstractTransformer
     }
 
     /**
-     * Pass the ComponentManager to the composer. The Composable
-     * implementation should use the specified ComponentManager
-     * to acquire the components it needs for execution.
+     * Pass the ServiceManager to the Serviceable. The Serviceable
+     * implementation should use the specified ServiceManager
+     * to acquire the services it needs for execution.
      *
-     * @param manager The ComponentManager which this Composable uses.
+     * @param manager The ServiceManager which this Serviceable uses.
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 
@@ -232,11 +232,10 @@ public class PatternTransformer extends AbstractTransformer
             throw new ProcessingException("Error during retrieving the lexicon",
                                           confige);
         } catch (SourceException se) {
-            throw new ProcessingException("Error during resolving of '"+src+
+            throw new ProcessingException("Error during resolving of '" + src +
                                           "'.", se);
-        } catch (ComponentException ce) {
-            throw new ProcessingException("Could not lookup for component",
-                                          ce);
+        } catch (ServiceException se) {
+            throw new ProcessingException("Could not lookup for component", se);
         } finally {
             if (store!=null) {
                 this.manager.release(store);
