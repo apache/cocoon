@@ -41,7 +41,7 @@ import org.apache.log.Hierarchy;
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: IOUtils.java,v 1.6 2004/07/12 13:04:55 antonio Exp $
+ * @version CVS $Id: IOUtils.java,v 1.7 2004/07/12 13:29:57 antonio Exp $
  */
 public class IOUtils {
 
@@ -55,6 +55,7 @@ public class IOUtils {
      * @param file The output file
      * @param string The string to be dumped
      * @exception IOException IO Error
+     * @deprecated To be removed in cocoon 2.3
      */
     public static void serializeString(File file, String string)
     throws IOException {
@@ -68,6 +69,7 @@ public class IOUtils {
      * @param string The string to be dumped
      * @param encoding The encoding for the output file or null for default platform encoding
      * @exception IOException IO Error
+     * @deprecated To be removed in cocoon 2.3
      */
     public static void serializeString(File file, String string, String encoding)
     throws IOException {
@@ -113,6 +115,7 @@ public class IOUtils {
      * @param file The output file
      * @param object The object to be serialized
      * @exception IOException IOError
+     * @deprecated To be removed in cocoon 2.3
      */
     public static void serializeObject(File file, Object object)
     throws IOException {
@@ -132,6 +135,7 @@ public class IOUtils {
      * @param file The input file
      * @return The deserialized object
      * @exception IOException IOError
+     * @deprecated To be removed in cocoon 2.3
      */
     public static Object deserializeObject(File file)
     throws IOException, ClassNotFoundException {
