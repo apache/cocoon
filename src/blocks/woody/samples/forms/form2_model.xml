@@ -37,7 +37,7 @@
     </wd:validation>
   </wd:aggregatefield>
 
-  <wd:field id="ipaddress" required="true">
+  <wd:field id="ipaddress">
     <wd:label>Please enter your IP address</wd:label>
     <wd:datatype base="string">
       <wd:validation>
@@ -45,6 +45,33 @@
           <wd:failmessage>Invalid IP address.</wd:failmessage>
         </wd:regexp>
       </wd:validation>
+    </wd:datatype>
+  </wd:field>
+
+  <wd:field id="birthday" required="true">
+    <wd:label>Your birthday (dd/MM/yyyy):</wd:label>
+    <wd:datatype base="date">
+      <wd:convertor>
+        <wd:patterns>
+          <wd:pattern>dd/MM/yyyy</wd:pattern>
+          <!-- The above pattern is a non-locale-specific pattern. You can
+          also add locale-specific patterns by adding more wd:pattern elements
+          here, with a locale attribute on them. -->
+        </wd:patterns>
+      </wd:convertor>
+    </wd:datatype>
+  </wd:field>
+
+  <wd:field id="number" required="true">
+    <wd:label>Select a number:</wd:label>
+    <wd:datatype base="long">
+      <wd:selection-list>
+        <wd:item value="1"/>
+        <wd:item value="2"/>
+        <wd:item value="3"/>
+        <wd:item value="4"/>
+        <wd:item value="5"/>
+      </wd:selection-list>
     </wd:datatype>
   </wd:field>
 

@@ -6,6 +6,10 @@
     Phone: +${form2bean.phoneCountry}-${form2bean.phoneZone}-${form2bean.phoneNumber}
     <br/>
     IP Address: ${form2bean.ipAddress}
+    <br/>
+    birthday: ${form2bean.birthday}
+    <br/>
+    number: ${form2bean.aNumber}
 
     <table border="1">
       <tr>

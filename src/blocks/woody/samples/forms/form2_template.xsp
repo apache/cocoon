@@ -17,15 +17,18 @@
       <li>the email address is marked in the binding as "read-only", meaning it
         will only be bound from bean/xml to form, but not in the other
         direction. So you won't see it changed in the bean or the XML.</li>
-      <li>the binding supports currently only string properties (will change
-        soon). It also doesn't support all widget types yet (e.g. the
+      <li>The binding doesn't support all widget types yet (e.g. the
         multivaluefield is currently not yet supported).</li>
+      <li>Note how, in the XML binding, the date is formatted according XML
+        Schema date format in the XML, while it is displayed in another format
+        to the user, and is stored in the form model as a Java Date
+        object (useful for date-specific validations).</li>
     </ul>
     <p>If you're running the XML-binding demo, then after successful submit
       you'll see the updated XML.</p>
     <p>If you're running the bean-binding demo, then after successful submit
       you'll be shown a page that uses the JXTemplateGenerator to extract
-      data from the bean.</p>
+      data from the bean (to show that the bean really has been updated).</p>
     <form method="POST">
       <xsp:attribute name="action"><xsp:expr><jpath:continuation/>+".continue"</xsp:expr></xsp:attribute>
       <table border="1">
@@ -40,6 +43,14 @@
         <tr>
           <td valign="top"><wt:widget-label id="ipaddress"/></td>
           <td valign="top"><wt:widget id="ipaddress"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="birthday"/></td>
+          <td valign="top"><wt:widget id="birthday"/></td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="number"/></td>
+          <td valign="top"><wt:widget id="number"/></td>
         </tr>
       </table>
 
