@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.5 2000-01-06 23:32:38 ricardo Exp $ -- 
+/*-- $Id: XSPUtil.java,v 1.6 2000-01-07 13:20:50 ricardo Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.5 $ $Date: 2000-01-06 23:32:38 $
+ * @version $Revision: 1.6 $ $Date: 2000-01-07 13:20:50 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -120,6 +120,12 @@ public class XSPUtil {
     ServletContext context
   ) throws IOException
   {
+    File file = new File(filename);
+
+    if (file.isAbsolute()) {
+      return filename;
+    }
+
     return
       (
         new File(
