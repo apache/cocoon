@@ -13,6 +13,8 @@
 		<source>processor.xsp.logicsheet.sql.java = 
   resource://org/apache/cocoon/processor/xsp/library/java/sql.xsl</source>
   		<p>Note the line break is for formatting purposes, it should not appear in your cocoon.properties file.</p>
+        <p>If you are going to use connection pools, then make sure that you have followed the 
+           <a href="connection-pool.html">installation</a> steps for the connection pools.</p>
 	</s1>
 
 	<s1 title="Configuration">
@@ -37,15 +39,17 @@
 		<p>The <code>execute-query</code> element will contain child elements in the sql taglib namespace which specify parameters for the query. It is an error if it contains children (not necessarily descendents) in another namespace. No other element in the sql taglib namespace may contain children in the sql taglib namespace.</p>
 		<p>The list of valid sql taglib configuration elements is:</p>
 		<dl>
-		<dt><code>driver</code> <strong>(mandatory)</strong></dt>
+		<dt><code>driver</code> <strong>(mandatory*)</strong></dt>
 		<dd>The fully qualified class name of the JDBC driver</dd>
-		<dt><code>dburl</code> <strong>(mandatory)</strong></dt>
+		<dt><code>dburl</code> <strong>(mandatory*)</strong></dt>
 		<dd>The JDBC URL to the data source</dd>
+		<dt><code>use-connection</code> <strong>(mandatory**)</strong></dt>
+		<dd>The name of the connection in the JDBC connection pool configured in cocoon.properties.</dd>
 		<dt><code>query</code> <strong>(mandatory)</strong></dt>
 		<dd>The SQL query to execute.</dd>
-		<dt><code>username</code></dt>
+		<dt><code>username</code><strong>*</strong></dt>
 		<dd>The username for database authentication</dd>
-		<dt><code>password</code></dt>
+		<dt><code>password</code><strong>*</strong></dt>
 		<dd>The password for database authentication</dd>
 		<dt><code>doc-element</code></dt>
 		<dd>The name of the element which will wrap the entire resultset, if there are any results. If this is not set, there will be no top-level wrapper.</dd>
@@ -77,9 +81,68 @@
 		<dd>The namespace prefix to use when creating result elements. FIXME - we should ask for a namespace URI and prefix, right?</dd>
 		<dt><code>column-format</code></dt>
 		<dd>Indicates that a column needs special formatting. See the column formatting section.</dd>
+        <dt><code><strong>*</strong></code></dt>
+		<dd>Indicates that this is manditory ONLY if you are NOT using the connection pool</dd>
+        <dt><code><strong>**</strong></code></dt>
+		<dd>Indicates that this is manditory ONLY if you ARE using the connection pool</dd>
 		</dl>
-		<p>Note that the query element may contain elements from other XSP-enabled namespaces, like request or session. The others may not right now, though I'm certainly willing to consider changing that if desired. I'm still new at this XSP thing too.</p>
+		<p>Note that the query element may contain elements from other XSP-enabled namespaces, like request or session. The others may not right now, though I'm certainly willing to consider changing that if desired. I'm still new at this XSP thing too.
+       </p>
 	</s1>
+
+    <s1 title="Examples">
+        <p>Let's step through an example of using a connection defined to be "helpdesk"
+           that uses oracle. In the cocoon.properties have something simular to this:</p>
+		<source>
+           #### ORACLE
+           processor.xsp.pool.database.helpdesk.driver=oracle.jdbc.driver.OracleDriver
+           processor.xsp.pool.database.helpdesk.url=jdbc:oracle:thin:@localhost:1521:dldf
+           processor.xsp.pool.database.helpdesk.username=dnUser
+           processor.xsp.pool.database.helpdesk.password=dbPass
+           # The number of database connections to cache in the ConnectionPool.
+           processor.xsp.pool.database.helpdesk.maxConnections=3
+        </source>
+         <p>then in my xml file, I would use the connection pool name "helpdesk" as:</p>
+		<source><![CDATA[
+         <sql:execute-query>
+            <sql:use-connection>helpdesk</sql:use-connection>
+            <sql:skip-rows>0</sql:skip-rows>
+            <sql:max-rows>50</sql:max-rows>
+            <sql:null-indicator>y</sql:null-indicator>
+            <sql:count-attribute>BOB</sql:count-attribute>
+            <sql:doc-element>ROWSET</sql:doc-element>
+            <sql:row-element>ROW</sql:row-element>
+            <sql:tag-case>preserve</sql:tag-case>
+            <sql:id-attribute>ID</sql:id-attribute>
+            <sql:query>
+               SELECT last_name, first_name, initials
+               FROM EMPLOYEE
+           </sql:query>
+        </sql:execute-query>
+   ]]></source>
+   <p>Notice that for the connection pool, you do <strong>not</strong> use the <strong>driver</strong>, 
+      <strong>dburl</strong>, <strong>username</strong>,
+       nor <strong>password</strong> tags. 
+     Lets look at an example that does not use the connection pool:</p>
+		<source><![CDATA[
+          <sql:execute-query>
+             <sql:driver>com.informix.jdbc.IfxDriver</sql:driver>
+             <sql:dburl>jdbc:informix-sqli://localhost:1526/database:informixserver=server</sql:dburl>
+             <sql:username>dbUser</sql:username>
+             <sql:password>dbPass</sql:password>
+             <sql:skip-rows>0</sql:skip-rows>
+             <sql:max-rows>50</sql:max-rows>
+             <sql:tag-case>preserve</sql:tag-case>
+             <sql:count-attribute>count</sql:count-attribute>
+             <sql:doc-element>ROWSET</sql:doc-element>
+             <sql:row-element>ROW</sql:row-element>
+             <sql:null-indicator>omit</sql:null-indicator>
+             <sql:id-attribute>ID</sql:id-attribute>
+             <sql:query>SELECT * FROM CUSTOMER;</sql:query>
+           </sql:execute-query>
+   ]]></source>
+   </s1>
+
 	<s1 title="Column Formatting">
 		<p>Generally, column values are formatted naively - the taglib requests an Object from the ResultSet and invoked the toString() method. Some columns return byte or character arrays - in that case, we construct a new String using the array as a construction argument.</p>
 		<p>These defaults may be overridden by supplying one or more sql:column-format elements. Each sql:column-format element may contain these child elements:</p>
