@@ -25,8 +25,6 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
@@ -36,12 +34,12 @@ import org.apache.excalibur.source.SourceResolver;
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: TestCronJob.java,v 1.6 2004/03/11 15:38:31 sylvain Exp $
+ * @version CVS $Id: TestCronJob.java,v 1.7 2004/04/29 08:23:23 cziegeler Exp $
  *
  * @since 2.1.1
  */
 public class TestCronJob extends ServiceableCronJob
-    implements CronJob, Configurable, ConfigurableCronJob, Serviceable {
+    implements Configurable, ConfigurableCronJob {
     
     /** Parameter key for the message */
     public static final String PARAMETER_MESSAGE = "TestCronJob.Parameter.Message";
@@ -59,11 +57,8 @@ public class TestCronJob extends ServiceableCronJob
     private int m_sleep;
     
     /** The pipeline to be called */
-    private String pipeline = null;
+    private String pipeline;
     
-    /** The service manager */
-    private ServiceManager manager;
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
@@ -74,17 +69,18 @@ public class TestCronJob extends ServiceableCronJob
         pipeline = config.getChild("pipeline").getValue("samples/hello-world/hello.xhtml");
     }
     
-    public void service(ServiceManager manager) {
-    	this.manager = manager;
-    }
-    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.cron.CronJob#execute(java.lang.String)
+     */
     public void execute(String name) {
 		getLogger().info("CronJob " + name + " launched at " + new Date() + " with message '" + m_msg +
 						 "' and sleep timeout of " + m_sleep + "ms");
 		
-		try {
-			SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-			Source src = resolver.resolveURI("cocoon://" + pipeline);
+        SourceResolver resolver = null;
+        Source src = null;
+        try {
+			resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+			src = resolver.resolveURI("cocoon://" + pipeline);
 			InputStream is = src.getInputStream();
 			
 			InputStreamReader reader = new InputStreamReader(is);
@@ -97,24 +93,29 @@ public class TestCronJob extends ServiceableCronJob
 			}
 			
 			reader.close();
-			resolver.release(src);
-			manager.release(resolver);
-			
-			getLogger().info("Cronjob " + name + " called pipeline " + pipeline + 
-				" and received following content:\n" + sb.toString() );
-       
-			try {
-				Thread.sleep(m_sleep);
-			} catch (final InterruptedException ie) {
-				//getLogger().error("CronJob " + name + " interrupted", ie);
-			}
 
-			getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + m_msg +
-							 "' and sleep timeout of " + m_sleep + "ms");
-			
-		} catch(Exception e) {
-		    throw new CascadingRuntimeException("CronJob " + name + " raised an exception", e);
+            getLogger().info("Cronjob " + name + " called pipeline " + pipeline + 
+                    " and received following content:\n" + sb.toString() );
+        } catch(Exception e) {
+            throw new CascadingRuntimeException("CronJob " + name + " raised an exception", e);
+        } finally {
+            if ( resolver != null ) {
+			    resolver.release(src);
+                this.manager.release(resolver);
+                resolver = null;
+			    src = null;
+            }
+        }
+       
+		try {
+			Thread.sleep(m_sleep);
+		} catch (final InterruptedException ie) {
+			//getLogger().error("CronJob " + name + " interrupted", ie);
 		}
+
+		getLogger().info("CronJob " + name + " finished at " + new Date() + " with message '" + m_msg +
+						 "' and sleep timeout of " + m_sleep + "ms");
+			
     }
 
     /* (non-Javadoc)
