@@ -63,6 +63,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.util.SimpleServiceSelector;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
 import org.w3c.dom.Element;
 
 /**
@@ -121,6 +122,11 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
             throw new CascadingException("Unknown validation rule \"" + name + "\" specified at " + DomHelper.getLocation(validationRuleElement), e);
         }
         return builder.build(validationRuleElement);
+    }
+
+    public Convertor createConvertor(String dataTypeName, Element convertorElement) throws Exception {
+        DatatypeBuilder datatypeBulder = (DatatypeBuilder)typeBuilderSelector.select(dataTypeName);
+        return datatypeBulder.buildConvertor(convertorElement);
     }
 
     public void dispose() {
