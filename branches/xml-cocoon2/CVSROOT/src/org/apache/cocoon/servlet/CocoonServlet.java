@@ -47,7 +47,7 @@ import org.apache.log.Priority;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.27 $ $Date: 2000-11-14 15:08:28 $
+ * @version CVS $Revision: 1.1.4.28 $ $Date: 2000-11-15 15:24:07 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -117,8 +117,9 @@ public class CocoonServlet extends HttpServlet {
         }
 
         try {
-            this.configFile = new File(this.context.getResource(configFileName).getFile());
-        } catch (java.net.MalformedURLException mue) {
+            this.configFile = new File(this.context.getRealPath(configFileName));
+        } catch (Exception mue) {
+            this.context.log("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
             log.error("Servlet initialization argument 'configurations' not found at " + configFileName, mue);
             throw new ServletException("Servlet initialization argument 'configurations' not found at " + configFileName);
         }
