@@ -5,7 +5,6 @@
   <!-- indicates what flowscript to attach to this sitemap -->
   <map:flow language="javascript">
     <map:script src="calc.js"/>
-    <map:script src="test.js"/>
   </map:flow>
 
   <map:pipelines>
@@ -47,10 +46,6 @@
           +-->
       <map:match pattern="">
         <map:call function="calculator"/>
-      </map:match>
-
-      <map:match pattern="test">
-        <map:call function="test"/>
       </map:match>
 
     </map:pipeline>
