@@ -354,7 +354,7 @@
        </map:transform>
        <map:serialize type="xml"/>
      </map:match>
-     
+
      <map:match pattern="xhr_cars/*/*">
        <map:generate src="forms/car-db.xml"/>
        <map:transform src="xsl/xhr_carfilter.xsl">

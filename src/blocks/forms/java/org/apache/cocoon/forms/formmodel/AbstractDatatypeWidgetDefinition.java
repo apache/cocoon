@@ -98,7 +98,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     public boolean hasValueChangedListeners() {
         return this.listener != null;
     }
-    
+
     public ValueChangedListener getValueChangedListener() {
         return this.listener;
     }
