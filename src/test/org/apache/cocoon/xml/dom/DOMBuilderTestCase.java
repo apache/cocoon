@@ -26,7 +26,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * JUnit Testcase for {@link DOMBuilder}.
  * 
- * @version CVS $Id: DOMBuilderTestCase.java,v 1.2 2004/05/07 13:11:26 ugo Exp $
+ * @version CVS $Id: DOMBuilderTestCase.java,v 1.3 2004/05/18 12:36:52 ugo Exp $
  */
 public class DOMBuilderTestCase extends TestCase {
 
@@ -57,8 +57,11 @@ public class DOMBuilderTestCase extends TestCase {
         builder.endElement("", "test", "test");
         builder.endDocument();
         Document dom = builder.getDocument();
-        assertEquals("Content of root element not what expected", "ABCDEF", 
-                dom.getDocumentElement().getFirstChild().getNodeValue()
-                + dom.getDocumentElement().getLastChild().getNodeValue());
+        StringBuffer value = new StringBuffer();
+        for (int i = 0 ; i < dom.getDocumentElement().getChildNodes().getLength() ; ++i) {
+            value.append(dom.getDocumentElement().getChildNodes().item(i).getNodeValue());
+        }
+        assertEquals("Content of root element not what expected",
+                "ABCDEF", value.toString()); 
     }
 }
