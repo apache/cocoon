@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  *
  * @see org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.5 2004/01/29 03:18:05 vgritsenko Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.6 2004/02/03 18:05:31 vgritsenko Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -146,7 +146,12 @@ public class FlowJXPathSelectionList implements SelectionList {
 
                 // Get the value as a string
                 Object value = itemCtx.getValue(this.valuePath);
-                stringValue = this.datatype.convertToString(value, locale);
+
+                // List may contain null value, and (per contract with convertors),
+                // convertors are not invoked on nulls.
+                if (value != null) {
+                    stringValue = this.datatype.convertToString(value, locale);
+                }
 
                 // Get the label (can be ommitted)
                 itemCtx.setLenient(true);
