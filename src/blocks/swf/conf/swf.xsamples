@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<!--
+    SWF samples setup contributed by joerg.heinicke@gmx.de
+    $Id: swf.xsamples,v 1.1 2003/05/03 07:36:02 bdelacretaz Exp $
+-->
+
+<xsamples xpath="/samples" unless="group[@name='SWF']">
+    <group name="SWF">
+        <sample name="SWF" href="swf/">
+            Flash!
+        </sample>
+    </group>
+</xsamples>
+
