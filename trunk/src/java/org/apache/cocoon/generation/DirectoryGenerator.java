@@ -55,7 +55,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
@@ -117,7 +123,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.11 2003/10/27 07:29:31 cziegeler Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.12 2003/10/27 07:38:10 cziegeler Exp $
  */
 public class DirectoryGenerator
     extends ServiceableGenerator

@@ -50,7 +50,13 @@
 */
 package org.apache.cocoon.acting;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -211,7 +217,7 @@ import org.apache.regexp.RESyntaxException;
  * </table>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: AbstractValidatorAction.java,v 1.6 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: AbstractValidatorAction.java,v 1.7 2003/10/27 07:37:49 cziegeler Exp $
  */
 public abstract class AbstractValidatorAction
     extends AbstractComplementaryConfigurableAction

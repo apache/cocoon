@@ -58,7 +58,13 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.environment.*;
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.i18n.I18nUtils;
 
 /**
@@ -137,7 +143,7 @@ import org.apache.cocoon.i18n.I18nUtils;
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
- * @version CVS $Id: LocaleAction.java,v 1.4 2003/10/27 07:28:26 cziegeler Exp $
+ * @version CVS $Id: LocaleAction.java,v 1.5 2003/10/27 07:37:49 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type="Action"
