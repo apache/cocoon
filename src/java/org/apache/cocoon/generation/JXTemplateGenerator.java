@@ -57,12 +57,19 @@ import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Stack;
+import java.util.TimeZone;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
@@ -85,11 +92,26 @@ import org.apache.commons.jexl.util.introspection.UberspectImpl;
 import org.apache.commons.jexl.util.introspection.VelMethod;
 import org.apache.commons.jexl.util.introspection.VelPropertyGet;
 import org.apache.commons.jexl.util.introspection.VelPropertySet;
-import org.apache.commons.jxpath.*;
+import org.apache.commons.jxpath.CompiledExpression;
+import org.apache.commons.jxpath.DynamicPropertyHandler;
+import org.apache.commons.jxpath.JXPathBeanInfo;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathContextFactory;
+import org.apache.commons.jxpath.JXPathIntrospector;
+import org.apache.commons.jxpath.Pointer;
+import org.apache.commons.jxpath.Variables;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeJavaClass;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
@@ -100,8 +122,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.LocatorImpl;
-import java.util.*;
-import java.text.*;
 
 /**
  * <p>(<em>JX</em> for <a href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</a> 
@@ -333,6 +353,8 @@ import java.text.*;
  *   &lt;tr&gt;&lt;td bgcolor="blue"&gt;Ontario&lt;/td&gt;&lt;/tr&gt;
  * &lt;/table&gt;
  * </pre></p>
+ * 
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.15 2003/10/20 10:13:42 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
