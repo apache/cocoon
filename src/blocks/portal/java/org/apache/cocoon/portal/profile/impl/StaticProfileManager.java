@@ -79,7 +79,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: StaticProfileManager.java,v 1.5 2003/07/11 07:49:57 cziegeler Exp $
+ * @version CVS $Id: StaticProfileManager.java,v 1.6 2003/07/18 14:41:45 cziegeler Exp $
  */
 public class StaticProfileManager
     extends AbstractProfileManager
@@ -96,7 +96,6 @@ public class StaticProfileManager
      * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(String, String)
      */
     public Layout getPortalLayout(String layoutKey, String layoutID) {
-        LayoutFactory factory = null;
         PortalService service = null;
         ProfileLS adapter = null;
         try {
@@ -169,7 +168,7 @@ public class StaticProfileManager
             service.setAttribute(serviceKey + "defaultKey", layout.getId());
             cacheLayouts(layouts, layout);
 
-            factory = (LayoutFactory) this.manager.lookup(LayoutFactory.ROLE);
+            LayoutFactory factory = service.getComponentManager().getLayoutFactory();
             factory.prepareLayout(layout);
 
             // store the new values in the service
@@ -187,8 +186,7 @@ public class StaticProfileManager
             return (Layout) layouts.get(layoutID);
 
         } catch (Exception ce) {
-            // TODO
-            throw new CascadingRuntimeException("Arg", ce);
+            throw new CascadingRuntimeException("Unable to get layout.", ce);
         } finally {
             this.manager.release(service);
             this.manager.release((Component)adapter);
@@ -272,20 +270,6 @@ public class StaticProfileManager
         } catch (ComponentException e) {
             throw new CascadingRuntimeException(
                 "Unable to lookup portal service.",
-                e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-
-    public void setEntryLayout(Layout object) {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            service.setTemporaryAttribute("DEFAULT_LAYOUT", object);
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException(
-                "Unable to lookup service manager.",
                 e);
         } finally {
             this.manager.release(service);

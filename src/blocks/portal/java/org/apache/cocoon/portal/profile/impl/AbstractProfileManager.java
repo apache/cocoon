@@ -57,6 +57,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
@@ -64,7 +65,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProfileManager.java,v 1.1 2003/07/10 13:17:00 cziegeler Exp $
+ * @version CVS $Id: AbstractProfileManager.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
  */
 public abstract class AbstractProfileManager 
     extends AbstractLogEnabled 
@@ -127,5 +128,32 @@ public abstract class AbstractProfileManager
     
     public void logout() {
     }
+
+    public void setEntryLayout(Layout object) {
+        String layoutKey = this.getDefaultLayoutKey();
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            service.setTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey, object);
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup service manager.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
+    public Layout getEntryLayout() {
+        String layoutKey = this.getDefaultLayoutKey();
+        PortalService service = null;
+        try {
+            service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            return (Layout)service.getTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey);
+        } catch (ComponentException e) {
+            throw new CascadingRuntimeException("Unable to lookup service manager.", e);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+
     
 }

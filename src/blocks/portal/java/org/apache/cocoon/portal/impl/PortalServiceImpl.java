@@ -52,18 +52,19 @@ package org.apache.cocoon.portal.impl;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.RequestLifecycleComponent;
@@ -71,7 +72,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
-import org.apache.cocoon.portal.LinkService;
+import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.SAXException;
 
@@ -84,24 +85,33 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.5 2003/07/11 11:06:22 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.6 2003/07/18 14:41:46 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
     implements Composable,
                 RequestLifecycleComponent, 
                 PortalService, 
-                Recyclable {
+                Contextualizable,
+                Recyclable,
+                Disposable,
+                Configurable {
 
+    protected Context context;
+    
     protected Map objectModel;
+   
     protected Map temporaryAttributes = new HashMap();
-    protected LinkService linkService;
     
     protected ComponentManager manager;
 
     protected String portalName;
 
     protected String attributePrefix;
+    
+    protected PortalComponentManager portalComponentManager;
+    
+    protected Map portalComponentManagers = new HashMap();
     
     public void compose(ComponentManager componentManager) throws ComponentException {
         this.manager = componentManager;
@@ -127,6 +137,10 @@ public class PortalServiceImpl
     public void setPortalName(String value) {
         this.portalName = value;
         this.attributePrefix = this.getClass().getName() + '/' + this.portalName + '/';
+        this.portalComponentManager = (PortalComponentManager) this.portalComponentManagers.get(this.portalName);
+        if ( this.portalComponentManager == null ) {
+            throw new RuntimeException("Portal '"+this.portalName+"' is not configured.");
+        }
     }
 
     /* (non-Javadoc)
@@ -135,8 +149,7 @@ public class PortalServiceImpl
     public void recycle() {
         this.portalName = null;
         this.temporaryAttributes.clear();
-        this.manager.release( this.linkService );
-        this.linkService = null;
+        this.portalComponentManager = null;
     }
 
     public Object getAttribute(String key) {
@@ -194,18 +207,53 @@ public class PortalServiceImpl
         return this.temporaryAttributes.keySet().iterator();
     }
 
+
     /**
-     * Get the link service
+     * Return the component manager for the current portal
      */
-    public LinkService getLinkService() {
-        if ( null == this.linkService ) {
-            try {
-                this.linkService = (LinkService)this.manager.lookup( LinkService.ROLE);
-            } catch (ComponentException e) {
-                throw new CascadingRuntimeException("Unable to lookup link service.", e);
-            }
+    public PortalComponentManager getComponentManager() {
+        return this.portalComponentManager;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        final Iterator i = this.portalComponentManagers.values().iterator();
+        while ( i.hasNext() ) {
+            ContainerUtil.dispose( i.next() );
         }
-        return this.linkService;
+        this.portalComponentManagers.clear();       
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration config) throws ConfigurationException {
+        final Configuration[] portals = config.getChild("portals").getChildren("portal");
+        for(int i=0; i < portals.length; i++ ) {
+            final Configuration current = portals[i];
+            final String name = current.getAttribute("name");
+            try {
+                PortalComponentManager c = new DefaultPortalComponentManager();
+                this.portalComponentManagers.put( name, c );
+                ContainerUtil.enableLogging( c, this.getLogger() );
+                ContainerUtil.contextualize( c, this.context );
+                ContainerUtil.compose( c, this.manager );
+                ContainerUtil.configure( c, current );
+                ContainerUtil.initialize( c );
+            } catch (Exception e) {
+                throw new ConfigurationException("Unable to setup new portal component manager for portal " + name, e);
+            }
+            
+        }
     }
 
 }

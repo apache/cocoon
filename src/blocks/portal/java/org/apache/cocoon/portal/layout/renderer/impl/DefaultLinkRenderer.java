@@ -50,11 +50,9 @@
 */
 package org.apache.cocoon.portal.layout.renderer.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.LinkLayout;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -64,29 +62,21 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: DefaultLinkRenderer.java,v 1.2 2003/07/10 13:16:59 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkRenderer.java,v 1.3 2003/07/18 14:41:45 cziegeler Exp $
  */
 public class DefaultLinkRenderer extends AbstractRenderer {
 
     public void process(Layout layout, PortalService service, ContentHandler handler)
     throws SAXException {
         if (layout instanceof LinkLayout) {
-            ProfileManager profileManager = null;
-            try {
-                profileManager = (ProfileManager)this.componentManager.lookup(ProfileManager.ROLE);
-                String layoutKey = (String)layout.getAspectData("link-layout-key");
-				String layoutId = (String)layout.getAspectData("link-layout-id");
-                if ( layoutKey == null && layoutId == null){
-					// get default values
-					layoutKey = ((LinkLayout)layout).getLayoutKey();
-					layoutId = ((LinkLayout)layout).getLayoutId();
-				}
-                this.processLayout(profileManager.getPortalLayout(layoutKey, layoutId), service, handler);
-            } catch (ComponentException ce) {
-                throw new SAXException("Unable to lookup profile manager.", ce);
-            } finally {
-                this.componentManager.release(profileManager);
-            }
+            String layoutKey = (String)layout.getAspectData("link-layout-key");
+			String layoutId = (String)layout.getAspectData("link-layout-id");
+            if ( layoutKey == null && layoutId == null){
+				// get default values
+				layoutKey = ((LinkLayout)layout).getLayoutKey();
+				layoutId = ((LinkLayout)layout).getLayoutId();
+			}
+            this.processLayout(service.getComponentManager().getProfileManager().getPortalLayout(layoutKey, layoutId), service, handler);
         } else {
             throw new SAXException("Wrong layout type, LinkLayout expected: " + layout.getClass().getName());
         }        

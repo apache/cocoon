@@ -69,14 +69,13 @@ import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.2 2003/07/10 13:17:03 cziegeler Exp $
+ * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.3 2003/07/18 14:41:45 cziegeler Exp $
  */
 public class FullScreenCopletEventAspect
 	extends AbstractLogEnabled
@@ -105,7 +104,7 @@ public class FullScreenCopletEventAspect
                     publisher.publish(e);
                     FullScreenCopletEvent fsce = (FullScreenCopletEvent)e;
                     if ( fsce.getLayout() != null) {
-                        service.getLinkService().addEventToLink( e );
+                        service.getComponentManager().getLinkService().addEventToLink( e );
                     }
                 }
             }
@@ -135,14 +134,14 @@ public class FullScreenCopletEventAspect
         FullScreenCopletEvent e = (FullScreenCopletEvent) event;
         final Layout startingLayout = e.getLayout();
         if ( null != startingLayout ) {
-            ProfileManager profileManager = null;
+            PortalService portalService = null;
             try {
-                profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
-                profileManager.setEntryLayout( startingLayout );
+                portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
+                portalService.getComponentManager().getProfileManager().setEntryLayout( startingLayout );
             } catch (ComponentException ce) {
                 // ignore
             } finally {
-                this.manager.release(profileManager);
+                this.manager.release(portalService);
             }
         }
     }

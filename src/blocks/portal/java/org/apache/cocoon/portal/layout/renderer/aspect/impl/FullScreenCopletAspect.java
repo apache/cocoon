@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletAspect.java,v 1.2 2003/06/06 11:33:39 cziegeler Exp $
+ * @version CVS $Id: FullScreenCopletAspect.java,v 1.3 2003/07/18 14:41:45 cziegeler Exp $
  */
 public class FullScreenCopletAspect extends AbstractAspect {
 
@@ -80,13 +80,12 @@ public class FullScreenCopletAspect extends AbstractAspect {
         
         CopletInstanceData cid = ((CopletLayout)layout).getCopletInstanceData();
 
-        Layout fullScreenLayout = (Layout)service.getTemporaryAttribute("DEFAULT_LAYOUT");
+        final Layout fullScreenLayout = (Layout)service.getComponentManager().getProfileManager().getEntryLayout();
         if ( fullScreenLayout != null && fullScreenLayout.equals( layout )) {
-            FullScreenCopletEvent event = new FullScreenCopletEvent( cid, null );
-            XMLUtils.createElement(handler, "fullscreen-uri", service.getLinkService().getRefreshLinkURI());
+            XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getRefreshLinkURI());
         } else {
             FullScreenCopletEvent event = new FullScreenCopletEvent( cid, layout );
-            XMLUtils.createElement(handler, "fullscreen-uri", service.getLinkService().getLinkURI(event));
+            XMLUtils.createElement(handler, "fullscreen-uri", service.getComponentManager().getLinkService().getLinkURI(event));
         }
 
         context.invokeNext(layout, service, handler);

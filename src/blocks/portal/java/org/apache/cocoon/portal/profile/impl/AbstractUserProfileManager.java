@@ -57,7 +57,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.cocoon.ProcessingException;
@@ -77,7 +76,7 @@ import org.apache.cocoon.portal.layout.LayoutFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AbstractUserProfileManager.java,v 1.1 2003/07/10 13:17:00 cziegeler Exp $
+ * @version CVS $Id: AbstractUserProfileManager.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
  */
 public abstract class AbstractUserProfileManager 
     extends AbstractProfileManager { 
@@ -298,32 +297,18 @@ public abstract class AbstractUserProfileManager
         }
     }
 
-    public void setEntryLayout(Layout object) {
-        String layoutKey = this.getDefaultLayoutKey();
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            service.setTemporaryAttribute("DEFAULT_LAYOUT:" + layoutKey, object);
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup service manager.", e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(java.lang.String, java.lang.String)
      */
     public Layout getPortalLayout(String layoutKey, String layoutID) {
         PortalService service = null;
-        LayoutFactory factory = null;
-        CopletFactory copletFactory = null;
         ComponentSelector adapterSelector = null;
         
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            factory = (LayoutFactory) this.manager.lookup(LayoutFactory.ROLE);
-            copletFactory = (CopletFactory) this.manager.lookup(CopletFactory.ROLE);
+            LayoutFactory factory = service.getComponentManager().getLayoutFactory();
+            CopletFactory copletFactory = service.getComponentManager().getCopletFactory();
+            
             adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             
             if ( null == layoutKey ) {
@@ -358,12 +343,9 @@ public abstract class AbstractUserProfileManager
             
             return layout;
         } catch (Exception ce) {
-            // TODO
-            throw new CascadingRuntimeException("Arg", ce);
+            throw new CascadingRuntimeException("Exception during loading of profile.", ce);
         } finally {
             this.manager.release(service);
-            this.manager.release((Component)factory);
-            this.manager.release((Component)copletFactory);
             this.manager.release(adapterSelector);
         }
     }

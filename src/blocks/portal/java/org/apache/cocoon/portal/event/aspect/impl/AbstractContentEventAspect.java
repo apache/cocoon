@@ -65,14 +65,13 @@ import org.apache.cocoon.portal.event.Publisher;
 import org.apache.cocoon.portal.event.aspect.EventAspect;
 import org.apache.cocoon.portal.event.aspect.EventAspectContext;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractContentEventAspect.java,v 1.1 2003/07/14 10:12:14 cziegeler Exp $
+ * @version CVS $Id: AbstractContentEventAspect.java,v 1.2 2003/07/18 14:41:45 cziegeler Exp $
  */
 public abstract class AbstractContentEventAspect
     extends AbstractLogEnabled
@@ -99,17 +98,10 @@ public abstract class AbstractContentEventAspect
      * values and invokes {@link #publish(Publisher, Layout, String[])}.
      * @param values The values contained in the request
      */
-    protected void publish(Publisher publisher, String[] values) {
-        ProfileManager profileManager = null;
-        try {
-            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-            Layout layout = profileManager.getPortalLayout(values[0], values[1] );
-            if ( layout != null ) {
-                this.publish( publisher, layout, values);
-            }
-        } catch (ComponentException ignore) {
-        } finally {
-            this.manager.release( profileManager );
+    protected void publish( PortalService service, Publisher publisher, String[] values) {
+        Layout layout = service.getComponentManager().getProfileManager().getPortalLayout(values[0], values[1] );
+        if ( layout != null ) {
+            this.publish( publisher, layout, values);
         }
     }
     
@@ -154,7 +146,7 @@ public abstract class AbstractContentEventAspect
                             tokenNumber = tokenNumber + 1;
                         } 
                     
-                        this.publish( publisher, eventValues );
+                        this.publish( service, publisher, eventValues );
 
                     } else {
                         this.getLogger().warn("Data for Event is not set correctly");

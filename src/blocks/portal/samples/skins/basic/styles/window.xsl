@@ -33,7 +33,7 @@
 			</font>
 	    </td>
 		<td align="right" bgColor="{$bgColor}">
-			<xsl:if test="fullscreen-uri">
+			<xsl:if test="fullscreen-uri and not(maximize-uri)">
 				<a href="{fullscreen-uri}">
 	  			    <img src="customize.gif" border="0" alt="Full Screen"/>
 	  			</a>

@@ -67,6 +67,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.AspectDescription;
@@ -76,14 +77,13 @@ import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
-import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
  * This factory is for creating and managing coplet objects
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultCopletFactory.java,v 1.6 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: DefaultCopletFactory.java,v 1.7 2003/07/18 14:41:46 cziegeler Exp $
  */
 public class DefaultCopletFactory  
     extends AbstractLogEnabled 
@@ -181,14 +181,14 @@ public class DefaultCopletFactory
             this.manager.release( adapterSelector );
         }
         
-        ProfileManager profileManager = null;
+        PortalService service = null;
         try {
-            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-            profileManager.register(instance);
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            service.getComponentManager().getProfileManager().register(instance);
         } catch (ComponentException ce) {
             throw new ProcessingException("Unable to lookup profile manager.", ce);
         } finally {
-            this.manager.release( profileManager );
+            this.manager.release( service );
         }
         return instance;
     }
@@ -283,14 +283,14 @@ public class DefaultCopletFactory
                 this.manager.release( adapterSelector );
             }
             
-            ProfileManager profileManager = null;
+            PortalService service = null;
             try {
-                profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-                profileManager.unregister(copletInstanceData);
+                service = (PortalService)this.manager.lookup(PortalService.ROLE);
+                service.getComponentManager().getProfileManager().unregister(copletInstanceData);
             } catch (ComponentException ce) {
-                throw new ProcessingException("Unable to lookup profile manager.", ce);
+                throw new ProcessingException("Unable to lookup portal service.", ce);
             } finally {
-                this.manager.release( profileManager );
+                this.manager.release( service );
             }
         }
     }

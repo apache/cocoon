@@ -70,6 +70,8 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.portal.PortalComponentManager;
+import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
 import org.apache.cocoon.portal.aspect.AspectDescription;
@@ -82,12 +84,11 @@ import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.LayoutEvent;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
-import org.apache.cocoon.portal.layout.*;
+import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -95,7 +96,7 @@ import org.apache.cocoon.util.ClassUtils;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLayoutFactory.java,v 1.12 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: DefaultLayoutFactory.java,v 1.13 2003/07/18 14:41:44 cziegeler Exp $
  */
 public class DefaultLayoutFactory
 	extends AbstractLogEnabled
@@ -115,6 +116,8 @@ public class DefaultLayoutFactory
     protected ComponentSelector storeSelector;
     
     protected ComponentManager manager;
+    
+    protected Configuration[] layoutsConf;
     
     /** 
      * Configure a layout
@@ -162,32 +165,26 @@ public class DefaultLayoutFactory
             }
         }
         // now query all configured renderers for their aspects
-        ComponentSelector rendererSelector = null;
+        PortalService service = null;
         try {
-            rendererSelector = (ComponentSelector)this.manager.lookup(Renderer.ROLE+"Selector");
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            PortalComponentManager pcManager = service.getComponentManager();
             
             Iterator rendererIterator = desc.getRendererNames();
             while (rendererIterator.hasNext()) {
                 final String rendererName = (String)rendererIterator.next();
-                Renderer renderer = null;
-                try { 
-                    renderer = (Renderer) rendererSelector.select( rendererName );
-                    
-                    Iterator aspectIterator = renderer.getAspectDescriptions();
-                    while (aspectIterator.hasNext()) {
-                        final AspectDescription adesc = (AspectDescription) aspectIterator.next();
-                        desc.addAspectDescription( adesc );
-                    }
-                } catch (ComponentException ce ) {
-                    throw new ConfigurationException("Unable to lookup renderer '" + rendererName + "'", ce);
-                } finally {
-                    rendererSelector.release( renderer );
+                Renderer renderer = pcManager.getRenderer( rendererName );
+                
+                Iterator aspectIterator = renderer.getAspectDescriptions();
+                while (aspectIterator.hasNext()) {
+                    final AspectDescription adesc = (AspectDescription) aspectIterator.next();
+                    desc.addAspectDescription( adesc );
                 }
             }
         } catch (ComponentException ce ) {
             throw new ConfigurationException("Unable to lookup renderer selector.", ce);
         } finally {
-            this.manager.release( rendererSelector );
+            this.manager.release( service );
         }
         
         // set the aspect data handler
@@ -201,17 +198,33 @@ public class DefaultLayoutFactory
      */
     public void configure(Configuration configuration) 
     throws ConfigurationException {
-        final Configuration[] layoutsConf = configuration.getChild("layouts").getChildren("layout");
-        if ( layoutsConf != null ) {
-            for(int i=0; i < layoutsConf.length; i++ ) {
-                this.configureLayout( layoutsConf[i] );
+        this.layoutsConf = configuration.getChild("layouts").getChildren("layout");
+    }
+
+    protected void init() {
+        // FIXME when we switch to another container we can remove
+        //        the lazy evaluation
+        if ( this.layoutsConf != null ) {
+            synchronized (this) {
+                if ( this.layoutsConf != null ) {
+                    for(int i=0; i < layoutsConf.length; i++ ) {
+                        try {
+                            this.configureLayout( layoutsConf[i] );
+                        } catch (ConfigurationException ce) {
+                            throw new CascadingRuntimeException("Unable to configure layout.", ce);
+                        }
+                    }
+                    this.layoutsConf = null;
+                }
             }
         }
     }
-
+    
     public void prepareLayout(Layout layout) 
     throws ProcessingException {
         if ( layout != null ) {
+            
+            this.init();
      
             final String layoutName = layout.getName();
             if ( layoutName == null ) {
@@ -240,6 +253,8 @@ public class DefaultLayoutFactory
 
     public Layout newInstance(String layoutName) 
     throws ProcessingException {
+        this.init();
+        
         Object[] o = (Object[]) this.layouts.get( layoutName );
             
         if ( o == null ) {
@@ -265,19 +280,20 @@ public class DefaultLayoutFactory
         layout.setDescription( layoutDescription );
         layout.setAspectDataHandler((AspectDataHandler)o[1]);
 
-        ProfileManager profileManager = null;
+        PortalService service = null;
         try {
-            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-            profileManager.register(layout);
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            service.getComponentManager().getProfileManager().register(layout);
         } catch (ComponentException ce) {
             throw new ProcessingException("Unable to lookup profile manager.", ce);
         } finally {
-            this.manager.release( profileManager );
+            this.manager.release( service );
         }
         return layout;
     }
     
     public List getLayoutDescriptions() {
+        this.init();
         return this.descriptions;
     }
 
@@ -356,6 +372,7 @@ public class DefaultLayoutFactory
     public void remove(Layout layout) 
     throws ProcessingException {
         if ( layout != null ) {
+            this.init();
             if ( layout instanceof CompositeLayout ) {
                 Iterator itemIterator = ((CompositeLayout)layout).getItems().iterator();
                 while ( itemIterator.hasNext() ) {
@@ -367,25 +384,18 @@ public class DefaultLayoutFactory
                 parent.getParent().removeItem( parent );
             }
             
-            if ( layout instanceof CopletLayout ) {
-                CopletFactory factory = null;
-                try {
-                    factory = (CopletFactory)this.manager.lookup(CopletFactory.ROLE);
-                    factory.remove( ((CopletLayout)layout).getCopletInstanceData());
-                } catch (ComponentException ce) {
-                    throw new ProcessingException("Unable to lookup coplet factory.", ce);
-                } finally {
-                    this.manager.release( (Component)factory );
-                }
-            }
-            ProfileManager profileManager = null;
+            PortalService service = null;
             try {
-                profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
-                profileManager.unregister(layout);
+                service = (PortalService)this.manager.lookup(PortalService.ROLE);
+                if ( layout instanceof CopletLayout ) {
+                    CopletFactory factory = service.getComponentManager().getCopletFactory();
+                    factory.remove( ((CopletLayout)layout).getCopletInstanceData());
+                }
+                service.getComponentManager().getProfileManager().unregister(layout);
             } catch (ComponentException ce) {
-                throw new ProcessingException("Unable to lookup profile manager.", ce);
+                throw new ProcessingException("Unable to lookup portal service.", ce);
             } finally {
-                this.manager.release( profileManager );
+                this.manager.release( service );
             }
         }
     }

@@ -56,7 +56,6 @@ import java.util.Iterator;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -81,7 +80,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractRenderer.java,v 1.3 2003/06/14 17:55:43 cziegeler Exp $
+ * @version CVS $Id: AbstractRenderer.java,v 1.4 2003/07/18 14:41:45 cziegeler Exp $
  */
 public abstract class AbstractRenderer
     extends AbstractLogEnabled
@@ -157,27 +156,10 @@ public abstract class AbstractRenderer
     protected void processLayout(Layout layout, PortalService service, ContentHandler handler) throws SAXException {
         final String rendererName = layout.getRendererName();
         Renderer renderer = null;
-        try {
-            renderer = (Renderer) this.getRenderSelector().select(rendererName);
-            renderer.toSAX(layout, service, handler);
-        } catch (ComponentException ce) {
-            throw new SAXException("Unable to lookup renderer for role " + rendererName, ce);
-        } finally {
-            this.getRenderSelector().release(renderer);
-        }
+        renderer = service.getComponentManager().getRenderer(rendererName);
+        renderer.toSAX(layout, service, handler);
     }
 
-    protected ComponentSelector getRenderSelector() {
-        if ( null == this.rendererSelector ) {
-            try {
-                this.rendererSelector = (ComponentSelector) this.componentManager.lookup(Renderer.ROLE + "Selector");
-            } catch (ComponentException local) {
-                throw new CascadingRuntimeException("Unable to lookup component selector for portal layout selector.", local);
-            }
-        }
-        return this.rendererSelector;
-    }
-        
     protected abstract void process(Layout layout, PortalService service, ContentHandler handler) throws SAXException;
 
     /**

@@ -58,7 +58,6 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
-import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.xml.sax.SAXException;
 
@@ -77,7 +76,7 @@ import org.xml.sax.SAXException;
  * &lt;/map:transform&gt;</pre>
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractCopletTransformer.java,v 1.2 2003/05/27 11:54:17 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletTransformer.java,v 1.3 2003/07/18 14:41:46 cziegeler Exp $
  */
 public abstract class AbstractCopletTransformer 
 extends AbstractSAXTransformer {
@@ -94,9 +93,10 @@ extends AbstractSAXTransformer {
 
     protected CopletInstanceData getCopletInstanceData() 
     throws SAXException {
-        ProfileManager profileManager = null;
+        PortalService portalService = null;
         try {
-            profileManager = (ProfileManager)this.manager.lookup(ProfileManager.ROLE);
+
+            portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
             // determine coplet id
             String copletId = null;            
@@ -108,12 +108,9 @@ extends AbstractSAXTransformer {
                     copletId = this.parameters.getParameter(COPLET_ID_PARAM);
                         
                     // set portal name
-                    PortalService portalService = null;
                     try {
-                        portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
                         portalService.setPortalName(this.parameters.getParameter(PORTAL_NAME_PARAM));
                     } finally {
-                        this.manager.release(portalService);
                     }
                 } catch (ParameterException e) {
                     throw new SAXException("copletId and portalName must be passed as parameter or in the object model within the parent context.");
@@ -124,7 +121,7 @@ extends AbstractSAXTransformer {
             }
 
 
-            CopletInstanceData object = profileManager.getCopletInstanceData( copletId );
+            CopletInstanceData object = portalService.getComponentManager().getProfileManager().getCopletInstanceData( copletId );
                 
             if (object == null) {
                 throw new SAXException("Could not find coplet instance data for " + copletId);
@@ -132,9 +129,9 @@ extends AbstractSAXTransformer {
                 
             return object;
         } catch (ComponentException e) {
-            throw new SAXException("Error getting profile manager.", e);
+            throw new SAXException("Error getting portal service.", e);
         } finally {
-            this.manager.release(profileManager);
+            this.manager.release( portalService );
         }
     }
 }
