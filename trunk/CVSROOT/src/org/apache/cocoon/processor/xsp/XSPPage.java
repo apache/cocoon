@@ -1,4 +1,4 @@
-/*-- $Id: XSPPage.java,v 1.9 2001-01-17 16:02:20 greenrd Exp $ -- 
+/*-- $Id: XSPPage.java,v 1.10 2001-01-17 20:45:15 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.xml.XMLFragment;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.9 $ $Date: 2001-01-17 16:02:20 $
+ * @version $Revision: 1.10 $ $Date: 2001-01-17 20:45:15 $
  */
 public abstract class XSPPage extends AbstractProducer implements Cacheable {
   protected Parser xspParser;
@@ -142,7 +142,8 @@ public abstract class XSPPage extends AbstractProducer implements Cacheable {
     return factory.createTextNode(String.valueOf(v));
   }
 
-  protected Node xspExpr(Object v, Document factory) {
+  protected Node xspExpr(Object v, Document factory) 
+  {
     // Null? blank text node
     if (v == null) {
       return factory.createTextNode("");
@@ -175,7 +176,12 @@ public abstract class XSPPage extends AbstractProducer implements Cacheable {
     // Convertible to DOM
     if (v instanceof XMLFragment) {
       DocumentFragment fragment = factory.createDocumentFragment ();
-      ((XMLFragment) v).toDOM(fragment);
+      try {
+        ((XMLFragment) v).toDOM(fragment);
+      }
+      catch (Exception ex) {
+        throw new RuntimeException ("Error building DOM: " + ex);
+      }
       return fragment;
     }
  
