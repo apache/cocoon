@@ -50,8 +50,22 @@
 */
 package org.apache.cocoon.portal.transformation;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.sax.XMLDeserializer;
+import org.apache.cocoon.components.sax.XMLSerializer;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractSAXTransformer;
-import org.w3c.tidy.Tidy;
+import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.excalibur.xmlizer.XMLizer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -61,11 +75,23 @@ import org.xml.sax.SAXException;
  * It's actually a quick hack...
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RSSTransformer.java,v 1.1 2003/07/11 14:17:02 cziegeler Exp $
+ * @version CVS $Id: RSSTransformer.java,v 1.2 2003/07/12 13:49:56 cziegeler Exp $
  */
 public final class RSSTransformer
 extends AbstractSAXTransformer {
 
+    /** The xmlizer for converting html to xml */
+    protected XMLizer xmlizer;
+    
+    /** The xml serializer */
+    protected XMLSerializer serializer;
+    
+    /** The xml deserializer */
+    protected XMLDeserializer deserializer;
+    
+    /** The filter */
+    protected XMLConsumer filter;
+    
     /**
      *  receive notification of start element event.
      **/
@@ -85,47 +111,95 @@ extends AbstractSAXTransformer {
         if ("description".equals(name)) {
             final String text = this.endTextRecording();
             final String html = "<html><body>"+text+"</body></html>";
-
+            
+            boolean parsed = false;            
             try {
-                final Tidy xhtmlconvert = new Tidy();
-                xhtmlconvert.setXmlOut(true);
-                xhtmlconvert.setXHTML(true);
-                xhtmlconvert.setShowWarnings(false);
-                org.w3c.dom.Document doc = xhtmlconvert.parseDOM(new java.io.ByteArrayInputStream(html.getBytes()), null);
-                org.w3c.dom.NodeList node = org.apache.cocoon.xml.dom.DOMUtil.selectNodeList(doc, "/html/body/*");
-                if (null != node) {
-                    for(int i = 0; i < node.getLength(); i++) {
-                        this.sendEvents(node.item(i));
-                    }
-                } else {
-                    this.sendTextEvent(text);
-                }
-            } catch (Exception e) {
+                InputStream inputStream = new ByteArrayInputStream(html.getBytes());
+                this.xmlizer.toSAX(inputStream,
+                                    "text/html",
+                                    null,
+                                    this.serializer);
+                // if no exception occurs, everything is fine!
+                parsed = true;
+            } catch (Exception ignore) {
+            }
+            if ( parsed ) {
+                this.deserializer.setConsumer( this.filter );
+                this.deserializer.deserialize( this.serializer.getSAXFragment());
+            } else {
                 this.sendTextEvent(text);
             }
         }
         super.endElement(uri,name,raw);
     }
 
-    /**
-     * Replace occurence of searchString in source with replacement. If
-     * replacement is null remove the occurences.
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
-    public static String replace(String source,
-                                 String searchString,
-                                 String replacement) {
-        if (source != null && searchString != null) {
-            int pos;
-            int l = searchString.length();
-            if (replacement == null) replacement = "";
-            do {
-                pos = source.indexOf(searchString);
-                if (pos != -1) {
-                    source = source.substring(0, pos) + replacement + source.substring(pos + l);
-                }
-            } while (pos != -1);
+    public void recycle() {
+        this.manager.release( (Component) this.xmlizer );
+        this.manager.release( this.serializer );
+        this.manager.release( this.deserializer );
+        this.xmlizer = null;
+        this.serializer = null;
+        this.deserializer = null;
+        this.filter = null;
+        super.recycle();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void setup(SourceResolver resolver,
+                       Map objectModel,
+                       String src,
+                       Parameters par)
+    throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, par);
+        try {
+            this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
+            this.serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
+            this.deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
+        } catch (ComponentException ce) {
+            throw new ProcessingException("Unable to lookup component.", ce);
         }
-        return source;
+    }
+
+   class HTMLFilter extends IncludeXMLConsumer {
+       
+       int bodyCount = 0;
+       
+       public HTMLFilter(XMLConsumer consumer) {
+           super(consumer);
+       }
+
+       public void startElement(String uri, String local, String qName, Attributes attr) throws SAXException {
+           if (bodyCount > 0 ) {
+               super.startElement(uri, local, qName, attr);
+           } 
+           if ("body".equalsIgnoreCase(local)) {
+               bodyCount++;
+           }
+       }
+
+       public void endElement(String uri, String local, String qName) throws SAXException {
+           if ("body".equalsIgnoreCase(local)) {
+               bodyCount--;
+           }
+           if (bodyCount > 0 ) {
+               super.endElement(uri, local, qName );
+           } 
+       }
+
+   }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.transformation.AbstractSAXTransformer#setupTransforming()
+     */
+    public void setupTransforming()
+        throws IOException, ProcessingException, SAXException {
+        super.setupTransforming();
+        this.filter = new HTMLFilter( this.xmlConsumer );
     }
 
 }
