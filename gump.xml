@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.149 2004/05/05 11:30:01 bdelacretaz Exp $
+    | CVS $Id: gump.xml,v 1.150 2004/05/07 07:43:45 cziegeler Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -83,6 +83,7 @@
     <depend project="eclipse-jtd"/>
 
     <depend project="xmlunit"/><!-- used by the testcases -->
+    <depend project="qdox"/>   <!-- used by ant tasks -->
 
     <work nested="build/cocoon-@@DATE@@/classes"/>
     <work nested="build/cocoon-@@DATE@@/deprecated"/>
