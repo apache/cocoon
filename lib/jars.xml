@@ -895,7 +895,7 @@
       An expression language interpreter.
     </description>
     <used-by>Cocoon Forms block</used-by>
-    <lib>optional/xreporter-expression-20030725.jar</lib>
+    <lib>optional/xreporter-expression-20040701.jar</lib>
     <homepage>http://xreporter.cocoondev.org</homepage>
   </file>
 
