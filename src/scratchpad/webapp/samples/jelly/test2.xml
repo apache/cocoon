@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:html="jelly:html">
+  <html>
+    <head>
+    <title>${name}'s Page</title>
+    </head>
+    <body bgcolor="${background}" text="#FFFFFF">
+    <h1>${name}'s Homepage</h1>
+    <img src="${url}"/>
+    <h2>My Hobbies</h2>
+    <ul>
+    <j:forEach items="${hobbies}" var="i">
+        <li>${i}</li>
+    </j:forEach>
+    </ul>
+    </body>
+  </html>
+</j:jelly>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.6 2003/04/27 01:57:04 coliver Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.7 2003/06/13 10:27:38 cziegeler Exp $ -->
 
 <samples>
 
@@ -47,4 +47,12 @@
     </sample>
   </group>
 
+  <group name="Jelly">
+    <sample name="Test 1" href="jelly/test1">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+    <sample name="Test 2" href="jelly/test2">
+      A test of the Jelly generator - you have to download and install the jelly.jar first!
+    </sample>
+  </group>
 </samples>
