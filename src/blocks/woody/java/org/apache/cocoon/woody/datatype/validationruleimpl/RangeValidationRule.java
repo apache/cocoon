@@ -58,7 +58,7 @@ import org.outerj.expression.Expression;
 import java.math.BigDecimal;
 
 /**
- * Checks numeric ranges. Works both for Long and BigDecimal values.
+ * Checks numeric ranges. Works for Integer, Long and BigDecimal values.
  *
  * <p>This validation rule can perform 3 different checks:
  * <ul>
@@ -69,7 +69,12 @@ import java.math.BigDecimal;
  */
 public class RangeValidationRule extends AbstractValidationRule {
     private Expression minExpr;
-    private Expression maxExpr;
+	private Expression maxExpr;
+    
+    private static final String RANGE_ELEM = "range";
+    private static final String MIN_ATTR = "min";
+    private static final String MAX_ATTR = "max";
+    
 
     public void setMinExpr(Expression minExpr) {
         this.minExpr = minExpr;
@@ -81,20 +86,22 @@ public class RangeValidationRule extends AbstractValidationRule {
 
     public ValidationError validate(Object value, ExpressionContext expressionContext) {
         BigDecimal decimal = null;
-        if (value instanceof Long)
-            decimal = new BigDecimal(((Long) value).longValue());
+        if (value instanceof Integer)
+            decimal = new BigDecimal(((Integer) value).intValue());
+		else if (value instanceof Long)
+			decimal = new BigDecimal(((Long) value).longValue()); 
         else
             decimal = (BigDecimal) value;
 
         if (minExpr != null && maxExpr != null) {
-            Object result = evaluateNumeric(minExpr, expressionContext, "min", "range");
+            Object result = evaluateNumeric(minExpr, expressionContext, MIN_ATTR, RANGE_ELEM);
             if (result instanceof ValidationError)
                 return (ValidationError) result;
             else if (result instanceof CannotYetResolveWarning)
                 return null;
             BigDecimal min = (BigDecimal) result;
 
-            result = evaluateNumeric(maxExpr, expressionContext, "max", "range");
+            result = evaluateNumeric(maxExpr, expressionContext, MAX_ATTR, RANGE_ELEM);
             if (result instanceof ValidationError)
                 return (ValidationError) result;
             else if (result instanceof CannotYetResolveWarning)
@@ -105,7 +112,7 @@ public class RangeValidationRule extends AbstractValidationRule {
                 return hasFailMessage() ? getFailMessage() : new ValidationError("validation.numeric.range", new String[]{min.toString(), max.toString()});
             return null;
         } else if (minExpr != null) {
-            Object result = evaluateNumeric(minExpr, expressionContext, "min", "range");
+            Object result = evaluateNumeric(minExpr, expressionContext, MIN_ATTR, RANGE_ELEM);
             if (result instanceof ValidationError)
                 return (ValidationError) result;
             else if (result instanceof CannotYetResolveWarning)
@@ -115,7 +122,7 @@ public class RangeValidationRule extends AbstractValidationRule {
                 return hasFailMessage() ? getFailMessage() : new ValidationError("validation.numeric.min", new String[]{min.toString()});
             return null;
         } else if (maxExpr != null) {
-            Object result = evaluateNumeric(maxExpr, expressionContext, "max", "range");
+            Object result = evaluateNumeric(maxExpr, expressionContext, MAX_ATTR, RANGE_ELEM);
             if (result instanceof ValidationError)
                 return (ValidationError) result;
             else if (result instanceof CannotYetResolveWarning)
@@ -129,6 +136,6 @@ public class RangeValidationRule extends AbstractValidationRule {
     }
 
     public boolean supportsType(Class clazz, boolean arrayType) {
-        return (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(BigDecimal.class)) && !arrayType;
+        return (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(BigDecimal.class)) && !arrayType;
     }
 }
