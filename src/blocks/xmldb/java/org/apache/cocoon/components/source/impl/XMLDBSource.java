@@ -87,9 +87,9 @@ import org.xmldb.api.modules.XPathQueryService;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.6 2003/10/25 18:06:20 joerg Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.7 2003/10/29 14:26:09 vgritsenko Exp $
  */
-public class XMLDBSource extends AbstractLogEnabled  
+public class XMLDBSource extends AbstractLogEnabled
     implements Source, XMLizable {
 
     /** The requested URL */
@@ -113,15 +113,15 @@ public class XMLDBSource extends AbstractLogEnabled
     /** Static Strings used for XML Collection representation */
 
     protected static final String URI = "http://apache.org/cocoon/xmldb/1.0";
-    // FIXME (VG): Should not be this more generic? Say, "xmldb"?
-    protected static final String PREFIX = "collection";
+
+    protected static final String PREFIX = "xmldb";
 
     /** Root element &lt;collections&gt; */
     protected static final String COLLECTIONS  = "collections";
     protected static final String QCOLLECTIONS  = PREFIX + ":" + COLLECTIONS;
     protected static final String RESOURCE_COUNT_ATTR = "resources";
     protected static final String COLLECTION_COUNT_ATTR  = "collections";
-//    protected static final String COLLECTION_BASE_ATTR  = "base";
+    protected static final String COLLECTION_BASE_ATTR  = "base";
 
     /** Element &lt;collection&gt; */
     protected static final String COLLECTION  = "collection";
@@ -159,7 +159,7 @@ public class XMLDBSource extends AbstractLogEnabled
                        SourceCredential credential,
                        String url,
                        ServiceManager manager) {
-        this.enableLogging(logger);
+        enableLogging(logger);
         this.manager = manager;
 
         this.user = credential.getPrincipal();
@@ -268,8 +268,8 @@ public class XMLDBSource extends AbstractLogEnabled
                         RESOURCE_COUNT_ATTR, "CDATA", nresources);
                 attributes.addAttribute("", COLLECTION_COUNT_ATTR,
                         COLLECTION_COUNT_ATTR, "CDATA", ncollections);
-//                attributes.addAttribute("", COLLECTION_BASE_ATTR,
-//                        COLLECTION_BASE_ATTR, "CDATA", url);
+                attributes.addAttribute("", COLLECTION_BASE_ATTR,
+                        COLLECTION_BASE_ATTR, "CDATA", url);
 
                 handler.startDocument();
                 handler.startPrefixMapping(PREFIX, URI);
