@@ -8,7 +8,7 @@ be embedded within the document.
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:include href="../../../documentation/stylesheets/document2html.xsl"/>
+  <xsl:include href="../../../docs/stylesheets/document2html.xsl"/>
 
   <xsl:template match="form | input | select | option | textarea | keygen | isindex">
     <xsl:copy>
