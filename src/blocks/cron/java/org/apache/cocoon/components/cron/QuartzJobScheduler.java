@@ -42,12 +42,12 @@ import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.quartz.impl.DirectSchedulerFactory;
 import org.quartz.impl.jdbcjobstore.InvalidConfigurationException;
 import org.quartz.impl.jdbcjobstore.JobStoreSupport;
@@ -734,6 +734,8 @@ public class QuartzJobScheduler extends AbstractLogEnabled
         ConnectionProvider provider;
         if (dsType.equals("jndi")) {
             provider = new JNDIConnectionProvider(dsName, false);
+        } else if (dsType.equals("excalibur")) {
+            provider = new DataSourceComponentConnectionProvider(dsName, this.manager);
         } else {
             // assume class name
             try {
