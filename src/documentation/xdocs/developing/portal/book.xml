@@ -13,9 +13,12 @@
   <menu label="Portal">
     <menu-item label="Introduction" href="index.html"/>
     <menu-item label="Portal Engine" href="portal-block.html"/>
+    <menu-item label="Event Handling" href="events.html"/>
     <menu-item label="Authentication" href="../webapps/authentication.html"/>
   </menu>
-
+  <menu label="Samples">
+    <menu-item label="Form handling" href="forms.html"/>
+  </menu>
 </book>
 
 

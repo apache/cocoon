@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Portal: Event Handling</title>
+  <subtitle>Overview</subtitle>
+  <authors>
+   <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+  <s1 title="Overview">
+   <p>
+     This document gives an overview of the event handling of the portal engine.
+   </p>
+   <p>
+     The sample portal that comes with the Cocoon distribution contains several
+     working samples for event handling.
+   </p>
+  </s1>
+  <s1 title="Introduction">
+    <p>
+      The event handling is a central mechanism used in the portal engine. Every
+      change (changes in status or layout, links etc) is propagated through an
+      event. The portal uses the publisher/subscribe paradigm, so each component
+      that is interested in a specific event can subscribe itself for this type
+      of event. In addition each component can send out events.
+    </p>
+    <p>
+      The processing of a portal request (a request send to the cocoon portal)
+      is divided into two parts: event handling and rendering. In the first part
+      all events are processed. For example if the user clicks a link this
+      triggers an event that is published. Any receiver of this event might
+      in turn fire new events that are published as well.
+    </p>
+    <p>
+      When all events are processed, the first phase is finished and the second
+      phase, the rendering, is started. At this point of time all event handling
+      and all information exchange should be finished.
+    </p>
+  </s1>
+  <s1 title="Events and the request/response cycle">
+    <p>
+      In the Portal, an event is represented by a Java object. This event object
+      contains all necessary information to process the event. So, in most cases an
+      event contains the object to modify, what to modify and the value to set.
+      For example, the minimize event for minimizing a coplet, contains the
+      coplet, the information to change the window state and the value "minimize" 
+      to set.
+    </p>
+    <p>
+      A component that processes this request is subscribed to this minimize event
+      and when such an event is fired, it changes the window state of the
+      layout object to minimize. Every data this component needs is stored in
+      the event. This is a very important detail: the event is not directly processed
+      (in this case) by the object that is changed (the coplet) but by a central
+      subscribed component that changes the coplet.
+    </p>
+    <p>
+      Let's have a look how such an event is created:
+    </p>
+    <source>
+Event event;
+event = new ChangeCopletInstanceAspectDataEvent(
+            copletInstanceData,
+            "size", 
+            SizingStatus.STATUS_MINIMIZEDD);
+    </source>
+    <p>
+      <em>Event</em> is just a marker interface, the concrete implementation
+      <em>ChangeCopletInstanceAspectDataEvent</em> implements this interface
+      and requires three pieces of information: the CopletInstanceData,
+      the information about what to change (size) and the new value.
+    </p>
+    <p>
+      If you want to fire this event, you have to publish it. Therefore you
+      need the event manager a central portal component. You can lookup this
+      component, fire the event and release the manager again. If you fire
+      the event, the event is directly published to all subscribed components.
+    </p>
+    <source>
+EventManager manager = null;
+try {
+    manager = serviceManager.lookup(EventManager.ROLE);
+    manager.getPublisher().publish(event);
+} finally {
+    serviceManager.release(manager);
+}
+    </source>
+    <p>
+      As noted above, the event will be directly fired. But usually in a portal
+      application, events are not fired directly but are invoked by some user
+      action. This means, the user clicks on a link in the browser, the
+      request is targetted at Cocoon and the portal invokes the correct events.
+    </p>
+    <p>
+      For this, a link (or a form action) must know, which event it should
+      fire, if it is clicked. So, in other words, a link is associated with
+      a concrete event. But on the other site, an event is a Java object and we can only use
+      strings in URLs. So how does this work?
+    </p>
+    <p>
+      The part of the portal that generates the link, creates the event object
+      with all necessary data, transforms this event into a usable URI and this
+      URI is the target of the link. When the user clicks on this link, the portal
+      transforms the URI into the Java event object and fires the event.
+    </p>
+    <p>
+      The transformation Event->URI->Event is done by another portal component,
+      the link service. Most portal components (apart from the event manager)
+      are available through another central component, the portal service. So
+      you need to have access to the portal service component. (Renderers e.g.
+      don't have to lookup the service by itself, they get it as a method
+      parameter).
+    </p>
+    <source>
+PortalService service = null;
+try {
+    service = serviceManager.lookup(PortalService.ROLE);
+    LinkService ls = service.getComponentManager().getLinkService();
+
+    String uri = getLinkURI( event );
+
+    // create a link that references the uri
+} finally {
+    serviceManager.release(service);
+}
+    </source>
+    <p>
+      That's all you have to do: create the event object, get the link service,
+      transform the event into a URI using the service and then create the
+      (html) link using the URI. Everything else is handled by the portal for you.
+    </p>
+  </s1>
+  <s1 title="Changing the State of a Coplet">
+    <p>
+      In most cases you want to change the state of a coplet because the user
+      performed an action. The portal engine provides you with some events
+      that you can directly use.
+    </p>
+    <ul>
+      <li>CopletJXPathEvent</li>
+      <li>ChangeCopletInstanceAspectDataEvent</li>
+    </ul>
+    <p>
+      The <em>CopletJXPathEvent</em> requires again three pieces of information:
+      the coplet instance data to change, the JXPath expression that defines the
+      data to change and the value:
+    </p>
+    <source>
+Event event = new CopletJXPathEvent(copletInstanceData, 
+                                    "attributes/username", 
+                                    username); 
+    </source>
+    <p>
+      In the previous chapter, we already saw an example of the usage of the
+      <em>ChangeCopletInstanceAspectDataEvent</em>.
+    </p>
+    <p>
+      It is of course possible that you write your own events for 
+      changing the state of a coplet. But in this case make sure that
+      your own event implements the interface <em>CopletInstanceEvent</em>.
+    </p>
+  </s1>
+  <s1 title="Subscribing to Events">
+    <p>
+      If you are interested in events, you can subscribe to a specific event
+      type. As events are Java objects, you subscribe for all events of a
+      specific interface or class (and all of the subclasses).
+      Subscribing is done using the event manager:
+    </p>
+    <source>
+EventManager manager = null;
+try {
+    manager = serviceManager.lookup(EventManager.ROLE);
+    manager.getRegister().subscribe( myComponent );
+} finally {
+    serviceManager.release(manager);
+}
+    </source>
+    <p>
+      The component you subscribe must implement the Subscriber interface:
+    </p>
+    <source>
+Subscriber interface:
+
+public Class getEventType();
+
+public void inform( Event event );
+    </source>
+    <p>
+      The getEventType() method returns the class/interfaces of the events
+      the component is interested and each time such an event occurs,
+      the inform() method is invoked.
+    </p>
+    <p>
+      For example one central component in the portal subscribes for
+      all events dealing with coplets, so it returns <em>CopletInstanceEvent</em>
+      as the class in getEventType().
+    </p>
+  </s1>
+  <s1 title="Inter Coplet Communication">
+    <p>
+      A very interesting feature of the portal is inter-coplet communication.
+      The sample portal already has a simple sample where the name of an
+      image selected in an image gallery is transfered to a different coplet.
+    </p>
+    <p>
+      Now, there is only one (minor) problem: in the cocoon portal coplets 
+      (or more precisly CopletInstanceData objects) are not components but
+      just data objects. So, a coplet can't directly register itself as 
+      a subcriber for events. 
+    </p>
+    <p>
+      Remember that we mentioned earlier on a central component that processes 
+      the change events for coplets? So, this is basically one possibility: if
+      you want to pass information from one coplet to another one, create
+      a CopletJXPathEvent and pass the information to the other coplet.
+    </p>
+    <p>
+      Imagine a form coplet where the user can enter a city. When this form is
+      processed by the form coplet, it can generate one (or more) CopletJXPathEvents
+      and push the entered city information to a weather coplet and a hotel guide
+      coplet. So, these two coplets display the information about the selected
+      city.
+    </p>
+  </s1>
+  <s1 title="Further Information">
+    <p>
+      The event.impl package contains all currently processed events, so you can
+      study the events and see how to create them. In general most events are
+      created inside the renderers, especially the renderer aspects that render
+      specific details (e.g. the sizing buttons for a coplet). So, you can have
+      a look at the code as well.
+    </p>
+    <p>
+      There are several transformers that help in creating events inside a Cocoon
+      pipeline. For example the <em>coplet transformer</em> can be used to
+      create links that contain events to change the status of a coplet or a layout   
+      object. The gallery sample uses this transformer as a demo.
+    </p>
+  </s1>
+ </body>
+</document>

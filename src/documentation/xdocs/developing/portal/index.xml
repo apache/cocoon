@@ -18,8 +18,9 @@
    be used to quickly develop portal applications.</p> 
 <p>The new <link href="portal-block.html">portal engine</link> is a new
   implementation of a portal engine which focuses on more flexibility
-  and ease-of-use. The current state of this engine is <em>alpha</em>
-  which means that the engine can still change in every aspect.</p>
+  and ease-of-use. In addition it supports the JSR-168. The current state of 
+  this engine is <em>alpha</em> which means that the engine can still change 
+  in some aspects.</p>
 
  </s1>
   <s1 title="Features">

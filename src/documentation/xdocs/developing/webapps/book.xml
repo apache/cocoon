@@ -16,7 +16,8 @@
     <menu-item label="Authentication" href="authentication.html"/>
     <menu-item label="Simple Forms" href="forms.html"/>
     <menu-item label="Form Handling" href="../../userdocs/concepts/xmlform.html"/>
-    <menu-item label="Portal" href="portal.html"/>
+    <menu-item label="Portal FW" href="portal.html"/>
+    <menu-item label="Portal Engine" href="../portal/index.html"/>
   </menu>
 
 </book>
