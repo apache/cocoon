@@ -58,6 +58,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
@@ -86,7 +88,7 @@ import org.apache.excalibur.source.impl.URLSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.30 2003/12/29 21:49:25 unico Exp $
+ * @version CVS $Id: Cocoon.java,v 1.31 2003/12/30 11:24:15 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=CompilingProcessor
@@ -98,6 +100,7 @@ public class Cocoon
         implements CompilingProcessor,
                    Contextualizable,
                    Serviceable,
+                   Configurable,
                    Initializable,
                    Disposable,
                    Modifiable {
@@ -110,6 +113,12 @@ public class Cocoon
 
     /** The parent component manager. */
     private ServiceManager serviceManager;
+    
+    /** the location of the configuration file */
+    private URL configUrl;
+    
+    /** number of ms between last modified checks */
+    private long lastModifiedDelay;
 
     /** flag for disposed or not */
     private boolean disposed = false;
@@ -125,21 +134,16 @@ public class Cocoon
     /** The environment helper */
     protected EnvironmentHelper environmentHelper;
     
-    /**
-     * Creates a new <code>Cocoon</code> instance.
-     *
-     * @exception ConfigurationException if an error occurs
-     */
-    public Cocoon() throws ConfigurationException {
+    
+    public Cocoon() {
         // Set the system properties needed by Xalan2.
         setSystemProperties();
     }
 
     /**
-     * Get the parent service manager. For purposes of
-     * avoiding extra method calls, the manager parameter may be null.
-     *
-     * @param manager the parent component manager. May be <code>null</code>
+     * The service lifecycle stage.
+     * 
+     * @param manager the parent service manager.
      * 
      * @avalon.dependency type=SourceResolver
      */
@@ -158,44 +162,38 @@ public class Cocoon
     }
 
     /**
-     * Describe <code>contextualize</code> method here.
-     *
-     * @param context a <code>Context</code> value
-     * @exception ContextException if an error occurs
+     * The contextualisation lifecycle stage.
+     * 
+     * @param context  the application <code>Context</code>.
+     * @exception  ContextException if a required context entry is missing.
      */
     public void contextualize(Context context) throws ContextException {
-        if (this.context == null) {
-            this.context = new ComponentContext(context);
-
-            //this.classpath = (String)context.get(Constants.CONTEXT_CLASSPATH);
-            //this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
-            try {
-                // FIXME : add a configuration option for the refresh delay.
-                // for now, hard-coded to 1 second.
-                URLSource urlSource = new URLSource();
-                urlSource.init((URL)context.get(Constants.CONTEXT_CONFIG_URL), null);
-                this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
-                    1000L
-                );
-
-            } catch (IOException ioe) {
-                throw new ContextException("Could not open configuration file.", ioe);
-            } catch (Exception e) {
-                throw new ContextException("contextualize(..) Exception", e);
-            }
-        }
+        this.context = new ComponentContext(context);
+        configUrl = (URL) context.get(Constants.CONTEXT_CONFIG_URL);
     }
-
+    
     /**
-     * The <code>initialize</code> method
-     *
-     * @exception Exception if an error occurs
+     * The configuration lifecycle stage.
      */
-    public void initialize() throws Exception {
+    public void configure(Configuration config) {
+        lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay",1000L);
+    }
+    
+    /**
+     * The initialisation lifecycle stage.
+     * 
+     * @throws IOException  if the configuration source could not be initialized
+     */
+    public void initialize() throws IOException {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("New Cocoon object.");
         }
-
+        URLSource urlSource = new URLSource();
+        urlSource.init(configUrl, null);
+        this.configurationFile = new DelayedRefreshSourceWrapper(
+            urlSource,
+            lastModifiedDelay
+        );
         // Log the System Properties.
         dumpSystemProperties();
     }
