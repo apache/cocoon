@@ -76,7 +76,10 @@
     <script type="text/javascript">
       var helpWin<xsl:value-of select="$id"/> = forms_createPopupWindow('help<xsl:value-of select="$id"/>');
     </script>
-    <a id="{$id}" name="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;"><img border="0" src="{$resources-uri}/help.gif"/></a>
+    <a id="{$id}" name="{$id}" href="#" onclick="helpWin{$id}.showPopup('{$id}');return false;">
+      <!-- TODO: i18n key for helppopup -->
+      <img src="{$resources-uri}/help.gif" alt="helppopup"/>
+    </a>
   </xsl:template>
 
   <!--+

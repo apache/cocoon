@@ -40,45 +40,29 @@
 
   <xsl:template name="resources">
     <div class="resources">
-      <table width="100%" cellpadding="3">
-        <tbody>
-          <tr>
-            <td width="90%">&#160;</td>
-            <td nowrap="nowrap">
-              <a href="?cocoon-view=content">Content View</a>
-            </td>
-            <td nowrap="nowrap">
-              <a href="?cocoon-view=pretty-content">Source</a>
-            </td>
-            <td nowrap="nowrap">
-              <a href="{$sitemap}?cocoon-view=pretty-content">Sitemap</a>
-            </td>
-            <xsl:for-each select="resources/resource">
-              <td class="{@type}">
-                <xsl:choose>
-                  <xsl:when test="@type='file'">
-                    <a href="{@href}">
-                      <!-- we need an explicite match in the sitemap showing
-                           the source of these resources -->
-                      <xsl:apply-templates/>
-                    </a>
-                  </xsl:when>
-                  <xsl:when test="@type='doc'">
-                    <a href="{concat($contextPath,'/docs/',@href)}">
-                      <xsl:apply-templates/>
-                    </a>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <a href="{concat($contextPath,'/',@href)}">
-                      <xsl:apply-templates/>
-                    </a>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </td>
-            </xsl:for-each>
-          </tr>
-        </tbody>
-      </table>
+      <a href="?cocoon-view=content">Content View</a>
+      <a href="?cocoon-view=pretty-content">Source</a>
+      <a href="{$sitemap}?cocoon-view=pretty-content">Sitemap</a>
+      <xsl:for-each select="resources/resource">
+        <xsl:variable name="href">
+          <xsl:choose>
+            <xsl:when test="@type='file'">
+              <!-- we need an explicite match in the sitemap showing
+                   the source of these resources -->
+              <xsl:value-of select="@href"/>
+            </xsl:when>
+            <xsl:when test="@type='doc'">
+              <xsl:value-of select="concat($contextPath, '/docs/', @href)"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="concat($contextPath, '/', @href)"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <a class="{@type}" href="{$href}">
+          <xsl:apply-templates/>
+        </a>
+      </xsl:for-each>
     </div>
   </xsl:template>
 
