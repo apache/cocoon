@@ -202,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="RG" type="add">
+     Portal: Added support for storing JSR-168 Portlet preferences.
+   </action>
    <action dev="JH" type="fix" fixes-bug="32342">
      Batik block: Fixed handling for empty extract URIs when matching on null
      namespace URIs.
