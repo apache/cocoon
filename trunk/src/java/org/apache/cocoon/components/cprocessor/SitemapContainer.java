@@ -21,6 +21,7 @@ import java.util.Map;
 import org.apache.avalon.fortress.impl.ComponentHandlerMetaData;
 import org.apache.avalon.fortress.impl.DefaultContainer;
 import org.apache.avalon.fortress.impl.lookup.FortressServiceManager;
+import org.apache.avalon.fortress.impl.lookup.FortressServiceSelector;
 import org.apache.avalon.fortress.util.CompositeException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -33,12 +34,16 @@ import org.apache.cocoon.components.cprocessor.sitemap.impl.ReaderNode;
 import org.apache.cocoon.components.cprocessor.sitemap.impl.SerializerNode;
 import org.apache.cocoon.components.cprocessor.sitemap.impl.TransformerNode;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
+import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.selection.Selector;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.ContentAggregator;
 import org.apache.cocoon.sitemap.LinkGatherer;
 import org.apache.cocoon.sitemap.LinkTranslator;
 import org.apache.cocoon.sitemap.NotifyingGenerator;
+import org.apache.cocoon.transformation.Transformer;
 
 /**
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
@@ -72,6 +77,27 @@ public class SitemapContainer extends DefaultContainer {
             String role = (String) TYPES2ROLES.get(type);
             m_defaultHints.put(role,hint);
         }
+        this.addSelector(Generator.ROLE);
+        this.addSelector(Transformer.ROLE);
+        this.addSelector(Serializer.ROLE);
+        this.addSelector(Reader.ROLE);
+        this.addSelector(Matcher.ROLE);
+        this.addSelector(Selector.ROLE);
+        this.addSelector(Action.ROLE);
+        this.addSelector(ProcessingPipeline.ROLE);
+    }
+    
+    /**
+     * Add a selector for compatibility with 2.1.x
+     */   
+    protected void addSelector(String role) {
+        final String selectorRole = role + "Selector";
+        FortressServiceSelector fss = new FortressServiceSelector(this, selectorRole);
+        Map hintMap = createHintMap();
+        hintMap.put( DEFAULT_ENTRY, fss );
+        hintMap.put( SELECTOR_ENTRY,
+                    new FortressServiceSelector( this, selectorRole ) );
+        m_mapper.put( selectorRole, hintMap );        
     }
     
     /**

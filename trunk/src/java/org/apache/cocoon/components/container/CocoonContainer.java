@@ -82,4 +82,12 @@ public class CocoonContainer extends DefaultECMContainer {
 
         return component;
     }
+    
+    /**
+     * Use a different default proxy type
+     */
+    protected String getDefaultProxyType() {
+        return "bcel";
+    }
+    
 }

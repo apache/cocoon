@@ -34,7 +34,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.2 2004/03/08 13:57:37 cziegeler Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.3 2004/04/15 13:13:17 cziegeler Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
@@ -148,7 +148,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         }
     }
 
-    private void addAnchorVariable(String anchor, String variable) throws PatternException {
+    private void addAnchorVariable(String anchor, String variable) {
         this.items.add(ANCHOR_OBJ);
         this.items.add(anchor);
         this.items.add(variable);
@@ -326,7 +326,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
 
                     case THREADSAFE_MODULE:
                         i++; // module
-                        this.selector.release((InputModule) this.items.get(i));
+                        this.selector.release(this.items.get(i));
                         i++; // variable
                         break;
 

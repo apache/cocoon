@@ -47,11 +47,11 @@ implements Node, Configurable, Serviceable {
         return m_manager.lookup(role);
     }
     
-    protected final boolean hasService(String role) throws ServiceException {
+    protected final boolean hasService(String role) {
         return m_manager.hasService(role);
     }
     
-    protected final void release(Object component) throws ServiceException {
+    protected final void release(Object component) {
         m_manager.release(component);
     }
     

@@ -37,7 +37,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: PipelineNode.java,v 1.3 2004/03/18 15:15:10 cziegeler Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.4 2004/04/15 13:13:16 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -63,7 +63,7 @@ public class PipelineNode extends SimpleParentProcessingNode implements Initiali
     private boolean m_internalOnly;
 
     /** Is it the last <pipeline> in the enclosing <pipelines> ? */
-    private boolean isLast = false;
+    //private boolean isLast = false;
 
     public PipelineNode() {
     }

@@ -55,7 +55,7 @@ import org.apache.commons.lang.StringUtils;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.3 2004/03/28 21:01:21 antonio Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.4 2004/04/15 13:13:16 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -156,7 +156,7 @@ public class AggregateNode extends AbstractProcessingNode {
 
         } else {
             // Are there some parts that match this view ?
-            actualParts = (Part[]) getViewParts(cocoonView);
+            actualParts = getViewParts(cocoonView);
 
             // If not, keep all parts
             if (actualParts == null) {
