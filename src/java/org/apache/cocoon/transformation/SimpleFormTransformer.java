@@ -174,7 +174,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.7 2003/10/27 21:18:32 joerg Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.8 2003/10/27 21:28:39 joerg Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -1101,7 +1101,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
      */
     private Object[] getValues(String name) {
         Object[] values = null;
-        ServiceSelector inputSelector = null;
+        ServiceSelector iputSelector = null;
         InputModule iput = null;
         try {
             if (this.input != null) {
@@ -1115,12 +1115,12 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
             } else {
                 // input was not thread safe
                 // so acquire it again
-                inputSelector = (ServiceSelector)this.manager.lookup(INPUT_MODULE_SELECTOR);
+                iputSelector = (ServiceSelector)this.manager.lookup(INPUT_MODULE_SELECTOR);
                 if (this.inputName != null
-                    && inputSelector != null
-                    && inputSelector.isSelectable(this.inputName)) {
+                    && iputSelector != null
+                    && iputSelector.isSelectable(this.inputName)) {
 
-                    iput = (InputModule) inputSelector.select(this.inputName);
+                    iput = (InputModule) iputSelector.select(this.inputName);
                 }
                 if (iput != null) {
                     values = iput.getAttributeValues(name, this.inputConf, objectModel);
@@ -1140,10 +1140,10 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
                         + e.getMessage());
         } finally {
             // release components if necessary
-            if (inputSelector != null) {
+            if (iputSelector != null) {
                 if (iput != null)
-                    inputSelector.release(iput);
-                this.manager.release(inputSelector);
+                    iputSelector.release(iput);
+                this.manager.release(iputSelector);
             }
         }
 
