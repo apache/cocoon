@@ -210,7 +210,7 @@ processed (defaults to <code>1</code> if <code>step</code> is absent). Either <c
 </source>
 <p>JXPath Example:</p>
 <source>
-&lt;forEach items="#{cart/cartItems[position() &lt;= $count]}}&gt;
+&lt;forEach select="#{cart/cartItems[position() &amp;lt;= $count]}}&gt;
    &lt;td&gt;#{./productId}&lt;/td&gt;
 &lt;/forEach&gt;
 </source>
