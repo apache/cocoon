@@ -276,6 +276,7 @@
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xmap" configuration="{string('${build.webapp}')}/sitemap.xmap"/>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xpipe" configuration="{string('${build.webapp}')}/sitemap.xmap"/>
          <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xconf" configuration="{string('${build.webapp}')}/WEB-INF/cocoon.xconf"/>
+         <xpatch directory="{string('${build.blocks}')}/{$block-name}/conf" extension="xlog" configuration="{string('${build.webapp}')}/WEB-INF/logkit.xconf"/>
       </target>
       
       <target name="{$block-name}-samples" if="{$block-name}.has.samples">
