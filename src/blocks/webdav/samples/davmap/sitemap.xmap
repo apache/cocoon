@@ -249,6 +249,11 @@
         </map:call>
       </map:match>
       
+      <!--+
+          | In order for proppatch to work you need to uncomment
+          | the simple jdbc source descriptor in cocoon.xconf
+          | and then define which properties you want to proppatch.
+          + -->
       <map:match pattern="PROPPATCH/**">
         <map:generate type="stream" />
         <map:transform src="styles/proppatch2propwrite.xsl">
