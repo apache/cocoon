@@ -94,7 +94,7 @@ function editor_gui(form, type) {
 
     // also store the form as a request attribute as the XSP isn't flow-aware
     cocoon.request.setAttribute("form_" + type + "_gui", form.getWidget());
-    cocoon.sendPage(type + "-success-pipeline.xsp");
+    cocoon.sendPage(type + "-success-pipeline.jx");
 }
 
 function present(string, list) {

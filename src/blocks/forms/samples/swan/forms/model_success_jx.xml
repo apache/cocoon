@@ -14,27 +14,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsp:page language="java"
-  xmlns:xsp="http://apache.org/xsp">
 
   <!--
-    CVS $Id: form_model_gui_success.xsp,v 1.3 2004/05/07 20:54:21 mpo Exp $
+    CVS $Id$
   -->
 
-  <xsp:structure>
-    <xsp:include>org.apache.cocoon.forms.formmodel.*</xsp:include>
-  </xsp:structure>
-
-  <page>
-    <title>Sample form result</title>
-    <content>
-      <xsp:logic>
-        // get reference to form and some of the widgets on it
-        Form form = (Form)request.getAttribute("form_model_gui");
-        Repeater repeater = (Repeater)form.lookupWidget("items");
-      </xsp:logic>
-
-      Repeater has <xsp:expr>repeater.getSize()</xsp:expr> row(s).
-    </content>
-  </page>
-</xsp:page>
+<page>
+  <title>Sample form result</title>
+  <content>
+    Repeater has ${request.getAttribute("form_model_gui").lookupWidget("items").getSize()} row(s).
+  </content>
+</page>
