@@ -335,7 +335,6 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
     public void pushSourceLocks(LockableSource source)
       throws SAXException, SourceException {
         SourceLock[] locks = source.getSourceLocks();
-        SourceLock lock;
 
         if (locks != null && locks.length > 0) {
             this.contentHandler.startElement(URI, LOCKS_NODE_NAME,
@@ -343,7 +342,7 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
                                              new AttributesImpl());
 
             for (int i = 0; locks.length > 0; i++) {
-                lock = (SourceLock) locks[i];
+                SourceLock lock = locks[i];
 
                 AttributesImpl attributes = new AttributesImpl();
 
