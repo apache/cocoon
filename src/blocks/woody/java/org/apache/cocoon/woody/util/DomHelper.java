@@ -55,10 +55,7 @@ import org.apache.xerces.xni.*;
 import org.apache.xerces.dom.NodeImpl;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.xml.dom.DOMStreamer;
-import org.w3c.dom.Element;
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXException;
@@ -179,6 +176,18 @@ public class DomHelper {
             return false;
         else
             throw new Exception("Cannot parse the value \"" + attrValue + "\" as a boolean in the attribute \"" + attributeName + "\" on the element \"" + element.getTagName() + "\" at " + getLocation(element));
+    }
+
+    public static String getElementText(Element element) {
+        StringBuffer value = new StringBuffer();
+        NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Text || node instanceof CDATASection) {
+                value.append(node.getNodeValue());
+            }
+        }
+        return value.toString();
     }
 
     /**
