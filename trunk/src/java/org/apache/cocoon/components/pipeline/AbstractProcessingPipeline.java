@@ -88,7 +88,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.29 2004/02/06 11:42:46 cziegeler Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.30 2004/02/11 15:59:02 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -430,9 +430,11 @@ public abstract class AbstractProcessingPipeline
         // If this is an internal request, lastConsumer was reset!
         if (null == this.lastConsumer) {
             this.lastConsumer = this.serializer;
-        }
-        if (null != this.lastConsumer || this.reader != null) {
+        } else {
             this.preparePipeline(environment);
+        }
+        if ( this.reader != null ) {
+            this.preparePipeline(environment);            
         }
         
         // See if we need to set an "Expires:" header
