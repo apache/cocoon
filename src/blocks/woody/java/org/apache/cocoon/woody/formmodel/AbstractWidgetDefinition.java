@@ -55,15 +55,14 @@ import java.util.Map;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.woody.Constants;
+import org.apache.excalibur.xml.sax.XMLizable;
 
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private String id;
-//    private Object label;
     private Map displayData;
 
     public String getId() {
@@ -80,7 +79,7 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
 
     /**
      * Sets the various display data for this widget. This includes the label, hint and help.
-     * They're all SAX fragments generated with Cocoon's XMLByteStreamCompiler. This approach
+     * They must all be objects implementing the XMLizable interface. This approach
      * allows to have mixed content in these data.
      * 
      * @param displayData an association of {name, sax fragment}
@@ -92,18 +91,13 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException {
         Object data = this.displayData.get(name);
         if (data != null) {
-            XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
-            interpreter.setContentHandler(contentHandler);
-            interpreter.deserialize(data);
-            
+            ((XMLizable)data).toSAX(contentHandler);
         } else if (!this.displayData.containsKey(name)) {
             throw new IllegalArgumentException("Unknown display data name '" + name + "'");
         }
     }
     
     public void generateDisplayData(ContentHandler contentHandler) throws SAXException {
-        XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
-        
         // Output all non-null display data
         Iterator iter = this.displayData.entrySet().iterator();
         while (iter.hasNext()) {
@@ -114,10 +108,8 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
                 // Enclose the data into a "wi:{name}" element
                 contentHandler.startElement(Constants.WI_NS, name, Constants.WI_PREFIX_COLON + name, Constants.EMPTY_ATTRS);
 
-                interpreter.setContentHandler(contentHandler);
-                interpreter.deserialize(entry.getValue());
-                interpreter.recycle();
-                
+                ((XMLizable)entry.getValue()).toSAX(contentHandler);
+
                 contentHandler.endElement(Constants.WI_NS, name, Constants.WI_PREFIX_COLON + name);
             }
         }

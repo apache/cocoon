@@ -57,6 +57,7 @@ import org.apache.cocoon.woody.datatype.ValidationRule;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.outerj.expression.Expression;
 
 import java.util.HashSet;
@@ -110,7 +111,7 @@ public class AggregateFieldDefinitionBuilder extends AbstractWidgetDefinitionBui
         // read split fail message (if any)
         Element failMessageElement = DomHelper.getChildElement(splitElement, Constants.WD_NS, "failmessage");
         if (failMessageElement != null) {
-            Object failMessage = DomHelper.compileElementContent(failMessageElement);
+            XMLizable failMessage = DomHelper.compileElementContent(failMessageElement);
             definition.setSplitFailMessage(failMessage);
         }
 

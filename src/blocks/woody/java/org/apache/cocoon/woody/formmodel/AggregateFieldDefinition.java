@@ -53,6 +53,7 @@ package org.apache.cocoon.woody.formmodel;
 import org.outerj.expression.Expression;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.cocoon.woody.datatype.ValidationRule;
+import org.apache.excalibur.xml.sax.XMLizable;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class AggregateFieldDefinition extends AbstractWidgetDefinition {
      * Message to be displayed when the {@link #splitPattern} does not match what the
      * user entered. Optional.
      */
-    protected Object splitFailMessage;
+    protected XMLizable splitFailMessage;
     /**
      * List containing instances of {@link #splitMappings}, i.e. the mapping between
      * a group (paren) from the regular expression and corresponding field id.
@@ -123,11 +124,11 @@ public class AggregateFieldDefinition extends AbstractWidgetDefinition {
         return splitRegexp;
     }
 
-    public Object getSplitFailMessage() {
+    public XMLizable getSplitFailMessage() {
         return splitFailMessage;
     }
 
-    protected void setSplitFailMessage(Object splitFailMessage) {
+    protected void setSplitFailMessage(XMLizable splitFailMessage) {
         this.splitFailMessage = splitFailMessage;
     }
 

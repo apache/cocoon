@@ -71,6 +71,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.excalibur.xml.sax.XMLizable;
 
 /**
  * Abstract base class for WidgetDefinitionBuilders. Provides functionality
@@ -128,7 +129,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         final String[] names = {"label", "help", "hint"};
         Map displayData = new HashMap(names.length);
         for (int i = 0; i < names.length; i++) {
-            Object data = null;
+            XMLizable data = null;
             Element dataElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, names[i]);
             if (dataElement != null) {
                 data = DomHelper.compileElementContent(dataElement);

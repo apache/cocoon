@@ -53,8 +53,9 @@ package org.apache.cocoon.woody.util;
 import org.apache.xerces.parsers.DOMParser;
 import org.apache.xerces.xni.*;
 import org.apache.xerces.dom.NodeImpl;
-import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.cocoon.xml.SaxBuffer;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXNotSupportedException;
@@ -256,13 +257,15 @@ public class DomHelper {
     }
 
     /**
-     * Uses Cocoon's XMLByteStreamCompiler to convert the content of the given element to compiled
-     * SAX events.
+     * Returns the content of the given Element as an object implementing the XMLizable
+     * interface. Practically speaking, the implementation uses the {@link SaxBuffer} class.
+     * The XMLizable object will be a standalone blurb of SAX events, not producing
+     * start/endDocument calls and containing all necessary namespace declarations.
      */
-    public static Object compileElementContent(Element element) {
-        XMLByteStreamCompiler byteStreamCompiler = new XMLByteStreamCompiler();
+    public static XMLizable compileElementContent(Element element) {
+        SaxBuffer saxBuffer = new SaxBuffer();
         DOMStreamer domStreamer = new DOMStreamer();
-        domStreamer.setContentHandler(byteStreamCompiler);
+        domStreamer.setContentHandler(saxBuffer);
 
         NodeList childNodes = element.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -273,7 +276,7 @@ public class DomHelper {
                 throw new RuntimeException("Error in DomHelper.compileElementContent: " + e.toString());
             }
         }
-        return byteStreamCompiler.getSAXFragment();
+        return saxBuffer;
     }
 
     /**
