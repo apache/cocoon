@@ -11,6 +11,8 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Stack;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -28,9 +30,11 @@ import org.apache.cocoon.ProcessingException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-04-01 07:52:51 $ $Author: balld $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-04-03 03:36:31 $ $Author: balld $
  */
 public class XIncludeFilter extends AbstractFilter {
+
+	protected boolean debug = true;
 
 	public static final String XMLBASE_NAMESPACE_URI = "http://www.w3.org/XML/1998/namespace";
 	public static final String XMLBASE_ATTRIBUTE = "base";
@@ -61,6 +65,16 @@ public class XIncludeFilter extends AbstractFilter {
     public void setup(Request request, Response response, 
                       String source, Parameters parameters) 
             throws ProcessingException, SAXException, IOException {}
+	/*
+		try {
+			System.err.println("SOURCE: "+source);
+			base_xmlbase_uri = new URL(source);
+			System.err.println("SOURCE URI: "+base_xmlbase_uri.toString());
+		} catch (MalformedURLException e) {
+			throw new ProcessingException(e.getMessage());
+		}
+	}
+	*/
 
 	public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
 		String value;
@@ -71,6 +85,18 @@ public class XIncludeFilter extends AbstractFilter {
 				throw new SAXException(e);
 			}
 		}
+		if (uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
+			String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
+			String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
+			try {
+				processXIncludeElement(href, parse);
+			} catch (MalformedURLException e) {
+				throw new SAXException(e);
+			} catch (IOException e) {
+				throw new SAXException(e);
+			}
+			return;
+		}
 		if (super.contentHandler!= null) {
 			super.contentHandler.startElement(uri,name,raw,attr);
 		}
@@ -79,6 +105,9 @@ public class XIncludeFilter extends AbstractFilter {
 	public void endElement(String uri, String name, String raw) throws SAXException {
 		if (last_xmlbase_element_uri.equals(uri) && last_xmlbase_element_name.equals(name)) {
 			endXMLBaseAttribute();
+		}
+		if (uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
+			return;
 		}
 		if (super.contentHandler!= null) {
 			super.contentHandler.endElement(uri,name,raw);
@@ -121,11 +150,27 @@ public class XIncludeFilter extends AbstractFilter {
 	}
 
 	protected void processXIncludeElement(String href, String parse) throws SAXException,MalformedURLException,IOException {
+		if (debug) { System.err.println("Processing XInclude element: href="+href+", parse="+parse); }
 		URL url = new URL(current_xmlbase_uri,href);
+		if (debug) { System.err.println("URL: "+url); }
 		Object object = url.getContent();
+		if (debug) { System.err.println("Object: "+object); }
 		if (parse.equals("text")) {
 			if (object instanceof Reader) {
 				Reader reader = (Reader)object;
+				int read;
+				char ary[] = new char[1024];
+				if (reader != null) {
+					while ((read = reader.read(ary)) != -1) {
+						if (super.contentHandler != null) {
+							super.contentHandler.characters(ary,0,read);
+						}
+					}
+					reader.close();
+				}
+			} else if (object instanceof InputStream) {
+				InputStream input = (InputStream)object;
+				InputStreamReader reader = new InputStreamReader(input);
 				int read;
 				char ary[] = new char[1024];
 				if (reader != null) {
