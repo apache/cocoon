@@ -24,36 +24,36 @@
       <!--+
           | Definitions for a thread pool used to schedule jobs
           +-->
-        <thread-pool>
+      <thread-pool>
         <!--+
             | Should we queue up execution requests if the pool is busy?
             | Defaults to false
             +-->
-            <use-queueing>false</use-queueing>
+        <use-queueing>false</use-queueing>
 
         <!--+
             | How big should the queue be.
             | Defaults to unlimited size (<0 == default)
             +-->
-            <queue-size>-1</queue-size>
+        <queue-size>-1</queue-size>
 
         <!--+
             | The maximum size of the pool.
             | Defaults to Integer.MAX_VALUE (<0 == default)
             +-->
-            <max-pool-size>-1</max-pool-size>
+        <max-pool-size>-1</max-pool-size>
 
         <!--+
             | The minimum size of the pool.
             | Defaults to 1 (<0 == default)
             +-->
-            <min-pool-size>1</min-pool-size>
+        <min-pool-size>1</min-pool-size>
 
         <!--+
             | How long will an idle thread be kept before it will be discarded.
             | Defaults to 60000ms (<0 == default)
             +-->
-            <keep-alive-time-ms>60000</keep-alive-time-ms>
+        <keep-alive-time-ms>60000</keep-alive-time-ms>
 
         <!--+
             | Which blocking policy should be used if the maximum pool
@@ -66,20 +66,20 @@
             | Discard:       Throw away the current request and return.
             | DiscardOldest: Throw away the oldest request and return.
             +-->
-            <block-policy>RUN</block-policy>
+        <block-policy>RUN</block-policy>
 
         <!--+
             | Should queued and running jobs be given a chance to finished
             | on system shutdown. Defaults to true
             +-->
-            <shutdown-graceful>true</shutdown-graceful>
+        <shutdown-graceful>true</shutdown-graceful>
 
         <!--+
             | The maximum time to wait for running jobs to complete.
             | Defaults to unlimited time (<0 == default)
             +-->
-            <shutdown-wait-time-ms>5000</shutdown-wait-time-ms>
-        </thread-pool>
+        <shutdown-wait-time-ms>5000</shutdown-wait-time-ms>
+      </thread-pool>
 
       <!--+
           | Definition of the JobStore.
@@ -89,12 +89,12 @@
           | (Attributes delegate and provider are optional)
       <store type="tx" delegate="org.quartz.impl.jdbcjobstore.StdJDBCDelegate">
         <datasource provider="jndi">jdbc/MyJobStoreDS</datasource>
-        </store>
+      </store>
           +-->
       <store type="ram"/>
 
-        <!-- Definintions of triggers -->
-        <triggers>
+      <!-- Definintions of triggers -->
+      <triggers>
         <!--+
             | A trigger element has the following attributes:
             |    name:            A name for the trigger. Mandatory
@@ -118,8 +118,8 @@
         <!--+
             | Sample trigger definitions, use components defined below.
         <trigger name="test-job1"
-                     target="org.apache.cocoon.components.cron.CronJob/test"
-                     concurrent-runs="false">
+                 target="org.apache.cocoon.components.cron.CronJob/test"
+                 concurrent-runs="false">
           <cron>*/12 * * * * ? *</cron>
         </trigger>
         <trigger name="test-job2"
@@ -142,7 +142,7 @@
           <weekdays>MON-FRI</weekdays>
         </trigger>
             +-->
-        </triggers>
+      </triggers>
     </component>
 
   <!--+
