@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.10 2004/03/28 14:28:04 antonio Exp $
+ * @version CVS $Id: NetUtils.java,v 1.11 2004/04/18 23:17:39 ugo Exp $
  */
 
 public class NetUtils {
@@ -354,6 +354,14 @@ public class NetUtils {
         }
 
         StringBuffer b = new StringBuffer(uri.length());
+        
+        // Added this check to satisfy NetUtilsTestCase. I cannot ascertain whether
+        // this is correct or not, since the description of this method is not very
+        // clear. [Ugo Cei <ugo@apache.org> 2004-04-19]
+        if (uri.charAt(0) == '/') {
+            b.append('/');
+        }
+        
         for (int i = 0; (i < length) && (clean[i] != null); i++) {
             b.append(clean[i]);
             if ((i+1 < length) && (clean[i+1] != null)) {
