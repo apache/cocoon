@@ -120,8 +120,8 @@
        Due to some interface changes in the Cocoon logging components, custom java
        components (generators,transformers or actions for example) compiled for Cocoon 2.0.x will not run
        under Cocoon 2.1 unless recompiled.</p>
-       <p>It's also advisable to change your implementations from using <em>LogEnabled</em>
-         instead of <em>Loggable</em> when it comes to logging in your components.
+       <p>It's also advisable to change your implementations from using <em>Loggable</em>
+         to <em>LogEnabled</em> when it comes to logging in your components.
        </p>
   </s1>
   <s1 title="Components">
