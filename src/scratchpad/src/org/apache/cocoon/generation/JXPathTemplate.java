@@ -821,14 +821,27 @@ public class JXPathTemplate extends AbstractGenerator {
         Event lastEvent;
         Stack stack = new Stack();
         Locator locator;
+        Locator charLocation;
+        StringBuffer charBuf;
 
         StartDocument getStartEvent() {
             return startEvent;
         }
         
-        private void addEvent(Event ev) {
+        private void addEvent(Event ev) throws SAXException {
             if (ev == null) {
                 throw new NullPointerException("null event");
+            }
+            if (charBuf != null) {
+                char[] chars = new char[charBuf.length()];
+                charBuf.getChars(0, charBuf.length(), chars, 0);
+                Characters charEvent = new Characters(charLocation,
+                                                      chars, 0, chars.length);
+                                                      
+                lastEvent.next = charEvent;
+                lastEvent = charEvent;
+                charLocation = null;
+                charBuf = null;
             }
             if (lastEvent == null) {
                 lastEvent = startEvent = new StartDocument(locator);
@@ -839,12 +852,14 @@ public class JXPathTemplate extends AbstractGenerator {
 
         public void characters(char[] ch, int start, int length) 
             throws SAXException {
-            Characters chars = new Characters(locator,
-                                              ch, start, length);
-            addEvent(chars);
+            if (charBuf == null) {
+                charBuf = new StringBuffer();
+                charLocation = new LocatorImpl(locator);
+            }
+            charBuf.append(ch, start, length);
         }
 
-        public void endDocument() {
+        public void endDocument() throws SAXException {
             StartDocument startDoc = (StartDocument)stack.pop();
             EndDocument endDoc = new EndDocument(locator);
             startDoc.endDocument = endDoc;
@@ -919,7 +934,7 @@ public class JXPathTemplate extends AbstractGenerator {
             addEvent(newEvent);
         }
         
-        public void endPrefixMapping(String prefix) {
+        public void endPrefixMapping(String prefix) throws SAXException {
             EndPrefixMapping endPrefixMapping = 
                 new EndPrefixMapping(locator, prefix);
             addEvent(endPrefixMapping);
@@ -931,7 +946,8 @@ public class JXPathTemplate extends AbstractGenerator {
             addEvent(ev);
         }
 
-        public void processingInstruction(String target, String data) {
+        public void processingInstruction(String target, String data) 
+            throws SAXException {
             Event pi = new ProcessingInstruction(locator, target, data);
             addEvent(pi);
         }
@@ -940,12 +956,14 @@ public class JXPathTemplate extends AbstractGenerator {
             this.locator = locator;
         }
 
-        public void skippedEntity(String name) {
+        public void skippedEntity(String name) 
+            throws SAXException {
             addEvent(new SkippedEntity(locator, name));
         }
 
 
-        public void startDocument() {
+        public void startDocument() 
+            throws SAXException {
             startEvent = new StartDocument(locator);
             lastEvent = startEvent;
             stack.push(lastEvent);
@@ -1103,7 +1121,8 @@ public class JXPathTemplate extends AbstractGenerator {
             addEvent(newEvent);
         }
         
-        public void startPrefixMapping(String prefix, String uri) {
+        public void startPrefixMapping(String prefix, String uri) 
+            throws SAXException {
             addEvent(new StartPrefixMapping(locator, prefix, uri));
         }
 
@@ -1112,27 +1131,33 @@ public class JXPathTemplate extends AbstractGenerator {
             addEvent(new Comment(locator, ch, start, length));
         }
 
-        public void endCDATA() {
+        public void endCDATA() 
+            throws SAXException {
             addEvent(new EndCDATA(locator));
         }
 
-        public void endDTD() {
+        public void endDTD() 
+            throws SAXException {
             addEvent(new EndDTD(locator));
         }
 
-        public void endEntity(String name) {
+        public void endEntity(String name) 
+            throws SAXException {
             addEvent(new EndEntity(locator, name));
         }
 
-        public void startCDATA() {
+        public void startCDATA() 
+            throws SAXException {
             addEvent(new StartCDATA(locator));
         }
 
-        public void startDTD(String name, String publicId, String systemId) {
+        public void startDTD(String name, String publicId, String systemId) 
+            throws SAXException {
             addEvent(new StartDTD(locator, name, publicId, systemId));
         }
         
-        public void startEntity(String name) {
+        public void startEntity(String name) 
+            throws SAXException {
             addEvent(new StartEntity(locator, name));
         }
     }
