@@ -9,7 +9,7 @@
  
  1. Redistributions must retain the above copyright notice,
     this list of conditions and the following disclaimer.
- 
+
  2. This document is referred to and considered only as "working draft".
  
  3. Any software implementation inspired by this document must indicate
@@ -24,7 +24,7 @@
     apache@apache.org.
  
  5. Products  derived from this document may not  be called "Cocoon", nor may
-    "Cocoon" nor "Apache" appear in their name, without prior written 
+    "Cocoon" nor "Apache" appear in their name, without prior written
     permission  of the Apache Software Foundation.
  
  THIS DOCUMENT IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
@@ -61,7 +61,7 @@ and web applications built from logic components and XML documents.
 It finds inspiration from both Apache's httpd.conf/.htaccess files as well
 as from Servlet API 2.2 WAR archives. It uses concepts such as Cascading
 from W3C CSS, as well as declarative approaches integrated into the W3C 
-XSLT language. It also uses some element/attribute equivalence patterns 
+XSLT language. It also uses some element/attribute equivalence patterns
 used in W3C RDF.
 
 The following goals were identified as engineering constraints:
@@ -128,7 +128,7 @@ The following goals were identified as engineering constraints:
 
    <!-- 
        Generators generate XML content as SAX events and initialize the 
-       pipeline processing. 
+       pipeline processing.
    -->
   <map:generators default="parser">
    <map:generator name="parser" src="class:///org.apache.cocoon.generation.FileGenerator" label="content"/>
@@ -154,7 +154,7 @@ The following goals were identified as engineering constraints:
        Readers generate and serialize directly from a resource in binary or char streams for  
        final client consumption. 
    --> 
-  <map:readers default="binary"> 
+  <map:readers default="binary">
    <map:reader name="binary" mime-type="image/svg" src="class:///org.apache.cocoon.reading.BinaryReader"/> 
   </map:readers> 
  
@@ -230,10 +230,10 @@ The following goals were identified as engineering constraints:
    </map:selector>
   </map:selectors>
 
-   <!-- 
+   <!--
        Matchers are classes that are able to test if the request parameters
-       match the given pattern and, if this is the case, they are able to 
-       return a collection of tokens that resulted from the matching or any
+       match the given pattern and, if this is the case, they are able to
+       return a Map of tokens that resulted from the matching or any
        depending on the matcher own logic (this is up to the matcher implementation).
    -->
   <map:matchers default="uri-wildcard">
@@ -254,9 +254,41 @@ The following goals were identified as engineering constraints:
    </map:matcher>
   </map:matchers>
 
+   <!--
+       Action are classes that are able to modify the underlying application model and
+       are meant as extensions to the sitemap functionality. They get access to the
+       objectModel containing all objects that make up a request (HttpServletrequest,
+       etc.). An Action can return a Map of tokens that resulted from the
+       processing logic (this is up to the action implementation). An Action is
+       references in the pipeline section with the type attribute as it is with all the
+       other sitemap components.
+   -->
+  <map:actions>
+   <map:action name="session-validator" src="org.apache.cocoon.acting.SessionValidationAction">
+    ...
+   </map:action>
+
+   <map:action name="db-adder"    src="org.apache.cocoon.acting.DBAddingAction">
+    <db-connection>postgresql-connection</db-connection>
+   </map:action>
+
+   <map:action name="db-modifier" src="org.apache.cocoon.acting.DBModifyingAction"/>
+    <db-connection>postgresql-connection</db-connection>
+   </map:action>
+
+   <map:action name="db-delete"   src="org.apache.cocoon.acting.DBDeletingAction"/>
+    <db-connection>postgresql-connection</db-connection>
+   </map:action>
+
+   <map:action name="form-dispatcher" src="org.apache.cocoon.acting.FormDispatcherAction"/>
+    <layout-description>somewhere/layout-employee-app</layout-description>
+   </map:action>
+
+  </map:actions>
+
  </map:components>
 
-<!-- =========================== Views =================================== --> 
+<!-- =========================== Views =================================== -->
 
  <!--
      the <view> element introduces the notion of multi-dimensional resource
@@ -265,23 +297,23 @@ The following goals were identified as engineering constraints:
      reduction and should help users in the creation of complex sitemaps that
      are able to produce different views of the resource they handle for each
      "aspect" requested.
-     
+
      Views can be pictured as generator-less pipelines which use, as a generator,
      the result of another pipeline from the "label" they indicate or from the
      position (first/last) in the pipeline.
-     
+
      Labels can be seen as non-standard exit points from the normal pipelines
      and "first" identifies the position right after the generator while "last
      indentifies the position right before the serializer.
-     
-     Both generators and transformers are allowed to attach a default label to 
+
+     Both generators and transformers are allowed to attach a default label to
      them. If no <label> element is explicitly indicated, the sitemap handler
      will scan for default labels attached to the components, starting from the
      serializer and going backward, until it finds a component to start.
      If none is found, the generator is assumed to be the view generator.
   -->
  <map:views>
- 
+
   <map:view name="content" from-position="first">
    <map:serialize type="xml"/>
   </map:view>
@@ -300,41 +332,76 @@ The following goals were identified as engineering constraints:
    <map:transform src="./stylesheets/xlink-filter.xsl"/>
    <map:serialize type="xml"/>
   </map:view>
- 
+
  </map:views>
 
-<!-- =========================== Resources ================================= --> 
+<!-- =========================== Resources ================================= -->
 
- <!-- 
+ <!--
      the <resource> element is used as a placeholder for pipelines
      that are used several times inside the document. This element
      is redundant and its functionality is not directly related
      to the sitemap, but could be cloned by the use of internal
      XInclude, for example
-   
+
          <xinclude:include href="#xpointer(resource[@name='Access refused'])"/>
-   
+
      but given the usability constraints and very specific operation
      it is much easier to include such an element instead of forcing
      the use of xinclude/xpointer.
  -->
  <map:resources>
-  
+
   <map:resource name="Access refused">
    <map:generate src="./error-pages/restricted.xml"/>
    <map:transform src="./stylesheets/general-browser.xsl"/>
    <map:serialize status-code="401"/>
   </map:resource>
-    
+
  </map:resources>
- 
-<!-- =========================== Pipelines ================================= -->  
- 
+
+<!-- ========================== Action Sets ================================ -->
+
+ <!--
+     the <action-set> element is used as a collection of related actions
+     that are used either several times inside the pipelines or in conjuction
+     with form actions which are selected by the sitemap for processing.
+     These action-sets are referenced in the pipeline section by using a
+     set attribute instead of a type attribute.
+     All the tokens returned by the individual actions in a action-set are
+     collected by the sitemap engine into one big map which can be used as
+     replacements in src attributes from generators/transformers.
+ -->
+ <map:action-sets>
+
+  <!--
+      The following action-set defines:
+      a) a "session-validator" action which will be executed whenever this
+         action-set is referenced in a pipeline.
+      b) several "db-*" action which have a additional action attribute which the
+         sitemap engine uses as a value to compare against the action value supplied
+         from the Environment object. Every action with a matching action value will
+         be processed.
+      c) a "form-dispatcher" action which will tell the sitemap which is the
+         next resource to display (usually used for the generator in charge).
+  -->
+  <map:action-set name="employee-form">
+   <map:act type="session-validator"/>
+   <map:act type="db-adder"    action="Add"/>
+   <map:act type="db-modifier" action="Update"/>
+   <map:act type="db-deleter"  action="Delete"/>
+   <map:act type="form-dispatcher"/>
+  </map:resource>
+
+ </map:resources>
+
+<!-- =========================== Pipelines ================================= -->
+
  <map:pipelines>
-  <map:pipeline> 
-   
-   <!--  
-       Mount points allow sitemaps to be cascaded and site management  
+  <map:pipeline>
+
+   <!--
+       Mount points allow sitemaps to be cascaded and site management
        workload to be parallelized. 
      --> 
    <map:match pattern="cocoon/*"> 
@@ -346,21 +413,21 @@ The following goals were identified as engineering constraints:
     <map:mount uri-prefix="bugs/{1}" check-reload="true"
       src="jar://apps/bugs.cocoon#{1}"/> 
    </map:match> 
-   
+
    <map:match pattern="dist/*"> 
     <map:mount uri-prefix="dist/{1}" check-reload="false"  src="./dist/{1}"/> 
-   </map:match> 
-   
+   </map:match>
+
    <map:match pattern="faq/*"> 
-    <map:mount uri-prefix="faq/{1}" check-reload="no" 
+    <map:mount uri-prefix="faq/{1}" check-reload="no"
       src="jar://apps/faq-o-matic.cocoon#{1}"/> 
    </map:match> 
-   
-   <map:match type="uri-regexp" pattern="^/xerces-(j|c|p)/(.*)$"> 
-    <map:mount uri-prefix="/xerces-{1}/{2}" 
-      src="cvs:pserver:anonymous@xml.apache.org://home/cvs/xerces-{1}/xdocs/{2}"/> 
-   </map:match> 
-    
+
+   <map:match type="uri-regexp" pattern="^/xerces-(j|c|p)/(.*)$">
+    <map:mount uri-prefix="/xerces-{1}/{2}"
+      src="cvs:pserver:anonymous@xml.apache.org://home/cvs/xerces-{1}/xdocs/{2}"/>
+   </map:match>
+
    <map:handle-errors> 
     <map:serialize type="html"/>   
    </map:handle-errors> 
@@ -376,7 +443,7 @@ The following goals were identified as engineering constraints:
    <map:match pattern="cocoon/dist/*"> 
     <map:select type="ip-filter">
      <map:when test="allowsAddress()">
-      <!-- 
+      <!--
           the <redirect-to> element is used to redirect one requested URI 
           to another. This is somewhat equivalent to URI rewriting.
         -->
@@ -398,7 +465,7 @@ The following goals were identified as engineering constraints:
     <map:transform src="./stylesheet/printer-friendly.xsl"/>
     <map:serialize/>
    </map:match>
-  
+
    <map:match pattern="images/logo">
     <map:select>
      <map:when test="accepts('image/svg')">
@@ -449,7 +516,7 @@ The following goals were identified as engineering constraints:
     <map:transform src="./stylesheet/slides2html.xsl"/>
     <map:serialize/>
    </map:match>
- 
+
    <!--
        Complex example to show how some xpath-like syntax is used to get access
        to the pattern tokens generated by the matchers.
@@ -460,25 +527,39 @@ The following goals were identified as engineering constraints:
        src="file:///home/www/mozilla-{1}-{2}/{../1}"/>
     </map:match>
    </map:match>
-  
+
    <map:match type="uri-regexp" pattern="([0-9]{4})/([0-9]{2})/([0-9]{2})/">
     <!--
          Here we implement the ability to indicate semantic information
          on the processed URI. This is mostly used to avoid to encode
          URI specific information in the XSP since the sitemap maintainer
          is the only one responsible to manage the URI space. This removes
-         a URI contract between the XSP writer and the URI space manager, 
+         a URI contract between the XSP writer and the URI space manager,
          moving it to parameter names which normally change less frequently.
     -->
     <map:param name="year" value="{1}"/>
     <map:param name="month" value="{2}"/>
     <map:param name="day" value="{3}"/>
-    
+
     <map:generate type="serverpages" src="./dailynews.xsp"/>
     <map:transform src="./stylesheet/{1}/news.xsl"/>
     <map:serialize/>
    </map:match>
-  
+
+   <!--
+       Here we show the use of action-sets. The scenario used is a form
+       generated which enables the visitor to add, modify and delete entries
+       in an employee database
+   -->
+   <map:match pattern="form/employee">
+    <map:act set="employee-form">
+     <map:generate src="forms/{next-form}.xml"/>
+     <map:transform src="forms2html.xsl"/>
+     <map:serialize/>
+    </map:act>
+   </map:match>
+
+
    <map:match pattern="*">
     <map:generate src="{1}.xml"/>
     <map:select type="load">
