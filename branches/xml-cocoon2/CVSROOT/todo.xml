@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.9 2000-07-19 22:19:46 giacomo Exp $
+  $Id: todo.xml,v 1.6.2.10 2000-08-17 16:44:53 stefano Exp $
 -->
 
 
@@ -26,16 +26,6 @@
    Write URLHandler for the protocols defined in the sitemap, e.g. class://. cvs://
   </action>
 
-  <action context="code" assigned-to="BL">
-   Make Cocoon 2 Avalon-aware using the Component api from Avalon.
-  </action>
-
-  <action context="code">
-   To simplify portability and installation on different enviornments, the
-   XSP subsystem should use the temporary directory provided by the
-   ServletContext via the "javax.servlet.context.tempdir" attribute.
-  </action>
-  
   <action context="code">
    Write a better error handling code for CocoonServlet to avoid hardcoding
    HTML inside the servlet which sucks big time.
