@@ -21,7 +21,7 @@ import org.apache.cocoon.util.ClassUtils;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-06 23:22:22 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-14 11:07:11 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -33,6 +33,7 @@ class RepositoryClassLoader extends ClassLoader {
    * Create an empty new class loader.
    */
   public RepositoryClassLoader() {
+    super(RepositoryClassLoader.class.getClassLoader());
     this.repositories = new Vector();
   }
 
