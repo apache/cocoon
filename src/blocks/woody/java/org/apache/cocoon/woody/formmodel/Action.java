@@ -62,8 +62,9 @@ import java.util.Locale;
 
 /**
  * An Action widget. An Action widget can cause an {@link ActionEvent} to be triggered
- * on the server side, which will be handled by the {@link org.apache.cocoon.woody.FormHandler FormHandler}
- * (in case of flowscript this is a javascript function). An Action widget can e.g. be rendered as a button,
+ * on the server side, which will be handled by either the event handlers defined in the
+ * form definition, and/or by the {@link org.apache.cocoon.woody.event.FormHandler FormHandler}
+ * registered with the form, if any. An Action widget can e.g. be rendered as a button,
  * or as a hidden field which gets its value set by javascript. The Action widget will generate its associated
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
@@ -92,9 +93,6 @@ public class Action extends AbstractWidget {
             form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
             
             handleActivate();
-            
-            // TODO : to be removed
-            formContext.setActionEvent(new ActionEvent(this, definition.getActionCommand()));
         }
     }
     
