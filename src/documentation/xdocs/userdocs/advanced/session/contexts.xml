@@ -23,14 +23,14 @@
         contexts which do not require a session. They are available everytime. These
         special contexts are the request context and the
         temporary context.</note>
-     <s2 title="session Transformer">
+   </s1>
+     <s1 title="session Transformer">
         <p>The <em>session transformer</em> is responsible for interpreting the tags
           and performing the actions required. The session transformer is configured
           in the sitemap and can be used inside a pipeline. All tags must be prefixed
           with the session namespace. So the actual tag used in the document will read
           <em>&lt;session:xxxx&gt;</em>. The current namespace URI for the session 
           transformer is <em>"http://apache.org/cocoon/session/1.0"</em>.</p>
-     </s2>
      <s2 title="Context-Tags">
         <p>A context is basically an application specific block of XML data in
           the users session. Each context has a unique name.</p>
@@ -268,5 +268,20 @@
           information for processing the current request.</p>
      </s2>
   </s1>
+  <s1 title="Session-Context Input Module">
+    <p>In addition to the <em>session transformer</em>, the <em>session-context input module</em>
+      can be used directly in the sitemap to get information out of a context.</p>
+    <p>The information for the input module consists of two parts, the first
+      one being the context name and the second one the path inside the
+      context. Let's have a look at an example:</p>
+    <source>
+&lt;map:generate src="{session-context:request/method}.xml"/&gt;      
+    </source>
+    <p>
+      In the example above, either <em>GET.xml</em> or <em>POST.xml</em> is
+      read by the <em>file generator</em>, depending on the value from
+      the context <em>request</em> using the xpath <em>method</em>.
+    </p>
+    </s1>  
 </body>
 </document>

@@ -5,16 +5,16 @@
       title="Apache Cocoon User Documentation - Concepts" 
       copyright="@year@ The Apache Software Foundation">
 
-  <menu label="Navigation">
-    <menu-item label="Main" href="../../index.html"/>
-    <menu-item label="User Documentation" href="../index.html"/>
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="2. Advanced" href="../preface.html"/>
   </menu>
 
-  <menu label="Offline">
-    <menu-item label="Overview" href="index.html"/>
-    <menu-item label="Command Line" href="cli.html"/>
-    <menu-item label="Ant" href="ant.html"/>
-    <menu-item label="Cocoon Bean" href="bean.html"/>
+  <menu label="2.5 Offline">
+    <menu-item label="2.5.1 Overview" href="index.html"/>
+    <menu-item label="2.5.2 Command Line" href="cli.html"/>
+    <menu-item label="2.5.3 Ant" href="ant.html"/>
+    <menu-item label="2.5.4 Cocoon Bean" href="bean.html"/>
   </menu>
 
 </book>

@@ -5,25 +5,25 @@
       title="Apache Cocoon XSP"
       copyright="@year@ The Apache Software Foundation">
 
-  <menu label="Navigation">
-    <menu-item label="Main" href="../../index.html"/>
-    <menu-item label="User Documentation" href="../index.html"/>
+  <menu label="User Guide">
+    <menu-item label="Intro" href="../../intro.html"/>
+    <menu-item label="2. Advanced" href="../preface.html"/>
   </menu>
 
-  <menu label="XSP">
-    <menu-item label="Overview" href="index.html"/>
-    <menu-item label="XSP Guide" href="logicsheet.html"/>
-    <menu-item label="XSP Internals" href="xsp-internals.html"/>
-    <menu-item label="XSP Logicsheets" href="logicsheet-concepts.html"/>
-    <menu-item label="Sessions" href="sessions.html"/>
+  <menu label="2.6 XSP">
+    <menu-item label="2.6.1 Overview" href="index.html"/>
+    <menu-item label="2.6.2 XSP Guide" href="logicsheet.html"/>
+    <menu-item label="2.6.3 XSP Internals" href="xsp-internals.html"/>
+    <menu-item label="2.6.4 XSP Logicsheets" href="logicsheet-concepts.html"/>
+    <menu-item label="2.6.5 Sessions" href="sessions.html"/>
   </menu>
 
   <menu label="Logicsheets">
-    <menu-item label="Request" href="request.html"/>
-    <menu-item label="Session" href="session.html"/>
-    <menu-item label="ESQL" href="esql.html"/>
-    <menu-item label="Forms" href="logicsheet-forms.html"/>
-    <menu-item label="Sendmail" href="sendmail.html"/>
+    <menu-item label="2.6.6 Request" href="request.html"/>
+    <menu-item label="2.6.7 Session" href="session.html"/>
+    <menu-item label="2.6.8 ESQL" href="esql.html"/>
+    <menu-item label="2.6.9 Forms" href="logicsheet-forms.html"/>
+    <menu-item label="2.6.10 Sendmail" href="sendmail.html"/>
   </menu>
 
 </book>
