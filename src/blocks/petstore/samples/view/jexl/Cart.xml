@@ -8,11 +8,11 @@
                 <item productId="${cartItem.item.productId}" id="${cartItem.item.itemId}">
                     <desc>${cartItem.item.attr1} ${cartItem.item.attr2} ${cartItem.item.attr3} ${cartItem.item.attr4} ${cartItem.item.attr5} ${cartItem.product.name}</desc>
                     <quantity>${cartItem.quantity}</quantity>
-                    <listPrice><c:formatNumber value="${cartItem.item.listPrice}" pattern="###,##0.00" currencyCode="USD" type="currency"/></listPrice>
-                    <total><c:formatNumber value="${cartItem.total}" pattern="###,##0.00" currencyCode="USD" type="currency"/></total>
+                    <listPrice>${cartItem.item.listPrice}</listPrice>
+                    <total>${cartItem.total}</total>
                 </item>
             </c:forEach>
-            <subTotal label="Sub Total" label1="Total"><c:formatNumber value="${cartForm.cart.subTotal}" pattern="###,##0.00" currencyCode="USD" type="currency"/></subTotal>
+            <subTotal label="Sub Total" label1="Total">${cartForm.cart.subTotal}</subTotal>
             <c:if test="${label == 'Checkout Summary'}">
                 <nextpointer img="images/button_continue.gif" do="${continuation.id}.kont"/>
             </c:if>

@@ -5,7 +5,7 @@
         <orderlist name="My Orders">
             <c:forEach select="#{orderList}" >
                 <order id="#{orderid}" status="#{status}">
-                    <total><c:formatNumber value="#{totalprice}" pattern="###,##0.00" currencyCode="USD" type="currency"/></total>
+                    <total>#{totalprice}</total>
                     <date>#{orderdate}</date>
                 </order>
             </c:forEach>
