@@ -110,7 +110,9 @@ public class CalculationApple extends AbstractLogEnabled implements AppleControl
 
 
     private void calculate() {
-        if("plus".equals(this.inputOp)) {
+        if (this.inputA == null || this.inputB == null) {
+            this.output = null;
+        } else if("plus".equals(this.inputOp)) {
             this.output = this.inputA.add(this.inputB);            
         } else if("minus".equals(this.inputOp)) {
             this.output = this.inputA.add(this.inputB.negate());            
@@ -125,9 +127,6 @@ public class CalculationApple extends AbstractLogEnabled implements AppleControl
 
     private void showNextState(AppleResponse res, String changeTo) {
         Object bizdata = buildBizData();
-        
-        //TODO: this simple example is obviously subject to some serious hacking
-        // by URL-hacking/adding a ?change one could damage the flow!
         
         if (changeTo != null) {
             res.sendPage("calc/get" + changeTo, bizdata);            
