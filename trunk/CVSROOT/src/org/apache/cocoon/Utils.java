@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.14 2000-05-06 11:13:00 stefano Exp $ --
+/*-- $Id: Utils.java,v 1.15 2000-05-12 12:39:46 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.14 $ $Date: 2000-05-06 11:13:00 $
+ * @version $Revision: 1.15 $ $Date: 2000-05-12 12:39:46 $
  */
 
 public final class Utils {
@@ -323,7 +323,7 @@ public final class Utils {
         if (location.indexOf("://") < 0) {
             if (location.charAt(0) == '/') {
                 // Location is relative to webserver's root
-                location = context.getRealPath(location);
+                location = request.getRealPath(location);
             } else {
                 // Location is relative to requested page's virtual directory
                 String basename = getBasename(request, context);
