@@ -74,10 +74,10 @@
  </component>
 
 <component class="org.apache.cocoon.components.persistance.CastorSourceConverter" role="org.apache.cocoon.components.persistance.CastorSourceConverter">
- 	<mapping-source source="layout">context://samples/portal/profiles/mapping/layout.xml</mapping-source>
- 	<mapping-source source="copletbasedata">context://samples/portal/profiles/mapping/copletbasedata.xml</mapping-source>
- 	<mapping-source source="copletdata">context://samples/portal/profiles/mapping/copletdata.xml</mapping-source>
- 	<mapping-source source="copletinstancedata">context://samples/portal/profiles/mapping/copletinstancedata.xml</mapping-source>
+ 	<mapping-source source="layout">resource://org/apache/cocoon/portal/layout/layout.xml</mapping-source>
+ 	<mapping-source source="copletbasedata">resource://org/apache/cocoon/portal/coplet/copletbasedata.xml</mapping-source>
+ 	<mapping-source source="copletdata">resource://org/apache/cocoon/portal/coplet/copletdata.xml</mapping-source>
+ 	<mapping-source source="copletinstancedata">resource://org/apache/cocoon/portal/coplet/copletinstancedata.xml</mapping-source>
  </component>
  <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" />
 
