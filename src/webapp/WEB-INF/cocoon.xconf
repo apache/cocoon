@@ -59,25 +59,21 @@
       |  following elements:
       |
       |    reload-scripts (boolean value, default false):
-      |
-      |       whether to check if the scripts source files are
-      |       modified. Checking for modification is an expensive
-      |       operation, so leave it disabled in a production
-      |       environment. If not present it is assumed to be "false". When
-      |       "true" *all* script files are checked for modification on
-      |       each function invocation done using <map:call
-      |       function="...">, but not more frequent than the value of
-      |       "check-time" (see below).
+      |       whether to check if the scripts source files are modified.
+      |       Checking for modification is an expensive operation, so leave
+      |       it disabled in a production environment. If not present it is
+      |       assumed to be "false". When "true" *all* script files are
+      |       checked for modification on each function invocation done using
+      |       <map:call function="...">, but not more frequent than the value
+      |       of "check-time" (see below).
       |
       |    check-time (long value, default 1000):
-      |
-      |       time in miliseconds between the checks for the last
-      |       modification date of script files.
+      |       time in miliseconds between the checks for the last modification
+      |       date of script files.
       |
       |    debugger (boolean value, default false):
-      |
-      |       whether support for the JavaScript debugger should be enabled
-      |       in the control flow.
+      |       whether support for the JavaScript debugger should be enabled in
+      |       the control flow.
       +-->
   <flow-interpreters default="javascript" logger="flow">
     <!-- FOM (Flow Object Model) -->
@@ -283,11 +279,10 @@
   <!--+
       | XML Parser
       |
-      | The default parser used in Apache Cocoon is
-      | org.apache.excalibur.xml.impl.JaxpParser. Apache Cocoon requires a
-      | JAXP 1.1 parser.
-      | If you have problems because your servlet environment uses its own
-      | parser not conforming to JAXP 1.1 try using the alternative
+      | Apache Cocoon requires a JAXP 1.1 parser. The default parser is
+      | org.apache.excalibur.xml.impl.JaxpParser. 
+      | Note: If you have problems because your servlet environment uses its
+      | own parser not conforming to JAXP 1.1 try using the alternative
       | XercesParser instead of the JaxpParser. To activate the XercesParser,
       | change the class attribute to
       |   class="org.apache.excalibur.xml.impl.XercesParser"
@@ -295,16 +290,16 @@
       | probably on the startup of your servlet engine like this:
       | -Dorg.apache.excalibur.xml.sax.SAXParser=org.apache.excalibur.xml.impl.XercesParser
       |
-      | Configuration for the JaxpParser (not the XercesParser!):
-      | - validate (boolean, default = false): This parameter causes the parser
-      |     to be a validating parser.
-      |     XML validation is only being used for the documentation build.
+      | Configuration parameters for the JaxpParser (not the XercesParser!):
+      | - validate (boolean, default = false): should the parser validate
+      |     parsed documents?
+      |     Note: XML validation is only being used for the documentation build.
       |     (If you are going to use it elsewhere, then do so with caution.)
       |     You really should have validated all of your XML documents already,
       |     according to their proper DTD or schema. Do not expect Cocoon
       |     to do it.
       | - namespace-prefixes (boolean, default = false) : do we want
-      |     namespaces declarations also as 'xmlns:' attributes ?
+      |     namespaces declarations also as 'xmlns:' attributes?
       |     Note : setting this to true confuses some XSL processors
       |     (e.g. Saxon).
       | - stop-on-warning (boolean, default = true) : should the parser
@@ -316,26 +311,29 @@
       |     Note : even if this parameter is true, parsers are not recycled
       |     in case of parsing errors : some parsers (e.g. Xerces) do not like
       |     to be reused after failure.
-      | - sax-parser-factory (string) : the name of the SAXParserFactory
-      |     implementation class to be used instead of using the standard
-      |     JAXP mechanism (SAXParserFactory.newInstance()). This allows to
-      |     choose unambiguously the JAXP implementation to be used when
-      |     several of them are available in the classpath.
-      | - document-builder-factory (string) : the name of the
+      | - sax-parser-factory (string, optional) : the name of the
+      |     SAXParserFactory implementation class to be used instead of using
+      |     the standard JAXP mechanism (SAXParserFactory.newInstance()). This
+      |     allows to choose unambiguously the JAXP implementation to be used
+      |     when several of them are available in the classpath.
+      | - document-builder-factory (string, optional) : the name of the
       |     DocumentBuilderFactory implementation to be used (similar to
       |     sax-parser-factory for DOM).
+      | - drop-dtd-comments : should comment() events from DTD's be dropped?
+      |     Note: Since this implementation does not support the DeclHandler
+      |     interface anyway, it is quite useless to only have the comments
+      |     from DTD. And the comment events from the internal DTD subset
+      |     would appear in the serialized output again.
       +-->
-  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser" logger="core.xml-parser" pool-grow="4" pool-max="32" pool-min="8">
+  <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser"
+             logger="core.xml-parser" pool-grow="4" pool-max="32" pool-min="8">
     <parameter name="validate" value="false"/>
     <parameter name="namespace-prefixes" value="false"/>
     <parameter name="stop-on-warning" value="true"/>
     <parameter name="stop-on-recoverable-error" value="true"/>
     <parameter name="reuse-parsers" value="false"/>
-    <!-- drop-dtd-comments: causes all comment events originating from DTD
-         comments to be dropped right after parsing -->
     <parameter name="drop-dtd-comments" value="true"/>
   </xml-parser>
-
 
   <!--+
       | XSLT Processor
@@ -400,40 +398,36 @@
 
   <!-- The XMLizers converts different mime-types to XML -->
   <xmlizer>
-      <parser role="org.apache.excalibur.xml.sax.SAXParser"      mime-type="text/xml"/>
+      <parser role="org.apache.excalibur.xml.sax.SAXParser" mime-type="text/xml"/>
   </xmlizer>
 
 <!-- ============================ Object Stores =========================== -->
 
   <!--+
       | Transient Store: holds objects that don't have to survive shutdown
+      |
+      | Common configuration parameters:
+      | maxobjects: Indicates how many objects will be hold in the cache.
+      |    When the number of maxobjects has been reached. The last object
+      |    in the cache will be thrown out.
       +-->
   <transient-store logger="core.store.transient">
-
-     <!--+
-         | Indicates how many objects will be hold in the cache.
-         | When the number of maxobjects has been reached. The last object
-         | in the cache will be thrown out.
-         +-->
      <parameter name="maxobjects" value="100"/>
-
   </transient-store>
   
   <!--+
-      | Store: generic store. The default implementation is an in-memory store backed by the
-      | persistent store (see below). This forms a two-stage cache composed of a fast in-memory MRU
-      | front-end and a persistent back-end storing less used objects.
+      | Store: generic store. The default implementation is an in-memory store
+      | backed by the persistent store (see below). This forms a two-stage
+      | cache composed of a fast in-memory MRU front-end and a persistent
+      | back-end storing less used objects.
+      |
+      | Common configuration parameters:
+      | maxobjects: Indicates how many objects will be hold in the cache.
+      |    When the number of maxobjects has been reached. The last object
+      |    in the cache will be thrown out.
       +-->
   <store logger="core.store">
-
-     <!--+
-         | Indicates how many objects will be hold in the cache.
-         |
-         | When the number of maxobjects has been reached. The last object
-         | in the cache will be thrown out.
-         +-->
      <parameter name="maxobjects" value="100"/>
-
   </store>
 
   <!--+
@@ -462,8 +456,10 @@
   <!--+
       | Store Janitor: the store garbage collector and memory usage controller.
       |
-      | Be careful with the heapsize and freememory parameters. Wrong values
-      | can cause high cpu usage. Example configuration:
+      | WARNING: Be careful with the heapsize and freememory parameters.
+      |           Wrong values can cause high cpu usage.
+      |
+      | Example configuration:
       | Jvm settings:
       |    -Xmx200000000
       | store-janitor settings:
@@ -555,10 +551,10 @@
       <!--+
           | Specifies which Java compiler to use. Possible variants are:
           |
-          |  - Javac: the java compiler that comes with JDK
-          |  - Pizza: the Pizza java compiler
-          |  - Jikes: the Jikes java compiler
           |  - EclipseJavaCompiler: the Eclipse JTD java compiler
+          |  - Javac: the java compiler that comes with JDK
+          |  - Jikes: the Jikes java compiler
+          |  - Pizza: the Pizza java compiler
           |
           | NOTE: the Eclipse JTD is the only java compiler that is capable
           |       of imports classes thru the context classloader. All other
@@ -567,10 +563,10 @@
           |       time. It is *HIGHLY* suggested that you use this compiler
           |       or you might experience problems in some servlet containers.
           +-->
-      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/-->
-      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Pizza"/-->
-      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Jikes"/-->
       <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.EclipseJavaCompiler"/>
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/-->
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Jikes"/-->
+      <!--parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Pizza"/-->
 
     </java-language>
 
