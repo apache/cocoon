@@ -86,7 +86,7 @@ import java.util.HashMap;
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: DOMStreamer.java,v 1.8 2003/03/17 10:44:07 bruno Exp $
+ * @version CVS $Id: DOMStreamer.java,v 1.9 2003/03/18 15:44:47 bruno Exp $
  */
 public class DOMStreamer implements XMLProducer {
 
@@ -152,18 +152,16 @@ public class DOMStreamer implements XMLProducer {
     }
 
     /**
+     * Set the <code>ContentHandler</code> that will receive XML data.
+     */
+    public void setContentHandler(ContentHandler handler) {
+        defaultDOMStreamer.setContentHandler(handler);
+        namespaceNormalizingDOMStreamer.setContentHandler(handler);
+    }
+    /**
      * Set the <code>LexicalHandler</code> that will receive XML data.
-     * <br>
-     * Subclasses may retrieve this <code>LexicalHandler</code> instance
-     * accessing the protected <code>super.lexicalHandler</code> field.
-     *
-     * @exception IllegalStateException If the <code>LexicalHandler</code> or
-     *                                  the <code>XMLConsumer</code> were
-     *                                  already set.
      */
     public void setLexicalHandler(LexicalHandler handler) {
-        // FIXME Shouldn't be used IHMO.
-
         defaultDOMStreamer.setLexicalHandler(handler);
         namespaceNormalizingDOMStreamer.setLexicalHandler(handler);
     }
