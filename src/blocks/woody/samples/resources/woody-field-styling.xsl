@@ -407,6 +407,55 @@
     <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 
+  <xsl:template match="wi:messages">
+    <xsl:if test="wi:message">
+      <xsl:apply-templates select="wi:label"/>:
+      <ul>
+        <xsl:for-each select="wi:message">
+          <li><xsl:apply-templates/></li>
+        </xsl:for-each>
+      </ul>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="wi:validation-errors">
+    <xsl:variable name="header">
+      <xsl:choose>
+        <xsl:when test="header">
+          <xsl:copy-of select="header"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <p class="validation-errors">The following errors have been detected (marked with !):</p>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="footer">
+      <xsl:choose>
+        <xsl:when test="footer">
+          <xsl:copy-of select="footer"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <p class="validation-errors">Please, correct them and re-submit the form.</p>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="frm" select="ancestor::wi:form-template"/>
+    <xsl:if test="$frm and $frm//wi:validation-message">
+      <xsl:copy-of select="$header"/>
+      <ul>
+        <xsl:for-each select="$frm//wi:validation-message">
+          <li class="validation-error">
+            <xsl:if test="../wi:label">
+              <xsl:value-of select="../wi:label"/><xsl:text>: </xsl:text>
+            </xsl:if>
+            <xsl:value-of select="."/>
+          </li>
+        </xsl:for-each>
+      </ul>
+      <xsl:copy-of select="$footer"/>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
