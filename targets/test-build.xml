@@ -47,6 +47,7 @@
           <include name="**/*TestCase.class"/>
           <include name="**/*Test.class" />
           <exclude name="**/AllTest.class" />
+          <exclude name="**/CocoonBeanTestCase.class" />
           <exclude name="**/*$$*Test.class" />
           <exclude name="**/Abstract*.class" />
           <exclude name="**/SitemapComponentTestCase*"/>
