@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-12 18:16:22 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-12 18:23:32 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -93,9 +93,10 @@ public class OraAddAction extends DatabaseAddAction {
                 }
             }
 
-            for (int i = 0; i < values.length; i++, currentIndex++) {
+            for (int i = 0; i < values.length; i++) {
                 if (this.isLargeObject(values[i].getAttribute("type")) == false) {
                     this.setColumn(statement, currentIndex, request, values[i]);
+                    currentIndex++;
                 }
             }
 
