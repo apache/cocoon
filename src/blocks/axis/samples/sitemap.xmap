@@ -34,7 +34,9 @@
 
     <!-- Match SOAP RPC Router requests -->
     <map:match pattern="rpcrouter">
-      <map:read type="soap-rpc" mime-type="text/xml"/>
+      <map:read type="soap-rpc" mime-type="text/xml">
+        <in-development-stage>false</in-development-stage>
+      </map:read>
     </map:match>
 
     <!-- Send all non qualified requests to the status page -->
