@@ -45,9 +45,10 @@
 */
 package org.apache.cocoon.components.flow;
 
-import java.util.List;
-
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Redirector;
+
+import java.util.List;
 
 /**
  * The interface to the flow scripting languages. This interface is
@@ -108,7 +109,8 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 11, 2002
- * @version CVS $Id: Interpreter.java,v 1.5 2004/01/05 08:17:31 cziegeler Exp $
+ * @see InterpreterSelector
+ * @version CVS $Id: Interpreter.java,v 1.6 2004/02/20 18:53:46 sylvain Exp $
  */
 public interface Interpreter
 {
@@ -171,9 +173,9 @@ public interface Interpreter
    * CallFunctionNode.Argument instances. The interpretation of the
    * parameters is left to the actual implementation of the
    * interpreter.
-   * @param env an <code>Environment</code> value
+   * @param redirector a <code>Redirector</code> used to call views
    */
-  void callFunction(String funName, List params, Environment env)
+  void callFunction(String funName, List params, Redirector redirector)
     throws Exception;
 
   /**
@@ -184,12 +186,11 @@ public interface Interpreter
    * to be made available to the forwarded pipeline
    * @param continuation a <code>WebContinuation</code>, the
    * continuation to be called to resume the processing
-   * @param environment an <code>Environment</code>, the Cocoon environment
-   * invocation context.
+   * @param redirector a <code>Redirector</code> used to call views
    * @exception Exception if an error occurs
    */
   void forwardTo(String uri, Object bizData, WebContinuation continuation,
-                 Environment environment)
+                 Redirector redirector)
     throws Exception;
 
   /**
@@ -205,10 +206,10 @@ public interface Interpreter
    * these parameters will only become available in the language's
    * environment, if at all.
    *
-   * @param environment an <code>Environment</code> value
+   * @param redirector a <code>Redirector</code> used to call views
    * @exception Exception if an error occurs
    */
   void handleContinuation(String continuationId, List params,
-                          Environment environment)
+                          Redirector redirector)
     throws Exception;
 }

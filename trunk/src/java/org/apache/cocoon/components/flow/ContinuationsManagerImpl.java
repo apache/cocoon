@@ -73,7 +73,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.10 2004/01/05 08:17:31 cziegeler Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.11 2004/02/20 18:53:46 sylvain Exp $
  * 
  * @avalon.component
  * @avalon.service type=ContinuationsManager

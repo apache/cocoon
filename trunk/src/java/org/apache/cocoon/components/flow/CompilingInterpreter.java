@@ -63,7 +63,7 @@ import org.mozilla.javascript.Scriptable;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CompilingInterpreter.java,v 1.4 2003/10/30 12:53:25 cziegeler Exp $
+ * @version CVS $Id: CompilingInterpreter.java,v 1.5 2004/02/20 18:53:46 sylvain Exp $
  */
 public abstract class CompilingInterpreter 
 extends AbstractInterpreter {
@@ -77,7 +77,7 @@ extends AbstractInterpreter {
     protected Map compiledScripts = new HashMap();
 
     /**
-     * Serviceable
+     * Composable
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);

@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.components.flow.javascript.fom;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -57,16 +59,23 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.flow.CompilingInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
@@ -74,17 +83,23 @@ import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.javascript.JSErrorReporter;
 import org.apache.cocoon.components.flow.javascript.ScriptablePointerFactory;
 import org.apache.cocoon.components.flow.javascript.ScriptablePropertyHandler;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceValidity;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EcmaError;
 import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeJavaClass;
+import org.mozilla.javascript.NativeJavaPackage;
+import org.mozilla.javascript.PropertyException;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
@@ -92,6 +107,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.ToolErrorReporter;
+import org.mozilla.javascript.tools.debugger.Main;
 import org.mozilla.javascript.tools.shell.Global;
 
 /**
@@ -100,16 +116,15 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.14 2004/02/16 21:31:02 vgritsenko Exp $
- * 
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.15 2004/02/20 18:53:46 sylvain Exp $
+
  * @avalon.component
  * @avalon.service type=Interpreter
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=fom-javascript-interpreter
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
-    implements Interpreter, Configurable, Initializable
-{
+    implements Configurable, Initializable {
 
     /**
      * LAST_EXEC_TIME
@@ -140,6 +155,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     Global scope;
 
+    CompilingClassLoader classLoader;
+    MyClassRepository javaClassRepository = new MyClassRepository();
+    String[] javaSourcePath;
 
     /**
      * List of <code>String</code> objects that represent files to be
@@ -151,18 +169,94 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     boolean enableDebugger = false;
 
     /**
+     * Needed to get things working with JDK 1.3. Can be removed once we
+     * don't support that platform any more.
+     */
+    protected ServiceManager getServiceManager() {
+        return manager;
+    }
+
+    class MyClassRepository implements CompilingClassLoader.ClassRepository {
+
+        Map javaSource = new HashMap();
+        Map javaClass = new HashMap();
+        Map sourceToClass = new HashMap();
+        Map classToSource = new HashMap();
+
+        public synchronized void addCompiledClass(String className, Source src,
+                    byte[] contents) {
+            javaSource.put(src.getURI(), src.getValidity());
+            javaClass.put(className, contents);
+            String uri = src.getURI();
+            Set set = (Set)sourceToClass.get(uri);
+            if (set == null) {
+                set = new HashSet();
+                sourceToClass.put(uri, set);
+            }
+            set.add(className);
+            classToSource.put(className, src.getURI());
+        }
+
+        public synchronized byte[] getCompiledClass(String className) {
+            return (byte[])javaClass.get(className);
+        }
+
+        public synchronized boolean upToDateCheck() throws Exception {
+            SourceResolver sourceResolver = (SourceResolver)
+                getServiceManager().lookup(SourceResolver.ROLE);
+            Iterator iter = javaSource.entrySet().iterator();
+            List invalid = new LinkedList();
+            while (iter.hasNext()) {
+                Map.Entry e = (Map.Entry)iter.next();
+                String uri = (String)e.getKey();
+                SourceValidity validity =
+                    (SourceValidity)e.getValue();
+                int valid = validity.isValid();
+                if (valid == SourceValidity.UNKNOWN) {
+                    Source newSrc = null;
+                    try {
+                        newSrc = sourceResolver.resolveURI(uri);
+                        valid = newSrc.getValidity().isValid(validity);
+                    } catch (Exception ignored) {
+                    } finally {
+                        if (newSrc != null) {
+                            sourceResolver.release(newSrc);
+                        }
+                    }
+                }
+                if (valid != SourceValidity.VALID) {
+                    invalid.add(uri);
+                }
+            }
+            iter = invalid.iterator();
+            while (iter.hasNext()) {
+                String uri = (String)iter.next();
+                Set set = (Set)sourceToClass.get(uri);
+                Iterator ii = set.iterator();
+                while (ii.hasNext()) {
+                    String className = (String)ii.next();
+                    sourceToClass.remove(className);
+                    javaClass.remove(className);
+                    classToSource.remove(className);
+                }
+                set.clear();
+                javaSource.remove(uri);
+            }
+            return invalid.size() == 0;
+        }
+    }
+
+    /**
      * JavaScript debugger: there's only one of these: it can debug multiple
      * threads executing JS code.
      */
-    static org.mozilla.javascript.tools.debugger.Main debugger;
+    static Main debugger;
 
-    static synchronized org.mozilla.javascript.tools.debugger.Main getDebugger() {
+    static synchronized Main getDebugger() {
         if (debugger == null) {
-            final org.mozilla.javascript.tools.debugger.Main db
-                = new org.mozilla.javascript.tools.debugger.Main("Cocoon Flow Debugger");
+            final Main db = new Main("Cocoon Flow Debugger");
             db.pack();
-            java.awt.Dimension size =
-                java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+            Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
             size.width *= 0.75;
             size.height *= 0.75;
             db.setSize(size);
@@ -179,9 +273,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         return debugger;
     }
 
-    public void configure(Configuration config)
-        throws ConfigurationException
-    {
+    public void configure(Configuration config) throws ConfigurationException {
         super.configure(config);
 
         String loadOnStartup
@@ -190,16 +282,31 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             register(loadOnStartup);
         }
 
-        String debugger
-            = config.getChild("debugger").getValue(null);
+        String debugger = config.getChild("debugger").getValue(null);
         if ("enabled".equalsIgnoreCase(debugger)) {
             enableDebugger = true;
         }
+
+        if (reloadScripts) {
+            String classPath = config.getChild("classpath").getValue(null);
+            synchronized (javaClassRepository) {
+                if (classPath != null) {
+                    StringTokenizer izer = new StringTokenizer(classPath, ";");
+                    int i = 0;
+                    javaSourcePath = new String[izer.countTokens() + 1];
+                    javaSourcePath[javaSourcePath.length - 1] = "";
+                    while (izer.hasMoreTokens()) {
+                        javaSourcePath[i++] = izer.nextToken();
+                    }
+                } else {
+                    javaSourcePath = new String[]{""};
+                }
+                updateSourcePath();
+            }
+        }
     }
 
-    public void initialize()
-        throws Exception
-    {
+    public void initialize() throws Exception {
         if (enableDebugger) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Flow debugger enabled, creating");
@@ -211,7 +318,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         context.setCompileFunctionsWithDynamicScope(true);
         context.setGeneratingDebug(true);
         // add support for Rhino objects to JXPath
-        JXPathIntrospector.registerDynamicClass(org.mozilla.javascript.Scriptable.class,
+        JXPathIntrospector.registerDynamicClass(Scriptable.class,
                                                 ScriptablePropertyHandler.class);
         JXPathContextReferenceImpl.addNodePointerFactory(new ScriptablePointerFactory());
 
@@ -227,6 +334,46 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
     }
 
+    private ClassLoader getClassLoader(boolean needsRefresh) throws Exception {
+        if (!reloadScripts) {
+            return Thread.currentThread().getContextClassLoader();
+        }
+        synchronized (javaClassRepository) {
+            boolean reload = needsRefresh || classLoader == null;
+            if (needsRefresh && classLoader != null) {
+                reload = !javaClassRepository.upToDateCheck();
+            }
+            if (reload) {
+                classLoader = new CompilingClassLoader(
+                        Thread.currentThread().getContextClassLoader(),
+                        (SourceResolver)manager.lookup(SourceResolver.ROLE),
+                        javaClassRepository);
+                classLoader.addSourceListener(
+                        new CompilingClassLoader.SourceListener() {
+                            public void sourceCompiled(Source src) {
+                                // no action
+                            }
+
+                            public void sourceCompilationError(Source src,
+                                                               String errMsg) {
+
+                                if (src != null) {
+                                    throw Context.reportRuntimeError(errMsg);
+                                }
+                            }
+                        });
+                updateSourcePath();
+            }
+            return classLoader;
+        }
+    }
+
+    private void updateSourcePath() {
+        if (classLoader != null) {
+            classLoader.setSourcePath(javaSourcePath);
+        }
+    }
+
     /**
      * Returns the JavaScript scope, a Scriptable object, from the user
      * session instance. Each URI prefix, as returned by the {@link
@@ -236,17 +383,19 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * @param environment an <code>Environment</code> value
      * @return a <code>Scriptable</code> value
      */
-    private Scriptable getSessionScope(Environment environment)
-        throws Exception {
-        Map objectModel = environment.getObjectModel();
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        Scriptable scope = null;
+    private ThreadScope getSessionScope() throws Exception {
+        Request request = ContextHelper.getRequest(this.avalonContext);
+        ThreadScope scope = null;
         Session session = request.getSession(false);
         if (session != null) {
-            HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
+            HashMap userScopes =
+                    (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
             if (userScopes != null) {
-                String uriPrefix = environment.getURIPrefix();
-                scope = (Scriptable)userScopes.get(uriPrefix);
+                // Get the scope attached to the current context
+                Source src = this.sourceresolver.resolveURI(".");
+                String contextPrefix = src.getURI();
+                this.sourceresolver.release(src);
+                scope = (ThreadScope)userScopes.get(contextPrefix);
             }
         }
         if (scope == null) {
@@ -255,10 +404,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         return scope;
     }
 
-    void updateSession(Environment env, Scriptable scope) throws Exception {
+    void updateSession(Scriptable scope) throws Exception {
         ThreadScope thrScope = (ThreadScope)scope;
         if (thrScope.useSession) {
-            setSessionScope(env, scope);
+            setSessionScope(scope);
         }
     }
 
@@ -270,10 +419,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * @param environment an <code>Environment</code> value
      * @param scope a <code>Scriptable</code> value
      */
-    private Scriptable setSessionScope(Environment environment, Scriptable scope)
+    private Scriptable setSessionScope(Scriptable scope)
         throws Exception {
-        Map objectModel = environment.getObjectModel();
-        Request request = ObjectModelHelper.getRequest(objectModel);
+        Request request = ContextHelper.getRequest(this.avalonContext);
         Session session = request.getSession(true);
 
         HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
@@ -281,42 +429,88 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
             userScopes = new HashMap();
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
-        String uriPrefix = environment.getURIPrefix();
-        userScopes.put(uriPrefix, scope);
+        // Attach the scope to the current context
+        Source src = this.sourceresolver.resolveURI(".");
+        String contextPrefix = src.getURI();
+        this.sourceresolver.release(src);
+        userScopes.put(contextPrefix, scope);
         return scope;
     }
 
     public static class ThreadScope extends ScriptableObject {
 
+        static final String[] builtinPackages = {"javax", "org", "com"};
+
+        ClassLoader classLoader;
+
         /* true if this scope has assigned any global vars */
         boolean useSession = false;
 
         public ThreadScope() {
+            final String[] names = { "importClass"};
+
+            try {
+                this.defineFunctionProperties(names, ThreadScope.class,
+                                              ScriptableObject.DONTENUM);
+            } catch (PropertyException e) {
+                throw new Error();  // should never happen
+            }
         }
 
         public String getClassName() {
             return "ThreadScope";
         }
-        
+
         public void put(String name, Scriptable start, Object value) {
             useSession = true;
             super.put(name, start, value);
         }
-        
+
         public void put(int index, Scriptable start, Object value) {
             useSession = true;
             super.put(index, start, value);
         }
-        
+
         void reset() {
             useSession = false;
         }
+
+        // Override importClass to allow reloading of classes
+        public static void importClass(Context cx, Scriptable thisObj,
+                                       Object[] args, Function funObj) {
+            for (int i = 0; i < args.length; i++) {
+                Object cl = args[i];
+                if (!(cl instanceof NativeJavaClass)) {
+                    throw Context.reportRuntimeError("Not a Java class: " +
+                                                       Context.toString(cl));
+                }
+                String s = ((NativeJavaClass) cl).getClassObject().getName();
+                String n = s.substring(s.lastIndexOf('.')+1);
+                thisObj.put(n, thisObj, cl);
+            }
+        }
+
+        public void setupPackages(ClassLoader cl) throws Exception {
+            final String JAVA_PACKAGE = "JavaPackage";
+            if (classLoader != cl) {
+                classLoader = cl;
+                Scriptable newPackages = new NativeJavaPackage("", cl);
+                newPackages.setParentScope(this);
+                newPackages.setPrototype(ScriptableObject.getClassPrototype(this, JAVA_PACKAGE));
+                super.put("Packages", this, newPackages);
+                for (int i = 0; i < builtinPackages.length; i++) {
+                    String pkgName = builtinPackages[i];
+                    Scriptable pkg = new NativeJavaPackage(pkgName, cl);
+                    pkg.setParentScope(this);
+                    pkg.setPrototype(ScriptableObject.getClassPrototype(this, JAVA_PACKAGE));
+                    super.put(pkgName, this, pkg);
+                }
+            }
+        }
     }
 
-    private Scriptable createThreadScope() 
-        throws Exception {
-        org.mozilla.javascript.Context context = 
-            org.mozilla.javascript.Context.getCurrentContext();
+    private ThreadScope createThreadScope() throws Exception {
+        Context context = Context.getCurrentContext();
 
         ThreadScope thrScope = new ThreadScope();
 
@@ -325,11 +519,10 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         // parent scope to null. This means that any variables created
         // by assignments will be properties of "thrScope".
         thrScope.setParentScope(null);
-        
         // Put in the thread scope the Cocoon object, which gives access
         // to the interpreter object, and some Cocoon objects. See
         // FOM_Cocoon for more details.
-        Object args[] = {};
+        Object[] args = {};
         FOM_Cocoon cocoon = (FOM_Cocoon)
             context.newObject(thrScope, "FOM_Cocoon", args);
         cocoon.setParentScope(thrScope);
@@ -337,7 +530,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         thrScope.defineProperty(LAST_EXEC_TIME,
                                 new Long(0),
                                 ScriptableObject.DONTENUM | ScriptableObject.PERMANENT);
-        
+
         thrScope.reset();
         return thrScope;
     }
@@ -349,7 +542,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * <p>If you want to maintain the state of global variables across
      * multiple invocations of <code>&lt;map:call
      * function="..."&gt;</code>, you need to instanciate the session
-     * object which is a property of the cocoon object 
+     * object which is a property of the cocoon object
      * <code>var session = cocoon.session</code>. This will place the
      * newly create Scriptable object in the user's session, where it
      * will be retrieved from at the next invocation of {@link #callFunction}.</p>
@@ -357,10 +550,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * @param environment an <code>Environment</code> value
      * @exception Exception if an error occurs
      */
-    private void setupContext(Environment environment,
-                              org.mozilla.javascript.Context context,
-                              Scriptable thrScope)
-        throws Exception {
+    private void setupContext(Redirector redirector, Context context,
+                  ThreadScope thrScope, CompilingClassLoader classLoader)
+                  throws Exception {
         // Try to retrieve the scope object from the session instance. If
         // no scope is found, we create a new one, but don't place it in
         // the session.
@@ -374,21 +566,23 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         FOM_Cocoon cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
         long lastExecTime = ((Long)thrScope.get(LAST_EXEC_TIME,
                                                 thrScope)).longValue();
+        boolean needsRefresh = false;
+        if (reloadScripts) {
+            long now = System.currentTimeMillis();
+            if (now >= lastTimeCheck + checkTime) {
+                needsRefresh = true;
+            }
+            lastTimeCheck = now;
+        }
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        cocoon.setup(this, environment, manager, getLogger());
-        
+        thrScope.setupPackages(getClassLoader(needsRefresh));
+        cocoon.pushCallContext(this, redirector, manager,
+                               avalonContext, getLogger(), null);
+
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
             List execList = new ArrayList();
-            boolean needsRefresh = false;
-            if (reloadScripts) {
-                long now = System.currentTimeMillis();
-                if (now >= lastTimeCheck + checkTime) {
-                    needsRefresh = true;
-                }
-                lastTimeCheck = now;
-            }
             // If we've never executed scripts in this scope or
             // if reload-scripts is true and the check interval has expired
             // or if new scripts have been specified in the sitemap,
@@ -427,7 +621,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     script.exec(context, thrScope);
                     thrScope.put(LAST_EXEC_TIME, thrScope,
                                  new Long(System.currentTimeMillis()));
-                    ((ThreadScope)thrScope).reset();
+                    thrScope.reset();
                 }
             }
         }
@@ -435,48 +629,47 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     /**
      * Compile filename as JavaScript code
-     * 
+     *
      * @param cx Rhino context
      * @param environment source resolver
      * @param fileName resource uri
      * @return compiled script
      */
-    Script compileScript(Context cx,
-                         Environment environment,
-                         String fileName) throws Exception {
+    Script compileScript(Context cx, String fileName) throws Exception {
         Source src = this.sourceresolver.resolveURI(fileName);
-        if (src == null) {
-            throw new ResourceNotFoundException(fileName + ": not found");
-        }
-        synchronized (compiledScripts) {
-            ScriptSourceEntry entry =
-                (ScriptSourceEntry)compiledScripts.get(src.getURI());
-            Script compiledScript = null;
-            if (entry == null) {
-                compiledScripts.put(src.getURI(),
-                                    entry = new ScriptSourceEntry(src));
-            } else {
-                this.sourceresolver.release(src);
+        if (src != null) {
+            synchronized (compiledScripts) {
+                ScriptSourceEntry entry =
+                    (ScriptSourceEntry)compiledScripts.get(src.getURI());
+                Script compiledScript = null;
+                if (entry == null) {
+                    compiledScripts.put(src.getURI(),
+                            entry = new ScriptSourceEntry(src));
+                } else {
+                    this.sourceresolver.release(src);
+                }
+                compiledScript = entry.getScript(cx, this.scope, false, this);
+                return compiledScript;
             }
-            compiledScript = entry.getScript(cx, this.scope, false, this);
-            return compiledScript;
+        } else {
+            throw new ResourceNotFoundException(fileName + ": not found");
         }
     }
 
-    protected Script compileScript(Context cx, Scriptable scope,
-                                   Source src) throws Exception {
+    protected Script compileScript(Context cx, Scriptable scope, Source src)
+            throws Exception {
         InputStream is = src.getInputStream();
-        if (is == null) {
+        if (is != null) {
+            try {
+                Reader reader = new BufferedReader(new InputStreamReader(is));
+                Script compiledScript = cx.compileReader(scope, reader,
+                        src.getURI(), 1, null);
+                return compiledScript;
+            } finally {
+                is.close();
+            }
+        } else {
             throw new ResourceNotFoundException(src.getURI() + ": not found");
-        }
-        try {
-            Reader reader = new BufferedReader(new InputStreamReader(is));
-            Script compiledScript = cx.compileReader(scope, reader,
-                                                     src.getURI(),
-                                                     1, null);
-            return compiledScript;
-        } finally {
-            is.close();
         }
     }
 
@@ -492,23 +685,22 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * @exception Exception if an error occurs
      */
     public void callFunction(String funName, List params,
-                             Environment environment)
-        throws Exception
-    {
+                             Redirector redirector) throws Exception {
         Context context = Context.enter();
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(errorReporter);
         FOM_Cocoon cocoon = null;
-        Scriptable thrScope = getSessionScope(environment);
+        ThreadScope thrScope = getSessionScope();
         synchronized (thrScope) {
             try {
-                setupContext(environment, context, thrScope);
+                setupContext(redirector, context, thrScope, classLoader);
                 cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
-                
+
                 // Register the current scope for scripts indirectly called from this function
-                cocoon.getRequest().setAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE, thrScope);
+                cocoon.getRequest().setAttribute(
+                        FOM_JavaScriptFlowHelper.FOM_SCOPE, thrScope);
                 if (enableDebugger) {
                     if (!getDebugger().isVisible()) {
                         // only raise the debugger window if it isn't already visible
@@ -518,59 +710,58 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 int size = (params != null ? params.size() : 0);
                 Object[] funArgs = new Object[size];
                 Scriptable parameters = context.newObject(thrScope);
-                if (size != 0) {
-                    for (int i = 0; i < size; i++) {
-                        Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-                        funArgs[i] = arg.value;
-                        if (arg.name == null) arg.name = "";
-                        parameters.put(arg.name, parameters, arg.value);
+                for (int i = 0; i < size; i++) {
+                    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+                    funArgs[i] = arg.value;
+                    if (arg.name == null) {
+                        arg.name = "";
                     }
+                    parameters.put(arg.name, parameters, arg.value);
                 }
                 cocoon.setParameters(parameters);
                 Object fun = ScriptableObject.getProperty(thrScope, funName);
                 if (fun == Scriptable.NOT_FOUND) {
-                    throw new ResourceNotFoundException("Function \"javascript:" + funName + "()\" not found");
+                    throw new ResourceNotFoundException(
+                            "Function \"javascript:" + funName + "()\" not found");
                 }
-                ScriptRuntime.call(context, fun, thrScope, 
-                                   funArgs, thrScope);
+                ScriptRuntime.call(context, fun, thrScope, funArgs, thrScope);
             } catch (JavaScriptException ex) {
-                EvaluatorException ee =
-                    Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                                            ex.getMessage()));
+                EvaluatorException ee = Context.reportRuntimeError(
+                        ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                ex.getMessage()));
                 Throwable unwrapped = unwrap(ex);
                 if (unwrapped instanceof ProcessingException) {
                     throw (ProcessingException)unwrapped;
                 }
-                
-                throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
+                throw new CascadingRuntimeException(ee.getMessage(),
+                        unwrapped);
             } catch (EcmaError ee) {
-                String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+                String msg = ToolErrorReporter.getMessage(
+                        "msg.uncaughtJSException", ee.toString());
                 if (ee.getSourceName() != null) {
-                    Context.reportRuntimeError(msg,
-                                               ee.getSourceName(),
-                                               ee.getLineNumber(),
-                                               ee.getLineSource(),
-                                               ee.getColumnNumber());
+                    Context.reportRuntimeError(msg, ee.getSourceName(),
+                           ee.getLineNumber(), ee.getLineSource(),
+                           ee.getColumnNumber());
                 } else {
                     Context.reportRuntimeError(msg);
                 }
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
-                updateSession(environment, thrScope);
-                if (cocoon != null) cocoon.invalidate();
+                updateSession(thrScope);
+                if (cocoon != null) {
+                    cocoon.popCallContext();
+                }
                 Context.exit();
             }
         }
     }
 
     public void handleContinuation(String id, List params,
-                                   Environment environment)
-        throws Exception
+                                   Redirector redirector) throws Exception
     {
         WebContinuation wk = continuationsMgr.lookupWebContinuation(id);
 
         if (wk == null) {
-
             /*
              * Throw an InvalidContinuationException to be handled inside the
              * <map:handle-errors> sitemap element.
@@ -590,59 +781,55 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.setup(this, environment, manager, getLogger());
+            cocoon.pushCallContext(this, redirector, manager,
+                                   avalonContext,
+                                   getLogger(), wk);
             // Register the current scope for scripts indirectly called from this function
-            cocoon.getRequest().setAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
+            cocoon.getRequest().setAttribute(
+                    FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
 
             if (enableDebugger) {
                 getDebugger().setVisible(true);
             }
-            int size = (params != null ? params.size() : 0);
             Scriptable parameters = context.newObject(kScope);
-            if (size != 0) {
-                for (int i = 0; i < size; i++) {
-                    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-                    parameters.put(arg.name, parameters, arg.value);
-                }
+            int size = params != null ? params.size() : 0;
+            for (int i = 0; i < size; i++) {
+                Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+                parameters.put(arg.name, parameters, arg.value);
             }
             cocoon.setParameters(parameters);
-            FOM_WebContinuation fom_wk = 
-                new FOM_WebContinuation(wk);
+            FOM_WebContinuation fom_wk = new FOM_WebContinuation(wk);
             fom_wk.setParentScope(kScope);
-            fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope, 
+            fom_wk.setPrototype(ScriptableObject.getClassPrototype(kScope,
                                                                    fom_wk.getClassName()));
-                                  
             Object[] args = new Object[] {k, fom_wk};
-
             try {
-                ScriptableObject.callMethod(cocoon, 
-                                            "handleContinuation", 
-                                            args);
+                ScriptableObject.callMethod(cocoon,
+                        "handleContinuation", args);
             } catch (JavaScriptException ex) {
-                EvaluatorException ee =
-                    Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                                            ex.getMessage()));
+                EvaluatorException ee = Context.reportRuntimeError(
+                        ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                ex.getMessage()));
                 Throwable unwrapped = unwrap(ex);
                 if (unwrapped instanceof ProcessingException) {
                     throw (ProcessingException)unwrapped;
                 }
-                
-                throw new CascadingRuntimeException(ee.getMessage(), unwrapped);
+                throw new CascadingRuntimeException(ee.getMessage(),
+                        unwrapped);
             } catch (EcmaError ee) {
-                String msg = ToolErrorReporter.getMessage("msg.uncaughtJSException", ee.toString());
+                String msg = ToolErrorReporter.getMessage(
+                        "msg.uncaughtJSException", ee.toString());
                 if (ee.getSourceName() != null) {
-                    Context.reportRuntimeError(msg,
-                                               ee.getSourceName(),
-                                               ee.getLineNumber(),
-                                               ee.getLineSource(),
-                                               ee.getColumnNumber());
+                    Context.reportRuntimeError(msg, ee.getSourceName(),
+                               ee.getLineNumber(), ee.getLineSource(),
+                               ee.getColumnNumber());
                 } else {
                     Context.reportRuntimeError(msg);
                 }
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
-                updateSession(environment, kScope);
-                cocoon.invalidate();
+                updateSession(kScope);
+                cocoon.popCallContext();
                 Context.exit();
             }
         }
@@ -659,39 +846,30 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         return e;
     }
 
-    public void forwardTo(Scriptable scope, FOM_Cocoon cocoon,
-                          String uri, Object bizData,
-                          FOM_WebContinuation fom_wk,
-                          Environment environment)
-        throws Exception {
-        setupView(scope, cocoon, environment, fom_wk);
-        super.forwardTo(uri, bizData, 
+    public void forwardTo(Scriptable scope, FOM_Cocoon cocoon, String uri,
+            Object bizData, FOM_WebContinuation fom_wk,
+            Redirector redirector) throws Exception {
+        setupView(scope, cocoon, fom_wk);
+        super.forwardTo(uri, bizData,
                         fom_wk == null ? null :
-                           fom_wk.getWebContinuation(), 
-                        environment);
+                           fom_wk.getWebContinuation(),
+                        redirector);
     }
 
     // package access as this is called by FOM_Cocoon
-    boolean process(Scriptable scope, FOM_Cocoon cocoon,
-                    String uri, Object bizData, 
-                    OutputStream out, Environment environment)
-        throws Exception {
-        setupView(scope, cocoon, environment, null);
-        return super.process(uri, bizData, out, environment);
+    void process(Scriptable scope, FOM_Cocoon cocoon, String uri,
+            Object bizData, OutputStream out) throws Exception {
+        setupView(scope, cocoon, null);
+        super.process(uri, bizData, out);
     }
-    
-    private void setupView(Scriptable scope,
-                           FOM_Cocoon cocoon,
-                           Environment environment,
-                           FOM_WebContinuation kont) {
-        Map objectModel = environment.getObjectModel();
+
+    private void setupView(Scriptable scope, FOM_Cocoon cocoon, FOM_WebContinuation kont) {
+        Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
         // Make the JS live-connect objects available to the view layer
         FOM_JavaScriptFlowHelper.setPackages(objectModel,
-                                   (Scriptable)ScriptableObject.getProperty(scope,
-                                                                            "Packages"));
+               (Scriptable)ScriptableObject.getProperty(scope, "Packages"));
         FOM_JavaScriptFlowHelper.setJavaPackage(objectModel,
-                                                (Scriptable)ScriptableObject.getProperty(scope,
-                                                                                         "java"));
+               (Scriptable)ScriptableObject.getProperty(scope, "java"));
         // Make the FOM objects available to the view layer
         FOM_JavaScriptFlowHelper.setFOM_Request(objectModel,
                                             cocoon.jsGet_request());
@@ -707,9 +885,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         FOM_JavaScriptFlowHelper.setFOM_Context(objectModel,
                                                 cocoon.jsGet_context());
         if (kont != null) {
-            FOM_JavaScriptFlowHelper.setFOM_WebContinuation(objectModel, 
-                                                            kont);
+            FOM_JavaScriptFlowHelper.setFOM_WebContinuation(objectModel, kont);
         }
     }
-
 }
