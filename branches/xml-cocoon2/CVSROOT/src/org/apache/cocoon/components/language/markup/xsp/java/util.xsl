@@ -142,7 +142,7 @@
 
               XSPUtil.include(__is, this.contentHandler, newParser);
           } catch (Exception e) {
-              this.cocoonLogger.error("Could not include page", e);
+              this.log.error("Could not include page", e);
           } finally {
               this.manager.release((Component) newParser);
           }
@@ -181,7 +181,7 @@
 
               XSPUtil.include(__is, this.contentHandler, newParser);
             } catch (Exception e) {
-              this.cocoonLogger.error("Could not include page", e);
+              this.log.error("Could not include page", e);
             } finally {
               this.manager.release((Component) newParser);
             }
@@ -215,7 +215,7 @@
 
               XSPUtil.include(__is, this.contentHandler, newParser);
           } catch (Exception e) {
-              this.cocoonLogger.error("Could not include page", e);
+              this.log.error("Could not include page", e);
           } finally {
               this.manager.release((Component) newParser);
           }
