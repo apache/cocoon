@@ -7,7 +7,7 @@ function upload() {
 
     k.invalidate();
 
-    cocoon.sendPage("upload-success-pipeline",
+    cocoon.sendPage("upload-success-pipeline.jx",
         {
             uploadContent: handleUpload(form), 
             username: form.getWidget("user").getValue(),

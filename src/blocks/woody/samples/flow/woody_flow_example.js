@@ -24,14 +24,16 @@ function form1(form) {
     } else {
       print("Form is not valid");
     }
-    cocoon.sendPage("form1-success-pipeline");
+    // also store the form as a request attribute as the XSP isn't flow-aware
+    cocoon.request.setAttribute("form1", form.getWidget());
+    cocoon.sendPage("form1-success-pipeline.xsp");
 }
 
 function selectCar() {
     var form = new Form("forms/carselector_form.xml");
-    form.showForm("carselector-view");
+    form.showForm("carselector-display-pipeline");
     cocoon.request.setAttribute("carselectorform", form.getWidget());
-    cocoon.sendPage("carselector-success");
+    cocoon.sendPage("carselector-success-pipeline.xsp");
 }
 
 var states = [
@@ -47,9 +49,9 @@ var countries = [
 
 function selectCountry() {
     var form = new Form("forms/countryselector_form.xml");
-    form.showForm("countryselector-view");
+    form.showForm("countryselector-display-pipeline");
     cocoon.request.setAttribute("countryselectorform", form.getWidget());
-    cocoon.sendPage("countryselector-success");
+    cocoon.sendPage("countryselector-success-pipeline.xsp");
 }
 
 function determineLocale() {
