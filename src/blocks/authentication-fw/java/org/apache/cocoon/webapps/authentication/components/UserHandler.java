@@ -50,52 +50,76 @@
 */
 package org.apache.cocoon.webapps.authentication.components;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.Redirector;
-import org.apache.excalibur.source.SourceParameters;
-import org.w3c.dom.DocumentFragment;
-
-
+import org.apache.cocoon.webapps.session.context.SessionContext;
 
 /**
- * This is the basis authentication component.
+ * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Manager.java,v 1.3 2003/04/21 19:26:14 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.1 2003/04/21 19:26:14 cziegeler Exp $
 */
-public interface Manager {
+public final class UserHandler
+implements java.io.Serializable {
 
-    /** The Avalon Role */
-    public static final String ROLE = Manager.class.getName();
+    /** The corresponding handler */
+    private HandlerConfiguration handler;
+    
+    /** Are all apps loaded? */
+    private boolean appsLoaded = false;
+
+    /** The handler contexts */
+    private List handlerContexts = new ArrayList(2);
+
+   /**
+     * Create a new handler object.
+     */
+    public UserHandler(HandlerConfiguration handler) {
+        this.handler = handler;
+    }
+
+    public void setApplicationsLoaded(boolean value)
+    throws ProcessingException {
+        this.appsLoaded = value;
+    }
+
+    public boolean getApplicationsLoaded()
+    throws ProcessingException {
+        if ( this.handler.getApplications().isEmpty() ) {
+            return true;
+        } else {
+            return this.appsLoaded;
+        }
+    }
+    
+    /**
+     * Add a handler context
+     */
+    public void addHandlerContext(SessionContext context) {
+        this.handlerContexts.add( context );
+    }
 
     /**
-     * Is the current user authenticated for the given handler?
+     * Get handler contexts
      */
-    boolean isAuthenticated(String handlerName)
-    throws ProcessingException;
+    public List getHandlerContexts() {
+        return this.handlerContexts;
+    }
 
     /**
-     * Is the current user authenticated for the given handler?
+     * Clear handler contexts
      */
-    boolean checkAuthentication(Redirector redirector,
-                                 String     handlerName,
-                                 String     applicationName)
-    throws ProcessingException, IOException;
-
+    public void clearHandlerContexts() {
+        this.handlerContexts.clear();
+    }
+    
     /**
-     * Authenticate
-     * If the authentication is successful, <code>null</code> is returned.
-     * If not an element "failed" is return. If handler specific error
-     * information is available this is also returned.
+     * Get the handler name
      */
-    DocumentFragment authenticate(String              handlerName,
-                                  String              applicationName,
-                                  SourceParameters    parameters)
-    throws ProcessingException;
-
-    void logout(String handlerName,
-                 int mode)
-    throws ProcessingException;
+    public String getHandlerName() {
+        return this.handler.getName();
+    }
 }

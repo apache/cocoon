@@ -51,704 +51,244 @@
 package org.apache.cocoon.webapps.authentication.components;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.RequestLifecycleComponent;
+import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
-import org.apache.cocoon.webapps.authentication.context.SessionContextImpl;
-import org.apache.cocoon.webapps.authentication.context.SessionContextProviderImpl;
-import org.apache.cocoon.webapps.session.components.AbstractSessionComponent;
-import org.apache.cocoon.webapps.session.components.SessionManager;
-import org.apache.cocoon.webapps.session.context.SessionContext;
-import org.apache.cocoon.webapps.session.context.SimpleSessionContext;
-import org.apache.cocoon.xml.XMLUtils;
-import org.apache.cocoon.xml.dom.DOMUtil;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceParameters;
-import org.w3c.dom.Document;
+import org.apache.excalibur.source.SourceUtil;
 import org.w3c.dom.DocumentFragment;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
 
 /**
  * This is the basis authentication component.
  *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.3 2003/03/24 14:33:57 stefano Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.4 2003/04/21 19:26:14 cziegeler Exp $
 */
 public final class DefaultAuthenticationManager
-extends AbstractSessionComponent
-implements Manager, Configurable, SitemapConfigurable, RequestLifecycleComponent {
+extends AbstractLogEnabled
+implements Manager, SitemapConfigurable, Serviceable, ThreadSafe {
 
-    /** The media Types */
-    private PreparedMediaType[] allMediaTypes;
-    
-    /** The default media type (usually this is html) */
-    private String      defaultMediaType;
-    
-    /** All media type names */
-    private String[]    mediaTypeNames;
+    /** The name of the session attribute storing the user status */
+    public final static String SESSION_ATTRIBUTE_USER_STATUS = DefaultAuthenticationManager.class.getName() + "/UserStatus";
 
     /** The manager for the authentication handlers */
-    private DefaultHandlerManager handlerManager;
+    private SitemapConfigurationHolder holder;
     
-    /** The context provider */
-    private static SessionContextProviderImpl contextProvider;
-
-    /** media type */
-    private String mediaType;
-
-    /** Init the class,
-     *  add the provider for the authentication context
-     */
-    static {
-        // add the provider for the authentication context
-        contextProvider = new SessionContextProviderImpl();
-        try {
-            SessionManager.addSessionContextProvider(contextProvider, AuthenticationConstants.SESSION_CONTEXT_NAME);
-        } catch (ProcessingException local) {
-            throw new CascadingRuntimeException("Unable to register provider for authentication context.", local);
-        }
-    }
-
-    /**
-     * Configurable interface.
-     */
-    public void configure(Configuration myConfiguration)
-    throws ConfigurationException {
-        // no sync required
-        Configuration mediaConf = myConfiguration.getChild("mediatypes", false);
-        if (mediaConf == null) {
-            // default configuration
-            this.defaultMediaType = "html";
-        } else {
-            this.defaultMediaType = mediaConf.getAttribute("default", "html");
-        }
-        this.mediaTypeNames = new String[1];
-        this.mediaTypeNames[0] = this.defaultMediaType;
-        boolean found;
-        int     i;
-        String  name;
-
-        Configuration[] childs = mediaConf.getChildren("media");
-        PreparedMediaType[] array = new PreparedMediaType[0];
-        PreparedMediaType[] copy;
-        Configuration current;
-        if (childs != null) {
-            for(int x = 0; x < childs.length; x++) {
-                current = childs[x];
-                copy = new PreparedMediaType[array.length + 1];
-                System.arraycopy(array, 0, copy, 0, array.length);
-                array = copy;
-                name = current.getAttribute("name");
-                array[array.length-1] = new PreparedMediaType(name, current.getAttribute("useragent"));
-                found = false;
-                i = 0;
-                while ( i < this.mediaTypeNames.length && found == false) {
-                    found = this.mediaTypeNames[i].equals(name);
-                    i++;
-                }
-                if (found == false) {
-                    String[] newStrings = new String[this.mediaTypeNames.length + 1];
-                    System.arraycopy(this.mediaTypeNames, 0, newStrings, 0, this.mediaTypeNames.length);
-                    newStrings[newStrings.length-1] = name;
-                    this.mediaTypeNames = newStrings;
-                }
-            }
-        }
-        this.allMediaTypes = array;
-    }
-
+    /** The Service Manager */
+    private ServiceManager manager;
+    
     /**
      * Set the sitemap configuration containing the handlers
      */
     public void configure(SitemapConfigurationHolder holder)
     throws ConfigurationException {
-        if ( null == this.handlerManager ) {
-            this.handlerManager = new DefaultHandlerManager( holder );
-        }
+        this.holder = holder;
     }
 
     /**
-     * Recyclable
+     * Get the handler configuration for the current sitemap
      */
-    public void recycle() {
-        super.recycle();
-        this.handlerManager.recycle();
+    private Map getHandlerConfigurations() 
+    throws ProcessingException {
+        Map configs = (Map) this.holder.getPreparedConfiguration();
+        if ( null == configs ) {
+            // prepare the configs
+            SourceResolver resolver = null;
+            try {       
+                resolver = (SourceResolver) this.manager.lookup( SourceResolver.ROLE );
+                configs = DefaultHandlerManager.prepareHandlerConfiguration(resolver, 
+                                                                            CocoonComponentManager.getCurrentEnvironment().getObjectModel(), 
+                                                                            this.holder);
+            } catch (ServiceException se) {
+                throw new ProcessingException("Unable to lookup source resolver.", se);
+            } catch (ConfigurationException ce) {
+                throw new ProcessingException("Configuration error.", ce);
+            } finally {
+                this.manager.release( resolver );
+            }
+        }
+        return configs;
+    }
+
+    /**
+     * Get the handler configuration
+     * @param name
+     * @return
+     */
+    private HandlerConfiguration getHandlerConfiguration(String name) 
+    throws ProcessingException {   
+        final Map configs = this.getHandlerConfigurations();
+        HandlerConfiguration c = null;
+        if ( configs != null) {
+            c = (HandlerConfiguration)configs.get( name ); 
+        }
+        return c;
     }
     
-    /**
-     * @see org.apache.cocoon.components.RequestLifecycleComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map)
-     */
-    public void setup(SourceResolver resolver, Map objectModel)
-    throws ProcessingException, SAXException, IOException {
-        super.setup(resolver, objectModel);
-        this.handlerManager.setup( resolver, objectModel );
-        // get the media of the current request
-        String useragent = request.getHeader("User-Agent");
-        PreparedMediaType media = null;
-        if (useragent != null) {
-            int i, l;
-            i = 0;
-            l = this.allMediaTypes.length;
-            while (i < l && media == null) {
-                if (useragent.indexOf(this.allMediaTypes[i].useragent) == -1) {
-                    i++;
-                } else {
-                    media = this.allMediaTypes[i];
-                }
-            }
-        }
-        this.mediaType = (media == null ? this.defaultMediaType : media.name);
+    private Request getRequest() {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        return ObjectModelHelper.getRequest( objectModel );
     }
-
-    /**
-     * Test if the media of the current request is the given value
-     */
-    public boolean testMedia(String value) {
-        // synchronized
-        boolean result = false;
-
-        String useragent = this.request.getHeader("User-Agent");
-        PreparedMediaType theMedia = null;
-        int i, l;
-        i = 0;
-        l = this.allMediaTypes.length;
-        while (i < l && theMedia == null) {
-            if (useragent.indexOf(this.allMediaTypes[i].useragent) == -1) {
-                i++;
-            } else {
-                theMedia = this.allMediaTypes[i];
-            }
-        }
-        if (theMedia != null) {
-            result = theMedia.name.equals(value);
-        } else {
-            result = this.defaultMediaType.equals(value);
-        }
-
-        return result;
-    }
-
-    /**
-     * Get all media type names
-     */
-    public String[] getMediaTypes() {
-        // synchronized
-        return this.mediaTypeNames;
-    }
-
-    /**
-     * Return the current media type
-     */
-    public String getMediaType() {
-        // synchronized
-        return this.mediaType;
-    }
-
-    /**
-     * Get the handler
-     */
-    private Handler getHandler(String name) 
-    throws ProcessingException {
-        // synchronized
-        try {
-            return this.handlerManager.getHandler( name );
-        } catch (ConfigurationException ce) {
-            throw new ProcessingException("Unable to get handler " + name, ce);
-        }
-    }
-
-    /**
-     * Is the current user authenticated for the given handler?
-     */
-    public boolean isAuthenticated(String name)
-    throws IOException, ProcessingException {
-        // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN isAuthenticated handler=" + name);
-        }
-        boolean isAuthenticated = true;
-
-        // if no handler: authenticated
-        if (name != null) {
-            isAuthenticated = this.handlerManager.hasUserHandler( name );
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END isAuthenticated authenticated=" + isAuthenticated);
-        }
-        return isAuthenticated;
-    }
-
-    /**
-     * Authenticate
-     * If the authentication is successful, <code>null</code> is returned.
-     * If not an element "failed" is return. If handler specific error
-     * information is available this is also returned.
-     */
-    public DocumentFragment authenticate(String              loginHandlerName,
-                                         SourceParameters    parameters)
-    throws ProcessingException, IOException {
-        // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN authenticate handler=" + loginHandlerName +
-                                   ", parameters="+parameters);
-        }
-
-        DocumentFragment authenticationFragment = null;
-        boolean         isValid                = false;
-
-        Handler myHandler = this.getHandler(loginHandlerName);
-        if (this.getLogger().isInfoEnabled() == true) {
-            this.getLogger().info("AuthenticationManager: Trying to authenticate using handler '" + loginHandlerName +"'");
-        }
-        if (myHandler != null) {
-            String           exceptionMsg     = null;
-
-            if (this.getLogger().isDebugEnabled() == true) {
-                this.getLogger().debug("start authentication");
-            }
-
-            final String   authenticationResourceName = myHandler.getAuthenticationResource();
-            final SourceParameters authenticationParameters = myHandler.getAuthenticationResourceParameters();
-            if (parameters != null) {
-                parameters.add(authenticationParameters);
-            } else {
-                parameters = authenticationParameters;
-            }
-
-            try {
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug("start invoking auth resource");
-                }
-                Source source = null;
-                try {
-                    source = org.apache.cocoon.components.source.SourceUtil.getSource(authenticationResourceName, 
-                                                                                      null, 
-                                                                                      parameters, 
-                                                                                      this.resolver);
-                    
-                    Document doc = org.apache.cocoon.components.source.SourceUtil.toDOM(source);
-                    authenticationFragment = doc.createDocumentFragment();
-                    authenticationFragment.appendChild(doc.getDocumentElement());
-                } catch (SAXException se) {
-                    throw new ProcessingException(se);
-                } catch (SourceException se) {
-                    throw org.apache.cocoon.components.source.SourceUtil.handle(se);
-                } finally {
-                    this.resolver.release(source);
-                }
-
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug("end invoking auth resource");
-                }
-            } catch (ProcessingException local) {
-                this.getLogger().error("authenticate", local);
-                exceptionMsg = local.getMessage();
-            }
-
-            // test if authentication was successful
-            if (authenticationFragment != null) {
-                isValid = this.isValidAuthenticationFragment(authenticationFragment);
-
-                if (isValid == true) {
-                    if (this.getLogger().isInfoEnabled() == true) {
-                        this.getLogger().info("AuthenticationManager: User authenticated using handler '" + myHandler.getName()+"'");
-                    }
-                    // create session object if necessary, context etc and get it
-                    if (this.getLogger().isDebugEnabled() == true) {
-                        this.getLogger().debug("creating session");
-                    }
-                    SessionContext context = this.getAuthenticationSessionContext(true);
-                    if (this.getLogger().isDebugEnabled() == true) {
-                        this.getLogger().debug("session created");
-                    }
-
-                    myHandler = this.handlerManager.storeUserHandler( myHandler );
-
-                    synchronized(context) {
-                        // add special nodes to the authentication block:
-                        // useragent, type and media
-                        Element specialElement;
-                        Text    specialValue;
-                        Element authNode;
-
-                        authNode = (Element)authenticationFragment.getFirstChild();
-                        specialElement = authenticationFragment.getOwnerDocument().createElementNS(null, "useragent");
-                        specialValue = authenticationFragment.getOwnerDocument().createTextNode(request.getHeader("User-Agent"));
-                        specialElement.appendChild(specialValue);
-                        authNode.appendChild(specialElement);
-
-                        specialElement = authenticationFragment.getOwnerDocument().createElementNS(null, "type");
-                        specialValue = authenticationFragment.getOwnerDocument().createTextNode("cocoon.authentication");
-                        specialElement.appendChild(specialValue);
-                        authNode.appendChild(specialElement);
-
-                        specialElement = authenticationFragment.getOwnerDocument().createElementNS(null, "media");
-                        specialValue = authenticationFragment.getOwnerDocument().createTextNode(this.mediaType);
-                        specialElement.appendChild(specialValue);
-                        authNode.appendChild(specialElement);
-
-                        // store the authentication data in the context
-                        context.setXML("/" + myHandler.getName(), authenticationFragment);
-
-                        // Now create the return value for this method:
-                        // <code>null</code>
-                        authenticationFragment = null;
-
-                        // And now load applications
-                        boolean loaded = true;
-                        Iterator applications = myHandler.getApplications().values().iterator();
-                        ApplicationHandler appHandler;
-
-                        while (applications.hasNext() == true) {
-                            appHandler = (ApplicationHandler)applications.next();
-                            if (appHandler.getLoadOnDemand() == false) {
-                                this.loadApplicationXML((SessionContextImpl)this.getSessionManager().getContext(AuthenticationConstants.SESSION_CONTEXT_NAME),
-                                                        appHandler, "/");
-                            } else {
-                                loaded = appHandler.getIsLoaded();
-                            }
-                        }
-                        myHandler.setApplicationsLoaded(loaded);
-
-                    } // end sync
-                }
-            }
-            if (isValid == false) {
-                if (this.getLogger().isInfoEnabled() == true) {
-                    this.getLogger().info("AuthenticationManager: Failed authentication using handler '" +  myHandler.getName()+"'");
-                }
-                // get the /authentication/data Node if available
-                Node data = null;
-
-                if (authenticationFragment != null) {
-                    data = DOMUtil.getFirstNodeFromPath(authenticationFragment, new String[] {"authentication","data"}, false);
-                }
-
-                // now create the following xml:
-                // <failed/>
-                // if data is available data is included, otherwise:
-                // <data>No information</data>
-                // If exception message contains info, it is included into failed
-                Document       doc = DOMUtil.createDocument();
-                authenticationFragment = doc.createDocumentFragment();
-
-                Element      element = doc.createElementNS(null, "failed");
-                authenticationFragment.appendChild(element);
-
-                if (exceptionMsg != null) {
-                    Text text = doc.createTextNode(exceptionMsg);
-                    element.appendChild(text);
-                }
-
-                if (data == null) {
-                    element = doc.createElementNS(null, "data");
-                    authenticationFragment.appendChild(element);
-                    Text text = doc.createTextNode("No information");
-                    element.appendChild(text);
-                } else {
-                    authenticationFragment.appendChild(doc.importNode(data, true));
-                }
-
-            }
-            if (this.getLogger().isDebugEnabled() == true) {
-                this.getLogger().debug("end authentication");
-            }
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END authenticate fragment="+authenticationFragment);
-        }
-        return authenticationFragment;
-    }
-
-    /**
-     * Check the fragment if it is valid
-     */
-    private boolean isValidAuthenticationFragment(DocumentFragment authenticationFragment) 
-    throws ProcessingException {
-        // calling method is synced
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN isValidAuthenticationFragment fragment=" + XMLUtils.serializeNodeToXML(authenticationFragment));
-        }
-        boolean isValid = false;
-
-        // authenticationFragment must only have exactly one child with
-        // the name authentication
-        if (authenticationFragment.hasChildNodes() == true
-            && authenticationFragment.getChildNodes().getLength() == 1) {
-            Node child = authenticationFragment.getFirstChild();
-
-            if (child.getNodeType() == Node.ELEMENT_NODE
-                && child.getNodeName().equals("authentication") == true) {
-
-                // now authentication must have one child ID
-                if (child.hasChildNodes() == true) {
-                    NodeList children = child.getChildNodes();
-                    boolean  found = false;
-                    int      i = 0;
-                    int      l = children.getLength();
-
-                    while (found == false && i < l) {
-                        child = children.item(i);
-                        if (child.getNodeType() == Node.ELEMENT_NODE
-                            && child.getNodeName().equals("ID") == true) {
-                            found = true;
-                        } else {
-                            i++;
-                        }
-                    }
-
-                    // now the last check: ID must have a TEXT child
-                    if (found == true) {
-                        child.normalize(); // join text nodes
-                        if (child.hasChildNodes() == true &&
-                            child.getChildNodes().getLength() == 1 &&
-                            child.getChildNodes().item(0).getNodeType() == Node.TEXT_NODE) {
-                            String value = child.getChildNodes().item(0).getNodeValue().trim();
-                            if (value.length() > 0) isValid = true;
-                        }
-                    }
-                }
-
-            }
-        }
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END isValidAuthenticationFragment valid="+isValid);
-        }
-        return isValid;
-    }
-
-    /**
-     * Get the private SessionContext
-     */
-    private SessionContext getAuthenticationSessionContext(boolean create)
-    throws ProcessingException {
-        // synchronized
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("BEGIN getAuthenticationSessionContext create=" + create);
-        }
-        SessionContext context = null;
-
-        Session session = this.getSessionManager().getSession(create);
-        if (session != null) {
-            synchronized(session) {
-                context = (SessionContext)session.getAttribute(AuthenticationConstants.SESSION_ATTRIBUTE_CONTEXT_NAME);
-                if (context == null && create == true) {
-                    context = new SimpleSessionContext();
-                    context.setup(AuthenticationConstants.SESSION_CONTEXT_NAME, null, null);
-                    session.setAttribute(AuthenticationConstants.SESSION_ATTRIBUTE_CONTEXT_NAME, context);
-                }
-            }
-        }
-
-        if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END getAuthenticationSessionContext context=" + context);
-        }
-        return context;
-    }
-
-    /**
-     * Load XML of an application
-     */
-    private void loadApplicationXML(SessionContextImpl context,
-                                    ApplicationHandler appHandler,
-                                    String path)
-    throws ProcessingException {
-        // synchronized
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN loadApplicationXML application=" + appHandler.getName() + ", path="+path);
-        }
-        Object o = this.getSessionManager().getSession(true);
-        synchronized(o) {
-
-            if (appHandler.getIsLoaded() == false) {
-
-                final String   loadResourceName = appHandler.getLoadResource();
-                SourceParameters parameters = appHandler.getLoadResourceParameters();
-                if (parameters != null) parameters = (SourceParameters)parameters.clone();
-                parameters = this.createParameters(parameters,
-                                                   appHandler.getHandler().getName(),
-                                                   path,
-                                                   appHandler.getName());
-                DocumentFragment fragment;
-
-                Source source = null;
-                try {
-                    source = org.apache.cocoon.components.source.SourceUtil.getSource(loadResourceName, 
-                                                                                      null, 
-                                                                                      parameters, 
-                                                                                      this.resolver);
-                    Document doc = org.apache.cocoon.components.source.SourceUtil.toDOM(source);
-                    fragment = doc.createDocumentFragment();
-                    fragment.appendChild(doc.getDocumentElement());
-                } catch (SourceException se) {
-                    throw org.apache.cocoon.components.source.SourceUtil.handle(se);
-                } catch (IOException se) {
-                    throw new ProcessingException(se);
-                } catch (SAXException se) {
-                    throw new ProcessingException(se);
-                } finally {
-                    this.resolver.release(source);
-                }
-
-                appHandler.setIsLoaded(true);
-
-                context.setApplicationXML(appHandler.getHandler().getName(),
-                                          appHandler.getName(),
-                                          path,
-                                          fragment);
-
-                // now test handler if all applications are loaded
-                Iterator applications = appHandler.getHandler().getApplications().values().iterator();
-                boolean     allLoaded = true;
-                while (allLoaded == true && applications.hasNext() == true) {
-                    allLoaded = ((ApplicationHandler)applications.next()).getIsLoaded();
-                }
-                appHandler.getHandler().setApplicationsLoaded(allLoaded);
-            }
-
-        } // end synchronized
-
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END loadApplicationXML");
-        }
-    }
-
-    /*
-     * Check if application for path is loaded
-     */
-    /* FIXME(SM): this method appears to be unused. Should we remove it?
-    private void checkLoaded(SessionContextImpl context,
-                               String             path,
-                               ApplicationHandler applicationHandler)
-    throws ProcessingException {
-        // synchronized as loadApplicationXML is synced
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN checkLoaded path="+path);
-        }
-        if ( path.equals("/") || path.startsWith("/application") ) {
-            if (applicationHandler != null) {
-                this.loadApplicationXML(context, applicationHandler, "/");
-            }
-        }
-
-        if ( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END checkLoaded");
-        }
-    } */
     
-    /**
-     * Build parameters for loading and saving of application data
-     */
-    private SourceParameters createParameters(SourceParameters parameters,
-                                                String             myHandler,
-                                                String             path,
-                                                String             appName)
-    throws ProcessingException {
-        // synchronized
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("BEGIN createParameters handler=" + myHandler +
-                              ", path="+path+ ", application=" + appName);
+    private Session getSession(boolean create) {        
+        return this.getRequest().getSession(create);
+    }
+    
+    private UserStatus getUserStatus() {
+        final Session session = this.getSession( false );
+        UserStatus status = null;
+        if ( session != null) {
+            status = (UserStatus) session.getAttribute(SESSION_ATTRIBUTE_USER_STATUS);
         }
-
-        SessionContextImpl context;
-        context = (SessionContextImpl)contextProvider.getSessionContext(AuthenticationConstants.SESSION_CONTEXT_NAME,
-                                                      this.objectModel,
-                                                      this.resolver,
-                                                      this.manager);
-        parameters = context.createParameters(parameters, myHandler, path, appName);
-
-        if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END createParameters parameters="+parameters);
-        }
-        return parameters;
+        return status;
     }
 
-    /**
-     * Build parameters for loading and saving of application data
-     */
-    public SourceParameters createParameters(String handler, 
-                                              String applicationName,
-                                              String path)
-    throws ProcessingException {
-        // synchronized
-        if (handler == null) {
-            return new SourceParameters();
+    private UserStatus createUserStatus() {
+        UserStatus status = this.getUserStatus();
+        if ( status == null ) {
+            final Session session = this.getSession(true);
+            status = new UserStatus();
+            session.setAttribute(SESSION_ATTRIBUTE_USER_STATUS, status);
         }
-        if (path == null) {
-            SessionContext context = this.getAuthenticationSessionContext(false);
-            SourceParameters pars = (SourceParameters)context.getAttribute("cachedparameters_" + handler);
-            if (pars == null) {
-                 pars = this.createParameters(null, handler, path, applicationName);
-                 context.setAttribute("cachedparameters_" + handler, pars);
+        return status;
+    }
+    
+    private UserHandler getUserHandler(String name) {
+        final UserStatus status = this.getUserStatus();
+        if ( status != null ) {
+            return status.getUserHandler( name );
+        }
+        return null;
+    }
+    
+    private void updateUserStatus() {
+        final Session session = this.getSession(true);
+        Object status = session.getAttribute(SESSION_ATTRIBUTE_USER_STATUS);
+        session.setAttribute(SESSION_ATTRIBUTE_USER_STATUS, status);
+    }
+    
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.webapps.authentication.components.Manager#authenticate(java.lang.String, java.lang.String, org.apache.excalibur.source.SourceParameters)
+	 */
+	public DocumentFragment authenticate(String handlerName,
+                                          String applicationName,
+                                          SourceParameters parameters)
+    throws ProcessingException {
+        HandlerConfiguration config = this.getHandlerConfiguration( handlerName );
+        if ( config == null ) {
+            throw new ProcessingException("Unknown handler to authenticate: " + handlerName);
+        }
+        // are we already logged in?
+        UserHandler handler = this.getUserHandler( handlerName );
+        if ( handler != null ) {
+            throw new ProcessingException("User is already authenticated using handler: " + handlerName);
+        }
+        
+        // TODO Authentication
+        
+        // create UserStatus
+        final UserStatus status = this.createUserStatus();
+        handler = new UserHandler( config );
+        
+        status.addHandler( handler );        
+        this.updateUserStatus();
+        
+ 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.webapps.authentication.components.Manager#checkAuthentication(org.apache.cocoon.environment.Redirector, java.lang.String, java.lang.String)
+	 */
+	public boolean checkAuthentication(Redirector redirector,
+                                        String handlerName,
+                                        String applicationName)
+	throws IOException, ProcessingException {
+        HandlerConfiguration config = this.getHandlerConfiguration( handlerName );
+        if ( config == null ) {
+            throw new ProcessingException("Unknown handler to check: " + handlerName);
+        }
+        // are we already logged in?
+        UserHandler handler = this.getUserHandler( handlerName );
+        final boolean authenticated = ( handler != null );
+        if ( !authenticated ) {
+            // create parameters
+            SourceParameters parameters = config.getRedirectParameters();
+            if (parameters == null) parameters = new SourceParameters();
+            final Request request = this.getRequest();
+            String resource = request.getRequestURI();
+            if (request.getQueryString() != null) {
+                resource += '?' + request.getQueryString();
             }
-            return pars;
-        }
-        return this.createParameters(null, handler, path, applicationName);
-    }
 
-    /**
-     * Create a map for the actions
-     * The result is cached!
-     */
-    public Map createMap(String handler, String applicationName)
+            parameters.setSingleParameterValue("resource", resource);
+            final String redirectURI = config.getRedirectURI();
+            redirector.globalRedirect(false, SourceUtil.appendParameters(redirectURI, parameters));
+        }
+        
+		return authenticated;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.webapps.authentication.components.Manager#isAuthenticated(java.lang.String)
+	 */
+	public boolean isAuthenticated(String handlerName)
     throws ProcessingException {
-        if (handler == null) {
-            // this is only a fallback
-            return Collections.EMPTY_MAP;
+        return ( this.getUserHandler( handlerName ) != null);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.webapps.authentication.components.Manager#logout(java.lang.String, java.lang.String)
+	 */
+	public void logout(String handlerName, int mode) 
+    throws ProcessingException {
+        HandlerConfiguration config = this.getHandlerConfiguration( handlerName );
+        if ( config == null ) {
+            throw new ProcessingException("Unknown handler to logout: " + handlerName);
         }
-        SessionContext context = this.getAuthenticationSessionContext(false);
-        Map map = (Map)context.getAttribute("cachedmap_" + handler);
-        if (map == null) {
-            map = new HashMap();
-            Parameters pars = this.createParameters(handler, applicationName, null).getFirstParameters();
-            String[] names = pars.getNames();
-            if (names != null) {
-                String key;
-                String value;
-                for(int i=0;i<names.length;i++) {
-                    key = names[i];
-                    value = pars.getParameter(key, null);
-                    if (value != null) map.put(key, value);
-                }
+        // are we logged in?
+        UserHandler handler = this.getUserHandler( handlerName );
+        // we don't throw an exception if we are already logged out!
+        if ( handler != null ) {
+            UserStatus status = this.getUserStatus();
+            status.removeHandler( handlerName );
+            this.updateUserStatus();
+        }
+        
+        /*
+        if ( mode == AuthenticationConstants.LOGOUT_MODE_IMMEDIATELY ) {
+            this.getSessionManager().terminateSession(true);
+        } else if (!this.handlerManager.hasUserHandler( this.request )) {
+            if (mode == AuthenticationConstants.LOGOUT_MODE_IF_UNUSED) {
+                this.getSessionManager().terminateSession(false);
+            } else {
+                this.getSessionManager().terminateSession(true);
             }
-            context.setAttribute("cachedmap_" + handler, map);
         }
-        return map;
-    }
+        */
+	}
+
+	/**
+     * Serviceable
+	 */
+	public void service(ServiceManager manager) 
+    throws ServiceException {
+        this.manager = manager;
+	}
+
 }
 
 
-/**
- * This class stores the media type configuration
- */
-final class PreparedMediaType {
-
-    String name;
-    String useragent;
-
-    PreparedMediaType(String name, String useragent) {
-        this.name = name;
-        this.useragent = useragent;
-    }
-}
