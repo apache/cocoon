@@ -1,11 +1,11 @@
 <interface xmlns="http://apache.org/cocoon/blocks/descriptor/1.0"
-           id="http://cocoon.apache.org/blocks/jdbc-connector/1.0">
+           id="http://cocoon.apache.org/blocks/jdbc-connector/1.0.0">
 
-  <name>JDBC Connector Interface</name>
+  <name>JDBC Connector</name>
 
   <description href="http://cocoon.apache.org/blocks/jdbc-connector">
-    The JDBC Connector Interface block defines a block providing
-    JDBC connections to wired blocks.
+    The JDBC Connector block provides an overly simplified implementation
+    of the JDBC Connection interface.
   </description>
 
   <license href="http://www.apache.org/licenses/LICENSE-2.0"
@@ -15,8 +15,10 @@
 
   <author href="http://www.vnunet.com/">Pier Fumagalli</author>
 
-  <exposes interface="java.sql.Connection"/>
+  <provides class="org.apache.cocoon.blocks.jdbc.WirableConnection"/>
 
-  <!-- No libraries -->
+  <libraries>
+    <library url="protected.jar" access="protected"/>
+  </libraries>
 
 </interface>
