@@ -326,7 +326,7 @@
     <parameter name="namespace-prefixes" value="false"/>
     <parameter name="stop-on-warning" value="true"/>
     <parameter name="stop-on-recoverable-error" value="true"/>
-    <parameter name="reuse-parsers" value="true"/>
+    <parameter name="reuse-parsers" value="false"/>
     <!-- drop-dtd-comments: causes all comment events originating from DTD
          comments to be dropped right after parsing -->
     <parameter name="drop-dtd-comments" value="true"/>
