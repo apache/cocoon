@@ -16,7 +16,6 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.net.URL;
-
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -33,16 +32,15 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.fam.SitemapMonitor;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 import org.apache.cocoon.sitemap.impl.DefaultExecutor;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.regexp.RE;
@@ -87,7 +85,9 @@ public class TreeProcessor extends AbstractLogEnabled
 
     /** Check for reload? */
     protected boolean checkReload;
-
+    
+    protected SitemapMonitor fom;
+    
     /** The source resolver */
     protected SourceResolver resolver;
 
@@ -135,6 +135,7 @@ public class TreeProcessor extends AbstractLogEnabled
         this.manager = parent.concreteProcessor.getServiceManager();
 
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+        this.fom = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
         // Setup environment helper
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
@@ -170,6 +171,7 @@ public class TreeProcessor extends AbstractLogEnabled
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+        this.fom = (SitemapMonitor) this.manager.lookup(SitemapMonitor.ROLE);
     }
 
     public void initialize() throws Exception {
@@ -345,7 +347,7 @@ public class TreeProcessor extends AbstractLogEnabled
      */
     private void setupConcreteProcessor(Environment env) throws Exception {
         // first, check for sitemap changes
-        if (this.concreteProcessor == null ||
+        if (this.concreteProcessor == null || this.concreteProcessor.isReloadNeeded() ||
                 (this.checkReload && this.source.getLastModified() != this.lastModified)) {
             buildConcreteProcessor(env);
         }
@@ -359,7 +361,7 @@ public class TreeProcessor extends AbstractLogEnabled
 
         // Now that we entered the synchronized area, recheck what's already
         // been checked in process().
-        if (this.concreteProcessor != null && source.getLastModified() == this.lastModified) {
+        if (this.concreteProcessor != null && source.getLastModified() == this.lastModified && !this.concreteProcessor.isReloadNeeded()) {
             // Nothing changed
             return;
         }
@@ -367,6 +369,7 @@ public class TreeProcessor extends AbstractLogEnabled
         long startTime = System.currentTimeMillis();
         long newLastModified;
         ConcreteTreeProcessor newProcessor;
+        ConcreteTreeProcessor oldProcessor = this.concreteProcessor;
 
         // We have to do a call to enterProcessor() here as during building
         // of the tree, components (e.g. actions) are already instantiated
@@ -408,6 +411,21 @@ public class TreeProcessor extends AbstractLogEnabled
                         treeBuilder.getComponentLocator(),
                         treeBuilder.getEnterSitemapEventListeners(),
                         treeBuilder.getLeaveSitemapEventListeners());
+
+                fom.unsubscribeSitemap(oldProcessor);
+
+                Configuration classpath = sitemapProgram.getChild("components").getChild("classpath", false);
+                if (classpath != null) {
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug("ConcreteTreeProcessor listening for changes");
+                    }
+                    
+                    fom.subscribeSitemap(newProcessor, sitemapProgram);                   
+                }
+                
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("ConcreteTreeProcessor ready");
+                }
             } finally {
                 this.manager.release(treeBuilder);
             }
@@ -421,10 +439,10 @@ public class TreeProcessor extends AbstractLogEnabled
         }
 
         // Switch to the new processor (ensure it's never temporarily null)
-        ConcreteTreeProcessor oldProcessor = this.concreteProcessor;
         this.concreteProcessor = newProcessor;
         this.lastModified = newLastModified;
 
+        
         // Dispose the old processor, if any
         if (oldProcessor != null) {
             oldProcessor.markForDisposal();
@@ -456,6 +474,7 @@ public class TreeProcessor extends AbstractLogEnabled
                 this.resolver.release(this.source.getSource());
                 this.source = null;
             }
+            this.manager.release(this.fom);
             this.manager.release(this.resolver);
             this.resolver = null;
             this.manager = null;
