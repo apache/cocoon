@@ -20,7 +20,7 @@
   </description>
 
   <tstamp>
-    <format property="timestamp" pattern="yyyyMMdd_hhmmss"/>
+    <format property="timestamp" pattern="yyyyMMdd_kkmmss"/>
   </tstamp>
 
   <target
