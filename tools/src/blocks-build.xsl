@@ -86,13 +86,14 @@
                <include name="{$block-name}/conf/**/*.xpipe" unless="unless.exclude.block.{$block-name}"/>
             </xsl:for-each>
          </xpatch>
-         <xpatch file="{string('${build.webapp}')}/WEB-INF/cocoon.xconf"
+         <!-- This is much slower, but preserves the dependencies -->
+         <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
+            <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+            <xpatch file="{string('${build.webapp}')}/WEB-INF/cocoon.xconf"
                  srcdir="{string('${blocks}')}">
-            <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
-               <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-               <include name="{$block-name}/conf/**/*.xconf" unless="unless.exclude.block.{$block-name}"/>
-            </xsl:for-each>
-         </xpatch>
+              <include name="{$block-name}/conf/**/*.xconf" unless="unless.exclude.block.{$block-name}"/>
+            </xpatch>
+         </xsl:for-each>
          <xpatch file="{string('${build.webapp}')}/WEB-INF/logkit.xconf"
                  srcdir="{string('${blocks}')}">
             <xsl:for-each select="project[contains(@name,'cocoon-block-')]">
