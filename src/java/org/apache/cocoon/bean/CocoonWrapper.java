@@ -260,9 +260,14 @@ public class CocoonWrapper {
             throw new IOException("'" + d + "' is not a directory.");
         }
 
-        if (!(d.canRead() && d.canWrite())) {
+        if (!d.canRead()) {
             throw new IOException(
-                "Directory '" + d + "' is not readable/writable");
+                "Directory '" + d + "' is not readable");
+        }
+
+        if ("working".equals( type ) && !d.canWrite()) {
+            throw new IOException(
+                "Directory '" + d + "' is not writable");
         }
 
         return d;
