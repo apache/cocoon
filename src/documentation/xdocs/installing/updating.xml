@@ -6,6 +6,7 @@
   <title>Updating Cocoon</title>
   <authors>
    <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+   <person name="Jörg Heinicke" email="joerg@apache.org"/>
   </authors>
  </header>
 
@@ -26,30 +27,55 @@
   </p>
   <p>In addition there were some disadvantages in the internal architecture of Cocoon. The
     new version removes these bottlenecks and gives more flexibility, usability and performance.
-   </p>
+  </p>
  </s1>
   <s1 title="Sitemap">
-  <p>There are some changes in the sitemap and the configuration of some components in
+   <p>There are some changes in the sitemap and the configuration of some components in
      the sitemap.</p>
-  <s2 title="FOP Serializer">
-  <p>FOP serializer's &lt;user-config&gt; relative path now resolves relative
-    to sitemap's directory. All Cocoon URIs are supported too.
-  </p>
-  </s2>
+   <s2 title="FOP Serializer">
+    <p>FOP serializer's &lt;user-config&gt; relative path now resolves relative
+      to sitemap's directory. All Cocoon URIs are supported too.</p>
+   </s2>
   </s1>
   <s1 title="Components">
-  <p>
+   <p>
     The Cocoon architecture has had some significant changes. However, great care has been
     taken that all changes are in a compatible way. This effort has been successful except
     one change which shouldn't affect anybody (see below).
-  </p>
-  <s2 title="Source Resolving">
-<p>Under Cocoon 2.0.x, the SourceResolver was not an Avalon component, so it could not be looked up using a component manager. Under 2.1, the SourceResolver is now an Avalon component and can be requested using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em></p>  
-  </s2>
-  <s2 title="XSLT Processor">
-    <p>Mention changes and update strategy...</p>
-  </s2>
-  <s2 title="XML Parser">
+   </p>
+   <s2 title="Source Resolving">
+    <p>Under Cocoon 2.0.x, the SourceResolver was not an Avalon component, so it could not be
+      looked up using a component manager. Under 2.1, the SourceResolver is now an Avalon component
+      and can be requested using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em></p>
+   </s2>
+   <s2 title="XSLT Processor">
+    <s3 title="Xalan vs. XSLTC">
+     <p>The most important change is the switch from
+      <link href="http://xml.apache.org/xalan-j">Xalan</link> to
+      <link href="http://xml.apache.org/xalan-j/xsltc_usage.html">XSLTC</link> as default XSLT
+      processor. It's configured in the root sitemap in the <code>map:components</code> section.
+      Simply search for <code>map:transformers</code>.</p>
+     <p>XSLTC is used, because it shell be faster than Xalan, but it is maybe not as stable as
+      Xalan. Another little problem are the not very meaningful messages when the transformation
+      fails. Bruno provided already a
+      <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=20114">patch</link>
+      to the Xalan team hoping it will be applied soon. At the moment if you only get the error
+      message like <em>"unable to create templates for stylesheet ..."</em>, simply switch the
+      processor to Xalan for this transformation (you don't need to change the default processor)
+      and you will hopefully get more expressive messages.</p>
+     </s3>
+     <s3 title="XML/XSLT with JDK 1.4">
+      <p>Another important and really error and exception prone issue is the Xalan and Xerces
+       package in the JDK 1.4. For general information on this please read the
+       <link href="http://xml.apache.org/xalan-j/faq.html#jdk14">Xalan FAQ</link>. What I want to
+       point out here, is that you have to update your libraries in the endorsed dirs of the JDK
+       or the servlet containers with every new version of Xalan and Xerces delivered with Cocoon.
+       Sometimes an error occurs, because there are different versions of these packages in the
+       classpath (independent of those in the JDK).
+      </p>
+     </s3>
+   </s2>
+   <s2 title="XML Parser">
     <p>The XML parser has also been moved to Excalibur.
      In the cocoon.xconf the hint name has therefore changed from <em>parser</em> to
      <em>xml-parser</em>. The configuration has not changed, so if you want to
@@ -58,8 +84,8 @@
       <em>org.apache.cocoon.components.parser.Parser.ROLE</em> anymore; use
       <em>org.apache.excalibur.xml.sax.SAXParser.ROLE</em> instead.
     </p>
-  </s2>
-  <s2 title="XML Entity Resolver">
+   </s2>
+   <s2 title="XML Entity Resolver">
     <p>The resolver used for resolving XML entities has also been moved to Excalibur.
      In the cocoon.xconf the hint name has therefore changed from <em>resolver</em> to
      <em>entity-resolver</em>. The configuration has not changed, so if you want to
@@ -68,8 +94,8 @@
       <em>org.apache.cocoon.components.resolver.Resolver.ROLE</em> anymore; use
       <em>org.apache.excalibur.xml.EntityResolver.ROLE</em> instead.
     </p>
-  </s2>
-  <s2 title="Stores">
+   </s2>
+   <s2 title="Stores">
     <p>The Store and StoreJanitor components and implementations have moved to
        Avalon Excalibur.</p>
     <p>TODO:Changes in cocoon.xconf...</p>
@@ -80,8 +106,8 @@
     <p>The roles PERSISTENT_CACHE and TRANSIENT_CACHE have been renamed to
        PERSISTENT_STORE and TRANSIENT_STORE. The hold() method has been removed
        from the Store interface.</p>
-  </s2>
-  <s2 title="SAXConnectors, Stream and Event Pipeline">
+   </s2>
+   <s2 title="SAXConnectors, Stream and Event Pipeline">
     <p>This is the only real incompatible change (But don't panic, this will
        not affect you, well at least only a little bit :). The internal architecture of Cocoon
        has changed. In the older version, the processing pipeline - constructed by
@@ -144,8 +170,7 @@
      <p>So you see, although this is an incompatible change in the Java code, you have only
        little to do to update your Cocoon installation.</p>
     </s3>
-  </s2>
- </s1>
- 
-</body>
+   </s2>
+  </s1>
+ </body>
 </document>
