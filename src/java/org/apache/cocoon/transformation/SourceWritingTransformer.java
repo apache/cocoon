@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation
  * This transformer allows you to output to a ModifiableSource.
  *
- * @cocoon.sitemap.component.name   write-source
+ * @cocoon.sitemap.component.name   sourcewriting
  * @cocoon.sitemap.component.logger sitemap.transformer.write-source
  *
  * This transformer allows you to output to a ModifiableSource.
