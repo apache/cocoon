@@ -33,6 +33,12 @@ public interface LinkService extends Component {
     
     String DEFAULT_REQUEST_EVENT_PARAMETER_NAME = "cocoon-portal-event";
     
+    static class ParameterDescription {
+        public final String parameters;
+        public ParameterDescription(String parameters) {
+            this.parameters = parameters;
+        }
+    }
     /**
      * Get the uri for this coplet containing the additional event
      * @param event The event to add (null is also allowed for convenience)
@@ -41,8 +47,8 @@ public interface LinkService extends Component {
     String getLinkURI(Event event);
 
     /**
-     * Get the uri for this coplet containing the additional events
-     * @param events The events to add
+     * Get the uri for this coplet containing the additional events.
+     * @param events The events to add: These can either be {@link Event}s or {@link #ParameterDescription}s.
      * @return A URI
      */
     String getLinkURI(List events);
