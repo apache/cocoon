@@ -37,7 +37,7 @@ import java.util.Stack;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: LuceneIndexContentHandler.java,v 1.6 2004/03/17 21:21:55 joerg Exp $
+ * @version CVS $Id: LuceneIndexContentHandler.java,v 1.7 2004/03/17 21:30:13 joerg Exp $
  */
 public class LuceneIndexContentHandler implements ContentHandler
 {
@@ -130,10 +130,10 @@ public class LuceneIndexContentHandler implements ContentHandler
         }
 
         if (text != null && text.length() > 0) {
-        	if (isFieldTag(lname)) {
-        		bodyDocument.add(Field.UnIndexed(lname, text.toString()));
-        	}
-        	bodyDocument.add(Field.UnStored(lname, text.toString()));
+            if (isFieldTag(lname)) {
+                bodyDocument.add(Field.UnIndexed(lname, text.toString()));
+            }
+            bodyDocument.add(Field.UnStored(lname, text.toString()));
         }
     }
 
