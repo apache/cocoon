@@ -17,7 +17,7 @@ import org.apache.avalon.configuration.DefaultConfiguration;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.CocoonComponentSelector;
+import org.apache.cocoon.components.ComponentSelector;
 import org.apache.cocoon.util.ClassUtils;
 
 /**
@@ -25,9 +25,9 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-21 18:40:55 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-05 15:40:37 $
  */
-public class GeneratorSelector extends CocoonComponentSelector {
+public class GeneratorSelector extends ComponentSelector {
     private ClassLoaderManager classManager;
 
     public void compose (ComponentManager manager) throws ComponentManagerException {

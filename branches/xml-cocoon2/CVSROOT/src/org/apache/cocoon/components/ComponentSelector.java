@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentSelector;
+//import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Context;
@@ -31,15 +31,14 @@ import org.apache.avalon.Disposable;
 import org.apache.avalon.ThreadSafe;
 
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.RoleUtils;
 import org.apache.cocoon.Roles;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-19 19:55:52 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-05 15:40:36 $
  */
-public class CocoonComponentSelector extends AbstractLoggable implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Disposable {
+public class ComponentSelector extends AbstractLoggable implements Contextualizable, org.apache.avalon.ComponentSelector, Composer, Configurable, ThreadSafe, Disposable {
 
     /** The application context for components
      */
@@ -65,7 +64,7 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
 
     /** Construct a new default component manager.
      */
-    public CocoonComponentSelector() {
+    public ComponentSelector() {
         // Setup the maps.
         componentHandlers = Collections.synchronizedMap(new HashMap());
         componentMapping = Collections.synchronizedMap(new HashMap());
@@ -98,7 +97,7 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
 
         while (keys.hasNext()) {
             Object key = keys.next();
-            CocoonComponentHandler handler = (CocoonComponentHandler)
+            ComponentHandler handler = (ComponentHandler)
                 this.componentHandlers.get(key);
 
             handler.dispose();
@@ -123,28 +122,28 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
 
         if (disposed) throw new IllegalStateException("You cannot select a Component from a disposed ComponentSelector");
 
-        CocoonComponentHandler handler = null;
+        ComponentHandler handler = null;
         Component component = null;
 
         if ( hint == null ) {
-            getLogger().error(this.getName() + ": CocoonComponentSelector Attempted to retrieve component with null hint.");
+            getLogger().error(this.getName() + ": ComponentSelector Attempted to retrieve component with null hint.");
             throw new ComponentManagerException("Attempted to retrieve component with null hint.");
         }
 
-        handler = (CocoonComponentHandler) this.componentHandlers.get(hint);
+        handler = (ComponentHandler) this.componentHandlers.get(hint);
         // Retrieve the instance of the requested component
         if ( handler == null ) {
-            throw new ComponentManagerException(this.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
+            throw new ComponentManagerException(this.getName() + ": ComponentSelector could not find the component for hint: " + hint);
         }
 
         try {
             component = handler.get();
         } catch (Exception e) {
-            throw new ComponentManagerException(this.getName() + ": CocoonComponentSelector could not access the Component for you", e);
+            throw new ComponentManagerException(this.getName() + ": ComponentSelector could not access the Component for you", e);
         }
 
         if (component == null) {
-            throw new ComponentManagerException(this.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
+            throw new ComponentManagerException(this.getName() + ": ComponentSelector could not find the component for hint: " + hint);
         }
 
         this.componentMapping.put(component, handler);
@@ -156,7 +155,7 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.conf = conf;
-        getLogger().debug("CocoonComponentSelector setting up with root element: " + conf.getName());
+        getLogger().debug("ComponentSelector setting up with root element: " + conf.getName());
         Configuration[] instances = conf.getChildren("component-instance");
 
         for (int i = 0; i < instances.length; i++) {
@@ -166,7 +165,7 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
             try {
                 this.addComponent(hint, ClassUtils.loadClass(className), instances[i]);
             } catch (Exception e) {
-                getLogger().error("CocoonComponentSelector The component instance for \"" + hint + "\" has an invalid class name.", e);
+                getLogger().error("ComponentSelector The component instance for \"" + hint + "\" has an invalid class name.", e);
                 throw new ConfigurationException("The component instance for '" + hint + "' has an invalid class name.", e);
             }
         }
@@ -177,7 +176,7 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
      */
     public void release(Component component) {
         if (component == null) return;
-        CocoonComponentHandler handler = (CocoonComponentHandler) this.componentMapping.get(component);
+        ComponentHandler handler = (ComponentHandler) this.componentMapping.get(component);
         if (handler == null) return;
         handler.put(component);
         this.componentMapping.remove(component);
@@ -191,7 +190,7 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
     public void addComponent(Object hint, Class component, Configuration config)
     throws ComponentManagerException {
         try {
-            CocoonComponentHandler handler = new CocoonComponentHandler(component, config, this.manager, this.context);
+            ComponentHandler handler = new ComponentHandler(component, config, this.manager, this.context);
             handler.setLogger(getLogger());
             handler.init();
             this.componentHandlers.put(hint, handler);
@@ -208,7 +207,7 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
      */
     public void addComponentInstance(String hint, Object instance) {
         try {
-            CocoonComponentHandler handler = new CocoonComponentHandler((Component) instance);
+            ComponentHandler handler = new ComponentHandler((Component) instance);
             handler.setLogger(getLogger());
             handler.init();
             this.componentHandlers.put(hint, handler);

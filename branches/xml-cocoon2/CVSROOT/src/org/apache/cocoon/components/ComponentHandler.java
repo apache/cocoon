@@ -19,7 +19,7 @@ import org.apache.avalon.Poolable;
 import org.apache.avalon.Stoppable;
 import org.apache.log.Logger;
 
-class CocoonComponentHandler extends AbstractLoggable implements Initializable, Disposable {
+class ComponentHandler extends AbstractLoggable implements Initializable, Disposable {
     /** Indicates that the Handler is holding a <code>ThreadSafe</code> Component */
     final static int THREADSAFE  = 0;
 
@@ -52,20 +52,16 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
      * whether a Component is ThreadSafe, Poolable, or SingleThreaded.
      * It falls back to SingleThreaded if not specified.
      */
-    CocoonComponentHandler(Class componentClass,
-                           Configuration config,
-                           ComponentManager manager,
-                           Context context)
-    throws Exception {
+    ComponentHandler(Class componentClass, Configuration config, ComponentManager manager, Context context) throws Exception {
         this.factory = new ComponentFactory(componentClass, config, manager, context);
 
         if (org.apache.avalon.Poolable.class.isAssignableFrom(componentClass)) {
             this.pool = new ComponentPool(this.factory);
-            this.type = CocoonComponentHandler.POOLABLE;
+            this.type = ComponentHandler.POOLABLE;
         } else if (org.apache.avalon.ThreadSafe.class.isAssignableFrom(componentClass)) {
-            this.type = CocoonComponentHandler.THREADSAFE;
+            this.type = ComponentHandler.THREADSAFE;
         } else {
-            this.type = CocoonComponentHandler.SINGLETHREADED;
+            this.type = ComponentHandler.SINGLETHREADED;
         }
     }
 
@@ -74,9 +70,8 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
      * whether a Component is ThreadSafe, Poolable, or SingleThreaded.
      * It falls back to SingleThreaded if not specified.
      */
-    CocoonComponentHandler(Component comp)
-    throws Exception {
-        this.type = CocoonComponentHandler.THREADSAFE;
+    ComponentHandler(Component comp) throws Exception {
+        this.type = ComponentHandler.THREADSAFE;
         this.instance = comp;
     }
 
@@ -102,7 +97,7 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
         if (this.initialized) return;
 
         switch (this.type) {
-            case CocoonComponentHandler.THREADSAFE:
+            case ComponentHandler.THREADSAFE:
                 try {
                     if (this.instance == null) {
                         this.instance = (Component)this.factory.newInstance();
@@ -111,7 +106,7 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
                     getLogger().error("Cannot use component: " + this.factory.getCreatedClass().getName(), e);
                 }
                 break;
-            case CocoonComponentHandler.POOLABLE:
+            case ComponentHandler.POOLABLE:
                 try {
                     this.pool.init();
                 } catch (Exception e) {
@@ -140,10 +135,10 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
         Component comp = null;
 
         switch (this.type) {
-            case CocoonComponentHandler.THREADSAFE:
+            case ComponentHandler.THREADSAFE:
                 comp = this.instance;
                 break;
-            case CocoonComponentHandler.POOLABLE:
+            case ComponentHandler.POOLABLE:
                 comp = (Component)this.pool.get();
                 break;
             default:
@@ -167,10 +162,10 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
         }
 
         switch (this.type) {
-            case CocoonComponentHandler.THREADSAFE:
+            case ComponentHandler.THREADSAFE:
                 // Nothing to do for ThreadSafe Components
                 break;
-            case CocoonComponentHandler.POOLABLE:
+            case ComponentHandler.POOLABLE:
                 this.pool.put((Poolable) comp);
                 break;
             default:
@@ -191,7 +186,7 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
 
         try {
             switch (this.type) {
-                case CocoonComponentHandler.THREADSAFE:
+                case ComponentHandler.THREADSAFE:
                     if (this.factory != null) {
                         this.factory.decommission(this.instance);
                     } else {
@@ -205,7 +200,7 @@ class CocoonComponentHandler extends AbstractLoggable implements Initializable, 
                     }
                     this.instance = null;
                     break;
-                case CocoonComponentHandler.POOLABLE:
+                case ComponentHandler.POOLABLE:
                     if (this.pool instanceof Disposable) {
                         ((Disposable) this.pool).dispose();
                     }

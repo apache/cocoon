@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.28 2001-04-05 13:44:51 bloritsch Exp $
+  $Id: changes.xml,v 1.9.2.29 2001-04-05 15:40:35 giacomo Exp $
 -->
 
 <changes title="History of Changes">
@@ -23,6 +23,10 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="GP" type="update">
+    Decoupled the RoleUtils class from the component management system.
+    Implemented RoleInfo proposed by Ricardo Rocha
+  </action>
   <action dev="GP" type="update">
     Split up ResourcePipeline into the Component EventPipeline and StreamPipeline
     and put them in the components package.

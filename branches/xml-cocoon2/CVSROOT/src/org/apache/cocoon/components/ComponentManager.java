@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.avalon.ComponentManager;
+//import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Context;
@@ -30,14 +30,13 @@ import org.apache.avalon.Initializable;
 import org.apache.avalon.AbstractLoggable;
 
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.cocoon.util.RoleUtils;
-import org.apache.cocoon.Roles;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-19 17:08:37 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-05 15:40:36 $
  */
-public class CocoonComponentManager extends AbstractLoggable implements ComponentManager, Configurable, Contextualizable, Disposable {
+public class ComponentManager extends AbstractLoggable
+        implements org.apache.avalon.ComponentManager, Configurable, Contextualizable, Disposable {
 
     /** The application context for components
      */
@@ -51,12 +50,16 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
      */
     private Map componentHandlers;
 
+    /** RoleInfos.
+     */
+    private RoleInfo roles;
+
     /** Is the Manager disposed or not? */
     private boolean disposed = false;
 
     /** Construct a new default component manager.
      */
-    public CocoonComponentManager() {
+    public ComponentManager() {
         // Setup the maps.
         componentHandlers = Collections.synchronizedMap(new HashMap());
         componentMapping = Collections.synchronizedMap(new HashMap());
@@ -80,7 +83,7 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
 
         while (keys.hasNext()) {
             Object key = keys.next();
-            CocoonComponentHandler handler = (CocoonComponentHandler)
+            ComponentHandler handler = (ComponentHandler)
                 this.componentHandlers.get(key);
 
             handler.dispose();
@@ -106,15 +109,15 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
 
         if (disposed) throw new IllegalStateException("You cannot lookup components on a disposed ComponentManager");
 
-        CocoonComponentHandler handler = null;
+        ComponentHandler handler = null;
         Component component = null;
 
         if ( role == null ) {
-            getLogger().error("CocoonComponentManager Attempted to retrieve component with null role.");
+            getLogger().error("ComponentManager Attempted to retrieve component with null role.");
             throw new ComponentManagerException("Attempted to retrieve component with null role.");
         }
 
-        handler = (CocoonComponentHandler) this.componentHandlers.get(role);
+        handler = (ComponentHandler) this.componentHandlers.get(role);
         // Retrieve the instance of the requested component
         if ( handler == null ) {
             getLogger().debug("Could not find ComponentHandler, attempting to create one for role: " + role);
@@ -122,13 +125,13 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
             Configuration config = new DefaultConfiguration("", "-");
 
             try {
-                componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
+                componentClass = ClassUtils.loadClass(roles.defaultClass(role));
 
-                handler = new CocoonComponentHandler(componentClass, config, this, this.context);
+                handler = new ComponentHandler(componentClass, config, this, this.context);
                 handler.setLogger(getLogger());
                 handler.init();
             } catch (Exception e) {
-                getLogger().error("CocoonComponentManager Could not find component for role: " + role, e);
+                getLogger().error("ComponentManager Could not find component for role: " + role, e);
                 throw new ComponentManagerException("Could not find component for role: " + role, e);
             }
 
@@ -157,6 +160,11 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
      * Configure the ComponentManager.
      */
     public void configure(Configuration conf) throws ConfigurationException {
+        DefaultRoleInfo role_info = new DefaultRoleInfo();
+        role_info.setLogger(getLogger());
+        role_info.configure(conf);
+        roles = role_info;
+
         // Set components
 
         Configuration[] e = conf.getChildren("component");
@@ -166,11 +174,11 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
             String className = e[i].getAttribute("class", "");
 
             if (! "".equals(type)) {
-                role = RoleUtils.lookup(type);
+                role = roles.lookup(type);
             }
 
             if ("".equals(className)) {
-                className = RoleUtils.defaultClass(role);
+                className = roles.defaultClass(role);
             }
 
             try {
@@ -183,16 +191,16 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
             }
         }
 
-        Iterator r = RoleUtils.shorthandNames();
+        Iterator r = roles.shorthandNames();
         while (r.hasNext()) {
             Configuration co = conf.getChild((String) r.next(), false);
 
             if (co != null) {
-                String role = RoleUtils.lookup(co.getName());
+                String role = roles.lookup(co.getName());
                 String className = co.getAttribute("class", "");
 
                 if ("".equals(className)) {
-                    className = RoleUtils.defaultClass(role);
+                    className = roles.defaultClass(role);
                 }
 
                 try {
@@ -213,7 +221,7 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
      */
     public void release(Component component) {
         if (component == null) return;
-        CocoonComponentHandler handler = (CocoonComponentHandler) this.componentMapping.get(component);
+        ComponentHandler handler = (ComponentHandler) this.componentMapping.get(component);
         if (handler == null) return;
         handler.put(component);
         this.componentMapping.remove(component);
@@ -227,7 +235,7 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
     public void addComponent(String role, Class component, Configuration config)
     throws ComponentManagerException {
         try {
-            CocoonComponentHandler handler = new CocoonComponentHandler(component, config, this, this.context);
+            ComponentHandler handler = new ComponentHandler(component, config, this, this.context);
             handler.setLogger(getLogger());
             this.componentHandlers.put(role, handler);
         } catch (Exception e) {
@@ -241,7 +249,7 @@ public class CocoonComponentManager extends AbstractLoggable implements Componen
      */
     public void addComponentInstance(String role, Object instance) {
         try {
-            CocoonComponentHandler handler = new CocoonComponentHandler((Component) instance);
+            ComponentHandler handler = new ComponentHandler((Component) instance);
             handler.setLogger(getLogger());
             this.componentHandlers.put(role, handler);
         } catch (Exception e) {

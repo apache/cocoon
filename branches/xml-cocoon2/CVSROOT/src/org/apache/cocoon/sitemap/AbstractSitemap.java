@@ -26,7 +26,7 @@ import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentNotFoundException;
 import org.apache.avalon.AbstractLoggable;
 
-import org.apache.cocoon.components.CocoonComponentSelector;
+import org.apache.cocoon.components.ComponentSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.Roles;
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-03-12 05:55:23 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-05 15:40:37 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
     private Context context;
@@ -60,13 +60,13 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
     /** The creation date */
     protected static long dateCreated = -1L;
 
-    protected CocoonComponentSelector generators;
-    protected CocoonComponentSelector transformers;
+    protected ComponentSelector generators;
+    protected ComponentSelector transformers;
     protected SitemapComponentSelector serializers;
     protected SitemapComponentSelector readers;
-    protected CocoonComponentSelector actions;
-    protected CocoonComponentSelector matchers;
-    protected CocoonComponentSelector selectors;
+    protected ComponentSelector actions;
+    protected ComponentSelector matchers;
+    protected ComponentSelector selectors;
 
     /**
      * Set the current <code>ComponentManager</code> instance used by this
@@ -77,13 +77,13 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
 
         try {
             this.urlFactory = (URLFactory) this.manager.lookup(Roles.URL_FACTORY);
-            this.generators = (CocoonComponentSelector) this.manager.lookup(Roles.GENERATORS);
-            this.transformers = (CocoonComponentSelector) this.manager.lookup(Roles.TRANSFORMERS);
+            this.generators = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
+            this.transformers = (ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS);
             this.serializers = (SitemapComponentSelector) this.manager.lookup(Roles.SERIALIZERS);
             this.readers = (SitemapComponentSelector) this.manager.lookup(Roles.READERS);
-            this.actions = (CocoonComponentSelector) this.manager.lookup(Roles.ACTIONS);
-            this.matchers = (CocoonComponentSelector) this.manager.lookup(Roles.MATCHERS);
-            this.selectors = (CocoonComponentSelector) this.manager.lookup(Roles.SELECTORS);
+            this.actions = (ComponentSelector) this.manager.lookup(Roles.ACTIONS);
+            this.matchers = (ComponentSelector) this.manager.lookup(Roles.MATCHERS);
+            this.selectors = (ComponentSelector) this.manager.lookup(Roles.SELECTORS);
         } catch (Exception e) {
             getLogger().error("cannot obtain the Component", e);
             throw new ComponentNotFoundException ("cannot obtain the URLFactory", e);
