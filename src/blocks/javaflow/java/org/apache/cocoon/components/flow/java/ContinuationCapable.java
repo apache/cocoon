@@ -16,12 +16,12 @@
 package org.apache.cocoon.components.flow.java;
 
 /**
- * Marker interface to mark classes, which sre transoform by the 
+ * Marker interface to mark classes, which are transformed by the 
  * ContinuationClassLoader.
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ContinuationCapable.java,v 1.1 2004/03/29 17:47:21 stephan Exp $
+ * @version CVS $Id: ContinuationCapable.java,v 1.2 2004/04/04 07:01:27 antonio Exp $
  */
 public interface ContinuationCapable {
 }
