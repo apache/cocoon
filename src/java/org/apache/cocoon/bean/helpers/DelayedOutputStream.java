@@ -64,7 +64,7 @@ import java.io.OutputStream;
  *
  * @author    huber@apache.org
  * @author    uv@upaya.co.uk
- * @version CVS $Id: DelayedOutputStream.java,v 1.1 2003/06/04 09:25:53 upayavira Exp $
+ * @version CVS $Id: DelayedOutputStream.java,v 1.2 2003/06/06 12:21:10 vgritsenko Exp $
  */
 public class DelayedOutputStream extends OutputStream {
     /**
@@ -162,9 +162,7 @@ public class DelayedOutputStream extends OutputStream {
                 baos.close();
             }
         } catch (IOException ioe) {
-            if (ioexception == null) {
-                ioexception = ioe;
-            }
+            ioexception = ioe;
         } finally {
             baos = null;
         }
@@ -207,9 +205,7 @@ public class DelayedOutputStream extends OutputStream {
                 baos.flush();
             }
         } catch (IOException ioe) {
-            if (ioexception == null) {
-                ioexception = ioe;
-            }
+            ioexception = ioe;
         }
 
         // flush fos
@@ -241,20 +237,12 @@ public class DelayedOutputStream extends OutputStream {
             return baos;
         } else if (baos != null && fos != null) {
             // fos is defined, flush boas to fos, and destroy baos
-            IOException ioexception = null;
-
             try {
                 baos.flush();
                 baos.writeTo(fos);
                 baos.close();
-            } catch (IOException ioe) {
-                ioexception = ioe;
             } finally {
                 baos = null;
-            }
-
-            if (ioexception != null) {
-                throw ioexception;
             }
 
             return fos;
