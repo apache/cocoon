@@ -65,7 +65,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
  * internal representation of a Cell
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: Cell.java,v 1.4 2003/08/08 13:42:47 bruno Exp $
+ * @version CVS $Id: Cell.java,v 1.5 2003/08/20 17:29:07 joerg Exp $
  */
 // package scope
 
@@ -108,13 +108,6 @@ class Cell {
      * @exception IOException
      */
     void setContent(final String content) throws IOException {
-        /* This part is plain wrong: in gnumeric a formula cell is a cell lacking the ValueType attribute
-           Disabled this code until someone implements it correctly.
-        if (content.charAt(0) == '=') {
-            //seems like a kludge but this is actually how gnumeric does it
-            _cell.setCellType(HSSFCell.CELL_TYPE_FORMULA);
-        }
-        */
         if (_cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
             try {
                 if (_celltype == CellType.CELL_TYPE_FLOAT) {
