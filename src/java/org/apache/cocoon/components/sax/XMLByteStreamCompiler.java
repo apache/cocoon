@@ -64,7 +64,7 @@ import java.util.HashMap;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.4 2003/11/19 01:48:12 tcurdt Exp $
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.5 2003/11/20 09:25:40 tcurdt Exp $
  */
 
 public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
@@ -129,15 +129,9 @@ public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
         if (this.bufCount == 6) { // no event arrived yet
             return null;
         }
-        /*
-        TC:
-        not nececcary since we create a new buffer on each recyle()
-
         byte newbuf[] = new byte[this.bufCount];
         System.arraycopy(this.buf, 0, newbuf, 0, this.bufCount);
         return newbuf;
-        */
-        return buf;
     }
 
     public void startDocument() throws SAXException {
