@@ -34,6 +34,7 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.Manager;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.DefaultComponentManager;
 
 import org.apache.log.Logger;
@@ -46,7 +47,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.38 $ $Date: 2000-12-07 17:10:29 $
+ * @version CVS $Revision: 1.4.2.39 $ $Date: 2000-12-29 18:50:44 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -131,7 +132,10 @@ public class Cocoon
         p.parse(is);
 
         this.configure(b.getConfiguration());
-        this.root = new File(root).toURL();
+
+        File rootFile = new File(root);
+        NetUtils.setRoot(rootFile);
+        this.root = rootFile.toURL();
     }
 
     /**

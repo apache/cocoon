@@ -18,10 +18,22 @@ import java.net.MalformedURLException;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-12-18 15:01:21 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-29 18:50:46 $
  */
 
 public class NetUtils {
+    /** The root directory for relative resolution */
+    private static File root = null;
+
+    /**
+     * This is a write once function that Cocoon uses to register the
+     * root directory.
+     */
+    public static void setRoot(File directory) {
+        if (NetUtils.root == null) {
+            NetUtils.root = directory;
+        }
+    }
 
     /**
      * Create a URL from a location. This method supports the
@@ -34,6 +46,10 @@ public class NetUtils {
      */
     public static URL getURL(String location) throws MalformedURLException {
         if (location.indexOf("://") < 0) {
+            if (NetUtils.root != null) {
+                return (new File(NetUtils.root, location)).toURL();
+            }
+
             return (new File(location)).toURL();
         } else if (location.startsWith("resource://")) {
             URL u = ClassUtils.getResource(location.substring("resource://".length()));
