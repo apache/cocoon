@@ -64,7 +64,7 @@ public class DefaultAppleRequest implements AppleRequest {
     /**
      * Constructs DefaultAppleRequest
      * @param params the nested <code>&lt;map:parameter&gt;</code>'s from the sitemap 
-     * @param env the active cocoon environment 
+     * @param request the active cocoon request
      */
     public DefaultAppleRequest(List params, Request request) {
         this.params = AppleHelper.makeMapFromArguments(params);

@@ -75,7 +75,7 @@ public interface AppleRequest {
 
     /**
      * Finds a named parameter in the request using the overloaded method
-     * {@link #getSitemapParamater(String)} but lets the returned value
+     * {@link #getSitemapParameter(String)} but lets the returned value
      * default to the second argument in case the delegation resulted into
      * <code>null</code>
      * @param key of parameter to lookup
