@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.58 2001-01-18 22:53:36 greenrd Exp $
+  $Id: todo.xml,v 1.59 2001-01-19 02:21:59 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,6 +16,9 @@
  </devs>
 
  <actions priority="high">
+  <action context="code" assigned-to="RDG" bugid="39">
+   Fix caching bug with Lynx.
+  </action>
   <action context="code" assigned-to="RDG" bugid="19">
    Track down cause of multiple PDF problems.
   </action>
