@@ -31,7 +31,7 @@ import org.quartz.impl.jdbcjobstore.NoSuchDelegateException;
  */
 public class QuartzJobStoreTX extends JobStoreTX {
 
-	private final Logger logger;
+    private final Logger logger;
     private final ServiceManager manager;
     private final Context context;
     private DriverDelegate delegate;

@@ -139,27 +139,14 @@ public class XMidiGenerator
     public void generate()
         throws IOException, SAXException, ProcessingException {
         try {
-            if (this.getLogger().isDebugEnabled()) {
-                this.getLogger().debug("processing file " + super.source);
-                this.getLogger().debug(
-                    "file resolved to " + this.inputSource.getURI());
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Source " + super.source +
+                                  " resolved to " + this.inputSource.getURI());
             }
-            parseMIDI(this.inputSource, super.xmlConsumer);
 
+            parseMIDI(this.inputSource);
         } catch (SAXException e) {
-            final Exception cause = e.getException();
-            if (cause != null) {
-                if (cause instanceof ProcessingException)
-                    throw (ProcessingException) cause;
-                if (cause instanceof IOException)
-                    throw (IOException) cause;
-                if (cause instanceof SAXException)
-                    throw (SAXException) cause;
-                throw new ProcessingException(
-                    "Could not read resource " + this.inputSource.getURI(),
-                    cause);
-            }
-            throw e;
+            SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
     }
 
@@ -175,14 +162,9 @@ public class XMidiGenerator
 
     /**
      * @param source
-     * @param consumer
      */
-    private void parseMIDI(Source source, XMLConsumer consumer)
-        throws
-            SAXException,
-            SourceNotFoundException,
-            IOException,
-            ProcessingException {
+    private void parseMIDI(Source source)
+    throws SAXException, SourceNotFoundException, IOException, ProcessingException {
         InputStream inputStream = source.getInputStream();
 
         AttributesImpl attr = new AttributesImpl();
@@ -664,7 +646,7 @@ public class XMidiGenerator
     }
 
     /**
-    add track data to DOM structure
+     * Add track data to DOM structure
     */
     void doTrack(byte[] dta, int len)
         throws SAXException, ProcessingException {
@@ -1036,9 +1018,8 @@ public class XMidiGenerator
     }
 
     /**
-    write formatted hex data to file
-    */
-
+     * Write formatted hex data to file
+     */
     void doHexData(byte[] dta, int len)
         throws ProcessingException, SAXException {
         AttributesImpl attr = new AttributesImpl();
@@ -1064,5 +1045,4 @@ public class XMidiGenerator
 
         this.contentHandler.endElement("", "HEXDATA", "HEXDATA");
     }
-
 }

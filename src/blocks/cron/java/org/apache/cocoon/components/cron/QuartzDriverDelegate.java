@@ -18,7 +18,6 @@ package org.apache.cocoon.components.cron;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.Constants;
 
 import org.quartz.Calendar;
 import org.quartz.CronTrigger;
