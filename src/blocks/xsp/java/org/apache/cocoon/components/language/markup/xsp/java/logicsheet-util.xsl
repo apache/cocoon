@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- $Id: logicsheet-util.xsl,v 1.3 2004/04/05 12:25:31 antonio Exp $-->
+<!-- $Id: logicsheet-util.xsl,v 1.4 2004/05/08 14:00:39 joerg Exp $-->
 <!--
  * A collection of utility templates to help logicsheet writers, and ensure
  * a consistent behaviour of logicsheets using them.
@@ -28,12 +28,13 @@
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.3 $ $Date: 2004/04/05 12:25:31 $
+ * @version CVS $Revision: 1.4 $ $Date: 2004/05/08 14:00:39 $
 -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsp="http://apache.org/xsp"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:XSLTExtension="org.apache.cocoon.components.language.markup.xsp.XSLTExtension">
 
 <!--
   Namespace prefix for this logicsheet.
@@ -41,6 +42,9 @@
 <xsl:param name="namespace-prefix">
   <xsl:call-template name="get-namespace-prefix"/>
 </xsl:param>
+
+<xsl:variable name="extension" select="XSLTExtension:new()"
+    xmlns:XSLTExtension="org.apache.cocoon.components.language.markup.xsp.XSLTExtension"/>
 
 <!--
   Find the namespace prefix used in the source document for a given namespace URI.
@@ -132,7 +136,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
-          <xsl:when test="string-length($default) = 0">
+          <xsl:when test="not($default)">
             <xsl:choose>
               <xsl:when test="$required = 'true'">
                 <xsl:call-template name="error">
@@ -158,22 +162,17 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
           ""
           <xsl:for-each select="$content/node()">
             <xsl:choose>
-              <xsl:when test="name(.)">
-                <!-- element -->
-                <xsl:choose>
-                  <xsl:when test="namespace-uri(.)='http://apache.org/xsp' and local-name(.)='text'">
-                    <!-- xsp:text element -->
-                    + "<xsl:value-of select="."/>"
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <!-- other elements -->
-                    + <xsl:apply-templates select="."/>
-                  </xsl:otherwise>
-                </xsl:choose>
+              <xsl:when test="self::xsp:text">
+                <!-- xsp:text element -->
+                + "<xsl:value-of select="XSLTExtension:escape($extension, .)"/>"
+              </xsl:when>
+              <xsl:when test="self::*">
+                <!-- other elements -->
+                + <xsl:apply-templates select="."/>
               </xsl:when>
               <xsl:otherwise>
                 <!-- text node -->
-                + "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
+                + "<xsl:value-of select="XSLTExtension:escape($extension, .)"/>"
               </xsl:otherwise>
             </xsl:choose>
           </xsl:for-each>
@@ -212,7 +211,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
-          <xsl:when test="string-length($default) = 0">
+          <xsl:when test="not($default)">
             <xsl:choose>
               <xsl:when test="$required = 'true'">
                 <xsl:call-template name="error">
@@ -234,7 +233,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
     <xsl:choose>
-      <xsl:when test="$content/xsp:text">"<xsl:value-of select="$content"/>"</xsl:when>
+      <xsl:when test="$content/xsp:text">"<xsl:value-of select="XSLTExtension:escape($extension, $content)"/>"</xsl:when>
       <xsl:when test="$content/*">
         <xsl:apply-templates select="$content/*"/>
       </xsl:when>
@@ -272,7 +271,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
-          <xsl:when test="string-length($default) = 0">
+          <xsl:when test="not($default)">
             <xsl:choose>
               <xsl:when test="$required = 'true'">
                 <xsl:call-template name="error">
