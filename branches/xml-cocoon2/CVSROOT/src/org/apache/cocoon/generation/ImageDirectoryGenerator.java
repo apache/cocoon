@@ -4,8 +4,6 @@ import java.io.*;
 import java.util.*;
 import org.xml.sax.SAXException;
 
-import org.apache.avalon.Poolable;
-
 import org.apache.log.LogKit;
 
 /**
@@ -13,9 +11,9 @@ import org.apache.log.LogKit;
  * files.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version $Revision: 1.1.2.6 $ $Date: 2001-02-12 14:17:35 $
+ * @version $Revision: 1.1.2.7 $ $Date: 2001-02-19 15:58:08 $
  */
-public class ImageDirectoryGenerator extends DirectoryGenerator implements Poolable {
+public class ImageDirectoryGenerator extends DirectoryGenerator {
 
     protected static String IMAGE_WIDTH_ATTR_NAME = "width";
     protected static String IMAGE_HEIGHT_ATTR_NAME = "height";

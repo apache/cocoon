@@ -30,6 +30,8 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.util.pool.Pool;
+import org.apache.cocoon.PoolClient;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.parser.Parser;
@@ -47,9 +49,9 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-12 14:17:45 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-19 15:58:11 $ $Author: bloritsch $
  */
-public class XIncludeTransformer extends AbstractTransformer implements Composer {
+public class XIncludeTransformer extends AbstractTransformer implements Composer, PoolClient {
 
     protected URLFactory urlFactory;
 
@@ -80,6 +82,16 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
     protected String last_xmlbase_element_name = "";
 
     protected Stack xmlbase_element_name_stack = new Stack();
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters)
@@ -259,7 +271,7 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
                 }
             } else {
                 XIncludeContentHandler xinclude_handler = new XIncludeContentHandler(super.contentHandler,super.lexicalHandler);
-		xinclude_handler.setLogger(getLogger());
+        xinclude_handler.setLogger(getLogger());
                 parser.setContentHandler(xinclude_handler);
                 parser.setLexicalHandler(xinclude_handler);
                 parser.parse(input);

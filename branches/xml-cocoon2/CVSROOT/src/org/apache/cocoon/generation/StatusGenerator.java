@@ -23,7 +23,8 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 
-import org.apache.avalon.Poolable;
+import org.apache.avalon.util.pool.Pool;
+import org.apache.cocoon.PoolClient;
 
 
 /** Generates an XML representation of the current status of Cocoon.
@@ -52,9 +53,10 @@ import org.apache.avalon.Poolable;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a> (Luminas Limited)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-12 14:17:36 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-19 15:58:08 $
  */
-public class StatusGenerator extends ComposerGenerator implements Poolable {
+public class StatusGenerator extends ComposerGenerator implements PoolClient {
+    private Pool pool;
 
     /** The XML namespace for the output document.
      */
@@ -65,6 +67,14 @@ public class StatusGenerator extends ComposerGenerator implements Poolable {
      */
     protected static final String xlinkNamespace =
         "http://www.w3.org/1999/xlink";
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     /** Generate the status information in XML format.
      * @throws SAXException

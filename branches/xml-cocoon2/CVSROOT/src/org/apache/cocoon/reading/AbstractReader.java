@@ -14,17 +14,14 @@ import org.apache.avalon.Parameters;
 
 import org.xml.sax.EntityResolver;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-01-22 21:56:47 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-19 15:58:09 $
  */
-public abstract class AbstractReader implements Reader, Loggable {
-    /** The logger */
-    protected Logger log;
+public abstract class AbstractReader extends AbstractLoggable implements Reader {
     /** The current <code>EntityResolver</code>. */
     protected EntityResolver resolver=null;
     /** The current <code>Map</code> of the object model. */
@@ -45,12 +42,6 @@ public abstract class AbstractReader implements Reader, Loggable {
         this.objectModel=objectModel;
         this.source=src;
         this.parameters=par;
-    }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
     }
 
     /**

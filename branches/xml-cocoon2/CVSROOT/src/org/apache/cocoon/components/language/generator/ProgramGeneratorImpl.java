@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-02-17 19:09:10 $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-02-19 15:58:08 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -141,7 +141,6 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         // Set filenames
         String filename = IOUtils.getFullFilename(file);
         String normalizedName = IOUtils.normalizedFilename(filename);
-        String sourceExtension = programmingLanguage.getSourceExtension();
         // Ensure no 2 requests for the same file overlap
         Class program = null;
         CompiledComponent programInstance = null;
@@ -150,19 +149,12 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         try {
             programInstance = (CompiledComponent) this.cache.select(normalizedName);
         } catch (Exception e) {
-            getLogger().debug("The instance was not accessible, creating it now.", e);
+            getLogger().debug("The instance was not accessible, creating it now.");
         }
 
         if (programInstance == null) {
             try {
-                /*
-                 * FIXME: Passing null as encoding may result in invalid
-                 * recompilation under certain circumstances!
-                 */
-
-                program = programmingLanguage.load(normalizedName, this.workDir, null);
-                // Store loaded program in cache
-                this.cache.addGenerator(normalizedName, program);
+                program = generateResource(file, filename, normalizedName, markupLanguage, programmingLanguage, resolver);
             } catch (LanguageException le) {
                 getLogger().debug("Language Exception", le);
             }
@@ -190,25 +182,37 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
         }
 
         if (program == null) {
-            // Generate code
-            String code = markupLanguage.generateCode(
-                new InputSource(
-                new FileReader(file)), normalizedName, programmingLanguage, resolver);
-            String encoding = markupLanguage.getEncoding();
-            // Format source code if applicable
-            CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();
-            if (codeFormatter != null) {
-                code = codeFormatter.format(code, encoding);
-            }
-            // Store generated code
-            String sourceFilename = filename + "." + sourceExtension;
-            repository.store(sourceFilename, code);
-            // [Compile]/Load generated program
-            program = programmingLanguage.load(normalizedName, this.workDir, encoding);
-            // Store generated program in cache
-            this.cache.addGenerator(normalizedName, program);
+            program = generateResource(file, filename, normalizedName, markupLanguage, programmingLanguage, resolver);
         }
         // Instantiate
         return (CompiledComponent) this.cache.select(normalizedName);
+    }
+
+    private Class generateResource(File file,
+                                  String filename,
+                                  String normalizedName,
+                                  MarkupLanguage markupLanguage,
+                                  ProgrammingLanguage programmingLanguage,
+                                  EntityResolver resolver)
+    throws Exception {
+        // Generate code
+        String code = markupLanguage.generateCode(
+            new InputSource(
+            new FileReader(file)), normalizedName, programmingLanguage, resolver);
+        String encoding = markupLanguage.getEncoding();
+        // Format source code if applicable
+        CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();
+        if (codeFormatter != null) {
+            code = codeFormatter.format(code, encoding);
+        }
+        // Store generated code
+        String sourceFilename = filename + "." + programmingLanguage.getSourceExtension();
+        repository.store(sourceFilename, code);
+        // [Compile]/Load generated program
+        Class program = programmingLanguage.load(normalizedName, this.workDir, markupLanguage.getEncoding());
+        // Store generated program in cache
+        this.cache.addGenerator(normalizedName, program);
+
+        return program;
     }
 }

@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.Poolable;
+import org.apache.avalon.ThreadSafe;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.ProcessingException;
@@ -29,9 +29,9 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-13 12:02:47 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-19 15:58:08 $
  */
-public class HTMLGenerator extends ComposerGenerator implements Poolable {
+public class HTMLGenerator extends ComposerGenerator implements ThreadSafe {
     /**
      * Generate XML data.
      */

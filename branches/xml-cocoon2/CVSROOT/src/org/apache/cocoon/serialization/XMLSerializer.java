@@ -14,18 +14,29 @@ import org.apache.xml.serialize.SerializerFactory;
 import org.apache.xml.serialize.Method;
 import org.apache.xml.serialize.OutputFormat;
 
-import org.apache.avalon.Poolable;
+import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
+import org.apache.cocoon.PoolClient;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-12 14:17:40 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-19 15:58:10 $
  */
 
-public class XMLSerializer extends AbstractTextSerializer implements Poolable {
+public class XMLSerializer extends AbstractTextSerializer implements PoolClient {
 
     private SerializerFactory factory;
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     public XMLSerializer() {
         this.factory = SerializerFactory.getSerializerFactory(Method.XML);

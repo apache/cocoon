@@ -8,8 +8,10 @@
 package org.apache.cocoon.transformation;
 
 import org.apache.avalon.Parameters;
+import org.apache.avalon.util.pool.Pool;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.PoolClient;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
@@ -45,10 +47,11 @@ import java.util.Map;
  *
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-14 22:12:30 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-19 15:58:11 $
  *
  */
-public class LogTransformer extends AbstractTransformer {
+public class LogTransformer extends AbstractTransformer implements PoolClient {
+    private Pool pool;
 
     /** Wether we are forwarding XML data or not. */
     private boolean canReset=true;
@@ -65,6 +68,14 @@ public class LogTransformer extends AbstractTransformer {
     private boolean append = false;
 
     /** BEGIN SitemapComponent methods **/
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters)

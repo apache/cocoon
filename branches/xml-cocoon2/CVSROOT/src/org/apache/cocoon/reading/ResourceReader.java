@@ -30,13 +30,14 @@ import org.apache.cocoon.components.url.URLFactory;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
+import org.apache.avalon.ThreadSafe;
 
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-15 20:29:50 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-02-19 15:58:09 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -52,7 +53,7 @@ import org.xml.sax.SAXException;
  *       </dd>
  *   </dl>
  */
-public class ResourceReader extends AbstractReader implements Composer {
+public class ResourceReader extends AbstractReader implements Composer, ThreadSafe {
 
     private ComponentManager manager;
 
@@ -71,7 +72,7 @@ public class ResourceReader extends AbstractReader implements Composer {
         try {
             urlFactory = (URLFactory)manager.lookup(Roles.URL_FACTORY);
         } catch (Exception e) {
-            log.error("cannot obtain the URLFactory", e);
+            getLogger().error("cannot obtain the URLFactory", e);
             throw new ProcessingException ("cannot obtain the URLFactory");
         }
 
@@ -108,11 +109,11 @@ public class ResourceReader extends AbstractReader implements Composer {
                 is = new FileInputStream (file);
             }
         } catch (SAXException se) {
-            log.error("ResourceReader: error resolving source \"" + source + "\"", se);
+            getLogger().error("ResourceReader: error resolving source \"" + source + "\"", se);
             throw new ResourceNotFoundException ("ResourceReader: error resolving source \""
                 +source+"\". ", se);
         } catch (MalformedURLException mue) {
-            log.error("ResourceReader: malformed source \"" + source + "\"", mue);
+            getLogger().error("ResourceReader: malformed source \"" + source + "\"", mue);
             throw new ResourceNotFoundException ("ResourceReader: malformed source \""
                 +src+"\". ", mue);
         }
@@ -137,7 +138,7 @@ public class ResourceReader extends AbstractReader implements Composer {
         if (if_modified_since >= lastModified) {
             res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
         }
-        log.debug("ResourceReader: resource has " + ((if_modified_since < lastModified) ? "" : "not ") + "been modified");
+        getLogger().debug("ResourceReader: resource has " + ((if_modified_since < lastModified) ? "" : "not ") + "been modified");
         return (if_modified_since < lastModified);
     }
 

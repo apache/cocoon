@@ -25,13 +25,14 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Configuration;
-import org.apache.avalon.Poolable;
+import org.apache.avalon.util.pool.Pool;
 import org.apache.avalon.Recyclable;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.PoolClient;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -58,10 +59,10 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-15 20:30:38 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-19 15:58:11 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
-implements Transformer, Composer, Poolable, Recyclable, Configurable {
+implements Transformer, Composer, PoolClient, Recyclable, Configurable {
     private static String FILE = "file:/";
 
     /** The store service instance */
@@ -75,6 +76,16 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
 
     /** Is the store turned on? (default is on) */
     private boolean useStore = true;
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     TransformerHandler getTransformerHandler(EntityResolver resolver, String xsluri)
       throws SAXException, ProcessingException, IOException, TransformerConfigurationException

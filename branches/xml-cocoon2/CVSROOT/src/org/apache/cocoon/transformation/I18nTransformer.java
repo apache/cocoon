@@ -14,11 +14,13 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.acting.LangSelect;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
+import org.apache.cocoon.PoolClient;
 
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Loggable;
+import org.apache.avalon.util.pool.Pool;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
@@ -100,7 +102,8 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
  */
-public class I18nTransformer extends AbstractTransformer implements Composer {
+public class I18nTransformer extends AbstractTransformer implements Composer, PoolClient {
+    private Pool pool;
 
     protected ComponentManager manager;
 
@@ -125,6 +128,13 @@ public class I18nTransformer extends AbstractTransformer implements Composer {
     protected boolean is_element = false;
     protected String lang;
 
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     /**
      *  Uses <code>org.apache.cocoon.acting.LangSelect.getLang()</code>

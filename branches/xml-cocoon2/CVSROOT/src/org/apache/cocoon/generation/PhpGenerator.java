@@ -17,7 +17,7 @@ import net.php.servlet;
 
 import org.apache.cocoon.components.parser.Parser;
 
-import org.apache.avalon.Poolable;
+import org.apache.avalon.ThreadSafe;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -28,9 +28,9 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-08 20:39:38 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-19 15:58:08 $
  */
-public class PhpGenerator extends ServletGenerator implements Poolable {
+public class PhpGenerator extends ServletGenerator implements ThreadSafe {
 
     /**
      * Stub implementation of Servlet Config

@@ -14,6 +14,7 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.xml.*;
 import org.apache.cocoon.xml.dom.*;
 import org.apache.avalon.*;
+import org.apache.avalon.util.pool.Pool;
 import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
@@ -37,9 +38,19 @@ import java.io.ByteArrayOutputStream;
  * A Batik based Serializer for generating PNG/JPG images
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-16 22:07:42 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-02-19 15:58:10 $
  */
-public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable {
+public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, PoolClient {
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     /** The <code>ContentHandler</code> receiving SAX events. */
     private ContentHandler contentHandler=null;

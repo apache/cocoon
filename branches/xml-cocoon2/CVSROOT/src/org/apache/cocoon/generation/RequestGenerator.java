@@ -13,16 +13,16 @@ import java.util.Enumeration;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-import org.apache.avalon.Poolable;
+import org.apache.avalon.ThreadSafe;
 
 /**
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-16 22:07:38 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-19 15:58:08 $
  */
-public class RequestGenerator extends ServletGenerator implements Poolable {
+public class RequestGenerator extends ServletGenerator implements ThreadSafe {
 
     /** The URI of the namespace of this generator. */
     private String URI="http://xml.apache.org/cocoon/2.0/RequestGenerator";

@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.Poolable;
+import org.apache.avalon.ThreadSafe;
 import java.io.IOException;
 import java.io.File;
 import java.io.ByteArrayInputStream;
@@ -57,9 +57,9 @@ import org.apache.avalon.Parameters;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-15 00:59:06 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-19 15:58:08 $
  */
-public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
+public class FileGenerator extends ComposerGenerator implements ThreadSafe, Configurable {
 
     /** The store service instance */
     private Store store = null;

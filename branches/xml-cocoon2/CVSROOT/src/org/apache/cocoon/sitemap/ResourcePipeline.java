@@ -34,7 +34,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-16 22:07:47 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-02-19 15:58:10 $
  */
 public class ResourcePipeline implements Composer {
     private Generator generator;
@@ -197,7 +197,7 @@ public class ResourcePipeline implements Composer {
             this.generator.generate();
 
             if (generator instanceof PoolClient) {
-               ((PoolClient)reader).returnToPool();
+               ((PoolClient)generator).returnToPool();
             }
 
             for (int j=0; j < i; j++) {
@@ -207,7 +207,7 @@ public class ResourcePipeline implements Composer {
             }
 
             if (serializer instanceof PoolClient) {
-               ((PoolClient)reader).returnToPool();
+               ((PoolClient)serializer).returnToPool();
             }
         }
         return true;

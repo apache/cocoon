@@ -24,8 +24,10 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Composer;
+import org.apache.avalon.util.pool.Pool;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
+import org.apache.cocoon.PoolClient;
 import org.apache.avalon.util.datasource.DataSourceComponent;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
@@ -47,10 +49,10 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-02-06 15:23:41 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-02-19 15:58:11 $ $Author: bloritsch $
  */
 
-public class SQLTransformer extends AbstractTransformer implements Composer, Loggable {
+public class SQLTransformer extends AbstractTransformer implements Composer, Loggable, PoolClient {
 
     private Logger log;
 
@@ -103,6 +105,16 @@ public class SQLTransformer extends AbstractTransformer implements Composer, Log
     protected LexicalHandler lexical_handler;
 
     protected ComponentSelector dbSelector = null;
+
+    private Pool pool;
+
+    public void setPool(Pool pool) {
+        this.pool = pool;
+    }
+
+    public void returnToPool() {
+        this.pool.put(this);
+    }
 
     public void compose(ComponentManager manager) {
         try {
