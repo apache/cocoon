@@ -12,3 +12,10 @@ function interceptionTest() {
 function callAnotherFunction() {
   cocoon.log.error ( "callAnotherFunction() - baseScript" );       
 }
+
+function testSendPageAndWait() { 
+  woody.send( "bla" );    
+  cocoon.sendPageAndWait("xxx",{});
+  cocoon.sendPageAndWait("yyy",{});
+  cocoon.sendPageAndWait( "zzz", {} );
+}
