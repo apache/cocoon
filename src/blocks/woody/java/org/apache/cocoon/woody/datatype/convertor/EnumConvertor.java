@@ -58,15 +58,30 @@ import java.util.Locale;
 import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
- * Description of EnumConvertor.
- * @version CVS $Id: EnumConvertor.java,v 1.5 2003/11/10 11:26:32 ugo Exp $
+ * A {@link org.apache.cocoon.woody.datatype.convertor.Convertor Convertor}
+ * implementation for types implementing Joshua Bloch's
+ * <a href="http://developer.java.sun.com/developer/Books/shiftintojava/page1.html#replaceenums">
+ * typesafe enum</a> pattern.
+ * 
+ * @see org.apache.cocoon.woody.datatype.typeimpl.EnumType
+ * @version CVS $Id: EnumConvertor.java,v 1.6 2003/11/16 10:56:30 ugo Exp $
  */
 public class EnumConvertor implements Convertor {
 
-    private String className;
+    private Class clazz;
     
+    /**
+     * Construct a new EnumConvertor for a class
+     * @param className The package-qualified name of the class implementing
+     * the typesafe enum pattern.
+     */
     public EnumConvertor(String className) {
-        this.className = className;
+        try {
+            clazz = Class.forName(className);
+        }
+        catch (ClassNotFoundException e) {
+            throw new CascadingRuntimeException("Class " + className + " not found", e);
+        }
     }
     
     /* (non-Javadoc)
@@ -127,12 +142,6 @@ public class EnumConvertor implements Convertor {
      * @see org.apache.cocoon.woody.datatype.convertor.Convertor#getTypeClass()
      */
     public Class getTypeClass() {
-        try {
-            // FIXME: use the correct class loader.
-            return Class.forName(className);
-        }
-        catch (ClassNotFoundException e) {
-            throw new CascadingRuntimeException("Class " + className + " not found", e);
-        }
+        return clazz;
     }
 }

@@ -4,8 +4,8 @@
   <wd:label>Sex</wd:label>
   <wd:datatype base="enum">
   	<wd:convertor type="enum">
-      <wd:enum>org.apache.cocoon.woody.datatype.convertor.Sex</wd:enum>
+      <wd:enum>org.apache.cocoon.woody.datatype.Sex</wd:enum>
   	</wd:convertor>
   </wd:datatype>
-  <wd:selection-list type="enum" class="org.apache.cocoon.woody.datatype.convertor.Sex"/>
+  <wd:selection-list type="enum" class="org.apache.cocoon.woody.datatype.Sex"/>
 </wd:field>

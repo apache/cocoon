@@ -48,12 +48,12 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.datatype.convertor;
+package org.apache.cocoon.woody.datatype;
 
 
 /**
  * Description of Sex.
- * @version CVS $Id: Sex.java,v 1.1 2003/11/16 08:55:29 ugo Exp $
+ * @version CVS $Id: Sex.java,v 1.1 2003/11/16 10:56:30 ugo Exp $
  */
 public class Sex {
 

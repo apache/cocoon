@@ -48,49 +48,45 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.datatype.typeimpl;
+package org.apache.cocoon.woody.datatype.convertor;
+
+import java.util.Locale;
+
+import org.apache.cocoon.woody.datatype.Sex;
+
+import junit.framework.TestCase;
 
 /**
- * A {@link org.apache.cocoon.woody.datatype.Datatype Datatype} implementation for
- * types implementing Joshua Bloch's <a href="http://developer.java.sun.com/developer/Books/shiftintojava/page1.html#replaceenums">
- * typesafe enum</a> pattern.
- * <p>See the following code for an example:</p>
- * <pre>
- * public class Sex {
- *
- *   public static final Sex MALE = new Sex("M");
- *   public static final Sex FEMALE = new Sex("F");
- *   private String code;
- *
- *   private Sex(String code) { this.code = code; }
- *
- *   public String toString() {
- *     switch(code.charAt(0)) {
- *         case 'M' : return this.getClass().getName() + ".MALE";
- *         case 'F' : return this.getClass().getName() + ".FEMALE";
- *         default : return "unknown"; // Should never happen
- *     }
- *   }
- * }
- * </pre>
- * @version CVS $Id: EnumType.java,v 1.4 2003/11/16 10:56:30 ugo Exp $
+ * Test case for the {@link EnumConvertor} class.
+ * 
+ * @version CVS $Id: EnumConvertorTestCase.java,v 1.1 2003/11/16 10:56:30 ugo Exp $
  */
-public class EnumType extends AbstractDatatype {
-    
-    public EnumType() {
-    }
-    
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.Datatype#getTypeClass()
-     */
-    public Class getTypeClass() {
-        return this.getConvertor().getTypeClass();
+public class EnumConvertorTestCase extends TestCase {
+
+    public EnumConvertorTestCase(String name) {
+        super(name);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.Datatype#getDescriptiveName()
+    /**
+     * Test the {@link EnumConvertor#convertFromString(java.lang.String, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
+     * method.
      */
-    public String getDescriptiveName() {
-        return this.getConvertor().getTypeClass().getName();
+    public void testConvertFromString() {
+        EnumConvertor convertor = new EnumConvertor("org.apache.cocoon.woody.datatype.Sex");
+        Object sex = convertor.convertFromString
+            (Sex.class.getName() + ".FEMALE", Locale.getDefault(), null);
+        assertSame("Returned sex must be FEMALE", Sex.FEMALE, sex);
+    }
+    
+    /**
+     * Test the {@link EnumConvertor##convertToString(java.lang.Object, java.util.Locale, org.apache.cocoon.woody.datatype.convertor.Convertor.FormatCache)
+     * method.
+     */
+    public void testConvertToString() {
+        EnumConvertor convertor = new EnumConvertor("org.apache.cocoon.woody.datatype.Sex");
+        assertEquals("Converted value must match string",
+                Sex.class.getName() + ".MALE",
+                convertor.convertToString
+                    (Sex.MALE, Locale.getDefault(), null));
     }
 }
