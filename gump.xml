@@ -661,6 +661,7 @@
     <library name="slide-kernel"/>
     <library name="slide-stores"/>
     <library name="slide-webdavservlet"/>
+    <library name="jdom"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -1328,6 +1329,7 @@
     <library name="commons-beanutils-core"/>
     <library name="commons-digester"/>
     <library name="commons-el"/>
+    <library name="jsp-api"/>
     <library name="myfaces"/>
     <library name="myfaces-jsf-api"/>
 
