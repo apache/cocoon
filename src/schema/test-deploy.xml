@@ -23,8 +23,14 @@
     <locator uri="http://cocoon.apache.org/block-repository/"/>
   </locators>
   <install>
+  	<!-- install Cocoon 2.2 at d:\ -->
     <cocoon version="2.2" target-uri="d:\"/>
-    <block id="http://mycompany.com/webmail/1.3.43" auto-resolve="true">
+    <!-- install this block and set the property xyz and define which
+         block implementations should be used for the defined requirements 
+         this overrides the default values set in block.xml -->
+    <block id="http://mycompany.com/webmail/1.3.43" auto-resolve="false">
+    	<use block="http://mycompany.com/myblock/1.3.43" interface="http://bla/1.0" />
+    	<use block="http://mycompany.com/myOtherBlock/1.3.43" interface="http://bar/1.0" />    	
       <property name="mailserver" value="xyz"/>
     </block>
     <block id="http://mycompany.com/myblock/1.3.43" auto-resolve="false">
