@@ -15,54 +15,58 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.ServletContext;
 
 import org.apache.avalon.Component;
+import org.apache.avalon.Configuration;
+import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Parameters;
-
-import org.apache.log.Logger;
-import org.apache.log.LogKit;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
 
+import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-14 15:08:27 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-06 22:54:10 $
  */
-public class HelloAction implements Action {
+public class HelloAction extends ComposerAction {
 
-    private Logger log = LogKit.getLoggerFor("cocoon");
+    /**
+     * Get the <code>Configuration</code> object for this <code>Component</code>
+     */
+    public void configure( Configuration configuration) throws ConfigurationException {
+    }
 
     /**
      * A simple Action that logs if the <code>Session</code> object
      * has been created
      */
     public List act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
-        HttpServletRequest req = (HttpServletRequest) objectModel.get("request");
+        HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
         if (req != null) {
             HttpSession session = req.getSession (false);
-            ServletContext context = (ServletContext)objectModel.get("context");
+            ServletContext context = (ServletContext)objectModel.get(Constants.CONTEXT_OBJECT);
             if (context != null) {
                 if (session != null) {
                     if (session.isNew()) {
-                        log.debug("Session is new");
+                        super.log.debug("Session is new");
                         context.log("Session is new");
                     } else {
-                        log.debug("Session is new");
+                        super.log.debug("Session is new");
                         context.log("Session is old");
                     }
                 } else {
-                    log.debug("A session object was not created");
+                    super.log.debug("A session object was not created");
                     context.log("A session object was not created");
                 }
             } else {
                 if (session != null) {
                     if (session.isNew()) {
-                        log.debug("Session is new");
+                        super.log.debug("Session is new");
                     } else {
-                        log.debug("Session is old");
+                        super.log.debug("Session is old");
                     }
                 } else {
-                    log.debug("A session object was not created");
+                    super.log.debug("A session object was not created");
                 }
             }
         }
