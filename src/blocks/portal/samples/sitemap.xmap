@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-<!-- =========================== Components ================================ -->
 
  <map:components>
   <map:generators default="file">
@@ -118,19 +117,38 @@
     
 	<!-- Cascading Stylesheets -->
 	<map:match pattern="css/*.css">
-    	<map:read mime-type="text/css" src="{global:skin}css/{1}.css"/>
+         <map:read mime-type="text/css" src="{global:skin}css/{1}.css"/>
    	</map:match>
 
     <map:match pattern="">
-       <map:redirect-to uri="portal"/>
+         <map:redirect-to uri="portal"/>
     </map:match>
 
-   <map:match pattern="news/**">
-      <map:mount check-reload="yes" src="news/" uri-prefix="news"/>
+    <map:match pattern="news/**">
+        <map:mount check-reload="yes" src="news/" uri-prefix="news"/>
     </map:match>
+
    <map:match pattern="coplets/**">
       <map:mount check-reload="yes" src="coplets/" uri-prefix="coplets"/>
     </map:match>
+
+    <!-- Do an auto login as guest -->
+    <!--
+    <map:act type="auth-loggedIn">
+        <map:parameter name="handler" value="portalhandler"/> 
+        <map:parameter name="application" value="portal"/> 
+        <map:parameter name="negate-result" value="true"/>
+
+        <map:act type="auth-login">
+            <map:parameter name="handler" value="portalhandler"/>
+            <map:parameter name="application" value="portal"/> 
+    
+            <map:parameter name="parameter_name" value="guest"/>
+            <map:parameter name="parameter_password" value="guest"/>
+         
+        </map:act>
+    </map:act>
+    -->
 
     <!-- Test pipeline for layout engine -->
     <map:match pattern="portal">
@@ -201,15 +219,16 @@
 
     <map:match pattern="auth">
         <map:act type="auth-loggedIn">
-          <map:parameter name="handler" value="portalhandler"/> 
-          <map:redirect-to uri="loggedin"/>
+            <map:parameter name="handler" value="portalhandler"/> 
+            <map:redirect-to uri="loggedin"/>
         </map:act>
         <map:act type="auth-login">
-          <map:parameter name="handler" value="portalhandler"/>
-          <map:parameter name="parameter_name" value="{request-param:name}"/>
-          <map:parameter name="parameter_password" value="{request-param:password}"/>
+            <map:parameter name="handler" value="portalhandler"/>
+            <map:parameter name="application" value="portal"/> 
+            <map:parameter name="parameter_name" value="{request-param:name}"/>
+            <map:parameter name="parameter_password" value="{request-param:password}"/>
 
-          <map:redirect-to uri="{request-param:resource}"/>
+            <map:redirect-to uri="{request-param:resource}"/>
 
         </map:act>
         <map:generate src="resources/login-error.xml"/>
