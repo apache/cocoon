@@ -87,11 +87,10 @@ import java.io.StringReader;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.5 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.6 2003/10/14 23:17:37 joerg Exp $
  */
 public class StreamGenerator extends ServiceableGenerator
 {
-    public static final String CLASS = StreamGenerator.class.getName();
 
     /** The parameter holding the name associated with the xml data  **/
     public static final String FORM_NAME = "form-name";
