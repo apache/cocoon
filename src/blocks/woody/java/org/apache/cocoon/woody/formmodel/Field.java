@@ -116,7 +116,7 @@ public class Field extends AbstractWidget {
 
         // try to convert entered string to the field's native datatype
         if (enteredValue != null) {
-            value = definition.getDatatype().convertFromStringLocalized(enteredValue, formContext.getLocale());
+            value = definition.getDatatype().convertFromString(enteredValue, formContext.getLocale());
             if (value == null)
                 conversionFailed = true;
         } else
@@ -161,7 +161,7 @@ public class Field extends AbstractWidget {
             contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
             String stringValue;
             if (value != null)
-                stringValue = definition.getDatatype().convertToStringLocalized(value, locale);
+                stringValue = definition.getDatatype().convertToString(value, locale);
             else
                 stringValue = enteredValue;
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());

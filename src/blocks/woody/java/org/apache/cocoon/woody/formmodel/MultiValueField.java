@@ -103,7 +103,7 @@ public class MultiValueField extends AbstractWidget {
             Object[] tempValues = new Object[enteredValues.length];
             for (int i = 0; i < enteredValues.length; i++) {
                 String param = enteredValues[i];
-                tempValues[i] = definition.getDatatype().convertFromStringLocalized(param, formContext.getLocale());
+                tempValues[i] = definition.getDatatype().convertFromString(param, formContext.getLocale());
                 if (tempValues[i] == null) {
                     conversionFailed = true;
                     break;
@@ -143,16 +143,14 @@ public class MultiValueField extends AbstractWidget {
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
                 contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
-                // Note: by intent not convertToStringLocalized
-                String value = definition.getDatatype().convertToString(values[i]);
+                String value = definition.getDatatype().getPlainConvertor().convertToString(values[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
                 contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
             }
         } else if (enteredValues != null) {
             for (int i = 0; i < enteredValues.length; i++) {
                 contentHandler.startElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
-                // Note: by intent not convertToStringLocalized
-                String value = definition.getDatatype().convertToString(enteredValues[i]);
+                String value = definition.getDatatype().getPlainConvertor().convertToString(enteredValues[i], locale, null);
                 contentHandler.characters(value.toCharArray(), 0, value.length());
                 contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
             }
