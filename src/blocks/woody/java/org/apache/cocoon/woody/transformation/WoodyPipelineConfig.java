@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.woody.transformation;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Locale;
 import java.util.Map;
 
@@ -61,9 +63,11 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.i18n.I18nUtils;
 import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathException;
 import org.apache.commons.jxpath.Variables;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
@@ -96,16 +100,39 @@ public class WoodyPipelineConfig {
      * The locale currently used by the transformer. */
     private Locale locale;
 
+    /**
+     * Value for the action attribute of the form.
+     */
+    private String formAction;
+
+    /**
+     * Value for the method attribute of the form.
+     */
+    private String formMethod;
+
+
 
     
-    private WoodyPipelineConfig(String attName, Request req, JXPathContext jxpc, Locale localeParam) {
+    private WoodyPipelineConfig(JXPathContext jxpc, Request req, Locale localeParam, 
+            String attName, String actionExpression, String method) {
         this.attributeName = attName;
         this.request = req;
         this.jxpathContext =jxpc;
         this.localeParameter = localeParam;
+        this.formAction = translateText(actionExpression);
+        this.formMethod = method;
     }
     
    
+    /**
+     * Creates and initializes a WoodyPipelineConfig object based on the passed
+     * arguments of the setup() of the specific Pipeline-component.
+     * 
+     * @param objectModel the objectmodel as passed in the setup()
+     * @param parameters the parameters as passed in the setup()
+     * @return an instance of WoodyPipelineConfig initialized according to the 
+     * settings in the sitemap.
+     */
     public static WoodyPipelineConfig createConfig(Map objectModel, Parameters parameters) {
         // create and set the jxpathContext...
         Object flowContext = FlowHelper.getContextObject(objectModel);
@@ -119,15 +146,21 @@ public class WoodyPipelineConfig {
         vars.declareVariable("session", session);
         vars.declareVariable("parameters", parameters);
         
-        String attributeName = parameters.getParameter("attribute-name", null);
-        
         Locale localeParameter = null;
         String localeStr = parameters.getParameter("locale", null);
         if (localeStr != null) {
             localeParameter = I18nUtils.parseLocale(localeStr);
         }
+
+        String attributeName = parameters.getParameter("attribute-name", null);
+        String actionExpression = parameters.getParameter("form-action", null);
+        String formMethod = parameters.getParameter("form-method", "POST");
+        //TODO (20031223 mpo)think about adding form-encoding for the Generator.
+        // Note generator will also need some text to go on the submit-button? 
+        // Alternative to adding more here is to apply xinclude ?
         
-        return new WoodyPipelineConfig(attributeName, request, jxpc, localeParameter);
+        return new WoodyPipelineConfig(jxpc, request, localeParameter, 
+                attributeName, actionExpression, formMethod);
     }
     
     
@@ -193,26 +226,76 @@ public class WoodyPipelineConfig {
         }
     }
 
-    public JXPathContext getJXPathContext() {
-        return jxpathContext;
+    /**
+     * Replaces JXPath expressions embedded inside #{ and } by their value.
+     * This will parse the passed String looking for #{} occurances and then
+     * uses the {@see #evaluateExpression(String)} to evaluate the found expression.
+     * 
+     * @return the original String with it's #{}-parts replaced by the evaulated results.
+     */
+    public String translateText(String original) {
+        if (original==null) {
+            return null;
+        }
+        
+        StringBuffer expression;
+        StringBuffer translated = new StringBuffer();
+        StringReader in = new StringReader(original);
+        int chr;
+        try {
+            while ((chr = in.read()) != -1) {
+                char c = (char) chr;
+                if (c == '#') {
+                    chr = in.read();
+                    if (chr != -1) {
+                        c = (char) chr;
+                        if (c == '{') {
+                            expression = new StringBuffer();
+                            boolean more = true;
+                            while ( more ) {
+                                more = false;
+                                if ((chr = in.read()) != -1) {
+                                    c = (char)chr;
+                                    if (c != '}') {
+                                        expression.append(c);
+                                        more = true;
+                                    } else {
+                                        translated.append(evaluateExpression(expression.toString()).toString());
+                                    }
+                                } else {
+                                    translated.append('#').append('{').append(expression);
+                                }
+                            }
+                        }
+                    } else {
+                        translated.append((char) chr);
+                    }
+                } else {
+                    translated.append(c);
+                }
+            }
+        } catch (IOException ignored) {
+            ignored.printStackTrace();
+        }
+        return translated.toString();
     }
 
-    public String getAttributeName() {
-        return attributeName;
-    }
+    /**
+     * Evaluates the passed xpath expression using the internal jxpath context 
+     * holding the declared variables:
+     * <ol><li>continuation: as made available by flowscript</li>
+     * <li>request: as present in the cocoon processing environment</li>
+     * <li>session: as present in the cocoon processing environment</li>
+     * <li>parameters: as present in the cocoon sitemap node of the pipeline component</li></ol>
+     * 
+     * @param expression
+     * @return the object-value resulting the expression evaluation.
+     */
+    public Object evaluateExpression(String expression) {
+        return this.jxpathContext.getValue(expression);
+    }    
 
-    public Request getRequest() {
-        return request;
-    }
-
-    public JXPathContext getJxpathContext() {
-        return jxpathContext;
-    }
-
-//    public void setJxpathContext(JXPathContext jxpathContext) {
-//        this.jxpathContext = jxpathContext;
-//    }
-
+    
     public Locale getLocale() {
         return locale;
     }
@@ -225,6 +308,42 @@ public class WoodyPipelineConfig {
         return localeParameter;
     }
 
+    /**
+     * The value for the wi:form-generated/@action. 
+     * Note: wi:form-template copies this from its wt:form-template counterpart.
+     *  
+     * @return the {@see #translateText(String)} result of the 'form-action' sitemap 
+     * parameter to the pipeline component, or null if that parameter was not set.
+     */
+    public String getFormAction() {
+        return formAction;
+    }
 
+    /**
+     * The value for the wi:form-generated/@method.
+     * Note: wi:form-template copies this from its wt:form-template counterpart.
+     * 
+     * @return the value of the 'form-method' sitemap parameter to the pipeline 
+     * component. Defaults to 'POST' if it was not set.
+     */
+    public String getFormMethod() {
+        return formMethod;
+    }
+    
+    /**
+     * The grouped attributes to set on the wi:form-generated element.
+     * Note: wi:form-template copies this from its wt:form-template counterpart.
+     * 
+     * @see #getFormAction()
+     * @see #getFormMethod()
+     */
+    public Attributes getFormAttributes() {
+        AttributesImpl formAtts = new AttributesImpl();
+        if (getFormAction() != null) {
+            formAtts.addCDATAAttribute("action", getFormAction());
+        }
+        formAtts.addCDATAAttribute("method", getFormMethod());
+        return formAtts;
+    }
 
 }

@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.woody.transformation;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Locale;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -78,7 +76,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.21 2003/12/29 06:14:49 tim Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.22 2003/12/29 15:37:28 mpo Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -216,14 +214,14 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
                 String localeAttr = attributes.getValue("locale");
                 if (localeAttr != null) { // first use value of locale attribute if any
-                    localeAttr = translateText(localeAttr);
+                    localeAttr = pipeContext.translateText(localeAttr);
                     pipeContext.setLocale(I18nUtils.parseLocale(localeAttr));
                 } else if (pipeContext.getLocaleParameter() != null) { // then use locale specified as transformer parameter, if any
                     pipeContext.setLocale(pipeContext.getLocaleParameter());
                 } else { // use locale specified in bizdata supplied for form
                     Object locale = null;
                     try {
-                        locale = pipeContext.getJXPathContext().getValue("/locale");
+                        locale = pipeContext.evaluateExpression("/locale");
                     } catch (JXPathException e) {}
                     if (locale != null) {
                         pipeContext.setLocale((Locale)locale);
@@ -241,7 +239,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             } else if (localName.equals(CONTINUATION_ID)){
                 // Insert the continuation id
                 // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
-                Object idObj = pipeContext.getJXPathContext().getValue("$continuation/id");
+                Object idObj = pipeContext.evaluateExpression("$continuation/id");
                 if (idObj == null) {
                     throw new SAXException("No continuation found");
                 }
@@ -271,62 +269,13 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             for (int i = 0; i < names.length; i++) {
                 String name = names[i];
                 int position = newAtts.getIndex(name);
-                String newValue = translateText(newAtts.getValue(position));
+                String newValue = pipeContext.translateText(newAtts.getValue(position));
                 newAtts.setValue(position, newValue);                
             }
         }
         return newAtts;
     }
 
-    /**
-     * Replaces JXPath expressions embedded inside #{ and } by their value.
-     */
-    private String translateText(String original) {
-        StringBuffer expression;
-        StringBuffer translated = new StringBuffer();
-        StringReader in = new StringReader(original);
-        int chr;
-        try {
-            while ((chr = in.read()) != -1) {
-                char c = (char) chr;
-                if (c == '#') {
-                    chr = in.read();
-                    if (chr != -1) {
-                        c = (char) chr;
-                        if (c == '{') {
-                            expression = new StringBuffer();
-                            boolean more = true;
-                            while ( more ) {
-                                more = false;
-                                if ((chr = in.read()) != -1) {
-                                    c = (char)chr;
-                                    if (c != '}') {
-                                        expression.append(c);
-                                        more = true;
-                                    } else {
-                                        translated.append(evaluateExpression(expression.toString()));
-                                    }
-                                } else {
-                                    translated.append('#').append('{').append(expression);
-                                }
-                            }
-                        }
-                    } else {
-                        translated.append((char) chr);
-                    }
-                } else {
-                    translated.append(c);
-                }
-            }
-        } catch (IOException ignored) {
-            ignored.printStackTrace();
-        }
-        return translated.toString();
-    }
-
-    private String evaluateExpression(String expression) {
-        return pipeContext.getJXPathContext().getValue(expression).toString();
-    }
 
     protected Widget getWidget(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
