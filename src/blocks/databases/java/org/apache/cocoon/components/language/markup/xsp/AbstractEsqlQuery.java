@@ -64,7 +64,7 @@ import java.util.ArrayList;
  * This is base class for all EsqlQueries
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
+ * @version CVS $Id: AbstractEsqlQuery.java,v 1.3 2003/03/20 21:51:43 tcurdt Exp $
  */
 public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     private int maxRows = -1;
@@ -94,7 +94,7 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
      * @param connection
      * @param query - The SQL query string
      */
-    protected AbstractEsqlQuery(AbstractEsqlConnection connection, String query) {
+    protected AbstractEsqlQuery(Connection connection, String query) {
         this.connection = connection;
         this.query = query;
     }

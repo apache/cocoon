@@ -55,14 +55,15 @@ import org.apache.cocoon.components.language.markup.xsp.AbstractEsqlQuery;
 
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.Connection;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: MysqlEsqlQuery.java,v 1.2 2003/03/11 17:44:19 vgritsenko Exp $
+ * @version CVS $Id: MysqlEsqlQuery.java,v 1.3 2003/03/20 21:51:43 tcurdt Exp $
  */
 final public class MysqlEsqlQuery extends AbstractEsqlQuery {
 
-    public MysqlEsqlQuery(AbstractEsqlConnection connection, String query) {
+    public MysqlEsqlQuery(Connection connection, String query) {
         super(connection, query);
     }
 
