@@ -28,6 +28,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 
+import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.AbstractSource;
 
@@ -143,6 +144,8 @@ public class ModuleSource
 
         if ( obj instanceof InputStream ) {
             return (InputStream)obj;
+        } else if ( obj instanceof Source ) {
+            return ((Source)obj).getInputStream();
         } else if ( obj instanceof String ) {
             return new ByteArrayInputStream( ((String)obj).getBytes() );
         } else if (obj instanceof byte[]) {

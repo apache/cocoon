@@ -16,15 +16,9 @@
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
-
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
-import org.apache.cocoon.generation.VirtualPipelineGenerator;
+import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
 
 /**
  * Handles &lt;map:components&gt;. It doesn't actually create a <code>ProcessingNode</code>.
@@ -32,14 +26,7 @@ import org.apache.cocoon.generation.VirtualPipelineGenerator;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$
  */
-public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder
-                                   implements Contextualizable {
-
-    private DefaultContext context;
-
-    public void contextualize(Context context) throws ContextException {
-        this.context = (DefaultContext) context;
-    }
+public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder {
 
     /** This builder has no parameters -- return <code>false</code> */
     protected boolean hasParameters() {
@@ -47,28 +34,13 @@ public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder
     }
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
-        // Check for component configurations
+        // Handle the VPCs
         Configuration child = config.getChild("generators", false);
         if (child != null) {
-            Configuration[] generators = child.getChildren("generator");
-            for (int i = 0; i < generators.length; i++) {
-                Configuration generator = generators[i];
-
-                String clazz = generator.getAttribute("src");
-                if (VirtualPipelineGenerator.class.getName().equals(clazz)) {
-                    // Got it
-                    PipelineNodeBuilder builder = new PipelineNodeBuilder();
-                    builder.setBuilder(this.treeBuilder);
-                    ProcessingNode node = builder.buildNode(generator);
-
-                    // Stuff this node into the context of current Sitemap
-                    // so that VirtualPipelineComponent can find it.
-                    String name = generator.getAttribute("name");
-                    context.put(Constants.CONTEXT_VPC_PREFIX + "generator-" + name, node);
-                }
-            }
+            ProcessingNodeBuilder childBuilder = this.treeBuilder.createNodeBuilder(child);
+            childBuilder.buildNode(child);
         }
-
         return null;
     }
 }
+
