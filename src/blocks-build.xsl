@@ -505,14 +505,14 @@
         <fileset dir="{string('${blocks}')}/{$block-name}/test" excludes="**/*.java"/>
       </copy>
 
-      <javac srcdir="{string('${blocks}')}/{$block-name}/test"
-             destdir="{string('${build.blocks}')}/{$block-name}/test"
-             fork="true"
+      <javac destdir="{string('${build.blocks}')}/{$block-name}/test"
              debug="{string('${compiler.debug}')}"
              optimize="{string('${compiler.optimize}')}"
              deprecation="{string('${compiler.deprecation}')}"
              target="{string('${target.vm}')}"
-             nowarn="{string('${compiler.nowarn}')}">
+             nowarn="{string('${compiler.nowarn}')}"
+             compiler="{string('${compiler}')}">
+        <src path="{string('${blocks}')}/{$block-name}/test"/>
         <classpath>
           <path refid="test.classpath"/>
           <path refid="{$block-name}.classpath"/>
