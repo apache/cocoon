@@ -57,8 +57,6 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -67,7 +65,7 @@ import java.util.Vector;
  * RequestModule} provides similar functionality based on JXPath.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestURIModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: RequestURIModule.java,v 1.2 2003/06/09 16:30:19 haul Exp $
  */
 public class RequestURIModule extends AbstractInputModule implements ThreadSafe {
 
@@ -99,10 +97,10 @@ public class RequestURIModule extends AbstractInputModule implements ThreadSafe 
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
         throws ConfigurationException {
 
-            List values = new LinkedList();
-            values.add( this.getAttribute(name, modeConf, objectModel) );
+            Object[] values = new Object[1];
+            values[0] = this.getAttribute(name, modeConf, objectModel);
 
-            return values.toArray();
+            return (values[0] == null? null : values);
             
     }
 
