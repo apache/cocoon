@@ -51,7 +51,7 @@ public class CalculatorFlow extends AbstractContinuable {
         float value = 0f;
         try {
             value = Float.parseFloat(getRequest().getParameter(name));
-        } catch (NumberFormatException nfe) {
+        } catch (Exception e) {
             sendMessage("Error: \""+getRequest().getParameter(name)+"\" is not a correct number!");
         }
         return value;
