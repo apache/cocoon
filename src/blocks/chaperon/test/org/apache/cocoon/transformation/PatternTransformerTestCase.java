@@ -60,7 +60,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: PatternTransformerTestCase.java,v 1.3 2003/11/26 16:27:23 stephan Exp $
+ * @version CVS $Id: PatternTransformerTestCase.java,v 1.4 2004/02/02 12:35:04 stephan Exp $
  */
 public class PatternTransformerTestCase extends SitemapComponentTestCase {
 
@@ -68,7 +68,7 @@ public class PatternTransformerTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testPatternTransformer() {
+    public void testPatternTransformer() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/patterntest-lexicon1.xml";
         Parameters parameters = new Parameters();

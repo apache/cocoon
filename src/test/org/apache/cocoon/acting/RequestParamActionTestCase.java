@@ -60,7 +60,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: RequestParamActionTestCase.java,v 1.3 2003/11/26 16:27:22 stephan Exp $
+ * @version CVS $Id: RequestParamActionTestCase.java,v 1.4 2004/02/02 12:35:04 stephan Exp $
  */
 public class RequestParamActionTestCase extends SitemapComponentTestCase {
 
@@ -68,7 +68,7 @@ public class RequestParamActionTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testRequestAction() {
+    public void testRequestAction() throws Exception {
 
         getRequest().setRequestURI("test.xml?abc=def&ghi=jkl");
         getRequest().setQueryString("abc=def&ghi=jkl");

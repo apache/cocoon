@@ -60,7 +60,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ParserTransformerTestCase.java,v 1.4 2003/11/26 16:27:23 stephan Exp $
+ * @version CVS $Id: ParserTransformerTestCase.java,v 1.5 2004/02/02 12:35:04 stephan Exp $
  */
 public class ParserTransformerTestCase extends SitemapComponentTestCase {
 
@@ -68,7 +68,7 @@ public class ParserTransformerTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testParserTransformer1() {
+    public void testParserTransformer1() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
         Parameters parameters = new Parameters();
@@ -78,7 +78,7 @@ public class ParserTransformerTestCase extends SitemapComponentTestCase {
         assertEqual(load(result), transform("parser", src, parameters, load(input)));
     }
 
-    public void testParserTransformer2() {
+    public void testParserTransformer2() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
         Parameters parameters = new Parameters();
@@ -88,7 +88,7 @@ public class ParserTransformerTestCase extends SitemapComponentTestCase {
         assertEqual(load(result), transform("recovery-parser", src, parameters, load(input)));
     }
 
-    /*public void testParserTransformer3() {
+    /*public void testParserTransformer3() throws Exception {
         String src = "resource://org/apache/cocoon/transformation/parsertest-grammar1.xml";
         Parameters parameters = new Parameters();
         String input = "resource://org/apache/cocoon/transformation/parsertest-input3.xml";

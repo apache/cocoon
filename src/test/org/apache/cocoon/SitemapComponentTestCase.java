@@ -78,6 +78,7 @@ import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.serialization.Serializer;
+import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.xml.WhitespaceFilter;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -94,7 +95,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.3 2004/02/02 11:25:57 stephan Exp $
+ * @version CVS $Id: SitemapComponentTestCase.java,v 1.4 2004/02/02 12:35:04 stephan Exp $
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -157,7 +158,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
      * @param pattern Pattern for the matcher.
      * @param parameters Matcher parameters.
      */
-    public final Map match(String type, String pattern, Parameters parameters) {
+    public final Map match(String type, String pattern, Parameters parameters) throws PatternException {
 
         ComponentSelector selector = null;
         Matcher matcher = null;
@@ -179,11 +180,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             result = matcher.match(pattern, objectmodel, parameters);
 
         } catch (ComponentException ce) {
-            getLogger().error("Could not retrieve generator", ce);
-            fail("Could not retrieve generator: " + ce.toString());
-        } catch (Exception e) {
-            getLogger().error("Could not execute test", e);
-            fail("Could not execute test: " + e);
+            getLogger().error("Could not retrieve matcher", ce);
+            fail("Could not retrieve matcher: " + ce.toString());
         } finally {
             if (matcher != null) {
                 selector.release(matcher);
@@ -201,7 +199,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
      * @param source Source for the action.
      * @param parameters Action parameters.
      */
-    public final Map act(String type, String source, Parameters parameters) {
+    public final Map act(String type, String source, Parameters parameters) throws Exception {
 
         ComponentSelector selector = null;
         Action action = null;
@@ -224,11 +222,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
                                 objectmodel, source, parameters);
 
         } catch (ComponentException ce) {
-            getLogger().error("Could not retrieve generator", ce);
-            fail("Could not retrieve generator: " + ce.toString());
-        } catch (Exception e) {
-            getLogger().error("Could not execute test", e);
-            fail("Could not execute test: " + e);
+            getLogger().error("Could not retrieve action", ce);
+            fail("Could not retrieve action: " + ce.toString());
         } finally {
             if (action != null) {
                 selector.release(action);
@@ -246,7 +241,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
      * @param source Source for the generator.
      * @param parameters Generator parameters.
      */
-    public final Document generate(String type, String source, Parameters parameters) {
+    public final Document generate(String type, String source, Parameters parameters) 
+        throws IOException, SAXException, ProcessingException {
 
         ComponentSelector selector = null;
         Generator generator = null;
@@ -285,9 +281,6 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
         } catch (ComponentException ce) {
             getLogger().error("Could not retrieve generator", ce);
             fail("Could not retrieve generator: " + ce.toString());
-        } catch (Exception e) {
-            getLogger().error("Could not execute test", e);
-            fail("Could not execute test: " + e);
         } finally {
             if (generator != null) {
                 selector.release(generator);
@@ -308,7 +301,8 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
      * @param parameters Generator parameters.
      * @param input Input document.
      */ 
-    public final Document transform(String type, String source, Parameters parameters, Document input) {
+    public final Document transform(String type, String source, Parameters parameters, Document input) 
+        throws SAXException, ProcessingException, IOException {
 
         ComponentSelector selector = null;
         Transformer transformer = null;
@@ -352,16 +346,6 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             getLogger().error("Could not retrieve transformer", ce);
             ce.printStackTrace();
             fail("Could not retrieve transformer:"+ce.toString());
-        } catch (SAXException saxe) {
-            getLogger().error("Could not execute test", saxe);
-            fail("Could not execute test:"+saxe.toString());
-        } catch (IOException ioe) {
-            getLogger().error("Could not execute test", ioe);
-            fail("Could not execute test:"+ioe.toString());
-        } catch (ProcessingException pe) {
-            getLogger().error("Could not execute test", pe);
-            pe.printStackTrace();
-            fail("Could not execute test:"+pe.toString());
         } finally {
             if (transformer!=null)
                 selector.release(transformer);
@@ -392,7 +376,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
      * @return Serialized data.
      */
     public final byte[] serialize(String type, Parameters parameters,
-                                  Document input) {
+                                  Document input) throws SAXException, IOException{
 
         ComponentSelector selector = null;
         Serializer serializer = null;
@@ -424,14 +408,7 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
             streamer.stream(input);
         } catch (ComponentException ce) {
             getLogger().error("Could not retrieve serializer", ce);
-            ce.printStackTrace();
             fail("Could not retrieve serializer:"+ce.toString());
-        } catch (SAXException saxe) {
-            getLogger().error("Could not execute test", saxe);
-            fail("Could not execute test:"+saxe.toString());
-        } catch (IOException ioe) {
-            getLogger().error("Could not execute test", ioe);
-            fail("Could not execute test:"+ioe.toString());
         } finally {
             if (serializer!=null) {
                 selector.release(serializer);

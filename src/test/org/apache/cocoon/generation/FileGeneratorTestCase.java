@@ -56,7 +56,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
 
 /**
  *
- * @version CVS $Id: FileGeneratorTestCase.java,v 1.6 2003/11/26 16:27:22 stephan Exp $
+ * @version CVS $Id: FileGeneratorTestCase.java,v 1.7 2004/02/02 12:35:04 stephan Exp $
  */
 public class FileGeneratorTestCase extends SitemapComponentTestCase {
 
@@ -64,7 +64,7 @@ public class FileGeneratorTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testFileGenerator() {
+    public void testFileGenerator() throws Exception {
 
         System.out.println("testFileGenerator()");
 

@@ -60,7 +60,7 @@ import org.w3c.dom.Document;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TraxTransformerTestCase.java,v 1.4 2003/11/26 16:27:22 stephan Exp $
+ * @version CVS $Id: TraxTransformerTestCase.java,v 1.5 2004/02/02 12:35:04 stephan Exp $
  */
 public class TraxTransformerTestCase extends SitemapComponentTestCase {
 
@@ -68,7 +68,7 @@ public class TraxTransformerTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testFunctionForXalan() {
+    public void testFunctionForXalan() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/traxtest-style.xsl";
         Parameters parameters = new Parameters();
@@ -78,7 +78,7 @@ public class TraxTransformerTestCase extends SitemapComponentTestCase {
         assertEqual(load(result), transform("xalan", src, parameters, load(input)));
     }
 
-    public void testStressForXalan() {
+    public void testStressForXalan() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/traxtest-style.xsl";
         Parameters parameters = new Parameters();
@@ -93,7 +93,7 @@ public class TraxTransformerTestCase extends SitemapComponentTestCase {
      FIXME: test doesn't run within a gump build, see
             http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=105082989401703&w=2
 
-    public void testFunctionForXSLTC() {
+    public void testFunctionForXSLTC() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/traxtest-style.xsl";
         Parameters parameters = new Parameters();
@@ -103,7 +103,7 @@ public class TraxTransformerTestCase extends SitemapComponentTestCase {
         assertEqual(load(result), transform("xsltc", src, parameters, load(input)));
     }
 
-    public void testStressForXSLTC() {
+    public void testStressForXSLTC() throws Exception {
 
         String src = "resource://org/apache/cocoon/transformation/traxtest-style.xsl";
         Parameters parameters = new Parameters();

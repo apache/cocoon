@@ -60,7 +60,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: ResourceExistsActionTestCase.java,v 1.2 2003/11/26 16:27:22 stephan Exp $
+ * @version CVS $Id: ResourceExistsActionTestCase.java,v 1.3 2004/02/02 12:35:04 stephan Exp $
  */
 public class ResourceExistsActionTestCase extends SitemapComponentTestCase {
 
@@ -68,7 +68,7 @@ public class ResourceExistsActionTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testExistAction() {
+    public void testExistAction() throws Exception {
 
         String src = "resource://org/apache/cocoon/acting/ResourceExistsActionTestCase.xtest";
         Parameters parameters = new Parameters();

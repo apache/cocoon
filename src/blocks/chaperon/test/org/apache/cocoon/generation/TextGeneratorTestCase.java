@@ -62,7 +62,7 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: TextGeneratorTestCase.java,v 1.3 2003/11/26 16:27:22 stephan Exp $
+ * @version CVS $Id: TextGeneratorTestCase.java,v 1.4 2004/02/02 12:35:04 stephan Exp $
  */
 public class TextGeneratorTestCase extends SitemapComponentTestCase {
 
@@ -70,7 +70,7 @@ public class TextGeneratorTestCase extends SitemapComponentTestCase {
         super(name);
     }
 
-    public void testTextGenerator1() {
+    public void testTextGenerator1() throws Exception {
         String src = "resource://org/apache/cocoon/generation/texttest-input1.txt";
         Parameters parameters = new Parameters();
         String result = "resource://org/apache/cocoon/generation/texttest-result1.xml";
@@ -78,7 +78,7 @@ public class TextGeneratorTestCase extends SitemapComponentTestCase {
         assertEqual(load(result), generate("text", src, parameters));
     }
 
-    public void testTextGenerator2() {
+    public void testTextGenerator2() throws Exception {
 
         String src = "resource://org/apache/cocoon/generation/texttest-input2.txt";
         Parameters parameters = new Parameters();
