@@ -50,25 +50,32 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.cocoon.environment.Environment;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.environment.Environment;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractParentProcessingNode.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: AbstractParentProcessingNode.java,v 1.2 2003/11/16 18:25:31 unico Exp $
  */
-
 public abstract class AbstractParentProcessingNode extends AbstractProcessingNode {
-
+    
+    
+    public AbstractParentProcessingNode() {
+    }
+    
     /**
      * Invoke all nodes of a node array in order, until one succeeds.
      *
      * @param currentMap the <code>Map<code> of parameters produced by this node,
      *            which is added to <code>listOfMap</code>.
      */
-
     protected final boolean invokeNodes(
         ProcessingNode[] nodes,
         Environment env,
@@ -112,4 +119,122 @@ public abstract class AbstractParentProcessingNode extends AbstractProcessingNod
 
         return false;
     }
+    
+    /**
+     * Subclasses should overide this method if they want to allow certain children.
+     * 
+     * @return  a Collection of node names that are allowed as children of this node.
+     */
+    protected Collection getAllowedChildren() {
+        return null;
+    }
+    
+    /**
+     * Subclasses should overide this method if they want to forbid certain children.
+     * 
+     * @return  a Collection of node names that are forbidden as children of this node.
+     */
+    protected Collection getForbiddenChildren() {
+        return null;
+    }
+    
+    protected final ProcessingNode[] getChildNodes(Configuration config) throws ConfigurationException {
+        return toNodeArray(getChildNodesList(config));
+    }
+    
+    private final ProcessingNode[] toNodeArray(List list) {
+        return (ProcessingNode[])list.toArray(new ProcessingNode[list.size()]);
+    }
+
+    /**
+     * Create the <code>ProcessingNode</code>s for the children of a given node.
+     * Child nodes are controlled to be actually allowed in this node.
+     */
+    private final List getChildNodesList(Configuration config) throws ConfigurationException {
+
+        Configuration[] children = config.getChildren();
+        List result = new ArrayList();
+        
+        for (int i = 0; i < children.length; i++) {
+            
+            Configuration child = children[i];
+            try {
+                 // TODO: is this check still neccesary?
+                 if (isChild(child)) {
+                    // OK : look it up from service manager
+                    String id = child.getAttribute("id-ref");
+                    result.add(m_manager.lookup(ProcessingNode.ROLE + "/" + id));
+                 }
+            } catch(ConfigurationException ce) {
+                throw ce;
+            } catch(Exception e) {
+                String msg = "Error while creating node '" + child.getName() + "' at " + child.getLocation();
+                throw new ConfigurationException(msg, e);
+            }
+        }
+
+        return result;
+    }
+    
+    /**
+     * Checks if a child element and is allowed, and if not throws a <code>ConfigurationException</code>.
+     *
+     * @param child the child configuration to check.
+     * @return <code>true</code> if this child should be considered or <code>false</code>
+     *         if it should be ignored.
+     * @throws ConfigurationException if this child isn't allowed.
+     */
+    private final boolean isChild(Configuration child) throws ConfigurationException {
+
+        checkNamespace(child);
+
+        String name = child.getName();
+
+        // Is this a parameter of a parameterizable node builder ?
+        if (isParameter(child)) {
+            return false;
+        }
+
+        // Is this element to be ignored ?
+        // TODO: do we need this? It's not used in treeprocessor-builtins.xml
+//        Collection ignoredChildren = getIgnoredChildren();
+//        if (ignoredChildren != null && ignoredChildren.contains(name)) {
+//            if (getLogger().isDebugEnabled()) {
+//                getLogger().debug("Element '" + name + "' is ignored for building children of element '" +
+//                                  child.getName() + "'");
+//            }
+//
+//            return false;
+//        }
+
+        // Is it allowed ?
+        Collection allowedChildren = getAllowedChildren();
+        Collection forbiddenChildren = getForbiddenChildren();
+        if ( (allowedChildren != null && !allowedChildren.contains(name)) ||
+             (forbiddenChildren != null && forbiddenChildren.contains(name)) ) {
+            String msg = "Element '" + name + "' is not allowed at " + getConfigLocation(child);
+            throw new ConfigurationException(msg);
+        }
+        return true;
+    }
+    
+    /**
+     * Check if the current config element is a parameter.
+     * 
+     * @throws ConfigurationException  if this config element is a parameter
+     * and this node does not allow parameters.
+     */
+    private final boolean isParameter(Configuration config) throws ConfigurationException {
+        String name = config.getName();
+        if (name.equals(PARAMETER_ELEMENT)) {
+            if (this.hasParameters()) {
+                return true;
+            } else {
+                String msg = "Element '" + name + "' has no parameters at " + getConfigLocation(config);
+                throw new ConfigurationException(msg);
+            }
+        }
+        return false;
+    }
+
 }

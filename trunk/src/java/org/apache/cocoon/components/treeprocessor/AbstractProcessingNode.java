@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -57,26 +60,21 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.xml.LocationAugmentationPipe;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.2 2003/11/16 14:30:01 unico Exp $
+ * @version CVS $Id: AbstractProcessingNode.java,v 1.3 2003/11/16 18:25:31 unico Exp $
  */
 public abstract class AbstractProcessingNode extends AbstractLogEnabled 
 implements ProcessingNode, Serviceable, Configurable {
 
-    private static final String PARAMETER_ELEMENT = "parameter";
+    protected static final String PARAMETER_ELEMENT = "parameter";
     private static final String PARAMETER_NAME_ATTR = "name";
     private static final String PARAMETER_VALUE_ATTR = "value";
     
@@ -105,7 +103,7 @@ implements ProcessingNode, Serviceable, Configurable {
     public final String getLocation() {
         return m_location;
     }
-        
+    
     /**
      * Parametrizable ProcessingNodes can overide this method to
      * have resolvable parameters set at configuration time.
@@ -140,6 +138,17 @@ implements ProcessingNode, Serviceable, Configurable {
                 String msg = "Invalid pattern '" + value + "' at " + getConfigLocation(child);
                 throw new ConfigurationException(msg, pe);
             }
+        }
+    }
+    
+    /**
+     * Check if the namespace URI of the given configuraition is the same as the
+     * one given by the builder.
+     */
+    protected final void checkNamespace(Configuration config) throws ConfigurationException {
+        if (TreeProcessor.SITEMAP_NS.equals(config.getNamespace())) {
+            String msg = "Invalid namespace '" + config.getNamespace() + "' at " + getConfigLocation(config);
+            throw new ConfigurationException(msg);
         }
     }
     

@@ -56,9 +56,13 @@ import org.apache.cocoon.environment.Environment;
  * A no-op node to stub not yet implemented features.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: NullNode.java,v 1.1 2003/03/09 00:09:16 pier Exp $
+ * @version CVS $Id: NullNode.java,v 1.2 2003/11/16 18:25:31 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="ProcessingNode"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="null-node"
  */
-
 public class NullNode extends AbstractProcessingNode {
 
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {

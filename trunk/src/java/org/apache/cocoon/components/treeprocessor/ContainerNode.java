@@ -50,19 +50,41 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.environment.Environment;
 
 /**
  * A generic container node that just invokes its children.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ContainerNode.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: ContainerNode.java,v 1.2 2003/11/16 18:25:31 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="ProcessingNode"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="container-node"
  */
-
 public class ContainerNode extends SimpleParentProcessingNode {
 
-    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
-
-        return invokeNodes(this.children, env, context);
+    public ContainerNode() {
     }
+    
+    public void configure(Configuration config) throws ConfigurationException {
+        super.configure(config);
+        if (m_children.length == 0) {
+            String msg = "There must be at least one child at " + config.getLocation();
+            throw new ConfigurationException(msg);
+        }
+    }
+    
+    public final boolean invoke(Environment env, InvokeContext context) throws Exception {
+        return invokeNodes(m_children, env, context);
+    }
+    
+    /** This builder has no parameters -- return <code>false</code> */
+    protected boolean hasParameters() {
+        return false;
+    }
+    
 }

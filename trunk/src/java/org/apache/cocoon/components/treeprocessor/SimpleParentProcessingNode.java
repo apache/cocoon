@@ -50,26 +50,27 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
-import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 
 import org.apache.cocoon.environment.Environment;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleParentProcessingNode.java,v 1.1 2003/03/09 00:09:17 pier Exp $
+ * @version CVS $Id: SimpleParentProcessingNode.java,v 1.2 2003/11/16 18:25:31 unico Exp $
  */
-
 public abstract class SimpleParentProcessingNode extends AbstractParentProcessingNode {
-
-    /** The childrens of this matcher */
-    protected ProcessingNode[] children;
-
-    public void setChildren(ProcessingNode[] children) {
-        this.children = children;
+    
+    /** The child nodes belonging to this node */
+    protected ProcessingNode[] m_children;
+    
+    
+    public void configure(Configuration config) throws ConfigurationException {
+        super.configure(config);
+        m_children = getChildNodes(config);
     }
-
+    
     /**
      * Boolean method with returns true if this Node has children 
      * and false otherwise
@@ -77,8 +78,9 @@ public abstract class SimpleParentProcessingNode extends AbstractParentProcessin
      * @return boolean 
      */
     public boolean hasChildren() {
-        if ((this.children == null) || (this.children.length > 0))
+        if ((m_children == null) || (m_children.length > 0)) {
             return true;
+        }
         return false;
     }
 
@@ -87,7 +89,6 @@ public abstract class SimpleParentProcessingNode extends AbstractParentProcessin
      * Define common invoke behavior here
      */
     public boolean invoke(Environment env, InvokeContext context) throws Exception {
-
 
         // inform the pipeline (if available) that we have come across
         // a possible branch point
