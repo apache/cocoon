@@ -85,7 +85,7 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.2 2003/05/22 13:02:46 vgritsenko Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.3 2003/08/04 03:20:54 joerg Exp $
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
@@ -212,6 +212,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * @param programmingLanguageName The <code>ProgrammingLanguage</code> in which the program must be written
      * @return The loaded program instance
      * @exception Exception If an error occurs during generation or loading
+     * @deprecated Pass Source object instead of file name.
      */
     public CompiledComponent load(ComponentManager newManager,
                                   String fileName,
