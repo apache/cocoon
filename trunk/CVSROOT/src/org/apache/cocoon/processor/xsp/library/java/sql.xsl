@@ -8,13 +8,33 @@
 
   <xsl:template name="get-nested-content">
     <xsl:param name="content"/>
-    <xsl:choose>
-      <xsl:when test="$content/*">
-        <xsl:apply-templates select="$content/*"/>
-      </xsl:when>
-      <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
-    </xsl:choose>
+	<xsl:choose>
+		<xsl:when test="$content/*">
+			<xsl:apply-templates select="$content/*"/>
+		</xsl:when>
+		<xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
+	</xsl:choose>
   </xsl:template>
+
+  <xsl:template name="get-nested-string">
+  	<xsl:param name="content"/>
+	<xsl:choose>
+		<xsl:when test="$content/*">
+			""
+			<xsl:for-each select="$content/node()">
+				<xsl:choose>
+					<xsl:when test="name(.)">
+						+ <xsl:apply-templates select="."/>
+					</xsl:when>
+					<xsl:otherwise>
+						+ "<xsl:value-of select="normalize-space(translate(.,'&#9;&#10;&#13;','   '))"/>"
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</xsl:when>
+		<xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
 
 <xsl:template match="xsp:page">
 	<xsp:page>
@@ -30,7 +50,7 @@
 
 <xsl:template match="sql:execute-query">
 	<xsl:variable name="driver">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:driver"/>
 		</xsl:call-template>
 	</xsl:variable>
@@ -145,10 +165,22 @@
 		</xsl:call-template>
 	</xsl:variable>
 	<xsl:variable name="query">
-		<xsl:call-template name="get-nested-content">
+		<xsl:call-template name="get-nested-string">
 			<xsl:with-param name="content" select="sql:query"/>
 		</xsl:call-template>
 	</xsl:variable>
+	<xsp:logic>
+		{
+		Integer max_rows = new Integer(0);
+		String max_rows_string = String.valueOf(<xsl:copy-of select="$max-rows"/>);
+		try {
+			max_rows = new Integer(max_rows_string);
+		} catch (Exception e) {}
+		Integer skip_rows = new Integer(0);
+		String skip_rows_string = String.valueOf(<xsl:copy-of select="$skip-rows"/>);
+		try {
+			skip_rows = new Integer(skip_rows_string);
+		} catch (Exception e) {}
 	<xsp:content>
 	<xsp:expr>
 		XSPSQLLibrary.processQuery(
@@ -163,8 +195,8 @@
 			String.valueOf(<xsl:copy-of select="$null-indicator"/>),
 			String.valueOf(<xsl:copy-of select="$id-attribute"/>),
 			String.valueOf(<xsl:copy-of select="$id-attribute-column"/>),
-			new Integer(String.valueOf(<xsl:copy-of select="$max-rows"/>)),
-			new Integer(String.valueOf(<xsl:copy-of select="$skip-rows"/>)),
+			max_rows,
+			skip_rows,
 			String.valueOf(<xsl:copy-of select="$error-element"/>),
 			String.valueOf(<xsl:copy-of select="$error-message-attribute"/>),
 			String.valueOf(<xsl:copy-of select="$error-stacktrace-attribute"/>),
@@ -180,6 +212,8 @@
 			null)
 	</xsp:expr>
 	</xsp:content>
+	}
+	</xsp:logic>
 </xsl:template>
 
         <xsl:template match="@*|node()" priority="-1">
