@@ -57,17 +57,11 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.*;
-import org.apache.cocoon.components.pipeline.AbstractProcessingPipeline;
-import org.apache.cocoon.components.sax.XMLDeserializer;
-import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.util.HashUtil;
@@ -76,20 +70,16 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
 import org.apache.excalibur.source.impl.validity.DeferredValidity;
 
 /**
- * This is the base class for all caching pipeline implementations.
- *
+ * This is the base class for all caching pipeline implementations
+ * that check the different pipeline components.
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.9 2003/07/31 03:54:22 vgritsenko Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.10 2003/07/31 12:39:04 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
-    extends AbstractProcessingPipeline
-    implements Disposable {
-
-    /** This is the Cache holding cached responses */
-    protected Cache  cache;
+    extends BaseCachingProcessingPipeline {
 
     /** The role name of the generator */
     protected String generatorRole;
@@ -102,11 +92,6 @@ public abstract class AbstractCachingProcessingPipeline
 
     /** The role name of the reader */
     protected String readerRole;
-
-    /** The deserializer */
-    protected XMLDeserializer xmlDeserializer;
-    /** The serializer */
-    protected XMLSerializer xmlSerializer;
 
     /** The cached byte stream */
     protected byte[]           cachedResponse;
@@ -148,30 +133,12 @@ public abstract class AbstractCachingProcessingPipeline
     protected abstract void connectCachingPipeline(Environment   environment) throws ProcessingException;
 
     /**
-     * Composable Interface
-     */
-    public void compose (ComponentManager manager)
-    throws ComponentException {
-        super.compose(manager);
-    }
-
-    /**
      * Parameterizable Interface - Configuration
      */
     public void parameterize(Parameters params)
     throws ParameterException {
         super.parameterize(params);
         this.configuredDoSmartCaching = params.getParameterAsBoolean("smart-caching", true);
-        String cacheRole = params.getParameter("cache-role", Cache.ROLE);
-        if ( this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Using cache " + cacheRole);
-        }
-        
-        try {
-            this.cache = (Cache)this.manager.lookup(cacheRole);
-        } catch (ComponentException ce) {
-            throw new ParameterException("Unable to lookup cache: " + cacheRole, ce);
-        }
     }
     
     /**
@@ -970,13 +937,6 @@ public abstract class AbstractCachingProcessingPipeline
      * Recyclable Interface
      */
     public void recycle() {
-        super.recycle();
-
-        this.manager.release( this.xmlDeserializer );
-        this.xmlDeserializer = null;
-
-        this.manager.release( this.xmlSerializer );
-        this.xmlSerializer = null;
 
         this.generatorRole = null;
         this.transformerRoles.clear();
@@ -989,18 +949,10 @@ public abstract class AbstractCachingProcessingPipeline
         this.transformerIsCacheableProcessingComponent = null;
         this.toCacheKey = null;
         this.toCacheSourceValidities = null;
+
+        super.recycle();
     }
 
-    /**
-     * Disposable Interface
-     */
-    public void dispose() {
-        if ( null != this.manager ) {
-            this.manager.release(this.cache);
-        }
-        this.cache = null;
-        this.manager = null;
-    }
 }
 
 final class DeferredPipelineValidity implements DeferredValidity {
