@@ -30,7 +30,7 @@ import org.outerj.expression.ExpressionContext;
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
  * will derive from this class.
- * @version $Id: AbstractDatatype.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
+ * @version $Id: AbstractDatatype.java,v 1.3 2004/03/24 18:57:26 joerg Exp $
  */
 public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();
@@ -57,15 +57,15 @@ public abstract class AbstractDatatype implements Datatype {
         return arrayType;
     }
 
-    void setArrayType(boolean arrayType) {
+    protected void setArrayType(boolean arrayType) {
         this.arrayType = arrayType;
     }
 
-    void setConvertor(Convertor convertor) {
+    protected void setConvertor(Convertor convertor) {
         this.convertor = convertor;
     }
 
-    void setBuilder(DatatypeBuilder builder) {
+    protected void setBuilder(DatatypeBuilder builder) {
         this.builder = builder;
     }
 
