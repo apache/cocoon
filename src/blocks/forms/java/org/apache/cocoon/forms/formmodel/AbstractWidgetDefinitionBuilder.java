@@ -63,8 +63,14 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         this.widgetValidatorBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetValidatorBuilder.ROLE + "Selector");
         this.widgetListenerBuilderSelector = (ServiceSelector) serviceManager.lookup(WidgetListenerBuilder.ROLE + "Selector");
     }
+    
+    protected void setupDefinition(Element widgetElement, AbstractWidgetDefinition definition) throws Exception {
+        setCommonProperties(widgetElement, definition);
+        setValidators(widgetElement, definition);
+        setCreateListeners(widgetElement, definition);
+    }
 
-    protected void setCommonProperties(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
+    private void setCommonProperties(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         // location
         widgetDefinition.setLocation(DomHelper.getLocation(widgetElement));
 
@@ -164,7 +170,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         widgetDefinition.setDisplayData(displayData);
     }
 
-    protected void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
+    private void setValidators(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         Element validatorElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "validation");
         if (validatorElement != null) {
             NodeList list = validatorElement.getChildNodes();
@@ -187,7 +193,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         }
     }
 
-    protected void setCreateListeners(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
+    private void setCreateListeners(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         Iterator iter = buildEventListeners(widgetElement, "on-create", CreateListener.class).iterator();
         while (iter.hasNext()) {
             widgetDefinition.addCreateListener((CreateListener)iter.next());

@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import org.apache.cocoon.forms.event.ActionListener;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.log.DeprecationLogger;
 import org.w3c.dom.Element;
 
 /**
@@ -27,23 +28,36 @@ import org.w3c.dom.Element;
  * @version $Id$
  */
 public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+    
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        ActionDefinition actionDefinition = createDefinition();
-        setCommonProperties(widgetElement, actionDefinition);
-        setDisplayData(widgetElement, actionDefinition);
+        ActionDefinition definition = new ActionDefinition();
+        setupDefinition(widgetElement, definition);
+        definition.makeImmutable();
+        return definition;
+    }
+    
+    protected void setupDefinition(Element widgetElement, ActionDefinition definition) throws Exception {
+        super.setupDefinition(widgetElement, definition);
 
-        String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
-        actionDefinition.setActionCommand(actionCommand);
+        setDisplayData(widgetElement, definition);
+
+        // Get the "command" optional attribute
+        String actionCommand = DomHelper.getAttribute(widgetElement, "command", null);
+        
+        // If unspecified, check the deprecated "action-command" deprecated attribute
+        if (actionCommand == null) {
+            actionCommand = DomHelper.getAttribute(widgetElement, "action-command", null);
+            if (actionCommand != null) {
+                DeprecationLogger.log("The 'action-command' attribute is deprecated and replaced by 'command', at " +
+                    DomHelper.getLocation(widgetElement));
+            }
+        }
+        
+        definition.setActionCommand(actionCommand);
 
         Iterator iter = buildEventListeners(widgetElement, "on-action", ActionListener.class).iterator();
         while (iter.hasNext()) {
-            actionDefinition.addActionListener((ActionListener)iter.next());
+            definition.addActionListener((ActionListener)iter.next());
         }
-
-        return actionDefinition;
-    }
-    
-    protected ActionDefinition createDefinition() {
-        return new ActionDefinition();
     }
 }

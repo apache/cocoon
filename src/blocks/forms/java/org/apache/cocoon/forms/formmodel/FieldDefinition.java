@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import org.apache.cocoon.forms.event.CreateEvent;
 
 /**
  * The {@link WidgetDefinition} part of a Field widget, see {@link Field} for more information.
@@ -27,9 +26,8 @@ public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
 
     public Widget createInstance() {
         Field field = new Field(this);
-        if (this.createListener != null) {
-            this.createListener.widgetCreated(new CreateEvent(field));
-        }
+        // Set the initial selection list, if any
+        field.setSelectionList(getSelectionList());
         return field;
     }
 
@@ -38,6 +36,7 @@ public class FieldDefinition extends AbstractDatatypeWidgetDefinition {
     }
 
     public void setRequired(boolean required) {
+        checkMutable();
         this.required = required;
     }
 }

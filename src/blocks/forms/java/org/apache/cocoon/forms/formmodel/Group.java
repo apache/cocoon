@@ -31,7 +31,7 @@ public class Group extends AbstractContainerWidget {
         this.definition = definition;
     }
     
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return this.definition;
     }
     

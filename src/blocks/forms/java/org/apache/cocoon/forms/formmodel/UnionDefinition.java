@@ -51,6 +51,7 @@ public class UnionDefinition extends AbstractContainerDefinition {
     */
 
     public void setCaseWidgetId(String id) {
+        checkMutable();
         caseWidgetId = id;
     }
 

@@ -58,8 +58,16 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         this.definition = definition;
     }
 
-    protected WidgetDefinition getDefinition() {
+    public WidgetDefinition getDefinition() {
         return this.definition;
+    }
+    
+    public void initialize() {
+        Boolean value = this.definition.getInitialValue();
+        if (value != null) {
+            setValue(value);
+        }
+        super.initialize();
     }
 
     public void readFromRequest(FormContext formContext) {
@@ -73,17 +81,6 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }
-    }
-
-    /**
-     * Always return <code>true</code> (an action has no validation)
-     * 
-     * TODO is there a use case for boolean fields having validators?
-     */
-    public boolean validate() {
-        // a boolean field is always valid
-        //return true;
-        return super.validate();
     }
 
     /**
@@ -169,7 +166,12 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
     }
 
     public void broadcastEvent(WidgetEvent event) {
-        this.definition.fireValueChangedEvent((ValueChangedEvent)event);
-        fireValueChangedEvent((ValueChangedEvent)event);
+        if (event instanceof ValueChangedEvent) {
+            this.definition.fireValueChangedEvent((ValueChangedEvent)event);
+            fireValueChangedEvent((ValueChangedEvent)event);
+        } else {
+            // Other kinds of events
+            super.broadcastEvent(event);
+        }
     }
 }

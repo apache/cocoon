@@ -25,18 +25,18 @@ import org.w3c.dom.Element;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public final class UploadDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         String mimeTypes = DomHelper.getAttribute(widgetElement, "mime-types", null);
         boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
         
         UploadDefinition uploadDefinition = new UploadDefinition(required, mimeTypes);
-        setCommonProperties(widgetElement, uploadDefinition);
+        super.setupDefinition(widgetElement, uploadDefinition);
 
         setDisplayData(widgetElement, uploadDefinition);
-        setValidators(widgetElement, uploadDefinition);
 
+        uploadDefinition.makeImmutable();
         return uploadDefinition;
     }
 }

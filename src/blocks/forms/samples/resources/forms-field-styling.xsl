@@ -55,6 +55,13 @@
   </xsl:template>
 
   <!--+
+      | Field in "output" state: display its value
+      +-->
+  <xsl:template match="fi:field[@state='output']" priority="3">
+    <xsl:value-of select="fi:value/node()"/>
+  </xsl:template>
+
+  <!--+
       | Common stuff like fi:validation-message, @required.
       +-->
   <xsl:template match="fi:*" mode="common">
@@ -299,17 +306,15 @@
   </xsl:template>
 
   <!--+
-      | fi:booleanfield with @type 'output' : rendered as text
+      | fi:booleanfield with @state 'output': rendered as an inactive checkbox (this doesn't
+      | use text but avoids i18n problems related to hardcoding 'yes'/'no' or 'true'/'false'
       +-->
-  <xsl:template match="fi:booleanfield[fi:styling/@type='output']">
-    <xsl:choose>
-      <xsl:when test="fi:value = 'true'">
-        yes
-      </xsl:when>
-      <xsl:otherwise>
-        no
-      </xsl:otherwise>
-    </xsl:choose>
+  <xsl:template match="fi:booleanfield[@state='output' or fi:styling/@type='output']" priority="3">
+    <input type="checkbox" title="{fi:hint}" disabled="disabled">
+    	  <xsl:if test="fi:value = 'true'">
+    	    <xsl:attribute name="checked">checked</xsl:attribute>
+    	  </xsl:if>
+    </input>
   </xsl:template>
 
   <!--+
@@ -394,6 +399,19 @@
   </xsl:template>
 
   <!--+
+      | fi:multivaluefield in 'output' state
+      +-->
+  <xsl:template match="fi:multivaluefield[@state='output']" priority="3">
+    <xsl:variable name="values" select="fi:values/fi:value/text()"/>
+    <xsl:for-each select="fi:selection-list/fi:item">
+      <xsl:variable name="value" select="@value"/>
+      <xsl:if test="$values[. = $value]">
+    	    <xsl:value-of select="fi:label/node()"/>
+    	  </xsl:if>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!--+
       | fi:upload
       +-->
   <xsl:template match="fi:upload">
@@ -414,6 +432,13 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:apply-templates select="." mode="common"/>
+  </xsl:template>
+
+  <!--+
+      | fi:upload, output state
+      +-->
+  <xsl:template match="fi:upload[@state='output']" priority="3">
+      <xsl:copy-of select="fi:value/node()"/>
   </xsl:template>
 
   <!--+

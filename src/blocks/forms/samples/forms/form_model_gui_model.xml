@@ -32,11 +32,11 @@
     <fd:new id="widgets-class"/>
 
     <!--
-    <fd:struct id="form">
+    <fd:group id="form">
       <fd:widgets>
         <fd:new id="widgets-class"/>
       </fd:widgets>
-    </fd:struct>
+    </fd:group>
     -->
 
     <fd:class id="widgets-class">
@@ -47,10 +47,10 @@
             <fd:new id="widget-row-class"/>
           </fd:widgets>
         </fd:repeater>
-        <fd:repeater-action id="addWidget" action-command="add-row" repeater="widgets">
+        <fd:repeater-action id="addWidget" command="add-row" repeater="widgets">
           <fd:label>New</fd:label>
         </fd:repeater-action>
-        <fd:repeater-action id="removeWidgets" action-command="delete-rows" repeater="widgets" select="select">
+        <fd:repeater-action id="removeWidgets" command="delete-rows" repeater="widgets" select="select">
           <fd:label>Delete</fd:label>
         </fd:repeater-action>
       </fd:widgets>
@@ -73,7 +73,7 @@
             <fd:item value="output"><fd:label>Output</fd:label></fd:item>
             <fd:item value="repeater"><fd:label>Repeater</fd:label></fd:item>
             <fd:item value="row-action"><fd:label>RowAction</fd:label></fd:item>
-            <fd:item value="struct"><fd:label>Struct</fd:label></fd:item>
+            <fd:item value="group"><fd:label>Group</fd:label></fd:item>
             <fd:item value="submit"><fd:label>Submit</fd:label></fd:item>
             <fd:item value="union"><fd:label>Union</fd:label></fd:item>
           </fd:selection-list>
@@ -83,15 +83,15 @@
           <fd:label>Type</fd:label>
           <fd:widgets>
 
-            <fd:struct id="action">
+            <fd:group id="action">
               <fd:label>Action</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="aggregatefield">
+            <fd:group id="aggregatefield">
               <fd:label>AggregateField</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
@@ -99,49 +99,49 @@
                 <fd:new id="required-class"/>
                 <fd:new id="widgets-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="booleanfield">
+            <fd:group id="booleanfield">
               <fd:label>BooleanField</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="class">
+            <fd:group id="class">
               <fd:label>Class</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="widgets-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="field">
+            <fd:group id="field">
               <fd:label>Field</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
                 <fd:new id="required-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="new">
+            <fd:group id="new">
               <fd:label>New</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="output">
+            <fd:group id="output">
               <fd:label>Output</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="repeater">
+            <fd:group id="repeater">
               <fd:label>Repeater</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
@@ -149,41 +149,41 @@
                 <fd:new id="initial-size-class"/>
                 <fd:new id="widgets-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="row-action">
+            <fd:group id="row-action">
                 <fd:label>RowAction</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="struct">
-              <fd:label>Struct</fd:label>
+            <fd:group id="group">
+              <fd:label>Group</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
                 <fd:new id="widgets-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="submit">
+            <fd:group id="submit">
               <fd:label>Submit</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="union">
+            <fd:group id="union">
               <fd:label>Union</fd:label>
               <fd:widgets>
                 <fd:new id="id-class"/>
                 <fd:new id="label-class"/>
                 <fd:new id="widgets-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
           </fd:widgets>
 

@@ -69,7 +69,7 @@
     
       <ft:class id="task-class">
         <div class="section">
-          <ft:struct id="task">
+          <ft:group id="task">
             <span class="actions">
               <ft:widget id="down"><fi:styling type="image" src="resources/img/move_down.gif"/></ft:widget>
               <ft:widget id="up"><fi:styling type="image" src="resources/img/move_up.gif"/></ft:widget>
@@ -83,7 +83,7 @@
             <!-- Recurse -->
             <ft:new id="tasklist-class"/>
             
-          </ft:struct>
+          </ft:group>
         </div>
       </ft:class>
       

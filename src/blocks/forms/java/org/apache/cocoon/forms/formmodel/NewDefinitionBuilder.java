@@ -26,7 +26,8 @@ public class NewDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         NewDefinition definition = new NewDefinition();
-        setCommonProperties(element, definition);
+        super.setupDefinition(element, definition);
+        definition.makeImmutable();
         return definition;
     }
 }

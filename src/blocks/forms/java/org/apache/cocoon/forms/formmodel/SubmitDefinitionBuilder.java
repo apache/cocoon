@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  *
  * <p>The syntax is as follows:
  * <pre>
- *   &lt;wd:submit id="sub-id" action-command="cmd" validate="false"&gt;
+ *   &lt;wd:submit id="sub-id" command="cmd" validate="false"&gt;
  * </pre>
  * The "validate" attribute can have the value <code>true</code> or
  * <code>false</code> and determines if the form is to be validated
@@ -35,15 +35,13 @@ import org.w3c.dom.Element;
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version $Id$
  */
-public class SubmitDefinitionBuilder  extends ActionDefinitionBuilder {
+public final class SubmitDefinitionBuilder extends ActionDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
-        SubmitDefinition definition = (SubmitDefinition)super.buildWidgetDefinition(widgetElement);
+        SubmitDefinition definition = new SubmitDefinition();
+        super.setupDefinition(widgetElement, definition);
         definition.setValidateForm(DomHelper.getAttributeAsBoolean(widgetElement, "validate", true));
+        definition.makeImmutable();
         return definition;
-    }
-
-    protected ActionDefinition createDefinition() {
-        return new SubmitDefinition();
-    }
+    }    
 }

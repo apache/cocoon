@@ -33,23 +33,32 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
  */
 public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable {
     private Datatype datatype;
+    private Object initialValue;
     private SelectionList selectionList;
     private ValueChangedListener listener;
     private ServiceManager manager;
 
     public void service(ServiceManager manager) throws ServiceException {
+        checkMutable();
         this.manager = manager;
     }
 
     public Datatype getDatatype() {
         return datatype;
     }
+    
+    public Object getInitialValue() {
+        return this.initialValue;
+    }
 
-    public void setDatatype(Datatype datatype) {
+    public void setDatatype(Datatype datatype, Object initialValue) {
+        checkMutable();
         this.datatype = datatype;
+        this.initialValue = initialValue;
     }
 
     public void setSelectionList(SelectionList selectionList) {
+        checkMutable();
         if (selectionList != null && selectionList.getDatatype() != getDatatype())
             throw new RuntimeException("Tried to assign a SelectionList that is not associated with this widget's datatype.");
         this.selectionList = selectionList;
@@ -86,6 +95,7 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     }
     
     public void addValueChangedListener(ValueChangedListener listener) {
+        checkMutable();
         this.listener = WidgetEventMulticaster.add(this.listener, listener);
     }
     

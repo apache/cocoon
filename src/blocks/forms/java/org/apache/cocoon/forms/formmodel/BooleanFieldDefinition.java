@@ -26,12 +26,24 @@ import org.apache.cocoon.forms.event.WidgetEventMulticaster;
  */
 public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     private ValueChangedListener listener;
+    
+    private Boolean initialValue;
 
     public Widget createInstance() {
         return new BooleanField(this);
     }
     
+    public void setInitialValue(Boolean value) {
+        checkMutable();
+        this.initialValue = value;
+    }
+    
+    public Boolean getInitialValue() {
+        return this.initialValue;
+    }
+    
     public void addValueChangedListener(ValueChangedListener listener) {
+        checkMutable();
         this.listener = WidgetEventMulticaster.add(this.listener, listener);
     }
     
@@ -46,6 +58,7 @@ public class BooleanFieldDefinition extends AbstractWidgetDefinition {
     }
         
     public void setRequired(boolean required) {
+        checkMutable();
         throw new UnsupportedOperationException("The property 'required' is not available on widgets of type booleanfield.");
     }    
 }

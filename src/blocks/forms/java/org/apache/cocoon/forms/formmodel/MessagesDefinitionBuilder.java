@@ -22,11 +22,12 @@ import org.w3c.dom.Element;
  * 
  * @version $Id$
  */
-public class MessagesDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
+public final class MessagesDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         MessagesDefinition messagesDefinition = new MessagesDefinition();
-        setCommonProperties(widgetElement, messagesDefinition);
+        super.setupDefinition(widgetElement, messagesDefinition);
         setDisplayData(widgetElement, messagesDefinition);
+        messagesDefinition.makeImmutable();
         return messagesDefinition;
     }
 }

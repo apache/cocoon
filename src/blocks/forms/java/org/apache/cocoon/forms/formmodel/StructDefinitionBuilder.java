@@ -18,19 +18,20 @@ package org.apache.cocoon.forms.formmodel;
 import org.w3c.dom.Element;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.util.DomHelper;
+import org.apache.cocoon.util.log.DeprecationLogger;
 
 /**
  * Builds {StructDefinition}s.
  *
+ * @deprecated replaced by {@link GroupDefinitionBuilder}
  * @version $Id$
  */
 public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         StructDefinition definition = new StructDefinition();
-        setCommonProperties(element, definition);
+        super.setupDefinition(element, definition);
         setDisplayData(element, definition);
-        setValidators(element, definition);
 
         Element widgetsElement = DomHelper.getChildElement(element, Constants.DEFINITION_NS, "widgets", true);
         // All child elements of the widgets element are widgets
@@ -41,6 +42,8 @@ public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
             definition.addWidgetDefinition(widgetDefinition);
         }
 
+        definition.makeImmutable();
+        DeprecationLogger.log("Use of 'fd:struct' is deprecated. Use 'fd:group' instead, at " + definition.getLocation());
         return definition;
     }
 }

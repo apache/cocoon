@@ -18,7 +18,6 @@ package org.apache.cocoon.forms.event;
 import org.apache.cocoon.forms.formmodel.Widget;
 
 /**
- * <b>Early prototype of a create event. Don't use it now as the plumbing is not yet ready! (SW)</b>
  * An event raised when a widget is created, once it has been fully set up. For
  * container widgets, this occurs after child widgets, if any, have been created.
  * 
