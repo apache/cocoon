@@ -2,7 +2,7 @@
 <xlog xpath="/logkit/categories"
       unless="category[@name='cron']">
 
-    <category log-level="DEBUG" name="cron">
+    <category log-level="INFO" name="cron">
         <log-target id-ref="cron" />
         <log-target id-ref="error"/>
     </category>
