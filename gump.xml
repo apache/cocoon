@@ -1,0 +1,746 @@
+<?xml version="1.0"?>
+<!-- module name will change into "cocoon" -->
+<module name="xml-cocoon2">
+
+  <url href="http://cocoon.apache.org/"/>
+  <description>Java XML Framework</description>
+
+  <!-- repository name will change into "cocoon" -->
+  <cvs repository="xml"/>
+
+  <!--
+    *******************************
+    ********  COCOON CORE  ********
+    *******************************
+  -->
+
+  <!-- project name will change into "cocoon" [remember to update forrest!] -->
+  <project name="xml-cocoon2">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-core">
+      <property name="version" value="@@DATE@@"/>
+      <depend property="logkit.jar"    project="dist-avalon-logkit"/>
+      <depend property="avalonapi.jar" project="avalon"/>
+    </ant>
+
+    <depend project="ant" inherit="runtime" version="supplied"/>
+
+    <depend project="xml-xerces" version="supplied"/>
+    <depend project="xml-xalan2" version="supplied"/>
+    <depend project="xml-commons-resolver" version="supplied"/>
+
+    <depend project="excalibur-cli" version="supplied"/>
+    <depend project="excalibur-instrument" version="supplied"/>
+    <depend project="excalibur-instrument-manager" version="supplied"/>
+    <depend project="excalibur-naming" version="supplied"/>
+    <depend project="excalibur-sourceresolve" version="supplied"/>
+    <depend project="excalibur-xmlutil" version="supplied"/>
+    <depend project="excalibur-store" version="supplied"/>
+    <depend project="excalibur-pool" version="supplied"/>
+    <depend project="excalibur-datasource" version="supplied"/>
+    <depend project="excalibur-component" version="supplied"/>
+    <depend project="excalibur-logger" version="supplied"/>
+    <depend project="excalibur-collections" version="supplied"/>
+
+    <depend project="avalon-cornerstone" version="supplied"/>
+
+    <depend project="jakarta-regexp" version="supplied"/>
+    <depend project="jakarta-servletapi-4" version="supplied"/>
+
+    <depend project="commons-httpclient" version="supplied"/>
+    <depend project="commons-collections" version="supplied"/>
+    <depend project="commons-jxpath" version="supplied"/>
+
+    <depend project="jdom" version="supplied"/>
+    <depend project="castor" version="supplied"/>
+    <depend project="rhino" version="supplied"/>
+    <depend project="jisp" version="supplied"/>
+    <depend project="jaxen" inherit="runtime"/>
+    <depend project="jing"/>
+    <depend project="jstyle"/>
+    <depend project="pizza"/>
+    <depend project="junit"/>
+    <depend project="eclipse-jtd"/>
+
+    <option project="xml-axis" version="supplied"/>
+
+    <work nested="build/cocoon-@@DATE@@/classes"/>
+    <work nested="tools/anttasks"/>
+    <work nested="tools/loader"/>
+
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="cocoon.jar"/>
+
+    <javadoc parent="build/cocoon-@@DATE@@/javadocs"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org">
+      <regexp pattern="/BUILD FAILED/"   subject="Build Failure - Cocoon2"/>
+      <regexp pattern="/Missing prereq/" subject="Prereq failure - Cocoon2"/>
+    </nag>
+  </project>
+
+  <!--
+    ********************************************
+    ********       COCOON BLOCKS        ********
+    ********************************************
+  -->
+
+  <project name="cocoon-block-fop">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="fop"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="xml-fop" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="fop-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-batik">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="batik"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="xml-batik" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="batik-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-chaperon">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="chaperon"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="chaperon" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="chaperon-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-swf">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="swf"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="spark" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="swf-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-jfor">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="jfor"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="jfor" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="jfor-block.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-itext">
+    <package>org.apache.cocoon</package>
+    <ant target="block">
+      <property name="block-name" value="itext"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="itext" version="supplied"/>
+    <depend project="itext-xml" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="itext.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+
+  <project name="cocoon-block-session-fw">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="session-fw"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="session-fw.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-authentication-fw">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="authentication-fw"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="cocoon-block-session-fw"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="authentication-fw.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-portal-fw">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="portal-fw"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="cocoon-block-session-fw"/>
+    <depend project="cocoon-block-authentication-fw"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="portal-fw.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-databases">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="databases"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="databases.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-hsqldb">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="hsqldb"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="cocoon-block-databases"/>
+    <depend project="hsqldb" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="hsqldb.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-precept" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="precept"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="precept.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-poi">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="poi"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="jakarta-poi" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="poi.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-naming">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="naming"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="jndi" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="naming.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-jsp">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="jsp"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="jsp.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-php">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="php"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <option project="phpservlt" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="php.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-python">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="python"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <option project="jython" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="python.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-lucene">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="lucene"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="jakarta-lucene" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="lucene.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-html">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="html"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="jtidy" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="html.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-bsf">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="bsf"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="bsf" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="bsf.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-profiler">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="profiler"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="profiler.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-velocity">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="velocity"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="jakarta-velocity" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="velocity.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-linkrewriter">
+    <package>org.apache.cocoon</package>
+    
+    <ant target="block">
+      <property name="block-name" value="linkrewriter"/>
+    </ant>
+    
+    <depend project="xml-cocoon2"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+    
+    <jar name="linkrewriter.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+    
+  <project name="cocoon-block-web3">
+    <package>org.apache.cocoon</package>
+    
+    <ant target="block">
+      <property name="block-name" value="web3"/>
+    </ant>
+    
+    <depend project="xml-cocoon2"/>
+    
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+    
+    <jar name="web3.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>  
+
+  <project name="cocoon-block-slide">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="slide"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="jakarta-slide" ids="kernel" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="slide.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+      
+  <project name="cocoon-block-proxy" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="proxy"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="commons-httpclient" version="supplied"/>
+    <depend project="commons-logging" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="proxy.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-xmldb">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="xmldb"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <option project="xmldb" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="xmldb.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-deli">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="deli"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="deli" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="deli.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+      
+  <project name="cocoon-block-asciiart" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="asciiart"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="asciiart.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-mail" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="mail"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="cocoon-block-asciiart"/>
+    <depend project="javamail" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="mail.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+    
+  <project name="cocoon-block-axis" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="block">
+      <property name="block-name" value="axis"/>
+    </ant>
+
+    <depend project="xml-cocoon2"/>
+    <depend project="cocoon-block-axis"/>
+    <depend project="axis" version="supplied"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon"/>
+
+    <jar name="axis.jar"/>
+
+    <nag from="Gump" to="cocoon-dev@xml.apache.org"/>
+  </project>
+
+  <!--
+    ********************************************
+    ********  COCOON SUPPLIED PROJECTS  ********
+    ********************************************
+  -->
+
+  <project name="pizza">
+    <url href="http://pizzacompiler.sourceforge.net/"/>
+    <package>net.sf.pizzacompiler</package>
+    <description>
+      Java Compiler
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="pizza-1.1.jar"/>
+  </project>
+
+  <project name="jstyle">
+    <url href="http://astyle.sourceforge.net/"/>
+    <package>jstyle</package>
+    <description>
+      Automatic Indentation Filter
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="jstyle.jar"/>
+  </project>
+
+  <project name="deli">
+    <url href="http://sourceforge.net/projects/delicon/"/>
+    <package>com.hp.hpl.deli</package>
+    <description>
+      Delivery context library
+    </description>
+    <home nested="src/blocks/deli/lib"/>
+    <jar name="deli-0.9.1.jar"/>
+  </project>
+
+  <project name="jisp">
+    <url href="http://www.coyotegulch.com/jisp/"/>
+    <description>
+      Java Indexed Serialization Package
+    </description>
+    <home nested="lib/core"/>
+    <jar name="jisp-2.0.1.jar"/>
+  </project>
+
+  <project name="jing">
+    <package>com/thaiopensource</package>
+    <url href="http://www.thaiopensource.com/relaxng/jing.html"/>
+    <description>
+      Jing performs XML Validation using RelaxNG schemas
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="jing-20020724.jar"/>
+  </project>
+
+  <project name="chaperon">
+    <url href="http://chaperon.sourceforge.net/"/>
+    <description>
+      Chaperon is a project that helps to convert structured text to XML
+    </description>
+    <home nested="src/blocks/chaperon/lib"/>
+    <jar name="chaperon-1.3-dev.jar"/>
+  </project>
+
+  <project name="itext">
+    <url href="http://www.lowagie.com/iText/"/>
+    <description>
+      iText is a library that allows you to generate PDF files on the fly
+    </description>
+    <home nested="src/blocks/itext/lib"/>
+    <jar name="itext-0.93b.jar"/>
+  </project>
+
+  <project name="itext-xml">
+    <url href="http://www.lowagie.com/iText/"/>
+    <description>
+      iText is a library that allows you to generate PDF files on the fly
+    </description>
+    <home nested="src/blocks/itext/lib"/>
+    <jar name="itext-xml-0.93.jar"/>
+  </project>
+
+  <project name="eclipse-jtd">
+    <url href="http://www.eclipse.org/"/>
+    <description>
+      Java Development Tools from the Eclipse IDE Project
+    </description>
+    <home nested="lib/optional"/>
+    <jar name="jdtcore2.0.2.jar"/>
+  </project>
+  
+  <project name="spark">
+    <url href="http://www.tivano.de/software/spark/index.shtml"/>
+    <description>
+      Spart is a library for converting XML to Flash (swf)
+    </description>
+    <home nested="src/blocks/swf/lib"/>
+    <jar name="spark.jar"/>
+  </project>
+
+</module>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<samples>
+
+  <group name="System Tools And Pages">
+    <sample name="Status Page" href="status">
+    Cocoon status page.
+   </sample>
+   <sample name="Clear Cache" href="clearcache">
+    Empties the Cocoon cache.
+   </sample>
+   <sample name="Clear Persistent Store" href="clearpersistentstore">
+    Empties the Cocoon persistent store.
+   </sample>
+   <sample name="Request Page" href="system/request.html">
+    This example shows the usage of the RequestGenerator.
+   </sample>
+   <sample name="Input Modules" href="modules/">
+    This example shows the usage of Input Modules in sitemap attribute expressions.
+   </sample>
+    <sample name="Error Page" href="system/generror.html">
+    This example shows what happens if an error is triggered in the pipeline.
+   </sample>
+  </group>
+  
+  <group name="Control flow">
+    <sample name="Documentation" href="flow/">
+    Introduction to Cocoon's control flow of Web pages.
+   </sample>
+    <sample name="Examples" href="flow/samples.html">
+    Samples implemented using control flow.
+   </sample>
+  </group>
+  
+  <group name="XMLForm: Form Handling and Web Services">
+    <sample name="Documentation" href="xmlform/overview.html">
+    Introduction to Cocoon's form handling framework,
+    which provides W3C XForms based markup, Schematron instance validation,
+    and automated binding to JavaBeans and DOM instances. 
+    Also shows that XMLForm based applications are readily available as Web Services (REST style).  
+   </sample>
+    <sample name="Example" href="xmlform/wizard">
+    Presents a sophisticated form handling demo ...
+    multi-page wizard with two-way navigation.
+   </sample>
+    <sample name="WSDL" href="xmlform/UsageFeedbackService/WSDL">
+	Example WSDL descriptor for the same application, 
+	exposed as a Web Service.     
+   </sample>
+  </group>
+  
+  <group name="Web Site Syndication">
+    <sample name="Examples" href="webserviceproxy/">
+    Demonstrates how to embed One Web Site functionality
+    in Another. Using the WebServiceProxyGenerator remote web app
+    integration is easy.
+   </sample>
+    <sample name="Virtual Portal Demo" href="webserviceproxy/cocoonhive/">
+    A more sophisticated example including Amazon and OpenWiki. 
+    Shows how a personalized
+    portal can be built by connecting multiple remote
+    services without writing a single line of business logic code.
+    Only styling is used in addition to the proxy.
+   </sample>
+  </group>
+  
+  <group name="Internationalization &amp; Localization">
+    <sample name="i18n samples" href="i18n/">
+    Internationalization with Cocoon
+   </sample>
+  </group>
+  
+  <group name="More Samples">
+    <sample name="Static Content" href="sample-static">
+    How to produce different type of static content.
+   </sample>
+    <sample name="Server Pages" href="sample-xsp">
+    Dynamic content implemented in XSP pages.
+   </sample>
+    <sample name="Dynamic Content" href="sample-dynamic">
+    More ways of implementing dynamic content.
+   </sample>
+    <sample name="Sources" href="sub/">
+    Samples showing possible ways how to use Cocoon sources in sitemap.
+    (These samples are served by sub-sitemap)
+   </sample>
+   <sample name="Miscellaneous" href="misc/">
+    Other samples: Catalog entity resolver, ...
+   </sample>
+  </group>
+  
+  <group name="Block samples">
+    <sample name="Blocks with samples" href="blocks">
+    Functionality outside the core has been moved to units called "blocks".
+    This will lead to a more modular Cocoon. Some samples depend on additional
+    components that need to be installed and configured correctly.
+    Look here ... samples for more and more blocks are in this section.
+   </sample>
+  </group>
+  
+  <group name="Scratchpad samples">
+    <sample name="Try Scratchpad" href="scratchpad">
+    Here is a peek of what the next release of Cocoon will bring.
+    To test these samples, you must have built Cocoon with "build (sh|bat) installscratchpadwar".
+   </sample>
+  </group>
+</samples>

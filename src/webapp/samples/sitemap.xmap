@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+<!-- =========================== Components ================================ -->
+
+ <map:components>
+  <map:generators default="file"/>
+  <map:transformers default="xslt"/>
+  <map:readers default="resource"/>
+  <map:serializers default="html"/>
+  <map:matchers default="wildcard">
+     <map:matcher logger="sitemap.matcher.header" name="filename" src="org.apache.cocoon.matching.modular.CachingRegexpMatcher">
+        <input-module name="request-param">
+           <parameter>filename</parameter>
+        </input-module>
+     </map:matcher>
+  </map:matchers>
+  <map:selectors default="browser"/>
+ </map:components>
+
+<!-- =========================== Views =================================== -->
+
+ <map:views>
+
+  <map:view name="pretty-content" from-label="data">
+    <map:transform src="common/style/xsl/html/simple-xml2html.xsl"/>
+    <map:serialize type="html"/>
+  </map:view>
+  
+ </map:views>
+
+<!-- =========================== Resources ================================= -->
+
+ <map:resources>
+  <map:resource name="slides">
+   <map:generate src="docs/samples/slides/slides.xml"/>
+   <map:transform src="stylesheets/slides/slides-navigation.xsl">
+    <map:parameter name="use-request-parameters" value="true"/>
+   </map:transform>
+   <map:transform src="stylesheets/slides/slides-apachecon.xsl"/>
+   <map:serialize/>
+  </map:resource>
+
+  <map:resource name="dynamic-page">
+     <map:generate src="{target}.xsp" type="serverpages"/>
+     <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="file" value="{target}.xsp"/>
+        <map:parameter name="remove" value="{remove}"/>
+     </map:transform>
+     <map:serialize/>
+  </map:resource>
+
+  <map:resource name="dynamic-page1">
+     <!-- print all current sitemap parameters to log -->
+     <map:act type="session-state">
+        <map:parameter name="new-state" value="{../0}"/>
+        <!-- 
+           use the complete string that was matched as a parameter. Compare
+           this with the target parameter below. There the third
+           sitemap parameter refers to the very same string. Verfy this
+           by looking at the log. This irritating effect stems from
+           the fact, that the above map:parameter belongs conceptually
+           still to the parent element while all other nested tags
+           are, well, nested.
+        -->
+        <map:call resource="dynamic-page">
+           <map:parameter name="target" value="{../target}/state{../../../0}{../../0}"/>
+           <map:parameter name="remove" value="{../remove}"/>
+        </map:call>
+     </map:act>
+  </map:resource>
+
+  <map:resource name="dynamic-page2">
+     <map:act type="session-state">
+        <map:parameter name="new-state" value="1"/>
+        <map:call resource="dynamic-page">
+           <map:parameter name="target" value="{../target}1"/>
+           <map:parameter name="remove" value="{../remove}"/>
+        </map:call>
+     </map:act>
+  </map:resource>
+
+  <map:resource name="simple-page">
+     <map:generate src="{target}.xml" type="file"/>
+     <map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="file" value="{target}.xml"/>
+        <map:parameter name="remove" value="{remove}"/>
+     </map:transform>
+     <map:serialize/>
+  </map:resource>
+ </map:resources>
+
+<!-- =========================== Pipelines ================================= -->
+
+ <map:pipelines>
+
+  <map:pipeline>
+    <!-- Welcome site with all samples -->
+    <map:match pattern="">
+      <map:redirect-to uri="welcome"/>
+    </map:match>
+
+    <map:match pattern="welcome">
+      <map:generate src="samples.xml"/>
+      <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+         <map:parameter name="contextPath" value="{request:contextPath}"/>
+      </map:transform>
+      <map:serialize/>
+    </map:match>
+  </map:pipeline>
+
+  <!-- MyApp - minimal Cocoon Application Mount -->
+  <map:pipeline>
+    <map:match pattern="myapp/**">
+      <map:mount check-reload="yes" src="myapp/" uri-prefix="myapp"/>
+    </map:match>
+  </map:pipeline>
+
+  <!-- sub-sitemap example pipeline -->
+  <map:pipeline>
+    <!-- Matcher: -->
+    <map:match pattern="sub/**">
+      <!--
+        matches all URIs starting with "sub". Have a look at
+        the docs for this matcher component. 
+        
+        "*" means, anything that does not contain a path separator,
+        i.e. slash "/", "**" means anything including path
+        separators. What is matched by the wildcard is put into sitemap
+        variables.
+        
+        Sitemap variables are organized like a stack, a new set is placed
+        on top of the already present ones. Any existing variable can be
+        accessed through a simplified path expression. These simplified
+        path expression may only use any number of "../" to refer to the
+        previous levels.
+        
+        If a component completes successfully, it sets some sitemap
+        variables. Their scope is only within the element of that
+        component. Thus they can only be accessed by nested components.
+      -->
+        
+      <!-- Mount: -->
+      <map:mount check-reload="yes" src="sub/sitemap.xmap" uri-prefix="sub"/>
+
+      <!--
+        Sitemaps may be organized hierarchically. Here such a subsitemap
+        is "mounted" (think: unix filesystems) to be responsible for all
+        URIs starting with "sub/". The file itself is by
+        coincidence located in a subdirectory named "sub/" as
+        well. There's no need to do that but it is good practice. The
+        check-reload attributes specifies, if changed to the subsitemap
+        should result in cocoon rereading the subsitemap or if they are to
+        be ignored. See docs for suggestions on this.
+      
+        Note here, that all component declarations are inherited to a
+        subsitemap.
+      -->
+    </map:match>
+
+    <map:handle-errors>
+      <!-- 
+        This pipeline specifies a different error handler.
+      -->
+      <map:transform src="context://samples/stylesheets/system/error2html.xsl"/>
+      <map:serialize status-code="500"/>
+    </map:handle-errors>
+  </map:pipeline>
+
+  <map:pipeline id="optional">
+    <!-- Utility for viewing source xml or html -->
+    <!-- sample use of regexp equivalent to "**.source" using wildcard
+         this also shows the '\{' notation to escape sitemap values substitution -->
+    <map:match pattern="(.*)\.s\{1}ource" type="regexp">
+      <map:generate src="cocoon:/{1}"/>
+      <map:transform src="stylesheets/simple-xml2html.xsl"/>
+      <map:serialize/>
+    </map:match>
+  </map:pipeline>
+
+  <!-- main samples pipeline -->
+   <map:pipeline>   
+    <map:match pattern="">
+      <map:generate src="welcome/welcome.xhtml"/>
+      <map:serialize/>      
+    </map:match>
+
+    <map:match pattern="cocoon.gif">
+      <map:read mime-type="image/gif" src="welcome/cocoon.gif"/>
+    </map:match>
+
+   <map:match pattern="welcome">
+    <map:generate src="docs/samples/samples.xml"/>
+    <!--
+      The first 'real' pipeline. The default generator reads from
+      "docs/samples/samples.xml" and emits SAX events down the
+      pipeline. Here, the default generator just reads XML from a file,
+      parses it and generates SAX events while it does so.
+    -->
+    <!--
+    <map:select>
+      <map:when test="wap">
+    	<map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+    	   <map:parameter name="contextPath" value="{request:contextPath}"/>
+    	</map:transform>
+      </map:when>
+      <map:when test="netscape">
+    	<map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+    	   <map:parameter name="contextPath" value="{request:contextPath}"/>
+    	</map:transform>
+      </map:when>
+      <map:otherwise>
+    	<map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+    	   <map:parameter name="contextPath" value="{request:contextPath}"/>
+    	</map:transform>
+      </map:otherwise>
+    </map:select>
+    -->
+    <map:transform type="xslt" src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <!-- uncomment the following if you want to use Xalan's interpreter as the XSLT processor -->
+    <!-- <map:transform type="xalan" src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+         </map:transform>
+    -->
+    <!--
+       These events are consumed by the default transformer, which
+       uses "stylesheets/simple-samples2html.xsl" as parameter. Since
+       here the default transformer is an XSLT transformer, the above
+       stylesheet is applied. As soon as some of the transformation's
+       result is determined, new SAX events are emitted down the
+       pipeline.
+    -->
+    <map:serialize/>
+    <!--
+       Finally, those SAX events are consumed by the default
+       serializer, assembling a character stream from them which is
+       send to the client.
+       
+       Once a serializer is encountered when assembling the pipeline,
+       the setup stops and the pipeline is fired up.
+    -->
+   </map:match>
+
+   <map:match pattern="sample-*">
+    <map:generate src="docs/samples/sample-{1}.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <!-- ================  Hello  =========================== -->
+
+   <map:match pattern="deli.html">
+     <map:generate src="docs/samples/hello-page.xml"/>
+     <map:transform src="stylesheets/deli_test.xsl" type="xslt"/>
+     <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="deli.wml">
+     <map:generate src="docs/samples/hello-page.xml"/>
+     <map:transform src="stylesheets/deli_test.xsl" type="xslt"/>
+     <map:serialize type="wml"/>
+   </map:match>
+
+   <map:match pattern="hello.html">
+    <map:generate src="docs/samples/hello-page.xml"/>
+    <map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
+       <map:parameter name="servletPath" value="{request:servletPath}"/>
+       <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+       <map:parameter name="file" value="docs/samples/hello-page.xml"/>
+       <map:parameter name="remove" value="{0}"/>
+    </map:transform>
+    <map:serialize type="html"/>
+   </map:match>
+
+   <map:match pattern="hello.wml">
+    <map:generate src="docs/samples/hello-page.xml"/>
+    <map:transform src="stylesheets/page/simple-page2wml.xsl"/>
+    <map:serialize type="wml"/>
+   </map:match>
+
+   <map:match pattern="hello.vml">
+    <map:generate src="docs/samples/hello-page.xml"/>
+    <map:transform src="stylesheets/page/simple-page2vml.xsl"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
+   <map:match pattern="hello.wrl">
+    <map:generate src="docs/samples/hello-page.xml"/>
+    <map:transform src="stylesheets/page/simple-page2vrml.xsl"/>
+    <map:serialize type="vrml"/>
+   </map:match>
+
+   <map:match pattern="redirect">
+    <map:act type="request">
+     <map:parameter name="parameters" value="true"/>
+
+     <map:redirect-to uri="{dest}"/>
+    </map:act>
+   </map:match>
+
+   <!-- ================  Sites  =========================== -->
+
+   <map:match pattern="sites/*.apache.org">
+    <map:generate src="docs/samples/sites/{1}_apache_org.xml"/>
+    <map:transform src="stylesheets/sites/{1}_apache_org-html.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="sites/images/*.gif">
+    <map:read mime-type="image/gif" src="resources/images/{1}.gif"/>
+   </map:match>
+
+   <!-- ================  NEWS  =========================== -->
+
+   <map:match pattern="news/slashdot.xml">
+    <map:generate src="http://slashdot.org/slashdot.xml"/>
+    <map:transform src="stylesheets/news/slashdot.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="news/**.gif">
+    <map:read mime-type="image/gif" src="http://images.slashdot.org/topics/{1}.gif"/>
+   </map:match>
+
+   <map:match pattern="news/**.jpg">
+    <map:read mime-type="image/jpg" src="http://images.slashdot.org/topics/{1}.jpg"/>
+   </map:match>
+
+   <map:match pattern="news/moreover.xml">
+    <map:generate src="http://www.moreover.com/cgi-local/page?o=xml&amp;c=Developer%20news"/>
+    <map:transform src="stylesheets/news/moreover.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="news/xmlhack.xml">
+    <map:generate src="http://www.xmlhack.com/cdf.cdf"/>
+    <map:transform src="stylesheets/news/xmlhack.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="news/aggregate.xml">
+    <map:aggregate element="page" ns="http://foo.bar.com/myspace">
+     <!--
+        Aggregation is a very powerful concept that allows a document
+        be generated from several other documents. Strictly speaking,
+        all parts are just concatenated in this order to a new
+        document.
+
+    Several things to note here:
+
+    "cocoon:" is a pseudo protocol and refers to another
+      pipeline. "cocoon:/" refers to a pipeline from the current
+      sitemap while "cocoon://" refers to a pipeline from the root
+      sitemap.
+
+    Other pseudo protocols exist:
+
+    "context:" is another pseudo protocol, "context://" is
+      refering to a resource using the servlet context.
+
+    "resource:" is yet another pseudo protocol, "resource://" is
+      refering to a resource from the context classloader.
+
+    These pseudo protocols are declared in cocoon.xconf
+
+    Thus the parts refer to the pipeline fragments above.
+
+    The element attribute places the content in a new root element
+    named as specified, using the namespace provided by the ns
+    attribute.
+
+    Please see docs for further explanations.
+     -->
+     <map:part element="news" ns="http://foo.bar.com/slashdot" src="cocoon:/news/slashdot.xml"/>
+     <map:part element="news" ns="http://foo.bar.com/moreover" src="cocoon:/news/moreover.xml"/>
+     <map:part element="news" ns="http://foo.bar.com/xmlhack" src="cocoon:/news/xmlhack.xml"/>
+    </map:aggregate>
+    <map:transform src="stylesheets/news/news.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <!-- Aggregation using CInclude transformer -->
+   <map:match pattern="news/aggregate">
+    <map:generate src="docs/samples/xsp/aggregate.xsp" type="serverpages"/>
+    <map:transform type="cinclude"/>
+    <map:transform src="stylesheets/news/news.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <!-- ================  Static  =========================== -->
+
+   <map:match pattern="slides/slides">
+    <map:call resource="slides"/>
+    <!--
+       To include common pipeline fragments in a pipeline they can be
+       defined in a resource. Such a resource can be called from
+       anywhere in your pipeline. Note that this is conceptionally
+       more like a "goto" because it will never return.
+    -->
+   </map:match>
+
+   <map:match pattern="slides/">
+    <map:call resource="slides"/>
+   </map:match>
+
+   <map:match pattern="slides/style">
+    <map:read mime-type="text/css" src="resources/styles/slides-apachecon.css"/>
+   </map:match>
+
+   <map:match pattern="style">
+    <map:read mime-type="text/css" src="resources/styles/slides-apachecon.css"/>
+   </map:match>
+
+   <map:match pattern="slides/**.gif">
+    <map:read mime-type="image/gif" src="docs/samples/{1}.gif"/>
+   </map:match>
+
+   <map:match pattern="slides/**.jpg">
+    <map:read mime-type="image/jpg" src="docs/samples/{1}.jpg"/>
+   </map:match>
+
+   <map:match pattern="slides/**.png">
+    <map:read mime-type="image/png" src="docs/samples/{1}.png"/>
+   </map:match>
+
+   <!-- =========================== Dynamic ================================ -->
+
+   <map:match pattern="xsp/*">
+    <map:generate src="docs/samples/xsp/{1}.xsp" type="serverpages"/>
+    <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="file" value="docs/samples/xsp/{1}.xsp"/>
+        <map:parameter name="remove" value="{0}"/>
+    <!--
+       Run-time configuration is done through these
+       <map:parameter/> elements. Again, let's have a look at the
+       javadocs: 
+
+       "[...] All <map:parameter> declarations will be made
+       available in the XSLT stylesheet as xsl:variables. [...]" 
+    -->
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="xsp-plain/*">
+    <map:generate src="docs/samples/xsp/{1}.xsp" type="serverpages"/>
+    <map:serialize/>
+   </map:match>
+
+   <!-- ========================== Stream ================================= -->
+
+   <map:match pattern="request1">
+     <map:generate type="stream">
+       <map:parameter name="form-name" value="Foo"/>
+     </map:generate>
+     <map:serialize type="xml"/>
+   </map:match>
+
+   <map:match pattern="Order">
+     <map:generate src="docs/samples/stream/OrderPage.xml"/>
+     <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="file" value=".xsp"/>
+     </map:transform>
+     <map:serialize type="html"/>
+   </map:match>
+
+   <!-- ========================== XSP Sources ============================== -->
+
+   <map:match pattern="view-source/*">
+    <map:read mime-type="text/plain" src="docs/samples/slides/{1}"/>
+   </map:match>
+
+   <map:match pattern="view-source">
+    <map:generate src="docs/samples/slides/view-source.xsp" type="serverpages"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="view-file">
+    <!-- colourize files that are known to be XML -->
+    <map:match type="filename" pattern="((xml)|(xsp)|(xmap)|(xconf))$">
+       <map:generate src="docs/samples/slides/view-source.xsp" type="serverpages"/>
+       <map:serialize/>
+    </map:match>
+    <!-- all other files are just send as text -->
+    <map:read mime-type="text/plain" src="../{request-param:filename}"/>
+   </map:match>
+
+   <!-- ========================== SOAP ============================== -->
+
+   <map:match pattern="soap/*">
+    <map:generate src="docs/samples/soap/{1}.xml" type="serverpages"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
+   <!-- ======================== XScript Samples ========================= -->
+
+   <map:match pattern="xscript/soap-getquote1">
+     <map:generate src="docs/samples/xscript/soap-getquote1.xsp" type="serverpages"/>
+     <map:transform src="docs/samples/xscript/soap-getquote1.xsl"/>
+     <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="file" value="docs/samples/{0}.xsp"/>
+        <map:parameter name="remove" value="{0}"/>
+     </map:transform>
+     <map:serialize/>
+   </map:match>
+
+   <map:match pattern="xscript/*">
+     <map:generate src="docs/samples/xscript/{1}.xsp" type="serverpages"/>
+     <map:transform src="context://samples/stylesheets/dynamic-page2html.xsl">
+        <map:parameter name="servletPath" value="{request:servletPath}"/>
+        <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
+        <map:parameter name="contextPath" value="{request:contextPath}"/>
+        <map:parameter name="file" value="docs/samples/{0}.xsp"/>
+        <map:parameter name="remove" value="{0}"/>
+     </map:transform>
+     <map:serialize/>
+   </map:match>
+
+   <!-- ========================= Server ================================ -->
+
+   <map:match pattern="request">
+    <map:generate type="request"/>
+    <map:serialize type="xml"/>
+   </map:match>
+
+   <map:match pattern="generror">
+    <map:generate src="docs/samples/error-giving-page.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="status">
+    <map:generate src="status" type="status"/>
+    <map:transform src="welcome/status2html.xsl"/>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="clearcache">
+     <map:act type="clear-cache">
+       <map:generate src="status" type="status"/>
+       <map:transform src="welcome/status2html.xsl"/>
+       <map:serialize/>
+     </map:act>
+   </map:match>
+
+    <map:match pattern="clearpersistentstore">
+     <map:act type="clear-persistent-store">
+       <map:generate src="status" type="status"/>
+       <map:transform src="welcome/status2html.xsl"/>
+       <map:serialize/>
+     </map:act>
+   </map:match>
+
+   <map:match pattern="sites/styles/**.css">
+    <map:read mime-type="text/css" src="resources/styles/{1}.css"/>
+   </map:match>
+
+   <map:match pattern="**favicon.ico">
+    <map:read mime-type="application/ico" src="resources/icons/cocoon.ico"/>
+   </map:match>
+   
+   <map:match pattern="images/**.gif">
+    <map:read mime-type="image/gif" src="resources/images/{1}.gif"/>
+   </map:match>
+
+   <map:match pattern="images/**.jpg">
+    <map:read mime-type="image/jpg" src="resources/images/{1}.jpg"/>
+   </map:match>
+
+   <map:match pattern="images/**.png">
+    <map:read mime-type="image/png" src="resources/images/{1}.png"/>
+   </map:match>
+
+   <map:match pattern="scratchpad">
+    <map:generate src="scratchpad-samples.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+
+   <map:match pattern="blocks">
+    <map:generate src="block-samples.xml"/>
+    <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+       <map:parameter name="contextPath" value="{request:contextPath}"/>
+    </map:transform>
+    <map:serialize/>
+   </map:match>
+  
+   <!-- ========================= Server ================================ -->
+
+   <map:match pattern="**favicon.ico">
+    <map:read src="common/resources/icons/cocoon.ico" mime-type="application/ico"/>
+   </map:match>
+   
+   <!-- ================== Common ======================= -->
+   <map:match pattern="*.css">
+    <map:read src="common/style/css/{1}.css" mime-type="text/css"/>
+   </map:match>
+
+   <map:match pattern="images/*.gif">
+    <map:read src="common/resources/images/{1}.gif" mime-type="image/gif"/>
+   </map:match>
+
+   <map:match pattern="images/*.jpg">
+    <map:read src="common/resources/images/{1}.jpg" mime-type="image/jpg"/>
+   </map:match>
+
+   <map:match pattern="images/*.png">
+    <map:read src="common/resources/images/{1}.png" mime-type="image/png"/>
+   </map:match>
+
+   <!-- ================== Common fallthrough ===================== -->
+   <!--
+   <map:match pattern="*/images/*.gif">
+    <map:read src="common/resources/images/{2}.gif" mime-type="image/gif"/>
+   </map:match>
+
+   <map:match pattern="*/images/*.jpg">
+    <map:read src="common/resources/images/{2}.jpg" mime-type="image/jpg"/>
+   </map:match>
+
+   <map:match pattern="*/images/*.png">
+    <map:read src="common/resources/images/{2}.png" mime-type="image/png"/>
+   </map:match>
+   -->
+   <!-- ======================== Samples =============================== -->
+   
+   <!-- samples automount -->  
+   <map:match pattern="*/**">
+     <map:mount uri-prefix="{1}" src="{1}/" check-reload="yes"/>
+   </map:match>
+        
+   <map:handle-errors>
+    <!-- FIXME -->
+    <!--<map:transform src="common/style/xsl/html/error2html.xsl"/>-->
+    <map:transform src="context://samples/common/style/xsl/html/error2html.xsl"/>
+    <map:serialize type="html" status-code="500"/>
+   </map:handle-errors>
+
+  </map:pipeline>
+ </map:pipelines>
+
+</map:sitemap>

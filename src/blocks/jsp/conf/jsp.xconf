@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="jsp-engine">
+   
+  <!-- JSP Engine:
+    The JspGenerator selects a JSPEngine component. The JSPEngine component
+    launches a JSP servlet engine of your servlet container, feeds the
+    HttpRequest into the JSP servlet engine, and pipes the jsp response as
+    SAX events into Cocoon2. The JSP page is specified by the HttpRequest.
+    This way you can continue to use your JSP pages. Your migration from JSP
+    to XSP may be done step by step. You may specify your JSP pages either as
+    JSP scriptlets or as JSP-XML. But keep in mind that your JSP output should
+    be valid XML.
+  -->
+  <jsp-engine logger="core.jsp-engine">
+    <parameter name="servlet-class" value="org.apache.jasper.servlet.JspServlet"/>
+    <parameter name="servlet-name" value="*.jsp"/>
+  </jsp-engine>
+
+</xconf>

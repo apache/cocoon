@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<xmap xpath="/sitemap/components/generators"
+      unless="generator[@name='portal']">
+
+    <map:generator name="portal"
+                   src="org.apache.cocoon.webapps.portal.generation.PortalGenerator"
+                   label="content,data"/>
+    <map:generator name="portal-conf"
+                   src="org.apache.cocoon.webapps.portal.generation.ConfigurationGenerator"
+                   label="content,data"/>
+</xmap>

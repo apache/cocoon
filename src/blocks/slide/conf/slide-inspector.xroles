@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.components.source.SourceInspector']">
+
+  <role name="org.apache.cocoon.components.source.SourceInspector"
+        shorthand="source-inspectors"
+        default-class="org.apache.cocoon.components.source.impl.SourceInspectorManager"/>
+</xroles>

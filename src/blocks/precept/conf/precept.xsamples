@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<xsamples xpath="/samples" unless="group[@name='precept']">
+
+  <group name="precept">
+    <sample name="Precept" href="precept/">
+      Introduction into the Precept Form components. 
+    </sample>
+  </group>
+</xsamples>

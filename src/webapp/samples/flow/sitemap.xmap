@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+
+<map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:components>
+    <map:generators default="file"/>
+    <map:transformers default="xslt">
+     <map:transformer name="augment"
+                      src="org.apache.cocoon.transformation.AugmentTransformer"
+                      mime-type="text/xml"
+                      logger="sitemap.transformer.augment"/>
+    </map:transformers>
+    <map:readers default="resource"/>
+    <map:serializers default="html"/>
+    <map:matchers default="wildcard"/>
+    <map:flow-interpreters default="JavaScript"/>
+  </map:components>
+
+  <map:resources>
+    <map:resource name="show-page">
+      <map:aggregate element="site">
+        <map:part src="cocoon:/book-{full-filename}.xml"/>
+        <map:part src="cocoon:/body-{full-filename}.xml"/>
+      </map:aggregate>
+      <map:transform src="context://documentation/stylesheets/site2xhtml.xsl">
+        <map:parameter name="use-request-parameters" value="true"/>
+        <map:parameter name="header" value="graphics/{filename}-header.jpg"/>
+      </map:transform>
+      <map:serialize/>
+    </map:resource>
+  </map:resources>
+
+
+  <map:pipelines>
+
+    <!-- Schecoon documentation pipeline -->
+
+    <map:pipeline>
+
+      <map:match pattern="">
+        <map:redirect-to uri="index.html"/>
+      </map:match>
+
+      <map:match pattern="**book-**.xml">
+        <map:generate src="docs/{1}book.xml"/>
+        <map:transform type="augment">
+          <map:parameter name="mount" value="samples/flow/"/>
+        </map:transform>
+        <map:transform src="context://documentation/stylesheets/book2menu.xsl">
+          <map:parameter name="use-request-parameters" value="true"/>
+          <map:parameter name="resource" value="{2}.html"/>
+        </map:transform>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="body-examples/*/**.xml">
+        <map:generate src="examples/{1}/pages/{2}.xsp" type="serverpages"/>
+        <map:transform src="stylesheets/extended-document2html.xsl"/>
+        <map:serialize type="xml"/>
+      </map:match>
+
+      <map:match pattern="body-**.xml">
+        <map:generate src="docs/{1}.xml"/>
+        <map:transform src="context://documentation/stylesheets/document2html.xsl"/>
+        <map:serialize/>
+      </map:match>
+
+      <map:match pattern="*.html">
+        <map:call resource="show-page">
+          <map:parameter name="filename" value="{1}"/>
+          <map:parameter name="full-filename" value="{1}"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="**/*.html">
+        <map:call resource="show-page">
+          <map:parameter name="filename" value="{2}"/>
+          <map:parameter name="full-filename" value="{1}/{2}"/>
+        </map:call>
+      </map:match>
+
+   <map:match pattern="**resources/script.js">
+     <map:read src="context://documentation/stylesheets/script-cli.js"
+	       mime-type="application/javascript"/>
+   </map:match>
+
+   <map:match pattern="**resources/**.js">
+     <map:read src="context://documentation/stylesheets/{2}.js"
+	       mime-type="application/javascript"/>
+   </map:match>
+
+   <map:match pattern="**.css">
+    <map:read src="context://documentation/{1}.css" mime-type="text/css"/>
+   </map:match>
+
+   <map:match pattern="**images/*.png">
+    <map:read src="context://samples/tutorial/resources/images/{2}.png"
+	      mime-type="image/png"/>
+   </map:match>
+
+   <map:match pattern="**images/*.jpg">
+    <map:read src="context://samples/tutorial/resources/images/{2}.jpg"
+	      mime-type="image/jpeg"/>
+   </map:match>
+
+   <map:match pattern="**images/*.gif">
+    <map:read src="context://samples/tutorial/resources/images/{2}.gif"
+	      mime-type="image/gif"/>
+   </map:match>
+
+   <map:match pattern="**graphics/**-*.jpg">
+     <map:generate src="svg/{3}.xml"/>
+     <map:transform src="svg/addlabel.xsl">
+       <map:parameter name="use-request-parameters" value="true"/>
+       <map:parameter name="label" value="{2}"/>
+     </map:transform>
+     <map:serialize type="svg2jpeg"/>
+   </map:match>
+
+    </map:pipeline>
+
+     <!-- All examples are located under the examples/ directory, and
+     are standalone samples, with their own sitemap. The following
+     generic mount operation loads them on demand. -->
+    <map:pipeline>
+      <map:match pattern="examples/**/invalidContinuation">
+        <map:call resource="show-page">
+          <map:parameter name="filename" value="invalidContinuation"/>
+          <map:parameter name="full-filename" value="invalidContinuation"/>
+        </map:call>
+      </map:match>
+
+      <map:match pattern="examples/*/**">
+        <map:mount uri-prefix="examples/{1}"
+                   src="examples/{1}/sitemap.xmap"
+                   check-reload="yes"/>
+      </map:match>
+    </map:pipeline>
+
+
+  </map:pipelines>
+
+</map:sitemap>

@@ -1,0 +1,28 @@
+<!-- $Id: samples.css,v 1.1 2003/03/09 00:10:52 pier Exp $ -->
+
+body { background-color: white;
+       }
+
+p { text-align: left;
+    font-style: italic;
+    }
+
+h2 { color: navy; 
+     text-align: center 
+     }
+
+h1 { color: navy; 
+     text-align: center 
+     }
+
+div.resources, div.footer { background-color: #c0d0f0; }
+div.footer    { font-size: small; }
+div.footer > table { font-size: small; }
+
+td.doc { background-color: #e0ffff; }
+td.file { background-color: #d0f0ff; }
+
+a:link { color: blue; }
+a:visited { color: blue; }
+a:hover {  color: red; }
+

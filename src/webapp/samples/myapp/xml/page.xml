@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- CVS: $Id: page.xml,v 1.1 2003/03/09 00:11:16 pier Exp $ -->
+<page>
+    <title>My App page</title>
+    <content>
+        <para>Just a static contents</para>
+    </content>
+</page>

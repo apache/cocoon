@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='xmldb']">
+
+    <!-- xmldb pseudo protocol -->
+    <component-instance class="org.apache.cocoon.components.source.impl.SourceFactoryWrapper" name="xmldb">
+        <source-factory class="org.apache.cocoon.components.source.XMLDBSourceFactory">
+            <!-- Xindice driver -->
+            <driver type="xindice" class="org.apache.xindice.client.xmldb.DatabaseImpl"/>
+            <!-- Add here other XML:DB compliant databases drivers -->
+        </source-factory>
+    </component-instance>
+
+</xconf>

@@ -1,0 +1,3 @@
+Note that the entities in this directory are a copy of the main entities in
+src/webapp/WEB-INF/entities/ (which is the authoritative version).
+Please keep these synchronised.

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!-- CVS: $Id: sample-dynamic.xml,v 1.1 2003/03/09 00:10:53 pier Exp $ -->
+
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Back">
+   <sample name="Back" href="welcome">
+    Back to samples home page
+   </sample>
+  </group>
+
+  <group name="Internationalization">
+   <sample name="Simple Internationalization" href="i18n/simple.xml">
+    Sample for Internationalization.        
+   </sample>
+
+   <sample name="XSP Internationalization" href="i18n/simple.xsp">
+    Sample for Internationalization in an XSP.        
+   </sample>
+  </group>
+
+  <group name="Dynamic Content">
+   <sample name="Javascript Generator" href="scripts/hello.js">
+    An example of the ScriptGenerator producing XML out of a Javascript program.
+   </sample>
+   <sample name="Python Generator" href="scripts/hello.py">
+    An example of the ScriptGenerator producing XML out of a Python program.
+    ATTENTION: This example will not work unless you have put the Jython
+    interpreter (jython.jar) from www.jython.org in the WEB-INF/lib directory 
+    of your Cocoon webapp context.
+   </sample>
+   <sample name="Velocity Generator" href="templates/hello-page.vm">
+    An example of the VelocityGenerator producing XML out of a Velocity Template.
+   </sample>
+   <sample name="Parameterised Redirect" href="redirect?dest=http://xml.apache.org/">
+    An example of redirecting a client based on a request parameter.
+   </sample>
+   <sample name="Yahoo Screen Scrape" href="yahoo">
+    An example of HTML Generator scraping a part of the Yahoo main page.
+   </sample>
+<!-- FIX ME
+   <sample name="Parent Component Manager" href="parentcm">
+    An example showing the use of a parent component manager. For this sample to work,
+    Cocoon must have been built without the exclude.webapp.libs flag set to true.
+    (Otherwise the sample classes are not found.)
+   </sample>
+-->
+  </group>
+
+  <group name="XScript and SOAP">
+   <sample name="Simple Sample" href="xscript/simple">
+       A simple sample for XScript.
+   </sample>
+   <sample name="SOAP Stock Quote Example 1" href="xscript/soap-getquote1">
+       This page demonstrates the SOAP logicsheet for
+       Cocoon. It accesses a SOAP service that provides stock quotes
+       and displays the result.
+   </sample>
+   <sample name="SOAP Sample 2" href="xscript/soap-getquote2">
+       This example uses an inline XSLT stylesheet and an
+       XScript transform instruction to extract the stock
+       price.
+   </sample>
+   <sample name="SOAP Sample 3" href="xscript/soap-getquote3">
+       This is yet another example of the XScript and SOAP
+       logicsheets. This sample is very similar with
+       SOAP Sample 2, except that the stylesheet is defined in an external file.
+   </sample>
+  </group>
+
+  <group name="Aggregation Sample">
+   <sample name="Slashdot" href="news/slashdot.xml">
+    Live XML Feed from Slashdot.
+   </sample>
+   <sample name="Moreover.com" href="news/moreover.xml">
+    Live XML Developer News Feed from moreover.com.
+   </sample>
+   <sample name="XMLHack.com" href="news/xmlhack.xml">
+    Live Channel Feed from XMLHack.com.
+   </sample>
+   <sample name="Aggregation" href="news/aggregate.xml">
+    Single Web Page with News from all sources above aggregated by
+    the sitemap.
+   </sample>
+   <sample name="Aggregation" href="news/aggregate">
+    Single Web Page with News from all sources above aggregated by
+    include transformer.
+   </sample>
+  </group>
+</samples>

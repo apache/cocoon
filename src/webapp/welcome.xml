@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--+
+    | This is a very simple XML page done just to show how a simple 
+    | cocoon pipeline works.
+    +-->
+
+<welcome>
+ <message>
+   Congratulations! If you are reading this page, it means that
+   your Cocoon installation was successful.
+ </message>
+</welcome>

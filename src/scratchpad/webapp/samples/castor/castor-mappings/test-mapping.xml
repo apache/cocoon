@@ -1,0 +1,13 @@
+<mapping>
+        <class name="org.apache.cocoon.samples.castor.TestBean">
+                <map-to xml="animal"/>
+                
+                <field name="name" type="java.lang.String">
+                        <bind-xml name="name" node="element"/>
+                </field>
+        
+                <field name="scope" type="java.lang.String">
+                        <bind-xml name="scope" node="element"/>
+                </field>                
+        </class>
+</mapping>

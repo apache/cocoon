@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<xmap xpath="/sitemap/components/selectors"
+      unless="selector[@name='auth-media']">
+
+    <map:selector name="auth-media"
+                  src="org.apache.cocoon.webapps.authentication.selection.MediaSelector"/>
+</xmap>

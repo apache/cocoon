@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+
+<document>
+ <header>
+  <title>Release Plan</title>
+  <subtitle>Planning Documentation</subtitle>
+  <authors>
+   <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+   <person name="David Crossley" email="crossley@apache.org"/>
+  </authors>
+ </header>
+
+ <body>
+ <s1 title="Timeframe">
+  <p>This is the current time frame for the next releases:</p>
+  <ul>
+   <li>Not schedulded yet : 2.1 Alpha</li>
+   <li>Not schedulded yet : 2.1 Beta 1</li>
+   <li>On request         : 2.0.5 (bug fix release)</li>
+  </ul>
+ </s1>
+
+ <s1 title="Version 2.1 Beta 1">
+<ul>
+<li>apply patches</li>
+<li>test flowmap + docs + etc</li>
+<li>documentation to be published by Forrest</li>
+<li>finish the document
+ <link href="../installing/updating.html">Updating Cocoon</link>
+which describes the major changes since 2.0.2
+</li>
+<li>finish the
+ <link href="samples.html">refactoring of samples</link></li>
+<li>finish to move scratchpad stuff in main trunk</li>
+<li>more tests and examples on the flowmap. Seems to me that this 
+strategic stuff has been a set a bit aside due to lack of time.</li>
+<li>Move complete Source implementation to Excalibur</li>
+<li>Change implementation for SitemapConfigurable</li>
+</ul>
+ </s1>
+ <s1 title="Version 2.2 Beta 1">
+ <p>Although this version might be long in the future, we already have some plans...</p>
+ <ul>
+  <li>Design and implement blocks</li>
+  <li>Move to a new Avalon container implementation (Merlin, Fortress or whatever)</li>
+ </ul>
+ </s1>
+ <s1 title="General tasks for a release">
+<ul>
+<li>We have many open bugs in bugzilla. These must be reviewed
+    and then solved (or declared invalid etc).</li>
+<li>Documentation updates (this area lacks most).
+    We could move this to the final release.
+Documentation must be happening all the time, and not left
+until last.</li>
+<li>Checking what to backport. We have components in the
+latest developer versions, which might find their way into
+the bugfix version line (2.0.x).</li>
+<li>Ensure that licensing requirements have been met.
+  update jars.xml, ensure proper banner in *.java header,
+  verify the current LICENSE* files, ensure that external
+  components have suitable licensing requirements.</li>
+<li>Everything we forgot...</li>
+</ul>
+ </s1>
+
+ </body>
+</document>
