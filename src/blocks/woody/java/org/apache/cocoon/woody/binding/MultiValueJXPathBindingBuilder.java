@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * content.
  * <pre><code>
  * &lt;wb:multi-value id="<i>widget-id</i>"
- *   parent-path="<i>xpath-expression</i>"&gt;
+ *   parent-path="<i>xpath-expression</i>"
  *   row-path="<i>xpath-expression</i>"&gt;
  *   &lt;!-- optional child binding to be executed upon 'save' of changed value --&gt;
  *   &lt;wb:on-update&gt;
@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * &lt;/wb:multi-value&gt;
  * </code></pre>
  *
- * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.5 2004/03/09 13:54:06 reinhard Exp $
+ * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.6 2004/04/06 16:12:02 mpo Exp $
  */
 public class MultiValueJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
