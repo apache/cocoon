@@ -54,6 +54,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
@@ -69,14 +70,12 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.4 2003/10/24 13:36:40 vgritsenko Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.5 2003/11/11 21:57:18 sylvain Exp $
  */
 public class CallFunctionNode extends AbstractProcessingNode implements Configurable, Composable {
-    protected String functionName;
-    protected String continuationId;
     protected List parameters;
-    protected VariableResolver functionNameResolver;
-    protected VariableResolver continuationResolver;
+    protected VariableResolver functionName;
+    protected VariableResolver continuationId;
     protected ComponentManager manager;
     protected Interpreter interpreter;
 
@@ -97,9 +96,9 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
         return result;
     }
 
-    public CallFunctionNode(String funName, String contId) {
-        functionName = funName;
-        continuationId = contId;
+    public CallFunctionNode(VariableResolver functionName, VariableResolver continuationId) {
+        this.functionName = functionName;
+        this.continuationId = continuationId;
     }
 
     public void setInterpreter(Interpreter interp) throws Exception {
@@ -114,6 +113,11 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
      * @exception ConfigurationException if an error occurs
      */
     public void configure(Configuration config) throws ConfigurationException {
+        //TODO (SW): Deprecate this in the future.
+        // It has be found to be bad practice to pass sitemap parameters
+        // as function arguments, as these are name-value pairs in the sitemap
+        // and positional arguments in the flowscript. If the user doesn't respect
+        // the argument order, this leads to difficult to solve bugs.
         parameters = new ArrayList();
 
         Configuration[] params = config.getChildren("parameter");
@@ -122,18 +126,6 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
             String name = param.getAttribute("name", null);
             String value = param.getAttribute("value", null);
             parameters.add(new Interpreter.Argument(name, value));
-        }
-
-        try {
-            // Check to see if we need to resolve the function name or the
-            // continuation id at runtime
-            if (functionName != null && VariableResolverFactory.needsResolve(functionName))
-                functionNameResolver = VariableResolverFactory.getResolver(functionName, manager);
-
-            if (continuationId != null && VariableResolverFactory.needsResolve(continuationId))
-                continuationResolver = VariableResolverFactory.getResolver(continuationId, manager);
-        } catch (PatternException ex) {
-            throw new ConfigurationException(ex.toString());
         }
     }
 
@@ -151,40 +143,36 @@ public class CallFunctionNode extends AbstractProcessingNode implements Configur
             params = resolveList(parameters, manager, context, env.getObjectModel());
         }
 
-        String continuation;
-        if (continuationResolver != null) {
-            // Need to resolve the function name at runtime
-            continuation = continuationResolver.resolve(context, env.getObjectModel());
-        } else {
-            continuation = continuationId;
-        }
+        String continuation = continuationId.resolve(context, env.getObjectModel());
 
         // If the continuation id is not null, it takes precedence over
         // the function call, so we invoke it here.
-        if (continuation != null) {
+        if (continuation != null && continuation.length() > 0) {
             interpreter.handleContinuation(continuation, params, env);
-            // FIXME (SW) : is a flow allowed not to redirect ?
-            // If not, we should throw a RNFE here.
-            return redirector.hasRedirected();
+            if (!redirector.hasRedirected()) {
+                throw new ProcessingException("<map:call continuation> did not send a response, at " + getLocation());
+            }
+            
+            // Success
+            return true;
         }
 
         // We don't have a continuation id passed in <map:call>, so invoke
         // the specified function
 
-        String name;
-        if (functionNameResolver != null) {
-            // Need to resolve the function name at runtime
-            name = functionNameResolver.resolve(context, env.getObjectModel());
-        } else {
-            name = functionName;
-        }
+        String name = functionName.resolve(context, env.getObjectModel());
 
-        if (name != null) {
+        if (name != null && name.length() > 0) {
             interpreter.callFunction(name, params, env);
-            // FIXME (SW) : is a flow allowed not to redirect ?
-            return redirector.hasRedirected();
+            if (!redirector.hasRedirected()) {
+                throw new ProcessingException("<map:call function='" + name + "'> did not send a response, at " + getLocation());
+            }
+            
+            // Success
+            return true;
         }
-
-        return false;
+        
+        // Found neither continuation nor function to call
+        throw new ProcessingException("No function nor continuation given in <map:call function> at " + getLocation());
     }
 }

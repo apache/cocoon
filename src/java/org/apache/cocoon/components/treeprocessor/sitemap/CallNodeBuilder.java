@@ -59,12 +59,13 @@ import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
- * @version CVS $Id: CallNodeBuilder.java,v 1.1 2003/03/09 00:09:21 pier Exp $
+ * @version CVS $Id: CallNodeBuilder.java,v 1.2 2003/11/11 21:57:18 sylvain Exp $
  */
 
 public class CallNodeBuilder extends AbstractProcessingNodeBuilder
@@ -83,19 +84,31 @@ public class CallNodeBuilder extends AbstractProcessingNodeBuilder
         continuationId = config.getAttribute("continuation", null);
 
         if (resourceName == null) {
-          if (functionName == null && continuationId == null)
-            throw new ConfigurationException("<map:call> must have either a 'resource', a 'function' or a 'continuation' attribute!");
+            // Building a CallFunction node
+            if (functionName == null && continuationId == null) {
+                throw new ConfigurationException(
+                    "<map:call> must have either a 'resource', 'function' or 'continuation' attribute, at " +
+                    config.getLocation());
+            }
 
-          node = new CallFunctionNode(functionName, continuationId);
-        }
-        else {
-            if (functionName != null || continuationId != null)
-              throw new ConfigurationException("<map:call> can be used to call either a resource, or a function/continuation in the control flow! Please specify either <map:call resource=\"...\"/> or <map:call function=\"...\" continuation=\"...\"/>.");
+            node = new CallFunctionNode(
+                VariableResolverFactory.getResolver(functionName, this.manager),
+                VariableResolverFactory.getResolver(continuationId, this.manager)
+            );
+            
+        } else {
+            // Building a Call(Resource)Node
+            if (functionName != null || continuationId != null) {
+                throw new ConfigurationException(
+                    "<map:call> cannot have both a 'resource' and a 'function' or 'continuation' attribute, at "
+                    + config.getLocation()
+                );
+            }
             node = new CallNode();
         }
 
         this.treeBuilder.setupNode(this.node, config);
-        if (node instanceof Configurable)
+        if (node instanceof Configurable) 
             ((Configurable)this.node).configure(config);
 
         return this.node;
