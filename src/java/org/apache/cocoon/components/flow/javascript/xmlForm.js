@@ -1,5 +1,5 @@
 //
-// CVS $Id: xmlForm.js,v 1.7 2003/03/29 19:12:24 coliver Exp $
+// CVS $Id: xmlForm.js,v 1.8 2003/04/01 19:25:11 coliver Exp $
 //
 // XMLForm Support
 //
@@ -15,21 +15,17 @@
  */
 
 function XForm(id, validatorNS, validatorDoc, scope) {
-    if (scope != "request") {
+    if (scope == "session") {
         cocoon.createSession();
     }
+    this.cocoon = cocoon; // workaround for Rhino dynamic scope bug
     this.id = id;
     this.lastContinuation = null;
-    XForm.forms[id] = this;
     this.validatorNS = validatorNS;
     this.validatorDoc = validatorDoc;
     this.dead = false;
 }
 
-/**
- * Global variable that stores XForm instances by id
- */
-XForm.forms = {};
 
 /**
  * Return the model object of this form
@@ -63,7 +59,7 @@ XForm.prototype.setModel = function(model) {
  */
 XForm.prototype.start = function(lastCont, timeToLive) {
     var k = new Continuation();
-    var kont = new WebContinuation(cocoon, k, 
+    var kont = new WebContinuation(this.cocoon, k, 
                                    lastCont, timeToLive);
     return kont;
 } 
@@ -119,17 +115,17 @@ XForm.prototype.iterate = function(expr) {
 }
 
 XForm.prototype._sendView = function(uri, lastCont, timeToLive) {
-  var k = new Continuation();
-  var kont = new WebContinuation(cocoon, k, lastCont, timeToLive);
-  var bizData = this.form.getModel();
-  if (bizData == undefined) {
-      bizData = null;
-  }
-
-  cocoon.forwardTo("cocoon://" + cocoon.environment.getURIPrefix() + uri,
-                   bizData, kont);
-  this.lastContinuation = kont;
-  suicide();
+    var k = new Continuation();
+    var kont = new WebContinuation(this.cocoon, k, lastCont, timeToLive);
+    var bizData = this.form.getModel();
+    if (bizData == undefined) {
+        bizData = null;
+    }
+    this.cocoon.forwardTo("cocoon://" + 
+                          this.cocoon.environment.getURIPrefix() + uri,
+                          bizData, kont);
+    this.lastContinuation = kont;
+    suicide();
 }
 
 /**
@@ -147,31 +143,31 @@ XForm.prototype._sendView = function(uri, lastCont, timeToLive) {
 XForm.prototype.sendView = function(phase, uri, validator) {
     var lastCont = this.lastContinuation;
     this.form.clearViolations();
-    var view = this.form.getFormView(cocoon.environment.objectModel);
+    var view = this.form.getFormView(this.cocoon.environment.objectModel);
     while (true) {
         // create a continuation, the invocation of which will resend
         // the page: this is used to implement <xf:submit continuation="back">
         var k = this.start(lastCont);
-        if (cocoon.request == null) {
+        if (this.cocoon.request == null) {
             // this continuation has been invalidated
             this.dead = true;
             handleInvalidContinuation();
             suicide();
         }
         // reset the view in case this is a re-invocation of a continuation
-        cocoon.request.setAttribute("view", view);
-	this.form.remove(cocoon.environment.objectModel, this.id);
-	this.form.save(cocoon.environment.objectModel, "request");
+        this.cocoon.request.setAttribute("view", view);
+        this.form.remove(this.cocoon.environment.objectModel, this.id);
+        this.form.save(this.cocoon.environment.objectModel, "request");
         this._sendView(uri, k);
         // _sendView creates a continuation, the invocation of which
         // will return right here: it is used to implement 
         // <xf:submit continuation="forward">
-        if (this.dead || cocoon.request == null) {
+        if (this.dead ||  this.cocoon.request == null) {
             // this continuation has been invalidated
             handleInvalidContinuation();
             suicide();
         }
-        this.form.populate(cocoon.environment.objectModel);
+        this.form.populate( this.cocoon.environment.objectModel);
         if (validator != undefined) {
             validator(this);
         }
@@ -186,7 +182,7 @@ XForm.prototype._setValidator = function(schNS, schDoc) {
     // if validator params are not specified, then
     // there is no validation by default
     if (schNS == null || schDoc == null ) return null;
-    var resolver = cocoon.environment;
+    var resolver =  this.cocoon.environment;
     var schemaSrc = resolver.resolveURI( schDoc );
     try {
         var is = Packages.org.apache.cocoon.components.source.SourceUtil.getInputSource(schemaSrc);
@@ -204,20 +200,12 @@ XForm.prototype._setValidator = function(schNS, schDoc) {
  */
 
 XForm.prototype.finish = function(uri) {
-    try {
-        this.form.save(cocoon.environment.objectModel, "request");
-    } catch (e if (e instanceof java.lang.IllegalStateException)) {
-        if (cocoon.session.getAttribute(this.id) != null) {
-            // someone else has taken my session
-            this.dead = true;
-            handleInvalidContinuation();
-            suicide();
-        }
-        throw e;
-    }
-    cocoon.forwardTo("cocoon://" + cocoon.environment.getURIPrefix() + uri,
-                     this.form.getModel(), null);
-    delete XForm.forms[this.id]; // delete myself
+    this.form.remove( this.cocoon.environment.objectModel, this.id);
+    this.form.save( this.cocoon.environment.objectModel, "request");
+     this.cocoon.forwardTo("cocoon://" + 
+                      this.cocoon.environment.getURIPrefix() + uri,
+                      this.form.getModel(), 
+                      null);
     this.dead = true;
     if (this.lastContinuation != null) {
         this.lastContinuation.invalidate();
@@ -259,16 +247,9 @@ function xmlForm(application, id, validator_ns, validator_doc, scope) {
     var command = getCommand();
     if (command != undefined) {
         // invoke a continuation 
-        var continuationsMgr =
-            cocoon.componentManager.lookup(Packages.org.apache.cocoon.components.flow.ContinuationsManager.ROLE);
-        var wk = continuationsMgr.lookupWebContinuation(command);
-        cocoon.componentManager.release(continuationsMgr);
-        if (wk != null) {
-            var jswk = wk.userObject;
-            jswk.continuation(jswk);
-            // note: not reached
-        }
-        handleInvalidContinuation(command);
+        cocoon.interpreter.handleContinuation(command, 
+                                              null,
+                                              cocoon.environment);
         return;
     } 
     if (id != null) {
