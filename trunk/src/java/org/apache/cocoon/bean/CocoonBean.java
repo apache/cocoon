@@ -287,14 +287,13 @@ public class CocoonBean
         m_properties.clear();
     }
 
-    public void initialize() throws Exception
-    {
+    public void initialize() throws Exception {
         // restart....
         if (null != m_contManager) dispose();
 
         forceLoadClasses();
 
-        m_initializationLogger.debug("Starting up Cocoon");
+        m_initializationLogger.info("Starting up Cocoon " + Constants.VERSION);
 
         m_confBuilder.setContextDirectory( m_contextURI );
         m_confBuilder.setContainerConfiguration( m_configURI );
