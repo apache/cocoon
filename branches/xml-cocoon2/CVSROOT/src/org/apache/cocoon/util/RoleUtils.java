@@ -19,7 +19,7 @@ import java.util.Collections;
  * role aliases and the real Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-12 05:18:09 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-05 15:18:43 $
  */
 
 public class RoleUtils {
@@ -43,6 +43,8 @@ public class RoleUtils {
         setup.put("image-encoder", Roles.IMAGE_ENCODER);
         setup.put("datasources", Roles.DB_CONNECTION);
         setup.put("url-factory", Roles.URL_FACTORY);
+        setup.put("event-pipeline", Roles.EVENT_PIPELINE);
+        setup.put("stream-pipeline", Roles.STREAM_PIPELINE);
 
         shorthand = Collections.unmodifiableMap(setup);
 
@@ -67,6 +69,8 @@ public class RoleUtils {
         setup.put(Roles.TRANSFORMERS, "org.apache.cocoon.components.CocoonComponentSelector");
         setup.put(Roles.SERIALIZERS, "org.apache.cocoon.sitemap.SitemapComponentSelector");
         setup.put(Roles.READERS, "org.apache.cocoon.sitemap.SitemapComponentSelector");
+        setup.put(Roles.EVENT_PIPELINE, "org.apache.cocoon.components.pipeline.NonCachingEventPipeline");
+        setup.put(Roles.STREAM_PIPELINE, "org.apache.cocoon.components.pipeline.NonCachingStreamPipeline");
 
         classname = Collections.unmodifiableMap(setup);
     }
