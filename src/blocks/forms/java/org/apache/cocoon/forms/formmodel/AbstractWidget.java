@@ -63,7 +63,12 @@ public abstract class AbstractWidget implements Widget {
      * Storage for the widget allocated attributes
      */
     private Map attributes;
- 
+    
+    /**
+     * Lazily computed request parameter name
+     */
+    private String requestParamName;   
+    
     protected AbstractWidget(AbstractWidgetDefinition definition) {
         this.state = definition.getState();
     }
@@ -161,15 +166,22 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public String getRequestParameterName() {
-        Widget myParent = getParent();
-        if (myParent != null) {
-            String parentFullId = myParent.getRequestParameterName();
-            // the top level form returns an id == ""
-            if (parentFullId.length() > 0) {
-                return parentFullId + "." + getId();
+        if (this.requestParamName == null) {
+
+            // Default if no parent or parent with empty id
+            this.requestParamName = getId();
+
+            Widget myParent = getParent();
+            if (myParent != null) {
+                String parentFullId = myParent.getRequestParameterName();
+                // the top level form returns an id == ""
+                if (parentFullId.length() > 0) {
+                    this.requestParamName = parentFullId + "." + getId();
+                }
             }
         }
-        return getId();
+        
+        return this.requestParamName;
     }
 
     public Widget lookupWidget(String path) {
