@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
+    <site signOn="{accountForm/signOn}" view="jxpath">
+        <backpointer name="Main Menu" do="index.do" />
+        <message>Please confirm the information below and then press continue...</message>
+        <panel header="Order #{order/orderId}" subheader="{order/orderDate}">
+            <panel label="Payment Details">
+                <field label="Card Type"><jxpath:value-of select="order/cardType" /></field>
+                <field label="Card Number"><jxpath:value-of select="order/creditCard" /></field>
+                <field label="Expiry Date (MM/YYYY)"><jxpath:value-of select="order/expiryDate" /></field>
+            </panel>
+            <panel label="Billing Address">
+                <field label="First name"><jxpath:value-of select="order/billToFirstName"/></field>
+                <field label="Last name" ><jxpath:value-of select="order/billToLastName"/></field>
+                <field label="Address 1" ><jxpath:value-of select="order/billAddress1"/></field>
+                <field label="Address 2" ><jxpath:value-of select="order/billAddress2"/></field>
+                <field label="City" ><jxpath:value-of select="order/billCity"/></field>
+                <field label="State" ><jxpath:value-of select="order/billState"/></field>
+                <field label="Zip" ><jxpath:value-of select="order/billZip"/></field>
+                <field label="Country" ><jxpath:value-of select="order/billCountry"/></field>
+            </panel>
+            <panel label="Shipping Address">
+                <field label="First name"><jxpath:value-of select="order/shipToFirstName"/></field>
+                <field label="Last name" ><jxpath:value-of select="order/shipToLastName"/></field>
+                <field label="Address 1" ><jxpath:value-of select="order/shipAddress1"/></field>
+                <field label="Address 2" ><jxpath:value-of select="order/shipAddress2"/></field>
+                <field label="City" ><jxpath:value-of select="order/shipCity"/></field>
+                <field label="State" ><jxpath:value-of select="order/shipState"/></field>
+                <field label="Zip" ><jxpath:value-of select="order/shipZip"/></field>
+                <field label="Country" ><jxpath:value-of select="order/shipCountry"/></field>
+            </panel>
+        </panel>
+        <nextpointer img="images/button_continue.gif" do="{$continuation/id}.kont?confirmed=true"/>
+    </site>
+
+</xsp:page>
+
+
+
+

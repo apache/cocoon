@@ -102,6 +102,10 @@ function setView() {
         EXT = ".vm";
     } else if (VIEW == "Xsp") {
         EXT = ".xsp";
+    } else if (VIEW == "Jexl") {
+        EXT = ".jexl";
+    } else if (VIEW == "JXPath") {
+        EXT = ".jxpath";
     }
     print("EXT="+EXT);
 }

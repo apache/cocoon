@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<page xmlns:jxpath="http://cocoon.apache.org/transformation/jxpath/1.0">
+    <site signOn="{accountForm/signOn}" view="jxpath">
+            <welcome>
+                <jxpath:if test="not(accountForm/signOn)">
+                    <firstName><jxpath:value-of select="accountForm/account/firstName"/></firstName>
+                </jxpath:if>
+                <menu>
+                    <jxpath:for-each select="categoryList" >
+                        <category name="{name}" id="{catId}"/>
+                    </jxpath:for-each>
+                </menu>
+            </welcome>
+    </site>
+</page>
+
+
+
+
+

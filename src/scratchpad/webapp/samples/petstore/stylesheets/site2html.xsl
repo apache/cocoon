@@ -21,9 +21,27 @@
 							<td>
 							   <form method="post" action="index.do">
 								 <input type="image" border="0" src="images/logo-topbar.gif" />
-								   <select name="view" width="14" align="left" value="Xsp" onChange="document.forms[0].submit()">
+								   <select name="view" width="14" align="left" onChange="document.forms[0].submit()">
+								<xsl:choose>
+									<xsl:when test="@view='jxpath'">
+									  <option value="JXPath">JXPath</option>
+									  <option value="Jexl">Jexl</option>
 									  <option value="Xsp">Xsp</option>
 									  <option value="Velocity">Velocity</option>
+                                                                        </xsl:when>
+									<xsl:when test="@view='jexl'">
+									  <option value="Jexl">Jexl</option>
+									  <option value="JXPath">JXPath</option>
+									  <option value="Xsp">Xsp</option>
+									  <option value="Velocity">Velocity</option>
+                                                                        </xsl:when>
+									<xsl:otherwise>
+									  <option value="Xsp">Xsp</option>
+									  <option value="JXPath">JXPath</option>
+									  <option value="Jexl">Jexl</option>
+									  <option value="Velocity">Velocity</option>
+									</xsl:otherwise>
+							              </xsl:choose>
 								   </select>
 							   </form>
 							</td>

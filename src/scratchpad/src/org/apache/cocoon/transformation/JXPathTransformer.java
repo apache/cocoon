@@ -52,6 +52,7 @@ package org.apache.cocoon.transformation;
 
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.Environment;
@@ -59,12 +60,17 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Variables;
 import org.apache.commons.jxpath.Pointer;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.w3c.dom.DocumentFragment;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceValidity;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -76,7 +82,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.Iterator;
 /**
- * JXPath Transformer.
+ * JXPath Transformer
  *
  * <p>
  *  Transformer implementation using Apache JXPath
@@ -91,7 +97,7 @@ import java.util.Iterator;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
  */
 public class JXPathTransformer
-extends AbstractSAXTransformer implements Initializable {
+extends AbstractSAXTransformer implements Initializable, Generator {
 
     public static final String JXPATH_NAMESPACE_URI  = 
 	"http://cocoon.apache.org/transformation/jxpath/1.0";
@@ -140,6 +146,31 @@ extends AbstractSAXTransformer implements Initializable {
     private Stack ifStack;
 
 
+    // Run as a generator for debugging: to get line numbers in error messages
+
+    private Source inputSource;
+
+    public void generate()
+        throws IOException, SAXException, ProcessingException {
+	try {
+            this.resolver.toSAX(this.inputSource, this);
+        } catch (SAXException e) {
+            final Exception cause = e.getException();
+            if( cause != null ) {
+                if ( cause instanceof ProcessingException )
+                    throw (ProcessingException)cause;
+                if ( cause instanceof IOException )
+                    throw (IOException)cause;
+                if ( cause instanceof SAXException )
+                    throw (SAXException)cause;
+                throw new ProcessingException("Could not read resource "
+                                              + this.inputSource.getURI(), cause);
+            }
+            throw e;
+        }
+    }
+
+
     /**
      * Initialize this transformer.
      *
@@ -166,7 +197,13 @@ extends AbstractSAXTransformer implements Initializable {
         throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
-
+	if (src != null) {
+	    try {
+		this.inputSource = resolver.resolveURI(src);
+	    } catch (SourceException se) {
+		throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
+	    }
+	}
         // setup the jxpath transformer for this thread
         // FIX ME: When we decide proper way to pass "bean" and "kont"
         Object bean = ((Environment)resolver).getAttribute("bean-dict");
@@ -177,6 +214,42 @@ extends AbstractSAXTransformer implements Initializable {
         ifStack = new Stack();
         inChoose = false;
         pushContext(bean);
+    }
+
+    /**
+     * Hack? Accept JXPath expr with or without enclosing {}
+     */
+
+    String getExpr(String inStr) {
+        try {
+	    inStr = inStr.trim();
+	    if (inStr.length() == 0 || inStr.charAt(0) != '{') {
+		return inStr;
+	    }
+            StringReader in = new StringReader(inStr);
+            int ch;
+            StringBuffer expr = new StringBuffer();
+	    in.read(); // '{'
+            while ((ch = in.read()) != -1) {
+                char c = (char)ch;
+		if (c == '}') {
+		    break;
+		} else if (c == '\\') {
+		    ch = in.read();
+		    if (ch == -1) {
+			expr.append('\\');
+		    } else {
+			expr.append((char)ch);
+		    }
+		} else {
+		    expr.append(c);
+		}
+	    } 
+	    return expr.toString();
+        } catch (IOException ignored) {
+            ignored.printStackTrace();
+        }
+	return inStr;
     }
 
     /**
@@ -247,8 +320,7 @@ extends AbstractSAXTransformer implements Initializable {
                     try {
                         substitute(reader, writer);
                     } catch (Exception exc) {
-                        throw new CascadingRuntimeException(exc.getMessage(),
-                                                            exc);
+                        throw new SAXException(exc.getMessage(), exc);
                     }
                     impl.setValue(i, writer.toString());
                 }
@@ -338,17 +410,15 @@ extends AbstractSAXTransformer implements Initializable {
                 finishIf();
             } else if (JXPATH_CHOOSE.equals(name)) {
                 finishChoose();
+                inChoose = false;
             } else if (JXPATH_WHEN.equals(name)) {
                 finishWhen();
                 inChoose = true;
-                return;
             } else if (JXPATH_OTHERWISE.equals(name)) {
                 finishOtherwise();
                 inChoose = true;
-                return;
             }
         }
-        inChoose = false;
     }
 
     private JXPathContext getContext() {
@@ -415,7 +485,7 @@ extends AbstractSAXTransformer implements Initializable {
         final String select = a.getValue(JXPATH_VALUEOF_SELECT);
 
         if (null != select) {
-            Object value = getValue(select);
+            Object value = getValue(getExpr(select));
             if (value == null) {
                 value = "";
             }
@@ -466,7 +536,7 @@ extends AbstractSAXTransformer implements Initializable {
         String test = a.getValue(JXPATH_IF_TEST);
 
         final Object value = 
-            (test == null) ? Boolean.FALSE : getValue("boolean("+test+")");
+            (test == null) ? Boolean.FALSE : getValue("boolean("+getExpr(test)+")");
         final boolean isTrueBoolean =
             value instanceof Boolean && ((Boolean)value).booleanValue() == true;
         ifStack.push(isTrueBoolean ? Boolean.TRUE : Boolean.FALSE);
@@ -496,7 +566,7 @@ extends AbstractSAXTransformer implements Initializable {
         if (ignoreEventsCount == 0) {
             startRecording();
             // get the test variable
-            String variable = a.getValue(JXPATH_VALUEOF_SELECT);
+            String variable = getExpr(a.getValue(JXPATH_VALUEOF_SELECT));
             Iterator iter = 
                 JXPathContext.compile(variable).iteratePointers(getContext());
             foreachStack.push(variable);
@@ -539,7 +609,7 @@ extends AbstractSAXTransformer implements Initializable {
         // get the test variable
         String test = a.getValue(JXPATH_WHEN_TEST);
         final Object value = 
-            (test == null) ? Boolean.FALSE : getValue("boolean("+test+")");
+            (test == null) ? Boolean.FALSE : getValue("boolean("+getExpr(test)+")");
         final boolean isTrueBoolean =
             value instanceof Boolean && ((Boolean)value).booleanValue() == true;
         if (isTrueBoolean) {
