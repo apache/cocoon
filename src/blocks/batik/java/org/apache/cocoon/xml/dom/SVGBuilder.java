@@ -21,6 +21,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.dom.svg.SVGDOMImplementation;
+import org.apache.batik.dom.svg.SVGOMDocument;
 
 import org.apache.cocoon.xml.XMLConsumer;
 
@@ -36,7 +37,7 @@ import java.net.URL;
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: SVGBuilder.java,v 1.7 2004/03/05 13:01:47 bdelacretaz Exp $
+ * @version CVS $Id: SVGBuilder.java,v 1.8 2004/03/28 05:29:04 antonio Exp $
  */
 public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled, Recyclable {
     protected Logger log;
@@ -105,7 +106,7 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
     }
 
     /**
-     * Receive notification of the beginning of a document.
+     * Receive notification of the end of a document.
      *
      * @exception SAXException If this method was not called appropriately.
      */
@@ -122,12 +123,11 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
                     baseURL = new URL("http://localhost/");
                     getLogger().warn("setDocumentLocator was not called, will use http://localhost/ as base URI");
                 }
-                ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(baseURL);
+                ((SVGOMDocument)super.document).setURLObject(baseURL);
             } catch (MalformedURLException e) {
                 getLogger().warn("Unable to set document base URI to " + baseURL + ", will default to http://localhost/", e);
-                ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(new URL("http://localhost/"));
+                ((SVGOMDocument)super.document).setURLObject(new URL("http://localhost/"));
             }
-
             notify(super.document);
         } catch (SAXException se) {
             throw se;
@@ -148,5 +148,4 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
     public void recycle() {
         locator = null;
     }
-
 }

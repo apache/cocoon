@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.generation;
 
+import java.io.Serializable;
+
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.ProcessingException;
@@ -40,7 +42,7 @@ import org.xml.sax.SAXException;
  * for offline generation.
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorGenerator.java,v 1.5 2004/03/05 13:01:46 bdelacretaz Exp $
+ * @version CVS $Id: FragmentExtractorGenerator.java,v 1.6 2004/03/28 05:29:04 antonio Exp $
  */
 public class FragmentExtractorGenerator extends ServiceableGenerator
                                         implements CacheableProcessingComponent {
@@ -51,7 +53,7 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         return this.source;
     }
 
@@ -86,7 +88,9 @@ public class FragmentExtractorGenerator extends ServiceableGenerator
             deserializer.deserialize(fragment);
 
         } catch (ServiceException ce) {
-            getLogger().error("Could not lookup for component.", ce);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Could not lookup for component.", ce);
+            }
             throw new SAXException("Could not lookup for component.", ce);
         } finally {
             this.manager.release(store);

@@ -17,6 +17,7 @@ package org.apache.cocoon.serialization;
 
 import java.awt.Color;
 import java.io.OutputStream;
+import java.io.Serializable;
 
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -49,7 +50,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Id: SVGSerializer.java,v 1.15 2004/03/05 13:01:46 bdelacretaz Exp $
+ * @version CVS $Id: SVGSerializer.java,v 1.16 2004/03/28 05:29:04 antonio Exp $
  */
 public class SVGSerializer extends SVGBuilder
 implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Contextualizable {
@@ -238,7 +239,7 @@ implements Serializer, Configurable, Poolable, CacheableProcessingComponent, Con
      * @return The generated key or <code>0</code> if the component
      *              is currently not cacheable.
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         return "1";
     }
 
