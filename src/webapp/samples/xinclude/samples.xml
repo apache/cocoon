@@ -10,6 +10,7 @@
    <sample name="XML Base" href="xmlbase.html">Demonstration of xml:base support.</sample>
 
    <sample name="Loop inclusion" href="loopinclusion.html">Example of a loop inclusion. This will show an error page.</sample>
+   <sample name="elementpath xpointer scheme" href="includehtml.html">Example of streaming inclusion using the custom elementpath XPointer scheme.</sample>
  </group>
 
 </samples>
