@@ -55,7 +55,7 @@ import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.commons.collections.ReferenceMap;
+import org.apache.commons.collections.map.ReferenceMap;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
@@ -71,7 +71,7 @@ import org.apache.excalibur.source.SourceValidity;
  * 
  * @since 2.1.4
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SoftSourceCache.java,v 1.2 2003/12/12 02:01:16 crossley Exp $
+ * @version CVS $Id: SoftSourceCache.java,v 1.3 2004/02/05 12:46:27 joerg Exp $
  */
 public class SoftSourceCache implements SourceCache {
 
