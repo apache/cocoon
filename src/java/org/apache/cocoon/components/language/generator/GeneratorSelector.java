@@ -78,7 +78,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: GeneratorSelector.java,v 1.3 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: GeneratorSelector.java,v 1.4 2004/02/04 14:44:34 sylvain Exp $
  */
 public class GeneratorSelector extends ExcaliburComponentSelector implements Disposable {
 
@@ -177,7 +177,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
         }
     }
 
-    protected void addGenerator(ComponentManager newManager,
+    public void addGenerator(ComponentManager newManager,
                                 Object hint, Program generator)
             throws Exception {
         try {
@@ -198,7 +198,7 @@ public class GeneratorSelector extends ExcaliburComponentSelector implements Dis
         }
     }
 
-    protected void removeGenerator(Object hint) {
+    public void removeGenerator(Object hint) {
         ComponentHandler handler = (ComponentHandler) this.componentHandlers.remove(hint);
         if (handler != null) {
             handler.dispose();
