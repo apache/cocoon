@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.11 2004/04/30 12:19:01 bruno Exp $
+ * @version $Id: Repeater.java,v 1.12 2004/05/07 13:42:09 mpo Exp $
  */
 public class Repeater extends AbstractWidget 
 //implements ContainerWidget 
@@ -190,7 +190,7 @@ public class Repeater extends AbstractWidget
 
     public void readFromRequest(FormContext formContext) {
         // read number of rows from request, and make an according number of rows
-        String sizeParameter = formContext.getRequest().getParameter(getFullyQualifiedId() + ".size");
+        String sizeParameter = formContext.getRequest().getParameter(getRequestParameterName() + ".size");
         if (sizeParameter != null) {
             int size = 0;
             try {
@@ -296,7 +296,7 @@ public class Repeater extends AbstractWidget
     public void generateWidgetLabel(String widgetId, ContentHandler contentHandler) throws SAXException {
         WidgetDefinition widgetDefinition = definition.getWidgetDefinition(widgetId);
         if (widgetDefinition == null)
-            throw new SAXException("Repeater \"" + getFullyQualifiedId() + "\" at " + this.getLocation()
+            throw new SAXException("Repeater \"" + getRequestParameterName() + "\" at " + this.getLocation()
                                    + " contains no widget with id \"" + widgetId + "\".");
         widgetDefinition.generateLabel(contentHandler);
     }
@@ -387,7 +387,7 @@ public class Repeater extends AbstractWidget
 //        }
         
         public void broadcastEvent(WidgetEvent event) {
-            throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
+            throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
         }
     }
 }

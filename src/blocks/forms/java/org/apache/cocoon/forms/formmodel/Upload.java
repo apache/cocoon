@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.11 2004/05/07 13:08:24 bruno Exp $
+ * @version CVS $Id: Upload.java,v 1.12 2004/05/07 13:42:09 mpo Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private final UploadDefinition uploadDefinition;
@@ -59,11 +59,11 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
     }
 
     public void setValue(Object object) {
-        throw new RuntimeException("Cannot manually set the value of an upload widget for field \"" + getFullyQualifiedId() + "\"");
+        throw new RuntimeException("Cannot manually set the value of an upload widget for field \"" + getRequestParameterName() + "\"");
     }
 
     public void readFromRequest(FormContext formContext) {
-        Object obj = formContext.getRequest().get(getFullyQualifiedId());
+        Object obj = formContext.getRequest().get(getRequestParameterName());
         
         // If the request object is a Part, keep it
         if (obj instanceof Part) {
@@ -153,7 +153,7 @@ public class Upload extends AbstractWidget implements ValidationErrorAware {
 	 */
 	public AttributesImpl getXMLElementAttributes() {
 		AttributesImpl attrs = super.getXMLElementAttributes();
-        attrs.addCDATAAttribute("id", getFullyQualifiedId());
+        attrs.addCDATAAttribute("id", getRequestParameterName());
         attrs.addCDATAAttribute("required", String.valueOf(uploadDefinition.isRequired()));
         if (uploadDefinition.getMimeTypes() != null) {
             attrs.addCDATAAttribute("mime-types", uploadDefinition.getMimeTypes());

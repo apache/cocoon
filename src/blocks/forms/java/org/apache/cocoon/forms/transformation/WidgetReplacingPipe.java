@@ -44,7 +44,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the forms template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.6 2004/04/23 13:02:31 mpo Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.7 2004/05/07 13:42:10 mpo Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -252,7 +252,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         }
         Widget widget = ((ContainerWidget)contextWidget).getWidget(widgetId);
         if (widget == null) {
-            throw new SAXException("FormsTemplateTransformer: widget with id \"" + widgetId + "\" does not exist in the container " + contextWidget.getFullyQualifiedId());
+            throw new SAXException("FormsTemplateTransformer: widget with id \"" + widgetId + "\" does not exist in the container " + contextWidget.getRequestParameterName());
         }
         return widget;
     }

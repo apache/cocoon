@@ -27,7 +27,7 @@ import org.apache.cocoon.forms.validation.WidgetValidator;
  * {@link org.apache.cocoon.forms.validation.WidgetValidator}.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ValidationRuleValidator.java,v 1.3 2004/04/28 16:34:13 bruno Exp $
+ * @version CVS $Id: ValidationRuleValidator.java,v 1.4 2004/05/07 13:42:09 mpo Exp $
  */
 public class ValidationRuleValidator implements WidgetValidator {
     
@@ -41,7 +41,7 @@ public class ValidationRuleValidator implements WidgetValidator {
     {
         if (! (widget instanceof ValidationErrorAware)) {
             // Invalid widget type
-            throw new IllegalArgumentException("Widget '" + widget.getFullyQualifiedId() + "' is not ValidationErrorAware");
+            throw new IllegalArgumentException("Widget '" + widget.getRequestParameterName() + "' is not ValidationErrorAware");
         }
 
         Object value = widget.getValue();
