@@ -28,7 +28,7 @@ import org.apache.cocoon.environment.commandline.FileSavingEnvironment;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.1 $ $Date: 2000-08-23 22:44:26 $
+ * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-08-31 15:59:23 $
  */
 
 public class Main {
@@ -95,8 +95,13 @@ public class Main {
         }
 
         try {
-            Main main = new Main(new Cocoon(getConfigurationFile(confFile)), getDestinationDir(destDir));
+            File dest = getDestinationDir(destDir);
+            File conf = getConfigurationFile(confFile);
+            File root = conf.getParentFile();
+            Main main = new Main(new Cocoon(conf), conf, dest);
+            System.out.println("[main] Starting...");
             main.processLinks(targets.iterator());
+            System.out.println("[main] Done.");
         } catch (Exception e) {
             System.out.println("[fatal error] Exception caught (" + e.getClass().getName() + "): " + e.getMessage() + "\n");
             printUsage();
@@ -178,27 +183,15 @@ public class Main {
 
     private Cocoon cocoon;
     private File destDir;
+    private File root;
 
     /**
      * Creates the Main class
      */
-    public Main(Cocoon cocoon, File destDir) {
+    public Main(Cocoon cocoon, File root, File destDir) {
         this.cocoon = cocoon;
+        this.root = root;
         this.destDir = destDir;
-    }
-
-    /**
-     * Process the given link and return the list of sublinks.
-     */
-    public Iterator processLink(String link) throws Exception {
-System.out.println("[main] processing link: " + link);        
-        // First process the given link and save it on disk
-        FileSavingEnvironment fileEnv = new FileSavingEnvironment(link, destDir);
-        cocoon.process(fileEnv);
-        // Then process it again (with another view) to obtain the hyperlinks
-        LinkSamplingEnvironment linkEnv = new LinkSamplingEnvironment(link);
-        cocoon.process(linkEnv);
-        return linkEnv.getLinks();
     }
 
     /**
@@ -209,6 +202,20 @@ System.out.println("[main] processing link: " + link);
             String link = (String) links.next();
             this.processLinks(this.processLink(link));
         }
+    }
+
+    /**
+     * Process the given link and return the list of sublinks.
+     */
+    public Iterator processLink(String link) throws Exception {
+        System.out.println("[main] processing link: " + link);        
+        // First process the given link and save it on disk
+        FileSavingEnvironment fileEnv = new FileSavingEnvironment(link, root, destDir);
+        cocoon.process(fileEnv);
+        // Then process it again (with another view) to obtain the hyperlinks
+        LinkSamplingEnvironment linkEnv = new LinkSamplingEnvironment(link);
+        cocoon.process(linkEnv);
+        return linkEnv.getLinks();
     }
 }
 
