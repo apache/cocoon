@@ -64,6 +64,8 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
@@ -77,7 +79,7 @@ import org.apache.avalon.excalibur.logger.LogKitManageable;
  * To be moved to Avalon ?
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: LifecycleHelper.java,v 1.1 2003/03/09 00:08:46 pier Exp $
+ * @version CVS $Id: LifecycleHelper.java,v 1.2 2003/07/16 22:46:20 bruno Exp $
  */
 
 // FIXME : need to handle also LogEnabled.
@@ -95,6 +97,10 @@ public class LifecycleHelper
     /** The component manager for this component.
      */
     private ComponentManager        m_componentManager;
+
+    /** The service manager for this component.
+     */
+    private ServiceManager        m_serviceManager;
 
     /** The configuration for this component.
      */
@@ -136,6 +142,21 @@ public class LifecycleHelper
         m_configuration = configuration;
     }
 
+    public LifecycleHelper( final Logger logger,
+            final Context context,
+            final ServiceManager serviceManager,
+            final RoleManager roles,
+            final LogKitManager logkit,
+            final Configuration configuration )
+    {
+        m_logger = logger;
+        m_context = context;
+        m_serviceManager = serviceManager;
+        m_roles = roles;
+        m_logkit = logkit;
+        m_configuration = configuration;
+    }
+
     /**
      * Setup a component, including initialization and start.
      *
@@ -165,6 +186,7 @@ public class LifecycleHelper
         return setupComponent( component,
                 m_logger,
                 m_context,
+                m_serviceManager,
                 m_componentManager,
                 m_roles,
                 m_logkit,
@@ -209,6 +231,28 @@ public class LifecycleHelper
             final boolean initializeAndStart )
         throws Exception
     {
+        return setupComponent( component,
+                logger,
+                context,
+                null,
+                componentManager,
+                roles,
+                logkit,
+                configuration,
+                initializeAndStart);
+    }
+
+    static Object setupComponent( final Object component,
+            final Logger logger,
+            final Context context,
+            final ServiceManager serviceManager,
+            final ComponentManager componentManager,
+            final RoleManager roles,
+            final LogKitManager logkit,
+            final Configuration configuration,
+            final boolean initializeAndStart )
+        throws Exception
+    {
         if( component instanceof LogEnabled )
         {
             Logger usedLogger;
@@ -242,7 +286,11 @@ public class LifecycleHelper
             ((Contextualizable)component).contextualize( context );
         }
 
-        if( null != componentManager && component instanceof Composable )
+        if( null != serviceManager && component instanceof Serviceable )
+        {
+            ((Serviceable)component).service( serviceManager );
+        }
+        else if( null != componentManager && component instanceof Composable )
         {
             ((Composable)component).compose( componentManager );
         }
