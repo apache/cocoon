@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-27 19:28:07 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-27 19:32:13 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     private static final Map addStatements = new HashMap();
@@ -79,7 +79,6 @@ public class DatabaseAddAction extends AbstractDatabaseAction {
                     set.next();
                     int value = set.getInt("maxid") + 1;
 
-                    getLogger().info("Assigning column " + currentIndex + "'" + key.getAttribute("dbcol") + "' to: " + value);
                     statement.setInt(currentIndex, value);
 
                     set.close();
