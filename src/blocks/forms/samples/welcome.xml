@@ -40,7 +40,7 @@
   <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>
   <sample name="HTMLArea" href="htmlarea">A simple form using the HTML editor widget.</sample>
   <sample name="Aggregate" href="aggregate/example">Aggregate field examples</sample>
-  <sample name="Multipage wizard" href="do-multipage.flow">A multipage wizard, using widget states and actions to go throgh pages.</sample>
+  <sample name="Multipage wizard" href="do-multipage.flow">A multipage wizard, using widget states and actions to move between pages.</sample>
  </group>
 
  <group name="Binding Samples">
