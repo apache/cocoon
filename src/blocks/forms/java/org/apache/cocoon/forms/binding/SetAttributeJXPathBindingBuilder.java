@@ -24,11 +24,11 @@ import org.w3c.dom.Element;
  * actual {@link SetAttributeJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:set-attribute name="<i>attribute-name to set to</i>"
+ * &lt;fb:set-attribute name="<i>attribute-name to set to</i>"
  *                      value="<i>attribute-value</i>"/&gt;
  * </code></pre>
  *
- * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: SetAttributeJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class SetAttributeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

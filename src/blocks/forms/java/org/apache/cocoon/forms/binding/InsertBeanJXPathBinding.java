@@ -28,9 +28,10 @@ import org.apache.commons.jxpath.JXPathContext;
  * <p>
  * NOTES: <ol>
  * <li>This Binding does not perform any actions when loading.</li>
+ * <li>This expects the back-end model to be a Java Bean model.</li>
  * </ol>
  *
- * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: InsertBeanJXPathBinding.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class InsertBeanJXPathBinding extends JXPathBindingBase {
 

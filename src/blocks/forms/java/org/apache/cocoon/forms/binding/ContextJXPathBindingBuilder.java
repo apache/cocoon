@@ -24,12 +24,12 @@ import org.w3c.dom.Element;
  * actual {@link ContextJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:context path="<i>xpath expression</i>"&gt;
+ * &lt;fb:context path="<i>xpath expression</i>"&gt;
  *   &lt;!-- in here come the nested child bindings on the sub-context --&gt;
- * &lt;/wb:context&gt;
+ * &lt;/fb:context&gt;
  * </code></pre>
  *
- * @version CVS $Id: ContextJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: ContextJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class ContextJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

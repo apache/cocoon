@@ -24,14 +24,14 @@ import org.w3c.dom.Element;
  * actual {@link NewJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:new id="<i>widget-id</i>"&gt;
- *   &lt;wb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>"
+ * &lt;fb:new id="<i>widget-id</i>"&gt;
+ *   &lt;fb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>"
  *       direction="<i>load|save</i>" lenient="<i>true/false</i>" />
- * &lt;/wb:new&gt;
+ * &lt;/fb:new&gt;
  * </code></pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: NewJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: NewJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class NewJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

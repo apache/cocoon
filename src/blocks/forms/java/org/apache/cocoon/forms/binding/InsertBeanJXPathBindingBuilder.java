@@ -25,10 +25,10 @@ import org.w3c.dom.Element;
  * actual {@link InsertBeanJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:insert-bean classname="..child-bean-class.." addmethod="..method-to-add.."/&gt;
+ * &lt;fb:insert-bean classname="..child-bean-class.." addmethod="..method-to-add.."/&gt;
  * </code></pre>
  *
- * @version CVS $Id: InsertBeanJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: InsertBeanJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class InsertBeanJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

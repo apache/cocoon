@@ -24,14 +24,14 @@ import org.w3c.dom.Element;
  * actual {@link UnionJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:union id="<i>widget-id</i>" path="<i>xpath-expression</i>"
+ * &lt;fb:union id="<i>widget-id</i>" path="<i>xpath-expression</i>"
  *     direction="<i>load|save</i>" lenient="<i>true|false</i>" &gt;
- *   &lt;wb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
- * &lt;/wb:union&gt;
+ *   &lt;fb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
+ * &lt;/fb:union&gt;
  * </code></pre>
  *
  * @author Timothy Larson
- * @version CVS $Id: UnionJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: UnionJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class UnionJXPathBindingBuilder extends JXPathBindingBuilderBase {
 

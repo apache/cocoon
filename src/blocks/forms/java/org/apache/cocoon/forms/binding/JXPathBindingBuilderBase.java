@@ -25,12 +25,14 @@ import org.w3c.dom.Element;
  * common configuration settings on all specific implementations of
  * {@link org.apache.cocoon.forms.binding.JXPathBindingBase}.
  *
- * Common supported configurations:
+ * Common supported configurations: {@link #getCommonAttributes(Element)}
  * <ul>
- * <li>Attribute direction="load|save|both": {@link #getCommonAttributes(Element)}</li>
+ * <li>Attribute direction="load|save|both": defaults to 'both'</li>
+ * <li>Attribute lenient="true|false|[undefined]": defaults to [undefined]
+ *     which means: "continue in same leniency-mode as parent" </li>
  * </ul>
  *
- * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.3 2004/04/01 12:59:57 mpo Exp $
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 

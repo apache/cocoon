@@ -22,15 +22,15 @@ import org.w3c.dom.Element;
  * A simple repeater binding that will replace (i.e. delete then re-add all) its
  * content.
  * <pre>
- * &lt;wb:simple-repeater
+ * &lt;fb:simple-repeater
  *   id="contacts"
  *   parent-path="contacts"&gt;
- *   &lt;<em>... child bindings ...</em>
- * &lt;/wb:simple-repeater&gt;
+ *   &lt;<em>... child bindings ...</em>&gt;
+ * &lt;/fb:simple-repeater&gt;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: SimpleRepeaterJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: SimpleRepeaterJXPathBindingBuilder.java,v 1.2 2004/04/01 12:59:57 mpo Exp $
  */
 public class SimpleRepeaterJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

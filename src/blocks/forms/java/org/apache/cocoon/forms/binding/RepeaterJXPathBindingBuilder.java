@@ -24,29 +24,32 @@ import org.w3c.dom.Element;
  * actual {@link RepeaterJXPathBinding} out of the configuration in the
  * provided configElement which looks like:
  * <pre><code>
- * &lt;wb:repeater
+ * &lt;fb:repeater
  *   id="contacts"
  *   parent-path="contacts"
  *   row-path="contact"
- *   unique-row-id="id"
- *   unique-path="@id"   &gt;
+ *   row-path-insert="new-contact"  &gt;
  *
- *   &lt;wb:on-bind&gt;
+ *   &lt;fb:identity&gt;
+ *      &lt;!-- nested bindings that map the 'identity' of the items --&gt;
+ *   &lt;/fb:identity&gt;
+ *
+ *   &lt;fb:on-bind&gt;
  *      &lt;!-- nested bindings executed on updates AND right after the insert --&gt;
- *   &lt;/wb:on-bind&gt;
+ *   &lt;/fb:on-bind&gt;
  *
- *   &lt;wb:on-delete-row&gt;
+ *   &lt;fb:on-delete-row&gt;
  *      &lt;!-- nested bindings executed on deletion of row --&gt;
- *   &lt;/wb:on-delete-row&gt;
+ *   &lt;/fb:on-delete-row&gt;
  *
- *   &lt;wb:on-insert-row&gt;
+ *   &lt;fb:on-insert-row&gt;
  *      &lt;!-- nested bindings executed to prepare the insertion of a row --&gt;
- *   &lt;/wb:on-insert-row&gt;
+ *   &lt;/fb:on-insert-row&gt;
  *
- * &lt;/wb:repeater&gt;
+ * &lt;/fb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.3 2004/03/12 03:31:39 joerg Exp $
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.4 2004/04/01 12:59:57 mpo Exp $
  */
 public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
@@ -96,6 +99,9 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
             if (insertWrapElement != null) {
                 insertBinding =
                     assistant.makeChildBindings(insertWrapElement)[0];
+                    // TODO: we now safely take only the first element here,
+                    // but we should in fact send out a warning to the log 
+                    // if more were available!
             }
 
             Element identityWrapElement = DomHelper.getChildElement(bindingElm,
