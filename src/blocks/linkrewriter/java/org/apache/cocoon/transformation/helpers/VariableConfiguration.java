@@ -64,7 +64,7 @@ import org.xml.sax.SAXException;
  * replaced with values from a lookup table.
  *
  * @author <a href="jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: VariableConfiguration.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
+ * @version CVS $Id: VariableConfiguration.java,v 1.3 2003/05/03 10:24:55 jefft Exp $
  */
 public class VariableConfiguration {
     public static final String UNSET_VAR="unset";
@@ -106,7 +106,7 @@ public class VariableConfiguration {
     public Configuration getConfiguration() throws SAXException, ConfigurationException {
 
         if (this.conf == null) return null;
-        InterpolatingConfigurationHandler handler = new InterpolatingConfigurationHandler(this.vars);
+        InterpolatingConfigurationHandler handler = new InterpolatingConfigurationHandler(this.vars, this.conf.getLocation());
         DefaultConfigurationSerializer ser = new DefaultConfigurationSerializer();
         ser.serialize(handler, this.conf);
         return handler.getConfiguration();

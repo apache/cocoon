@@ -62,16 +62,27 @@ import java.util.StringTokenizer;
  *
  * @see VariableConfiguration
  * @author <a href="jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: InterpolatingConfigurationHandler.java,v 1.2 2003/03/11 17:44:21 vgritsenko Exp $
+ * @version CVS $Id: InterpolatingConfigurationHandler.java,v 1.3 2003/05/03 10:24:55 jefft Exp $
  */
 public class InterpolatingConfigurationHandler extends SAXConfigurationHandler {
-    private Map vars;
+    final private Map vars;
+    final private String location;
 
     /** Constructor.
      * @param vars The mappings from variable name to value.
      */
     public InterpolatingConfigurationHandler(Map vars) {
         this.vars = vars;
+        this.location = "Unknown";
+    }
+
+    /** Constructor.
+     * @param vars The mappings from variable name to value.
+     * @param location The origin of this configuration info.
+     */
+    public InterpolatingConfigurationHandler(Map vars, String location) {
+        this.vars = vars;
+        this.location = location;
     }
 
     /** Replace {vars} in attributes.  */
@@ -93,6 +104,10 @@ public class InterpolatingConfigurationHandler extends SAXConfigurationHandler {
         buf.append(newVal);
         buf.append(ch, start+len, ch.length-(start+len));
         super.characters(buf.toString().toCharArray(), start, newVal.length());
+    }
+
+    protected String getLocationString() {
+        return this.location;
     }
 
 
