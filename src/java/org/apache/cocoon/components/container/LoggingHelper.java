@@ -114,7 +114,7 @@ public class LoggingHelper {
                 Source source = null;
                 try {
                     source = resolver.resolveURI(logkitConfig);
-                    final ConfigurationBuilder builder = new ConfigurationBuilder();
+                    final ConfigurationBuilder builder = new ConfigurationBuilder(settings);
                     final Configuration conf = builder.build(source.getInputStream());
                     final DefaultConfiguration categories = (DefaultConfiguration)conf.getChild("categories");
                     final DefaultConfiguration targets = (DefaultConfiguration)conf.getChild("targets");

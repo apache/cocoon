@@ -94,11 +94,13 @@ public class ConfigurationBuilder
     private Configuration configuration;
     private Locator locator;
     private final NamespaceSupport namespaceSupport = new NamespaceSupport();
-
+    private final Settings settings;
+    
     /**
      * Create a Configuration Builder
      */
-    public ConfigurationBuilder() {
+    public ConfigurationBuilder(Settings s) {
+        this.settings = s;
         try {
             final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
 
@@ -272,7 +274,7 @@ public class ConfigurationBuilder
             } else {
                 finishedValue = accumulatedValue.trim();
             }
-            finishedConfiguration.setValue( PropertyHelper.replace(finishedValue) );
+            finishedConfiguration.setValue( PropertyHelper.replace(finishedValue, this.settings) );
         } else {
             final String trimmedValue = accumulatedValue.trim();
             if( trimmedValue.length() > 0 ) {
@@ -367,7 +369,7 @@ public class ConfigurationBuilder
         for( int i = 0; i < attributesSize; i++ ) {
             final String name = componentAttr.getQName( i );
             final String value = componentAttr.getValue( i );
-            configuration.setAttribute( name, PropertyHelper.replace(value) );
+            configuration.setAttribute( name, PropertyHelper.replace(value, this.settings) );
         }
     }
 

@@ -35,6 +35,8 @@ import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.notification.DefaultNotifyingBuilder;
 import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.portlet.PortletContext;
 import org.apache.cocoon.environment.portlet.PortletEnvironment;
@@ -287,6 +289,8 @@ public class CocoonPortlet extends GenericPortlet {
 
         this.portletContext = conf.getPortletContext();
         this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new PortletContext(this.portletContext));
+        // FIXME - add settings
+        appContext.put(Core.CONTEXT_SETTINGS, new Settings());
         this.portletContextPath = this.portletContext.getRealPath("/");
 
         // first init the work-directory for the logger.

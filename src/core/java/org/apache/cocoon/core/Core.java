@@ -20,12 +20,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.cocoon.configuration.Settings;
+
 /**
  * The Core
  * 
- * @version SVN $Id:$
+ * @version SVN $Id$
  */
 public class Core {
+
+    /** Application <code>Context</code> Key for the settings @since 2.2 */
+    public static final String CONTEXT_SETTINGS = "settings";
 
     private static final ThreadLocal cleanup = new InheritableThreadLocal();
     
@@ -49,8 +57,25 @@ public class Core {
             l.clear();
         }
     }
+    
     public static interface CleanupTask {
         
         void invoke();
     }
+    
+    /**
+     * Return the current response
+     * @param context The component context
+     * @return The response
+     * @since 2.2
+     */
+    public static final Settings getSettings(Context context) {
+        // the settings object is always present
+        try {
+            return (Settings)context.get(CONTEXT_SETTINGS);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException("Unable to get the settings object from the context.", ce);
+        }
+    }
+    
 }

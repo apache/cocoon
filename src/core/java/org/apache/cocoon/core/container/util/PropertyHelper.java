@@ -16,6 +16,8 @@
  */
 package org.apache.cocoon.core.container.util;
 
+import org.apache.cocoon.configuration.Settings;
+
 /**
  * Helper class for replacing property references with the value of the
  * property
@@ -24,11 +26,11 @@ package org.apache.cocoon.core.container.util;
  */
 public class PropertyHelper {
 
-    /**
+        /**
      * Replace all property references in the string with the current value
      * and return it.
      */
-    public static String replace(String value) {
+    public static String replace(String value, Settings settings) {
         // quick test for null or no references
         if ( value == null || value.indexOf("${") == -1 ) {
             return value;
@@ -64,7 +66,7 @@ public class PropertyHelper {
                     prev = value.length();
                 } else {
                     final String propertyName = value.substring(pos + 2, endName);
-                    String propertyValue = getProperty(propertyName);
+                    String propertyValue = getProperty(propertyName, settings);
                     // compatibility fallback - if the value is null, just readd token
                     if (propertyValue == null) {
                         buffer.append("${");
@@ -85,7 +87,14 @@ public class PropertyHelper {
         return buffer.toString();
     }
 
-    static String getProperty(String name) {
-        return System.getProperty(name);    
+    static String getProperty(String name, Settings settings) {
+        String value = null;
+        if ( settings != null ) {
+            value = settings.getProperty(name);
+        }
+        if ( value == null ) {
+            value = System.getProperty(name);
+        }
+        return value;
     }
 }

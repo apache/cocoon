@@ -42,6 +42,8 @@ import org.apache.cocoon.components.container.ComponentContext;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
+import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core;
 import org.apache.cocoon.core.container.RoleManager;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -251,7 +253,8 @@ public class Cocoon
     private void configure() throws Exception {
         InputSource is = SourceUtil.getInputSource(this.configurationFile);
 
-        ConfigurationBuilder builder = new ConfigurationBuilder();
+        final Settings settings = Core.getSettings(context);
+        ConfigurationBuilder builder = new ConfigurationBuilder(settings);
         Configuration conf = builder.build(is);
 
         if (getLogger().isDebugEnabled()) {
