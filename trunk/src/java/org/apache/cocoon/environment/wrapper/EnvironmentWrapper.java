@@ -50,19 +50,6 @@
 */
 package org.apache.cocoon.environment.wrapper;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.logger.Logger;
-
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.AbstractEnvironment;
-import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.util.BufferedOutputStream;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -71,6 +58,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.AbstractEnvironment;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.util.BufferedOutputStream;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
 
 /**
  * This is a wrapper class for the <code>Environment</code> object.
@@ -78,7 +76,7 @@ import java.util.Map;
  * contains a <code>RequestWrapper</code> object.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version $Id: EnvironmentWrapper.java,v 1.1 2003/03/09 00:09:30 pier Exp $
+ * @version $Id: EnvironmentWrapper.java,v 1.2 2003/03/12 12:55:16 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -332,16 +330,10 @@ public class EnvironmentWrapper
      * Change the current context to the last one set by changeContext()
      * and return last processor
      */
-    public Processor changeToLastContext() {
+    public void changeToLastContext() {
         this.setContext(this.lastContext);
         this.setURIPrefix(this.lastPrefix);
         this.uris = this.lastURI;
-		// HACK: As processing enters sitemap, capture current processor.
-		// If pipeline is successfully assembled, this will contain proper processor.
-		// Used by cocoon protocol.
-		// FIXME (CZ) : Is this the right place? This was before
-		//               in the setComponentManager method!
-        return CocoonComponentManager.getCurrentProcessor();
     }
 
     /**
@@ -371,7 +363,7 @@ public class EnvironmentWrapper
     {
         Object value = super.getAttribute(name);
         if (value == null)
-            value = environment.getAttribute(name);
+            value = this.environment.getAttribute(name);
 
         return value;
     }
@@ -384,7 +376,7 @@ public class EnvironmentWrapper
      */
     public void removeAttribute(String name) {
         super.removeAttribute(name);
-        environment.removeAttribute(name);
+        this.environment.removeAttribute(name);
     }
 
 }
