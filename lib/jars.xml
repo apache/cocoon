@@ -441,7 +441,7 @@
       HTTP standards and recommendations.
     </description>
     <used-by>SOAP logicsheet, WebServiceProxyGenerator, HttpProxyGenerator</used-by>
-    <lib>core/commons-httpclient-2.0-final.jar</lib>
+    <lib>core/commons-httpclient-2.0.1.jar</lib>
     <homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
   </file>
 
