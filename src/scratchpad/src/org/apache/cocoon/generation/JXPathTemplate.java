@@ -210,12 +210,15 @@ public class JXPathTemplate extends AbstractGenerator {
     final static String JXPATH_NS = 
         "http://cocoon.apache.org/transformation/jxpath/1.0";
 
+    final static String TEMPLATE = "template";
     final static String FOR_EACH = "for-each";
     final static String IF = "if";
     final static String CHOOSE = "choose";
     final static String WHEN = "when";
     final static String OTHERWISE = "otherwise";
     final static String VALUE_OF = "value-of";
+    final static String IMPORT = "import";
+
 
     // get XPath expression (optionally contained in {})
     private String getExpr(String inStr) {
@@ -774,6 +777,34 @@ public class JXPathTemplate extends AbstractGenerator {
         }
     }
 
+    class StartImport extends Event {
+        StartImport(Locator location, String name) {
+            super(location);
+            this.uri = name;
+        }
+        final String uri;
+        EndImport endImport;
+    }
+
+    class EndImport extends Event {
+        EndImport(Locator location) {
+            super(location);
+        }
+    }
+
+    class StartTemplate extends Event {
+        StartTemplate(Locator location) {
+            super(location);
+        }
+        EndTemplate endTemplate;
+    }
+
+    class EndTemplate extends Event {
+        EndTemplate(Locator location) {
+            super(location);
+        }
+    }
+
     class Parser implements LexicalHandler, ContentHandler {
 
         StartDocument startEvent;
@@ -854,6 +885,14 @@ public class JXPathTemplate extends AbstractGenerator {
                     StartChoose startChoose = (StartChoose)start;
                     newEvent = 
                         startChoose.endChoose = new EndChoose(locator);
+                } else if (start instanceof StartImport) {
+                    StartImport startImport = (StartImport)start;
+                    newEvent = 
+                        startImport.endImport = new EndImport(locator);
+                } else if (start instanceof StartTemplate) {
+                    StartTemplate startTemplate = (StartTemplate)start;
+                    newEvent =
+                        startTemplate.endTemplate = new EndTemplate(locator);
                 } else {
                     throw new SAXParseException("unrecognized tag: " + localName, locator, null);
                 }
@@ -977,6 +1016,18 @@ public class JXPathTemplate extends AbstractGenerator {
                     StartIf startIf = 
                         new StartIf(locator, expr);
                     newEvent = startIf;
+                } else if (localName.equals(IMPORT)) {
+                    String uri = attrs.getValue("uri");
+                    if (uri == null) {
+                        throw new SAXParseException("import: \"uri\" is required", locator, null);
+                    }
+                    StartImport startImport = 
+                        new StartImport(locator, uri);
+                    newEvent = startImport;
+                } else if (localName.equals(TEMPLATE)) {
+                    StartTemplate startTemplate =
+                        new StartTemplate(locator);
+                    newEvent = startTemplate;
                 } else {
                     throw new SAXParseException("unrecognized tag: " + localName, locator, null);
                 }
@@ -1050,8 +1101,8 @@ public class JXPathTemplate extends AbstractGenerator {
                 throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
             }
         }
-        String uri = inputSource.getURI();
         long lastMod = inputSource.getLastModified();
+        String uri = inputSource.getURI();
         synchronized (cache) {
             StartDocument startEvent = (StartDocument)cache.get(uri);
             if (startEvent != null &&
@@ -1201,11 +1252,25 @@ public class JXPathTemplate extends AbstractGenerator {
                 }
             } else if (ev instanceof StartForEach) {
                 StartForEach startForEach = (StartForEach)ev;
-                Iterator iter = 
-                    startForEach.select.iteratePointers(context);
+                Iterator iter;
+                try {
+                    iter = 
+                        startForEach.select.iteratePointers(context);
+                } catch (JXPathException exc) {
+                    throw new SAXParseException(exc.getMessage(),
+                                                ev.location,
+                                                exc);
+                }
                 while (iter.hasNext()) {
                     Pointer ptr = (Pointer)iter.next();
-                    Object contextObject = ptr.getNode();
+                    Object contextObject;
+                    try {
+                        contextObject = ptr.getNode();
+                    } catch (JXPathException exc) {
+                        throw new SAXParseException(exc.getMessage(),
+                                                    ev.location,
+                                                    exc);
+                    }
                     JXPathContext newContext = 
                         jxpathContextFactory.newContext(null, 
                                                         contextObject);
@@ -1223,7 +1288,7 @@ public class JXPathTemplate extends AbstractGenerator {
                     Object val;
                     try {
                         val = startWhen.test.getValue(context);
-                    } catch (Exception e) {
+                    } catch (JXPathException e) {
                         throw new SAXParseException(e.getMessage(),
                                                     ev.location,
                                                     e);
@@ -1277,7 +1342,7 @@ public class JXPathTemplate extends AbstractGenerator {
                                 try {
                                     val = 
                                         expr.compiledExpression.getValue(context);
-                                } catch (Exception e) {
+                                } catch (JXPathException e) {
                                     throw new SAXParseException(e.getMessage(),
                                                                 ev.location,
                                                                 e);
@@ -1333,7 +1398,7 @@ public class JXPathTemplate extends AbstractGenerator {
                 Object val;
                 try {
                     val = startValueOf.compiledExpression.getValue(context);
-                } catch (Exception e) {
+                } catch (JXPathException e) {
                     throw new SAXParseException(e.getMessage(),
                                                 ev.location,
                                                 e);
@@ -1342,8 +1407,48 @@ public class JXPathTemplate extends AbstractGenerator {
                     val = "";
                 }
                 char[] ch = val.toString().toCharArray();
-                
                 consumer.characters(ch, 0, ch.length);
+            } else if (ev instanceof StartTemplate) {
+                // no action
+            } else if (ev instanceof StartImport) {
+                StartImport startImport = (StartImport)ev;
+                String uri = startImport.uri;
+                Source input;
+                try {
+                    input = resolver.resolveURI(uri);
+                } catch (Exception exc) {
+                    throw new SAXParseException(exc.getMessage(),
+                                                ev.location,
+                                                exc);
+                }
+                long lastMod = input.getLastModified();
+                StartDocument doc;
+                synchronized (cache) {
+                    doc = (StartDocument)cache.get(input.getURI());
+                    if (doc != null) {
+                        if (doc.compileTime < lastMod) {
+                            doc = null; // recompile
+                        }
+                    }
+                }
+                if (doc == null) {
+                    try {
+                        Parser parser = new Parser();
+                        this.resolver.toSAX(input, parser);
+                        doc = parser.getStartEvent();
+                        doc.compileTime = lastMod;
+                    } catch (Exception exc) {
+                        throw new SAXParseException(exc.getMessage(),
+                                                    ev.location,
+                                                    exc);
+                    }
+                    synchronized (cache) {
+                        cache.put(input.getURI(), doc);
+                    }
+                }
+                execute(context, doc.next, null);
+                ev = startImport.endImport.next;
+                continue;
             }
             ev = ev.next;
         }
