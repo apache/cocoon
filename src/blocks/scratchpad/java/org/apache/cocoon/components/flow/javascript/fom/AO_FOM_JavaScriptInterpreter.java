@@ -107,7 +107,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.5 2003/09/12 18:41:36 reinhard Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.6 2003/09/24 22:00:34 cziegeler Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -551,7 +551,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         }
     }
     // (RPO) added/changed by interception layer   
-    private Script compileScript( Context cx, Scriptable scope, 
+    protected Script compileScript( Context cx, Scriptable scope, 
                                   Source src, JavaScriptAspectWeaver aspectWeaver)
         throws Exception {
         Script compiledScript = null;

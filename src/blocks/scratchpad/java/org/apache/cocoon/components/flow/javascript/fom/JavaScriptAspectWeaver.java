@@ -114,7 +114,7 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.7 2003/09/17 01:09:45 joerg Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.8 2003/09/24 22:00:34 cziegeler Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -394,14 +394,14 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                     // check for comments
                     if( thisChar == '/' && nextChar == '*' ) {
                         JSToken t = new JSToken( JSToken.COMMENT );
-                        curToken = t.append('/').append('*');;
+                        curToken = t.append('/').append('*');
                         parsingState = IN_COMMENT;
                         i++;
                         continue;
                     }
                     else if( thisChar == '/' && nextChar == '/' ) {                
                         JSToken t = new JSToken( JSToken.LINE_COMMENT );
-                        curToken = t.append( thisChar ).append( nextChar );;
+                        curToken = t.append( thisChar ).append( nextChar );
                         parsingState = IN_LINECOMMENT;
                         i++;
                         continue;                    
@@ -429,7 +429,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                     }
                     else if( thisChar == '\"' ) {
                         JSToken t = new JSToken( JSToken.CODE_LITERAL );
-                        curToken = t.append( thisChar );;
+                        curToken = t.append( thisChar );
                         parsingState = IN_DOUBLE_QUOTES;
                         continue;
                     }
@@ -483,7 +483,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
                     }       
                     else if( thisChar == ']' ) {
                         JSToken t = new JSToken( JSToken.BRACKET1_RIGHT );
-                        curToken = t.append( thisChar );;
+                        curToken = t.append( thisChar );
                         parsingState = AT_START;   
                         continue;  
                     }   
@@ -604,7 +604,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         /**
          * Add the code fragement of the passed interceptions at the right places
          */
-        private void addInterceptions( ArrayList interceptionsList ) {
+        protected void addInterceptions( ArrayList interceptionsList ) {
                                            
             ListIterator li = this.listIterator();
             boolean inAround = false;
@@ -822,7 +822,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          * to make intercepting easier events are added (start function, 
          * stop function, stop execution, continue execution)
          */
-        private void addInterceptionEvents( List stopExecutionFunctions ) {
+        protected void addInterceptionEvents( List stopExecutionFunctions ) {
 
             this.stopExecutionFunctions = stopExecutionFunctions;
             
@@ -903,7 +903,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          * Get a list of sources as string (the src attribute of the 
          * cocoon.apply( src) function) of all scripts to apply
          */
-        private List getScriptsApplied() {
+        protected List getScriptsApplied() {
             ArrayList scriptsApplied = new ArrayList();            
             boolean foundCocoon = false;
             boolean foundApply = false;
@@ -943,7 +943,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         /**
          * comment out all occurencies of cocoon.apply( "..." );
          */
-        private void commentScriptsApplied() {
+        protected void commentScriptsApplied() {
             int diff = -1;
             for( int i = 0; i < this.cocoonPositions.size(); i++ ) {
                 int pos = ((Integer) this.cocoonPositions.get(i)).intValue();
@@ -969,7 +969,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          * Replace all occurencies of return (except those which
          * are in separte code blocks)
          */
-        private void replaceReturnStatements() {
+        protected void replaceReturnStatements() {
             ListIterator li = this.listIterator();
             int countOpenBrackets = 0;
             boolean inFunction = false;
@@ -1053,7 +1053,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          *   <li>around(): { ... }</li> 
          * </ul>
          */
-        private InterceptionList readInterceptionTokens() {
+        protected InterceptionList readInterceptionTokens() {
             InterceptionList interceptors = new InterceptionList();
             List functionPositions = this.getFunctionPositions();   
             // loop over all intercepting functions
@@ -1141,7 +1141,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
          * return the tokens as Reader
          */
         public Reader getScriptAsReader() {       
-            return (Reader) new CharArrayReader( getScriptAsCharArray() );    
+            return new CharArrayReader( getScriptAsCharArray() );    
         }
 
         public char[] getScriptAsCharArray() {

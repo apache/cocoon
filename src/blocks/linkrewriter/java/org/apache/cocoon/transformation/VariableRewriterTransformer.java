@@ -169,7 +169,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Note that currently, only links in the default ("") namespace are converted.
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: VariableRewriterTransformer.java,v 1.3 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: VariableRewriterTransformer.java,v 1.4 2003/09/24 22:04:40 cziegeler Exp $
  */
 public class VariableRewriterTransformer
     extends AbstractSAXTransformer implements Initializable, Configurable
@@ -183,9 +183,6 @@ public class VariableRewriterTransformer
     /** List containing schemes (protocols) of links to log */
     private Set inSchemes;
     private Set outSchemes;
-
-    /** Links matching one of the acceptable schemes. */
-    private Set links;
 
     /** Configuration passed to the component once through configure(). */
     private Configuration origConf; 
@@ -224,7 +221,6 @@ public class VariableRewriterTransformer
         throws ProcessingException, SAXException, IOException
     {
         super.setup(resolver, objectModel, src, parameters);
-        this.links = new HashSet();
         this.badLinkStr = parameters.getParameter("bad-link-str", null);
         this.linkAttrs = split(parameters.getParameter("link-attrs", "href"), " ");
         this.inSchemes = split(parameters.getParameter("schemes", ""), " ");
@@ -370,7 +366,6 @@ public class VariableRewriterTransformer
     public void recycle() {
         super.recycle();
         this.resolver = null;
-        this.links = null;
         this.linkAttrs = null;
         this.inSchemes = null;
         this.outSchemes = null;
