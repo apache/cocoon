@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.48 2003/06/15 16:15:20 bruno Exp $
+    | CVS $Id: jars.xml,v 1.49 2003/06/18 11:18:34 giacomo Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -709,7 +709,7 @@
   <title>???</title>
   <description>???</description>
   <used-by>Axis block</used-by>
-  <lib>axis/lib/axis-saaj-1.0.jar</lib>
+  <lib>axis/lib/axis-saaj-1.1.jar</lib>
   <homepage>???</homepage>
  </file>
 
@@ -733,7 +733,7 @@
   <title>???</title>
   <description>???</description>
   <used-by>Axis block</used-by>
-  <lib>axis/lib/axis-jaxrpc-1.0.jar</lib>
+  <lib>axis/lib/axis-jaxrpc-1.1.jar</lib>
   <homepage>???</homepage>
  </file>
 
@@ -741,7 +741,7 @@
   <title>???</title>
   <description>???</description>
   <used-by>Axis block</used-by>
-  <lib>axis/lib/axis-1.0.jar</lib>
+  <lib>axis/lib/axis-1.1.jar</lib>
   <homepage>???</homepage>
  </file>
 
