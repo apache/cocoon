@@ -2,7 +2,7 @@
 <!-- This sitemap is written specifically for rendering Cocoon's docs.  When the
 Ant 'docs' target is invoked, it will be renamed to sitemap.xmap in a temporary
 context.  The sitemap.xmap file here is an override of Forrest's -->
-<!-- $Id: sitemap-localdocs.xmap,v 1.1 2003/03/26 13:28:00 jefft Exp $ -->
+<!-- $Id: sitemap-localdocs.xmap,v 1.2 2003/04/06 04:13:22 crossley Exp $ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- =========================== Components ================================ -->
@@ -98,8 +98,8 @@ context.  The sitemap.xmap file here is an override of Forrest's -->
 
    <!-- the main ToDo doc -->
    <map:match pattern="body-todo.xml">
-     <map:generate type="file-nolabel" src="xdocs/todo.xml"/>
-     <map:transform src="stylesheets/todo2document.xsl" label="content"/>
+     <map:generate type="file-nolabel" src="xdocs/status.xml"/>
+     <map:transform src="stylesheets/statustodo2document.xsl" label="content"/>
      <map:transform src="stylesheets/document2html.xsl"/>
      <map:serialize/>
    </map:match>
@@ -114,8 +114,9 @@ context.  The sitemap.xmap file here is an override of Forrest's -->
 
    <!-- the main Changes doc -->
    <map:match pattern="body-changes.xml">
-     <map:generate type="file-nolabel" src="xdocs/changes.xml"/>
-     <map:transform src="stylesheets/changes2document.xsl" label="content"/>
+     <map:generate type="file-nolabel" src="xdocs/status.xml"/>
+     <map:transform src="stylesheets/statuschanges2document.xsl"
+       label="content"/>
      <map:transform src="stylesheets/document2html.xsl"/>
      <map:serialize/>
    </map:match>
