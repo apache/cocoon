@@ -4,24 +4,24 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
                 exclude-result-prefixes="wi">
-  
+
   <!-- must be called in <head> to load calendar script and setup the CSS -->
   <xsl:template name="woody-field-head">
     <xsl:param name="uri" select="'resources'"/>
     <xsl:param name="div">woody_calendarDiv</xsl:param>
-    
-    <!-- use this for debugging 
-    <script src="{$uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript"></script>
-    <script src="{$uri}/mattkruse-lib/CalendarPopup.js" language="JavaScript"></script>
-    <script src="{$uri}/mattkruse-lib/date.js" language="JavaScript"></script>
-    <script src="{$uri}/mattkruse-lib/OptionTransfer.js" language="JavaScript"></script>
-    <script src="{$uri}/mattkruse-lib/PopupWindow.js" language="JavaScript"></script>
-    <script src="{$uri}/mattkruse-lib/selectbox.js" language="JavaScript"></script>
+
+    <!-- use this for debugging
+    <script src="{$uri}/mattkruse-lib/AnchorPosition.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$uri}/mattkruse-lib/CalendarPopup.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$uri}/mattkruse-lib/date.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$uri}/mattkruse-lib/OptionTransfer.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$uri}/mattkruse-lib/PopupWindow.js" language="JavaScript" type="text/javascript"/>
+    <script src="{$uri}/mattkruse-lib/selectbox.js" language="JavaScript" type="text/javascript"/>
     -->
-    <script src="{$uri}/mattkruse-lib.js" language="JavaScript"></script>
-    
-    <script src="{$uri}/woody-lib.js" language="JavaScript"></script>
-    <script language="JavaScript">
+    <script src="{$uri}/mattkruse-lib.js" language="JavaScript" type="text/javascript"/>
+
+    <script src="{$uri}/woody-lib.js" language="JavaScript" type="text/javascript"/>
+    <script language="JavaScript" type="text/javascript">
       // Setup calendar
       <xsl:choose>
         <xsl:when test="$div">
@@ -38,7 +38,7 @@
       document.write(woody_calendar.getStyles());
     </script>
   </xsl:template>
-  
+
   <!-- must be called in <head> to load calendar script and setup the CSS -->
   <xsl:template name="woody-field-body">
     <xsl:attribute name="onload">woody_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
@@ -46,10 +46,10 @@
       // Register woody startup function
       document.body.onload = woody_init;
     </script-->
-    
+
      <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
   </xsl:template>
-  
+
   <!--
     Generic wi:field : produce an <input>
   -->
@@ -64,7 +64,7 @@
     </input>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
-  
+
   <xsl:template match="wi:*" mode="common">
     <!-- validation message -->
     <xsl:apply-templates select="wi:validation-message"/>
@@ -162,7 +162,7 @@
     </xsl:choose>
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
-  
+
   <!--
     wi:field with a selection list and @type 'output'
   -->
@@ -412,9 +412,9 @@
         var opt<xsl:value-of select="generate-id()"/> = woody_createOptionTransfer('<xsl:value-of select="@id"/>');
       </script>
     </span>
-    
+
   </xsl:template>
-  
+
   <!--
     wi:upload
   -->
@@ -480,7 +480,7 @@
       <xsl:apply-templates/>
     </form>
   </xsl:template>
-  
+
   <!--
     wi:form
   -->
