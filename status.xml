@@ -199,6 +199,11 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="SW" type="fix" fixes-bug="25951">
+     Flowscript: enforce the explicit declaration of variables in the global scope (attached to the session).
+     This avoids the implicit declaration of variables in the global scope when the 'var' keyword is missing,
+     which leads to weird bugs difficult to track down, especially with continuations.
+   </action>
    <action dev="ATC" type="update">
      Deprecated the PHP block since the PHP servlet the generator depends on
 	 never worked properly. Explicitly excluded the PHP block from blocks.properties.
