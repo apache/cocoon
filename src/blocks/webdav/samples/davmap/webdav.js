@@ -93,7 +93,7 @@ function isRecurse(depth) {
   if (depth == null || depth == '') {
     recurse = true;
   }
-  else if (depth == 'infinity') {
+  else if (depth == 'Infinity') {
     recurse = true;
   }
   else {
