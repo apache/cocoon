@@ -51,9 +51,12 @@
 package org.apache.cocoon.portal.impl;
 
 import java.io.IOException;
+import java.util.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -73,11 +76,15 @@ import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.SAXException;
 
 /**
+ * Default implementation of a portal service using a session to store
+ * custom information.
+ * 
+ * TODO: Make this ThreadSafe
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.4 2003/06/17 19:59:31 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.5 2003/07/11 11:06:22 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
@@ -94,6 +101,8 @@ public class PortalServiceImpl
 
     protected String portalName;
 
+    protected String attributePrefix;
+    
     public void compose(ComponentManager componentManager) throws ComponentException {
         this.manager = componentManager;
     }
@@ -105,8 +114,9 @@ public class PortalServiceImpl
 		Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
 		if (context != null) {
 			String portalName = (String)context.get(Constants.PORTAL_NAME_KEY);
-			if (portalName != null)
-				this.setPortalName(portalName);
+			if (portalName != null) {
+                this.setPortalName(portalName);
+			}
 		}
     }
 
@@ -116,6 +126,7 @@ public class PortalServiceImpl
 
     public void setPortalName(String value) {
         this.portalName = value;
+        this.attributePrefix = this.getClass().getName() + '/' + this.portalName + '/';
     }
 
     /* (non-Javadoc)
@@ -129,40 +140,40 @@ public class PortalServiceImpl
     }
 
     public Object getAttribute(String key) {
-        Session session = ObjectModelHelper.getRequest(this.objectModel).getSession(false);
+        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession(false);
         if (session == null) {
             return null;
         }
-        Map map = (Map) session.getAttribute(this.portalName);
-        if (null != map) {
-            return map.get(key);
-        }
-        return null;
+        return session.getAttribute( this.attributePrefix + key);
     }
 
     public void setAttribute(String key, Object value) {
-        Session session = ObjectModelHelper.getRequest(this.objectModel).getSession();
-        Map map = (Map) session.getAttribute(this.portalName);
-        if (null == map) {
-            map = new HashMap();
-            session.setAttribute(this.portalName, map);
-        }
-        map.put(key, value);
+        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession();
+        session.setAttribute( this.attributePrefix + key, value);
     }
 
     public void removeAttribute(String key) {
-        Session session = ObjectModelHelper.getRequest(this.objectModel).getSession();
-        Map map = (Map) session.getAttribute(this.portalName);
-        if (null != map) {
-            map.remove(key);
+        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession(false);
+        if ( session != null ) {
+            session.removeAttribute( this.attributePrefix + key);
         }
     }
 
     public Iterator getAttributeNames() {
-        Session session = ObjectModelHelper.getRequest(this.objectModel).getSession();
-        Map map = (Map) session.getAttribute(this.portalName);
-        if (null != map) {
-            return map.keySet().iterator();
+        final Session session = ObjectModelHelper.getRequest(this.objectModel).getSession(false);
+        if ( session != null ) {
+            List names = new ArrayList();
+            Enumeration e = session.getAttributeNames();
+            final int pos = this.attributePrefix.length() + 1;
+            if ( e != null ) {
+                while ( e.hasMoreElements() ) {
+                    final String name = (String)e.nextElement();
+                    if ( name.startsWith( this.attributePrefix )) {
+                        names.add( name.substring( pos ) );
+                    }
+                }
+            }
+            return names.iterator();
         }
         return Collections.EMPTY_MAP.keySet().iterator();
     }
