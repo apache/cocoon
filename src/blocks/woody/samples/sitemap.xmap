@@ -7,7 +7,7 @@
     <map:generator name="woody" src="org.apache.cocoon.woody.generation.WoodyGenerator"/>
   </map:generators>
 
-  <map:transformers default="xslt">    
+  <map:transformers default="xalan">    
     <map:transformer name="woody" src="org.apache.cocoon.woody.transformation.WoodyTemplateTransformer"/>
     <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
       <catalogues default="other">
@@ -16,23 +16,7 @@
       </catalogues>
       <cache-at-startup>true</cache-at-startup>
     </map:transformer>
-    <!-- be sure Xalan is used instead of XSLTC -->
-    <map:transformer logger="sitemap.transformer.xslt" name="xslt" pool-grow="2" pool-max="32" pool-min="8" src="org.apache.cocoon.transformation.TraxTransformer">
-      <use-request-parameters>false</use-request-parameters>
-      <use-session-parameters>false</use-session-parameters>
-      <use-cookie-parameters>false</use-cookie-parameters>
-      <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
-    </map:transformer>
   </map:transformers>
-
-  <map:readers default="resource">  
-  </map:readers>
-
-  <map:serializers default="html">     
-  </map:serializers>
-
-  <map:matchers default="wildcard">
-  </map:matchers>
 
   <map:selectors default="browser">
     <map:selector name="request-method" src="org.apache.cocoon.selection.RequestMethodSelector"/>
@@ -48,24 +32,6 @@
   </map:pipes>
 
  </map:components>
-
-<!-- =========================== Views =================================== -->
-
- <map:views>
-  <map:view name="content" from-label="content">
-   <map:serialize type="xml"/>
-  </map:view>
-
-  <map:view name="pretty-content" from-label="data">
-    <map:transform src="context://stylesheets/system/xml2html.xsl"/>
-    <map:serialize type="html"/>
-  </map:view>
-
-  <map:view name="links" from-position="last">
-   <map:serialize type="links"/>
-  </map:view>
-  
- </map:views>
 
  <map:pipelines>
    <map:pipeline>
