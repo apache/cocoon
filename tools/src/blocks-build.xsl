@@ -83,12 +83,14 @@
     </target>
 
     <target name="unstable" depends="init">
-      <xsl:for-each select="$cocoon-blocks[@status='unstable']">
-        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
         <condition property="unstable.blocks.present">
-          <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
-        </condition>
-      </xsl:for-each>
+          <or>
+            <xsl:for-each select="$cocoon-blocks[@status='unstable']">
+                <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+                <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
+            </xsl:for-each>
+        </or>
+      </condition>
       <if>
         <istrue value="${{unstable.blocks.present}}"/>
         <then>
@@ -106,12 +108,14 @@
     </target>
 
     <target name="excluded" depends="init">
-      <xsl:for-each select="$cocoon-blocks">
-        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-        <condition property="excluded.blocks.present">
-          <istrue value="${{internal.exclude.block.{$block-name}}}"/>
-        </condition>
-      </xsl:for-each>
+      <condition property="excluded.blocks.present">
+        <or>
+          <xsl:for-each select="$cocoon-blocks">
+            <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+              <istrue value="${{internal.exclude.block.{$block-name}}}"/>
+          </xsl:for-each>
+        </or>
+      </condition>
       <if>
         <istrue value="${{excluded.blocks.present}}"/>
         <then>
@@ -149,7 +153,7 @@
         </xsl:for-each>
       </xsl:attribute>
     </target>
-                                                                                                                                                                               
+
     <target name="roles">
       <xsl:attribute name="depends">
         <xsl:text>init</xsl:text>
@@ -329,7 +333,7 @@
   <xsl:template match="project">
     <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
-    
+
     <target name="{@name}" unless="internal.exclude.block.{$block-name}"/>
 
     <target name="{@name}-compile" unless="internal.exclude.block.{$block-name}">
@@ -374,7 +378,7 @@
           </javac>
         </then>
       </if>
-      
+
       <!-- This is a little bit tricky:
            As the javac task checks, if a src directory is available and
            stops if its not available, we use the following property
@@ -484,7 +488,7 @@
           </xsl:for-each>
         </xsl:if>
       </xsl:attribute>
-                                                                                                                                                                               
+
       <xpatch file="${{build.webapp}}/sitemap.xmap" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xmap"/>
       </xpatch>
@@ -498,8 +502,8 @@
         <include name="{$block-name}/conf/*.xweb"/>
       </xpatch>
 
-      <!-- generate sitemap entries 
-      <sitemap-components sitemap="${{build.webapp}}/sitemap.xmap" 
+      <!-- generate sitemap entries
+      <sitemap-components sitemap="${{build.webapp}}/sitemap.xmap"
                           source="${{blocks}}/{$block-name}/java"
                           block="{$block-name}">
         <xsl:if test="@status='unstable'">
@@ -510,12 +514,12 @@
         </xsl:if>
       </sitemap-components>
       -->
-      
+
       <!-- generate sitemap components docs -->
       <!-- TODO - this is the wrong place for documentation, but currently blocks
            don't have own docs!
         <mkdir dir="${{build.context}}/xdocs/userdocs"/>
-      <sitemap-components docDir="${{build.context}}/xdocs/userdocs" 
+      <sitemap-components docDir="${{build.context}}/xdocs/userdocs"
                           source="${{blocks}}/{$block-name}/java"
                           block="{$block-name}">
         <xsl:if test="@status='unstable'">
@@ -527,7 +531,7 @@
       </sitemap-components>
       -->
     </target>
-                                                                                                                                                                               
+
     <target name="{@name}-roles" unless="internal.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
@@ -538,7 +542,7 @@
           </xsl:for-each>
         </xsl:attribute>
       </xsl:if>
-                                                                                                                                                                               
+
       <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xroles"/>
       </xpatch>
