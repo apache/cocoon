@@ -55,6 +55,39 @@ import java.util.Map;
  */
 public class XSPUtil {
 
+    /** The namespace for the XSP core logicsheet. */
+    public static final String XSP_URI = "http://apache.org/xsp";
+
+    /**
+     * The namespace prefix for the request logicsheet.
+     */
+    public static final String XSP_REQUEST_PREFIX = "xsp-request";
+
+    /**
+     * The namespace for the request logicsheet.
+     */
+    public static final String XSP_REQUEST_URI = XSP_URI + "/request/2.0";
+
+    /**
+     * The namespace prefix for the response logicsheet.
+     */
+    public static final String XSP_RESPONSE_PREFIX = "xsp-response";
+
+    /**
+     * The namespace for the response logicsheet.
+     */
+    public static final String XSP_RESPONSE_URI = XSP_URI + "/response/2.0";
+
+    /**
+     * The namespace prefix for the cookie logicsheet.
+     */
+    public static final String XSP_COOKIE_PREFIX = "xsp-cookie";
+
+    /**
+     * The namespace for the cookie logicsheet.
+     */
+    public static final String XSP_COOKIE_URI = XSP_URI + "/cookie/2.0";
+
     public static String pathComponent(String filename) {
         int i = filename.lastIndexOf(File.separator);
         return (i >= 0) ? filename.substring(0, i) : filename;

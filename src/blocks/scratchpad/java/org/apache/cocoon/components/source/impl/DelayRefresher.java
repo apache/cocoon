@@ -19,9 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,6 +47,7 @@ import org.apache.cocoon.caching.IdentifierCacheKey;
 import org.apache.cocoon.components.cron.CronJob;
 import org.apache.cocoon.components.cron.JobScheduler;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
@@ -57,7 +57,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Default implementation of the refresher.
  * 
  * @since 2.1.1
- * @version CVS $Id: DelayRefresher.java,v 1.7 2004/05/26 01:31:06 joerg Exp $
+ * @version CVS $Id$
  */
 public class DelayRefresher extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSafe, Refresher, CronJob {
@@ -272,26 +272,29 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
 	 * @throws CascadingException
 	 */
 	private void setupSingleRefreshJob(final Configuration conf) throws ConfigurationException, CascadingException {
-		
-        final String uri = URLDecoder.decode(conf.getAttribute(ATTR_URI));
-		final String cache = conf.getAttribute(ATTR_CACHE);
-        final int expires = conf.getAttributeAsInteger(ATTR_EXPIRES);
-		final String key = URLDecoder.decode(conf.getAttribute(ATTR_KEY));
-		final IdentifierCacheKey cacheKey = new IdentifierCacheKey(key, false);
-		
-        final Parameters parameters = Parameters.fromConfiguration(conf);
-        
-        final TargetConfiguration tc = new TargetConfiguration(cacheKey, uri, cache, parameters);
-		
-        this.entries.put(key, tc);
-		final String name = cacheKey.getKey();
-		
-		this.scheduler.addPeriodicJob(name,
-                                      this.updateTarget,
-		                              expires,
-		                              true,
-		                              tc.parameters,
-		                              tc.map);
+		try {
+            final String uri = NetUtils.decode(conf.getAttribute(ATTR_URI), "utf-8");
+    		final String cache = conf.getAttribute(ATTR_CACHE);
+            final int expires = conf.getAttributeAsInteger(ATTR_EXPIRES);
+    		final String key = NetUtils.decode(conf.getAttribute(ATTR_KEY), "utf-8");
+    		final IdentifierCacheKey cacheKey = new IdentifierCacheKey(key, false);
+    		
+            final Parameters parameters = Parameters.fromConfiguration(conf);
+            
+            final TargetConfiguration tc = new TargetConfiguration(cacheKey, uri, cache, parameters);
+    		
+            this.entries.put(key, tc);
+    		final String name = cacheKey.getKey();
+    		
+    		this.scheduler.addPeriodicJob(name,
+                                          this.updateTarget,
+    		                              expires,
+    		                              true,
+    		                              tc.parameters,
+    		                              tc.map);
+        } catch (UnsupportedEncodingException uee) {
+            throw new ConfigurationException("Unsupported encoding", uee);
+        }
 	}
 
 	/**
@@ -335,13 +338,13 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
 	 */
 	private void writeRefreshJobConfiguration(Writer writer, final TargetConfiguration c) throws IOException {
         writer.write("<"+TAGNAME_TARGET+" "+ATTR_URI+"=\"");
-        writer.write(URLEncoder.encode(c.parameters.getParameter(ATTR_URI, "")));
+        writer.write(NetUtils.encode(c.parameters.getParameter(ATTR_URI, ""), "utf-8"));
         writer.write("\" "+ATTR_EXPIRES+"=\"");
         writer.write(c.parameters.getParameter(PARAM_CACHE_EXPIRES, "0"));
         writer.write("\" "+ATTR_CACHE+"=\"");
         writer.write(c.parameters.getParameter(PARAM_CACHE_ROLE, ""));
         writer.write("\" "+ATTR_KEY+"=\"");
-        writer.write(URLEncoder.encode(((IdentifierCacheKey) c.map.get(CACHE_KEY)).getKey()));
+        writer.write(NetUtils.encode(((IdentifierCacheKey) c.map.get(CACHE_KEY)).getKey(), "utf-8"));
         writer.write("\"/>\n");
 	}
 	

@@ -18,10 +18,8 @@ package org.apache.cocoon.components.expression.jxpath;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.cocoon.components.expression.Expression;
-import org.apache.cocoon.components.expression.ExpressionCompiler;
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.components.expression.ExpressionException;
 import org.apache.cocoon.components.expression.jexl.JSIntrospector;

@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
-import org.apache.cocoon.template.jxtg.JXTemplateGenerator;
 import org.xml.sax.Locator;
 import org.xml.sax.helpers.LocatorImpl;
 

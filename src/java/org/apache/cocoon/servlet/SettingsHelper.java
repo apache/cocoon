@@ -36,7 +36,6 @@ public class SettingsHelper {
     
     public static Settings getSettings(ServletConfig config) {
         final Settings s = new Settings();
-        s.fill(System.getProperties());
         
         // logging
         s.setCocoonLogger(config.getInitParameter("cocoon-logger"));
