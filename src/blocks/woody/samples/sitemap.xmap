@@ -49,7 +49,7 @@
  </map:views>
 
   <!-- indicates what flowscript to attach to this sitemap -->
-  <map:flow language="JavaScript">
+  <map:flow language="javascript">
     <map:script src="flow/woody_flow_example.js"/>
   </map:flow>
 
