@@ -42,14 +42,13 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.28 2004/03/09 13:53:56 reinhard Exp $
+ * @version CVS $Id: Field.java,v 1.29 2004/04/14 09:26:40 sylvain Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     protected SelectionList selectionList;
 
     protected String enteredValue;
     protected Object value;
-    private Object oldValue;
 
     // At startup, we don't need to parse (both enteredValue and value are null),
     // but need to validate (error if field is required)
@@ -70,10 +69,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     public String getId() {
         return definition.getId();
-    }
-
-    public Object getOldValue() {
-        return oldValue;
     }
 
     public Object getValue() {
@@ -156,9 +151,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
         }
-        // If set comes before a form is first sent then the new value will be the old value by the time of the next form request.
-        // If the set occurs in an event handler then again the new value will be the old value by the time of the next form request.
-        this.oldValue = newValue;
     }
 
     public void readFromRequest(FormContext formContext) {
@@ -176,16 +168,10 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             }
         }
 
-        // TODO: This cause validation to occur too early.
-        getValue();
-        this.oldValue = value;
-
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
-            // TODO: Hmmm...
-            //getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
-            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, getValue()));
+            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
             enteredValue = newEnteredValue;
             validationError = null;
             value = null;
