@@ -60,30 +60,37 @@ import java.util.Iterator;
  * The avalon behavioural component interface of crawling.
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: CocoonCrawler.java,v 1.2 2003/03/16 17:49:11 vgritsenko Exp $
+ * @version CVS $Id: CocoonCrawler.java,v 1.3 2003/10/06 16:30:41 jeremy Exp $
  */
 public interface CocoonCrawler extends Component
 {
     /**
      * Role name of this avalon component.
      * Its value is <code>org.apache.cocoon.components.crawler.CocoonCrawler</code>.
-     *
-     * @since
      */
     String ROLE = CocoonCrawler.class.getName();
 
 
     /**
-     * start crawling the URL.
-     * <p>
-     *   Calling this method initiates the crawling.
-     * </p>
+     * This is the same as calling crawl(url,-1);
      *
-     * @param  url  Description of Parameter
-     * @since
+     * @param  url  The URL to start crawling from.
      */
     void crawl(URL url);
-
+    
+    
+	/**
+     * start crawling the URL.
+     * <p>
+     *   Calling this method initiates the crawling and tells the
+     *   crawler not to crawl beyond a maximum depth.
+     * </p>
+     * 
+	 * @param url  The URL to start crawling from
+	 * @param depth  The maximum depth to crawl to. -1 for no maxiumum.
+	 */
+    void crawl(URL url, int maxDepth);
+    
 
     /**
      * Iterate over crawling URLs.
@@ -93,7 +100,6 @@ public interface CocoonCrawler extends Component
      * </p>
      *
      * @return    Iterator iterates over crawling URLs.
-     * @since
      */
     Iterator iterator();
 }
