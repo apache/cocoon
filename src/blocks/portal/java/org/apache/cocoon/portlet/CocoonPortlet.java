@@ -61,6 +61,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.GenericPortlet;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
+import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import java.io.File;
@@ -86,8 +87,7 @@ import java.util.jar.Manifest;
 /**
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
- * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.5 2004/04/23 15:50:34 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -242,7 +242,24 @@ public class CocoonPortlet extends GenericPortlet {
     protected int defaultSessionScope;
 
     /**
+     * Store pathInfo in session
+     */
+    protected boolean storeSessionPath;
+
+    /**
      * Initialize this <code>CocoonPortlet</code> instance.
+     *
+     * <p>Uses the following parameters:
+     *  portlet-logger
+     *  enable-uploads
+     *  autosave-uploads
+     *  overwrite-uploads
+     *  upload-max-size
+     *  show-time
+     *  container-encoding
+     *  form-encoding
+     *  manage-exceptions
+     *  servlet-path
      *
      * @param conf The PortletConfig object from the portlet container.
      * @throws PortletException
@@ -1042,6 +1059,15 @@ public class CocoonPortlet extends GenericPortlet {
 
         String uri = servletPath;
         String pathInfo = request.getParameter(PortletEnvironment.PARAMETER_PATH_INFO);
+        if (storeSessionPath) {
+            final PortletSession session = request.getPortletSession(true);
+            if (pathInfo == null) {
+                pathInfo = (String)session.getAttribute(PortletEnvironment.PARAMETER_PATH_INFO);
+            } else {
+                session.setAttribute(PortletEnvironment.PARAMETER_PATH_INFO, pathInfo);
+            }
+        }
+
         if (pathInfo != null) {
             if (pathInfo.length() > 0 && pathInfo.charAt(0) == '/') {
                 pathInfo = pathInfo.substring(1);
@@ -1196,6 +1222,15 @@ public class CocoonPortlet extends GenericPortlet {
 
         String uri = servletPath;
         String pathInfo = request.getParameter(PortletEnvironment.PARAMETER_PATH_INFO);
+        if (storeSessionPath) {
+            final PortletSession session = request.getPortletSession(true);
+            if (pathInfo == null) {
+                pathInfo = (String)session.getAttribute(PortletEnvironment.PARAMETER_PATH_INFO);
+            } else {
+                session.setAttribute(PortletEnvironment.PARAMETER_PATH_INFO, pathInfo);
+            }
+        }
+
         if (pathInfo != null) {
             if (pathInfo.length() > 0 && pathInfo.charAt(0) == '/') {
                 pathInfo = pathInfo.substring(1);
@@ -1342,14 +1377,14 @@ public class CocoonPortlet extends GenericPortlet {
     protected void manageException(ActionRequest req, ActionResponse res, Environment env,
                                    String uri, String title, String message, String description,
                                    Exception e)
-            throws PortletException {
+    throws PortletException {
         throw new PortletException("Exception in CocoonPortlet", e);
     }
 
     protected void manageException(RenderRequest req, RenderResponse res, Environment env,
                                    String uri, String title, String message, String description,
                                    Exception e)
-            throws IOException, PortletException {
+    throws IOException, PortletException {
         if (this.manageExceptions) {
             if (env != null) {
                 env.tryResetResponse();
@@ -1360,20 +1395,17 @@ public class CocoonPortlet extends GenericPortlet {
             String type = Notifying.FATAL_NOTIFICATION;
             HashMap extraDescriptions = null;
 
-            // TODO: Removed if(code == SC_NOT_FOUND) {}
-            {
-                extraDescriptions = new HashMap(2);
-                extraDescriptions.put(Notifying.EXTRA_REQUESTURI, getPortletConfig().getPortletName());
-                if (uri != null) {
-                    extraDescriptions.put("Request URI", uri);
-                }
+            extraDescriptions = new HashMap(2);
+            extraDescriptions.put(Notifying.EXTRA_REQUESTURI, getPortletConfig().getPortletName());
+            if (uri != null) {
+                extraDescriptions.put("Request URI", uri);
+            }
 
-                // Do not show exception stack trace when log level is WARN or above. Show only message.
-                if (!getLogger().isInfoEnabled()) {
-                    Throwable t = DefaultNotifyingBuilder.getRootCause(e);
-                    if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
-                    e = null;
-                }
+            // Do not show exception stack trace when log level is WARN or above. Show only message.
+            if (!getLogger().isInfoEnabled()) {
+                Throwable t = DefaultNotifyingBuilder.getRootCause(e);
+                if (t != null) extraDescriptions.put(Notifying.EXTRA_CAUSE, t.getMessage());
+                e = null;
             }
 
             Notifying n = new DefaultNotifyingBuilder().build(this,
@@ -1400,7 +1432,7 @@ public class CocoonPortlet extends GenericPortlet {
                                          String uri,
                                          ActionRequest req,
                                          ActionResponse res)
-            throws Exception {
+    throws Exception {
         PortletEnvironment env;
 
         String formEncoding = req.getParameter("cocoon-form-encoding");
@@ -1428,7 +1460,7 @@ public class CocoonPortlet extends GenericPortlet {
                                          String uri,
                                          RenderRequest req,
                                          RenderResponse res)
-            throws Exception {
+    throws Exception {
         PortletEnvironment env;
 
         String formEncoding = req.getParameter("cocoon-form-encoding");
