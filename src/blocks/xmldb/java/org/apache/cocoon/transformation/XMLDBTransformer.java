@@ -83,52 +83,52 @@ import javax.xml.transform.stream.StreamResult;
  *
  * <p>Input XML document example:</p>
  * <pre>
- * &lt;page xmlns:xmldb="http://apache.org/cocoon/xmldb/1.0"&gt;
+ * &lt;page xmlns:db="http://apache.org/cocoon/xmldb/1.0"&gt;
  *   ...
  *   &lt;p&gt;Create XML resource in base collection with specified object ID&lt;/p&gt;
- *   &lt;xmldb:query type="create" oid="xmldb-object-id"&gt;
+ *   &lt;db:query type="create" oid="xmldb-object-id"&gt;
  *     &lt;page&gt;
  *       XML Object body
  *     &lt;/page&gt;
- *   &lt;/xmldb:query&gt;
+ *   &lt;/db:query&gt;
  *
  *   &lt;p&gt;Delete XML resource from the base collection with specified object ID&lt;/p&gt;
- *   &lt;xmldb:query type="delete" oid="xmldb-object-id"/&gt;
+ *   &lt;db:query type="delete" oid="xmldb-object-id"/&gt;
  *
  *   &lt;p&gt;Update XML resource with specified object ID&lt;/p&gt;
- *   &lt;xmldb:query type="update" oid="xmldb-object-id"&gt;
+ *   &lt;db:query type="update" oid="xmldb-object-id"&gt;
  *     &lt;xu:modifications version="1.0" xmlns:xu="http://www.xmldb.org/xupdate"&gt;
  *       &lt;xu:remove select="/person/phone[@type = 'home']"/&gt;
  *       &lt;xu:update select="/person/phone[@type = 'work']"&gt;
  *         480-300-3003
  *       &lt;/xu:update&gt;
  *       &lt;/xu:modifications&gt;
- *   &lt;/xmldb:query&gt;
+ *   &lt;/db:query&gt;
  *
  *   &lt;p&gt;Create collection nested into the base collection&lt;/p&gt;
- *   &lt;xmldb:query type="create" oid="inner/"/&gt;
+ *   &lt;db:query type="create" oid="inner/"/&gt;
  *
  *   &lt;p&gt;Create XML resource in context collection with specified object ID&lt;/p&gt;
  *   &lt;xmldb:query type="create" collection="inner" oid="xmldb-object-id"&gt;
  *     &lt;page&gt;
  *       XML Object body
  *     &lt;/page&gt;
- *   &lt;/xmldb:query&gt;
+ *   &lt;/db:query&gt;
  *   ...
  * &lt;/page&gt;
  * </pre>
  *
  * <p>Output XML document example:</p>
  * <pre>
- * &lt;page xmlns:xmldb="http://apache.org/cocoon/xmldb/1.0"&gt;
+ * &lt;page xmlns:db="http://apache.org/cocoon/xmldb/1.0"&gt;
  *   ...
- *   &lt;xmldb:query type="create" oid="xmldb-object-id" result="success"/&gt;
+ *   &lt;db:query type="create" oid="xmldb-object-id" result="success"/&gt;
  *
- *   &lt;xmldb:query type="delete" oid="xmldb-object-id" result="success"/&gt;
+ *   &lt;db:query type="delete" oid="xmldb-object-id" result="success"/&gt;
  *
- *   &lt;xmldb:query type="update" oid="xmldb-object-id" result="failure"&gt;
+ *   &lt;db:query type="update" oid="xmldb-object-id" result="failure"&gt;
  *     Resource xmldb-object-id is not found
- *   &lt;/xmldb:query&gt;
+ *   &lt;/db:query&gt;
  *   ...
  * &lt;/page&gt;
  * </pre>
@@ -139,7 +139,7 @@ import javax.xml.transform.stream.StreamResult;
  * </ul>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBTransformer.java,v 1.10 2004/05/03 15:45:43 vgritsenko Exp $
+ * @version CVS $Id: XMLDBTransformer.java,v 1.11 2004/05/16 16:16:43 cziegeler Exp $
  */
 public class XMLDBTransformer extends AbstractTransformer
         implements CacheableProcessingComponent, Configurable, Initializable {
