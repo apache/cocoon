@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:context&gt;
  * </code></pre>
  *
- * @version CVS $Id: CustomJXPathBindingBuilder.java,v 1.3 2004/04/06 08:51:24 mpo Exp $
+ * @version CVS $Id: CustomJXPathBindingBuilder.java,v 1.4 2004/04/08 14:51:19 mpo Exp $
  */
 public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
     private static final Class[] DOMELEMENT_METHODARGS;
@@ -73,7 +73,7 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
             CommonAttributes commonAtts = 
                 JXPathBindingBuilderBase.getCommonAttributes(bindingElm);
             String xpath = DomHelper.getAttribute(bindingElm, "path", ".");
-            String widgetId = DomHelper.getAttribute(bindingElm, "id");
+            String widgetId = DomHelper.getAttribute(bindingElm, "id", null);
 
             Object bindingInstance;
             
