@@ -68,6 +68,13 @@
    browser plugin for smoother integration)
   </sample>
   
+  <sample name="More complex FO + SVG Example" url="fo/test2-fo.xml">
+   This page shows higher potentials of the XSL Formatting Object specifications
+   when mixed with other graphic outline specification such as SVG (Scalable
+   Vector Graphics). Both are interpreted by FOP and rendered into PDF as
+   area and vector graphics.
+  </sample>
+    
   <sample name="Novel FO formatting" url="fo/darkness-novel.xml">
    In this example, part of Joseph Conrad's "The Heart of Darkness" novel
    is taken from its orginal style-free XML format and rendered into PDF
