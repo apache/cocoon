@@ -16,9 +16,9 @@
 -->
 <!-- SVN $Id$ -->
 
-<xconf xpath="/cocoon" unless="include[@src='WEB-INF/xconf/cocoon-scratchpad-caching-source.xconf']">
-  <include src="WEB-INF/xconf/cocoon-scratchpad-caching-source.xconf"/>
-  <include src="WEB-INF/xconf/cocoon-scratchpad-groovyflow.xconf"/>
-  <include src="WEB-INF/xconf/cocoon-scratchpad-intercepted-flow.xconf"/>
-  <include src="WEB-INF/xconf/cocoon-scratchpad-zip-source.xconf"/>
+<xconf xpath="/cocoon" unless="include[@src='xconf/cocoon-scratchpad-caching-source.xconf']">
+  <include src="xconf/cocoon-scratchpad-caching-source.xconf"/>
+  <include src="xconf/cocoon-scratchpad-groovyflow.xconf"/>
+  <include src="xconf/cocoon-scratchpad-intercepted-flow.xconf"/>
+  <include src="xconf/cocoon-scratchpad-zip-source.xconf"/>
 </xconf>

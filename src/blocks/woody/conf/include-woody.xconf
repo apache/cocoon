@@ -16,6 +16,6 @@
 -->
 <!-- SVN $Id$ -->
 
-<xconf xpath="/cocoon" unless="include[@src='WEB-INF/xconf/cocoon-woody.xconf']">
-  <include src="WEB-INF/xconf/cocoon-woody.xconf"/>
+<xconf xpath="/cocoon" unless="include[@src='xconf/cocoon-woody.xconf']">
+  <include src="xconf/cocoon-woody.xconf"/>
 </xconf>
