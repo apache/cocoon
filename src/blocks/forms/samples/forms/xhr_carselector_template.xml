@@ -88,6 +88,15 @@ function changeType(make, type) {
     </script>
   <title>Car selector with XMLHTTPRequest</title>
   <content>
+    <para>
+        This experimental sample demonstrates the use of XMLHttpRequest to update
+        fields without refreshing the page. It is currently broken: the form
+        cannot be successfully submitted, as the form model does not contain the
+        values of the type and model selection lists. After selecting a value in
+        the "model" field, the "type" and "model" fields are reset to their initial
+        values, instead of submitting the form. See also bugzilla 34077.
+    </para>
+
     <ft:form-template action="xhr_carselector" method="POST">
       <ft:continuation-id/>
       <fi:group>
@@ -107,5 +116,6 @@ function changeType(make, type) {
         </fi:items>
       </fi:group>
     </ft:form-template>
+
   </content>
 </page>
