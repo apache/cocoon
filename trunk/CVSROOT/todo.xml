@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.33 2000-09-22 22:56:47 greenrd Exp $
+  $Id: todo.xml,v 1.34 2000-09-27 23:31:04 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,6 +16,10 @@
  </devs>
 
  <actions priority="high">
+  <action context="code">
+   Work out how to integrate inline XSP docs (such as inline esql docs)
+   into the build docs procedure.
+  </action>
   <action context="code" assigned-to="RDG">
    Workaround redirect problem with Tomcat and IE
    (code written; just needs to be merged in.)
@@ -37,10 +41,6 @@
   <action context="docs">
    Cleanup and improve documentation. (in progress.)
   </action>
-  <action context="code">
-   Work out how to integrate inline XSP docs (such as inline esql docs)
-   into the build docs procedure.
-  </action>
   <action context="code" assigned-to="RDG">
    Class auto-reloading for XSP pages
    (code written; just needs to be merged in and documented.)
@@ -53,6 +53,10 @@
   </action>
   <action context="code">
    Better error reporting for typos in stylesheet URIs.
+  </action>
+  <action context="code">
+   Prepared statements for ESQL for speed and to avoid escaping problems
+   (for both security and bug-preventing reasons).
   </action>
  </actions>
 

@@ -484,9 +484,11 @@
   <question>Is there a way to fake the requesting
    UserAgent from my browser? That would make testing easier.</question>
   <answer>
-   <p>Yes - just append <code>?user-agent=xxx</code> to your requested URI and
+   <p>Yes - just append <code>?user-Agent=xxx</code> to your requested URI and
     Cocoon will ignore the userAgent description that your browser is sending and
     use the one you specified instead.</p>
+
+   <note>user-Agent is case-sensitive.</note>
   </answer>
  </faq>
 </faqsection>
@@ -899,6 +901,20 @@
     <link href="http://www.mulberrytech.com/xsl/">"Mulberrytech list"</link>,
     which is more appropriate than the cocoon-users list for general
     XSL questions.</p>
+  </answer>
+ </faq>
+
+ <faq id="articles">
+  <question>Are there any articles explaining Cocoon technologies, apart from
+   the Cocoon documentation itself?</question>
+  <answer>
+   <p>Yes. In <em>XML Magazine</em>, Fall 2000, there is an article entitled
+    <link href="http://www.xmlmag.com/upload/free/features/xml/2000/04fal00/kj0004/kj0004.asp">"A
+    Better Way for Web Development"</link> by Kevin Jones, from page 72. 
+    This article discusses XML, XSLT, Using XPath in XSLT, processing XML/XSLT, 
+    using Cocoon, how to write a Producer and other helpful hints. 
+    Although incomplete in one important respect (lacking a mention of XSP!),
+    it's a good introductory read.</p>
   </answer>
  </faq>
 

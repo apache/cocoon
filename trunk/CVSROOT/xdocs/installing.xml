@@ -228,24 +228,24 @@ AddHandler cocoon xml</source>
     <code>$COCOON_HOME/lib</code> to <code>$TOMCAT_HOME/lib</code> that are necessary for Cocoon to run.
     In addition, you must copy <code>$COCOON_HOME/bin/cocoon.jar</code> to <code>$TOMCAT_HOME/lib</code>.
    </p>
- 
+
    <p>
     In recent versions of Tomcat under Unix, Tomcat will automatically
     detect any <code>.jar</code> files
     in the <code>$TOMCAT_HOME/lib</code> directory. But under Windows, you must explicitly add the new
     <code>.jar</code> files in the appropriate place in the file <code>$TOMCAT_ROOT/bin/tomcat.bat</code>.
    </p>
- 
+
    <p>
     Next you must tell Tomcat about the new context which will run Cocoon requests. To do
     this edit the file <code>$TOMCAT_HOME/conf/server.xml</code> and add the following line:
    </p>
- 
+
  <source><![CDATA[
  <Context path="/cocoon" docBase="webapps/cocoon" debug="0" reloadable="true" >
  </Context>
  ]]></source>
- 
+
       <p>
       This tells Tomcat that requests that come in under that partial path "/cocoon" should
       be mapped to the context defined in the directory "webapps/cocoon". We will set that up
@@ -663,6 +663,12 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
    <td>JDK 1.2.2_006</td>
   </tr>
   <tr>
+   <td>RedHat Linux 6.2</td>
+   <td>Apache 1.3.12</td>
+   <td>JRun 3.0</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
    <td>RedHat Linux 6.2 (i686)</td>
    <td>Apache 1.3.12 + mod_ssl 2.6.5</td>
    <td>JRun 2.3.3</td>
@@ -748,6 +754,12 @@ D:/Netscape/Server4/docs/cocoon/lib/xerces_1_0_3.jar
   <tr>
    <td>Windows NT 4.0 SP4</td>
    <td colspan="2">BEA WebLogic Server 5.1 SP3</td>
+   <td>Sun JDK 1.2.2</td>
+  </tr>
+  <tr>
+   <td>Windows NT 4.0 SP5</td>
+   <td>IIS 4.0</td>
+   <td>JRun 3.0</td>
    <td>Sun JDK 1.2.2</td>
   </tr>
   <tr>

@@ -25,7 +25,7 @@
 		<source><![CDATA[
 <xsp:page
 	language="java"
-	xmlns:sql="http://apache.org/cocoon/XSP/FP/1.0"
+	xmlns:fp="http://apache.org/cocoon/XSP/FP/1.0"
 	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
 >
 
