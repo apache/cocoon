@@ -55,6 +55,9 @@ import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -88,17 +91,20 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Authenticator.java,v 1.6 2003/05/04 20:30:56 cziegeler Exp $
+ * @version CVS $Id: Authenticator.java,v 1.7 2003/07/01 19:26:40 cziegeler Exp $
 */
-public final class Authenticator 
+public class Authenticator 
     extends AbstractLogEnabled
-    implements Serviceable, ThreadSafe, Disposable {
+    implements Serviceable, ThreadSafe, Disposable, Contextualizable {
+    
+    /** The context */
+    protected Context context;
         
     /** The service manager */
-    private ServiceManager manager;
+    protected ServiceManager manager;
     
     /** The source resolver */
-    private SourceResolver resolver;
+    protected SourceResolver resolver;
     
     /**
      * Check the fragment if it is valid
@@ -216,9 +222,8 @@ public final class Authenticator
                     this.getLogger().info("Authenticator: User authenticated using handler '" + configuration.getName()+"'");
                 }
                 
-                handler = new UserHandler(configuration);
-                
-                AuthenticationContext context = handler.getContext();
+                AuthenticationContext authContext = new AuthenticationContext(this.context);
+                handler = new UserHandler(configuration, authContext);
 
                 MediaManager mediaManager = null;
                 String mediaType;
@@ -230,7 +235,7 @@ public final class Authenticator
                 } finally {
                     this.manager.release( mediaManager );
                 }
-                synchronized(context) {
+                synchronized(authContext) {
                     // add special nodes to the authentication block:
                     // useragent, type and media
                     Element specialElement;
@@ -250,7 +255,7 @@ public final class Authenticator
                     authNode.appendChild(specialElement);
 
                     // store the authentication data in the context
-                    context.init(doc);
+                    authContext.init(doc);
 
                     // And now load applications
                     boolean loaded = true;
@@ -343,5 +348,12 @@ public final class Authenticator
             this.resolver = null;
 		}
 	}
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.context = context;
+    }
 
 }

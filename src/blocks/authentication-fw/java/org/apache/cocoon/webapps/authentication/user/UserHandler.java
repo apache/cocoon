@@ -62,7 +62,7 @@ import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: UserHandler.java,v 1.8 2003/05/27 12:19:30 cziegeler Exp $
+ * @version CVS $Id: UserHandler.java,v 1.9 2003/07/01 19:26:40 cziegeler Exp $
 */
 public final class UserHandler
 implements java.io.Serializable {
@@ -88,9 +88,10 @@ implements java.io.Serializable {
     /**
      * Create a new handler object.
      */
-    public UserHandler(HandlerConfiguration handler) {
+    public UserHandler(HandlerConfiguration handler, AuthenticationContext context) {
+        this.context = context;
         this.handler = handler;
-        this.context = new AuthenticationContext(this);
+        this.context.init(this);
     }
 
     /**

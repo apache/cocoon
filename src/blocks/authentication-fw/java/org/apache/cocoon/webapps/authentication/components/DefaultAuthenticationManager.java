@@ -58,6 +58,7 @@ import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -76,7 +77,6 @@ import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
-import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.authentication.user.UserState;
@@ -92,7 +92,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.13 2003/06/16 16:04:06 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.14 2003/07/01 19:26:40 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -368,13 +368,15 @@ implements AuthenticationManager,
     throws ServiceException {
         this.manager = manager;
         this.authenticator = new Authenticator();
-        this.authenticator.enableLogging( this.getLogger() );
-        this.authenticator.service( this.manager );
+        try {
+            ContainerUtil.enableLogging( this.authenticator, this.getLogger() );
+            ContainerUtil.contextualize( this.authenticator, this.context);
+            ContainerUtil.service( this.authenticator, this.manager );
+            ContainerUtil.initialize( this.authenticator );
+        } catch (Exception e ) {
+            throw new ServiceException("Unable to initialize authenticator.", e);
+        }
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-        
-        ContextManager contextManager;
-        
-        contextManager = (ContextManager) this.manager.lookup(ContextManager.ROLE);
 	}
 
 	/* (non-Javadoc)
@@ -382,7 +384,7 @@ implements AuthenticationManager,
 	 */
 	public void dispose() {
 		if ( this.authenticator != null ) {
-            this.authenticator.dispose();
+            ContainerUtil.dispose( this.authenticator );
             this.authenticator = null;
 		}
         if ( this.manager != null) {
@@ -396,10 +398,14 @@ implements AuthenticationManager,
      * Get the current state of authentication
      */
     public RequestState getState() {
-        final Request req = ContextHelper.getRequest(this.context);
-        return (RequestState)req.getAttribute( REQUEST_STATE_KEY);
+        return getRequestState(this.context);
     }
 
+    public static RequestState getRequestState(Context context) {
+        final Request req = ContextHelper.getRequest(context);
+        return (RequestState)req.getAttribute( REQUEST_STATE_KEY);
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
@@ -409,7 +415,6 @@ implements AuthenticationManager,
     }
 
     protected void setState(RequestState status) {
-        AuthenticationContext.state.set(status);
         final Request req = ContextHelper.getRequest(this.context);
         if ( status != null ) {
             req.setAttribute(  REQUEST_STATE_KEY, status);
