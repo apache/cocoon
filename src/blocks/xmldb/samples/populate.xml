@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 
+<!--+
+    | Populates XMLDB with some samples data
+    | CVS $Id: populate.xml,v 1.2 2003/12/12 15:00:31 vgritsenko Exp $
+    +-->
+
 <html>
   <h2>Populating DB with samples data</h2>
   <h3>Create Collection</h3>
@@ -28,6 +33,23 @@
           </note>
           <sample name="From File System" href="welcome">
             This samples page, but served from the file system.
+          </sample>
+          <sample name="Browser" href="browse/">
+            Simple database browser
+          </sample>
+        </group>
+        <group name="XMLDB Source">
+          <sample name="Get Collection" href="db/cocoon/">
+            Get /db/cocoon collection.
+          </sample>
+          <sample name="Get Resource" href="db/cocoon/welcome">
+            Get /db/cocoon/welcome resource.
+          </sample>
+          <sample name="Query Collection" href="db/cocoon/?xpath=/samples/group">
+            Query /db/cocoon collection.
+          </sample>
+          <sample name="Query Collection" href="db/cocoon/welcome?xpath=/samples/group">
+            Query /db/cocoon/welcome resource (same query).
           </sample>
         </group>
       </samples>

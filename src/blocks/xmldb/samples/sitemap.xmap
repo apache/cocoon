@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--+
+    | XMLDB Samples Sitemap
+    | CVS $Id: sitemap.xmap,v 1.5 2003/12/12 15:00:31 vgritsenko Exp $
+    +-->
+
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
 <!-- =========================== Views =================================== -->
@@ -50,12 +55,29 @@
         <map:serialize/>
       </map:match>
 
+      <map:match pattern="browse/**">
+        <map:match type="request-parameter" pattern="xpath">
+          <map:generate src="xmldb:xindice-embed:///db/{../1}#{1}"/>
+          <map:transform src="xmldb2samples.xsl"/>
+          <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+            <map:parameter name="contextPath" value="{request:contextPath}"/>
+          </map:transform>
+          <map:serialize/>
+        </map:match>
+
+        <map:generate src="xmldb:xindice-embed:///db/{1}"/>
+        <map:transform src="xmldb2samples.xsl"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
+
       <map:match pattern="db/**">
         <map:match type="request-parameter" pattern="xpath">
           <map:generate src="xmldb:xindice-embed:///db/{../1}#{1}"/>
           <map:serialize type="xml"/>
         </map:match>
-
         <map:generate src="xmldb:xindice-embed:///db/{1}"/>
         <map:serialize type="xml"/>
       </map:match>
