@@ -56,6 +56,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -83,7 +84,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.11 2004/02/04 15:16:01 sylvain Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.12 2004/02/04 16:33:13 giacomo Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -400,7 +401,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
                 }
                 this.resolver.release(src);
             } catch(IOException ioe) {
-                throw new RuntimeException("Cannot resolve " + base, ioe);
+                throw new CascadingRuntimeException("Cannot resolve " + base, ioe);
             }
         }
         
