@@ -15,29 +15,29 @@
   limitations under the License.
 -->
 
-<!-- CVS: $Id: samples.xml,v 1.4 2004/04/28 21:01:23 upayavira Exp $ -->
+<!-- CVS: $Id$ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="simple form handling">
 
   <group name="Simple Form Handling">
+     <note>
+       Apache Cocoon contains several approaches to forms. The one demonstrated
+       here is probably the simplest but also the weakest. Please also consider
+       Cocoon Forms in the Forms block.
+     </note>
      <note>
        This samples group demonstrates the use for the simple form handling
        in Apache Cocoon. Simple form handling consists of four parts:
        validating user input, filling forms with submitted data, displaying 
        validation results, and filling forms with default values. This
        corresponds largely to the involved Cocoon components: a validating
-       action, a logicsheet helping to display validation results, a
+       action, an XSP logicsheet helping to display validation results, a
        transformer to fill in submitted data and display validation results,
        and a transformer to extract default values.
      </note>
-     <note>
-       Apache Cocoon contains several approaches to forms. The one demonstrated
-       here is probably the simplest but also the weakest. Please also consider
-       Cocoon Forms in the Forms block.
-     </note>
      <sample name="Logicsheet" href="one/index">
-       On a XSP two logicsheets are used to redisplay submitted data and
-       indicate validation results.
+       On an XSP page two logicsheets are used to redisplay submitted data
+       and indicate validation results.
      </sample>
      <sample name="One Transformer" href="two/index">
        On a static XML page a form is displayed, submitted data is filled in,
