@@ -83,7 +83,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ResourceReader.java,v 1.8 2004/07/02 08:33:42 antonio Exp $
+ * @version CVS $Id$
  */
 public class ResourceReader extends AbstractReader
                             implements CacheableProcessingComponent, Configurable {
@@ -228,10 +228,10 @@ public class ResourceReader extends AbstractReader
             response.setHeader("Accept-Ranges", "none");
         }
 
-        String ranges = request.getHeader("Ranges");
+        String ranges = request.getHeader("Range");
 
         ByteRange byteRange;
-        if (ranges != null && byteRanges) {
+        if (byteRanges && ranges != null) {
             try {
                 ranges = ranges.substring(ranges.indexOf('=') + 1);
                 byteRange = new ByteRange(ranges);
