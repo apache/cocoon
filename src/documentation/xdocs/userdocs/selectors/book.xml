@@ -36,7 +36,7 @@
     <menu-item label="Parameter Selector" href="parameter-selector.html"/>
     <menu-item label="Request Attribute Selector" href="requestattribute-selector.html"/>
     <menu-item label="Request Parameter Selector" href="requestparameter-selector.html"/>
-    <menu-item label="Regular-expression Header Selector" href="regular-expression-header-selector.html"/>
+    <!--menu-item label="Regular-expression Header Selector" href="regular-expression-header-selector.html"/-->
   </menu>
   <menu label="Optional">
   </menu>
