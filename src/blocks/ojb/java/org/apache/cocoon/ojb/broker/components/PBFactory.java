@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,24 +28,24 @@ import org.apache.ojb.broker.PersistenceBroker;
  * @version CVS $Id$
 */
 public interface PBFactory {
-    
+
     /**
      * The <code>ROLE</code>
      */
     String ROLE = PBFactory.class.getName();
-	
+
     /**
      * Get the default Persistence BrokerManager.
      * @return a PersistenceBroker Object
      * @throws PBFactoryException - If the operation failed.
      */
     PersistenceBroker defaultPersistenceBroker()
-        throws PBFactoryException;
-    
+    throws PBFactoryException;
+
     /**
      * Create a new PersistenceBroker with the given parameters.
      * Using this method we can access diferents datasources.
-     * 
+     *
      * @param jcdAlias - name of the jdbc connection descriptor to be used.
      * @param user - Datasource user's name
      * @param password - Datasource user's password
@@ -53,8 +53,10 @@ public interface PBFactory {
      * @throws PBFactoryException - If the operation failed.
      */
     PersistenceBroker createPersistenceBroker(String jcdAlias,
-            String user, String password) throws PBFactoryException;
-    
+                                              String user,
+                                              String password)
+    throws PBFactoryException;
+
     /**
      * Create a new PersistenceBroker with the given parameters.
      * @param key - A immutable key that identify the PB instance in pools
@@ -62,5 +64,5 @@ public interface PBFactory {
      * @throws PBFactoryException - If the operation failed.
      */
     PersistenceBroker createPersistenceBroker(PBKey key)
-        throws PBFactoryException;
+    throws PBFactoryException;
 }
