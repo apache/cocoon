@@ -83,7 +83,7 @@ import java.util.Set;
  * attribute name.</p>
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: SimpleMappingMetaModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: SimpleMappingMetaModule.java,v 1.2 2003/05/17 06:01:25 jefft Exp $
  */
 public class SimpleMappingMetaModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -143,6 +143,8 @@ public class SimpleMappingMetaModule extends AbstractMetaModule implements Threa
 
     public void configure(Configuration config) throws ConfigurationException {
 
+        // It seems that even if there is no config, we'll get an empty
+        // input-module element here, so it will never be null (JT)
         this.inputConf = config.getChild("input-module");
         this.defaultInput = this.inputConf.getAttribute("name", this.defaultInput);
         this.prefix = config.getChild("prefix").getValue(null);
