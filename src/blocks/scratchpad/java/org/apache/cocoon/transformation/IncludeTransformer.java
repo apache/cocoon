@@ -49,7 +49,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @cocoon.sitemap.component.documentation
  * <p>A simple transformer including resolvable sources (accessed through
  * Cocoon's {@link SourceResolver} from its input.</p>
  *
@@ -104,6 +103,10 @@ import java.util.Map;
  *   &lt;map:parameter name="parallel" value="true"/&gt;
  * </pre>
  * <p>By default, parallel processing is turned off.</p>
+ *
+ * @cocoon.sitemap.component.documentation
+ * <p>A simple transformer including resolvable sources (accessed through
+ * Cocoon's SourceResolver from its input.</p>
  *
  * @cocoon.sitemap.component.name   include
  * @cocoon.sitemap.component.logger sitemap.transformer.include
