@@ -69,7 +69,7 @@ import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.BufferedOutputStream;
 import org.apache.cocoon.util.ClassUtils;
-import org.apache.commons.collections.IteratorEnumeration;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.excalibur.xmlizer.XMLizer;
@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.10 2003/05/02 06:53:10 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.11 2003/05/12 13:26:17 stephan Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 

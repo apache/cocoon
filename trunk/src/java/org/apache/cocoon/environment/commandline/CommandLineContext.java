@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.environment.commandline;
 
-import org.apache.commons.collections.IteratorEnumeration;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.environment.Context;
 
@@ -66,10 +66,10 @@ import java.io.InputStream;
  *
  * Implements the {@link org.apache.cocoon.environment.Context} interface
  * @author ?
- * @version CVS $Id: CommandlineContext.java,v 1.1 2003/03/09 00:09:29 pier Exp $
+ * @version CVS $Id: CommandLineContext.java,v 1.1 2003/05/12 13:26:17 stephan Exp $
  */
 
-public class CommandlineContext extends AbstractLogEnabled implements Context {
+public class CommandLineContext extends AbstractLogEnabled implements Context {
 
     /** The context directory path*/
     private String contextDir;
@@ -80,7 +80,7 @@ public class CommandlineContext extends AbstractLogEnabled implements Context {
     /**
      * Constructs a CommandlineContext object from a ServletContext object
      */
-    public CommandlineContext (String contextDir) {
+    public CommandLineContext (String contextDir) {
         String contextDirPath = new File(contextDir).getAbsolutePath();
         // store contextDirPath as is don't remove trailing /.
         this.contextDir = contextDirPath;

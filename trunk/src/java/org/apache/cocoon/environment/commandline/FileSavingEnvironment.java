@@ -66,7 +66,7 @@ import java.util.List;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: FileSavingEnvironment.java,v 1.2 2003/03/18 15:23:49 nicolaken Exp $
+ * @version CVS $Id: FileSavingEnvironment.java,v 1.3 2003/05/12 13:26:17 stephan Exp $
  */
 public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
 
@@ -76,7 +76,7 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
                                  Map parameters,
                                  Map links,
                                  List gatheredLinks,
-                                 CommandlineContext cliContext,
+                                 CommandLineContext cliContext,
                                  OutputStream stream,
                                  Logger log)
     throws MalformedURLException {
