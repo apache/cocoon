@@ -123,7 +123,7 @@ import java.util.Comparator;
  *         (Apache Software Foundation)
  * @author <a href="mailto:conny@smb-tec.com">Conny Krappatsch</a>
  *         (SMB GmbH) for Virbus AG
- * @version CVS $Id: DirectoryGenerator.java,v 1.5 2003/06/25 00:55:31 joerg Exp $
+ * @version CVS $Id: DirectoryGenerator.java,v 1.6 2003/06/27 23:00:57 joerg Exp $
  */
 public class DirectoryGenerator extends ComposerGenerator implements CacheableProcessingComponent {
 
@@ -289,7 +289,9 @@ public class DirectoryGenerator extends ComposerGenerator implements CacheablePr
      * @see DirectoryGenerator.DirValidity
      */
     public SourceValidity getValidity() {
-        this.validity = new DirValidity(this.refreshDelay);
+        if (this.validity == null) {
+            this.validity = new DirValidity(this.refreshDelay);
+        }
         return this.validity;
     }
 
