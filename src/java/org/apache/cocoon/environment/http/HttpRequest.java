@@ -17,6 +17,7 @@ package org.apache.cocoon.environment.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -25,7 +26,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
@@ -40,7 +40,7 @@ import org.apache.commons.collections.IteratorUtils;
  * to provide request information in the HTTP servlets environment.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: HttpRequest.java,v 1.11 2004/07/12 13:27:57 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 public final class HttpRequest implements Request {
@@ -376,7 +376,7 @@ public final class HttpRequest implements Request {
         return this.req.getContentType();
     }
 
-    public ServletInputStream getInputStream() throws IOException {
+    public InputStream getInputStream() throws IOException {
         return this.req.getInputStream();
     }
 

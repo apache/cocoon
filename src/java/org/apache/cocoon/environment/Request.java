@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.environment;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -37,7 +39,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.11 2004/07/12 13:27:57 cziegeler Exp $
+ * @version CVS $Id$
  *
  */
 
@@ -580,6 +582,18 @@ public interface Request {
      */
 
     Enumeration getHeaderNames();
+    
+    /**
+     * Retrieves the body of the request as binary data using 
+     * an <code>InputStream</code>.
+     * 
+     * @return                        an <code>InputStream</code>
+     *                                containing the body of the request.
+     * 
+     * @throws IOException            if an input or output exception occurred
+     * @throws UnsupportedOperationException
+     */
+    InputStream getInputStream() throws IOException, UnsupportedOperationException;
 
     /**
      *

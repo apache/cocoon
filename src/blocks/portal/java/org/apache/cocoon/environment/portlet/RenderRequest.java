@@ -15,13 +15,15 @@
  */
 package org.apache.cocoon.environment.portlet;
 
+import java.io.InputStream;
+
 /**
  * Implements the {@link org.apache.cocoon.environment.Request} interface for
  * the JSR-168 (Portlet) environment.
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RenderRequest.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class RenderRequest extends PortletRequest {
 
@@ -50,4 +52,11 @@ public final class RenderRequest extends PortletRequest {
     public String getMethod() {
         return "GET";
     }
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.environment.Request#getInputStream()
+	 */
+	public InputStream getInputStream() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
 }

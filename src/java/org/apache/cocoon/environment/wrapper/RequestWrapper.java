@@ -33,7 +33,7 @@ import org.apache.commons.collections.IteratorUtils;
  * are different.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestWrapper.java,v 1.9 2004/07/11 13:59:12 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class RequestWrapper extends AbstractRequestWrapper {
 
@@ -228,4 +228,5 @@ public final class RequestWrapper extends AbstractRequestWrapper {
             this.requestAttributes.put( name, o );
         }
     }
+
 }

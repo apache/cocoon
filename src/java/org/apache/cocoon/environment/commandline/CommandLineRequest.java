@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.environment.commandline;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ import org.apache.commons.lang.SystemUtils;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.13 2004/07/12 13:27:57 cziegeler Exp $
+ * @version CVS $Id$
  */
 
 /*
@@ -418,4 +419,12 @@ public class CommandLineRequest implements Request {
     public void setCharacterEncoding(java.lang.String env)
                           throws java.io.UnsupportedEncodingException { characterEncoding = env; }
     public StringBuffer getRequestURL() { return null; }
+
+	/*
+	 * @see org.apache.cocoon.environment.Request#getInputStream()
+	 */
+	public InputStream getInputStream() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+
 }
