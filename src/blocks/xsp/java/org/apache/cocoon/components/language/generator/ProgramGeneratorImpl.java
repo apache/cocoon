@@ -133,13 +133,11 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * @param manager The global component manager
      */
     public void service(ServiceManager manager) throws ServiceException {
-        if (this.manager == null && manager != null) {
-            this.manager = manager;
-            this.cache = (GeneratorSelector) this.manager.lookup(GeneratorSelector.ROLE + "Selector");
-            this.markupSelector = (ServiceSelector)this.manager.lookup(MarkupLanguage.ROLE + "Selector");
-            this.languageSelector = (ServiceSelector)this.manager.lookup(ProgrammingLanguage.ROLE + "Selector");
-            this.classManager = (ClassLoaderManager)this.manager.lookup(ClassLoaderManager.ROLE);
-        }
+        this.manager = manager;
+        this.cache = (GeneratorSelector) this.manager.lookup(GeneratorSelector.ROLE + "Selector");
+        this.markupSelector = (ServiceSelector)this.manager.lookup(MarkupLanguage.ROLE + "Selector");
+        this.languageSelector = (ServiceSelector)this.manager.lookup(ProgrammingLanguage.ROLE + "Selector");
+        this.classManager = (ClassLoaderManager)this.manager.lookup(ClassLoaderManager.ROLE);
     }
 
     /**
@@ -492,21 +490,22 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
         this.cache.removeGenerator(normalizedName);
     }
 
-    /**
-     *  dispose
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        this.manager.release(this.cache);
-        this.cache = null;
-        this.manager.release(this.markupSelector);
-        this.markupSelector = null;
-        this.manager.release(this.languageSelector);
-        this.languageSelector = null;
-        this.manager.release(this.classManager);
-        this.classManager = null;
+        if ( this.manager != null ) {
+            this.manager.release(this.cache);
+            this.cache = null;
+            this.manager.release(this.markupSelector);
+            this.markupSelector = null;
+            this.manager.release(this.languageSelector);
+            this.languageSelector = null;
+            this.manager.release(this.classManager);
+            this.classManager = null;
 
-        this.manager = null;
-
+            this.manager = null;
+        }
         this.workDir = null;
         this.contextDir = null;
     }

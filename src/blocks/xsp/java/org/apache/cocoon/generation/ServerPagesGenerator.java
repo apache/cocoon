@@ -59,12 +59,13 @@ import java.util.Map;
  */
 public class ServerPagesGenerator extends ServletGenerator
         implements CacheableProcessingComponent, Configurable {
+    
     /**
      * The sitemap-defined server pages program generator
      */
-    protected ProgramGenerator programGenerator = null;
+    protected ProgramGenerator programGenerator;
 
-    protected AbstractServerPage generator = null;
+    protected AbstractServerPage generator;
 
     /** The source */
     private Source inputSource;
@@ -79,11 +80,7 @@ public class ServerPagesGenerator extends ServletGenerator
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-
-        if (programGenerator == null) {
-            this.programGenerator =
-                    (ProgramGenerator) manager.lookup(ProgramGenerator.ROLE);
-        }
+        this.programGenerator = (ProgramGenerator) manager.lookup(ProgramGenerator.ROLE);
     }
 
     /* (non-Javadoc)
@@ -274,15 +271,15 @@ public class ServerPagesGenerator extends ServletGenerator
         super.recycle();
     }
 
-    /**
-     * dispose
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
         if ( this.manager != null ) {
             this.manager.release(this.programGenerator);
             this.programGenerator = null;
-            this.manager = null;
         }
+        super.dispose();
     }
 
     /* Completion pipe */
