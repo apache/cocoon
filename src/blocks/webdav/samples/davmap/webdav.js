@@ -9,9 +9,8 @@ function selectMethod() {
   cocoon.sendPage(method+"/"+page, null);
 }
 
-function sendStatus(status,msg) {
-  //cocoon.response.setStatus(status);
-  cocoon.sendPage("status/"+status,{message:msg});
+function sendStatus(sc) {
+  cocoon.sendStatus(sc);
 }
 
 function put() {
@@ -19,11 +18,11 @@ function put() {
   var dest = cocoon.parameters["dest"];
   try {
     var status = repository.save(src,dest);
-    sendStatus(status,"");
+    sendStatus(status);
   }
   catch (e) {
     cocoon.log.error(e);
-    sendStatus(500,"unknown error");
+    sendStatus(500);
   }
 }
 
@@ -31,11 +30,11 @@ function remove() {
   var location = cocoon.parameters["location"];
   try {
     var status = repository.remove(location);
-    sendStatus(status,"");
+    sendStatus(status);
   }
   catch (e) {
     cocoon.log.error(e);
-    sendStatus(500,"unknown error");
+    sendStatus(500);
   }
 }
 
@@ -43,11 +42,11 @@ function mkcol() {
   var location = cocoon.parameters["location"];
   try {
     var status = repository.makeCollection(location);
-    sendStatus(status,"");
+    sendStatus(status);
   }
   catch (e) {
     cocoon.log.error(e);
-    sendStatus(500,"unknown error");
+    sendStatus(500);
   }
 }
 
@@ -58,9 +57,9 @@ function copy() {
   var overwrite = isOverwrite(cocoon.parameters["overwrite"]);
   try {
     var status = repository.copy(from,to,recurse,overwrite);
-    sendStatus(status,"");
+    sendStatus(status);
   } catch (e) {
-    sendStatus(500,"unknown error");
+    sendStatus(500);
   }
 }
 
@@ -71,9 +70,9 @@ function move() {
   var overwrite = isOverwrite(cocoon.parameters["overwrite"]);
   try {
     var status = repository.move(from,to,recurse,overwrite);
-    sendStatus(status,"");
+    sendStatus(status);
   } catch (e) {
-    sendStatus(500,"unknown error");
+    sendStatus(500);
   }
 }
 
@@ -82,7 +81,7 @@ function options() {
   var options = "OPTIONS,GET,HEAD,POST,DELETE,TRACE,PUT" 
               + ",MKCOL,PROPFIND,PROPPATCH,COPY,MOVE";
   cocoon.response.setHeader("Allow",options);
-  sendStatus(200,"");
+  sendStatus(200);
 }
 
 /*
@@ -113,27 +112,3 @@ function isOverwrite(header) {
   }
   return overwrite;
 }
-
-/*
-function getDestination() {
-  var destination = cocoon.request.getHeader("Destination");
-  var index = destination.indexOf('://');
-  if (index != -1) {
-    destination = destination.substring(index+3);
-    index = destination.indexOf('/');
-    if (index != -1) {
-      destination = destination.substring(index);
-    }
-  }
-  return destination;
-}
-
-function getUserAgent() {
-  var userAgent = cocoon.request.getHeader("User-Agent");
-  var index = userAgent.indexOf('/');
-  if (index != -1) {
-    return userAgent.substring(0,index);
-  }
-  return userAgent;
-}
-*/
