@@ -27,7 +27,7 @@
              [yourPath]/[yourBasescript-name]_intercepted.js which will be overwritten
              
          -->
-        <copy-result-script>false</copy-result-script>
+        <serialize-result-script>false</serialize-result-script>
     </component-instance>   
 
 </xconf>
