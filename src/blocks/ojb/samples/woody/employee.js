@@ -22,7 +22,7 @@ function employeeform_jdo(form) {
 	form.save(bean);
 
     // Insert Bean in Database
-	ojbEmployee.insert(bean, factory);
+	ojbEmployee.remove(bean, factory);
 	// Clean up the operation
 	cocoon.releaseComponent(factory);
 

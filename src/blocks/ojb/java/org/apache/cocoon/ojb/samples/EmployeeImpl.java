@@ -58,16 +58,15 @@ import org.apache.ojb.broker.Identity;
 import org.apache.ojb.broker.PersistenceBroker;
 import org.apache.ojb.broker.PersistenceBrokerFactory;
 /**
- *  Department's Impl
+ *  Employee's Impl
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: EmployeeImpl.java,v 1.3 2003/10/10 06:10:00 antonio Exp $
+ * @version CVS $Id: EmployeeImpl.java,v 1.4 2003/10/10 16:00:46 antonio Exp $
 */
 public class EmployeeImpl {
 
 	public EmployeeImpl(){}
-	
-	
+
 	public void retrieve(Employee bean, JdoPMF pmf) {
 		
 		/* 1. Get the PersistenceManager */
@@ -101,6 +100,50 @@ public class EmployeeImpl {
 		// 5. Commit the transaction
 		tx.commit();
 	}
+	
+	public void update(Employee bean, JdoPMF pmf) {
+		
+		/* 1. Get the PersistenceManager */
+		PersistenceManager persistenceManager = pmf.getPersistenceManager();
+		
+		Employee e = new Employee();
+		e.setId(bean.getId());
+		PersistenceBroker broker = PersistenceBrokerFactory.defaultPersistenceBroker();
+		Identity oid = new Identity(e, broker);
+		
+		Employee b = new Employee();
+		//	2. start transaction
+		persistenceManager.currentTransaction().begin();
+		// 3. Get the Object based on the primary key
+		b = (Employee) persistenceManager.getObjectById(oid, false);
+		// 4. Copy data from bean
+		copyData(bean, b);
+		// Store to database
+		// persistenceManager.makePersistent(b);
+		// 5. End transaction
+		persistenceManager.currentTransaction().commit();
+	}
+	
+	public void remove(Employee bean, JdoPMF pmf) {
+		
+			/* 1. Get the PersistenceManager */
+			PersistenceManager persistenceManager = pmf.getPersistenceManager();
+		
+			Employee e = new Employee();
+			e.setId(bean.getId());
+			PersistenceBroker broker = PersistenceBrokerFactory.defaultPersistenceBroker();
+			Identity oid = new Identity(e, broker);
+		
+			Employee b = new Employee();
+			//	2. start transaction
+			persistenceManager.currentTransaction().begin();
+			// 3. Get the Object based on the primary key
+			b = (Employee) persistenceManager.getObjectById(oid, false);
+			// Delete in the database
+			persistenceManager.deletePersistent(b);
+			// 5. End transaction
+			persistenceManager.currentTransaction().commit();
+		}
 	
 	private void copyData(Employee from, Employee to)
 	{
