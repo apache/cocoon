@@ -33,7 +33,7 @@ import org.apache.cocoon.Constants;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-11 21:01:42 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-01-11 21:04:14 $
  */
 public class UpdEmployeeAction extends ComposerAction {
 
@@ -62,7 +62,7 @@ public class UpdEmployeeAction extends ComposerAction {
         HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
         String id = req.getParameter("employee");
         String name = req.getParameter("name");
-        String department = req.getParameter("department")
+        String department = req.getParameter("department");
 
         if (updateEmployee(id, name, department) == true) {
             req.setAttribute("message", "You have updated the employee " + name);
