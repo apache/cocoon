@@ -1,4 +1,4 @@
-/*-- $Id: EngineWrapper.java,v 1.12 2000-12-22 11:52:58 greenrd Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.13 2001-01-11 13:52:19 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.framework.*;
  * But I have more important stuff to do right now.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.12 $ $Date: 2000-12-22 11:52:58 $
+ * @version $Revision: 1.13 $ $Date: 2001-01-11 13:52:19 $
  */
 
 public class EngineWrapper {
@@ -93,7 +93,7 @@ public class EngineWrapper {
 
     /**
      * Dummy implementation of the HttpServletRequest class to create a 
-     * fake but funtional request for the main engine.
+     * fake but functional request for the main engine.
      * NOTE: this works only with the default file producer.
      */
     public class HttpServletRequestImpl implements HttpServletRequest {
@@ -124,9 +124,7 @@ public class EngineWrapper {
         public String getPathInfo() { return ""; }
 
         public String getParameter(String name) { 
-            if ((document != null) &&  (name.equalsIgnoreCase("producer")))
-                return "org.apache.cocoon.producer.ProducerFromRequest";
-            else if (name.equalsIgnoreCase("user-agent"))
+            if (name.equalsIgnoreCase("user-agent"))
               return userAgent;
             else
                 return null;
