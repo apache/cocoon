@@ -73,7 +73,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.6 2003/05/16 07:04:55 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.7 2003/07/06 20:37:48 sylvain Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -363,6 +363,13 @@ public class EnvironmentWrapper
     public void removeAttribute(String name) {
         super.removeAttribute(name);
         this.environment.removeAttribute(name);
+    }
+
+    /**
+     * Always return <code>false</code>.
+     */
+    public boolean isExternal() {
+        return false;
     }
 
 }

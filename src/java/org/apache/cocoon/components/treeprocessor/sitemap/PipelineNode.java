@@ -73,7 +73,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.5 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.6 2003/07/06 20:37:47 sylvain Exp $
  */
 public class PipelineNode
     extends AbstractParentProcessingNode
@@ -152,16 +152,14 @@ public class PipelineNode
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
         
-        Map objectModel = env.getObjectModel();
-        
-        boolean internalRequest = ObjectModelHelper.getRequest(objectModel).isInternal();
+        boolean externalRequest = env.isExternal();
 
         // Always fail on external resquests if internal only.
-        if (this.internalOnly && !internalRequest) {
+        if (this.internalOnly && externalRequest) {
             return false;
         }
 
-        context.inform(this.processingPipeline, this.parameters, objectModel);
+        context.inform(this.processingPipeline, this.parameters, env.getObjectModel());
 
         try {
             if (invokeNodes(children, env, context)) {
@@ -178,7 +176,7 @@ public class PipelineNode
             
         } catch(Exception ex) {
             
-            if (internalRequest) {
+            if (!externalRequest) {
                 // Propagate exception on internal requests
                 throw ex;
                 
