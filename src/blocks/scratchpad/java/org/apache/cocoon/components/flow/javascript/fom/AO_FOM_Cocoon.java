@@ -78,13 +78,14 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
+
 /**
  * Implementation of FOM (Flow Object Model).
  *
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: AO_FOM_Cocoon.java,v 1.1 2003/09/06 13:23:30 reinhard Exp $
+ * @version CVS $Id: AO_FOM_Cocoon.java,v 1.2 2003/09/12 18:16:37 reinhard Exp $
  */
 
 public class AO_FOM_Cocoon extends ScriptableObject {
@@ -201,30 +202,25 @@ public class AO_FOM_Cocoon extends ScriptableObject {
         environment.redirect(false, uri);
     }
 
-/*
-
- NOTE (SM): These are the hooks to the future FOM Event Model that will be
- designed in the future. It has been postponed because we think
- there are more important things to do at the moment, but these
- are left here to indicate that they are planned.
+    /*
+    NOTE (SM): These are the hooks to the future FOM Event Model that will be
+    designed in the future. It has been postponed because we think
+    there are more important things to do at the moment, but these
+    are left here to indicate that they are planned.
  
     public void jsFunction_addEventListener(String eventName, 
                                             Object function) {
-        // what is this?
     }
     
     public void jsFunction_removeEventListener(String eventName,
                                                Object function) {
-        // what is this?
     }
-    
-*/
+    */
 
     /**
      * Access components.
      * 
-     * TODO: Do we want to restrict the access of sitemap components? (RP)
-     * TODO: Do we want to raise an error or return null? (RP)
+     * @param id - role name of the component
      */  
     public Object jsFunction_getComponent(String id) 
         throws Exception { 
@@ -244,6 +240,22 @@ public class AO_FOM_Cocoon extends ScriptableObject {
             throw new JavaScriptException( "Only components can be released!" );
         }
     }
+
+    // (RPO) added by interception layer    
+    /**
+     * Dummy function for apply methods which does nothing - only necessary
+     * to make it easy to switch between the interception aware interpreter
+     * (intercepted-javascript) and the other (javascript). See cocoon.xconf
+     * for details.
+     */
+    public void jsFunction_apply( String script ) {
+        if( logger.isWarnEnabled() ) {
+            logger.warn( "In order to apply interceptions to your Javascript functions " + 
+                         "you have to use the interceptions aware Javascript interpreter. " +
+                         "Check your settings in cocoon.xconf!" );
+        }
+    }
+    // --end
 
     /**
      * Load the script file specified as argument.
