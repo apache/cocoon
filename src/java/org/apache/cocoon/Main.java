@@ -50,18 +50,15 @@
 */
 package org.apache.cocoon;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.bean.helpers.OutputStreamListener;
+import org.apache.cocoon.bean.helpers.BeanConfigurator;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -70,9 +67,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * Command line entry point. Parses command line, create Cocoon bean and invokes it
@@ -82,7 +76,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.20 2003/10/07 09:59:17 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.21 2003/10/08 23:22:00 upayavira Exp $
  */
 public class Main {
 
@@ -130,52 +124,6 @@ public class Main {
     protected static final String DEFAULT_FILENAME_LONG =   "defaultFilename";
     protected static final String URI_LONG =                "uri";
     protected static final String URI_GROUP_NAME_LONG =     "uris";
-
-    private static final String NODE_ROOT = "cocoon";
-    private static final String ATTR_VERBOSE = "verbose";
-
-    private static final String NODE_LOGGING = "logging";
-    private static final String ATTR_LOG_KIT = "log-kit";
-    private static final String ATTR_LOG_LEVEL = "level";
-    private static final String ATTR_LOGGER = "logger";
-
-    private static final String NODE_CONTEXT_DIR = "context-dir";
-    private static final String NODE_DEST_DIR = "dest-dir";
-    private static final String NODE_WORK_DIR = "work-dir";
-    private static final String NODE_CONFIG_FILE = "config-file";
-    private static final String NODE_URI_FILE = "uri-file";
-    private static final String NODE_CHECKSUMS_URI = "checksums-uri";
- 
-    private static final String NODE_BROKEN_LINKS = "broken-links";
-    private static final String ATTR_BROKEN_LINK_REPORT_TYPE = "type";
-    private static final String ATTR_BROKEN_LINK_REPORT_FILE = "file";
-    private static final String ATTR_BROKEN_LINK_GENERATE = "generate";
-    private static final String ATTR_BROKEN_LINK_EXTENSION = "extension";
-
-    private static final String NODE_AGENT = "user-agent";
-    private static final String NODE_ACCEPT = "accept";
-
-    private static final String ATTR_FOLLOW_LINKS = "follow-links";
-    private static final String ATTR_PRECOMPILE_ONLY = "precompile-only";
-    private static final String ATTR_CONFIRM_EXTENSIONS = "confirm-extensions";
-    private static final String NODE_LOAD_CLASS = "load-class";
-    private static final String NODE_DEFAULT_FILENAME = "default-filename";
-
-    private static final String NODE_INCLUDE = "include";
-    private static final String NODE_EXCLUDE = "exclude";
-    private static final String ATTR_INCLUDE_EXCLUDE_PATTERN = "pattern";
-    
-    private static final String NODE_INCLUDE_LINKS = "include-links";
-    private static final String ATTR_LINK_EXTENSION = "extension";
-    
-    private static final String NODE_URI = "uri";
-    private static final String ATTR_URI_TYPE = "type";
-    private static final String ATTR_URI_SOURCEPREFIX = "src-prefix";
-    private static final String ATTR_URI_SOURCEURI = "src";
-    private static final String ATTR_URI_DESTURI = "dest";
-
-    private static final String NODE_URIS = "uris";
-    private static final String ATTR_NAME = "name";
     
     private static Options options;
     private static OutputStreamListener listener;
@@ -382,7 +330,7 @@ public class Main {
             listener.setReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
         }
         if (line.hasOption(URI_FILE_OPT)) {
-            cocoon.addTargets(processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
+            cocoon.addTargets(BeanConfigurator.processURIFile(line.getOptionValue(URI_FILE_OPT)), destDir);
         }
         if (line.hasOption(FOLLOW_LINKS_OPT)) {
             cocoon.setFollowLinks(yesno(line.getOptionValue(FOLLOW_LINKS_OPT)));
@@ -413,367 +361,18 @@ public class Main {
         return "yes".equals(in) || "true".equals(in);
     }
 
-    /**
-     * <code>processURIFile</code> method.
-     *
-     * @param filename a <code>String</code> value
-     * @return uris a <code>List</code> of URIs
-     */
-    public static List processURIFile(String filename) {
-        List uris = new ArrayList();
-        try {
-            BufferedReader uriFile = new BufferedReader(new FileReader(filename));
-            boolean eof = false;
-
-            while (!eof) {
-                String uri = uriFile.readLine();
-
-                if (null == uri) {
-                    eof = true;
-                } else {
-                    uris.add(uri.trim());
-                }
-            }
-
-            uriFile.close();
-        } catch (Exception e) {
-            // ignore errors.
-        }
-        return uris;
-    }
-
-    /**
-     * <code>processXConf</code> method. Reads in XML configuration from
-     * specified xconf file.
-     *
-     * @param cocoon a <code>CocoonBean</code> that will be configured by the xconf file
-     * @param filename a <code>String</code> value
-     */
     private static String processXConf(CocoonBean cocoon, String filename, String destDir, String uriGroup) {
 
         try {
             final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            final Document conf = builder.parse(new File(filename).toURL().toExternalForm());
-
-            Node root = conf.getDocumentElement();
-            if (!NODE_ROOT.equals(root.getNodeName())) {
-                throw new IllegalArgumentException("Expected root node of "+ NODE_ROOT);
-            }
-
-            if (Main.hasAttribute(root, ATTR_VERBOSE)) {
-                cocoon.setVerbose(Main.getBooleanAttributeValue(root, ATTR_VERBOSE));
-            }
-            if (Main.hasAttribute(root, ATTR_FOLLOW_LINKS)) {
-                cocoon.setFollowLinks(Main.getBooleanAttributeValue(root, ATTR_FOLLOW_LINKS));
-            }
-            if (Main.hasAttribute(root, ATTR_PRECOMPILE_ONLY)) {
-                cocoon.setPrecompileOnly(Main.getBooleanAttributeValue(root, ATTR_PRECOMPILE_ONLY));
-            }
-            if (Main.hasAttribute(root, ATTR_CONFIRM_EXTENSIONS)) {
-                cocoon.setConfirmExtensions(Main.getBooleanAttributeValue(root, ATTR_CONFIRM_EXTENSIONS));
-            }
-            if (destDir == null || destDir.length() == 0) {
-                destDir = getNodeValue(root, NODE_DEST_DIR);
-            }
-
-            NodeList nodes = root.getChildNodes();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node node = nodes.item(i);
-                if (node.getNodeType()== Node.ELEMENT_NODE) {
-                    String nodeName = node.getNodeName();
-                    if (nodeName.equals(NODE_BROKEN_LINKS)) {
-                        parseBrokenLinkNode(cocoon, node);
-
-                    } else if (nodeName.equals(NODE_LOAD_CLASS)) {
-                        cocoon.addLoadedClass(getNodeValue(node));
-
-                    } else if (nodeName.equals(NODE_LOGGING)) {
-                        parseLoggingNode(cocoon, node);
-
-                    } else if (nodeName.equals(NODE_CONTEXT_DIR)) {
-                        cocoon.setContextDir(getNodeValue(node));
-
-                    } else if (nodeName.equals(NODE_CONFIG_FILE)) {
-                        cocoon.setConfigFile(getNodeValue(node));
-
-                    } else if (nodeName.equals(NODE_DEST_DIR)) {
-                        // Ignore
-
-                    } else if (nodeName.equals(NODE_WORK_DIR)) {
-                        cocoon.setWorkDir(getNodeValue(node));
-
-                    } else if (nodeName.equals(NODE_CHECKSUMS_URI)) {
-                        cocoon.setChecksumURI(getNodeValue(node));
-                        
-                    } else if (nodeName.equals(NODE_AGENT)) {
-                        cocoon.setAgentOptions(getNodeValue(node));
-
-                    } else if (nodeName.equals(NODE_ACCEPT)) {
-                        cocoon.setAcceptOptions(getNodeValue(node));
-
-                    } else if (nodeName.equals(NODE_DEFAULT_FILENAME)) {
-                        cocoon.setDefaultFilename(getNodeValue(node));
-
-                    } else if (nodeName.equals(NODE_INCLUDE)) {
-                        String pattern = Main.parseIncludeExcludeNode(cocoon, node, NODE_INCLUDE);
-                        cocoon.addIncludePattern(pattern);
-
-                    } else if (nodeName.equals(NODE_EXCLUDE)) {
-                        String pattern = Main.parseIncludeExcludeNode(cocoon, node, NODE_EXCLUDE);
-                        cocoon.addExcludePattern(pattern);
-
-                    } else if (nodeName.equals(NODE_INCLUDE_LINKS)) {
-                        Main.parseIncludeLinksNode(cocoon, node);
-
-                    } else if (nodeName.equals(NODE_URI)) {
-                        Main.parseURINode(cocoon, node, destDir);
-
-                    } else if (nodeName.equals(NODE_URIS)) {
-                        Main.parseURIsNode(cocoon, node, destDir, uriGroup);
-
-                    } else if (nodeName.equals(NODE_URI_FILE)) {
-                        cocoon.addTargets(Main.processURIFile(getNodeValue(node)), destDir);
-
-                    } else {
-                        throw new IllegalArgumentException("Unknown element: <" + nodeName + ">");
-                    }
-                }
-            }
+            final Document xconf = builder.parse(new File(filename).toURL().toExternalForm());
+            return BeanConfigurator.configure(xconf, cocoon, destDir, uriGroup, listener);
         } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
+            return destDir;
         }
 
-        return destDir;
     }
-
-    private static void parseLoggingNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
-        if (Main.hasAttribute(node, ATTR_LOG_KIT)) {
-            cocoon.setLogKit(Main.getAttributeValue(node, ATTR_LOG_KIT));
-        }
-        if (Main.hasAttribute(node, ATTR_LOGGER)) {
-            cocoon.setLogger(Main.getAttributeValue(node, ATTR_LOGGER));
-        }
-        if (Main.hasAttribute(node, ATTR_LOG_LEVEL)) {
-            cocoon.setLogLevel(Main.getAttributeValue(node, ATTR_LOG_LEVEL));
-        }
-        NodeList nodes = node.getChildNodes();
-        if (nodes.getLength()!=0) {
-            throw new IllegalArgumentException("Unexpected children of <" + NODE_LOGGING + "> node");
-        }
-    }
-
-    private static void parseIncludeLinksNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
-        if (Main.hasAttribute(node, ATTR_LINK_EXTENSION)) {
-            cocoon.addIncludeLinkExtension(Main.getAttributeValue(node, ATTR_LINK_EXTENSION));
-        }
-    }
-
-    private static void parseBrokenLinkNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
-        if (Main.hasAttribute(node, ATTR_BROKEN_LINK_REPORT_FILE)) {
-            listener.setReportFile(Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_FILE));
-        }
-        if (Main.hasAttribute(node, ATTR_BROKEN_LINK_REPORT_TYPE)) {
-            listener.setReportType(Main.getAttributeValue(node, ATTR_BROKEN_LINK_REPORT_TYPE));
-        }
-        if (Main.hasAttribute(node, ATTR_BROKEN_LINK_GENERATE)) {
-        cocoon.setBrokenLinkGenerate(Main.getBooleanAttributeValue(node, ATTR_BROKEN_LINK_GENERATE));
-        }
-        if (Main.hasAttribute(node, ATTR_BROKEN_LINK_EXTENSION)) {
-        cocoon.setBrokenLinkExtension(Main.getAttributeValue(node, ATTR_BROKEN_LINK_EXTENSION));
-        }
-        NodeList nodes = node.getChildNodes();
-        if (nodes.getLength()!=0) {
-            throw new IllegalArgumentException("Unexpected children of <" + NODE_BROKEN_LINKS + "> node");
-        }
-    }
-
-    private static String parseIncludeExcludeNode(CocoonBean cocoon, Node node, final String NODE_TYPE) throws IllegalArgumentException {
-        NodeList nodes = node.getChildNodes();
-        if (nodes.getLength() != 0) {
-            throw new IllegalArgumentException("Unexpected children of <" + NODE_INCLUDE + "> node");
-        }
-
-        if (Main.hasAttribute(node, ATTR_INCLUDE_EXCLUDE_PATTERN)) {
-            return Main.getAttributeValue(node, ATTR_INCLUDE_EXCLUDE_PATTERN);
-        } else {
-            throw new IllegalArgumentException("Expected a "+ATTR_INCLUDE_EXCLUDE_PATTERN+" attribute for <"+NODE_TYPE+"> node");
-        }
-    }
-
-    private static void parseURIsNode(CocoonBean cocoon, Node node, String destDir, String uriGroup) throws IllegalArgumentException {
-
-        boolean followLinks = cocoon.followLinks();
-        boolean confirmExtensions = cocoon.confirmExtensions();
-        String logger = cocoon.getLoggerName();
-        String destURI = destDir;
-        String root = null;
-        String type = null;
-        String name = null;
-        
-        if (Main.hasAttribute(node, ATTR_FOLLOW_LINKS)) {
-            followLinks = Main.getBooleanAttributeValue(node, ATTR_FOLLOW_LINKS);
-        }
-        if (Main.hasAttribute(node, ATTR_CONFIRM_EXTENSIONS)) {
-            confirmExtensions = Main.getBooleanAttributeValue(node, ATTR_CONFIRM_EXTENSIONS);
-        }
-        if (Main.hasAttribute(node, ATTR_URI_TYPE)) {
-            type = Main.getAttributeValue(node, ATTR_URI_TYPE);
-        }
-        if (Main.hasAttribute(node, ATTR_URI_SOURCEPREFIX)) {
-            root = Main.getAttributeValue(node, ATTR_URI_SOURCEPREFIX);
-        }
-        if (Main.hasAttribute(node, ATTR_URI_DESTURI)) {
-            destURI = Main.getAttributeValue(node, ATTR_URI_DESTURI);
-        }
-        if (Main.hasAttribute(node, ATTR_LOGGER)) {
-            logger = Main.getAttributeValue(node, ATTR_LOGGER);
-        }
-        if (Main.hasAttribute(node, ATTR_NAME)) {
-            name = Main.getAttributeValue(node, ATTR_NAME);
-            if (name != null && uriGroup != null && !name.equals(uriGroup)) {
-                // The user has not selected this URI group, so ignore it.
-                return;
-            }
-        }
-        NodeList nodes = node.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node child = nodes.item(i);
-            if (child.getNodeType()== Node.ELEMENT_NODE) {
-                String childName = child.getNodeName();
-                if (childName.equals(NODE_URI)) {
-                    String _sourceURI = null;
-                    String _destURI = destURI;
-                    String _root = root;
-                    String _type = type;
-                    
-                    if (child.getAttributes().getLength() == 0) {
-                        _sourceURI = getNodeValue(child);
-                        //destURI is inherited 
-                    } else {
-                        _sourceURI = Main.getAttributeValue(child, ATTR_URI_SOURCEURI);
-
-                        if (Main.hasAttribute(child, ATTR_URI_TYPE)) {
-                            _type = Main.getAttributeValue(child, ATTR_URI_TYPE);
-                        }
-                        if (Main.hasAttribute(child, ATTR_URI_SOURCEPREFIX)) {
-                            _root = Main.getAttributeValue(child, ATTR_URI_SOURCEPREFIX);
-                        }
-                        if (Main.hasAttribute(child, ATTR_URI_DESTURI)) {
-                            _destURI = Main.getAttributeValue(child, ATTR_URI_DESTURI);
-                        }
-                    }
-                    cocoon.addTarget(_type, _root, _sourceURI, _destURI, followLinks, confirmExtensions, logger);
-                } else {
-                    throw new IllegalArgumentException("Unknown element: <" + childName + ">");
-                }
-            }
-        }
-    }
-        
-    private static void parseURINode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
-        NodeList nodes = node.getChildNodes();
-        if (nodes.getLength() != 0) {
-            throw new IllegalArgumentException("Unexpected children of <" + NODE_URI + "> node");
-        }
-
-        if (node.getAttributes().getLength() == 0) {
-            cocoon.addTarget(getNodeValue(node), destDir);
-        } else {
-            String src = Main.getAttributeValue(node, ATTR_URI_SOURCEURI);
-
-            String type = null;
-            if (Main.hasAttribute(node, ATTR_URI_TYPE)) {
-                type = Main.getAttributeValue(node, ATTR_URI_TYPE);
-            }
-            String root = null;
-            if (Main.hasAttribute(node, ATTR_URI_SOURCEPREFIX)) {
-                root = Main.getAttributeValue(node, ATTR_URI_SOURCEPREFIX);
-            }
-            String dest = null;
-            if (Main.hasAttribute(node, ATTR_URI_DESTURI)) {
-                dest = Main.getAttributeValue(node, ATTR_URI_DESTURI);
-            }
-
-            if (root != null && type != null & dest != null) {
-                cocoon.addTarget(type, root, src, dest);
-            } else if (root != null & dest != null) {
-                cocoon.addTarget(root, src, dest);
-            } else if (dest != null) {
-                cocoon.addTarget(src, dest);
-            } else {
-                cocoon.addTarget(src, destDir);
-            }
-        }
-    }
-
-    private static String getNodeValue(Node root, String name) throws IllegalArgumentException {
-        NodeList nodes = root.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType()== Node.ELEMENT_NODE) {
-                String nodeName = node.getNodeName();
-                if (nodeName.equals(name)) {
-                    return getNodeValue(node);
-                }
-            }
-        }
-        return null;
-    }
-
-    private static String getNodeValue(Node node) throws IllegalArgumentException {
-        StringBuffer s = new StringBuffer();
-        NodeList children = node.getChildNodes();
-        boolean found = false;
-
-        for (int i = 0; i < children.getLength(); i++) {
-            Node child = children.item(i);
-            if (child.getNodeType() == Node.TEXT_NODE) {
-                s.append(child.getNodeValue());
-                found = true;
-            } else {
-                throw new IllegalArgumentException("Unexpected node:" + child.getLocalName());
-            }
-        }
-        if (!found) {
-            throw new IllegalArgumentException("Expected value for " + node.getLocalName() + " node");
-        }
-        return s.toString();
-    }
-
-    private static String getAttributeValue(Node node, String attr) throws IllegalArgumentException {
-        NamedNodeMap nodes = node.getAttributes();
-        if (nodes != null) {
-            Node attribute = nodes.getNamedItem(attr);
-            if (attribute != null && attribute.getNodeValue() != null) {
-                return attribute.getNodeValue();
-            }
-        }
-        throw new IllegalArgumentException("Missing " + attr + " attribute on <" + node.getNodeName() + "> node");
-    }
-
-    private static boolean hasAttribute(Node node, String attr) {
-        NamedNodeMap nodes = node.getAttributes();
-        if (nodes != null) {
-            Node attribute = nodes.getNamedItem(attr);
-            return (attribute != null);
-        }
-        return false;
-    }
-
-    private static boolean getBooleanAttributeValue(Node node, String attr) {
-        NamedNodeMap nodes = node.getAttributes();
-        if (nodes != null) {
-            Node attribute = nodes.getNamedItem(attr);
-
-            if (attribute != null) {
-                String value = attribute.getNodeValue();
-                return "yes".equals(value)
-                        || "true".equals(value);
-            }
-        }
-        return false;
-    }
-
     /**
      * Print a description of the software before running
      */
