@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.286 2004/03/20 01:50:58 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.287 2004/03/23 07:33:15 antonio Exp $:-->
 
 <status>
  <developers>
@@ -213,7 +213,7 @@
 
  <release version="@version@" date="@date@">
     <action dev="AG" type="update">
-     Updated jdtcore to 2.1.3
+     Updated jdtcore to 2.1.3, update castor-xml to 0.9.5.3
    </action>
    <action dev="CZ" type="fix" fixes-bug="27764" due-to="Corin Moss" due-to-email="cmoss@tvnz.co.nz">
      DefaultIncludeCacheManager did not release xml-serializer under some circumstances.
