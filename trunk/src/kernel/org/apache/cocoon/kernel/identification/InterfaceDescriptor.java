@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.kernel.identification;
 
+import java.util.Map;
+
 import org.apache.cocoon.kernel.configuration.Configuration;
 import org.apache.cocoon.kernel.configuration.ConfigurationException;
 
@@ -23,7 +25,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationException;
  * {@link Descriptor}.</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class InterfaceDescriptor extends AbstractDescriptor {
 

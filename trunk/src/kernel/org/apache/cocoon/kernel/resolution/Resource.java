@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.kernel.resolution;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -24,7 +24,7 @@ import java.net.URL;
  * <p>The {@link Resource} interface defines an abstract readable resource.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Resource {
 

@@ -16,6 +16,7 @@
 package org.apache.cocoon.kernel.archival;
 
 import java.util.Set;
+
 import org.apache.cocoon.kernel.identification.Descriptor;
 import org.apache.cocoon.kernel.identification.Identifier;
 
@@ -24,7 +25,7 @@ import org.apache.cocoon.kernel.identification.Identifier;
  * {@link Descriptor}s.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public interface Library extends Set {
 

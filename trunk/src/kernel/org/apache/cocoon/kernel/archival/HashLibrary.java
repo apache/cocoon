@@ -17,6 +17,7 @@ package org.apache.cocoon.kernel.archival;
 
 import java.util.HashSet;
 import java.util.Iterator;
+
 import org.apache.cocoon.kernel.identification.Descriptor;
 import org.apache.cocoon.kernel.identification.Identifier;
 import org.apache.cocoon.kernel.identification.ParsedIdentifier;
@@ -40,7 +41,7 @@ import org.apache.cocoon.kernel.identification.ParsedIdentifier;
  * operations on remote servers).</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class HashLibrary extends HashSet implements Library {
 

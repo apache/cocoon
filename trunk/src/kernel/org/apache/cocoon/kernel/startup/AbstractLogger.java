@@ -17,6 +17,7 @@ package org.apache.cocoon.kernel.startup;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.xml.sax.SAXException;
 
 /**
@@ -24,7 +25,7 @@ import org.xml.sax.SAXException;
  * log entries and outputting them.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public abstract class AbstractLogger extends Logger {
 

@@ -17,8 +17,8 @@ package org.apache.cocoon.kernel.configuration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -40,7 +40,7 @@ import java.util.NoSuchElementException;
  * name spaces</b>.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class Configuration extends ArrayList {
 
@@ -1035,7 +1035,7 @@ public class Configuration extends ArrayList {
          * <p>Check if this {@link Iterator} can return the next element.</p>
          *
          * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
-         * @version 1.0 (CVS $Revision: 1.3 $)
+         * @version 1.0 (CVS $Revision: 1.4 $)
          */
         public boolean hasNext() {
             /* No name, no children. Bye! */

@@ -17,8 +17,8 @@ package org.apache.cocoon.kernel.resolution;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -27,7 +27,7 @@ import java.net.URL;
  * interface for resources accessible via {@link File}s.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class FileResource implements Resource {
 

@@ -18,14 +18,16 @@ package org.apache.cocoon.kernel.configuration;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
+
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
-import org.xml.sax.ContentHandler; 
+
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl; 
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * <p>The {@link ConfigurationSerializer} serializes {@link Configuration}
@@ -38,7 +40,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * {@link OutputStream} instances.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class ConfigurationSerializer {
 

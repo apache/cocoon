@@ -15,14 +15,14 @@
  */
 package org.apache.cocoon.kernel.startup;
 
-import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
-import org.apache.cocoon.kernel.KernelDeployer;
 import org.apache.cocoon.kernel.Installer;
+import org.apache.cocoon.kernel.KernelDeployer;
+import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class Main {
 

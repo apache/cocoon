@@ -17,15 +17,15 @@ package org.apache.cocoon.kernel.resolution;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * <p>A {@link LocalResolver} is an implementation of the {@link Resolver}
@@ -35,7 +35,7 @@ import java.util.jar.JarEntry;
  * If the file is not a directory, it must (then) be a valid JAR archive.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class LocalResolver implements Resolver {
 

@@ -20,15 +20,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException; 
-import org.xml.sax.helpers.DefaultHandler; 
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * <p>The {@link ConfigurationBuilder} builds {@link Configuration} instances
@@ -42,7 +44,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * and producing {@link Configuration} instances.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class ConfigurationBuilder extends DefaultHandler {
 
@@ -56,7 +58,7 @@ public class ConfigurationBuilder extends DefaultHandler {
     private List stack = new ArrayList();
 
     /** <p>The buffer holding element values.</p> */
-    private StringBuffer buffer = new StringBuffer();
+    private StringBuffer buffer = null;
 
     /** <p>The current {@link Locator}.</p> */
     private Locator locator = null;

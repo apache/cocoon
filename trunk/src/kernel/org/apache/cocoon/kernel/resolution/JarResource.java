@@ -15,21 +15,21 @@
  */
 package org.apache.cocoon.kernel.resolution;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * <p>A {@link JarResource} is the implementation of the {@link Resource}
  * interface for {@link JarEntry} resources in a {@link JarFile}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class JarResource implements Resource {
 

@@ -15,19 +15,23 @@
  */
 package org.apache.cocoon.kernel.startup;
 
+import java.net.URL;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.cocoon.kernel.KernelDeployer;
+import org.apache.cocoon.kernel.CoreWirings;
 import org.apache.cocoon.kernel.Installer;
+import org.apache.cocoon.kernel.KernelDeployer;
+import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.configuration.Configuration;
 import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 
 /**
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class Servlet extends HttpServlet {
 
@@ -56,7 +60,7 @@ public class Servlet extends HttpServlet {
         }
 
         /* Find our configurations */
-        String deplconf  = this.getInitParameter("deployer-config");
+        String deplconf = this.getInitParameter("deployer-config");
         String instconf = this.getInitParameter("installer-config");
         if (deplconf == null) {
             String message = "Parameter \"deployer-config\" not specified";
@@ -67,27 +71,47 @@ public class Servlet extends HttpServlet {
             logger.fatal(message);
             throw new ServletException(message);
         }
-        
+
         /* Let's start up */
         this.logger.info("Kernel startup");
         try {
+            URL deplurl = ctxt.getResource(deplconf);
+            if (deplurl == null) {
+            		String message = "Unable to find deployer configurations \""
+            					     + deplconf + "\"";
+            		logger.fatal(message);
+            		throw new ServletException(message);
+            }
+            
+            URL insturl = ctxt.getResource(instconf);
+            if (insturl == null) {
+            		String message = "Unable to find installer configuration \""
+            						 + deplconf + "\"";
+            		logger.fatal(message);
+            		throw new ServletException(message);
+            }
+
             Configuration conf = null;
 
             /* Now let's create our core deployer */
             KernelDeployer deployer = new KernelDeployer();
             deployer.logger(logger);
-            conf = ConfigurationBuilder.parse(ctxt.getResource(deplconf));
+            conf = ConfigurationBuilder.parse(deplurl);
             deployer.configure(conf);
             
             /* Instantiate an installer and process deployment */
             Installer installer = new Installer(deployer);
-            conf = ConfigurationBuilder.parse(ctxt.getResource(instconf));
+            conf = ConfigurationBuilder.parse(insturl);
             installer.process(conf);
             
+            /* Store the current wirings as an application attribute */
+            String attribute = Wirings.class.getName();
+            ctxt.setAttribute(attribute, new CoreWirings(deployer));
+
         } catch (Throwable throwable) {
             String message = "An error occurred initializing the kernel";
             logger.fatal(message, throwable);
-            //throw new ServletException(message, throwable);
+            throw new ServletException(message, throwable);
         }
     }
 

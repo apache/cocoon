@@ -16,6 +16,7 @@
 package org.apache.cocoon.kernel.deployment;
 
 import java.util.Iterator;
+
 import org.apache.cocoon.kernel.identification.Identifier;
 
 /**
@@ -23,7 +24,7 @@ import org.apache.cocoon.kernel.identification.Identifier;
  * can be deployed.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public interface Deployer {
 
