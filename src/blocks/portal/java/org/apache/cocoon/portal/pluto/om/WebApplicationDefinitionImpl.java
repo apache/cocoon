@@ -74,7 +74,7 @@ import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
  */
 public class WebApplicationDefinitionImpl 
 implements WebApplicationDefinition, Support {
@@ -160,7 +160,6 @@ implements WebApplicationDefinition, Support {
     {
         Vector structure = (Vector)parameter;
         PortletApplicationDefinition portletApplication = (PortletApplicationDefinition)structure.get(0);
-        String contextString = (String)structure.get(1);
 
         ((Support)portletApplication).postLoad(this);
 
@@ -203,7 +202,6 @@ implements WebApplicationDefinition, Support {
     {
         Vector structure = (Vector)parameter;
         PortletApplicationDefinition portletApplication = (PortletApplicationDefinition)structure.get(0);
-        String contextString = (String)structure.get(1);
 
         ((Support)portletApplication).preStore(null);
 

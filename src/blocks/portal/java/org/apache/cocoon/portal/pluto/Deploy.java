@@ -69,8 +69,6 @@ import org.apache.cocoon.portal.pluto.om.common.DescriptionSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.DisplayNameImpl;
 import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
 import org.apache.pluto.om.ControllerFactory;
-import org.apache.pluto.om.common.DescriptionSet;
-import org.apache.pluto.om.common.DisplayNameSet;
 import org.apache.pluto.om.common.Parameter;
 import org.apache.pluto.om.common.ParameterCtrl;
 import org.apache.pluto.om.common.ParameterSet;
@@ -97,7 +95,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: Deploy.java,v 1.1 2004/01/22 15:05:19 cziegeler Exp $
+ * @version CVS $Id: Deploy.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
  */
 public class Deploy {
 
@@ -236,13 +234,13 @@ public class Deploy {
                 dispName.setLocale(Locale.ENGLISH);
                 DisplayNameSetImpl dispSet = new DisplayNameSetImpl();
                 dispSet.add(dispName);
-                webApp.setDisplayNames((DisplayNameSet) dispSet);
+                webApp.setDisplayNames(dispSet);
                 DescriptionImpl desc = new DescriptionImpl();
                 desc.setDescription("Automated generated Application Wrapper");
                 desc.setLocale(Locale.ENGLISH);
                 DescriptionSetImpl descSet = new DescriptionSetImpl();
                 descSet.add(desc);
-                webApp.setDescriptions((DescriptionSet) descSet);
+                webApp.setDescriptions(descSet);
             }
 
             ControllerFactory controllerFactory = new ControllerFactoryImpl();
@@ -289,7 +287,7 @@ public class Deploy {
                 dispName.setLocale(Locale.ENGLISH);
                 DisplayNameSetImpl dispSet = new DisplayNameSetImpl();
                 dispSet.add(dispName);
-                servletCtrl.setDisplayNames((DisplayNameSet) dispSet);
+                servletCtrl.setDisplayNames(dispSet);
                 DescriptionImpl desc = new DescriptionImpl();
                 desc.setDescription("Automated generated Portlet Wrapper");
                 desc.setLocale(Locale.ENGLISH);
@@ -358,9 +356,11 @@ public class Deploy {
                 SecurityRoleRefSet portletSecurityRoleRefs =
                     portlet.getInitSecurityRoleRefSet();
 
+/* never read
                 SecurityRoleRefSetCtrl portletSecurityRoleRefSetCtrl =
                     (SecurityRoleRefSetCtrl) controllerFactory.get(
                         portletSecurityRoleRefs);
+*/
 
                 Iterator p = portletSecurityRoleRefs.iterator();
 

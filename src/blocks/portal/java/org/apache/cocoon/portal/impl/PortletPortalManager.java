@@ -51,7 +51,6 @@ import java.util.Properties;
 import javax.portlet.PortletMode;
 import javax.portlet.WindowState;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -92,7 +91,7 @@ import org.xml.sax.SAXException;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletPortalManager.java,v 1.1 2004/01/22 14:01:22 cziegeler Exp $
+ * @version CVS $Id: PortletPortalManager.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
  */
 public class PortletPortalManager
 	extends PortalManagerImpl
@@ -175,8 +174,6 @@ public class PortletPortalManager
      * Initialize the container
      */
     public void initContainer() throws Exception {
-        final ServletContext servletContext = this.servletConfig.getServletContext();
-        
         this.portletContainer = new PortletContainerImpl();
         
         if (!portletContainer.isInitialized()) {

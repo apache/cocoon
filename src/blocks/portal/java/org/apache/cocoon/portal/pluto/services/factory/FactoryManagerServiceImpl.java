@@ -100,7 +100,7 @@ import org.apache.pluto.util.impl.NamespaceMapperFactoryImpl;
  * @see Factory
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: FactoryManagerServiceImpl.java,v 1.1 2004/01/22 14:01:22 cziegeler Exp $
+ * @version CVS $Id: FactoryManagerServiceImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
  */
 public class FactoryManagerServiceImpl 
 implements FactoryManagerService, Initializable, Contextualizable, Disposable {
@@ -188,8 +188,7 @@ implements FactoryManagerService, Initializable, Contextualizable, Disposable {
      ** Returns the service implementation for the given service class, or
      ** <CODE>null</CODE> if no such service is registered.
      **
-     ** @param   aClass
-     **          the service class
+     ** @param theClass  the service class
      **
      ** @return   the service implementation
      **/

@@ -82,7 +82,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletAdapter.java,v 1.1 2004/01/22 14:01:22 cziegeler Exp $
+ * @version CVS $Id: PortletAdapter.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
@@ -128,9 +128,6 @@ public class PortletAdapter
         PortletDefinitionRegistry registry = (PortletDefinitionRegistry) environment.getContainerService(PortletDefinitionRegistry.class);
         
         final String portletEntityId = (String) getConfiguration(coplet, "portlet");   
-        final int pos = portletEntityId.indexOf('.');
-        final String applicationId = portletEntityId.substring(0, pos);
-        final String portletId = portletEntityId.substring(pos+1);
         
         PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
         PortletEntity portletEntity = ((PortletEntityListImpl)pae.getPortletEntityList()).add(pae, portletEntityId, coplet, registry);
