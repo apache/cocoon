@@ -52,11 +52,11 @@ package org.apache.cocoon.acting;
 
 
 /**
- * Helper class to pass a the result of a validation back along with
+ * Helper class to pass the result of a validation back along with
  * the validated object itself.
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: ValidatorActionHelper.java,v 1.1 2003/03/09 00:08:40 pier Exp $
+ * @version CVS $Id: ValidatorActionHelper.java,v 1.2 2003/07/18 20:52:04 stephan Exp $
  */
 public class ValidatorActionHelper
 {
