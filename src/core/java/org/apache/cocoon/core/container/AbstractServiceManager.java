@@ -123,7 +123,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
             }
             // FIXME - use different classloader
             final Class clazz = this.getClass().getClassLoader().loadClass( className );
-            this.doAddComponent( role, clazz, configuration );
+            this.addComponent( role, clazz, configuration );
         } catch( final ClassNotFoundException cnfe ) {
             final String message = "Could not get class (" + className + ") for role "
                                  + role + " at " + configuration.getLocation();
@@ -151,7 +151,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
         }        
     }
     
-    protected abstract void doAddComponent(String role, Class clazz, Configuration config)
+    protected abstract void addComponent(String role, Class clazz, Configuration config)
     throws ServiceException;
     
     

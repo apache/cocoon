@@ -130,7 +130,7 @@ public class TreeProcessor extends AbstractLogEnabled
         this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
 
-        this.manager = parent.concreteProcessor.getComponentInfo().getServiceManager();
+        this.manager = parent.concreteProcessor.getServiceManager();
 
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
         this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
@@ -273,9 +273,9 @@ public class TreeProcessor extends AbstractLogEnabled
         return result;
     }
 
-    /**
-     * Set the sitemap component configurations
-     */
+//    /**
+//     * Set the sitemap component configurations
+//     */
 //    public void setComponentConfigurations(Configuration componentConfigurations) {
 //        this.concreteProcessor.setComponentConfigurations(componentConfigurations);
 //    }
@@ -399,7 +399,7 @@ public class TreeProcessor extends AbstractLogEnabled
                 treeBuilder.setParentProcessorManager(this.manager);
 
                 ProcessingNode root = treeBuilder.build(sitemapProgram);
-                newProcessor.setProcessorData(root, treeBuilder.getDisposableNodes());
+                newProcessor.setProcessorData(treeBuilder.getBuiltProcessorManager(), root, treeBuilder.getDisposableNodes());
             } finally {
                 this.manager.release(treeBuilder);
             }
@@ -424,11 +424,7 @@ public class TreeProcessor extends AbstractLogEnabled
     }
 
     private ConcreteTreeProcessor createConcreteTreeProcessor() {
-        ProcessorComponentInfo componentInfo = this.parent == null?
-                null : this.parent.concreteProcessor.getComponentInfo();
-        ConcreteTreeProcessor processor = new ConcreteTreeProcessor(this,
-                                                                    this.sitemapExecutor,
-                                                                    componentInfo);
+        ConcreteTreeProcessor processor = new ConcreteTreeProcessor(this, this.sitemapExecutor);
         setupLogger(processor);
         return processor;
     }

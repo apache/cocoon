@@ -26,7 +26,7 @@ import org.apache.cocoon.components.ServiceInfo;
  * @version CVS $Id$
  */
 public class ThreadSafeComponentHandler
-extends AbstractComponentHandler {
+extends AbstractFactoryHandler {
     
     private Object instance;
 

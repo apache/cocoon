@@ -42,7 +42,7 @@ public abstract class AbstractProcessingNodeBuilder extends AbstractLogEnabled
      */
     public void setBuilder(TreeBuilder treeBuilder) {
         this.treeBuilder = treeBuilder;
-        this.manager = treeBuilder.getProcessor().getComponentInfo().getServiceManager();
+        this.manager = treeBuilder.getBuiltProcessorManager();
     }
 
     /**

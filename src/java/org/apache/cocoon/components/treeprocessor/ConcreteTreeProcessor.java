@@ -15,10 +15,13 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
@@ -31,9 +34,6 @@ import org.apache.cocoon.environment.internal.ForwardEnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.sitemap.SitemapExecutor;
 
-import java.io.IOException;
-import java.util.List;
-
 /**
  * The concrete implementation of {@link Processor}, containing the evaluation tree and associated
  * data such as component manager.
@@ -41,6 +41,9 @@ import java.util.List;
  * @version CVS $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled implements Processor {
+
+    /** Our ServiceManager */
+    private ServiceManager manager;
 
     /** The processor that wraps us */
     private TreeProcessor wrappingProcessor;
@@ -50,9 +53,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
     /** Root node of the processing tree */
     private ProcessingNode rootNode;
-
-    /** The component info needed to build child processors */
-    private ProcessorComponentInfo componentInfo;
 
     private Configuration componentConfigurations;
 
@@ -66,31 +66,23 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
      * Builds a concrete processig, given the wrapping processor
      */
     public ConcreteTreeProcessor(TreeProcessor wrappingProcessor,
-                                 SitemapExecutor sitemapExecutor,
-                                 ProcessorComponentInfo componentInfo) {
+                                 SitemapExecutor sitemapExecutor) {
         // Store our wrapping processor
         this.wrappingProcessor = wrappingProcessor;
-
-        // Initialize component info
-        this.componentInfo = new ProcessorComponentInfo(componentInfo);
 
         // Get the sitemap executor - we use the same executor for each sitemap
         this.sitemapExecutor = sitemapExecutor;
     }
-
+    
     /** Set the processor data, result of the treebuilder job */
-    public void setProcessorData(ProcessingNode rootNode, List disposableNodes) {
+    public void setProcessorData(ServiceManager manager, ProcessingNode rootNode, List disposableNodes) {
         if (this.rootNode != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
 
+        this.manager = manager;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
-    }
-
-    /** Get the component info for this processor */
-    public ProcessorComponentInfo getComponentInfo() {
-        return this.componentInfo;
     }
 
     /** Set the sitemap component configurations (called as part of the tree building process) */
@@ -197,14 +189,14 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         try {
             // and now process
-            EnvironmentHelper.enterProcessor(this, this.componentInfo.getServiceManager(), environment);
+            EnvironmentHelper.enterProcessor(this, this.manager, environment);
             final Redirector oldRedirector = context.getRedirector();
 
             // Build a redirector
             TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
             setupLogger(redirector);
             context.setRedirector(redirector);
-            context.service(this.componentInfo.getServiceManager());
+            context.service(this.manager);
             context.setLastProcessor(this);
 
             try {
@@ -330,5 +322,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
      */
     public SitemapExecutor getSitemapExecutor() {
         return this.sitemapExecutor;
+    }
+    
+    public ServiceManager getServiceManager() {
+        return this.manager;
     }
 }

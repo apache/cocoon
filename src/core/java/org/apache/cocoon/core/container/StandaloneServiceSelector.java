@@ -333,7 +333,7 @@ implements ServiceSelector, Serviceable, Configurable {
      * @param component the class of this component.
      * @param configuration the configuration for this component.
      */
-    public void doAddComponent( final String key,
+    public void addComponent( final String key,
                               final Class component,
                               final Configuration configuration )
     throws ServiceException {
@@ -464,9 +464,9 @@ implements ServiceSelector, Serviceable, Configurable {
             this.roleManager = roleManager;
         }
         
-        public Object newInstance()
+        protected void setupObject(Object obj)
         throws Exception {
-            final StandaloneServiceSelector component = (StandaloneServiceSelector)this.serviceClass.newInstance();
+            final StandaloneServiceSelector component = (StandaloneServiceSelector)obj;
 
             ContainerUtil.enableLogging(component, this.environment.logger);
             ContainerUtil.contextualize(component, this.environment.context);
@@ -478,8 +478,6 @@ implements ServiceSelector, Serviceable, Configurable {
             ContainerUtil.configure(component, this.serviceInfo.getConfiguration());
             ContainerUtil.initialize(component);
             ContainerUtil.start(component);
-
-            return component;
         }
     }
 }

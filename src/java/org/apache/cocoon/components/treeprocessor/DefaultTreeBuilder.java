@@ -105,6 +105,11 @@ public class DefaultTreeBuilder
      */
     private ServiceSelector itsBuilders;
 
+    /**
+     * The sitemap component information grabbed while building itsMaanger
+     */
+    protected ProcessorComponentInfo itsComponentInfo;
+
     // -------------------------------------
 
     /**
@@ -224,6 +229,10 @@ public class DefaultTreeBuilder
     public ConcreteTreeProcessor getProcessor() {
         return this.processor;
     }
+    
+    public ServiceManager getBuiltProcessorManager() {
+        return this.itsManager;
+    }
 
 
     /**
@@ -317,6 +326,7 @@ public class DefaultTreeBuilder
         // Context and manager for the sitemap we build
         this.itsContext = createContext(tree);
         this.itsManager = createServiceManager(this.itsContext, tree);
+        this.itsComponentInfo = (ProcessorComponentInfo)this.itsManager.lookup(ProcessorComponentInfo.ROLE);
 
         // Create a helper object to setup components
         this.itsLifecycle = new LifecycleHelper(getLogger(),
@@ -472,7 +482,7 @@ public class DefaultTreeBuilder
         // Get the component type for the statement
         String type = statement.getAttribute("type", null);
         if (type == null) {
-            type = getProcessor().getComponentInfo().getDefaultType(role);
+            type = this.itsComponentInfo.getDefaultType(role);
         }
 
         if (type == null) {
@@ -491,12 +501,12 @@ public class DefaultTreeBuilder
                                              e);
         }
 
-        this.itsManager.release(selector);
-
         if (!selector.isSelectable(type)) {
             throw new ConfigurationException("Type '" + type + "' does not exist for 'map:" +
                                              statement.getName() + "' at " + statement.getLocation());
         }
+
+        this.itsManager.release(selector);
 
         return type;
     }

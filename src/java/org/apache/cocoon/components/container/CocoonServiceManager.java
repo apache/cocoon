@@ -19,28 +19,60 @@ package org.apache.cocoon.components.container;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
+import org.apache.cocoon.components.treeprocessor.ProcessorComponentInfo;
+import org.apache.cocoon.core.container.CoreServiceManager;
 
 /**
  * Default service manager for Cocoon's components.
  *
  * @version CVS $Revision: 1.6 $Id: CocoonServiceManager.java 55165 2004-10-20 16:51:50Z cziegeler $
  */
-public class CocoonServiceManager
-extends org.apache.cocoon.core.container.CocoonServiceManager {
+public class CocoonServiceManager extends CoreServiceManager {
     
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
+    
+    private ProcessorComponentInfo info;
 
     /** Create the ServiceManager with a parent ServiceManager */
     public CocoonServiceManager( final ServiceManager parent) {
         super( parent );
+        ProcessorComponentInfo parentInfo = null;
+        if (parent != null) {
+            try {
+                parentInfo = (ProcessorComponentInfo) parent.lookup(ProcessorComponentInfo.ROLE);
+            } catch (ServiceException e) {
+                // no parent
+            }
+        }
+        this.info = new ProcessorComponentInfo(parentInfo);
+    }
+    
+    public void addComponent(String role, Class clazz, Configuration config) throws ServiceException {
+        super.addComponent(role, clazz, config);
+        // Let's ProcessorComponentInfo do its stuff.
+        // Note: if more behaviours of this kind are needed, we may setup an
+        // event listener mechanism on the core service manager
+        this.info.componentAdded(role, clazz, config);
     }
 
+    public void addRoleAlias(String existingRole, String newRole) throws ServiceException {
+        super.addRoleAlias(existingRole, newRole);
+        this.info.roleAliased(existingRole, newRole);
+    }
+
+    public void initialize() throws Exception {
+        this.info.lock();
+        this.addInstance(ProcessorComponentInfo.ROLE, this.info);
+        super.initialize();
+    }
+    
     /* (non-Javadoc)
      * @see org.apache.cocoon.core.container.CocoonServiceManager#initialize(java.lang.String, java.lang.Object)
      */
