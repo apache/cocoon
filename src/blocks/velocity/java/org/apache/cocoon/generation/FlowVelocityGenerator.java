@@ -146,7 +146,7 @@ import java.util.Set;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.3 2003/03/17 01:50:09 vgritsenko Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.4 2003/03/18 21:22:09 vgritsenko Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
         implements Initializable, Configurable, LogSystem {
@@ -337,7 +337,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
             String type = loader.getAttribute("class");
             this.tmplEngine.setProperty(prefix + "class", type);
             Configuration[] loaderProperties = loader.getChildren("property");
-            for (int j = 0; i < loaderProperties.length; ++j) {
+            for (int j = 0; j < loaderProperties.length; j++) {
                 Configuration c = loaderProperties[j];
                 String propName = c.getAttribute("name");
                 this.tmplEngine.setProperty(prefix + propName, c.getAttribute("value"));
