@@ -35,7 +35,7 @@ import org.apache.avalon.Loggable;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:48 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-08 14:25:32 $
  */
 public class Handler implements Runnable, Configurable, Composer, Processor, Loggable {
     protected Logger log;
@@ -135,7 +135,6 @@ public class Handler implements Runnable, Configurable, Composer, Processor, Log
         regenerateAsynchronously(environment);
         if (regeneration != null)
             regeneration.join();
-        log.debug("Sitemap regeneration complete");
     }
 
     public boolean process (Environment environment)
@@ -170,17 +169,21 @@ public class Handler implements Runnable, Configurable, Composer, Processor, Log
             if (smap instanceof Loggable) ((Loggable) smap).setLogger(this.log);
             if (smap instanceof Composer) smap.compose(this.manager);
             if (smap instanceof Configurable) smap.configure(this.conf);
+
             this.sitemap = smap;
+            log.debug("Sitemap regeneration complete");
+
             if (this.sitemap != null) {
                 log.debug("The sitemap has been successfully compiled!");
             } else {
                 log.debug("No errors, but the sitemap has not been set.");
             }
-        } catch (Exception e) {
-            log.error("Error compiling sitemap", e);
-            this.exception = e;
         } catch (Throwable t) {
             log.error("Error compiling sitemap", t);
+
+            if (t instanceof Exception) {
+              this.exception = (Exception) t;
+            }
         } finally {
             this.regeneration = null;
             this.environment = null;
