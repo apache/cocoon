@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.182 2004/02/28 11:10:40 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.183 2004/03/03 10:21:17 antonio Exp $:-->
 
 <status>
  <developers>
@@ -189,6 +189,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated xalan to 2.6.0
+   </action>
    <action dev="CZ" type="update">
      Rewrote the request handling (external and internal).
    </action>
