@@ -236,7 +236,7 @@ implements ServiceSelector, Serviceable, Configurable {
 
             Configuration instance = instances[i];
 
-            Object hint = instance.getAttribute("name").trim();
+            String key = instance.getAttribute("name").trim();
 
             String classAttr = instance.getAttribute(getClassAttributeName(), null);
             String className;
@@ -244,7 +244,7 @@ implements ServiceSelector, Serviceable, Configurable {
             if (compInstanceName == null) {
                 // component-instance implicitly defined by the presence of the 'class' attribute
                 if (classAttr == null) {
-                    className = this.roleManager.getDefaultClassNameForHint(roleName, instance.getName());
+                    className = this.roleManager.getDefaultClassNameForKey(roleName, instance.getName());
                 } else {
                     className = classAttr.trim();
                 }
@@ -254,19 +254,19 @@ implements ServiceSelector, Serviceable, Configurable {
                 if (compInstanceName.equals(instance.getName())) {
                     className = (classAttr == null) ? null : classAttr.trim();
                 } else {
-                    className = this.roleManager.getDefaultClassNameForHint(roleName, instance.getName());
+                    className = this.roleManager.getDefaultClassNameForKey(roleName, instance.getName());
                 }
             }
 
             if (className == null) {
-                String message = "Unable to determine class name for component named '" + hint +
+                String message = "Unable to determine class name for component named '" + key +
                     "' at " + instance.getLocation();
 
                 getLogger().error(message);
                 throw new ConfigurationException(message);
             }
             
-            this.addComponent( className, hint.toString(), instance );
+            this.addComponent( className, key, instance );
         }
     }
 
@@ -340,15 +340,14 @@ implements ServiceSelector, Serviceable, Configurable {
     }
 
     /** Add a new component to the manager.
-     * @param hint the key for the new component.
+     * @param key the key for the new component.
      * @param component the class of this component.
      * @param configuration the configuration for this component.
      */
-    public void addComponent( final Object hint,
+    public void addComponent( final String key,
                               final Class component,
                               final Configuration configuration )
     throws ServiceException {
-        final String key = hint.toString();
         if( this.initialized ) {
             throw new ServiceException( key,
                 "Cannot add components to an initialized service selector" );

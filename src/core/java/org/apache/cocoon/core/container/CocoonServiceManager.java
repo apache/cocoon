@@ -402,18 +402,18 @@ implements ServiceManager, Configurable {
      * @param component the class of this component.
      * @param configuration the configuration for this component.
      */
-    public void addComponent( final Object role,
+    public void addComponent( final String role,
                               final Class component,
                               final Configuration configuration )
     throws ServiceException {
         if( this.initialized ) {
-            throw new ServiceException( role.toString(),
+            throw new ServiceException( role,
                 "Cannot add components to an initialized CocoonServiceManager." );
         }
 
         try {
             if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( "Attempting to get handler for role [" + role.toString() + "]" );
+                this.getLogger().debug( "Attempting to get handler for role [" + role + "]" );
             }
 
             final AbstractComponentHandler handler = this.getComponentHandler( component,
@@ -424,12 +424,12 @@ implements ServiceManager, Configurable {
                 this.getLogger().debug( "Handler type = " + handler.getClass().getName() );
             }
 
-            this.componentHandlers.put( role.toString(), handler );
+            this.componentHandlers.put( role, handler );
             this.newComponentHandlers.add( handler );
         } catch ( final ServiceException se ) {
             throw se;
         } catch( final Exception e ) {
-            throw new ServiceException( role.toString(), "Could not set up component handler.", e );
+            throw new ServiceException( role, "Could not set up component handler.", e );
         }
     }
 

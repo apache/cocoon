@@ -41,10 +41,10 @@ implements Configurable {
     /** Map for role to default classname mapping */
     private Map classNames;
 
-    /** Map for role->hint to classname mapping */
-    private Map hintClassNames;
+    /** Map for role->key to classname mapping */
+    private Map keyClassNames;
 
-    /** Parent <code>RoleManager</code> for nested resolution */
+    /** Parent role manager for nested resolution */
     private final RoleManager parent;
 
     /**
@@ -109,7 +109,7 @@ implements Configurable {
     }
 
     /**
-     * Retrieves a default class name for a role/hint combination.
+     * Retrieves a default class name for a role/key combination.
      * This is only called when a role is mapped to a
      * CocoonServiceSelector, and the configuration elements use
      * shorthand names for the type of component.  If this RoleManager
@@ -117,32 +117,32 @@ implements Configurable {
      * parent will be asked to resolve the class name.
      *
      * @param role  The role that this shorthand refers to.
-     * @param shorthand  The shorthand name for the type of Component
-     * @return the FQCN for the role/hint combination.
+     * @param shorthand  The shorthand name for the type of component
+     * @return the FQCN for the role/key combination.
      */
-    public final String getDefaultClassNameForHint( final String role,
-                                                    final String shorthand ) {
+    public final String getDefaultClassNameForKey( final String role,
+                                                   final String shorthand ) {
         if( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug( "looking up hintmap for role " + role );
+            this.getLogger().debug( "looking up keymap for role " + role );
         }
 
-        final Map hintMap = (Map)this.hintClassNames.get( role );
+        final Map keyMap = (Map)this.keyClassNames.get( role );
 
-        if( null == hintMap ) {
+        if( null == keyMap ) {
             if( null != this.parent ) {
-                return this.parent.getDefaultClassNameForHint( role, shorthand );
+                return this.parent.getDefaultClassNameForKey( role, shorthand );
             } 
             return "";
         }
 
         if( this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug( "looking up classname for hint " + shorthand );
+            this.getLogger().debug( "looking up classname for key " + shorthand );
         }
 
-        final String s = ( String ) hintMap.get( shorthand );
+        final String s = ( String ) keyMap.get( shorthand );
 
         if( s == null && null != this.parent ) {
-            return this.parent.getDefaultClassNameForHint( role, shorthand );
+            return this.parent.getDefaultClassNameForKey( role, shorthand );
         } 
         return s;
     }
@@ -158,7 +158,7 @@ implements Configurable {
     throws ConfigurationException {
         final Map shorts = new HashMap();
         final Map classes = new HashMap();
-        final Map hintclasses = new HashMap();
+        final Map keyclasses = new HashMap();
 
         final Configuration[] roles = configuration.getChildren( "role" );
 
@@ -173,23 +173,23 @@ implements Configurable {
                 classes.put( name, defaultClassName );
             }
 
-            final Configuration[] hints = roles[ i ].getChildren( "hint" );
-            if( hints.length > 0 ) {
-                HashMap hintMap = new HashMap();
+            final Configuration[] keys = roles[ i ].getChildren( "hint" );
+            if( keys.length > 0 ) {
+                HashMap keyMap = new HashMap();
 
-                for( int j = 0; j < hints.length; j++ ) {
-                    final String shortHand = hints[ j ].getAttribute( "shorthand" ).trim();
-                    String className = hints[ j ].getAttribute( "class" ).trim();
+                for( int j = 0; j < keys.length; j++ ) {
+                    final String shortHand = keys[ j ].getAttribute( "shorthand" ).trim();
+                    String className = keys[ j ].getAttribute( "class" ).trim();
 
-                    hintMap.put( shortHand, className );
+                    keyMap.put( shortHand, className );
                     if( this.getLogger().isDebugEnabled() ) {
-                        this.getLogger().debug( "Adding hint type " + shortHand +
+                        this.getLogger().debug( "Adding key type " + shortHand +
                                                 " associated with role " + name +
                                                 " and class " + className );
                     }
                 }
 
-                hintclasses.put( name, Collections.unmodifiableMap( hintMap ) );
+                keyclasses.put( name, Collections.unmodifiableMap( keyMap ) );
             }
 
             if( this.getLogger().isDebugEnabled() ) {
@@ -200,6 +200,6 @@ implements Configurable {
 
         this.shorthands = Collections.unmodifiableMap( shorts );
         this.classNames = Collections.unmodifiableMap( classes );
-        this.hintClassNames = Collections.unmodifiableMap( hintclasses );
+        this.keyClassNames = Collections.unmodifiableMap( keyclasses );
     }
 }

@@ -113,7 +113,7 @@ extends org.apache.cocoon.core.container.CocoonServiceManager {
      * @param component the class of this component.
      * @param configuration the configuration for this component.
      */
-    public void addComponent( final Object role,
+    public void addComponent( final String role,
                               final Class component,
                               final Configuration configuration )
     throws ServiceException {

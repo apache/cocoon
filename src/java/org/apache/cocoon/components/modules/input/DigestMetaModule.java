@@ -40,7 +40,7 @@ import java.io.UnsupportedEncodingException;
  * string), "hex" (returns string of hex values).
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DigestMetaModule.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
 
@@ -287,7 +287,7 @@ public class DigestMetaModule extends AbstractMetaModule implements ThreadSafe {
         case ENCODING_URL:
             try {
                 String str = new String(b, "UTF-8");
-                result = URLEncoder.encode(str);
+                result = URLEncoder.encode(str, "utf-8");
             } catch (UnsupportedEncodingException uee) {
                 if (getLogger().isErrorEnabled())
                     getLogger().error("UTF-8 not supported -- cannot convert message digest to String.");

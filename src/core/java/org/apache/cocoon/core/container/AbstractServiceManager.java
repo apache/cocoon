@@ -119,7 +119,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
     }
 
     protected void addComponent(String className,
-                                Object role,
+                                String role,
                                 Configuration configuration) 
     throws ConfigurationException {
         // check for old excalibur class names - we only test against the selector
@@ -162,7 +162,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
         }        
     }
     
-    protected abstract void addComponent(Object role, Class clazz, Configuration config)
+    protected abstract void addComponent(String role, Class clazz, Configuration config)
     throws ServiceException;
     
     

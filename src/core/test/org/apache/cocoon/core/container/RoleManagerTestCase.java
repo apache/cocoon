@@ -69,7 +69,7 @@ public class RoleManagerTestCase extends MockObjectTestCase {
         child0.verify();
         assertEquals("Role name for shorthand incorrect", "testName", rm.getRoleForName("testShorthand"));
         assertEquals("Default class for role incorrect", "testClass", rm.getDefaultClassNameForRole("testName"));
-        assertEquals("Default class for hint must be empty", "", rm.getDefaultClassNameForHint("testName", "testShorthand"));
+        assertEquals("Default class for key must be empty", "", rm.getDefaultClassNameForKey("testName", "testShorthand"));
     }
 
 }
