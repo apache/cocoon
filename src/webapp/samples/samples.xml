@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.33 2004/03/20 12:57:17 crossley Exp $
+    | CVS $Id: samples.xml,v 1.34 2004/03/20 13:02:10 crossley Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -51,8 +51,8 @@
       XML is handy but also very complex. Cocoon integrates a number of 
       facilities to help you during your journey through XML-land. One of these
       is the centralized handling of resolving network resources 
-      (e.g. DTDs, symbols, character entity sets, images) to local copies through
-      the use of catalogs.
+      (e.g. DTDs, symbols, character entity sets, images) to local copies
+      through the use of catalogs. Also explains how to use DocBook DTDs.
     </sample>
   </group>
 
