@@ -8,7 +8,7 @@
   
   <xsl:template match="map:sitemap">
     <sitemap proxy-type="none">
-      <xsl:apply-templates select="map:components|map:views|map:resources|map:action-sets|map:pipelines"/>
+      <xsl:apply-templates select="map:components|map:views|map:flow|map:resources|map:action-sets|map:pipelines"/>
     </sitemap>
   </xsl:template>
   
@@ -20,7 +20,6 @@
     </meta>
     <xsl:apply-templates select="*/*" />
   </xsl:template>
-  
   
   <xsl:template match="map:generator|map:transformer|map:serializer|map:reader">
     <xsl:element name="{local-name()}-node">
@@ -49,6 +48,12 @@
     <xsl:apply-templates select="map:view">
       <xsl:with-param name="parent-id" select="$id"/>
     </xsl:apply-templates>
+  </xsl:template>
+  
+  <xsl:template match="map:flow">
+    <flow-node id="flow">
+      <xsl:apply-templates select="@*|map:script" mode="copy"/>
+    </flow-node>
   </xsl:template>
   
   <xsl:template match="map:resources">
@@ -368,6 +373,12 @@
     <part>
       <xsl:apply-templates select="@*" mode="copy"/>
     </part>
+  </xsl:template>
+  
+  <xsl:template match="map:script" mode="copy">
+    <script>
+      <xsl:apply-templates select="@*" mode="copy"/>
+    </script>
   </xsl:template>
   
   <xsl:template match="map:parameter" mode="copy">
