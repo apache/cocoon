@@ -51,6 +51,7 @@
 package org.apache.cocoon.webapps.authentication.components;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,7 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
@@ -92,7 +94,7 @@ import org.xml.sax.SAXException;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.14 2003/07/01 19:26:40 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.15 2003/07/12 18:39:49 cziegeler Exp $
 */
 public class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -113,14 +115,14 @@ implements AuthenticationManager,
     /** The Service Manager */
     protected ServiceManager manager;
     
-    /** The authenticator used to authenticate a user */
-    protected Authenticator authenticator;
-    
     /** The Source Resolver */
     protected SourceResolver resolver;
     
     /** The context */
     protected Context context;
+    
+    /** Instantiated authenticators */
+    protected Map authenticators = new HashMap();
     
     /** This is the key used to store the current request state in the request object */
     private static final String REQUEST_STATE_KEY = RequestState.class.getName();
@@ -231,8 +233,12 @@ implements AuthenticationManager,
             throw new ProcessingException("User is already authenticated using handler: " + handlerName);
         }
         
-        // This could be made pluggable, if required
-        handler = this.authenticator.authenticate( config, parameters );
+        Authenticator authenticator = this.lookupAuthenticator( config );
+        try {
+            handler = authenticator.authenticate( config, parameters );
+        } finally {
+            this.releaseAuthenticator( authenticator, config );
+        }
         
         if ( handler != null ) {
             // create UserStatus
@@ -251,7 +257,42 @@ implements AuthenticationManager,
  		return handler;
 	}
 
-	/* (non-Javadoc)
+	/**
+     * Release the used authenticator
+     */
+    protected void releaseAuthenticator(Authenticator authenticator, HandlerConfiguration config) {
+        // all authenticators are released on dispose
+    }
+
+    /**
+     * The authenticator used to authenticate a user 
+     */
+    protected Authenticator lookupAuthenticator(HandlerConfiguration config) 
+    throws ProcessingException {
+        final String name = config.getAuthenticatorClassName();
+        Authenticator authenticator = (Authenticator) this.authenticators.get(name);
+        if ( authenticator == null ) {
+            synchronized (this) {
+                authenticator = (Authenticator) this.authenticators.get(name);
+                if ( authenticator == null ) {
+                    try {
+                        authenticator = (Authenticator) ClassUtils.newInstance(name);
+                        ContainerUtil.enableLogging( authenticator, this.getLogger() );
+                        ContainerUtil.contextualize( authenticator, this.context);
+                        ContainerUtil.service( authenticator, this.manager );
+                        ContainerUtil.initialize( authenticator );
+                        this.authenticators.put(name, authenticator);
+                        
+                    } catch (Exception e ) {
+                        throw new ProcessingException("Unable to initialize authenticator from class " + name, e);
+                    }
+                }
+            }
+        }
+        return authenticator;
+    }
+
+    /* (non-Javadoc)
 	 * @see org.apache.cocoon.webapps.authentication.components.Manager#checkAuthentication(org.apache.cocoon.environment.Redirector, java.lang.String, java.lang.String)
 	 */
 	public boolean checkAuthentication(Redirector redirector,
@@ -367,15 +408,6 @@ implements AuthenticationManager,
 	public void service(ServiceManager manager) 
     throws ServiceException {
         this.manager = manager;
-        this.authenticator = new Authenticator();
-        try {
-            ContainerUtil.enableLogging( this.authenticator, this.getLogger() );
-            ContainerUtil.contextualize( this.authenticator, this.context);
-            ContainerUtil.service( this.authenticator, this.manager );
-            ContainerUtil.initialize( this.authenticator );
-        } catch (Exception e ) {
-            throw new ServiceException("Unable to initialize authenticator.", e);
-        }
         this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 	}
 
@@ -383,10 +415,11 @@ implements AuthenticationManager,
 	 * @see org.apache.avalon.framework.activity.Disposable#dispose()
 	 */
 	public void dispose() {
-		if ( this.authenticator != null ) {
-            ContainerUtil.dispose( this.authenticator );
-            this.authenticator = null;
-		}
+        Iterator iter = this.authenticators.values().iterator();
+        while ( iter.hasNext() ) {
+            final Authenticator authenticator = (Authenticator) iter.next();
+            ContainerUtil.dispose( authenticator );
+        }
         if ( this.manager != null) {
             this.manager.release( this.resolver );
             this.manager = null;

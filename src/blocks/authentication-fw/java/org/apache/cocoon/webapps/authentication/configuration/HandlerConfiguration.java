@@ -59,6 +59,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.webapps.authentication.components.PipelineAuthenticator;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.SAXException;
@@ -67,7 +68,7 @@ import org.xml.sax.SAXException;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HandlerConfiguration.java,v 1.1 2003/04/27 12:52:53 cziegeler Exp $
+ * @version CVS $Id: HandlerConfiguration.java,v 1.2 2003/07/12 18:39:49 cziegeler Exp $
 */
 public final class HandlerConfiguration
 implements java.io.Serializable {
@@ -83,6 +84,9 @@ implements java.io.Serializable {
 
     /** The authentication resource */
     private String authenticationResource;
+    
+    /** The class name of the authenticator to use */
+    private String authenticatorClass;
 
     /** The authentication resource parameters */
     private SourceParameters authenticationResourceParameters;
@@ -141,9 +145,16 @@ implements java.io.Serializable {
 
         // get load resource (required)
         child = conf.getChild("authentication", false);
-        if (child == null)
+        if (child == null) {
             throw new ConfigurationException("Handler '"+this.name+"' needs authentication configuration");
-        this.authenticationResource = child.getAttribute("uri");
+        }
+        this.authenticatorClass = child.getAttribute("authenticator", PipelineAuthenticator.class.getName());
+        if ( PipelineAuthenticator.class.getName().equals(authenticatorClass)) {
+            this.authenticationResource = child.getAttribute("uri");
+        } else {
+            // the uri attribute is optional for other authenticators
+            this.authenticationResource = child.getAttribute("uri", null);
+        }
         this.authenticationResourceParameters = SourceParameters.create(child);
 
         // get load resource (optional)
@@ -268,5 +279,12 @@ implements java.io.Serializable {
      */
     public String toString() {
         return "authentication-Handler " + this.name;
+    }
+    
+    /**
+     * Return the authenticator class
+     */
+    public String getAuthenticatorClassName() {
+        return this.authenticatorClass;
     }
 }
