@@ -105,7 +105,7 @@
 
     <!-- Alias for the loglevel -->
     <property name="loglevel" value="${build.webapp.loglevel}"/>
-    
+
     <!-- Set classpath -->
     <path id="classpath">
       <fileset dir="${lib.local}">
@@ -120,7 +120,7 @@
       <fileset dir="${lib.core}">
         <include name="*.jar"/>
       </fileset>
-      <!-- Currently, we have no JVM dependent libraries 
+      <!-- Currently, we have no JVM dependent libraries
         <fileset dir="${lib.core}/jvm${target.vm}">
           <include name="*.jar"/>
         </fileset>
@@ -135,7 +135,6 @@
   </target>
 
   <target name="init-tasks" depends="init">
-
     <!-- Set classpath for building ant tasks -->
     <path id="tasks.classpath">
       <path refid="classpath"/>
@@ -162,7 +161,7 @@
            classpath="${tools.tasks.dest}"/>
 
     <!-- A task for sitemap components -->
-    <taskdef name="sitemap-components" 
+    <taskdef name="sitemap-components"
             classname="SitemapTask"
             classpathref="tasks.classpath"/>
 

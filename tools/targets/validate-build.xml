@@ -32,8 +32,8 @@
     </path>
 
     <property name="all.jars" refid="all.jars"/>
-    <copy file="${tools.src}/jars.xml.tmpl" 
-          tofile="${build.temp}/current-jars.xml" 
+    <copy file="${tools.src}/jars.xml.tmpl"
+          tofile="${build.temp}/current-jars.xml"
           filtering="yes" overwrite="yes">
       <filterset>
         <filter token="JARS" value="${all.jars}"/>
@@ -42,28 +42,28 @@
 
     <!-- split the path in 'jar' XML elements -->
     <replace file="${build.temp}/current-jars.xml"
-             token="${path.separator}" 
+             token="${path.separator}"
              value="&lt;/jar&gt;&#xA; &lt;jar&gt;"/>
 
     <!-- relativize file names by removing the current directory -->
-    <replace file="${build.temp}/current-jars.xml" 
-             token="${user}${file.separator}lib${file.separator}" 
+    <replace file="${build.temp}/current-jars.xml"
+             token="${user}${file.separator}lib${file.separator}"
              value=""/>
-    <replace file="${build.temp}/current-jars.xml" 
-             token="${user}${file.separator}${blocks}${file.separator}" 
+    <replace file="${build.temp}/current-jars.xml"
+             token="${user}${file.separator}${blocks}${file.separator}"
              value=""/>
 
     <!-- and incase that fails, remove the base directory -->
-    <replace file="${build.temp}/current-jars.xml" 
-             token="${basedir}${file.separator}lib${file.separator}" 
+    <replace file="${build.temp}/current-jars.xml"
+             token="${basedir}${file.separator}lib${file.separator}"
              value=""/>
-    <replace file="${build.temp}/current-jars.xml" 
-             token="${basedir}${file.separator}${blocks}${file.separator}" 
+    <replace file="${build.temp}/current-jars.xml"
+             token="${basedir}${file.separator}${blocks}${file.separator}"
              value=""/>
 
     <!-- replace platform-dependent path separator by '/' -->
-    <replace file="${build.temp}/current-jars.xml" 
-             token="${file.separator}" 
+    <replace file="${build.temp}/current-jars.xml"
+             token="${file.separator}"
              value="/"/>
 
     <xslt in="${lib}/jars.xml" out="${build.temp}/jars.xml"
@@ -96,7 +96,7 @@
     <echo message="Not conducting validation of core XML documentation."/>
     <echo message="Use 'forrest validate-xdocs' instead."/>
 
-<!-- FIXME: 
+<!-- FIXME:
     <echo message="Validating all **/book.xml instances using RELAX NG ..."/>
     <jing rngfile="${webapp}/WEB-INF/entities/book-v01.rng">
       <fileset dir="${build.context}" includes="**/book.xml"/>

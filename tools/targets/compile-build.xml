@@ -251,9 +251,9 @@
   </target>
 
   <target name="call-block-target" depends="prepare">
-    <ant antfile="${build.temp}/blocks-build.xml" 
-         inheritAll="true" 
-         inheritRefs="false" 
+    <ant antfile="${build.temp}/blocks-build.xml"
+         inheritAll="true"
+         inheritRefs="false"
          target="cocoon-block-${block.name}-${target.name}" />
   </target>
 </project>
