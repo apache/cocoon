@@ -375,6 +375,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="AG" type="update">
+     Updated antlr to 2.7.4
+   </action>
    <action dev="AG" type="fix" fixes-bug="29945" due-to="Christoph Gaffga" due-to-email="cgaffga@triplemind.com">
      BetwixtTransformer: removed deprecation warning with latest betwixt
    </action>
