@@ -248,7 +248,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.19 2003/12/12 05:39:38 antonio Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.20 2003/12/22 13:51:43 joerg Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -776,11 +776,6 @@ public class I18nTransformer extends AbstractTransformer
      */
     protected ComponentManager manager;
 
-    /**
-     * Source Resolver
-     */
-    private SourceResolver sourceResolver;
-
     //
     // i18n configuration variables
     //
@@ -1000,7 +995,6 @@ public class I18nTransformer extends AbstractTransformer
                       Parameters parameters)
     throws ProcessingException, SAXException, IOException {
 
-        this.sourceResolver = resolver;
         this.objectModel = objectModel;
 
         try {
@@ -2098,7 +2092,6 @@ public class I18nTransformer extends AbstractTransformer
             catalogueInfo.releaseCatalog();
         }
 
-        sourceResolver = null;
         objectModel = null;
         super.recycle();
     }
