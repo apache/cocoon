@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.13 2000-12-21 20:38:37 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.14 2000-12-21 20:45:08 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -160,7 +160,7 @@
     <xsl:value-of select="text()"/>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Indicates that a sql connection is going to be defined and one or
@@ -402,7 +402,7 @@
 
   <xsl:template match="esql:statement//esql:parameter">"?"</xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     If the query has results, this element's children will be
@@ -413,7 +413,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     If the query has no results, this element's children will be
@@ -424,7 +424,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     If the query results in an error, this element's children will be
@@ -435,7 +435,7 @@
     <xsl:apply-templates/>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Results in a set of elements whose names are the names of the
@@ -461,7 +461,7 @@
     </xsp:logic>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a string
@@ -471,7 +471,7 @@
     <xsp:expr><xsl:call-template name="get-resultset"/>.getString(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a date. if a format
@@ -491,7 +491,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a time. if a format
@@ -511,7 +511,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a timestamp. if a format
@@ -531,7 +531,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as true or false
@@ -548,7 +548,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a double. if a format
@@ -568,7 +568,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a float. if a format
@@ -588,7 +588,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as an integer
@@ -598,7 +598,7 @@
     <xsp:expr><xsl:call-template name="get-resultset"/>.getInt(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a long
@@ -608,7 +608,7 @@
     <xsp:expr><xsl:call-template name="get-resultset"/>.getLong(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column as a short
@@ -618,7 +618,7 @@
     <xsp:expr><xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the value of the given column interpeted as an xml
@@ -649,7 +649,7 @@
     <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the position of the current row in the result set
@@ -659,7 +659,7 @@
     <xsp:expr>esqlSession.count</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the name of the given column. the column mus tbe specified
@@ -670,7 +670,7 @@
     <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnName(<xsl:value-of select="@column"/>)</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the label of the given column. the column mus the
@@ -681,7 +681,7 @@
     <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnLabel(<xsl:value-of select="@column"/>)</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the name of the type of the given column. the column must
@@ -692,7 +692,7 @@
     <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnTypeName(<xsl:value-of select="@column"/>)</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the message of the current exception
@@ -702,7 +702,7 @@
     <xsp:expr>esqlException.getMessage()</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the current exception as a string
@@ -712,7 +712,7 @@
     <xsp:expr>esqlException.toString()</xsp:expr>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Returns the stacktrace of the current exception
@@ -735,7 +735,7 @@
     </xsl:choose>
   </xsl:template>
 
-  <!-- ----------------------------------------------------------- -->
+  <!-- =========================================================== -->
 
   <xspdoc:desc>
     Used internally to determine which column is the given column. if
