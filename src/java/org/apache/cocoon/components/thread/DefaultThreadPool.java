@@ -180,6 +180,25 @@ public class DefaultThreadPool
     }
 
     /**
+     * Execute a command
+     *
+     * @param command The {@link Runnable} to execute
+     *
+     * @throws InterruptedException In case of interruption
+     */
+    public void execute( Runnable command )
+        throws InterruptedException
+    {
+        if( getLogger(  ).isDebugEnabled(  ) )
+        {
+            getLogger(  ).debug( "Executing Command: " + command.toString(  ) +
+                                 ",pool=" + getName(  ) );
+        }
+
+        super.execute( command );
+    }
+
+    /**
      * @see org.apache.cocoon.components.thread.ThreadPool#shutdownGraceful()
      */
     public void shutdown(  )
