@@ -109,7 +109,7 @@ import org.apache.cocoon.acting.AbstractAction;
 import org.apache.cocoon.Constants;
 import java.util.Map;
 import java.util.HashMap;
-import javax.servlet.http.HttpServletRequest;
+import org.apache.cocoon.environment.Request;
 import org.xml.sax.EntityResolver;
 
 public class HelloWorldAction extends AbstractAction {
@@ -117,7 +117,7 @@ public class HelloWorldAction extends AbstractAction {
     Map sitemapParams = new HashMap();
     sitemapParams.put("world", "hello");
 
-    HttpServletRequest request = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
+    Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
 
     request.setParameter("hello", "world");
 

@@ -1,12 +1,9 @@
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.2 2001-04-17 03:55:09 donaldp Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.3 2001-04-17 18:18:06 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.configuration.Configuration;
@@ -25,6 +22,8 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.SQLException;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * This action is used to authenticate user by comparing several request
@@ -54,7 +53,7 @@ import java.sql.SQLException;
  * expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 03:55:09 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-17 18:18:06 $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
 {
@@ -206,5 +205,5 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction
     }
 }
 
-// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.2 2001-04-17 03:55:09 donaldp Exp $
+// $Id: DatabaseAuthenticatorAction.java,v 1.1.2.3 2001-04-17 18:18:06 dims Exp $
 // vim: set et ts=4 sw=4:

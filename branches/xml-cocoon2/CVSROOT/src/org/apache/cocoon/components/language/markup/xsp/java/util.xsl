@@ -78,7 +78,7 @@
   <!-- Mark page as cacheable -->
   <xsl:template match="xsp:structure/util:cacheable">
     <xsp:logic>
-      public boolean isCacheable (HttpServletRequest request) {
+      public boolean isCacheable (Request request) {
         return true;
       }
     </xsp:logic>

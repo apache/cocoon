@@ -257,11 +257,10 @@ The following goals were identified as engineering constraints:
    <!--
        Action are classes that are able to modify the underlying application model and
        are meant as extensions to the sitemap functionality. They get access to the
-       objectModel containing all objects that make up a request (HttpServletrequest,
-       etc.). An Action can return a Map of tokens that resulted from the
-       processing logic (this is up to the action implementation). An Action is
-       references in the pipeline section with the type attribute as it is with all the
-       other sitemap components.
+       objectModel containing all objects that make up a request. An Action can return 
+       a Map of tokens that resulted from the processing logic (this is up to the action
+       implementation). An Action is references in the pipeline section with the type 
+       attribute as it is with all the other sitemap components.
    -->
   <map:actions>
    <map:action name="session-validator" src="org.apache.cocoon.acting.SessionValidationAction">

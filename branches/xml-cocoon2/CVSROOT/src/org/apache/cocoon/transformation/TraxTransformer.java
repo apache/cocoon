@@ -14,6 +14,7 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.Hashtable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.text.StringCharacterIterator;
 
 import java.lang.reflect.Method;
@@ -40,6 +41,8 @@ import org.apache.cocoon.components.browser.Browser;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.TimeStampCacheValidity;
+import org.apache.cocoon.caching.CompositeCacheValidity;
+import org.apache.cocoon.caching.ParametersCacheValidity;
 import org.apache.cocoon.util.HashUtil;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -65,7 +68,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-15 16:34:43 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-17 18:18:55 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
@@ -213,9 +216,14 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
      *         component is currently not cacheable.
      */
     public CacheValidity generateValidity() {
+        HashMap map = getLogicSheetParameters();
+        
         if (this.systemID.startsWith("file:") == true) {
             File xslFile = new File(this.systemID.substring("file:".length()));
-            return new TimeStampCacheValidity(xslFile.lastModified());
+            return new CompositeCacheValidity( 
+                                    new ParametersCacheValidity(map),
+                                    new TimeStampCacheValidity(xslFile.lastModified())
+                                    );
         }
         return null;
     }
@@ -227,8 +235,6 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
      * and <code>setLexicalHandler(consumer)</code>.
      */
     public void setConsumer(XMLConsumer consumer) {
-        /** The Request object */
-        Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
 
         /** Get a Transformer Handler */
         try {
@@ -247,6 +253,30 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
             throw new RuntimeException("Problem in getTransformer:" + e.getMessage());
         }
 
+        HashMap map = getLogicSheetParameters();
+        Iterator iterator = map.keySet().iterator();
+        while(iterator.hasNext()) {
+            String name = (String)iterator.next();
+            transformerHandler.getTransformer().setParameter(name,map.get(name));
+        }
+
+        super.setContentHandler(transformerHandler);
+        if(transformerHandler instanceof Loggable) {
+            ((Loggable)transformerHandler).setLogger(getLogger());
+        }
+        if(transformerHandler instanceof org.xml.sax.ext.LexicalHandler)
+            this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)transformerHandler);
+
+        this.setContentHandler(consumer);
+    }
+
+    private HashMap getLogicSheetParameters()
+    {
+        HashMap map = new HashMap();
+
+        /** The Request object */
+        Request request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
+
         if (request != null) {
             Enumeration parameters = request.getParameterNames();
             if ( parameters != null ) {
@@ -254,7 +284,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
                     String name = (String) parameters.nextElement();
                     if (isValidXSLTParameterName(name)) {
                         String value = request.getParameter(name);
-                        transformerHandler.getTransformer().setParameter(name,value);
+                        map.put(name,value);
                     }
                 }
             }
@@ -267,7 +297,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
                 if (isValidXSLTParameterName(name)) {
                     String value = par.getParameter(name,null);
                     if (value != null) {
-                        transformerHandler.getTransformer().setParameter(name,value);
+                        map.put(name,value);
                     }
                 }
             }
@@ -309,14 +339,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposabl
 //            getLogger().error("Error setting Browser info", e);
 //        }
 
-        super.setContentHandler(transformerHandler);
-        if(transformerHandler instanceof Loggable) {
-            ((Loggable)transformerHandler).setLogger(getLogger());
-        }
-        if(transformerHandler instanceof org.xml.sax.ext.LexicalHandler)
-            this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)transformerHandler);
-
-        this.setContentHandler(consumer);
+        return map;
     }
 
     /**

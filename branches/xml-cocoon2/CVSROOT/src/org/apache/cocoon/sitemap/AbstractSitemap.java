@@ -36,6 +36,7 @@ import org.apache.cocoon.components.pipeline.StreamPipeline;
 import org.apache.cocoon.components.pipeline.EventPipeline;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.util.ClassUtils;
 
 import org.xml.sax.SAXException;
@@ -44,7 +45,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-13 16:02:25 $
+ * @version CVS $Revision: 1.1.2.33 $ $Date: 2001-04-17 18:18:50 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable {
     private Context context;
@@ -116,7 +117,7 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
      * dynamically generated content has changed
      * @return Whether content has changes for this request's data
      *//*
-    public boolean hasContentChanged(HttpServletRequest resuest) {
+    public boolean hasContentChanged(Request request) {
         return true;
     }
 

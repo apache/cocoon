@@ -18,7 +18,7 @@ import javax.servlet.http.Cookie;
  * Defines an interface to provide client response information .  
  * 
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-09 11:15:47 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-17 18:18:44 $
  *
  */
 
@@ -143,7 +143,7 @@ public interface Response {
      * encode a normal link, this method is seperate from the
      * <code>encodeURL</code> method.
      * 
-     * <p>All URLs sent to the <code>HttpServletResponse.sendRedirect</code>
+     * <p>All URLs sent to the <code>Response.sendRedirect</code>
      * method should be run through this method.  Otherwise, URL
      * rewriting cannot be used with browsers which do not support
      * cookies.

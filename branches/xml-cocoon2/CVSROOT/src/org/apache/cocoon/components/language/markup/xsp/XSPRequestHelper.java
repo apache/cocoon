@@ -21,10 +21,10 @@ import org.xml.sax.SAXException;
 import org.apache.cocoon.Constants;
 
 /**
- * The <code>HttpServletRequest</code> object helper
+ * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:18 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-17 18:18:32 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -36,7 +36,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
   }
 
   /**
-   * Output the uri associated with the given <code>HttpServletRequest</code>
+   * Output the uri associated with the given <code>Request</code>
    *
    * @param objectModel The Map objectModel
    * @param contentHandler The SAX content handler
@@ -494,7 +494,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     /**
      * Output the fully qualified name of the client that sent the request, or
      * the IP address of the client if the name cannot be determined, given
-     * <code>HttpServletRequest</code>
+     * <code>Request</code>
      *
      * @param objectModel The Map objectModel
      */
@@ -509,7 +509,7 @@ public class XSPRequestHelper extends XSPObjectHelper {
     /**
      * Output the fully qualified name of the client that sent the request, or
      * the IP address of the client if the name cannot be determined, given
-     * <code>HttpServletRequest</code>
+     * <code>Request</code>
      *
      * @param objectModel The Map objectModel
      * @param contentHandler The SAX content handler

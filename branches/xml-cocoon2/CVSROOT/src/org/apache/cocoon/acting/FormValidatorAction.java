@@ -1,12 +1,9 @@
-// $Id: FormValidatorAction.java,v 1.1.2.1 2001-04-16 19:30:42 dims Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:09 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.configuration.Configuration;
@@ -17,6 +14,7 @@ import org.xml.sax.InputSource;
 
 import org.apache.cocoon.*;
 import org.apache.cocoon.util.Tokenizer;
+import org.apache.cocoon.environment.Request;
 
 /**
  * This is the action used to validate HTTP form parameters supplied via
@@ -37,7 +35,7 @@ import org.apache.cocoon.util.Tokenizer;
  * all validated parameters to the sitemap via {name} expression.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-16 19:30:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 18:18:09 $
  */
 public class FormValidatorAction extends AbstractValidatorAction
 {
@@ -46,7 +44,7 @@ public class FormValidatorAction extends AbstractValidatorAction
      */
     public Map act (EntityResolver resolver, Map objectModel, String src,
             Parameters parameters) throws Exception {
-        HttpServletRequest req = (HttpServletRequest) 
+        Request req = (Request) 
             objectModel.get (Constants.REQUEST_OBJECT);
 
         /* check request validity */
@@ -85,5 +83,5 @@ public class FormValidatorAction extends AbstractValidatorAction
     }
 }
 
-// $Id: FormValidatorAction.java,v 1.1.2.1 2001-04-16 19:30:42 dims Exp $
+// $Id: FormValidatorAction.java,v 1.1.2.2 2001-04-17 18:18:09 dims Exp $
 // vim: set et ts=4 sw=4:

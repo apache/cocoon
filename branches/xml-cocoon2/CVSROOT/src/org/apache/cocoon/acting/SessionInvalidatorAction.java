@@ -1,12 +1,9 @@
-// $Id: SessionInvalidatorAction.java,v 1.1.2.1 2001-04-16 19:30:42 dims Exp $
+// $Id: SessionInvalidatorAction.java,v 1.1.2.2 2001-04-17 18:18:11 dims Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Collections;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.configuration.Configuration;
@@ -17,13 +14,16 @@ import org.xml.sax.InputSource;
 
 import org.apache.cocoon.*;
 import org.apache.cocoon.util.Tokenizer;
+import org.apache.cocoon.environment.Request;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * This is the action used to invalidate an HTTP session. The action returns
  * empty map if everything is ok, null otherwise.
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-16 19:30:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-17 18:18:11 $
  */
 public class SessionInvalidatorAction extends AbstractAction
 {
@@ -32,7 +32,7 @@ public class SessionInvalidatorAction extends AbstractAction
      */
     public Map act (EntityResolver resolver, Map objectModel, String src,
             Parameters parameters) throws Exception {
-        HttpServletRequest req = (HttpServletRequest) 
+        Request req = (Request) 
             objectModel.get (Constants.REQUEST_OBJECT);
         HashMap actionMap = new HashMap ();
 
@@ -49,5 +49,5 @@ public class SessionInvalidatorAction extends AbstractAction
     }
 }
 
-// $Id: SessionInvalidatorAction.java,v 1.1.2.1 2001-04-16 19:30:42 dims Exp $
+// $Id: SessionInvalidatorAction.java,v 1.1.2.2 2001-04-17 18:18:11 dims Exp $
 // vim: set et ts=4 sw=4:
