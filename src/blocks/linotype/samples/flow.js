@@ -1,11 +1,8 @@
-var realpath = cocoon.context.getRealPath("/");
-
-var requesturi = cocoon.request.getRequestURI();
-var sitemapuri = cocoon.request.getSitemapURI();
-
-var mountpoint = requesturi.substring(1,requesturi.indexOf(sitemapuri));
-
-var home = realpath + mountpoint;
+/*
+ * Yeah, I know that hardwiring those is hacky as hell. But I'll try to
+ * fix this with link translation later on.
+ */
+var home = cocoon.context.getRealPath("/") + "samples/linotype/";
 
 var stream = new java.io.FileInputStream(home + "linotype.users.properties");
 var users = new Packages.org.apache.cocoon.components.UserManager.getInstance(stream);
@@ -115,7 +112,7 @@ function edit(id,type,subpage) {
 	    			innerHTML : cocoon.request.getParameter("innerHTML") 
 	    		}
 	    	);
-	        var action = cocoon.request.getParameter("action");
+	        var action = cocoon.request.getParameter("action"); d
 	       	if (action == "delete") {
 	        	repo.remove(document);
 	        	break;
