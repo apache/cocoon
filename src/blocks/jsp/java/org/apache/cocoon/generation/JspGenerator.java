@@ -72,7 +72,7 @@ import java.io.IOException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.10 2003/11/20 12:46:52 joerg Exp $
+ * @version CVS $Id: JspGenerator.java,v 1.11 2003/12/18 21:09:47 vgritsenko Exp $
  */
 public class JspGenerator extends ServletGenerator {
 
@@ -128,6 +128,7 @@ public class JspGenerator extends ServletGenerator {
         } catch (ServletException e) {
             throw new ProcessingException("ServletException in JspGenerator.generate()", e.getRootCause());
         } catch (SAXException e) {
+            // FIXME: e.getException can be null
             throw new ProcessingException("SAXException JspGenerator.generate()", e.getException());
         } catch (IOException e) {
             throw new ProcessingException("IOException JspGenerator.generate()", e);
