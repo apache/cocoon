@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2000-09-04 18:54:20 $
+ * @version CVS $Revision: 1.1.2.31 $ $Date: 2000-09-06 19:25:55 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -382,6 +382,9 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:choose>
         </xsl:for-each>
       </xsl:variable>
+      <xsl:if test="position() > 1">
+        else
+      </xsl:if>
       if (<xsl:value-of select="$selector-name"/> ("<xsl:value-of select="$test-value"/>", objectModel)) {
        <xsl:apply-templates/>
       }
