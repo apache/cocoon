@@ -56,7 +56,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -73,13 +72,14 @@ import org.apache.excalibur.source.SourceUtil;
 import org.apache.excalibur.source.URIAbsolutizer;
 
 /**
- * A factory for the context protocol using the context of the servlet api. It builds the
- * source by asking the environment context for the real URL
- * (see {@link org.apache.cocoon.environment.Context#getResource(String)}) and then resolving this real URL.
+ * A factory for the context protocol using the context of the servlet api. 
+ * It builds the source by asking the environment context for the real URL
+ * (see {@link org.apache.cocoon.environment.Context#getResource(String)}) 
+ * and then resolving this real URL.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.6 2003/12/26 18:43:39 unico Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.7 2004/02/22 17:23:13 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=SourceFactory
@@ -88,8 +88,10 @@ import org.apache.excalibur.source.URIAbsolutizer;
  */
 public class ContextSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, Serviceable, Disposable, Contextualizable, URIAbsolutizer
-{
+implements SourceFactory, 
+            Serviceable, 
+            Contextualizable, 
+            URIAbsolutizer {
 
     /** The context */
     protected Context envContext;
@@ -97,97 +99,95 @@ public class ContextSourceFactory
     /** The ServiceManager */
     protected ServiceManager manager;
 
-    /** The Source Resolver */
-    protected SourceResolver resolver;
-
-    /**
-     * Serviceable Interface
-     * 
-     * @avalon.dependency type="SourceResolver"
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        // FIXME : Looking up the resolver here leads to an infinite loop
-        // (is this because of Avalon or CocoonComponentManager ??)
-        // So we delay this for to the first call to getSource().
-        //this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
-    /**
-     * Disposable Interface
-     */
-    public void dispose() {
-        if (this.resolver != null) {
-            this.manager.release( this.resolver );
-            this.resolver = null;
-        }
-    }
-
-    /**
-     * Get the context
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(org.apache.avalon.framework.context.Context context)
     throws ContextException {
         this.envContext = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
 
-    /**
-     * Get a <code>Source</code> object.
-     * @param parameters This is optional.
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.SourceFactory#getSource(java.lang.String, java.util.Map)
      */
     public Source getSource( String location, Map parameters )
-        throws SourceException, MalformedURLException, IOException
-    {
-        if( this.getLogger().isDebugEnabled() )
-        {
+    throws SourceException, MalformedURLException, IOException {
+        if( this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug( "Creating source object for " + location );
         }
 
-        // Lookup resolver if needed
-        if (this.resolver == null) {
-            try {
-                this.resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
-            } catch (ServiceException se) {
-            	throw new SourceException("Unable to lookup source resolver.", se);
-            }
-        }
+        // Lookup resolver 
+        SourceResolver resolver = null;
+        try {
+            resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
                 
-        // Remove the protocol and the first '/'
-        int pos = location.indexOf(":/");
-        String path = location.substring(pos+1);
+            // Remove the protocol and the first '/'
+            final int pos = location.indexOf(":/");
+            final String path = location.substring(pos+1);
         
-        URL u;
-        
-        // Try to get a file first and fall back to a resource URL
-        String actualPath = envContext.getRealPath(path);
-        if (actualPath != null) {
-            u = new File(actualPath).toURL();
-        } else {
-            u = envContext.getResource(path);
-        }
-
-        if (u != null) {
-            return this.resolver.resolveURI(u.toExternalForm());
+            // fix for #24093, we don't give access to files outside the context:
+            if ( path.indexOf("../") != -1 ) {
+                throw new MalformedURLException("Invalid path ('../' is not allowed) : " + path);
+            }
             
-        } else {
-            String message = location + " could not be found. (possible context problem)";
-            getLogger().info(message);
-            throw new MalformedURLException(message);
-        }
+            URL u;
+            
+            // Try to get a file first and fall back to a resource URL
+            String actualPath = envContext.getRealPath(path);
+            if (actualPath != null) {
+                u = new File(actualPath).toURL();
+            } else {
+                u = envContext.getResource(path);
+            }
+    
+            if (u != null) {
+                    return resolver.resolveURI(u.toExternalForm());
+                
+            } else {
+                String message = location + " could not be found. (possible context problem)";
+                getLogger().info(message);
+                throw new MalformedURLException(message);
+            }
+        } catch (ServiceException se) {
+          	throw new SourceException("Unable to lookup source resolver.", se);
+        } finally {
+            this.manager.release( resolver );
     }
     
-    /**
-     * Release a {@link Source} object.
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.SourceFactory#release(org.apache.excalibur.source.Source)
      */
     public void release( Source source ) {
+        // In fact, this method should never be called as this factory
+        // returns a source object from a different factory. So that
+        // factory should release the source
         if ( null != source ) {
             if ( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug("Releasing source " + source.getURI());
             }
-            this.resolver.release( source );
+            SourceResolver resolver = null;
+            try {
+                resolver = (SourceResolver)this.manager.lookup( SourceResolver.ROLE );
+                resolver.release( source );
+            } catch (ServiceException ingore) {
+            } finally {
+                this.manager.release( resolver );
         }
     }
+    }
 
+    /* (non-Javadoc)
+     * @see org.apache.excalibur.source.URIAbsolutizer#absolutize(java.lang.String, java.lang.String)
+     */
     public String absolutize(String baseURI, String location) {
         return SourceUtil.absolutize(baseURI, location, true);
     }
