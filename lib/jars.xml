@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.55 2003/07/01 23:44:47 joerg Exp $
+    | CVS $Id: jars.xml,v 1.56 2003/07/03 20:51:14 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -564,8 +564,8 @@
  <file>
   <title>Jakarta Commons JXPath</title>
   <description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
-  <used-by>JXPath logicsheet and XMLForm</used-by>
-  <lib>optional/commons-jxpath-1.1.jar</lib>
+  <used-by>Flow, JXPath logicsheet, and XMLForm</used-by>
+  <lib>core/commons-jxpath-1.1.jar</lib>
   <homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
  </file>
 
