@@ -128,7 +128,7 @@ public class FOM_Cocoon extends ScriptableObject {
                                               lastContinuation,
                                               0);
         }
-        interpreter.forwardTo("cocoon://"+
+        interpreter.forwardTo(getParentScope(), this, "cocoon://"+
                               environment.getURIPrefix() + uri,
                               bizData, wk, environment);
     }
@@ -148,7 +148,7 @@ public class FOM_Cocoon extends ScriptableObject {
         if (!(unwrap(outputStream) instanceof OutputStream)) {
             throw new JavaScriptException("expected a java.io.OutputStream instead of " + outputStream);
         }
-        interpreter.process(uri, map, 
+        interpreter.process(getParentScope(), this, uri, map, 
                             (OutputStream)unwrap(outputStream), 
                             environment);
     }

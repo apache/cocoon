@@ -49,6 +49,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +101,7 @@ import org.apache.cocoon.components.flow.javascript.ScriptablePointerFactory;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.2 2003/06/22 18:12:27 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.3 2003/06/23 03:37:04 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -648,18 +649,42 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         return e;
     }
 
-    public void forwardTo(String uri, Object bizData,
-                          WebContinuation continuation,
-                          Environment environment)
+    void forwardTo(Scriptable scope, FOM_Cocoon cocoon,
+                   String uri, Object bizData,
+                   WebContinuation continuation,
+                   Environment environment)
         throws Exception {
+        setupView(scope, cocoon ,environment);
+        super.forwardTo(uri, bizData, continuation, environment);
+    }
+
+    boolean process(Scriptable scope, FOM_Cocoon cocoon,
+                    String uri, Object bizData, 
+                    OutputStream out, Environment environment)
+        throws Exception {
+        setupView(scope, cocoon, environment);
+        return super.process(uri, bizData, out, environment);
+    }
+    
+    private void setupView(Scriptable scope,
+                           FOM_Cocoon cocoon,
+                           Environment environment) {
         Map objectModel = environment.getObjectModel();
-        // Make the live-connect objects available to the view layer
-        JavaScriptFlow.setPackages(objectModel,
+        // Make the JS live-connect objects available to the view layer
+        FOM_JavaScriptFlowHelper.setPackages(objectModel,
                                    (Scriptable)ScriptableObject.getProperty(scope,
                                                                             "Packages"));
-        JavaScriptFlow.setJavaPackage(objectModel,
-                                      (Scriptable)ScriptableObject.getProperty(scope,
-                                                                   "java"));
-        super.forwardTo(uri, bizData, continuation, environment);
+        FOM_JavaScriptFlowHelper.setJavaPackage(objectModel,
+                                                (Scriptable)ScriptableObject.getProperty(scope,
+                                                                                         "java"));
+        // Make the FOM objects available to the view layer
+        FOM_JavaScriptFlowHelper.setRequest(objectModel,
+                                            cocoon.jsGet_request());
+        FOM_JavaScriptFlowHelper.setResponse(objectModel,
+                                             cocoon.jsGet_response());
+        FOM_JavaScriptFlowHelper.setSession(objectModel,
+                                            cocoon.jsGet_session());
+        FOM_JavaScriptFlowHelper.setContext(objectModel,
+                                            cocoon.jsGet_context());
     }
 }
