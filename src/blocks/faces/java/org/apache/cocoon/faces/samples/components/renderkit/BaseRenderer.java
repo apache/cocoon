@@ -49,8 +49,6 @@ import javax.faces.render.Renderer;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 /**
  * <p>Convenient base class for <code>Renderer</code> implementations.</p>

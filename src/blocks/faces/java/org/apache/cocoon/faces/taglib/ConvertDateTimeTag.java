@@ -15,17 +15,13 @@
  */
 package org.apache.cocoon.faces.taglib;
 
-import org.apache.cocoon.taglib.TagSupport;
 import org.apache.cocoon.i18n.I18nUtils;
 
 import org.apache.cocoon.faces.FacesUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import javax.faces.component.UIComponent;
-import javax.faces.component.ValueHolder;
 import javax.faces.convert.Converter;
-import javax.faces.convert.ConverterException;
 import javax.faces.convert.DateTimeConverter;
 import java.util.Locale;
 import java.util.TimeZone;
