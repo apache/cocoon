@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
  * Sun's implementation.
  *
  * @author <A HREF="mailto:moravek@pobox.sk">Peter Moravek</A>
- * @version CVS $Id: Tokenizer.java,v 1.5 2004/04/29 00:19:40 joerg Exp $
+ * @version CVS $Id$
  */
 public class Tokenizer implements Enumeration {
 
@@ -251,7 +251,7 @@ public class Tokenizer implements Enumeration {
   }
 
   /**
-   * Default delimiters "\t\n\r\f":
+   * Default delimiters " \t\n\r\f":
    * the space character, the tab character, the newline character,
    * the carriage-return character, and the form-feed character.
    */
@@ -287,5 +287,3 @@ public class Tokenizer implements Enumeration {
    */
   private int max = 0;
 }
-
-
