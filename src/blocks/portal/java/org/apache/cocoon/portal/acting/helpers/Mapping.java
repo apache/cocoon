@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.portal.acting.helpers;
 
+import java.io.Serializable;
+
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 
@@ -22,8 +24,9 @@ import org.apache.cocoon.portal.event.Event;
  * Helper class for an event
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Mapping.java,v 1.2 2004/03/05 13:02:09 bdelacretaz Exp $
+ * @version CVS $Id: Mapping.java,v 1.3 2004/03/29 12:22:16 cziegeler Exp $
 */
-public abstract class Mapping {
+public abstract class Mapping implements Serializable {
+    
     public abstract Event getEvent(PortalService service, Object data);
 }
