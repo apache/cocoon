@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.9 2004/05/01 00:05:44 joerg Exp $
+ * @version CVS $Id: FormInstance.java,v 1.10 2004/05/07 17:47:55 joerg Exp $
  */
 public class FormInstance extends AbstractContinuable {
 
@@ -112,11 +112,11 @@ public class FormInstance extends AbstractContinuable {
      * If <code>name</code> is undefined, the form widget itself is returned.
      * Otherwise, the form's child widget of name <code>name</code> is returned.
      */
-    public Widget getWidget(String name) {
+    public Widget getChild(String name) {
         if (name == null) {
-            return this.form/*Widget*/;
+            return this.form;
         } else {
-            return this.form/*Widget*/.getWidget(name);
+            return this.form.getChild(name);
         }
     }
 
