@@ -64,7 +64,7 @@ import java.util.HashMap;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: XMLByteStreamCompiler.java,v 1.5 2003/11/20 09:25:40 tcurdt Exp $
+ * @version CVS $Id: XMLByteStreamCompiler.java,v 1.6 2003/11/20 13:53:47 joerg Exp $
  */
 
 public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
@@ -398,12 +398,15 @@ public final class XMLByteStreamCompiler implements XMLSerializer, Recyclable {
 */
     }
 
+/*  JH (2003-11-20): seems to be never used
+
     private void write( final byte[] b ) {
         int newcount = this.bufCount + b.length;
         assure(newcount);
         System.arraycopy(b, 0, this.buf, this.bufCount, b.length);
         this.bufCount = newcount;
     }
+*/
 
     private void write( final int b ) {
         int newcount = this.bufCount + 1;
