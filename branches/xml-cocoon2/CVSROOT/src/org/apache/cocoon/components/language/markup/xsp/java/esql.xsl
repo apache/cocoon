@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.1 2000-10-26 20:52:50 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.2 2000-10-26 21:01:46 balld Exp $-->
 <!--
 
  ============================================================================
@@ -109,13 +109,10 @@
 			<xsp:include>java.sql.SQLException</xsp:include>
 			<xsp:include>java.text.SimpleDateFormat</xsp:include>
 			<xsp:include>java.text.DecimalFormat</xsp:include>
-			<xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
-			<xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
 		</xsp:structure>
 		<xsp:logic>
 		 static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
                  class EsqlSession {
-                  DBConnection db_connection=null;
                   Connection connection=null;
                   boolean close_connection = true;
 		  String query;
@@ -261,8 +258,7 @@
 		  _esql_session.close_connection = false;
 		 </xsl:when>
 		 <xsl:when test="esql:use-connection">
-		  _esql_session.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$use-connection"/>));
-		  _esql_session.connection = _esql_session.db_connection.getConnection();
+		  <!-- FIXME - need to do avalon pooling here maybe? -->
 		 </xsl:when>
 		 <xsl:otherwise>
 		  Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
@@ -353,7 +349,7 @@
 		 } catch (SQLException _esql_exception) {}
 		}
 	        <xsl:if test="esql:use-connection">
-	         _esql_pool.releaseConnection(_esql_session.db_connection);
+		 <!-- FIXME - need to release avalon pooling here maybe -->
 	        </xsl:if>
 	       }
 	       if (_esql_sessions.empty()) {
