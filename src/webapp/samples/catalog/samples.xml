@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.7 2004/03/06 02:25:54 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.8 2004/03/20 13:02:10 crossley Exp $ -->
 
 <samples name="Catalogs and DocBook" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -49,7 +49,7 @@
   </sample>
   <note>
    If you get a FileNotFoundException, then you have not configured the
-   OASIS catalog properly.
+   OASIS catalog properly. Follow the documentation as suggested above.
   </note>
  </group>
 
