@@ -48,8 +48,6 @@ import org.apache.cocoon.util.log.Log4JConfigurator;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.excalibur.instrument.InstrumentManager;
-import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
 import org.apache.log.ContextMap;
 import org.apache.log.ErrorHandler;
 import org.apache.log.Hierarchy;
@@ -196,16 +194,6 @@ public class CocoonPortlet extends GenericPortlet {
      * If false, it will rethrow them to the portlet container.
      */
     private boolean manageExceptions;
-
-    /**
-     * Flag to enable avalon excalibur instrumentation of Cocoon.
-     */
-    private boolean enableInstrumentation;
-
-    /**
-     * The <code>InstrumentManager</code> instance
-     */
-    private DefaultInstrumentManager instrumentManager;
 
     /**
      * This is the path to the portlet context (or the result
@@ -495,8 +483,6 @@ public class CocoonPortlet extends GenericPortlet {
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
         this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
-        this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
-
         this.requestFactory = new RequestFactory(this.autoSaveUploads,
                                                  this.uploadDir,
                                                  this.allowOverwrite,
@@ -542,10 +528,6 @@ public class CocoonPortlet extends GenericPortlet {
                 getLogger().debug("Portlet destroyed - disposing Cocoon");
             }
             this.disposeCocoon();
-        }
-
-        if (this.enableInstrumentation) {
-            this.instrumentManager.dispose();
         }
 
         ContainerUtil.dispose(this.parentServiceManager);
@@ -1619,40 +1601,6 @@ public class CocoonPortlet extends GenericPortlet {
     protected void updateEnvironment() throws PortletException {
         this.appContext.put(Constants.CONTEXT_CLASS_LOADER, classLoader);
         this.appContext.put(Constants.CONTEXT_CLASSPATH, getClassPath());
-    }
-
-    /**
-     * Helper method to obtain an <code>InstrumentManager</code> instance
-     *
-     * @return an <code>InstrumentManager</code> instance
-     */
-    private InstrumentManager getInstrumentManager()
-    throws Exception {
-        String imConfig = getInitParameter("instrumentation-config");
-        if (imConfig == null) {
-            throw new PortletException("Please define the init-param 'instrumentation-config' in your web.xml");
-        }
-
-        final InputStream is = this.portletContext.getResourceAsStream(imConfig);
-        final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-        final Configuration conf = builder.build(is);
-
-        // Get the logger for the instrument manager
-        final String imLoggerCategory = conf.getAttribute("logger", "core.instrument");
-        Logger imLogger = this.loggerManager.getLoggerForCategory(imLoggerCategory);
-
-        // Set up the Instrument Manager
-        DefaultInstrumentManager instrumentManager = new DefaultInstrumentManager();
-        instrumentManager.enableLogging(imLogger);
-        instrumentManager.configure(conf);
-        instrumentManager.initialize();
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Instrument manager created " + instrumentManager);
-        }
-
-        this.instrumentManager = instrumentManager;
-        return instrumentManager;
     }
 
     private String processTime(long time) {
