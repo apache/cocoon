@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  * are instances of the {@link ParamSaxBuffer} class.
  * 
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.5 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: XMLResourceBundle.java,v 1.6 2004/01/16 15:55:38 kpiroumian Exp $
  */
 public class XMLResourceBundle extends AbstractLogEnabled
                                implements Bundle, Serviceable {
@@ -125,7 +125,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
     /**
      * Bundle validity
      */
-    private SourceValidity validity;
+    private SourceValidity validity = null;
 
     /**
      * Locale of the bundle
@@ -327,10 +327,16 @@ public class XMLResourceBundle extends AbstractLogEnabled
         try {
             resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
             source = resolver.resolveURI(sourceURL);
-            HashMap values = new HashMap();
-            SourceUtil.toSAX(source, new SAXContentHandler(values));
-            this.validity = source.getValidity();
-            this.values = values;
+            SourceValidity sourceValidity = source.getValidity();
+            if (validity == null || validity.isValid( sourceValidity ) == SourceValidity.INVALID) {
+                HashMap values = new HashMap();
+                SourceUtil.toSAX(source, new SAXContentHandler(values));
+                this.validity = sourceValidity;
+                this.values = values;
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Loaded XML bundle: " + name + ", locale: " + locale);
+                }
+            }
         } catch (ServiceException e) {
             throw new ProcessingException("Can't lookup source resolver", e);
         } catch (MalformedURLException e) {
@@ -419,5 +425,20 @@ public class XMLResourceBundle extends AbstractLogEnabled
      */
     public Set keySet() {
         return Collections.unmodifiableSet(values.keySet());
+    }
+
+    /**
+     * Reload this bundle if URI's timestam is newer than ours
+     *
+     * @param sourceURL source URL of the XML bundle
+     **/
+    public void update(String sourceURL)
+    {
+        try {
+                load(sourceURL);
+        }
+        catch (Exception e) {
+            getLogger().info("Resource update failed. " + name + ", locale: " + locale + " Exception: " + e.getMessage());
+        }
     }
 }
