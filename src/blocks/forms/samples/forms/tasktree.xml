@@ -37,7 +37,7 @@
         </fd:repeater>
         <fd:repeater-action id="addsub" repeater="tasks" action-command="add-row">
           <fd:label>Add subtasks</fd:label>
-	  <fd:hint>Creates a task subtree</fd:hint>
+          <fd:hint>Creates a task subtree</fd:hint>
         </fd:repeater-action>
       </fd:widgets>
     </fd:class>
