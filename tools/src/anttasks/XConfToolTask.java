@@ -300,7 +300,7 @@ public final class XConfToolTask extends MatchingTask {
             // Override addComments from ant task if specified as an attribute
             String addCommentsAttr = getAttribute(elem, "add-comments", replaceProperties);
             if ((addCommentsAttr!=null) && (addCommentsAttr.length()>0)) {
-                setAddComments(new Boolean(addCommentsAttr));
+                setAddComments(Boolean.valueOf(addCommentsAttr));
             }
 
             // Allow multiple attributes to be added or modified
