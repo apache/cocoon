@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.37 2000-12-06 05:49:15 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.38 2000-12-13 13:30:27 greenrd Exp $-->
 <!--
 
  ============================================================================
@@ -352,7 +352,12 @@
   <xsp:logic>
     for (int _esql_i=1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
       Node _esql_node = document.createElement(_esql_query.resultset_metadata.getColumnName(_esql_i));
-      _esql_node.appendChild(document.createTextNode(_esql_query.resultset.getString(_esql_i)));
+      _esql_node.appendChild(document.createTextNode(
+        <xsl:call-template name="get-string-encoded">
+          <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
+          <xsl:with-param name="resultset">_esql_query.resultset</xsl:with-param>
+        </xsl:call-template>
+      ));
       xspCurrentNode.appendChild(_esql_node);
     }
   </xsp:logic>
@@ -360,7 +365,12 @@
 
 <xspdoc:desc>returns the value of the given column as a string</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-string" name="get-string">
-  <xsp:expr><xsl:call-template name="get-resultset"/>.getString(<xsl:call-template name="get-column"/>)</xsp:expr>
+  <xsp:expr>
+    <xsl:call-template name="get-string-encoded">
+      <xsl:with-param name="column-spec"><xsl:call-template name="get-column"/></xsl:with-param>
+      <xsl:with-param name="resultset"><xsl:call-template name="get-resultset"/></xsl:with-param>
+    </xsl:call-template>
+  </xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>returns the value of the given column as a date. if a format attribute exists, its value is taken to be a date format string as defined in java.text.SimpleDateFormat, and the result is formatted accordingly.</xspdoc:desc>
@@ -443,11 +453,15 @@
   <xsp:expr><xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
- <xspdoc:desc>returns the value of the given column interpeted as an xml fragment. the fragment is parsed by the default xsp parser and the document element is returned. if a root attribute exists, its value is taken to be the name of an element to wrap around the contents of the fragment before parsing.</xspdoc:desc>
+ <xspdoc:desc>returns the value of the given column interpeted as an xml fragment. 
+ The fragment is parsed by the default xsp parser and the document element is returned. 
+ If a root attribute exists, its value is taken to be the name of an element to wrap around the contents of 
+ the fragment before parsing.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-xml">
   <xsl:variable name="content">
     <xsl:choose>
       <xsl:when test="@root">
+        <xsl:call-template name="add-xml-decl">
         <xsl:text>"&lt;</xsl:text>
         <xsl:value-of select="@root"/>
         <xsl:text>&gt;"+</xsl:text>
@@ -457,6 +471,7 @@
         <xsl:text>&gt;"</xsl:text>
       </xsl:when>
       <xsl:otherwise>
+        <xsl:call-template name="add-xml-decl">
         <xsl:call-template name="get-string"/>
       </xsl:otherwise>
     </xsl:choose>
@@ -537,6 +552,32 @@
       </xsl:call-template>
     </xsl:when>
   </xsl:choose>
+</xsl:template>
+
+<xsl:template name="get-string-encoded">
+  <xsl:param name="column-spec"/>
+  <xsl:param name="resultset"/>
+  <xsl:choose>
+    <xsl:when test="@encoding">
+      new String (<xsl:value-of select="$resultset"/>.getBytes 
+        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="@encoding"/>)
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="$resultset"/>.getString(<xsl:value-of select="$column-spec"/>)
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template name="add-xml-decl">
+  <xsl:choose>
+    <xsl:when test="@encoding">
+      "&lt;?xml version=\"1.0\" encoding=\"<xsl:value-of select="@encoding"/>\"?&gt;"
+    </xsl:when>
+    <xsl:otherwise>
+      "&lt;?xml version=\"1.0\"?&gt;"
+    </xsl:otherwise>
+  </xsl:choose>
+  +
 </xsl:template>
 
 <xsl:template match="@*|node()" priority="-1">
