@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <logkit>
   <factories>
     <factory type="priority-filter" class="org.apache.avalon.excalibur.logger.factory.PriorityFilterTargetFactory"/>
@@ -40,7 +41,6 @@
 
     <cocoon id="sitemap">
       <filename>${context-root}/WEB-INF/logs/sitemap.log</filename>
-
       <format type="cocoon">
         %7.7{priority} %{time}   [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}
       </format>
@@ -89,20 +89,20 @@
       When defining subcategory manually, it is required to specify log
       targets, because they are not inherited in this case.
     -->
-    <category name="core" log-level="ERROR">
+    <category name="core" log-level="@loglevel@">
       <!-- Startup component manager logger -->
-      <category name="startup" log-level="ERROR">
+      <category name="startup" log-level="@loglevel@">
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
       </category>
 
-      <category name="roles" log-level="ERROR">
+      <category name="roles" log-level="@loglevel@">
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
       </category>
 
-      <category name="instrument" log-level="ERROR">
-        <category name="values" log-level="ERROR">
+      <category name="instrument" log-level="@loglevel@">
+        <category name="values" log-level="@loglevel@">
           <log-target id-ref="core"/>
           <log-target id-ref="error"/>
         </category>
@@ -111,14 +111,14 @@
       </category>
 
       <!-- Cocoon component manager logger -->
-      <category name="manager" log-level="ERROR">
+      <category name="manager" log-level="@loglevel@">
         <log-target id-ref="core"/>
         <log-target id-ref="error"/>
       </category>
 
       <!-- Cocoon cache and stores logger -->
-      <category name="store" log-level="ERROR">
-        <category name="janitor" log-level="ERROR">
+      <category name="store" log-level="@loglevel@">
+        <category name="janitor" log-level="@loglevel@">
           <log-target id-ref="core"/>
           <log-target id-ref="error"/>
         </category>
@@ -130,20 +130,19 @@
       <log-target id-ref="error"/>
     </category>
 
-    <category name="sitemap" log-level="ERROR">
+    <category name="sitemap" log-level="@loglevel@">
       <log-target id-ref="sitemap"/>
       <log-target id-ref="error"/>
     </category>
 
-    <category name="access" log-level="ERROR">
+    <category name="access" log-level="@loglevel@">
       <log-target id-ref="access"/>
       <log-target id-ref="error"/>
     </category>
 
-    <category name="flow" log-level="ERROR">
+    <category name="flow" log-level="@loglevel@">
       <log-target id-ref="flow"/>
       <log-target id-ref="error"/>
     </category>
-
   </categories>
 </logkit>
