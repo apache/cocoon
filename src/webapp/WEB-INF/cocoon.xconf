@@ -12,17 +12,18 @@
 <!-- =========================== Sitemap =============================== -->
 
   <!--+
-      | New implementation of the sitemap. It is interpreted, so load times are super-fast,
-      | and request processing is slightly faster than with the compiled engine thanks to
-      | the HotSpot VM.
+      | New implementation of the sitemap. It is interpreted, so load times
+      | are super-fast, and request processing is slightly faster than with
+      | the compiled engine thanks to the HotSpot VM.
       |
       | Reloading of the sitemap:
-      |   The check-reload attribute determines if the sitemap is reloaded on change.
+      |   The check-reload attribute determines if the sitemap is to be
+      |   reloaded on change.
       |   Set to "no", the sitemap is generated once at startup.
       |   Set to "yes", the sitemap is regenerated if it changes.
       |
       | For development environment, set the check-reload to yes.
-      | For production environment, it is advisable to set the check-reload to no.
+      | For production environment, it is advisable to set check-reload to no.
       +-->
   <sitemap
     file="context://sitemap.xmap"
@@ -116,12 +117,12 @@
       | A number of components already use InputModules: the sitemap processor, 
       | flow, some matchers, the linkrewriting transformer, database actions
       | and more.
-	  |
+      |
       | For example the sitemap processor allows to obtain a value
       | named "foo" from an the InputModule for request parameters by
       | writing {request-param:foo} wherever a sitemap variable is
       | allowed. 
-	  |
+      |
       | Some InputModules need the help of other InputModules to
       | obtain values and only apply a function to the obtained value
       | or change the name of the attribute. These modules usually
@@ -163,7 +164,8 @@
       <input-module name="defaults"/>
     </component-instance>
 
-    <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used in the samples -->
+    <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used
+         in the samples -->
     <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsMetaModule">
       <values>
         <skin>defaultSkin</skin>
@@ -187,7 +189,7 @@
       | writing data to places. Apparently, there are a lot less
       | places to write to than to read data from, thus there are only
       | a few OutputModules coming with Apache Cocoon.
-	  |
+      |
       | One special feature of OutputModules is, that they expose some
       | limited transactional behaviour. Hence it does not suffice to
       | write a value, but it is required to confirm this at the
@@ -195,7 +197,7 @@
       | corresponding InputModule. This behaviour is not enfored but
       | it should be expected. Omitting a commit or rollback is an
       | error. 
-	  |
+      |
       | OutputModules are currently used by flow, a number of actions
       | and transformers.
       +-->
@@ -234,7 +236,8 @@
       |
       | There are various ways to do local configuration (see "Entity Catalogs"
       | documentation). One way is via the CatalogManager.properties file.
-      | As an additional method, you can specify the "local-catalog" parameter here.
+      | As an additional method, you can specify the "local-catalog"
+      | parameter here.
       |
       | local-catalog:
       |   The full filesystem pathname to a single local catalog file.
@@ -279,24 +282,26 @@
       |     XML validation is only being used for the documentation build.
       |     (If you are going to use it elsewhere, then do so with caution.)
       |     You really should have validated all of your XML documents already,
-      |     according to their proper DTD or schema. Do not expect Cocoon to do it.
+      |     according to their proper DTD or schema. Do not expect Cocoon
+      |     to do it.
       | - namespace-prefixes (boolean, default = false) : do we want
       |     namespaces declarations also as 'xmlns:' attributes ?
-      |     Note : setting this to true confuses some XSL processors (e.g. Saxon).
+      |     Note : setting this to true confuses some XSL processors
+      |     (e.g. Saxon).
       | - stop-on-warning (boolean, default = true) : should the parser
       |     stop parsing if a warning occurs ?
-      | - stop-on-recoverable-error (boolean, default = true) : should the parser
-      |     stop parsing if a recoverable error occurs ?
+      | - stop-on-recoverable-error (boolean, default = true) : should the
+      |     parser stop parsing if a recoverable error occurs ?
       | - reuse-parsers (boolean, default = true) : do we want to reuse
       |     parsers or create a new parser for each parse ?
-      |     Note : even if this parameter is true, parsers are not
-      |     recycled in case of parsing errors : some parsers (e.g. Xerces) don't like
+      |     Note : even if this parameter is true, parsers are not recycled
+      |     in case of parsing errors : some parsers (e.g. Xerces) do not like
       |     to be reused after failure.
       | - sax-parser-factory (string) : the name of the SAXParserFactory
-      |     implementation class to be used instead of using the standard JAXP mechanism
-      |     (SAXParserFactory.newInstance()). This allows to choose
-      |     unambiguously the JAXP implementation to be used when several of them are
-      |     available in the classpath.
+      |     implementation class to be used instead of using the standard
+      |     JAXP mechanism (SAXParserFactory.newInstance()). This allows to
+      |     choose unambiguously the JAXP implementation to be used when
+      |     several of them are available in the classpath.
       | - document-builder-factory (string) : the name of the
       |     DocumentBuilderFactory implementation to be used (similar to
       |     sax-parser-factory for DOM).
@@ -343,12 +348,12 @@
 
      <!--+
          | Indicates how many objects will be hold in the cache.
-         | When the number of maxobjects has been reached. The last object in the
-         | cache will be thrown out.
+         | When the number of maxobjects has been reached. The last object
+         | in the cache will be thrown out.
          +-->
      <parameter name="maxobjects" value="100"/>
 
-     <!-- Turns the swapping of the objects into persistent cache on and off. -->
+     <!-- Turns swapping of the objects into persistent cache on and off. -->
      <parameter name="use-persistent-cache" value="true"/>
   </transient-store>
 
@@ -379,29 +384,31 @@
   <!--+
       | Store Janitor: the store garbage collector and memory usage controller.
       |
-      | Be careful with the heapsize and freememory parameters. Wrong values can
-      | cause high cpu usage. Example configuration:
+      | Be careful with the heapsize and freememory parameters. Wrong values
+      | can cause high cpu usage. Example configuration:
       | Jvm settings:
       |    -Xmx200000000
       | store-janitor settings:
       |    <parameter name="freememory" value="5000000"/>
       |    <parameter name="heapsize" value="150000000"/>
       |
-      | It is recommended to have heapsize equal to -Xmx, especially
-      | on Sun's JVM which are unable to shrink its heap once it grows above minimum.
+      | It is recommended to have heapsize equal to -Xmx, especially on Sun's
+      | JVM which are unable to shrink its heap once it grows above minimum.
       | Freememory should be greater than amount of memory necessary for normal
       | application operation.
       +-->
   <store-janitor logger="core.store.janitor">
      <!-- How much free memory shall be available in the jvm -->
      <parameter name="freememory" value="1000000"/>
-     <!-- Indicates the limit of the jvm memory consumption. The default max heapsize for Sun's JVM is 64Mb -->
+     <!-- Indicates the limit of the jvm memory consumption. The default max
+          heapsize for Sun's JVM is 64Mb -->
      <parameter name="heapsize" value="67108864"/>
      <!-- How often shall the cleanup thread check memory -->
      <parameter name="cleanupthreadinterval" value="10"/>
      <!-- Indicates the thread priority of the cleanup thread -->
      <parameter name="threadpriority" value="5"/>
-     <!-- How much percent of the elements of each registered Store shall be removed when low on memory. Default 10% -->
+     <!-- How much percent of the elements of each registered Store
+          shall be removed when low on memory. Default 10% -->
      <parameter name="percent_to_free" value="10"/>
   </store-janitor>
 
@@ -413,10 +420,10 @@
   <!--+
       | I18n Bundle Factory
       |
-	  | BundleFactory loads Bundles with i18n resources for the given locale.
-	  | Bundles are loaded from the 'catalogue_location'. Bundle base name is
-	  | 'catalogue_name' value.
-	  | If 'cache-at-startup' is true then BundleFactory preloads bundles.
+      | BundleFactory loads Bundles with i18n resources for the given locale.
+      | Bundles are loaded from the 'catalogue_location'. Bundle base name is
+      | 'catalogue_name' value.
+      | If 'cache-at-startup' is true then BundleFactory preloads bundles.
       +-->
   <i18n-bundles logger="core.i18n-bundles">
     <catalogue-name>messages</catalogue-name>
@@ -451,7 +458,8 @@
 
       <!-- Specifies which formatter to use to format source code.
            This parameter is optional.
-           It is commented out because of bug #5689: Java "code-formatter" incorrectly formats double values -->
+           It is commented out because of bug #5689: Java "code-formatter"
+           incorrectly formats double values -->
       <!--parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/-->
 
       <!-- A singleton-like implementation of a ClassLoader -->
@@ -486,9 +494,10 @@
   <!--+
       | Logisheets
       |
-      | This section defines the XSP logicsheets. A logicsheet is a special XSLT
-      | stylesheet used to translate user-defined dynamic markup into equivalent
-      | XSP markup that embeds directives for a given markup language.
+      | This section defines the XSP logicsheets. A logicsheet is a special
+      | XSLT stylesheet used to translate user-defined dynamic markup into
+      | equivalent XSP markup that embeds directives for a given markup
+      | language.
       |
       | Logicsheets are the XSP equivalent of taglibs. For info about
       | the tags included in the default taglibs, please, refer to the
@@ -548,8 +557,8 @@
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/util.xsl"/>
         </builtin-logicsheet>
 
-        <!-- The xsp-formval taglib serves as interface to retrieve validation results
-             from a request attribute -->
+        <!-- The xsp-formval taglib serves as interface to retrieve
+             validation results from a request attribute -->
         <builtin-logicsheet>
           <parameter name="prefix" value="xsp-formval"/>
           <parameter name="uri" value="http://apache.org/xsp/form-validator/2.0"/>
@@ -574,8 +583,8 @@
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/action.xsl"/>
         </builtin-logicsheet>
 
-        <!-- The capture taglib is for capturing parts of the XSP-generated XML as
-             XML fragments or DOM nodes -->
+        <!-- The capture taglib is for capturing parts of the XSP-generated
+             XML as XML fragments or DOM nodes -->
         <builtin-logicsheet>
           <parameter name="prefix" value="capture"/>
           <parameter name="uri" value="http://apache.org/cocoon/capture/1.0"/>
@@ -676,8 +685,8 @@
       +-->
   <component class="org.apache.cocoon.transformation.helpers.DefaultIncludeCacheManager" 
              role="org.apache.cocoon.transformation.helpers.IncludeCacheManager">
-    <!-- Set the preemptive-loader-url to a pipeline inside Cocoon that contains the
-         preemptive loader action. The URL must be absolute! 
+    <!-- Set the preemptive-loader-url to a pipeline inside Cocoon that
+         contains the preemptive loader action. The URL must be absolute! 
     <parameter name="preemptive-loader-url" 
                value="http://localhost:8080/cocoon/samples/cinclude/loader"/>
     -->
