@@ -53,7 +53,6 @@ package org.apache.cocoon.environment.mock;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -63,14 +62,10 @@ import junit.framework.AssertionFailedError;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Source;
-import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 public class MockEnvironment implements Environment {
-
-    private SourceResolver resolver;
 
     private String uri;
     private String uriprefix;
@@ -85,8 +80,7 @@ public class MockEnvironment implements Environment {
     private HashMap objectmodel;
     private Hashtable attributes = new Hashtable();
 
-    public MockEnvironment(SourceResolver resolver) {
-        this.resolver = resolver;
+    public MockEnvironment() {
     }
 
     public String getURI() {
@@ -208,12 +202,6 @@ public class MockEnvironment implements Environment {
     }
 
 
-    public Source resolve(String systemID)
-      throws ProcessingException, SAXException, IOException {
-  
-        throw new AssertionFailedError("Not not use deprecated methods!");
-    }
-
     public void toSAX(org.apache.excalibur.source.Source source,
                 ContentHandler handler)
       throws SAXException, IOException, ProcessingException {
@@ -221,35 +209,6 @@ public class MockEnvironment implements Environment {
         throw new AssertionFailedError("Not not use deprecated methods!");
     }
 
-    public void toSAX(org.apache.excalibur.source.Source source,
-               String         mimeTypeHint,
-               ContentHandler handler)
-      throws SAXException, IOException, ProcessingException {
-
-        throw new AssertionFailedError("Not not use deprecated methods!");
-    }
-
-    public org.apache.excalibur.source.Source resolveURI(String location)
-        throws MalformedURLException, IOException, org.apache.excalibur.source.SourceException {
-
-        return resolver.resolveURI(location);
-    }
-
-    public org.apache.excalibur.source.Source resolveURI(String location,
-                                                         String base,
-                                                         Map parameters)
-        throws MalformedURLException, IOException, org.apache.excalibur.source.SourceException {
-
-        return resolver.resolveURI(location, base, parameters);
-    }
-
-    /**
-     * Releases a resolved resource
-     */
-    public void release(org.apache.excalibur.source.Source source) {
-        resolver.release(source);
-    }
-    
     /**
      * Always return <code>true</code>.
      */
