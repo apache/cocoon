@@ -328,6 +328,10 @@
     <map:read src="resources/styles/slides-apachecon.css" mime-type="text/css"/>
    </map:match>
 
+   <map:match pattern="style">
+    <map:read src="resources/styles/slides-apachecon.css" mime-type="text/css"/>
+   </map:match>
+
    <map:match pattern="slides/**.gif">
     <map:read src="docs/samples/{1}.gif" mime-type="image/gif"/>
    </map:match>
@@ -355,18 +359,18 @@
     This pipeline is fully cachable and thus an image depends only on
     the text id and the laguage used and is generated once for each combination.
    -->
-   <map:match pattern="i18n/images/*.png">
-    <map:act type="lang-select">
-     <map:generate type="serverpages" src="docs/samples/i18n/navimages.xsp">
-      <parameter name="textid" value="{../1}"/>
-      <parameter name="lang" value="{lang}"/>
-     </map:generate>
-    </map:act>
-     <map:transform type="i18n" src="docs/samples/i18n/nav_trans.xml">
-      <parameter name="default_lang" value="en"/>
-      <parameter name="available_lang_1" value="en"/>
-      <parameter name="available_lang_2" value="de"/>
-     </map:transform>
+   <map:match type="regexp" pattern="i18n/images/(.*)_(.*)_(.*).png">
+    <map:generate type="serverpages" src="docs/samples/i18n/navimages.xsp">
+     <parameter name="text" value="{1}"/>
+     <parameter name="lang" value="{2}"/>
+     <parameter name="kind" value="{3}"/>
+    </map:generate>
+    <map:transform type="i18n" src="docs/samples/i18n/nav_trans.xml">
+     <parameter name="lang" value="{2}"/>
+     <parameter name="default_lang" value="en"/>
+     <parameter name="available_lang_1" value="en"/>
+     <parameter name="available_lang_2" value="de"/>
+    </map:transform>
     <map:serialize type="svg2png"/>
    </map:match>
 
