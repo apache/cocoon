@@ -5,6 +5,10 @@
        shorthand="parser"
        default-class="org.apache.cocoon.components.parser.JaxpParser"/>
 
+ <role name="org.apache.cocoon.components.browser.Browser"
+       shorthand="browser"
+       default-class="org.apache.cocoon.components.browser.BrowserImpl"/>
+
  <role name="org.apache.cocoon.Processor"
        shorthand="processor"/>
 

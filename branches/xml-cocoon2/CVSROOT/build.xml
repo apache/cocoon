@@ -224,6 +224,7 @@ by the main ones.
         <exclude name="**/http/HttpResponse2*.java"/>
 	<exclude name="**/Ora*.java" unless="ora.driver.present"/>
 	<exclude name="**/Sendmail*.java" unless="mail.present"/>
+	<exclude name="**/browser/*.x*"/>
       </fileset>
     </copy>
   </target>
@@ -263,10 +264,26 @@ by the main ones.
   <!-- =================================================================== -->
   <target name="prepare-src" depends="prepare-src-22"/>
 
+
+  <!-- =================================================================== -->
+  <!-- Generate the Java code from XML using XSLT                          -->
+  <!-- =================================================================== -->
+  <target name="generate-java-code">
+    <delete dir="${build.src}/org/apache/cocoon/components/browser"
+	    includes="BrowserImpl.java"/>
+    <style basedir="${src.dir}/org/apache/cocoon/components/browser"
+	   destdir="${build.src}/org/apache/cocoon/components/browser"
+	   includes="BrowserImpl.xml"
+	   extension=".java"
+	   style="BrowserImpl.xsl"/>
+  </target>
+
+  
   <!-- =================================================================== -->
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
-  <target name="compile" depends="prepare-src" description="Compiles the source code">
+  <target name="compile" depends="prepare-src,generate-java-code" 
+          description="Compiles the source code">
     <copy todir="${build.dest}">
       <fileset dir="${build.src}">
         <include name="**/Manifest.mf"/>
