@@ -26,6 +26,7 @@
     <menu-item label="XML Validation" href="validation.html"/>
     <menu-item label="Databases" href="databases.html"/>
     <menu-item label="Modules" href="modules.html"/>
+    <menu-item label="Modules Reference" href="modules-ref.html"/>
     <menu-item label="Redirection" href="redirection.html"/>
     <menu-item label="Profiler" href="profiler.html"/>
     <menu-item label="Error Handling" href="errorhandling.html"/>
