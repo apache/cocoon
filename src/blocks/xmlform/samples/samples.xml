@@ -27,9 +27,11 @@
    Presents a sophisticated form handling demo ... multi-page wizard with two-way navigation, 
    based on a Cocoon Action. 
   </sample>
+  <!-- 
   <sample name="Flow" href="flow">
    Flow-based XMLForm Cocoon Usage Feedback Wizard Demonstration
-  </sample>
+  </sample> 
+  -->
   <sample name="Controller" href="calc">
    A more configurable action, which borrows some ideas from Jakarta Struts.
   </sample>
