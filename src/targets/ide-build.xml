@@ -1,7 +1,7 @@
 <!-- === IDE targets =========================================================== -->
 
   <!-- Generate the Emacs JDE project file -->
-  <target name="emacs-project" depends="init" description="Generate the Emacs project files">
+  <target name="emacs-project" depends="prepare" description="Generate the Emacs project files">
     <path id="jar.files">
       <fileset dir="${build.webapp}/WEB-INF/lib">
         <include name="*.jar"/>
@@ -19,17 +19,10 @@
   </target>
 
   <!-- Build the Eclipse projects files -->
-  <target name="eclipse-project" depends="init" description="Generate the Eclipse project files">
+  <target name="eclipse-project" depends="prepare" description="Generate the Eclipse project files">
 
-    <echo>+---------------------------------------------------------------------------+</echo>
-    <echo>                        ${fullname} ${version} [${year}]</echo>
-    <echo>+---------------------------------------------------------------------------+</echo>
-    <echo> Building Eclipse Project Files</echo>
-    <echo>+---------------------------| W A R N I N G |-------------------------------+</echo>
-    <echo>          The project files are targeted for use with JVM ${target.vm}</echo>
-    <echo>+---------------------------------------------------------------------------+</echo>
+    <echo message="Building Eclipse Project Files"/>
 
-    <mkdir dir="${build}"/>
     <!-- prepare the various paths that will form the project -->
     <path id="srcs">
       <!-- main source dir -->

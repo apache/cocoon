@@ -45,6 +45,9 @@
     <available file="project.properties" type="file" property="project.properties.present"/>
     <available file="ant.properties" type="file" property="ant.properties.present"/>
     <available file=".ant.properties" type="file" property=".ant.properties.present"/>
+
+    <echo message="forrest.home.present=${forrest.home.present}"/>
+    <echo message="build.properties.present=${build.properties.present}"/>
   </target>
 
   <!-- No we can't extract the commonalities below into an antcall'ed target,

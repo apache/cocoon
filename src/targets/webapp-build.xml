@@ -73,7 +73,7 @@
     <copy file="${build}/${name}-scratchpad.jar" tofile="${build.webapp.lib}/${name}-${version}-scratchpad.jar"/>
   </target>
  
-  <target name="prepare-webapp-deprecated" depends="prepare-webapp,init-xpatch" unless="unless.exclude.deprecated">
+  <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="unless.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
     <xpatch directory="${deprecated.conf}" extension="xconf" configuration="${build.webapp}/WEB-INF/cocoon.xconf"/>
   </target>
@@ -124,7 +124,7 @@
     <xpatch directory="${documentation}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
   </target>
   
-  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,prepare-webapp-scratchpad,validate-config,init-loader" description="Builds web application folder"/>
+  <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,prepare-webapp-scratchpad,validate-config" description="Builds web application folder"/>
 
   <target name="war" depends="webapp" description="Builds web application archieve">
     <!-- A task to create manifest for webapp. -->

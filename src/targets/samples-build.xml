@@ -1,6 +1,6 @@
 <!-- === Samples Targets ======================================================= -->
 
-  <target name="samples" depends="prepare, init-xpatch" unless="unless.exclude.webapp.samples">
+  <target name="samples" depends="prepare" unless="unless.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
 
     <javac srcdir="${samples}"
@@ -42,7 +42,7 @@
     <xpatch directory="${webapp.samples}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>
   </target>
 
-  <target name="scratchpad-samples" depends="prepare, init-xpatch" unless="unless.exclude.scratchpad">
+  <target name="scratchpad-samples" depends="prepare" unless="unless.exclude.scratchpad">
  
     <!-- copy sample files -->
     <copy todir="${build.webapp.samples}" filtering="on">
