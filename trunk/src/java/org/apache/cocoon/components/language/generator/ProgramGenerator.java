@@ -50,8 +50,6 @@
 */
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.cocoon.environment.SourceResolver;
@@ -61,9 +59,9 @@ import org.apache.cocoon.environment.SourceResolver;
  * documents written in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ProgramGenerator.java,v 1.2 2003/10/16 14:57:59 bloritsch Exp $
+ * @version CVS $Id: ProgramGenerator.java,v 1.3 2003/11/09 20:09:47 cziegeler Exp $
  */
-public interface ProgramGenerator extends Component {
+public interface ProgramGenerator {
 
     String ROLE = ProgramGenerator.class.getName();
 
