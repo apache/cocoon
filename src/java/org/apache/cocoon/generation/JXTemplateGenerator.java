@@ -1,4 +1,4 @@
-/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
+/* 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -412,7 +412,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     result = ScriptRuntime.call(cx, result, thisObj, 
                                                 newArgs, scope);
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                         
                     } else {
@@ -465,7 +465,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     Object result = ScriptableObject.getProperty(thisObj, name);
                     if (result == Undefined.instance || 
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } 
                     if (result instanceof Wrapper) {
@@ -551,7 +551,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 try {
                     Object result = arr.get(index++, arr);
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else {
                         if (!(result instanceof NativeJavaClass)) {
@@ -594,7 +594,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         ScriptableObject.getProperty(scope, 
                                                      ids[index++].toString());
                     if (result == Undefined.instance ||
-                        result == ScriptableObject.NOT_FOUND) {
+                        result == Scriptable.NOT_FOUND) {
                         result = null;
                     } else {
                         if (!(result instanceof NativeJavaClass)) {
@@ -2483,7 +2483,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
             public void endDocument() throws SAXException {
                 super.endDocument();
-                gen.execute(gen.getConsumer(),
+                gen.execute(gen.xmlConsumer,
                             gen.getJexlContext(),
                             gen.getJXPathContext(),
                             getStartEvent(), null);
@@ -2517,7 +2517,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         }
     }
 
-    private XMLConsumer consumer;
     private JXPathContext jxpathContext;
     private MyJexlContext globalJexlContext;
     private Variables variables;
@@ -2533,16 +2532,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return globalJexlContext;
     }
 
-    private XMLConsumer getConsumer() {
-        return consumer;
-    }
-
     public void recycle() {
         if ( this.resolver != null) {
             this.resolver.release(this.inputSource);            
         }
         this.inputSource = null;
-        this.consumer = null;
         this.jxpathContext = null;
         this.globalJexlContext = null;
         this.variables = null;
@@ -2579,12 +2573,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         Object bean = FlowHelper.getContextObject(objectModel);
         WebContinuation kont = FlowHelper.getWebContinuation(objectModel);
         setContexts(bean, kont,
-                    ObjectModelHelper.getRequest(objectModel),
-                    ObjectModelHelper.getResponse(objectModel),
-                    ObjectModelHelper.getContext(objectModel),
                     parameters,
                     objectModel);
-        definitions = new HashMap();
+        this.definitions = new HashMap();
     }
     
     private void fillContext(Object contextObject, Map map) {
@@ -2626,19 +2617,19 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     private void setContexts(Object contextObject,
                              WebContinuation kont,
-                             Request request,
-                             Response response,
-                             org.apache.cocoon.environment.Context app,
                              Parameters parameters,
                              Map objectModel) {
-        if (variables == null) {
-            variables = new MyVariables(contextObject,
+        final Request request = ObjectModelHelper.getRequest(objectModel);
+        final Response response = ObjectModelHelper.getResponse(objectModel);
+        final org.apache.cocoon.environment.Context app =
+                  ObjectModelHelper.getContext(objectModel);
+        
+        this.variables = new MyVariables(contextObject,
                                         kont,
                                         request,
                                         response,
                                         app,
                                         parameters);
-        }
         Map map;
         if (contextObject instanceof Map) {
             map = (Map)contextObject;
@@ -2646,11 +2637,13 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             map = new HashMap();
             fillContext(contextObject, map);
         }
+        
         jxpathContext = jxpathContextFactory.newContext(null, contextObject);
         jxpathContext.setVariables(variables);
         globalJexlContext = new MyJexlContext();
         globalJexlContext.setVars(map);
         map = globalJexlContext.getVars();
+        
         if (contextObject != null) {
             map.put("flowContext", contextObject);
             // FIXME (VG): Is this required (what it's used for - examples)?
@@ -2668,33 +2661,31 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         map.put("response", response);
         map.put("context", app);
         map.put("parameters", parameters);
-        Object session = request.getSession(false);
+        
+        final Object session = request.getSession(false);
         if (session != null) {
             map.put("session", session);
         }
     }
 
-    public void setConsumer(XMLConsumer consumer) {
-        this.consumer = consumer;
-    }
-
     public void generate() 
         throws IOException, SAXException, ProcessingException {
+        final String cacheKey = inputSource.getURI();
+        
         StartDocument startEvent;
         synchronized (cache) {
-            startEvent = (StartDocument)cache.get(inputSource.getURI());
+            startEvent = (StartDocument)cache.get(cacheKey);
         }
         if (startEvent == null) {
-            SourceValidity validity = inputSource.getValidity();
             Parser parser = new Parser();
             SourceUtil.parse(this.manager, this.inputSource, parser);
             startEvent = parser.getStartEvent();
-            startEvent.compileTime = validity;
+            startEvent.compileTime = inputSource.getValidity();
             synchronized (cache) {
-                cache.put(inputSource.getURI(), startEvent);
+                cache.put(cacheKey, startEvent);
             }
         }
-        execute(consumer,
+        execute(this.xmlConsumer,
                 globalJexlContext, jxpathContext, 
                 startEvent, null);
     }
@@ -2757,8 +2748,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                       startElement.attributes);
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement)ev;
-                StartElement startElement = 
-                    (StartElement)endElement.startElement;
+                StartElement startElement = endElement.startElement;
                 consumer.endElement(startElement.namespaceURI,
                                     startElement.localName,
                                     startElement.raw);
@@ -2921,8 +2911,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 consumer.endDocument();
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement)ev;
-                StartElement startElement = 
-                    (StartElement)endElement.startElement;
+                StartElement startElement = endElement.startElement;
                 consumer.endElement(startElement.namespaceURI,
                                     startElement.localName,
                                     startElement.raw);

@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.31 2003/09/03 20:27:01 bruno Exp $
+    | CVS $Id: sitemap.xmap,v 1.32 2003/10/15 14:12:45 cziegeler Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -60,6 +60,7 @@
     <map:generator label="content" logger="sitemap.generator.request" name="request" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.RequestGenerator"/>
     <map:generator label="content" logger="sitemap.generator.stream" name="stream" pool-grow="2" pool-max="16" pool-min="1" src="org.apache.cocoon.generation.StreamGenerator"/>
     <map:generator label="content" logger="sitemap.generator.status" name="status" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.StatusGenerator"/>
+    <map:generator label="content" logger="sitemap.generator.jx" name="jx" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
     <!-- The notifying generator can only be used in a <handle-errors> section : it produces an XML
          representation of the exception that caused the error handler to be executed -->
     <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
