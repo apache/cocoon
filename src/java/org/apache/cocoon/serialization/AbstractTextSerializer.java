@@ -55,7 +55,7 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.8 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
         implements Configurable, CacheableProcessingComponent, Contextualizable {
@@ -91,6 +91,9 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      */
     private NamespaceAsAttributes namespacePipe;
 
+    /** The caching key */
+    private String cachingKey = "1";
+    
 
     /**
      * Interpose namespace pipe if needed.
@@ -175,7 +178,6 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      * Set the configurations for this serializer.
      */
     public void configure(Configuration conf) throws ConfigurationException {
-
         // configure buffer size
         //   Configuration bsc = conf.getChild("buffer-size", false);
         //   if(null != bsc)
@@ -193,35 +195,51 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         String standAlone = conf.getChild("standalone").getValue(null);
         String version = conf.getChild("version").getValue(null);
 
+        final StringBuffer buffer = new StringBuffer();
+        
         if (cdataSectionElements != null) {
             format.put(OutputKeys.CDATA_SECTION_ELEMENTS, cdataSectionElements);
+            buffer.append(";cdata-section-elements=").append(cdataSectionElements);
         }
         if (dtPublic != null) {
             format.put(OutputKeys.DOCTYPE_PUBLIC, dtPublic);
+            buffer.append(";doctype-public=").append(dtPublic);
         }
         if (dtSystem != null) {
             format.put(OutputKeys.DOCTYPE_SYSTEM, dtSystem);
+            buffer.append(";doctype-system=").append(dtSystem);
         }
         if (encoding != null) {
             format.put(OutputKeys.ENCODING, encoding);
+            buffer.append(";encoding=").append(encoding);
         }
         if (indent != null) {
             format.put(OutputKeys.INDENT, indent);
+            buffer.append(";indent=").append(indent);
         }
         if (mediaType != null) {
             format.put(OutputKeys.MEDIA_TYPE, mediaType);
+            buffer.append(";media-type=").append(mediaType);
         }
         if (method != null) {
             format.put(OutputKeys.METHOD, method);
+            buffer.append(";method=").append(method);
         }
         if (omitXMLDeclaration != null) {
             format.put(OutputKeys.OMIT_XML_DECLARATION, omitXMLDeclaration);
+            buffer.append(";omit-xml-declaration=").append(omitXMLDeclaration);
         }
         if (standAlone != null) {
             format.put(OutputKeys.STANDALONE, standAlone);
+            buffer.append(";standalone=").append(standAlone);
         }
         if (version != null) {
             format.put(OutputKeys.VERSION, version);
+            buffer.append(";version=").append(version);
+        }
+        
+        if ( buffer.length() > 0 ) {
+            this.cachingKey = buffer.toString();
         }
 
         Configuration tFactoryConf = conf.getChild("transformer-factory", false);
@@ -271,7 +289,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      *              is currently not cacheable.
      */
     public java.io.Serializable getKey() {
-        return "1";
+        return this.cachingKey;
     }
 
     /**
