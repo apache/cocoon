@@ -26,7 +26,6 @@ import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.commons.collections.list.CursorableLinkedList;
-import org.apache.commons.lang.BooleanUtils;
 
 /**
  * A widget that serves as a container for other widgets, the top-level widget in
@@ -87,7 +86,7 @@ public class Form extends AbstractContainerWidget {
      * Fire the events that have been queued.
      * Note that event handling can fire new events.
      */
-    private void fireWidgetEvents() {
+    private void fireEvents() {
         if (this.events != null) {
             CursorableLinkedList.Cursor cursor = this.events.cursor();
             while(cursor.hasNext()) {
@@ -188,7 +187,7 @@ public class Form extends AbstractContainerWidget {
     public boolean process(FormContext formContext) {
 
         // Fire the binding phase events
-        fireWidgetEvents();
+        fireEvents();
 
         // setup processing
         this.submitWidget = null;
@@ -226,7 +225,7 @@ public class Form extends AbstractContainerWidget {
 
             // Fire events, still buffering them: this ensures they will be handled in the same
             // order as they were added.
-            fireWidgetEvents();
+            fireEvents();
         } finally {
             // No need for buffering in the following phases
             this.bufferEvents = false;
@@ -249,7 +248,7 @@ public class Form extends AbstractContainerWidget {
      * @param redisplayForm indicates if the form should be redisplayed to the user.
      */
     public void endProcessing(boolean redisplayForm) {
-        this.endProcessing = BooleanUtils.toBooleanObject(!redisplayForm);
+        this.endProcessing = Boolean.valueOf(!redisplayForm);
     }
 
     /**

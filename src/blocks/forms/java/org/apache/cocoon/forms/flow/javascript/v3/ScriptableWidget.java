@@ -48,7 +48,6 @@ import org.apache.cocoon.forms.formmodel.WidgetState;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.WidgetValidator;
-import org.apache.commons.lang.BooleanUtils;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.JavaScriptException;
@@ -391,7 +390,7 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
             delegate.setValue(value);
         } else if (delegate instanceof BooleanField) {
             BooleanField field = (BooleanField)delegate;
-            field.setValue(BooleanUtils.toBooleanObject(Context.toBoolean(value)));
+            field.setValue(Boolean.valueOf(Context.toBoolean(value)));
         } else if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             if (value instanceof NativeArray) {

@@ -52,6 +52,14 @@ function selectCar() {
     cocoon.sendPage("carselector-success-pipeline.xsp");
 }
 
+function xhrSelectCar() {
+    var form = new Form("forms/xhr_carselector_form.xml");
+    // form.lookupWidget("make").setValue(cocoon.parameters.defaultMake);
+    form.showForm("xhr_carselector-display-pipeline");
+    cocoon.request.setAttribute("carselectorform", form.getWidget());
+    cocoon.sendPage("carselector-success-pipeline.xsp");
+}
+
 var states = [
     { key: "AL", value: "Alabama" },
     { key: "AK", value: "Alaska" },

@@ -114,9 +114,9 @@
 
              <!-- the content of this action is only executed in case validation
                   succeeded, thus if the form handling is completed -->
-             <map:generate type="serverpages" src="forms/form1_success.xsp"/>
+             <map:generate type="jx" src="forms/form1_success_jx.xml"/>
              <map:call resource="simple-page2html">
-               <map:parameter name="file" value="forms/form1_success.xsp"/>
+               <map:parameter name="file" value="forms/form1_success_jx.xml"/>
              </map:call>
              <map:serialize/>
            </map:act>
@@ -196,9 +196,9 @@
         | Display a success page using XSP
         -->
      <map:match pattern="*-success-pipeline.xsp">
-       <map:generate type="serverpages" src="forms/{1}_success.xsp"/>
+       <map:generate type="jx" src="forms/{1}_success_jx.xml"/>
        <map:call resource="simple-page2html">
-         <map:parameter name="file" value="forms/{1}_template.xsp"/>
+         <map:parameter name="file" value="forms/{1}_template_jx.xml"/>
        </map:call>
        <map:serialize/>
      </map:match>

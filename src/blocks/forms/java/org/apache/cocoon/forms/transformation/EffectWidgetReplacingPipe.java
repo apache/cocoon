@@ -19,6 +19,7 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.AggregateField;
 import org.apache.cocoon.forms.formmodel.ContainerWidget;
+import org.apache.cocoon.forms.formmodel.Group;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Struct;
 import org.apache.cocoon.forms.formmodel.Union;
@@ -75,6 +76,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private static final String CLASS = "class";
     private static final String CONTINUATION_ID = "continuation-id";
     private static final String FORM_TEMPLATE_EL = "form-template";
+    private static final String GROUP = "group";
     private static final String NEW = "new";
     private static final String REPEATER_SIZE = "repeater-size";
     private static final String REPEATER_WIDGET = "repeater-widget";
@@ -97,6 +99,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     private final ContinuationIdHandler      continuationIdHandler  = new ContinuationIdHandler();
     private final DocHandler                 docHandler             = new DocHandler();
     private final FormHandler                formHandler            = new FormHandler();
+    private final GroupHandler               groupHandler           = new GroupHandler();
     private final NestedHandler              nestedHandler          = new NestedHandler();
     private final NewHandler                 newHandler             = new NewHandler();
     private final RepeaterSizeHandler        repeaterSizeHandler    = new RepeaterSizeHandler();
@@ -134,6 +137,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         templates.put(AGGREGATE_WIDGET, aggregateWidgetHandler);
         templates.put(CLASS, classHandler);
         templates.put(CONTINUATION_ID, continuationIdHandler);
+        templates.put(GROUP, groupHandler);
         templates.put(NEW, newHandler);
         templates.put(REPEATER_SIZE, repeaterSizeHandler);
         templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
@@ -552,6 +556,34 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         }
     }
 
+    protected class GroupHandler extends Handler {
+        public Handler process() throws SAXException {
+            switch(event) {
+            case EVENT_START_ELEMENT:
+                widgetPath = getWidgetId(input.attrs);
+                widget = getWidget(widgetPath);
+                if (!(widget instanceof Group)) {
+                    throwWrongWidgetType("GroupHandler", input.loc, "group");
+                }
+                if (isVisible(widget)) {
+                    contextWidgets.addFirst(contextWidget);
+                    contextWidget = widget;
+                    return this;
+                } else {
+                    return nullHandler;
+                }
+            case EVENT_ELEMENT:
+                return nestedTemplate();
+            case EVENT_END_ELEMENT:
+                contextWidget = (Widget)contextWidgets.removeFirst();
+                return this;
+            default:
+                out.copy();
+                return this;
+            }
+        }
+    }
+
     protected class StructHandler extends Handler {
         public Handler process() throws SAXException {
             switch(event) {
@@ -713,7 +745,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 // Insert the continuation id
                 // FIXME(SW) we could avoid costly JXPath evaluation if we had the objectmodel here.
-                Object idObj = pipeContext.evaluateExpression("$continuation/id");
+                Object idObj = pipeContext.evaluateExpression("$cocoon/continuation/id");
                 if (idObj == null) {
                     throwSAXException("No continuation found");
                 }

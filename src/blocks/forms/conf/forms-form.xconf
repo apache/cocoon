@@ -40,6 +40,7 @@
       <widget name="new" src="org.apache.cocoon.forms.formmodel.NewDefinitionBuilder"/>
       <widget name="struct" src="org.apache.cocoon.forms.formmodel.StructDefinitionBuilder"/>
       <widget name="union" src="org.apache.cocoon.forms.formmodel.UnionDefinitionBuilder"/>
+      <widget name="group" src="org.apache.cocoon.forms.formmodel.GroupDefinitionBuilder"/>
     </widgets>
   </forms-formmanager>
 </xconf>

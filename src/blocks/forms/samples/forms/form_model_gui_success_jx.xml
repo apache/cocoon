@@ -14,16 +14,14 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<test>
-    <html:html xmlns:html="http://www.w3.org/1999/xhtml">
-        <html:head>
-            <html:title>some title</html:title>
-        </html:head>
-    </html:html>
-    <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-        <xsl:template name="template-name"/>
-    </xsl:stylesheet>
-    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
-        <fo:page-sequence><fo:flow flow-name="flow-name" /></fo:page-sequence>
-    </fo:root>
-</test>
+
+<!--
+  @version $Id$
+-->
+
+<page>
+  <title>Sample form result</title>
+  <content>
+    Repeater has ${request.getAttribute("form_model_gui").lookupWidget("widgets").getSize()} row(s).
+  </content>
+</page>

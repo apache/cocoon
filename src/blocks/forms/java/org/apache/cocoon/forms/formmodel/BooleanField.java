@@ -25,7 +25,6 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
 import org.apache.cocoon.forms.validation.ValidationError;
-import org.apache.commons.lang.BooleanUtils;
 
 /**
  * A widget to select a boolean value. Usually rendered as a checkbox.
@@ -70,7 +69,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
         validationError = null;
         Object oldValue = value;
         String param = formContext.getRequest().getParameter(getRequestParameterName());
-        value = BooleanUtils.toBooleanObject(BooleanUtils.toBoolean(param));
+        value = Boolean.valueOf(param);
         if (!value.equals(oldValue)) {
             getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
         }

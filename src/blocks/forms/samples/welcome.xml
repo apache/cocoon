@@ -37,6 +37,7 @@
   <sample name="Various (Flowscript)" href="form1.flow">The same sample as above using Flowscript.</sample>
   <sample name="Registration" href="registration">A simple registration form.</sample>
   <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
+  <sample name="XHR Car selector" href="xhr_carselector">Same sample, using XmlHttpRequest to reduce client/server roundtrips.</sample>
   <sample name="Country selector" href="countryselector">Illustrates programmatically changing flow-jxpath selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
   <sample name="Form Model GUI" href="form_model_gui.flow">Illustrates the use of Class, New, Struct, and Union.</sample>

@@ -37,6 +37,7 @@
       <binding name="new" src="org.apache.cocoon.forms.binding.NewJXPathBindingBuilder"/>
       <binding name="struct" src="org.apache.cocoon.forms.binding.StructJXPathBindingBuilder"/>
       <binding name="union" src="org.apache.cocoon.forms.binding.UnionJXPathBindingBuilder"/>
+      <binding name="group" src="org.apache.cocoon.forms.binding.GroupJXPathBindingBuilder"/>
     </bindings>
   </forms-binding>
 
