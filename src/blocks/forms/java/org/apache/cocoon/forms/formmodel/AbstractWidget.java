@@ -395,4 +395,13 @@ public abstract class AbstractWidget implements Widget {
             this.attributes.remove(name);
         }
     }
+    
+    public String toString() {
+        String className = this.getClass().getName();
+        int last = className.lastIndexOf('.');
+        if (last != -1) {
+            className = className.substring(last+1);
+        }
+        return className + "@" + getRequestParameterName();
+    }
 }

@@ -205,6 +205,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="SW" type="add">
+     CForms block: Implementation of the CForm template language using JX macros,
+     allowing smart page layout that depends on the widgets state and value.
+   </action>
    <action dev="AG" type="remove">
      Remove jisp from distribution.
    </action>
