@@ -87,7 +87,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.5 2003/07/10 13:16:55 cziegeler Exp $
+ * @version CVS $Id: ExceptionSelector.java,v 1.6 2003/07/30 08:21:25 cziegeler Exp $
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {
@@ -181,6 +181,9 @@ public class ExceptionSelector extends AbstractSwitchSelector implements Configu
     }
 
     public boolean select(String expression, Object selectorContext) {
+        if ( selectorContext == null ) {
+            return false;
+        }
         // Just compare the expression with the previously found name
 		boolean result = expression.equals(((FindResult)selectorContext).getName());
 		
