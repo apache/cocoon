@@ -30,8 +30,8 @@
   </p>
 
   <p>
-   Before submitting a patch, please read the page on <link href="contrib.xml">Third-Party
-   Contributions</link>. The preferred submission method for patches is:
+   Before submitting a patch, please read the page on <connect href="contrib.xml">Third-Party
+   Contributions</connect>. The preferred submission method for patches is:
   </p>
 
   <ul>
@@ -91,7 +91,7 @@
      possible security manager problems.
     </td>
     <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
-    <td>1.?</td>
+    <td>1.8</td>
    </tr>
    <tr>
     <td>29 Oct 2000</td>
@@ -99,7 +99,7 @@
      Browser capabilities and database</link></td>
     <td>Extensive changes to user agent recognition and a capabilities map.</td>
     <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
-    <td>1.?</td>
+    <td>1.8</td>
    </tr>
    <tr>
     <td>31 Oct 2000</td>
@@ -107,7 +107,7 @@
      Command line patches</link></td>
     <td>Support for specifying user agent in the command line and outputting to stdout.</td>
     <td><link href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</link></td>
-    <td>1.?</td>
+    <td>1.8</td>
    </tr>
    <tr>
     <td>4 Nov 2000</td>
