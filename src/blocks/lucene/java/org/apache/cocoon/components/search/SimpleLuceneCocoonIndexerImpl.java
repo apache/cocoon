@@ -51,13 +51,13 @@
 package org.apache.cocoon.components.search;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.crawler.CocoonCrawler;
 import org.apache.lucene.analysis.Analyzer;
@@ -83,10 +83,10 @@ import java.util.Iterator;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.7 2004/01/06 12:51:54 joerg Exp $
+ * @version CVS $Id: SimpleLuceneCocoonIndexerImpl.java,v 1.8 2004/01/06 13:39:11 joerg Exp $
  */
 public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
-         implements LuceneCocoonIndexer, Configurable, Composable, Disposable
+         implements LuceneCocoonIndexer, Configurable, Serviceable, Disposable
 {
 
     /**
@@ -122,9 +122,9 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
     public final static int MERGE_FACTOR_DEFAULT = 10;
 
     /**
-     * The component manager for looking up components used.
+     * The service manager for looking up components used.
      */
-    protected ComponentManager manager = null;
+    protected ServiceManager manager = null;
 
     protected Analyzer analyzer;
 //    private String analyzerClassnameDefault = ANALYZER_CLASSNAME_DEFAULT;
@@ -170,13 +170,13 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
 
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      *
      * @param  manager                 used by this component
-     * @exception  ComponentException  is never thrown
+     * @exception  ServiceException  is never thrown
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -244,8 +244,8 @@ public class SimpleLuceneCocoonIndexerImpl extends AbstractLogEnabled
             writer.optimize();
         } catch (IOException ioe) {
             throw new ProcessingException("IOException in index()", ioe);
-        } catch (ComponentException ce) {
-            throw new ProcessingException("ComponentException in index()", ce);
+        } catch (ServiceException se) {
+            throw new ProcessingException("Could not lookup service in index()", se);
         } finally {
             if (writer != null) {
                 try {
