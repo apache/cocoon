@@ -105,7 +105,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * </tr>
  * </tbody></table>
  *  
- * @version CVS $Id: CachingSourceFactory.java,v 1.8 2004/03/26 16:45:31 unico Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.9 2004/04/25 20:00:35 haul Exp $
  * @since 2.1.1
  */
 public final class CachingSourceFactory extends AbstractLogEnabled
@@ -198,7 +198,7 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
         try {
             this.cache = (Cache) this.manager.lookup(this.cacheRole);
         } catch (ServiceException se) {
-            throw new SourceException("Missing service dependency: " + SourceResolver.ROLE, se);
+            throw new SourceException("Missing service dependency: " + this.cacheRole, se);
         }
         if (this.async) {
             try {
