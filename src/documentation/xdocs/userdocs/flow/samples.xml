@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../../WEB-INF/entities/document-v10.dtd">
+
+<document>
+  <header>
+    <title>Apache Cocoon - Examples</title>
+    <authors>
+      <person name="Ovidiu Predescu" email="ovidiu@apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="Examples">
+      <p>This page contains shows some examples built using the
+      control flow layer available in Cocoon.</p>
+
+      <ul>
+	<li><link href="examples/calc/">Calculator</link> - a simple
+	example using continuations to maintain the state between
+	requests.</li>
+
+	<li><link href="examples/prefs/">User preferences</link> - A
+	common portion of an application which requires users to be
+	registered.</li>
+      </ul>
+    </s1>
+  </body>
+</document>
