@@ -148,14 +148,14 @@ public class XPointerFrameworkParser
         }
         jj_consume_token(LBRACE);
         // when going inside the scheme data, swith to a different lexical state
-        token_source.SwitchTo(IN_SCHEME);
+        token_source.switchTo(IN_SCHEME);
 
         // store the scheme name
         schemeName = x.image;
         schemeData = schemeData();
         jj_consume_token(RBRACE);
         // when going outside the scheme data, swith back to the default lexical state
-        token_source.SwitchTo(DEFAULT);
+        token_source.switchTo(DEFAULT);
 
         // parse schemeName in prefix and localName
         String schemeNamespace = null, schemeLocalName = null;
@@ -351,9 +351,9 @@ public class XPointerFrameworkParser
             jj_2_rtns[i] = new JJCalls();
     }
 
-    public void ReInit(java.io.InputStream stream) {
-        jj_input_stream.ReInit(stream, 1, 1);
-        token_source.ReInit(jj_input_stream);
+    public void reInit(java.io.InputStream stream) {
+        jj_input_stream.reInit(stream, 1, 1);
+        token_source.reInit(jj_input_stream);
         token = new Token();
         jj_ntk = -1;
         jj_gen = 0;
@@ -375,9 +375,9 @@ public class XPointerFrameworkParser
             jj_2_rtns[i] = new JJCalls();
     }
 
-    public void ReInit(java.io.Reader stream) {
-        jj_input_stream.ReInit(stream, 1, 1);
-        token_source.ReInit(jj_input_stream);
+    public void reInit(java.io.Reader stream) {
+        jj_input_stream.reInit(stream, 1, 1);
+        token_source.reInit(jj_input_stream);
         token = new Token();
         jj_ntk = -1;
         jj_gen = 0;
@@ -398,7 +398,7 @@ public class XPointerFrameworkParser
             jj_2_rtns[i] = new JJCalls();
     }
 
-    public void ReInit(XPointerFrameworkParserTokenManager tm) {
+    public void reInit(XPointerFrameworkParserTokenManager tm) {
         token_source = tm;
         token = new Token();
         jj_ntk = -1;
