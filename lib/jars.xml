@@ -497,7 +497,7 @@
     provides robust and full-featured Unicode services on a wide variety 
     of platforms. </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>optional/icu4j-3.0.jar</lib>
+    <lib>optional/icu4j-2.8.jar</lib>
     <homepage>http://oss.software.ibm.com/icu4j/</homepage>
   </file>
 
