@@ -978,7 +978,7 @@
 <component-instance name="xsp"
   class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
   <parameter name="prefix" value="xsp"/>
-  <parameter name="uri" value="http://xml.apache.org/xsp"/>
+  <parameter name="uri" value="http://apache.org/xsp"/>
 </component-instance>
 ]]></source>
 
@@ -1238,7 +1238,7 @@
   <component-instance name="xsp"
     class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
     <parameter name="prefix" value="xsp"/>
-    <parameter name="uri" value="http://xml.apache.org/xsp"/>
+    <parameter name="uri" value="http://apache.org/xsp"/>
 
     <target-language name="java">
       <parameter name="core-logicsheet"
@@ -1246,7 +1246,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"
 
       <builtin-logicsheet>
         <parameter name="prefix" value="xsp-request"/>
-        <parameter name="uri" value="http://xml.apache.org/xsp/request/2.0"/>
+        <parameter name="uri" value="http://apache.org/xsp/request/2.0"/>
         <parameter name="href"
 value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
       </builtin-logicsheet>
@@ -1254,7 +1254,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.
       <builtin-logicsheet>
         <parameter name="prefix" value="xsp-response"/>
         <parameter name="uri"
-          value="http://xml.apache.org/xsp/response/2.0"/>
+          value="http://apache.org/xsp/response/2.0"/>
         <parameter name="href"
 value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
       </builtin-logicsheet>
@@ -1671,7 +1671,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.
     <component-instance name="xsp"
     class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
       <parameter name="prefix" value="xsp"/>
-      <parameter name="uri" value="http://xml.apache.org/xsp"/>
+      <parameter name="uri" value="http://apache.org/xsp"/>
 
       <target-language name="java">
         <parameter name="core-logicsheet"
@@ -1679,7 +1679,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"
 
         <builtin-logicsheet>
           <parameter name="prefix" value="xsp-request"/>
-          <parameter name="uri" value="http://xml.apache.org/xsp/request/2.0"/>
+          <parameter name="uri" value="http://apache.org/xsp/request/2.0"/>
           <parameter name="href"
 value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
         </builtin-logicsheet>
@@ -1687,7 +1687,7 @@ value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.
         <builtin-logicsheet>
           <parameter name="prefix" value="xsp-response"/>
           <parameter name="uri"
-          value="http://xml.apache.org/xsp/response/2.0"/>
+          value="http://apache.org/xsp/response/2.0"/>
           <parameter name="href"
 value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
         </builtin-logicsheet>
