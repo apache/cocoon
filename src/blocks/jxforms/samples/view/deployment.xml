@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<document xmlns:xf="http://apache.org/cocoon/jxforms/1.0">
+	<xf:form id="form-feedback" view="deployment" action="" method="GET">
+		<xf:label>Cocoon Deployment Information</xf:label>
+		<error>
+			<xf:violations class="error"/>
+		</error>
+		<xf:input ref="/number">
+			<xf:label>Number of deployments</xf:label>
+			<xf:violations class="error"/>
+		</xf:input>
+		<xf:input ref="/liveUrl">
+			<xf:label>Live URL</xf:label>
+			<xf:help>You must enter a valid URL</xf:help>
+			<xf:violations class="error"/>
+		</xf:input>
+		<xf:select1 ref="/publish" appearance="full">
+			<xf:label>Publish</xf:label>
+                        <xf:item>
+                           <xf:label>Yes</xf:label>
+                           <xf:value>true</xf:value>
+                        </xf:item>
+                        <xf:item>
+                           <xf:label>No</xf:label>
+                           <xf:value></xf:value>
+                        </xf:item>
+		</xf:select1>
+		<xf:group nodeset="" id="favorites_group">
+			<xf:label>Favorite web sites</xf:label>
+			<!-- 
+              repeat is a very powerful iterator tag,
+              because it iterates over a nodeset resulting from
+              the 'nodeset' selector attribute.
+              Very similar to xslt's for-each tag.
+
+              In this case we iterate over the top three favorite
+              web sites.
+            -->
+			<xf:repeat nodeset="favorite[position() &lt;= 3]" id="favorites">
+				<xf:input ref="." class="info">
+					<xf:label>URL:</xf:label>
+				</xf:input>
+			</xf:repeat>
+		</xf:group>
+		<xf:submit id="prev" continuation="back" class="button">
+			<xf:label>Prev</xf:label>
+			<xf:hint>Go to previous page</xf:hint>
+		</xf:submit>
+		<xf:submit id="next" continuation="forward" class="button">
+			<xf:label>Next</xf:label>
+			<xf:hint>Go to next page</xf:hint>
+		</xf:submit>
+	</xf:form>
+	<xf:output ref="count" id="show_count" form="form-feedback" class="info">
+		<xf:label>Visits Count</xf:label>
+	</xf:output>
+</document>
