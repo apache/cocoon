@@ -56,10 +56,11 @@ implements UserInfoProvider, Serviceable {
         AuthenticationManager authManager = null;
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
-            final UserInfo info = new UserInfo(portalName, layoutKey);
-
             final RequestState state = authManager.getState();
             final UserHandler handler = state.getHandler();
+
+            final UserInfo info = new AFWUserInfo(portalName, layoutKey, handler);
+
 
             info.setUserName(handler.getUserId());
             try {
@@ -88,6 +89,26 @@ implements UserInfoProvider, Serviceable {
             return info;    
         } finally {
             this.manager.release( authManager );
+        }
+    }
+    
+    public static final class AFWUserInfo extends UserInfo {
+        
+        protected final UserHandler handler;
+        /**
+         * @param portalName
+         * @param layoutKey
+         */
+        public AFWUserInfo(String portalName, String layoutKey, UserHandler handler) {
+            super(portalName, layoutKey);
+            this.handler = handler;
+        }
+    
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.portal.profile.PortalUser#isUserInRole(java.lang.String)
+         */
+        public boolean isUserInRole(String role) {
+            return this.isUserInRole(role);
         }
     }
 }
