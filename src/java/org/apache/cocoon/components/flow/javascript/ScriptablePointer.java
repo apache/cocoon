@@ -1,4 +1,4 @@
-/*
+/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -50,14 +50,16 @@ import java.util.Locale;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.apache.commons.jxpath.ri.model.beans.PropertyPointer;
+import org.apache.commons.jxpath.ri.model.beans.PropertyOwnerPointer;
 import org.apache.commons.jxpath.ri.model.dynamic.DynamicPointer;
 import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 /**
  *
- * @version CVS $Id: ScriptablePointer.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: ScriptablePointer.java,v 1.3 2003/05/01 09:32:34 coliver Exp $
  */
 public class ScriptablePointer extends DynamicPointer {
 
@@ -73,13 +75,6 @@ public class ScriptablePointer extends DynamicPointer {
         node = object;
     }
 
-    public boolean isCollection() {
-        if (node instanceof NativeArray) {
-            return true;
-        }
-        return false;
-    }
-
     public ScriptablePointer(QName name,
                              Scriptable object,
                              Locale locale) {
@@ -87,22 +82,47 @@ public class ScriptablePointer extends DynamicPointer {
         node = object;
     }
 
+    public PropertyPointer getPropertyPointer(){
+        return new ScriptablePropertyPointer(this, handler);
+    }
+
     public int getLength() {
-        if (ScriptableObject.hasProperty(node, "length")) {
-            Object val = ScriptableObject.getProperty(node, "length");
-            if (val instanceof Number) {
-                return ((Number)val).intValue();
+        Object obj = getBaseValue();
+        if (obj instanceof Scriptable) {
+            Scriptable node = (Scriptable)obj;
+            if (node instanceof NativeArray) {
+                return (int)((NativeArray)node).jsGet_length();
+            }
+            if (ScriptableObject.hasProperty(node, "length")) {
+                Object val = ScriptableObject.getProperty(node, "length");
+                if (val instanceof Number) {
+                    return ((Number)val).intValue();
+                }
             }
         }
         return super.getLength();
     }
 
-    public PropertyPointer getPropertyPointer(){
-        return new ScriptablePropertyPointer(this, handler);
+    public Object getImmediateNode() {
+        Object value;
+        if (index == WHOLE_COLLECTION) {
+            value = node;
+        } else {
+            value = ScriptableObject.getProperty(node, index);
+            if (value == ScriptableObject.NOT_FOUND) {
+                value = node; // hack: same behavior as ValueUtils.getValue()
+            } 
+        }
+        if (value instanceof Wrapper) {
+            value = ((Wrapper)value).unwrap();
+        }
+        return value;
     }
 
     public void setValue(Object value){
-        getParent().setValue(value);
+        if (getParent() != null) {
+            getParent().setValue(value);
+        }
     }
 
 }
