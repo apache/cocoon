@@ -87,17 +87,14 @@ public class FormInstance extends AbstractContinuable {
      */
     public FormInstance(Element formDefinition) {
         FormManager formMgr = null;
-        SourceResolver resolver = null;
         try {
             formMgr = (FormManager)getComponent(FormManager.ROLE);
-            resolver = (SourceResolver)getComponent(SourceResolver.ROLE);
             this.form = formMgr.createForm(formDefinition);
             this.binding = null;
         } catch (Exception e) {
             throw new CascadingRuntimeException("Could not create form instance", e);
         } finally {
             releaseComponent(formMgr);
-            releaseComponent(resolver);
         }
     }
 
