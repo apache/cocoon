@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 
 <!--
     Convert a page so that is is usable as input for the SWFSerializer
@@ -11,7 +26,7 @@
     Most probably, the font definition below is not correct over the
     whole character set.
 
-    CVS $Id: page2swf.xsl,v 1.6 2003/10/22 11:47:51 joerg Exp $
+    CVS $Id: page2swf.xsl,v 1.7 2004/03/10 10:18:52 cziegeler Exp $
 -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
@@ -444,7 +459,7 @@
             <ShapeRaw>EDVoWs5mw86yAJqwAxyiW8YyrJci72p4FV2+SHwVjp/U1gV3AoW3yQ+C1phVyUDCY6I0MAmXQA1z
                 9lnmwR21AJ48ANhRJeFrrK2LPaHXuo11/qWkGzYvtode6jqcP11B7mZQ1GEAmXQBAKNvYugA </ShapeRaw>
         </Glyph>
-        <Glyph char="" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
+        <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
         <Glyph char="‚" advance="228" xmin="54" ymin="-104" xmax="159" ymax="136">
@@ -497,17 +512,17 @@
             <ShapeRaw>EDVoxpH4Gf2VfgrvdcHAlmyrcFqbr64FV2VbglHZlp94d74AJ7SANnjJ95mQBX5wBXyPk5yPlE0A
                 J0IACIb9mdBWQaw02gQc6HN0IQA2zgBMDojzHKQoAEyiAHNzOOdwAK5OALPx9zNjXNgASzgFBCAA  </ShapeRaw>
         </Glyph>
-        <Glyph char="" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
+        <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
         <Glyph char="Ž" advance="626" xmin="21" ymin="-915" xmax="600" ymax="0">
 
             <ShapeRaw>EDVpMr1544RhwOpsq3Jb3ZpuK7xXtTKngmfZqeRBuyrgrJ9MLab1ewzb8ejNig35S6bDPtOVVAA= </ShapeRaw>
         </Glyph>
-        <Glyph char="" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
+        <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
-        <Glyph char="" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
+        <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
         <Glyph char="‘" advance="228" xmin="64" ymin="-745" xmax="169" ymax="-505">
@@ -562,7 +577,7 @@
                 ZltmNrCXawAOpgBdIzCYuP0oAmQAAuy5i7LAJ2YAndPNm08y+AAVoc2LwJNN9Wmxsy2LMUBLEAV1
                 M2sU/SQA </ShapeRaw>
         </Glyph>
-        <Glyph char="" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
+        <Glyph char="?" advance="768" xmin="128" ymin="-640" xmax="640" ymax="0">
             <ShapeRaw>EDUpD4eB4OW0HBEHKmAFagLAcqgOCAOWwHIgAAA= </ShapeRaw>
         </Glyph>
         <Glyph char="ž" advance="512" xmin="20" ymin="-737" xmax="490" ymax="0">

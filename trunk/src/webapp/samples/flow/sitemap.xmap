@@ -1,8 +1,38 @@
 <?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
 
-<!-- CVS $Id: sitemap.xmap,v 1.8 2003/05/20 00:54:11 vgritsenko Exp $ -->
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id: sitemap.xmap,v 1.9 2004/03/10 10:18:53 cziegeler Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:views>
+    <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+    </map:view>
+
+    <map:view from-label="content" name="pretty-content">
+      <map:transform src="context://stylesheets/system/xml2html.xslt"/>
+      <map:serialize type="html"/>
+    </map:view>
+
+    <map:view name="links" from-position="last">
+      <map:serialize type="links"/>
+    </map:view>
+  </map:views>
 
   <map:pipelines>
     <map:pipeline>

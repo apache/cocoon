@@ -1,6 +1,21 @@
 <?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
 
-<!-- CVS $Id: sitemap.xmap,v 1.6 2003/08/12 15:48:02 sylvain Exp $ -->
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!-- CVS $Id: sitemap.xmap,v 1.7 2004/03/10 10:20:25 cziegeler Exp $ -->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -17,11 +32,14 @@
         <catalogues default="messages">
           <catalogue id="messages" name="messages" location="translations"/>
           <catalogue id="menu" name="menu" location="translations"/>
+          <catalogue id="tiered" name="messages">
+        <location>translations/tiered</location>
+        <location>translations</location>
+      </catalogue>
         </catalogues>
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
     </map:transformers>
-    <!-- =========================== Actions ================================= -->
     <map:actions>
       <!-- LocaleAction is used to set/get current users locale. See Javadocs for details. -->
       <map:action name="locale" logger="sitemap.action.locale" src="org.apache.cocoon.acting.LocaleAction">
@@ -99,6 +117,16 @@
         <!-- Generate dynamic output (simple.xsp) -->
         <map:match pattern="*.xsp">
           <map:call resource="composite"/>
+        </map:match>
+
+        <!-- A helper matcher for static content translation and generation -->
+        <map:match pattern="content/tiered.xml">
+          <map:generate src="tiered.xml"/>
+          <map:transform type="i18n">
+        <map:parameter name="default-catalogue-id" value="tiered"/>
+            <map:parameter name="locale" value="{../locale}"/>
+          </map:transform>
+          <map:serialize/>
         </map:match>
 
         <!-- A helper matcher for static content translation and generation -->

@@ -1,4 +1,19 @@
 <?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <page>
 <head>
 <style type="text/css">
@@ -95,19 +110,21 @@ error {
 					</repeat>
 					<tr>
 						<td colspan="2">
-							<error name="*" when-ge="error">An error occurred. Please check your input and the messages below for more information.</error>
-							<error name="persons" when="too-small">The smallest car seats 2.</error>
-							<error name="persons" when="too-large">The largest car seats 9.</error>
-							<error name="deposit" when="too-small">The deposit needs to be at least EUR 50.</error>
-							<error name="deposit" when="is-null">Please specify a deposit.</error>
-							<error name="email" when="is-null">Please fill in an email address.</error>
-							<error name="email" when="no-match">Your email seems incorrect. Please fill in a correct email address.</error>
-							<error name="address" when="is-null">Please fill in a billing address.</error>
-							<error name="address" when="too-small">Your address seems to be incorrect. Please fill in a correct billing address.</error>
-							<error name="type" when="is-null">Please select the type of car you would like to drive.</error>
-							<error name="type" when="no-match">Please select one of the existing type of car.</error>
+                                                <ol>
+							<li><error name="*" when-ge="error">An error occurred. <span style="background-color: #aaaaaa;">Please check your input and the messages below</span> for more <br /> information.</error></li>
+							<li><error name="persons" when="too-small">The smallest car <br /> seats 2.</error></li>
+							<li><error name="persons" when="too-large">The largest car <br /> seats 9.</error></li>
+							<li><error name="deposit" when="too-small">The deposit needs to be <br /> at least EUR 50.</error></li>
+							<li><error name="deposit" when="is-null">Please specify a <br /> deposit.</error></li>
+							<li><error name="email" when="is-null">Please fill in an <br /> email address.</error></li>
+							<li><error name="email" when="no-match">Your email seems incorrect. <br /> Please fill in a correct email address.</error></li>
+							<li><error name="address" when="is-null">Please fill in a <br /> billing address.</error></li>
+							<li><error name="address" when="too-small">Your address seems <br /> to be incorrect. Please fill in a correct billing address.</error></li>
+							<li><error name="type" when="is-null">Please select the type of car <br /> you would like to drive.</error></li>
+							<li><error name="type" when="no-match">Please select one of <br /> the existing type of car.</error></li>
 
-							<error name="driver" when="error">Please enter at least one valid driver's name.</error>
+							<li><error name="driver" when="error">Please enter at least <br /> one valid driver's name.</error></li>
+                                                </ol>
       					</td>
 					</tr>
 					<tr>

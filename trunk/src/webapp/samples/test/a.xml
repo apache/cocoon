@@ -1,7 +1,0 @@
-<test file="a" xmlns:cinclude="http://apache.org/cocoon/include/1.0">
-
-	<note>Now i'm going to include something from a sitemap mounted below here</note>
-
-	<cinclude:include src="cocoon:/simpletest-mounted/includer"/>
-
-</test>
