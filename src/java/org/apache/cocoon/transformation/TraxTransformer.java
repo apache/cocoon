@@ -66,9 +66,7 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xslt document for validation
  * 
- * @cocoon.sitemap.component.pooling.min   8
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  * 
  * This Transformer is used to transform the incoming SAX stream using
  * a TrAXProcessor. Use the following sitemap declarations to define, configure
@@ -145,7 +143,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.13 2004/07/02 08:33:42 antonio Exp $
+ * @version CVS $Id$
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Serviceable, Configurable, CacheableProcessingComponent, Disposable {

@@ -25,22 +25,22 @@
     <map:generator name="file" 
        src="org.apache.cocoon.generation.FileGenerator"
        label="content" logger="sitemap.generator.file"  
-       pool-min="1" pool-grow="1" pool-max="8"  
+       pool-max="8"  
     />
     <map:generator name="directory" 
        src="org.apache.cocoon.generation.DirectoryGenerator"
        label="content" logger="sitemap.generator.file"  
-       pool-min="1" pool-grow="1" pool-max="8"  
+       pool-max="8"  
     />    
     <map:generator name="request" 
        src="org.apache.cocoon.generation.RequestGenerator"
        label="content" logger="sitemap.generator.request" 
-       pool-min="1" pool-grow="1" pool-max="4"  
+       pool-max="4"  
     />
     <map:generator name="jx"
        src="org.apache.cocoon.generation.JXTemplateGenerator"
        label="content" logger="sitemap.generator.jx" 
-       pool-min="1" pool-grow="1" pool-max="8"  
+       pool-max="8"  
     />
     <map:generator name="notifying" src="org.apache.cocoon.sitemap.NotifyingGenerator"/>
   </map:generators>
@@ -49,7 +49,7 @@
     <map:transformer name="xslt"   
       src="org.apache.cocoon.transformation.TraxTransformer"
       logger="sitemap.transformer.xslt"
-      pool-min="2" pool-grow="2" pool-max="8"  
+      pool-max="8"  
     >
       <use-request-parameters>false</use-request-parameters>
       <use-session-parameters>false</use-session-parameters>
@@ -66,12 +66,12 @@
     <map:transformer name="cinclude" 
       src="org.apache.cocoon.transformation.CIncludeTransformer"
       logger="sitemap.transformer.cinclude"  
-      pool-min="2" pool-grow="2" pool-max="8"  
+      pool-max="8"  
     />
     <map:transformer name="jx" 
       src="org.apache.cocoon.transformation.JXTemplateTransformer" 
       logger="sitemap.transformer.jx"
-      pool-min="2" pool-grow="2" pool-max="8"  
+      pool-max="8"  
     />
   </map:transformers>
 
@@ -87,7 +87,7 @@
     <map:serializer name="html" mime-type="text/html" 
       src="org.apache.cocoon.serialization.HTMLSerializer"
       logger="sitemap.serializer.html"   
-      pool-min="1" pool-grow="1" pool-max="8"  
+      pool-max="8"  
     >
       <buffer-size>1024</buffer-size>
       <encoding>ISO-8859-1</encoding>
@@ -95,14 +95,14 @@
     <map:serializer name="xhtml" mime-type="text/html" 
       src="org.apache.cocoon.serialization.XMLSerializer"
       logger="sitemap.serializer.xhtml"   
-      pool-min="1" pool-grow="1" pool-max="8"  
+      pool-max="8"  
     >
       <doctype-public>-//W3C//DTD XHTML 1.0 Strict//EN</doctype-public>
       <doctype-system>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</doctype-system>
       <buffer-size>1024</buffer-size>
       <encoding>ISO-8859-1</encoding>
     </map:serializer>
-    <map:serializer logger="sitemap.serializer.rss" mime-type="text/rss" name="rss" pool-grow="2" pool-max="10" pool-min="2" src="org.apache.cocoon.serialization.XMLSerializer">
+    <map:serializer logger="sitemap.serializer.rss" mime-type="text/rss" name="rss" pool-max="10" src="org.apache.cocoon.serialization.XMLSerializer">
       <doctype-system>http://my.netscape.com/publish/formats/rss-0.91.dtd</doctype-system>
       <encoding>ISO-8859-1</encoding>
     </map:serializer>
@@ -112,12 +112,12 @@
     <map:reader name="resource" 
       src="org.apache.cocoon.reading.ResourceReader"
       logger="sitemap.reader.resource"  
-      pool-min="1" pool-grow="1" pool-max="8"  
+      pool-max="8"  
     />
     <map:reader name="image"
       src="org.apache.cocoon.reading.ImageReader"
       logger="sitemap.reader.image"  
-      pool-min="1" pool-grow="1" pool-max="8"  
+      pool-max="8"  
     />
   </map:readers>
 

@@ -87,7 +87,7 @@ In the snippet above, the component is identified by the role it plays. Note the
     name="xslt-notinc"
     src="org.apache.cocoon.transformation.TraxTransformer"
     logger="sitemap.transformer.xslt"
-    pool-max="32" pool-min="8" pool-grow="2">
+    pool-max="32">
     <use-request-parameters>false</use-request-parameters>
     <use-browser-capabilities-db>false</use-browser-capabilities-db>
     <use-deli>false</use-deli>

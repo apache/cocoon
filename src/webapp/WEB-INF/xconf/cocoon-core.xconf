@@ -365,7 +365,7 @@
       |     would appear in the serialized output again.
       +-->
   <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser"
-             logger="core.xml-parser" pool-grow="4" pool-max="32" pool-min="8">
+             logger="core.xml-parser" pool-max="32">
     <parameter name="validate" value="false"/>
     <parameter name="namespace-prefixes" value="false"/>
     <parameter name="stop-on-warning" value="true"/>
@@ -547,8 +547,8 @@
       | the intermediate results of the pipeline stages reducing the overhead
       | of xml parsing/serialization.
       +-->
-  <xml-serializer class="org.apache.cocoon.components.sax.XMLByteStreamCompiler" logger="core.xml-serializer" pool-grow="4" pool-max="32" pool-min="8"/>
-  <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml-deserializer" pool-grow="4" pool-max="32" pool-min="8"/>
+  <xml-serializer class="org.apache.cocoon.components.sax.XMLByteStreamCompiler" logger="core.xml-serializer" pool-max="32"/>
+  <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml-deserializer" pool-max="32"/>
 
   <!--+
       | The Cache Manager is a component that can be used to cache content.

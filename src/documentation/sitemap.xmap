@@ -56,7 +56,7 @@
       </map:transformer>
 
       <map:transformer name="xpath" logger="sitemap.transformer.xpath" src="org.apache.cocoon.transformation.XPathTransformer" />
-      <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer" logger="sitemap.transformer.xslt" pool-max="32" pool-min="8" pool-grow="2">
+      <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer" logger="sitemap.transformer.xslt" pool-max="32">
         <use-request-parameters>false</use-request-parameters>
         <use-browser-capabilities-db>false</use-browser-capabilities-db>
         <use-deli>false</use-deli>
@@ -65,7 +65,7 @@
         <!--<transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory>-->
       </map:transformer>
 
-      <map:transformer name="xinclude" src="org.apache.cocoon.transformation.XIncludeTransformer" logger="sitemap.transformer.xinclude" pool-grow="2" pool-max="16" pool-min="2" />
+      <map:transformer name="xinclude" src="org.apache.cocoon.transformation.XIncludeTransformer" logger="sitemap.transformer.xinclude" pool-max="16"/>
     </map:transformers>
 
     <map:readers default="resource">

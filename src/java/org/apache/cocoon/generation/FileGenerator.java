@@ -41,14 +41,12 @@ import java.util.Map;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xml document for validation
  *
- * @cocoon.sitemap.component.pooling.min   8
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.10 2004/07/02 08:33:42 antonio Exp $
+ * @version CVS $Id$
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {

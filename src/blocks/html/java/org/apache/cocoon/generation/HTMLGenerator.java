@@ -62,16 +62,14 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xml document for validation
  *
- * @cocoon.sitemap.component.pooling.min   4
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.14 2004/06/24 11:31:38 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class HTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {

@@ -46,9 +46,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @cocoon.sitemap.component.documentation.caching
  *               TBD
  * 
- * @cocoon.sitemap.component.pooling.min   8
  * @cocoon.sitemap.component.pooling.max  32
- * @cocoon.sitemap.component.pooling.grow  4
  * 
  * The encodeURL transformer emits encoded URLs.
  * <p>

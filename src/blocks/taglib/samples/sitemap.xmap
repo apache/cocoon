@@ -19,8 +19,7 @@
 
   <map:components>
     <map:transformers default="xslt">
-      <!-- FIXME: pool-min="0" because of recursive lookup & some problem in Avalon -->
-      <map:transformer name="tag" src="org.apache.cocoon.transformation.TagTransformer" pool-max="64" pool-min="0" pool-grow="2" logger="sitemap.transformer.newtag">
+      <map:transformer name="tag" src="org.apache.cocoon.transformation.TagTransformer" pool-max="64" logger="sitemap.transformer.newtag">
         <transformer-hint>tag</transformer-hint>
       </map:transformer>
     </map:transformers>

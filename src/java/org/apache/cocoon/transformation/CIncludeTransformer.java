@@ -65,9 +65,7 @@ import java.util.Map;
  * @cocoon.sitemap.component.documentation.caching
  *               See documentation for further information.
  *
- * @cocoon.sitemap.component.pooling.min   2
  * @cocoon.sitemap.component.pooling.max  16
- * @cocoon.sitemap.component.pooling.grow  2
  *
  * This transformer also supports a more verbose but flexible version:
  * <cinclude:includexml xmlns:cinclude="http://apache.org/cocoon/include/1.0" ignoreErrors="false">
