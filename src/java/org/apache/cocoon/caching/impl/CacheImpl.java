@@ -55,6 +55,9 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.Cache;
@@ -72,11 +75,11 @@ import java.util.Map;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.1 2003/03/09 00:08:46 pier Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.2 2003/07/11 08:04:22 cziegeler Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
-implements Cache, ThreadSafe, Composable, Disposable {
+implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
 
     /** The store containing the cached responses */
     protected Store store;
@@ -84,13 +87,16 @@ implements Cache, ThreadSafe, Composable, Disposable {
     /** The component manager */
     protected ComponentManager manager;
 
+    /** The role name of the store to use */
+    protected String storeName;
+    
     /**
      * Composable Interface
      */
     public void compose (ComponentManager manager)
     throws ComponentException {
         this.manager = manager;
-        this.store = (Store)this.manager.lookup(Store.TRANSIENT_STORE);
+        this.store = (Store)this.manager.lookup(this.storeName);
     }
 
     /**
@@ -145,6 +151,13 @@ implements Cache, ThreadSafe, Composable, Disposable {
      */
     public void clear() {
         this.store.clear();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void parameterize(Parameters parameters) throws ParameterException {
+        this.storeName = parameters.getParameter("store", Store.TRANSIENT_STORE);
     }
 
 }
