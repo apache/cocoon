@@ -69,13 +69,15 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 /**
  * Allows JSP to be used as a generator.  Builds upon the JSP servlet
  * functionality - overrides the output method and returns the byte(s).
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.2 2003/05/07 20:50:05 cziegeler Exp $
+ * @author <a href="mailto:miyabe@jzf.co.jp">MIYABE Tatsuhiko</a>
+ * @version CVS $Id: JSPEngineImpl.java,v 1.3 2003/05/30 15:12:19 crossley Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -219,26 +221,50 @@ public class JSPEngineImpl extends AbstractLogEnabled
      */
     class MyServletResponse implements HttpServletResponse {
         HttpServletResponse response;
-        MyServletOutputStream output;
+        MyServletOutputStream output = null;
+        String encoding = "iso-8859-1";
 
         public MyServletResponse(HttpServletResponse response){
             this.response = response;
-            this.output = new MyServletOutputStream();
         }
         public void flushBuffer() throws IOException { }
         public int getBufferSize() { return 1024; }
         public String getCharacterEncoding() { return this.response.getCharacterEncoding();}
         public Locale getLocale(){ return this.response.getLocale();}
         public PrintWriter getWriter() {
+            if (this.output == null) {
+                System.out.println(this.encoding);
+                this.output = new MyServletOutputStream(this.encoding);
+            }
             return this.output.getWriter();
         }
         public boolean isCommitted() { return false; }
         public void reset() {}
         public void setBufferSize(int size) {}
         public void setContentLength(int len) {}
-        public void setContentType(java.lang.String type) {}
+        public void setContentType(java.lang.String type) {
+            StringTokenizer st = new StringTokenizer(type, ";,");
+            st.nextToken();
+            while (st.hasMoreTokens())  {
+                String param = st.nextToken();
+                int equal = param.indexOf("=");
+                if (equal != -1) {
+                    String name = param.substring(0, equal);
+                    if (name.trim().equalsIgnoreCase("charset")) {
+                        this.encoding = param.substring(equal + 1).trim();
+                        break;
+                    }
+                    continue;
+                }
+                break;
+            }
+        }
         public void setLocale(java.util.Locale loc) {}
         public ServletOutputStream getOutputStream() {
+            if (this.output == null) {
+                System.out.println(this.encoding);
+                this.output = new MyServletOutputStream(this.encoding);
+            }
             return this.output;
         }
         public void addCookie(Cookie cookie){ response.addCookie(cookie); }
@@ -267,7 +293,12 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public void resetBuffer(){}
 
         public byte[] toByteArray() {
-            return output.toByteArray();
+            if (this.output != null) {
+                return output.toByteArray();
+            }
+            else {
+                return new byte[0];
+            }
         }
     }
 
@@ -278,12 +309,12 @@ public class JSPEngineImpl extends AbstractLogEnabled
         ByteArrayOutputStream output;
         PrintWriter writer;
 
-        public MyServletOutputStream() {
+        public MyServletOutputStream(String encoding) {
             this.output = new ByteArrayOutputStream();
             try {
-                this.writer = new PrintWriter(new OutputStreamWriter(output, "utf-8"));
+                this.writer = new PrintWriter(new OutputStreamWriter(output, encoding));
             } catch (UnsupportedEncodingException e) {
-                // This can't be true: JVM must support UTF-8 encoding.
+                // This can't be true: JVM must support the encoding.
                 this.writer = new PrintWriter(new OutputStreamWriter(output));
             }
         }
