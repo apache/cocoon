@@ -33,7 +33,7 @@ import org.apache.cocoon.portal.PortalComponentManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortalServiceInfo.java,v 1.3 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortalServiceInfo {
     
@@ -57,7 +57,11 @@ public class PortalServiceInfo {
 			String portalName = (String)context.get(Constants.PORTAL_NAME_KEY);
 			if (portalName != null) {
                 this.setPortalName(portalName);
-			}
+			} else if ( this.portalComponentManagers.size() == 1 ) {
+                // if we only have one portal, just use it
+                portalName = this.portalComponentManagers.keySet().iterator().next().toString();
+                this.setPortalName(portalName);
+            }
 		}
     }
 
