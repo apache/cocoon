@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: form1.xml,v 1.2 2004/04/05 12:34:23 antonio Exp $
+    | CVS $Id: form1.xml,v 1.3 2004/05/07 21:32:32 mpo Exp $
     +-->
 
 <fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
@@ -100,7 +100,7 @@
           java.lang.System.err.println("Was here!");
           var newValue = event.source.value;
           if (newValue != null) {
-            var number2 = event.source.parent.getWidget("number2");
+            var number2 = event.source.lookupWidget("../number2");
             if (number2.value == null) {
               number2.setValue(new java.lang.Long(newValue.intValue() + 1));
             }
@@ -246,10 +246,10 @@
       	    // Get the row
       	    var row = widget.getRow(i);
       	    // Compute a key combining the first and last name
-      	    var key = row.getWidget("firstname").value + "/" + row.getWidget("lastname").value;
+      	    var key = row.lookupWidget("firstname").value + "/" + row.getWidget("lastname").value;
       	    if (list.contains(key)) {
       	      // already in the list
-      	      row.getWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
+      	      row.lookupWidget("firstname").setValidationError(new Packages.org.apache.cocoon.forms.validation.ValidationError("Duplicate contact name", false));
       	      success = false;
       	      break; // no need to continue
       	    }
