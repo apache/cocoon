@@ -181,6 +181,9 @@
 
  <release version="@version@" date="@date@">
   <action dev="SMS" type="update">
+   Changed namespace for the RequestGenerator to 'http://apache.org/cocoon/request/2.0'.
+  </action>
+  <action dev="SMS" type="update">
    Changed namespace for XMLForm components to 'http://apache.org/cocoon/xmlform/1.0'.
   </action>
   <action dev="SMS" type="update" fixes-bug="19786" due-to="Torsten Knodt" due-to-email="torstenknodt@datas-world.de">
