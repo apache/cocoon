@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.12 2003/10/28 17:21:14 vgritsenko Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.13 2003/11/20 15:31:29 sylvain Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable
@@ -364,7 +364,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                                                 thrScope)).longValue();
         // We need to setup the FOM_Cocoon object according to the current
         // request. Everything else remains the same.
-        cocoon.setup(this, environment, manager, getLogger());
+        cocoon.setup(this, environment, manager, serviceManager, avalonContext, getLogger());
         
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
@@ -578,7 +578,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         Scriptable kScope = k.getParentScope();
         synchronized (kScope) {
             FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
-            cocoon.setup(this, environment, manager, getLogger());
+            cocoon.setup(this, environment, manager, serviceManager, avalonContext, getLogger());
             // Register the current scope for scripts indirectly called from this function
             cocoon.getRequest().setAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
 
