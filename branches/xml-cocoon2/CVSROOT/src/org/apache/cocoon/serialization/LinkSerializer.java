@@ -21,10 +21,10 @@ import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-27 22:53:35 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-09-29 01:04:49 $
  */
 
-public class XLinkSerializer extends ExtendedXLinkPipe implements Serializer {
+public class LinkSerializer extends ExtendedXLinkPipe implements Serializer {
 
     private PrintStream out;
 
@@ -45,25 +45,15 @@ public class XLinkSerializer extends ExtendedXLinkPipe implements Serializer {
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr)
     throws SAXException {
-        if (isLocal(href)) encode(href, role, out);
+        if (isLocal(href)) out.println(href);
     }
 
     public void startLocator(String href, String role, String title, String label, String uri, String name, String raw, Attributes attr)
     throws SAXException {
-        if (isLocal(href)) encode(href, role, out);
+        if (isLocal(href)) out.println(href);
     }
 
     private boolean isLocal(String href) {
         return (href.indexOf("://") == -1);
-    }
-
-    private void encode(String href, String role, PrintStream out) {
-        if ((role == null) || role.equals(Cocoon.LINK_CRAWLING_ROLE)) {
-            out.print('+');
-        } else {
-            out.print('-');
-        }
-        out.print(" ");
-        out.println(href);
     }
 }
