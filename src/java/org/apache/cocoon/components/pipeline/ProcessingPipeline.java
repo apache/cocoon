@@ -20,6 +20,7 @@ import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.sitemap.SitemapErrorHandler;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -116,6 +117,13 @@ public interface ProcessingPipeline extends Component, Recomposable {
      * @param mimeType Can be null
      */
     void setReader(String role, String source, Parameters param, String mimeType)
+    throws ProcessingException;
+
+    /**
+     * Sets error handler for this pipeline.
+     * Used for handling errors in the internal pipelines.
+     */
+    void setErrorHandler(SitemapErrorHandler errorHandler)
     throws ProcessingException;
 
     /**

@@ -59,13 +59,15 @@ public class ExceptionGenerator extends AbstractGenerator {
      */
     public void generate()
     throws ProcessingException , SAXException, IOException {
-        String text = ExceptionAction.exception(this.exception, this.code);
         Attributes noAttrs = new AttributesImpl();
         this.contentHandler.startDocument();
         this.contentHandler.startElement("", "html", "html", noAttrs);
         this.contentHandler.startElement("", "body", "body", noAttrs);
         this.contentHandler.startElement("", "p", "p", noAttrs);
+
+        String text = ExceptionAction.exception(this.exception, this.code);
         this.contentHandler.characters(text.toCharArray(), 0, text.length());
+
         this.contentHandler.endElement("", "p", "p");
         this.contentHandler.endElement("", "body", "body");
         this.contentHandler.endElement("", "html", "html");

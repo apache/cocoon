@@ -91,7 +91,7 @@ public class MountNode extends AbstractProcessingNode
         if (resolvedSource.length() == 0) {
             throw new ProcessingException("Source of mount statement is empty");
         }
-        TreeProcessor processor = getProcessor(resolvedSource, resolvedPrefix);
+        TreeProcessor processor = getProcessor(resolvedSource);
 
         // Save context
         String oldPrefix = env.getURIPrefix();
@@ -101,7 +101,7 @@ public class MountNode extends AbstractProcessingNode
         env.setAttribute(COCOON_PASS_THROUGH, BooleanUtils.toBooleanObject(passThrough));
 
         boolean pipelineWasBuilt = false;
-        
+
         try {
             env.changeContext(resolvedPrefix, resolvedSource);
 
@@ -111,8 +111,6 @@ public class MountNode extends AbstractProcessingNode
                 if (pp != null) {
                     context.setProcessingPipeline( pp );
                     pipelineWasBuilt = true;
-                } else {
-                    pipelineWasBuilt = false;
                 }
             } else {
                 // Processor will create its own pipelines
@@ -126,7 +124,7 @@ public class MountNode extends AbstractProcessingNode
             if (!pipelineWasBuilt) {
                 env.setContext(oldPrefix, oldURI, oldContext);
             }
-            
+
             if (oldPassThrough != null) {
                 env.setAttribute(COCOON_PASS_THROUGH, oldPassThrough);
             } else {
@@ -138,14 +136,14 @@ public class MountNode extends AbstractProcessingNode
             // Recompose pipelines which may have been recomposed by subsitemap
             // context.recompose(this.manager);
         }
-        
+
         return pipelineWasBuilt;
     }
 
-    private synchronized TreeProcessor getProcessor(String source, String prefix) throws Exception {
+    private synchronized TreeProcessor getProcessor(String source)
+    throws Exception {
 
-        TreeProcessor processor = (TreeProcessor)processors.get(source);
-
+        TreeProcessor processor = (TreeProcessor) processors.get(source);
         if (processor == null) {
             // Handle directory mounts
             String actualSource;

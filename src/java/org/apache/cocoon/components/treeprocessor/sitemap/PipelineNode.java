@@ -26,6 +26,7 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.sitemap.SitemapErrorHandler;
 
 import java.util.Map;
 
@@ -118,11 +119,22 @@ public class PipelineNode extends AbstractParentProcessingNode
 
         // Always fail on external request if pipeline is internal only.
         if (this.internalOnly && env.isExternal()) {
-            return false;
+            if (!this.isLast || passThrough) {
+                return false;
+            }
+
+            // Do not use internal-only pipeline error handler for external requests.
+            throw new ResourceNotFoundException("No pipeline matched request: " +
+                                                env.getURIPrefix() + env.getURI());
         }
 
         context.inform(this.processingPipeline, this.parameters, env.getObjectModel());
         try {
+            if (this.errorHandlerHelper.isInternal()) {
+                context.getProcessingPipeline().setErrorHandler(
+                        new SitemapErrorHandler(this.errorHandlerHelper, env, context));
+            }
+
             if (invokeNodes(children, env, context)) {
                 return true;
             } else if (!this.isLast || passThrough) {

@@ -814,6 +814,10 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * Otherwise return <code>null</code>
      */
     public SourceValidity getValidityForEventPipeline() {
+        if (isInternalError()) {
+            return null;
+        }
+
         if (this.cachedResponse != null) {
             if (this.toCacheSourceValidities != null) {
                 // This means that the pipeline is valid based on the validities
@@ -898,16 +902,21 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
      * @see org.apache.cocoon.components.pipeline.ProcessingPipeline#getKeyForEventPipeline()
      */
     public String getKeyForEventPipeline() {
-        if ( null != this.toCacheKey
+        if (isInternalError()) {
+            return null;
+        }
+
+        if (null != this.toCacheKey
              && !this.cacheCompleteResponse
              && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
              return String.valueOf(HashUtil.hash(this.toCacheKey.toString()));
         }
-        if ( null != this.fromCacheKey
+        if (null != this.fromCacheKey
              && !this.completeResponseIsCached
              && this.firstProcessedTransformerIndex == super.transformers.size()) {
             return String.valueOf(HashUtil.hash(this.fromCacheKey.toString()));
         }
+
         return null;
     }
 
