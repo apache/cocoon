@@ -86,7 +86,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.2 2003/05/03 18:34:41 gianugo Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.3 2003/05/18 18:37:09 cziegeler Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -673,8 +673,7 @@ public abstract class AbstractProcessingPipeline
     throws ProcessingException {
         this.lastConsumer = consumer;
         if ( this.reader != null ) {
-            // FIXME (CZ) We *could* use the xmlizer here...but does this make sense?!?
-            throw new ProcessingException("Streaming of pipeline is not possible with a reader.");
+            throw new ProcessingException("Streaming of an internal pipeline is not possible with a reader.");
         } else {
             this.connectPipeline(environment);
             return this.processXMLPipeline(environment);
