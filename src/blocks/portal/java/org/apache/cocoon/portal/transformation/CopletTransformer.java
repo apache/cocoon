@@ -189,7 +189,14 @@ extends AbstractCopletTransformer {
             }
         } else if (name.equals(PARAMETER_ELEM)) {
             if (this.insideLinks) {
-                this.collectedEvents.add(new LinkService.ParameterDescription(attr.getValue("href")));
+                String href = attr.getValue("href");
+                if ( href != null ) {
+                    final int pos = href.indexOf('?');
+                    if ( pos != -1 ) {
+                        href = href.substring(pos+1);
+                    }
+                    this.collectedEvents.add(new LinkService.ParameterDescription(href));
+                }
             }
         } else if (name.equals(LINKS_ELEM) ) {
             this.insideLinks = true;
@@ -226,9 +233,23 @@ extends AbstractCopletTransformer {
             this.insideLinks = false;
             final String format = (String)this.stack.pop();
             final LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
-            final String href = linkService.getLinkURI(this.collectedEvents);
+            String href = linkService.getLinkURI(this.collectedEvents);
 
             AttributesImpl newAttrs = (AttributesImpl)this.stack.pop();
+            // test for alternate base url
+            final String baseURL = newAttrs.getValue("base-url");
+            if ( baseURL != null ) {
+                newAttrs.removeAttribute("base-url");
+                int pos = href.indexOf('?') + 1;
+                final char separator;
+                if ( baseURL.indexOf('?') == -1 ) {
+                    separator = '?';
+                } else {
+                    separator = '&';
+                }
+                href = baseURL + separator + href.substring(pos);
+                
+            }
             this.output(href, format, newAttrs );
 
             this.collectedEvents.clear();
