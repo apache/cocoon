@@ -61,7 +61,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.16 2004/05/16 15:20:48 cziegeler Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.17 2004/05/16 16:13:25 cziegeler Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, ModifiableSource, XMLizable {
@@ -74,7 +74,7 @@ public class XMLDBSource extends AbstractLogEnabled
     public static final String URI = "http://apache.org/cocoon/xmldb/1.0";
 
     /** Source prefix */
-    public static final String PREFIX = "xmldb";
+    public static final String PREFIX = "db";
 
     /** Root element <code>&lt;collections&gt;</code> */
     protected static final String COLLECTIONS  = "collections";
