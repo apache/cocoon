@@ -162,6 +162,22 @@
       <input-module name="session-attr"/>
       <input-module name="defaults"/>
     </component-instance>
+
+    <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used in the samples -->
+    <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsMetaModule">
+      <values>
+        <skin>defaultSkin</skin>
+        <base-url>http://localhost:8080/cocoon</base-url>
+      </values>
+    </component-instance>
+
+    <component-instance class="org.apache.cocoon.components.modules.input.XMLFileModule" logger="core.modules.xml" name="myxml">
+      <file src="context:///samples/modules/forrestconf.xml"/>
+    </component-instance>
+    <component-instance class="org.apache.cocoon.components.modules.input.XMLFileModule" logger="core.modules.xml" name="slashdot">
+      <file src="http://slashdot.org/slashdot.rss"/>
+    </component-instance>
+
   </input-modules>
 
   <!--+
