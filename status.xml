@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.385 2004/07/05 18:38:03 tcurdt Exp $:-->
+<!-- CVS $Id: status.xml,v 1.386 2004/07/06 23:23:39 vgritsenko Exp $:-->
 
 <status>
  <developers>
@@ -204,15 +204,21 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="VG" type="add">
+     Portal block: Added ManagedCocoonPortlet, to be used together with
+     CocoonServlet or CocoonPortlet.
+   </action>
    <action dev="TC" type="add" fixes-bug="28015" due-to="Frank Taffelt" due-to-email="frank.taffelt@interface-business.de">
-     POI: cell spanning
+     POI block: cell spanning.
    </action>
    <action dev="AG" type="fix" fixes-bug="23002" due-to="Viktor Skladovs" due-to-email="skladov@his.de">
-     POI: processing of tags "vcenter", "hcenter", "monochrome", "draft", "Header", "Footer" in "gmr:PrintInformation".
-     Initial support for "Margins" ("top", "bottom", "left", "right", "header", "footer").
+     POI block: processing of tags "vcenter", "hcenter", "monochrome", "draft",
+     "Header", "Footer" in "gmr:PrintInformation". Initial support for
+     "Margins" ("top", "bottom", "left", "right", "header", "footer").
    </action>
    <action dev="AG" type="fix" fixes-bug="23002" due-to="Viktor Skladovs" due-to-email="skladov@his.de">
-     POI: processing of tags "grid", "orientation and "paper" in "gmr:PrintInformation".
+     POI block: processing of tags "grid", "orientation and "paper" in
+     "gmr:PrintInformation".
    </action>
    <action dev="AG" type="fix" fixes-bug="24433">
      Fix JXTemplate generator does not handle format-number(number, '$#,##0.00').
@@ -231,14 +237,14 @@
      Update to servlet specification 2.3.
    </action>
    <action dev="AG" type="update">
-     Update commons-collections to 3.1
+     Update commons-collections to 3.1.
    </action>
    <action dev="AG" type="fix" fixes-bug="27133">
      Fix JXTemplateGenerator eating backslash characters.
    </action>
    <action dev="AG" type="fix" fixes-bug="25083">
-     Add new &lt;jx:comment&gt; tag. XML comments are no more parsed.
-     See the bug description for a sample.
+     Add new &lt;jx:comment&gt; tag to the JXTemplate. XML comments are not
+     parsed anymore. See the bug description for a sample.
    </action>
    <action dev="AG" type="fix" fixes-bug="29369" due-to="Juan Jose Pablos">
      Move commons-logging-1.0.4.jar to lib/core as jcs.jar depends on it.
@@ -301,17 +307,17 @@
      Portal: Fix problem with bookmarks and CachingURICoplet
    </action>
    <action dev="SW" type="update">
-     A new build property, "include.sources-in-jars", allows to include java source files
-     in jar archives. Useful when using a non-released version to know what sources
-     are used.
+     A new build property, "include.sources-in-jars", allows to include java
+     source files in jar archives. Useful when using a non-released version
+     to know what sources are used.
    </action>
    <action dev="CZ" type="fix" fixes-bug="28686">
      Correct redirect handling for internal redirects.
    </action>
    <action dev="SW" type="fix" fixes-bug="27249">
-     Refactor TreeProcessor to avoid constant reloading of sitemap if its modification
-     date is in the future and occasional ECM-related exceptions when a sitemap is
-     reloaded.
+     Refactor TreeProcessor to avoid constant reloading of sitemap if its
+     modification date is in the future and occasional ECM-related exceptions
+     when a sitemap is reloaded.
    </action>
    <action dev="BD" type="add" due-to="Stavros Kounis" fixes-bug="28834">
      Tour block: added Java shapes sample.
