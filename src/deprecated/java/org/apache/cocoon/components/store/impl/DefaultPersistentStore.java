@@ -39,10 +39,10 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  * (http://www.coyotegulch.com/jisp/index.html). This store uses B-Tree indexes
  * to access variable-length serialized data stored in files.
  *
+ * @deprecated Use org.apache.cocoon.components.store.impl.JCSDefaultStore
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @deprecated Use the JCS store instead
- * @version CVS $Id: DefaultPersistentStore.java,v 1.3 2004/05/24 07:05:17 cziegeler Exp $
+ * @version CVS $Id: DefaultPersistentStore.java,v 1.1 2004/05/24 08:33:00 antonio Exp $
  */
 public class DefaultPersistentStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
