@@ -61,7 +61,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.Constants;
-import org.apache.excalibur.xml.DefaultEntityResolver;
+import org.apache.cocoon.components.resolver.ResolverImpl;
 import org.apache.cocoon.environment.commandline.CommandLineContext;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.xml.EntityResolver;
@@ -72,7 +72,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:crossley@apache.org">David Crossley</a>
- * @version CVS $Id: ResolverImplTestCase.java,v 1.5 2003/08/11 11:03:31 cziegeler Exp $
+ * @version CVS $Id: ResolverImplTestCase.java,v 1.6 2003/09/21 16:41:41 ugo Exp $
  */
 public final class ResolverImplTestCase
          extends ExcaliburTestCase
@@ -231,7 +231,7 @@ public final class ResolverImplTestCase
         "<!ENTITY shy    \"&#173;\" ><!--=soft hyphen-->\n" +
         "";
     private DefaultContext context;
-    private DefaultEntityResolver resolverImpl;
+    private ResolverImpl resolverImpl;
     private File workDir;
     private File commandlineContextDir;
 
@@ -279,7 +279,7 @@ public final class ResolverImplTestCase
         super.setUp();
 
         String role = EntityResolver.ROLE;
-        resolverImpl = (DefaultEntityResolver) manager.lookup(role);
+        resolverImpl = (ResolverImpl) manager.lookup(role);
         assertNotNull("ResolverImpl is null", resolverImpl);
     }
 
