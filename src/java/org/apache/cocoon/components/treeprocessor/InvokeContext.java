@@ -80,7 +80,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.1 2003/03/09 00:09:16 pier Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.2 2003/07/06 11:44:30 sylvain Exp $
  */
 
 public class InvokeContext implements Recomposable, Disposable, LogEnabled {
@@ -89,7 +89,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     private HashMap nameToMap = new HashMap();
     private HashMap mapToName = new HashMap();
 
-    private boolean isInternalRequest;
+    private boolean isBuildingPipelineOnly;
 
     /** The current component manager, as set by the last call to compose() or recompose() */
     private ComponentManager currentManager;
@@ -120,7 +120,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
      * the current request is external.
      */
     public InvokeContext() {
-        this.isInternalRequest = false;
+        this.isBuildingPipelineOnly = false;
     }
 
     /**
@@ -135,8 +135,8 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     /**
      * Create an <code>InvokeContext</code>
      */
-    public InvokeContext(boolean internalRequest) {
-        this.isInternalRequest = internalRequest;
+    public InvokeContext(boolean isBuildingPipelineOnly) {
+        this.isBuildingPipelineOnly = isBuildingPipelineOnly;
     }
 
     /**
@@ -194,7 +194,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
                   VariableResolver.buildParameters(this.processingPipelineParameters,
                                                    this, this.processingPipelineObjectModel)
             );
-            if (this.isInternalRequest) {
+            if (this.isBuildingPipelineOnly) {
                 CocoonComponentManager.addComponentForAutomaticRelease(this.pipelineSelector,
                                                                        this.processingPipeline,
                                                                        this.pipelinesManager);
@@ -211,10 +211,10 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
     }
 
     /**
-     * Is this an internal request ?
+     * Are we building a pipeline (and not executing it) ?
      */
-    public final boolean isInternalRequest() {
-        return this.isInternalRequest;
+    public final boolean isBuildingPipelineOnly() {
+        return this.isBuildingPipelineOnly;
     }
 
     /**
@@ -304,7 +304,7 @@ public class InvokeContext implements Recomposable, Disposable, LogEnabled {
      */
     public void dispose() {
         // Release pipelines, if any
-        if (!this.isInternalRequest && this.pipelinesManager != null) {
+        if (!this.isBuildingPipelineOnly && this.pipelinesManager != null) {
 
             if ( this.pipelineSelector != null) {
                 this.pipelineSelector.release(this.processingPipeline);

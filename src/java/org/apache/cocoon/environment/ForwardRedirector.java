@@ -68,7 +68,7 @@ import java.net.MalformedURLException;
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.4 2003/06/24 15:20:28 upayavira Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.5 2003/07/06 11:44:30 sylvain Exp $
  */
 public class ForwardRedirector extends AbstractLogEnabled implements Redirector, PermanentRedirector {
 
@@ -222,7 +222,7 @@ public class ForwardRedirector extends AbstractLogEnabled implements Redirector,
                 if ( !this.internal ) {
                     processingResult = usedProcessor.process(newEnv);
                 } else {
-                    ProcessingPipeline pp = usedProcessor.processInternal(newEnv);
+                    ProcessingPipeline pp = usedProcessor.buildPipeline(newEnv);
                     if (pp != null) pp.release();
                     processingResult = pp != null;
                 }
