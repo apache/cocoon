@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,12 +39,12 @@ import org.apache.cocoon.components.axis.SoapServer; // or use Constants ?
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: AbstractLogEnabledService.java,v 1.2 2004/03/05 13:01:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractLogEnabledService
-    extends AbstractLogEnabled
-    implements ServiceLifecycle {
-	    
+        extends AbstractLogEnabled
+        implements ServiceLifecycle {
+
     // servlet endpoint context reference
     protected ServletEndpointContext m_endPointContext;
 
@@ -87,7 +87,7 @@ public abstract class AbstractLogEnabledService
     }
 
     /**
-     * Helper method to obtain the Avalon <code>Logger</code> object out of 
+     * Helper method to obtain the Avalon <code>Logger</code> object out of
      * the context object and enable logging for this service.
      */
     private void setLogger() {

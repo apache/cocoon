@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -76,26 +76,24 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:">Steve Loughran</a>
  * @author <a href="mailto:dug@us.ibm.com">Doug Davis</a>
  *
- * @version CVS $Id: AxisRPCReader.java,v 1.6 2004/03/05 13:01:42 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class AxisRPCReader extends ServiceableReader
-    implements Configurable, Disposable
-{
+                           implements Configurable, Disposable {
 
     // soap server reference
     private SoapServer m_server;
-    
+
     /** Are we in development stage ? */
     private boolean m_isDevelompent = false;
 
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-	 */
-	public void configure(Configuration config) throws ConfigurationException
-	{
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
+    public void configure(Configuration config) throws ConfigurationException {
         m_isDevelompent = config.getChild("development-stage").getValueAsBoolean(m_isDevelompent );
-	}
-
+    }
+    
     public void service(final ServiceManager manager) throws ServiceException {
         super.service(manager);
         // set soap server reference
@@ -121,14 +119,14 @@ public class AxisRPCReader extends ServiceableReader
      * @exception SAXException if an error occurs
      */
     public void setup(
-        final SourceResolver resolver, 
+        final SourceResolver resolver,
         final Map objectModel,
         final String src,
         final Parameters parameters
     )
         throws ProcessingException, IOException, SAXException
     {
-        super.setup(resolver, objectModel, src, parameters); 
+        super.setup(resolver, objectModel, src, parameters);
 
         checkHTTPPost(objectModel);
 
@@ -205,7 +203,7 @@ public class AxisRPCReader extends ServiceableReader
             msgContext.setRequestMessage(requestMsg);
             String url = HttpUtils.getRequestURL(req).toString();
             msgContext.setProperty(MessageContext.TRANS_URL, url);
-            
+
             try
             {
                 //
@@ -246,7 +244,7 @@ public class AxisRPCReader extends ServiceableReader
                     //tell everyone that something is wrong
                     throw new Exception("no response message");
                 }
-            } 
+            }
             catch (AxisFault fault)
             {
                 if (getLogger().isErrorEnabled())

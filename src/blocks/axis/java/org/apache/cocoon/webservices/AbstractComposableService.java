@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,12 +36,12 @@ import org.apache.cocoon.components.axis.providers.AvalonProvider;
  * </p>
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: AbstractComposableService.java,v 1.2 2004/03/05 13:01:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractComposableService
-    extends AbstractLogEnabledService
-    implements Composable {
-	    
+        extends AbstractLogEnabledService
+        implements Composable {
+    
     // component manager reference
     protected ComponentManager m_manager;
 
