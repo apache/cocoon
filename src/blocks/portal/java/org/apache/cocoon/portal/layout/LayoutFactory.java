@@ -48,19 +48,18 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.aspect;
-
+package org.apache.cocoon.portal.layout;
 
 /**
- *
+ * This factory is for creating and managing layout objects
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Aspectalizable.java,v 1.2 2003/05/07 13:28:35 cziegeler Exp $
+ * @version CVS $Id: LayoutFactory.java,v 1.1 2003/05/07 13:27:29 cziegeler Exp $
  */
-public interface Aspectalizable {
-
-    Object getAspectData(String aspectName);
+public interface LayoutFactory  {
+	// TODO - define the interface
     
-    void setAspectData(String aspectName, Object data);
+    void prepareLayout(Layout layout);
 }
