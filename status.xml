@@ -181,6 +181,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="fix" fixes-bug="14977" due-to="Tony Culshaw" due-to-email="tony@cultech.com.au">
+    fixed NPE in SQLTransformer.serializeData()
+  </action>
   <action dev="JH" type="add" fixes-bug="20477" due-to="Arje Cahn" due-to-email="arje@hippo.nl">
    Added cHTML/iMode "Hello World!" sample (provided by Arje Cahn)
   </action>
