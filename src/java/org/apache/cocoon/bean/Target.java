@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.bean;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.apache.cocoon.Constants;
@@ -29,7 +31,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.14 2004/05/06 19:32:37 upayavira Exp $
+ * @version CVS $Id$
  */
 public class Target {
     // Defult type is append
@@ -50,7 +52,8 @@ public class Target {
     private String defaultFilename = Constants.INDEX_URI;
     private String finalDestinationURI = null;
     private String extension = null;    
-
+    private List referringURIs = null;
+    
     private boolean followLinks;
     private boolean confirmExtension;
     private String logger;
@@ -80,6 +83,7 @@ public class Target {
         sourceURI = NetUtils.normalize(root + sourceURI);
         this.deparameterizedSourceURI = NetUtils.deparameterize(sourceURI, this.parameters);
         this.sourceURI = NetUtils.parameterize(this.deparameterizedSourceURI, this.parameters);
+        this.referringURIs = new ArrayList();
     }
 
     public Target(String type, String sourceURI, String destURI)
@@ -111,7 +115,7 @@ public class Target {
         
         Target target = new Target(this.type, this.root, linkURI, this.destURI);
         target.setOriginalURI(originalLinkURI);
-        target.setParentURI(this.sourceURI);
+        target.addReferringURI(this.sourceURI);
         target.setConfirmExtension(this.confirmExtension);
         target.setFollowLinks(this.followLinks);
         target.setDefaultFilename(this.defaultFilename);
@@ -132,9 +136,10 @@ public class Target {
     /**
      * Sets the URI of the page that contained the link to this 
      * URI. Used for reporting purposes.
+     * @deprecated Use the addPerentURIs method instead
      */
     public void setParentURI(String uri) {
-        this.parentURI = uri;
+        this.referringURIs.add(uri);
     }
     
     /**
@@ -181,6 +186,30 @@ public class Target {
         this.defaultFilename = filename;
     }
     
+    /**
+     * Adds a URI for a referring page. This will be used later if 
+     * this page causes a broken link in order to list all pages
+     * that refer to this broken link
+     * @param uri
+     */
+    public void addReferringURI(String uri) {
+        this.referringURIs.add(uri);
+    }
+    
+    /**
+     * Returns the first referring URI. If this method is 
+     * called, their should only be one entry in the list 
+     */
+    public String getReferringURI() {
+        return (String)referringURIs.get(0);
+    }
+
+    /**
+     * Get all referring URIs.
+     */
+    public List getReferringURIs() {
+        return referringURIs;
+    }
     /**
      * Gets the filename from the source URI, without the path.
      * This is used to fill out relative URIs that have
