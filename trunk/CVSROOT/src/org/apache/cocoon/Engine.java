@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.53 2001-03-01 16:05:35 greenrd Exp $ --
+/*-- $Id: Engine.java,v 1.54 2001-03-01 16:24:20 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -76,7 +76,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.53 $ $Date: 2001-03-01 16:05:35 $
+ * @version $Revision: 1.54 $ $Date: 2001-03-01 16:24:20 $
  */
 
 public class Engine implements Defaults {
@@ -88,7 +88,7 @@ public class Engine implements Defaults {
     };
 
     private Block blocker = new Block();
-    private boolean VERBOSE, PROFILE, LASTMODIFIED;
+    private boolean VERBOSE, PROFILE, LASTMODIFIED, FAST_CUTOFF;
 
     private static Hashtable engineInstances = new Hashtable(2, 0.90f);
 
@@ -186,6 +186,7 @@ public class Engine implements Defaults {
 
         VERBOSE = configurations.get ("verbosity", "false").equals ("true");
         LASTMODIFIED = configurations.get ("lastmodified", "true").equals ("true");
+        FAST_CUTOFF = configurations.get ("fastcutoff", "true").equals ("true");
 
         // If enabled, create the profiler and register it
         PROFILE = configurations.get ("profiler.enabled", "false").equals ("true");
@@ -349,7 +350,7 @@ public class Engine implements Defaults {
                         if (PROFILE) profiler.startEvent (requestMarker, producer.getClass ());
                         Document document = producer.getDocument(request);
                         if (PROFILE) profiler.finishEvent (requestMarker, producer.getClass ());
-                        if (((HttpServletResponseFacade) response).hasRedirected) throw new RedirectException ();
+                        redirectCheck (response);
 
                         if (LOG) logger.log(this, "Document produced", Logger.DEBUG);
 
@@ -375,7 +376,7 @@ public class Engine implements Defaults {
                             document = processor.process(document, environment);
                             page.setChangeable(processor);
                             if (PROFILE) profiler.finishEvent (requestMarker, processDesc);
-                            if (((HttpServletResponseFacade) response).hasRedirected) throw new RedirectException ();
+                            redirectCheck (response);
                             if (LOG) logger.log(this, "Document processed", Logger.DEBUG);
                         }
 
@@ -492,6 +493,11 @@ public class Engine implements Defaults {
             }
         }
 
+    }
+
+    private void redirectCheck (HttpServletResponse response) throws RedirectException {
+        if (FAST_CUTOFF && ((HttpServletResponseFacade) response).hasRedirectedOrOutputted)
+            throw new RedirectException ();                                                                   
     }
 
     /**

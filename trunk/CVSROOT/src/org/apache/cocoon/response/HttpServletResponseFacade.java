@@ -1,4 +1,4 @@
-/*-- $Id: HttpServletResponseFacade.java,v 1.3 2001-01-23 18:48:50 greenrd Exp $ --
+/*-- $Id: HttpServletResponseFacade.java,v 1.4 2001-03-01 16:24:22 greenrd Exp $ --
  
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,12 +61,12 @@ import javax.servlet.http.*;
  * Hack to handle redirects correctly with Tomcat 3.1.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.3 $ $Date: 2001-01-23 18:48:50 $
+ * @version $Revision: 1.4 $ $Date: 2001-03-01 16:24:22 $
  */
 
 public class HttpServletResponseFacade implements HttpServletResponse {
 
-  public boolean hasRedirected = false;
+  public boolean hasRedirectedOrOutputted = false;
   protected final HttpServletResponse r;
 
   public HttpServletResponseFacade (HttpServletResponse response) {
@@ -82,10 +82,12 @@ public class HttpServletResponseFacade implements HttpServletResponse {
   }
 
   public ServletOutputStream getOutputStream() throws IOException {
+    this.hasRedirectedOrOutputted = true;
     return r.getOutputStream ();
   }
 
   public PrintWriter getWriter () throws IOException {
+    this.hasRedirectedOrOutputted = true;
     return r.getWriter ();
   }
 
@@ -118,10 +120,12 @@ public class HttpServletResponseFacade implements HttpServletResponse {
   }
 
   public void sendError(int sc, String msg) throws IOException {
+    this.hasRedirectedOrOutputted = true;
     r.sendError (sc, msg);
   }
 
   public void sendError(int sc) throws IOException {
+    this.hasRedirectedOrOutputted = true;
     r.sendError (sc);
   }
 
@@ -129,7 +133,7 @@ public class HttpServletResponseFacade implements HttpServletResponse {
     r.sendRedirect (location);
     //this breaks too much code
     //throw new RedirectException ();
-    this.hasRedirected = true;
+    this.hasRedirectedOrOutputted = true;
   }
 
   public String encodeURL (String url) {
