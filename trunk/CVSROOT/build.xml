@@ -50,6 +50,7 @@ find
   - ant.jar
   - projectx-tr2.jar
   - tools.jar
+  - servlet-2.2.0.jar
   
 that you should place into your classpath.
 
@@ -61,7 +62,7 @@ packages from the indicated URL:
  Apache FOP 0.12.0+     - http://xml.apache.org/dist/
  
  Sun ProjectX (TR2)     - jakarta-tools CVS at jakarta.apache.org
- Sun Servlet API (2.1+) - jakarta-tools CVS at jakarta.apache.org
+ Sun Servlet API (2.2+) - jakarta-tools CVS at jakarta.apache.org
  Sun JNDI API (1.2.1+)  - http://java.sun.com/products/jndi/index.html
 
  James Clark XT         - ftp://ftp.jclark.com/pub/xml/xt.zip
@@ -215,14 +216,14 @@ of build files, give credits to the original authors. Thank you.
   <!-- Compiles the source directory                                       -->
   <!-- =================================================================== -->
   <target name="compile" depends="prepare-src">
-    <javac srcdir="${build.src}" destdir="${build.dest}" debug="${debug}"/>
+    <javac srcdir="${build.src}" destdir="${build.dest}" classpath="${classpath}" debug="${debug}"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates the class package                                           -->
   <!-- =================================================================== -->
   <target name="package" depends="compile">
-    <jar jarfile="${build.dir}/${name}.jar" basedir="${build.dest}" manifest="${build.src}/Manifest.mf" items="org"/>
+    <jar jarfile="${build.dir}/${name}.jar" basedir="${build.dest}" manifest="${build.src}/Manifest.mf" items="org, resources"/>
   </target>
 
   <!-- =================================================================== -->
