@@ -62,6 +62,16 @@ import org.xml.sax.SAXException;
 public interface WidgetDefinition {
 
     /**
+     * Gets the {@link FormDefinition}.
+     */
+    public FormDefinition getFormDefinition();
+
+    /**
+     * Sets the parent of this definition
+     */
+    public void setParent(WidgetDefinition definition);
+
+    /**
      * Gets source location of this widget definition.
      */
     public String getLocation();
@@ -75,6 +85,16 @@ public interface WidgetDefinition {
      * Creates and returns a widget based on this widget definition.
      */
     public Widget createInstance();
+
+    /**
+     * Generates SAX events for named display data.
+     */
+    public void generateDisplayData(String name, ContentHandler contentHandler) throws SAXException;
+
+    /**
+     * Generates SAX events for display data.
+     */
+    public void generateDisplayData(ContentHandler contentHandler) throws SAXException;
 
     /**
      * Generates SAX events for the label of this widget.

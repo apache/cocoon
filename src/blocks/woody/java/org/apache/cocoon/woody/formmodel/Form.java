@@ -77,15 +77,13 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.11 2003/12/19 21:28:39 tim Exp $
+ * @version CVS $Id: Form.java,v 1.12 2003/12/29 06:14:49 tim Exp $
  */
-public class Form extends AbstractWidget {
+public class Form extends AbstractContainerWidget {
     
     private Boolean endProcessing;
     private Locale locale = Locale.getDefault();
     private CursorableLinkedList events;
-    private List widgets;
-    private Map widgetsById;
     private FormDefinition definition;
     private FormHandler formHandler;
     private Widget submitWidget;
@@ -94,16 +92,8 @@ public class Form extends AbstractWidget {
     private ProcessingPhaseListener listener;
 
     public Form(FormDefinition definition) {
-        widgets = new ArrayList();
-        widgetsById = new HashMap();
-        this.definition = definition;
+        super(definition);
         setLocation(definition.getLocation());
-    }
-
-    protected void addWidget(Widget widget) {
-        widgets.add(widget);
-        widget.setParent(this);
-        widgetsById.put(widget.getId(), widget);
     }
 
     /**
@@ -315,11 +305,7 @@ public class Form extends AbstractWidget {
 
     private void doReadFromRequest(FormContext formContext) {
         // let all individual widgets read their value from the request object
-        Iterator widgetIt = widgets.iterator();
-        while (widgetIt.hasNext()) {
-            Widget widget = (Widget)widgetIt.next();
-            widget.readFromRequest(formContext);
-        }
+        super.readFromRequest(formContext); 
     }
 
     public boolean validate(FormContext formContext) {
@@ -327,21 +313,7 @@ public class Form extends AbstractWidget {
     }
 
     public boolean doValidate(FormContext formContext) {
-        boolean allValid = true;
-        Iterator widgetIt = widgets.iterator();
-        while (widgetIt.hasNext()) {
-            Widget widget = (Widget)widgetIt.next();
-            allValid = allValid & widget.validate(formContext);
-        }
-        return allValid;
-    }
-
-    public Widget getWidget(String id) {
-        return (Widget)widgetsById.get(id);
-    }
-
-    public String getId() {
-        return definition.getId();
+        return super.validate(formContext); 
     }
 
     private static final String FORM_EL = "form";

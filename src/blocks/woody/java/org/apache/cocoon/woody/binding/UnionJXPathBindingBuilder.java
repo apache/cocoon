@@ -50,44 +50,41 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * UnionJXPathBindingBuilder provides a helper class for the Factory 
+ * implemented in {@link JXPathBindingManager} that helps construct the 
+ * actual {@link UnionJXPathBinding} out of the configuration in the 
+ * provided configElement which looks like:
+ * <pre><code>
+ * &lt;wb:union id="<i>widget-id</i>" path="<i>xpath-expression</i>"
+ *     direction="<i>load|save</i>" lenient="<i>true|false</i>" &gt;
+ *   &lt;wb:field id="<i>sub-widget-id</i>" path="<i>relative-xpath</i>" />
+ * &lt;/wb:union&gt;
+ * </code></pre>
+ *
+ * CVS $Id: UnionJXPathBindingBuilder.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public class UnionJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
+    public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
+            throws BindingException {
+        try {
+            String widgetId = DomHelper.getAttribute(bindingElm, "id");
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
+            String xpath = DomHelper.getAttribute(bindingElm, "path");
 
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
+            JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
-
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+            UnionJXPathBinding unionBinding = new UnionJXPathBinding(commonAtts, widgetId, xpath, childBindings);
+            return unionBinding;
+        } catch (BindingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new BindingException("Error building union binding defined at " + DomHelper.getLocation(bindingElm), e);
+        }
+    }
 }

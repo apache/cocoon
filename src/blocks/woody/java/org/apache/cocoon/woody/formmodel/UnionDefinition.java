@@ -48,46 +48,57 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
 
+import java.util.Iterator;
+
+import org.apache.cocoon.woody.datatype.Datatype;
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * The {@link WidgetDefinition} corresponding to a {@link Union} widget.
+ *
+ * CVS $Id: UnionDefinition.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public class UnionDefinition extends AbstractContainerDefinition {
+    private String caseWidgetId;
 
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
+    /*
+    public void setDatatype(Datatype datatype) {
+        if (!String.class.isAssignableFrom(datatype.getTypeClass()))
+            throw new RuntimeException("Only datatype string is allowed for this widget at " + getLocation() + ".");
+        super.setDatatype(datatype);
+    }
 
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
+    public void setDefault(Object value) throws Exception {
+        if (!(value == null || String.class.isAssignableFrom(value.getClass())))
+            throw new Exception("UnionDefinition: Default case must be supplied as a string (" + getLocation() + ")");
+        if (value == null || value.equals("")) {
+            if (isRequired())
+                throw new Exception("UnionWidget: Union is marked required, but no default case was supplied (" + getLocation() + ")");
+            this.defaultValue = "";
+        } else {
+            if (!hasWidget((String)value))
+                throw new Exception("UnionWidget: The default value \"" + value + "\" does not match a union case (" + getLocation() + ")");
+            this.defaultValue = (String)value;
+        }
+    }
 
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
+    public Object getDefaultValue() {
+        return defaultValue;
+    }
+    */
 
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public void setCaseWidgetId(String id) {
+        caseWidgetId = id;
+    }
+
+    public String getCaseWidgetId() {
+        return caseWidgetId;
+    }
+
+    public Widget createInstance() {
+        Union unionWidget = new Union(this);
+        return unionWidget;
+    }
 }

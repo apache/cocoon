@@ -50,97 +50,86 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import java.util.HashMap;
-
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.woody.formmodel.Union;
 import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * ComposedJXPathBindingBase provides a helper base class for subclassing 
- * into specific {@link JXPathBindingBase} implementations that have nested 
- * child-bindings.
+ * UnionJXPathBinding provides an implementation of a {@link Binding} 
+ * that narrows the context towards provided childbindings. 
+ * <p>
+ * NOTES: <ol>
+ * <li>This Binding assumes that the provided widget-id points to a
+ * union widget.</li>
+ * </ol>
+ *
+ * CVS $Id: UnionJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * @author Timothy Larson
  */
-public class ComposedJXPathBindingBase extends JXPathBindingBase {
-    private final JXPathBindingBase[] subBindings;
+public class UnionJXPathBinding extends ComposedJXPathBindingBase {
+
+    private final String xpath;
+
+    private final String widgetId;
 
     /**
-     * Constructs ComposedJXPathBindingBase
-     * 
-     * @param childBindings sets the array of childBindings
+     * Constructs UnionJXPathBinding
+     * @param commonAtts
+     * @param widgetId
+     * @param xpath
+     * @param childBindings
      */
-    protected ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes commonAtts, JXPathBindingBase[] childBindings) {
-        super(commonAtts);
-        this.subBindings = childBindings;
-        if (this.subBindings != null) {
-            for (int i = 0; i < this.subBindings.length; i++) {
-                this.subBindings[i].setParent(this);
-            }
-        }
-    }
-
-    /** 
-     * Receives the logger to use for logging activity, and hands it over to
-     * the nested children.
-     */
-    public void enableLogging(Logger logger) {
-        super.enableLogging(logger);
-        if (this.subBindings != null) {
-            for (int i = 0; i < this.subBindings.length; i++) {
-                this.subBindings[i].enableLogging(logger);
-            }
-        }
+    public UnionJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] childBindings) {
+        super(commonAtts, childBindings);
+        this.widgetId = widgetId;
+        this.xpath = xpath;
     }
 
     /**
-     * Gets a binding class by id.
-     * @param id Id of binding class to get.
-     */
-    public Binding getClass(String id) {
-        if (classes == null) {
-            classes = new HashMap();
-            if (this.subBindings != null) {
-                for (int i = 0; i < this.subBindings.length; i++) {
-                    Binding binding = this.subBindings[i];
-                    String bindingId = binding.getId();
-                    if (bindingId != null)
-                      classes.put(bindingId, binding);
-                }
-            }
-        }
-        return super.getClass(id);
-    }
-
-    /**
-     * Returns child bindings.
-     */
-    public JXPathBindingBase[] getChildBindings() {
-        return subBindings;
-    }
-
-    /**
-     * Actively performs the binding from the ObjectModel to the Woody-form
-     * by passing the task onto it's children.
+     * Narrows the scope on the form-model to the member widget-field, and
+     * narrows the scope on the object-model to the member xpath-context 
+     * before continuing the binding over the child-bindings.
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
-        if (this.subBindings != null) {
-            int size = this.subBindings.length;
+        Widget widget = frmModel.getWidget(this.widgetId);
+        if (!(widget instanceof Union))
+            throw new RuntimeException("Binding: Expected Union widget, but received class: \"" +
+                    widget.getClass().getName() + "\".");
+        Union unionWidget = (Union)widget;
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+        Binding[] subBindings = getChildBindings();
+        if (subBindings != null) {
+            int size = subBindings.length;
             for (int i = 0; i < size; i++) {
-                this.subBindings[i].loadFormFromModel(frmModel, jxpc);
+                subBindings[i].loadFormFromModel(unionWidget, jxpc);
             }
+        }
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done loading " + toString());
         }
     }
 
     /**
-     * Actively performs the binding from the Woody-form to the ObjectModel 
-     * by passing the task onto it's children.
+     * Narrows the scope on the form-model to the member widget-field, and
+     * narrows the scope on the object-model to the member xpath-context 
+     * before continuing the binding over the child-bindings.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
-        if (this.subBindings != null) {
-            int size = this.subBindings.length;
+        Union unionWidget = (Union)frmModel.getWidget(this.widgetId);
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
+        Binding[] subBindings = getChildBindings();
+        if (subBindings != null) {
+            int size = subBindings.length;
             for (int i = 0; i < size; i++) {
-                this.subBindings[i].saveFormToModel(frmModel, jxpc);
+                subBindings[i].saveFormToModel(unionWidget, jxpc);
             }
         }
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("done saving " + toString());
+        }
+    }
+
+    public String toString() {
+        return "UnionJXPathBinding [widget=" + this.widgetId + ", xpath=" + this.xpath + "]";
     }
 }

@@ -48,46 +48,67 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import java.util.Locale;
+
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.datatype.SelectionList;
+import org.apache.cocoon.woody.datatype.ValidationError;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.xml.AttributesImpl;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * A general-purpose abstract Widget which can hold zero or more widgets.
+ *
+ * CVS $Id: AbstractContainerWidget.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public abstract class AbstractContainerWidget extends AbstractWidget implements ContainerWidget {
+    protected ContainerDelegate widgets;
 
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
+    public AbstractContainerWidget(WidgetDefinition definition) {
+        setDefinition(definition);
+        setLocation(definition.getLocation());
+        widgets = new ContainerDelegate(definition);
+    }
 
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
+    public void addWidget(Widget widget) {
+        widget.setParent(this);
+        widgets.addWidget(widget);
+    }
 
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
+    public boolean hasWidget(String id) {
+        return widgets.hasWidget(id);
+    }
 
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public Widget getWidget(String id) {
+    	return widgets.getWidget(id);
+    }
+
+    public void readFromRequest(FormContext formContext) {
+        widgets.readFromRequest(formContext);
+    }
+
+    public boolean validate(FormContext formContext) {
+        return widgets.validate(formContext);
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String element) throws SAXException {
+        if (getId() == null || getId().equals("")) {
+            contentHandler.startElement(Constants.WI_NS, element, Constants.WI_PREFIX_COLON + element, Constants.EMPTY_ATTRS);
+        } else {
+            AttributesImpl attrs = new AttributesImpl();
+            attrs.addCDATAAttribute("id", getFullyQualifiedId());
+            contentHandler.startElement(Constants.WI_NS, element, Constants.WI_PREFIX_COLON + element, attrs);
+        }
+        if (definition != null)
+            definition.generateDisplayData(contentHandler);
+        // The child widgets
+        widgets.generateSaxFragment(contentHandler, locale);
+        contentHandler.endElement(Constants.WI_NS, element, Constants.WI_PREFIX_COLON + element);
+    }
 }

@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.woody.binding;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.util.jxpath.DOMFactory;
@@ -74,6 +77,15 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      */
     private final JXpathBindingBuilderBase.CommonAttributes commonAtts;
     
+    /**
+     * Parent binding of this binding.
+     */
+    protected Binding parent;
+
+    /**
+     * Cache of class definitions
+     */
+    protected Map classes;
 
     private JXPathBindingBase() {
         this(JXpathBindingBuilderBase.CommonAttributes.DEFAULT);
@@ -83,6 +95,51 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         this.commonAtts = commonAtts;
     }
     
+    /**
+     * Sets parent binding.
+     */
+    public void setParent(Binding binding) {
+        this.parent = binding;
+    }
+
+    /**
+     * Returns binding definition id.
+     */
+    public String getId() {
+        return null;
+    }
+
+    public Binding getClass(String id) {
+        Binding classBinding = null;
+        if (classes != null) {
+            // Query cache for class
+            classBinding = (Binding)classes.get(id);
+        }
+        if (classBinding == null) {
+            // Query parent for class
+            if (parent == null) {
+                // TODO: Improve message to include source location.
+                throw new RuntimeException("Class \"" + id + "\" not found.");
+            }
+            classBinding = parent.getClass(id);
+            // Cache result
+            if (classes == null)
+               classes = new HashMap(); 
+            classes.put(id, classBinding);
+        }
+        return classBinding;
+    }
+
+    protected Widget getWidget(Widget widget, String id) {
+        Widget childWidget = widget.getWidget(id);
+        if (childWidget == null) {
+            throw new RuntimeException(getClass().getName() + ": Widget \"" + id +
+                "\" does not exist in container \"" + widget.getFullyQualifiedId() + "\" (" +
+                widget.getLocation() + ").");
+        }
+        return childWidget;
+    }
+
     /**
      * Performs the actual load binding regardless of the flag {@see #loadEnabled}.
      * Abstract method that subclasses need to implement for specific activity.

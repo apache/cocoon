@@ -51,43 +51,86 @@
 package org.apache.cocoon.woody.binding;
 
 import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * NewJXPathBinding provides an implementation of a {@link Binding} 
+ * that references a class of bindings.
+ * <p>
+ * NOTES: <ol>
+ * <li>This Binding assumes that the provided widget-id points to a
+ * class that contains other widgets.</li>
+ * </ol>
+ *
+ * CVS $Id: NewJXPathBinding.java,v 1.1 2003/12/29 06:14:48 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public class NewJXPathBinding extends ComposedJXPathBindingBase {
+
+    private final String widgetId;
+
+    private Binding classBinding;
 
     /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
+     * Constructs NewJXPathBinding
+     * @param commonAtts 
+     * @param widgetId
+     * @param xpath
+     * @param childBindings
      */
-    void setParent(Binding binding);
+    public NewJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, JXPathBindingBase[] childBindings) {
+        super(commonAtts, childBindings);
+        this.widgetId = widgetId;
+        this.classBinding = null;
+    }
+
+    private void resolve() {
+        classBinding = getClass(widgetId);
+    }
 
     /**
-     * Gets binding definition id.
+     * Narrows the scope on the form-model to the member widget-field, and
+     * narrows the scope on the object-model to the member xpath-context 
+     * before continuing the binding over the child-bindings.
      */
-    String getId();
+    public void doLoad(Widget frmModel, JXPathContext jxpc) {
+        if (classBinding == null)
+            resolve();
+        if (classBinding instanceof ClassJXPathBinding) {
+            Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
+            if (subBindings != null) {
+                int size = subBindings.length;
+                for (int i = 0; i < size; i++) {
+                    subBindings[i].loadFormFromModel(frmModel, jxpc);
+                }
+            }
+        } else {
+            classBinding.loadFormFromModel(frmModel, jxpc);
+        }
+    }
 
     /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
+     * Narrows the scope on the form-model to the member widget-field, and
+     * narrows the scope on the object-model to the member xpath-context 
+     * before continuing the binding over the child-bindings.
      */
-    Binding getClass(String id);
+    public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
+        if (classBinding == null)
+            resolve();
+        if (classBinding instanceof ClassJXPathBinding) {
+            Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
+            if (subBindings != null) {
+                int size = subBindings.length;
+                for (int i = 0; i < size; i++) {
+                    subBindings[i].saveFormToModel(frmModel, jxpc);
+                }
+            }
+        } else {
+            classBinding.saveFormToModel(frmModel, jxpc);
+        }
+    }
 
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public String toString() {
+        return "NewJXPathBinding [widget=" + this.widgetId + "]";
+    }
 }

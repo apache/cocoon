@@ -20,6 +20,10 @@
       <widget name="output" src="org.apache.cocoon.woody.formmodel.OutputDefinitionBuilder"/>
       <widget name="upload" src="org.apache.cocoon.woody.formmodel.UploadDefinitionBuilder"/>
       <widget name="messages" src="org.apache.cocoon.woody.formmodel.MessagesDefinitionBuilder"/>
+      <widget name="class" src="org.apache.cocoon.woody.formmodel.ClassDefinitionBuilder"/>
+      <widget name="new" src="org.apache.cocoon.woody.formmodel.NewDefinitionBuilder"/>
+      <widget name="struct" src="org.apache.cocoon.woody.formmodel.StructDefinitionBuilder"/>
+      <widget name="union" src="org.apache.cocoon.woody.formmodel.UnionDefinitionBuilder"/>
     </widgets>
   </woody-formmanager>
 </xconf>

@@ -62,9 +62,37 @@ import org.apache.excalibur.xml.sax.XMLizable;
  * Provides functionality that is common across many WidgetDefinition implementations.
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
+    private FormDefinition formDefinition;
+    protected WidgetDefinition parent;
     private String location = null;
     private String id;
     private Map displayData;
+
+    public FormDefinition getFormDefinition() {
+        if (this.formDefinition == null) {
+            if (this instanceof FormDefinition) {
+                this.formDefinition = (FormDefinition)this;
+            } else {
+                this.formDefinition = this.parent.getFormDefinition();
+            }
+        }
+        return this.formDefinition;
+    }
+
+    /**
+     * Sets the parent of this definition
+     */
+    public void setParent(WidgetDefinition definition) {
+        this.parent = definition;
+    }
+    
+    /**
+     * Gets the parent of this definition.
+     * This method returns null for the root definition.
+     */
+    public WidgetDefinition getParent() {
+        return this.parent;
+    }
 
     protected void setLocation(String location) {
         this.location = location;

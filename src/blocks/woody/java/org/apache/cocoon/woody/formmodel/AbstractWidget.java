@@ -50,16 +50,37 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import java.util.Locale;
+
+import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.event.WidgetEvent;
+import org.apache.cocoon.xml.AttributesImpl;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  */
 public abstract class AbstractWidget implements Widget {
-    private String location = null;
+    private String location;
     private Widget parent;
     private Form form;
+    protected WidgetDefinition definition;
+
+    /**
+     * Sets the definition of this widget.
+     */
+    protected void setDefinition(WidgetDefinition definition) {
+        this.definition = definition;
+    }
+
+    /**
+     * Gets the id of this widget.
+     */
+    public String getId() {
+        return definition.getId();
+    }
 
     /**
      * Sets the source location of this widget.
@@ -128,5 +149,22 @@ public abstract class AbstractWidget implements Widget {
     
     public void broadcastEvent(WidgetEvent event) {
         throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
+    }
+
+    public void generateLabel(ContentHandler contentHandler) throws SAXException {
+        if (definition != null)
+            definition.generateDisplayData("label", contentHandler);
+    }
+
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        // Do nothing
+    }
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String element, WidgetDefinition definition) throws SAXException {
+        AttributesImpl attrs = new AttributesImpl();
+        attrs.addCDATAAttribute("id", getFullyQualifiedId());
+        contentHandler.startElement(Constants.WI_NS, element, Constants.WI_PREFIX_COLON + element, attrs);
+        generateItemSaxFragment(contentHandler, locale);
+        contentHandler.endElement(Constants.WI_NS, element, Constants.WI_PREFIX_COLON + element);
     }
 }

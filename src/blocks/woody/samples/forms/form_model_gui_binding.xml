@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<wb:context
+  xmlns:wb="http://apache.org/cocoon/woody/binding/1.0"
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+  path="/wd:form"
+  lenient="true">
+
+  <!--
+    This binding needs lots of work...
+
+    CVS $Id: form_model_gui_binding.xml,v 1.1 2003/12/29 06:14:50 tim Exp $
+    Author: Timothy Larson
+  -->
+
+  <wb:new id="widgets-class"/>
+
+  <wb:class id="widgets-class">
+    <wb:temp-repeater id="widgets"
+      parent-path="wd:widgets"
+      row-path="*">
+      <wb:on-bind>
+        <wb:new id="widget-row-class"/>
+      </wb:on-bind>
+    </wb:temp-repeater>
+  </wb:class>
+
+  <wb:class id="widget-row-class">
+    <wb:javascript id="type" path=".">
+      <wb:load-form>
+        widget.setValue(jxpathPointer.getNode().getLocalName());
+      </wb:load-form>
+      <wb:save-form>
+        /*
+        var value = widget.getValue();
+        var node = jxpathPointer.getNode();
+        var doc = node.getOwnerDocument();
+        var newNode = doc.createElementNS("http://apache.org/cocoon/woody/binding/1.0", value);
+        node.appendChild(newNode);
+        jxpathContext = jxpathContext.getRelativeContext(jxpathContext.getPointer(value));
+        */
+      </wb:save-form>
+    </wb:javascript>
+    <wb:union id="union" path=".">
+      <wb:new id="action-class"/>
+      <wb:new id="aggregatefield-class"/>
+      <wb:new id="booleanfield-class"/>
+      <wb:new id="class-class"/>
+      <wb:new id="field-class"/>
+      <wb:new id="new-class"/>
+      <wb:new id="output-class"/>
+      <wb:new id="repeater-class"/>
+      <wb:new id="row-action-class"/>
+      <wb:new id="struct-class"/>
+      <wb:new id="submit-class"/>
+      <wb:new id="union-class"/>
+    </wb:union>
+  </wb:class>
+
+  <wb:class id="action-class">
+    <wb:case id="action" path=".">
+      <wb:struct id="action" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:action/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <wb:value id="label" path="wd:action/wb:label" direction="save"/>
+        <wb:value id="id" path="wd:action/@id" direction="save"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="aggregatefield-class">
+    <wb:case id="aggregatefield" path=".">
+      <wb:struct id="aggregatefield" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:aggregatefield/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <wb:value id="label" path="wd:aggregatefield/wb:label" direction="save"/>
+        <wb:value id="id" path="wd:aggregatefield/@id" direction="save"/>
+        <wb:insert-node><wd:widgets/></wb:insert-node>
+        <wb:new id="widgets-class"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="booleanfield-class">
+    <wb:case id="booleanfield" path=".">
+      <wb:struct id="booleanfield" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:booleanfield/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <wb:value id="label" path="wb:booleanfield/wb:label" direction="save"/>
+        <wb:value id="id" path="wb:booleanfield/@id" direction="save"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="class-class">
+    <wb:case id="class" path=".">
+      <wb:struct id="class" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:class/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:insert-node><wd:widgets/></wb:insert-node>
+        <wb:new id="widgets-class"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="field-class">
+    <wb:case id="field" path=".">
+      <wb:struct id="field" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:field/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <wb:value id="required" path="@required" direction="load">
+          <wd:convertor datatype="boolean"/>
+        </wb:value>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="new-class">
+    <wb:case id="new" path=".">
+      <wb:struct id="new" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:new/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="output-class">
+    <wb:case id="output" path=".">
+      <wb:struct id="output" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:output/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="repeater-class">
+    <wb:case id="repeater" path=".">
+      <wb:struct id="repeater" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:repeater/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <wb:value id="initial-size" path="@initial-size" direction="load">
+          <wd:convertor datatype="long"/>
+        </wb:value>
+        <wb:insert-node><wd:widgets/></wb:insert-node>
+        <wb:new id="widgets-class"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="row-action-class">
+    <wb:case id="row-action" path=".">
+      <wb:struct id="row-action" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:row-action/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="struct-class">
+    <wb:case id="struct" path=".">
+      <wb:struct id="struct" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:struct/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <wb:insert-node><wd:widgets/></wb:insert-node>
+        <wb:new id="widgets-class"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="submit-class">
+    <wb:case id="submit" path="/">
+      <wb:struct id="submit" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:submit/>
+        </wb:insert-node>
+        -->
+        <wb:insert-node>
+          <wd:submit><wd:label/></wd:submit>
+        </wb:insert-node>
+        <wb:value id="id" path="@id" direction="load"/>
+        <!-- wb:value id="id" path="wd:submit/@id" direction="save"/ -->
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <!-- wb:value id="label" path="wd:submit/wd:label" direction="save"/ -->
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+  <wb:class id="union-class">
+    <wb:case id="union" path=".">
+      <wb:struct id="union" path=".">
+        <!--
+        <wb:insert-node>
+          <wd:union/>
+        </wb:insert-node>
+        -->
+        <wb:value id="id" path="@id" direction="load"/>
+        <wb:value id="label" path="wd:label" direction="load"/>
+        <wb:insert-node><wd:widgets/></wb:insert-node>
+        <wb:new id="widgets-class"/>
+      </wb:struct>
+    </wb:case>
+  </wb:class>
+
+</wb:context>

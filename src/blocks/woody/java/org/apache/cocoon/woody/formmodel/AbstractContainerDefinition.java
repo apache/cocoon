@@ -48,46 +48,51 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import java.util.Collection;
+import java.util.List;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * The {@link AbstractContainerDefinition} corresponding to an {@link AbstractContainer} widget.
+ *
+ * CVS $Id: AbstractContainerDefinition.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public abstract class AbstractContainerDefinition
+        extends AbstractWidgetDefinition implements ContainerDefinition {
+    protected ContainerDefinitionDelegate definitions;
 
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
+    public AbstractContainerDefinition() {
+        definitions = new ContainerDefinitionDelegate(this);
+    }
 
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
+    public void createWidget(Widget parent, String id) {
+        definitions.createWidget(parent, id);
+    }
 
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
+    public void createWidgets(Widget parent) {
+        definitions.createWidgets(parent);
+    }
 
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public void addWidgetDefinition(WidgetDefinition definition) throws Exception, DuplicateIdException {
+        definition.setParent(this);
+        definitions.addWidgetDefinition(definition);
+    }
+
+    public void resolve(List parents, WidgetDefinition parent) throws Exception {
+        definitions.resolve(parents, parent);
+    }
+
+    public boolean hasWidget(String id) {
+        return definitions.hasWidget(id);
+    }
+
+    public WidgetDefinition getWidgetDefinition(String id) {
+        return definitions.getWidgetDefinition(id);
+    }
+
+    public Collection getWidgetDefinitions() {
+        return definitions.getWidgetDefinitions();
+    }
 }

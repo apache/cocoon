@@ -48,46 +48,17 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
-
-import org.apache.cocoon.woody.formmodel.Widget;
+package org.apache.cocoon.woody.formmodel;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * A {@link WidgetDefinition} which holds a collection of {@link Widget}s
+ * and which can be instantiated with a {@link NewDefinition}.
+ *
+ * CVS $Id: ClassDefinition.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
-
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
-
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
-
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
-
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+public class ClassDefinition extends AbstractContainerDefinition {
+    public Widget createInstance() {
+        return null;
+    }
 }

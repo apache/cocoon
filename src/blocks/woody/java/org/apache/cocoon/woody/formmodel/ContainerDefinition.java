@@ -48,46 +48,63 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.datatype.SelectionList;
+import org.apache.cocoon.woody.event.ValueChangedEvent;
+import org.apache.cocoon.woody.event.ValueChangedListener;
+import org.w3c.dom.Element;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * Interface to be implemented by WidgetDefinitions for Widgets which contain other widgets.
+ *
+ * CVS $Id: ContainerDefinition.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public interface ContainerDefinition extends WidgetDefinition {
 
     /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
+     * Resolve references to widget definition classes
      */
-    void setParent(Binding binding);
+    public void resolve(List parents, WidgetDefinition parent) throws Exception;
 
     /**
-     * Gets binding definition id.
+     * Create a widget from a contained widget definition.
      */
-    String getId();
+    public void createWidget(Widget parent, String id);
 
     /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
+     * Create widgets from the contained widget definitions.
      */
-    Binding getClass(String id);
+    public void createWidgets(Widget parent);
 
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
     /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
+     * Adds a (sub) widget definition to this definition.
      */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+    public void addWidgetDefinition(WidgetDefinition definition) throws Exception, DuplicateIdException;
+
+    /**
+     * Check if this definition contains the named definition.
+     */
+    public boolean hasWidget(String id);
+
+    /**
+     * Gets a (sub) widget definition from this definition.
+     */
+    public WidgetDefinition getWidgetDefinition(String id);
+
+    /**
+     * Gets the collection of (sub) widget definition from this definition.
+     */
+    public Collection getWidgetDefinitions();
 }

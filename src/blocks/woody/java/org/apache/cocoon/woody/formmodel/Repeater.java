@@ -70,7 +70,7 @@ import java.util.*;
  * <p>Using the methods {@link #getSize} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  */
-public class Repeater extends AbstractWidget {
+public class Repeater extends AbstractWidget implements ContainerWidget {
     private RepeaterDefinition definition;
     private List rows = new ArrayList();
 
@@ -89,14 +89,18 @@ public class Repeater extends AbstractWidget {
         return rows.size();
     }
 
+    public void addWidget(Widget widget) {
+        throw new RuntimeException("Repeater.addWidget(): Please use addRow() instead.");
+    }
+
     public RepeaterRow addRow() {
-        RepeaterRow repeaterRow = new RepeaterRow();
+        RepeaterRow repeaterRow = new RepeaterRow(definition);
         rows.add(repeaterRow);
         return repeaterRow;
     }
     
     public RepeaterRow addRow(int index) {
-        RepeaterRow repeaterRow = new RepeaterRow();
+        RepeaterRow repeaterRow = new RepeaterRow(definition);
         if (index >= this.rows.size()) {
             rows.add(repeaterRow);
         } else {
@@ -188,9 +192,25 @@ public class Repeater extends AbstractWidget {
         return row.getWidget(id);
     }
 
+    public boolean hasWidget(String id) {
+        int row; 
+        try { 
+            row = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            // TODO: Use i18n.
+            throw new RuntimeException("Repeater: Row id is not a valid integer: " + id);
+        }
+        return row >= 0 && row < rows.size();
+    }
+
     public Widget getWidget(String id) {
-        // TODO catch numberformatexception and throw something nice in that case
-        int row = Integer.parseInt(id);
+        int row; 
+        try { 
+            row = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            // TODO: Use i18n.
+            throw new RuntimeException("Repeater: Row id is not a valid integer: " + id);
+        }
         return (RepeaterRow)rows.get(row);
     }
 
@@ -302,23 +322,11 @@ public class Repeater extends AbstractWidget {
         contentHandler.endElement(Constants.WI_NS, REPEATER_SIZE_EL, Constants.WI_PREFIX_COLON + REPEATER_SIZE_EL);
     }
 
-    public class RepeaterRow implements Widget {
-        private List widgets;
-        private Map widgetsById;
+    public class RepeaterRow extends AbstractContainerWidget {
 
-        public RepeaterRow() {
-            this.widgets = new ArrayList();
-            this.widgetsById = new HashMap();
-
-            // make instances of all the widgets
-            Iterator widgetDefinitionIt = definition.getWidgetDefinitions().iterator();
-            while (widgetDefinitionIt.hasNext()) {
-                WidgetDefinition widgetDefinition = (WidgetDefinition)widgetDefinitionIt.next();
-                Widget widget = widgetDefinition.createInstance();
-                widget.setParent(this);
-                widgets.add(widget);
-                widgetsById.put(widget.getId(), widget);
-            }
+        public RepeaterRow(WidgetDefinition definition) {
+            super(definition);
+            ((ContainerDefinition)definition).createWidgets(this);
         }
 
         public String getLocation() {
@@ -350,45 +358,11 @@ public class Repeater extends AbstractWidget {
             throw new RuntimeException("Parent of RepeaterRow is fixed, and cannot be set.");
         }
 
-        public Widget getWidget(String id) {
-            return (Widget)widgetsById.get(id);
-        }
-
-        public void readFromRequest(FormContext formContext) {
-            Iterator widgetIt = widgets.iterator();
-            while (widgetIt.hasNext()) {
-                Widget widget = (Widget)widgetIt.next();
-                widget.readFromRequest(formContext);
-            }
-        }
-
-        public boolean validate(FormContext formContext) {
-            boolean valid = true;
-            Iterator widgetIt = widgets.iterator();
-            while (widgetIt.hasNext()) {
-                Widget widget = (Widget)widgetIt.next();
-                valid = valid & widget.validate(formContext);
-            }
-            return valid;
-        }
-
-        public Object getValue() {
-            return null;
-        }
-
-        public void setValue(Object object) {
-            throw new RuntimeException("Cannot set the value of widget " + getFullyQualifiedId());
-        }
-
-        public boolean isRequired() {
-            return false;
-        }
+        private static final String ROW_EL = "repeater-row";
 
         public void generateLabel(ContentHandler contentHandler) throws SAXException {
             // this widget has no label
         }
-
-        private static final String ROW_EL = "repeater-row";
 
         public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
             AttributesImpl rowAttrs = new AttributesImpl();

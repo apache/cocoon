@@ -76,7 +76,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.19 2003/12/19 21:28:39 tim Exp $
+ * @version CVS $Id: Field.java,v 1.20 2003/12/29 06:14:49 tim Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -84,6 +84,7 @@ public class Field extends AbstractWidget {
     
     private String enteredValue = null;
     private Object value = null;
+    private Object oldValue;
 
     // At startup, we don't need to parse (both enteredValue and value are null),
     // but need to validate (error if field is required)
@@ -105,6 +106,10 @@ public class Field extends AbstractWidget {
 
     public String getId() {
         return definition.getId();
+    }
+
+    public Object getOldValue() {
+        return oldValue;
     }
 
     public Object getValue() {
@@ -204,6 +209,9 @@ public class Field extends AbstractWidget {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, newValue));
             }
         }
+        // If set comes before a form is first sent then the new value will be the old value by the time of the next form request.
+        // If the set occurs in an event handler then again the new value will be the old value by the time of the next form request.
+        this.oldValue = newValue;
     }
 
     public void readFromRequest(FormContext formContext) {
@@ -219,11 +227,15 @@ public class Field extends AbstractWidget {
             }
         }
         
+        // TODO: This cause validation to occur too early.
+        getValue();
+        this.oldValue = value;
         // Only convert if the text value actually changed. Otherwise, keep the old value
         // and/or the old validation error (allows to keep errors when clicking on actions)
         if (!(newEnteredValue == null ? "" : newEnteredValue).equals((enteredValue == null ? "" : enteredValue))) {
-            
-            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
+            // TODO: Hmmm...
+            //getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
+            getForm().addWidgetEvent(new DeferredValueChangedEvent(this, getValue()));
 
             enteredValue = newEnteredValue;
             validationError = null;

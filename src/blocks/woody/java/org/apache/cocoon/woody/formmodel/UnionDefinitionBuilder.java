@@ -48,46 +48,38 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.binding;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Binding declares the methods to 'bind' (i.e. 'load' and 'save') 
- * information elements from some back-end model (2nd argument) to and from 
- * a existing Woody Widget.
+ * Builds {UnionDefinition}s.
+ *
+ * CVS $Id: UnionDefinitionBuilder.java,v 1.1 2003/12/29 06:14:49 tim Exp $
+ * @author Timothy Larson
  */
-public interface Binding {
+public class UnionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
-    /**
-     * Sets parent binding.
-     * @param binding Parent of this binding.
-     */
-    void setParent(Binding binding);
+    public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
+        UnionDefinition definition = new UnionDefinition();
+        setLocation(element, definition);
+        setId(element, definition);
+        definition.setCaseWidgetId(DomHelper.getAttribute(element, "case", ""));
+        setDisplayData(element, definition);
 
-    /**
-     * Gets binding definition id.
-     */
-    String getId();
+        Element widgetsElement = DomHelper.getChildElement(element, Constants.WD_NS, "widgets", true);
+        // All child elements of the widgets element are widgets
+        Element[] widgetElements = DomHelper.getChildElements(widgetsElement, Constants.WD_NS);
+        for (int i = 0; i < widgetElements.length; i++) {
+            Element widgetElement = widgetElements[i];
+            WidgetDefinition widgetDefinition = buildAnotherWidgetDefinition(widgetElement);
+            definition.addWidgetDefinition(widgetDefinition);
+        }
 
-    /**
-     * Gets a binding class.
-     * @param id Id of binding class to get.
-     */
-    Binding getClass(String id);
-
-    /** 
-     * Loads the information-elements from the objModel to the frmModel.
-     *  
-     * @param frmModel
-     * @param objModel
-     */
-    void loadFormFromModel(Widget frmModel, Object objModel);
-    
-    /**
-     * Saves the infortmation-elements to the objModel from the frmModel.
-     * @param frmModel
-     * @param objModel
-     */
-    void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
+        return definition;
+    }
+    // TODO: Need to add code somewhere to build a selection list for the case widget.
 }
+

@@ -70,6 +70,7 @@
     <map:script src="flow/upload_example.js"/>
     <map:script src="flow/registration.js"/>
     <map:script src="flow/customvalidationdemo.js"/>
+    <map:script src="flow/form_model_gui.js"/>
   </map:flow>
 
  <map:pipelines>
@@ -311,6 +312,16 @@
 
      <map:match pattern="resources/**">
        <map:read src="{0}"/>
+     </map:match>
+
+     <map:match pattern="form_model_gui.flow">
+       <map:call function="woody">
+         <map:parameter name="function" value="form_model_gui"/>
+         <map:parameter name="form-definition" value="forms/form_model_gui_model.xml"/>
+         <map:parameter name="attribute-name" value="form_model_gui"/>
+         <map:parameter name="documentURI" value="forms/form_model_gui_data.xml"/>
+         <map:parameter name="bindingURI" value="forms/form_model_gui_binding.xml"/>
+       </map:call>
      </map:match>
 
    </map:pipeline>
