@@ -69,7 +69,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.19 2004/03/28 14:28:04 antonio Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.20 2004/07/07 08:50:47 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -1126,10 +1126,10 @@ public class SQLTransformer
 
         protected String getColumnValue( int i ) throws SQLException {
 			int numberOfChar = 1024;
-            String retval =  SQLTransformer.getStringValue( rs.getObject( i ) );
+            String retval;
 			
-			if (rs.getMetaData().getColumnType(i) == 8) {
-            retval = SQLTransformer.getStringValue( rs.getBigDecimal( i ) );
+			if (rs.getMetaData().getColumnType(i) == java.sql.Types.DOUBLE) {
+                retval = SQLTransformer.getStringValue( rs.getBigDecimal( i ) );
 			} else if (rs.getMetaData().getColumnType(i) == java.sql.Types.CLOB) {
 				Clob clob = rs.getClob(i);
 				InputStream inputStream = clob.getAsciiStream();
@@ -1144,7 +1144,9 @@ public class SQLTransformer
 					throw new SQLException("Error reading stream from CLOB");
 				}
 				retval = buffer.toString();
-			}
+			} else {
+                retval = SQLTransformer.getStringValue( rs.getObject( i ) );                
+            }
             return retval;
         }
 
