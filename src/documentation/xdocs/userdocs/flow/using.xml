@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../../WEB-INF/entities/document-v10.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <document>
   <header>
@@ -19,37 +19,36 @@
   <p>
     The request is received by Cocoon and passed to the sitemap for
     processing. In the sitemap, you can do two things to pass the control to
-    the Control Flow layer:
-    <ul>
-      <li>
-        You can invoke a JavaScript top-level function to start processing a
-        logically grouped sequences of pages. Each time a response page is
-        being sent back to the client browser from this function, the
-        processing of the JavaScript  code stops at the point the page is
-        sent back, and the HTTP request finishes. Through the magic of
-        continuations, the execution state is saved in a continuation object.
-        Each continuation is given a unique string id, which could be embedded
-        in generated page, so that you can restart the saved computation later
-        on.
-      </li>
-      <li>
-        To invoke a top level JavaScript function in the Control Flow, you use
-        the <code><link href="sitemap.html#callFunction">&lt;map:call&nbsp;function="function-name"/&gt;</link></code>
-        construction.
-      </li>
-      <li>
-        To restart the computation of a previously stopped function, you use
-        the <code><link href="sitemap.html#callContinuation">&lt;map:call&nbsp;continuation="..."/&gt;</link></code> construction.
-        This restarts the computation saved in a continuation object
-        identified by the string value of the <code>continuation</code> attribute.
-        This value could be extracted in the sitemap from the requested URL,
-        from a POST or GET parameter etc. When the computation stored in the
-        continuation object is restarted, it appears as if nothing happened,
-        all the local and global variables have exactly the same values as
-        they had when the computation was stopped.
-      </li>
-    </ul>
-  </p>
+    the Control Flow layer:</p>
+  <ul>
+    <li>
+      You can invoke a JavaScript top-level function to start processing a
+      logically grouped sequences of pages. Each time a response page is
+      being sent back to the client browser from this function, the
+      processing of the JavaScript  code stops at the point the page is
+      sent back, and the HTTP request finishes. Through the magic of
+      continuations, the execution state is saved in a continuation object.
+      Each continuation is given a unique string id, which could be embedded
+      in generated page, so that you can restart the saved computation later
+      on.
+    </li>
+    <li>
+      To invoke a top level JavaScript function in the Control Flow, you use
+      the <link href="sitemap.html#callFunction"><code>&lt;map:call&nbsp;function="function-name"/&gt;</code></link>
+      construction.
+    </li>
+    <li>
+      To restart the computation of a previously stopped function, you use
+      the <link href="sitemap.html#callContinuation"><code>&lt;map:call&nbsp;continuation="..."/&gt;</code></link> construction.
+      This restarts the computation saved in a continuation object
+      identified by the string value of the <code>continuation</code> attribute.
+      This value could be extracted in the sitemap from the requested URL,
+      from a POST or GET parameter etc. When the computation stored in the
+      continuation object is restarted, it appears as if nothing happened,
+      all the local and global variables have exactly the same values as
+      they had when the computation was stopped.
+    </li>
+  </ul>
  
   <p>
     Once the JavaScript function in the control layer is restarted, you're
@@ -69,7 +68,7 @@
   <p>
     Once here, the Control Flow has to decide which page needs to be sent back
     to the client browser. To do this, the script can invoke either the
-    <code><link href="api.html#sendPageAndWait">sendPageAndWait</link></code> or the <code><link href="api.html#sendPage">sendPage</link></code> functions.
+    <link href="api.html#sendPageAndWait"><code>sendPageAndWait</code></link> or the <link href="api.html#sendPage"><code>sendPage</code></link> functions.
     These functions take two parameters, the relative URL of the page to be
     sent back to the client, and a context object which can be accessed
     inside this page to extract various values and place them in the
@@ -112,25 +111,24 @@
     View a context object constructed from Model data.
   </p>
  
-  <h4>Basic usage</h4>
+  <s2 title="Basic usage">
  
   <p>
     As hinted in the previous section, an application using Cocoon's MVC
-    approach is composed of three layers:
-    <ul>
-      <li>
-        A JavaScript controller which implements the interaction with the
-        client
-      </li>
-      <li>
-       The business logic model which implements your application
-      </li>
-      <li>
-        The page templates, which describe the content of the pages, and XSLT
-        stylesheets which describe the look of the content.
-      </li>
-    </ul>
-  </p>
+    approach is composed of three layers:</p>
+  <ul>
+    <li>
+      A JavaScript controller which implements the interaction with the
+      client
+    </li>
+    <li>
+     The business logic model which implements your application
+    </li>
+    <li>
+      The page templates, which describe the content of the pages, and XSLT
+      stylesheets which describe the look of the content.
+    </li>
+  </ul>
  
   <p>
     In more complex applications, the flow of pages can be thought of smaller
@@ -145,14 +143,13 @@
   </p>
  
   <p>
-    This application is composed of four top-level JavaScript functions:
-    <ul>
-      <li><code>login</code>,</li>
-      <li><code>registerUser</code>,</li>
-      <li><code>edit</code> and</li>
-      <li><code>logout</code>.</li>
-    </ul>
-  </p>
+    This application is composed of four top-level JavaScript functions:</p>
+  <ul>
+    <li><code>login</code>,</li>
+    <li><code>registerUser</code>,</li>
+    <li><code>edit</code> and</li>
+    <li><code>logout</code>.</li>
+  </ul>
  
   <p>
     The entry level point in the application can be any of these functions,
@@ -175,11 +172,12 @@
   <p>
     To solve the problem, the <code>login</code> and
     <code>registerUser</code> functions have to call the
-    <code><link href="api.html#createSession">cocoon.createSession()</link></code> method, which creates a servlet
+    <link href="api.html#createSession"><code>cocoon.createSession()</code></link> method, which creates a servlet
     session and saves the global scope containing the global variables' value
     in it. Next time the user invokes one of the four top-level functions,
     the values of the global variables is restored, making sharing very easy.
   </p>
+  </s2>
  
   <p>
     Even if you don't need complex control flow in your application, you may

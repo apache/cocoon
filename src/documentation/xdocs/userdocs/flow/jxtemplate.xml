@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
-"../dtd/document-v10.dtd">
+"../../dtd/document-v10.dtd">
 <document>
 	<header>
 		<title>Advanced Control Flow</title> 
@@ -24,12 +24,11 @@ The JXTemplate Generator supports two embedded expression languages: <link href=
 <source>
  &lt;site signOn="${accountForm.signOn}"&gt;
  </source>
-<p>Embedded Jexl expressions are contained in <source>${}</source></p>
-<p>Embedded JXPath expressions are contained in <source>#{}</source></p>
+<p>Embedded Jexl expressions are contained in <code>${}</code></p>
+<p>Embedded JXPath expressions are contained in <code>#{}</code></p>
 <p>The referenced objects may be Java Beans, DOM, JDOM, or JavaScript objects 
 from a Flowscript. In addition the following implicit objects are available as
 both JXPath and Jexl variables in a template:</p>
-<p>
 <dl>
 <dt><code>request</code></dt>
 <dd>The current Cocoon request</dd>
@@ -46,35 +45,31 @@ both JXPath and Jexl variables in a template:</p>
 <dt><code>parameters</code></dt>
 <dd>Any parameters passed to the generator in the pipeline</dd>
 </dl>
-</p>
 <p>
-Jexl Example:
+Jexl Example:</p>
 <source>
   The content type of the current request is ${request.contentType}
 </source>
-</p>
 <p>
-JXPath Example:
+JXPath Example:</p>
 <source>
   The content type of the current request is #{$request/contentType}
 </source>
-</p>
 <p> 
 The current Web Continuation from the Flowscript 
 is also available as a variable named <code>continuation</code>. You would 
-typically access its <code>id</code>:
+typically access its <code>id</code>:</p>
 <source>
    &lt;form action="${continuation.id}"&gt;
 </source>
-</p>
 <p>You can also reach previous continuations by using the <code>getContinuation()</code> function:</p>
 <source>
     &lt;form action="${continuation.getContinuation(1).id}" >
 </source>
-<p>or using an XPath expression:</p><p>
+<p>or using an XPath expression:</p>
 <source>
     &lt;form action="#{getContinuation($continuation)/id}" >
-</source></p>
+</source>
 </s1>
 <s1 title ="Tags">
 <p>The JXTemplate Generator tags are defined in the namespace</p>
@@ -98,18 +93,16 @@ http://apache.org/cocoon/templates/jx/1.0
        [body]
    &lt;/set&gt;
 </source><p>If used within a <code>macro</code> definition (see below) variables created by <code>set</code> are only visible within the body of the <code>macro</code>.</p>
-<p>Jexl Example:
+<p>Jexl Example:</p>
 <source>
 &lt;set var="greeting" value="Hello ${user}"/&gt;
 ${greeting}
 </source>
-</p>
-<p>JXPath Example:
+<p>JXPath Example:</p>
 <source>
 &lt;set var="greeting" value="Hello #{user}"/&gt;
 #{$greeting}
 </source>
-</p>
 </s2>
 <s2 title ="if">
 <p>The <code>if</code> tag allows the conditional execution of its body 
@@ -119,20 +112,18 @@ according to value of a <code>test</code> attribute:</p>
       body
   &lt;/if&gt;
 </source>
-<p>Jexl Example:
+<p>Jexl Example:</p>
 <source>
 &lt;if test="${cart.numberOfItems == 0}"&gt;
   Your cart is empty
 &lt;/if&gt;
 </source>
-</p>
-<p>JXPath Example:
+<p>JXPath Example:</p>
 <source>
 &lt;if test="#{cart/numberOfItems = 0}"&gt;
   Your cart is empty
 &lt;/if&gt;
 </source>
-</p>
 </s2>
 <s2 title ="choose">
 <p>The <code>choose</code> tag performs conditional block execution by the 
@@ -151,7 +142,7 @@ tag is evaluated, if present:</p>
    &lt;/otherwise&gt;?
  &lt;/choose&gt;
 </source>
-<p>Jexl Example:
+<p>Jexl Example:</p>
 <source>
 &lt;choose&gt;
   &lt;when test="${!user.loggedIn}"&gt;
@@ -162,8 +153,7 @@ tag is evaluated, if present:</p>
   &lt;/otherwise&gt;
 &lt;/choose&gt;
 </source>
-</p>
-<p>JXPath Example:
+<p>JXPath Example:</p>
 <source>
 &lt;choose&gt;
   &lt;when test="#{not(user/loggedIn)}"&gt;
@@ -174,7 +164,6 @@ tag is evaluated, if present:</p>
   &lt;/otherwise&gt;
 &lt;/choose&gt;
 </source>
-</p>
 </s2>
 <s2 title="out">
 <p>The <code>out</code> tag evaluates an expression and outputs 
@@ -182,25 +171,23 @@ the result of the evaluation:</p>
 <source>
 &lt;out value="Expression"/&gt;
 </source>
-<p>Jexl Example:
+<p>Jexl Example:</p>
 <source>
 &lt;out value="${cart.numberOfItems}"&gt;
 </source>
-</p>
-<p>JXPath Example:
+<p>JXPath Example:</p>
 <source>
 &lt;out value="#{cart/numberOfItems}"&gt;
 </source>
-</p>
 </s2>
 <s2 title="forEach">
 <p>The <code>forEach</code> tag allows you to iterate over a collection 
-of objects:</p><p>
+of objects:</p>
 <source>
   &lt;forEach [var="Name"] [items="Expression"] [begin="NumExpr"] [end="NumExpr"] [step="NumExpr"]&gt;
     body
  &lt;/forEach&gt;
-</source></p>
+</source>
 <p>The <code>items</code> attribute specifies the list of items to iterate over. The <code>var</code> attribute specifies the name of a variable to hold the current item. The <code>begin</code> attribute specifies the element to start with 
 (<code>0</code> = first item, <code>1</code> = second item, ...). 
 If unspecified it defaults to <code>0</code>. The <code>end</code> 
@@ -213,22 +200,20 @@ processed (defaults to <code>1</code> if <code>step</code> is absent). Either <c
   body
 &lt;/forEach&gt;
 </source>
-<p>When using XPath expressions within <code>forEach</code> the current element is the context node and can be referenced with:</p>
-<source>#{.}</source>
-<p>Jexl Example:
+<p>When using XPath expressions within <code>forEach</code> the current element is the context node and can be referenced with: 
+<code>#{.}</code></p>
+<p>Jexl Example:</p>
 <source>
 &lt;forEach var="item" items="${cart.cartItems} begin="${start}" end="${count-start}" step="1""&gt;
    &lt;td&gt;${item.productId}&lt;/td&gt;
 &lt;/forEach&gt;
 </source>
-</p>
-<p>JXPath Example:
+<p>JXPath Example:</p>
 <source>
 &lt;forEach items="#{cart/cartItems[position() &lt;= $count]}}&gt;
    &lt;td&gt;#{./productId}&lt;/td&gt;
 &lt;/forEach&gt;
 </source>
-</p>
 </s2>
 <s2 title="macro"> 
 <p>The <code>macro</code> tag allows you define a new custom tag.</p><source>
@@ -257,9 +242,10 @@ can be used like any other tag:</p><source>
   &lt;/c:forEach&gt;
 &lt;/c:macro&gt;
 </source>
-<p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used. The content of the tag is also available as a special variable <code>${content}</code>.</p><p>Assuming you had this code in your flowscript:</p><p>
-   <source><p>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];</p><p>sendPage(uri, {greatlakes: greatlakes});</p></source>
-</p><p>and a template like this:</p><source>
+<p>The <code>parameter</code> tags in the macro definition define formal parameters, which are replaced with the actual attribute values of the tag when it is used. The content of the tag is also available as a special variable <code>${content}</code>.</p><p>Assuming you had this code in your flowscript:</p>
+   <source>var greatlakes = ["Superior", "Michigan", "Huron", "Erie", "Ontario"];
+   sendPage(uri, {greatlakes: greatlakes});</source>
+<p>and a template like this:</p><source>
 &lt;table&gt;
    &lt;tablerows list="${greatlakes}" color="blue"/&gt;
 &lt;/table&gt;

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
-"../dtd/document-v10.dtd">
+"../../dtd/document-v10.dtd">
 <document>
 	<header>
 		<title>Advanced Control Flow</title> 
@@ -28,13 +28,12 @@ according to value of a <code>test</code> attribute:</p>
       body
   &lt;/if&gt;
 </source>
-<p>Example:
+<p>Example:</p>
 <source>
 &lt;jpath:if test="cart/numberOfItems = 0"&gt;
   Your cart is empty
 &lt;/jpath:if&gt;
 </source>
-</p>
 </s2>
 <s2 title ="choose">
 <p>The <code>choose</code> tag performs conditional block execution by the 
@@ -53,7 +52,7 @@ tag is evaluated, if present:</p>
    &lt;/otherwise&gt;?
  &lt;/choose&gt;
 </source>
-<p>Example:
+<p>Example:</p>
 <source>
 &lt;choose&gt;
   &lt;when test="not(user/loggedIn)"&gt;
@@ -64,7 +63,6 @@ tag is evaluated, if present:</p>
   &lt;/otherwise&gt;
 &lt;/choose&gt;
 </source>
-</p>
 </s2>
 <s2 title="value-of">
 <p>The <code>value-of</code> tag evaluates an expression and outputs 
@@ -72,40 +70,37 @@ the result of the evaluation:</p>
 <source>
 &lt;value-of select="XPathExpression"/&gt;
 </source>
-<p>Example:
+<p>Example:</p>
 <source>
 &lt;value-of select="cart/numberOfItems"&gt;
 </source>
-</p>
 </s2>
 <s2 title="for-each">
 <p>The <code>for-each</code> tag allows you to iterate over a collection 
-of objects:</p><p>
+of objects:</p>
 <source>
   &lt;for-each select="XPathExpression"&gt;
     body
  &lt;/for-each&gt;
 </source>
-<p>When using XPath expressions within <code>for-each</code> the current element is the context node and can be referenced with:</p>
-<source>.</source></p>
-<p>Example:
+<p>When using XPath expressions within <code>for-each</code> the current element is the context node and can be referenced with: 
+<code>.</code></p>
+<p>Example:</p>
 <source>
 &lt;for-each select="cart/cartItems[position() &lt;= $count]"&gt;
    &lt;td&gt;&lt;value-of select="./productId"&gt;&lt;/td&gt;
 &lt;/for-each&gt;
 </source>
-</p>
 </s2>
 <s2 title="continuation">
 <p>The <code>continuation</code> tag returns the id of the current web continuation of your Flowscript. You can refer to previous continuations by supplying the optional <code>level</code> attribute. Zero is the current level, <code>-1</code> refers to the previous continuation, and so on.</p>
 <source>
 &lt;continuation [level="Number"]/&gt;
 </source>
-<p>Example:
+<p>Example:</p>
 <source>
 &lt;xsp:attribute name="action"&gt;&lt;xsp:expr&gt;&lt;jpath:continuation/&gt;+".form"&lt;/xsp:expr&gt;&lt;/xsp:attribute&gt;
 </source>
-</p>
 </s2>
 </s1>
 </body>

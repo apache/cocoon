@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../../WEB-INF/entities/document-v10.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <document>
   <header>
@@ -45,50 +45,50 @@
     <s1 title="Objects">
     <s2 title = "cocoon">
     <p>The <code>cocoon</code> object represents the current Cocoon sitemap and provides the following readonly properties:</p> 
-    <s4 title="request">
+    <s3 title="request">
     <p>The current Cocoon request:</p>
     <p>
     <em>Property</em> <code>[org.apache.cocoon.environment.Request] request</code>
     </p>
-    </s4>
-    <s4 title="response">
+    </s3>
+    <s3 title="response">
     <p>The current Cocoon response:</p>
     <p>
     <em>Property</em> <code>[org.apache.cocoon.environment.Response] response</code>
     </p>
-    </s4>
-    <s4 title="session">
+    </s3>
+    <s3 title="session">
     <p>The current Cocoon session:</p>
     <p>
     <em>Property</em> <code>[org.apache.cocoon.environment.Session] session</code>
     </p>
-    </s4>
-    <s4 title="context">
+    </s3>
+    <s3 title="context">
     <p>The current Cocoon application context:</p>
     <p>
     <em>Property</em> <code>[org.apache.cocoon.environment.Context] context</code>
     </p>
-    </s4>
-    <s4 title="environment">
+    </s3>
+    <s3 title="environment">
     <p>The current Cocoon environment:</p>
     <p>
     <em>Property</em> <code>[org.apache.cocoon.environment.Environment] environment</code>
     </p>
-    </s4>
-    <s4 title="componentManager">
+    </s3>
+    <s3 title="componentManager">
     <p>The current Sitemap's component manager:</p>
     <p>
     <em>Property</em> <code>[org.apache.avalon.framework.component.ComponentManager] componentManager</code>
     </p>
-    </s4>
-    <s4 title="parameters">
+    </s3>
+    <s3 title="parameters">
     <p>Any parameters passed to the script by the Sitemap:</p>
     <p>
     <em>Property</em> <code>[Array] parameters</code>
     </p>
     <p>The <code>cocoon</code> object also provides the following functions:</p>
-    </s4>
-    <s4 title="process">
+    </s3>
+    <s3 title="process">
     <p>
     <em>Function</em> <code>[Boolean] process([String] uri, [Object] bizData, [java.io.OutputStream] stream)</code></p>
     <p>
@@ -100,8 +100,8 @@
      <p><code>stream</code> is an <code>OutputStream</code> where the output should be written to.</p>
      <p>Returns the result from the Cocoon processor.
      </p>
-    </s4>
-    <s4 title="createSession"><anchor id="createSession"/>
+    </s3>
+    <s3 title="createSession"><anchor id="createSession"/>
     
     <p> <em>Function</em> <code>createSession()</code></p>
     <p>  
@@ -110,22 +110,22 @@
        function="..."&gt;</link>), will share global JavaScript variables.
     </p> 
 
-    </s4>
-    <s4 title="removeSession">
+    </s3>
+    <s3 title="removeSession">
     <p>
     <em>Function</em> <code>removeSession()</code>
     </p>
     <p>
        Dissociate global JavaScript variables from the user's session.
     </p>
-    </s4>
-    <s4 title="load">
+    </s3>
+    <s3 title="load">
     <p><em>Function</em> <code>load([String] uri)</code></p>
     <p>
       Load the JavaScript script specified by <code>uri</code>. The Cocoon
      source resolver is used to resolve <code>uri</code>. 
     </p>
-    </s4>
+    </s3>
     </s2>
     <s2 title="WebContinuation"><anchor id="WebContinuation"/>
     <p>A <code>WebContinuation</code> represents a continuation of a Flowscript. Because a user may click on the back button in the browser and restart a saved computation in a continuation, each <code>WebContinuation</code> becomes the parent of a subtree of continuations.
@@ -136,7 +136,7 @@
     <p>
        <code>WebContinuation</code> objects support the following functions and properties:
     </p>
-    <s4 title="getContinuation">
+    <s3 title="getContinuation">
     <p>
         <em>Function</em> <code>[WebContinuation] getContinuation([Number] level)</code>
     </p>
@@ -149,8 +149,8 @@
       the depth of the tree, the root of the tree is returned.
      
     </p>
-    </s4>
-    <s4 title="invalidate">
+    </s3>
+    <s3 title="invalidate">
     <p>
         <em>Function</em> <code>invalidate()</code>
     </p>
@@ -161,15 +161,15 @@
       <code>WebContinuation</code> invalidates all the
       <code>WebContinuation</code>s which are children of it.    
     </p>
-    </s4>
-    <s4 title="id">
+    </s3>
+    <s3 title="id">
     <p>
         <em>Property</em> <code>[String] id</code>
     </p>
     <p>
        Returns the unique string identifier of this continuation
     </p>
-    </s4>
+    </s3>
     </s2>
     </s1>
   </body>

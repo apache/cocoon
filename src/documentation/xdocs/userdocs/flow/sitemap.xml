@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../../WEB-INF/entities/document-v10.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <document>
   <header>
@@ -14,21 +14,18 @@
     <s1 title="Sitemap">
     <p>The Cocoon sitemap includes several elements to specify interactions with your Flowscripts.</p>
       <s2 title="flow">
-     <p>The <code>flow</code> element defines a Flowscript interpreter for a sitemap. The <code>language</code> attribute specifies the target programming language. Currently the only supported language is <code>"JavaScript"</code>. Its embedded <code>script</code> elements allow you to specify the files that make up the flow for this sitemap. Each <code>script</code> element specifies the URI of a script that will be compiled and executed when this Sitemap is created. The <code>src</code> attribute specifies the URI of the script.</p><p>
+     <p>The <code>flow</code> element defines a Flowscript interpreter for a sitemap. The <code>language</code> attribute specifies the target programming language. Currently the only supported language is <code>"JavaScript"</code>. Its embedded <code>script</code> elements allow you to specify the files that make up the flow for this sitemap. Each <code>script</code> element specifies the URI of a script that will be compiled and executed when this Sitemap is created. The <code>src</code> attribute specifies the URI of the script.</p>
       <source><![CDATA[
         <map:flow language="Language">
            <map:script src="URI"/>+
         </map:flow>
       ]]></source>
-    </p>
-<p>
-  Example:
+    <p>Example:</p>
       <source><![CDATA[
         <map:flow language="JavaScript">
            <map:script src="myApplication.js"/>
         </map:flow>
       ]]></source>
-</p>
       </s2>
       <s2 title="call">
      <p>The <code>call</code> element allows you to call a top-level function in your Flowscript or to invoke an existing continuation.</p>
@@ -39,8 +36,7 @@
            <map:parameter name="Name" value="Value"/>*
         </map:call>
       ]]></source>
-      <p>
-Example:
+      <p>Example:</p>
       <source><![CDATA[
         <map:flow language="JavaScript">
            <map:script src="myApplication.js"/>
@@ -53,7 +49,6 @@ Example:
            </map:pipeline>
         </map:pipelines>
       ]]></source>
-      </p>
       <p>Then in <code>myApplication.js</code> you would define a JavaScript function called <code>showIndexPage()</code> such as:</p>
       <source><![CDATA[
         function showIndexPage() { 
@@ -61,23 +56,18 @@ Example:
             sendPage("private/index.html", {param: param});
         }
       ]]></source>
-      <p></p>
       </s3>
       <s3 title="continuation"><anchor id="callContinuation"/>
       <p>If the <code>continuation</code> attribute is present, then the Sitemap will invoke an existing continuation of your Flowscript. The <code>continuation</code> attribute specifies the unique id of the continuation.</p>
-      <p>
       <source><![CDATA[
         <map:call continuation="Id"/>
       ]]></source>
-      </p>
-      <p>
-Example:
+      <p>Example:</p>
       <source><![CDATA[
         <map:match pattern="*.form">
           <map:call continuation="{1}"/>
         </map:match>
       ]]></source>
-      </p>
       </s3>
       </s2>
     </s1>
