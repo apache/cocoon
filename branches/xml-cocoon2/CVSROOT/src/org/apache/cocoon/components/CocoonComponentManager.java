@@ -33,7 +33,7 @@ import org.apache.avalon.Loggable;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-03-16 19:54:03 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-16 20:13:50 $
  */
 public class CocoonComponentManager implements ComponentManager, Loggable, Configurable, Contextualizable {
 
@@ -176,7 +176,9 @@ public class CocoonComponentManager implements ComponentManager, Loggable, Confi
     }
 
     public void release(Component component) {
+        if (component == null) return;
         CocoonComponentHandler handler = (CocoonComponentHandler) this.componentMapping.get(component);
+        if (handler == null) return;
         handler.put(component);
         this.componentMapping.remove(component);
     }
