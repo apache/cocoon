@@ -45,9 +45,8 @@
   </question>
   <answer>
   <p>1. <code>{cocoon}/WEB-INF/logkit.xconf</code>:</p>
-    <p>Please refer to the Avalon Excalibur Documentation:
-    <link href="http://jakarta.apache.org/avalon/excalibur/logger.html">
-     Avalon Excalibur LogKit Management</link> </p>
+   <p>Please refer to the
+    <link href="http://avalon.apache.org/logkit/index.html">Avalon LogKit Documentation</link></p>
   <p>2. <code>{cocoon}/WEB-INF/web.xml</code>:</p>
     <p>Here you can change following paramters:</p>
     <ul>
