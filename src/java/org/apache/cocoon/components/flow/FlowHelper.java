@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.flow;
 
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.Request;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 
@@ -29,15 +27,24 @@ import java.util.Map;
  */
 public class FlowHelper {
 
+    // Constants defining keys in the object model used to store the various objects.
+    // These constants are private so that access to these objects only go through the
+    // accessors provided below.
+    //
+    // These objects are stored in the object model rather than as request attributes,
+    // as object model is cloned for subrequests (see EnvironmentWrapper), whereas
+    // request attributes are shared between the "real" request and all of its
+    // child requests.
+
     /**
      * Request attribute name used to store flow context.
      */
-    public static final String CONTEXT_OBJECT = "cocoon.flow.context";
+    private static final String CONTEXT_OBJECT = "cocoon.flow.context";
 
     /**
      * Request attribute name used to store flow continuation.
      */
-    public static final String CONTINUATION_OBJECT = "cocoon.flow.continuation";
+    private static final String CONTINUATION_OBJECT = "cocoon.flow.continuation";
 
     /**
      * Get the flow context object associated with the current request
@@ -46,8 +53,7 @@ public class FlowHelper {
      * @return The context object 
      */
     public final static Object getContextObject(Map objectModel) {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        return request.getAttribute(CONTEXT_OBJECT);
+        return objectModel.get(CONTEXT_OBJECT);
     }
 
     /**
@@ -57,8 +63,7 @@ public class FlowHelper {
      * @return The web continuation
      */
     public final static WebContinuation getWebContinuation(Map objectModel) {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        return (WebContinuation)request.getAttribute(CONTINUATION_OBJECT);
+        return (WebContinuation)objectModel.get(CONTINUATION_OBJECT);
     }
 
     /**
@@ -69,8 +74,7 @@ public class FlowHelper {
      */
     public final static void setWebContinuation(Map objectModel,
                                           WebContinuation kont) {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        request.setAttribute(CONTINUATION_OBJECT, kont);
+        objectModel.put(CONTINUATION_OBJECT, kont);
     }
 
     /**
@@ -80,8 +84,7 @@ public class FlowHelper {
      * @param obj The context object 
      */
     public final static void setContextObject(Map objectModel, Object obj) {
-        Request request = ObjectModelHelper.getRequest(objectModel);
-        request.setAttribute(CONTEXT_OBJECT, obj);
+        objectModel.put(CONTEXT_OBJECT, obj);
     }
     
     /**

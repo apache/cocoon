@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.5 2004/03/31 21:06:59 vgritsenko Exp $
+ * @version CVS $Id: Form.js,v 1.6 2004/04/25 12:12:09 sylvain Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -106,9 +106,11 @@ Form.prototype.showForm = function(uri, bizData) {
         var formContext = 
             Packages.org.apache.cocoon.forms.flow.javascript.FormsFlowHelper.getFormContext(cocoon, this.locale);
 
-        // Prematurely add the bizData as a request attribute so that event listeners can use it
+        // Prematurely add the bizData as in the object model so that event listeners can use it
         // (the same is done by cocoon.sendPage())
-        cocoon.request.setAttribute(Packages.org.apache.cocoon.components.flow.FlowHelper.CONTEXT_OBJECT, bizData);
+        // FIXME: hack because object model isn't available in flowscript.
+        var objectModel = org.apache.cocoon.components.CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        org.apache.cocoon.components.flow.FlowHelper.setContextObject(objectModel, bizData);
 
         finished = this.form.process(formContext);
         

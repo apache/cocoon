@@ -81,7 +81,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.26 2004/04/24 17:38:32 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.27 2004/04/25 12:12:08 sylvain Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -669,8 +669,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
                     
                     // Register the current scope for scripts indirectly called from this function
-                    cocoon.getRequest().setAttribute(
-                                                     FOM_JavaScriptFlowHelper.FOM_SCOPE, thrScope);
+                    FOM_JavaScriptFlowHelper.setFOM_FlowScope(cocoon.getObjectModel(), thrScope);
                     if (enableDebugger) {
                         if (!getDebugger().isVisible()) {
                             // only raise the debugger window if it isn't already visible
@@ -762,8 +761,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                                        avalonContext,
                                        getLogger(), wk);
                 // Register the current scope for scripts indirectly called from this function
-                cocoon.getRequest().setAttribute(
-                                                 FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
+                FOM_JavaScriptFlowHelper.setFOM_FlowScope(cocoon.getObjectModel(), kScope);
                 
                 if (enableDebugger) {
                     getDebugger().setVisible(true);

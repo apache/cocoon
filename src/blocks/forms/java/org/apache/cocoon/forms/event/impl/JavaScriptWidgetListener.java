@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.event.impl;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -34,7 +35,7 @@ import org.mozilla.javascript.Script;
  * Listeners built by {@link org.apache.cocoon.forms.event.impl.JavaScriptWidgetListenerBuilder}
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListener.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version CVS $Id: JavaScriptWidgetListener.java,v 1.3 2004/04/25 12:12:09 sylvain Exp $
  */
 public abstract class JavaScriptWidgetListener {
     
@@ -55,15 +56,15 @@ public abstract class JavaScriptWidgetListener {
             
             // FIXME: remove this ugly hack and get the request from the Avalon context once
             // listener builder are real components
-            Request request = ObjectModelHelper.getRequest(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
+            Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
             
             // Add the biz data that was passed to showForm()
-            Object viewData = request.getAttribute(FlowHelper.CONTEXT_OBJECT);
+            Object viewData = FlowHelper.getContextObject(objectModel);
             if (viewData != null) {
                 values.put("viewData", viewData);
             }
             
-            JavaScriptHelper.execScript(this.script, values, request);
+            JavaScriptHelper.execScript(this.script, values, objectModel);
             
         } catch(RuntimeException re) {
             // rethrow
