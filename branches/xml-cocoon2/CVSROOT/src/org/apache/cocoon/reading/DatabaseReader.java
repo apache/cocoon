@@ -12,6 +12,7 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.util.datasource.DataSourceComponent;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
@@ -45,15 +46,18 @@ import org.apache.cocoon.environment.Response;
  *
  * @author <a href="bloritsch@apache.org">Berin Loritsch</a>
  */
-public class DatabaseReader extends AbstractReader implements Composer, Configurable {
+public class DatabaseReader extends AbstractReader implements Composer, Configurable, Disposable {
     ComponentSelector dbselector;
     String dsn;
+
+    private ComponentManager manager;
 
     /**
      * Compose the object so that we get the <code>Component</code>s we need from
      * the <code>ComponentManager</code>.
      */
     public void compose(ComponentManager manager) throws ComponentManagerException {
+        this.manager = manager;
         this.dbselector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
     }
 
@@ -232,5 +236,13 @@ public class DatabaseReader extends AbstractReader implements Composer, Configur
         }
         is.close();
         out.flush();
+    }
+
+    /**
+     * dispose()
+     */
+    public void dispose()
+    {
+        if (this.dbselector != null) this.manager.release((Component)this.dbselector);
     }
 }

@@ -27,6 +27,7 @@ import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Recyclable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Loggable;
 
@@ -62,10 +63,10 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-11 10:53:04 $
+ * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-13 16:02:27 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
-implements Transformer, Composer, Recyclable, Configurable, Cacheable {
+implements Transformer, Composer, Recyclable, Configurable, Cacheable, Disposable {
     private static String FILE = "file:/";
 
     /** The store service instance */
@@ -79,6 +80,8 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable {
 
     /** Is the store turned on? (default is on) */
     private boolean useStore = true;
+
+    private ComponentManager manager;
 
     /** The InputSource */
     private InputSource inputSource;
@@ -155,6 +158,7 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable {
      */
     public void compose(ComponentManager manager) {
         try {
+            this.manager = manager;
             log.debug("Looking up " + Roles.STORE);
             this.store = (Store) manager.lookup(Roles.STORE);
         } catch (Exception e) {
@@ -318,6 +322,12 @@ implements Transformer, Composer, Recyclable, Configurable, Cacheable {
         }
 
         return true;
+    }
+
+    public void dispose() 
+    {
+        if(this.store != null)
+            this.manager.release((Component)this.store);
     }
 
     public void recycle()

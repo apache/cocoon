@@ -40,6 +40,7 @@ import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
@@ -175,9 +176,9 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-11 12:41:11 $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-13 16:02:18 $
  */
-public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
+public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable, Disposable {
     protected Map files = new HashMap();
     private static final Map typeConstants;
     protected ComponentSelector dbselector;
@@ -548,5 +549,13 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
     private final long dateValue(String value, String format) throws Exception {
         DateFormat formatter = new SimpleDateFormat(format);
         return formatter.parse(value).getTime();
+    }
+
+    /**
+     *  dispose
+     */
+    public void dispose() {
+        this.manager.release((Component)dbselector);
+        super.dispose();
     }
 }

@@ -18,6 +18,7 @@ import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.Loggable;
 
@@ -33,14 +34,15 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-03-19 21:20:29 $
+ * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-13 16:02:21 $
  */
-public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composer {
+public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composer, Disposable {
 
   /** The class loader */
   private ClassLoaderManager classLoaderManager;
 
-  //private ComponentManager manager;
+  /** The component manager */
+  protected ComponentManager manager = null;
 
   /**
    * Return the language name
@@ -93,6 +95,7 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
    * @param manager The global component manager
    */
   public void compose(ComponentManager manager) {
+    this.manager = manager;
     if (this.classLoaderManager == null) {
       try {
           log.debug("Looking up " + Roles.CLASS_LOADER);
@@ -290,5 +293,12 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
         buffer.append(files[i]).append(File.pathSeparator);
     }
     return buffer.toString();
+  }
+
+  /**
+   *  dispose
+   */
+  public void dispose() {
+    manager.release((Component)this.classLoaderManager);
   }
 }

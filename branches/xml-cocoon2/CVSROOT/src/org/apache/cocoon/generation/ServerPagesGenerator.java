@@ -20,8 +20,11 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Recyclable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.Loggable;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
@@ -41,11 +44,11 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-02 12:21:05 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-13 16:02:23 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
-  implements ContentHandler, LexicalHandler, Poolable
+  implements ContentHandler, LexicalHandler, Recyclable, Disposable
 {
   /**
    * The sitemap-defined server pages program generator
@@ -392,4 +395,12 @@ public class ServerPagesGenerator
     protected String getSystemId() { return this.systemId; }
     protected String getName() { return this.name; }
   }
+
+    /**
+     * dispose
+     */
+    public void dispose() {
+        if(this.programGenerator != null) manager.release((Component)this.programGenerator);
+        if(this.factory != null) manager.release((Component)this.factory);
+    }
 }

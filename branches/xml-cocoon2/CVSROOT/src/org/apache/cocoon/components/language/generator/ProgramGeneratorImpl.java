@@ -19,6 +19,7 @@ import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.ThreadSafe;
@@ -47,9 +48,10 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.46 $ $Date: 2001-04-12 17:17:35 $
+ * @version CVS $Revision: 1.1.2.47 $ $Date: 2001-04-13 16:02:20 $
  */
-public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
+public class ProgramGeneratorImpl extends AbstractLoggable 
+    implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe, Disposable {
 
     /** The auto-reloading option */
     protected boolean autoReload = false;
@@ -269,5 +271,15 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
 
     public void release(CompiledComponent component) {
         this.cache.release((Component) component);
+    }
+
+    /**
+     *  dispose
+     */
+    public void dispose() {
+        this.manager.release((Component)this.cache);
+        this.manager.release((Component)this.repository);
+        this.manager.release((Component)this.markupSelector);
+        this.manager.release((Component)this.languageSelector);
     }
 }

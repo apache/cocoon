@@ -26,7 +26,9 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.util.datasource.DataSourceComponent;
 
 import org.apache.cocoon.ProcessingException;
@@ -48,10 +50,10 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-03-19 21:20:47 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-13 16:02:27 $ $Author: dims $
  */
 
-public class SQLTransformer extends AbstractTransformer implements Composer, Loggable, Poolable {
+public class SQLTransformer extends AbstractTransformer implements Composer, Loggable, Poolable, Disposable {
 
     private Logger log;
 
@@ -104,9 +106,11 @@ public class SQLTransformer extends AbstractTransformer implements Composer, Log
     protected LexicalHandler lexical_handler;
 
     protected ComponentSelector dbSelector = null;
+    protected ComponentManager manager;
 
     public void compose(ComponentManager manager) {
         try {
+            this.manager = manager;
             this.dbSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
         } catch (ComponentManagerException cme) {
             this.log.warn("Could not get the DataSource Selector", cme);
@@ -637,4 +641,11 @@ public class SQLTransformer extends AbstractTransformer implements Composer, Log
 
     }
 
+
+    /**
+     * dispose 
+     */
+    public void dispose() {
+        if(this.dbSelector != null) this.manager.release((Component) this.dbSelector);
+    }
 }

@@ -24,6 +24,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Modifiable;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Disposable;
 
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
@@ -71,10 +72,10 @@ import javax.xml.parsers.ParserConfigurationException;
  * This Transformer use the XT processor.
  *
  * @author <a href="mailto:ssahuc@imediation.com">Sahuc Sebastien</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-04-12 12:30:36 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-04-13 16:02:27 $
  */
 public class XTTransformer extends DocumentHandlerWrapper
-implements Transformer, Composer, Loggable, Poolable {
+implements Transformer, Composer, Loggable, Poolable, Disposable {
     private Logger log;
 
     /** The component manager */
@@ -276,6 +277,15 @@ implements Transformer, Composer, Loggable, Poolable {
         public void unparsedEntityDecl (String name, String publicId, String systemId, String notationName) throws SAXException {
             builder.unparsedEntityDecl (name, publicId, systemId, notationName);
         }
+    }
+
+    /**
+    * dispose
+    */
+    public void dispose()
+    {
+        if(this.store != null)
+            this.manager.release((Component)this.store);
     }
 }
 

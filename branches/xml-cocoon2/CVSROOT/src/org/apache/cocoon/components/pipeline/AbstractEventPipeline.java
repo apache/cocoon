@@ -16,6 +16,7 @@ import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Parameters;
 
 import org.apache.cocoon.ProcessingException;
@@ -37,15 +38,17 @@ import org.xml.sax.EntityResolver;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-12 12:30:34 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-13 16:02:22 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
-implements EventPipeline {
+implements EventPipeline, Disposable {
 
     protected Generator generator;
     protected Parameters generatorParam;
     protected String generatorSource;
+    protected ComponentSelector generatorSelector;
+    protected ComponentSelector transformerSelector;
     protected ArrayList transformers = new ArrayList();
     protected ArrayList transformerParams = new ArrayList();
     protected ArrayList transformerSources = new ArrayList();
@@ -57,6 +60,8 @@ implements EventPipeline {
     public void compose (ComponentManager manager)
     throws ComponentManagerException {
         this.manager = manager;
+        generatorSelector = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
+        transformerSelector = (ComponentSelector)this.manager.lookup(Roles.TRANSFORMERS);
     }
 
     public void setGenerator (String role, String source, Parameters param, Exception e)
@@ -75,18 +80,14 @@ implements EventPipeline {
         if (this.generator != null) {
             throw new ProcessingException ("Generator already set. You can only select one Generator (" + role + ")");
         }
-        ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.GENERATORS);
-        this.generator = (Generator) selector.select(role);
-        this.manager.release((Component)selector);
+        this.generator = (Generator) generatorSelector.select(role);
         this.generatorSource = source;
         this.generatorParam = param;
     }
 
     public void addTransformer (String role, String source, Parameters param)
     throws Exception {
-        ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.TRANSFORMERS);
-        this.transformers.add ((Transformer)selector.select(role));
-        this.manager.release((Component)selector);
+        this.transformers.add ((Transformer)transformerSelector.select(role));
         this.transformerSources.add (source);
         this.transformerParams.add (param);
     }
@@ -225,24 +226,31 @@ implements EventPipeline {
 
     }
 
+    public void dispose() {
+        if(generatorSelector != null)        
+            manager.release((Component)generatorSelector);
+        if(transformerSelector != null)        
+            manager.release((Component)transformerSelector);
+    }
+
     public void recycle() {
         super.recycle();
         try {
-            // release generator
-            if ( this.generator != null ) {
-                ((ComponentSelector) this.manager.lookup(Roles.GENERATORS))
-                    .release(this.generator);
+            // Release generator.
+            if ( this.generatorSelector != null ) {
+                if ( this.generator != null ) {
+                    generatorSelector.release(this.generator);
+                }
             }
             this.generator = null;
 
             // Release transformers
-            ComponentSelector transformerSelector;
-            transformerSelector = (ComponentSelector)this.manager.lookup(Roles.TRANSFORMERS);
-            Iterator itt = this.transformers.iterator();
-            while ( itt.hasNext() ) {
-                transformerSelector.release((Component)itt.next());
+            if(transformerSelector != null) {
+                Iterator itt = this.transformers.iterator();
+                while ( itt.hasNext() ) {
+                    transformerSelector.release((Component)itt.next());
+                }
             }
-            this.manager.release((Component)transformerSelector);
 
             this.transformers.clear();
             this.transformerParams.clear();
@@ -254,7 +262,7 @@ implements EventPipeline {
                 this.manager.release((Component) itc.next());
             }
             this.connectors.clear();
-        } catch ( ComponentManagerException e ) {
+        } catch ( Exception e ) {
             getLogger().warn(
                 "Failed to release components from event pipeline.",
                 e

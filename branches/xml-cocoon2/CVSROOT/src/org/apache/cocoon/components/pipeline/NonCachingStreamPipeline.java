@@ -12,9 +12,10 @@ import java.io.OutputStream;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.AbstractLoggable;
 
@@ -37,9 +38,9 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-12 12:30:34 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-13 16:02:22 $
  */
-public class NonCachingStreamPipeline extends AbstractLoggable implements StreamPipeline {
+public class NonCachingStreamPipeline extends AbstractLoggable implements StreamPipeline, Disposable {
     private EventPipeline eventPipeline;
     private Reader reader;
     private Parameters readerParam;
@@ -51,6 +52,8 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
     private String serializerSource;
     private String serializerMimeType;
     private String sitemapSerializerMimeType;
+    private SitemapComponentSelector readerSelector;
+    private SitemapComponentSelector serializerSelector;
 
     /** the component manager */
     private ComponentManager manager;
@@ -63,9 +66,11 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
      *
      * @param manager The <code>ComponentManager</code> which this
      *               <code>Composer</code> uses.
-     * @throws ComponentException  */
-    public void compose (ComponentManager manager) throws ComponentException {
+     * @throws ComponentManagerException  */
+    public void compose (ComponentManager manager) throws ComponentManagerException {
         this.manager = manager;
+        readerSelector = (SitemapComponentSelector) this.manager.lookup(Roles.READERS);
+        serializerSelector = (SitemapComponentSelector) this.manager.lookup(Roles.SERIALIZERS);
     }
 
     public void setEventPipeline (EventPipeline eventPipeline) throws Exception {
@@ -97,13 +102,11 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
         if (this.reader != null) {
             throw new ProcessingException ("Reader already set. You can only select one Reader (" + role + ")");
         }
-        SitemapComponentSelector selector = (SitemapComponentSelector) this.manager.lookup(Roles.READERS);
-        this.reader = (Reader)selector.select(role);
+        this.reader = (Reader)readerSelector.select(role);
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
-        this.sitemapReaderMimeType = selector.getMimeTypeForRole(role);
-        this.manager.release((Component)selector);
+        this.sitemapReaderMimeType = readerSelector.getMimeTypeForRole(role);
     }
 
     public void setSerializer (String role, String source, Parameters param)
@@ -116,13 +119,11 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
         if (this.serializer != null) {
             throw new ProcessingException ("Serializer already set. You can only select one Serializer (" + role + ")");
         }
-        SitemapComponentSelector selector = (SitemapComponentSelector) this.manager.lookup(Roles.SERIALIZERS);
-        this.serializer = (Serializer)selector.select(role);
+        this.serializer = (Serializer)serializerSelector.select(role);
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
-        this.sitemapSerializerMimeType = selector.getMimeTypeForRole(role);
-        this.manager.release((Component)selector);
+        this.sitemapSerializerMimeType = serializerSelector.getMimeTypeForRole(role);
     }
 
     public void addTransformer (String role, String source, Parameters param) throws Exception {
@@ -231,14 +232,22 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
         prev.setConsumer(this.serializer);
     }
 
+    public void dispose() {
+        if(readerSelector != null)        
+            manager.release((Component)readerSelector);
+        if(serializerSelector != null)        
+            manager.release((Component)serializerSelector);
+    }
+
     public void recycle() {
         getLogger().debug("Recycling of NonCachingStreamPipeline");
 
         try {
             // release reader.
-            if ( this.reader != null ) {
-                ((ComponentSelector) this.manager.lookup(Roles.READERS))
-                    .release(this.reader);
+            if ( this.readerSelector != null) {
+                if ( this.reader != null ) {
+                    readerSelector.release(this.reader);
+                }
             }
             this.reader = null;
 
@@ -246,9 +255,10 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
             this.eventPipeline = null;
 
             // release serializer
-            if ( this.serializer != null ) {
-                ((ComponentSelector) this.manager.lookup(Roles.SERIALIZERS))
-                    .release(this.serializer);
+            if ( this.serializerSelector != null ) {
+                if ( this.serializer != null ) {
+                    serializerSelector.release(this.serializer);
+                }
             }
             this.serializer = null;
         } catch ( Exception e ) {

@@ -18,6 +18,7 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Component;
+import org.apache.avalon.Disposable;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
@@ -40,9 +41,9 @@ import java.io.IOException;
  * <a href="http://c2.com/cgi/wiki?YouArentGonnaNeedIt">you aren't gonna need it</a>,
  * so I've just used very simple extraction based on a URI and local name.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-19 21:20:45 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-13 16:02:26 $
  */
-public class FragmentExtractorTransformer extends AbstractTransformer implements Composer {
+public class FragmentExtractorTransformer extends AbstractTransformer implements Composer, Disposable {
     private static String EXTRACT_URI="http://www.w3.org/2000/svg";
     private static String EXTRACT_ELEMENT="svg";
 
@@ -63,8 +64,10 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
 
     private DOMFactory documentFactory;
 
-    public void compose(ComponentManager manager) {
+    public void compose(ComponentManager manager) 
+        throws ComponentManagerException{
         this.manager = manager;
+        documentFactory = (DOMFactory) manager.lookup(Roles.PARSER);
     }
 
     /** Setup the transformer.
@@ -81,14 +84,6 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
      */
     public void startDocument()
     throws SAXException {
-        try {
-            documentFactory = (DOMFactory) manager.lookup(Roles.PARSER);
-        } catch ( ComponentManagerException cme ) {
-            documentFactory = null;
-            getLogger().error("FragmentExtractorTransformer could not lookup parser.");
-            throw new SAXException("Could not get documentFactory", cme);
-        }
-
         super.startDocument();
     }
 
@@ -98,9 +93,6 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
     public void endDocument()
     throws SAXException {
         super.endDocument();
-
-        this.manager.release((Component) this.documentFactory);
-        this.documentFactory = null;
     }
 
     /**
@@ -387,5 +379,13 @@ public class FragmentExtractorTransformer extends AbstractTransformer implements
         } else {
             this.currentBuilder.comment(ch,start,len);
         }
+    }
+
+    /**
+     * dispose
+     */
+    public void dispose() {
+        if(this.documentFactory!=null) this.manager.release((Component) this.documentFactory);
+        this.documentFactory = null;
     }
 }

@@ -34,6 +34,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.Component;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
@@ -52,9 +53,9 @@ import javax.xml.transform.TransformerException;
  * by the SAX event FSM yet.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.1.2.25 $ $Date: 2001-04-12 12:30:36 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-13 16:02:27 $ $Author: dims $
  */
-public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable {
+public class XIncludeTransformer extends AbstractTransformer implements Composer, Poolable, Disposable {
 
     protected URLFactory urlFactory;
 
@@ -380,5 +381,11 @@ public class XIncludeTransformer extends AbstractTransformer implements Composer
             throws SAXException {
             lexical_handler.comment(ary,start,length);
         }
+    }
+
+    public void dispose()
+    {
+        if(this.urlFactory != null)
+            this.manager.release((Component)this.urlFactory);
     }
 }

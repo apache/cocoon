@@ -16,9 +16,10 @@ import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.Roles;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.configuration.Parameters;
-import org.apache.avalon.Recyclable;
+import org.apache.avalon.Disposable;
 
 /**
  * An Abstract DOM Transformer, for use when a transformer needs a DOM-based
@@ -32,7 +33,7 @@ import org.apache.avalon.Recyclable;
  * @version CVS $Revision $Date
  */
 public abstract class AbstractDOMTransformer extends DOMBuilder
-    implements Transformer, DOMBuilder.Listener, Composer {
+    implements Transformer, DOMBuilder.Listener, Composer, Disposable {
 
     /** The SAX entity resolver */
     protected EntityResolver resolver;
@@ -145,5 +146,12 @@ public abstract class AbstractDOMTransformer extends DOMBuilder
      */
     public void setLexicalHandler(LexicalHandler handler) {
         this.lexicalHandler = handler;
+    }
+
+    /**
+     * dispose
+     */
+    public void dispose() {
+        if(super.factory != null) manager.release((Component)super.factory);
     }
 }

@@ -37,7 +37,7 @@ import org.apache.avalon.Component;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-12 09:40:03 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-13 16:02:23 $
  */
 public class FileGenerator extends ComposerGenerator
 implements Cacheable {
@@ -53,11 +53,6 @@ implements Cacheable {
      */
     public void compose(ComponentManager manager) {
         super.compose(manager);
-        try {
-            getLogger().debug("Looking up " + Roles.STORE);
-        } catch (Exception e) {
-            getLogger().error("Could not find component", e);
-        }
     }
 
     /**

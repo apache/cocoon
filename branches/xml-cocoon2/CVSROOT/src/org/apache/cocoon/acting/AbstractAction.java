@@ -7,6 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
+import org.apache.avalon.Disposable;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -19,15 +20,23 @@ import org.apache.log.Logger;
  * Actions.  In order to get at the Logger, use getLogger().
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-12 04:38:30 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-13 16:02:17 $
  */
 public abstract class AbstractAction extends AbstractLoggable
-implements Action, Configurable {
+implements Action, Configurable, Disposable {
 
     /**
      * Configures the Action.  This implementation currently does nothing.
      */
     public void configure(Configuration conf) throws ConfigurationException {
+        // Purposely empty so that we don't need to implement it in every
+        // class.
+    }
+
+    /**
+     *  dispose
+     */
+    public void dispose() {
         // Purposely empty so that we don't need to implement it in every
         // class.
     }

@@ -25,6 +25,7 @@ import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.AbstractLoggable;
+import org.apache.avalon.Disposable;
 import org.apache.avalon.component.DefaultComponentSelector;
 
 import org.apache.cocoon.ProcessingException;
@@ -43,9 +44,9 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.31 $ $Date: 2001-04-12 16:00:57 $
+ * @version CVS $Revision: 1.1.2.32 $ $Date: 2001-04-13 16:02:25 $
  */
-public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
+public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap, Disposable {
     private Context context;
 
     private static final int BYTE_ARRAY_SIZE = 1024;
@@ -249,4 +250,18 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
      */
     public abstract boolean process (Environment environment, StreamPipeline pipeline, EventPipeline eventPipeline)
     throws Exception;
+
+    /**
+     * dispose
+     */
+    public void dispose() {
+        if (this.urlFactory!=null)  manager.release((Component)this.urlFactory);
+        if (this.generators!=null)  manager.release((Component)this.generators);
+        if (this.transformers!=null)  manager.release((Component)this.transformers);
+        if (this.serializers!=null)  manager.release((Component)this.serializers);
+        if (this.readers!=null)  manager.release((Component)this.readers);
+        if (this.actions!=null)  manager.release((Component)this.actions);
+        if (this.matchers!=null)  manager.release((Component)this.matchers);
+        if (this.selectors!=null)  manager.release((Component)this.selectors);
+    }
 }
