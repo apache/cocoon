@@ -43,7 +43,7 @@
    It also declares and includes the ISOnum set of character entities,
    so that we can use entities like "&amp;frac12;" (to represent &frac12;).
    Finally the internal DTD subset declares an internal general entity
-   for &quot;&amp;note&quot;.
+   for &quot;&amp;note;&quot;.
   </para>
  </section>
 
