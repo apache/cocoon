@@ -203,6 +203,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="fix" fixes-bug="27260">
+     Make implementation of Cocoon protocol compliant with the Source interface.
+   </action>
    <action dev="AG" type="update">
      Updated Apache Ant to 1.6.2.
    </action>
