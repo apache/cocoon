@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.9 2000-03-25 12:50:21 stefano Exp $ --
+/*-- $Id: MemoryStore.java,v 1.10 2000-03-26 13:18:58 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * sending a note about a method to do it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.9 $ $Date: 2000-03-25 12:50:21 $
+ * @version $Revision: 1.10 $ $Date: 2000-03-26 13:18:58 $
  */
 
 public class MemoryStore implements Store, Status {
@@ -75,7 +75,7 @@ public class MemoryStore implements Store, Status {
      * Indicates how much memory should be left free in the JVM for
      * normal operation.
      */
-    private static final int memory = 500000;
+    private static final int MEMORY = 500000;
 
     private Runtime jvm;
     private Hashtable hashtable;
@@ -110,7 +110,7 @@ public class MemoryStore implements Store, Status {
      * virtual machine is restarted or some error happens.
      */
     public synchronized void hold(Object key, Object object) {
-        if (jvm.freeMemory() < memory) this.free();
+        if (jvm.freeMemory() < MEMORY) this.free();
         this.hashtable.put(key, new Container(object));
     }
 
@@ -217,14 +217,15 @@ public class MemoryStore implements Store, Status {
         // give back info on the total memory used.
         StringBuffer buffer = new StringBuffer();
         buffer.append("Memory Object Storage System:<br>");
-        buffer.append("Minimum required free memory:  " + memory + "<br>");
-        buffer.append("Current free memory: " + this.jvm.freeMemory() + "<br>");
+        buffer.append("Minimum required free memory:  " + MEMORY + "<br>");
+        buffer.append("Current free memory: " + this.jvm.freeMemory() + "<br><ul>");
         Enumeration e = list();
         while (e.hasMoreElements()) {
             buffer.append("<li>");
             buffer.append(e.nextElement());
             buffer.append("</li>");
         }
+        buffer.append("</ul>");
         return buffer.toString();
     }
 }
