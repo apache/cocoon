@@ -1,4 +1,4 @@
-Copyright 2000 (C) Intalio Inc. All Rights Reserved.
+Copyright 1999-2004 (C) Intalio Inc., and others. All Rights Reserved.
 
 Redistribution and use of this software and associated documentation
 ("Software"), with or without modification, are permitted provided
