@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.12 2000-03-30 00:35:25 stefano Exp $ --
+/*-- $Id: Utils.java,v 1.13 2000-05-03 12:57:36 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -61,7 +61,7 @@ import javax.servlet.http.*;
  * Utility methods for Cocoon and its classes.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.12 $ $Date: 2000-03-30 00:35:25 $
+ * @version $Revision: 1.13 $ $Date: 2000-05-03 12:57:36 $
  */
 
 public final class Utils {
@@ -249,14 +249,18 @@ public final class Utils {
                 throw new RuntimeException("Cannot access non-file/war resources");
             }
         } catch (NoSuchMethodError e) {
+            String path;
+            
             // if there is no such method we must be in Servlet API 2.1
             if (request.getPathInfo() != null) {
                 // this must be Apache JServ
-                return request.getPathTranslated().replace('\\','/');
+                path = request.getPathTranslated();
             } else {
                 // otherwise use the deprecated method on all other servlet engines.
-                return request.getRealPath(request.getRequestURI()).replace('\\', '/');
+                path = request.getRealPath(request.getRequestURI());
             }
+
+            return (path == null) ? "" : path.replace('\\','/');
         } catch (NullPointerException e) {
             // if there is no context set, we must be called from the command line
             return request.getPathTranslated().replace('\\','/');
