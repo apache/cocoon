@@ -65,7 +65,10 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.generation.Generator;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathContextFactory;
@@ -86,7 +89,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  * <p>
  *  Provides a tag library and embedded XPath expression substitution
- *  to access data sent by the Cocoon flow layer
+ *  to access data sent by Cocoon flowscripts
+ *  
  * </p>
  *
  *
@@ -101,23 +105,26 @@ extends AbstractSAXTransformer implements Initializable, Generator {
 
     public static final String JXPATH_NAMESPACE_URI  = 
         "http://cocoon.apache.org/transformation/jxpath/1.0";
-    public static final String JXPATH_FOR_EACH         = "for-each";
+    public static final String JXPATH_FOR_EACH       = "for-each";
     public static final String JXPATH_CHOOSE         = "choose";
-    public static final String JXPATH_WHEN         = "when";
-    public static final String JXPATH_OTHERWISE         = "otherwise";
+    public static final String JXPATH_WHEN           = "when";
+    public static final String JXPATH_OTHERWISE      = "otherwise";
     public static final String JXPATH_VALUEOF        = "value-of";
     public static final String JXPATH_VALUEOF_SELECT = "select";
     public static final String JXPATH_CONTINUATION   = "continuation";
     public static final String JXPATH_CONTINUATION_SELECT = "select";
     public static final String JXPATH_IF             = "if";
-    public static final String JXPATH_IF_TEST           = "test";
-    public static final String JXPATH_WHEN_TEST           = "test";
+    public static final String JXPATH_IF_TEST        = "test";
+    public static final String JXPATH_WHEN_TEST      = "test";
 
     // web contination
     private WebContinuation kont;
 
+    // XPath variables 
+    private MyVariables variables;
+
     // TBD: Don't really need stacks for these in current implementation of for-each
-    private Stack foreachStack = new Stack(); 
+    private Stack foreachStack;
     // Stack of JXPathContext's 
     private Stack contextStack;
 
@@ -217,6 +224,13 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         chooseStack = new Stack();
         ifStack = new Stack();
         inChoose = false;
+        variables = new MyVariables(bean, 
+                                    kont,
+                                    ObjectModelHelper.getRequest(objectModel),
+                                    ObjectModelHelper.getResponse(objectModel),
+                                    ObjectModelHelper.getContext(objectModel),
+                                    parameters);
+                                          
         pushContext(bean);
     }
 
@@ -429,6 +443,71 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         return (JXPathContext)contextStack.peek();
     }
 
+
+    static class MyVariables implements Variables {
+
+        static final String[] VARIABLES = new String[] {
+            "continuation",
+            "flowContext",
+            "request",
+            "response",
+            "context",
+            "session",
+            "parameters"
+        };
+
+        Object bean, kont, request, response,
+            session, context, parameters;
+
+        MyVariables(Object bean, WebContinuation kont,
+                    Request request, Response response,
+                    org.apache.cocoon.environment.Context context,
+                    Parameters parameters) {
+            this.bean = bean;
+            this.kont = kont;
+            this.request = request;
+            this.session = request.getSession(false);
+            this.response = response;
+            this.context = context;
+            this.parameters = parameters;
+        }
+
+        public boolean isDeclaredVariable(String varName) {
+            for (int i = 0; i < VARIABLES.length; i++) {
+                if (varName.equals(VARIABLES[i])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        public Object getVariable(String varName) {
+            if (varName.equals("continuation")) {
+                return kont;
+            } else if (varName.equals("flowContext")) {
+                return bean;
+            } else if (varName.equals("request")) {
+                return request;
+            } else if (varName.equals("response")) {
+                return response;
+            } else if (varName.equals("session")) {
+                return session;
+            } else if (varName.equals("context")) {
+                return context;
+            } else if (varName.equals("parameters")) {
+                return parameters;
+            }
+            return null;
+        }
+        
+        public void declareVariable(String varName, Object value) {
+        }
+        
+        public void undeclareVariable(String varName) {
+        }
+    }
+
+
     private void pushContext(Object contextObject) {
         JXPathContext ctx = 
             jxpathContextFactory.newContext(null, contextObject);
@@ -441,25 +520,7 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         //
         //  <form action="kont/{getContinuation($continuation, 1)/id}" ...
         //
-        ctx.setVariables(new Variables() {
-
-                public boolean isDeclaredVariable(String varName) {
-                    return varName.equals("continuation");
-                }
-
-                public Object getVariable(String varName) {
-                    if (varName.equals("continuation")) {
-                        return kont;
-                    }
-                    return null;
-                }
-
-                public void declareVariable(String varName, Object value) {
-                }
-
-                public void undeclareVariable(String varName) {
-                }
-            });
+        ctx.setVariables(variables);
         contextStack.push(ctx);
     }
 
@@ -679,5 +740,6 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         foreachStack = null;
         chooseStack = null;
         ifStack = null;
+        variables = null;
     }
 }
