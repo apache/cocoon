@@ -26,7 +26,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapConfigurable.java,v 1.6 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface SitemapConfigurable {
 
