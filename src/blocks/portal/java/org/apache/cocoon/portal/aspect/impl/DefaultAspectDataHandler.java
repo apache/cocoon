@@ -67,7 +67,7 @@ import org.apache.cocoon.portal.aspect.AspectalizableDescription;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultAspectDataHandler.java,v 1.3 2003/10/20 13:36:41 cziegeler Exp $
+ * @version CVS $Id: DefaultAspectDataHandler.java,v 1.4 2003/12/11 09:56:58 cziegeler Exp $
  */
 public class DefaultAspectDataHandler 
     implements AspectDataHandler {
@@ -181,7 +181,7 @@ public class DefaultAspectDataHandler
         AspectDataStore store = null;
         try {
             store = (AspectDataStore)this.storeSelector.select(aspectDesc.getStoreName());
-            store.setAspectData(owner, aspectName, data);
+            store.setAspectData(owner, aspectName, AspectUtil.convert(aspectDesc, data));
         } catch (ServiceException ce) {
             throw new CascadingRuntimeException("Unable to lookup aspect data store " + aspectDesc.getStoreName(), ce);
         } finally {
