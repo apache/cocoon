@@ -59,7 +59,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.3 2003/03/18 15:23:30 nicolaken Exp $
+ * @version CVS $Id: Constants.java,v 1.4 2003/05/23 09:18:48 cziegeler Exp $
  */
 public final class Constants {
 
@@ -323,8 +323,8 @@ public final class Constants {
     /** Application <code>Context</code> Key for the upload directory path */
     public static final String CONTEXT_UPLOAD_DIR = "upload-directory";
 
-    public static final /** Application <code>Context</code> Key for the cache directory path */
-    String CONTEXT_CACHE_DIR = "cache-directory";
+    /** Application <code>Context</code> Key for the cache directory path */
+    public static final String CONTEXT_CACHE_DIR = "cache-directory";
 
     /** Application <code>Context</code> Key for the current classpath */
     public static final String CONTEXT_CLASSPATH = "classpath";

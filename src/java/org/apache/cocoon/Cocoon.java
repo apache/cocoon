@@ -50,6 +50,15 @@
 */
 package org.apache.cocoon;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Map;
+
 import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.logger.LogKitManageable;
@@ -71,6 +80,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ComponentContext;
 import org.apache.cocoon.components.EnvironmentStack;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -94,22 +104,13 @@ import org.apache.excalibur.xml.impl.XercesParser;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.InputSource;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Map;
-
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.6 2003/05/16 07:04:56 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.7 2003/05/23 09:18:48 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -190,10 +191,9 @@ public class Cocoon
      */
     public void contextualize(Context context) throws ContextException {
         if (this.context == null) {
-            this.context = new DefaultContext(context);
+            this.context = new ComponentContext(context);
             
-            try
-            {
+            try {
                 DefaultContext setup = (DefaultContext)this.context;
                 threads = new TPCThreadManager();
                 CommandManager commands = new CommandManager();
@@ -214,9 +214,7 @@ public class Cocoon
                 setup.put(Queue.ROLE, commands.getCommandSink());
                 
                 setup.makeReadOnly();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 getLogger().error("Could not set up the Command Manager", e);
             }
             
@@ -761,3 +759,4 @@ public class Cocoon
         return activeRequestCount;
     }
 }
+

@@ -53,6 +53,7 @@ package org.apache.cocoon.portal.event.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -63,10 +64,13 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
@@ -84,7 +88,7 @@ import org.apache.cocoon.portal.event.subscriber.impl.DefaultLayoutEventSubscrib
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultEventManager.java,v 1.4 2003/05/22 15:19:43 cziegeler Exp $
+ * @version CVS $Id: DefaultEventManager.java,v 1.5 2003/05/23 09:18:48 cziegeler Exp $
  */
 public class DefaultEventManager 
     extends AbstractLogEnabled
@@ -94,6 +98,7 @@ public class DefaultEventManager
                 ThreadSafe,
                 Configurable,
                 Disposable,
+                Contextualizable,
                 Publisher, Register {
                     
     private final String rootEventType = Event.class.getName();
@@ -106,12 +111,18 @@ public class DefaultEventManager
     
     protected ComponentSelector aspectSelector;
 
+    protected Context context;
+    
     public Publisher getPublisher() {
         return this;
     }
     
     public Register getRegister() {
         return this;
+    }
+    
+    protected Map getObjectModel() {
+        return ContextHelper.getObjectModel( this.context );
     }
 
     /* (non-Javadoc)
@@ -240,7 +251,7 @@ public class DefaultEventManager
             
             // Invoke aspects
             context.setEventPublisher( publisher );
-            context.setObjectModel(CocoonComponentManager.getCurrentEnvironment().getObjectModel());
+            context.setObjectModel(this.getObjectModel());
             context.setEventConverter(converter);
             context.invokeNext( service );
 
@@ -253,6 +264,14 @@ public class DefaultEventManager
             this.manager.release(service);
         }
 
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) 
+    throws ContextException {
+        this.context = context;
     }
 
 }
