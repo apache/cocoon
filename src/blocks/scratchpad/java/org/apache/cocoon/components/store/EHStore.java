@@ -17,6 +17,7 @@ package org.apache.cocoon.components.store;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 
@@ -38,8 +39,15 @@ import org.apache.excalibur.store.Store;
  * Store implementation based on EHCache.
  * (http://ehcache.sourceforge.net/)
  * 
- * TODO: CacheManager expects to be a singleton. So configuring
- * multiple EHStore intances could lead to errors.
+ * <p>
+ *  IMPORTANT:<br>
+ *  (from http://ehcache.sourceforge.net/documentation/) 
+ *  Persistence:
+ *  The Disk Cache used by EHCache is not meant to be persistence mechanism. 
+ *  The data file for each cache is deleted, if it exists, on startup.
+ *  No data from a previous instance of an application is persisted through the disk cache. 
+ *  The data file for each cache is also deleted on shutdown.
+ * </p>
  */
 public class EHStore extends AbstractLogEnabled 
 implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
@@ -47,30 +55,62 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
     private Cache m_cache;
     private CacheManager m_cacheManager;
     
+    // configuration options
     private String m_cacheName;
     private int m_maximumSize;
     private boolean m_overflowToDisk;
+    private String m_configFile;
+    
+    // ---------------------------------------------------- lifecycle
     
     public EHStore() {
     }
     
+    /**
+     * Configure the store. The following options can be used:
+     * <ul>
+     *  <li><code>cache-name</code> (main) - When configuring multiple 
+     *  EHStore intances you must specify a different name for each.</li>
+     *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
+     *  <li><code>overflow-to-disk</disk> (true) - Whether to spool elements to disk after
+     *   maxobjects has been exceeded.
+     *  <li><code>config-file</code> (org/apache/cocoon/components/store/ehcache-defaults.xml) -
+     *   The default configuration file to use. This file is the only way to specify the path where
+     *   the disk store puts its .cache files. The current default value is <code>java.io.tmp</code>.
+     *   (On a standard Linux system this will be /tmp). Note that since the EHCache manager is
+     *   a singleton object the value of this parameter will only have effect when this store is the
+     *   first to create it. Configuring different stores with different values for this parameter
+     *   will have no effect.
+     * </ul>
+     */
     public void parameterize(Parameters parameters) throws ParameterException {
-        m_cacheName = parameters.getParameter("cache-name","main");
-        m_maximumSize = parameters.getParameterAsInteger("maxobjects",100);
-        m_overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk",true);
+        m_cacheName = parameters.getParameter("cache-name", "main");
+        m_maximumSize = parameters.getParameterAsInteger("maxobjects", 10000);
+        m_overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
+        m_configFile = parameters.getParameter("config-file", 
+            "org/apache/cocoon/components/store/ehcache-defaults.xml");
     }
     
+    /**
+     * Initialize the CacheManager and created the Cache.
+     */
     public void initialize() throws Exception {
-        m_cacheManager = CacheManager.create();
-        m_cache = new Cache(m_cacheName,m_maximumSize,m_overflowToDisk,true,0,0);
+        URL configFile = Thread.currentThread().getContextClassLoader().getResource(m_configFile);
+        m_cacheManager = CacheManager.create(configFile);
+        m_cache = new Cache(m_cacheName, m_maximumSize, m_overflowToDisk, true, 0, 0);
         m_cacheManager.addCache(m_cache);
     }
     
+    /**
+     * Shutdown the CacheManager.
+     */
     public void dispose() {
         m_cacheManager.shutdown();
         m_cacheManager = null;
         m_cache = null;
     }
+    
+    // ---------------------------------------------------- Store implementation
     
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#free()

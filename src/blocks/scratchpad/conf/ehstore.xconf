@@ -20,13 +20,14 @@
   <!-- Experimental EHCache Store implementation -->
   <!--
   <store class="org.apache.cocoon.components.store.EHStore" 
-                    logger="core.store">
-    <parameter name="maxobjects" value="100"/>
+         logger="core.store">
+    <parameter name="maxobjects" value="10000"/>
   </store>
   
   <transient-store class="org.apache.cocoon.components.store.EHStore" 
-                    logger="core.store.transient">
-    <parameter name="maxobjects" value="100"/>
+                   logger="core.store.transient">
+    <parameter name="maxobjects" value="1000"/>
+    <parameter name="cache-name" value="transient"/>
     <parameter name="overflow-to-disk" value="false"/>
   </transient-store>
   -->
