@@ -57,38 +57,75 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
- * Old name for {@link DefaultsModule}.
- * @deprecated Use DefaultsModule instead; this is not a 'meta' module and is
- * thus misnamed.
- * @version CVS $Id: DefaultsMetaModule.java,v 1.2 2003/03/19 08:19:12 jefft Exp $
+ * Set a number of constants. To override the values with input from
+ * another module, combine this one with the ChainMetaModule and an
+ * arbitrary number of other modules. IOW this is no "meta" module
+ * anymore!
+ *
+ * &lt;values&gt;
+ *  &lt;skin&gt;myskin&lt;/skin&gt;
+ *  &lt;base&gt;baseurl&lt;/base&gt;
+ * &lt;/values&gt;
+ *
+ * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
+ * @version CVS $Id: DefaultsModule.java,v 1.1 2003/03/19 08:19:12 jefft Exp $
  */
-
-/* Deprecated 2003-03-19. Suggest we keep this class for compat with 2.0.x
- * until at least v2.2 (JT) */
-
-public class DefaultsMetaModule extends DefaultsModule
+public class DefaultsModule extends AbstractLogEnabled
     implements InputModule, Configurable, ThreadSafe {
 
+    private Map constants = null;
+    
     public void configure(Configuration config) throws ConfigurationException {
-        super.configure( config );
+
+        this.constants = new HashMap();
+        Configuration[] consts = config.getChild("values").getChildren();
+        for (int i=0; i<consts.length; i++) {
+            this.constants.put(consts[i].getName(), consts[i].getValue());
+        }
     }
+
 
     public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel ) 
         throws ConfigurationException {
-        return super.getAttributeValues( name, modeConf, objectModel );
+
+        String parameter=name;
+        Configuration mConf = null;
+        if (modeConf!=null) {
+            mConf       = modeConf.getChild("values");
+        }
+
+        Object[] values = new Object[1];
+        values[0] = (mConf!=null? mConf.getChild(parameter).getValue((String) this.constants.get(parameter)) 
+                     : this.constants.get(parameter));
+        return values;
     }
+
 
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel ) 
         throws ConfigurationException {
-        return super.getAttributeNames( modeConf, objectModel );
+
+        SortedSet matchset = new TreeSet(this.constants.keySet());
+        if (modeConf!=null) {
+            Configuration[] consts = modeConf.getChild("values").getChildren();
+            for (int i=0; i<consts.length; i++)
+                matchset.add(consts[i].getName());
+        }
+        return matchset.iterator();
      }
+
 
     public Object getAttribute( String name, Configuration modeConf, Map objectModel ) 
         throws ConfigurationException {
-        return super.getAttribute( name, modeConf, objectModel );
+
+        Object[] values = this.getAttributeValues(name,modeConf,objectModel);
+        return values[0];
     }
+
 }

@@ -166,7 +166,7 @@
 
     <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used
          in the samples -->
-    <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsMetaModule">
+    <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsModule">
       <values>
         <skin>defaultSkin</skin>
         <base-url>http://localhost:8080/cocoon</base-url>

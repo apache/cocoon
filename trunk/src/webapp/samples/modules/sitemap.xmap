@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: sitemap.xmap,v 1.1 2003/03/09 00:11:15 pier Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.2 2003/03/19 08:19:12 jefft Exp $ -->
 <!--
 Input Modules sample sitemap.
 
@@ -165,8 +165,8 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
           <map:parameter name="base-url" value="{defaults:base-url}"/>
         </map:generate>
         <map:transform src="properties2html.xsl">
-          <map:parameter name="title" value="Defaults Input Module (DefaultsMetaModule)"/>
-          <map:parameter name="description" value="DefaultsMetaModule
+          <map:parameter name="title" value="Defaults Input Module (DefaultsModule)"/>
+          <map:parameter name="description" value="DefaultsModule
             contains 'default' values, hardcoded into cocoon.xconf.
             It is simply a lookup table containing static values."/>
         </map:transform>
