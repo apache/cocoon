@@ -109,29 +109,17 @@
     <!--
       This parameter is used to list classes that should be loaded
       at initialization time of the servlet.
-      Usually this classes are JDBC Drivers used
+      For example, JDBC Drivers used need to be named here.
+      Additional entries may be inserted here during build depending on your 
+      build properties.
     -->
     <init-param>
       <param-name>load-class</param-name>
       <param-value>
+        <!-- For parent ComponentManager sample:
+        org.apache.cocoon.samples.parentcm.Configurator -->
         <!-- For IBM WebSphere:
         com.ibm.servlet.classloader.Handler -->
-
-        <!-- For Database Driver: -->
-        org.hsqldb.jdbcDriver
-
-        <!-- For PostgeSQL Database: 
-             org.postgresql.Driver -->
-
-        <!-- For Oracle Database:
-             oracle.jdbc.driver.OracleDriver -->
-
-        <!-- ODBC 
-             sun.jdbc.odbc.JdbcOdbcDriver -->
- 
-        <!-- For parent ComponentManager sample:
-        org.apache.cocoon.samples.parentcm.Configurator
-        -->
       </param-value>
     </init-param>
 
