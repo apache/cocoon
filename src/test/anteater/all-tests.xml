@@ -32,7 +32,7 @@
     <property name="port" value="8100"/>
     <property name="cocoon" value="http://${host}:${port}/${base}"/>
     <property name="src-webapp-dir" value="../../webapp"/>
-    <property name="deploy-dir" value="../../../build/cocoon/webapp"/>
+    <property name="deploy-dir" value="../../../build/webapp"/>
   </target>
 
   <target name="deploy">
