@@ -110,7 +110,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.13 2003/08/16 13:30:04 sylvain Exp $
+ * @version CVS $Id: Cocoon.java,v 1.14 2003/09/04 19:41:58 bruno Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -203,7 +203,7 @@ public class Cocoon
                 params.setParameter("threads-per-processor", "1");
                 params.setParameter("sleep-time", "100");
                 params.setParameter("block-timeout", "1000");
-                params.setParameter("force-shutdown", "false");
+                params.setParameter("force-shutdown", "true");
                 params.makeReadOnly();
                 
                 ContainerUtil.enableLogging(this.threads, getLogger().getChildLogger("thread.manager"));
@@ -516,8 +516,6 @@ public class Cocoon
      * Log debug information about the current environment.
      *
      * @param environment an <code>Environment</code> value
-     * @param pipeline a <code>StreamPipeline</code> value
-     * @param eventPipeline an <code>EventPipeline</code> value
      */
     protected void debug(Environment environment, boolean internal) {
         String lineSeparator = System.getProperty("line.separator");
