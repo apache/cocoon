@@ -4,7 +4,7 @@
   <target name="test" depends="junit.tests, anteater.tests" description="Runs all tests"/>
 
   <!-- Runs JUnit tests -->
-  <target name="junit.tests" depends="compile" description="Runs the unit tests">
+  <target name="junit.tests" depends="compile">
     <mkdir dir="${build.test}"/>
 
     <!-- Copy test files to build test dir -->
@@ -54,7 +54,7 @@
   </target>
 
   <!-- Anteater tests  -->
-  <target name="anteater.tests" description="Runs the functional tests">
+  <target name="anteater.tests">
     <property name="host" value="localhost"/>
     <property name="port" value="8888"/>
     <property name="base" value="/"/>

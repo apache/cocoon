@@ -4,15 +4,18 @@
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="site"/>
   </target>
 
-  <target name="forrest.webapp" depends="forrest.init" description="Generates an unpackaged webapp of the website">
+  <!-- Generates an unpackaged webapp of the website -->
+  <target name="forrest.webapp" depends="forrest.init">
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="webapp"/>
   </target>
 
-  <target name="forrest.war" depends="forrest.init" description="Generates a .war file containing the website">
+  <!-- Generates a .war file containing the website -->
+  <target name="forrest.war" depends="forrest.init">
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="war"/>
   </target>
 
-  <target name="forrest.validate" depends="forrest.init" description="Validates XML documentation files">
+  <!-- Validates XML documentation files -->
+  <target name="forrest.validate" depends="forrest.init">
     <ant antfile="${forrest.home}/forrest.antproxy.xml" target="validate"/>
   </target>
 
