@@ -43,7 +43,7 @@ import org.apache.pluto.services.information.PortletURLProvider;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletURLProviderImpl.java,v 1.4 2004/03/16 15:56:43 cziegeler Exp $
+ * @version CVS $Id: PortletURLProviderImpl.java,v 1.5 2004/03/18 19:01:15 cziegeler Exp $
  */
 public class PortletURLProviderImpl 
        implements PortletURLProvider, CopletInstanceEvent {
@@ -194,6 +194,12 @@ public class PortletURLProviderImpl
         PortalService service = null;
         try {
             service = (PortalService) this.manager.lookup(PortalService.ROLE);
+            if ( service.getPortalName() == null ) {
+                // this happens when the core log is set to debug
+                // and Cocoon debugs all session attributes
+                // otherwise this can't happen
+                return super.toString();
+            }
             LinkService linkService = service.getComponentManager().getLinkService();
             
             //TODO - secure
