@@ -59,7 +59,6 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ComponentContext;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
@@ -85,7 +84,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.19 2003/10/17 17:49:24 bloritsch Exp $
+ * @version CVS $Id: Cocoon.java,v 1.20 2003/10/17 22:03:42 bloritsch Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -93,7 +92,7 @@ public class Cocoon
                    Initializable,
                    Disposable,
                    Modifiable,
-                   Processor,
+                   CompilingProcessor,
                    Contextualizable {
 
     /** The application context */
@@ -351,10 +350,10 @@ public class Cocoon
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
-        Object key = CocoonComponentManager.startProcessing(environment);
+/*        Object key = CocoonComponentManager.startProcessing(environment);
         CocoonComponentManager.enterEnvironment(environment,
                                                 this.serviceManager,
-                                                this);
+                                                this);              */
         try {
             boolean result;
             if (this.getLogger().isDebugEnabled()) {
@@ -379,14 +378,14 @@ public class Cocoon
             environment.tryResetResponse();
             throw any;
         } finally {
-            CocoonComponentManager.leaveEnvironment();
-            CocoonComponentManager.endProcessing(environment, key);
+//            CocoonComponentManager.leaveEnvironment();
+//            CocoonComponentManager.endProcessing(environment, key);
             if (this.getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
 
             // TODO (CZ): This is only for testing - remove it later on
-            CocoonComponentManager.checkEnvironment(this.getLogger());
+//            CocoonComponentManager.checkEnvironment(this.getLogger());
         }
     }
 
@@ -459,15 +458,16 @@ public class Cocoon
             }
 
             programGenerator = (ProgramGenerator) this.serviceManager.lookup(ProgramGenerator.ROLE);
-            source = environment.resolveURI(fileName);
+/*            source = environment.resolveURI(fileName);
             CompiledComponent xsp = programGenerator.load(this.serviceManager,
                     source,
                     markupLanguage, programmingLanguage, environment);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("XSP generation complete:" + xsp);
             }
+            */
         } finally {
-            environment.release(source);
+            //environment.release(source);
             this.serviceManager.release(programGenerator);
         }
     }
