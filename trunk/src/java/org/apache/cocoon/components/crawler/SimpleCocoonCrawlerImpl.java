@@ -76,12 +76,12 @@ import java.util.List;
  * A simple cocoon crawler.
  *
  * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.4 2003/12/06 21:22:09 cziegeler Exp $
+ * @version CVS $Id: SimpleCocoonCrawlerImpl.java,v 1.5 2003/12/26 18:43:39 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="CocoonCrawler"
- * @x-avalon.lifestyle type="pooled"
- * @x-avalon.info name="cocoon-crawler"
+ * @avalon.service type=CocoonCrawler
+ * @x-avalon.lifestyle type=pooled
+ * @x-avalon.info name=cocoon-crawler
  */
 public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
         implements CocoonCrawler, Configurable, Disposable, Recyclable {
@@ -607,7 +607,7 @@ public class SimpleCocoonCrawlerImpl extends AbstractLogEnabled
      * </p>
      *
      * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
-     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.4 2003/12/06 21:22:09 cziegeler Exp $
+     * @version    $Id: SimpleCocoonCrawlerImpl.java,v 1.5 2003/12/26 18:43:39 unico Exp $
      */
     public static class CocoonCrawlerIterator implements Iterator {
         private SimpleCocoonCrawlerImpl cocoonCrawler;

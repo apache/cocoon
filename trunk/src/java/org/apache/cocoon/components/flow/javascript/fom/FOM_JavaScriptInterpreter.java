@@ -81,7 +81,15 @@ import org.apache.cocoon.environment.Session;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.continuations.Continuation;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.shell.Global;
@@ -92,10 +100,15 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.12 2003/10/28 17:21:14 vgritsenko Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.13 2003/12/26 18:43:39 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Interpreter
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=fom-javascript-interpreter
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
-    implements Configurable, Initializable
+    implements Interpreter, Configurable, Initializable
 {
 
     /**

@@ -72,7 +72,18 @@ import org.apache.cocoon.environment.Session;
 import org.apache.commons.jxpath.JXPathIntrospector;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.excalibur.source.Source;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EcmaError;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.PropertyException;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
 /**
@@ -81,7 +92,12 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.22 2003/10/15 17:04:50 cziegeler Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.23 2003/12/26 18:43:39 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Interpreter
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=javascript-interpreter
  */
 public class JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable

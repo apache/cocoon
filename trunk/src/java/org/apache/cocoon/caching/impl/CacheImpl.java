@@ -75,12 +75,12 @@ import org.apache.excalibur.store.Store;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.9 2003/10/27 02:35:53 ghoward Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.10 2003/12/26 18:43:39 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="Cache"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="cache"
+ * @avalon.service type=Cache
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=cache
  * 
  */
 public class CacheImpl

@@ -76,9 +76,9 @@ import org.apache.excalibur.source.SourceResolver;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @avalon.component
- * @avalon.service type="InputModule"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="properties-file-module"
+ * @avalon.service type=InputModule
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=properties-file-module
  */
 public class PropertiesFileModule extends AbstractJXPathModule 
 implements InputModule, Serviceable, Configurable, ThreadSafe {

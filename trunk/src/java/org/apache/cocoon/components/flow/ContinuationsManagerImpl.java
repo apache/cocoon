@@ -75,12 +75,16 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.8 2003/09/04 13:20:27 mpo Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.9 2003/12/26 18:43:39 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=ContinuationsManager
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=continuations-manager
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
-        implements ContinuationsManager, Component, Configurable,
-        ThreadSafe, Contextualizable {
+        implements ContinuationsManager, Configurable, Contextualizable {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";

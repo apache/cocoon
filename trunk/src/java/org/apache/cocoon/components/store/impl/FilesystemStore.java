@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.components.store.impl;
 
+import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.impl.AbstractFilesystemStore;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -68,7 +69,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FilesystemStore.java,v 1.2 2003/10/27 02:30:44 ghoward Exp $
+ * @version CVS $Id: FilesystemStore.java,v 1.3 2003/12/26 18:43:39 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type="Store"
@@ -76,7 +77,7 @@ import java.io.IOException;
  */
 public final class FilesystemStore
 extends AbstractFilesystemStore
-implements Contextualizable, Parameterizable {
+implements Store, Contextualizable, Parameterizable {
 
     protected File workDir;
     protected File cacheDir;

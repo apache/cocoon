@@ -66,6 +66,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.excalibur.store.Store;
 import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
 
 /**
@@ -75,7 +76,7 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.7 2003/10/27 02:30:44 ghoward Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.8 2003/12/26 18:43:39 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type="Store"
@@ -83,7 +84,7 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  * @x-avalon.info name="persistent-store"
  */
 public class DefaultStore extends AbstractJispFilesystemStore
-    implements org.apache.excalibur.store.Store,
+    implements Store,
                Contextualizable,
                Parameterizable,
                Disposable {

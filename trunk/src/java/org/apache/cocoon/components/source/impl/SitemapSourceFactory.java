@@ -71,12 +71,12 @@ import org.apache.excalibur.source.SourceUtil;
  * as it needs the current <code>Sitemap</code> as input.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.4 2003/10/27 02:05:15 ghoward Exp $
+ * @version CVS $Id: SitemapSourceFactory.java,v 1.5 2003/12/26 18:43:39 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="SourceFactory"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="cocoon"
+ * @avalon.service type=SourceFactory
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=cocoon-source
  */
 public final class SitemapSourceFactory
     extends AbstractLogEnabled

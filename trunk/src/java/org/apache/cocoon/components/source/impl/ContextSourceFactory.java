@@ -56,7 +56,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.excalibur.source.*;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -66,6 +65,12 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceFactory;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.SourceUtil;
+import org.apache.excalibur.source.URIAbsolutizer;
 
 /**
  * A factory for the context protocol using the context of the servlet api. It builds the
@@ -74,12 +79,12 @@ import org.apache.cocoon.environment.Context;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.5 2003/10/27 02:05:15 ghoward Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.6 2003/12/26 18:43:39 unico Exp $
  * 
  * @avalon.component
- * @avalon.service type="SourceFactory"
- * @x-avalon.lifestyle type="singleton"
- * @x-avalon.info name="context"
+ * @avalon.service type=SourceFactory
+ * @x-avalon.info name=context-source
+ * @x-avalon.lifestyle type=singleton
  */
 public class ContextSourceFactory
     extends AbstractLogEnabled
