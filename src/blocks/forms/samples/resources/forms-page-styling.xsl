@@ -93,6 +93,28 @@
         </div>
       </xsl:for-each>
     </div>
+    <!-- The tabbed elements can have an attribute formsOnShow containing some javascript to be executed
+         when a tab gets shown. -->
+    <script type="text/javascript">
+      if (window.onTabShownHandlers == undefined)
+        window.onTabShownHandlers = new Object();
+      var currentHandlers = new Object();
+      var initialHandler = null;
+      window.onTabShownHandlers["<xsl:value-of select="$id"/>"] = currentHandlers;
+      <xsl:for-each select="fi:items/fi:*">
+        <xsl:variable name="pos" select="position() - 1"/>
+          <xsl:if test="@formsOnShow">
+            currentHandlers["<xsl:value-of select="concat($id, '_items_', $pos)"/>"] = "<xsl:value-of select="@formsOnShow"/>";
+            <xsl:if test="$active = $pos">
+               initialHandler = "<xsl:value-of select="@formsOnShow"/>";
+            </xsl:if>
+          </xsl:if>
+      </xsl:for-each>
+      if (initialHandler != null) {
+        eval(initialHandler);
+        initialHandler = null;
+      }
+    </script>
   </xsl:template>
 
   <!--
