@@ -788,6 +788,7 @@
     <depend project="nekodtd"/>
     <depend project="daisy-util"/>
     <depend project="daisy-htmlcleaner"/>
+    <depend project="icu4j"/>
 
     <library name="xreporter-expression"/>
     <library name="jakarta-oro"/>
@@ -795,6 +796,7 @@
     <library name="nekodtd"/>
     <library name="daisy-util"/>
     <library name="daisy-htmlcleaner"/>
+    <library name="icu4j"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/forms/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/forms/test"/>
