@@ -33,6 +33,8 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
  * @author <a href="mailto:peter@palserv.com">Peter Loeb</a>
+ * 
+ * @version CVS $Id$
  */
 
 public class XMidiSerializer extends AbstractSerializer {
@@ -367,7 +369,7 @@ public class XMidiSerializer extends AbstractSerializer {
                 String typ = buffer.toString();
                 for (int i = 0; i < typ.length(); i++) {
                     if (typ.substring(i, i + 1).compareTo("0")
-                        < 0 | typ.substring(i, i + 1).compareTo("9")
+                        < 0 || typ.substring(i, i + 1).compareTo("9")
                         > 0) {
                         throw new ProcessingException(
                             "Invalid numeric midi format: " + typ);
