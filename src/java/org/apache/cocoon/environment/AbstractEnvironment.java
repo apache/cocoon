@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.19 2004/03/18 15:08:12 cziegeler Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.20 2004/05/24 11:15:40 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -338,25 +338,21 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         return this.view;
     }
 
-    /**
-     * Returns the request action
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAction()
      */
     public String getAction() {
         return this.action;
     }
 
-    // Response methods
-
-    /**
-     * Set a status code
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setStatus(int)
      */
     public void setStatus(int statusCode) {
     }
 
-    // Object model method
-
-    /**
-     * Returns a Map containing environment specific objects
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getObjectModel()
      */
     public Map getObjectModel() {
         return this.objectModel;
@@ -415,56 +411,50 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
     }
 
-    /**
-     * Check if the response has been modified since the same
-     * "resource" was requested.
-     * The caller has to test if it is really the same "resource"
-     * which is requested.
-     * @return true if the response is modified or if the
-     *         environment is not able to test it
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#isResponseModified(long)
      */
     public boolean isResponseModified(long lastModified) {
         return true; // always modified
     }
 
-    /**
-     * Mark the response as not modified.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setResponseIsNotModified()
      */
     public void setResponseIsNotModified() {
         // does nothing
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAttribute(java.lang.String)
+     */
     public Object getAttribute(String name) {
         return this.attributes.get(name);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#setAttribute(java.lang.String, java.lang.Object)
+     */
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#removeAttribute(java.lang.String)
+     */
     public void removeAttribute(String name) {
         this.attributes.remove(name);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getAttributeNames()
+     */
     public Enumeration getAttributeNames() {
         return new IteratorEnumeration(this.attributes.keySet().iterator());
     }
 
-    /**
-     * Get the output stream where to write the generated resource.
-     * @deprecated Use {@link #getOutputStream(int)} instead.
-     */
-    public OutputStream getOutputStream() throws IOException {
-        // by default we use the complete buffering output stream
-        return this.getOutputStream(-1);
-    }
-
-    /**
-     * Get the output stream where to write the generated resource.
-     * The returned stream is buffered by the environment. If the
-     * buffer size is -1 then the complete output is buffered.
-     * If the buffer size is 0, no buffering takes place.
-     * This method replaces {@link #getOutputStream()}.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getOutputStream(int)
      */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
@@ -481,13 +471,9 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
     }
 
-    /**
-     * Reset the response if possible. This allows error handlers to have
-     * a higher chance to produce clean output if the pipeline that raised
-     * the error has already output some data.
-     *
-     * @return true if the response was successfully reset
-    */
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#tryResetResponse()
+     */
     public boolean tryResetResponse()
     throws IOException {
         if (this.secureOutputStream != null) {
@@ -497,8 +483,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         return false;
     }
 
-    /**
-     * Commit the response
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#commitResponse()
      */
     public void commitResponse()
     throws IOException {
@@ -570,16 +556,15 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         }
     }
     
-    /**
-     * Notify that the processing starts.
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#startingProcessing()
      */
     public void startingProcessing() {
         // do nothing here
     }
 
-    /**
-     * Notify that the processing is finished
-     * This can be used to cleanup the environment object
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#finishingProcessing()
      */
     public void finishingProcessing() {
         if ( null != this.manager ) {
