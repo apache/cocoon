@@ -6,8 +6,9 @@
   <content>
     <wt:form-template action="#{$continuation/id}.continue" method="POST">
     <table align="center">
-     <tr><td>
-     
+     <tr>
+       <td>
+
             <!-- group with tabs. Each of the children of <items> will constitute a tab -->
             <wi:group>
               <wi:styling type="choice"/>
