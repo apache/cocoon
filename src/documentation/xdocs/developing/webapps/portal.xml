@@ -9,6 +9,8 @@
     </header>
     <body>
   <s1 title="Introduction">
+     <note>This is the description of the "old" portal framework, please also have
+      a look at the newer <link href="../portal/index.html">portal block</link>.</note>
      <p>The portal engine of Cocoon provides the required
         functionality to display user dependent content with a user defineable
         layout.</p>
