@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "dtd/document-v10.dtd">
+<document>
+  <header>
+    <title>Apache Cocoon Public License</title>
+    <authors>
+      <person name="Cocoon community" email="dev@cocoon.apache.org"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="General information">
+      <ul>
+        <li>
+          Apache Cocoon is a web development framework built around the concepts 
+          of component-based web development and separation of concerns, ensuring 
+          that people can interact and collaborate on a project without stepping 
+          on each other toes.
+        </li>
+        <li>
+          Cocoon implements these concepts around the notion of <strong>component pipelines</strong>, 
+          each component on the pipeline specializing on a particular operation 
+          (usual pipeline uses a Generator, Transformers and a Serializer). This 
+          makes it possible to use a Lego(tm)-like approach in building web solutions, 
+          hooking together components into pipelines without requiring programming.
+        </li>
+        <li>
+          <strong>Advanced Control Flow</strong>: continuation-based page flow hides 
+          the complexity of request/response processing and is cleanly separated from 
+          the view and data components.
+        </li>
+        <li>
+          Cocoon is open source software (based on the 
+          <link href="license.html">Apache Software License</link>).
+        </li>
+        <li>
+          Cocoon doesn't duplicate efforts but tightly integrates many technologies.
+        </li>
+        <li>
+          Cocoon is in use at many live sites and on many company networks.
+        </li>
+        <li>
+          Cocoon has a strong community, with many active developers and more 
+          than <link href="who.html">15 active committers</link>!
+        </li>
+        <li>
+          here is free support on our <link href="mail-lists.html">mailing lists</link> 
+          and commercial support is available from various companies and consultants.
+        </li>
+        <li>
+          There are many Cocoon sessions at different conferences:
+          <ul>
+            <li>
+              <fork href="http://www.orixo.com/events/gt2003/">Cocoon GetTogether</fork>
+            </li>
+            <li>
+              <fork href="http://apachecon.com">ApacheCon</fork>
+            </li>
+            <li>
+              <fork href="http://cocoon.ifs.tuwien.ac.at">Austrian Cocoon Day</fork>  
+            </li>
+            <li>
+              <fork href="http://www.wjax.de/">WJAX</fork>
+            </li>
+            <li>
+              <fork href="http://www.jax2003.de/">JAX</fork>
+            </li>
+          </ul>
+        </li>
+        <li>
+          To get started see the <link href="tracks/first-steps-track.html">"first steps" 
+          documentation track</link>. 
+          Basically you only need to <link href="http://cocoon.apache.org/mirror.cgi">download</link> 
+          Cocoon, unpack it and follow the simple INSTALL.txt instructions. 
+          A minimal version of the Jetty servlet container is included with Cocoon.
+        </li>
+      </ul>
+    </s1>
+    <s1 title="Usage scenarios">
+      <p>
+      As you would expect, all of these scenarios can be combined.
+    </p>
+      <ul>
+        <li>
+          Dynamic multi-channel web publishing (see below for the possible 
+          datasources and output formats)
+        </li>
+        <li>
+          Create static content (automatically) by separating data from view - see Forrest
+        </li>
+        <li>
+          Advanced web applications with J2EE integration
+          (with separation of your data, the view and the 
+          <link href="userdocs/flow/index.html">flow logic</link> --&gt; this really means you 
+          can change one of the parts without touching another)
+        </li>
+        <li>
+          Develop your company portal using the Cocoon Portal framework
+        </li>
+        <li>
+          Support multiple clients, layouts and languages (i18n) without code duplication
+        </li>
+        <li>
+          Integrate Cocoon with your existing web applications or use it to put 
+          a better face on them (page scraping)
+        </li>
+        <li>
+          Add full-text search to any datasource that can be converted to XML (see below)
+        </li>
+        <li>
+          Use Cocoon as the base for Enterprise Application Integration (EAI)
+        </li>
+        <li>
+          Use Cocoon as the base for your Content Management System (CMS) 
+          (see also Lenya for a Cocoon based CMS)
+        </li>
+        <li>
+          Use Cocoon for producing mobile content (mobile phones, pdas)
+        </li>
+        <li>
+          Datawarehouse reporting across multiple formats (see xReporter) 
+        </li>
+      </ul>
+    </s1>
+    <s1 title="Connect your datasources">
+      <p>
+       Out of the box, the following data can be converted to XML to be processed 
+       by Cocoon pipelines.
+    </p>
+      <ul>
+        <li>
+          XML Files
+        </li>
+        <li>
+          XML based (Web) services
+        </li>
+        <li>
+          RDBMS (via <fork href="http://java.sun.com/products/jdbc/">JDBC</fork>, including connection pooling)
+        </li>
+        <li>
+          XML databases
+        </li>
+        <li>
+          SAP (r) Systems by adding the SAP JavaConnector see 
+          <fork href="http://service.sap.com/connectors/">http://service.sap.com/connectors/</fork>
+          (accessible for all SAP (r) customers)
+        </li>
+        <li>
+          <fork href="http://www.webdav.org">WebDAV</fork>
+        </li>
+        <li>
+          CVS (supported by the external project <fork href="http://cocoondev.org/projects/cvssource.html">CVSSource</fork>)
+        </li>
+        <li>
+          Text-based file formats, either using the integrated <fork href="http://chaperon.sourceforge.net/">Chaperon </fork>
+          parser for a yacc-like approach to parsing, or the "slop" 
+          component (Simple Line Oriented Parser).
+        </li>
+        <li>
+          <fork href="http://jakarta.apache.org/velocity/">Velocity templates</fork>
+        </li>
+        <li>
+          <fork href="userdocs/flow/jxtemplate.html">JXPath/Jexl templates</fork>
+        </li>
+        <li>
+          <fork href="userdocs/xsp/index.html">eXtensible Server Pages (XSP)</fork> with wide range of 
+          logicsheets (database, mailing, ...)
+        </li>
+        <li>
+          <fork href="http://www.jython.org/">Python (Jython</fork>) and generic <fork href="http://jakarta.apache.org/bsf/">BSF support</fork>
+        </li>
+        <li>
+          <fork href="http://java.sun.com/products/jsp/">JSP</fork>
+        </li>
+        <li>
+          Filesystem (traversing directory hierarchies)
+        </li>
+        <li>
+          Any information provided by environment (request, session)
+        </li>
+        <li>
+          <fork href="http://www.macromedia.com/">Flash</fork>
+        </li>
+        <li>
+          <fork href="http://www.palserv.com/XMidi/">XMidi</fork>
+        </li>
+        <li>
+          <fork href="http://www.ietf.org/rfc/rfc1777.txt?number=1777">LDAP - Lightweight Directory Access Protocol</fork>
+        </li>
+        <li>
+          Easily aggregate different datasources
+      </li>
+      </ul>
+    </s1>
+    <s1 title="Easily aggregate different datasources">
+      <ul>
+        <li>
+          <fork href="http://www.w3.org/TR/xslt">XSLT</fork> (The default XSLT-Engine is Xalan, XSLTC is included in the 
+          Cocoon distribution, other XSLT-Engines like Saxon can be easily 
+          integrated)        
+        </li>
+        <li>
+          <fork href="http://stx.sourceforge.net/documents/spec-stx-20030505.html">STX (Streaming Transformations for XML)</fork>
+        </li>
+        <li>
+          <fork href="http://www.w3.org/TR/xinclude/">XInclude</fork> with 
+          <fork href="http://www.w3.org/TR/xptr/">XPointer</fork> framework support  
+      </li>
+      </ul>
+    </s1>
+    <s1 title="Serialize your XML to various output formats">
+      <ul>
+        <li>
+         <fork href="http://www.w3.org/XML/">XML</fork>
+       </li>
+        <li>
+         <fork href="http://www.w3.org/XML/">HTML</fork>
+       </li>
+       <li>
+         <fork href="http://www.w3.org/XHTML/">XHTML</fork>
+       </li>
+        <li>
+         <fork href="http://www.adobe.com/products/acrobat/adobepdf.html">PDF</fork>
+       </li>
+        <li>
+         <fork href="http://www.openoffice.org/">OpenOffice.org/StarOffice</fork>
+       </li>
+        <li>
+         MS Excel
+       </li>
+        <li>
+         <fork href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnrtfspec/html/rtfspec.asp">RTF</fork>
+       </li>
+        <li>
+         Postscript
+       </li>
+        <li>
+         Charts (see external project Fins http://www.cocoondev.org/projects/fins.html)
+       </li>
+        <li>
+         <fork href="http://www.macromedia.com">Flash</fork>
+       </li>
+        <li>
+         Plain text
+       </li>
+        <li>
+         <fork href="http://www.w3.org/TR/SVG/">Scalable Vector Graphics (SVG)</fork>
+       </li>
+        <li>
+         MIDI
+       </li>
+        <li>
+         ZIP archives
+       </li>
+      </ul>
+    </s1>
+    <s1 title="What else we can do for you">
+      <ul>
+        <li>
+          Coexist and interoperate side-by-side with your existing J2EE solutions 
+          (<fork href="http://java.sun.com/products/ejb/">EJB</fork>, 
+           <fork href="http://java.sun.com/products/jms/">JMS</fork>, 
+           ...)
+        </li>
+        <li>
+          Build your <link href="developing/portal/index.html">Portals</link> based on Cocoon (expect support for JSR168 soon)
+        </li>
+        <li>
+          Scheduler - Run background tasks for maintenance, etc.
+        </li>
+        <li>
+          Caching on many levels
+        </li>
+        <li>
+          Integrated search engine (using <fork href="http://jakarta.apche.org/lucene">Lucene</fork>)
+        </li>
+        <li>
+          <link href="http://cocoon.apache.org/2.1/developing/deli.html">DELI</link> (detect client configuration)
+        </li>
+        <li>
+          Catalog Entity Resolver to map to local copies of DTDs and other resources
+        </li>
+        <li>
+          Publish your own WebServices (<fork href="http://xml.apache.org/axis">Apache Axis</fork> is integrated)
+        </li>
+        <li>
+          <fork href="http://java.sun.com/products/javamail/">Java Mail</fork> support
+        </li>
+        <li>
+          Easy integration of object-relational-frameworks (
+          <fork href="http://db.apache.org/ojb"></fork>OJB, <fork href="http://www.hibernate.org">Hibernate</fork>, ...)
+        </li>
+        <li>
+          I18n support (translation support)
+        </li>
+        <li>
+          Easily extensible by clear interfaces (write your own components 
+          following <link href="http://avalon.apache.org">Avalon</link> patterns)
+        </li>
+        <li>
+          Many, many examples and samples
+        </li>
+        <li>
+          Configurable build mechanism based on <link href="http://ant.apache.org">Ant</link> (you decide which parts 
+          of Cocoon you need)
+        </li>
+        <li>
+          Integration of Java data binding frameworks (
+          <fork href="http://www.castor.org">Castor</fork>, 
+          <fork href="http://jakarta.apache.org/commons/betwixt/">Betwixt</fork>)
+      </li>
+      </ul>
+    </s1>
+    <s1 title="Form handling frameworks">
+      <ul>
+        <li>
+           Enhanced form handling with strong validation through 
+           <link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">CocoonForms</link> 
+        </li>
+        <li>
+           Easy integration of (future) <fork href="http://www.w3.org/TR/xforms/">XForms</fork> clients
+        </li>
+      </ul>
+    </s1>
+    <s1 title="Cocoon deployment and integration">
+      <ul>
+        <li>
+           Cocoon can be run in every servlet container or J2EE application server that
+           supports Java Servlets 2.2 and above, like 
+           <fork href="http://jakarta.apache.org/tomcat">Tomcat</fork>, 
+           <fork href="http://jetty.mortbay.org/jetty/">Jetty</fork>, 
+           <fork href="http://www.jboss.org">JBoss</fork>
+           <fork href="http://www.macromedia.com/software/jrun/">JRun</fork>, 
+           <fork href="http://www.caucho.com/">Resin</fork>,
+           <fork href="http://www.ibm.com/software/webservers/">Websphere</fork>,
+           <fork href="http://www.bea.com">Weblogic</fork>, ...
+        </li>
+        <li>
+           Command line execution, without requiring a servlet container
+        </li>
+        <li>
+           Embeddable in any Java application
+        </li>
+       </ul>
+    </s1>    
+  </body>
+</document>
