@@ -118,17 +118,22 @@ public class JCSPersistentStore extends AbstractJCSStore
         SourceResolver resolver = null;
         Source source = null;
         try {
-            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(configFileName);
+            File configFile = null;
+
+            if ( configFileName != null ) {
+                resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+                source = resolver.resolveURI(configFileName);
             
-            // get the config file to use
-            final File configFile = SourceUtil.getFile(source);
+                // get the config file to use
+                configFile = SourceUtil.getFile(source);
             
-            //if(!configFile.exists()){
-            //   throw new ParameterException(
-            //      "JCS Config file does not exist: " + configFileName
-            //   );
-            //}
+                //if(!configFile.exists()){
+                //   throw new ParameterException(
+                //      "JCS Config file does not exist: " + configFileName
+                //   );
+                //}
+            }
+            
             try {
                this.setup(configFile, regionName, groupName);
             } catch (CacheException ce) {
