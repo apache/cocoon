@@ -54,28 +54,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.TransformerHandler;
+
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.webapps.portal.PortalConstants;
 import org.apache.cocoon.webapps.portal.context.SessionContextImpl;
+import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMUtil;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
+import org.apache.excalibur.xml.xslt.XSLTProcessor;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -85,7 +86,7 @@ import org.w3c.dom.NodeList;
  * This is the thread for loading one coplet in the background.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CopletThread.java,v 1.4 2003/12/18 14:29:03 cziegeler Exp $
+ * @version CVS $Id: CopletThread.java,v 1.5 2004/01/09 11:20:22 cziegeler Exp $
 */
 public final class CopletThread implements Runnable {
 
@@ -93,7 +94,7 @@ public final class CopletThread implements Runnable {
     private String           copletID;
     private Map              objectModel;
     private Object[]         loadedCoplet;
-    private ComponentManager manager;
+    private ComponentManager  manager;
     private SourceResolver   resolver;
     private XPathProcessor   processor;
     
@@ -164,26 +165,32 @@ public final class CopletThread implements Runnable {
                 XMLConsumer nextConsumer = compiler;
                 NodeList transformations = DOMUtil.selectNodeList(copletConf,
                                                         "transformation/stylesheet", this.processor);
-                Transformer xslT = null;
-                ArrayList transformers = new ArrayList();
-                ComponentSelector selector = null;
+                XSLTProcessor xslt = null;
+                ArrayList transformers = null;
+                ArrayList sources = null;
                 Request request = ObjectModelHelper.getRequest(this.objectModel);
-
+                XMLConsumer stylesheet =null;
+                
                 try {
                     if (transformations != null && transformations.getLength() > 0) {
-                        selector = (ComponentSelector) this.manager.lookup(Transformer.ROLE + "Selector");
+                        transformers = new ArrayList();
+                        sources = new ArrayList();
+                        
                         nextConsumer = new IncludeXMLConsumer(nextConsumer);
                         for(int k = transformations.getLength()-1; k >=0; k--) {
-                            xslT = (Transformer)selector.select("xslt");
-                            transformers.add(xslT);
-                            xslT.setup(resolver,
-                                       objectModel,
-                                       DOMUtil.getValueOfNode(transformations.item(k)),
-                                       new Parameters());
-                            xslT.setConsumer(nextConsumer);
-                            nextConsumer = xslT;
+                            xslt = (XSLTProcessor)this.manager.lookup(XSLTProcessor.ROLE);
+                            transformers.add(xslt);
+                            Source source = this.resolver.resolveURI(DOMUtil.getValueOfNode(transformations.item(k)));
+                            sources.add(source);
+                            TransformerHandler handler = xslt.getTransformerHandler(source);
+
+                            final SAXResult result = new SAXResult(nextConsumer);
+                            result.setLexicalHandler(nextConsumer);
+                            handler.setResult(result);
+                            nextConsumer = new ContentHandlerWrapper(handler, handler);
+                            stylesheet = nextConsumer;
                         }
-                        nextConsumer.startDocument();
+                        stylesheet.startDocument();
                     }
                     boolean includeFragment = true;
                     boolean handlesParameters = DOMUtil.getValueAsBooleanOf(copletConf, "configuration/handlesParameters", true, this.processor);
@@ -220,22 +227,18 @@ public final class CopletThread implements Runnable {
                             this.logger.debug("portal: Loaded coplet " + copletID);
                         }
                     }
-                        
-                    
-                    if (xslT != null) {
-                        xslT.endDocument();
-                        xslT = null;
+                    if ( stylesheet != null ) {
+                        stylesheet.endDocument();
                     }
                 } finally {
                     SessionContextImpl.copletInfo.set(null);
-                    if (selector != null) {
-                        for(int i=0; i<transformers.size(); i++) {
-                            selector.release((Component)transformers.get(i));
+                    if ( transformers != null ) {
+                        for(int i=0; i < transformers.size(); i++) {
+                            this.manager.release( (Component)transformers.get(i));
+                            this.resolver.release( (Source)sources.get(i));
                         }
-                        this.manager.release(selector);
                     }
                 }
-                transformers.clear();
                 nextConsumer = null;
                 compiler.endDocument();
                 loadedCoplet[0] = compiler.getSAXFragment();

@@ -56,6 +56,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.webapps.portal.PortalConstants;
 import org.apache.cocoon.webapps.portal.components.PortalManager;
+import org.apache.cocoon.webapps.portal.components.PortalManagerImpl;
 import org.apache.cocoon.webapps.session.context.SessionContext;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -96,7 +97,7 @@ import java.util.Map;
  * &lt;/configuration&gt;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextImpl.java,v 1.6 2003/12/18 14:29:03 cziegeler Exp $
+ * @version CVS $Id: SessionContextImpl.java,v 1.7 2004/01/09 11:20:23 cziegeler Exp $
 */
 public final class SessionContextImpl
 implements SessionContext {
@@ -210,7 +211,7 @@ implements SessionContext {
                 Map copletLayouts = (Map)this.profile.get(PortalConstants.PROFILE_COPLET_LAYOUTS);
                 DOMBuilder builder = new DOMBuilder();
                 builder.startDocument();
-                PortalManager.streamLayoutProfile(builder, portalLayouts, copletLayouts, this.mediaType);
+                PortalManagerImpl.streamLayoutProfile(builder, portalLayouts, copletLayouts, this.mediaType);
                 builder.endDocument();
                 this.layoutDOM = builder.getDocument();
             } catch (SAXException local) {
