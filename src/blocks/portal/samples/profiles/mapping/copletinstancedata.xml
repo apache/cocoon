@@ -30,10 +30,6 @@
 		   extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
 		<map-to xml="coplet-instance-data" />
 
-		<field name="status" type="java.lang.Integer">
-			<bind-xml name="status"/>
-		</field>
-
 		<field name="copletData" type="java.lang.String" handler="org.apache.cocoon.portal.util.CopletDataReferenceFieldHandler"/>
 
 		<field name="attributes" type="org.exolab.castor.mapping.MapItem" collection="map" handler="org.apache.cocoon.portal.util.AttributesFieldHandler">
