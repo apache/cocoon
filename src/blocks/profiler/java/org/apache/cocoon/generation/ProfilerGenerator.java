@@ -79,7 +79,7 @@ import java.util.Set;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerGenerator.java,v 1.2 2003/03/20 15:04:16 stephan Exp $
+ * @version CVS $Id: ProfilerGenerator.java,v 1.3 2003/03/21 17:28:42 bruno Exp $
  */
 public class ProfilerGenerator extends ComposerGenerator {
 
@@ -110,6 +110,9 @@ public class ProfilerGenerator extends ComposerGenerator {
 
     // Index of the componen of the latest results
     private int componentIndex = -1;
+
+    // Indicates if the fragment only, and not the profiler metadata around it, should be generated
+    private boolean fragmentOnly;
 
     /**
      * Composable
@@ -148,6 +151,12 @@ public class ProfilerGenerator extends ComposerGenerator {
         } else {
             this.componentIndex = -1;
         }
+
+        if (request.getParameter("fragmentonly") != null && request.getParameter("fragmentonly").equals("true")) {
+            fragmentOnly = true;
+        } else {
+            fragmentOnly = false;
+        }
     }
 
     /**
@@ -167,16 +176,39 @@ public class ProfilerGenerator extends ComposerGenerator {
      *         when there is a problem creating the output SAX events.
      */
     public void generate() throws SAXException {
+        // check if only the stored XML data is requested
+        if (fragmentOnly && key != null && resultIndex != -1 && componentIndex != -1) {
+            // find the fragment
+            Object fragment = null;
+            try {
+                ProfilerResult result = profiler.getResult(key);
+                fragment = result.getSAXFragments()[resultIndex][componentIndex];
+            } catch (Exception e) {
+                // fragment will be null
+            }
+            if (fragment != null) {
+                generateSAXFragment(fragment, false);
+            } else {
+                this.contentHandler.startDocument();
+                this.contentHandler.startPrefixMapping("", PROFILER_NS);
+                this.contentHandler.startElement(PROFILER_NS, "fragment-error", "fragment-error", new AttributesImpl());
+                char[] message = "Fragment is not available.".toCharArray();
+                this.contentHandler.characters(message, 0, message.length);
+                this.contentHandler.endElement(PROFILER_NS, "fragment-error", "fragment-error");
+                this.contentHandler.endPrefixMapping("");
+                this.contentHandler.endDocument();
+            }
+        } else {
+            // Start the document and set the PROFILER_NS.
+            this.contentHandler.startDocument();
+            this.contentHandler.startPrefixMapping("", PROFILER_NS);
 
-        // Start the document and set the PROFILER_NS.
-        this.contentHandler.startDocument();
-        this.contentHandler.startPrefixMapping("", PROFILER_NS);
+            generateProfilerInfo();
 
-        generateProfilerInfo();
-
-        // End the document.
-        this.contentHandler.endPrefixMapping("");
-        this.contentHandler.endDocument();
+            // End the document.
+            this.contentHandler.endPrefixMapping("");
+            this.contentHandler.endDocument();
+        }
     }
 
     /**
@@ -368,7 +400,12 @@ public class ProfilerGenerator extends ComposerGenerator {
         atts.clear();
 
         if (this.componentIndex==componentIndex) {
-            generateSAXFragment(fragment);
+            this.contentHandler.startElement(PROFILER_NS, FRAGMENT_ELEMENT,
+                                             FRAGMENT_ELEMENT,
+                                             new AttributesImpl());
+            generateSAXFragment(fragment, true);
+            this.contentHandler.endElement(PROFILER_NS, FRAGMENT_ELEMENT,
+                                           FRAGMENT_ELEMENT);
         }
 
         this.contentHandler.endElement(PROFILER_NS, COMPONENT_ELEMENT,
@@ -454,18 +491,17 @@ public class ProfilerGenerator extends ComposerGenerator {
                                        ENVIROMENTINFO_ELEMENT);
     }
 
-    public void generateSAXFragment(Object fragment) throws SAXException {
+    public void generateSAXFragment(Object fragment, boolean embed) throws SAXException {
 
         if (fragment!=null) {
-            this.contentHandler.startElement(PROFILER_NS, FRAGMENT_ELEMENT,
-                                             FRAGMENT_ELEMENT,
-                                             new AttributesImpl());
-
             XMLDeserializer deserializer = null;
 
             try {
                 deserializer = (XMLDeserializer) this.manager.lookup(XMLDeserializer.ROLE);
-                deserializer.setConsumer(new IncludeXMLConsumer(this.xmlConsumer));
+                if (embed)
+                    deserializer.setConsumer(new IncludeXMLConsumer(this.xmlConsumer));
+                else
+                    deserializer.setConsumer(this.xmlConsumer);
                 deserializer.deserialize(fragment);
             } catch (ComponentException ce) {
                 getLogger().debug("Could not retrieve XMLDeserializer component",
@@ -480,9 +516,6 @@ public class ProfilerGenerator extends ComposerGenerator {
                     this.manager.release(deserializer);
                 }
             }
-
-            this.contentHandler.endElement(PROFILER_NS, FRAGMENT_ELEMENT,
-                                           FRAGMENT_ELEMENT);
         }
     }
 }
