@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.190 2003/11/11 12:06:57 crossley Exp $:-->
+<!-- CVS $Id: status.xml,v 1.191 2003/11/11 12:15:30 crossley Exp $:-->
 
 <status>
  <developers>
@@ -192,6 +192,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="DC" type="fix" fixes-bug="24463" due-to-email="tek@leonid.de" due-to="Leo Leonid">
+     Complete overhaul of the Petstore sample. Adding Woody form processing
+     Flow, and dealing with persistent data. Implementation of missing or
+     unfinished parts. See the the bug report and its attached notes.
+   </action>
    <action dev="CZ" type="fix">
      The CachingPointProcessingPipeline now uses Parameters instead of 
      an own configuration scheme. See the demo sitemap for the changed configuration.
