@@ -19,11 +19,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;
 import org.apache.commons.collections.ListUtils;
@@ -35,7 +33,7 @@ import org.apache.commons.jxpath.Pointer;
  * that allows for bidirectional binding of a repeater-widget to/from
  * repeating structures in the back-end object model.
  *
- * @version CVS $Id: RepeaterJXPathBinding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: RepeaterJXPathBinding.java,v 1.2 2004/03/12 03:31:39 joerg Exp $
  */
 public class RepeaterJXPathBinding extends JXPathBindingBase {
 
@@ -46,7 +44,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     private final JXPathBindingBase rowBinding;
     private final JXPathBindingBase insertRowBinding;
     private final JXPathBindingBase deleteRowBinding;
-    private final List uniqueRowBinding;
+    private final ComposedJXPathBindingBase identityBinding;
 
     /**
      * Constructs RepeaterJXPathBinding
@@ -54,56 +52,37 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     public RepeaterJXPathBinding(
             JXPathBindingBuilderBase.CommonAttributes commonAtts,
             String repeaterId, String repeaterPath, String rowPath,
-            String rowPathForInsert, String uniqueRowId,
-            String uniqueRowPath, JXPathBindingBase[] childBindings,
-            JXPathBindingBase insertBinding,
-            JXPathBindingBase[] deleteBindings, JXPathBindingBase[] uniqueBindings) {
-        this(commonAtts, repeaterId, repeaterPath, rowPath, rowPathForInsert,
-                uniqueRowId, uniqueRowPath, null, null, childBindings,
-                insertBinding, deleteBindings, uniqueBindings);
-    }
-
-    /**
-     * Constructs RepeaterJXPathBinding
-     */
-    public RepeaterJXPathBinding(
-            JXPathBindingBuilderBase.CommonAttributes commonAtts,
-            String repeaterId, String repeaterPath, String rowPath,
-            String rowPathForInsert, String uniqueRowId,
-            String uniqueRowPath, Convertor convertor, Locale convertorLocale,
+            String rowPathForInsert,
             JXPathBindingBase[] childBindings, JXPathBindingBase insertBinding,
-            JXPathBindingBase[] deleteBindings, JXPathBindingBase[] uniqueBindings) {
+            JXPathBindingBase[] deleteBindings, JXPathBindingBase[] identityBindings) {
         super(commonAtts);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
         this.rowPathForInsert = rowPathForInsert;
+
         this.rowBinding = new ComposedJXPathBindingBase(
-                JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
-                childBindings);
+                                  JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
+                                  childBindings);
         this.rowBinding.setParent(this);
+
         this.insertRowBinding = insertBinding;
         if (this.insertRowBinding != null) {
             this.insertRowBinding.setParent(this);
         }
+
         this.deleteRowBinding = new ComposedJXPathBindingBase(
-                JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
-                deleteBindings);
+                                        JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
+                                        deleteBindings);
         if (this.deleteRowBinding != null) {
             this.deleteRowBinding.setParent(this);
         }
-        // New unique key management
-        uniqueRowBinding = new ArrayList();
-        // Create a UniqueFieldJXPathBining for the unique define in old-style
-        if (uniqueRowId != null && uniqueRowPath != null) {
-            uniqueRowBinding.add(new UniqueFieldJXPathBinding(
-                JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
-                uniqueRowId, uniqueRowPath, convertor, convertorLocale));
-        }
-        if (uniqueBindings != null) {
-            for (int i=0; i < uniqueBindings.length; i++) {
-                uniqueRowBinding.add(uniqueBindings[i]);
-            }
+
+        this.identityBinding = new ComposedJXPathBindingBase(
+                                       JXPathBindingBuilderBase.CommonAttributes.DEFAULT,
+                                       identityBindings);
+        if (this.identityBinding != null) {
+            this.identityBinding.setParent(this);
         }
     }
 
@@ -136,10 +115,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             Pointer jxp = (Pointer)rowPointers.next();
             JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
             // hand it over to children
-            Iterator iter = this.uniqueRowBinding.iterator();
-            while (iter.hasNext()) {
-                ((UniqueFieldJXPathBinding)iter.next()).loadFormFromModel(thisRow, rowContext);
-            }
+            this.identityBinding.loadFormFromModel(thisRow, rowContext);
             this.rowBinding.loadFormFromModel(thisRow, rowContext);
         }
         if (getLogger().isDebugEnabled())
@@ -147,9 +123,9 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     }
 
     /**
-     * Uses the mapped unique-id of each row to detect if rows have been
+     * Uses the mapped identity of each row to detect if rows have been
      * updated, inserted or removed.  Depending on what happened the appropriate
-     * child-bindings are alowed to visit the narrowed contexts.
+     * child-bindings are allowed to visit the narrowed contexts.
      */
     public void doSave(Widget frmModel, JXPathContext jxpc)
             throws BindingException {
@@ -160,7 +136,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             jxpc.getRelativeContext(jxpc.getPointer(this.repeaterPath));
 
         // create set of updatedRowIds
-        Set updatedRowIds = new HashSet();
+        Set updatedRows = new HashSet();
         //create list of rows to insert at end
         List rowsToInsert = new ArrayList();
 
@@ -169,22 +145,22 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         for (int i = 0; i < formRowCount; i++) {
             Repeater.RepeaterRow thisRow = repeater.getRow(i);
 
-            // Get the key values
-            List rowIdValues = getUniqueRowValues(thisRow);
+            // Get the identity
+            List identity = getIdentity(thisRow);
 
-            if (isAnyListElementNotNull(rowIdValues)) {
+            if (hasNonNullElements(identity)) {
                 // iterate nodes to find match
                 Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
                 boolean found = false;
                 while (rowPointers.hasNext()) {
                     Pointer jxp = (Pointer) rowPointers.next();
                     JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
-                    List matchIds = getMatchIds(rowContext);
-                    if (ListUtils.isEqualList(rowIdValues, matchIds)) {
+                    List contextIdentity = getIdentity(rowContext);
+                    if (ListUtils.isEqualList(identity, contextIdentity)) {
                         // match! --> bind to children
                         this.rowBinding.saveFormToModel(thisRow, rowContext);
                         //        --> store rowIdValue in list of updatedRowIds
-                        updatedRowIds.add(rowIdValues);
+                        updatedRows.add(identity);
                         found = true;
                         break;
                     }
@@ -193,10 +169,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                     // this is a new row
                     rowsToInsert.add(thisRow);
                     // also add it to the updated row id's so that this row doesn't get deleted
-                    updatedRowIds.add(rowIdValues);
+                    updatedRows.add(identity);
                 }
             } else {
-                // if all rowIdValues == null --> this is a new row
+                // if there is no value to determine the identity --> this is a new row
                 rowsToInsert.add(thisRow);
             }
         }
@@ -206,9 +182,10 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         while (rowPointers.hasNext()) {
             Pointer jxp = (Pointer)rowPointers.next();
             JXPathContext rowContext = repeaterContext.getRelativeContext((Pointer)jxp.clone());
-            List matchIds = getMatchIds(rowContext);
-            // check if matchPath was in list of updates, if not --> bind for delete
-            if (!isListInSet(updatedRowIds, matchIds)) {
+            List contextIdentity = getIdentity(rowContext);
+            // check if the identity of the rowContext is in the updated rows
+            //     if not --> bind for delete
+            if (!isIdentityInUpdatedRows(updatedRows, contextIdentity)) {
                 rowsToDelete.add(rowContext);
             }
         }
@@ -260,8 +237,8 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
                 }
             } else {
                 if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("RepeaterBinding has detected rows to insert, but misses " +
-                            "the <on-insert-row> binding to do it.");
+                    getLogger().warn("RepeaterBinding has detected rows to insert, but misses "
+                                     + "the <on-insert-row> binding to do it.");
                 }
             }
         }
@@ -271,16 +248,16 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     }
 
     /**
-     * Tests if a List is already contained in a Set of Lists.
-     * @param set the Set of Lists.
-     * @param list the list that is tested if it is already in the Set.
-     * @return true if the Set contains the List, false otherwise.
+     * Tests if an identity is already contained in a Set of identities.
+     * @param identitySet the Set of identities.
+     * @param identity the identity that is tested if it is already in the Set.
+     * @return true if the Set contains the identity, false otherwise.
      */
-    private boolean isListInSet(Set set, List list) {
-        Iterator iter = set.iterator();
+    private boolean isIdentityInUpdatedRows(Set identitySet, List identity) {
+        Iterator iter = identitySet.iterator();
         while (iter.hasNext()) {
-            List listFromSet = (List)iter.next();
-            if (ListUtils.isEqualList(listFromSet, list)) {
+            List identityFromSet = (List)iter.next();
+            if (ListUtils.isEqualList(identityFromSet, identity)) {
                 return true;
             }
         }
@@ -292,7 +269,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
      * @param list
      * @return
      */
-    private boolean isAnyListElementNotNull(List list) {
+    private boolean hasNonNullElements(List list) {
         Iterator iter = list.iterator();
         while (iter.hasNext()) {
             if (iter.next() != null) {
@@ -303,47 +280,57 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     }
 
     /**
-     * 
+     * Get the identity of the given row context. That's infact a list of all
+     * the values of the fields in the bean or XML that constitute the identity. 
      * @param rowContext
-     * @return
+     * @return List the identity of the row context
      */
-    private List getMatchIds(JXPathContext rowContext) {
-        List matchIds = new ArrayList();
-        Iterator iter = this.uniqueRowBinding.iterator();
-        while (iter.hasNext()) {
-            UniqueFieldJXPathBinding key = (UniqueFieldJXPathBinding)iter.next();
-            Object matchId = rowContext.getValue(key.getXpath());
-            if (matchId != null && key.getConvertor() != null) {
-                if (matchId instanceof String) {
-                    matchId = key.getConvertor().convertFromString(
-                            (String)matchId, key.getConvertorLocale(), null);
-                } else {
-                    if (getLogger().isWarnEnabled()) {
-                        getLogger().warn("Convertor ignored on backend-value " +
-                                "which isn't of type String.");
+    private List getIdentity(JXPathContext rowContext) {
+        List identity = new ArrayList();
+
+        JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
+        if (childBindings != null) {
+            int size = childBindings.length;
+            for (int i = 0; i < size; i++) {
+                ValueJXPathBinding vBinding = (ValueJXPathBinding)childBindings[i];
+                Object value = rowContext.getValue(vBinding.getXPath());
+                if (value != null && vBinding.getConvertor() != null) {
+                    if (value instanceof String) {
+                        value = vBinding.getConvertor().convertFromString(
+                                (String)value, vBinding.getConvertorLocale(), null);
+                    } else {
+                        if (getLogger().isWarnEnabled()) {
+                            getLogger().warn("Convertor ignored on backend-value " +
+                                    "which isn't of type String.");
+                        }
                     }
                 }
+                identity.add(value);
             }   
-            matchIds.add(matchId);
         }
-        return matchIds;
+        return identity;
     }
 
     /**
-     * Get the values of the unique-fields of the given row in the formModel 
+     * Get the identity of the given row. That's infact a list of all the values
+     * of the fields in the form model that constitute the identity. 
      * @param thisRow
-     * @return List
+     * @return List the identity of the row
      */
-    private List getUniqueRowValues(Repeater.RepeaterRow thisRow) {
-        List values = new ArrayList();
-        Iterator iter = this.uniqueRowBinding.iterator();
-        while (iter.hasNext()) {
-            UniqueFieldJXPathBinding key = (UniqueFieldJXPathBinding)iter.next();
-            Widget rowIdWidget = thisRow.getWidget(key.getFieldId());
-            Object rowIdValue = rowIdWidget.getValue();
-            values.add(rowIdValue);
+    private List getIdentity(Repeater.RepeaterRow row) {
+        List identity = new ArrayList();
+
+        JXPathBindingBase[] childBindings = this.identityBinding.getChildBindings();
+        if (childBindings != null) {
+            int size = childBindings.length;
+            for (int i = 0; i < size; i++) {
+                String fieldId = ((ValueJXPathBinding)childBindings[i]).getFieldId();
+                Widget widget = row.getWidget(fieldId);
+                Object value = widget.getValue();
+                identity.add(value);
+            }
         }
-        return values;
+        return identity;
     }
 
     public String toString() {
@@ -360,9 +347,8 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
             this.insertRowBinding.enableLogging(logger);
         }
         this.rowBinding.enableLogging(logger);
-        Iterator iter = this.uniqueRowBinding.iterator();
-        while (iter.hasNext()) {
-            ((UniqueFieldJXPathBinding)iter.next()).enableLogging(logger);
+        if (this.identityBinding != null) {
+            this.identityBinding.enableLogging(logger);
         }
     }
 }

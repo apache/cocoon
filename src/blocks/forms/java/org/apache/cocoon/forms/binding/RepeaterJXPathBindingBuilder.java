@@ -15,12 +15,7 @@
  */
 package org.apache.cocoon.forms.binding;
 
-import java.util.Locale;
-
-import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.datatype.convertor.Convertor;
 import org.apache.cocoon.forms.util.DomHelper;
-import org.apache.cocoon.i18n.I18nUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -51,7 +46,7 @@ import org.w3c.dom.Element;
  * &lt;/wb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.3 2004/03/12 03:31:39 joerg Exp $
  */
 public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
@@ -76,30 +71,9 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
             String rowPath = DomHelper.getAttribute(bindingElm, "row-path");
             String rowPathForInsert =
                 DomHelper.getAttribute(bindingElm, "row-path-insert", rowPath);
-            String uniqueRowId =
-                DomHelper.getAttribute(bindingElm, "unique-row-id", null);
-            String uniqueRowIdPath =
-                DomHelper.getAttribute(bindingElm, "unique-path", null);
 
-            Convertor convertor = null;
-            Locale convertorLocale = Locale.US;
-            Element convertorEl =
-                DomHelper.getChildElement(bindingElm,
-                        Constants.DEFINITION_NS, "convertor");
-            if (convertorEl != null) {
-                String datatype =
-                    DomHelper.getAttribute(convertorEl, "datatype");
-                String localeStr = convertorEl.getAttribute("datatype");
-                if (!localeStr.equals("")) {
-                    convertorLocale = I18nUtils.parseLocale(localeStr);
-                }
-                convertor =
-                    assistant.getDatatypeManager().createConvertor(datatype,
-                            convertorEl);
-            }
-
-            Element childWrapElement = DomHelper.getChildElement(bindingElm,
-                    BindingManager.NAMESPACE, "on-bind");
+            Element childWrapElement =
+                DomHelper.getChildElement(bindingElm, BindingManager.NAMESPACE, "on-bind");
             if (childWrapElement == null) {
                 throw new BindingException(
                       "RepeaterBinding misses '<on-bind>' child definition. " +
@@ -123,29 +97,19 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 insertBinding =
                     assistant.makeChildBindings(insertWrapElement)[0];
             }
-            /* New <wb:unique-row> child element builder */
-            Element uniqueFieldWrapElement = DomHelper.getChildElement(bindingElm,
-                    BindingManager.NAMESPACE, "unique-row");
-            JXPathBindingBase[] uniqueFieldBinding = null;
-            if (uniqueFieldWrapElement != null) {
-                uniqueFieldBinding = assistant.makeChildBindings(uniqueFieldWrapElement);
-            } else if (uniqueRowId == null || uniqueRowIdPath == null) {
-                throw new BindingException(
-                      "RepeaterBinding misses '<unique-row>' child definition. " +
-                      DomHelper.getLocation(bindingElm));
-            } else {
-                if (this.getLogger().isInfoEnabled()) {
-                this.getLogger().info("<wb:repeater>: The attributes 'unique-row-id' and " +
-                        "'unique-path' are deprecated. Use <unique-row> child element instead." +
-                        " Located at " + DomHelper.getLocation(bindingElm));
-                }
+
+            Element identityWrapElement = DomHelper.getChildElement(bindingElm,
+                    BindingManager.NAMESPACE, "identity");
+            JXPathBindingBase[] identityBinding = null;
+            if (identityWrapElement != null) {
+                identityBinding =
+                    assistant.makeChildBindings(identityWrapElement);
             }
 
             RepeaterJXPathBinding repeaterBinding =
                 new RepeaterJXPathBinding(commonAtts, repeaterId, parentPath,
-                        rowPath, rowPathForInsert, uniqueRowId,
-                        uniqueRowIdPath, convertor, convertorLocale,
-                        childBindings, insertBinding, deleteBindings, uniqueFieldBinding);
+                        rowPath, rowPathForInsert, 
+                        childBindings, insertBinding, deleteBindings, identityBinding);
             return repeaterBinding;
         } catch (BindingException e) {
             throw e;
