@@ -178,9 +178,7 @@
   <!-- package testcase code -->
   <target name="package-testcase" depends="compile-tests">
     <jar jarfile="${build}/${name}-testcase.jar" index="true">
-      <fileset dir="${build.test}">
-        <include name="org/apache/cocoon/*"/>
-      </fileset>
+      <fileset dir="${build.test}" includes="**/*.class"/>
     </jar>
     <!-- optionally add source files to the jar -->
     <if>
