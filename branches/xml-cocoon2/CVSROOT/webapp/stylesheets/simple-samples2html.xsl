@@ -12,7 +12,7 @@
 
     <p align="center"><img border="0" src="images/cocoon.png"/></p>
 
-    <h3 align="center">version 2.0a2</h3>
+    <h3 align="center">version @version@</h3>
 
     <p><br/></p>
 
@@ -20,7 +20,7 @@
 
     <p align="center">
      <font size="-1">
-      Copyright &#169; 1999-2000 <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
+      Copyright &#169; @year@ <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
       All rights reserved.
      </font>
     </p>
@@ -29,21 +29,19 @@
  </xsl:template>
 
  <xsl:template match="group">
-  <div align="center">
-  <table border="0" width="60%">
+  <table border="0" width="60%" align="center">
    <tr>
-    <td width="100%" bgcolor="#0086b2">
+    <td width="100%" bgcolor="#0086b2" align="left">
      <big><xsl:value-of select="@name"/></big>
     </td>
    </tr>
    <xsl:apply-templates/>
   </table>
-  </div>
  </xsl:template>
 
  <xsl:template match="sample">
   <tr>
-   <td width="100%" bgcolor="#ffffff">
+   <td width="100%" bgcolor="#ffffff" align="left">
     <a href="{@url}"><xsl:value-of select="@name"/></a><xsl:text> - </xsl:text>
     <xsl:apply-templates/>
    </td>
