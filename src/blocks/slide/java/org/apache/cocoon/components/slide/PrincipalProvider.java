@@ -47,7 +47,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.repository;
+package org.apache.cocoon.components.slide;
 
 import org.apache.avalon.framework.component.Component;
 
@@ -58,12 +58,12 @@ import org.apache.cocoon.ProcessingException;
  * is similar to the classes java.security.* .
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalProvider.java,v 1.3 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: PrincipalProvider.java,v 1.1 2003/12/02 19:18:46 unico Exp $
  */
 public interface PrincipalProvider extends Component {
 
     /** Role for the component */
-    public final static String ROLE = "org.apache.cocoon.components.repository.PrincipalProvider";
+    public final static String ROLE = PrincipalProvider.class.getName();
 
     /**
      * Return all users.

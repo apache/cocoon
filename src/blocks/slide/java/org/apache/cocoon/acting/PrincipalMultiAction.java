@@ -59,9 +59,9 @@ import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.repository.Principal;
-import org.apache.cocoon.components.repository.PrincipalGroup;
-import org.apache.cocoon.components.repository.PrincipalProvider;
+import org.apache.cocoon.components.slide.Principal;
+import org.apache.cocoon.components.slide.PrincipalGroup;
+import org.apache.cocoon.components.slide.PrincipalProvider;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -71,7 +71,7 @@ import org.apache.cocoon.environment.SourceResolver;
  * Multiple actions for to add, to removing and to modify principals or principal groups.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalMultiAction.java,v 1.3 2003/11/15 13:31:18 joerg Exp $
+ * @version CVS $Id: PrincipalMultiAction.java,v 1.4 2003/12/02 19:18:46 unico Exp $
  */ 
 public class PrincipalMultiAction extends AbstractMultiAction implements ThreadSafe {
 

@@ -47,120 +47,38 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.repository;
+package org.apache.cocoon.components.slide;
 
 /**
- * This class represents a principal. The implementation is based
- * on the interface java.security.Principal.
+ * This class represents a group of principals. 
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: Principal.java,v 1.4 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: PrincipalGroup.java,v 1.1 2003/12/02 19:18:46 unico Exp $
  */
-public class Principal implements java.security.Principal {
+public class PrincipalGroup {
 
     private String name = null;
-    private String role = null;
-    private String password = null;
 
-    public Principal(String name) {
+    public PrincipalGroup(String name) {
         this.name = name;
     }
-
-    public Principal(String name, String password) {
-        this.name = name;
-        this.password = password;
-    }
-
-    public Principal(String name, String role, String password) {
-        this.name = name;
-        this.role = role;
-        this.password = password;
-    } 
 
     /**
-     * Returns the name of the principal
+     * Returns the name of the group.
      *
-     * @return Name of principal
+     * @return Name of the group.
      */
     public String getName() {
         return this.name;
     }
 
     /**
-     * Sets the name
-     *
-     * @param name Name of principal
+     * Sets the name of the group.
+     * 
+     * @param name Name of the group.
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Returns the role of the principal
-     *
-     * @return Role of the principal
-     */
-    public String getRole() {
-        return this.role;
-    }
-  
-    /**
-     * Sets the role of the user
-     *
-     * @param role Role of the principal
-     */
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    /**
-     * Returns the password of the principal
-     *
-     * @return Password of the principal
-     */
-    public String getPassword() {
-        return this.password;
-    }
-
-    /**
-     * Sets the password of the user
-     *
-     * @param password Password of the principal
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /** 
-     * Compares this principal to the specified object. Returns true 
-     * if the object passed in matches the principal.
-     *
-     * @param another Principal to compare with.
-     * @return True if the principal passed in is the same as that 
-     *         encapsulated by this principal, and false otherwise.
-     */
-    public boolean equals(Object another) {
-        if (another instanceof java.security.Principal)
-            return this.name.equals(((java.security.Principal)another).getName());
-        return false;
-    }
-
-    /**
-     * Returns a string representation of this principal.
-     *
-     * @return A string representation of this principal.
-     */
-    public String toString() {
-        return this.name;
-    }
-
-    /**
-     * Returns a hashcode for this principal.
-     *
-     * @return A hashcode for this principal.
-     */
-    public int hashCode() {
-        return this.name.hashCode();
     }
 }
 

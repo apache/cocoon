@@ -49,7 +49,7 @@
 
 */
 
-package org.apache.cocoon.components.repository.impl;
+package org.apache.cocoon.components.slide.impl;
 
 import org.apache.slide.util.conf.Configuration;
 import org.apache.slide.util.conf.ConfigurationException;
@@ -60,7 +60,7 @@ import java.util.*;
  * The class represent an adapter for the configuration class from jakarta slide
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SlideConfigurationAdapter.java,v 1.3 2003/05/06 14:12:58 vgritsenko Exp $
+ * @version CVS $Id: SlideConfigurationAdapter.java,v 1.1 2003/12/02 19:18:45 unico Exp $
  */
 public class SlideConfigurationAdapter implements Configuration {
 

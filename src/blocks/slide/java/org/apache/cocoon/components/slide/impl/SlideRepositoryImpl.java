@@ -49,11 +49,12 @@
 
 */
 
-package org.apache.cocoon.components.repository.impl;
+package org.apache.cocoon.components.slide.impl;
 
 import java.util.Hashtable;
 
 import org.apache.avalon.framework.activity.Disposable;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -68,7 +69,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.repository.Repository;
+import org.apache.cocoon.components.slide.SlideRepository;
 import org.apache.cocoon.environment.Context;
 
 import org.apache.excalibur.source.Source;
@@ -85,11 +86,11 @@ import org.xml.sax.InputSource;
  * The class represent a manger for slide repositories
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepository.java,v 1.4 2003/11/15 13:34:43 joerg Exp $
+ * @version CVS $Id: SlideRepositoryImpl.java,v 1.1 2003/12/02 19:18:45 unico Exp $
  */
-public class SlideRepository
-  implements Repository, ThreadSafe, Serviceable, Configurable, LogEnabled,
-             Contextualizable, Disposable {
+public class SlideRepositoryImpl
+implements SlideRepository, LogEnabled, Serviceable, Configurable,
+Contextualizable, Disposable, ThreadSafe  {
 
     /** The service manager instance */
     protected ServiceManager manager = null;
@@ -199,19 +200,8 @@ public class SlideRepository
         }
 
         try {
-            Configuration[] parameters = configuration.getChildren("parameter");
-            Hashtable table = new Hashtable();
-
-            for (int i = 0; i<parameters.length; i++) {
-                String name = parameters[i].getAttribute("name");
-
-                table.put(name, parameters[i].getValue(""));
-            }
-            table.put("contextpath", this.contextpath);
-            this.domain.setParameters(table);
-
-            domain.setDefaultNamespace(configuration.getAttribute("default",
-                "slide"));
+            
+            domain.setDefaultNamespace(configuration.getAttribute("default","slide"));
 
             this.logger.info("Initializing Domain");
 
@@ -224,13 +214,10 @@ public class SlideRepository
                                  namespaceDefinitions[i].getAttribute("name"));
 
                 String name = namespaceDefinitions[i].getAttribute("name");
-
                 Configuration namespaceDefinition = namespaceDefinitions[i].getChild("definition");
-
                 Configuration namespaceConfigurationDefinition = namespaceDefinitions[i].getChild("configuration");
-
                 Configuration namespaceBaseDataDefinition = namespaceDefinitions[i].getChild("data");
-
+                
                 domain.addNamespace(name,
                                     new SlideLoggerAdapter(this.logger.getChildLogger(name)),
                                     new SlideConfigurationAdapter(namespaceDefinition),
@@ -239,6 +226,17 @@ public class SlideRepository
 
                 this.logger.info("Namespace configuration complete");
             }
+            
+            Configuration[] parameters = configuration.getChildren("parameter");
+            Hashtable table = new Hashtable();
+
+            for (int i = 0; i<parameters.length; i++) {
+                String name = parameters[i].getAttribute("name");
+                table.put(name, parameters[i].getValue(""));
+            }
+            table.put("contextpath", this.contextpath);
+            this.domain.setParameters(table);
+            
         } catch (ConfigurationException ce) {
             this.logger.error("Could not configure Slide domain", ce);
             return;
