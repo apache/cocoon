@@ -14,9 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!-- CVS $Id: samples.xml,v 1.6 2004/03/06 02:26:13 antonio Exp $ -->
-
+<!-- CVS $Id: samples.xml,v 1.7 2004/03/06 02:34:33 joerg Exp $ -->
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <group name="Main examples page.">
@@ -30,11 +28,18 @@
         <sample name="Hello, PDF world!" href="hello.pdf">
             The well-known hello.xml document rendered as PDF.
         </sample>
-        <sample name="XSL-FO document" href="misc/minimal.fo.xml">
+        <sample name="minimal XSL-FO document" href="misc/minimal.fo.xml">
             Source document used by FOP in the next example.
         </sample>
-        <sample name="PDF output" href="misc/minimal.pdf">
+        <sample name="minimal PDF output" href="misc/minimal.pdf">
             PDF version of the above document
+        </sample>
+        <sample name="SVG test XSL-FO document" href="misc/svgtest.fo.xml">
+            Source document for testing embedded SVG in FOP. Should enforce
+            possible problems with our FOP and our Batik if they are incompatible.
+        </sample>
+        <sample name="SVG test PDF output" href="misc/svgtest.pdf">
+            PDF version of the above document.
         </sample>
     </group>
 
