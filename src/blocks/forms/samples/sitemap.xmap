@@ -208,6 +208,14 @@
        </map:call>
      </map:match>
 
+     <map:match pattern="form2simpleXML.flow">
+       <map:call function="handleForm">
+         <map:parameter name="function" value="form2simpleXML"/>
+         <map:parameter name="form-definition" value="forms/form2_model.xml"/>
+         <map:parameter name="documentURI" value="forms/form2_simple_data.xml"/>
+       </map:call>
+     </map:match>
+
      <map:match pattern="form2bean.flow">
        <map:call function="handleForm">
          <map:parameter name="function" value="form2bean"/>
@@ -216,11 +224,21 @@
        </map:call>
      </map:match>
 
+     <map:match pattern="forms/form2_simple_data.xml">
+       <map:generate src="forms/form2_simple_data.xml"/>
+       <map:serialize type="xml"/>
+     </map:match>
+
      <map:match pattern="form2-success-pipeline">
        <map:generate src="forms/form2_data-result.xml"/>
        <map:transform type="i18n">
          <map:parameter name="locale" value="en-US"/>
        </map:transform>
+       <map:serialize type="xml"/>
+     </map:match>
+
+     <map:match pattern="form2simpleXML-success-pipeline">
+       <map:generate type="jx" src="forms/form2simpleXML_result.xml"/>
        <map:serialize type="xml"/>
      </map:match>
 

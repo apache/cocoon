@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.9 2004/05/11 12:01:38 bruno Exp $-->
+<!-- $Id: welcome.xml,v 1.10 2004/06/08 15:40:08 danielf Exp $-->
 <samples name="CForms Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
  <group name="Back">
   <sample name="Back" href="../..">to Cocoon Samples main page</sample>
@@ -47,9 +47,10 @@
     Cocoon Forms has a binding framework which assists in copying Java-bean or XML (DOM) data into a form and back.
   </note>
   <sample name="XML Binding" href="form2xml.flow">A form for just editing an XML file.</sample>
+  <sample name="Simple XML Binding" href="form2simpleXML.flow">A form for just editing XML data. Illustrates the XMLAdapter.</sample>
   <sample name="Bean Binding" href="form2bean.flow">A form for just editing a Java bean</sample>
   <note>
-  	Step-by-step tutorial into individual binding features:
+        Step-by-step tutorial into individual binding features:
   </note>
   <sample name="1. Binding Simple Values" href="binding-01value.flow">fb:*/@direction and fb:value/*</sample>
   <sample name="2. Lenient Binding" href="binding-02lenient.flow">fb:*/@lenient</sample>
