@@ -255,22 +255,27 @@ AddHandler cocoon xml</source>
      Make sure you replaced the path to the Cocoon.properties file with the
      location of that file on your system, 
      <strong>relative to the context root</strong>. Even if you start the
-     filename with a / it will still be relative to the context root.
+     filename with a <code>/</code> it will still be relative to the context root.
     </p>
 
     <note>
-      Because Cocoon now (since version 1.7.3) uses getResource () in the
+      Because Cocoon now (since version 1.7.3) uses getResource() in the
       Servlet API to read cocoon.properties, and has different instances for
       each servlet context, you need to put a copy of cocoon.properties in all
       of your servlet contexts that use Cocoon. (It is recommended to put it
-      in the context's WEB-INF directory,
-      or a password-protected directory, to prevent anyone from being able
-      to read it over the web.)
-      However, you <strong>cannot</strong> use symbolic
-      links on Unix to point to a file outside of the current context, because
-      Tomcat does not allow it for security reasons.
+      in the context's WEB-INF directory, or a password-protected directory, 
+      to prevent anyone from being able to read it over the web.)
+      However, you <strong>cannot</strong> use symbolic links on Unix to point 
+      to a file outside of the current context, because Tomcat does not allow 
+      it for security reasons.
     </note>
 
+    <note>
+      the <code>cocoon.properties</code> file <strong>must</strong> be referenced 
+      with relative paths in <code>WEB-INF/web.xml</code>, otherwise, Cocoon
+      won't be able to locate it's properties and won't be able to start.
+    </note>
+    
     <p>
      Note that you should not need to change anything from the template
      properties file found in the distribution, but you must edit it for
@@ -306,6 +311,13 @@ AddHandler cocoon xml</source>
    <note>
     Tomcat 3.0 has a bug that prevents Cocoon operation, please download
     a later version.
+   </note>
+   
+   <note>
+    Due to DOM level1 and DOM level2 incompatibilities, make sure that <code>
+    xerces.jar</code> is located <strong>before</strong> <code>xml.jar</code>
+    since Xerces contains DOM2 (which is needed by Cocoon) while ProjectX 
+    contains DOM1 (which will generate runtime exceptions with Cocoon).
    </note>
   </s2>
 
