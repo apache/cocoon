@@ -56,8 +56,6 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -94,7 +92,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.9 2003/09/05 07:21:49 cziegeler Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.10 2004/02/06 22:45:58 joerg Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Contextualizable {
@@ -128,7 +126,6 @@ public class LuceneIndexTransformer extends AbstractTransformer
     private static final int STATE_DOCUMENT = 2; // processing a lucene:document element
 
     // Initialization time variables
-    protected ComponentManager manager = null;
     protected File workDir = null;
 
     // Declaration time parameters values (specified in sitemap component config)
@@ -192,10 +189,6 @@ public class LuceneIndexTransformer extends AbstractTransformer
             parameters.getParameter(DIRECTORY_PARAMETER, configureConfiguration.indexDirectory),
             parameters.getParameterAsInteger(MERGE_FACTOR_PARAMETER, configureConfiguration.mergeFactor)
         );
-    }
-
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
     }
 
     /**

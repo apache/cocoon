@@ -51,8 +51,8 @@
 
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.components.deli.Deli;
@@ -71,7 +71,7 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: DeliTransformer.java,v 1.2 2003/10/28 19:53:57 cziegeler Exp $
+ * @version CVS $Id: DeliTransformer.java,v 1.3 2004/02/06 22:46:53 joerg Exp $
  */
 public class DeliTransformer extends TraxTransformer {
 
@@ -79,11 +79,11 @@ public class DeliTransformer extends TraxTransformer {
     private Deli deli;
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
 
         this.deli = (Deli) this.manager.lookup(Deli.ROLE);
     }

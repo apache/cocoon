@@ -54,9 +54,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Stack;
 
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 import org.apache.cocoon.components.elementprocessor.CannotCreateElementProcessorException;
 import org.apache.cocoon.components.elementprocessor.ElementProcessor;
@@ -82,17 +82,17 @@ import org.xml.sax.SAXException;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
- * @version CVS $Id: ElementProcessorSerializer.java,v 1.3 2004/01/31 08:50:45 antonio Exp $
+ * @version CVS $Id: ElementProcessorSerializer.java,v 1.4 2004/02/06 22:50:13 joerg Exp $
  */
 public abstract class ElementProcessorSerializer
-    extends AbstractLogEnabled implements Serializer, Composable
+    extends AbstractLogEnabled implements Serializer, Serviceable
 {
     private static final boolean _should_set_content_length = false;
     private OutputStream         _output_stream;
     private Stack                _open_elements;
     private Locator              _locator;
-    /** Component Manager */
-    protected ComponentManager   manager = null;
+    /** Service Manager */
+    protected ServiceManager   manager = null;
 
     /**
      * Constructor
@@ -104,7 +104,7 @@ public abstract class ElementProcessorSerializer
         _locator       = null;
     }
 
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
     

@@ -63,14 +63,14 @@ import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.collections.map.StaticBucketMap;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.environment.SourceResolver;
@@ -87,11 +87,11 @@ import org.xml.sax.SAXException;
  * Transformer which implements the dynamic Tag functionalty.
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: TagTransformer.java,v 1.4 2004/02/05 10:47:24 cziegeler Exp $
+ * @version CVS $Id: TagTransformer.java,v 1.5 2004/02/06 22:56:46 joerg Exp $
  */
 public class TagTransformer
     extends AbstractXMLProducer
-    implements Transformer, Composable, Configurable, Disposable, Recyclable {
+    implements Transformer, Serviceable, Configurable, Disposable, Recyclable {
 
     private int recordingLevel = 0;
     private int skipLevel = 0;
@@ -100,8 +100,8 @@ public class TagTransformer
     private ArrayStack tagStack = new ArrayStack();
     private ArrayStack tagSelectorStack = new ArrayStack();
     private ArrayStack tagTransformerStack = new ArrayStack();
-    private ComponentSelector tagNamespaceSelector;
-    private ComponentSelector transformerSelector;
+    private ServiceSelector tagNamespaceSelector;
+    private ServiceSelector transformerSelector;
     private Tag currentTag;
     /** current SAX Event Consumer  */
     private XMLConsumer currentConsumer;
@@ -116,8 +116,8 @@ public class TagTransformer
     private Map objectModel;
     /** The parameters specified in the sitemap */
     private Parameters parameters;
-    /** The Avalon ComponentManager */
-    private ComponentManager manager;
+    /** The Avalon ServiceManager */
+    private ServiceManager manager;
 
     /** Array for dynamic calling of Tag set property methods */
     private String[] paramArray = new String[1];
@@ -147,12 +147,12 @@ public class TagTransformer
     }
 
     /**
-     * Avalon Composable Interface
-     * @param manager The Avalon Component Manager
+     * Avalon Serviceable Interface
+     * @param manager The Avalon Service Manager
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        tagNamespaceSelector = (ComponentSelector) manager.lookup(Tag.ROLE + "Selector");
+        tagNamespaceSelector = (ServiceSelector) manager.lookup(Tag.ROLE + "Selector");
     }
 
     /**
@@ -162,8 +162,8 @@ public class TagTransformer
         transformerHint = conf.getChild("transformer-hint").getValue(null);
         if (transformerHint != null) {
             try {
-                transformerSelector = (ComponentSelector) manager.lookup(Transformer.ROLE + "Selector");
-            } catch (ComponentException e) {
+                transformerSelector = (ServiceSelector) manager.lookup(Transformer.ROLE + "Selector");
+            } catch (ServiceException e) {
                 String message = "can't lookup transformer";
                 getLogger().error(message, e);
                 throw new ConfigurationException(message, e);
@@ -229,7 +229,7 @@ public class TagTransformer
 
         Tag tag = (Tag) tagStack.pop();
         if (tag != null) {
-            ComponentSelector tagSelector = (ComponentSelector) tagSelectorStack.pop();
+            ServiceSelector tagSelector = (ServiceSelector)tagSelectorStack.pop();
             try {
                 if (saxFragment != null) {
                     //start Iteration
@@ -242,7 +242,7 @@ public class TagTransformer
                             xmlDeserializer.deserialize(saxFragment);
                         } while (iterTag.doAfterBody() != Tag.SKIP_BODY);
 
-                    } catch (ComponentException e) {
+                    } catch (ServiceException e) {
                         throw new SAXException("lookup XMLDeserializer failed", e);
                     }
                     finally {
@@ -350,7 +350,7 @@ public class TagTransformer
             Tag tag = (Tag) tagStack.pop();
             if (tag == null)
                 continue;
-            ComponentSelector tagSelector = (ComponentSelector) tagSelectorStack.pop();
+            ServiceSelector tagSelector = (ServiceSelector)tagSelectorStack.pop();
             tagSelector.release(tag);
 
             tagNamespaceSelector.release(tagSelector);
@@ -459,10 +459,10 @@ public class TagTransformer
 
         Tag tag = null;
         if (namespaceURI != null && namespaceURI.length() > 0) {
-            ComponentSelector tagSelector = null;
+            ServiceSelector tagSelector = null;
             Transformer tagTransformer = null;
             try {
-                tagSelector = (ComponentSelector) tagNamespaceSelector.select(namespaceURI);
+                tagSelector = (ServiceSelector) tagNamespaceSelector.select(namespaceURI);
                 tagSelectorStack.push(tagSelector);
 
                 // namespace matches tag library, lookup tag now.
@@ -521,7 +521,7 @@ public class TagTransformer
                             currentConsumerBackup = currentConsumer;
                             currentConsumer = xmlSerializer;
                             recordingLevel = 1;
-                        } catch (ComponentException e) {
+                        } catch (ServiceException e) {
                             throw new SAXException("lookup XMLSerializer failed", e);
                         }
                     }

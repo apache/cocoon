@@ -56,13 +56,13 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
@@ -81,13 +81,12 @@ import org.xml.sax.SAXException;
  *  Context provider for the portal context
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionContextProviderImpl.java,v 1.6 2004/01/09 11:20:23 cziegeler Exp $
+ * @version CVS $Id: SessionContextProviderImpl.java,v 1.7 2004/02/06 22:52:16 joerg Exp $
 */
-public final class SessionContextProviderImpl
-extends AbstractLogEnabled
-implements SessionContextProvider, ThreadSafe, Component, Composable, Contextualizable, Disposable {
+public final class SessionContextProviderImpl extends AbstractLogEnabled
+        implements SessionContextProvider, ThreadSafe, Component, Serviceable, Contextualizable, Disposable {
 
-    private ComponentManager manager;
+    private ServiceManager manager;
     private Context context;
     
     /** The XPath Processor */
@@ -150,10 +149,10 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
                     throw new ProcessingException("SAXException", se);
                 } catch (IOException ioe) {
                     throw new ProcessingException("IOException", ioe);
-                } catch (ComponentException ce) {
-                    throw new ProcessingException("Unable to lookup portal.", ce);
+                } catch (ServiceException se) {
+                    throw new ProcessingException("Unable to lookup portal.", se);
                 } finally {
-                    manager.release( (Component)portal);
+                    manager.release(portal);
                 }
             }
         }
@@ -182,9 +181,9 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
     }
     
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#Service(org.apache.avalon.framework.Service.ServiceManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
@@ -201,7 +200,7 @@ implements SessionContextProvider, ThreadSafe, Component, Composable, Contextual
      */
     public void dispose() {
         if ( this.manager != null ) {
-            this.manager.release( (Component)this.xpathProcessor );
+            this.manager.release(this.xpathProcessor);
             this.xpathProcessor = null;
             this.manager = null;
         }

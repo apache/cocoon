@@ -81,7 +81,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * TODO: doesn't handle (and doubt it'll ever will) HTTP/1.1 keep-alive
  * 
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version $Id: GenericProxyGenerator.java,v 1.3 2003/09/25 17:28:38 joerg Exp $
+ * @version $Id: GenericProxyGenerator.java,v 1.4 2004/02/06 22:53:22 joerg Exp $
  */
 public class GenericProxyGenerator extends ServiceableGenerator {
  
@@ -98,7 +98,7 @@ public class GenericProxyGenerator extends ServiceableGenerator {
     /**
      * Compose and get a SAX parser for further use.
      * 
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);

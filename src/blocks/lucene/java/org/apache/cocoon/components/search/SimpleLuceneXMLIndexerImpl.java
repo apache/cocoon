@@ -50,14 +50,13 @@
 */
 package org.apache.cocoon.components.search;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.util.Tokenizer;
@@ -100,17 +99,17 @@ import java.util.List;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.5 2003/11/15 04:21:30 joerg Exp $
+ * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.6 2004/02/06 22:45:58 joerg Exp $
  */
 public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
-         implements LuceneXMLIndexer, Configurable, Composable, ThreadSafe {
+         implements LuceneXMLIndexer, Configurable, Serviceable, ThreadSafe {
 
     /**
-     * The component manager instance
+     * The service manager instance
      *
      * @since
      */
-    protected ComponentManager manager = null;
+    protected ServiceManager manager = null;
 
     /**
      * Config element name specifying query-string appendend for requesting links
@@ -204,14 +203,14 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
 
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      *
      * @param  manager                 Description of Parameter
-     * @exception  ComponentException  Description of Exception
+     * @exception  ServiceException  Description of Exception
      * @since
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -315,11 +314,11 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
             throw new ProcessingException("Cannot read!", ioe);
         } catch (SAXException saxe) {
             throw new ProcessingException("Cannot parse!", saxe);
-        } catch (ComponentException ce) {
-            throw new ProcessingException("Cannot lookup xml parser!", ce);
+        } catch (ServiceException se) {
+            throw new ProcessingException("Cannot lookup xml parser!", se);
         } finally {
             if (parser != null) {
-                this.manager.release((Component)parser);
+                this.manager.release(parser);
             }
         }
     }

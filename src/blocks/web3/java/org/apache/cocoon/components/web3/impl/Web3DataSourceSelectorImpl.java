@@ -53,12 +53,11 @@ package org.apache.cocoon.components.web3.impl;
 import org.apache.cocoon.components.web3.Web3DataSource;
 
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -77,23 +76,23 @@ import EDU.oswego.cs.dl.util.concurrent.Mutex;
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3DataSourceSelectorImpl.java,v 1.5 2003/08/04 03:19:22 joerg Exp $
+ * @version CVS $Id: Web3DataSourceSelectorImpl.java,v 1.6 2004/02/06 22:54:05 joerg Exp $
  */
 public class Web3DataSourceSelectorImpl
     extends AbstractLogEnabled
-    implements ComponentSelector, Disposable, Composable, Configurable, ThreadSafe {
+    implements ServiceSelector, Disposable, Serviceable, Configurable, ThreadSafe {
 
-    /** The component manager instance */
-    protected ComponentManager manager = null;
+    /** The service manager instance */
+    protected ServiceManager manager = null;
     protected Configuration configuration = null;
     private static Hashtable pools = new Hashtable();
     private static Mutex lock = new Mutex();
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
     }
 
@@ -108,11 +107,11 @@ public class Web3DataSourceSelectorImpl
         }
     }
 
-    public boolean hasComponent(Object obj) {
+    public boolean isSelectable(Object obj) {
         return Web3DataSourceSelectorImpl.pools.containsKey(obj);
     }
 
-    public Component select(Object obj) throws ComponentException {
+    public Object select(Object obj) throws ServiceException {
         Web3DataSource pool = null;
         try {
             Web3DataSourceSelectorImpl.lock.acquire();
@@ -151,7 +150,7 @@ public class Web3DataSourceSelectorImpl
                     if (pool instanceof LogEnabled) {
                         ((LogEnabled) pool).enableLogging(getLogger());
                     }
-                    pool.compose(this.manager);
+                    pool.service(this.manager);
                     pool.configure(c);
                     pool.initialize();
                     Web3DataSourceSelectorImpl.pools.put(obj, pool);
@@ -159,7 +158,7 @@ public class Web3DataSourceSelectorImpl
             }
         } catch (Exception ex) {
             getLogger().error(ex.getMessage(), ex);
-            throw new ComponentException(null, ex.getMessage());
+            throw new ServiceException(null, ex.getMessage());
         } finally {
             Web3DataSourceSelectorImpl.lock.release();
         }
@@ -167,7 +166,7 @@ public class Web3DataSourceSelectorImpl
         return pool;
     }
 
-    public void release(Component component) {
+    public void release(Object object) {
     }
 
     /** Dispose properly of the pool */
