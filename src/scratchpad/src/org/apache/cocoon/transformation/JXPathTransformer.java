@@ -76,6 +76,7 @@ import org.apache.excalibur.source.SourceException;
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.AttributesImpl;
 /**
  * JXPath Transformer
@@ -154,16 +155,20 @@ extends AbstractSAXTransformer implements Initializable, Generator {
 	try {
             this.resolver.toSAX(this.inputSource, this);
         } catch (SAXException e) {
+            if (e instanceof SAXParseException) {
+                throw e;
+            }
             final Exception cause = e.getException();
-            if( cause != null ) {
-                if ( cause instanceof ProcessingException )
+            if (cause != null) {
+                if (cause instanceof ProcessingException)
                     throw (ProcessingException)cause;
-                if ( cause instanceof IOException )
+                if (cause instanceof IOException)
                     throw (IOException)cause;
-                if ( cause instanceof SAXException )
+                if (cause instanceof SAXException)
                     throw (SAXException)cause;
-                throw new ProcessingException("Could not read resource "
-                                              + this.inputSource.getURI(), cause);
+                throw new ProcessingException("Error reading resource "
+                                              + this.inputSource.getURI(), 
+                                              cause);
             }
             throw e;
         }
