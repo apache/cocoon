@@ -202,6 +202,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="fix" fixes-bug="26107">
+      XSP Block: Note in the documentation that XSP namespace must be declared
+      on the <code>xsp:page</code> element.
+    </action>
     <action dev="CZ" type="fix" fixes-bug="33963" due-to="John Yonosh" due-to-email="jyonosh@fcg.com">
       Fix NPE in DOMStreamer.stream().
     </action>

@@ -24,7 +24,7 @@
 
   <menu label="About">
     <menu-item label="Index" href="index.html"/>
-    <menu-item label="Features" href="features.html"/>    
+    <menu-item label="Features" href="features.html"/>
     <external label="News" href="http://cocoon.apache.org/news/"/>
     <menu-item label="License" href="license.html"/>
     <external label="Download" href="http://cocoon.apache.org/mirror.cgi"/>
@@ -32,11 +32,11 @@
 
   <menu label="Documentation">
     <menu-item label="Introduction" href="introduction.html"/>
-    <menu-item label="Tracks" href="tracks/index.html"/>
-    <menu-item label="Installing" href="installing/index.html"/>
     <menu-item label="Overview" href="overview.html"/>
+    <menu-item label="Installing" href="installing/index.html"/>
     <menu-item label="User Guide" href="userdocs/index.html"/>
     <menu-item label="Dev Guide" href="developing/index.html"/>
+    <menu-item label="Tracks" href="tracks/index.html"/>
     <menu-item label="Tutorials" href="tutorial/index.html"/>
     <menu-item label="FAQs" href="faq/index.html"/>
     <menu-item label="How-Tos" href="howto/index.html"/>
