@@ -83,7 +83,7 @@ import org.apache.excalibur.source.SourceResolver;
  * via the compose() method is an instance of CocoonComponentManager.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.9 2003/04/26 13:35:39 cziegeler Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.10 2003/04/26 14:06:50 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager
@@ -104,34 +104,27 @@ implements SourceResolver
     /** The {@link RoleManager} */
     private RoleManager roleManager;
 
-    /** The root component manager */
-    private static ComponentManager rootManager;
-    
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
     
     /** Create the ComponentManager */
     public CocoonComponentManager() {
         super( null, Thread.currentThread().getContextClassLoader() );
-        if ( null == rootManager ) rootManager = this;
     }
 
     /** Create the ComponentManager with a Classloader */
     public CocoonComponentManager(final ClassLoader loader) {
         super( null, loader );
-        rootManager = this;
     }
 
     /** Create the ComponentManager with a Classloader and parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager, final ClassLoader loader) {
         super( manager, loader );
-        if (rootManager != manager) rootManager = this;
     }
 
     /** Create the ComponentManager with a parent ComponentManager */
     public CocoonComponentManager(final ComponentManager manager) {
         super( manager);
-        if (rootManager != manager) rootManager = this;
     }
 
     /**
@@ -246,8 +239,8 @@ implements SourceResolver
 			return (ComponentManager)o[2];
 		}
 
-        // if we don't have an environment yet, just return the root manager
-        return rootManager;
+        // if we don't have an environment yet, just return null
+        return null;
     }
     
     /**
