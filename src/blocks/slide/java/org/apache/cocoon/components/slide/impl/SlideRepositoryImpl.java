@@ -86,7 +86,7 @@ import org.xml.sax.InputSource;
  * and the fact that JTA is not on the classpath).
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SlideRepositoryImpl.java,v 1.3 2003/12/08 18:07:42 unico Exp $
+ * @version CVS $Id: SlideRepositoryImpl.java,v 1.4 2003/12/10 17:23:39 unico Exp $
  */
 public class SlideRepositoryImpl
 implements SlideRepository, LogEnabled, Serviceable, Configurable,
@@ -160,7 +160,6 @@ Contextualizable, Disposable, Component, ThreadSafe  {
         Configuration configuration = null;
 
         if (Domain.isInitialized()) {
-            this.logger.info("Domain already initialized.");
             return;
         }
 
