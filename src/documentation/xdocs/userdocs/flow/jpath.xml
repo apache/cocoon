@@ -47,10 +47,10 @@ tag is evaluated, if present:</p>
  &lt;choose&gt;
    &lt;when test="XPathExpression"&gt;
       body
-   &lt;/when&gt;
+   &lt;/when&gt;+
    &lt;otherwise&gt;
       body
-   &lt;/otherwise&gt;
+   &lt;/otherwise&gt;?
  &lt;/choose&gt;
 </source>
 <p>Example:
@@ -92,12 +92,12 @@ of objects:</p><p>
 <source>
 &lt;for-each select="cart/cartItems[position() &lt;= $count]"&gt;
    &lt;td&gt;&lt;value-of select="./productId"&gt;&lt;/td&gt;
-&lt;/forEach&gt;
+&lt;/for-each&gt;
 </source>
 </p>
 </s2>
 <s2 title="continuation">
-<p>The <code>continuation</code> tag returns the id of the current web continuation of your Flowscript. You can refer to previous continuations by supplying the <code>level</code> attribute. Zero is the current level, <code>-1</code> refers to the previous continuation, and so on.</p>
+<p>The <code>continuation</code> tag returns the id of the current web continuation of your Flowscript. You can refer to previous continuations by supplying the optional <code>level</code> attribute. Zero is the current level, <code>-1</code> refers to the previous continuation, and so on.</p>
 <source>
 &lt;continuation [level="Number"]/&gt;
 </source>
