@@ -29,9 +29,6 @@
       widget validator can perform some checks on the widget and if these
       fail, set a validation error on the widget.</p>
 
-      <p>Note that technically, it is not required that really each widget
-      supports widget validators, but all the ones supplied with CForms do.</p>
-
       <p>Implementation-wise, a widget validator is an object implementing
       the <code>WidgetValidator</code> interface. [insert javadoc link
       once those are published]</p>
@@ -47,6 +44,66 @@
       <p>CForms supplies a number of widget validators, mostly for performing
       checks on the value of field widgets. Additionally you can write your
       own ones in Java or in Javascript.</p>
+    </s1>
+
+    <s1 title="Table of widgets supporting ValidationErrorAware">
+      <p>These are the widgets on which you can call <code>setValidationError</code>
+      (and <code>getValidationError</code>). This is relevant if you are writing your
+      own validation logic.</p>
+      <table>
+        <tr>
+          <th>Widget</th>
+          <th>Supports ValidationErrorAware</th>
+        </tr>
+        <tr>
+          <td>field</td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>multivaluefield</td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>booleanfield</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>repeater</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>output</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>submit</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>action</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>repeater-action</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>row-action</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aggregatefield</td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>upload</td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>messages</td>
+          <td></td>
+        </tr>
+      </table>
     </s1>
 
     <s1 title="Reference">

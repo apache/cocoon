@@ -28,23 +28,19 @@
       <p>Some types of widgets can emit events. For example, the
       action widget produces ActionEvents and the field widget
       produces ValueChangedEvents. Next to these events, there are
-      also processing phase events, fired in between the various
+      also ProcessingPhaseEvents, fired in between the various
       phases of the processing of a request.</p>
 
-      <p>Handling events can be done in two ways:</p>
+      <p>Handling events can be done in three ways:</p>
 
       <ul>
         <li>by defining event listeners in the form definition (as child
         of wd:on-action for the action widget, or wd:on-value-changed for
-        the field widget, ...). These event listeners will be triggered when
-        the widget on which they're defined fires an event.</li>
-        <li>by registering a org.apache.cocoon.woody.event.FormHandler on the
+        the field widget, ...).</li>
+        <li>by adding event listeners dynamically on widget instances.</li>
+        <li>by registering a <code>FormHandler</code> on the
         Form object. This FormHandler will receive all events from all widgets.</li>
       </ul>
-
-      <p>Note that higher-level API's like the flowscript integration might
-      provide other ways which might be more comfortable to work with in
-      those environments.</p>
     </s1>
 
     <s1 title="When are events processed? (Request processing phases)">
@@ -116,7 +112,7 @@
         </ul>
 
         <note>It does not make sense to create continuations from the Javascript event
-        handler. In other words, do not call cocoon.sendPageAndWait or form.showForm
+        handler. In other words, do not call <code>cocoon.sendPageAndWait</code> or <code>form.showForm</code>
         from there.</note>
       </s2>
 
@@ -125,6 +121,23 @@
         implement a certain event listener interface. Which interface depends on the type of widget.
         See the documentation of the individual widgets for more information.</p>
       </s2>
+    </s1>
+
+    <s1 title="Adding event listeners on widget instances">
+      <p>Adding event listeners on widgets instances allows to dynamically
+      add event listeners at runtime. This is often convenient: as you
+      control the creation of the event listeners yourself, you can pass
+      them any information you need.</p>
+
+      <p>To add an event listener on a widget instance, simply call
+      the appropriate method on the widget (e.g. addValueChangedListener)
+      with an appropriate listener object as argument. You can of course also remove
+      the event listener afterwards (e.g. removeValueChangedListener).</p>
+
+      <p>When using flowscript, it is possible to simply assign Javascript
+      functions as event listeners. This is a very easy and powerful way
+      to create event listeners. See the <link href="api_javascript.html">flowscript
+      API section</link> for more information.</p>
     </s1>
 
     <s1 title="Handling events using the FormHandler">
@@ -140,7 +153,94 @@
       See the javadocs of these interfaces and classes for more details.</p>
 
       <p>Once you created the FormHandler, register it on a form instance by calling
-      the method setFormHandler(FormHandler formHandler) on it.</p>
+      the method <code>setFormHandler(FormHandler formHandler)</code> on it.</p>
+    </s1>
+
+    <s1 title="Overview of supported events">
+      <p>The figure below shows the 3 types of events we currently support, each
+      extending from the common WidgetEvent class.</p>
+
+      <figure src="images/forms_event_types.png" alt="Overview of event types"/>
+
+      <p>The full types of the event listeners and event objects are:</p>
+
+      <source><![CDATA[org.apache.cocoon.forms.event.ValueChangedListener
+org.apache.cocoon.forms.event.ValueChangedEvent
+
+org.apache.cocoon.forms.event.ActionListener
+org.apache.cocoon.forms.event.ActionEvent
+
+org.apache.cocoon.forms.event.ProcessingPhaseListener
+org.apache.cocoon.forms.event.ProcessingPhaseEvent]]></source>
+
+      <p>The table below gives an overview of what events are supported on what widgets.</p>
+      <table>
+        <tr>
+          <th>Widget</th>
+          <th>Supports ValueChangedEvents</th>
+          <th>Supports ActionEvents</th>
+        </tr>
+        <tr>
+          <td>field</td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>multivaluefield</td>
+          <td>TODO</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>booleanfield</td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>repeater</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>output</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>submit</td>
+          <td></td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>action</td>
+          <td></td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>repeater-action</td>
+          <td></td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>row-action</td>
+          <td></td>
+          <td><img src="images/yes_mark.png" alt="yes"/></td>
+        </tr>
+        <tr>
+          <td>aggregatefield</td>
+          <td>TODO</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>upload</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>messages</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
     </s1>
   </body>
 </document>
