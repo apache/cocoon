@@ -1,5 +1,5 @@
-<!--<?xml version="1.0"?>
-<project default="webapp" basedir="." name="Apache Cocoon Targets">-->
+<?xml version="1.0"?>
+<project default="webapp" basedir="." name="Initialization targets">
   <!-- Initialization Targets ================================================ -->
 
   <target name="init">
@@ -220,4 +220,4 @@
     <delete dir="${dist.root}"/>
   </target>
 
-<!--</project>-->
+</project>
