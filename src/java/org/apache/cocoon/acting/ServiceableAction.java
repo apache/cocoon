@@ -50,28 +50,28 @@
 */
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 
 /**
- * The <code>ComposerAction</code> will allow any <code>Action</code>
+ * The <code>ServiceableAction</code> will allow any <code>Action</code>
  * that extends this to access SitemapComponents.
  *
- * @deprecated Use the ServiceableAction instead
- * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ComposerAction.java,v 1.2 2003/10/15 17:37:56 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@pwr.ch">Carsten Ziegeler</a>
+ * @version CVS $Id: ServiceableAction.java,v 1.1 2003/10/15 17:37:56 cziegeler Exp $
  */
-public abstract class ComposerAction extends AbstractAction implements Composable {
+public abstract class ServiceableAction 
+    extends AbstractAction implements Serviceable {
 
-    /** The component manager instance */
-    protected ComponentManager manager;
+    /** The service manager instance */
+    protected ServiceManager manager;
 
     /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Composable</code>.
+     * Set the current <code>ServiceManager</code> instance used by this
+     * <code>Serviceable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager=manager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 }
