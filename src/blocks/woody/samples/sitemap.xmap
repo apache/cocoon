@@ -70,6 +70,7 @@
     <map:script src="flow/upload_example.js"/>
     <map:script src="flow/registration.js"/>
     <map:script src="flow/customvalidationdemo.js"/>
+    <map:script src="flow/bindings.js"/>
     <map:script src="flow/form_model_gui.js"/>
   </map:flow>
 
@@ -312,6 +313,11 @@
        <map:read src="{0}"/>
      </map:match>
 
+     <!--
+        | Sample building a woody-form-gui editor in woody
+        | Doubles as a showcase for class, new, struct, union widgets
+        -->
+
      <map:match pattern="form_model_gui.flow">
        <map:call function="woody">
          <map:parameter name="function" value="form_model_gui"/>
@@ -320,6 +326,39 @@
          <map:parameter name="documentURI" value="forms/form_model_gui_data.xml"/>
          <map:parameter name="bindingURI" value="forms/form_model_gui_binding.xml"/>
        </map:call>
+     </map:match>
+     
+     
+     <!--
+        | Group of Binding feature samples...
+        -->
+     
+     <map:match pattern="binding-*-*.flow">
+       <map:call function="bindingSample">
+         <map:parameter name="sample-code" value="{1}" />
+         <map:parameter name="backend-type" value="{2}" />
+       </map:call>
+     </map:match>
+     
+     <map:match pattern="binding-*.flow">
+       <map:redirect-to uri="binding-{1}-JS.flow" />
+     </map:match>
+     
+     <map:match pattern="binding.form">
+       <map:generate type="woody">
+         <map:parameter name="form-action" value="#\{$continuation/id}.continue" />
+       </map:generate>
+       <!--TODO: fix xsl for use with woody-generator -->
+       <map:transform src="resources/woody-samples-styling.xsl" />
+       <map:serialize type="html" />
+     </map:match>
+
+     <map:match pattern="binding.done">
+       <map:generate type="jx" src="forms/binding/done.jx"/> <!-- generic dump of flow env via jx? -->
+       <map:call resource="simple-page2html">
+         <map:parameter name="file" value="forms/binding/done.jx"/>
+       </map:call>
+       <map:serialize />
      </map:match>
 
    </map:pipeline>
