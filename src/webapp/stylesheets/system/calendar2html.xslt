@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: calendar2html.xslt,v 1.2 2004/04/09 07:45:43 ugo Exp $ -->
+<!-- CVS $Id: calendar2html.xslt,v 1.3 2004/04/09 14:31:48 ugo Exp $ -->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -30,59 +30,47 @@
         </title>
         <style>
           <xsl:comment>
-.largecalendar {
+.calendar {
+  font-family: Georgia, "Book Antiqua", Palatino, "Times New Roman", serif;
   margin-top: 20px;
   padding-bottom: 1em;
   background-color: white;
   color: #333;
 }
 
-.largecalendar table {
+.calendar table {
   background-color: #888;
 }
 
-.largecalendar table caption {
-  font-family: LuciduxSerif, Georgia, "Book Antiqua", Palatino, "Times New Roman", serif;
-  font-size: large;
+.calendar table caption {
+  font-size: x-large;
   font-weight: bold;
   font-variant: small-caps;
   padding-top: 0.2em;
   padding-bottom: 0.3em;
   background: #fff;
   color: #333;
-  voice-family: "\"}\"";
-  voice-family:inherit;
-  font-size: x-large;
 }
 
-.largecalendar table th {
-  font-family: LuciduxSerif, Georgia, "Book Antiqua", Palatino, "Times New Roman", serif;
-  font-size: x-small;
+.calendar table th {
+  font-size: small;
   font-variant: small-caps;
   background: #fff;
   color: #333;
   padding-bottom: 2px;
-  voice-family: "\"}\"";
-  voice-family:inherit;
-  font-size: small;
 }
 
-.largecalendar .daytitle {
+.calendar .daytitle {
   position: relative;
   left: 0;
   top: 0;
   width: 25%;
-  padding: 3px 0 3px 0;
-  background: transparent;
+  padding: 3px 0;
   color: #000;
   border-right: 1px solid #888;
   border-bottom: 1px solid #888;
-  font-size: x-small;
-  font-family: Verdana, sans-serif;
-  text-align: center;
-  voice-family: "\"}\"";
-  voice-family:inherit;
   font-size: small;
+  text-align: center;
 }
 
 td {
@@ -95,29 +83,9 @@ td {
   color: #333;
 }
 
-.largecalendar ul {
-  list-style: none;
-  margin: 0;
-  padding: 0 3px 0 3px;
-}
-
-.largecalendar li {
-  display: block;
+.calendar p {
   text-align: center;
-  font-size: xx-small;
-  font-family: Verdana, sans-serif;
-  padding-top: 6px;
-  voice-family: "\"}\"";
-  voice-family:inherit;
-  font-size: x-small;
-}
-html>body .largecalendar li {
-  margin-top: 6px;
-}
-
-.largecalendar li.first {
-  padding-top: 0;
-  background: transparent;
+  font-size: small;
 }
           </xsl:comment>
         </style>
@@ -129,7 +97,7 @@ html>body .largecalendar li {
   </xsl:template>
 
   <xsl:template match="calendar:calendar">
-    <div class="largecalendar">
+    <div class="calendar">
       <table cellpadding="0" cellspacing="1" summary="Monthly calendar">
         <caption><xsl:value-of select="@month"/>
           <xsl:text> </xsl:text><xsl:value-of select="@year"/>
@@ -153,88 +121,54 @@ html>body .largecalendar li {
   </xsl:template>
   
   <xsl:template match="calendar:week">
-    <xsl:variable name="start" select="7 - count(../calendar:week[1]/calendar:day)"/>
     <tr>
       <xsl:if test="position() = 1">
         <xsl:choose>
           <xsl:when test="count(calendar:day) = 1">
-            <td class="d1"/>
-            <td class="d2"/>
-            <td class="d3"/>
-            <td class="d4"/>
-            <td class="d5"/>
-            <td class="d6"/>
+            <td/><td/><td/><td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 2">
-            <td class="d1"/>
-            <td class="d2"/>
-            <td class="d3"/>
-            <td class="d4"/>
-            <td class="d5"/>
+            <td/><td/><td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 3">
-            <td class="d1"/>
-            <td class="d2"/>
-            <td class="d3"/>
-            <td class="d4"/>
+            <td/><td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 4">
-            <td class="d1"/>
-            <td class="d2"/>
-            <td class="d3"/>
+            <td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 5">
-            <td class="d1"/>
-            <td class="d2"/>
+            <td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 6">
-            <td class="d1"/>
+            <td/>
           </xsl:when>
         </xsl:choose>
       </xsl:if>
       <xsl:for-each select="calendar:day">
-        <td class="d{@number + $start}">
+        <td>
           <div class="daytitle"><xsl:value-of select="@number"/></div>
-          <ul>
-            <li class="first"><xsl:value-of select="@date"/></li>
-          </ul>
+          <p><xsl:value-of select="@date"/></p>
         </td>
       </xsl:for-each>
-      <xsl:variable name="last" select="count(../calendar:week/calendar:day) + $start"/>
       <xsl:if test="position() = last()">
         <xsl:choose>
           <xsl:when test="count(calendar:day) = 1">
-            <td class="d{$last + 1}"/>
-            <td class="d{$last + 2}"/>
-            <td class="d{$last + 3}"/>
-            <td class="d{$last + 4}"/>
-            <td class="d{$last + 5}"/>
-            <td class="d{$last + 6}"/>
+            <td/><td/><td/><td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 2">
-            <td class="d{$last + 1}"/>
-            <td class="d{$last + 2}"/>
-            <td class="d{$last + 3}"/>
-            <td class="d{$last + 4}"/>
-            <td class="d{$last + 5}"/>
+            <td/><td/><td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 3">
-            <td class="d{$last + 1}"/>
-            <td class="d{$last + 2}"/>
-            <td class="d{$last + 3}"/>
-            <td class="d{$last + 4}"/>
+            <td/><td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 4">
-            <td class="d{$last + 1}"/>
-            <td class="d{$last + 2}"/>
-            <td class="d{$last + 3}"/>
+            <td/><td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 5">
-            <td class="d{$last + 1}"/>
-            <td class="d{$last + 2}"/>
+            <td/><td/>
           </xsl:when>
           <xsl:when test="count(calendar:day) = 6">
-            <td class="d{$last + 1}"/>
+            <td/>
           </xsl:when>
         </xsl:choose>
       </xsl:if>
