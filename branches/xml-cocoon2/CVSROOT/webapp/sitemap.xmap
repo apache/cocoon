@@ -119,15 +119,9 @@
 
  <map:action-sets>
   <map:action-set name="employee">
-   <map:act type="add-employee" action="Add">
-    <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
-   </map:act>
-   <map:act type="del-employee" action="Delete">
-    <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
-   </map:act>
-   <map:act type="upd-employee" action="Update">
-    <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
-   </map:act>
+   <map:act type="add-employee" action="Add"/>
+   <map:act type="del-employee" action="Delete"/>
+   <map:act type="upd-employee" action="Update"/>
   </map:action-set>
  </map:action-sets>
 
@@ -290,10 +284,12 @@
 
    <!-- ========================== Forms ================================= -->
    <map:match pattern="forms/employee">
-     <map:act set="employee"/>
-     <map:generate type="serverpages" src="docs/samples/forms/employee.xsp"/>
-     <map:transform src="stylesheets/dynamic-page2html.xsl"/>
-     <map:serialize/>
+     <map:act set="employee">
+       <parameter name="form-descriptor" value="context://docs/samples/forms/employee.xml"/>
+       <map:generate type="serverpages" src="docs/samples/forms/employee.xsp"/>
+       <map:transform src="stylesheets/dynamic-page2html.xsl"/>
+       <map:serialize/>
+     </map:act>
    </map:match>
 
    <map:match pattern="forms/*">
