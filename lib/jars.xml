@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.182 2004/03/04 07:01:56 antonio Exp $
+    | CVS $Id: jars.xml,v 1.183 2004/03/08 21:41:19 unico Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -510,6 +510,14 @@
     <used-by>JCS Store</used-by>
     <lib>scratchpad/lib/jcs-1.0-dev-20040303.jar</lib>
     <homepage>http://jakarta.apache.org/turbine/jcs</homepage>
+  </file>
+
+  <file>
+    <title>EHCache</title>
+    <description>Easy Hibernate Cache</description>
+    <used-by>EHCache Store</used-by>
+    <lib>scratchpad/lib/ehcache-0.7.jar</lib>
+    <homepage>http://ehcache.sourceforge.net/</homepage>
   </file>
 
   <file>
