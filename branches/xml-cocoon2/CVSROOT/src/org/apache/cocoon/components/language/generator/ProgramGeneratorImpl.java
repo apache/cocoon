@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.34 $ $Date: 2001-02-21 17:22:28 $
+ * @version CVS $Revision: 1.1.2.35 $ $Date: 2001-02-22 12:07:58 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -186,7 +186,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
             programInstance = null;
         }
 
-        if (program == null) {
+        if (programInstance == null) {
             program = generateResource(file, normalizedName, markupLanguage, programmingLanguage, resolver);
         }
         // Instantiate
