@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- CVS: $Id: request.xsp,v 1.1 2003/03/09 00:10:59 pier Exp $ -->
+<!-- CVS: $Id: request.xsp,v 1.2 2003/03/18 19:32:12 shannon Exp $ -->
 
 <xsp:page language="java"
           xmlns:xsp="http://apache.org/xsp"  
@@ -163,6 +163,10 @@ get-date-header
   <td>get-requested-session-id</td><td><xsp-request:get-requested-session-id/></td>
   <td>getRequestedSessionId</td><td><xsp:expr>request.getRequestedSessionId()</xsp:expr></td>
     </tr>
+<tr>
+  <td>get-session-id</td><td><xsp-request:get-session-id/></td>
+  <td>getSession.getId</td><td><xsp:expr>request.getSession().getId()</xsp:expr></td>
+    </tr>
 </table>
 
 	<h1>xsp-request logicsheet output (as xml)</h1>
@@ -199,11 +203,13 @@ get-query-string            <xsp-request:get-query-string as="xml"/>
 get-protocol                <xsp-request:get-protocol as="xml"/>
 get-remote-host             <xsp-request:get-remote-host as="xml"/>
 is-secure                   <xsp-request:is-secure as="xml"/>
+get-path-translated         <xsp-request:get-path-translated as="xml"/>
 get-servlet-path            <xsp-request:get-servlet-path as="xml"/>
 get-user-principal          <xsp-request:get-user-principal as="xml"/>
 get-auth-type               <xsp-request:get-auth-type as="xml"/>
 is-user-in-role             <xsp-request:is-user-in-role role="admin" as="xml"/>
 get-requested-session-id    <xsp-request:get-requested-session-id as="xml"/>
+get-session-id              <xsp-request:get-session-id as="xml"/>
 </textarea>
 
 <xsp-request:remove-attribute name="attr"/>
