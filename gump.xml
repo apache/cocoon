@@ -24,7 +24,7 @@
 
   <url href="http://cocoon.apache.org/"/>
   <description>Java XML Framework</description>
-  <cvs repository="cocoon"/>
+  <svn repository="cocoon" dir="trunk/"/>
 
   <!--
     *******************************
