@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.39 2000-12-13 13:40:34 greenrd Exp $-->
+<!-- $Id: esql.xsl,v 1.40 2001-01-10 05:55:52 balld Exp $-->
 <!--
 
  ============================================================================
@@ -57,6 +57,42 @@
   xmlns:esql="http://apache.org/cocoon/SQL/v2"
   xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
 >
+<!--
+  xmlns:xsp="http://apache.org/xsp"
+-->
+
+<xsl:param name="XSP-ENVIRONMENT"/>
+<xsl:param name="XSP-VERSION"/>
+<xsl:param name="filename"/>
+<xsl:param name="language"/>
+
+<xsl:variable name="cocoon1-environment">Cocoon 1.8.1-dev</xsl:variable>
+<xsl:variable name="cocoon2-environment">something else</xsl:variable>
+
+<xsl:variable name="cocoon1-xsp-namespace-uri">http://www.apache.org/1999/XSP/Core</xsl:variable>
+<xsl:variable name="cocoon2-xsp-namespace-uri">http://apache.org/xsp</xsl:variable>
+
+<xsl:variable name="environment">
+  <xsl:choose>
+    <xsl:when test="$XSP-ENVIRONMENT = $cocoon1-environment">
+      <xsl:text>cocoon1</xsl:text>
+    </xsl:when>
+    <xsl:when test="$XSP-ENVIRONMENT = $cocoon2-environment">
+      <xsl:text>cocoon2</xsl:text>
+    </xsl:when>
+  </xsl:choose>
+</xsl:variable>
+
+<xsl:variable name="xsp-namespace-uri">
+  <xsl:choose>
+    <xsl:when test="$environment = 'cocoon1'">
+      <xsl:value-of select="$cocoon1-xsp-namespace-uri"/>
+    </xsl:when>
+    <xsl:when test="$environment = 'cocoon2'">
+      <xsl:value-of select="$cocoon2-xsp-namespace-uri"/>
+    </xsl:when>
+  </xsl:choose>
+</xsl:variable>
 
 <xsl:template name="get-nested-content">
   <xsl:param name="content"/>
@@ -111,6 +147,8 @@
       <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
     </xsp:structure>
     <xsp:logic>
+      /** environment - <xsl:value-of select="$environment"/> **/
+      /** xsp namespace uri - <xsl:value-of select="$xsp-namespace-uri"/> **/
       static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
       class EsqlConnection {
         DBConnection db_connection = null;
@@ -136,7 +174,7 @@
   </xsp:page>
 </xsl:template>
 
-<xsl:template match="xsp:page/*[not(namespace-uri(.)='http://www.apache.org/1999/XSP/Core')]">
+<xsl:template match="xsp:page/*[not(namespace-uri(.)=$xsp-namespace-uri)]">
  <xsl:copy>
   <xsl:apply-templates select="@*"/>
   <xsp:logic>
@@ -194,22 +232,24 @@
       }
       <xsl:apply-templates/>
     } finally {
-      if(!_esql_connection.connection.getAutoCommit()) {
-        _esql_connection.connection.commit();
-      }
-      <xsl:choose>
-        <xsl:when test="esql:pool">
-          _esql_pool.releaseConnection(_esql_connection.db_connection);
-        </xsl:when>
-        <xsl:otherwise>
-          _esql_connection.connection.close();
-        </xsl:otherwise>
-      </xsl:choose>
-    }
-    if (_esql_connections.empty()) {
-      _esql_connection = null;
-    } else {
-      _esql_connection = (EsqlConnection)_esql_connections.pop();
+      try {
+        if(!_esql_connection.connection.getAutoCommit()) {
+          _esql_connection.connection.commit();
+        }
+        <xsl:choose>
+          <xsl:when test="esql:pool">
+            _esql_pool.releaseConnection(_esql_connection.db_connection);
+          </xsl:when>
+          <xsl:otherwise>
+            _esql_connection.connection.close();
+          </xsl:otherwise>
+        </xsl:choose>
+        if (_esql_connections.empty()) {
+          _esql_connection = null;
+        } else {
+          _esql_connection = (EsqlConnection)_esql_connections.pop();
+        }
+      } catch (NullPointerException _esql_exception_<xsl:value-of select="generate-id(.)"/>) {}
     }
   </xsp:logic>
 </xsl:template>
@@ -278,6 +318,7 @@
           }
         }
         <xsl:apply-templates select="esql:results"/>
+        <xsl:apply-templates select="esql:no-results"/>
         _esql_query.resultset.close();
       } else {
         _esql_query.position = _esql_query.statement.getUpdateCount();
@@ -349,18 +390,27 @@
 
 <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-columns">
-  <xsp:logic>
-    for (int _esql_i=1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
-      Node _esql_node = document.createElement(_esql_query.resultset_metadata.getColumnName(_esql_i));
-      _esql_node.appendChild(document.createTextNode(
-        <xsl:call-template name="get-string-encoded">
-          <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
-          <xsl:with-param name="resultset">_esql_query.resultset</xsl:with-param>
-        </xsl:call-template>
-      ));
-      xspCurrentNode.appendChild(_esql_node);
-    }
-  </xsp:logic>
+  <xsl:choose>
+    <xsl:when test="$environment = 'cocoon1'">
+      <xsp:logic>
+        for (int _esql_i=1; _esql_i &lt;= _esql_query.resultset_metadata.getColumnCount(); _esql_i++) {
+          Node _esql_node = document.createElement(_esql_query.resultset_metadata.getColumnName(_esql_i));
+          _esql_node.appendChild(document.createTextNode(
+            <xsl:call-template name="get-string-encoded">
+              <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
+              <xsl:with-param name="resultset">_esql_query.resultset</xsl:with-param>
+            </xsl:call-template>
+          ));
+          xspCurrentNode.appendChild(_esql_node);
+        }
+      </xsp:logic>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsp:logic>
+        throw new RuntimeException("esql:get-columns is not supported in this environment: "+<xsl:value-of select="$environment"/>);
+      </xsp:logic>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xspdoc:desc>returns the value of the given column as a string</xspdoc:desc>
@@ -476,7 +526,16 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-  <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+  <xsl:choose>
+    <xsl:when test="$environment = 'cocoon1'">
+      <xsp:expr>this.xspParser.parse(new InputSource(new StringReader(<xsl:copy-of select="$content"/>))).getDocumentElement()</xsp:expr>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsp:logic>
+        throw new RuntimeException("esql:get-xml is not supported in this environment: "+<xsl:value-of select="$environment"/>);
+      </xsp:logic>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xspdoc:desc>returns the position of the current row in the result set</xspdoc:desc>
