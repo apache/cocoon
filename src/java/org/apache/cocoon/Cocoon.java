@@ -81,7 +81,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.27 2004/06/11 21:37:04 vgritsenko Exp $
+ * @version CVS $Id: Cocoon.java,v 1.28 2004/07/06 20:21:51 vgritsenko Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -94,6 +94,7 @@ public class Cocoon
                    Contextualizable,
                    Composable,
                    InstrumentManageable {
+    static Cocoon instance;
 
     private ThreadManager threads;
 
@@ -155,6 +156,10 @@ public class Cocoon
     public Cocoon() throws ConfigurationException {
         // Set the system properties needed by Xalan2.
         setSystemProperties();
+
+        // HACK: Provide a way to share an instance of Cocoon object between
+        //       several servlets/portlets.
+        instance = this;
     }
 
     /**
