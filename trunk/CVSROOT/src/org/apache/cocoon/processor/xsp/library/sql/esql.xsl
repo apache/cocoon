@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.29 2000-11-12 21:03:53 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.30 2000-11-12 21:05:53 balld Exp $-->
 <!--
 
  ============================================================================
@@ -106,6 +106,7 @@
       <xsp:include>java.text.SimpleDateFormat</xsp:include>
       <xsp:include>java.text.DecimalFormat</xsp:include>
       <xsp:include>java.io.StringWriter</xsp:include>
+      <xsp:include>java.io.PrintWriter</xsp:include>
       <xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
       <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
     </xsp:structure>
