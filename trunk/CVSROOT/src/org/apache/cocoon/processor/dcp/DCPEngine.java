@@ -1,4 +1,4 @@
-/*-- $Id: DCPEngine.java,v 1.3 1999-11-09 02:30:44 dirkx Exp $ -- 
+/*-- $Id: DCPEngine.java,v 1.4 1999-12-14 23:43:28 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -169,7 +169,7 @@ import org.apache.cocoon.interpreter.*;
  * </ul>
  * 
  * @author <a href="mailto:rrocha@plenix.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:44 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-14 23:43:28 $
  */
  
 public class DCPEngine {
@@ -278,11 +278,18 @@ public class DCPEngine {
                 } catch (Exception e) {
                     String message = e.getMessage();
                     String className = e.getClass().getName();
-                    Text text = document.createTextNode("{DCP Error: " 
-                                                        + className + ": " 
-                                                        + message + "}");
-
-                    parent.replaceChild(text, pi);
+                    
+                    StringWriter sw = new StringWriter();
+                    PrintWriter pw = new PrintWriter(sw, true);
+                    e.printStackTrace(pw);
+                    Text errorText = document.createTextNode(
+                        "{DCP Error: " +
+                        className + ": " +
+                        message + "}\n" +
+                        sw.toString()
+                    );
+                    
+                    parent.replaceChild(errorText, pi);
                 } 
 
                 break;
