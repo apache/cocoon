@@ -42,7 +42,7 @@
       support high level server development. 
     </description>
     <used-by>Cocoon</used-by>
-    <lib>databases/lib/excalibur-datasource-1.1.1.jar</lib>
+    <lib>optional/excalibur-datasource-1.1.1.jar</lib>
     <homepage>http://avalon.apache.org/excalibur/</homepage>
   </file>
 
