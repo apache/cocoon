@@ -53,25 +53,33 @@ package org.apache.cocoon.portal.layout.impl;
 import org.apache.cocoon.portal.layout.AbstractLayout;
 import org.apache.cocoon.portal.layout.Layout;
 
-
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * 
- * @version CVS $Id: LinkLayout.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: LinkLayout.java,v 1.2 2003/07/10 13:17:04 cziegeler Exp $
  */
-public final class LinkLayout 
-    extends AbstractLayout
-    implements Layout {
+public class LinkLayout extends AbstractLayout implements Layout {
 
-    private String linkedLayoutId;
-    
+    protected String linkedLayoutKey;
+    protected String linkedLayoutId;
+
     public void setLayoutId(String layoutId) {
         this.linkedLayoutId = layoutId;
     }
-    
+
     public String getLayoutId() {
         return this.linkedLayoutId;
     }
+
+    public String getLayoutKey() {
+        return linkedLayoutKey;
+    }
+
+    public void setLayoutKey(String key) {
+        linkedLayoutKey = key;
+    }
+
 }

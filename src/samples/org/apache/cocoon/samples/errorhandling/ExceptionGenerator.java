@@ -65,8 +65,8 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * Exception generator.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
- * @version CVS $Id: ExceptionGenerator.java,v 1.2 2003/05/08 10:13:02 stephan Exp $
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * @version CVS $Id: ExceptionGenerator.java,v 1.3 2003/07/10 13:17:01 cziegeler Exp $
  */
 public class ExceptionGenerator extends AbstractGenerator {
 

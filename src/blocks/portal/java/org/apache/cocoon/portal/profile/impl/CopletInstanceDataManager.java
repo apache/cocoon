@@ -58,9 +58,9 @@ import org.apache.cocoon.portal.coplet.CopletInstanceData;
 /**
  * Holds instances of CopletInstanceData.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataManager.java,v 1.3 2003/05/26 14:29:53 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataManager.java,v 1.4 2003/07/10 13:16:59 cziegeler Exp $
  */
 public class CopletInstanceDataManager {
 	

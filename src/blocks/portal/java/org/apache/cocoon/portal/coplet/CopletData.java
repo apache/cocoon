@@ -61,9 +61,9 @@ import org.apache.cocoon.portal.util.DeltaApplicable;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletData.java,v 1.7 2003/06/13 14:15:04 cziegeler Exp $
+ * @version CVS $Id: CopletData.java,v 1.8 2003/07/10 13:17:02 cziegeler Exp $
  */
 public class CopletData 
 extends AbstractProducible

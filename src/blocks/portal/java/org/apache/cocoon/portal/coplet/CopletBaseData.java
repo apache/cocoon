@@ -57,9 +57,9 @@ import java.util.Map;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletBaseData.java,v 1.5 2003/05/26 09:52:59 cziegeler Exp $
+ * @version CVS $Id: CopletBaseData.java,v 1.6 2003/07/10 13:17:02 cziegeler Exp $
  */
 public final class CopletBaseData { 
 

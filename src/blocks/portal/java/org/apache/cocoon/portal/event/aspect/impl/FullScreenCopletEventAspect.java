@@ -76,7 +76,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.1 2003/05/07 06:22:27 cziegeler Exp $
+ * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.2 2003/07/10 13:17:03 cziegeler Exp $
  */
 public class FullScreenCopletEventAspect
 	extends AbstractLogEnabled
@@ -138,7 +138,7 @@ public class FullScreenCopletEventAspect
             ProfileManager profileManager = null;
             try {
                 profileManager = (ProfileManager) this.manager.lookup(ProfileManager.ROLE);
-                profileManager.setDefaultLayout( startingLayout );
+                profileManager.setEntryLayout( startingLayout );
             } catch (ComponentException ce) {
                 // ignore
             } finally {

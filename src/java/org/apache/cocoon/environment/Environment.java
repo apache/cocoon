@@ -58,10 +58,10 @@ import java.util.Map;
 /**
  * Base interface for an environment abstraction
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.4 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: Environment.java,v 1.5 2003/07/10 13:17:03 cziegeler Exp $
  */
 public interface Environment
     extends SourceResolver {

@@ -83,9 +83,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * Please see also the documentation of superclass AbstractCopletTransformer for how
  * the coplet instance data are acquired.
  *   
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: EventLinkTransformer.java,v 1.4 2003/05/27 11:54:17 cziegeler Exp $
+ * @version CVS $Id: EventLinkTransformer.java,v 1.5 2003/07/10 13:17:04 cziegeler Exp $
  */
 public class EventLinkTransformer 
 extends AbstractCopletTransformer {

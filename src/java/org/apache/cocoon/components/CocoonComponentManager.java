@@ -83,9 +83,9 @@ import org.apache.excalibur.source.SourceResolver;
  * directly - and do not assume that a {@link ComponentManager} you get
  * via the compose() method is an instance of CocoonComponentManager.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.13 2003/06/21 14:08:07 jefft Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.14 2003/07/10 13:17:04 cziegeler Exp $
  */
 public final class CocoonComponentManager
 extends ExcaliburComponentManager

@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalManagerImpl.java,v 1.3 2003/07/03 08:27:47 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.4 2003/07/10 13:17:02 cziegeler Exp $
  */
 public final class PortalManagerImpl
 	extends AbstractLogEnabled
@@ -108,7 +108,7 @@ public final class PortalManagerImpl
         try {
             service = (PortalService)this.componentManager.lookup(PortalService.ROLE);
             profileManager = (ProfileManager)this.componentManager.lookup(ProfileManager.ROLE);
-            Layout portalLayout = profileManager.getPortalLayout(null);
+            Layout portalLayout = profileManager.getPortalLayout(null, null);
 
             rendererSelector = (ComponentSelector)this.componentManager.lookup(Renderer.ROLE+"Selector");
             portalLayoutRenderer = (Renderer)rendererSelector.select(portalLayout.getRendererName());       

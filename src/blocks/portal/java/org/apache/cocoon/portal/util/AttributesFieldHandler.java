@@ -65,9 +65,9 @@ import org.exolab.castor.mapping.MapItem;
  * FIXME This is a little bit hacky and should be changed by using
  * reflection
  * 
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AttributesFieldHandler.java,v 1.3 2003/06/13 14:20:10 cziegeler Exp $
+ * @version CVS $Id: AttributesFieldHandler.java,v 1.4 2003/07/10 13:16:55 cziegeler Exp $
  */
 public class AttributesFieldHandler implements FieldHandler {
 

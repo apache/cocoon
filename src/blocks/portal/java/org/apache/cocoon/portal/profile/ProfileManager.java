@@ -65,24 +65,45 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ProfileManager.java,v 1.5 2003/05/27 14:07:16 cziegeler Exp $
+ * @version CVS $Id: ProfileManager.java,v 1.6 2003/07/10 13:17:04 cziegeler Exp $
  */
 public interface ProfileManager extends Component {
     
     String ROLE = ProfileManager.class.getName();
     
-    Layout getPortalLayout(String key);
+    /**
+     * Get the portal layout defined by the layout key. This
+     * usually addresses the layout profile.
+     * With the optional subKey it's possible to retrieve
+     * a specific layout object in the profile defined by
+     * the layout key.
+     * @param layoutKey A key describing the layout or null for the default
+     * @param subKey    The id of a layout object or null for the root object
+     * @return The layout
+     */
+	Layout getPortalLayout(String layoutKey, String layoutID);
     
-    void setDefaultLayout(Layout object);
+    /**
+     * FIXME this is for the full-screen function
+     */
+    void setEntryLayout(Layout object);
+    
+    /**
+     * Change the default layout key for most functions
+     */
+    void setDefaultLayoutKey(String layoutKey);
+    
+    /**
+     * Get the default layout key
+     */
+    String getDefaultLayoutKey();
     
     CopletInstanceData getCopletInstanceData(String copletID);
     
     List getCopletInstanceData(CopletData data);
     
-    // TODO - not called yet
     void login();
     
-    // TODO - not called yet
     void logout();
     
     void register(CopletInstanceData coplet);

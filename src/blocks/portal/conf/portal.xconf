@@ -206,7 +206,7 @@
  	<mapping-source source="copletdata">context://samples/portal/profiles/mapping/copletdata.xml</mapping-source>
  	<mapping-source source="copletinstancedata">context://samples/portal/profiles/mapping/copletinstancedata.xml</mapping-source>
  </component>
- <component class="org.apache.cocoon.portal.profile.impl.MapSourceAdapter" role="org.apache.cocoon.portal.profile.impl.MapSourceAdapter" />
+ <component class="org.apache.cocoon.portal.profile.impl.MapProfileLS" role="org.apache.cocoon.portal.profile.ProfileLS" />
 
  <component class="org.apache.cocoon.components.variables.DefaultVariableResolverFactory" role="org.apache.cocoon.components.variables.VariableResolverFactory" />
 </xconf>

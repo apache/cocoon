@@ -50,103 +50,82 @@
 */
 package org.apache.cocoon.portal.profile.impl;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.cocoon.portal.coplet.CopletData;
-import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.profile.ProfileManager;
 
 /**
- * Holds instances of CopletData.
- *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
+ * Base class for all profile managers
  * 
- * @version CVS $Id: CopletDataManager.java,v 1.4 2003/07/10 13:16:59 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: AbstractProfileManager.java,v 1.1 2003/07/10 13:17:00 cziegeler Exp $
  */
-public class CopletDataManager 
-implements DeltaApplicableReferencesAdjustable {
+public abstract class AbstractProfileManager 
+    extends AbstractLogEnabled 
+    implements Composable, ProfileManager, ThreadSafe {
 
-	/**
-	 * The coplet data instances.
-	 */
-	private Map copletData = new HashMap();
-	
-	/**
-	 * Signals whether a delta has been applied.
-	 */
-	private boolean deltaApplied = false;
-	
-	/**
-	 * Gets all coplet data.
-	 */
-	public Map getCopletData() {
-		return this.copletData;
-	}
+    public static final String DEFAULT_LAYOUT_KEY = "portal";
+    
+    protected ComponentManager manager;
 
-	/**
-	 * Gets the specified coplet data. 
-	 */
-	public CopletData getCopletData(String name) {
-		return (CopletData)this.copletData.get(name);
-	}
-	
-	/**
-	 * Puts the specified coplet data to the manager.
-	 */
-	public void putCopletData(CopletData data) {
-		this.copletData.put(data.getId(), data);
-	}
-	
-	/**
-	 * Applies the specified delta.
-	 * @throws ClassCastException If the object is not of the expected type.
-	 */
-	public boolean applyDelta(Object object) {
-		CopletDataManager manager = (CopletDataManager)object;
-		
-		this.deltaApplied = true;
+    /**
+     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+     */
+    public void compose(ComponentManager componentManager) throws ComponentException {
+        this.manager = componentManager;
+    }
 
-		Iterator iterator = manager.getCopletData().values().iterator();
-		CopletData data, delta;
-		while (iterator.hasNext()) {
-			delta = (CopletData)iterator.next();
-			data = this.getCopletData(delta.getId());
-			if (data == null) {
-				this.putCopletData(delta);
-			} else {
-				data.applyDelta(delta); 
-			}
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Checks if a delta has been applied.
-	 */
-	public boolean deltaApplied() {
-		return this.deltaApplied;
-	}
+    /**
+     * Change the default layout key for most functions
+     */
+    public void setDefaultLayoutKey(String layoutKey) {
+        PortalService service = null;
+        try {
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            if ( layoutKey == null ) {
+                service.removeAttribute("default-layout-key");
+            } else {
+                service.setAttribute("default-layout-key", layoutKey);
+            }
+        } catch (ComponentException ce) {
+            // this should never happen
+            throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
+        } finally {
+            this.manager.release(service);
+        }
+    }
+    
+    /**
+     * Get the default layout key
+     */
+    public String getDefaultLayoutKey() {
+        PortalService service = null;
+        try {
+            service = (PortalService)this.manager.lookup(PortalService.ROLE);
+            String defaultLayoutKey = (String)service.getAttribute("default-layout-key");
+            if ( defaultLayoutKey == null ) {
+                return DEFAULT_LAYOUT_KEY;
+            }
+            return defaultLayoutKey;
+        } catch (ComponentException ce) {
+            // this should never happen
+            throw new CascadingRuntimeException("Unable to lookup portal service.", ce);
+        } finally {
+            this.manager.release(service);
+        }
+        
+    }
 
-	/**
-	 * Updates the references to contained DeltaApplicable objects  
-	 * if no delta has been applied to them.
-	 * @throws ClassCastException If the object is not of the expected type.
-	 */
-	public void adjustReferences(Object object) {
-		CopletDataManager manager = (CopletDataManager)object;
-		
-		Iterator iterator = this.copletData.values().iterator();
-		CopletData data, other;
-		while (iterator.hasNext()) {
-			data = (CopletData)iterator.next();
-			if (!data.deltaApplied()) {
-				other = manager.getCopletData(data.getId());
-				if (other != null) {
-					this.putCopletData(other);
-				}
-			}
-		}
-	}
+    public void login() {
+    }
+    
+    public void logout() {
+    }
+    
 }

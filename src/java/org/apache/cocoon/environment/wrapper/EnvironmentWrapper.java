@@ -71,9 +71,9 @@ import org.apache.cocoon.util.BufferedOutputStream;
  * It has the same properties except that the object model
  * contains a <code>RequestWrapper</code> object.
  *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.7 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.8 2003/07/10 13:17:01 cziegeler Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 

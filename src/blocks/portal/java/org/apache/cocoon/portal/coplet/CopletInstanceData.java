@@ -60,9 +60,9 @@ import org.apache.cocoon.portal.factory.impl.AbstractProducible;
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.7 2003/06/17 20:10:39 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceData.java,v 1.8 2003/07/10 13:17:02 cziegeler Exp $
  */
 public final class CopletInstanceData 
     extends AbstractProducible {

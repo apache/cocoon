@@ -50,36 +50,30 @@
 */
 package org.apache.cocoon.portal.profile.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletFactory;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
-import org.apache.cocoon.portal.layout.CompositeLayout;
-import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.LayoutFactory;
-import org.apache.cocoon.portal.profile.ProfileManager;
+import org.apache.cocoon.portal.profile.ProfileLS;
 import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.commons.collections.SequencedHashMap;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
@@ -87,31 +81,23 @@ import org.apache.excalibur.source.SourceValidity;
 /**
  * The profile manager using the authentication framework
  * 
- * FIXME - create abstract base class
- * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.7 2003/07/03 08:27:47 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.8 2003/07/10 13:16:59 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
-    extends AbstractLogEnabled 
-    implements Composable, ProfileManager, ThreadSafe {
+    extends AbstractUserProfileManager { 
 
-    protected ComponentManager manager;
-
-    private Map attributes = new HashMap();
+    protected ReadWriteLock lock = new ReadWriteLock();
     
-    private ReadWriteLock lock = new ReadWriteLock();
+    protected Map attributes = new HashMap();
     
     /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+     * Get the current authentication state of the user
+     * @return
      */
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.manager = componentManager;
-    }
-
-    public RequestState getRequestState() {
+    protected RequestState getRequestState() {
         AuthenticationManager authManager = null;
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
@@ -123,248 +109,133 @@ public class AuthenticationProfileManager
             this.manager.release( (Component)authManager );
         }
     }
-    
-    public void login() {
-        // TODO - we should move most of the stuff from getPortalLayout to here
-        // for now we use a hack :)
-        this.getPortalLayout(null);
-    }
-    
-    public void logout() {
-        PortalService service = null;
-        String attribute = null;
-        ComponentSelector adapterSelector = null;
-        try {
-            adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
-            service = (PortalService)this.manager.lookup(PortalService.ROLE);
-
-            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
-
-            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(portalPrefix+"/CopletInstanceData");
-            Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
-            while ( iter.hasNext() ) {
-                CopletInstanceData cid = (CopletInstanceData) iter.next();
-                CopletAdapter adapter = null;
-                try {
-                    adapter = (CopletAdapter)adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
-                    adapter.logout( cid );
-                } finally {
-                    adapterSelector.release( adapter );
-                }
-            }
-
-            service.removeAttribute(portalPrefix+"/CopletData");
-            service.removeAttribute(portalPrefix+"/CopletInstanceData");
-            service.removeAttribute(portalPrefix+"/Layout");
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
-        } finally {
-            this.manager.release(service);
-            this.manager.release(adapterSelector);
-        }
-    }
-    
-    /**
-     * @see ProfileManager#getPortalLayout(String)
-     */
-    public Layout getPortalLayout(String key) {
-        PortalService service = null;
-        LayoutFactory factory = null;
-        CopletFactory copletFactory = null;
-        ComponentSelector adapterSelector = null;
         
+    /**
+     * This loads a new profile
+     */
+    protected Layout loadProfile(String layoutKey, 
+                                PortalService service,
+                                CopletFactory copletFactory,
+                                LayoutFactory layoutFactory,
+                                ComponentSelector adapterSelector) 
+    throws Exception {
+        final RequestState state = this.getRequestState();
+        final UserHandler handler = state.getHandler();
+        final Configuration config = state.getApplicationConfiguration().getConfiguration("portal").getChild("profiles");
+
+        HashMap parameters = new HashMap();
+        parameters.put("config", config);
+        parameters.put("handler", handler);
+        CopletDataManager copletDataManager = null;
+        Map keyMap;
         try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            factory = (LayoutFactory) this.manager.lookup(LayoutFactory.ROLE);
-            copletFactory = (CopletFactory) this.manager.lookup(CopletFactory.ROLE);
-            adapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
-            
-            if ( null == key ) {
-                Layout l = (Layout) service.getTemporaryAttribute("DEFAULT_LAYOUT");
-                if ( null != l) {
-                    return l;
-                }
-            }
-            
-            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
-            Layout layout = null;
+                                                                                        
+            this.lock.readLock();
 
-            if ( key != null ) {
-                // now search for a layout
-                Map layoutMap = (Map)service.getAttribute("layout-map");
-                if ( layoutMap == null ) {
-                    layout = (Layout)service.getAttribute(portalPrefix+"/Layout");
-                    if (layout != null) {
-                        layoutMap = new HashMap();
-                        this.cacheLayouts(layoutMap, layout);
-                        service.setAttribute("layout-map", layoutMap);
-                    }
-                }
-                if ( layoutMap != null) {
-                    layout = (Layout) layoutMap.get( key );
-                    if ( layout != null) {
-                        return layout;
-                    }
-                }
-            }
-            
+            // load coplet base data
+            parameters.put("profiletype", "copletbasedata");
+            parameters.put("objectmap", null);
 
-			layout = (Layout)service.getAttribute(portalPrefix+"/Layout");
-			if (layout == null) {
-				this.lock.readLock();
-                HashMap map = new HashMap();
-                HashMap keyMap = new HashMap();
-                CopletDataManager copletDataManager = null;
-				try {
-					map.put("portalname", service.getPortalName());
-					
-					// TODO Change to KeyManager usage
-					RequestState state = this.getRequestState();
-					UserHandler handler = state.getHandler();
-					keyMap.put("user", handler.getUserId());
-					keyMap.put("role", handler.getContext().getContextInfo().get("role"));
-					keyMap.put("config", state.getApplicationConfiguration().getConfiguration("portal"));
-					
-					// load coplet base data
-					map.put("profile", "copletbasedata");
-					map.put("objectmap", null);
-					Object[] result = this.getProfile(keyMap, map, portalPrefix+"/CopletBaseData", null);
-					CopletBaseDataManager copletBaseDataManager = (CopletBaseDataManager)result[0];
-					
-					// load coplet data
-					map.put("profile", "copletdata");
-					map.put("objectmap", copletBaseDataManager.getCopletBaseData());
-					copletDataManager = (CopletDataManager)this.getDeltaProfile(keyMap, map, portalPrefix+"/CopletData", service, copletFactory, ((Boolean)result[1]).booleanValue());
-					
-                } finally {
-                    this.lock.releaseLocks();
-                }
-				// load coplet instance data
-				map.put("profile", "copletinstancedata");
-				map.put("objectmap", copletDataManager.getCopletData());
-				CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)this.getOrCreateProfile(keyMap, map, portalPrefix+"/CopletInstanceData", service, copletFactory);
-				
-				// load layout
-				map.put("profile", "layout");
-				map.put("objectmap", copletInstanceDataManager.getCopletInstanceData());
-				layout = (Layout)this.getOrCreateProfile(keyMap, map, portalPrefix+"/Layout", service, factory);
+            Object[] result = this.getProfile(layoutKey, parameters, null, false, service);
+            CopletBaseDataManager copletBaseDataManager = (CopletBaseDataManager)result[0];
+                    
+            // load coplet data
+            parameters.put("profiletype", "copletdata");
+            parameters.put("objectmap", copletBaseDataManager.getCopletBaseData());
+            copletDataManager = (CopletDataManager)this.getDeltaProfile(layoutKey, parameters, service, copletFactory, ((Boolean)result[1]).booleanValue());
+                    
+        } finally {
+            this.lock.releaseLocks();
+        }
+        // load coplet instance data
+        parameters.put("profiletype", "copletinstancedata");
+        parameters.put("objectmap", copletDataManager.getCopletData());
+        CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)this.getOrCreateProfile(layoutKey, parameters, service, copletFactory);
+        service.setAttribute("CopletInstanceData:" + layoutKey, copletInstanceDataManager);
                 
-                // now invoke login on each instance
-                Iterator iter =  copletInstanceDataManager.getCopletInstanceData().values().iterator();
-                while ( iter.hasNext() ) {
-                    CopletInstanceData cid = (CopletInstanceData) iter.next();
-                    CopletAdapter adapter = null;
-                    try {
-                        adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
-                        adapter.login( cid );
-                    } finally {
-                        adapterSelector.release( adapter );
-                    }
-                }
-			}
-			
-            return layout;
-        } catch (Exception ce) {
-            // TODO
-            throw new CascadingRuntimeException("Arg", ce);
-        } finally {
-            this.manager.release(service);
-            this.manager.release((Component)factory);
-            this.manager.release((Component)copletFactory);
-            this.manager.release(adapterSelector);
-        }
-    }
-    
-    /**
-     * @param layoutMap
-     * @param layout
-     */
-    private void cacheLayouts(Map layoutMap, Layout layout) {
-        if ( layout != null ) {
-            if ( layout.getId() != null ) {
-                layoutMap.put( layout.getId(), layout );
-            }
-            if ( layout instanceof CompositeLayout ) {
-                CompositeLayout cl = (CompositeLayout)layout;
-                Iterator i = cl.getItems().iterator();
-                while ( i.hasNext() ) {
-                    Item current = (Item)i.next();
-                    this.cacheLayouts( layoutMap, current.getLayout() );
-                }
+        // load layout
+        parameters.put("profiletype", "layout");
+        parameters.put("objectmap", copletInstanceDataManager.getCopletInstanceData());
+        Layout layout = (Layout)this.getOrCreateProfile(layoutKey, parameters, service, layoutFactory);
+        service.setAttribute("Layout:" + layoutKey, layout);
+                
+        // now invoke login on each instance
+        Iterator iter =  copletInstanceDataManager.getCopletInstanceData().values().iterator();
+        while ( iter.hasNext() ) {
+            CopletInstanceData cid = (CopletInstanceData) iter.next();
+            CopletAdapter adapter = null;
+            try {
+                adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                adapter.login( cid );
+            } finally {
+                adapterSelector.release( adapter );
             }
         }
         
+        return layout;
     }
-
+    
     public void saveUserProfiles() {
-		MapSourceAdapter adapter = null;
+        final String layoutKey = this.getDefaultLayoutKey();
+		ProfileLS adapter = null;
 		PortalService service = null;
 		try {
-			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
+			adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
 			service = (PortalService) this.manager.lookup(PortalService.ROLE);
             
-			String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
-
-			HashMap map = new HashMap();
-			map.put("portalname", service.getPortalName());
-			map.put("type", "user");
-				
-			// TODO Change to KeyManager usage
             RequestState state = this.getRequestState();
-			UserHandler handler = state.getHandler();
-			HashMap key = new HashMap();
-			key.put("user", handler.getUserId());
-			key.put("role", handler.getContext().getContextInfo().get("role"));
-			key.put("config", state.getApplicationConfiguration().getConfiguration("portal"));
+            UserHandler handler = state.getHandler();
+
+			HashMap parameters = new HashMap();
+			parameters.put("type", "user");
+            parameters.put("config", state.getApplicationConfiguration().getConfiguration("portal"));
+            parameters.put("handler", handler);
+            parameters.put("profiletype", "copletinstancedata");
+
+			Map key = this.buildKey(service, parameters, layoutKey, false);
 	
 			// save coplet instance data
-			map.put("profile", "copletinstancedata");
-			Object profile = ((Object[])service.getAttribute(portalPrefix+"/CopletInstanceData"))[0];
-			adapter.saveProfile(key, map, profile);
+			Object profile = ((Object[])service.getAttribute("CopletInstanceData:" + layoutKey))[0];
+			adapter.saveProfile(key, parameters, profile);
 
 			// save coplet instance data
-			map.put("profile", "layout");
-			profile = ((Object[])service.getAttribute(portalPrefix+"/Layout"))[0];
-			adapter.saveProfile(key, map, profile);
+			parameters.put("profiletype", "layout");
+            key = this.buildKey(service, parameters, layoutKey, false);
+			profile = ((Object[])service.getAttribute("Layout:" + layoutKey))[0];
+			adapter.saveProfile(key, parameters, profile);
+            
 		} catch (Exception e) {
 			// TODO
-			throw new CascadingRuntimeException("Arg", e);
+			throw new CascadingRuntimeException("Exception during save profile", e);
 		} finally {
-			this.manager.release(adapter);
+			this.manager.release((Component)adapter);
 			this.manager.release(service);
 		}
     }
     
 	/**
-	 * Gets a profile.
-	 * @return result[0] is the profile, result[1] is a Boolean, 
-	 * which signals whether the profile has been loaded or reused.
-	 */
-	private Object[] getProfile(Object key, Map map, String location, Object factory)
-	throws Exception {
-		return this.getProfile(key, map, location, factory, false);
-	}
-
-	/**
 	 * Gets a profile and applies possible user and role deltas to it.
 	 */
-	private Object getDeltaProfile(Object key, Map map, String location, PortalService service, Object factory, boolean forcedLoad) 
+    protected Object getDeltaProfile(String layoutKey, 
+                                    Map parameters, 
+                                    PortalService service, 
+                                    Object factory, 
+                                    boolean forcedLoad) 
 	throws Exception {
+        Configuration config = (Configuration) parameters.get("config");
+        
 		DeltaApplicableReferencesAdjustable result;
 		Object object;
-    	
-		// TODO Change to KeyManager usage
-		Map keyMap = (Map)key;
 
-		// load global profile
-		map.put("type", "global");
-		Object global = this.getProfile(key, map, location, factory, forcedLoad)[0];
-		result = (DeltaApplicableReferencesAdjustable)this.loadProfile(key, map, factory);
+        parameters.put("type", "global");
+		Object global = this.getProfile(layoutKey, parameters, factory, forcedLoad, service)[0];
+        Object key = this.buildKey(service, parameters, layoutKey, true);
+		result = (DeltaApplicableReferencesAdjustable)this.loadProfile(key, parameters, factory);
 	
 		// load role delta
-		map.put("type", "role");
+        parameters.put("type", "role");
 		try {
-			object = this.getProfile(key, map, location+"-role-"+keyMap.get("role"), factory, forcedLoad)[0];
+			object = this.getProfile(layoutKey, parameters, factory, forcedLoad, service)[0];
 			if (object != null)
 				result.applyDelta(object); 		
 		} catch (Exception e) {
@@ -373,9 +244,10 @@ public class AuthenticationProfileManager
 		}
 
 		// load user delta
-		map.put("type", "user");
+        parameters.put("type", "user");
 		try {
-			object = this.loadProfile(key, map, factory);
+            key = this.buildKey(service, parameters, layoutKey, true);
+			object = this.loadProfile(key, parameters, factory);
 			if (object != null)
 				result.applyDelta(object);
 		} catch (Exception e) {
@@ -384,12 +256,13 @@ public class AuthenticationProfileManager
 		}
 		
 		if (result == null)
-			throw new SourceNotFoundException("Global "+keyMap.get("profile")+" does not exist.");
+			throw new SourceNotFoundException("Global profile does not exist.");
 		
 		// change references to objects where no delta has been applied
 		result.adjustReferences(global);
 		
-		service.setAttribute(location, result);
+        // FIXME
+		this.attributes.put(key, result);
 		
 		return result;
 	}
@@ -397,47 +270,49 @@ public class AuthenticationProfileManager
 	/**
 	 * Gets a user profile and creates it by copying the role or the global profile.
 	 */
-	private Object getOrCreateProfile(Object key, Map map, String location, PortalService service, Object factory) 
+    protected Object getOrCreateProfile(String layoutKey, Map parameters, PortalService service, Object factory) 
 	throws Exception {
 		Object result;
     	
-		// TODO Change to KeyManager usage
-		Map keyMap = (Map)key;
-
 		// load user profile
-		map.put("type", "user");
+		parameters.put("type", "user");
+        Map keyMap = this.buildKey(service, parameters, layoutKey, true);
 		try {
-			result = this.loadProfile(key, map, factory);
+			result = this.loadProfile(keyMap, parameters, factory);
 		} catch (Exception e1) {
 			if (!isSourceNotFoundException(e1))
 				throw e1;
 
 			// load role profile
-			map.put("type", "role");
+			parameters.put("type", "role");
+            keyMap = this.buildKey(service, parameters, layoutKey, true);
 			try {
-				result = this.loadProfile(key, map, factory);
+				result = this.loadProfile(keyMap, parameters, factory);
 			} catch (Exception e2) {
 				if (!isSourceNotFoundException(e2))
 					throw e2;
 
 				// load global profile
-				map.put("type", "global");
-				result = this.loadProfile(key, map, factory);
+				parameters.put("type", "global");
+                keyMap = this.buildKey(service, parameters, layoutKey, true);
+				result = this.loadProfile(keyMap, parameters, factory);
 			}
 			
 			// save profile as user profile
-			MapSourceAdapter adapter = null;
+			ProfileLS adapter = null;
 			try {
-				adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
-				map.put("type", "user");
+				adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
+                parameters.put("type", "user");
+                keyMap = this.buildKey(service, parameters, layoutKey, false);
 				
-                adapter.saveProfile(key, map, result);
+                //adapter.saveProfile(keyMap, parameters, result);
 			} finally {
-				this.manager.release(adapter);
+				this.manager.release((Component)adapter);
 			}
 		}
 		
-		service.setAttribute(location, result);
+        // FIXME
+        this.attributes.put(keyMap, result);
 
 		return result;
 	}
@@ -447,13 +322,20 @@ public class AuthenticationProfileManager
 	 * @return result[0] is the profile, result[1] is a Boolean, 
 	 * which signals whether the profile has been loaded or reused.
 	 */
-	private Object[] getProfile(Object key, Map map, String location, Object factory, boolean forcedLoad) 
+    protected Object[] getProfile(String layoutKey, 
+                                 Map parameters, 
+                                 Object factory, 
+                                 boolean forcedLoad, 
+                                 PortalService service) 
 	throws Exception {
-		MapSourceAdapter adapter = null;
-		try {
-			adapter = (MapSourceAdapter)this.manager.lookup(MapSourceAdapter.ROLE);
+        final Map key = this.buildKey(service, parameters, layoutKey, true);
 
-			Object result = this.checkValidity(key, map, location, forcedLoad, adapter);
+        ProfileLS adapter = null;
+		try {
+			adapter = (ProfileLS)this.manager.lookup(ProfileLS.ROLE);
+
+			Object result = this.checkValidity(key, parameters, forcedLoad, adapter, service);
+            
 			if (!(result instanceof SourceValidity))
 				return new Object[]{result, Boolean.FALSE};
 			SourceValidity newValidity = (SourceValidity)result; 
@@ -462,28 +344,33 @@ public class AuthenticationProfileManager
 			this.lock.writeLock();
 			
 			// check validity again in case of another thread has already loaded
-			result = this.checkValidity(key, map, location, forcedLoad, adapter);
+			result = this.checkValidity(key, parameters, forcedLoad, adapter, service);
+            
 			if (!(result instanceof SourceValidity))
 				return new Object[]{result, Boolean.FALSE};
 			newValidity = (SourceValidity)result; 
 
-			Object object = adapter.loadProfile(key, map);
+			Object object = adapter.loadProfile(key, parameters);
 			this.prepareObject(object, factory);
 			if (newValidity != null) {
-				this.attributes.put(location, new Object[] {object, newValidity});
+                this.attributes.put(key, new Object[] {object, newValidity});
 			}
 
 			return new Object[]{object, Boolean.TRUE};
 		} finally {
-			this.manager.release(adapter);
+			this.manager.release((Component) adapter);
 		}
 	}
 	
 	/**
 	 * If the profile is valid itself is returned, otherwise a newly created SourceValidity object is returned.
 	 */
-	private Object checkValidity(Object key, Map map, String location, boolean forcedLoad, MapSourceAdapter adapter) {
-		Object[] objects = (Object[])this.attributes.get(location);
+    protected Object checkValidity(Object key, 
+                                  Map parameters, 
+                                  boolean forcedLoad, 
+                                  ProfileLS adapter, 
+                                  PortalService service) {
+		Object[] objects = (Object[])this.attributes.get(key);
 
 		SourceValidity sourceValidity = null;
 		int valid = SourceValidity.INVALID;
@@ -494,7 +381,7 @@ public class AuthenticationProfileManager
 				return objects[0];
 		}
 
-		SourceValidity newValidity = adapter.getValidity(key, map);
+		SourceValidity newValidity = adapter.getValidity(key, parameters);
 		if (!forcedLoad && valid == SourceValidity.UNKNWON) {
 			if (sourceValidity.isValid(newValidity) == SourceValidity.VALID)
 				return objects[0];
@@ -506,18 +393,18 @@ public class AuthenticationProfileManager
 	/**
 	 * Loads a profile.
 	 */
-	private Object loadProfile(Object key, Map map, Object factory)
+    protected Object loadProfile(Object key, Map map, Object factory)
 	throws Exception {
-		MapSourceAdapter adapter = null;
+        ProfileLS adapter = null;
 		try {
-			adapter = (MapSourceAdapter) this.manager.lookup(MapSourceAdapter.ROLE);
+			adapter = (ProfileLS) this.manager.lookup(ProfileLS.ROLE);
 
 			Object object = adapter.loadProfile(key, map);
 			this.prepareObject(object, factory);
 
 			return object;
 		} finally {
-			this.manager.release(adapter);
+			this.manager.release((Component) adapter);
 		}
 	}
 
@@ -531,168 +418,47 @@ public class AuthenticationProfileManager
 		return false;
 	}
 	
-	/**
-	 * Prepares the object by using the specified factory.
-	 */
-	private void prepareObject(Object object, Object factory)
-	throws ProcessingException {
-		if (factory != null && object != null) {
-			if (object instanceof Layout) {
-				((LayoutFactory)factory).prepareLayout((Layout)object);
-			} else if (object instanceof CopletDataManager) {
-				CopletFactory copletFactory = (CopletFactory)factory;
-				Iterator iterator = ((CopletDataManager)object).getCopletData().values().iterator();
-				while (iterator.hasNext()) {
-					CopletData cd = (CopletData)iterator.next();
-					copletFactory.prepare(cd);
-				}
-			} else if (object instanceof CopletInstanceDataManager) {
-				CopletFactory copletFactory = (CopletFactory)factory;
-				Iterator iterator = ((CopletInstanceDataManager)object).getCopletInstanceData().values().iterator();
-				while (iterator.hasNext()) {
-					CopletInstanceData cid = (CopletInstanceData)iterator.next();
-					copletFactory.prepare(cid);
-				}
-			}
-		}
-	}
-	
-    public CopletInstanceData getCopletInstanceData(String copletID) {
-        PortalService service = null;
-        String attribute = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-
-			attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
-			CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
-
-            return copletInstanceDataManager.getCopletInstanceData(copletID);
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
-        } finally {
-            this.manager.release(service);
+    protected Map buildKey(PortalService service, 
+                            Map           parameters,
+                            String        layoutKey, 
+                            boolean      load) 
+    throws ProcessingException, ConfigurationException {
+        
+        // TODO Change to KeyManager usage
+        final String type = (String)parameters.get("type");
+        final Configuration config = (Configuration) parameters.get("config");
+        final String profileType = (String)parameters.get("profiletype");
+        final String postFix = (load ? "load" : "save");
+        final UserHandler handler = (UserHandler)parameters.get("handler");
+        
+        String uri = null;
+        if (type == null) {
+            uri = config.getChild(profileType + "-" + postFix).getAttribute("uri");
+        } else if (type.equals("global")) {
+            uri = config.getChild(profileType + "-global-" + postFix).getAttribute("uri");
+        } else if (type.equals("role")) {
+            uri = config.getChild(profileType + "-role-" + postFix).getAttribute("uri");
+        } else if (type.equals("user")) {
+            uri = config.getChild(profileType + "-user-" + postFix).getAttribute("uri");
         }
-    }
 
-    public List getCopletInstanceData(CopletData data) {
-        List coplets = new ArrayList();
-        PortalService service = null;
-        String attribute = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-
-            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
-            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
-
-            Iterator iter = copletInstanceDataManager.getCopletInstanceData().values().iterator();
-            while ( iter.hasNext() ) {
-                CopletInstanceData current = (CopletInstanceData)iter.next();
-                if ( current.getCopletData().equals(data) ) {
-                    coplets.add( current );
-                }
+        Map key = new SequencedHashMap();
+        key.put("baseuri", uri);
+        key.put("separator", "?");
+        key.put("portal", service.getPortalName());
+        key.put("layout", layoutKey);
+        if ( type != null ) {
+            key.put("type", type);
+            if ( "role".equals(type) || "user".equals(type)) {
+                key.put("role", handler.getContext().getContextInfo().get("role"));
             }
-            return coplets;
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-
-    public void register(CopletInstanceData coplet) {
-        PortalService service = null;
-        String attribute = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-
-            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
-            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
-            
-            copletInstanceDataManager.putCopletInstanceData( coplet );
-            
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-    
-    public void unregister(CopletInstanceData coplet) {
-        PortalService service = null;
-        String attribute = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-
-            attribute = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName()+"/CopletInstanceData";
-            CopletInstanceDataManager copletInstanceDataManager = (CopletInstanceDataManager)service.getAttribute(attribute);
-            
-            copletInstanceDataManager.getCopletInstanceData().remove(coplet.getId());
-            
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-
-    public void register(Layout layout) {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
-
-            Map layoutMap = (Map)service.getAttribute("layout-map");
-            if ( layoutMap == null ) {
-                layout = (Layout)service.getAttribute(portalPrefix+"/Layout");
-                if (layout != null) {
-                    layoutMap = new HashMap();
-                    this.cacheLayouts(layoutMap, layout);
-                    service.setAttribute("layout-map", layoutMap);
-                }
+            if ( "user".equals(type) ) {
+                key.put("user", handler.getUserId());
             }
-            
-            if ( layoutMap != null) {
-                layoutMap.put(layout.getId(), layout);
-            }
-            
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
-        } finally {
-            this.manager.release(service);
         }
-    }
-    
-    public void unregister(Layout layout) {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            String portalPrefix = AuthenticationProfileManager.class.getName()+"/"+service.getPortalName();
-
-            Map layoutMap = (Map)service.getAttribute("layout-map");
-            
-            if ( layoutMap != null) {
-                layoutMap.remove(layout.getId());
-            }
-            
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup portal service.", e);
-        } finally {
-            this.manager.release(service);
-        }
+        return key;
     }
 
-    public void setDefaultLayout(Layout object) {
-        PortalService service = null;
-        try {
-            service = (PortalService) this.manager.lookup(PortalService.ROLE);
-            service.setTemporaryAttribute("DEFAULT_LAYOUT", object);
-        } catch (ComponentException e) {
-            throw new CascadingRuntimeException("Unable to lookup service manager.", e);
-        } finally {
-            this.manager.release(service);
-        }
-    }
-    
     class ReadWriteLock {
     	private Thread activeWriter = null;
     	private HashSet activeReaders = new HashSet();
@@ -756,4 +522,5 @@ public class AuthenticationProfileManager
 			}
        	}
     }
+
 }

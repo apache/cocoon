@@ -56,9 +56,9 @@ import org.apache.cocoon.portal.event.CopletInstanceEvent;
 /**
  * This class realizes a link event created by the EventLinkTransformer.
  *  
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
+ * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletLinkEvent.java,v 1.1 2003/05/26 13:18:19 cziegeler Exp $
+ * @version CVS $Id: CopletLinkEvent.java,v 1.2 2003/07/10 13:17:04 cziegeler Exp $
  */
 public class CopletLinkEvent
 extends AbstractActionEvent
