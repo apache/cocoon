@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
@@ -30,13 +31,16 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.variables.VariableResolver;
-import org.apache.cocoon.components.variables.VariableResolverFactory;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.components.variables.VariableResolverFactory;
+import org.apache.cocoon.components.variables.VariableResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
@@ -47,16 +51,31 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Apply a XSLT stylesheet to the contained layout. All following renderer aspects
- * are applied first before the XML is fed into the XSLT. All layout parameters
- * are made available to the stylesheet.
+ * are applied first before the XML is fed into the XSLT. All configuration and layout
+ * parameters are made available to the stylesheet.
  * 
  * <h2>Example XML:</h2>
  * <pre>
  *  &lt;-- result from output of following renderers transformed by stylesheet --&gt;
  * </pre>
  *
+ *
+ * The parameter values may contain Strings and/or references to input modules which will be resolved each
+ * time the aspect is rendered.
  * <h2>Applicable to:</h2>
  * {@link org.apache.cocoon.portal.layout.Layout}
+ *
+ * <h2>Configuration</h2>
+ * <h3>cocoon.xconf</h3>
+ *
+ * <pre>
+ * &lt;aspect name="xslt" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"&gt;
+ *   &lt;parameters&gt;
+ *     &lt;parameter name="<i>name1</i>" value="<i>parameter value</i>"/&gt;
+ *     &lt;parameter name="<i>name2</i>" value="<i>parameter value</i>"/&gt;
+ *   &lt;parameter&gt;
+ * &lt;/aspect&gt;
+ * </pre>
  *
  * <h2>Parameters</h2>
  * <table><tbody>
@@ -67,14 +86,16 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.10 2004/04/25 20:12:04 haul Exp $
+ * @version CVS $Id$
  */
 public class XSLTAspect 
     extends AbstractAspect
-    implements Disposable {
+    implements Disposable, Configurable {
 
     protected List variables = new ArrayList();
-    
+
+    protected Parameters parameters = null;
+
     protected VariableResolverFactory variableFactory;
     
     /* (non-Javadoc)
@@ -83,6 +104,18 @@ public class XSLTAspect
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
         this.variableFactory = (VariableResolverFactory) this.manager.lookup(VariableResolverFactory.ROLE);
+    }
+
+
+    /* (non-Javadoc)
+    * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+    */
+    public void configure(Configuration config) throws ConfigurationException {
+        Configuration parameterItems = config.getChild("parameters", false);
+
+        if (parameterItems != null) {
+            this.parameters = Parameters.fromConfiguration(parameterItems);
+        }
     }
 
     /* (non-Javadoc)
@@ -103,6 +136,18 @@ public class XSLTAspect
             stylesheet = resolver.resolveURI(this.getStylesheetURI(config, layout));
             processor = (XSLTProcessor) this.manager.lookup(config.xsltRole);
             TransformerHandler transformer = processor.getTransformerHandler(stylesheet);
+            // Pass configured parameters to the stylesheet.
+            if (config.parameters.size() > 0) {
+                Map.Entry entry;
+                Transformer theTransformer = transformer.getTransformer();
+                Iterator iter = config.parameters.entrySet().iterator();
+                while (iter.hasNext()) {
+                    entry = (Map.Entry) iter.next();
+                    String value = getParameterValue(entry);
+                    theTransformer.setParameter((String) entry.getKey(), value);
+                }
+            }
+
             Map parameter = layout.getParameters();
             if (parameter.size() > 0) {
                 Map.Entry entry;
@@ -147,13 +192,24 @@ public class XSLTAspect
         }
     }
 
+    protected String getParameterValue(Map.Entry entry) throws SAXException {
+        try {
+            return ((VariableResolver)entry.getValue()).resolve();
+        } catch (PatternException pe) {
+            throw new SAXException("Unable to get value for parameter " + entry.getKey(), pe);
+        }
+    }
+
+
     protected class PreparedConfiguration {
         public VariableResolver stylesheet;
-        public String xsltRole; 
+        public String xsltRole;
+        public Map parameters = new HashMap();
 
         public void takeValues(PreparedConfiguration from) {
             this.stylesheet = from.stylesheet;
             this.xsltRole = from.xsltRole;
+            this.parameters = from.parameters;
         }
     }
     
@@ -171,6 +227,19 @@ public class XSLTAspect
             throw new ParameterException("Unknown pattern for stylesheet " + stylesheet, pe);
         }
         this.variables.add(pc.stylesheet);
+        if (this.parameters != null) {
+            String[] name = this.parameters.getNames();
+            for (int i=0; i < name.length; ++i) {
+                try {
+                    VariableResolver resolver =
+                        this.variableFactory.lookup(this.parameters.getParameter(name[i]));
+                    this.variables.add(resolver);
+                    pc.parameters.put(name[i], resolver);
+                } catch (PatternException e) {
+                    throw new ParameterException("Invalid value for parameter " + name[i], e);
+                }
+            }
+        }
         return pc;
     }
 
@@ -189,6 +258,4 @@ public class XSLTAspect
             this.variableFactory = null;
         }
     }
-
 }
-
