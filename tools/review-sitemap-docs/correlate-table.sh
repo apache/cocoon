@@ -21,7 +21,12 @@ find src -name *Action.java -o -name *Generator.java \
       -o -name *Selector.java -o -name *Serializer.java \
       -o -name *Transformer.java \
 | grep -v -f tools/review-sitemap-docs/find-component-java-files-exclude.txt \
-| sort > component-java-files.txt
+> component-java-files.tmp
+find src -name *.java | grep -f tools/review-sitemap-docs/grep-components.txt \
+| grep -v -f tools/review-sitemap-docs/find-component-java-files-exclude.txt \
+>> component-java-files.tmp
+sort component-java-files.tmp | uniq > component-java-files.txt
+rm -f component-java-files.tmp
 
 echo "Listing the sitemap components java source files."
 echo " (See components-source.txt)"
