@@ -38,7 +38,7 @@ import java.util.Hashtable;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
- * @version CVS $Id: EPBottom.java,v 1.6 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class EPBottom extends BaseElementProcessor {
     private NumericResult          _style;

@@ -16,16 +16,16 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
+import java.io.IOException;
+
 /**
  * No-op implementation of ElementProcessor to handle the "Header" tag
  *
  * This element has three attributes: Left, Middle, and Top, and no
  * contents.
  *
- * This element is not used in HSSFSerializer 1.0
- *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EPHeader.java,v 1.5 2004/03/05 13:02:04 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class EPHeader extends BaseElementProcessor {
     private String _left;
@@ -82,5 +82,13 @@ public class EPHeader extends BaseElementProcessor {
             }
         }
         return _right;
+    }
+    
+    /**
+     * Setup the text to be printed at the top of every page
+     * @exception IOException
+     */
+    public void endProcessing() throws IOException{
+        this.getSheet().setHeader(getLeft(), getMiddle(), getRight());
     }
 } // end public class EPHeader

@@ -238,8 +238,8 @@
    </action>
    <action dev="UH" type="add">
      Enhanced JMS support by adding a JMSConnectionManager component to the JMS block.
-     This component replaces the JMSConnection component which only supported 
-     publish/subscribe messaging and which mixed some concerns. Two abstract classes: 
+     This component replaces the JMSConnection component which only supported
+     publish/subscribe messaging and which mixed some concerns. Two abstract classes:
      AbstractMessageListener and AbstractMessagePublisher should be used as basis for
      custom publish/subscribe components.
    </action>
@@ -272,6 +272,18 @@
    <action dev="VG" type="add">
      Portal block: Added ManagedCocoonPortlet, to be used together with
      CocoonServlet or CocoonPortlet.
+   </action>
+   <action dev="TC" type="add" fixes-bug="28015" due-to="Frank Taffelt" due-to-email="frank.taffelt@interface-business.de">
+     POI block: cell spanning.
+   </action>
+   <action dev="AG" type="fix" fixes-bug="23002">
+     POI block: processing of tags "vcenter", "hcenter", "monochrome", "draft",
+     "Header", "Footer" in "gmr:PrintInformation". Initial support for
+     "Margins" ("top", "bottom", "left", "right", "header", "footer").
+   </action>
+   <action dev="AG" type="fix" fixes-bug="23002" due-to="Viktor Skladovs" due-to-email="skladov@his.de">
+     POI block: processing of tags "grid", "orientation and "paper" in
+     "gmr:PrintInformation".
    </action>
    <action dev="VG" type="update">
      ResourceReader can now take configuration elements, parameters
