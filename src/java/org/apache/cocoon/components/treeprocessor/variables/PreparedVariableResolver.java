@@ -35,7 +35,7 @@ import java.util.Stack;
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.9 2004/04/14 18:05:46 joerg Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.10 2004/05/06 19:27:55 upayavira Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
@@ -60,7 +60,8 @@ final public class PreparedVariableResolver extends VariableResolver implements 
     private static Token COLON_TOKEN = new Token(COLON);
     private static Token OPEN_TOKEN = new Token(OPEN);
     private static Token CLOSE_TOKEN = new Token(CLOSE);    
-
+    private static Token EMPTY_TOKEN = new Token(EXPR);
+    
     public PreparedVariableResolver(String expr, ComponentManager manager) throws PatternException {
         
         super(expr);
@@ -249,7 +250,10 @@ final public class PreparedVariableResolver extends VariableResolver implements 
                     Token expr = (Token)stack.pop();
                     Token lastButOne = (Token)stack.pop();
                     Token result;
-                    if (lastButOne.hasType(COLON)) {
+                    if (expr.hasType(COLON)) { // i.e. nothing was specified after the colon
+                        stack.pop(); // Pop the OPEN
+                        result = processModule(lastButOne, EMPTY_TOKEN, objectModel, context, mapStack, stackSize);
+                    } else if (lastButOne.hasType(COLON)) {
                         Token module = (Token)stack.pop();
                         stack.pop(); // Pop the OPEN
                         result = processModule(module, expr, objectModel, context, mapStack, stackSize);
@@ -392,7 +396,11 @@ final public class PreparedVariableResolver extends VariableResolver implements 
         private int type;
 
         public Token(int type) {
-            this.value = null;
+            if (type==EXPR) {
+                this.value="";
+            } else {
+                this.value = null; 
+            } 
             this.type = type;
         }
 

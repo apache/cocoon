@@ -30,7 +30,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * Test case for the nested variant of the PreparedVariableResolver
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolverTestCase.java,v 1.4 2004/04/14 09:39:45 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolverTestCase.java,v 1.5 2004/05/06 19:27:55 upayavira Exp $
  */
 public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
 
@@ -216,4 +216,14 @@ public class PreparedVariableResolverTestCase extends SitemapComponentTestCase {
         assertEquals("This is a {brace}", resolver.resolve(context, getObjectModel()));
     }
 
+    public void testModuleWithoutOption() throws PatternException {
+        String expr = "{baselink:}";
+        InvokeContext context = new InvokeContext(true);
+        context.enableLogging(new LogKitLogger(getLogger()));
+        
+        Map sitemapElements = new HashMap();
+        context.pushMap("sitemap", sitemapElements);
+        PreparedVariableResolver resolver = new PreparedVariableResolver(expr, manager);
+        assertEquals("", resolver.resolve(context, getObjectModel()));
+    }
 }
