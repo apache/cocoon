@@ -88,7 +88,7 @@ function changeType(make, type) {
     </script>
   <title>Car selector with XMLHTTPRequest</title>
   <content>
-    <ft:form-template action="carselector" method="POST">
+    <ft:form-template action="xhr_carselector" method="POST">
       <ft:continuation-id/>
       <fi:group>
         <fi:styling layout="columns"/>

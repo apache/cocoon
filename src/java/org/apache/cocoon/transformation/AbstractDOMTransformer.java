@@ -18,6 +18,7 @@ package org.apache.cocoon.transformation;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
@@ -45,7 +46,7 @@ import java.util.Map;
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
  * @author <a href="mailto:brobertson@mta.ca">Bruce G. Robertson</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: AbstractDOMTransformer.java,v 1.3 2004/04/28 16:35:21 joerg Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractDOMTransformer extends AbstractTransformer
         implements Transformer, DOMBuilder.Listener, Composable, Disposable, Recyclable {
@@ -149,7 +150,6 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
      * @return A DOM Document to stream down the pipeline
      */
     protected abstract Document transform(Document doc);
-
 
     //
     // SAX Methods. Send incoming SAX events to the DOMBuilder.
