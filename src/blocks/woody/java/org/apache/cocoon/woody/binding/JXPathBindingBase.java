@@ -153,10 +153,12 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * depending on the value of {@see #loadEnabled}
      */
     public final void loadFormFromModel(Widget frmModel, JXPathContext jxpc) {
+        boolean inheritedLeniency = jxpc.isLenient(); 
         applyLeniency(jxpc);
         if (this.commonAtts.loadEnabled) {
             doLoad(frmModel, jxpc);
         }    
+        jxpc.setLenient(inheritedLeniency);
     }
 
     /**
@@ -186,10 +188,12 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * depending on the value of {@see #saveEnabled}
      */
     public final void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException{
+        boolean inheritedLeniency = jxpc.isLenient(); 
         applyLeniency(jxpc);
         if (this.commonAtts.saveEnabled) {
             doSave(frmModel, jxpc);
-        }    
+        }
+        jxpc.setLenient(inheritedLeniency);
     }
     
     /**
