@@ -86,7 +86,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.8 2003/05/19 00:25:51 jefft Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.9 2003/05/20 09:17:57 jefft Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule
     implements Composable, ThreadSafe {
@@ -276,11 +276,12 @@ public class XMLFileModule extends AbstractJXPathModule
                         "missing 'file' child element at " + 
                         modeConf.getLocation());
                 */
+            } else {
+              hasDynamicConf = true;
             }
-            hasDynamicConf = true;
         }
 
-        if (hasDynamicConf && fileConf != null) {
+        if (hasDynamicConf) {
             src = fileConf.getAttribute("src");
         }
 
