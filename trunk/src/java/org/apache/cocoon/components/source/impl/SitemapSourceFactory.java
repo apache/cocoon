@@ -71,7 +71,12 @@ import org.apache.excalibur.source.SourceUtil;
  * as it needs the current <code>Sitemap</code> as input.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceFactory.java,v 1.3 2003/10/19 16:21:28 cziegeler Exp $
+ * @version CVS $Id: SitemapSourceFactory.java,v 1.4 2003/10/27 02:05:15 ghoward Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="SourceFactory"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="cocoon"
  */
 public final class SitemapSourceFactory
     extends AbstractLogEnabled
@@ -81,7 +86,10 @@ public final class SitemapSourceFactory
     private ServiceManager manager;
 
     /**
-     * Composable
+     * Serviceable
+     * 
+     * @avalon.dependency type="org.apache.excalibur.source.SourceResolver"
+     * @avalon.dependency type="org.apache.cocoon.Processor"
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;

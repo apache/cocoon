@@ -64,7 +64,6 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.Context;
 
@@ -75,11 +74,16 @@ import org.apache.cocoon.environment.Context;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ContextSourceFactory.java,v 1.4 2003/10/25 18:14:25 joerg Exp $
+ * @version CVS $Id: ContextSourceFactory.java,v 1.5 2003/10/27 02:05:15 ghoward Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="SourceFactory"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="context"
  */
 public class ContextSourceFactory
     extends AbstractLogEnabled
-    implements SourceFactory, Serviceable, Disposable, Contextualizable, ThreadSafe, URIAbsolutizer
+    implements SourceFactory, Serviceable, Disposable, Contextualizable, URIAbsolutizer
 {
 
     /** The context */
@@ -92,7 +96,9 @@ public class ContextSourceFactory
     protected SourceResolver resolver;
 
     /**
-     * Composable Interface
+     * Serviceable Interface
+     * 
+     * @avalon.dependency type="SourceResolver"
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
