@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- CVS $Id: cocoon.xconf,v 1.54 2004/07/23 02:42:07 crossley Exp $ -->
+<!-- CVS $Id: cocoon.xconf,v 1.55 2004/07/23 06:56:37 cziegeler Exp $ -->
 <cocoon version="2.2">
 
 <!--+
@@ -158,6 +158,7 @@
     <component-instance logger="core.modules.input" name="request-param"    class="org.apache.cocoon.components.modules.input.RequestParameterModule"/>
     <component-instance logger="core.modules.input" name="raw-request-param" class="org.apache.cocoon.components.modules.input.RawRequestParameterModule"/>
     <component-instance logger="core.modules.input" name="request-attr"     class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/>
+    <component-instance logger="core.modules.input" name="request-scoped-attr"     class="org.apache.cocoon.components.modules.input.RequestScopedAttributeModule"/>
     <component-instance logger="core.modules.input" name="request-header"   class="org.apache.cocoon.components.modules.input.HeaderAttributeModule"/>
     <component-instance logger="core.modules.input" name="session-attr"     class="org.apache.cocoon.components.modules.input.SessionAttributeModule"/>
     <component-instance logger="core.modules.input" name="system-property"  class="org.apache.cocoon.components.modules.input.SystemPropertyModule"/>

@@ -38,34 +38,43 @@ import java.util.TreeSet;
  * getAttributeValues. Only one "*" is allowed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestAttributeModule.java,v 1.3 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id: RequestAttributeModule.java,v 1.4 2004/07/23 06:56:37 cziegeler Exp $
  */
 public class RequestAttributeModule extends AbstractInputModule implements ThreadSafe {
 
-    public Object getAttribute( String name, Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
+    protected Object getAttribute( String name, Configuration modeConf, Map objectModel, int scope)
+    throws ConfigurationException {
         String pname = (String) this.settings.get("parameter", name);
         if ( modeConf != null ) {
             pname = modeConf.getAttribute( "parameter", pname );
             // preferred
             pname = modeConf.getChild("parameter").getValue(pname);
         }
-        return ObjectModelHelper.getRequest(objectModel).getAttribute( pname );
+        return ObjectModelHelper.getRequest(objectModel).getAttribute( pname, scope );        
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttribute(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
+    public Object getAttribute( String name, Configuration modeConf, Map objectModel )
+    throws ConfigurationException {
+        return this.getAttribute(name, modeConf, objectModel, Request.GLOBAL_SCOPE);
     }
 
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeNames(org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
     public Iterator getAttributeNames( Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
+    throws ConfigurationException {
         return new IteratorHelper(ObjectModelHelper.getRequest(objectModel).getAttributeNames());
     }
 
 
-    public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
-        throws ConfigurationException {
-
-        Request request = ObjectModelHelper.getRequest(objectModel);
+    protected Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel, int scope )
+    throws ConfigurationException {
+        final Request request = ObjectModelHelper.getRequest(objectModel);
+        
         String wildcard = (String) this.settings.get("parameter",name);
         if ( modeConf != null ) {
             wildcard = modeConf.getAttribute( "parameter", wildcard );
@@ -89,21 +98,21 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
                 suffix = "";
             }
             SortedSet names = new TreeSet();
-            Enumeration allNames = request.getAttributeNames();
+            Enumeration allNames = request.getAttributeNames( scope );
 
-           while (allNames.hasMoreElements()) {
-               String pname = (String) allNames.nextElement();
-               if ( pname.startsWith( prefix ) && pname.endsWith( suffix ) ) {
-                   names.add(pname);
-               }
-           }
+            while (allNames.hasMoreElements()) {
+                String pname = (String) allNames.nextElement();
+                if ( pname.startsWith( prefix ) && pname.endsWith( suffix ) ) {
+                    names.add(pname);
+                }
+            }
 
-           List values = new LinkedList();
-           Iterator j = names.iterator();
-           while (j.hasNext()){
-               String pname = (String) j.next();
-               values.add( request.getAttribute( pname ) );
-           }
+            List values = new LinkedList();
+            Iterator j = names.iterator();
+            while (j.hasNext()){
+                String pname = (String) j.next();
+                values.add( request.getAttribute( pname ) );
+            }
 
             return values.toArray();
 
@@ -111,7 +120,7 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
             // no "*" in attribute name => just return all values of
             // this one attribute. Make sure, it's an array.
 
-            Object value = request.getAttribute( wildcard );
+            Object value = request.getAttribute( wildcard, scope );
             if ( value != null && !value.getClass().isArray() ) {
                 Object[] values = new Object[1];
                 values[0] = value;
@@ -124,6 +133,13 @@ public class RequestAttributeModule extends AbstractInputModule implements Threa
 
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.modules.input.InputModule#getAttributeValues(java.lang.String, org.apache.avalon.framework.configuration.Configuration, java.util.Map)
+     */
+    public Object[] getAttributeValues( String name, Configuration modeConf, Map objectModel )
+    throws ConfigurationException {
+        return this.getAttributeValues(name, modeConf, objectModel, Request.GLOBAL_SCOPE );
+    }
 
 
 }
