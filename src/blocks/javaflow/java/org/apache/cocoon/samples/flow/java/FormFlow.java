@@ -27,7 +27,7 @@ public class FormFlow extends AbstractCocoonFlow {
 
     public void doEditForm1() {
 
-				FormInstance form = new FormInstance("forms/form1.xml");
+        FormInstance form = new FormInstance("forms/form1.xml");
 
         Field birthDate = (Field) form.getWidget("birthdate");
         birthDate.setValue(new Date());
