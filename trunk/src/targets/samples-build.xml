@@ -41,7 +41,9 @@
     </copy>
 
     <!-- patch the welcome page to tell we have samples to show -->
-    <xpatch directory="${webapp.samples}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>
+    <xpatch file="${build.webapp}/welcome.xml"
+            srcdir="${webapp.samples}" 
+            includes="**/*.xwelcome"/>
   </target>
 
   <target name="scratchpad-samples" depends="prepare" unless="unless.exclude.scratchpad">
@@ -64,7 +66,9 @@
     </copy>
 
     <!-- patch the samples page to tell we have scratchpad samples to show -->
-    <xpatch directory="${scratchpad.samples}" extension="xsamples" configuration="${build.webapp.samples}/samples.xml"/> 
+    <xpatch file="${build.webapp.samples}/samples.xml"
+            srcdir="${scratchpad.samples}" 
+            includes="**/*.xsamples"/>
   </target>
     
   <target name="block-samples" depends="prepare" unless="unless.exclude.webapp.samples">

@@ -76,9 +76,9 @@
   <target name="compile-deprecated" depends="prepare" unless="unless.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
-    <xpatch configuration="${build.dest}/org/apache/cocoon/cocoon.roles" 
-            directory="${deprecated.conf}" 
-            extension="xroles"/>
+    <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
+            srcdir="${deprecated.conf}"
+            includes="**/*.xroles"/>
             
     <javac srcdir="${deprecated.src}"
            destdir="${build.deprecated}"
@@ -96,7 +96,7 @@
   <target name="package" depends="package-core, package-scratchpad, package-deprecated"/>
 
   <!-- package the core -->
-  <target name="package-core" depends="compile-core,block-roles">
+  <target name="package-core" depends="compile-core, block-roles">
     <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf">
       <fileset dir="${build.dest}"/>
     </jar>
@@ -133,7 +133,7 @@
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
-         target="roles"/>
+         target="patch-roles"/>
   </target>
   
   <!-- compiles and packages all blocks -->

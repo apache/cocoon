@@ -65,7 +65,7 @@
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
-         target="patch"/>
+         target="patch-conf"/>
   </target>
 
   <target name="prepare-webapp-samples" depends="prepare-webapp, samples, block-samples, scratchpad-samples" unless="unless.exclude.webapp.samples"/>
@@ -82,7 +82,9 @@
  
   <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="unless.exclude.deprecated">
     <copy file="${build}/${name}-deprecated.jar" tofile="${build.webapp.lib}/${name}-${version}-deprecated.jar"/>
-    <xpatch directory="${deprecated.conf}" extension="xconf" configuration="${build.webapp}/WEB-INF/cocoon.xconf"/>
+    <xpatch file="${build.webapp}/WEB-INF/cocoon.xconf"
+            srcdir="${deprecated.conf}" 
+            includes="**/*.xconf"/>
   </target>
 
   <target name="prepare-webapp-idldocs" depends="idldocs" unless="unless.exclude.webapp.idldocs">
@@ -93,7 +95,9 @@
     </copy>
 
     <!-- patch the welcome page to tell we have idldocs to show -->
-    <xpatch directory="${idl}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
+    <xpatch file="${build.webapp}/welcome.xml"
+            srcdir="${idl}" 
+            extension="**/*.xwelcome"/>
   </target>
   
   <target name="prepare-webapp-javadocs" depends="javadocs" unless="unless.exclude.webapp.javadocs">
@@ -104,7 +108,9 @@
     </copy>
 
     <!-- patch the welcome page to tell we have javadocs to show -->
-    <xpatch directory="${resources.javadoc}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
+    <xpatch file="${build.webapp}/welcome.xml"
+            srcdir="${resources.javadoc}" 
+            includes="**/*.xwelcome"/>    
   </target>
     
   <target name="prepare-webapp-docs" depends="validate-xdocs" unless="unless.exclude.webapp.documentation">
@@ -137,7 +143,9 @@
     </copy>
 
     <!-- patch the welcome page to tell we have documentation to show -->
-    <xpatch directory="${documentation}" extension="xwelcome" configuration="${build.webapp}/welcome.xml"/>    
+    <xpatch file="${build.webapp}/welcome.xml"
+            srcdir="${documentation}" 
+            includes="**/*.xwelcome"/>    
   </target>
   
   <target name="webapp" depends="prepare-webapp,prepare-webapp-samples,prepare-webapp-docs,prepare-webapp-javadocs,prepare-webapp-idldocs,prepare-webapp-deprecated,prepare-webapp-scratchpad,validate-jars,validate-config" description="Builds web application folder"/>
