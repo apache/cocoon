@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-05-01 14:41:34 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-05-01 16:47:28 $
  */
 public class JspGenerator extends ServletGenerator implements Poolable {
 
@@ -71,18 +71,17 @@ public class JspGenerator extends ServletGenerator implements Poolable {
 
         Parser parser = null;
         try {
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
             MyServletRequest request = new MyServletRequest(httpRequest, this.source);
-            MyServletResponse response = new MyServletResponse(httpResponse, output);
+            MyServletResponse response = new MyServletResponse(httpResponse);
 
             // start JSPServlet.
             Class clazz = Class.forName("org.apache.jasper.servlet.JspServlet");
             HttpServlet jsp = (HttpServlet) clazz.newInstance();
             jsp.init(new config((ServletContext)this.objectModel.get(HttpEnvironment.HTTP_SERVLET_CONTEXT)));
             jsp.service(request, response);
-            output.close();
 
-            ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
+            byte[] bytes = response.toByteArray();
+            ByteArrayInputStream input = new ByteArrayInputStream(bytes);
 
             // pipe the results into the parser
             parser = (Parser)this.manager.lookup(Roles.PARSER);
@@ -192,19 +191,19 @@ public class JspGenerator extends ServletGenerator implements Poolable {
      * Stub implementation of HttpServletResponse
      */
     class MyServletResponse implements HttpServletResponse {
-        ServletOutputStream output;
         HttpServletResponse response;
+        MyServletOutputStream output;
 
-        public MyServletResponse(HttpServletResponse response, OutputStream output){
+        public MyServletResponse(HttpServletResponse response){
             this.response = response;
-            this.output = new MyServletOutputStream(output);
+            this.output = new MyServletOutputStream();
         }
-        public void flushBuffer() throws IOException { this.output.flush(); }
+        public void flushBuffer() throws IOException { }
         public int getBufferSize() { return 1024; }
         public String getCharacterEncoding() { return this.response.getCharacterEncoding();}
         public Locale getLocale(){ return this.response.getLocale();}
         public PrintWriter getWriter() {
-            return new PrintWriter(this.output);
+            return this.output.getWriter();
         }
         public boolean isCommitted() { return false; }
         public void reset() {}
@@ -237,15 +236,24 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         public void setStatus(int i, String s){response.setStatus(i, s); }
         public void resetBuffer(){}
 
+        public byte[] toByteArray() {
+            return output.toByteArray();
+        }
     }
 
     /**
      * Stub implementation of ServletOutputStream
      */
     class MyServletOutputStream extends ServletOutputStream {
-        OutputStream output;
-        public MyServletOutputStream(OutputStream output) {
-            this.output = output;
+        ByteArrayOutputStream output;
+        PrintWriter writer;
+
+        public MyServletOutputStream() {
+            this.output = new ByteArrayOutputStream();
+            this.writer = new PrintWriter(output, true);
+        }
+        public PrintWriter getWriter() {
+            return this.writer;
         }
         public void write(byte[] b) throws java.io.IOException {
             output.write(b);
@@ -255,6 +263,11 @@ public class JspGenerator extends ServletGenerator implements Poolable {
         }
         public void write(int b) throws java.io.IOException  {
             output.write(b);
+        }
+        public byte[] toByteArray() {
+            this.writer.flush();
+            byte[] bytes = output.toByteArray();
+            return bytes;
         }
      }
 }
