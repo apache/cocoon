@@ -50,169 +50,298 @@
 package org.apache.cocoon.i18n;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.net.MalformedURLException;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.logger.Logger;
-
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.xml.ParamSaxBuffer;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.xml.xpath.XPathProcessor;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import org.xml.sax.InputSource;
+import org.apache.excalibur.source.SourceValidity;
+import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * Implementation of <code>Bundle</code> interface for XML resources. Represents a single XML message bundle.
- *
- * @author <a href="mailto:mengelhart@earthtrip.com">Mike Engelhart</a>
- * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
- * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
- * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
- * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.3 2003/11/27 02:51:40 vgritsenko Exp $
+ * Implementation of <code>Bundle</code> interface for XML resources. Represents a
+ * single XML message bundle.
+ * 
+ * XML format for this resource bundle implementation is the following:
+ * <pre>
+ * &lt;catalogue xml:lang="en"&gt;
+ *   &lt;message key="key1"&gt;Message &lt;br/&gt; Value 1&lt;/message&gt;
+ *   &lt;message key="key2"&gt;Message &lt;br/&gt; Value 1&lt;/message&gt;
+ *   ...
+ * &lt;/catalogue&gt;
+ * </pre>
+ * 
+ * Value can be any well formed XML snippet and it will be cached by the key specified
+ * in the attrbute <code>key</code>. Objects returned by this {@link Bundle} implementation
+ * are instances of the {@link ParamSaxBuffer} class.
+ * 
+ * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
+ * @version CVS $Id: XMLResourceBundle.java,v 1.4 2003/12/10 15:37:37 vgritsenko Exp $
  */
-public class XMLResourceBundle extends ResourceBundle
-                               implements Bundle {
+public class XMLResourceBundle extends AbstractLogEnabled
+                               implements Bundle, Serviceable {
 
-    /** DOM factory */
-    protected static final DocumentBuilderFactory docfactory = DocumentBuilderFactory.newInstance();
+    /**
+     * Namespace for the Bundle markup
+     */
+    public static final String NS = "http://apache.org/cocoon/i18n/2.0";
+    
+    /**
+     * XML bundle root element name
+     */
+    public static final String EL_CATALOGUE = "catalogue";
+    
+    /**
+     * XML bundle message element name
+     */
+    public static final String EL_MESSAGE = "message";
+    
+    /**
+     * XML bundle message element's key attribute name 
+     */
+    public static final String AT_KEY = "key";
+    
+    
+    /**
+     * Bundle name
+     */
+    private String name;
 
-    /** Logger */
-    protected Logger logger;
+    /**
+     * Bundle validity
+     */
+    private SourceValidity validity;
 
-    /** Cache for storing string values for existing XPaths */
-    private Hashtable cache = new Hashtable();
-
-    /** Cache for storing non-existing XPaths */
-    private Map cacheNotFound = new HashMap();
-
-    /** Bundle name */
-    private String name = "";
-
-    /** DOM-tree containing the bundle content */
-    private Document doc;
-
-    /** Locale of the bundle */
+    /**
+     * Locale of the bundle
+     */
     private Locale locale;
 
-    /** Parent of the current bundle */
-    protected XMLResourceBundle parent = null;
+    /**
+     * Parent of the current bundle
+     */
+    protected Bundle parent;
 
-    /** Component Manager */
-    protected ComponentManager manager = null;
+    /**
+     * Objects stored in the bundle
+     */
+    protected HashMap values;
+    
+    /**
+     * Service Manager
+     */
+    protected ServiceManager manager;
 
-    /** XPath Processor */
-    private XPathProcessor processor = null;
+    /**
+     * Processes XML bundle file and creates map of values
+     */
+    private class SAXContentHandler implements ContentHandler {
+        private Map values;
+        private int state;
+        private String namespace;
+        private ParamSaxBuffer buffer; 
+        
+        public SAXContentHandler(Map values) {
+            this.values = values;
+        }
+        
+        public void setDocumentLocator(Locator arg0) {
+            // Ignore
+        }
 
+        public void startDocument() throws SAXException {
+            // Ignore
+        }
 
+        public void endDocument() throws SAXException {
+            // Ignore
+        }
+
+        public void processingInstruction(String arg0, String arg1) throws SAXException {
+            // Ignore
+        }
+
+        public void skippedEntity(String arg0) throws SAXException {
+            // Ignore
+        }
+
+        public void startElement(String ns, String localName, String qName, Attributes atts) throws SAXException {
+            switch (state) {
+                case 0:
+                    // <i18n:catalogue>
+                    if (!"".equals(ns) && !NS.equals(ns)) {
+                        throw new SAXException("Root element <" + EL_CATALOGUE +
+                                               "> must be non-namespaced or in i18n namespace.");
+                    }
+                    if (!EL_CATALOGUE.equals(localName)) {
+                        throw new SAXException("Root element must be <" + EL_CATALOGUE + ">.");
+                    }
+                    this.namespace = ns;
+                    state ++;
+                    break;
+                case 1:
+                    // <i18n:message>
+                    if (!EL_MESSAGE.equals(localName)) {
+                        throw new SAXException("<" + EL_CATALOGUE + "> must contain <" +
+                                               EL_MESSAGE + "> elements only.");
+                    }
+                    if (!this.namespace.equals(ns)) {
+                        throw new SAXException("<" + EL_MESSAGE + "> element must be in '" +
+                                               this.namespace + "' namespace.");
+                    }
+                    String key =  atts.getValue(AT_KEY);
+                    if (key == null) {
+                        throw new SAXException("<" + EL_MESSAGE + "> must have '" +
+                                               AT_KEY + "' attribute.");
+                    }
+                    buffer = new ParamSaxBuffer();
+                    values.put(key, buffer);
+                    state ++;
+                    break;
+                case 2:
+                    buffer.startElement(ns, localName, qName, atts);
+                    break;
+                default:
+                    throw new SAXException("Internal error: Invalid state");
+            }
+        }
+
+        public void endElement(String ns, String localName, String qName) throws SAXException {
+            switch (state) {
+                case 0:
+                    break;
+                case 1:
+                    // </i18n:catalogue>
+                    state --;
+                    break;
+                case 2:
+                    if (this.namespace.equals(ns) && EL_MESSAGE.equals(localName)) {
+                        // </i18n:message>
+                        this.buffer = null;
+                        state --;
+                    } else {
+                        buffer.endElement(ns, localName, qName);
+                    }
+                    break;
+                default:
+                    throw new SAXException("Internal error: Invalid state");
+            }
+        }
+
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
+            if (buffer != null) {
+                buffer.startPrefixMapping(prefix, uri);
+            }
+        }
+
+        public void endPrefixMapping(String prefix) throws SAXException {
+            if (buffer != null) {
+                buffer.endPrefixMapping(prefix);
+            }
+        }
+
+        public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+            if (buffer != null) {
+                buffer.ignorableWhitespace(ch, start, length);
+            }
+        }
+
+        public void characters(char[] ch, int start, int length) throws SAXException {
+            if (buffer != null) {
+                buffer.characters(ch, start, length);
+            }
+        }
+    }
+    
     /**
      * Compose this instance
      *
-     * @param manager The <code>ComponentManager</code> instance
+     * @param manager The <code>ServiceManager</code> instance
      * @throws ComponentException if XPath processor is not found
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.processor = (XPathProcessor) this.manager.lookup(XPathProcessor.ROLE);
     }
 
     /**
      * Implements Disposable interface for this class.
      */
     public void dispose() {
-        this.manager.release((Component) this.processor);
-        this.processor = null;
-    }
-
-    /**
-     * Implements LogEnabled interface for this class.
-     *
-     * @param logger the logger object
-     */
-    public void enableLogging(final Logger logger) {
-        this.logger = logger;
+        this.manager = null;
     }
 
     /**
      * Initalize the bundle
      *
      * @param name name of the bundle
-     * @param fileName name of the XML source file
+     * @param sourceURL source URL of the XML bundle
      * @param locale locale
      * @param parent parent bundle of this bundle
-     * @param cacheAtStartup cache all the keys when constructing?
      *
      * @throws IOException if an IO error occurs while reading the file
-     * @throws ParserConfigurationException if no parser is configured
-     * @throws SAXException if an error occurs while parsing the file
+     * @throws ProcessingException if an error occurs while loading the bundle
+     * @throws SAXException if an error occurs while loading the bundle
      */
-    public void init(String name, String fileName, Locale locale, XMLResourceBundle parent, boolean cacheAtStartup)
-    throws IOException, ParserConfigurationException, SAXException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Constructing XMLResourceBundle: " + name + ", locale: " + locale);
+    public void init(String name, String sourceURL, Locale locale, Bundle parent)
+    throws IOException, ProcessingException, SAXException {
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Loading XML bundle: " + name + ", locale: " + locale);
         }
 
         this.name = name;
-        this.doc = loadResourceBundle(fileName);
         this.locale = locale;
         this.parent = parent;
-
-        if (cacheAtStartup) {
-            Node root = doc.getDocumentElement();
-            cacheAll(root, "/" + root.getNodeName());
-        }
+        this.values = new HashMap();
+        load(sourceURL);
     }
 
     /**
-     * Load the DOM tree, based on the file name.
+     * Load the XML bundle, based on the source URL.
      *
-     * @param fileName name of the XML source file
-     *
+     * @param sourceURL source URL of the XML bundle
      * @return the DOM tree
      *
      * @exception IOException if an IO error occurs while reading the file
      * @exception ParserConfigurationException if no parser is configured
      * @exception SAXException if an error occurs while parsing the file
      */
-    protected synchronized Document loadResourceBundle(String fileName)
-    throws IOException, ParserConfigurationException, SAXException {
+    protected void load(String sourceURL)
+    throws IOException, ProcessingException, SAXException {
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
         Source source = null;
         SourceResolver resolver = null;
-
         try {
             resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
-            source = resolver.resolveURI(fileName);
-            return builder.parse(new InputSource(source.getInputStream()));
-        } catch (Exception e) {
-            logger.warn("XMLResourceBundle: Non excalibur-source " + fileName, e);
+            source = resolver.resolveURI(sourceURL);
+            HashMap values = new HashMap();
+            SourceUtil.toSAX(source, new SAXContentHandler(values));
+            this.validity = source.getValidity();
+            this.values = values;
+        } catch (ServiceException e) {
+            throw new ProcessingException("Can't lookup source resolver", e);
+        } catch (MalformedURLException e) {
+            throw new SourceNotFoundException("Invalid resource URL: " + sourceURL, e);
         } finally {
-            resolver.release(source);
+            if (source != null) {
+                resolver.release(source);
+            }
             manager.release(resolver);
         }
-
-        // Fallback try
-        return builder.parse(fileName);
     }
 
     /**
@@ -225,12 +354,12 @@ public class XMLResourceBundle extends ResourceBundle
     }
 
     /**
-     * Gets the source DOM tree of the bundle.
+     * Gets the validity of the bundle.
      *
-     * @return the DOM tree
+     * @return the validity
      */
-    public Document getDocument() {
-        return this.doc;
+    public SourceValidity getValidity() {
+        return this.validity;
     }
 
     /**
@@ -243,173 +372,53 @@ public class XMLResourceBundle extends ResourceBundle
     }
 
     /**
-     * Does the &quot;key-not-found-cache&quot; contain such key?
-     *
-     * @param key the key to the value to be returned
-     *
-     * @return true if contains, false otherwise
-     */
-    private boolean cacheNotFoundContains(String key) {
-        return cacheNotFound.containsKey(key);
-    }
-
-    /**
-     * Cache the key and value in &quot;key-cache&quot;.
-     *
-     * @param key the key
-     * @param value the value
-     */
-    private void cacheKey(String key, Node value) {
-        cache.put(key, value);
-    }
-
-    /**
-     * Cache the key in &quot;key-not-found-cache&quot;.
-     *
-     * @param key the key
-     */
-    private void cacheNotFoundKey(String key) {
-        cacheNotFound.put(key, "");
-    }
-
-    /**
-     * Gets the value by the key from the &quot;key-cache&quot;.
+     * Get Object value by key.
      *
      * @param key the key
      * @return the value
      */
-    private Node getFromCache(String key) {
-        Object value = cache.get(key);
-        return (Node)value;
-    }
-
-    /**
-     * Steps through the bundle tree and stores all text element values in bundle's cache. Also stores attributes for
-     * all element nodes.
-     *
-     * @param parent parent node, must be an element
-     * @param pathToParent XPath to the parent node
-     */
-    private void cacheAll(Node parent, String pathToParent) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Caching all messages");
-        }
-
-        NodeList children = parent.getChildNodes();
-        int childnum = children.getLength();
-
-        for (int i = 0; i < childnum; i++) {
-            Node child = children.item(i);
-
-            if (child.getNodeType() == Node.ELEMENT_NODE) {
-                StringBuffer pathToChild = new StringBuffer(pathToParent).append('/').append(child.getNodeName());
-
-                NamedNodeMap attrs = child.getAttributes();
-                if (attrs != null) {
-                    int attrnum = attrs.getLength();
-
-                    for (int j = 0; j < attrnum; j++) {
-                        Node temp = attrs.item(j);
-
-                        if (!temp.getNodeName().equalsIgnoreCase("xml:lang")) {
-                            pathToChild.append("[@").append(temp.getNodeName()).append("='").append(temp.getNodeValue())
-                                       .append("']");
-                        }
-                    }
-                }
-
-                cacheKey(pathToChild.toString(), child);
-            }
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("What we've cached: " + child.toString());
-            }
-        }
-    }
-
-    /**
-     * Get value by key.
-     *
-     * @param key the key
-     * @return the value
-     */
-    private Object _getObject(String key) {
+    public Object getObject(String key) {
         if (key == null) {
             return null;
         }
 
-        Node value = getFromCache(key);
-        if (value == null && !cacheNotFoundContains(key)) {
-            if (doc != null) {
-                value = (Node)_getObject(this.doc.getDocumentElement(), key);
-            }
-
-            if (value == null) {
-                if (this.parent != null) {
-                    value = (Node)this.parent._getObject(key);
-                }
-            }
-
-            if (value != null) {
-                cacheKey(key, value);
-            } else {
-                cacheNotFoundKey(key);
-            }
+        Object value = values.get(key);
+        if (value == null && this.parent != null) {
+            value = this.parent.getObject(key);
         }
 
         return value;
     }
 
     /**
-     * Get value by key from a concrete node.
+     * Get String value by key.
      *
-     * @param node the node
      * @param key the key
-     *
      * @return the value
      */
-    private Object _getObject(Node node, String key) {
-        return _getNode(node, key);
-    }
+    public String getString(String key) {
+        if (key == null) {
+            return null;
+        }
 
-    /**
-     * Get the node with the supplied XPath key, starting from concrete root node.
-     *
-     * @param rootNode the root node
-     * @param key the key
-     *
-     * @return the node
-     */
-    private Node _getNode(Node rootNode, String key) {
-        try {
-            return this.processor.selectSingleNode(rootNode, key);
-        } catch (Exception e) {
-            logger.error("Error while locating resource with key: " + key, e);
+        Object value = values.get(key);
+        if (value != null) {
+            return value.toString();
+        }
+        
+        if(this.parent != null) {
+            return this.parent.getString(key);
         }
 
         return null;
     }
 
     /**
-     * Return an Object by key. Implementation of the ResourceBundle abstract method.
-     *
-     * @param key the key
-     *
-     * @return the object
-     *
-     * @throws MissingResourceException on error
-     */
-    protected Object handleGetObject(String key)
-    throws MissingResourceException {
-        return _getObject(key);
-    }
-
-    /**
-     * Return an enumeration of the keys. Implementation of the ResourceBundle abstract method.
+     * Return a set of keys.
      *
      * @return the enumeration of keys
      */
-    public Enumeration getKeys() {
-        return cache.keys();
+    public Set keySet() {
+        return Collections.unmodifiableSet(values.keySet());
     }
 }

@@ -64,19 +64,20 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  * Bundle factory implementation base class.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: AbstractBundleFactory.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: AbstractBundleFactory.java,v 1.3 2003/12/10 15:37:37 vgritsenko Exp $
  */
 public abstract class AbstractBundleFactory 
-  extends AbstractLogEnabled
-  implements BundleFactory, Composable, Configurable, Disposable, LogEnabled, ThreadSafe {
+    extends AbstractLogEnabled
+    implements BundleFactory, Composable, Configurable, Disposable, LogEnabled, ThreadSafe {
 
     /** Should we load bundles to cache on startup or not. */
-    protected boolean cacheAtStartup = false;
+    protected boolean cacheAtStartup;
 
     /** Root directory to all bundle names */
     protected String directory;
 
-    protected ComponentManager manager = null;
+    protected ComponentManager manager;
+
 
     public void compose(ComponentManager manager) {
         this.manager = manager;
@@ -88,7 +89,7 @@ public abstract class AbstractBundleFactory
      * @param configuration the configuration.
      */
     public void configure(Configuration configuration)
-        throws ConfigurationException {
+    throws ConfigurationException {
 
         this.cacheAtStartup =
             configuration.getChild(
@@ -99,20 +100,15 @@ public abstract class AbstractBundleFactory
                 ConfigurationKeys.ROOT_DIRECTORY, true).getValue();
         } catch (ConfigurationException e) {
             if (getLogger().isWarnEnabled()) {
-                getLogger().warn(
-                    "Root directory not provided in configuration, "
-                    + "using default (root)"
-                );
+                getLogger().warn("Root directory not provided in configuration, " +
+                                 "using default (\"\")");
             }
             this.directory = "";
         }
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug(
-                "Bundle Factory implementation configured with: cacheAtStartup = "
-                + cacheAtStartup + ", directory = '" + directory + "'"
-            );
+            getLogger().debug("Bundle Factory implementation configured with: cacheAtStartup = " +
+                              cacheAtStartup + ", directory = '" + directory + "'");
         }
     }
-
 }
