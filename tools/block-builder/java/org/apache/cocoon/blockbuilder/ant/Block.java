@@ -16,7 +16,15 @@
 package org.apache.cocoon.blockbuilder.ant;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.xerces.parsers.DOMParser;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 /**
  * @since 0.1
@@ -26,6 +34,7 @@ public class Block {
     private String name;
     private String relativeJardir;
     private String blockPath;
+    private boolean dynamicEclipseReference = false;
     
     public Block() {
         
@@ -47,6 +56,18 @@ public class Block {
     	this.relativeJardir = dir;
     }
     
+    public void setDynamicEclipseReference(boolean dynamicEclipseReference) {
+        System.out.println("dynamic reference: " + dynamicEclipseReference);
+    }
+    
+    public boolean isDynamicEclipseReference() {
+        return this.dynamicEclipseReference;
+    }
+    
+    public String getEclipseProjectName() throws Exception {
+        return getProjectName(new File(this.blockPath, ".project"));
+    }
+    
     public File[] getJarFile(File basedir) {
     	File jarDir = new File(basedir, blockPath + File.separator + this.relativeJardir);
         return jarDir.listFiles(new FilenameFilter() {
@@ -54,5 +75,37 @@ public class Block {
                 return name.toLowerCase().endsWith("jar");
             }
         });
+    }
+    
+    private String getProjectName(File eclipseProjectFile) throws Exception {
+        String projectName = "";
+        try {
+            System.out.println("eclipseProjectfile: " + eclipseProjectFile);
+            String EL_PROJECTDESCRIPTION = "projectDescription";
+            String EL_NAME = "name";
+            
+            DOMParser parser = new DOMParser();
+            parser.parse(new InputSource(new FileInputStream(eclipseProjectFile)));
+            Document doc = parser.getDocument();
+            
+            // read in all available libraries
+            NodeList rootNodeList = doc.getChildNodes();
+            for(int i = 0; i <= rootNodeList.getLength(); i++ ) {
+                Node rootChildNode = rootNodeList.item(i);
+                if(rootChildNode != null && EL_PROJECTDESCRIPTION.equals(rootChildNode.getLocalName())) {
+                    NodeList projectDescriptor = rootChildNode.getChildNodes();
+                    for(int x = 0; x <= projectDescriptor.getLength(); x++) {
+                        Node nameNode = projectDescriptor.item(x);
+                        if(nameNode != null && EL_NAME.equals(nameNode.getLocalName())) {
+                            projectName = nameNode.getFirstChild().getNodeValue();
+                        }
+                    }
+                }
+            }       
+        } catch(Exception e) {
+            throw new BuildException("Make sure that a valid Eclipse project file can be found at " 
+                    + eclipseProjectFile.getCanonicalPath());
+        }
+        return projectName;
     }
 }
