@@ -59,7 +59,8 @@ import org.w3c.dom.Element;
  * Work interface for the component that can create {@link Form}s.
  */
 public interface FormManager {
-    public static final String ROLE = "org.apache.cocoon.woody.FormManager";
+    
+    public static final String ROLE = FormManager.class.getName();
 
     public Form createForm(Source source) throws Exception;
 

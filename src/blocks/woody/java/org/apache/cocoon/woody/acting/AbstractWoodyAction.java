@@ -52,6 +52,8 @@ package org.apache.cocoon.woody.acting;
 
 import org.apache.cocoon.woody.FormManager;
 import org.apache.cocoon.acting.Action;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.Composable;
@@ -60,10 +62,24 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 /**
  * Abstract base class for Woody actions.
  */
-public abstract class AbstractWoodyAction implements Action, ThreadSafe, Composable {
+public abstract class AbstractWoodyAction 
+  implements Action, ThreadSafe, Composable, Disposable {
+      
+    protected ComponentManager manager;
+    
     protected FormManager formManager;
 
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        formManager = (FormManager)componentManager.lookup(FormManager.ROLE);
+    public void compose(ComponentManager componentManager) 
+    throws ComponentException {
+        this.manager = componentManager;
+        this.formManager = (FormManager)componentManager.lookup(FormManager.ROLE);
+    }
+    
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( (Component)this.formManager );
+            this.manager = null;
+            this.formManager = null;
+        }
     }
 }
