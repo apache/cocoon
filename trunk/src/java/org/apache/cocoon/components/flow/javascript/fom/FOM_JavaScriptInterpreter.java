@@ -92,7 +92,7 @@ import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_WebContin
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.2 2003/07/14 09:54:13 reinhard Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.3 2003/07/17 17:12:52 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -126,6 +126,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
      * Shared global scope for scripts and other immutable objects
      */
     Global scope;
+
 
     /**
      * List of <code>String</code> objects that represent files to be
@@ -272,9 +273,16 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             scope = (Scriptable)userScopes.get(uriPrefix);
         }
         if (scope == null) {
-            return setSessionScope(environment, createThreadScope());
+            scope = createThreadScope();
         }
         return scope;
+    }
+
+    void updateSession(Environment env, Scriptable scope) throws Exception {
+        ThreadScope thrScope = (ThreadScope)scope;
+        if (thrScope.useSession) {
+            setSessionScope(env, scope);
+        }
     }
 
     /**
@@ -296,10 +304,39 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             userScopes = new HashMap();
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
-
         String uriPrefix = environment.getURIPrefix();
+        System.out.println("Session: setting :" + uriPrefix + ": " + System.identityHashCode(scope));
         userScopes.put(uriPrefix, scope);
         return scope;
+    }
+
+    public static class ThreadScope extends ScriptableObject {
+
+        /* true if this scope has assigned any global vars */
+        boolean useSession = false;
+
+        public ThreadScope() {
+        }
+
+        public String getClassName() {
+            return "ThreadScope";
+        }
+        
+        public void put(String name, Scriptable start,
+                        Object value) {
+            useSession = true;
+            super.put(name, start, value);
+        }
+        
+        public void put(int index, Scriptable start,
+                        Object value) {
+            useSession = true;
+            super.put(index, start, value);
+        }
+        
+        void reset() {
+            useSession = false;
+        }
     }
 
     private Scriptable createThreadScope() 
@@ -307,7 +344,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         org.mozilla.javascript.Context context = 
             org.mozilla.javascript.Context.getCurrentContext();
 
-        Scriptable thrScope = context.newObject(scope);
+        Scriptable thrScope = new ThreadScope();
 
         thrScope.setPrototype(scope);
         // We want 'thrScope' to be a new top-level scope, so set its
@@ -392,8 +429,6 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
                 needResolve.clear();
             }
-            thrScope.put(LAST_EXEC_TIME, thrScope,
-                         new Long(System.currentTimeMillis()));
             // Compile all the scripts first. That way you can set breakpoints
             // in the debugger before they execute.
             for (int i = 0, size = execList.size(); i < size; i++) {
@@ -417,6 +452,9 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 Script script = entry.getScript(context, this.scope, false);
                 if (lastExecTime == 0 || lastMod > lastExecTime) {
                     script.exec(context, thrScope);
+                    thrScope.put(LAST_EXEC_TIME, thrScope,
+                                 new Long(System.currentTimeMillis()));
+                    ((ThreadScope)thrScope).reset();
                 }
             }
         }
@@ -497,7 +535,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
                 int size = (params != null ? params.size() : 0);
                 Object[] funArgs = new Object[size];
-		Scriptable parameters = context.newObject(thrScope);
+                Scriptable parameters = context.newObject(thrScope);
                 if (size != 0) {
                     for (int i = 0; i < size; i++) {
                         Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
@@ -536,6 +574,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
+                updateSession(environment, thrScope);
                 cocoon.invalidate();
                 Context.exit();
             }
@@ -576,11 +615,11 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             int size = (params != null ? params.size() : 0);
             Scriptable parameters = context.newObject(kScope);
             if (size != 0) {
-		for (int i = 0; i < size; i++) {
-		    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
-		    parameters.put(arg.name, parameters, arg.value);
-		}
-	    }
+                for (int i = 0; i < size; i++) {
+                    Interpreter.Argument arg = (Interpreter.Argument)params.get(i);
+                    parameters.put(arg.name, parameters, arg.value);
+                }
+            }
             cocoon.setParameters(parameters);
             Object[] args = new Object[] {k, 
                                           cocoon.makeWebContinuation(wk)};
@@ -611,6 +650,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 }
                 throw new CascadingRuntimeException(ee.getMessage(), ee);
             } finally {
+                updateSession(environment, kScope);
                 cocoon.invalidate();
                 Context.exit();
             }
@@ -673,4 +713,5 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                                                             kont);
         }
     }
+
 }
