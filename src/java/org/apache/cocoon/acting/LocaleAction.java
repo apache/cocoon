@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -90,10 +90,9 @@ import org.apache.cocoon.i18n.I18nUtils;
  * the locale value of the server is used)
  *
  * <br>
- *
  * The attribute names can be configured/customized at action definition
- * using the configuration paramters
- * {language,country,variant,locale}-attribute.
+ * using the configuration parameters
+ * {language, country, variant, locale}-attribute.
  *
  * eg.
  *
@@ -103,14 +102,12 @@ import org.apache.cocoon.i18n.I18nUtils;
  * &lt;/map:action&gt;
  * </pre>
  *
- * or:
- *
- * <center>Code originated from org.apache.cocoon.acting.LangSelect</center>
+ * <p>Code originated from org.apache.cocoon.acting.LangSelect</p>
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
  * @author <a href="mailto:lassi.immonen@valkeus.com">Lassi Immonen</a>
- * @version CVS $Id: LocaleAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LocaleAction extends ServiceableAction implements ThreadSafe, Configurable {
 
@@ -176,16 +173,16 @@ public class LocaleAction extends ServiceableAction implements ThreadSafe, Confi
 
 
     // Store the lang in request. Default is not to do this.
-    private boolean storeInRequest = false;
+    private boolean storeInRequest;
 
     // Store the lang in session, if available. Default is not to do this.
-    private boolean storeInSession = false;
+    private boolean storeInSession;
 
     // Should we create a session if needed. Default is not to do this.
-    private boolean createSession = false;
+    private boolean createSession;
 
     // Should we add a cookie with the lang. Default is not to do this.
-    private boolean storeInCookie = false;
+    private boolean storeInCookie;
 
     // Configuration attributes.
     private String langAttr;
@@ -201,60 +198,44 @@ public class LocaleAction extends ServiceableAction implements ThreadSafe, Confi
      */
     public void configure(Configuration conf)
     throws ConfigurationException {
-        Configuration child = conf.getChild(STORE_REQUEST);
-        storeInRequest = child.getValueAsBoolean(false);
-
+        this.storeInRequest = conf.getChild(STORE_REQUEST).getValueAsBoolean(false);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug((storeInRequest ? "will" : "won't") + " set values in request");
+            getLogger().debug((this.storeInRequest ? "will" : "won't") + " set values in request");
         }
 
-        child = conf.getChild(CREATE_SESSION);
-        createSession = child.getValueAsBoolean(false);
-
+        this.createSession = conf.getChild(CREATE_SESSION).getValueAsBoolean(false);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug((createSession ? "will" : "won't") + " create session");
+            getLogger().debug((this.createSession ? "will" : "won't") + " create session");
         }
 
-        child = conf.getChild(STORE_SESSION);
-        storeInSession = child.getValueAsBoolean(false);
-
+        this.storeInSession = conf.getChild(STORE_SESSION).getValueAsBoolean(false);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug((storeInSession ? "will" : "won't") + " set values in session");
+            getLogger().debug((this.storeInSession ? "will" : "won't") + " set values in session");
         }
 
-        child = conf.getChild(STORE_COOKIE);
-        storeInCookie = child.getValueAsBoolean(false);
-
+        this.storeInCookie = conf.getChild(STORE_COOKIE).getValueAsBoolean(false);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug((storeInCookie ? "will" : "won't") + " set values in cookies");
+            getLogger().debug((this.storeInCookie ? "will" : "won't") + " set values in cookies");
         }
 
-        child = conf.getChild(LANG_ATTR);
-        langAttr = child.getValue(LANG);
-
+        this.langAttr = conf.getChild(LANG_ATTR).getValue(LANG);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("global language attribute name is " + langAttr);
+            getLogger().debug("global language attribute name is " + this.langAttr);
         }
 
-        child = conf.getChild(COUNTRY_ATTR);
-        countryAttr = child.getValue(COUNTRY);
-
+        this.countryAttr = conf.getChild(COUNTRY_ATTR).getValue(COUNTRY);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("global country attribute name is " + countryAttr);
+            getLogger().debug("global country attribute name is " + this.countryAttr);
         }
 
-        child = conf.getChild(VARIANT_ATTR);
-        variantAttr = child.getValue(VARIANT);
-
+        this.variantAttr = conf.getChild(VARIANT_ATTR).getValue(VARIANT);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("global variant attribute name is " + variantAttr);
+            getLogger().debug("global variant attribute name is " + this.variantAttr);
         }
 
-        child = conf.getChild(LOCALE_ATTR);
-        localeAttr = child.getValue(LOCALE);
-
+        this.localeAttr = conf.getChild(LOCALE_ATTR).getValue(LOCALE);
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("global locale attribute name is " + localeAttr);
+            getLogger().debug("global locale attribute name is " + this.localeAttr);
         }
     }
 
@@ -262,21 +243,20 @@ public class LocaleAction extends ServiceableAction implements ThreadSafe, Confi
      * Action which obtains the current environments locale information, and
      * places it in the objectModel (and optionally in a session/cookie).
      */
-    public Map act(
-        Redirector redirector,
-        SourceResolver resolver,
-        Map objectModel,
-        String source,
-        Parameters par
-    ) throws Exception {
+    public Map act(Redirector redirector,
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String source,
+                   Parameters params)
+    throws Exception {
 
         // obtain locale information from params, session or cookies
         String lc = getLocaleAttribute(objectModel, localeAttr);
         Locale locale = I18nUtils.parseLocale(lc);
 
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("obtained locale information, locale = " + lc);
-            checkParams(par);
+            getLogger().debug("Found locale = " + lc);
+            checkParams(params);
         }
 
         if (storeInRequest) {
@@ -329,33 +309,35 @@ public class LocaleAction extends ServiceableAction implements ThreadSafe, Confi
      * @return locale value or <code>null</null> if no locale was found
      */
     public static String getLocaleAttribute(Map objectModel,
-        String localeAttrName) {
-
-        String ret_val;
+                                            String localeAttrName) {
+        String locale;
 
         Request request = ObjectModelHelper.getRequest(objectModel);
 
-        // 1. Request CGI parameter 'locale'
-        if ((ret_val = request.getParameter(localeAttrName)) != null)
-            return ret_val;
+        // 1. Request parameter 'locale'
+        if ((locale = request.getParameter(localeAttrName)) != null) {
+            return locale;
+        }
 
         // 2. Session attribute 'locale'
         Session session = request.getSession(false);
         if (session != null &&
-            ((ret_val = (String) session.getAttribute(localeAttrName)) != null))
-            return ret_val;
+            ((locale = (String) session.getAttribute(localeAttrName)) != null)) {
+            return locale;
+        }
 
         // 3. First matching cookie parameter 'locale' within each cookie sent
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
-            for (int i = 0; i < cookies.length; ++i) {
+            for (int i = 0; i < cookies.length; i++) {
                 Cookie cookie = cookies[i];
-                if (cookie.getName().equals(localeAttrName))
+                if (cookie.getName().equals(localeAttrName)) {
                     return cookie.getValue();
+                }
             }
         }
 
-        // 4. Locale setting of the requesting object/server
+        // 4. Locale setting of the requesting browser or server default
         return request.getLocale().toString();
     }
 
@@ -372,7 +354,6 @@ public class LocaleAction extends ServiceableAction implements ThreadSafe, Confi
      * </pre>
      */
     private void checkParams(Parameters par) {
-
         langAttr = par.getParameter(LANG_ATTR, langAttr);
         countryAttr = par.getParameter(COUNTRY_ATTR, countryAttr);
         variantAttr = par.getParameter(VARIANT_ATTR, variantAttr);
