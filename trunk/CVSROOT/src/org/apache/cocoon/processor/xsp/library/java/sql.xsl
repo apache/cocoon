@@ -27,7 +27,7 @@
 						+ <xsl:apply-templates select="."/>
 					</xsl:when>
 					<xsl:otherwise>
-						+ "<xsl:value-of select="normalize-space(translate(.,'&#9;&#10;&#13;','   '))"/>"
+						+ "<xsl:value-of select="translate(.,'&#9;&#10;&#13;','   ')"/>"
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>
