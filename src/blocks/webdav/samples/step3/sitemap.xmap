@@ -31,7 +31,7 @@
     </global-variables>
   </map:component-configurations>
 
-  <map:pipeline>
+  <map:pipeline type="noncaching"> 
 
     <map:match pattern="repo/">
       <map:generate type="traverse" src="{global:staging}repo/"/>
