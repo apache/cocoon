@@ -2,7 +2,7 @@
 
 <testcase>
  <annotation>
-  Test Cases: MIDIGenerator
+  Test Cases: XMidiGenerator
  </annotation>
 
  <logkit>
@@ -59,7 +59,7 @@
   </source-factories>
 
   <generators logger="test">
-   <component-instance class="org.apache.cocoon.generation.MIDIGenerator" name="midi"/>
+   <component-instance class="org.apache.cocoon.generation.XMidiGenerator" name="midi"/>
   </generators>
  </components>
 </testcase>

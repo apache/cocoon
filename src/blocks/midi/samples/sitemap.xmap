@@ -4,9 +4,11 @@
   <!-- =========================== Components ================================ -->
   <map:components> 
     <map:generators default="file">
-      <map:generator name="midi" src="org.apache.cocoon.generation.MIDIGenerator" logger="midi.sitemap.generator"/>
+      <map:generator name="xmidi" src="org.apache.cocoon.generation.XMidiGenerator" logger="midi.sitemap.generator"/>
     </map:generators>
-    <map:serializers default="html"/>
+    <map:serializers default="html">
+      <map:serializer name="xmidi" src="org.apache.cocoon.serialization.XMidiSerializer" logger="midi.sitemap.serializer"/>
+    </map:serializers>
     <map:matchers default="wildcard"/>
   </map:components>
 
@@ -44,12 +46,17 @@
         <map:serialize/>
       </map:match>
       
-      <map:match pattern="*.mid">
+      <map:match pattern="raw/*.mid">
       	<map:read src="midi/{1}.mid" mime-type="audio/x-midi"/>
       </map:match>
 
+      <map:match pattern="*.mid">
+      	<map:generate type="xmidi" src="midi/{1}.mid"/>
+      	<map:serialize type="xmidi"/>
+      </map:match>
+      
       <map:match pattern="*.xmi">
-      	<map:generate type="midi" src="midi/{1}.mid"/>
+      	<map:generate type="xmidi" src="midi/{1}.mid"/>
       	<map:serialize type="xml"/>
       </map:match>
       

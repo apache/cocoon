@@ -49,31 +49,50 @@
 
 */
 
-package org.apache.cocoon.generation;
-
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.AbstractCompositeTestCase;
+package org.apache.cocoon.components.midi.xmidi;
 
 /**
- * Test case for the MIDIGenerator
- * @author Mark Leicester
+ * The MIDI file parsing parts of this class are based on code from the XMidi project, written
+ * by  Peter Arthur Loeb (http://www.palserv.com/XMidi/) and used with permission.
+ * The warranty disclaimer of the MIT license (http://www.opensource.org/licenses/mit-license.html)
+ * applies to Peter Arthur Loeb's code.
+ *
+ * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
+ * @author <a href="mailto:peter@palserv.com">Peter Loeb</a>
  */
-public class MIDIGeneratorTestCase extends AbstractCompositeTestCase
-{
 
-  public MIDIGeneratorTestCase(String name)
-  {
-    super(name);
-  }
+public class ByteLen {
+/**
+ * Default constructor.
+ * As of Jan 8, 2001, this is not used.
+*/
+	public ByteLen() {}
 
-  public void testMIDIGenerator() throws Exception
-  {
+/**
+ * Constructor used in the
+ * {@link com.palserv.XMidi.MX#deltaToInt(byte[],int) MX.deltaToInt}
+ * method to create this class, which it then returns.
+ * @param byte[] b - a byte array; used to set ba
+ * @param int l - a length; used to set len
+*/
+	public ByteLen(byte[] b, int l) {
+		ba = b;
+		len = l;
+	}
 
-    String type = "midi";
-    String src = "resource://org/apache/cocoon/generation/Prelude.mid";
-    Parameters parameters = new Parameters();
-    String result = "resource://org/apache/cocoon/generation/Prelude.xmi";
+/**
+ * A byte array.
+*/
+	public byte[] ba;
 
-    assertEqual(load(result), generate(type, src, parameters));
-  }
+/**
+ * As used in the
+ * {@link com.palserv.XMidi.MX#deltaToInt(byte[],int) MX.deltaToInt}
+ * method, it is the length of the delta field being converted,
+ * not the length of the array.
+ * <p>
+ * There is nothing about this class that requires that this variable
+ * be used in this way.  It could be any int.
+*/
+	public int len;
 }
