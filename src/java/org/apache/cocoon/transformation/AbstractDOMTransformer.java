@@ -45,7 +45,7 @@ import java.util.Map;
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
  * @author <a href="mailto:brobertson@mta.ca">Bruce G. Robertson</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: AbstractDOMTransformer.java,v 1.2 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: AbstractDOMTransformer.java,v 1.3 2004/04/28 16:35:21 joerg Exp $
  */
 public abstract class AbstractDOMTransformer extends AbstractTransformer
         implements Transformer, DOMBuilder.Listener, Composable, Disposable, Recyclable {
@@ -127,7 +127,6 @@ public abstract class AbstractDOMTransformer extends AbstractTransformer
     public void dispose() {
         this.builder = null;
         this.manager = null;
-        this.builder = null;
     }
 
     /**
