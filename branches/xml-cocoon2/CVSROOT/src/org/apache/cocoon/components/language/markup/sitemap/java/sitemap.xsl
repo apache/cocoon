@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.89 2001-03-12 04:38:43 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.90 2001-03-13 09:43:34 cziegeler Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -806,6 +806,7 @@
           result = pipeline.process(environment);
       } catch (Exception pipelineException<xsl:value-of select="generate-id(.)"/>) {
           getLogger().debug("Error processing pipeline", pipelineException<xsl:value-of select="generate-id(.)"/>);
+          throw pipelineException<xsl:value-of select="generate-id(.)"/>;
       } finally {
           pipeline.dispose();
       }
@@ -831,6 +832,7 @@
           result = pipeline.process(environment);
       } catch (Exception RpipelineException<xsl:value-of select="generate-id(.)"/>) {
           getLogger().debug("Error processing pipeline", RpipelineException<xsl:value-of select="generate-id(.)"/>);
+          throw RpipelineException<xsl:value-of select="generate-id(.)"/>;
       } finally {
           pipeline.dispose();
       }
