@@ -23,12 +23,12 @@
 	<title><i18n:text i18n:catalogue="local">${result.query.type}.page.title</i18n:text>: ${result.query.name}</title>
 	<content>
 		<!-- description of the query -->
-		<p class="query.description">
+		<p class="query-description">
 			<i18n:text i18n:catalogue="local">search.subject.title</i18n:text>
-			<span class="query.bool" title="local:query.bool.hint" i18n:attr="title">
+			<span class="query-bool" title="local:query.bool.hint" i18n:attr="title">
 				<i18n:text i18n:catalogue="local">search.${result.query.bool}.bool</i18n:text>
 			</span>
-			<span class="query.criteria">
+			<span class="query-criteria">
 				<jx:choose>
 					<jx:when test="${result.query.criteria.size() == 1}">
 						<i18n:text i18n:catalogue="local">search.criterion.label</i18n:text>:
@@ -40,13 +40,13 @@
 				<ul>
 					<jx:forEach var="item" items="${result.query.criteria}">
 						<li>
-							<span class="query.criterion-field" title="local:criterion.field.hint" i18n:attr="title">
+							<span class="query-criterion-field" title="local:criterion.field.hint" i18n:attr="title">
 								<i18n:text i18n:catalogue="local">search.${item.field}.field</i18n:text>
 							</span>
-							<span class="query.criterion-match" title="local:criterion.match.hint" i18n:attr="title">
+							<span class="query-criterion-match" title="local:criterion.match.hint" i18n:attr="title">
 								<i18n:text i18n:catalogue="local">search.${item.match}.match</i18n:text>
 							</span>
-							<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${item.term}”.</span>
+							<span class="query-criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${item.term}”.</span>
 						</li>
 					</jx:forEach>
 				</ul>
@@ -78,30 +78,30 @@
 		<jx:choose>
 			<jx:when test="#{count(result/results) > 0}">
 				<jx:if test="#{count(result/nav/index) > 1}">
-					<div class="query.paging">
+					<div class="query-paging">
 						<p>
-							<span class="query.pagenumber"><i18n:text i18n:catalogue="local">search.pagenumber.label</i18n:text>: #{format-number(result/nav/page+1,'#')}.</span>
-							<span class="query.pagecount"><i18n:text i18n:catalogue="local">search.pagecount.label</i18n:text>: #{result/nav/pages}.</span>
-							<span class="query.hitcount"><i18n:text i18n:catalogue="local">search.recordcount.label</i18n:text>: #{result/nav/total}.</span>
-							<span class="query.pagesize"><i18n:text i18n:catalogue="local">search.pagesize.label</i18n:text>: #{result/nav/size}.</span>
+							<span class="query-pagenumber"><i18n:text i18n:catalogue="local">search.pagenumber.label</i18n:text>: #{format-number(result/nav/page+1,'#')}.</span>
+							<span class="query-pagecount"><i18n:text i18n:catalogue="local">search.pagecount.label</i18n:text>: #{result/nav/pages}.</span>
+							<span class="query-hitcount"><i18n:text i18n:catalogue="local">search.recordcount.label</i18n:text>: #{result/nav/total}.</span>
+							<span class="query-pagesize"><i18n:text i18n:catalogue="local">search.pagesize.label</i18n:text>: #{result/nav/size}.</span>
 						</p>
-						<p class="query.navigation">
+						<p class="query-navigation">
 							<jx:if test="#{result/nav/prev}">
-								<span class="query.prev">
+								<span class="query-prev">
 									<a href="${result.query.type}.html?page=#{result/nav/prev}&amp;hid=${result.id}"><i18n:text i18n:catalogue="local">search.previous.label</i18n:text></a>&#160;
 								</span>
 							</jx:if>
-							<jx:if test="#{result/nav/firstIndex != 0}"><span class="query.prev-dots"> ... </span></jx:if>
+							<jx:if test="#{result/nav/firstIndex != 0}"><span class="query-prev-dots"> ... </span></jx:if>
 							<jx:set var="THIS" value="#{result/nav/page}"/>
 							<jx:forEach items="#{result/nav/index}">
 								<jx:choose>
-									<jx:when test="#{$THIS != .}"><span class="query.page-link"> <a href="${result.query.type}.html?page=#{.}&amp;hid=${result.id}">#{format-number(.+1,'#')}</a> </span></jx:when>
-									<jx:otherwise><span class="query.this-page"> #{format-number(.+1,'#')} </span></jx:otherwise>
+									<jx:when test="#{$THIS != .}"><span class="query-page-link"> <a href="${result.query.type}.html?page=#{.}&amp;hid=${result.id}">#{format-number(.+1,'#')}</a> </span></jx:when>
+									<jx:otherwise><span class="query-this-page"> #{format-number(.+1,'#')} </span></jx:otherwise>
 								</jx:choose>
 							</jx:forEach>
-							<jx:if test="#{result/nav/lastIndex &lt; result/nav/pages - 1}"><span class="query.next-dots"> ... </span></jx:if>
+							<jx:if test="#{result/nav/lastIndex &lt; result/nav/pages - 1}"><span class="query-next-dots"> ... </span></jx:if>
 							<jx:if test="#{result/nav/next}">
-								<span class="query.next">
+								<span class="query-next">
 									<a href="${result.query.type}.html?page=#{result/nav/next}&amp;hid=${result.id}"><i18n:text i18n:catalogue="local">search.next.label</i18n:text></a>
 								</span>
 							</jx:if>
@@ -109,7 +109,7 @@
 					</div>
 				</jx:if>
 				<!-- results -->
-				<table class="query.results" summary="search results">
+				<table class="query-results" summary="search results">
 					<tr>
 						<th align="left"><i18n:text i18n:catalogue="local">search.rank.label</i18n:text></th>
 						<th align="left"><i18n:text i18n:catalogue="local">search.score.label</i18n:text></th>
@@ -120,16 +120,16 @@
 						<jx:set var="index" value="${item[Packages.org.apache.cocoon.bean.query.SimpleLuceneQueryBean.INDEX_FIELD]}"/>
 						<jx:set var="url" value="${item[Packages.org.apache.cocoon.components.search.LuceneXMLIndexer.URL_FIELD]}"/>
 						<tr>
-							<td class="query.result-rank">#{format-number($index +1,'#')}</td>
-							<td class="query.result-score">#{format-number($score,'##%')}</td>
-							<td class="query.result-title"><a href="#{$url}"><jx:if test="#{string(title) = ''}"><span class="query.result-url">#{url}</span></jx:if>#{title}</a></td>
+							<td class="query-result-rank">#{format-number($index +1,'#')}</td>
+							<td class="query-result-score">#{format-number($score,'##%')}</td>
+							<td class="query-result-title"><a href="#{$url}"><jx:if test="#{string(title) = ''}"><span class="query-result-url">#{url}</span></jx:if>#{title}</a></td>
 						</tr>
 					</jx:forEach>
 				</table>
 			</jx:when>
 			<!-- no results -->
 			<jx:otherwise>
-				<p class="query.results-none"><i18n:text i18n:catalogue="local">search.norecords.note</i18n:text></p>
+				<p class="query-results-none"><i18n:text i18n:catalogue="local">search.norecords.note</i18n:text></p>
 			</jx:otherwise>
 		</jx:choose>
 		<jx:if test="${result.tip != null}">

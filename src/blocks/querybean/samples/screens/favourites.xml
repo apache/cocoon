@@ -33,11 +33,11 @@
 		</p>
 		<jx:choose>
 			<jx:when test="${queries!=null}">
-				<p class="favourites.title">
+				<p class="favourites-title">
 					<i18n:text i18n:catalogue="local">favourites.queries.title</i18n:text>: 
-					<span class="favourites.count"><jx:out value="${queries.size()}"/></span>
+					<span class="favourites-count"><jx:out value="${queries.size()}"/></span>
 				</p>
-				<table width="100%" class="query.favourites" summary="Query Favourites">
+				<table width="100%" class="query-favourites" summary="Query Favourites">
 					<tr>
 						<th align="left"><i18n:text i18n:catalogue="local">favourites.date.label</i18n:text></th>
 						<th align="left"><i18n:text i18n:catalogue="local">favourites.title.label</i18n:text></th>
@@ -45,16 +45,16 @@
 					</tr>
 					<jx:forEach var="item" items="${queries}">
 						<tr valign="top">
-							<td class="favourites.date">
+							<td class="favourites-date">
 								<jx:formatDate value="${item.date}" type="date" dateStyle="short"/>
-							</td><td class="favourites.name">
+							</td><td class="favourites-name">
 								<a href="${item.type}.html?fid=${item.id}" title="local:favourites.search.hint" i18n:attr="title">${item.name}</a>
-							</td><td class="query.description">						
+							</td><td class="query-description">						
 								<i18n:text i18n:catalogue="local">search.subject.title</i18n:text>
-								<span class="query.bool" title="local:query.bool.hint" i18n:attr="title">
+								<span class="query-bool" title="local:query.bool.hint" i18n:attr="title">
 									<i18n:text i18n:catalogue="local">search.${item.bool}.bool</i18n:text>
 								</span>
-								<span class="query.criteria">
+								<span class="query-criteria">
 									<jx:choose>
 										<jx:when test="${item.criteria.size() == 1}">
 											<i18n:text i18n:catalogue="local">search.criterion.label</i18n:text>:
@@ -66,13 +66,13 @@
 									<ul>
 										<jx:forEach var="crit" items="${item.criteria}">
 											<li>
-												<span class="query.criterion-field" title="local:criterion.field.hint" i18n:attr="title">
+												<span class="query-criterion-field" title="local:criterion.field.hint" i18n:attr="title">
 													<i18n:text i18n:catalogue="local">search.${crit.field}.field</i18n:text>
 												</span>
-												<span class="query.criterion-match" title="local:criterion.match.hint" i18n:attr="title">
+												<span class="query-criterion-match" title="local:criterion.match.hint" i18n:attr="title">
 													<i18n:text i18n:catalogue="local">search.${crit.match}.match</i18n:text>
 												</span>
-												<span class="query.criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${crit.term}”</span>
+												<span class="query-criterion-value" title="local:criterion.value.hint" i18n:attr="title">“${crit.term}”</span>
 											</li>
 										</jx:forEach>
 									</ul>
