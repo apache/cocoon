@@ -52,8 +52,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 
-import java.util.Locale;
-
 /**
  * <B>Util</B> is a class which houses common functionality used by
  * other classes.

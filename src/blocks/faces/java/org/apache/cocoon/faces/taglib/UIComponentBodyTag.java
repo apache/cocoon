@@ -17,7 +17,6 @@ package org.apache.cocoon.faces.taglib;
 
 import org.apache.cocoon.taglib.BodyContent;
 import org.apache.cocoon.taglib.BodyTag;
-import org.apache.cocoon.taglib.Tag;
 
 import org.xml.sax.SAXException;
 
