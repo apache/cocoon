@@ -11,14 +11,21 @@
    <title>A Database Driven XSP Page</title>
 
    <content>
-   
-   <esql:execute-query inner-method="no">
-    <esql:use-connection>personnel</esql:use-connection>
-    <esql:query>select * from department_table</esql:query>
-    <esql:results>
-     <para><esql:get-string column="name"/></para>
-    </esql:results>
-   </esql:execute-query>
+
+   <esql:connection>
+     <esql:driver>org.postgresql.Driver</esql:driver>
+     <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+     <esql:username>test</esql:username>
+     <esql:password>test</esql:password>
+     <esql:execute-query>
+       <esql:query>select * from department_table</esql:query>
+       <esql:results>
+         <esql:row-results>
+           <para><esql:get-string column="name"/></para>
+         </esql:row-results>
+       </esql:results>
+     </esql:execute-query>
+   </esql:connection>
 
    </content>
   </page>
