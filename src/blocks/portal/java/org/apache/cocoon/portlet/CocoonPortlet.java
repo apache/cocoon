@@ -85,7 +85,7 @@ import java.util.jar.Manifest;
  * This is the entry point for Cocoon execution as an JSR-168 Portlet.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonPortlet.java,v 1.2 2004/03/05 13:02:17 bdelacretaz Exp $
+ * @version CVS $Id: CocoonPortlet.java,v 1.3 2004/03/11 09:56:47 cziegeler Exp $
  */
 public class CocoonPortlet extends GenericPortlet {
 
@@ -460,6 +460,7 @@ public class CocoonPortlet extends GenericPortlet {
         this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.defaultFormEncoding = getInitParameter("form-encoding", "ISO-8859-1");
 
+        this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, this.defaultFormEncoding);
         this.manageExceptions = getInitParameterAsBoolean("manage-exceptions", true);
 
         this.enableInstrumentation = getInitParameterAsBoolean("enable-instrumentation", false);
