@@ -90,8 +90,10 @@
     </s1>
     
     <s1 title="Session Management with Redirects">
+      <p>
       By setting the <code>session</code> attribute to <code>yes</code>, the current
       session will be maintained during the redirect.
+      </p>
     </s1>
     
     <s1 title="Temporary and Permanent Redirects">
