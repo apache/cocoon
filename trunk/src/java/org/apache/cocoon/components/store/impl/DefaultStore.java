@@ -64,7 +64,6 @@ import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
@@ -76,12 +75,16 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.6 2003/08/12 16:01:01 vgritsenko Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.7 2003/10/27 02:30:44 ghoward Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Store"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="persistent-store"
  */
 public class DefaultStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
                Contextualizable,
-               ThreadSafe,
                Parameterizable,
                Disposable {
 

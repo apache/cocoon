@@ -68,7 +68,11 @@ import java.io.IOException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FilesystemStore.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: FilesystemStore.java,v 1.2 2003/10/27 02:30:44 ghoward Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type="Store"
+ * @avalon.lifestyle type="singleton"
  */
 public final class FilesystemStore
 extends AbstractFilesystemStore
