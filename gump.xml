@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.166 2004/07/01 14:05:16 unico Exp $
+    | CVS $Id: gump.xml,v 1.167 2004/07/02 09:00:45 cziegeler Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -64,7 +64,7 @@
     <depend project="excalibur-testcase"/>
 
     <depend project="jakarta-regexp"/>
-    <depend project="jakarta-servletapi"/>
+    <depend project="jakarta-servletapi-4"/>
     <depend project="jakarta-turbine-jcs"/>
 
     <depend project="commons-cli"/>
@@ -1072,7 +1072,7 @@
       <property name="version" value="@@DATE@@"/>
     </ant>
 
-    <depend project="jakarta-servletapi"/>
+    <depend project="jakarta-servletapi-4"/>
     <depend project="cocoon" inherit="all"/>
 
     <work nested="tools/anttasks"/>

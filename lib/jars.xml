@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.233 2004/07/01 07:29:06 bruno Exp $
+    | CVS $Id: jars.xml,v 1.234 2004/07/02 09:00:45 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -611,16 +611,9 @@
 
   <file>
     <title>Servlet API</title>
-    <description>Servlet API Version 2.2</description>
-    <used-by>Cocoon</used-by>
-    <lib>optional/servlet_2_2.jar</lib>
-    <homepage>http://jakarta.apache.org/tomcat/</homepage>
-  </file>
-  <file>
-    <title>Servlet API</title>
     <description>Servlet API Version 2.3</description>
     <used-by>Cocoon</used-by>
-    <lib>scratchpad/lib/servlet-2_3.jar</lib>
+    <lib>optional/servlet-2_3.jar</lib>
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
