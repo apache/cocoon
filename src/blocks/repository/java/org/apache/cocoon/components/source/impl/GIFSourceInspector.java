@@ -52,12 +52,7 @@ package org.apache.cocoon.components.source.impl;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import org.apache.cocoon.components.source.SourceInspector;
-import org.apache.cocoon.components.source.helpers.SourceProperty;
-
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
@@ -66,64 +61,31 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: GIFSourceInspector.java,v 1.2 2003/10/23 16:56:51 unico Exp $
+ * @version CVS $Id: GIFSourceInspector.java,v 1.3 2003/10/27 09:31:28 unico Exp $
  */
-public class GIFSourceInspector extends AbstractLogEnabled implements 
-    SourceInspector, ThreadSafe {
+public class GIFSourceInspector extends AbstractImageSourceInspector implements ThreadSafe {
     
-    /** 
-     * The namespace uri of the properties exposed by this SourceInspector.
-     * The value is <code>http://apache.org/cocoon/inspector/gif/1.0</code> .
-     */
-    public static final String PROPERTY_NS = "http://apache.org/cocoon/inspector/gif/1.0";
+    
+    public GIFSourceInspector() {
+    }
     
     /**
-     * <code>width</code> property name.
+     * Checks the source uri for the .gif extension.
      */
-    public static final String IMAGE_WIDTH_PROPERTY_NAME = "width";
+    protected final boolean isImageMimeType(Source source) {
+        final String uri = source.getURI();
+        final int index = uri.lastIndexOf('.');
+        if (index != -1) {
+            String extension = uri.substring(index);
+            return extension.equalsIgnoreCase(".gif");
+        }
+        return false;
+    }
     
     /**
-     * <code>height</code> property name.
+     * Checks that this is in fact a gif file.
      */
-    public static final String IMAGE_HEIGHT_PROPERTY_NAME = "height";
-    
-    private static String[] EXPOSED_PROPERTIES = new String[] {
-        PROPERTY_NS + "#" + IMAGE_HEIGHT_PROPERTY_NAME,
-        PROPERTY_NS + "#" + IMAGE_WIDTH_PROPERTY_NAME
-    };
-
-    public SourceProperty getSourceProperty(Source source, String namespace, String name) 
-        throws SourceException {
-
-        if ((namespace.equals(PROPERTY_NS)) && 
-            ((name.equals(IMAGE_WIDTH_PROPERTY_NAME)) || (name.equals(IMAGE_HEIGHT_PROPERTY_NAME))) && 
-            (source.getURI().endsWith(".gif")) && (isGIFFile(source))) {
-
-            if (name.equals(IMAGE_WIDTH_PROPERTY_NAME))
-                return new SourceProperty(PROPERTY_NS, IMAGE_WIDTH_PROPERTY_NAME, 
-                                          String.valueOf(getGifSize(source)[0]));
-            if (name.equals(IMAGE_HEIGHT_PROPERTY_NAME))
-                return new SourceProperty(PROPERTY_NS, IMAGE_HEIGHT_PROPERTY_NAME,
-                                          String.valueOf(getGifSize(source)[1]));
-        }
-        return null;  
-    }
-
-    public SourceProperty[] getSourceProperties(Source source) throws SourceException {
-
-        if ((source.getURI().endsWith(".gif")) &&
-            (isGIFFile(source))) {
-
-            int[] size = getGifSize(source);
-            return new SourceProperty[] {
-                new SourceProperty(PROPERTY_NS, IMAGE_WIDTH_PROPERTY_NAME, String.valueOf(size[0])),
-                new SourceProperty(PROPERTY_NS, IMAGE_HEIGHT_PROPERTY_NAME, String.valueOf(size[1]))
-            };
-        }
-        return null;
-    }
-
-    private boolean isGIFFile(Source source) throws SourceException {
+    protected final boolean isImageFileType(Source source) throws SourceException {
         BufferedInputStream in = null;
         try {
             in = new BufferedInputStream(source.getInputStream());
@@ -148,7 +110,7 @@ public class GIFSourceInspector extends AbstractLogEnabled implements
     /**
      * Returns width as first element, height as second
      */
-    private int[] getGifSize(Source source) throws SourceException {
+    protected final int[] getImageSize(Source source) throws SourceException {
         BufferedInputStream in = null;
         try {
             in = new BufferedInputStream(source.getInputStream());
@@ -178,10 +140,6 @@ public class GIFSourceInspector extends AbstractLogEnabled implements
                     in.close(); 
                 } catch (Exception e) {}
         }
-    }
-
-    public String[] getExposedSourcePropertyTypes() {
-        return EXPOSED_PROPERTIES;
     }
 
 }
