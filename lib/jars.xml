@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.115 2003/10/21 09:22:45 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.116 2003/10/25 20:05:10 ghoward Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -896,7 +896,19 @@
 	<homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
-  <!-- JMS block begin
+  <!-- JMS block begin -->
+    <file>
+        <title>JMS Spec</title>
+        <description>J2EE Java Message Service Specification.  This implentation
+        developed by the (currently incubating) Apache Geronimo project is an 
+        open source implementation from the original spec.  As such it is licensed 
+        under the Apache license and therefore freely distributable.
+        </description>
+        <used-by>JMS</used-by>
+        <lib>jms/lib/geronimo-spec-jms-DEV-20030826.jar</lib>
+        <homepage>http://www.apache.org/~jstrachan/geronimo/</homepage>
+  </file>
+  <!--
   <file>
         <title>OpenJMS</title>
         <description>OpenJMS core libraries. OpenJMS is a OpenSource JMS, Java Messaging
