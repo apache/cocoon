@@ -63,7 +63,7 @@ import org.apache.cocoon.util.NetUtils;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
- * @version CVS $Id: NetUtilsTestCase.java,v 1.3 2003/03/16 18:03:56 vgritsenko Exp $
+ * @version CVS $Id: NetUtilsTestCase.java,v 1.4 2003/10/31 21:42:00 vgritsenko Exp $
  */
 public class NetUtilsTestCase extends TestCase
 {
@@ -153,10 +153,17 @@ public class NetUtilsTestCase extends TestCase
     public void testAbsolutize() throws Exception {
 
         Object[] test_values = {
-                new String[]{"http://xml.apache.org", "foo.bar", "http://xml.apache.org/foo.bar"},
-                new String[]{"http://xml.apache.org/", "foo.bar", "http://xml.apache.org/foo.bar"},
-                new String[]{"http://xml.apache.org", "/foo.bar", "/foo.bar"},
-                };
+            new String[]{"/base/path",  "foo.bar",  "/base/path/foo.bar"},
+            new String[]{"/base/path/", "foo.bar",  "/base/path/foo.bar"},
+            new String[]{"/base/path",  "/foo.bar", "/foo.bar"},
+            
+            new String[]{"/base/path", "",   "/base/path"},
+            new String[]{"/base/path", null, "/base/path"},
+            
+            new String[]{"",   "foo.bar", "foo.bar"},
+            new String[]{null, "foo.bar", "foo.bar"},
+        };
+        
         for (int i = 0; i < test_values.length; i++) {
             String tests[] = (String[]) test_values[i];
             String test_path = tests[0];
@@ -259,10 +266,12 @@ public class NetUtilsTestCase extends TestCase
      */
     public void testDeparameterize() throws Exception {
         Map parameters = new HashMap();
+
         Object[] test_values = {
-                new String[]{"/foo/bar", "/foo/bar"},
-                new String[]{"bar?a=b&c=d", "bar"},
-                };
+            new String[]{"/foo/bar", "/foo/bar"},
+            new String[]{"bar?a=b&c=d", "bar"},
+        };
+
         for (int i = 0; i < test_values.length; i++) {
             String tests[] = (String[]) test_values[i];
             String test = tests[0];
@@ -289,8 +298,9 @@ public class NetUtilsTestCase extends TestCase
         Map parameters1 = new HashMap();
 
         Object[] test_values = {
-                new Object[]{"/foo/bar", parameters1, "/foo/bar"},
-                };
+            new Object[]{"/foo/bar", parameters1, "/foo/bar"},
+        };
+
         for (int i = 0; i < test_values.length; i++) {
             Object tests[] = (Object[]) test_values[i];
             String test = (String) tests[0];
@@ -314,12 +324,10 @@ public class NetUtilsTestCase extends TestCase
                     
         String result = NetUtils.parameterize(test, parameters2);        
 
-        if(expected1.equals(result)){
+        if (expected1.equals(result)) {
           assertEquals(message, expected1, result);  
-        }
-        else{
+        } else {
           assertEquals(message, expected2, result);  
         }
-                              
     }
 }
