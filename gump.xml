@@ -1031,7 +1031,7 @@
     <!-- commented out because of circular dependency -->
     <!--depend project="cocoon-block-eventcache" type="samples"/-->
     <depend project="cocoon-block-databases" type="samples"/>
-    <depend project="cocoon-block-hsqldb"/>
+    <depend project="cocoon-block-hsqldb" inherit="all"/>
     <depend project="jms"/>
 
     <work nested="tools/anttasks"/>
