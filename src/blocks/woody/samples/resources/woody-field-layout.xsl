@@ -13,10 +13,10 @@
         <xsl:copy-of select="wi:styling/@*"/>
       </xsl:if>
     </input>
-    <xsl:call-template name="field-common"/>
+    <xsl:call-template name="woody-field-common"/>
   </xsl:template>
   
-  <xsl:template name="field-common">
+  <xsl:template name="woody-field-common">
     <xsl:apply-templates select="wi:validation-message"/>
     <xsl:if test="@required='true'">
       <b>*</b>
@@ -43,9 +43,10 @@
       <xsl:when test="$liststyle='radio'">
         <span title="{wi:help}">
         <xsl:variable name="vertical" select="string(wi:styling/@list-orientation) != 'horizontal'"/>
+        <xsl:variable name="id" select="@id"/>
         <xsl:for-each select="wi:selection-list/wi:item">
           <xsl:if test="$vertical and position() != 1"><br/></xsl:if>
-          <input type="radio" name="{@id}" value="{@value}">
+          <input type="radio" name="{$id}" value="{@value}">
             <xsl:if test="@value = $value">
               <xsl:attribute name="checked">true</xsl:attribute>
             </xsl:if>
@@ -80,7 +81,7 @@
         </select>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:call-template name="field-common"/>
+    <xsl:call-template name="woody-field-common"/>
   </xsl:template>
   
   <!--
@@ -91,7 +92,7 @@
       <xsl:copy-of select="wi:styling/@*[not(name() = 'type')]"/>
       <xsl:copy-of select="wi:value/node()"/>
     </textarea>
-    <xsl:call-template name="field-common"/>
+    <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 
   <!--
@@ -117,11 +118,11 @@
     </input>
     <!-- note: we use forms[0]['{@id}'] and not forms[0].{@id} since @id may not be a valid JS property name -->
     <a href="#" onClick="woody_calendar.select(document.forms[0]['{@id}'],'{generate-id()}','{$format}'); return false;" NAME="{generate-id()}" ID="{generate-id()}"><img src="resources/cal.gif" border="0" alt="Calendar"/></a>
-    <xsl:call-template name="field-common"/>
+    <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 
   <!-- must be called in <head> to load calendar script and setup the CSS -->
-  <xsl:template name="calendar-head">
+  <xsl:template name="woody-calendar-head">
     <xsl:param name="uri" select="'resources'"/>
     <xsl:param name="div"/>
     <script src="{$uri}/CalendarPopup.js" language="JavaScript"></script>
@@ -157,13 +158,13 @@
         <xsl:attribute name="checked">true</xsl:attribute>
       </xsl:if>
     </input>
-    <xsl:call-template name="field-common"/>
+    <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 
   <!--
-    wi:action
+    wi:button
   -->
-  <xsl:template match="wi:action">
+  <xsl:template match="wi:button">
     <input type="submit" name="{@id}" title="{wi:help}">
       <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
     </input>
@@ -202,7 +203,7 @@
       <br/>
     </xsl:for-each>
     </span>
-    <xsl:call-template name="field-common"/>
+    <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 
   <!--
@@ -286,7 +287,7 @@
 
   <xsl:template match="wi:aggregatefield">
     <input name="{@id}" value="{wi:value}" title="{wi:help}"/>
-    <xsl:call-template name="field-common"/>
+    <xsl:call-template name="woody-field-common"/>
   </xsl:template>
 
   <xsl:template match="@*|node()" priority="-1">
