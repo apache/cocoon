@@ -667,8 +667,9 @@
             </classpath>
           </javac>
 
-          <junit printsummary="yes" haltonfailure="yes" fork="yes">
+          <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
             <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
+            <jvmarg value="-Djunit.test.loglevel=${{junit.test.loglevel}}"/>
             <classpath>
               <path refid="{$block-name}.classpath"/>
               <path refid="test.classpath"/>
@@ -676,7 +677,8 @@
               <pathelement location="${{build.blocks}}/{$block-name}/test"/>
             </classpath>
             <formatter type="plain" usefile="no"/>
-            <batchtest>
+            <formatter type="xml"/>
+            <batchtest todir="${{build.test.output}}">
               <fileset dir="${{build.blocks}}/{$block-name}/test">
                 <include name="**/*TestCase.class"/>
                 <include name="**/*Test.class"/>
