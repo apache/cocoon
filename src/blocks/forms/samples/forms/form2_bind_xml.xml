@@ -14,11 +14,12 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
 <!--
-    | Binding template between 
-    |   - form_data file (backend)
-    |   - and form_model file
-     -->
+  - Binding template between
+  -   * form_data file (backend)
+  -   * and form_model file
+  -->
 <fb:context 
             xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" 
             xmlns:fd="http://apache.org/cocoon/forms/1.0#definition" 
@@ -68,12 +69,17 @@
 
   <fb:multi-value id="drinks" parent-path="drinks" row-path="drink"/>
 
-  <!-- repeater requires unique identification mechanism of the row-nodes -->
-  <!-- important note: the row-path is used inside jxpath-createPath context,
-       as a consequence it cannot have dependent children or predicates -->
+  <!--
+    - Repeater requires unique identification mechanism of the row-nodes.
+    - (it is of course possible to implement other binding strategies)
+    -
+    - Important NOTE: When adding rows, the row-path is used inside
+    - jxpath-createPath context, as a consequence it cannot have dependent
+    - children or predicates.
+    -->
   <fb:repeater id="contacts"
-    parent-path="contacts"
-    row-path="contact">
+               parent-path="contacts"
+               row-path="contact">
 
     <fb:identity>
       <fb:value id="id" path="@id">
@@ -81,7 +87,6 @@
         <fd:convertor datatype="long" />
       </fb:value>
     </fb:identity>
-
 
     <fb:on-bind>
         <!-- executed on updates AND right after the insert -->

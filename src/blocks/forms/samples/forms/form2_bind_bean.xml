@@ -14,30 +14,36 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- Example binding to bind the "form2" form to the bean "Form2Bean" -->
 
-<!-- The id attributes on the elements in this file map to widgets in the
-     form definition. The path attributes are JXPath expressions addressing
-     properties of the bean. -->
-
-<!-- It would be an interesting exercise to generate this file from
-     javadoc-tags in the bean using an xdoclet-like approach. -->
+<!--
+  - Example binding to bind the "form2" form to the bean "Form2Bean"
+  -
+  - The id attributes on the elements in this file map to widgets in the
+  - form definition. The path attributes are JXPath expressions addressing
+  - properties of the bean.
+  -
+  - It would be an interesting exercise to generate this file from
+  - javadoc-tags in the bean using an xdoclet-like approach.
+  -->
 
 <fb:context xmlns:fb="http://apache.org/cocoon/forms/1.0#binding" path="/" >
 
-  <!-- the email value will not be saved because of the @direction="load" -->
+  <!-- The email value will not be saved because of the @direction="load" -->
   <fb:value id="email" path="email" direction="load"/>
+
   <fb:value id="ipaddress" path="ipAddress"/>
   <fb:value id="birthday" path="birthday"/>
   <fb:value id="number" path="aNumber"/>
   <fb:value id="choose" path="choose"/>
   <fb:value id="sex" path="sex"/>
 
-  <!-- An aggregatefield is a special kind of widget that lets
-  the user edit the value of multiple widgets through one text box
-  (see also the form definition for how this works). In this case
-  it is used to map the different parts of a phone number to different
-  bean properties. -->
+  <!--
+    - An aggregatefield is a special kind of widget that lets
+    - the user edit the value of multiple widgets through one text box,
+    - or single widgets through multiple boxes. (see also samples in
+    - ../aggregate directory). In this case it is used to map the different
+    - parts of a phone number to different bean properties.
+    -->
   <fb:aggregate id="phone" path="." >
     <fb:value id="number" path="phoneNumber"/>
     <fb:value id="zone"   path="phoneZone"/>
@@ -46,21 +52,24 @@
 
   <fb:multi-value id="drinks" parent-path="." row-path="drinks" direction="load"/>
 
-  <!-- repeater requires unique identification mechanism of the row-nodes -->
-  <!-- (it is of course possible to implement other binding strategies) -->
-  <!-- important note: the row-path is used inside jxpath-createPath context,
-       as a consequence it cannot have dependent children or predicates -->
+  <!--
+    - Repeater requires unique identification mechanism of the row-nodes.
+    - (it is of course possible to implement other binding strategies)
+    -
+    - Important NOTE: When adding rows, the row-path is used inside
+    - jxpath-createPath context, as a consequence it cannot have dependent
+    - children or predicates.
+    -->
   <fb:repeater id="contacts"
-    parent-path="."
-    row-path="contacts"
-    unique-row-id="id"
-    unique-path="@id">
+               parent-path="."
+               row-path="contacts"
+               unique-row-id="id"
+               unique-path="@id">
 
     <fb:identity>
       <!-- compare to xml-binding: the convertor is not needed here -->
       <fb:value id="id" path="@id"/>
     </fb:identity>
-
 
     <fb:on-bind>
       <!-- executed on updates AND right after the insert -->
