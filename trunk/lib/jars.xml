@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.65 2003/07/12 13:49:56 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.66 2003/07/15 14:07:31 bruno Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -767,7 +767,7 @@
     An expression language interpreter.
   </description>
 	<used-by>Woody block</used-by>
-  <lib>woody/lib/xreporter-expression-20030428.jar</lib>
+  <lib>woody/lib/xreporter-expression-20030709.jar</lib>
   <homepage>http://xreporter.cocoondev.org</homepage>
  </file>
 
