@@ -62,7 +62,7 @@ public class RepeaterDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         RepeaterDefinition repeaterDefinition = new RepeaterDefinition();
         setId(widgetElement, repeaterDefinition);
-        setLabel(widgetElement, repeaterDefinition);
+        setDisplayData(widgetElement, repeaterDefinition);
 
         // the children of the repeater element are widget configuration elements
         Element[] widgetElements = DomHelper.getChildElements(widgetElement, Constants.WD_NS);

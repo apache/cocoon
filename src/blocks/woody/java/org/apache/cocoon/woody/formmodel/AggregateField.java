@@ -254,10 +254,8 @@ public class AggregateField extends AbstractWidget {
             contentHandler.endElement(Constants.WI_NS, VALIDATION_MSG_EL, Constants.WI_PREFIX_COLON + VALIDATION_MSG_EL);
         }
 
-        // the label
-        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-        definition.generateLabel(contentHandler);
-        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+        // generate label, help, hint, etc.
+        definition.generateDisplayData(contentHandler);
 
         contentHandler.endElement(Constants.WI_NS, AGGREGATEFIELD_EL, Constants.WI_PREFIX_COLON + AGGREGATEFIELD_EL);
     }

@@ -52,7 +52,9 @@ package org.apache.cocoon.woody.formmodel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -94,14 +96,6 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         widgetDefinition.setId(id);
     }
 
-    protected void setLabel(Element widgetElement, AbstractWidgetDefinition widgetDefinition) {
-        Element labelElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "label");
-        if (labelElement != null) {
-            Object label = DomHelper.compileElementContent(labelElement);
-            widgetDefinition.setLabel(label);
-        }
-    }
-
     protected WidgetDefinition buildAnotherWidgetDefinition(Element widgetDefinition) throws Exception {
         String widgetName = widgetDefinition.getLocalName();
         WidgetDefinitionBuilder builder = null;
@@ -128,6 +122,24 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
         }
         
         return result == null ? Collections.EMPTY_LIST : result;
+    }
+    
+    protected void setDisplayData(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
+        final String[] names = {"label", "help", "hint"};
+        Map displayData = new HashMap(names.length);
+        for (int i = 0; i < names.length; i++) {
+            Object data = null;
+            Element dataElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, names[i]);
+            if (dataElement != null) {
+                data = DomHelper.compileElementContent(dataElement);
+            }
+            
+            // Note: we put also null values in the may in order to test their existence
+            // (see AbstractWidgetDefinition.generateDisplayData)
+            displayData.put(names[i], data);
+        }
+        
+        widgetDefinition.setDisplayData(displayData);
     }
     
     public void dispose() {

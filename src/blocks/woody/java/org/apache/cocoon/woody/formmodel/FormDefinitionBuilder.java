@@ -63,7 +63,7 @@ public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
         FormDefinition formDefinition = new FormDefinition();
 
         formDefinition.setId("");
-        setLabel(formElement, formDefinition);
+        setDisplayData(formElement, formDefinition);
 
         // all child elements of the form element, that are in woody's namespace, are supposed
         // to be widgets

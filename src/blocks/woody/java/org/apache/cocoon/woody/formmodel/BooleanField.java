@@ -118,9 +118,8 @@ public class BooleanField extends AbstractWidget {
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
         contentHandler.endElement(Constants.WI_NS, VALUE_EL, Constants.WI_PREFIX_COLON + VALUE_EL);
 
-        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-        definition.generateLabel(contentHandler);
-        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+        // generate label, help, hint, etc.
+        definition.generateDisplayData(contentHandler);
 
         contentHandler.endElement(Constants.WI_NS, BOOLEAN_FIELD_EL, Constants.WI_PREFIX_COLON + BOOLEAN_FIELD_EL);
     }

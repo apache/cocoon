@@ -66,7 +66,7 @@ public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefi
         MultiValueFieldDefinition definition = new MultiValueFieldDefinition();
 
         setId(widgetElement, definition);
-        setLabel(widgetElement, definition);
+        setDisplayData(widgetElement, definition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
         if (datatypeElement == null)

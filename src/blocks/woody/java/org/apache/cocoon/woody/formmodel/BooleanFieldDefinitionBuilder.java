@@ -62,7 +62,7 @@ public class BooleanFieldDefinitionBuilder extends AbstractWidgetDefinitionBuild
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         BooleanFieldDefinition definition = new BooleanFieldDefinition();
         setId(widgetElement, definition);
-        setLabel(widgetElement, definition);
+        setDisplayData(widgetElement, definition);
         
         Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
         while (iter.hasNext()) {

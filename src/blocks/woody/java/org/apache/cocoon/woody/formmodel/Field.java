@@ -75,7 +75,7 @@ import java.util.Locale;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.12 2003/10/08 10:03:19 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.13 2003/10/24 14:13:49 sylvain Exp $
  */
 public class Field extends AbstractWidget {
     private SelectionList selectionList;
@@ -283,10 +283,8 @@ public class Field extends AbstractWidget {
             contentHandler.endElement(Constants.WI_NS, VALIDATION_MSG_EL, Constants.WI_PREFIX_COLON + VALIDATION_MSG_EL);
         }
 
-        // the label
-        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-        definition.generateLabel(contentHandler);
-        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+        // generate label, help, hint, etc.
+        definition.generateDisplayData(contentHandler);
 
         // the selection list, if any
         if (selectionList != null) {

@@ -159,10 +159,8 @@ public class MultiValueField extends AbstractWidget {
         }
         contentHandler.endElement(Constants.WI_NS, VALUES_EL, Constants.WI_PREFIX_COLON + VALUES_EL);
 
-        // the label
-        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-        definition.generateLabel(contentHandler);
-        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+        // generate label, help, hint, etc.
+        definition.generateDisplayData(contentHandler);
 
         // the selection list (a MultiValueField has per definition always a SelectionList)
         definition.getSelectionList().generateSaxFragment(contentHandler, locale);
