@@ -575,7 +575,7 @@
       searching of documents.
     </description>
     <used-by>Lucene block</used-by>
-    <lib>lucene/lib/lucene-1.3-final.jar</lib>
+    <lib>lucene/lib/lucene-1.4-final.jar</lib>
     <homepage>http://jakarta.apache.org/lucene/</homepage>
   </file>
 
