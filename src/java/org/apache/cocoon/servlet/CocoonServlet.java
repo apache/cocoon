@@ -79,6 +79,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.avalon.excalibur.logger.DefaultLogKitManager;
 import org.apache.avalon.excalibur.logger.LogKitManager;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -121,7 +122,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.6 2003/04/29 10:45:21 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.7 2003/05/20 12:38:27 bruno Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -209,6 +210,10 @@ public class CocoonServlet extends HttpServlet {
     protected boolean initClassLoader = false;
 
     private String parentComponentManagerClass;
+    private String parentComponentManagerInitParam;
+
+    /** The parent ComponentManager, if any. Stored here in order to be able to dispose it in destroy(). */
+    private ComponentManager parentComponentManager;
 
     protected String forceLoadParameter;
     protected String forceSystemProperty;
@@ -509,6 +514,12 @@ public class CocoonServlet extends HttpServlet {
             if (log.isDebugEnabled()) {
                 log.debug("parent-component-manager was not set - defaulting to null.");
             }
+        } else {
+            int dividerPos = parentComponentManagerClass.indexOf('/');
+            if (dividerPos != -1) {
+                parentComponentManagerInitParam = parentComponentManagerClass.substring(dividerPos + 1);
+                parentComponentManagerClass = parentComponentManagerClass.substring(0, dividerPos);
+            }
         }
 
         this.containerEncoding = conf.getInitParameter("container-encoding");
@@ -574,6 +585,10 @@ public class CocoonServlet extends HttpServlet {
 
         if (this.enableInstrumentation) {
             this.instrumentManager.dispose();
+        }
+        
+        if (this.parentComponentManager != null && this.parentComponentManager instanceof Disposable) {
+            ((Disposable)this.parentComponentManager).dispose();
         }
     }
 
@@ -1308,19 +1323,14 @@ public class CocoonServlet extends HttpServlet {
      * @return the parent component manager, or <code>null</code>.
      */
     protected synchronized ComponentManager getParentComponentManager() {
-        ComponentManager parentComponentManager = null;
+        if (parentComponentManager != null && parentComponentManager instanceof Disposable)
+            ((Disposable)parentComponentManager).dispose();
+        parentComponentManager = null;
         if (parentComponentManagerClass != null) {
             try {
-                String initParam = null;
-                int dividerPos = parentComponentManagerClass.indexOf('/');
-                if (dividerPos != -1) {
-                    initParam = parentComponentManagerClass.substring(dividerPos + 1);
-                    parentComponentManagerClass = parentComponentManagerClass.substring(0, dividerPos);
-                }
-
                 Class pcm = ClassUtils.loadClass(parentComponentManagerClass);
                 Constructor pcmc = pcm.getConstructor(new Class[]{String.class});
-                parentComponentManager = (ComponentManager) pcmc.newInstance(new Object[]{initParam});
+                parentComponentManager = (ComponentManager) pcmc.newInstance(new Object[]{parentComponentManagerInitParam});
 
                 if (parentComponentManager instanceof LogEnabled) {
                     ((LogEnabled) parentComponentManager).enableLogging(new LogKitLogger(log));
