@@ -64,7 +64,7 @@ import org.apache.commons.jxpath.JXPathContext;
  * </ol>
  *
  * @author Timothy Larson
- * @version CVS $Id: UnionJXPathBinding.java,v 1.3 2004/01/11 20:51:16 vgritsenko Exp $
+ * @version CVS $Id: UnionJXPathBinding.java,v 1.4 2004/01/27 04:20:51 tim Exp $
  */
 public class UnionJXPathBinding extends ComposedJXPathBindingBase {
 
@@ -92,6 +92,7 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doLoad(Widget frmModel, JXPathContext jxpc) {
         Widget widget = frmModel.getWidget(this.widgetId);
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         if (!(widget instanceof Union))
             throw new RuntimeException("Binding: Expected Union widget, but received class: \"" +
                     widget.getClass().getName() + "\".");
@@ -100,7 +101,7 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
         if (subBindings != null) {
             int size = subBindings.length;
             for (int i = 0; i < size; i++) {
-                subBindings[i].loadFormFromModel(unionWidget, jxpc);
+                subBindings[i].loadFormFromModel(unionWidget, subContext);
             }
         }
         if (getLogger().isDebugEnabled()) {
@@ -115,11 +116,12 @@ public class UnionJXPathBinding extends ComposedJXPathBindingBase {
      */
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         Union unionWidget = (Union)frmModel.getWidget(this.widgetId);
+        JXPathContext subContext = jxpc.getRelativeContext(jxpc.getPointer(this.xpath));
         Binding[] subBindings = getChildBindings();
         if (subBindings != null) {
             int size = subBindings.length;
             for (int i = 0; i < size; i++) {
-                subBindings[i].saveFormToModel(unionWidget, jxpc);
+                subBindings[i].saveFormToModel(unionWidget, subContext);
             }
         }
         if (getLogger().isDebugEnabled()) {
