@@ -54,12 +54,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
 
@@ -68,11 +69,11 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  * sitemap base
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapVariableHolder.java,v 1.3 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: SitemapVariableHolder.java,v 1.4 2003/03/20 12:28:45 cziegeler Exp $
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
-    implements Component, Configurable, SitemapConfigurable, Recyclable
+    implements Component, Configurable, SitemapConfigurable, ThreadSafe
 {
  
     public static final String ROLE = SitemapVariableHolder.class.getName();
@@ -81,10 +82,10 @@ public final class SitemapVariableHolder
      * Stores (global) configuration parameters as <code>key</code> /
      * <code>value</code> pairs from the component configuration
      */
-    private Map values;
+    private Map globalValues;
 
     /** Manager for sitemap/sub sitemap configuration */
-    private Manager manager;
+    private SitemapConfigurationHolder holder;
 
     /**
      * Configures the database access helper.
@@ -98,13 +99,12 @@ public final class SitemapVariableHolder
      * */
     public void configure(Configuration conf) 
     throws ConfigurationException {
-        this.manager = new Manager();
         final Configuration[] parameters = conf.getChildren();
-        this.values = new HashMap(parameters.length);
+        this.globalValues = new HashMap(parameters.length);
         for (int i = 0; i < parameters.length; i++) {
             final String key = parameters[i].getName();
             final String value = parameters[i].getValue();
-            this.values.put(key, value);
+            this.globalValues.put(key, value);
         }
     }
 
@@ -113,61 +113,49 @@ public final class SitemapVariableHolder
      */
     public void configure(SitemapConfigurationHolder holder)
     throws ConfigurationException {
-        // add sitemap configuration
-        this.manager.add(holder.getConfiguration());
-    }
-
-    /**
-     * Recyclable
-     */
-    public void recycle() {
-        // clear sitemap configuration
-        this.manager.init(this.values);
+        this.holder = holder;
     }
 
     /**
      * Get a value
      */
     public Object get(String key) {
-        return this.manager.get(key);
+        return this.getValues().get(key);
     }
     
     /**
      * Get keys
      */
     public Iterator getKeys() {
-        return this.manager.getKeys();
-    }
-}
-
-final class Manager {
-    
-    private Map values = new HashMap();
-    
-    void init(Map newValues) {
-        this.values.clear();
-        this.values.putAll(newValues);
+        return this.getValues().keySet().iterator();
     }
     
-    void add(Configuration conf) 
-    throws ConfigurationException {
+    protected Map getValues() {
+        Map values = (Map)this.holder.getPreparedConfiguration();
+        if ( null == values ) {
+            values = new HashMap(this.globalValues);
+            ChainedConfiguration conf = this.holder.getConfiguration();
+            this.prepare(conf, values);
+            this.holder.setPreparedConfiguration(conf, values);
+        }
+        return values;
+    }
+    
+    protected void prepare(ChainedConfiguration conf, Map values) {
+        ChainedConfiguration parent = conf.getParent();
+        if ( null != parent) {
+            this.prepare(parent, values);
+        }
         final Configuration[] parameters = conf.getChildren();
         final int len = parameters.length;
-        this.values = new HashMap( len );
         for ( int i = 0; i < len; i++) {
             final String key = parameters[i].getName();
-            final String value = parameters[i].getValue();
+            final String value = parameters[i].getValue("");
             if ( key != null && value != null) {
-                this.values.put(key, value);
+                values.put(key, value);
             }
         }
     }
     
-    Object get(String key) {
-        return this.values.get(key);
-    }
-    
-    Iterator getKeys() {
-        return this.values.keySet().iterator();
-    }
 }
+

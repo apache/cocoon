@@ -50,17 +50,22 @@
 */
 package org.apache.cocoon.components;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.1 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.2 2003/03/20 12:28:45 cziegeler Exp $
  */
 public final class DefaultSitemapConfigurationHolder 
     implements SitemapConfigurationHolder {
 
+    /** The role of the sitemap component */
     private String role;
+    
+    /** The prepared configurations indexed by the ChainedConfiguration */
+    private Map preparedConfigurations;
     
     public DefaultSitemapConfigurationHolder(String role) {
         this.role = role;
@@ -78,13 +83,24 @@ public final class DefaultSitemapConfigurationHolder
      * @see org.apache.cocoon.components.SitemapConfigurationHolder#getPreparedConfiguration()
      */
     public Object getPreparedConfiguration() {
+        if ( null != this.preparedConfigurations ) {
+            ChainedConfiguration conf = this.getConfiguration();
+            if ( null != conf ) {
+                return this.preparedConfigurations.get( conf );
+            }
+        }
         return null;
     }
 
     /**
      * @see org.apache.cocoon.components.SitemapConfigurationHolder#setPreparedConfiguration(java.lang.Object)
      */
-    public void setPreparedConfiguration(ChainedConfiguration configuration, Object preparedConfig) {
+    public void setPreparedConfiguration(ChainedConfiguration configuration, 
+                                          Object preparedConfig) {
+        if ( null == this.preparedConfigurations ) {
+            this.preparedConfigurations = new HashMap(5);                                              
+        }
+        this.preparedConfigurations.put(configuration, preparedConfig);
     }
 
 }
