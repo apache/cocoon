@@ -85,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.28 2004/04/13 17:13:29 stephan Exp $
+ * @version $Id: WebDAVSource.java,v 1.29 2004/06/28 10:10:04 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource, MoveableSource {
@@ -602,8 +602,8 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      * @see org.apache.excalibur.source.TraversableSource#getParent()
      */
     public Source getParent() throws SourceException {
-        String path = isCollection()?"..":".";
-      
+        initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
+        String path = this.resource.isCollection()?"..":".";
         try {
             HttpURL parentURL;
             if (url instanceof HttpsURL) {
@@ -749,8 +749,13 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
         try {
             if (!this.resource.mkcolMethod()) {
                 int status = this.resource.getStatusCode();
+                if (status == 409) {
+                    // parent does not exist, create it and try again
+                    ((ModifiableTraversableSource) getParent()).makeCollection();
+                    makeCollection();
+                }
                 // Ignore status 405 - Not allowed: collection already exists
-                if (status != 405) {
+                else if (status != 405) {
                     final String msg = 
                         "Unable to create collection " + getSecureURI()
                         + ". Server responded " + this.resource.getStatusCode()
