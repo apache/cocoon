@@ -13,7 +13,7 @@ var nat = slide.getNamespaceToken("cocoon");
 // is/should there be a simple way to share these? an input module?
 var principal;
 var namespace = "cocoon";
-var base = "/slide-samples/";
+var base = "/samples/slide";
 
 // ---------------------------------------------- utility functions
 

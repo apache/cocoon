@@ -53,7 +53,7 @@
    <map:component-configurations>
      <global-variables>
        <namespace>cocoon</namespace>
-       <base>/slide-samples</base>
+       <base>/samples/slide</base>
      </global-variables>
    </map:component-configurations>
    
