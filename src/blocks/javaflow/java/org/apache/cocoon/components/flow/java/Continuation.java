@@ -23,11 +23,10 @@ import java.util.HashMap;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: Continuation.java,v 1.1 2004/03/29 17:47:21 stephan Exp $
+ * @version CVS $Id: Continuation.java,v 1.2 2004/04/23 23:07:07 joerg Exp $
  */
 public class Continuation {
     private ContinuationStack stack;
-    private Continuation parent;
     private Object context;
 
     private static HashMap continuationsmap = new HashMap();
@@ -51,7 +50,6 @@ public class Continuation {
             throw new NullPointerException("Parent continuation is null");
 
         stack = new ContinuationStack(parent.stack);
-        this.parent = parent;
         this.context = context;
         restoring = true;
     }
