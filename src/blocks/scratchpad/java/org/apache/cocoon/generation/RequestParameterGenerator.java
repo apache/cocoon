@@ -17,8 +17,6 @@ package org.apache.cocoon.generation;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Set;
@@ -150,11 +148,6 @@ implements CacheableProcessingComponent  {
         /* Start the document, associate prefix, and print core elements */
         AttributesImpl attributes = new AttributesImpl();
         this.xmlConsumer.startDocument();
-
-        /* TODO: remove this debugging code */
-        String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS").format(new Date());
-        this.xmlConsumer.comment(date.toCharArray(), 0, date.length());
-        
         this.xmlConsumer.startPrefixMapping(PREFIX, URI);
         this.xmlConsumer.startElement(URI, E_REQ_L, E_REQ_Q, attributes);
         this.xmlConsumer.startElement(URI, E_PARAMS_L, E_PARAMS_Q, attributes);
