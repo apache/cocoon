@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import org.apache.excalibur.instrument.manager.interfaces.InstrumentSampleDescri
  * allows you to access sample information from the InstrumentManager.
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: InstrumentationServiceImpl.java,v 1.2 2004/03/05 13:01:43 bdelacretaz Exp $
+ * @version CVS $Id: InstrumentationServiceImpl.java,v 1.3 2004/06/03 12:38:54 vgritsenko Exp $
  */
 public final class InstrumentationServiceImpl extends AbstractLogEnabled
     implements InstrumentationService {
@@ -49,11 +49,10 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
     public void setInstrumentManager(final InstrumentManager iManager) {
 
         if (iManager == null) {
-            if (getLogger().isWarnEnabled())
-                getLogger().warn(
-                    "No instrument manager available," +
-                    "please enable instrumentation in your web.xml"
-                );
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("No instrument manager available, " +
+                                 "please enable instrumentation in your web.xml");
+            }
         }
 
         // we require a DefaultInstrumentManager, attempt a cast.
@@ -100,10 +99,8 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
 
         // ensure we have an instrument manager available
         if (!haveInstrumentManager()) {
-            getLogger().warn(
-               "No instrument manager available," +
-               "please enable instrumentation in your web.xml"
-            );
+            getLogger().warn("No instrument manager available, " +
+                             "please enable instrumentation in your web.xml");
             return EMPTY_INT_ARRAY;
         }
 
@@ -122,10 +119,8 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
 
         // ensure we have an instrument manager available
         if (!haveInstrumentManager()) {
-            getLogger().warn(
-                "No instrument manager available," +
-                "please enable instrumentation in your web.xml"
-            );
+            getLogger().warn("No instrument manager available, " +
+                             "please enable instrumentation in your web.xml");
             return EMPTY_STRING_ARRAY;
         }
 
@@ -135,8 +130,7 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
         final List names = new ArrayList();
 
         for (int i = 0; i < descriptors.length; ++i) {
-
-            // list all instruments 
+            // list all instruments
             InstrumentDescriptor[] insts =
                 descriptors[i].getInstrumentDescriptors();
 
