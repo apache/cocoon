@@ -59,7 +59,6 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.source.impl.AvalonToCocoonSource;
 import org.apache.cocoon.environment.Source;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -68,8 +67,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
+ * An adapter for the Excalibur SourceResolver.
  *
- * @version CVS $Id: SourceResolverAdapter.java,v 1.6 2003/05/17 11:51:42 vgritsenko Exp $
+ * @version CVS $Id: SourceResolverAdapter.java,v 1.7 2003/07/24 07:18:25 stephan Exp $
  */
 public class SourceResolverAdapter implements SourceResolver
 {
@@ -128,51 +128,6 @@ public class SourceResolverAdapter implements SourceResolver
     public Source resolve(String systemID)
         throws ProcessingException, SAXException, IOException {
 
-        try {
-            return new AvalonToCocoonSource(this.resolver.resolveURI(systemID), this.resolver, null, manager);
-        } catch (org.apache.excalibur.source.SourceException se) {
-            throw new ProcessingException(se.toString());
-        }
-    }
-
-    /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     */
-    public void toSAX( org.apache.excalibur.source.Source source,
-                ContentHandler handler )
-        throws SAXException, IOException, ProcessingException {
-
-        SAXParser parser = null;
-        try {
-            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
-
-            parser.parse(new InputSource(source.getInputStream()), handler);
-        } catch (ComponentException ce) {
-            throw new ProcessingException("Couldn't xmlize source", ce);
-        } catch (org.apache.excalibur.source.SourceException se) {
-            throw new ProcessingException("Couldn't xmlize source", se);
-        } finally {
-            this.manager.release((Component) parser);
-        } 
-    }
-
-    /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     */
-    public void toSAX( org.apache.excalibur.source.Source source, String mimeType,
-                ContentHandler handler )
-        throws SAXException, IOException, ProcessingException {
-
-        this.toSAX( source, handler );
+        throw new RuntimeException("Method SourceResolver.resolve(String) is deprecated");
     }
 }
