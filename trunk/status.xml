@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.82 2003/07/09 07:42:23 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.83 2003/07/10 22:17:43 reinhard Exp $:-->
 <status>
 
   <developers>
@@ -38,6 +38,7 @@
   <person name="Konstantin Piroumian" email="kpiroumian@apache.org" id="KP"/>
   <person name="Ovidiu Predescu" email="ovidiu@apache.org" id="OP"/>
   <person name="Jeremy Quinn" email="jeremy@apache.org" id="JQ"/>
+  <person name="Reinhard P&#246;tz" email="reinhard@apache.org" id="RP"/>
   <person name="Gianugo Rabellino" email="gianugo@apache.org" id="GR"/>
   <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
   <person name="Peter Royal" email="proyal@apache.org" id="PAR"/>
@@ -183,6 +184,13 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="RP" type="fix">
+    Web3: The stylesheets in the examples use Xalan as transformer and work correctly now
+    as XSLTC has problems with the 'rfc' namespace.
+  </action>  
+  <action dev="RP" type="update">
+    Changed namespace for Web3RfcTransformer to 'http://apache.org/cocoon/Web3-Rfc/1.0'.
+  </action> 
   <action dev="CZ" type="add">
     ParanoidCocoonServlet can optionally configured with a file containing the classpath.
   </action>
