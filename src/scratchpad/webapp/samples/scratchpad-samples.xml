@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.9 2003/06/27 20:10:43 stefano Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.10 2003/07/01 13:51:59 ghoward Exp $ -->
 
 <samples>
 
@@ -39,5 +39,12 @@
     <sample name="Test 2" href="jelly/test2">
       A test of the Jelly generator - you have to download and install the jelly.jar first!
     </sample>
+  </group>
+  <group name="Event Based Cache">
+  	<sample name="Event Based Cache" href="eventcache/?pageKey=one">
+  	  A sample demonstrating a new system of cache invalidation based on 
+  	  events usually external to Cocoon.  Example uses include cache content 
+  	  until a back-end database is updated, or EJB signals an update.
+  	</sample>
   </group>
 </samples>
