@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
+<!-- SVN $Id:$ -->
 <samplesxconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.profile.ProfileManager/Auth']">
 
  <!-- THIS IS A SAMPLE PORTAL

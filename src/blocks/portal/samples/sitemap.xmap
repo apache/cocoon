@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
+<!-- SVN $Id$ -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <!-- ========================= Components ================================ -->
@@ -24,6 +24,9 @@
       <map:generator name="portal" src="org.apache.cocoon.portal.generation.PortalGenerator"/>
     </map:generators>
     <map:transformers default="xslt">
+      <map:transformer name="portal-coplet" 
+                       src="org.apache.cocoon.portal.transformation.CopletTransformer" 
+                       logger="sitemap.transformer.portal" />
       <map:transformer name="htmlroot" src="org.apache.cocoon.portal.transformation.HTMLRootTransformer"
         logger="sitemap.transformer.htmlroot" />
       <map:transformer name="rss" src="org.apache.cocoon.portal.transformation.RSSTransformer"
@@ -56,6 +59,18 @@
     <map:matchers default="wildcard"/>
     <map:selectors default="browser"/>
     <map:actions>
+      <map:action name="portal-login"
+                  src="org.apache.cocoon.portal.acting.LoginAction"/>
+      <map:action name="portal-logout"
+                  src="org.apache.cocoon.portal.acting.LogoutAction"/>
+      <map:action name="portal-object-model"
+                  src="org.apache.cocoon.portal.acting.ObjectModelAction"/>
+      <map:action name="portal-set-data"
+                  src="org.apache.cocoon.portal.acting.CopletSetDataAction"/>
+      <map:action name="portal-save-profile"
+                  src="org.apache.cocoon.portal.acting.SaveAction"/>
+      <map:action name="portal-bookmark"
+                  src="org.apache.cocoon.portal.acting.BookmarkAction"/>
       <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
         <parameter name="src" value="resources/bookmarks.xml"/>
       </map:action>
