@@ -37,6 +37,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
+import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.TraversableSource;
@@ -123,7 +124,11 @@ public class LoggingHelper {
                     final Configuration[] children = conf.getChildren("include");
                     for(int i=0; i<children.length; i++) {
                         String directoryURI = children[i].getAttribute("dir");                    
-                        final String ending = children[i].getAttribute("postfix", null);
+                        final String pattern = children[i].getAttribute("pattern", null);
+                        int[] parsedPattern = null;
+                        if ( pattern != null ) {
+                            parsedPattern = WildcardHelper.compilePattern(pattern);
+                        }
                         Source directory = null;
                         try {
                             directory = resolver.resolveURI(directoryURI, source.getURI(), CONTEXT_PARAMETERS);
@@ -131,7 +136,7 @@ public class LoggingHelper {
                                 final Iterator c = ((TraversableSource)directory).getChildren().iterator();
                                 while ( c.hasNext() ) {
                                     final Source s = (Source)c.next();
-                                    if ( ending == null || s.getURI().endsWith(ending) ) {
+                                    if ( parsedPattern == null || this.match(s.getURI(), parsedPattern) ) {
                                         final Configuration includeConf = builder.build(s.getInputStream());
                                         // add targets and categories
                                         categories.addAllChildren(includeConf.getChild("categories"));
@@ -221,4 +226,13 @@ public class LoggingHelper {
     public LoggerManager getLoggerManager() {
         return this.loggerManager;
     }
+
+    private boolean match(String uri, int[] parsedPattern ) {
+        int pos = uri.lastIndexOf('/');
+        if ( pos != -1 ) {
+            uri = uri.substring(pos+1);
+        }
+        return WildcardHelper.match(null, uri, parsedPattern);      
+    }
+    
 }
