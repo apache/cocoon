@@ -60,6 +60,7 @@ import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpConnection;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.excalibur.source.SourceUtil;
 import org.xml.sax.InputSource;
 
 import java.io.InputStreamReader;
@@ -72,7 +73,7 @@ import java.net.URL;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: SOAPHelper.java,v 1.2 2003/07/05 04:28:54 joerg Exp $
+ * @version CVS $Id: SOAPHelper.java,v 1.3 2003/10/19 12:42:58 sylvain Exp $
  * @since July 16, 2001
  */
 public class SOAPHelper {
@@ -80,15 +81,17 @@ public class SOAPHelper {
     URL url;
     String action = "";
     XScriptObject xscriptObject;
+    String authorization = "";
 
     public SOAPHelper(ComponentManager manager, String urlContext, String url,
-                      String action, XScriptObject xscriptObject)
+                      String action, String authorization, XScriptObject xscriptObject)
             throws MalformedURLException, ComponentException
     {
         this.xscriptManager = (XScriptManager) manager.lookup(XScriptManager.ROLE);
         URL context = new URL(urlContext);
         this.url = new URL(context, url);
         this.action = action;
+        this.authorization = authorization;
         this.xscriptObject = xscriptObject;
     }
 
@@ -154,6 +157,10 @@ public class SOAPHelper {
                     new Header("Content-type", "text/xml; charset=\"utf-8\""));
             method.setRequestHeader(new Header("SOAPAction", action));
             method.setRequestBody(request);
+
+            if (authorization != null && !authorization.equals("")) {
+               method.setRequestHeader(new Header("Authorization","Basic "+SourceUtil.encodeBASE64(authorization)));
+            }
 
             method.execute(new HttpState(), conn);
 
