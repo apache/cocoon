@@ -63,9 +63,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 /**
  * The default implementation
  * 
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStoreImpl.java,v 1.3 2003/10/27 01:45:34 ghoward Exp $
+ * @version CVS $Id: RequestDataStoreImpl.java,v 1.4 2004/01/08 09:22:58 cziegeler Exp $
  * @since 2.1.1
  * 
  * @avalon.component
@@ -79,17 +79,15 @@ public class RequestDataStoreImpl
         
     protected Context context;
 
-    protected String requestDataKey;
+    protected final String requestDataKey = this.getClass().getName() + "/RD";
     
-    protected String globalRequestDataKey;
+    protected final String globalRequestDataKey = this.getClass().getName() + "/GRD";
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
-        this.requestDataKey = this.getClass().getName() + "/RD";
-        this.globalRequestDataKey = this.getClass().getName() + "/GRD";
     }
 
     /* (non-Javadoc)
