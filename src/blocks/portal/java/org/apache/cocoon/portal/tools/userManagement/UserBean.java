@@ -29,7 +29,8 @@ public class UserBean {
 	private String picture = "";
 	
 	
-    public UserBean () {}
+    public UserBean () {
+    }
     
     /**
      * Add a single context information
@@ -57,10 +58,11 @@ public class UserBean {
 	 * @return
 	 */
 	public String getContextItem (String key) {
-		if (this.context.get(key) != null)
+		if (this.context.get(key) != null) {
 			return ((ContextItem) this.context.get(key)).getValue();
-		else
+        } else {
 			return "";
+        }
 	}
 	
 	/**

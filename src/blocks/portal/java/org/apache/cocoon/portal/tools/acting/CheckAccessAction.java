@@ -36,37 +36,30 @@ public class CheckAccessAction
 extends ServiceableAction
 implements ThreadSafe {
     
-    /**
-     * The userrights service.
-     */
-    private UserrightsService userrightsService;
-
-    /** 
-     * Overridden from superclass.
-     * 
+    /* (non-Javadoc)
      * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
-    public Map act(
-        Redirector redirector,
-        SourceResolver resolver,
-        Map objectModel,
-        String source,
-        Parameters parameters)
-    throws Exception
-    {
+    public Map act(Redirector redirector,
+                   SourceResolver resolver,
+                   Map objectModel,
+                   String source,
+                   Parameters parameters)
+    throws Exception {
     	String name = parameters.getParameter("name", "anonymous");
     	String role = parameters.getParameter("role", "guest");
         String url = parameters.getParameter("url");
         User user = new User(name, role);
         PortalToolManager ptm = (PortalToolManager) this.manager.lookup(PortalToolManager.ROLE);
-        userrightsService = ptm.getUserRightsService();
-        // FIXME: replace the throw with something else
-        if (!this.userrightsService.userIsAllowed(url, user)) {
+        try {
+            UserrightsService userrightsService = ptm.getUserRightsService();
+            // FIXME: replace the throw with something else
+            if (!userrightsService.userIsAllowed(url, user)) {
+                throw new ProcessingException(
+                    "You are not allowed to request this page.");
+            }
+        } finally {
             this.manager.release(ptm);
-            throw new ProcessingException(
-                "You are not allowed to request this page.");
         }
-        this.manager.release(ptm);
         return EMPTY_MAP;
     }
 

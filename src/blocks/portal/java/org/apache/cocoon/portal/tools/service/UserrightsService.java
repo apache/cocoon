@@ -34,8 +34,8 @@ import org.apache.excalibur.source.Source;
  * 
  * @version CVS $Id$
  */
-public class UserrightsService
-{
+public class UserrightsService {
+    
     /** 
      * The properties' location.
      */
@@ -44,7 +44,7 @@ public class UserrightsService
     /**
      * The properties.
      */
-    private Properties properties = null;
+    private Properties properties;
 
     /**
      * Signals when the properties have been loaded last.
@@ -65,8 +65,7 @@ public class UserrightsService
      * @return The location
      */
     
-    public Source getLocation()
-    {
+    public Source getLocation() {
         return this.location;
     }
 
@@ -74,63 +73,54 @@ public class UserrightsService
      * @param location The location to set
      */
 
-    public void setLocation(Source location)
-    {
+    public void setLocation(Source location) {
         this.location = location;
     }
 
     /**
      * @return The reload
      */
-    public boolean getReload()
-    {
+    public boolean getReload() {
         return this.reload;
     }
 
     /**
      * @param reload The reload to set
      */
-    public void setReload(boolean reload)
-    {
+    public void setReload(boolean reload) {
         this.reload = reload;
     }
 
     /**
      * Initialize the bean.
      */
-    public void initialize()
-    {
+    public void initialize() {
         boolean load;
 
         // Check if called for the first time
-        if (this.properties == null)
+        if (this.properties == null) {
             load = true;
-        else
-        {
+        } else {
             // Check if reload is required
             load = this.reload;
         }
 
-        try
-        {
-            if (load)
-            {
+        try {
+            if (load) {
                 // Check file timestamp
                 long lastModified = this.location.getLastModified();
-                if (this.lastModified >= lastModified)
+                if (this.lastModified >= lastModified) {
                     load = false;
+                }
 
-                if (load)
-                {
+                if (load) {
                     this.lastModified = lastModified;
                     this.properties = new Properties();
                     this.properties.load(this.location.getInputStream());
                     this.parseProperties();
                 }
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -138,8 +128,7 @@ public class UserrightsService
     /**
      * @return Whether the current user is allowed to call the given url.
      */
-    public boolean userIsAllowed(String url, User user)
-    {
+    public boolean userIsAllowed(String url, User user) {
         this.initialize();
 
         boolean isAllowed = true;
@@ -149,23 +138,21 @@ public class UserrightsService
         Map.Entry entry;
         int[] pattern;
         RoleMatcher[] matcher;
-        while (iterator.hasNext() && isAllowed)
-        {
+        while (iterator.hasNext() && isAllowed) {
             entry = (Map.Entry)iterator.next();
             pattern = (int[])entry.getKey();
 
             // If userright matches try to find a matching role
-            if (WildcardHelper.match(new HashMap(), url, pattern))
-            {
+            if (WildcardHelper.match(new HashMap(), url, pattern)) {
                 matcher = (RoleMatcher[])entry.getValue();
 
                 isAllowed = false;
 
                 int length = matcher.length;
-                for (int i = 0; i < length; i++)
-                {
-                    if (matcher[i].matches(user))
+                for (int i = 0; i < length; i++) {
+                    if (matcher[i].matches(user)) {
                         isAllowed = true;
+                    }
                 }
             }
         }
@@ -173,8 +160,7 @@ public class UserrightsService
         return isAllowed;
     }
 
-    public boolean userFunctionIsAllowed(String id, User user)
-    {
+    public boolean userFunctionIsAllowed(String id, User user) {
         this.initialize();
 
         boolean isAllowed = true;
@@ -184,23 +170,21 @@ public class UserrightsService
         Map.Entry entry;
         int[] pattern;
         RoleMatcher[] matcher;
-        while (iterator.hasNext() && isAllowed)
-        {
+        while (iterator.hasNext() && isAllowed) {
             entry = (Map.Entry)iterator.next();
             pattern = (int[])entry.getKey();
 
             // If userright matches try to find a matching role
-            if (WildcardHelper.match(new HashMap(), id, pattern))
-            {
+            if (WildcardHelper.match(new HashMap(), id, pattern)) {
                 matcher = (RoleMatcher[])entry.getValue();
 
                 isAllowed = false;
 
                 int length = matcher.length;
-                for (int i = 0; i < length; i++)
-                {
-                    if (matcher[i].matches(user))
+                for (int i = 0; i < length; i++) {
+                    if (matcher[i].matches(user)) {
                         isAllowed = true;
+                    }
                 }
             }
         }
@@ -211,14 +195,12 @@ public class UserrightsService
     /**
      * Parse the properties.
      */
-    private void parseProperties()
-    {
+    private void parseProperties() {
         Map userrights = new HashMap();
 
         Iterator iterator = this.properties.entrySet().iterator();
         Map.Entry entry;
-        while (iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             entry = (Map.Entry)iterator.next();
             userrights.put(
                 WildcardHelper.compilePattern((String)entry.getKey()),
@@ -231,20 +213,20 @@ public class UserrightsService
     /**
      * @return A list representing the given roles.
      */
-    private RoleMatcher[] buildRoles(String roles)
-    {
+    private RoleMatcher[] buildRoles(String roles) {
         StringTokenizer tokenizer = new StringTokenizer(roles, ",", false);
 
         RoleMatcher[] result = new RoleMatcher[tokenizer.countTokens()];
 
         String token;
         int i = 0;
-        while (tokenizer.hasMoreTokens())
-        {
+        while (tokenizer.hasMoreTokens()) {
             token = tokenizer.nextToken();
-            if (token.indexOf(MultipleRoleMatcher.ROLE_SEPARATOR) == -1)
+            if (token.indexOf(MultipleRoleMatcher.ROLE_SEPARATOR) == -1) {
                 result[i] = new SingleRoleMatcher(token);
-            else result[i] = new MultipleRoleMatcher(token);
+            } else {
+                result[i] = new MultipleRoleMatcher(token);
+            }
             i++;
         }
 

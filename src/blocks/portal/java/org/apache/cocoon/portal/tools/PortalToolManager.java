@@ -63,9 +63,6 @@ public class PortalToolManager implements ThreadSafe, Parameterizable, Serviceab
 
 	private ServiceManager manager;
 	
-	// parameters from the component-configuration
-	private Parameters para;
-	
 	private List i18n = new ArrayList();
 	
 	
@@ -84,16 +81,10 @@ public class PortalToolManager implements ThreadSafe, Parameterizable, Serviceab
     /** The source resolver */
     protected SourceResolver resolver;
     
-    /**
-	 * Constructor
-	 */
-	public PortalToolManager() {}
-
 	/* (non-Javadoc)
 	 * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
 	 */
 	public void parameterize(Parameters para) throws ParameterException {
-		this.para = para;
 		this.rootDir = para.getParameter("root", "/");
 		this.confFile = para.getParameter("conf", "conf.xml");
 		this.authFile = para.getParameter("auth", "auth.xml");

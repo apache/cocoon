@@ -22,8 +22,8 @@ import org.apache.cocoon.portal.tools.model.User;
  * 
  * @version CVS $Id$
  */
-public interface RoleMatcher
-{
+public interface RoleMatcher {
+    
     /**
      * @return Whether the user matches this role.
      */

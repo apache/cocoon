@@ -44,12 +44,15 @@ public class PortalObjects {
 	public PortalComponentManager getComponentManager() {
 		return componentManager;
 	}
+    
 	public Layout getPortalLayout() {
 		return portalLayout;
 	}
+    
 	public PortalService getPortalService() {
 		return portalService;
 	}
+    
 	public ProfileManager getProfileManager() {
 		return profileManager;
 	}
