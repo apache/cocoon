@@ -100,7 +100,7 @@
     <attribute name="target"/>
     <attribute name="targetfile"/>
     <sequential>
-      <java classname="org.apache.tools.ant.Main" fork="true">
+      <java classname="org.apache.tools.ant.Main" fork="true" failonerror="true">
         <classpath>
           <fileset dir="${anteater.home}">
             <include name="lib/**/*.jar"/>
