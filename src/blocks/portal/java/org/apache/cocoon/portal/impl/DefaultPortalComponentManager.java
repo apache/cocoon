@@ -82,7 +82,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultPortalComponentManager.java,v 1.1 2003/07/18 14:41:46 cziegeler Exp $
+ * @version CVS $Id: DefaultPortalComponentManager.java,v 1.2 2003/10/06 15:22:36 vgritsenko Exp $
  */
 public class DefaultPortalComponentManager
     extends AbstractLogEnabled
@@ -151,11 +151,11 @@ public class DefaultPortalComponentManager
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
+        if (this.manager != null) {
             if ( this.rendererSelector != null) {
                 Iterator i = this.renderers.values().iterator();
-                while ( i.hasNext() ) {
-                    this.rendererSelector.release( (Component) i.next());
+                while (i.hasNext()) {
+                    this.rendererSelector.release((Component) i.next());
                 }
                 this.manager.release( this.rendererSelector );
                 this.rendererSelector = null;
@@ -163,15 +163,14 @@ public class DefaultPortalComponentManager
             }
             this.manager.release( this.profileManager );
             this.manager.release( this.linkService );
-            this.manager = null;
             this.profileManager = null;
             this.linkService = null;
-            this.manager.release( (Component)this.copletFactory );
-            this.manager.release( (Component)this.layoutFactory );
+            this.manager.release((Component)this.copletFactory);
+            this.manager.release((Component)this.layoutFactory);
             this.copletFactory = null;
             this.layoutFactory = null;
+            this.manager = null;
         }
-
     }
 
     /* (non-Javadoc)
