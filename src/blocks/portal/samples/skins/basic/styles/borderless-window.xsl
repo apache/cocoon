@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- SVN $Id: window.xsl 126209 2005-01-23 11:32:10Z cziegeler $ -->
+<!-- SVN $Id$ -->
 <xsl:stylesheet version="1.0" 
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -31,23 +31,21 @@
   </xsl:choose>
 </xsl:variable>
 
-<table border="0" cellSpacing="0" cellpadding="0" width="100%">
-	<tr vAlign="top">
-		<td bgColor="{$bgColor}" valign="middle">
-			<font>
-				<xsl:attribute name="color">#ffffff</xsl:attribute>
-				<xsl:attribute name="face">Arial</xsl:attribute>
-				<xsl:attribute name="size">2</xsl:attribute>	
-				<xsl:choose>
-				    <xsl:when test="@title">
-					    <b><xsl:value-of select="@title"/></b>
-					</xsl:when>
-				    <xsl:otherwise>
-					    <b><xsl:value-of select="title"/></b>
-					</xsl:otherwise>
-				</xsl:choose>	
-			</font>
-	    </td>
+  <table border="0" cellSpacing="0" cellpadding="0" width="100%"><tbody>
+    <tr vAlign="top">
+      <td width="5" bgColor="{$bgColor}"/>
+      <td bgColor="{$bgColor}" valign="middle">
+        <font color="#ffffff" face="Arial" size="2"><b>
+          <xsl:choose>
+            <xsl:when test="@title">
+              <xsl:value-of select="@title"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="title"/>
+            </xsl:otherwise>
+          </xsl:choose>	
+        </b></font>
+      </td>
 		<td align="right" bgColor="{$bgColor}">
 			<xsl:if test="basket-add-link">
 				<a href="{basket-add-link}">
@@ -105,13 +103,17 @@
 	  			</a>
 			</xsl:if>
 		</td>
-	</tr>
-	<tr>
-		<td colSpan="2">
-               <xsl:apply-templates select="content"/>
-		</td>
-	</tr>
-</table>
+      <td width="5" bgColor="{$bgColor}"/>
+      <td width="1"/>
+    </tr>
+    <tr>
+      <td width="5"/>
+      <td colSpan="2">
+        <xsl:apply-templates select="content"/>
+      </td>
+      <td width="5" colSpan="2"/>
+    </tr>
+  </tbody></table>
 </xsl:template>
 
 <xsl:template match="content">
