@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<xsp:page
+          language="java"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:xsp-request="http://apache.org/xsp/request"
+          xmlns:xsp-response="http://apache.org/xsp/response"
+      xmlns:log="http://apache.org/xsp/log"
+>
+  <page>
+   <title>This form allows you upload files</title>
+   <content>
+     <para>
+       <form method="post" enctype="multipart/form-data" action="upload">
+         File:  <input type="file" name="uploaded_file" size="50" />
+	 <p><input type="submit" value="Upload File" /></p>
+       </form>
+     </para>
+     <para>
+     <ul>
+       <xsp:logic>
+         File workDir = (File) this.context.getAttribute("javax.servlet.context.tempdir");
+         File uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
+         String[] filelist = uploadDir.list();
+         for (int i = 0; i &lt; filelist.length; i++) {
+           <li>
+             <xsp:expr>filelist[i]</xsp:expr>
+           </li>
+         }
+       </xsp:logic>
+     </ul>
+     </para>
+     <para>Brought to you by Cocoon2 at <xsp:expr>new Date()</xsp:expr>.</para>
+
+   </content>
+  </page>
+</xsp:page>
+

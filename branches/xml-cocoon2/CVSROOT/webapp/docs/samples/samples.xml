@@ -68,9 +68,12 @@
     and table according to the docs/samples/xsp/esql.xsp and the
     docs/samples/sql/sql-page.sql definitions.
    </sample>
-    <sample name="Session XSP" href="session" xlink:role="dynamic">
-      Sample Session XSP to illustrate session handling.
-    </sample>
+   <sample name="Session XSP" href="session" xlink:role="dynamic">
+    Sample Session XSP to illustrate session handling.
+   </sample>
+   <sample name="File Uploads" href="xsp/upload" xlink:role="dynamic">
+    Sample to illustrate File uploads.
+   </sample>
   </group>
 
   <group name="Sample Forms">
