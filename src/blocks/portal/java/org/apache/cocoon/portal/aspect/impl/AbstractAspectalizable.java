@@ -50,6 +50,9 @@
 */
 package org.apache.cocoon.portal.aspect.impl;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.cocoon.portal.aspect.AspectDataHandler;
@@ -60,12 +63,14 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspectalizable.java,v 1.3 2003/05/21 13:06:02 cziegeler Exp $
+ * @version CVS $Id: AbstractAspectalizable.java,v 1.4 2003/05/22 06:54:52 cziegeler Exp $
  */
 public abstract class AbstractAspectalizable 
     implements Aspectalizable {
 
     transient protected AspectDataHandler aspectDataHandler;
+    
+    transient protected List persistentDatas;
     
     /**
      * Is this aspect supported
@@ -95,6 +100,21 @@ public abstract class AbstractAspectalizable
      */
     public void setAspectDataHandler(AspectDataHandler handler) {
         this.aspectDataHandler = handler;
+        if ( this.persistentDatas != null ) {
+            Iterator iter = this.persistentDatas.iterator();
+            while (iter.hasNext()) {
+                Object[] o = (Object[])iter.next();
+                handler.setAspectData(this, (String)o[0], o[1]);
+            }
+            this.persistentDatas = null;
+        }
+    }
+
+    public void addPersistenAspectData(String aspectName, Object data) {
+        if ( this.persistentDatas == null ) {
+            this.persistentDatas = new ArrayList();
+        }
+        this.persistentDatas.add(new Object[] {aspectName, data});
     }
 
 }
