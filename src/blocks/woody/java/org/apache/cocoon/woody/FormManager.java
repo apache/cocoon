@@ -63,6 +63,4 @@ public interface FormManager {
     String ROLE = FormManager.class.getName();
 
     Form createForm(Source source) throws Exception;
-
-    WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception;
 }
