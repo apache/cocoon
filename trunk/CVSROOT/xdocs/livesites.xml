@@ -17,7 +17,8 @@
     Here is a list of web sites that are proudly powered by Cocoon 
     (in chronological order):
    </p>
-   
+
+   <s2 title="Powered by Cocoon 1">   
    <ul>
     <li><link href="http://www.zen.co.za/">http://www.zen.co.za</link></li>
     <li><link href="http://www.randshow.co.za/">http://www.randshow.co.za</link></li>
@@ -73,6 +74,16 @@ href="http://opensource.yourdecor.on.ca/faq1/index.html">Open Source FAQ applica
     <!--<li><link href="http://www.weather-index.co.uk/">http://www.weather-index.co.uk</link></li> not up yet-->
 <!--<li><link href=""></link></li>-->
    </ul>
+   </s2>
+
+   <s2 title="Powered by Cocoon 2">
+   <ul>
+    <li><link href="http://www.adolos.com/">http://www.adolos.com</link></li>
+    <li><link href="http://www.scottishbiblesociety.org/">http://www.scottishbiblesociety.org</link></li>
+    <li><link href="http://www.uea.ac.uk/ugprospectus/">http://www.uea.ac.uk/ugprospectus/</link></li>
+    <li><link href="http://www.uea.ac.uk/pgprospectus/">http://www.uea.ac.uk/pgprospectus/</link></li>
+   <ul>
+   </s2>
 
    <p>
     If you don't find your site here, make sure you 
