@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream; 
 import java.net.MalformedURLException; 
 import java.net.URL; 
-import java.util.Dictionary; 
-import java.util.Hashtable; 
+import java.util.Map; 
 
 import javax.servlet.ServletContext; 
 import javax.servlet.http.HttpServletRequest; 
@@ -49,7 +48,8 @@ public class HttpEnvironment extends AbstractEnvironment {
                             HttpServletResponse response, 
                             ServletContext servletContext) 
     throws MalformedURLException, IOException {
-        super(uri, request.getHeader("cocoon-view"), servletContext.getRealPath("/"));
+//        super(uri, request.getHeader("cocoon-view"), servletContext.getRealPath("/"));
+        super(uri, request.getParameter("cocoon-view"), servletContext.getRealPath("/"));
         this.request = new HttpRequest (request, this);
         this.servletRequest = request;
         this.response = new HttpResponse (response);
