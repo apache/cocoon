@@ -704,7 +704,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
             store = new JobStoreCMT();
         }
         else {
-            throw new ConfigurationException("Unknown job type: " + type);
+            throw new ConfigurationException("Unknown store type: " + type);
         }
         store.setDataSource(configuration.getChild("datasource").getValue());
         return store;
