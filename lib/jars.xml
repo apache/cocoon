@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.100 2003/09/25 05:35:03 antonio Exp $
+    | CVS $Id: jars.xml,v 1.101 2003/09/25 07:37:05 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -455,10 +455,10 @@
 
   <file>
     <title>JISP</title>
-    <description></description>
+    <description>Java Indexed Serialization Package</description>
     <used-by>JISP file storage</used-by>
     <lib>core/jisp-2.5.1.jar</lib>
-    <homepage>http://www.coyotegulch.com/algorithm/jisp/index.html</homepage>
+    <homepage>http://www.coyotegulch.com/jisp/</homepage>
   </file>
 
   <file>
@@ -483,8 +483,8 @@
   <file>
     <title>Search engine</title>
     <description>
-      jakarta-lucene is a search engine toolkit designed for 
-      indexing and searching of documents.
+      jakarta-lucene is a search engine toolkit designed for indexing and
+      searching of documents.
     </description>
     <used-by>Lucene block</used-by>
     <lib>lucene/lib/lucene-1.2.jar</lib>
@@ -584,17 +584,20 @@
 
   <file>
     <title>Spark</title>
-    <description>Spark is XML2SWF and SWF2XML converter</description>
+    <description>
+      Spark is a Java library that converts data in Macromedias SWF ("Flash")
+      data format to XML conforming to a specialized DTD and vice versa
+    </description>
     <used-by>SWF Serializer (swf block)</used-by>
-    <lib>swf/lib/spark.jar</lib>
+    <lib>swf/lib/spark-0.2.jar</lib>
     <homepage>http://www.tivano.de/software/spark/</homepage>
   </file>
 
   <file>
     <title>Chaperon Text Parser</title>
     <description>
-      The chaperon project is parser which could parse text files, and 
-      convert those to XML files.
+      The chaperon project is parser which could parse text files, and convert
+      those to XML files.
     </description>
     <used-by>Chaperon block</used-by>
     <lib>chaperon/lib/chaperon-2.1.jar</lib>
