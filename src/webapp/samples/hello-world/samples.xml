@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.9 2003/06/16 10:44:53 upayavira Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.10 2003/09/07 06:15:31 vgritsenko Exp $ -->
 
 <samples name="Hello, World!">
 
@@ -58,22 +58,9 @@
     hear your content, so here is a VoiceML representation of your content (you 
     need a VoiceML-capable agent to hear this).
    </sample>
-   <sample name="RTF" href="../jfor/hello.rtf">
-    Rich Text Format.
-    (Requires block-jfor.)
-   </sample>
-   <sample name="PDF" href="../fop/hello.pdf">
-    Portable Document Format.
-    (Requires block-fop.)
-   </sample>
-   <sample name="SWF" href="../swf/hello.swf">
-    Flash ... You need the appropriate plugin for your browser.
-    (Requires block-swf.)
-   </sample>
    <sample name="Zip archive" href="hello.zip">
     Or you might want your information nicely packaged as a zip file.
    </sample>
-
   </group>
 
   <group name="Hello Office!">
@@ -100,4 +87,30 @@
    </sample>
   </group>
 
+  <group name="Blocks Hello World!">
+   <sample name="RTF" href="../jfor/hello.rtf">
+    Hello from the jfor block in Rich Text Format.
+   </sample>
+   <sample name="PDF" href="../fop/hello.pdf">
+    Hello from the fop block in Portable Document Format.
+   </sample>
+   <sample name="PDF" href="../itext/hello.pdf">
+    Another hello in Portable Document Format, from the itext block.
+   </sample>
+   <sample name="JPEG" href="../batik/hello.jpeg">
+    Hello from the batik block in JPEG.
+   </sample>
+   <sample name="PNG" href="../batik/hello.png">
+    Hello from the batik block in PNG.
+   </sample>
+   <sample name="SWF" href="../swf/hello.swf">
+    Flashy hello from swf block! You need the appropriate (flash) plugin for your browser.
+   </sample>
+   <sample name="XLS" href="../poi/hello.xls">
+    Hello in Excel spreadsheet format from the POI block.
+   </sample>
+   <sample name="HTML" href="../stx/hello.html">
+    Hello in the HTML format, but now with help from stx block.
+   </sample>
+  </group>
 </samples>
