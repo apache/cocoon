@@ -977,6 +977,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="quartz"/>
+    <depend project="concurrent"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
