@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.61 2003/07/09 01:59:26 crossley Exp $
+    | CVS $Id: jars.xml,v 1.62 2003/07/11 10:32:35 gianugo Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -682,6 +682,14 @@
   <description>The Jakarta Slide WebDAV servlet.</description>
   <used-by>Slide block</used-by>
   <lib>slide/lib/slide-webdavservlet-20030322.jar</lib>
+  <homepage>http://jakarta.apache.org/slide/</homepage>
+ </file>
+
+ <file>
+  <title>Slide WebDAV Client library</title>
+  <description>The Jakarta Slide WebDAV client library.</description>
+  <used-by>WebDAV block</used-by>
+  <lib>webdav/lib/slide-webdavlib.jar</lib>
   <homepage>http://jakarta.apache.org/slide/</homepage>
  </file>
 
