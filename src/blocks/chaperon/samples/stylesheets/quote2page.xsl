@@ -12,58 +12,37 @@
    </header>
    <body>
     <section>
-     <title>Stock quote</title>
+     <title>CSV Example</title>
 
-     <p>
-      The example Comma-Separated Values (CSV) file is three months of end-of-day
-      data for one particular stock symbol (data such as that obtained from
-      <a href="http://finance.yahoo.com/">Yahoo Finance</a>).
-     </p>
-     <p>
-      Here are the first 5 lines (total 64) of the input file ...
-     </p>
-     <pre>--------------------------------------------
-20021101,0.11,0.11,0.11,0.11,74000
-20021104,0.11,0.11,0.1,0.105,1166900
-20021105,0.1,0.105,0.1,0.105,759670
-20021106,0.1,0.105,0.1,0.105,101000
-20021107,0.105,0.105,0.097,0.097,808230
-...
---------------------------------------------</pre>
-     <p>
-      After processing with the Lexer Transformer and the Parser Transformer,
-      here is the result ...
-     </p>
      <table cellpadding="3" border="1">
-      <tr>
-       <th>Line #</th>
-       <th>Date</th>
-       <th>Open</th>
-       <th>High</th>
-       <th>Low</th>
-       <th>Close</th>
-       <th>Volume</th>
-      </tr>
-      <xsl:apply-templates select="st:document/st:rows"/>
+      <xsl:apply-templates select="st:document/st:rows/st:row[1]" mode="title"/>
+      <xsl:apply-templates select="st:document/st:rows/st:row[position()>1]"/>
      </table>
     </section>
    </body>
   </document>
  </xsl:template>
 
- <xsl:template match="st:rows">
-  <xsl:apply-templates select="st:row"/>
+ <xsl:template match="st:row" mode="title">
+  <tr>
+   <th>Line #</th>
+   <xsl:apply-templates select="st:column" mode="title"/>
+  </tr>
  </xsl:template>
 
  <xsl:template match="st:row">
   <tr>
-   <td><xsl:number/></td>
-   <xsl:apply-templates select="st:Value"/>
+   <td><xsl:value-of select="position()"/></td>
+   <xsl:apply-templates select="st:column"/>
   </tr>
  </xsl:template>
 
- <xsl:template match="st:Value">
-  <td><xsl:value-of select="."/></td>
+ <xsl:template match="st:column" mode="title">
+  <th><xsl:value-of select="st:Value"/></th>
+ </xsl:template>
+
+ <xsl:template match="st:column">
+  <td><xsl:value-of select="st:Value"/></td>
  </xsl:template>
 
  <xsl:template match="@*|*|text()|processing-instruction()" priority="-1">
