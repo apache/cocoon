@@ -1,83 +1,120 @@
 <?xml version="1.0"?>
-<!--
 <!DOCTYPE document SYSTEM "./dtd/document-v10.dtd">
--->
 <?xml-stylesheet href="document2html.xsl" type="text/xsl"?>
 
 <document>
 	<header>
 		<title>The SVG Serializer</title>
 		<authors>
-		 <person name="Ross Burton" email="rossb@apache.org"/>
+			<person name="Ross Burton" email="rossb@apache.org"/>
 		</authors>
 	</header>
+	
+	<body>
+		<s1 title="SVG Serializer">
+			<s2 title="Introduction">
+				<p>
+					The SVG Serializer is an advanced serializer which accepts
+					valid Scalable Vector Graphic documents (currently to the
+					2000-08-02 Candidate Recommendation specification) and
+					renders it to an image which is served just like any other
+					document in Cocoon 2.
+				</p>
+				<p>
+					Why would you want to do this? Well, charts can be produced from the
+					same data which generates tables, graphical images with text labels
+					all following a standard theme can be generated or normal pages can be
+					beautified.
+				</p>
+				<note>
+					For examples of this serializer, see the Cocoon 2 welcome
+					page in the distribution (<code>[cocoon2
+					root]/welcome</code>).
+				</note>
+				<p>
+					So how does this serializer work?
+				</p>
+				<ol>
+					<li>Parse and validate SVG document</li>
+					<li>Call Batik's <code>Transcoder</code> to encode this image as an image file, and return it to the user.</li>
+				</ol>
+			</s2>
 
-<body>
-	<s1 title="SVG Serializer">
-		<s2 title="Introduction">
-			<p>The SVG Serializer is an advanced serializer which accepts valid Scalable Vector Graphic documents (currently to the 2000-08-02 Candidate Recommendation specification) and renders it to an image which is served just like any other document in Cocoon 2.</p>
-			<p>Why would you want to do this? Well, charts can be produced from the same data which generates tables, graphical images with text labels all following a standard theme can be generated or normal pages can be beautified.</p>
-			<note>For examples of this serializer, see the Cocoon 2 welcome page in the distribution (<code>[cocoon2 root]/welcome</code>).</note>
-			<p>So how does this serializer work?</p>
-			<ol>
-				<li>Parse and validate SVG document</li>
-				<li>Call Batik's <code>Transcoder</code> to encode this image as an image file, and return it to the user.</li>
-			</ol>
-		</s2>
+			<s2 title="Usage">
+				<p>The best way to explain how this serializer works is to show some examples.</p>
+				<s3 title="Basic Example">
+					<p>This is a basic example of the serializer.</p>
+					<source><![CDATA[
+<map:serializers>
+  <map:serializer>
+    <map:serializer name="svg2jpeg" mime-type="image/jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
+      <parameter name="transcoder" value="org.apache.batik.transcoder.image.JPEGTranscoder"/>
+  </map:serializer>
+<map:serializers>
+...
+<map:pipeline>
+  <map:match pattern="sample.jpeg">
+    <map:generate type="file" src="sample.svg"/> 
+    <map:serialize type="svg2jpeg"/>
+  </map:match>	
+</map:pipeline>
+						]]></source>
+					<p>
+						When the resource <code>sample.jpeg</code> is requested, a SAX event
+						stream is generated from the file <code>sample.svg</code>, which is
+						serialized using the <code>svg2jpeg</code> serializer. This
+						serializer is configured to use a specific transcoder. The MIME type
+						is specified so that Cocoon 2 can tell the client which type the
+						document is. It can be seen that in general the use of this
+						serializer is identical to that of the other serializers.
+					</p>
+				</s3>
 
-		<s2 title="Usage">
-			<p>The best way to explain how this serializer works is to show some examples.</p>
-			<s3 title="Basic Example">
-				<p>This is a basic example of the serializer.</p>
-				<source><![CDATA[
-component role="jpeg-encoder" src="org.apache.cocoon.components.image.JPEGEncoder"/>
-
-<!-- this line goes inside the map:serializers tag -->
-<map:serializer name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
-</map:serializer>
-
-<!-- this node is inserted inside the map:pipline tag -->
-<map:match pattern="hello.svg">
- 	<map:generate type="file" src="docs/samples/hello-page.xml"/> 
- 	<map:transform type="xslt" src="stylesheets/page/simple-page2svg.xsl"/> 
- 	<map:serialize type="svg2jpeg"/>
-</map:match>				
-				]]></source>
-				<p>When the resource <code>hello.svg</code> is requested, a SAX event stream is generated from the file <code>docs/samples/hello-page.xml</code>, which is transformed via XSLT into SVG and then serialized using the <code>svg2jpeg</code> serializer. The serializer uses the image encoder called <code>jpeg-encoder</code> which is assumed to be defined elseware in the sitemap. It can be seen that in general the use of this serializer is identical to that of the other serializers.</p>
-			</s3>
-
-			<s3 title="Advanced Example">
-				<p>This is a more advanced sample of using the SVG Serializer.</p>
-				<source><![CDATA[
-<component role="jpeg-encoder" src="org.apache.cocoon.components.image.JPEGEncoder"/>
-
-<!-- this line goes inside the map:serializers tag -->
-<map:serializer name="svg2jpeg" mime-type="image/jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
-</map:serializer>
-
-<!-- this node is inserted inside the map:pipline tag -->
-<map:match pattern="hello.svg">
-  <map:generate type="file" src="docs/samples/hello-page.xml"/> 
-  <map:transform type="xslt" src="stylesheets/page/simple-page2svg.xsl"/> 
-  <map:serialize type="svg2jpeg"/>
-</map:match>				
-]]></source>
-				<p>In this example more configuration options are given to the serializer. These are <code>&lt;transparent&gt;</code> and <code>&lt;background&gt;</code>. <code>Transparent</code> is a boolean which states whether the SVG is rendered onto a transparent image (thus the SVG will appear transparent) or onto a solid colour, which is set with the <code>background</code> node. This value is in the traditional web format of <code>#RRGGBB</code>.  In this example the SVG is rendered onto a background of bright red.</p>
-				<p>The more alert readers would have noticed that in the first simple example there was no explicit transparency setting and that the file type used was JPEG, which does not support transparency. So, what happens? By default transparency is on, so the SVG was rendered as a transparent image. However, when the JPEG encoder writes the file it notices that the image has an alpha channel and converts the image to a regular image without an alpha channel. The result is that the image looks like <code>transparency</code> was set to <code>false</code> and <code>background</code> was set to <code>#FFFFFF</code>.</p>
-				<p>Also, the MIME type was specified. This value is only used as a last resort, as by default the serializer asks the image encoder what the MIME type is. However, in case the image encoder being used does not know what it's MIME type is, it can be specified in the sitemap.</p>
-			</s3>
-			<s3 title="Reference">
-				<p>Still to do.</p>
-			</s3>
-		</s2>
-
-		<s2 title="Notes">
-				<p>Still to do.</p>
-		</s2>
-
-		<s2 title="FAQ">
-				<p>Still to do.</p>
-		</s2>
-	</s1>
-</body>
+				<s3 title="Advanced Example">
+					<p>This is a more advanced sample of using the SVG Serializer.</p>
+					<source><![CDATA[
+<map:serializers>
+  <map:serializer>
+    <map:serializer name="svg2jpeg" mime-type="image/jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
+      <parameter name="transcoder" value="org.apache.batik.transcoder.image.JPEGTranscoder"/>
+      <parameter name="background_color" type="color" value="#00FF00"/>
+  </map:serializer>
+<map:serializers>
+...
+<map:pipeline>
+  <map:match pattern="sample.jpeg">
+    <map:generate type="file" src="sample.svg"/> 
+    <map:serialize type="svg2jpeg"/>
+  </map:match>	
+</map:pipeline>
+						]]></source>
+					<p>
+						In this example another parameter is given to the serializer,
+						<code>background_color</code>. This parameter is passed to the
+						transcoder. The <code>type</code> argument specifies the type of
+						data to convert the <code>value</code> to. In this example the
+						string "#00FF00" is converted to a <code>Color</code> object, which
+						is passed to the transcoder as the background colour to use.
+					<p>
+						For a list of the parameters available for each transcoder, refer to
+						the Batik API docs.
+					</p>
+					<fixme author="rossb@apache.org">
+						Create a document summarising the transcoder hints
+					</fixme>
+					<p>
+						For this to work reliably with any transcoder, some magic must be
+						done. First, the parameter name is transformed to upper-case and then "KEY_" is
+						prepended. This is to match the internal naming scheme of the hints
+						in the Batik <code>Transcoder</code> interfaces. This name is then
+						looked up via Reflection to ensure it is a valid parameter on the
+						specified transcoder. Then the value is converted to the type
+						specified in the <code>type</code> attribute (currently supported
+						types are string, float, integer, boolean and color) and passed to
+						the transcoder.
+					</p>
+				</s3>
+			</s2>
+		</s1>
+	</body>
 </document>
