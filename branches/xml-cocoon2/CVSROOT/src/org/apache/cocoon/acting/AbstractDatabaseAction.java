@@ -138,13 +138,39 @@ import org.apache.cocoon.components.parser.Parser;
  *     <td>now</td>
  *     <td>a Timestamp with the current day/time--the form value is ignored.</td>
  *   </tr>
+ *   <tr>
+ *     <td>image</td>
+ *     <td>a binary image file, we cache the attribute information</td>
+ *   </tr>
+ *   <tr>
+ *     <td>image-width</td>
+ *     <td>
+ *       the width attribute of the cached file attribute.  NOTE:
+ *       param attribute must equal the same param for image.
+ *     </td>
+ *   </tr>
+ *   <tr>
+ *     <td>image-height</td>
+ *     <td>
+ *     the width attribute of the cached file attribute  NOTE:
+ *       param attribute must equal the same param for image.
+ *     </td>
+ *   </tr>
+ *   <tr>
+ *     <td>image-size</td>
+ *     <td>
+ *       the size attribute of the cached file attribute  NOTE:
+ *       param attribute must equal the same param for image.
+ *     </td>
+ *   </tr>
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-27 19:32:13 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-02 20:26:21 $
  */
 public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
     private static Map configurations = new HashMap();
+    protected Map files = new HashMap();
     private static final Map typeConstants;
     protected ComponentSelector dbselector;
 
@@ -165,6 +191,10 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
         constants.put("time", new Integer(Types.TIME));
         constants.put("time-stamp", new Integer(Types.TIMESTAMP));
         constants.put("now", new Integer(Types.OTHER));
+        constants.put("image", new Integer(Types.DISTINCT));
+        constants.put("image-width", new Integer(Types.ARRAY));
+        constants.put("image-height", new Integer(Types.BIT));
+        constants.put("image-size", new Integer(Types.CHAR));
 
         typeConstants = Collections.unmodifiableMap(constants);
     }
@@ -310,6 +340,47 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
                 break;
             case Types.OTHER:
                 statement.setTimestamp(position, new Timestamp((new java.util.Date()).getTime()));
+                break;
+            case Types.DISTINCT:
+                // Upload an image (just like binary), but cache attributes
+                Parameters param = new Parameters();
+                File imageFile = (File) request.get(attribute);
+                FileInputStream imageStream = new FileInputStream(imageFile);
+                statement.setBinaryStream(position, imageStream, (int) imageFile.length());
+
+                param.setParameter("image-size", Long.toString(imageFile.length()));
+
+                int [] dimensions = ImageDirectoryGenerator.getSize(imageFile);
+                param.setParameter("image-width", Integer.toString(dimensions[0]));
+                param.setParameter("image-height", Integer.toString(dimensions[1]));
+
+                synchronized (this.files) {
+                    this.files.put(imageFile, param);
+                }
+                break;
+            case Types.ARRAY:
+                // Grab the image-width attribute from the cached attributes
+                imageFile = (File) request.get(attribute);
+                synchronized (this.files) {
+                    param = (Parameters) this.files.get(imageFile);
+                    statement.setInt(position, param.getParameterAsInteger("image-width", -1));
+                }
+                break;
+            case Types.BIT:
+                // Grab the image-height attribute from the cached attributes
+                imageFile = (File) request.get(attribute);
+                synchronized (this.files) {
+                    param = (Parameters) this.files.get(imageFile);
+                    statement.setInt(position, param.getParameterAsInteger("image-height", -1));
+                }
+                break;
+            case Types.CHAR:
+                // Grab the image-size attribute from the cached attributes
+                imageFile = (File) request.get(attribute);
+                synchronized (this.files) {
+                    param = (Parameters) this.files.get(imageFile);
+                    statement.setInt(position, param.getParameterAsInteger("image-size", -1));
+                }
                 break;
         }
     }

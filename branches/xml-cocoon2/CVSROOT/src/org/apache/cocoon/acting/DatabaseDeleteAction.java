@@ -43,7 +43,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-27 18:19:08 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-02 20:26:31 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();
@@ -130,9 +130,9 @@ public final class DatabaseDeleteAction extends AbstractDatabaseAction {
                 }
 
                 query = queryBuffer.toString();
-            }
 
-            DatabaseDeleteAction.deleteStatements.put(conf, query);
+                DatabaseDeleteAction.deleteStatements.put(conf, query);
+            }
         }
 
         return query;

@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-27 18:19:09 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-02 20:26:34 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();
@@ -151,9 +151,9 @@ public class DatabaseUpdateAction extends AbstractDatabaseAction {
                 }
 
                 query = queryBuffer.toString();
-            }
 
-            DatabaseUpdateAction.updateStatements.put(conf, query);
+                DatabaseUpdateAction.updateStatements.put(conf, query);
+            }
         }
 
         return query;
