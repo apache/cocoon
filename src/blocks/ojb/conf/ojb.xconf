@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="ojb-jdo">
+  <!-- Persistent Manager Factory for JDO -->
+  <ojb-jdo class="org.apache.cocoon.ojb.jdo.components.JdoPMFImpl" logger="core.ojb-jdo"/>
+</xconf>

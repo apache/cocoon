@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
+
+    <xsp:structure>
+        <xsp:include>org.apache.cocoon.woody.formmodel.*</xsp:include>
+    </xsp:structure>
+
+    <page>
+        <title>employee form result</title>
+        <content>
+            <xsp:logic>
+                Form form = (Form)request.getAttribute("employeeform");
+                Field fid = (Field)form.getWidget("id");
+                Field fname = (Field)form.getWidget("name");
+                Field fdepartment_id = (Field)form.getWidget("department_id");
+            </xsp:logic>
+
+            id:<xsp:expr>fid.getValue()</xsp:expr>
+            <br/>
+            Name:<xsp:expr>fname.getValue()</xsp:expr>
+            <br/>
+            Department id:<xsp:expr>fdepartment_id.getValue()</xsp:expr>
+        </content>
+    </page>
+</xsp:page>
