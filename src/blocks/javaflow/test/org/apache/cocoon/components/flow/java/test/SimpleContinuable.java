@@ -18,7 +18,7 @@ package org.apache.cocoon.components.flow.java.test;
 import org.apache.cocoon.components.flow.java.*;
 
 public class SimpleContinuable implements Continuable {
-	public void suspend() {
+	public void doSuspendTest() {
 		System.out.println("suspending");
 		Continuation.suspend();
 		System.out.println("continuing");

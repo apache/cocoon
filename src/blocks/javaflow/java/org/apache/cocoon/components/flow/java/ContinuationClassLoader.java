@@ -34,7 +34,7 @@ import org.apache.regexp.RE;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.8 2004/06/03 14:30:39 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.9 2004/06/14 14:53:56 stephan Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 
@@ -168,7 +168,7 @@ public class ContinuationClassLoader extends ClassLoader {
             }
         }
         
-        /*byte[] changed = clazz.getJavaClass().getBytes();
+        byte[] changed = clazz.getJavaClass().getBytes();
         try {
             java.io.FileOutputStream out = new java.io.FileOutputStream(clazz.getClassName() + ".rewritten.class");
             out.write(changed);
@@ -176,7 +176,7 @@ public class ContinuationClassLoader extends ClassLoader {
             out.close();
         } catch (java.io.IOException ioe) {
             ioe.printStackTrace();
-        }*/
+        }
         
         clazz.addInterface(CONTINUATIONCAPABLE_CLASS);
         return clazz.getJavaClass().getBytes();
@@ -459,13 +459,23 @@ public class ContinuationClassLoader extends ClassLoader {
         // pop all arguments for the constructor from the stack
         for (int i = arguments.length - 1; i >= 0; i--) {
             Type type = arguments[i];
-            insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
-            insList.append(new SWAP());
+            // check for types with two words on stack
+            if (type.equals(Type.LONG) || type.equals(Type.DOUBLE)) {
+                insList.append(new ACONST_NULL()); // create dummy stack entry
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(new DUP2_X2()); // swap ContinuationStack object and long/float
+                insList.append(new POP2());
+            } else {
+                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                insList.append(new SWAP());
+            }
             if (type instanceof BasicType) {
                 if (type.getSize() < 2 && !type.equals(Type.FLOAT)) {
                     type = Type.INT;
                 }
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
+                if (type.equals(Type.LONG) || type.equals(Type.DOUBLE))
+                    insList.append(new POP()); // remove dummy stack entry
             } else if (type instanceof ReferenceType) {
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(Type.OBJECT), Type.VOID, new Type[]{Type.OBJECT}, Constants.INVOKEVIRTUAL));
             }
@@ -538,9 +548,19 @@ public class ContinuationClassLoader extends ClassLoader {
                 if (type.getSize() < 2 && !type.equals(Type.FLOAT)) {
                     type = Type.INT;
                 }
-                insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
-                insList.append(new SWAP()); // TODO: check for types with two words on stack
+                // check for types with two words on stack
+                if (type.equals(Type.LONG) || type.equals(Type.DOUBLE)) {
+                    insList.append(new ACONST_NULL()); // create dummy stack entry
+                    insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                    insList.append(new DUP2_X2()); // swap ContinuationStack object and long/float
+                    insList.append(new POP2());
+                } else {
+                    insList.append(InstructionFactory.createLoad(STACK_TYPE, method.getMaxLocals()+1));
+                    insList.append(new SWAP());
+                }
                 insList.append(insFactory.createInvoke(STACK_CLASS, getPushMethod(type), Type.VOID, new Type[]{type}, Constants.INVOKEVIRTUAL));
+                if (type.equals(Type.LONG) || type.equals(Type.DOUBLE))
+                    insList.append(new POP()); // remove dummy stack entry
             } else if (type.equals(Type.NULL)) {
                 insList.append(InstructionConstants.POP);
             } else if (type instanceof UninitializedObjectType) {

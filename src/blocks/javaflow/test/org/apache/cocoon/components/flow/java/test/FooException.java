@@ -13,20 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package org.apache.cocoon.components.flow.java.test;
 
-import org.apache.cocoon.components.flow.java.*;
+public class FooException extends java.lang.Exception {
+   
+    private long id = 0;
 
-public class WrapperContinuable implements Continuable {
-
-    SimpleContinuable simple;
-
-    public WrapperContinuable() {
-        simple = new SimpleContinuable();
+    public FooException() {
     }
 
-    public void doWrapperTest() {
-        simple.doSuspendTest();
+    public FooException(String msg) {
+        super(msg);
     }
-
+   
+    public FooException(String msg, long id) {
+       super(msg);
+       this.id = id;
+    }
 }
