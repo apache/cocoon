@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.97 2000-08-07 02:26:57 balld Exp $
+  $Id: changes.xml,v 1.98 2000-08-16 15:32:36 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add" due-to="Mark Evans" due-to-email="mark.evans@dsto.defence.gov.au">
+   Added Solaris8 and improved Win2k installation case documentation.
+  </action>
   <action dev="DB" type="fix">
    Made XSP SQL processor to array to string conversion when using a Format object on a text column
   </action>
@@ -41,22 +44,22 @@
    Updated Cocoon installation case document.
   </action>
   <action dev="DB" type="fix">
-   removed normalize-space from sql logicsheet's get-nested-string template
+   Removed normalize-space from sql logicsheet's get-nested-string template
   </action>
   <action dev="DB" type="fix" due-to="Brian Millett" due-to-email="bpm@ec-group.com">
-   changed turbine libraries to just include connection pool stuff, added connection pool docs
+   Changed turbine libraries to just include connection pool stuff, added connection pool docs
   </action>
   <action dev="DB" type="fix" due-to="John Morrison" due-to-email="john.morrison@experian.com">
-   fixed stupid bug in XInclude processor's handling of local files introduced in last patch
+   Fixed stupid bug in XInclude processor's handling of local files introduced in last patch
   </action>
   <action dev="DB" type="add" due-to="Brian Millett" due-to-email="bpm@ec-group.com">
-   added connection pool (and turbine) to sql logicsheet
+   Added connection pool (and turbine) to sql logicsheet
   </action>
   <action dev="DB" type="fix">
-   added support for site-absolute links in xinclude processor
+   Added support for site-absolute links in xinclude processor
   </action>
   <action dev="DB" type="fix" due-to="Ulrich Mayring" due-to-email="ulim@denic.de">
-   fixed stupid bug in absolute href support in xinclude processor. also now set system ids on included xml resources.
+   Fixed stupid bug in absolute href support in xinclude processor. also now set system ids on included xml resources.
   </action>
   <action dev="SM" type="fix" due-to="Matthias Brunner" due-to-email="mb@blumenstrasse.vol.at">
    Fixed typo on util.xsl that generated XSP compilation problems for the util taglib.
