@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.294 2004/04/02 21:32:33 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.295 2004/04/03 01:32:28 antonio Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+    <action dev="AG" type="update">
+     Updated bsf to 2.3.0
+   </action>
    <action dev="JH" type="fix" fixes-bug="15841">
      "Fixed" bug 15841 by raising an exception when something is tried to add
      to elements before attributes.

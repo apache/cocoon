@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
 "../../dtd/document-v10.dtd">
 <!--
-  <![CDATA[ CVS Version: $Id: script-action.xml,v 1.2 2004/03/06 02:26:07 antonio Exp $ 
+  <![CDATA[ CVS Version: $Id: script-action.xml,v 1.3 2004/04/03 01:34:45 antonio Exp $ 
   ]]>  
 --><document>
   <header>
@@ -107,8 +107,8 @@
         <p>The next table lists the default mapping of BSF:</p>
         <table>
           <tr>
-            <th>Extension</th>
             <th>Script language</th>
+            <th>Extension</th>
           </tr>
           <tr>
             <td>javascript</td>
@@ -137,10 +137,6 @@
           <tr>
             <td>vbscript</td>
             <td>vbs</td>
-          </tr>
-          <tr>
-            <td>jscript</td>
-            <td>jss</td>
           </tr>
           <tr>
             <td>jscript</td>
@@ -243,16 +239,17 @@
     </s1>
     <s1 title="History">
       <p>07-24-03: initial creation</p>
+      <p>04-02-04: Updated to Jakarta BSF</p>
     </s1>
     <s1 title="Copyright">
-      <p>Copyright (C) 1999-2003 The Apache Software Foundation. All rights
+      <p>Copyright (C) 1999-2004 The Apache Software Foundation. All rights
       reserved.</p>
     </s1>
     <s1 title="See also">
       <p><!-- Links to related components pages. -->A general documentation
       about actions is available at <link href="../concepts/actions.html">Actions</link>.</p>
-      <p>Further Documentation about BSF is available <link
-      href="http://www-124.ibm.com/developerworks/projects/bsf">here</link>.</p>
+      <p>Further Documentation visit <link
+      href="http://jakarta.apache.org/bsf/index.html">Jakarta BSF Project</link>.</p>
     </s1>
   </body>
 </document>

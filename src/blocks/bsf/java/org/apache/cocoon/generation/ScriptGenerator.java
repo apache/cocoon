@@ -15,9 +15,9 @@
  */
 package org.apache.cocoon.generation;
 
-import com.ibm.bsf.BSFException;
-import com.ibm.bsf.BSFManager;
-import com.ibm.bsf.util.IOUtils;
+import org.apache.bsf.BSFException;
+import org.apache.bsf.BSFManager;
+import org.apache.bsf.util.IOUtils;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -55,7 +55,7 @@ import java.io.StringReader;
  * </pre>
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptGenerator.java,v 1.4 2004/03/05 13:01:47 bdelacretaz Exp $
+ * @version CVS $Id: ScriptGenerator.java,v 1.5 2004/04/03 01:32:32 antonio Exp $
  */
 public class ScriptGenerator extends ServiceableGenerator implements Configurable {
 

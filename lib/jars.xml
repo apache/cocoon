@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: jars.xml,v 1.199 2004/04/01 13:18:24 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.200 2004/04/03 01:32:32 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -386,8 +386,8 @@
       support the additional languages.
     </description>
     <used-by>Script generator, script action (bsf block)</used-by>
-    <lib>bsf/lib/bsf-2.2.jar</lib>
-    <homepage>http://oss.software.ibm.com/developerworks/projects/bsf</homepage>
+    <lib>bsf/lib/bsf-2.3.0.jar</lib>
+    <homepage>http://jakarta.apache.org/bsf/</homepage>
   </file>
 
   <file>
