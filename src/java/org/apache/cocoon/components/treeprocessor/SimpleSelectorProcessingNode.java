@@ -23,9 +23,10 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 /**
+ * Base class for processing nodes that are based on a component in a Selector (act, match, select, etc).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: SimpleSelectorProcessingNode.java,v 1.6 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessingNode
@@ -37,7 +38,7 @@ public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessin
     private ServiceManager manager;
     
     /** Selector where to get components from */
-    protected ServiceSelector selector;
+    private ServiceSelector selector;
     
     /** The underlying component, if it's threadsafe. Null otherwise */
     private Object threadSafeComponent;
@@ -60,44 +61,33 @@ public abstract class SimpleSelectorProcessingNode extends SimpleParentProcessin
         }
     }
     
-    protected boolean hasThreadSafeComponent() {
-        return this.threadSafeComponent != null;
+    /**
+     * Get the component to be used by this node. That component may be cached for faster
+     * execution if it's ThreadSafe. In any case, a call to {@link #releaseComponent(Object)} must
+     * be done to release the component if needed.
+     * 
+     * @return the component to use
+     * @throws ServiceException if component lookup fails
+     */
+    protected Object getComponent() throws ServiceException {
+        if (this.threadSafeComponent != null) {
+            return this.threadSafeComponent;
+        } else {
+            return this.selector.select(this.componentName);
+        }
     }
     
-    protected Object getThreadSafeComponent() {
-        return this.threadSafeComponent;
+    /**
+     * Release the component used by this node (does nothing if it's the cached
+     * ThreadSafe component)
+     * 
+     * @param obj the component
+     */
+    protected void releaseComponent(Object obj) {
+        if (obj != this.threadSafeComponent) {
+            this.selector.release(obj);
+        }
     }
-
-//    public void setSelector(ServiceSelector selector) {
-//        this.selector = selector;
-//    }
-
-//    /**
-//     * Tests if the component designated by this node using the selector and component name
-//     * is <code>ThreadSafe</code>, and return it if true.
-//     * <p>
-//     * Note : this method must be called <i>after</i> <code>setSelector()</code>.
-//     */
-//    protected Object getThreadSafeComponent() throws ServiceException {
-//        return getThreadSafeComponent(this.componentName);
-//    }
-//
-//    /**
-//     * Tests if the component designated by this node using the selector and component name
-//     * is <code>ThreadSafe</code>, and return it if true.
-//     * <p>
-//     * Note : this method must be called <i>after</i> <code>setSelector()</code>.
-//     * @throws ServiceException
-//     */
-//    protected Object getThreadSafeComponent(String name) throws ServiceException {
-//        Object component = this.selector.select(name);
-//        if (component instanceof ThreadSafe) {
-//            return component;
-//        } else {
-//            this.selector.release(component);
-//            return null;
-//        }
-//    }
     
     public void dispose() {
         this.selector.release(this.threadSafeComponent);

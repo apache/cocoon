@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceSelector;
@@ -22,17 +25,13 @@ import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNodeBu
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.selection.Selector;
 import org.apache.cocoon.selection.SwitchSelector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SelectNodeBuilder.java,v 1.3 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: SelectNodeBuilder.java,v 1.4 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public class SelectNodeBuilder extends AbstractParentProcessingNodeBuilder {

@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
 import org.apache.avalon.excalibur.component.RoleManageable;
 import org.apache.avalon.excalibur.component.RoleManager;
@@ -29,11 +28,9 @@ import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.WrapperComponentManager;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -43,7 +40,6 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.WrapperServiceSelector;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ExtendedComponentSelector;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -51,16 +47,17 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.13 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.14 2004/07/16 12:36:45 sylvain Exp $
  */
 public class DefaultTreeBuilder
         extends AbstractLogEnabled
-        implements TreeBuilder, Configurable, Contextualizable, Serviceable,
-                   RoleManageable, Recyclable, Disposable {
+        implements TreeBuilder, Contextualizable, Serviceable,
+                   RoleManageable, Initializable, Recyclable, Disposable {
 
     protected Map attributes = new HashMap();
 
@@ -84,7 +81,6 @@ public class DefaultTreeBuilder
      */
     protected RoleManager ownRoleManager;
 
-    protected Configuration configuration;
     // -------------------------------------
     
     /**
@@ -96,11 +92,6 @@ public class DefaultTreeBuilder
      * Component manager created by {@link #createComponentManager(Configuration)}.
      */
     protected ServiceManager processorManager;
-
-    /**
-     * Role manager result created by {@link #createRoleManager()}.
-     */
-    protected RoleManager processorRoleManager;
 
     /** Selector for ProcessingNodeBuilders */
     protected ServiceSelector builderSelector;
@@ -138,6 +129,60 @@ public class DefaultTreeBuilder
     public void service(ServiceManager manager) throws ServiceException {
         this.ownManager = manager;
     }
+    
+    /**
+     * Get the location of the treebuilder config file. Can be overridden for other versions.
+     * @return
+     */
+    protected String getBuilderConfigURL() {
+        return "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";
+    }
+    
+    public void initialize() throws Exception {
+        // Load the builder config file
+        SourceResolver resolver = (SourceResolver)this.ownManager.lookup(SourceResolver.ROLE);
+        String url = getBuilderConfigURL();
+        Configuration config;
+        try {
+            Source src = resolver.resolveURI(url);
+            try {
+                SAXConfigurationHandler handler = new SAXConfigurationHandler();
+                SourceUtil.toSAX(this.ownManager, src, null, handler);
+                config = handler.getConfiguration();
+            } finally {
+                resolver.release(src);
+            }
+        } catch(Exception e) {
+            throw new ConfigurationException("Could not load TreeBuilder configuration from " + url, e);
+        } finally {
+            this.ownManager.release(resolver);
+        }
+        
+        // Create the NodeBuilder selector.
+        ExcaliburComponentSelector selector = new ExtendedComponentSelector() {
+            protected String getComponentInstanceName() {
+                return "node";
+            }
+
+            protected String getClassAttributeName() {
+                return "builder";
+            }
+        };
+
+        // Automagically initialize the selector
+        LifecycleHelper.setupComponent(selector,
+            getLogger(),
+            this.context,
+            this.ownManager,
+            new WrapperComponentManager(this.ownManager),
+            this.ownRoleManager,
+            config.getChild("nodes", false),
+            true
+        );
+
+        this.builderSelector = new WrapperServiceSelector("BuilderSelector", selector);
+        
+    }
 
     public void setParentProcessorManager(ServiceManager manager) {
         this.parentProcessorManager = manager;
@@ -148,13 +193,6 @@ public class DefaultTreeBuilder
      */
     public void setRoleManager(RoleManager rm) {
         this.ownRoleManager = rm;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure(Configuration config) throws ConfigurationException {
-        this.configuration = config;
     }
 
     /* (non-Javadoc)
@@ -172,31 +210,6 @@ public class DefaultTreeBuilder
     }
 
     /**
-     * Create a role manager that will be used by all <code>RoleManageable</code>
-     * components. The default here is to create a role manager with the contents of
-     * the &lt;roles&gt; element of the configuration.
-     * <p>
-     * Subclasses can redefine this method to create roles from other sources than
-     * the one used here.
-     *
-     * @return the role manager
-     */
-    protected RoleManager createRoleManager() throws Exception
-    {
-        RoleManager roles = new DefaultRoleManager(this.ownRoleManager);
-
-        LifecycleHelper.setupComponent(roles,
-            getLogger(),
-            this.context,
-            this.ownManager,
-            this.ownRoleManager,
-            this.configuration.getChild("roles")
-        );
-
-        return roles;
-    }
-
-    /**
      * Create a component manager that will be used for all <code>Composable</code>
      * <code>ProcessingNodeBuilder</code>s and <code>ProcessingNode</code>s.
      * <p>
@@ -211,69 +224,6 @@ public class DefaultTreeBuilder
     protected ServiceManager createServiceManager(Configuration tree) throws Exception
     {
         return this.ownManager;
-    }
-
-    /**
-     * Create a <code>ComponentSelector</code> for <code>ProcessingNodeBuilder</code>s.
-     * It creates a selector with the contents of the "node" element of the configuration.
-     *
-     * @return a selector for node builders
-     */
-    protected ServiceSelector createBuilderSelector(String sitemapVersion)
-    throws Exception {
-
-        // Create the NodeBuilder selector.
-        ExcaliburComponentSelector selector = new ExtendedComponentSelector() {
-            protected String getComponentInstanceName() {
-                return "node";
-            }
-
-            protected String getClassAttributeName() {
-                return "builder";
-            }
-        };
-
-        // Merge configuration for tree builder from
-        // <nodes> and <nodes-{sitemapVersion}>
-        final Configuration base = this.configuration.getChild("nodes");
-        final Configuration layer = this.configuration.getChild("nodes-" + sitemapVersion);
-        if ( layer != null ) {
-            final DefaultConfiguration merged =
-                  new DefaultConfiguration( base.getName(),
-                                      "Merged [layer: " + layer.getLocation()
-                                      + ", base: " + base.getLocation() + "]" );
-            merged.addAllChildren(base);
-            final Configuration[] lc = layer.getChildren();
-            for( int i = 0; i < lc.length; i++ ) {
-                final String nodeName = lc[i].getAttribute("name");
-                final Configuration[] bc = base.getChildren();
-                boolean found = false;
-                int m = 0;
-                while ( m < bc.length && ! found ) {
-                    if ( nodeName.equals(bc[m].getAttribute("name")) ) {
-                        found = true;
-                    } else {
-                        m++;
-                    }
-                }
-                if ( found ) {
-                    merged.removeChild( bc[m] );
-                }
-                merged.addChild( lc[i] );
-            }
-        }
-        // Automagically initialize the selector
-        LifecycleHelper.setupComponent(selector,
-            getLogger(),
-            this.context,
-            this.ownManager,
-            new WrapperComponentManager(this.ownManager),
-            this.ownRoleManager,
-            base,
-            true
-        );
-
-        return new WrapperServiceSelector("BuilderSelector", selector);
     }
 
     /* (non-Javadoc)
@@ -372,40 +322,13 @@ public class DefaultTreeBuilder
         return this.namespace;
     }
 
-    public ProcessingNode build(Source source)
-    throws Exception {
-
-        try {
-            // Build a namespace-aware configuration object
-            NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
-            SourceUtil.toSAX( source, handler );
-            Configuration treeConfig = handler.getConfiguration();
-
-            this.namespace = treeConfig.getNamespace();
-
-            // get the namespace version
-            final int pos = this.namespace.lastIndexOf('/');
-            if ( pos == -1 ) {
-                throw new ProcessingException("Namespace " + this.namespace + " does not have a version number.");
-            }
-            if ( !this.namespace.substring(0, pos).equals("http://apache.org/cocoon/sitemap") ) {
-                throw new ProcessingException("Namespace " + this.namespace + " is not a valid sitemap namespace.");
-            }
-            return build(treeConfig, this.namespace.substring(pos+1));
-        } catch (ProcessingException e) {
-            throw e;
-        } catch(Exception e) {
-            throw new ProcessingException("Failed to load sitemap from " +
-                source.getURI(), e);
-        }
-    }
-
     /**
      * Build a processing tree from a <code>Configuration</code>.
      */
-    protected ProcessingNode build(Configuration tree, String sitemapVersion) throws Exception {
-
-        this.processorRoleManager = createRoleManager();
+    public ProcessingNode build(Configuration tree) throws Exception {
+        
+        // The namespace use in the whole sitemap is the one of the root element
+        this.namespace = tree.getNamespace();
 
         this.processorManager = createServiceManager(tree);
 
@@ -413,11 +336,9 @@ public class DefaultTreeBuilder
         this.lifecycle = new LifecycleHelper(getLogger(),
             this.context,
             this.processorManager,
-            this.processorRoleManager,
+            this.ownRoleManager,
             null // configuration
         );
-
-        this.builderSelector = createBuilderSelector(sitemapVersion);
 
         // Calls to getRegisteredNode() are forbidden
         this.canGetNode = false;
@@ -565,19 +486,27 @@ public class DefaultTreeBuilder
     }
     
     public void recycle() {
+        
+        // Reset all data created during the build
+        this.attributes.clear();
+        this.canGetNode = false;
+        this.disposableNodes = new ArrayList(); // Must not be cleared as it's used for processor disposal
+        this.initializableNodes.clear();
+        this.lifecycle = null; // Created in build()
+        this.linkedBuilders.clear();
+        this.namespace = null; // Set in build()
+        this.parentProcessorManager = null; // Set in setParentProcessorManager()
+        this.processor = null; // Set in setProcessor()
+        this.processorManager = null; // Set in build()
+        this.registeredNodes.clear();
+
         this.lifecycle = null; // Created in build()
         this.initializableNodes.clear();
         this.linkedBuilders.clear();
         this.canGetNode = false;
         this.registeredNodes.clear();
 
-        // Don't clear disposableNodes as they're used by the Processor
-        this.disposableNodes = new ArrayList();
         VariableResolverFactory.setDisposableCollector(null);
-
-        this.processor = null;
-        this.processorManager = null;
-        this.processorRoleManager = null;
     }
 
     public void dispose() {

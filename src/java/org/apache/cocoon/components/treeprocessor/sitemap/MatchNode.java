@@ -29,7 +29,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MatchNode.java,v 1.5 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: MatchNode.java,v 1.6 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public class MatchNode extends SimpleSelectorProcessingNode
@@ -66,25 +66,15 @@ public class MatchNode extends SimpleSelectorProcessingNode
 
         Map result = null;
 
-        if (this.hasThreadSafeComponent()) {
-            // Avoid select() and try/catch block (faster !)
+        Matcher matcher = (Matcher)getComponent();
+        try {
             result = this.executor.invokeMatcher(this, 
-                                                 objectModel, 
-                                                 (Matcher)this.getThreadSafeComponent(), 
-                                                 resolvedPattern, 
-                                                 resolvedParams);
-        } else {
-            // Get matcher from selector
-            Matcher matcher = (Matcher)this.selector.select(this.componentName);
-            try {
-                result = this.executor.invokeMatcher(this, 
-                        objectModel, 
-                        matcher, 
-                        resolvedPattern, 
-                        resolvedParams);
-            } finally {
-                this.selector.release(matcher);
-            }
+                    objectModel, 
+                    matcher, 
+                    resolvedPattern, 
+                    resolvedParams);
+        } finally {
+            releaseComponent(matcher);
         }
 
         if (result != null) {

@@ -16,19 +16,7 @@
 -->
 
 <!DOCTYPE sitemap-language [
-  <!ELEMENT sitemap-language (parameter, roles, nodes)>
-  <!ELEMENT roles (role+)>
-  <!ELEMENT role (hint*)>
-  <!ATTLIST role
-    name CDATA #REQUIRED
-    shorthand CDATA #REQUIRED
-    default-class CDATA #REQUIRED
-  >
-  <!ELEMENT hint EMPTY>
-  <!ATTLIST hint
-    shorthand CDATA #REQUIRED
-    class CDATA #REQUIRED
-  >
+  <!ELEMENT sitemap-language (nodes)>
   <!ELEMENT nodes (node+)>
   <!ELEMENT node (allowed-children*, ignored-children*, forbidden-children*)>
   <!ATTLIST node
@@ -42,77 +30,7 @@
 
 <sitemap-language>
 
-    <!-- New roles available to components created within a sitemap (i.e. in <map:components>) -->
-    <roles>
-      <role name="org.apache.cocoon.acting.ActionSelector"
-            shorthand="actions"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
-      
-      <role name="org.apache.cocoon.selection.SelectorSelector"
-            shorthand="selectors"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
-      
-      <role name="org.apache.cocoon.components.pipeline.ProcessingPipelineSelector"
-            shorthand="pipes"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
-
-      <role name="org.apache.cocoon.matching.MatcherSelector"
-            shorthand="matchers"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector">
-
-        <!-- since <map:components> is a regular xconf, we can define shorthand for
-             well-known implementations.
-             
-             The hint below allows the following to be written in <map:matchers> :
-               <regexp-uri-matcher name="regexp"/>
-             in place of :
-               <map:matcher name="regexp" src="org.apache.cocoon.matching.RegexpURIMatcher"/>
-          -->
-        <hint shorthand="regexp-uri-matcher"
-              class="org.apache.cocoon.matching.RegexpURIMatcher"/>
-
-        <hint shorthand="wildcard-uri-matcher"
-              class="org.apache.cocoon.matching.WildcardURIMatcher"/>
-
-      </role>
-      
-      <role name="org.apache.cocoon.generation.GeneratorSelector"
-            shorthand="generators"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector">
-
-        <hint shorthand="file-generator"
-              class="org.apache.cocoon.generation.FileGenerator"/>
-
-      </role>
-      
-      <role name="org.apache.cocoon.transformation.TransformerSelector"
-            shorthand="transformers"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector">
-
-        <hint shorthand="XSLT-transformer"
-              class="org.apache.cocoon.transformation.TraxTransformer"/>
-
-        <hint shorthand="cinclude-transformer"
-              class="org.apache.cocoon.transformation.CIncludeTransformer"/>
-
-      </role>
-      
-      <role name="org.apache.cocoon.serialization.SerializerSelector"
-            shorthand="serializers"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
-      
-      <role name="org.apache.cocoon.reading.ReaderSelector"
-            shorthand="readers"
-            default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
-          
-      <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
-            shorthand="notifying-builder"
-            default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>  
-
-    </roles>
-    
-    <!-- node definitions for the sitemap language 
-         that apply to all version -->
+    <!-- node definitions for the sitemap language -->
     <nodes>
       <!-- A node has the following attributes :
            - name : the node name, given as a local name in the language namespace (no prefix)

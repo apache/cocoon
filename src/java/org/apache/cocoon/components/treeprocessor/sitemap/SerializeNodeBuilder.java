@@ -15,22 +15,20 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.LinkedProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory;
-
-import org.apache.cocoon.reading.Reader;
 import org.apache.cocoon.serialization.Serializer;
-
-import java.util.Collection;
-import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SerializeNodeBuilder.java,v 1.4 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: SerializeNodeBuilder.java,v 1.5 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public class SerializeNodeBuilder extends AbstractProcessingNodeBuilder

@@ -95,10 +95,62 @@
        shorthand="store-janitor"
        default-class="org.apache.excalibur.store.impl.StoreJanitorImpl"/>
 
+  <!--=========================================================================
+       Sitemap engine
+      =========================================================================-->
+
+  <!-- the sitemap engine -->
   <role name="org.apache.cocoon.Processor"
         shorthand="sitemap"
         default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
+  
+  <!-- the tree builder for the sitemap language (additional implementations can be added here
+       or in cocoon.xconf for other implementations)
+       
+       The shorthand attribute is actually of no use, but the rolemanager requires it -->
+  <role name="org.apache.cocoon.components.treeprocessor.TreeBuilder/sitemap-1.0"
+        shorthand="treebuilder-1.0-should-actually-never-be-used"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage"/>
 
+  <!-- the various elements of map:components -->
+  <role name="org.apache.cocoon.components.pipeline.ProcessingPipelineSelector"
+        shorthand="pipes"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+
+  <role name="org.apache.cocoon.acting.ActionSelector"
+        shorthand="actions"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.selection.SelectorSelector"
+        shorthand="selectors"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.matching.MatcherSelector"
+        shorthand="matchers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.generation.GeneratorSelector"
+        shorthand="generators"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.transformation.TransformerSelector"
+        shorthand="transformers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.serialization.SerializerSelector"
+        shorthand="serializers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+      
+  <role name="org.apache.cocoon.reading.ReaderSelector"
+        shorthand="readers"
+        default-class="org.apache.cocoon.components.treeprocessor.sitemap.ComponentsSelector"/>
+          
+  <role name="org.apache.cocoon.components.notification.NotifyingBuilder"
+        shorthand="notifying-builder"
+        default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>  
+
+  <!--=========================================================================-->
+  
   <role name="org.apache.cocoon.components.classloader.ClassLoaderManager"
         shorthand="classloader"
         default-class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>

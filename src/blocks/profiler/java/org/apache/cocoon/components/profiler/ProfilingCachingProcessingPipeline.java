@@ -18,9 +18,9 @@ package org.apache.cocoon.components.profiler;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilingCachingProcessingPipeline.java,v 1.8 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id: ProfilingCachingProcessingPipeline.java,v 1.9 2004/07/16 12:36:45 sylvain Exp $
  */
 public class ProfilingCachingProcessingPipeline
   extends CachingProcessingPipeline {
@@ -50,9 +50,9 @@ public class ProfilingCachingProcessingPipeline
      *
      * @param manager    
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
 
-        super.compose(manager);
+        super.service(manager);
         this.profiler = (Profiler) manager.lookup(Profiler.ROLE);
     }
 
@@ -211,24 +211,22 @@ public class ProfilingCachingProcessingPipeline
             }
             this.data.setSetupTime(index++, System.currentTimeMillis()-time);
 
-            String mimeType = this.serializer.getMimeType();
-
-            if (mimeType!=null) {
-                // we have a mimeType from the component itself
-                environment.setContentType(mimeType);
-            } else if (serializerMimeType!=null) {
-                // there was a mimeType specified in the sitemap pipeline
+            // Set the mime-type
+            // the behaviour has changed from 2.1.x to 2.2 according to bug #10277
+            if (serializerMimeType != null) {
+                // there was a serializer defined in the sitemap
                 environment.setContentType(serializerMimeType);
-            } else if (this.sitemapSerializerMimeType!=null) {
-                // use the mimeType specified in the sitemap component declaration
-                environment.setContentType(this.sitemapSerializerMimeType);
             } else {
-                // No mimeType available
-                String message = "Unable to determine MIME type for "+
-                                 environment.getURIPrefix()+"/"+
-                                 environment.getURI();
-
-                throw new ProcessingException(message);
+                // ask to the component itself
+                String mimeType = this.serializer.getMimeType();
+                if (mimeType != null) {
+                    environment.setContentType (mimeType);
+                } else {
+                    // No mimeType available
+                    String message = "Unable to determine MIME type for " +
+                        environment.getURIPrefix() + "/" + environment.getURI();
+                    throw new ProcessingException(message);
+                }
             }
         } catch (SAXException e) {
             throw new ProcessingException("Could not setup pipeline.", e);

@@ -21,15 +21,16 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.source.Source;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.7 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: TreeBuilder.java,v 1.8 2004/07/16 12:36:45 sylvain Exp $
  */
 
 public interface TreeBuilder extends Component {
+    
+    final static String ROLE = TreeBuilder.class.getName();
 
     void setProcessor(ConcreteTreeProcessor processor);
     
@@ -57,9 +58,9 @@ public interface TreeBuilder extends Component {
     String getNamespace();
 
     /**
-     * Build a processing tree from a <code>Source</code>.
+     * Build a processing tree from a <code>Configuration</code> object holding the sitemap program.
      */
-    ProcessingNode build(Source source) throws Exception;
+    ProcessingNode build(Configuration config) throws Exception;
 
     /**
      * Return the list of <code>ProcessingNodes</code> part of this tree that are

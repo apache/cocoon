@@ -32,7 +32,7 @@ import org.apache.cocoon.sitemap.PatternException;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatchNode.java,v 1.8 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id: PreparableMatchNode.java,v 1.9 2004/07/16 12:36:45 sylvain Exp $
  */
 public class PreparableMatchNode extends SimpleSelectorProcessingNode
     implements ParameterizableProcessingNode, Initializable {
@@ -66,7 +66,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
     public void initialize() throws Exception {
 
         // Prepare the pattern
-        PreparableMatcher matcher = (PreparableMatcher)selector.select(componentName);
+        PreparableMatcher matcher = (PreparableMatcher)getComponent();
 
         try {
             this.preparedPattern = matcher.preparePattern(this.pattern);
@@ -74,7 +74,7 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
             String msg = "Invalid pattern '" + this.pattern + "' for matcher at " + this.getLocation();
             throw new ConfigurationException(msg, pe);
         } finally {
-            selector.release(matcher);
+            releaseComponent(matcher);
         }
     }
 
@@ -94,19 +94,12 @@ public class PreparableMatchNode extends SimpleSelectorProcessingNode
 
         Map result = null;
 
-        if (this.getThreadSafeComponent() != null) {
-            // Avoid select() and try/catch block (faster !)
-            result = ((PreparableMatcher)this.getThreadSafeComponent()).preparedMatch(preparedPattern, objectModel, resolvedParams);
+        PreparableMatcher matcher = (PreparableMatcher)getComponent();
+        try {
+            result = matcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
 
-        } else {
-            // Get matcher from selector
-            PreparableMatcher matcher = (PreparableMatcher)this.selector.select(this.componentName);
-            try {
-                result = matcher.preparedMatch(preparedPattern, objectModel, resolvedParams);
-
-            } finally {
-                this.selector.release(matcher);
-            }
+        } finally {
+            releaseComponent(matcher);
         }
 
         if (result != null) {
