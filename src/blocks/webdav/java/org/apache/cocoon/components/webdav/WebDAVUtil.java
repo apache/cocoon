@@ -170,7 +170,7 @@ public class WebDAVUtil {
             String colToMake = null;
             while (pathToMake.indexOf("/") != -1) {
                 colToMake = pathToMake.substring(0, pathToMake.indexOf("/"));
-                WebDAVUtil.makeCollection(path.substring(0, path.indexOf(colToMake)), colToMake);
+                WebDAVUtil.makeCollection(path.substring(0, path.lastIndexOf(colToMake)), colToMake);
                 pathToMake = pathToMake.substring(pathToMake.indexOf("/")+1);
             }
         }
