@@ -49,43 +49,57 @@
  
 */
 
-package org.apache.cocoon.transformation.pagination;
+package org.apache.cocoon.util;
 
 /**
- * Container class for the immutable pagination rules for each page.
+ * Add-only Container class.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: ItemGroup.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
+ * @version CVS $Id: ResizableContainer.java,v 1.1 2003/06/27 20:10:43 stefano Exp $
  */
-public class ItemGroup {
-    
-    private String name;
-    private String elementName;
-    private String elementURI;
-    
-    public ItemGroup (String name, String elementURI, String elementName) {
-        this.name = name;
-        this.elementURI = elementURI;
-        this.elementName = elementName;
-    }
-    
-    public boolean match(String elementName, String elementURI) {
-        return (this.elementName.equals(elementName) && this.elementURI.equals(elementURI));
+public class ResizableContainer {
+
+    private int pointer = -1;
+    private int size = 0;
+    private Object[] container;
+
+    public ResizableContainer(int initialCapacity){
+        this.container = new Object[initialCapacity];
     }
 
-    public boolean match(String elementURI) {
-        return this.elementURI.equals(elementURI);
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getElementURI() {
-        return this.elementURI;
+    public void add(Object o) {
+        set(++pointer,o);
     }
     
-    public String getElementName() {
-        return this.elementName;
+    public void set(int index, Object o) {
+        adjustPointer(index);
+        ensureCapacity(index+1);
+        container[index] = o;
+        size++;
+    }
+    
+    public Object get(int index) {
+        return (index < container.length) ? container[index] : null; 
+    }    
+
+    public int size() {
+        return size;
+    }
+
+    private void adjustPointer(int newPointer) {
+        this.pointer = Math.max(this.pointer, newPointer);
+    }
+    
+    private void ensureCapacity(int minCapacity) {
+        int oldCapacity = container.length;
+        if (oldCapacity < minCapacity) {
+            Object[] oldContainer = container;
+            int newCapacity = (oldCapacity * 3)/2 + 1;
+            if (newCapacity < minCapacity) {
+                newCapacity = minCapacity;
+            }
+            container = new Object[newCapacity];
+            System.arraycopy(oldContainer, 0, container, 0, oldContainer.length);
+        }
     }
 }

@@ -1,5 +1,5 @@
 
-CVS: $Id: README.txt,v 1.1 2003/03/09 00:10:31 pier Exp $
+CVS: $Id: README.txt,v 1.1 2003/06/27 20:10:42 stefano Exp $
 
 
 To get started, read the How-To for this component:

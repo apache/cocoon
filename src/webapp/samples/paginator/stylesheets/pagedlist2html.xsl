@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: pagedlist2html.xsl,v 1.1 2003/03/09 00:10:33 pier Exp $ -->
+<!-- CVS: $Id: pagedlist2html.xsl,v 1.1 2003/06/27 20:10:41 stefano Exp $ -->
 
 <!DOCTYPE xsl:stylesheet [
  <!ENTITY laquo "&#xAB;" >

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: list2html.xsl,v 1.1 2003/03/09 00:10:33 pier Exp $ -->
+<!-- CVS: $Id: list2html.xsl,v 1.1 2003/06/27 20:10:41 stefano Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
