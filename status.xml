@@ -437,6 +437,13 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="SW" type="update">
+     CForms: separate <code>FormattingDateConvertor</code> that uses
+     <code>java.text.SimpleDateFormat</code> and <code>Icu4jDateFormatter</code>
+     that uses ICU4J. There was previously an automatic switch to ICU4J if the
+     library was present in the classpath, which sometimes caused some strange
+     results are it behaves a bit differently.
+   </action>
    <action dev="VG" type="update">
      Build: Added exclude.all.blocks and include.all.blocks properties
      to quickly toggle all blocks on or off.
