@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.reading;
 
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.util.ByteRange;
@@ -96,14 +98,17 @@ import java.util.Map;
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ResourceReader.java,v 1.5 2003/12/27 15:11:57 unico Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: ResourceReader.java,v 1.6 2004/02/04 12:22:47 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Reader
  * @x-avalon.lifestyle type=pooled
  * @x-avalon.info name=resource-reader
  */
-public class ResourceReader extends AbstractReader implements CacheableProcessingComponent {
+public class ResourceReader 
+extends AbstractReader 
+implements CacheableProcessingComponent, Parameterizable {
 
     /** The list of generated documents */
     private static final Map documents = new HashMap();
@@ -119,6 +124,21 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
     protected long expires;
     protected int bufferSize;
 
+    protected long configuredExpires;
+    protected boolean configuredQuickTest;
+    protected int configuredBufferSize;
+    protected boolean configuredByteRanges;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
+     */
+    public void parameterize(Parameters parameters) throws ParameterException {
+        this.configuredExpires = parameters.getParameterAsLong("expires", -1);
+        this.configuredQuickTest = parameters.getParameterAsBoolean("quick-modified-test", false);
+        this.configuredBufferSize = parameters.getParameterAsInteger("buffer-size", 8192);
+        this.configuredByteRanges = parameters.getParameterAsBoolean("byte-ranges", true);
+    }
+
     /**
      * Setup the reader.
      * The resource is opened to get an <code>InputStream</code>,
@@ -130,11 +150,11 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
         request = ObjectModelHelper.getRequest(objectModel);
         response = ObjectModelHelper.getResponse(objectModel);
 
-        expires = par.getParameterAsInteger("expires", -1);
-        bufferSize = par.getParameterAsInteger("buffer-size",8192);
+        expires = par.getParameterAsLong("expires", this.configuredExpires);
+        bufferSize = par.getParameterAsInteger("buffer-size", this.configuredBufferSize);
 
-        byteRanges = par.getParameterAsBoolean("byte-ranges",true);
-        quickTest = par.getParameterAsBoolean("quick-modified-test", false);
+        byteRanges = par.getParameterAsBoolean("byte-ranges", this.configuredByteRanges);
+        quickTest = par.getParameterAsBoolean("quick-modified-test", this.configuredQuickTest);
 
         try {
             inputSource = resolver.resolveURI(src);
@@ -184,7 +204,7 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
             return inputSource.getLastModified();
         }
         final String systemId = (String) documents.get(request.getRequestURI());
-        if (inputSource.getURI().equals(systemId)) {
+        if (systemId == null || inputSource.getURI().equals(systemId)) {
             return inputSource.getLastModified();
         }
         else {
@@ -294,9 +314,16 @@ public class ResourceReader extends AbstractReader implements CacheableProcessin
                 throw SourceUtil.handle("Error during resolving of the input stream", se);
             }
 
-            processStream();
-
-            inputStream.close();
+            // Bugzilla Bug 25069, close inputStream in finally block
+            // this will close inputStream even if processStream throws
+            // an exception
+            try {
+                processStream();
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            }
 
             if (!quickTest) {
                 // if everything is ok, add this to the list of generated documents
