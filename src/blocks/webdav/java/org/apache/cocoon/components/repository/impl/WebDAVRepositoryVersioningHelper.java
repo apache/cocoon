@@ -139,16 +139,7 @@ implements RepositoryVersioningHelper, Serviceable, Disposable, Component {
 
         try {
             if(!versioned) {
-                WebDAVUtil.moveResource(this.repo.getAbsoluteURI(uri),
-                                        this.repo.getAbsoluteURI(uri + ".temp"),
-                                        false,
-                                        false);
-                WebDAVUtil.copyResource(this.repo.getAbsoluteURI(uri + ".temp"),
-                                        this.repo.getAbsoluteURI(uri),
-                                        false,
-                                        false);
-                WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri + ".temp")).deleteMethod();
-                return true;
+                return false;
 
             } else {      
                 return WebDAVUtil.getWebdavResource(this.repo.getAbsoluteURI(uri))
