@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.4 2003/03/19 17:26:54 stefano Exp $
+:: $Id: cocoon.bat,v 1.5 2003/04/12 02:50:31 ghoward Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -121,6 +121,7 @@ goto end
 
 :doDebug
 %EXEC% %JAVA_HOME%\bin\java.exe %JAVA_OPT% -Xdebug -Xrunjdwp:transport=dt_socket,address=%JAVA_DEBUG_PORT%,server=y,suspend=n  -classpath %CP% -Djava.endorsed.dirs=%COCOON_HOME%\lib\endorsed -Dwebapp=%JETTY_WEBAPP% -Dhome=%COCOON_HOME% -Dorg.xml.sax.parser=org.apache.xerces.parsers.SAXParser -Djetty.port=%JETTY_PORT% -Djetty.admin.port=%JETTY_ADMIN_PORT% -Dloader.jar.repositories=%COCOON_HOME%\tools\jetty\lib,%COCOON_HOME%\lib\endorsed -Dloader.main.class=org.mortbay.jetty.Server Loader %COCOON_HOME%\tools\jetty\conf\main.xml
+goto end
 
 :: ----- Servlet Profile ---------------------------------------------------------
 
