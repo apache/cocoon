@@ -34,10 +34,10 @@
 
      <xsl:if test="$section">
       <xsl:if test="not($slide)">
-       <xsl:apply-templates select="//section[$section]"/>
+       <xsl:apply-templates select="//section[position() = $section]"/>
       </xsl:if>
       <xsl:if test="$slide">
-       <xsl:apply-templates select="//section[$section]/slide[$slide]"/>
+       <xsl:apply-templates select="//section[position() = $section]/slide[position() = $slide]"/>
       </xsl:if>
      </xsl:if>
    </slide>
@@ -55,7 +55,7 @@
       <xsl:value-of select="count(//section)"/>
      </xsl:variable>
      <xsl:variable name="previous-last">
-      <xsl:value-of select="count(//section[$section - 1]/slide)"/>
+      <xsl:value-of select="count(//section[position() = ($section - 1)]/slide)"/>
      </xsl:variable>
 
      <home href=""/>
@@ -90,10 +90,10 @@
       <xsl:value-of select="count(//section)"/>
      </xsl:variable>
      <xsl:variable name="last">
-      <xsl:value-of select="count(//section[$section]/slide)"/>
+      <xsl:value-of select="count(//section[position() = $section]/slide)"/>
      </xsl:variable>
      <xsl:variable name="previous-last">
-      <xsl:value-of select="count(//section[$section - 1]/slide)"/>
+      <xsl:value-of select="count(//section[position() = ($section - 1)]/slide)"/>
      </xsl:variable>
 
      <home href="?section={$section}"/>
