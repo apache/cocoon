@@ -51,12 +51,17 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.variables.VariableResolver;
@@ -64,6 +69,7 @@ import org.apache.cocoon.components.variables.VariableResolverFactory;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.apache.cocoon.sitemap.PatternException;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -79,12 +85,17 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.5 2003/06/15 16:56:09 cziegeler Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.6 2003/06/17 17:54:47 cziegeler Exp $
  */
 public class XSLTAspect 
-    extends AbstractAspect {
+    extends AbstractAspect
+    implements Disposable {
 
-	/* (non-Javadoc)
+    protected List variables = new ArrayList();
+    
+    protected VariableResolverFactory variableFactory;
+    
+    /* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
 	 */
 	public void toSAX(RendererAspectContext context,
@@ -126,30 +137,19 @@ public class XSLTAspect
         }
 	}
 
-    protected String getStylesheetURI(PreparedConfiguration config, Layout layout) {
-
+    protected String getStylesheetURI(PreparedConfiguration config, Layout layout) 
+    throws SAXException {
         // FIXME Get the stylesheet either from a layout attribute or another aspect
-        String stylesheet = config.stylesheet;
-        // TODO make this faster
-        VariableResolverFactory factory = null;
         try {
-            factory = (VariableResolverFactory) this.manager.lookup(VariableResolverFactory.ROLE);
-            VariableResolver resolver = null;
-            try {
-                resolver = factory.lookup( stylesheet );
-                stylesheet = resolver.resolve();
-            } finally {
-                factory.release( resolver );
-            }
-        } catch (Exception ignore) {
-        } finally {
-            this.manager.release((Component)factory);
+            String stylesheet = config.stylesheet.resolve();
+            return stylesheet;
+        } catch (PatternException pe) {
+            throw new SAXException("Pattern exception during variable resolving.", pe);            
         }
-        return stylesheet;
     }
 
     protected class PreparedConfiguration {
-        public String stylesheet;
+        public VariableResolver stylesheet;
         public String xsltRole; 
 
         public void takeValues(PreparedConfiguration from) {
@@ -164,9 +164,40 @@ public class XSLTAspect
     public Object prepareConfiguration(Parameters configuration) 
     throws ParameterException {
         PreparedConfiguration pc = new PreparedConfiguration();
-        pc.stylesheet = configuration.getParameter("style");
         pc.xsltRole = configuration.getParameter("xslt-processor-role", XSLTProcessorImpl.ROLE);
+        String stylesheet = configuration.getParameter("style");
+        try {
+            pc.stylesheet = this.variableFactory.lookup( stylesheet );
+        } catch (PatternException pe) {
+            throw new ParameterException("Unknown pattern for stylesheet " + stylesheet, pe);
+        }
+        this.variables.add(pc.stylesheet);
         return pc;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            Iterator vars = this.variables.iterator();
+            while ( vars.hasNext() ) {
+                this.variableFactory.release( (VariableResolver) vars.next() );
+            }
+            this.variables.clear();
+            this.manager.release((Component) this.variableFactory);
+            this.manager = null;
+            this.variableFactory = null;
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
+    public void compose(ComponentManager componentManager)
+    throws ComponentException {
+        super.compose(componentManager);
+        this.variableFactory = (VariableResolverFactory) this.manager.lookup(VariableResolverFactory.ROLE);
     }
 
 }
