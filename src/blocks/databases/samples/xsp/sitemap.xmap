@@ -20,7 +20,7 @@
 
    <map:match pattern="*">
      <map:generate src="{1}.xsp" type="serverpages"/>
-     <map:transform src="context://samples/stylesheets/simple-sql2html.xsl">
+     <map:transform src="../stylesheets/sql2html.xsl">
         <map:parameter name="servletPath" value="{request:servletPath}"/>
         <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
         <map:parameter name="contextPath" value="{request:contextPath}"/>
@@ -34,6 +34,7 @@
    </map:match>
 
   </map:pipeline>
+  
  </map:pipelines>
 
 </map:sitemap>
