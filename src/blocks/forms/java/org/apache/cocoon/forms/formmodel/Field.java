@@ -43,7 +43,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.8 2004/04/20 22:19:27 mpo Exp $
+ * @version CVS $Id: Field.java,v 1.9 2004/04/22 14:26:48 mpo Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget {
     protected SelectionList selectionList;
@@ -225,14 +225,17 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     public String getXMLElementName() {
         return FIELD_EL;
     }
-
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl fieldAttrs = new AttributesImpl();
-        fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        fieldAttrs.addCDATAAttribute("required", String.valueOf(isRequired()));
-        contentHandler.startElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL, fieldAttrs);
-
+    
+    /**
+     * Adds the @required attribute
+     */
+    public AttributesImpl getXMLElementAttributes() {
+        AttributesImpl attrs = super.getXMLElementAttributes();
+        attrs.addCDATAAttribute("required", String.valueOf(isRequired()));
+        return attrs;
+    }    
+    
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         if (enteredValue != null || value != null) {
             contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
             String stringValue;
@@ -252,9 +255,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
 
-        // generate label, help, hint, etc.
-        fieldDefinition.generateDisplayData(contentHandler);
-
         // generate selection list, if any
         if (selectionList != null) {
             selectionList.generateSaxFragment(contentHandler, locale);
@@ -264,13 +264,8 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
         // include some info about the datatype
         fieldDefinition.getDatatype().generateSaxFragment(contentHandler, locale);
-
-        contentHandler.endElement(Constants.INSTANCE_NS, FIELD_EL, Constants.INSTANCE_PREFIX_COLON + FIELD_EL);
     }
 
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        fieldDefinition.generateLabel(contentHandler);
-    }
 
     /**
      * Set this field's selection list.

@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>Using the methods {@link #getSize()} and {@link #getWidget(int, java.lang.String)}
  * you can access all of the repeated widget instances.
  * 
- * @version $Id: Repeater.java,v 1.8 2004/04/21 13:33:37 mpo Exp $
+ * @version $Id: Repeater.java,v 1.9 2004/04/22 14:26:48 mpo Exp $
  */
 public class Repeater extends AbstractWidget 
 //implements ContainerWidget 
@@ -249,16 +249,23 @@ public class Repeater extends AbstractWidget
         return REPEATER_EL;
     }   
     
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl repeaterAttrs = new AttributesImpl();
-        repeaterAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        repeaterAttrs.addCDATAAttribute("size", String.valueOf(getSize()));
-        contentHandler.startElement(Constants.INSTANCE_NS, REPEATER_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_EL, repeaterAttrs);
-
+    
+    
+	/**
+	 * Adds @size attribute
+	 */
+	public AttributesImpl getXMLElementAttributes() {
+        AttributesImpl attrs = super.getXMLElementAttributes();
+        attrs.addCDATAAttribute("size", String.valueOf(getSize()));
+		return attrs;
+	}
+    
+        
+	public void generateDisplayData(ContentHandler contentHandler)
+			throws SAXException {
         // the repeater's label
         contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, XMLUtils.EMPTY_ATTRIBUTES);
-        definition.generateLabel(contentHandler);
+        generateLabel(contentHandler);
         contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
 
         // heading element -- currently contains the labels of each widget in the repeater
@@ -271,18 +278,16 @@ public class Repeater extends AbstractWidget
             contentHandler.endElement(Constants.INSTANCE_NS, HEADING_EL, Constants.INSTANCE_PREFIX_COLON + HEADING_EL);
         }
         contentHandler.endElement(Constants.INSTANCE_NS, HEADINGS_EL, Constants.INSTANCE_PREFIX_COLON + HEADINGS_EL);
-
+	}
+    
+    
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // the actual rows in the repeater
         Iterator rowIt = rows.iterator();
         while (rowIt.hasNext()) {
             RepeaterRow row = (RepeaterRow)rowIt.next();
             row.generateSaxFragment(contentHandler, locale);
         }
-        contentHandler.endElement(Constants.INSTANCE_NS, REPEATER_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_EL);
-    }
-
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
     }
 
     /**
@@ -300,9 +305,7 @@ public class Repeater extends AbstractWidget
      * Generates a repeater-size element with a size attribute indicating the size of this repeater.
      */
     public void generateSize(ContentHandler contentHandler) throws SAXException {
-        AttributesImpl attrs = new AttributesImpl();
-        attrs.addCDATAAttribute("id", getFullyQualifiedId());
-        attrs.addCDATAAttribute("size", String.valueOf(getSize()));
+        AttributesImpl attrs = getXMLElementAttributes(); 
         contentHandler.startElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL, attrs);
         contentHandler.endElement(Constants.INSTANCE_NS, REPEATER_SIZE_EL, Constants.INSTANCE_PREFIX_COLON + REPEATER_SIZE_EL);
     }
@@ -353,12 +356,7 @@ public class Repeater extends AbstractWidget
         
         private static final String ROW_EL = "repeater-row";
 
-        public void generateLabel(ContentHandler contentHandler) throws SAXException {
-            // this widget has no label
-        }
 
-        
-        
         /**
          * @return "repeater-row"
          */
@@ -366,31 +364,30 @@ public class Repeater extends AbstractWidget
             return ROW_EL;
         }
 
-        //TODO: reuse available implementation on superclass       
-        public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-            AttributesImpl rowAttrs = new AttributesImpl();
-            rowAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-            contentHandler.startElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL, rowAttrs);
-            Iterator widgetIt = widgets.iterator();
-            while (widgetIt.hasNext()) {
-                Widget widget = (Widget)widgetIt.next();
-                widget.generateSaxFragment(contentHandler, locale);
-            }
-            contentHandler.endElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL);
+        public void generateLabel(ContentHandler contentHandler) throws SAXException {
+            // this widget has its label generated in the context of the repeater
+        }     
+        
+        public void generateDisplayData(ContentHandler contentHandler)
+                throws SAXException {
+            // this widget has its display-data generated in the context of the repeater
         }
+                
+//        //TODO: reuse available implementation on superclass       
+//        public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+//            AttributesImpl rowAttrs = new AttributesImpl();
+//            rowAttrs.addCDATAAttribute("id", getFullyQualifiedId());
+//            contentHandler.startElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL, rowAttrs);
+//            Iterator widgetIt = widgets.iterator();
+//            while (widgetIt.hasNext()) {
+//                Widget widget = (Widget)widgetIt.next();
+//                widget.generateSaxFragment(contentHandler, locale);
+//            }
+//            contentHandler.endElement(Constants.INSTANCE_NS, ROW_EL, Constants.INSTANCE_PREFIX_COLON + ROW_EL);
+//        }
         
         public void broadcastEvent(WidgetEvent event) {
             throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
         }
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.forms.formmodel.ContainerWidget#getChildren()
-     */
-//    public Iterator getChildren() {
-//        // TODO Auto-generated method stub to make this compile again
-//        return null;
-//    }
-
-    
 }

@@ -15,16 +15,15 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Locale;
+
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.ValueChangedEvent;
 import org.apache.cocoon.forms.event.WidgetEvent;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * A widget to select a boolean value. Usually rendered as a checkbox.
@@ -37,7 +36,7 @@ import java.util.Locale;
  * and the manner in which the request parameter of this widget is interpreted
  * is different (missing or empty request parameter means 'false', rather than null value).
  * 
- * @version $Id: BooleanField.java,v 1.5 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: BooleanField.java,v 1.6 2004/04/22 14:26:48 mpo Exp $
  */
 public class BooleanField extends AbstractWidget {
     // FIXME(SW) : should the initial value be false or null ? This would allow
@@ -87,26 +86,12 @@ public class BooleanField extends AbstractWidget {
         return BOOLEAN_FIELD_EL;
     }
 
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl fieldAttrs = new AttributesImpl();
-        fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.INSTANCE_NS, BOOLEAN_FIELD_EL, Constants.INSTANCE_PREFIX_COLON + BOOLEAN_FIELD_EL, fieldAttrs);
-
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // value element
         contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, XMLUtils.EMPTY_ATTRIBUTES);
         String stringValue = String.valueOf(value != null && value.booleanValue() == true? "true": "false");
         contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
         contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
-
-        // generate label, help, hint, etc.
-        definition.generateDisplayData(contentHandler);
-
-        contentHandler.endElement(Constants.INSTANCE_NS, BOOLEAN_FIELD_EL, Constants.INSTANCE_PREFIX_COLON + BOOLEAN_FIELD_EL);
-    }
-
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
     }
 
     public Object getValue() {

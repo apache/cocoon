@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
+import java.util.Locale;
+
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.datatype.SelectionList;
@@ -23,12 +25,9 @@ import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.cocoon.forms.validation.ValidationErrorAware;
-import org.apache.cocoon.xml.AttributesImpl;
 import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * A MultiValueField is mostly the same as a normal {@link Field}, but can
@@ -45,7 +44,7 @@ import java.util.Locale;
  * can be used with the Datatype (see {@link org.apache.cocoon.forms.datatype.Datatype Datatype}
  * description for more information).
  * 
- * @version $Id: MultiValueField.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: MultiValueField.java,v 1.7 2004/04/22 14:26:48 mpo Exp $
  */
 public class MultiValueField extends AbstractWidget implements ValidationErrorAware, SelectableWidget {
     private final MultiValueFieldDefinition definition;
@@ -117,12 +116,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         return MULTIVALUEFIELD_EL;
     }   
     
-    //TODO: reuse available implementation on superclass
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl attrs = new AttributesImpl();
-        attrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.INSTANCE_NS, MULTIVALUEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + MULTIVALUEFIELD_EL, attrs);
-
+    public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         contentHandler.startElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL, XMLUtils.EMPTY_ATTRIBUTES);
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
@@ -141,9 +135,6 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
         }
         contentHandler.endElement(Constants.INSTANCE_NS, VALUES_EL, Constants.INSTANCE_PREFIX_COLON + VALUES_EL);
 
-        // generate label, help, hint, etc.
-        definition.generateDisplayData(contentHandler);
-
         // the selection list (a MultiValueField has per definition always a SelectionList)
         if (this.selectionList != null) {
             this.selectionList.generateSaxFragment(contentHandler, locale);
@@ -157,14 +148,9 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
             validationError.generateSaxFragment(contentHandler);
             contentHandler.endElement(Constants.INSTANCE_NS, VALIDATION_MSG_EL, Constants.INSTANCE_PREFIX_COLON + VALIDATION_MSG_EL);
         }
-
-        contentHandler.endElement(Constants.INSTANCE_NS, MULTIVALUEFIELD_EL, Constants.INSTANCE_PREFIX_COLON + MULTIVALUEFIELD_EL);
     }
 
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
-    }
-
+    
     public Object getValue() {
         return values;
     }

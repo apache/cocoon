@@ -15,11 +15,9 @@
  */
 package org.apache.cocoon.forms.formmodel;
 
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.FormContext;
 import org.apache.cocoon.forms.event.FormHandler;
 import org.apache.cocoon.forms.event.ProcessingPhase;
@@ -27,11 +25,7 @@ import org.apache.cocoon.forms.event.ProcessingPhaseEvent;
 import org.apache.cocoon.forms.event.ProcessingPhaseListener;
 import org.apache.cocoon.forms.event.WidgetEvent;
 import org.apache.cocoon.forms.event.WidgetEventMulticaster;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.apache.cocoon.xml.XMLUtils;
 import org.apache.commons.collections.list.CursorableLinkedList;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 
 /**
  * A widget that serves as a container for other widgets, the top-level widget in
@@ -39,7 +33,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.8 2004/04/20 22:19:27 mpo Exp $
+ * @version CVS $Id: Form.java,v 1.9 2004/04/22 14:26:48 mpo Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -314,25 +308,4 @@ public class Form extends AbstractContainerWidget {
         return FORM_EL;
     }
     
-    //TODO: reuse available implementation on superclass    
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl formAttrs = new AttributesImpl();
-        formAttrs.addCDATAAttribute("id", definition.getId());
-        contentHandler.startElement(Constants.INSTANCE_NS, FORM_EL, Constants.INSTANCE_PREFIX_COLON + FORM_EL, XMLUtils.EMPTY_ATTRIBUTES);
-        definition.generateLabel(contentHandler);
-
-        contentHandler.startElement(Constants.INSTANCE_NS, CHILDREN_EL, Constants.INSTANCE_PREFIX_COLON + CHILDREN_EL, XMLUtils.EMPTY_ATTRIBUTES);
-        Iterator widgetIt = widgets.iterator();
-        while (widgetIt.hasNext()) {
-            Widget widget = (Widget)widgetIt.next();
-            widget.generateSaxFragment(contentHandler, locale);
-        }
-        contentHandler.endElement(Constants.INSTANCE_NS, CHILDREN_EL, Constants.INSTANCE_PREFIX_COLON + CHILDREN_EL);
-
-        contentHandler.endElement(Constants.INSTANCE_NS, FORM_EL, Constants.INSTANCE_PREFIX_COLON + FORM_EL);
-    }
-
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
-    }
 }
