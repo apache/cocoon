@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.5 $ $Date: 2004/05/03 09:00:28 $
+ * @version CVS $Revision: 1.6 $ $Date: 2004/07/02 09:49:14 $
  */
 public final class DocumentCache {
 
@@ -97,12 +97,15 @@ public final class DocumentCache {
         return document;
     }
     
-    public static Document getDocument(String string) {
+    public static Document getDocument(String string, String systemURI) {
         try {
             final InputSource is = new InputSource(new StringReader(string));
+            if ( systemURI != null ) {
+                is.setSystemId(systemURI);
+            }
             return builder.parse(is);
         } catch (Exception e) {
-            throw new BuildException("Unable to parse string.");
+            throw new BuildException("Unable to parse string.", e);
         }
     }
     

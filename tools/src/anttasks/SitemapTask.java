@@ -16,6 +16,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ import com.thoughtworks.qdox.model.JavaClass;
  * 
  * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.16 $ $Date: 2004/05/26 13:12:40 $
+ * @version CVS $Revision: 1.17 $ $Date: 2004/07/02 09:49:14 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
@@ -464,7 +465,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             String configuration = this.getTagValue(CONF_TAG, null);
             if ( configuration != null ) {
                 configuration = "<root>" + configuration + "</root>";
-                final Document confDoc = DocumentCache.getDocument(configuration);
+                final Document confDoc = DocumentCache.getDocument(configuration, null);
                 setValue(node, null, confDoc.getDocumentElement().getChildNodes());
             }
 
@@ -507,7 +508,13 @@ public final class SitemapTask extends AbstractQdoxTask {
             
             // append root element and surrounding paragraph
             final String description = "<root><p>" + doc + "</p></root>";
-            final Document descriptionDoc = DocumentCache.getDocument(description);
+            String systemURI = null;
+            try {
+                systemURI = docFile.toURL().toExternalForm();
+            } catch (MalformedURLException mue) {
+                // we ignore this
+            }
+            final Document descriptionDoc = DocumentCache.getDocument(description, systemURI);
             
             // Title
             setValue(template, "/document/header/title", 
