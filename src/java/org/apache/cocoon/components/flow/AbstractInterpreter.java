@@ -47,7 +47,7 @@ import org.apache.excalibur.source.SourceUtil;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.19 2004/03/05 13:02:46 bdelacretaz Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.20 2004/05/04 11:54:35 cziegeler Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Serviceable, Contextualizable, Interpreter,
@@ -155,9 +155,13 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     {
         // FIXME (SW): should we deprecate this method in favor of PipelineUtil?
         PipelineUtil pipeUtil = new PipelineUtil();
-        pipeUtil.contextualize(this.avalonContext);
-        pipeUtil.service(this.manager);
-        pipeUtil.processToStream(uri, biz, out);
+        try {
+            pipeUtil.contextualize(this.avalonContext);
+            pipeUtil.service(this.manager);
+            pipeUtil.processToStream(uri, biz, out);
+        } finally {
+            pipeUtil.dispose();
+        }
     }
 
     public void forwardTo(String uri, Object bizData,
@@ -173,6 +177,8 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             if (redirector.hasRedirected()) {
                 throw new IllegalStateException("Pipeline has already been processed for this request");
             }
+            // this is a hint for the redirector
+            objectModel.put("cocoon:forward", "true");
             redirector.redirect(false, uri);
         } else {
             throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");

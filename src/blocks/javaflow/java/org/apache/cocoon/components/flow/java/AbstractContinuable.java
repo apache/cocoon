@@ -31,7 +31,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractContinuable.java,v 1.3 2004/04/25 12:12:08 sylvain Exp $
+ * @version CVS $Id: AbstractContinuable.java,v 1.4 2004/05/04 11:54:35 cziegeler Exp $
  */
 public abstract class AbstractContinuable implements Continuable {
 
@@ -115,13 +115,15 @@ public abstract class AbstractContinuable implements Continuable {
 
         ContinuationContext context = getContext();
 
-        try {
-            PipelineUtil pipeUtil = new PipelineUtil();
+        PipelineUtil pipeUtil = new PipelineUtil();
+        try {          
             pipeUtil.contextualize(context.getAvalonContext());
             pipeUtil.service(context.getServiceManager());
             pipeUtil.processToStream(uri, bizdata, out);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Cannot process pipeline to '"+uri+"'", e);
+        } finally {
+            pipeUtil.dispose();
         }
     }
 
