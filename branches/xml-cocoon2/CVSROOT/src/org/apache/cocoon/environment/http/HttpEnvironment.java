@@ -74,6 +74,13 @@ public class HttpEnvironment extends AbstractEnvironment {
     }
 
     /** 
+     * Set the StatusCode 
+     */ 
+    public void setStatus(int statusCode) { 
+        this.response.setStatus(statusCode); 
+    } 
+
+    /** 
      * Set the ContentType 
      */ 
     public void setContentType(String contentType) { 
