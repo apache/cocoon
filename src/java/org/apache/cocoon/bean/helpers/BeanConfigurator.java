@@ -67,7 +67,7 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a CocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.3 2003/10/13 12:08:10 upayavira Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.4 2003/10/14 22:42:21 joerg Exp $
  */
 public class BeanConfigurator {
 
@@ -95,7 +95,6 @@ public class BeanConfigurator {
     private static final String ATTR_AGENT = "user-agent";
     private static final String ATTR_ACCEPT = "accept";
     private static final String ATTR_DEFAULT_FILENAME = "default-filename";
-    private static final String ATTR_LOCALE = "locale";
      
     private static final String NODE_BROKEN_LINKS = "broken-links";
     private static final String ATTR_BROKEN_LINK_REPORT_TYPE = "type";
