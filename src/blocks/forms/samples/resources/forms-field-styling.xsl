@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.9 2004/05/25 15:46:47 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.10 2004/05/27 23:20:22 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -149,7 +149,7 @@
                   <xsl:if test="@value = $value">
                     <xsl:attribute name="checked">checked</xsl:attribute>
                   </xsl:if>
-                  <xsl:apply-templates select="." mode="styling"/>
+                  <xsl:apply-templates select="../.." mode="styling"/>
                 </input>
               </td>
               <td>
@@ -171,7 +171,7 @@
               <xsl:if test="@value = $value">
                 <xsl:attribute name="checked">checked</xsl:attribute>
               </xsl:if>
-              <xsl:apply-templates select="." mode="styling"/>
+              <xsl:apply-templates select="../.." mode="styling"/>
             </input>
             <label for="{generate-id()}"><xsl:copy-of select="fi:label/node()"/></label>
           </xsl:for-each>
