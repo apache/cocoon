@@ -362,7 +362,7 @@ public abstract class AbstractWidget implements Widget {
         	attrs.addCDATAAttribute("id", getRequestParameterName());
         }
 
-        // Add the "state" attribute is different from active (the default state)
+        // Add the "state" attribute if different from active (the default state)
         WidgetState state = getCombinedState();
         if (state != WidgetState.ACTIVE) {
             attrs.addCDATAAttribute("state", getCombinedState().getName());
