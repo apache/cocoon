@@ -70,7 +70,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.15 2004/01/05 12:41:48 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.16 2004/01/05 12:51:41 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -381,9 +381,10 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public static void enterProcessor(Processor processor,
                                       ServiceManager manager,
-                                      Environment env) {
+                                      Environment env) 
+    throws ProcessingException {
         if ( null == processor) {
-            throw new IllegalArgumentException("Processor is not set.");
+            throw new ProcessingException("Processor is not set.");
         }
 
         EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
@@ -427,9 +428,10 @@ implements SourceResolver, Serviceable, Disposable {
      *
      * @return A unique key within this thread.
      */
-    public static Object startProcessing(Environment env) {
+    public static Object startProcessing(Environment env) 
+    throws ProcessingException {
         if ( null == env) {
-            throw new RuntimeException("EnvironmentHelper.startProcessing: environment must be set.");
+            throw new ProcessingException("EnvironmentHelper.startProcessing: environment must be set.");
         }
         final EnvironmentContext desc = new EnvironmentContext(env);
         env.getObjectModel().put(PROCESS_KEY, desc);
