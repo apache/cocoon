@@ -141,11 +141,17 @@
       | carry "Meta" in their name. An example is the ChainMetaModule
       | which tries several other modules in turn until a non-null
       | value is obtained or all modules are tied.
-	  |
+      |
       | For details and optional configuration parameters refer to the
       | accompanying javadocs.
       +-->
   <input-modules>
+    <component-instance logger="core.modules.input" name="url-encode"       class="org.apache.cocoon.components.modules.input.URLEncodeModule">
+        <encoding>UTF-8</encoding>
+    </component-instance>
+    <component-instance logger="core.modules.input" name="url-decode"       class="org.apache.cocoon.components.modules.input.URLDecodeModule">
+        <encoding>UTF-8</encoding>
+    </component-instance>
     <component-instance logger="core.modules.input" name="global"           class="org.apache.cocoon.components.modules.input.GlobalInputModule"/>
     <component-instance logger="core.modules.input" name="request"          class="org.apache.cocoon.components.modules.input.RequestModule"/>
     <component-instance logger="core.modules.input" name="baselink"         class="org.apache.cocoon.components.modules.input.BaseLinkModule" />
