@@ -36,7 +36,6 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.Locator;
 
 import java.util.HashMap;
 import java.util.LinkedList;

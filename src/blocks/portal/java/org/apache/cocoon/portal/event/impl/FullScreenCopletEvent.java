@@ -20,8 +20,6 @@ import org.apache.cocoon.portal.event.RequestEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.PortalService;
-import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
-import org.apache.pluto.om.window.PortletWindow;
 
 /**
  * EventSource: copletID

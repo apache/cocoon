@@ -19,8 +19,6 @@ package org.apache.cocoon.portal.pluto;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.event.ConvertableEventFactory;
 import org.apache.cocoon.portal.event.ConvertableEvent;
-import org.apache.cocoon.portal.event.impl.FullScreenCopletEventFactory;
-import org.apache.cocoon.portal.event.impl.FullScreenCopletEvent;
 
 /**
  * Factory to create PortletURLProviderImpl objects from marshalled data
