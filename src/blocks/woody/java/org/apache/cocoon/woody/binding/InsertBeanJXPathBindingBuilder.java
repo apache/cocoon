@@ -73,14 +73,14 @@ public class InsertBeanJXPathBindingBuilder
     public JXPathBindingBase buildBinding(Element bindingElm, Assistant assistant) throws BindingException {
 
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
             
             String className =
                 DomHelper.getAttribute(bindingElm, "classname");
             String addMethod =
                 DomHelper.getAttribute(bindingElm, "addmethod");
 
-            return new InsertBeanJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, className, addMethod);
+            return new InsertBeanJXPathBinding(commonAtts, className, addMethod);
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {

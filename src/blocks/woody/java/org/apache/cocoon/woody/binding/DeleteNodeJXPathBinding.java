@@ -64,8 +64,8 @@ import org.apache.commons.jxpath.JXPathContext;
  */
 public class DeleteNodeJXPathBinding extends JXPathBindingBase {
     
-    public DeleteNodeJXPathBinding(boolean loadEnabled, boolean saveEnabled) {
-        super(loadEnabled, saveEnabled);
+    public DeleteNodeJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts) {
+        super(commonAtts);
     }
 
     public void doLoad(Widget frmModel, JXPathContext jxpc) {

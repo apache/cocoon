@@ -75,8 +75,8 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs InsertBeanJXPathBinding
      */
-    public InsertBeanJXPathBinding(boolean loadEnabled, boolean saveEnabled, String className, String addMethod) {
-        super(loadEnabled, saveEnabled);
+    public InsertBeanJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String className, String addMethod) {
+        super(commonAtts);
         this.className = className;
         this.addMethodName = addMethod;
     }

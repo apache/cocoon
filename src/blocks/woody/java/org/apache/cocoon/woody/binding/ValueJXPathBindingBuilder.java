@@ -82,7 +82,7 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
     public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 
@@ -104,7 +104,7 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
             }
 
             ValueJXPathBinding fieldBinding =
-                    new ValueJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, 
+                    new ValueJXPathBinding(commonAtts, 
                             widgetId, xpath, updateBindings, convertor, convertorLocale);
 
             return fieldBinding;

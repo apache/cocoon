@@ -102,7 +102,7 @@ public class RepeaterJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm); 
             
             String repeaterId = DomHelper.getAttribute(bindingElm, "id");
             String parentPath =
@@ -159,7 +159,7 @@ public class RepeaterJXPathBindingBuilder
 
             RepeaterJXPathBinding repeaterBinding =
                 new RepeaterJXPathBinding(
-                    directionAtts.loadEnabled, directionAtts.saveEnabled,
+                    commonAtts,
                     repeaterId, parentPath, rowPath, rowPathForInsert,
                     uniqueRowId, uniqueRowIdPath,
                     convertor, convertorLocale, 

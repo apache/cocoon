@@ -74,7 +74,7 @@ public class SimpleRepeaterJXPathBindingBuilder
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElem); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElem); 
             
             String repeaterId = DomHelper.getAttribute(bindingElem, "id");
             String parentPath = DomHelper.getAttribute(bindingElem, "parent-path");
@@ -84,8 +84,8 @@ public class SimpleRepeaterJXPathBindingBuilder
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElem);
 
-            return new SimpleRepeaterJXPathBinding( directionAtts.loadEnabled, directionAtts.saveEnabled, repeaterId, parentPath, rowPath, clearOnLoad, deleteIfEmpty,
-                new ComposedJXPathBindingBase(true, true, childBindings));
+            return new SimpleRepeaterJXPathBinding( commonAtts, repeaterId, parentPath, rowPath, clearOnLoad, deleteIfEmpty,
+                new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings));
         } catch (BindingException e) {
             throw e;
         } catch (Exception e) {

@@ -66,7 +66,7 @@ import org.mozilla.javascript.Script;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.3 2003/12/16 15:05:54 mpo Exp $
+ * @version CVS $Id: JavaScriptJXPathBinding.java,v 1.4 2003/12/18 07:57:21 mpo Exp $
  */
 public class JavaScriptJXPathBinding extends JXPathBindingBase {
     
@@ -75,8 +75,8 @@ public class JavaScriptJXPathBinding extends JXPathBindingBase {
     private final Script loadScript;
     private final Script saveScript;
     
-    public JavaScriptJXPathBinding(boolean loadEnabled, boolean saveEnabled, String id, String path, Script loadScript, Script saveScript) {        
-        super(loadEnabled && (loadScript != null), saveEnabled && (saveScript != null));
+    public JavaScriptJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String id, String path, Script loadScript, Script saveScript) {        
+        super(commonAtts);
         this.id = id;
         this.path = path;
         this.loadScript = loadScript;

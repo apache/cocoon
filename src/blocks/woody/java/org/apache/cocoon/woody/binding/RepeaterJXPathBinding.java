@@ -87,26 +87,26 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(boolean loadEnabled, boolean saveEnabled, 
+    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, 
                                  String repeaterId, String repeaterPath, 
                                  String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath, 
                                  JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
-        this(loadEnabled, saveEnabled, repeaterId, repeaterPath, rowPath, rowPathForInsert, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
+        this(commonAtts, repeaterId, repeaterPath, rowPath, rowPathForInsert, uniqueRowId, uniqueRowPath, null, null, childBindings, insertBinding, deleteBindings);
     }
 
     /**
      * Constructs RepeaterJXPathBinding
      */
-    public RepeaterJXPathBinding(boolean loadEnabled, boolean saveEnabled, 
+    public RepeaterJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, 
                                  String repeaterId, String repeaterPath, 
                                  String rowPath, String rowPathForInsert,
                                  String uniqueRowId, String uniqueRowPath, 
                                  Convertor convertor, Locale convertorLocale, 
                                  JXPathBindingBase[] childBindings,
                                  JXPathBindingBase insertBinding, JXPathBindingBase[] deleteBindings) {
-        super(loadEnabled, saveEnabled);
+        super(commonAtts);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;
@@ -114,12 +114,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         this.uniqueRowId = uniqueRowId;
         this.uniqueRowIdPath = uniqueRowPath;
         this.uniqueFieldBinding =
-            new ValueJXPathBinding(true, true, uniqueRowId, uniqueRowPath, null, convertor, convertorLocale);
+            new ValueJXPathBinding(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, uniqueRowId, uniqueRowPath, null, convertor, convertorLocale);
         this.uniqueRowIdConvertor = convertor;
         this.uniqueRowIdConvertorLocale = convertorLocale;
-        this.rowBinding = new ComposedJXPathBindingBase(true, true, childBindings);
+        this.rowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, childBindings);
         this.insertRowBinding = insertBinding;
-        this.deleteRowBinding = new ComposedJXPathBindingBase(true, true, deleteBindings);
+        this.deleteRowBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, deleteBindings);
     }
 
 

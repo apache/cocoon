@@ -87,30 +87,30 @@ import org.w3c.dom.Element;
  * </ul>
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.2 2003/12/16 15:05:54 mpo Exp $
+ * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.3 2003/12/18 07:57:21 mpo Exp $
  */
 public class JavaScriptJXPathBindingBuilder extends JXpathBindingBuilderBase {
 
     public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(element); 
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(element); 
             
             String id = DomHelper.getAttribute(element, "id");
             String path = DomHelper.getAttribute(element, "path");
             
             Script loadScript = null;
-            if (directionAtts.loadEnabled) {
+            if (commonAtts.loadEnabled) {
                 Element loadElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "load-form");
                 loadScript = JavaScriptHelper.buildScript(loadElem);
             }
             
             Script saveScript = null;
-            if (directionAtts.saveEnabled) {
+            if (commonAtts.saveEnabled) {
                 Element saveElem = DomHelper.getChildElement(element, BindingManager.NAMESPACE, "save-form");
                 saveScript = JavaScriptHelper.buildScript(saveElem);
             }
 
-            return new JavaScriptJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, id, path, loadScript, saveScript);
+            return new JavaScriptJXPathBinding(commonAtts, id, path, loadScript, saveScript);
 
         } catch(Exception e) {
             throw new BindingException("Cannot build binding at " + DomHelper.getLocation(element), e);

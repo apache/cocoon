@@ -77,8 +77,8 @@ public class SimpleRepeaterJXPathBinding extends JXPathBindingBase {
     private final boolean deleteIfEmpty;
 
     public SimpleRepeaterJXPathBinding(
-            boolean loadEnabled, boolean saveEnabled, String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, boolean deleteIfEmpty, JXPathBindingBase rowBinding) {
-        super(loadEnabled, saveEnabled);
+            JXpathBindingBuilderBase.CommonAttributes commonAtts, String repeaterId, String repeaterPath, String rowPath, boolean clearOnLoad, boolean deleteIfEmpty, JXPathBindingBase rowBinding) {
+        super(commonAtts);
         this.repeaterId = repeaterId;
         this.repeaterPath = repeaterPath;
         this.rowPath = rowPath;

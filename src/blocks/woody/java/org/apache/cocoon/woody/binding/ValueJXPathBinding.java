@@ -98,12 +98,12 @@ public class ValueJXPathBinding extends JXPathBindingBase {
      *
      * @param convertor may be null
      */
-    public ValueJXPathBinding(boolean loadEnabled, boolean saveEnabled, String widgetId, String xpath, JXPathBindingBase[] updateBindings,
+    public ValueJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, String xpath, JXPathBindingBase[] updateBindings,
                               Convertor convertor, Locale convertorLocale) {
-        super(loadEnabled, saveEnabled);
+        super(commonAtts);
         this.fieldId = widgetId;
         this.xpath = xpath;
-        this.updateBinding = new ComposedJXPathBindingBase(true, true, updateBindings);
+        this.updateBinding = new ComposedJXPathBindingBase(JXpathBindingBuilderBase.CommonAttributes.DEFAULT, updateBindings);
         this.convertor = convertor;
         this.convertorLocale = convertorLocale;
     }

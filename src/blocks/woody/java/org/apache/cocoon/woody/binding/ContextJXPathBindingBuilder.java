@@ -74,12 +74,12 @@ public class ContextJXPathBindingBuilder extends JXpathBindingBuilderBase {
         JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
-            DirectionAttributes directionAtts = JXpathBindingBuilderBase.getDirectionAttributes(bindingElm);             
+            CommonAttributes commonAtts = JXpathBindingBuilderBase.getCommonAttributes(bindingElm);             
             String xpath = DomHelper.getAttribute(bindingElm, "path");
 
             JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 
-            ContextJXPathBinding contextBinding = new ContextJXPathBinding(directionAtts.loadEnabled, directionAtts.saveEnabled, xpath, childBindings);
+            ContextJXPathBinding contextBinding = new ContextJXPathBinding(commonAtts, xpath, childBindings);
             return contextBinding;
         } catch (BindingException e) {
             throw e;

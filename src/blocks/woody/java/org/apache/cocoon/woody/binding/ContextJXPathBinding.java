@@ -69,8 +69,8 @@ public class ContextJXPathBinding extends ComposedJXPathBindingBase {
     /**
      * Constructs ContextJXPathBinding for the specified xpath sub-context
      */
-    public ContextJXPathBinding(boolean loadEnabled, boolean saveEnabled, String contextPath, JXPathBindingBase[] childBindings) {
-        super(loadEnabled, saveEnabled, childBindings);
+    public ContextJXPathBinding(JXpathBindingBuilderBase.CommonAttributes commonAtts, String contextPath, JXPathBindingBase[] childBindings) {
+        super(commonAtts, childBindings);
         this.xpath = contextPath;
     }
 
