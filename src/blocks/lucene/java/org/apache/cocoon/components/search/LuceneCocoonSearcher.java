@@ -19,7 +19,9 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.store.Directory;
+
 
 /**
  * The avalon behavioural component interface of a searcher.
@@ -30,7 +32,7 @@ import org.apache.lucene.store.Directory;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: LuceneCocoonSearcher.java,v 1.3 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id: LuceneCocoonSearcher.java,v 1.4 2004/06/21 09:43:22 jeremy Exp $
  */
 public interface LuceneCocoonSearcher extends Component
 {
@@ -64,6 +66,21 @@ public interface LuceneCocoonSearcher extends Component
 
 
     /**
+     * Gets the analyzer attribute of the LuceneCocoonSearcher object
+     * <p>
+     *   The analyzer determines the tokenization of the query,
+     *   and strategy of matching.
+     * </p>
+     * <p>
+     *   The analyzer class defined here should be equivalent to the analyzer
+     *   class used when creating the index used for searching.
+     * </p>
+     *
+     * @since 2.1.6
+     */
+    Analyzer getAnalyzer();
+
+    /**
      * Sets the directory attribute of the LuceneCocoonSearcher object
      * <p>
      *   The directory specifies the directory used for looking up the
@@ -89,5 +106,18 @@ public interface LuceneCocoonSearcher extends Component
      * @since
      */
     Hits search(String query_string, String default_field) throws ProcessingException;
+
+    /**
+     * Search using a Lucene Query object, returning zero, or more hits.
+     * <p>
+     * </p>
+     *
+     * @param  query                    A lucene query
+     * @return                          Hits zero or more hits matching the query string
+     * @exception  ProcessingException  throwing due to processing errors while
+     *   looking up the index directory, parsing the query string, generating the hits.
+     * @since 2.1.6
+     */
+    Hits search(Query query) throws ProcessingException;
 }
 

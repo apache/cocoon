@@ -57,7 +57,7 @@ import java.io.IOException;
  * </p>
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.6 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id: SimpleLuceneCocoonSearcherImpl.java,v 1.7 2004/06/21 09:43:22 jeremy Exp $
  */
 public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
          implements LuceneCocoonSearcher, Configurable, Serviceable, Disposable, Recyclable
@@ -195,6 +195,13 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
         this.analyzer = analyzer;
     }
 
+    /**
+     * get the analyzer.
+     *
+     */
+    public Analyzer getAnalyzer() {
+        return this.analyzer;
+    }
 
     /**
      *Sets the directory attribute of the SimpleLuceneCocoonSearcherImpl object
@@ -361,6 +368,29 @@ public class SimpleLuceneCocoonSearcherImpl extends AbstractLogEnabled
         return hits;
     }
 
+    /**
+     * Search lucene index.
+     * This method is designed to be used by other components, or Flowscripts
+     *
+     * @param  query                    the lucene Query
+     * @return                          lucene Hits
+     * @exception  ProcessingException  if its not possible do run the query
+     */
+    public Hits search(Query query) throws ProcessingException {
+        Hits hits = null;
+        try {
+            // release index searcher for each new search
+            releaseIndexSearcher();
+
+            IndexSearcher indexSearcher = new IndexSearcher(getReader());
+            hits = indexSearcher.search(query);
+            // do not close indexSearcher now, as using hits needs an
+            // opened indexSearcher indexSearcher.close();
+        } catch (IOException ioe) {
+            throw new ProcessingException("Cannot access hits", ioe);
+        }
+        return hits;
+    }
 
     /**
      * Release the index searcher.
