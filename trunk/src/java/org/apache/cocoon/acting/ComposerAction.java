@@ -58,8 +58,9 @@ import org.apache.avalon.framework.component.Composable;
  * The <code>ComposerAction</code> will allow any <code>Action</code>
  * that extends this to access SitemapComponents.
  *
+ * @deprecated Use the ServiceableAction instead
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ComposerAction.java,v 1.1 2003/03/09 00:08:38 pier Exp $
+ * @version CVS $Id: ComposerAction.java,v 1.2 2003/10/15 17:36:35 cziegeler Exp $
  */
 public abstract class ComposerAction extends AbstractAction implements Composable {
 
