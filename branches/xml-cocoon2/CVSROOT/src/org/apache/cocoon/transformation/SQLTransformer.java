@@ -20,7 +20,13 @@ import java.util.Map;
 import java.util.Enumeration;
 
 import org.apache.avalon.Parameters;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.ComponentSelector;
+import org.apache.avalon.Composer;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.Roles;
+import org.apache.cocoon.components.datasource.DataSourceComponent;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLProducer;
 import org.apache.cocoon.util.ClassUtils;
@@ -41,10 +47,10 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-12-11 15:06:10 $ $Author: bloritsch $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-01-08 15:29:45 $ $Author: bloritsch $
  */
 
-public class SQLTransformer extends AbstractTransformer {
+public class SQLTransformer extends AbstractTransformer implements Composer {
 
     private Logger log = LogKit.getLoggerFor("cocoon");
 
@@ -54,7 +60,7 @@ public class SQLTransformer extends AbstractTransformer {
 
     /** The SQL namespace element names **/
     public static final String MAGIC_EXECUTE_QUERY = "execute-query";
-    public static final String MAGIC_DRIVER = "driver";
+    public static final String MAGIC_CONNECTION = "use-connection";
     public static final String MAGIC_DBURL = "dburl";
     public static final String MAGIC_USERNAME = "username";
     public static final String MAGIC_PASSWORD = "password";
@@ -87,7 +93,7 @@ public class SQLTransformer extends AbstractTransformer {
     protected String current_name;
 
     /** The current state of the event receiving FSM **/
-    protected int current_state = STATE_OUTSIDE;
+    protected int current_state = SQLTransformer.STATE_OUTSIDE;
 
     /** The value of the value element we're currently receiving **/
     protected StringBuffer current_value = new StringBuffer();
@@ -96,41 +102,52 @@ public class SQLTransformer extends AbstractTransformer {
     protected XMLConsumer xml_consumer;
     protected LexicalHandler lexical_handler;
 
+    protected ComponentSelector dbSelector = null;
+
+    public void compose(ComponentManager manager) {
+        try {
+            this.dbSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
+        } catch (ComponentManagerException cme) {
+            this.log.warn("Could not get the DataSource Selector", cme);
+        }
+    }
+
     /** BEGIN SitemapComponent methods **/
 
     public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters)
     throws ProcessingException, SAXException, IOException {
-        current_state = STATE_OUTSIDE;
+        current_state = SQLTransformer.STATE_OUTSIDE;
 
-        // Check the driver
-        String parameter = parameters.getParameter("driver",null);
+        // Check for connection
+        String parameter = parameters.getParameter(SQLTransformer.MAGIC_CONNECTION, null);
         if (parameter != null) {
-            log.debug("DRIVER: "+parameter);
+            log.debug("CONNECTION: "+parameter);
 
-            default_properties.setProperty("driver",parameter);
-        }
+            default_properties.setProperty(SQLTransformer.MAGIC_CONNECTION, parameter);
+        } else {
 
-        // Check the dburl
-        parameter = parameters.getParameter("dburl",null);
-        if (parameter != null) {
-            log.debug("DBURL: "+parameter);
+            // Check the dburl
+            parameter = parameters.getParameter(SQLTransformer.MAGIC_DBURL,null);
+            if (parameter != null) {
+                log.debug("DBURL: "+parameter);
 
-            default_properties.setProperty("dburl",parameter);
-        }
+                default_properties.setProperty(SQLTransformer.MAGIC_DBURL,parameter);
+            }
 
-        // Check the username
-        parameter = parameters.getParameter("username",null);
-        if (parameter != null) {
-            log.debug("USERNAME: "+parameter);
+            // Check the username
+            parameter = parameters.getParameter(SQLTransformer.MAGIC_USERNAME,null);
+            if (parameter != null) {
+                log.debug("USERNAME: "+parameter);
 
-            default_properties.setProperty("username",parameter);
-        }
+                default_properties.setProperty(SQLTransformer.MAGIC_USERNAME,parameter);
+            }
 
-        // Check the password
-        parameter = parameters.getParameter("password",null);
-        if (parameter != null) {
-            default_properties.setProperty("password",parameter);
+            // Check the password
+            parameter = parameters.getParameter(SQLTransformer.MAGIC_PASSWORD,null);
+            if (parameter != null) {
+                default_properties.setProperty(SQLTransformer.MAGIC_PASSWORD,parameter);
+            }
         }
 
     }
@@ -149,7 +166,7 @@ public class SQLTransformer extends AbstractTransformer {
         try {
             query.execute();
         } catch (SQLException e) {
-            log.debug("SQLTransformer", e);
+            log.debug("SQLTransformer.executeQuery()", e);
             throw new SAXException(e);
         }
         this.start(query.rowset_name, attr);
@@ -163,7 +180,7 @@ public class SQLTransformer extends AbstractTransformer {
                 this.end(query.row_name);
             }
         } catch (SQLException e) {
-            log.debug("SQLTransformer", e);
+            log.debug("SQLTransformer.executeQuery()", e);
             throw new SAXException(e);
         }
         this.end(query.rowset_name);
@@ -176,12 +193,12 @@ public class SQLTransformer extends AbstractTransformer {
 
     protected void startExecuteQueryElement() {
         switch (current_state) {
-            case STATE_OUTSIDE:
-            case STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
+            case SQLTransformer.STATE_OUTSIDE:
+            case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 current_query_index = queries.size();
                 Query query = new Query(this, current_query_index);
                 queries.addElement(query);
-                current_state = STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
             default:
                 throwIllegalStateException("Not expecting a start execute query element");
@@ -190,10 +207,10 @@ public class SQLTransformer extends AbstractTransformer {
 
     protected void startValueElement(String name) {
         switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
+            case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 current_name = name;
                 current_value.setLength(0);
-                current_state = STATE_INSIDE_VALUE_ELEMENT;
+                current_state = SQLTransformer.STATE_INSIDE_VALUE_ELEMENT;
                 break;
             default:
                 throwIllegalStateException("Not expecting a start value element: "+
@@ -203,11 +220,11 @@ public class SQLTransformer extends AbstractTransformer {
 
     protected void startQueryElement(Attributes attributes) {
         switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
+            case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 current_value.setLength(0);
-                current_state = STATE_INSIDE_QUERY_ELEMENT;
+                current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
                 String isupdate =
-                    attributes.getValue("", MAGIC_UPDATE_ATTRIBUTE);
+                    attributes.getValue("", SQLTransformer.MAGIC_UPDATE_ATTRIBUTE);
         if (isupdate != null && !isupdate.equalsIgnoreCase("false"))
                     getCurrentQuery().setUpdate(true);
                 break;
@@ -218,7 +235,7 @@ public class SQLTransformer extends AbstractTransformer {
 
     protected void endQueryElement() {
         switch (current_state) {
-            case STATE_INSIDE_QUERY_ELEMENT:
+            case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
                 if (current_value.length() > 0) {
                     getCurrentQuery().addQueryPart(
                       current_value.toString());
@@ -227,7 +244,7 @@ public class SQLTransformer extends AbstractTransformer {
 
                     current_value.setLength(0);
                 }
-                current_state = STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
             default:
                 throwIllegalStateException("Not expecting a stop query element");
@@ -236,14 +253,14 @@ public class SQLTransformer extends AbstractTransformer {
 
     protected void endValueElement() {
         switch (current_state) {
-            case STATE_INSIDE_VALUE_ELEMENT:
+            case SQLTransformer.STATE_INSIDE_VALUE_ELEMENT:
                 getCurrentQuery().setParameter(current_name,
                                                current_value.toString());
                 log.debug("SETTING VALUE ELEMENT name {"+
                                        current_name + "} value {"+
                                        current_value.toString() + "}");
 
-                current_state = STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 break;
             default:
                 throwIllegalStateException("Not expecting an end value element");
@@ -252,14 +269,14 @@ public class SQLTransformer extends AbstractTransformer {
 
     protected void endExecuteQueryElement() throws SAXException {
         switch (current_state) {
-            case STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
+            case SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT:
                 if (current_query_index == 0) {
                     executeQuery(0);
                     queries.removeAllElements();
-                    current_state = STATE_OUTSIDE;
+                    current_state = SQLTransformer.STATE_OUTSIDE;
                 } else {
                     current_query_index--;
-                    current_state = STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
+                    current_state = SQLTransformer.STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
                 }
                 break;
             default:
@@ -269,21 +286,21 @@ public class SQLTransformer extends AbstractTransformer {
 
     protected void startAncestorValueElement(Attributes attributes) {
         switch (current_state) {
-            case STATE_INSIDE_QUERY_ELEMENT:
+            case SQLTransformer.STATE_INSIDE_QUERY_ELEMENT:
                 int level = 0;
                 try {
                     level = Integer.parseInt( attributes.getValue(my_uri,
-                                              MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
+                                              SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE));
                 } catch (Exception e) {
             log.debug("SQLTransformer", e);
                     throwIllegalStateException("Ancestor value elements must have a "+
-                                               MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE + " attribute");
+                                               SQLTransformer.MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE + " attribute");
                 }
                 String name = attributes.getValue(my_uri,
-                                                  MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE);
+                                                  SQLTransformer.MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE);
                 if (name == null) {
                     throwIllegalStateException("Ancestor value elements must have a "+
-                                               MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE + " attribute");
+                                               SQLTransformer.MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE + " attribute");
                 }
                 AncestorValue av = new AncestorValue(level, name);
                 log.debug("ANCESTOR VALUE "+level + " "+name);
@@ -297,7 +314,7 @@ public class SQLTransformer extends AbstractTransformer {
                     current_value.setLength(0);
                 }
                 getCurrentQuery().addQueryPart(av);
-                current_state = STATE_INSIDE_ANCESTOR_VALUE_ELEMENT;
+                current_state = SQLTransformer.STATE_INSIDE_ANCESTOR_VALUE_ELEMENT;
                 break;
             default:
                 throwIllegalStateException("Not expecting a start ancestor value element");
@@ -305,7 +322,7 @@ public class SQLTransformer extends AbstractTransformer {
     }
 
     protected void endAncestorValueElement() {
-        current_state = STATE_INSIDE_QUERY_ELEMENT;
+        current_state = SQLTransformer.STATE_INSIDE_QUERY_ELEMENT;
     }
 
     protected Query getCurrentQuery() {
@@ -335,11 +352,11 @@ public class SQLTransformer extends AbstractTransformer {
         }
         log.debug("RECEIVED START ELEMENT "+name);
 
-        if (name.equals(MAGIC_EXECUTE_QUERY)) {
+        if (name.equals(SQLTransformer.MAGIC_EXECUTE_QUERY)) {
             startExecuteQueryElement();
-        } else if (name.equals(MAGIC_QUERY)) {
+        } else if (name.equals(SQLTransformer.MAGIC_QUERY)) {
             startQueryElement(attributes);
-        } else if (name.equals(MAGIC_ANCESTOR_VALUE)) {
+        } else if (name.equals(SQLTransformer.MAGIC_ANCESTOR_VALUE)) {
             startAncestorValueElement(attributes);
         } else {
             startValueElement(name);
@@ -355,13 +372,13 @@ public class SQLTransformer extends AbstractTransformer {
         log.debug("RECEIVED END ELEMENT "+name + "("+uri +
                                ")");
 
-        if (name.equals(MAGIC_EXECUTE_QUERY)) {
+        if (name.equals(SQLTransformer.MAGIC_EXECUTE_QUERY)) {
             endExecuteQueryElement();
-        } else if (name.equals(MAGIC_QUERY)) {
+        } else if (name.equals(SQLTransformer.MAGIC_QUERY)) {
             endQueryElement();
-        } else if (name.equals(MAGIC_ANCESTOR_VALUE)) {
+        } else if (name.equals(SQLTransformer.MAGIC_ANCESTOR_VALUE)) {
             endAncestorValueElement();
-        } else if (name.equals(MAGIC_VALUE) || current_state == STATE_INSIDE_VALUE_ELEMENT) {
+        } else if (name.equals(SQLTransformer.MAGIC_VALUE) || current_state == SQLTransformer.STATE_INSIDE_VALUE_ELEMENT) {
             endValueElement();
         } else {
             super.endElement(uri, name, raw);
@@ -370,8 +387,8 @@ public class SQLTransformer extends AbstractTransformer {
 
     public void characters(char ary[], int start,
                            int length) throws SAXException {
-        if (current_state != STATE_INSIDE_VALUE_ELEMENT &&
-                current_state != STATE_INSIDE_QUERY_ELEMENT) {
+        if (current_state != SQLTransformer.STATE_INSIDE_VALUE_ELEMENT &&
+                current_state != SQLTransformer.STATE_INSIDE_QUERY_ELEMENT) {
             super.characters(ary, start, length);
         }
         log.debug("RECEIVED CHARACTERS: "+
@@ -463,19 +480,16 @@ public class SQLTransformer extends AbstractTransformer {
         }
 
         protected void execute() throws SQLException {
-            String driver = properties.getProperty(transformer.MAGIC_DRIVER);
-            try {
-                ClassUtils.newInstance(driver);
-            } catch (Exception e) {log.debug("SQLTransformer", e);}
-            if (null != properties.getProperty(transformer.MAGIC_DOC_ELEMENT)) {
-                this.rowset_name = properties.getProperty(transformer.MAGIC_DOC_ELEMENT);
+            if (null != properties.getProperty(SQLTransformer.MAGIC_DOC_ELEMENT)) {
+                this.rowset_name = properties.getProperty(SQLTransformer.MAGIC_DOC_ELEMENT);
             }
-            if (null != properties.getProperty(transformer.MAGIC_ROW_ELEMENT)) {
-                this.row_name = properties.getProperty(transformer.MAGIC_ROW_ELEMENT);
+            if (null != properties.getProperty(SQLTransformer.MAGIC_ROW_ELEMENT)) {
+                this.row_name = properties.getProperty(SQLTransformer.MAGIC_ROW_ELEMENT);
             }
-            String dburl = properties.getProperty(transformer.MAGIC_DBURL);
-            String username = properties.getProperty(transformer.MAGIC_USERNAME);
-            String password = properties.getProperty(transformer.MAGIC_PASSWORD);
+            String connection = properties.getProperty(SQLTransformer.MAGIC_CONNECTION);
+            String dburl = properties.getProperty(SQLTransformer.MAGIC_DBURL);
+            String username = properties.getProperty(SQLTransformer.MAGIC_USERNAME);
+            String password = properties.getProperty(SQLTransformer.MAGIC_PASSWORD);
             Enumeration enum = query_parts.elements();
             StringBuffer sb = new StringBuffer();
             while (enum.hasMoreElements()) {
@@ -497,11 +511,16 @@ public class SQLTransformer extends AbstractTransformer {
             }
             String query = sb.toString();
             try {
-                if (username == null || password == null) {
-                    conn = DriverManager.getConnection(dburl);
+                if (connection != null) {
+                    DataSourceComponent datasource = (DataSourceComponent) dbSelector.select(connection);
+                    conn = datasource.getConnection();
                 } else {
-                    conn = DriverManager.getConnection(dburl, username,
-                                                       password);
+                    if (username == null || password == null) {
+                        conn = DriverManager.getConnection(dburl);
+                    } else {
+                        conn = DriverManager.getConnection(dburl, username,
+                                                           password);
+                    }
                 }
                 st = conn.createStatement();
                 if (isupdate)
@@ -514,6 +533,8 @@ public class SQLTransformer extends AbstractTransformer {
                 log.error("Caught a SQLException", e);
                 conn.close();
                 throw e;
+            } catch (ComponentManagerException cme) {
+                log.error("Could not use connection: " + connection, cme);
             }
         }
 

@@ -42,7 +42,7 @@
    <param-value>DEBUG</param-value>
   </init-param>
     <init-param>
-      <param-name>driver</param-name>
+      <param-name>load-class</param-name>
       <param-value>
         <!-- For IBM WebSphere: -->
         com.ibm.servlet.classloader.Handler

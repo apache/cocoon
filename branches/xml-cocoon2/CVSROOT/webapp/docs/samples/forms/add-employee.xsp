@@ -14,10 +14,7 @@
         <para>Department:
           <select name="department">
       <esql:execute-query inner-method="no">
-        <esql:driver>postgresql.Driver</esql:driver>
-        <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
-        <esql:username>test</esql:username>
-        <esql:password>test</esql:password>
+        <esql:use-connection>personnel</esql:use-connection>
         <esql:query>select id, name from department_table order by name</esql:query>
         <esql:results>
 	  <option>

@@ -21,10 +21,7 @@
     <title><xsp:expr>process</xsp:expr> Employee Processed</title>
     <content>
       <esql:execute-query inner-method="no">
-        <esql:driver>postgresql.Driver</esql:driver>
-        <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
-        <esql:username>test</esql:username>
-        <esql:password>test</esql:password>
+        <esql:use-connection>personnel</esql:use-connection>
         <esql:query>
 	   select max(id) as maxid from employee_table
 	</esql:query>

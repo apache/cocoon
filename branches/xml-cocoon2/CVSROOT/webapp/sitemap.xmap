@@ -252,10 +252,7 @@
    <map:match pattern="sql/*">
     <map:generate src="docs/samples/sql/{1}.xml"/>
     <map:transform type="sql">
-      <parameter name="driver"   value="postgresql.Driver"/>
-      <parameter name="dburl"    value="jdbc:postgresql://localhost/test"/>
-      <parameter name="username" value="test"/>
-      <parameter name="password" value="test"/>
+      <parameter name="use-connection" value="personnel"/>
     </map:transform>
     <map:transform src="stylesheets/simple-sql2html.xsl"/>
     <map:serialize/>

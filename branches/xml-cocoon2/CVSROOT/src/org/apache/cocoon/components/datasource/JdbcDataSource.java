@@ -19,7 +19,7 @@ import java.sql.DriverManager;
  * The Default implementation for DataSources in Cocoon.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-06 16:32:17 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-01-08 15:29:32 $
  */
 public class JdbcDataSource implements DataSourceComponent {
     String dburl;
@@ -36,11 +36,11 @@ public class JdbcDataSource implements DataSourceComponent {
         this.passwd = conf.getChild("password").getValue();
 
         try {
-	        if (user.equals("")) {
-	            this.dbConnection = DriverManager.getConnection(dburl);
-	        } else {
-	            this.dbConnection = DriverManager.getConnection(dburl, user, passwd);
-	        }
+            if (user.equals("")) {
+                this.dbConnection = DriverManager.getConnection(dburl);
+            } else {
+                this.dbConnection = DriverManager.getConnection(dburl, user, passwd);
+            }
         } catch (Exception e) {
             log.error("Could not connect to Database", e);
             throw new ConfigurationException("Could not connect to Database", e);

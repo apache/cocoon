@@ -53,7 +53,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.42 $ $Date: 2001-01-06 16:32:20 $
+ * @version CVS $Revision: 1.1.4.43 $ $Date: 2001-01-08 15:29:39 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -96,7 +96,7 @@ public class CocoonServlet extends HttpServlet {
 
         this.setClassPath(conf.getInitParameter("classpath-attribute"), this.context);
 
-        this.forceLoad(conf.getInitParameter("driver"));
+        this.forceLoad(conf.getInitParameter("load-class"));
 
         this.workDir = (File) this.context.getAttribute("javax.servlet.context.tempdir");
 
@@ -165,12 +165,12 @@ public class CocoonServlet extends HttpServlet {
                 final String localClasspath = classpathTokenizer.nextToken().trim();
 
                 if (localClasspath != null) {
-	                if (buildClassPath.length() > 0) {
-	                    buildClassPath.append(";");
-	                }
-	
-	                log.debug("Using attribute: " + localClasspath.trim());
-	                buildClassPath.append((String) context.getAttribute(localClasspath.trim()));
+                    if (buildClassPath.length() > 0) {
+                        buildClassPath.append(";");
+                    }
+
+                    log.debug("Using attribute: " + localClasspath.trim());
+                    buildClassPath.append((String) context.getAttribute(localClasspath.trim()));
                 }
             }
         }

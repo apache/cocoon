@@ -20,10 +20,7 @@
               onChange="top.location.href=window.location.pathname + '?employee=' + document.forms['EmployeeSelection'].employee.options[document.forms['EmployeeSelection'].employee.options.selectedIndex].value">
             <option value="0">-- New employee --</option>
             <esql:execute-query inner-method="no">
-              <esql:driver>postgresql.Driver</esql:driver>
-              <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
-              <esql:username>test</esql:username>
-              <esql:password>test</esql:password>
+              <esql:use-connection>personnel</esql:use-connection>
               <esql:query>select id, department_id, name from employee_table order by name</esql:query>
               <esql:results>
                 <option>
