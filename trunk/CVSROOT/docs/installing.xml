@@ -193,14 +193,14 @@
    <ul>
     <li>Startup heap size:
      <ul>
-      <li>java 1.1 - <code>-ms[size]</code>
-      <li>java 1.2 - <code>-Xms[size]</code>
+      <li>java 1.1 - <code>-ms[size]</code></li>
+      <li>java 1.2 - <code>-Xms[size]</code></li>
      </ul>
     </li>
     <li>Maximum heap size:
      <ul>
-      <li>java 1.1 - <code>-mx[size]</code>
-      <li>java 1.2 - <code>-Xmx[size]</code>
+      <li>java 1.1 - <code>-mx[size]</code></li>
+      <li>java 1.2 - <code>-Xmx[size]</code></li>
      </ul>
     </li>
    </ul>
@@ -231,7 +231,7 @@
     locate this directory somewhere else, you have to change the
    </p>
    
-<source>processor.xsp.repository = ./repository</store>
+<source>processor.xsp.repository = ./repository</source>
 
    <p>
     property in the cocoon configuration file.

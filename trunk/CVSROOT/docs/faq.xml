@@ -7,8 +7,8 @@
 <faq>
  <question>How do I pipe my servlet output into Cocoon?</question>
  <answer>
-  <p>Simple answer: <em>you don't!!!</em> read <connect href="dynamic.xml">this
-  document</connect> instead to find out equivalent ways to do what you need.</p>
+  <p>Simple answer: <em>you don't!!!</em> read <connect href="dynamic.xml">the page
+  about dynamic content</connect> to find out equivalent ways to do what you need.</p>
   <p>Complex answer: the Servlet API <em>was not</em> designed with servlet
   chaining capabilities in mind. Servlet chaining was a night hack of the
   original Java web server authors that allowed to pipe one servlet output
@@ -36,7 +36,7 @@
   <ul>
     <li><link href="http://www.xml.org">http://www.xml.org</link> - A very nice site for XML
       information.</li>
-    <li><link href="http://www.w3.org/markup/xml/">http://www.w3.org/markup/xml/</link> - The XML
+    <li><link href="http://www.w3.org/xml/">http://www.w3.org/xml/</link> - The XML
       official home page at W3C</li>
     <li><link href="http://www.w3.org/style/xsl">http://www.w3.org/style/xsl</link> - The XSL official
       home page W3C</li>
@@ -149,7 +149,7 @@
     processing chain for each requested URI and for every possible request state
     (with request parameters, session parameters and environment parameters).</p>
   <p>The proposed solution (as you read in the <connect href="cocoon2.xml">Cocoon2
-    outline</connect>) is to have a regular expression based site map where site
+    outline</connect>) is to have a site map where site
     managers decide what processing chain to apply to each possible request.
     This somehow follows the mod_rewrite model in the Apache Web Server, but
     rather than URL rewriting, the site map allows site designers to control the

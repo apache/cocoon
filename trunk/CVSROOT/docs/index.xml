@@ -115,15 +115,6 @@
    of special cache systems.
   </p>
   <p>
-   In this direction it must be understood that Cocoon 1.x should
-   be considered a proof of concept rather than a software usable for real web
-   sites. In fact, the Cocoon projects aims to gather as much information as
-   possible during it's first generation while its second generation, starting
-   from Cocoon 2.0, will aim to be a usable and real-life publishing framework.
-   See the <connect href="cocoon2.xml">Cocoon 2 outline</connect> to understand the 
-   design plans already established.
-  </p>
-  <p>
    Another problem is the intrinsic impossibility of page-compiling all the three
    processing layers, due to the post-processing requirements of XSL styling. This 
    problem will be solved (hopefully!) with the availability of XSL-enabled
@@ -155,9 +146,11 @@
    (follow the link for information on how to subscribe and to access the mail 
    list archives), to checkout the <link href="http://xml.apache.org/websrc/cvsweb.cgi/xml-cocoon/">
    latest and greatest code</link> (which you found in the xml-cocoon module in 
-   the xml.apache.org CVS code repository), control the <connect href="../todo.xml">todo</connect>
+   the xml.apache.org CVS code repository, or from the 
+   <link href="http://xml.apache.org/from-cvs/xml-cocoon/">CVS snapshots</link>), 
+   control the <connect href="../todo.xml">todo</connect>
    list and jump in. Document writers are usually the most wanted people so if
-   you like to help but you're not familiar with technical details, don't worry
+   you like to help but you're not familiar with technical details, don't worry:
    we have work for you.
   </p>
   <p>
@@ -173,9 +166,9 @@
   </p>
   <p>
    Anyway, a great way of contributing back to the project is to
-   allow others to know about it so that the word spreads and other may wish to
+   allow others to know about it so that the word spreads and others may wish to
    contribute, so, please, help us by placing the cocoon logo somewhere in your
-   site to indicate that you are using uses and supporting the Cocoon Project.
+   site to indicate that you are using and supporting the Cocoon Project.
   </p>
   
   <p>
