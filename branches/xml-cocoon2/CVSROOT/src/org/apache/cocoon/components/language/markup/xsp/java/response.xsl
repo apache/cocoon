@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-23 19:38:11 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-25 22:21:43 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -26,7 +26,7 @@
     <xsl:variable name="name">
       <xsl:choose>
         <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
-        <xsl:when test="name">
+        <xsl:when test="xsp-response:name">
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="xsp-response:name"/>
           </xsl:call-template>
@@ -37,7 +37,7 @@
     <xsl:variable name="value">
       <xsl:choose>
         <xsl:when test="@value">"<xsl:value-of select="@value"/>"</xsl:when>
-        <xsl:when test="value">
+        <xsl:when test="xsp-response:value">
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="xsp-response:value"/>
           </xsl:call-template>
@@ -55,7 +55,7 @@
     <xsl:variable name="type">
       <xsl:choose>
         <xsl:when test="@type">"<xsl:value-of select="@type"/>"</xsl:when>
-        <xsl:when test="type">
+        <xsl:when test="xsp-response:type">
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="xsp-response:type"/>
           </xsl:call-template>
