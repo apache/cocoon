@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: error-giving-page.xml,v 1.1 2003/03/09 00:10:53 pier Exp $ -->
+<!-- CVS: $Id: error-giving-page.xml,v 1.2 2003/03/11 12:14:43 michaelm Exp $ -->
 
 <!DOCTYPE page [
  <!ELEMENT page (title?, content)>
@@ -12,6 +12,6 @@
 <page>
  <title>Hello</title>
  <content>
-  </para>This is my first Cocoon page!</para>
+  <para>This is my first Cocoon page!</para>
  </content>
 </page>
