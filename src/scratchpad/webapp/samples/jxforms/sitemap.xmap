@@ -52,7 +52,7 @@
 	  <map:parameter name="id" value="form-feedback"/>
           <map:parameter name="schema-ns" value="http://www.ascc.net/xml/schematron"/>
           <map:parameter name="validator-schema" value="schematron/wizard-xmlform-sch-report.xml"/>
-          <map:parameter name="scope" value="session"/>
+          <map:parameter name="scope" value="request"/>
         </map:call>
       </map:match>
 

@@ -157,6 +157,7 @@ JXForm.prototype._sendView = function(uri, lastWebCont, timeToLive) {
     if (bizData == undefined) {
         bizData = null;
     }
+    this.lastWebContinuation = wk;
     this.cocoon.forwardTo("cocoon://" + 
                           this.cocoon.environment.getURIPrefix() + uri,
                           bizData, wk);
@@ -176,10 +177,10 @@ JXForm.prototype._sendView = function(uri, lastWebCont, timeToLive) {
  */
 JXForm.prototype.sendView = function(uri, validator) {
     var lastWebCont = this.lastWebContinuation;
+    // create a continuation, the invocation of which will resend
+    // the page: this is used to implement <xf:submit continuation="back">
     var wk = this.start(lastWebCont);
     while (true) {
-        // create a continuation, the invocation of which will resend
-        // the page: this is used to implement <xf:submit continuation="back">
         if (this.cocoon.request == null) {
             // this continuation has been invalidated
             this.dead = true;
@@ -245,9 +246,8 @@ JXForm.prototype.finish = function(uri) {
     if (this.rootContinuation != null) {
         this.rootContinuation.invalidate();
         this.rootContinuation = null;
-        this.lastContinuation = null;
+        this.lastWebContinuation = null;
     }
-    
 }
 
 /**
