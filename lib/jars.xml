@@ -970,8 +970,8 @@
       However, these APIs can be quite complex to understand and utilize. 
       The BeanUtils component provides easy-to-use wrappers around these capabilities.
     </description>
-    <used-by>BetwixtTransformer</used-by>
-    <lib>scratchpad/lib/commons-beanutils-core-1.7.jar</lib>
+    <used-by>Faces block, BetwixtTransformer</used-by>
+    <lib>faces/lib/commons-beanutils-core-1.7.jar</lib>
     <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
   </file>
 
@@ -983,8 +983,8 @@
        XML elements is recognized. A rich set of predefined  rules  is
        available for your use, or you can also create your own.
     </description>
-    <used-by>BetwixtTransformer</used-by>
-    <lib>scratchpad/lib/commons-digester-1.5.jar</lib>
+    <used-by>Faces block, BetwixtTransformer</used-by>
+    <lib>faces/lib/commons-digester-1.5.jar</lib>
     <homepage>http://jakarta.apache.org/commons/digester/</homepage>
   </file>  
 
@@ -1128,5 +1128,47 @@
     <used-by>XSLTC, javaflow</used-by>
     <lib>endorsed/jakarta-bcel-20040329.jar</lib>
     <homepage>http://jakarta.apache.org/bcel/</homepage>
+  </file>
+
+  <file>
+    <title>MyFaces</title>
+    <description>
+      MyFaces is an open source implementation of the JSR-127 JavaServer Faces
+      specification.
+    </description>
+    <used-by>Faces block</used-by>
+    <lib>faces/lib/myfaces-20041005m.jar</lib>
+    <homepage>http://www.myfaces.org/</homepage>
+  </file>
+
+  <file>
+    <title>MyFaces</title>
+    <description>
+      MyFaces is an open source implementation of the JSR-127 JavaServer Faces
+      specification.
+    </description>
+    <used-by>Faces block</used-by>
+    <lib>faces/lib/myfaces-jsf-api-20041005.jar</lib>
+    <homepage>http://www.myfaces.org/</homepage>
+  </file>
+
+  <file>
+    <title>Jakarta Commons EL</title>
+    <description>
+      EL is the JSP 2.0 Expression Language Interpreter from Apache.
+    </description>
+    <used-by>Faces block</used-by>
+    <lib>faces/lib/commons-el-1.0.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/el/</homepage>
+  </file>
+
+  <file>
+    <title>Apache Tomcat JSP API</title>
+    <description>
+      JSP API classes from Apache Tomcat
+    </description>
+    <used-by>Faces block</used-by>
+    <lib>faces/lib/jsp-api-2.0.jar</lib>
+    <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 </jars>
