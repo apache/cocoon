@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: demo1.xsp,v 1.1 2003/09/28 04:31:10 antonio Exp $-->
+<!-- $Id: demo1.xsp,v 1.2 2004/02/04 17:33:58 joerg Exp $-->
 <!--
 
  ============================================================================
@@ -55,7 +55,7 @@
  * Simple demo that insert a row into hsqldb using OJB with JDO
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/09/28 04:31:10 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/02/04 17:33:58 $
 -->
 
 <xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
@@ -65,7 +65,7 @@
 		<xsp:include>javax.jdo.Transaction</xsp:include>
 		<xsp:include>org.apache.cocoon.ojb.jdo.components.JdoPMF</xsp:include>
 		<xsp:include>javax.jdo.Transaction</xsp:include>
-		<xsp:include>org.apache.cocoon.ojb.samples.Department</xsp:include>
+		<xsp:include>org.apache.cocoon.ojb.samples.bean.Department</xsp:include>
 	</xsp:structure>
 
 	<xsp:init-page>
