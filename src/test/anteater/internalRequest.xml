@@ -8,7 +8,7 @@
 
   <!-- test samples/test/simpletest -->
   <target name="internal-request-test">
-    <property name="internal-request-test" value="${cocoon}/samples/test/internal-request/simpletest"/>
+    <property name="internal-request-test" value="${anteater.env.cocoon}/samples/test/internal-request/simpletest"/>
 
       <httpRequest href="${internal-request-test}"
 		   description="Test the internal request handling">

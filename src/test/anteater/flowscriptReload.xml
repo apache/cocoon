@@ -9,15 +9,15 @@
   <!-- Check the reloading of the sitemap -->
   <target name="flowscriptReload">
     <property name="test-dir" value="samples/flow/test"/>
-    <property name="url" value="${cocoon}/${test-dir}/showString"/>
+    <property name="url" value="${anteater.env.cocoon}/${test-dir}/showString"/>
 
     <!--+
         | Copy the flowscript from its source directory to the destination
         | area, and replace the parameter value with 'abc' 
         +-->
 
-    <copy file="${src-webapp-dir}/${test-dir}/sendpage.js"
-	  tofile="${deploy-dir}/${test-dir}/sendpage.js"
+    <copy file="${anteater.env.src-webapp-dir}/${test-dir}/sendpage.js"
+	  tofile="${anteater.env.deploy-dir}/${test-dir}/sendpage.js"
 	  overwrite="yes">
       <filterset>
         <filter token="REPLACEME" value="replaceme-abc"/>
@@ -38,8 +38,8 @@
         | area, and replace the parameter value with '123' 
         +-->
 
-    <copy file="${src-webapp-dir}/${test-dir}/sendpage.js"
-	  tofile="${deploy-dir}/${test-dir}/sendpage.js"
+    <copy file="${anteater.env.src-webapp-dir}/${test-dir}/sendpage.js"
+	  tofile="${anteater.env.deploy-dir}/${test-dir}/sendpage.js"
 	  overwrite="yes">
       <filterset>
 	    <filter token="REPLACEME" value="replaceme-123"/>

@@ -8,7 +8,7 @@
 
     <!-- Check mime-types (bugzilla 25212) -->
     <target name="reader-mime-type">
-        <property name="baseUrl" value="${cocoon}/samples/test/reader-mime-type"/>
+        <property name="baseUrl" value="${anteater.env.cocoon}/samples/test/reader-mime-type"/>
 
         <httpRequest href="${baseUrl}/test10.html" description="Check content-type">
             <match>

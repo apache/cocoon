@@ -7,7 +7,7 @@
 
     @author bdelacretaz@apache.org
 
-    $Id: samples-mime-types.xml,v 1.3 2004/02/09 19:34:24 joerg Exp $
+    $Id: samples-mime-types.xml,v 1.4 2004/02/10 07:47:49 bdelacretaz Exp $
  -->
 
 <project name="batik-samples-mime-types" default="batik-samples-mime-types">
@@ -17,8 +17,8 @@
     </group>
 
     <target name="batik-samples-mime-types">
-        <property name="helloWorldBaseUrl" value="${cocoon}/samples/hello-world"/>
-        <property name="batikBaseUrl" value="${cocoon}/samples/batik"/>
+        <property name="helloWorldBaseUrl" value="${anteater.env.cocoon}/samples/hello-world"/>
+        <property name="batikBaseUrl" value="${anteater.env.cocoon}/samples/batik"/>
 
         <httpRequest href="${helloWorldBaseUrl}/hello.svg">
             <match>

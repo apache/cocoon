@@ -4,7 +4,7 @@
   <typedef resource="META-INF/Anteater.types"/>
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
 
-  <property name="url" value="${cocoon}/samples/xsp/java/resolver"/>
+  <property name="url" value="${anteater.env.cocoon}/samples/xsp/java/resolver"/>
 
   <target name="conditional" depends="main,disabled"/>
   <target name="disabled" unless="anteater.test.bug26186InternalRequestMemoryLeak.enabled">
