@@ -1,39 +1,11 @@
 Index: src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java
 ===================================================================
 RCS file: /cvsroot/myfaces/myfaces/src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java,v
-retrieving revision 1.28
-diff -u -u -r1.28 JspViewHandlerImpl.java
---- src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	2 Sep 2004 09:04:14 -0000	1.28
-+++ src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	16 Sep 2004 18:57:15 -0000
-@@ -29,13 +29,11 @@
- import javax.faces.context.ExternalContext;
- import javax.faces.context.FacesContext;
- import javax.faces.render.RenderKitFactory;
--import javax.servlet.ServletRequest;
- import javax.servlet.ServletResponse;
- import javax.servlet.http.HttpServletRequest;
- import javax.servlet.http.HttpServletResponse;
- import javax.servlet.http.HttpSession;
- import java.io.IOException;
--import java.util.Enumeration;
- import java.util.Iterator;
- import java.util.List;
- import java.util.Locale;
-@@ -95,10 +93,10 @@
-     {
-         //ExternalContext.getLocales() is missing. Next Spec will define it.
-         //But since we are in a JSP specific impl we can cast...
--        Enumeration locales = ((ServletRequest)facesContext.getExternalContext().getRequest()).getLocales();
--        while (locales.hasMoreElements())
-+        Iterator locales = facesContext.getExternalContext().getRequestLocales();
-+        while (locales.hasNext())
-         {
--            Locale locale = (Locale) locales.nextElement();
-+            Locale locale = (Locale) locales.next();
-             for (Iterator it = facesContext.getApplication().getSupportedLocales(); it.hasNext();)
-             {
-                 Locale supportLocale = (Locale)it.next();
-@@ -209,7 +207,7 @@
+retrieving revision 1.29
+diff -u -r1.29 JspViewHandlerImpl.java
+--- src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	5 Oct 2004 08:22:55 -0000	1.29
++++ src/myfaces/net/sourceforge/myfaces/application/jsp/JspViewHandlerImpl.java	5 Oct 2004 11:53:57 -0000
+@@ -207,7 +207,7 @@
  
          String viewId = facesContext.getViewRoot().getViewId();
          ServletMapping servletMapping = getServletMapping(externalContext);
@@ -42,34 +14,31 @@ diff -u -u -r1.28 JspViewHandlerImpl.java
          {
              String defaultSuffix = externalContext.getInitParameter(ViewHandler.DEFAULT_SUFFIX_PARAM_NAME);
              String suffix = defaultSuffix != null ? defaultSuffix : ViewHandler.DEFAULT_SUFFIX;
-@@ -297,7 +295,7 @@
- 
+@@ -296,6 +296,12 @@
          ExternalContext externalContext = facescontext.getExternalContext();
          ServletMapping servletMapping = getServletMapping(externalContext);
--
-+        if (servletMapping != null) {
+ 
++        if (servletMapping == null)
++        {
++            // If no servlet mappings found, return viewID as is.
++            return viewId;
++        }
++
          if (servletMapping.isExtensionMapping())
          {
              // extension mapping
-@@ -334,6 +332,9 @@
+@@ -372,10 +378,11 @@
+                 }
              }
-             return urlpattern + viewId;
          }
-+        }
-+
-+        return viewId;
-     }
- 
- 
-@@ -376,8 +377,9 @@
-         }
-         log.error("could not find pathMapping for servletPath = " + servletPath +
-                   " requestPathInfo = " + requestPathInfo);
--        throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
+-        log.error("could not find pathMapping for servletPath = " + servletPath +
 -                  " requestPathInfo = " + requestPathInfo);
+-        throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
++
++        // No mappings found, return null
++        log.warn("could not find pathMapping for servletPath = " + servletPath +
+                   " requestPathInfo = " + requestPathInfo);
 +        return null;
-+        //throw new IllegalArgumentException("could not find pathMapping for servletPath = " + servletPath +
-+        //          " requestPathInfo = " + requestPathInfo);
      }
  
  }
