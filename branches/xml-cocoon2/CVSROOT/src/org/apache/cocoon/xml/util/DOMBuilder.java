@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 17:50:07 $
  */
 public class DOMBuilder implements XMLConsumer {
     /** The document was not started */
@@ -56,8 +56,6 @@ public class DOMBuilder implements XMLConsumer {
     private Locator locator=null;
     /** The listener */
     private Listener listener=null;
-    /** The document factory */
-    private DOMFactory factory=null;
     /** The namespaces table */
     private NamespacesTable namespaces=null;
     /** The current document */
@@ -68,6 +66,16 @@ public class DOMBuilder implements XMLConsumer {
     private String name=null;
     /** The vector of namespaces declarations to include in the next element */
     private Vector undecl=new Vector();
+
+    /** The document factory */
+    protected DOMFactory factory=null;
+
+    /**
+     * Construct a new instance of this TreeGenerator.
+     */
+    protected DOMBuilder() {
+        this(null,null);
+    }
 
     /**
      * Construct a new instance of this TreeGenerator.
@@ -136,7 +144,7 @@ public class DOMBuilder implements XMLConsumer {
         // Do a state change and reset the DTD flag
         state=S_AVAIL;
         // Notify the listener
-        if (this.listener!=null) this.listener.notify(this.document);
+        this.notify(this.document);
     }
 
     /**
@@ -516,6 +524,14 @@ public class DOMBuilder implements XMLConsumer {
         this.current.appendChild(eref);
     }
 
+    /**
+     * Receive notification of a successfully completed DOM tree generation.
+     */
+    protected void notify(Document doc)
+    throws SAXException {
+        if (this.listener!=null) this.listener.notify(this.document);
+    }
+
     /** Create a location string */
     private String location() {
         if (this.locator==null) return("");
@@ -536,6 +552,7 @@ public class DOMBuilder implements XMLConsumer {
      * be notified of a successful DOM tree generation.
      */
     public static interface Listener {
+    
         /**
          * Receive notification of a successfully completed DOM tree generation.
          */

@@ -33,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-27 01:33:12 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-27 17:50:08 $
  */
 public class DOMStreamer extends AbstractXMLProducer {
 
@@ -77,7 +77,7 @@ public class DOMStreamer extends AbstractXMLProducer {
     /**
      * Start the production of SAX events.
      */
-    public void produce(Document document)
+    public void stream(Document document)
     throws SAXException {
         processNode(document);
     }
