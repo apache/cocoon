@@ -61,6 +61,8 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.CocoonComponentManager;
@@ -94,7 +96,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.6 2003/05/16 07:04:55 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.7 2003/09/03 15:00:57 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -202,6 +204,35 @@ public final class SourceUtil {
                 throw new ProcessingException("Exception during parsing source.", ce);
             } finally {
                 manager.release( (Component)parser );
+            }
+        }
+    }
+
+    /**
+     * Generates SAX events from the given source by parsing it.
+     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
+     * that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!
+     * @param  source    the data
+     * @throws ProcessingException if no suitable converter is found
+     */
+    static public void parse( ServiceManager manager, 
+                              Source source,
+                              ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
+        if ( source instanceof XMLizable ) {
+            ((XMLizable)source).toSAX( handler );
+        } else {
+            SAXParser parser = null;
+            try {
+                parser = (SAXParser) manager.lookup( SAXParser.ROLE);
+                parser.parse( getInputSource( source ), handler );
+            } catch (SourceException se) {
+                throw SourceUtil.handle(se);
+            } catch (ServiceException ce) {
+                throw new ProcessingException("Exception during parsing source.", ce);
+            } finally {
+                manager.release( parser );
             }
         }
     }

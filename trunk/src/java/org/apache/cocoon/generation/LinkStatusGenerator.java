@@ -85,9 +85,9 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.3 2003/05/03 04:41:22 crossley Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.4 2003/09/03 15:00:56 cziegeler Exp $
  */
-public class LinkStatusGenerator extends ComposerGenerator implements Recyclable, Configurable {
+public class LinkStatusGenerator extends ServiceableGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */
     protected static final String URI =
             "http://apache.org/cocoon/linkstatus/2.0";

@@ -54,9 +54,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
@@ -117,7 +117,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:joerg@apache.org">Jörg Heinicke</a>
- * @version CVS $Id: XPathDirectoryGenerator.java,v 1.2 2003/07/02 23:58:11 joerg Exp $
+ * @version CVS $Id: XPathDirectoryGenerator.java,v 1.3 2003/09/03 15:00:56 cziegeler Exp $
  */
 public class XPathDirectoryGenerator extends DirectoryGenerator {
 
@@ -161,12 +161,27 @@ public class XPathDirectoryGenerator extends DirectoryGenerator {
         }
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    /**
+     * Serviceable
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
         this.processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
         this.parser = (DOMParser)manager.lookup(DOMParser.ROLE);
     }
 
+    /**
+     * Disposable
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.processor );
+            this.manager.release( this.parser );
+            this.processor = null;
+            this.parser = null;
+        }
+        super.dispose();
+    }
     /**
      * Extends the startNode() method of the DirectoryGenerator by starting
      * a possible XPath query on a file.
