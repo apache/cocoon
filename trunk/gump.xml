@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.72 2003/08/04 08:39:41 bruno Exp $
+  CVS $Id: gump.xml,v 1.73 2003/08/06 12:59:13 bdelacretaz Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -959,6 +959,25 @@
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
+
+  <project name="cocoon-block-slop" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="slop"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/slop-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+
 
   <!--
     ********************************************
