@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
@@ -242,13 +244,35 @@ public class Core
         void configure(Settings settings);
         void configureLoggingContext(DefaultContext context);
 
+        void configure(DefaultContext context);
+
         ClassLoader getInitClassLoader();
 
         org.apache.cocoon.environment.Context getEnvironmentContext();
         
-        String getContextPath();
-        
+        /**
+         * Returns the URL to the application context.
+         */
+        String getContextURL();
+
+        /**
+         * Returns a file to the application context.
+         * @return A file pointing to the context or null if the context is not
+         *         writeable.
+         */
+        File getContextForWriting();
+
         LogTarget getDefaultLogTarget();
+
+        /**
+         * Set the ConfigFile for the Cocoon object.
+         *
+         * @param configFileName The file location for the cocoon.xconf
+         *
+         * @throws Exception
+         */
+        public URL getConfigFile(final Logger logger, final String configFileName)
+        throws Exception;
     }
     
 }

@@ -181,9 +181,40 @@ public class CocoonServlet extends HttpServlet {
         super.init(conf);
 
         this.servletContextPath = this.servletContext.getRealPath("/");
+        String path = this.servletContextPath;
+        // these two variables are just for debugging. We can't log at this point
+        // as the logger isn't initialized yet.
+        String debugPathOne = null, debugPathTwo = null;
+        if (path == null) {
+            // Try to figure out the path of the root from that of WEB-INF
+            try {
+                path = this.servletContext.getResource("/WEB-INF").toString();
+            } catch (MalformedURLException me) {
+                throw new ServletException("Unable to get resource 'WEB-INF'.", me);
+            }
+            debugPathOne = path;
+            path = path.substring(0, path.length() - "WEB-INF".length());
+            debugPathTwo = path;
+        }
+        try {
+            if (path.indexOf(':') > 1) {
+                this.servletContextURL = path;
+            } else {
+                this.servletContextURL = new File(path).toURL().toExternalForm();
+            }
+        } catch (MalformedURLException me) {
+            // VG: Novell has absolute file names starting with the
+            // volume name which is easily more then one letter.
+            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
+            try {
+                this.servletContextURL = new File(path).toURL().toExternalForm();
+            } catch (MalformedURLException ignored) {
+                throw new ServletException("Unable to determine servlet context URL.", me);
+            }
+        }
 
         // initialize settings
-        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader, this.servletContextPath);
+        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader, this.servletContextPath, this.servletContextURL);
 
         this.settings = Core.createSettings(env);
 
@@ -242,37 +273,6 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(Constants.CONTEXT_WORK_DIR, workDir);
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
-        String path = this.servletContextPath;
-        // these two variables are just for debugging. We can't log at this point
-        // as the logger isn't initialized yet.
-        String debugPathOne = null, debugPathTwo = null;
-        if (path == null) {
-            // Try to figure out the path of the root from that of WEB-INF
-            try {
-                path = this.servletContext.getResource("/WEB-INF").toString();
-            } catch (MalformedURLException me) {
-                throw new ServletException("Unable to get resource 'WEB-INF'.", me);
-            }
-            debugPathOne = path;
-            path = path.substring(0, path.length() - "WEB-INF".length());
-            debugPathTwo = path;
-        }
-        try {
-            if (path.indexOf(':') > 1) {
-                this.servletContextURL = path;
-            } else {
-                this.servletContextURL = new File(path).toURL().toExternalForm();
-            }
-        } catch (MalformedURLException me) {
-            // VG: Novell has absolute file names starting with the
-            // volume name which is easily more then one letter.
-            // Examples: sys:/apache/cocoon or sys:\apache\cocoon
-            try {
-                this.servletContextURL = new File(path).toURL().toExternalForm();
-            } catch (MalformedURLException ignored) {
-                throw new ServletException("Unable to determine servlet context URL.", me);
-            }
-        }
         try {
             this.appContext.put(ContextHelper.CONTEXT_ROOT_URL, new URL(this.servletContextURL));
         } catch (MalformedURLException ignore) {
@@ -360,9 +360,16 @@ public class CocoonServlet extends HttpServlet {
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
         // update settings
-        final URL u = this.getConfigFile(this.settings.getConfiguration());
-        this.settings.setConfiguration(u.toExternalForm());
-        this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
+        try {
+            final URL u = env.getConfigFile(this.log, this.settings.getConfiguration());
+            this.settings.setConfiguration(u.toExternalForm());
+            this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
+        } catch (Exception e) {
+            if ( e instanceof ServletException ) {
+                throw (ServletException)e;
+            }
+            throw new ServletException(e);
+        }
 
         parentServiceManagerClass = this.settings.getParentServiceManagerClassName();
         if (parentServiceManagerClass != null) {
@@ -674,65 +681,6 @@ public class CocoonServlet extends HttpServlet {
         LoggingHelper lh = new LoggingHelper(this.settings, servTarget, subcontext);
         this.loggerManager = lh.getLoggerManager();
         this.log = lh.getLogger();
-    }
-
-    /**
-     * Set the ConfigFile for the Cocoon object.
-     *
-     * @param configFileName The file location for the cocoon.xconf
-     *
-     * @throws ServletException
-     */
-    private URL getConfigFile(final String configFileName)
-    throws ServletException {
-        final String usedFileName;
-
-        if (configFileName == null) {
-            if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Servlet initialization argument 'configurations' not specified, attempting to use '/WEB-INF/cocoon.xconf'");
-            }
-            usedFileName = "/WEB-INF/cocoon.xconf";
-        } else {
-            usedFileName = configFileName;
-        }
-
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Using configuration file: " + usedFileName);
-        }
-
-        URL result;
-        try {
-            // test if this is a qualified url
-            if (usedFileName.indexOf(':') == -1) {
-                result = this.servletContext.getResource(usedFileName);
-            } else {
-                result = new URL(usedFileName);
-            }
-        } catch (Exception mue) {
-            String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
-            getLogger().error(msg, mue);
-            throw new ServletException(msg, mue);
-        }
-
-        if (result == null) {
-            File resultFile = new File(usedFileName);
-            if (resultFile.isFile()) {
-                try {
-                    result = resultFile.getCanonicalFile().toURL();
-                } catch (Exception e) {
-                    String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
-                    getLogger().error(msg, e);
-                    throw new ServletException(msg, e);
-                }
-            }
-        }
-
-        if (result == null) {
-            String msg = "Init parameter 'configuration' doesn't name an existing resource : " + usedFileName;
-            getLogger().error(msg);
-            throw new ServletException(msg);
-        }
-        return result;
     }
 
     /**
@@ -1308,10 +1256,20 @@ public class CocoonServlet extends HttpServlet {
 
         private final ServletConfig config;
         private final ClassLoader   classLoader;
+        private final File          writeableContextPath;
         private final String        contextPath;
-        public ServletBootstrapEnvironment(ServletConfig config, ClassLoader cl, String path) {
+
+        public ServletBootstrapEnvironment(ServletConfig config, 
+                                           ClassLoader   cl, 
+                                           String        writeablePath,
+                                           String        path) {
             this.config = config;
             this.classLoader = cl;
+            if ( writeablePath == null ) {
+                this.writeableContextPath = null;
+            } else {
+                this.writeableContextPath = new File(writeablePath);
+            }
             this.contextPath = path;
         }
 
@@ -1363,13 +1321,19 @@ public class CocoonServlet extends HttpServlet {
         }
 
         /**
-         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getContextPath()
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getContextURL()
          */
-        public String getContextPath() {
+        public String getContextURL() {
             return this.contextPath;
         }
 
 
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getContextForWriting()
+         */
+        public File getContextForWriting() {
+            return this.writeableContextPath;
+        }
         /**
          * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getDefaultLogTarget()
          */
@@ -1385,7 +1349,70 @@ public class CocoonServlet extends HttpServlet {
          * @see org.apache.cocoon.core.Core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
          */
         public void configureLoggingContext(DefaultContext context) {
-            context.put("servlet-context", this.config.getServletContext());
+            context.put(CONTEXT_SERVLET_CONFIG, this.config.getServletContext());
         }
+
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
+         */
+        public void configure(DefaultContext context) {
+            context.put(CONTEXT_SERVLET_CONFIG, this.config.getServletContext());
+        }
+
+        /**
+         * @see org.apache.cocoon.core.Core.BootstrapEnvironment#getConfigFile(org.apache.avalon.framework.logger.Logger, java.lang.String)
+         */
+        public URL getConfigFile(final Logger logger, final String configFileName)
+        throws Exception {
+            final String usedFileName;
+
+            if (configFileName == null) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Servlet initialization argument 'configurations' not specified, attempting to use '/WEB-INF/cocoon.xconf'");
+                }
+                usedFileName = "/WEB-INF/cocoon.xconf";
+            } else {
+                usedFileName = configFileName;
+            }
+
+            if (logger.isDebugEnabled()) {
+                logger.debug("Using configuration file: " + usedFileName);
+            }
+
+            URL result;
+            try {
+                // test if this is a qualified url
+                if (usedFileName.indexOf(':') == -1) {
+                    result = this.config.getServletContext().getResource(usedFileName);
+                } else {
+                    result = new URL(usedFileName);
+                }
+            } catch (Exception mue) {
+                String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
+                logger.error(msg, mue);
+                throw new ServletException(msg, mue);
+            }
+
+            if (result == null) {
+                File resultFile = new File(usedFileName);
+                if (resultFile.isFile()) {
+                    try {
+                        result = resultFile.getCanonicalFile().toURL();
+                    } catch (Exception e) {
+                        String msg = "Init parameter 'configurations' is invalid : " + usedFileName;
+                        logger.error(msg, e);
+                        throw new ServletException(msg, e);
+                    }
+                }
+            }
+
+            if (result == null) {
+                String msg = "Init parameter 'configuration' doesn't name an existing resource : " + usedFileName;
+                logger.error(msg);
+                throw new ServletException(msg);
+            }
+            return result;
+        }
+
     }
 }
