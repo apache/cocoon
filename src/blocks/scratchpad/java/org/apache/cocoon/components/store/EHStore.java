@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.store;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
@@ -28,6 +29,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.util.IOUtils;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -54,35 +56,20 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
 
     // ---------------------------------------------------- Constants
 
-    private static final String CACHE_NAME_PARAM = "cache-name";
-    private static final String MAXOBJECTS_PARAM = "maxobjects";
-    private static final String OVERFLOW_TO_DISK_PARAM = "overflow-to-disk";
-    private static final String ETERNAL_PARAM = "eternal";
-    private static final String TIME_TO_IDLE_PARAM = "time-to-idle-seconds";
-    private static final String TIME_TO_LIVE_PARAM = "time-to-live-seconds";
-    private static final String THREAD_INTERVAL_PARAM = "thread-interval";
-    private static final String CONFIG_FILE_PARAM = "config-file";
+    private static final String CONFIG_FILE = "org/apache/cocoon/components/store/ehcache.xml";
 
-    private static final String DEFAULT_CACHE_NAME = "main";
-    private static final long DEFAULT_TIME_TO_IDLE = 120;
-    private static final long DEFAULT_TIME_TO_LIVE = 120;
-    private static final long DEFAULT_THREAD_INTERVAL = 120;
-    private static final String DEFAULT_CONFIG_FILE = "org/apache/cocoon/components/store/ehcache-defaults.xml";
+    private static int instanceCount = 0;
 
     // ---------------------------------------------------- Instance variables
 
     private Cache cache;
     private CacheManager cacheManager;
 
+    private final String cacheName;
+
     // configuration options
-    private String cacheName;
-    private int maximumSize;
+    private int maxObjects;
     private boolean overflowToDisk;
-    private boolean eternal;
-    private long timeToIdle;
-    private long timeToLive;
-    private long threadInterval;
-    private String configFile;
 
     /** The service manager */
     private ServiceManager manager;
@@ -90,19 +77,22 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
     /** The store janitor */
     private StoreJanitor storeJanitor;
 
-    /** The context containing the work and the cache directory */
-    private Context context;
+    private File workDir;
+    private File cacheDir;
 
     // ---------------------------------------------------- Lifecycle
 
     public EHStore() {
+        instanceCount++;
+        this.cacheName = "cocoon-ehcache-" + instanceCount;
     }
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
      */
-    public void contextualize(Context aContext) throws ContextException {
-        this.context = aContext;
+    public void contextualize(Context context) throws ContextException {
+        this.workDir = (File)context.get(Constants.CONTEXT_WORK_DIR);
+        this.cacheDir = (File)context.get(Constants.CONTEXT_CACHE_DIR);
     }
 
     /* (non-Javadoc)
@@ -112,61 +102,116 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
         this.manager = aManager;
         this.storeJanitor = (StoreJanitor) this.manager.lookup(StoreJanitor.ROLE);
     }
-    
+
     /**
      * Configure the store. The following options can be used:
      * <ul>
-     *  <li><code>cache-name</code> (main) - When configuring multiple 
-     *  EHStore intances you must specify a different name for each.</li>
      *  <li><code>maxobjects</code> (10000) - The maximum number of in-memory objects.</li>
-     *  <li><code>overflow-to-disk</disk> (true) - Whether to spool elements to disk after
+     *  <li><code>overflow-to-disk</code> (true) - Whether to spool elements to disk after
      *   maxobjects has been exceeded.</li>
-     *  <li><code>eternal</code> (true) - If eternal, 
-     *   timeouts are ignored and the elements are never expired.
-     *  <li><code>time-to-idle-seconds</code> (120) - Idle time before an element expires. Only
-     *   relevant if the cache is not eternal.
-     *  <li><code>time-to-live-seconds</code> (120) - Time to live before an element expires. Only
-     *   relevant if the cache is not eternal.
-     *  <li><code>thread-interval</code> (120) - The number of seconds between runs of the disk 
-     *   expiry thread.
-     *  <li><code>config-file</code> (org/apache/cocoon/components/store/ehcache-defaults.xml) -
-     *   The default configuration file to use. This file is the only way to specify the path where
-     *   the disk store puts its .cache files. The current default value is <code>java.io.tmp</code>.
-     *   (On a standard Linux system this will be /tmp). Note that since the EHCache manager is
-     *   a singleton object the value of this parameter will only have effect when this store is the
-     *   first to create it. Configuring different stores with different values for this parameter
-     *   will have no effect.</li>
+     *  <li><code>use-cache-directory</code> (false) - If true the <i>cache-directory</i>
+     *   context entry will be used as the location of the disk store. 
+     *   Within the servlet environment this is set in web.xml.</li>
+     *  <li><code>use-work-directory</code> (false) - If true the <i>work-directory</i>
+     *   context entry will be used as the location of the disk store.
+     *   Within the servlet environment this is set in web.xml.</li>
+     *  <li><code>directory</code> - Specify an alternative location of the disk store.
      * </ul>
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        this.cacheName = parameters.getParameter(CACHE_NAME_PARAM, DEFAULT_CACHE_NAME);
-        this.maximumSize = parameters.getParameterAsInteger(MAXOBJECTS_PARAM, 10000);
-        this.overflowToDisk = parameters.getParameterAsBoolean(OVERFLOW_TO_DISK_PARAM, true);
-        this.eternal = parameters.getParameterAsBoolean(ETERNAL_PARAM, true);
-        this.timeToIdle = parameters.getParameterAsLong(TIME_TO_IDLE_PARAM, DEFAULT_TIME_TO_IDLE);
-        this.timeToLive = parameters.getParameterAsLong(TIME_TO_LIVE_PARAM, DEFAULT_TIME_TO_LIVE);
-        this.threadInterval = parameters.getParameterAsLong(THREAD_INTERVAL_PARAM, DEFAULT_THREAD_INTERVAL);
-        this.configFile = parameters.getParameter(CONFIG_FILE_PARAM, DEFAULT_CONFIG_FILE);
+
+        this.maxObjects = parameters.getParameterAsInteger("maxobjects", 10000);
+        this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
+
+        try {
+            if (parameters.getParameterAsBoolean("use-cache-directory", false)) {
+                if (this.getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using cache directory: " + cacheDir);
+                }
+                setDirectory(cacheDir);
+            }
+            else if (parameters.getParameterAsBoolean("use-work-directory", false)) {
+                if (this.getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using work directory: " + workDir);
+                }
+                setDirectory(workDir);
+            }
+            else if (parameters.getParameter("directory", null) != null) {
+                String dir = parameters.getParameter("directory");
+                dir = IOUtils.getContextFilePath(workDir.getPath(), dir);
+                if (this.getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using directory: " + dir);
+                }
+                setDirectory(new File(dir));
+            }
+            else {
+                try {
+                    // Legacy: use working directory by default
+                    setDirectory(workDir);
+                } catch (IOException e) {
+                }
+            }
+        } catch (IOException e) {
+            throw new ParameterException("Unable to set directory", e);
+        }
+
     }
-    
+
+    /**
+     * Sets the cache directory
+     */
+    private void setDirectory(final File directory) throws IOException  {
+        
+        /* Save directory path prefix */
+        String directoryPath = getFullFilename(directory);
+        directoryPath += File.separator;
+
+        /* If directory doesn't exist, create it anew */
+        if (!directory.exists()) {
+            if (!directory.mkdir()) {
+                throw new IOException("Error creating store directory '" + directoryPath + "': ");
+            }
+        }
+
+        /* Is given file actually a directory? */
+        if (!directory.isDirectory()) {
+            throw new IOException("'" + directoryPath + "' is not a directory");
+        }
+
+        /* Is directory readable and writable? */
+        if (!(directory.canRead() && directory.canWrite())) {
+            throw new IOException("Directory '" + directoryPath + "' is not readable/writable");
+        }
+
+        System.setProperty("java.io.tmpdir", directoryPath);
+    }
+
+    /**
+     * Get the complete filename corresponding to a (typically relative)
+     * <code>File</code>.
+     * This method accounts for the possibility of an error in getting
+     * the filename's <i>canonical</i> path, returning the io/error-safe
+     * <i>absolute</i> form instead
+     *
+     * @param file The file
+     * @return The file's absolute filename
+     */
+    private static String getFullFilename(File file) {
+        try {
+            return file.getCanonicalPath();
+        }
+        catch (Exception e) {
+            return file.getAbsolutePath();
+        }
+    }
+
     /**
      * Initialize the CacheManager and created the Cache.
      */
     public void initialize() throws Exception {
-        URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(this.configFile);
-        String tempDir = System.getProperty("java.io.tmpdir");
-        Object cacheDir = this.context.get(Constants.CONTEXT_CACHE_DIR);
-        if (cacheDir != null) System.setProperty("java.io.tmpdir", cacheDir.toString());
+        URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(CONFIG_FILE);
         this.cacheManager = CacheManager.create(configFileURL);
-        if (tempDir != null) System.setProperty("java.io.tmpdir", tempDir);
-        this.cache = new Cache(this.cacheName,
-                               this.maximumSize,
-                               this.overflowToDisk,
-                               this.eternal,
-                               this.timeToLive,
-                               this.timeToIdle,
-                               true,
-                               this.threadInterval);
+        this.cache = new Cache(this.cacheName, this.maxObjects, this.overflowToDisk, true, 0, 0, true, 120);
         this.cacheManager.addCache(this.cache);
         this.storeJanitor.register(this);
     }
@@ -175,7 +220,7 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      * Shutdown the CacheManager.
      */
     public void dispose() {
-        if ( this.storeJanitor != null ) {
+        if (this.storeJanitor != null) {
             this.storeJanitor.unregister(this);
             this.manager.release(this.storeJanitor);
             this.storeJanitor = null;
@@ -228,7 +273,28 @@ implements Store, Contextualizable, Serviceable, Parameterizable, Initializable,
      * @see org.apache.excalibur.store.Store#free()
      */
     public void free() {
-        // FIXME - we have to implement this!
+        try {
+            final List keys = this.cache.getKeysNoDuplicateCheck();
+            if (!keys.isEmpty()) {
+            	// TODO find a way to get to the LRU one.
+                final Serializable key = (Serializable) keys.get(0);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Freeing cache");
+                    getLogger().debug("key: " + key);
+                    getLogger().debug("value: " + this.cache.get(key));
+                }
+                if (!this.cache.remove(key)) {
+                    if (getLogger().isInfoEnabled()) {
+                        getLogger().info("Concurrency condition in free()");
+                    }
+                }
+            }
+        }
+        catch (CacheException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Error in free()", e);
+            }
+        }
     }
 
     /* (non-Javadoc)
