@@ -71,7 +71,7 @@ import org.apache.excalibur.source.SourceValidity;
  * 
  * @since 2.1.4
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SoftSourceCache.java,v 1.1 2003/11/09 13:33:24 haul Exp $
+ * @version CVS $Id: SoftSourceCache.java,v 1.2 2003/12/12 02:01:16 crossley Exp $
  */
 public class SoftSourceCache implements SourceCache {
 
