@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.65 2003/06/27 23:18:51 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.66 2003/06/28 12:11:20 joerg Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="fix" fixes-bug="19104" due-to="Johan Stuyts" due-to-email="johan@hippo.nl">
+    Fixed SchematronValidator.evalRule() in xmlforms block: create a relative context instead of an absolute one.
+    This allows to refer to another form field by using relative paths (../password) instead of choosing a common root.
+  </action>
   <action dev="JH" type="fix" fixes-bug="20682" due-to="Wolfgang Kowarschick" due-to-email="kowa@fh-augsburg.de">
     Fixed return of different DirValidity objects on multiple calls on getValidity() in the DirectoryGenerator.
   </action>
