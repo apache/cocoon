@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.7 2000-06-06 23:10:03 stefano Exp $
+  $Id: changes.xml,v 1.9.2.8 2000-06-24 20:19:03 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -19,6 +19,12 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="update">
+   Patched XSLTFilter to pass request parameters into stylesheet like cocoon1
+  </action>
+  <action dev="DB" type="add">
+   Added ImageDirectoryGenerator - this oughta be pluggable though, so other file types can have extra attributes added easily
+  </action>
   <action dev="SM" type="add"> 
    Improved the samples and the webapp sitemap.
   </action>
