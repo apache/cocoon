@@ -61,8 +61,8 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.component.DefaultRoleManager;
 import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
-import org.apache.avalon.excalibur.logger.LogKitManageable;
-import org.apache.avalon.excalibur.logger.LogKitManager;
+import org.apache.avalon.excalibur.logger.LoggerManager;
+
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -70,6 +70,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
@@ -79,6 +80,7 @@ import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.ComponentContext;
 import org.apache.cocoon.components.EnvironmentStack;
@@ -92,6 +94,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.ClassUtils;
+
 import org.apache.excalibur.event.Queue;
 import org.apache.excalibur.event.command.CommandManager;
 import org.apache.excalibur.event.command.TPCThreadManager;
@@ -102,6 +105,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.impl.URLSource;
 import org.apache.excalibur.xml.impl.XercesParser;
 import org.apache.excalibur.xml.sax.SAXParser;
+
 import org.xml.sax.InputSource;
 
 /**
@@ -110,7 +114,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.14 2003/09/04 19:41:58 bruno Exp $
+ * @version CVS $Id: Cocoon.java,v 1.15 2003/09/09 19:03:44 joerg Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -122,7 +126,6 @@ public class Cocoon
                    Processor,
                    Contextualizable,
                    Composable,
-                   LogKitManageable,
                    InstrumentManageable {
 
     private ThreadManager threads;
@@ -138,8 +141,8 @@ public class Cocoon
     /** The configuration tree */
     private Configuration configuration;
 
-    /** The logkit manager */
-    private LogKitManager logKitManager;
+    /** The logger manager */
+    private LoggerManager loggerManager;
 
     /** The instrument manager */
     private InstrumentManager instrumentManager;
@@ -241,13 +244,13 @@ public class Cocoon
     }
 
     /**
-     * The <code>setLogKitManager</code> method will get a <code>LogKitManager</code>
+     * The <code>setLoggerManager</code> method will get a <code>LoggerManager</code>
      * for further use.
      *
-     * @param logKitManager a <code>LogKitManager</code> value
+     * @param loggerManager a <code>LoggerManager</code> value
      */
-    public void setLogKitManager(LogKitManager logKitManager) {
-        this.logKitManager = logKitManager;
+    public void setLoggerManager(LoggerManager loggerManager) {
+        this.loggerManager = loggerManager;
     }
 
     /**
@@ -306,10 +309,10 @@ public class Cocoon
         ExcaliburComponentManager startupManager = new ExcaliburComponentManager((ClassLoader)this.context.get(Constants.CONTEXT_CLASS_LOADER));
         ContainerUtil.enableLogging(startupManager, getLogger().getChildLogger("startup"));
         ContainerUtil.contextualize(startupManager, this.context);
-        startupManager.setLogKitManager(this.logKitManager);
+        startupManager.setLoggerManager(this.loggerManager);
 
         try {
-            startupManager.addComponent(SAXParser.ROLE, ClassUtils.loadClass(parser), new org.apache.avalon.framework.configuration.DefaultConfiguration("", "empty"));
+            startupManager.addComponent(SAXParser.ROLE, ClassUtils.loadClass(parser), new DefaultConfiguration("", "empty"));
         } catch (Exception e) {
             throw new ConfigurationException("Could not load parser " + parser, e);
         }
@@ -443,7 +446,7 @@ public class Cocoon
         }
 
         this.componentManager.setRoleManager(drm);
-        this.componentManager.setLogKitManager(this.logKitManager);
+        this.componentManager.setLoggerManager(this.loggerManager);
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Setting up components...");
