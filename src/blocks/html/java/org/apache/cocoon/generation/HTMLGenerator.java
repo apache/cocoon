@@ -93,7 +93,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.8 2003/09/04 09:38:39 cziegeler Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.9 2003/10/10 12:06:22 bruno Exp $
  */
 public class HTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -330,7 +330,12 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 contentHandler.endDocument();
             } else {
                 DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
-                streamer.stream(doc);
+                // If the HTML document contained a <?xml ... declaration, tidy would have recognized
+                // this as a processing instruction (with a 'null' target), giving problems further
+                // on in the pipeline. Therefore we only serialize the document element.
+                this.contentHandler.startDocument();
+                streamer.stream(doc.getDocumentElement());
+                this.contentHandler.endDocument();
             }
         } catch (IOException e){
             throw new ResourceNotFoundException("Could not get resource "
