@@ -113,7 +113,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.45 2004/06/24 20:35:07 antonio Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.46 2004/06/26 07:31:18 antonio Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -308,7 +308,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     Object result = ScriptableObject.getProperty(thisObj, name);
                     if (result == Scriptable.NOT_FOUND) {
-                        result = ScriptableObject.getProperty(thisObj, "get" + name.substring(0, 1).toUpperCase() + (name.length() > 1 ? name.substring(1) : ""));
+                        result = ScriptableObject.getProperty(thisObj, "get" + StringUtils.capitalize(name));
                         if (result != Scriptable.NOT_FOUND &&
                             result instanceof Function) {
                             try {
@@ -1605,19 +1605,15 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     // formatNumber tag (borrows from Jakarta taglibs JSTL)
 
-    private static final char HYPHEN = '-';
-    private static final char UNDERSCORE = '_';
-
     private static Locale parseLocale(String locale, String variant) {
         Locale ret = null;
         String language = locale;
         String country = null;
-        int index = -1;
+        int index = StringUtils.indexOfAny(locale, "-_");
 
-        if ((index = locale.indexOf(HYPHEN)) > -1
-                || (index = locale.indexOf(UNDERSCORE)) > -1) {
+        if (index > -1) {
             language = locale.substring(0, index);
-            country = locale.substring(index+1);
+            country = locale.substring(index + 1);
         }
         if (StringUtils.isEmpty(language)) {
             throw new IllegalArgumentException("No language in locale");
@@ -1667,6 +1663,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 currencyClass = Class.forName("java.util.Currency");
                 // container's runtime is J2SE 1.4 or greater
             } catch (Exception cnfe) {
+                // EMPTY
             }
         }
 
@@ -1832,23 +1829,21 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             String code = null;
             String symbol = null;
 
-            if ((currencyCode == null) && (currencySymbol == null)) {
-                return;
-            }
-            if ((currencyCode != null) && (currencySymbol != null)) {
+            if (currencyCode == null) {
+                if (currencySymbol == null) {
+                    return;
+                }
+                symbol = currencySymbol;
+            } else if (currencySymbol != null) {
                 if (currencyClass != null) {
                     code = currencyCode;
                 } else {
                     symbol = currencySymbol;
                 }
-            } else if (currencyCode == null) {
-                symbol = currencySymbol;
+            } else if (currencyClass != null) {
+                code = currencyCode;
             } else {
-                if (currencyClass != null) {
-                    code = currencyCode;
-                } else {
-                    symbol = currencyCode;
-                }
+                symbol = currencyCode;
             }
             if (code != null) {
                 Object[] methodArgs = new Object[1];
@@ -2356,10 +2351,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     // <parameter name="paramName" required="Boolean" default="value"/>
                     // body
                     // </macro>
-                    String namespace = attrs.getValue("targetNamespace");
-                    if (namespace == null) {
-                        namespace = "";
-                    }
+                    String namespace = StringUtils.defaultString(attrs.getValue("targetNamespace"));
                     String name = attrs.getValue("name");
                     if (name != null) {
                         StartDefine startDefine =
@@ -3002,8 +2994,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     consumer.characters(chars, 0, chars.length);
                 }
-            } else if (ev instanceof EndDocument) {
-                consumer.endDocument();
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement)ev;
                 StartElement startElement = endElement.startElement;
@@ -3028,12 +3018,6 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } else if (ev instanceof SkippedEntity) {
                 SkippedEntity skippedEntity = (SkippedEntity)ev;
                 consumer.skippedEntity(skippedEntity.name);
-            } else if (ev instanceof StartDocument) {
-                StartDocument startDoc = (StartDocument)ev;
-                if (startDoc.endDocument != null) {
-                    // if this isn't a document fragment
-                    consumer.startDocument();
-                }
             } else if (ev instanceof StartIf) {
                 StartIf startIf = (StartIf)ev;
                 Object val;
@@ -3225,13 +3209,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     startWhen = startWhen.nextChoice;
                 }
-                if (startWhen == null) {
-                    if (startChoose.otherwise != null) {
-                        execute(consumer,
-                                jexlContext, jxpathContext, macroCall,
-                                startChoose.otherwise.next,
-                                startChoose.otherwise.endInstruction);
-                    }
+                if (startWhen == null && startChoose.otherwise != null) {
+                    execute(consumer,
+                            jexlContext, jxpathContext, macroCall,
+                            startChoose.otherwise.next,
+                            startChoose.otherwise.endInstruction);
                 }
                 ev = startChoose.endInstruction.next;
                 continue;
@@ -3699,6 +3681,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 }
                 ev = startImport.endInstruction.next;
                 continue;
+            } else if (ev instanceof StartDocument) {
+                StartDocument startDoc = (StartDocument)ev;
+                if (startDoc.endDocument != null) {
+                    // if this isn't a document fragment
+                    consumer.startDocument();
+                }
+            } else if (ev instanceof EndDocument) {
+                consumer.endDocument();
             }
             ev = ev.next;
         }
