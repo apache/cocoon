@@ -54,33 +54,28 @@ public class DefaultAppleResponse implements AppleResponse {
 
     private String uri;
     private Object data;
-    
-    /**
-     * Gets the 'bizdata' that was prepared in this response by the AppleController.
-     * This will be passed as the flow's so called 'context-object' through the
-     * selected cocoon pipeline.
-     */
-    Object getData() {
-        return data;
+    private boolean redirect = false;
+
+    public void sendPage(String uri, Object bizData) {
+        this.uri = uri;
+        this.data = bizData;
+        this.redirect = false;
     }
 
-    /**
-     * Gets the 'uri' of the pipeline that was selected and set in this response 
-     * by the AppleController.
-     * This will be use to select the publication pipeline.
-     */
-    String getURI() {
+    public void redirectTo(String uri) {
+        this.uri = uri;
+        this.redirect = true;
+    }
+
+    protected boolean isRedirect() {
+        return redirect;
+    }
+
+    protected String getURI() {
         return uri;
     }
 
-
-    public void setData(Object object) {
-        data = object;
+    protected Object getData() {
+        return data;
     }
-
-
-    public void setURI(String string) {
-        uri = string;
-    }
-
 }
