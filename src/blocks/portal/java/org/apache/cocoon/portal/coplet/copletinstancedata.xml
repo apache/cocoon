@@ -51,7 +51,7 @@
 			<bind-xml name="attribute"/>
 		</field>
 
-    <field name="title" type="java.lang.String" get-method="getInstanceTitle">
+    <field name="title" type="java.lang.String" get-method="getInstanceTitle" set-method="setTitle">
       <bind-xml name="title"/>
     </field>
 	</class>
