@@ -7,93 +7,57 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import org.apache.cocoon.XMLConsumer;
-import org.xml.sax.AttributeList;
-import org.xml.sax.Locator;
+import org.apache.cocoon.sax.XMLConsumer;
+import org.apache.cocoon.sax.XMLConsumerImpl;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributeListImpl;
 
 /**
+ * The <code>LinkHandler</code> handles elements and performs link translation
+ * querying the configured <code>LinkResolver</code>.
+ * <br>
+ * This object will monitor ant then translate special attributes like
+ * <code>cocoon:translate</code> and <code>cocoon:partition</code> to translate
+ * links specified in the source space to valid links in the target space.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>, 
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-10 13:46:56 $
  */
-public abstract class LinkHandler implements XMLConsumer {
-    private XMLConsumer consumer=null;
+public class LinkHandler extends XMLConsumerImpl {
+    /** The current links resolver */
     private LinkResolver resolver=null;
 
-    public LinkHandler(LinkResolver resolver) {
-        super();
+    public LinkHandler(LinkResolver resolver, XMLConsumer cons) {
+        super(cons,cons);
         this.resolver=null;
     }
 
-    public void setXMLConsumer(XMLConsumer cons) {
-        this.consumer=cons;
-    }
-
     /**
-     * Receive notification of a processing instruction. 
+     * Receive notification of the beginning of an element.
+     * <br>
+     * This method will translate the value of the attribute wich name is
+     * specified in the <code>cocoon:translate</code> attribute.
+     * This will also monitor the <code>cocoon:partition</code> attribute used
+     * to force the partition in wich link translation should be done.
+     * <br>
+     * NOTE: (PF) Link translation is yet all to implement.
+     *
+     * @param uri The Namespace URI, or the empty string if the element has no
+     *            Namespace URI or if Namespace
+     *            processing is not being performed.
+     * @param loc The local name (without prefix), or the empty string if
+     *            Namespace processing is not being performed.
+     * @param raw The raw XML 1.0 name (with prefix), or the empty string if
+     *            raw names are not available.
+     * @param a The attributes attached to the element. If there are no
+     *          attributes, it shall be an empty Attributes object.
      */
-    public void processingInstruction(String target, String data)
+    public void startElement(String uri, String loc, String raw, Attributes a)
     throws SAXException {
-        this.consumer.processingInstruction(target,data);
-    }
-
-    /**
-     * Receive notification of the beginning of an element. 
-     */
-    public void startElement(String name, AttributeList atts)
-    throws SAXException {
-        this.consumer.startElement(name,atts);
-    }
-
-    /**
-     * Receive notification of the end of an element. 
-     */
-    public void endElement(String name)
-    throws SAXException {
-        this.consumer.endElement(name);
-    }
-
-    /**
-     * Receive notification of the beginning of a document. 
-     */
-    public void startDocument()
-    throws SAXException {
-        this.consumer.startDocument();
-    }
-
-    /**
-     * Receive notification of the end of a document. 
-     */
-    public void endDocument()
-    throws SAXException {
-        this.consumer.endDocument();
-    }
-
-    /**
-     * Receive notification of character data.
-     */
-    public void characters(char[] ch, int start, int len)
-    throws SAXException {
-        this.consumer.characters(ch,start,len);
-    }
-
-    /**
-     * Receive notification of ignorable whitespace in element content. 
-     */
-    public void ignorableWhitespace(char[] ch, int start, int len)
-    throws SAXException {
-        this.consumer.ignorableWhitespace(ch,start,len);
-    }
-
-    /**
-     * Receive an object for locating the origin of SAX document events. 
-     */
-    public void setDocumentLocator(Locator locator) {
-        this.consumer.setDocumentLocator(locator);
+        // Instead of calling super, we have to perform the translation.
+        super.startElement(uri,loc,raw,a);
     }
 }
