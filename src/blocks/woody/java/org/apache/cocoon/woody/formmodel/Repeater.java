@@ -380,4 +380,14 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
             throw new UnsupportedOperationException("Widget " + this.getFullyQualifiedId() + " doesn't handle events.");
         }
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.woody.formmodel.ContainerWidget#getChildren()
+     */
+    public Iterator getChildren() {
+        // TODO Auto-generated method stub to make this compile again
+        return null;
+    }
+
+    
 }
