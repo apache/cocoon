@@ -3,20 +3,20 @@
 
 <!-- ===================== General Components =========================== -->
 
-  <component type="parser" class="org.apache.cocoon.components.parser.XercesParser"/>
-  <component type="store" class="org.apache.cocoon.components.store.MemoryStore"/>
+  <parser class="org.apache.cocoon.components.parser.XercesParser"/>
+  <store class="org.apache.cocoon.components.store.MemoryStore"/>
 
-  <component type="programming-languages" class="org.apache.cocoon.CocoonComponentSelector">
+  <programming-languages>
     <component-instance name="java" class="org.apache.cocoon.components.language.programming.java.JavaLanguage">
       <parameter name="compiler" value="org.apache.cocoon.components.language.programming.java.Javac"/>
       <parameter name="code-formatter" value="org.apache.cocoon.components.language.programming.java.JstyleFormatter"/>
       <parameter name="class-loader" value="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
     </component-instance>
-  </component>
+  </programming-languages>
 
-  <component type="classloader" class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
+  <classloader class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl"/>
 
-  <component type="markup-languages" class="org.apache.cocoon.CocoonComponentSelector">
+  <markup-languages>
     <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
       <parameter name="prefix" value="xsp"/>
       <parameter name="uri" value="http://apache.org/xsp"/>
@@ -58,23 +58,23 @@
         <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/sitemap/java/sitemap.xsl"/>
       </target-language>
     </component-instance>
-  </component>
+  </markup-languages>
 
-  <component type="program-generator" class="org.apache.cocoon.components.language.generator.ProgramGeneratorImpl">
+  <program-generator>
     <parameter name="auto-reload" value="true"/>
-  </component>
+  </program-generator>
 
-  <component type="datasources" class="org.apache.cocoon.CocoonComponentSelector">
+  <datasources>
     <component-instance name="personnel" class="org.apache.cocoon.components.datasource.JdbcDataSource">
       <pool-controller min="5" max="10"/>
       <dburl>jdbc:postgresql://localhost/test</dburl>
       <user>test</user>
       <password>test</password>
     </component-instance>
-  </component>
+  </datasources>
 
   <!-- these components is used as a PoolController for the sitemap component pools  -->
-  <component type="pool-controller" class="org.apache.cocoon.util.ComponentPoolController"/>
+  <pool-controller class="org.apache.cocoon.util.ComponentPoolController"/>
 
   <sitemap file="sitemap.xmap"/>
 </cocoon>
