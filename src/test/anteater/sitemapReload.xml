@@ -8,35 +8,38 @@
 
   <!-- Check the reloading of the sitemap -->
   <target name="sitemapReload">
-    <property name="test-dir" value="/samples/flow/examples/test"/>
-    <property name="url" value="${cocoon}${test-dir}/showString"/>
+    <property name="test-dir" value="samples/flow/test"/>
+    <property name="url" value="${cocoon}/${test-dir}/showString"/>
 
-    <!-- Copy the sitemap from its source directory to the destination
-    area, and replace the parameter value with 'abc' -->
+    <!--+
+        | Copy the sitemap from its source directory to the destination
+        | area, and replace the parameter value with 'abc' 
+        +-->
 
-    <copy file="${src-webapp-dir}${test-dir}/sitemap.xmap"
-	  tofile="${deploy-dir}${test-dir}/sitemap.xmap"
+    <copy file="${src-webapp-dir}/${test-dir}/sitemap.xmap"
+	  tofile="${deploy-dir}/${test-dir}/sitemap.xmap"
 	  overwrite="yes">
       <filterset>
-	<filter token="PARAMETER" value="abc"/>
+	    <filter token="PARAMETER" value="abc"/>
       </filterset>
     </copy>
 
-    <httpRequest href="${url}"
-		 description="Send original request">
+    <httpRequest href="${url}" description="Send original request">
       <match>
         <xpath select="html/body//p[2]" pattern=".*abc.*"/>
       </match>
     </httpRequest>
 
-    <!-- Copy the sitemap from its source directory to the destination
-    area, and replace the parameter value with '123' -->
+    <!--+ 
+        | Copy the sitemap from its source directory to the destination
+        | area, and replace the parameter value with '123' 
+        +-->
 
-    <copy file="${src-webapp-dir}${test-dir}/sitemap.xmap"
-	  tofile="${deploy-dir}${test-dir}/sitemap.xmap"
+    <copy file="${src-webapp-dir}/${test-dir}/sitemap.xmap"
+	  tofile="${deploy-dir}/${test-dir}/sitemap.xmap"
 	  overwrite="yes">
       <filterset>
-	<filter token="PARAMETER" value="123"/>
+	   <filter token="PARAMETER" value="123"/>
       </filterset>
     </copy>
 
