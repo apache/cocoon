@@ -90,7 +90,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.12 2003/03/24 15:07:40 stefano Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.13 2003/03/27 19:11:53 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -541,7 +541,10 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             Context context = Context.getCurrentContext();
             JSCocoon cocoon = (JSCocoon)thrScope.get("cocoon", thrScope);
             if (enableDebugger) {
-                getDebugger().setVisible(true);
+                if (!getDebugger().isVisible()) {
+                    // only raise the debugger window if it isn't already visible
+                    getDebugger().setVisible(true);
+                }
             }
             int size = (params != null ? params.size() : 0);
             Object[] funArgs = new Object[size];
