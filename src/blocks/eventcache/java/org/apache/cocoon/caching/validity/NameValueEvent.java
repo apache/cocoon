@@ -50,7 +50,7 @@ package org.apache.cocoon.caching.validity;
  * An example might be "table_name", "primary_key"
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: NameValueEvent.java,v 1.2 2003/09/05 04:02:51 ghoward Exp $
+ * @version $Id: NameValueEvent.java,v 1.3 2003/11/21 15:41:09 unico Exp $
  */
 public class NameValueEvent extends Event {
 
@@ -86,5 +86,9 @@ public class NameValueEvent extends Event {
     
     public int hashCode() {
         return m_hashcode;
+    }
+    
+    public String toString() {
+        return "NameValueEvent[" + m_name + "," + m_value + "]";
     }
 }
