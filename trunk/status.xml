@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.130 2003/08/28 19:08:23 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.131 2003/08/31 09:32:35 bruno Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BRD" type="fix" fixes-bug="18131">
+     Patched util-concurrent.jar so that Tomcat shutdown and continuations
+     cleanup now works properly.
+   </action>
    <action dev="CZ" type="add">
      Add a session-context input module to the session framework to retrieve
      information from a session context in the sitemap.
