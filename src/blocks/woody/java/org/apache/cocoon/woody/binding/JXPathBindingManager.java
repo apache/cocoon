@@ -78,8 +78,8 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
 
     //TODO caching of the Bindings. 
 
-    private DatatypeManager datatypeManager;
     private ServiceManager serviceManager;
+    private DatatypeManager datatypeManager;
     private Configuration configuration;
     private SimpleServiceSelector bindingBuilderSelector;
 
@@ -104,8 +104,7 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
             InputSource is = new InputSource(bindSrc.getInputStream());
             is.setSystemId(bindSrc.getURI());
             
-            Document doc =
-                DomHelper.parse(is);
+            Document doc = DomHelper.parse(is);
             Element rootElm = doc.getDocumentElement();
             JXPathBindingBase newBinding = null;
             if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
@@ -129,7 +128,9 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
 
     public void dispose() {
         bindingBuilderSelector.dispose();
+        bindingBuilderSelector = null;
         serviceManager.release(datatypeManager);
+        datatypeManager = null;
     }
 
     /**
@@ -191,6 +192,5 @@ public class JXPathBindingManager extends AbstractLogEnabled implements BindingM
         public ServiceManager getServiceManager() {
             return serviceManager;
         }
-
     }
 }

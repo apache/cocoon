@@ -96,8 +96,10 @@ public class ValueJXPathBindingBuilder extends JXpathBindingBuilderBase {
             if (convertorEl != null) {
                 String datatype = DomHelper.getAttribute(convertorEl, "datatype");
                 String localeStr = convertorEl.getAttribute("datatype");
-                if (!localeStr.equals(""))
+                if (!localeStr.equals("")) {
                     convertorLocale = I18nUtils.parseLocale(localeStr);
+                }
+
                 convertor = assistant.getDatatypeManager().createConvertor(datatype, convertorEl);
             }
 
