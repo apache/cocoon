@@ -121,6 +121,25 @@ The update process is now going to start.
       <replacevalue><![CDATA[exclude-result-prefixes="fi"]]></replacevalue>
     </replace>
 
+    <!-- references to stylesheets in sitemap and stylesheets -->
+    <replace dir="${target.dir}">
+      <include name="**/*.xmap"/>
+      <include name="**/*.xsl"/>
+      <include name="**/*.xslt"/>
+      <replacefilter token="woody-advanced-field-styling.xsl"
+                     value="forms-advanced-field-styling.xsl"/>
+      <replacefilter token="woody-calendar-styling.xsl"
+                     value="forms-calendar-styling.xsl"/>
+      <replacefilter token="woody-field-styling.xsl"
+                     value="forms-field-styling.xsl"/>
+      <replacefilter token="woody-htmlarea-styling.xsl"
+                     value="forms-htmlarea-styling.xsl"/>
+      <replacefilter token="woody-page-styling.xsl"
+                     value="forms-page-styling.xsl"/>
+      <replacefilter token="woody-samples-styling.xsl"
+                     value="forms-samples-styling.xsl"/>
+    </replace>
+
     <!-- updating sitemaps -->
     <replace dir="${target.dir}">
       <include name="**/*.xmap"/>
@@ -137,12 +156,6 @@ The update process is now going to start.
           | -> Forms(Generator|TemplateTransformer|Messages)
           +-->
       <replacefilter token="Woody" value="Forms"/>
-      <!--+
-          | - stylesheet names
-          +-->
-      <replacefilter
-        token="woody-samples-styling.xsl"
-        value="forms-samples-styling.xsl"/>
       <!--+
           | - hints for actions (removing woody "prefix")
           +-->
