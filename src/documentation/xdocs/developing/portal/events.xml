@@ -29,8 +29,8 @@
       of event. In addition each component can send out events.
     </p>
     <p>
-      The processing of a portal request (a request send to the cocoon portal)
-      is divided into two parts: event handling and rendering. In the first part
+      The processing of a portal request (a request send to the Cocoon portal)
+      is divided into two phases: event handling and rendering. In the first phase
       all events are processed. For example if the user clicks a link this
       triggers an event that is published. Any receiver of this event might
       in turn fire new events that are published as well.
@@ -51,12 +51,22 @@
       to set.
     </p>
     <p>
-      A component that processes this request is subscribed to this minimize event
+      There are different types of events: a type for changing the window state,
+      a type for removing a coplet, a type for links that are clicked by the user etc.
+      Each event type is represented by a Java class (or interface).
+    </p>
+    <p>
+      A component that processes for example the window state request is subscribed 
+      to this minimize event (or: the corresponding class/interface)
       and when such an event is fired, it changes the window state of the
-      layout object to minimize. Every data this component needs is stored in
+      coplet to minimize. Every data this component needs is stored in
       the event. This is a very important detail: the event is not directly processed
       (in this case) by the object that is changed (the coplet) but by a central
-      subscribed component that changes the coplet.
+      subscribed component that changes the coplet. This is because of the
+      publisher/subscribe mechanism used: many components in the portal can subscribe
+      to the same event type if they are interested. So, each component that is
+      interested in an event needs all information about this event. That's why
+      all data is stored in the event itself.
     </p>
     <p>
       Let's have a look how such an event is created:
@@ -75,8 +85,13 @@ event = new ChangeCopletInstanceAspectDataEvent(
       the information about what to change (size) and the new value.
     </p>
     <p>
-      If you want to fire this event, you have to publish it. Therefore you
-      need the event manager a central portal component. You can lookup this
+      All events must implement the marker interface <em>Event</em>, so if
+      a component is interested in all Events it could subscribe itself
+      using this event type.
+    </p>
+    <p>
+      If you want to fire an event, you have to publish it. Therefore you
+      need the event manager, a central portal component. You can lookup this
       component, fire the event and release the manager again. If you fire
       the event, the event is directly published to all subscribed components.
     </p>
@@ -93,7 +108,7 @@ try {
       As noted above, the event will be directly fired. But usually in a portal
       application, events are not fired directly but are invoked by some user
       action. This means, the user clicks on a link in the browser, the
-      request is targetted at Cocoon and the portal invokes the correct events.
+      request is targetted at Cocoon and the portal invokes (fires) the correct events.
     </p>
     <p>
       For this, a link (or a form action) must know, which event it should
@@ -105,7 +120,7 @@ try {
       The part of the portal that generates the link, creates the event object
       with all necessary data, transforms this event into a usable URI and this
       URI is the target of the link. When the user clicks on this link, the portal
-      transforms the URI into the Java event object and fires the event.
+      transforms the URI back into the Java event object and fires the event.
     </p>
     <p>
       The transformation Event->URI->Event is done by another portal component,
@@ -132,6 +147,12 @@ try {
       That's all you have to do: create the event object, get the link service,
       transform the event into a URI using the service and then create the
       (html) link using the URI. Everything else is handled by the portal for you.
+    </p>
+    <p>
+      In addition, you can transform several events into one single link. So
+      you can create links, the user can click, that do several things at
+      the same time (minimizing one coplet and maximizing another one etc.).
+      The link service offers corresponding methods for this.
     </p>
   </s1>
   <s1 title="Changing the State of a Coplet">
@@ -162,6 +183,7 @@ Event event = new CopletJXPathEvent(copletInstanceData,
       It is of course possible that you write your own events for 
       changing the state of a coplet. But in this case make sure that
       your own event implements the interface <em>CopletInstanceEvent</em>.
+      This helps the portal engine in tracking if a coplet has been changed.
     </p>
   </s1>
   <s1 title="Subscribing to Events">
@@ -198,13 +220,13 @@ public void inform( Event event );
     <p>
       For example one central component in the portal subscribes for
       all events dealing with coplets, so it returns <em>CopletInstanceEvent</em>
-      as the class in getEventType().
+      as the class (interface) in getEventType().
     </p>
   </s1>
   <s1 title="Inter Coplet Communication">
     <p>
       A very interesting feature of the portal is inter-coplet communication.
-      The sample portal already has a simple sample where the name of an
+      The demo portal already has a simple sample where the name of an
       image selected in an image gallery is transfered to a different coplet.
     </p>
     <p>
@@ -225,6 +247,106 @@ public void inform( Event event );
       and push the entered city information to a weather coplet and a hotel guide
       coplet. So, these two coplets display the information about the selected
       city.
+    </p>
+  </s1>
+  <s1 title="The Coplet Transformer">
+    <p>
+      Apart from the possibility to create events from within your Java code,
+      it's also possible to create events from within a pipeline by using
+      for example the coplet transformer. It listens for elements with the
+      namespace "http://apache.org/cocoon/portal/coplet/1.0".
+    </p>
+    <s2 title="The coplet element">
+      <p>
+        The coplet element has nothing to do with events :) It can be used
+        to include information about the current coplet in the SAX stream:
+      </p>
+      <source>
+<![CDATA[...
+  <coplet:coplet select="attributes/name"/>
+...]]>
+      </source>
+      <p>
+        The coplet element can only be used inside a coplet pipeline, but
+        not in the main portal pipeline. The select attribute defines an
+        JXPath expression that is used to fetch the value that is included
+        in the stream.
+      </p>
+    </s2>
+    <s2 title="The link element">
+      <p>
+        The link element creates a link that will trigger an event if the 
+        user clicks this link:
+      </p>
+      <source>
+<![CDATA[...
+  <coplet:link coplet="COPLET_ID" path="JXPATH" value="TO_SET"/>
+  <coplet:link layout="LAYOUT_ID" path="JXPATH" value="TO_SET"/>
+...]]>
+      </source>
+      <p>
+        This element generates an HTML link which will eiter trigger an
+        event to change a coplet instance data or a layout based on
+        the JXPath and the value provided.
+      </p>
+    </s2>
+  </s1>
+  <s1 title="Configuring Subscribers">
+    <p>
+      In the previous chapters we saw one possibility to subscribe: dynamically
+      in some Java code. This requires that - of course - this code is executed
+      at some point of time. This is a solution for dynamic subscribers, which
+      means a subscriber that is only "available" if a specific feature of 
+      the portal is used. If the feature is available, the "feature" subscribes
+      itself (or another component).
+    </p>
+    <p>
+      However, this adds an exta burdon to the development of own events and
+      their subscribers. Therefore it is possible to configure subscribers
+      in the cocoon.xconf. These subscribers are instantiated by the
+      portal engine on startup of Cocoon and subscribed by the portal
+      engine.
+    </p>
+    <p>
+      You have two possibilites, you can either subscribe Avalon components or
+      classes. In the first case, you configure the role of the component.
+      Then the portal engine looks up this component and subscribes it.
+    </p>
+    <p>
+      If you configure a class, the portal engine creates an instance of this
+      class using the no-argument constructor and subscribes this instance.
+      For convenience, this instance can implement the Avalon lifecycle
+      interface like LogEnabled or Serviceable.
+    </p>
+    <p>
+      The configuration takes place in the cocoon.xconf as a configuration for
+      the event manager:
+    </p>
+    <source>
+<![CDATA[...
+ <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" 
+            logger="portal" 
+            role="org.apache.cocoon.portal.event.EventManager">
+    ...
+    <!-- add a new instance of each class as a subscriber: -->
+    <subscriber-classes>
+        <class name="org.apache.cocoon.portal.event.subscriber.impl.DefaultJXPathEventSubscriber"/>
+    </subscriber-classes>
+    <!-- add each component as a subscriber (the component should be thread safe): -->
+    <subscriber-roles>
+        <role name="org.apache.cocoon.portal.samples.location.LocationEventSubscriber"/>
+    </subscriber-roles>
+ </component>
+...]]>
+    </source>
+    <p>
+      In the sample configuration above, one class is subscribed (the
+      <em>DefaultJXPathEventSubscriber</em>) and one Avalon component
+      (the <em>LocationEventSubscriber</em>).
+    </p>
+    <p>
+      So, if you write your own events and your own subscribers you can either dynamically
+      add them during execution or statically add them by configuration as shown above.
     </p>
   </s1>
   <s1 title="Further Information">

@@ -42,19 +42,31 @@
       <coplet-base-data>CachingURICoplet</coplet-base-data>
       <attribute>
       	<name>buffer</name>
-      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      	<value xsi:type="java:java.lang.Boolean" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            true
+        </value>
       </attribute>
       <attribute>
       	<name>handleParameters</name>
-      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      	<value xsi:type="java:java.lang.Boolean" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+             true
+        </value>
       </attribute>
       <attribute>
       	<name>uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon:/coplets/html/application</value>
+      	<value xsi:type="java:java.lang.String" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            cocoon:/coplets/html/application
+        </value>
       </attribute>
       <attribute>
       	<name>temporary:application-uri</name>
-      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">cocoon://samples/flow/jxcalc/</value>
+      	<value xsi:type="java:java.lang.String" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            cocoon://samples/flow/jxcalc/
+        </value>
       </attribute>
    </coplet-data>
 ...]]>
@@ -96,7 +108,7 @@
   <s1 title="Building forms">
     <p>
       In this chapter we demonstrate using a sample how to build forms that can
-      be used with the portal. We will use Cocoon flow to define the logic for
+      be used within the portal. We will use Cocoon flow to define the logic for
       the form, but for your own form you can of course use a different approach
       as well. If you want to have complex forms, you can also use Cocoon forms
       (Woody), but you have to be careful with correctly using JavaScript on
@@ -194,7 +206,7 @@ function form() {
         is not called.
       </p>
       <p>
-        The portal caches the response of an application and severes the coplet out
+        The portal caches the response of an application and serves the coplet out
         of the cache until an action for this coplet is triggered.
       </p>
     </s2>
