@@ -57,6 +57,7 @@ import com.coyotegulch.jisp.BTreeIndex;
 import com.coyotegulch.jisp.IndexedObjectDatabase;
 import com.coyotegulch.jisp.KeyNotFound;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -75,13 +76,14 @@ import org.apache.excalibur.store.impl.AbstractJispFilesystemStore;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.4 2003/07/26 15:17:25 cziegeler Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.5 2003/08/12 15:50:40 vgritsenko Exp $
  */
 public class DefaultStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
                Contextualizable,
                ThreadSafe,
-               Parameterizable {
+               Parameterizable,
+               Disposable {
 
     /** The context containing the work and the cache directory */
     protected Context context;
@@ -169,9 +171,17 @@ public class DefaultStore extends AbstractJispFilesystemStore
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Datafile exists: " + databaseExists);
             }
-            super.m_Database = new IndexedObjectDatabase(databaseFile.toString(), !databaseExists);
-            super.m_Index = new BTreeIndex(indexFile.toString(),
-                                            order, this.getNullKey(), false);
+            super.m_Database = new IndexedObjectDatabase(databaseFile.toString(),
+                                                         !databaseExists);
+
+            if (!databaseExists) {
+                // Create new index
+                super.m_Index = new BTreeIndex(indexFile.toString(),
+                                               order, super.getNullKey(), false);
+            } else {
+                // Open existing index
+                super.m_Index = new BTreeIndex(indexFile.toString());
+            }
             super.m_Database.attachIndex(super.m_Index);
         } catch (KeyNotFound ignore) {
         } catch (Exception e) {
@@ -179,4 +189,21 @@ public class DefaultStore extends AbstractJispFilesystemStore
         }
     }
 
+    public void dispose() {
+        try {
+            getLogger().debug("Disposing");
+
+            if (super.m_Index != null) {
+                System.out.println("-------------- DISPOSING --------------");
+                super.m_Index.dumpTree(System.out);
+                super.m_Index.close();
+            }
+
+            if (super.m_Database != null) {
+                super.m_Database.close();
+            }
+        } catch (Exception e) {
+            getLogger().error("dispose(..) Exception", e);
+        }
+    }
 }

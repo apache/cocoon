@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.116 2003/08/12 15:48:02 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.117 2003/08/12 15:50:40 vgritsenko Exp $:-->
 <status>
 
  <developers>
@@ -202,6 +202,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="VG" type="fix">
+     Fix Jisp based persistent store: close database files on Cocoon shutdown and
+     re-use existing database and index files on startup.
+   </action>
    <action dev="SW" type="fix" fixes-bug="22239">
      Views are now always loaded before resources, ensuring proper call of views from resources.
      Redeclaring a component (e.g. file generator) with no "label" attribute was wrongly inheriting
@@ -210,10 +214,10 @@
  </release>
  <release version="2.1" date="August 12 2003">
   <action dev="JH" type="update" fixes-bug="22288" due-to="Mark Leicester" due-to-email="mark.leicester@energyintellect.com">
-    midi block refactoring applied.
+    Midi block refactoring applied.
   </action>
   <action dev="CZ" type="add" fixes-bug="22270" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
-   Patch for allowing to specify a cocoon-view for internal requests in the query string.
+    Patch for allowing to specify a cocoon-view for internal requests in the query string.
   </action>
   <action dev="JH" type="fix" fixes-bug="19839">
     Instrumentation support: Updated client libraries to make instrumentation work again.
