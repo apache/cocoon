@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.89 $ $Date: 2001-04-25 17:08:36 $
+ * @version CVS $Revision: 1.1.4.90 $ $Date: 2001-04-27 14:57:49 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -219,7 +219,8 @@ public class CocoonServlet extends HttpServlet {
                  String s = st.nextToken();
                  if (i++ > 0)
                      sb.append(System.getProperty("path.separator"));
-                 if (s.charAt(0) == System.getProperty("file.separator").charAt(0)) {
+                 if ((s.charAt(0) == System.getProperty("file.separator").charAt(0)) ||
+                     (s.charAt(1) == ':')) {
                      log.debug ("extraClassPath is absolute: " + extraClassPath);
                      sb.append(s);
                  } else {
