@@ -49,7 +49,7 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: Logicsheet.java,v 1.3 2004/05/17 13:44:47 unico Exp $
+ * @version CVS $Id$
  */
 public class Logicsheet extends AbstractLogEnabled
 {
@@ -156,7 +156,7 @@ public class Logicsheet extends AbstractLogEnabled
      * @see org.xml.sax.XMLFilter
      * @see org.xml.sax.ContentHandler
      */
-    protected class SaveNamespaceFilter extends XMLFilterImpl {
+    protected static class SaveNamespaceFilter extends XMLFilterImpl {
         private Map originalNamepaceURIs;
 
         /**
