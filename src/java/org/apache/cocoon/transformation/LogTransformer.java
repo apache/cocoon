@@ -188,7 +188,7 @@ public class LogTransformer
     throws SAXException {
         this.log ("startElement", "uri="+uri+",local="+loc+",raw="+raw);
         for (int i = 0; i < a.getLength(); i++) {
-            this.log ("            ", new Integer(i+1).toString()
+            this.log ("            ", Integer.toString(i+1)
                  +". uri="+a.getURI(i)
                  +",local="+a.getLocalName(i)
                  +",qname="+a.getQName(i)
