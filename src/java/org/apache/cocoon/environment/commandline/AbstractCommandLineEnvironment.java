@@ -36,7 +36,7 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.6 2004/03/05 13:02:54 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public abstract class AbstractCommandLineEnvironment
@@ -179,4 +179,16 @@ implements Redirector {
         return true;
     }
 
+    /**
+     * Return an OutputStream, but allow it to be null for when
+     * the pipeline is being streamed to the provided SAX 
+     * content handler (using CocoonBean)
+     */
+    public OutputStream getOutputStream(int bufferSize) throws IOException {
+        if (this.outputStream == null) {
+            return null;
+        } else {
+            return super.getOutputStream(bufferSize);
+        }
+    }
 }
