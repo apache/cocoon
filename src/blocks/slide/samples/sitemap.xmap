@@ -63,18 +63,20 @@
 <!-- =========================== Views =================================== -->
 
  <map:views>
-  <map:view name="content" from-label="content">
-   <map:transform src="context://samples/common/style/xsl/html/simple-xml2html.xsl"/>
-   <map:serialize type="html">
-    <encoding>ASCII</encoding>
-   </map:serialize>
-  </map:view>
+ 
+     <map:view name="content" from-label="content">
+      <map:serialize type="xml"/>
+     </map:view>
 
-  <map:view name="xml" from-label="content">
-   <map:serialize type="xml">
-    <encoding>ASCII</encoding>
-   </map:serialize>
-  </map:view>
+     <map:view name="pretty-content" from-label="data">
+       <map:transform src="context://stylesheets/system/xml2html.xsl"/>
+       <map:serialize type="html"/>
+     </map:view>
+
+     <map:view name="xml" from-label="content">
+       <map:serialize type="xml"/>
+     </map:view>
+     
  </map:views>
 
 <!-- =========================== Resources =================================== -->
@@ -139,11 +141,6 @@
 
     <map:serialize type="xml"/>
    </map:match>
-
-<!--   <map:handle-errors>
-    <map:transform src="context://samples/common/style/xsl/html/error2html.xsl"/>
-    <map:serialize status-code="500"/>
-   </map:handle-errors>-->
 
   </map:pipeline>
 
@@ -268,11 +265,6 @@
 
     </map:act>
    </map:match>
-
-   <map:handle-errors>
-    <map:transform src="context://samples/common/style/xsl/html/error2html.xsl"/>
-    <map:serialize status-code="500"/>
-   </map:handle-errors>
 			
 	</map:pipeline>
 

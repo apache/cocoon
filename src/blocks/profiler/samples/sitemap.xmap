@@ -39,7 +39,7 @@
   </map:view>
 
   <map:view name="pretty-content" from-label="data">
-    <map:transform src="context://samples/common/style/xsl/html/simple-xml2html.xsl"/>
+    <map:transform src="context://stylesheets/system/xml2html.xsl"/>
     <map:serialize type="html"/>
   </map:view>
 
@@ -64,11 +64,6 @@
     <map:serialize type="html"/>
    </map:match>
 
-   <map:handle-errors>
-    <map:transform src="context://samples/common/style/xsl/html/error2html.xsl"/>
-    <map:serialize type="html" status-code="500"/>
-   </map:handle-errors>
-
   </map:pipeline>
 
 <!-- =========================== Noncacheable ================================= -->
@@ -81,11 +76,6 @@
     <map:transform src="page2html.xsl"/>
     <map:serialize type="html"/>
    </map:match>
-
-   <map:handle-errors>
-    <map:transform src="context://samples/common/style/xsl/html/error2html.xsl"/>
-    <map:serialize type="html" status-code="500"/>
-   </map:handle-errors>
 
   </map:pipeline>
 
@@ -135,12 +125,8 @@
     <map:read src="{1}.js" mime-type="text/javascript"/>
    </map:match>
    
-   <map:handle-errors>
-    <map:transform src="context://samples/common/style/xsl/html/error2html.xsl"/>
-    <map:serialize type="html" status-code="500"/>
-   </map:handle-errors>
-   
   </map:pipeline>
+ 
  </map:pipelines>
 
 </map:sitemap>
