@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.19 2003/12/23 08:46:17 mpo Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.20 2003/12/26 18:12:18 vgritsenko Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -392,10 +392,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     public void startPrefixMapping(String prefix, String uri)
             throws SAXException {
-        if (Constants.WT_NS.equals(uri)) {
-            // We consume this namespace completely
-            this.namespacePrefix = prefix;
-        } else if (inWidgetElement) {
+        if (inWidgetElement) {
             saxBuffer.startPrefixMapping(prefix, uri);
         } else {
             super.startPrefixMapping(prefix, uri);
@@ -404,9 +401,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     public void endPrefixMapping(String prefix)
             throws SAXException {
-        if (prefix.equals(this.namespacePrefix)) {
-            // We consume this namespace completely
-        } else if (inWidgetElement) {
+        if (inWidgetElement) {
             saxBuffer.endPrefixMapping(prefix);
         } else {
             super.endPrefixMapping(prefix);
