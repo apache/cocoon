@@ -24,7 +24,7 @@ import org.apache.log.LogKit;
  * A class loader with a growable list of path search directories
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2000-12-11 17:09:37 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-12-13 14:44:16 $
  */
 class RepositoryClassLoader extends ClassLoader {
   /**
@@ -118,7 +118,7 @@ class RepositoryClassLoader extends ClassLoader {
       try {
         c = findSystemClass(name);
       } catch (ClassNotFoundException e) {
-        log.warn("Could not load class", e);
+        log.debug("Could not load class " + name + "trying to load from the repository");
         byte[] bits = this.loadClassData (name);
 
         if (bits == null) {
@@ -144,51 +144,62 @@ class RepositoryClassLoader extends ClassLoader {
     return c;
   }
 
-  /**
-   * Load class from a file contained in a repository.
-   *
-   * @param className The class name
-   * @return An array of byes containing the class data or <code>null</code> if
-   * not founfd
-   */
-  protected byte[] loadClassData (String className) {
-    int count = this.repositories.size();
-    for (int i = 0; i < count; i++) {
-      File repository = (File) this.repositories.elementAt(i);
-      File file = new File(this.getClassFilename(className, repository));
+    /**
+    * Load class from a file contained in a repository.
+    *
+    * @param className The class name
+    * @return An array of byes containing the class data or <code>null</code> if
+    * not founfd
+    */
+    protected byte[] loadClassData (String className) {
+        int count = this.repositories.size();
+        for (int i = 0; i < count; i++) {
+            File repository = (File) this.repositories.elementAt(i);
+            File file = new File(repository, this.getClassFilename(className));
 
-      if (file.exists() && file.isFile() && file.canRead()) {
-        byte[] buffer = null;
-        FileInputStream in = null;
+            if (file.exists() && file.isFile() && file.canRead()) {
+                byte[] buffer = null;
+                FileInputStream in = null;
 
-        int n = 0;
-        int pos = 0;
-        buffer = new byte [(int) file.length ()];
+                int n = 0;
+                int pos = 0;
+                buffer = new byte [(int) file.length ()];
 
-        try {
-          in = new FileInputStream(file);
+                try {
+                    boolean process = true;
+                    log.debug("Loading file: " + file.getCanonicalPath());
 
-          while (
-            pos < buffer.length &&
-            (n = in.read (buffer, pos, buffer.length - pos)) != -1
-          ) {
-            pos += n;
-          }
+                    in = new FileInputStream(file);
 
-      return buffer;
-    } catch (IOException e) {
-      log.warn("RepositoryClassLoader.IOException", e);
-        } finally {
-          if (in != null) {
-            try { in.close(); }
-            catch (IOException e) { log.warn("Could not close stream", e); }
-          }
+                    while (process) {
+                        if (pos < buffer.length) {
+                            n = in.read (buffer, pos, buffer.length - pos));
+                            if (n != -1) {
+                                pos += n;
+                            } else {
+                                process = false;
+                            }
+                        } else {
+                            process = false;
+                        }
+                    }
+
+                    log.debug(n + " Bytes read.");
+
+                    return buffer;
+                } catch (IOException e) {
+                    log.warn("RepositoryClassLoader.IOException", e);
+                } finally {
+                    if (in != null) {
+                        try { in.close(); }
+                        catch (IOException e) { log.warn("Could not close stream", e); }
+                    }
+                }
+            }
         }
-      }
-    }
 
-    return null;
-  }
+        return null;
+    }
 
   /**
    * Return the filename associated with a given class name in a given
@@ -199,9 +210,7 @@ class RepositoryClassLoader extends ClassLoader {
    * @return The filename associated with a given class name in a given
    * directory
    */
-  protected String getClassFilename(String className, File repository) {
-    return
-      repository.getAbsolutePath() + File.separator +
-      className.replace('.', File.separatorChar) + ".class";
+  protected String getClassFilename(String className) {
+    return className.replace('.', File.separatorChar) + ".class";
   }
 }
