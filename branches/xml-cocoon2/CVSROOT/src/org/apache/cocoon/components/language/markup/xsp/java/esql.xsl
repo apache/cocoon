@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.19 2001-01-05 23:07:35 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.20 2001-01-09 14:15:28 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -109,13 +109,12 @@
         <xsp:include>java.sql.SQLException</xsp:include>
         <xsp:include>java.text.SimpleDateFormat</xsp:include>
         <xsp:include>java.text.DecimalFormat</xsp:include>
-	<xsp:include>org.apache.cocoon.components.datasource.DataSourceComponent</xsp:include>
+    <xsp:include>org.apache.cocoon.components.datasource.DataSourceComponent</xsp:include>
       </xsp:structure>
       <xsp:logic>
 
         class EsqlSession {
             Connection connection=null;
-            boolean closeConnection = true;
             String query;
             Statement statement;
             PreparedStatement preparedStatement;
@@ -265,13 +264,11 @@
           <xsl:choose>
             <xsl:when test="not(esql:use-connection or esql:dburl)">
               esqlSession.connection = ((EsqlSession)esqlSessions.peek()).connection;
-              esqlSession.closeConnection = false;
             </xsl:when>
             <xsl:when test="esql:use-connection">
-	      ComponentSelector esqlDSSelector = (ComponentSelector) this.manager.lookup(Roles.DB_CONNECTION);
-	      DataSourceComponent esqlDS = (DataSourceComponent) esqlDSSelector.select(String.valueOf(<xsl:copy-of select="$use-connection"/>));
-	      esqlSession.connection = esqlDS.getConnection();
-              <!-- FIXME - need to do avalon pooling here maybe? -->
+          ComponentSelector esqlDSSelector = (ComponentSelector) this.manager.lookup(Roles.DB_CONNECTION);
+          DataSourceComponent esqlDS = (DataSourceComponent) esqlDSSelector.select(String.valueOf(<xsl:copy-of select="$use-connection"/>));
+          esqlSession.connection = esqlDS.getConnection();
             </xsl:when>
             <xsl:otherwise>
               ClassUtils.newInstance(String.valueOf(<xsl:copy-of select="$driver"/>).trim());
@@ -371,19 +368,12 @@
 
           <xsl:apply-templates select="esql:error-results/*"/>
       } finally {
-          if (esqlSession.closeConnection) {
-              if (esqlSession.connection != null) {
-                  try {
-                      esqlSession.connection.close();
-                  } catch (SQLException esqlException) {
-                      cocoonLogger.debug("Could not close DB connection", esqlException);
-                  }
+          if (esqlSession.connection != null) {
+              try {
+                  esqlSession.connection.close();
+              } catch (SQLException esqlException) {
+                  cocoonLogger.debug("Could not close DB connection", esqlException);
               }
-
-              <xsl:if test="esql:use-connection">
-	        esqlSession.connection = null;
-                <!-- FIXME - need to release avalon pooling here maybe -->
-              </xsl:if>
           }
 
           if (esqlSessions.empty()) {

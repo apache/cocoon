@@ -25,7 +25,7 @@ import java.util.List;
  * The Pool implementation for JdbcConnections.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-08 20:25:45 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-09 14:15:23 $
  */
 public class JdbcConnectionPool implements Pool, Runnable, Disposable {
     private final String dburl;
@@ -112,6 +112,8 @@ public class JdbcConnectionPool implements Pool, Runnable, Disposable {
             }
         }
 
+        log.debug("JdbcConnection '" + this.dburl + "' has been requested from pool.");
+
         return obj;
     }
 
@@ -122,15 +124,19 @@ public class JdbcConnectionPool implements Pool, Runnable, Disposable {
         if (this.monitoring) {
             this.ready.add(obj);
         }
+
+        log.debug("JdbcConnection '" + this.dburl + "' has been returned to the pool.");
     }
 
     public void run() {
         while (this.monitoring) {
             if (this.ready.size() < this.min) {
+                log.debug("There are not enough Connections for pool: " + this.dburl);
                 while ((this.ready.size() < this.min) && (this.currentCount < this.max)) {
                     this.ready.add(this.createJdbcConnection());
                 }
             } else {
+                log.debug("Trimming excess fat from pool: " + this.dburl);
                 while (this.ready.size() > this.min) {
                     this.recycle((Recyclable) this.ready.remove(0));
                 }
