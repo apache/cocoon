@@ -24,6 +24,7 @@
     <menu-item label="FAQs" href="faq/index.html"/>
     <menu-item label="How-Tos" href="howto/index.html"/>
     <menu-item label="Snippets" href="snippet/index.html"/>
+    <external label="Wiki Docs" href="http://wiki.cocoondev.org/"/>
   </menu>
 
   <menu label="Status">
