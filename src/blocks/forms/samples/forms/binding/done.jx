@@ -28,7 +28,7 @@
                   <dumpBean bean="#{.}" />
                 </jx:when>
                 <jx:otherwise>
-                  #{.}
+                  <pre>#{.}</pre>
                 </jx:otherwise>
               </jx:choose>
             </td>

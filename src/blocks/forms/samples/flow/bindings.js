@@ -73,16 +73,28 @@ function bindingSample(sampleCode, backendType) {
     form.load(bean);
 
     // wait for user to submit the form correctly	
-    form.showForm("binding.form");
+    form.showForm("binding.form." + sampleCode);
 	
     // saves the form into the backend-bean
     form.save(bean);
     var bizData = new Object();
+    //hack the XML content to a string for display
+    if (backendType.equals("XML")) {
+    	bean = {xml: serializeNode(bean)};
+    }
     bizData["bean"] = bean;
     bizData["backendType"] = backendType;
     bizData["sampleCode"] = sampleCode;
 
     cocoon.sendPage("binding.done", bizData);
+}
+
+/** 
+ * Uses internal cocoon utility class to convert the DOM Node to it's 
+ * String representation .
+ */
+function serializeNode(node) {
+    return Packages.org.apache.cocoon.xml.XMLUtils.serializeNodeToXML(node);
 }
 
 /** 
@@ -197,6 +209,34 @@ function createJavaBeanFor02lenient() {
 
             bean.put(contexts[i], subBean);
     }
+    return bean;
+}
+
+
+/**
+ * Creates the JS Bean for sample '03aggregate'
+ */ 
+function createJSBeanFor03aggregate() {
+    var bean = new Object();
+    bean["match-combined"] = new Object();
+    bean["match-combined"].split = new Object();
+    bean["match-combined"].split.day = "7";
+    bean["match-combined"].split.month = "4";
+    bean["match-combined"].split.year = "2004";
+
+    bean["match-split"] = new Object();    
+    bean["match-split"].combined = "07/04/2004";
+    bean["match-split"].split = new Object();
+    return bean;
+}
+
+/**
+ * Creates the Java Bean for sample '03aggregate'
+ */ 
+function createJavaBeanFor03aggregate() {
+    var bean = new Packages.java.util.HashMap();
+    bean.put("match-combined", new Packages.org.apache.cocoon.forms.samples.bindings.DateWrapper("07","04","2004"));
+    bean.put("match-split", new Packages.org.apache.cocoon.forms.samples.bindings.DateWrapper("07","04","2004"));
     return bean;
 }
 
