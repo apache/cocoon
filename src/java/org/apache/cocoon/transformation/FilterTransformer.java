@@ -34,9 +34,8 @@ import java.util.Map;
  * a given block.
  * 
  * @cocoon.sitemap.component.name   filter
+ * @cocoon.sitemap.component.documentation.caching TBD
  * @cocoon.sitemap.component.logger sitemap.transformer.filter
- * @cocoon.sitemap.component.documentation.caching
- *               TBD
  * 
  * 
  * The filter transformer can be used to let only an amount of elements through in
@@ -56,7 +55,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FilterTransformer.java,v 1.6 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class FilterTransformer
 extends AbstractTransformer
