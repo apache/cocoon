@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,8 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.Logger;
+
+import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
@@ -31,17 +33,19 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
-
 public final class PipelinesNode extends SimpleParentProcessingNode
-  implements Composable, Disposable {
+                                 implements Composable, Disposable {
 
     private ComponentManager manager;
-    
-    private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
 
-    private ProcessingNode errorHandler;
+    private ErrorHandlerHelper errorHandlerHelper;
+
+
+    public PipelinesNode() {
+        this.errorHandlerHelper = new ErrorHandlerHelper();
+    }
 
     /**
      * Keep the component manager used everywhere in the tree so that we can
@@ -58,13 +62,12 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     }
 
     public void setErrorHandler(ProcessingNode node) {
-        this.errorHandler = node;
+        this.errorHandlerHelper.set500Handler(node);
     }
-    
+
     public void setChildren(ProcessingNode[] nodes) {
         // Mark the last pipeline so that it can throw a ResourceNotFoundException
-        ((PipelineNode)nodes[nodes.length - 1]).setLast(true);
-
+        ((PipelineNode) nodes[nodes.length - 1]).setLast(true);
         super.setChildren(nodes);
     }
 
@@ -75,25 +78,25 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      */
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
-    
-        // Perform any common invoke functionality 
+
+        // Perform any common invoke functionality
         super.invoke(env, context);
 
         // Recompose context (and pipelines) to the local component manager
         context.recompose(this.manager);
 
         try {
-            // FIXME : is there any useful information that can be passed as top-level parameters,
-            //         such as the URI of the mount point ?
+            // FIXME: Is there any useful information that can be passed as top-level parameters,
+            //        such as the URI of the mount point ?
 
             return invokeNodes(this.children, env, context);
+
+        } catch (ConnectionResetException e) {
+            // Will be reported by CocoonServlet, rethrowing
+            throw e;
         } catch (Exception ex) {
-            if (this.errorHandler != null) {
-                // Invoke pipelines handler
-                return this.errorHandlerHelper.invokeErrorHandler(this.errorHandler, ex, env, context);
-            } 
-            // No handler : propagate
-            throw ex;
+            // Invoke pipelines handler
+            return this.errorHandlerHelper.invokeErrorHandler(ex, env, context);
         }
     }
 
@@ -102,7 +105,7 @@ public final class PipelinesNode extends SimpleParentProcessingNode
      */
     public void dispose() {
         if (this.manager instanceof Disposable) {
-            ((Disposable)this.manager).dispose();
+            ((Disposable) this.manager).dispose();
         }
         this.manager = null;
     }

@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,28 +32,27 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelinesNodeBuilder.java,v 1.5 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version $Id$
  */
-
 public class PipelinesNodeBuilder extends ContainerNodeBuilder implements ThreadSafe {
 
     public ProcessingNode buildNode(Configuration config)
     throws Exception {
-        // check for component configurations
+        // Check for component configurations
         Configuration child = config.getChild("component-configurations", false);
         if (child != null) {
-            this.checkNamespace(child);
+            checkNamespace(child);
             this.treeBuilder.getProcessor().setComponentConfigurations(child);
         }
+
         PipelinesNode node = new PipelinesNode();
         this.treeBuilder.setupNode(node, config);
 
 		Configuration[] childConfigs = config.getChildren();
 		List children = new ArrayList();
 		HandleErrorsNode handler = null;
-		
-		for (int i = 0; i < childConfigs.length; i++) {
 
+		for (int i = 0; i < childConfigs.length; i++) {
 			Configuration childConfig = childConfigs[i];
 			if (isChild(childConfig)) {
 
@@ -66,6 +65,7 @@ public class PipelinesNodeBuilder extends ContainerNodeBuilder implements Thread
 				}
 			}
 		}
+
         if (children.size() == 0) {
             String msg = "There must be at least one pipeline at " + config.getLocation();
             throw new ConfigurationException(msg);

@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,18 +15,23 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.Map;
-
+import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Helps to call error handlers from PipelineNode and PipelinesNode.
@@ -35,9 +40,31 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @version CVS $Id$
  */
-public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable {
+public class ErrorHandlerHelper extends AbstractLogEnabled
+                                implements Composable {
 
     private ComponentManager manager;
+
+    /**
+     * Logger for handled errors
+     */
+    protected Logger handledErrorsLogger;
+
+    /**
+     * Error handling node for the ResourceNotFoundException
+     */
+    private ProcessingNode error404;
+
+    /**
+     * Error handling node for all other exceptions
+     */
+    private ProcessingNode error500;
+
+
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        this.handledErrorsLogger = logger.getChildLogger("handled-errors");
+    }
 
     /**
      * The component manager is used to create notifying builders.
@@ -46,61 +73,95 @@ public class ErrorHandlerHelper extends AbstractLogEnabled implements Composable
         this.manager = manager;
     }
 
-    public boolean invokeErrorHandler(ProcessingNode node, 
-                                      Exception ex, 
-                                      Environment env,
-                                      InvokeContext originalContext)
-    throws Exception {
-		Map objectModel = env.getObjectModel();
-  	
-        InvokeContext errorContext = null;
-		boolean nodeSuccessful = false;
-		
-        try {
-        	if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
-				// error has not been processed by another handler before
-				
-	            // Try to reset the response to avoid mixing already produced output
-	            // and error page.
-	            env.tryResetResponse();
-	
-	            // Create a Notifying
-	            NotifyingBuilder notifyingBuilder= (NotifyingBuilder)this.manager.lookup(NotifyingBuilder.ROLE);
-	            Notifying currentNotifying = null;
-	            try {
-	                currentNotifying = notifyingBuilder.build(this, ex);
-	            } finally {
-	                this.manager.release(notifyingBuilder);
-	            }
-	
-	            // Add it to the object model
-	            objectModel.put(Constants.NOTIFYING_OBJECT, currentNotifying);
-	            
-	            // Also add the exception
-	            objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, ex);
-        	}
+    void setHandledErrorsLogger(Logger logger) {
+        this.handledErrorsLogger = logger;
+    }
 
-			// Build a new context
-			errorContext = new InvokeContext();
-			errorContext.enableLogging(getLogger());
-			errorContext.compose(this.manager);
-			errorContext.setRedirector(originalContext.getRedirector());
-            
-			nodeSuccessful = node.invoke(env, errorContext);
-        } catch (Exception subEx) {
-            getLogger().error("An exception occured while handling errors at " + node.getLocation(), subEx);
-            // Rethrow it : it will either be handled by the parent sitemap or by the environment (e.g. Cocoon servlet)
-            throw subEx;
-        } finally {
-            if (errorContext != null) {
-                errorContext.dispose();
-            }
+    void set404Handler(ProcessingNode node) {
+        this.error404 = node;
+    }
+
+    void set500Handler(ProcessingNode node) {
+        this.error500 = node;
+    }
+
+    public boolean invokeErrorHandler(Exception ex,
+                                      Environment env,
+                                      InvokeContext context)
+    throws Exception {
+        if (!env.isExternal() && !env.isInternalRedirect()) {
+            // Propagate exception on internal requests
+            throw ex;
+        } else if (error404 != null && ex instanceof ResourceNotFoundException) {
+            // Invoke 404-specific handler
+            return invokeErrorHandler(error404, ex, env, context);
+        } else if (error500 != null) {
+            // Invoke global handler
+            return invokeErrorHandler(error500, ex, env, context);
         }
-        
-        if (nodeSuccessful) {
-            return true;
-        }
+
+        // No handler : propagate
         throw ex;
     }
-}
 
+    public boolean invokeErrorHandler(ProcessingNode node,
+                                      Exception ex,
+                                      Environment env,
+                                      InvokeContext context)
+    throws Exception {
+        this.handledErrorsLogger.error(ex.getMessage(), ex);
+
+        try {
+            prepare(env, context, ex);
+
+            // Create error context
+            InvokeContext errorContext = new InvokeContext(context.isBuildingPipelineOnly());
+            errorContext.enableLogging(getLogger());
+            errorContext.setRedirector(context.getRedirector());
+            errorContext.compose(this.manager);
+            try {
+                // Process error handling node
+                if (node.invoke(env, errorContext)) {
+                    // Exception was handled.
+                    return true;
+                }
+            } finally {
+                errorContext.dispose();
+            }
+        } catch (Exception e) {
+            getLogger().error("An exception occured while handling errors at " + node.getLocation(), e);
+            // Rethrow it: It will either be handled by the parent sitemap or by the environment (e.g. Cocoon servlet)
+            throw e;
+        }
+
+        // Exception was not handled in this error handler, propagate.
+        throw ex;
+    }
+
+    private void prepare(Environment env, InvokeContext context, Exception ex)
+    throws IOException, ComponentException {
+        Map objectModel = env.getObjectModel();
+        if (objectModel.get(Constants.NOTIFYING_OBJECT) == null) {
+            // error has not been processed by another handler before
+
+            // Try to reset the response to avoid mixing already produced output
+            // and error page.
+            env.tryResetResponse();
+
+            // Create a Notifying
+            NotifyingBuilder notifyingBuilder = (NotifyingBuilder) this.manager.lookup(NotifyingBuilder.ROLE);
+            Notifying currentNotifying = null;
+            try {
+                currentNotifying = notifyingBuilder.build(this, ex);
+            } finally {
+                this.manager.release(notifyingBuilder);
+            }
+
+            // Add it to the object model
+            objectModel.put(Constants.NOTIFYING_OBJECT, currentNotifying);
+
+            // Also add the exception
+            objectModel.put(ObjectModelHelper.THROWABLE_OBJECT, ex);
+        }
+    }
+}
