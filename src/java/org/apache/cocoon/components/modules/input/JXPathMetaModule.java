@@ -66,7 +66,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: JXPathMetaModule.java,v 1.7 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class JXPathMetaModule extends AbstractMetaModule implements Configurable, ThreadSafe {
 
@@ -114,7 +114,7 @@ public class JXPathMetaModule extends AbstractMetaModule implements Configurable
 
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) { 
-            name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name); 
+            name = modeConf.getChild("parameter").getValue(!this.parameter.equals("") ? this.parameter : name); 
         }
         return JXPathHelper.getAttribute(name, modeConf, this.configuration, contextObj);
     }
@@ -133,7 +133,7 @@ public class JXPathMetaModule extends AbstractMetaModule implements Configurable
 
         Object contextObj = getContextObject(modeConf, objectModel);
         if (modeConf != null) { 
-            name = modeConf.getChild("parameter").getValue(this.parameter != null ? this.parameter : name); 
+            name = modeConf.getChild("parameter").getValue(!this.parameter.equals("") ? this.parameter : name);
         }
         return JXPathHelper.getAttributeValues(name, modeConf, this.configuration, contextObj);
     }
