@@ -21,6 +21,7 @@
    <map:transformer     name="log"       src="org.apache.cocoon.transformation.LogTransformer"/>
    <map:transformer     name="sql"       src="org.apache.cocoon.transformation.SQLTransformer"/>
    <map:transformer     name="xinclude"  src="org.apache.cocoon.transformation.XIncludeTransformer"/>
+   <map:transformer     name="link"      src="org.apache.cocoon.sitemap.LinkTranslator"/>
   </map:transformers>
 
   <map:readers default="resource">
@@ -28,7 +29,7 @@
   </map:readers>
 
   <map:serializers default="html">
-   <map:serializer name="links"                               src="org.apache.cocoon.serialization.XLinkSerializer"/>
+   <map:serializer name="links"                               src="org.apache.cocoon.serialization.LinkSerializer"/>
    <map:serializer name="xml"    mime-type="text/xml"         src="org.apache.cocoon.serialization.XMLSerializer"/>
    <map:serializer name="html"   mime-type="text/html"        src="org.apache.cocoon.serialization.HTMLSerializer"/>
    <map:serializer name="fo2pdf" mime-type="application/pdf"  src="org.apache.cocoon.serialization.FOPSerializer"/>
