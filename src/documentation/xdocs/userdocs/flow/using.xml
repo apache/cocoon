@@ -34,12 +34,12 @@
       </li>
       <li>
         To invoke a top level JavaScript function in the Control Flow, you use
-        the <code>&lt;map:call&nbsp;function="function-name"/&gt;</code>
+        the <code><link href="sitemap.html#callFunction">&lt;map:call&nbsp;function="function-name"/&gt;</link></code>
         construction.
       </li>
       <li>
         To restart the computation of a previously stopped function, you use
-        the <code>&lt;map:call&nbsp;continuation="..."/&gt;</code> construction.
+        the <code><link href="sitemap.html#callContinuation">&lt;map:call&nbsp;continuation="..."/&gt;</link></code> construction.
         This restarts the computation saved in a continuation object
         identified by the string value of the <code>continuation</code> attribute.
         This value could be extracted in the sitemap from the requested URL,
@@ -69,7 +69,7 @@
   <p>
     Once here, the Control Flow has to decide which page needs to be sent back
     to the client browser. To do this, the script can invoke either the
-    <code>sendPageAndWait</code> or the <code>sendPage</code> functions.
+    <code><link href="api.html#sendPageAndWait">sendPageAndWait</link></code> or the <code><link href="api.html#sendPage">sendPage</link></code> functions.
     These functions take two parameters, the relative URL of the page to be
     sent back to the client, and a context object which can be accessed
     inside this page to extract various values and place them in the
@@ -86,10 +86,10 @@
  
   <p>
     The page specified by the URL is processed by the sitemap, using the
-    normal sitemap rules. The simplest case is an XSP generator followed by
+    normal sitemap rules. The simplest case is a <link href="views.html">generator</link> followed by
     an XSLT transformation and a serializer. This page generation is part of
-    the View layer. If an XSP page is processed, you can make use of several
-    Cocoon generators to retrieve values from the context objects passed by the
+    the View layer. To process a page you can make use of several
+    Cocoon <link href="views.html">generators</link> to retrieve values from the context objects passed by the
     Control Flow.
   </p>
  
@@ -179,7 +179,7 @@
   <p>
     To solve the problem, the <code>login</code> and
     <code>registerUser</code> functions have to call the
-    <code>cocoon.createSession()</code> method, which creates a servlet
+    <code><link href="api.html#createSession">cocoon.createSession()</link></code> method, which creates a servlet
     session and saves the global scope containing the global variables' value
     in it. Next time the user invokes one of the four top-level functions,
     the values of the global variables is restored, making sharing very easy.

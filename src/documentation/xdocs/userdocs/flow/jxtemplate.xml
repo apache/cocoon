@@ -32,7 +32,7 @@ both JXPath and Jexl variables in a template:</p>
 <p>
 <dl>
 <dt><code>request</code></dt>
-<dd>The Cocoon current request</dd>
+<dd>The current Cocoon request</dd>
  
 <dt><code>response</code></dt>
 <dd>The Cocoon response associated with the current request</dd>

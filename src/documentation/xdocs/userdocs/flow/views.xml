@@ -19,7 +19,7 @@ The second argument to <code>sendPage</code> and <code>sendPageAndWait</code> is
 The page specified by the URL is processed by the sitemap, using the normal sitemap rules.
 </p>
 <p>
-Several generators are provided that allow you to access the context object and inject its values into a pipeline.
+Several Cocoon generators are provided that allow you to access the context object and inject its values into a pipeline. Currently, these are the <link href="jxtemplate.html">JXTemplate Generator</link>, <link href="jpath.html">JPath XSP Logic Sheet</link>, and <link href="velocity.html">Velocity Generator</link>.
 </p>
     </s1>
 
