@@ -65,7 +65,7 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: ProfileManager.java,v 1.7 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: ProfileManager.java,v 1.8 2003/07/31 14:37:05 cziegeler Exp $
  */
 public interface ProfileManager extends Component {
     
@@ -78,7 +78,7 @@ public interface ProfileManager extends Component {
      * a specific layout object in the profile defined by
      * the layout key.
      * @param layoutKey A key describing the layout or null for the default
-     * @param subKey    The id of a layout object or null for the root object
+     * @param layoutID    The id of a layout object or null for the root object
      * @return The layout
      */
 	Layout getPortalLayout(String layoutKey, String layoutID);
