@@ -9,24 +9,30 @@
 
          <path id="classpath">
             <fileset dir="{string('${lib.core}')}">
-              <include name="*.jar"/>
+               <include name="*.jar"/>
             </fileset>
             <fileset dir="{string('${lib.endorsed}')}">
-              <include name="*.jar"/>
+               <include name="*.jar"/>
             </fileset>      
             <fileset dir="{string('${lib.core}/jvm${target.vm}')}">
-              <include name="*.jar"/>
+               <include name="*.jar"/>
             </fileset>
             <fileset dir="{string('${lib.optional}')}">
-              <include name="*.jar"/>
+               <include name="*.jar"/>
             </fileset>
             <fileset dir="{string('${build.blocks}')}">
-              <include name="*.jar"/>
+               <include name="*.jar"/>
             </fileset>
             <path location="{string('${build.mocks}')}"/>
             <path location="{string('${build.dest}')}"/>
             <path location="{string('${build.deprecated.dest}')}"/>
             <path location="{string('${build.scratchpad.dest}')}"/>
+         </path>
+
+         <path id="test.classpath">
+            <fileset dir="{string('${tools.lib}')}">
+               <include name="*.jar"/>
+            </fileset>
          </path>
 
          <target name="init">
@@ -297,12 +303,6 @@ select="@project"/>-tests</xsl:for-each></xsl:attribute>
          <copy todir="{string('${build.blocks}')}/{$block-name}/test" filtering="on">
             <fileset dir="{string('${blocks}')}/{$block-name}/test" excludes="**/*.java"/>
          </copy>
-
-         <path id="test.classpath">
-            <fileset dir="{string('${tools.lib}')}">
-               <include name="*.jar"/>
-            </fileset>
-         </path>
 
          <javac srcdir="{string('${blocks}')}/{$block-name}/test"
                 destdir="{string('${build.blocks}')}/{$block-name}/test"
