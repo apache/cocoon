@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.binding;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.logger.LogEnabled;
@@ -149,11 +150,14 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             throws BindingException {
         boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
+        applyNSDeclarations(jxpc);
         if (this.commonAtts.loadEnabled) {
             doLoad(frmModel, jxpc);
         }
         jxpc.setLenient(inheritedLeniency);
     }
+
+
 
     /**
      * Hooks up with the more generic Binding of any objectModel by wrapping
@@ -188,6 +192,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
             throws BindingException{
         boolean inheritedLeniency = jxpc.isLenient();
         applyLeniency(jxpc);
+        applyNSDeclarations(jxpc);
         if (this.commonAtts.saveEnabled) {
             doSave(frmModel, jxpc);
         }
@@ -216,6 +221,21 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
         }
     }
 
+    private void applyNSDeclarations(JXPathContext jxpc)
+    {
+        if (this.commonAtts.nsDeclarations != null)
+        {
+            Iterator keysIter = this.commonAtts.nsDeclarations.keySet().iterator();
+            while (keysIter.hasNext())
+            {
+                String nsuri = (String) keysIter.next();
+                String pfx = (String) this.commonAtts.nsDeclarations.get(nsuri);
+                jxpc.registerNamespace(pfx, nsuri);
+            }
+        }
+    }
+    
+    
     private JXPathContext makeJXPathContext(Object objModel) {
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {

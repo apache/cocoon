@@ -17,6 +17,11 @@ package org.apache.cocoon.forms.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -33,9 +38,11 @@ import org.apache.xerces.xni.QName;
 import org.apache.xerces.xni.XMLAttributes;
 import org.apache.xerces.xni.XMLLocator;
 import org.apache.xerces.xni.XNIException;
+import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -57,6 +64,8 @@ import org.xml.sax.SAXNotSupportedException;
  * @version CVS $Id$
  */
 public class DomHelper {
+
+    public static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";
 
     /**
      * Retrieves the location of an element node in the source file from which
@@ -390,5 +399,54 @@ public class DomHelper {
                 node.setUserData("location", location, null);
             }
         }
+    }
+
+    public static Map getLocalNSDeclarations(Element elm)
+    {
+        return addLocalNSDeclarations(elm, null);
+    }
+    
+    private static Map addLocalNSDeclarations(Element elm, Map nsDeclarations)
+    {
+        NamedNodeMap atts = elm.getAttributes();
+        int attsSize = atts.getLength();
+
+        for (int i = 0; i < attsSize; i++)
+        {
+            Attr attr = (Attr)atts.item(i);
+            if (XMLNS_URI.equals(attr.getNamespaceURI()))
+            {
+                String nsUri = attr.getValue();
+                String pfx = attr.getLocalName();
+                if (nsDeclarations == null)
+                    nsDeclarations = new HashMap();
+                nsDeclarations.put(nsUri, pfx);
+            }
+        }        
+        return nsDeclarations;    }
+    
+    public static Map getInheritedNSDeclarations(Element elm)
+    {
+        List ancestorsAndSelf = new LinkedList();
+        Element current = elm;
+        while (current != null) 
+        {
+            ancestorsAndSelf.add(current);
+            Node parent = current.getParentNode();
+            if (parent.getNodeType() == Node.ELEMENT_NODE)
+                current = (Element)parent;
+            else 
+                current = null;
+        }
+        
+        Map nsDeclarations = null;
+        ListIterator iter = ancestorsAndSelf.listIterator(ancestorsAndSelf.size());
+        while (iter.hasPrevious())
+        {
+            Element element = (Element) iter.previous();
+            nsDeclarations = addLocalNSDeclarations(element, nsDeclarations);
+        }
+        
+        return nsDeclarations;
     }
 }

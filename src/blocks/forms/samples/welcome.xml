@@ -58,6 +58,7 @@
   <sample name="3. Aggregate Binding" href="binding-03aggregate.flow">fb:aggregate</sample>
   <sample name="4. Heavy Form" href="binding-04heavy-XML.flow">Form with lots of select boxes - test memory utilization, performance</sample>
   <sample name="5. Custom Bindings using Java or Javascript" href="binding-05custom.flow">fb:javascript and fb:custom</sample>
+  <sample name="6. XML binding using namespaces" href="binding-06namespaced-XML.flow">Using XML binding with complex namespaced XML</sample>
   <!-- TODO: provide more tutorial samples like these:
   <sample name="6. MultiValue/Repeater Binding" href="binding-03multi.flow">fb:multi-value</sample>
   <sample name="7. Repeater Binding" href="binding-06repeater.flow">fb:repeater</sample>
