@@ -26,7 +26,7 @@ import org.apache.tools.ant.Task;
  * in the specified directory.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Revision: 1.2 $ $Date: 2004/03/08 07:57:06 $
+ * @version CVS $Revision: 1.3 $ $Date: 2004/03/10 09:11:50 $
  */
 
 public final class ManifestToolTask extends Task {
@@ -61,8 +61,9 @@ public final class ManifestToolTask extends Task {
     /**
      * Scan recursive
      */
-    private void process(final File directoryFile, final String manifest)
-            throws IOException, BuildException {
+    private void process(final File directoryFile,
+                         final String manifest)
+    throws IOException, BuildException {
 
         System.out.println("Writing: " + manifest);
         FileWriter w = new FileWriter(this.project.resolveFile(manifest));
@@ -72,19 +73,22 @@ public final class ManifestToolTask extends Task {
             w.write("Cocoon-Libs: ");
 
             final File[] files = directoryFile.listFiles();
-            for (int i = 0; i < files.length; i++) {
+            for(int i = 0; i < files.length; i++) {
                 if (files[i].getName().endsWith(".jar")) {
-                    w.write(files[i].getName() + " ");
+                    w.write(files[i].getName());
+                    w.write(" ");
                 }
             }
             w.write("\n");
 
-            for (int i = 0; i < files.length; i++) {
+            for(int i = 0; i < files.length; i++) {
                 if (files[i].getName().endsWith(".jar")) {
-                    w.write("Cocoon-Lib-" +
-                            files[i].getName().replace('.', '_') +
-                            ": " + String.valueOf(files[i].lastModified()) +
-                            "\n");
+                    w.write("Cocoon-Lib-");
+                    String s = files[i].getName().replace('.', '_');
+                    w.write(s);
+                    w.write(": ");
+                    w.write(String.valueOf(files[i].lastModified()));
+                    w.write("\n");
                 }
             }
         }
