@@ -1,4 +1,4 @@
-/*-- $Id: Engine.java,v 1.42 2000-12-07 00:07:26 balld Exp $ --
+/*-- $Id: Engine.java,v 1.43 2000-12-08 11:50:45 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -77,7 +77,7 @@ import org.apache.cocoon.response.RedirectException;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.42 $ $Date: 2000-12-07 00:07:26 $
+ * @version $Revision: 1.43 $ $Date: 2000-12-08 11:50:45 $
  */
 
 public class Engine implements Defaults {
@@ -439,6 +439,7 @@ public class Engine implements Defaults {
                    }
                 }
 
+                /* will fix later
                 if (!VERBOSE && page.isText()) {
                     if (encoding == null) {
                         response.setContentLength(page.getContent().getBytes().length);
@@ -446,6 +447,7 @@ public class Engine implements Defaults {
                         response.setContentLength(page.getContent().getBytes(encoding).length);
                     }
                 }
+                */
 
                 // get the output writer
                 PrintWriter out = response.getWriter();
