@@ -22,10 +22,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.cocoon.environment.Environment;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public abstract class AbstractEnvironment implements Environment {
+
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     /** The current uri in progress */
     protected String uri = null;
@@ -45,7 +50,7 @@ public abstract class AbstractEnvironment implements Environment {
     /**
      * Constructs the abstract enviornment
      */
-    public AbstractEnvironment(String uri, String view, String context) 
+    public AbstractEnvironment(String uri, String view, String context)
     throws MalformedURLException {
         this(uri, view, new File(context));
     }
@@ -53,7 +58,7 @@ public abstract class AbstractEnvironment implements Environment {
     /**
      * Constructs the abstract enviornment
      */
-    public AbstractEnvironment(String uri, String view, File context) 
+    public AbstractEnvironment(String uri, String view, File context)
     throws MalformedURLException {
         this.uri = uri;
         this.view = view;
@@ -85,8 +90,8 @@ public abstract class AbstractEnvironment implements Environment {
                 this.context = f.toURL();
             }
         } else {
-            throw new RuntimeException("The current URI (" 
-                + uri + ") doesn't start with given prefix (" 
+            throw new RuntimeException("The current URI ("
+                + uri + ") doesn't start with given prefix ("
                 + prefix + ")"
             );
         }
@@ -96,7 +101,7 @@ public abstract class AbstractEnvironment implements Environment {
      * Redirect the client to a new URL
      */
     public abstract void redirect(String newURL) throws IOException;
-    
+
     // Request methods
 
     /**

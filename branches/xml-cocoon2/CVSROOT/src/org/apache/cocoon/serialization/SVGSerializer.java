@@ -3,9 +3,9 @@
  * ------------------------------------------------------------------------- *
  * This software is published under the terms of the Apache Software License *
  * version 1.1,  a copy of wich has been included  with this distribution in *
- * the LICENSE file.                                                         * 
- *****************************************************************************/ 
- 
+ * the LICENSE file.                                                         *
+ *****************************************************************************/
+
 package org.apache.cocoon.serialization;
 
 import org.apache.cocoon.*;
@@ -25,7 +25,7 @@ import org.w3c.dom.svg.*;
 import org.csiro.svg.dom.SVGDocumentImpl;
 
 public class SVGSerializer extends DOMBuilder implements Composer, Serializer, Configurable {
-   
+
     /** The <code>ContentHandler</code> receiving SAX events. */
     private ContentHandler contentHandler=null;
     /** The <code>LexicalHandler</code> receiving SAX events. */
@@ -54,36 +54,37 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
         this.output=new BufferedOutputStream(out);
     }
 
-    /** 
-     * Set the configurations for this serializer. 
+    /**
+     * Set the configurations for this serializer.
      */
     public void configure(Configuration conf) throws ConfigurationException {
         this.config = conf;
 
         try {
-	    log.debug("Looking up " + Roles.PARSER);
+        log.debug("Looking up " + Roles.PARSER);
             // First, get a DOM parser for the DOM Builder to work with.
             super.factory= (Parser) this.manager.lookup(Roles.PARSER);
-	} catch (Exception e) {
-	    log.error("Could not find component", e);
-	}
+    } catch (Exception e) {
+        log.error("Could not find component", e);
+        throw new ConfigurationException("Could not find Parser", e);
+    }
 
         // What image encoder do I use?
         String enc = this.config.getChild("encoder").getValue();
         if (enc == null) {
             throw new ConfigurationException("No Image Encoder specified.");
         }
-        
+
         try {
-	    log.debug("Selecting " + Roles.IMAGE_ENCODER + ": " + enc);
-	    ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
+        log.debug("Selecting " + Roles.IMAGE_ENCODER + ": " + enc);
+        ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
             this.encoder = (ImageEncoder) selector.select(enc);
         } catch (Exception e) {
-	    log.error("Could not select " + Roles.IMAGE_ENCODER, e);
-            throw new ConfigurationException("The ImageEncoder '" 
+        log.error("Could not select " + Roles.IMAGE_ENCODER, e);
+            throw new ConfigurationException("The ImageEncoder '"
                 + enc + "' cannot be found. Check your component configuration in the sitemap"/*, conf*/);
         }
-        
+
         // Configure the encoder
         if (this.encoder instanceof Configurable) {
             ((Configurable)this.encoder).configure(conf);
@@ -174,7 +175,7 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
             throw new SAXException("IOException writing image ", ex);
         }
     }
-    
+
     /**
      * Return the MIME type.
      */

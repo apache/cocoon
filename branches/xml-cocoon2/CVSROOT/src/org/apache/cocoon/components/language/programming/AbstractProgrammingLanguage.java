@@ -27,7 +27,7 @@ import org.apache.log.LogKit;
  * unloading.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-10 22:38:54 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-15 19:29:37 $
  */
 public abstract class AbstractProgrammingLanguage
   implements ProgrammingLanguage, Configurable
@@ -69,6 +69,7 @@ public abstract class AbstractProgrammingLanguage
       }
     } catch (Exception e) {
        log.error("Error with \"code-formatter\" parameter", e);
+       throw e;
     }
   }
 

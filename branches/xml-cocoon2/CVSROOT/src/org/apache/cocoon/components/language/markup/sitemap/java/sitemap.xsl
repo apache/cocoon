@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.61 $ $Date: 2000-11-10 22:38:53 $
+     * @version CVS $Revision: 1.1.2.62 $ $Date: 2000-11-15 19:29:34 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -202,7 +202,7 @@
           load_component ("!transformer:link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration(""), null);
 
           <!-- Configure generators -->
-	  <xsl:call-template name="config-components">
+      <xsl:call-template name="config-components">
             <xsl:with-param name="name">generator</xsl:with-param>
             <xsl:with-param name="components"
                 select="/map:sitemap/map:components/map:generators/map:generator"/>
@@ -672,6 +672,7 @@
 
       <!-- redirect to a external resource definition. Let the environment do the redirect -->
       <xsl:when test="@uri">
+        log.debug("Redirecting to '<xsl:value-of select="@uri"/>'");
         environment.redirect (substitute(listOfLists, "<xsl:value-of select="@uri"/>"));
         if(true)return true;
       </xsl:when>
@@ -728,7 +729,7 @@
         <!-- get nested configuration definitions -->
         <xsl:call-template name="nested-config-components">
           <xsl:with-param name="name" select="$name"/>
-	  <xsl:with-param name="level" select="2"/>
+      <xsl:with-param name="level" select="2"/>
           <xsl:with-param name="config-name"><xsl:value-of select="concat(local-name(.),'/',@name)"/></xsl:with-param>
           <xsl:with-param name="components" select="*"/>
           <xsl:with-param name="type" select="@name"/>
@@ -743,7 +744,7 @@
             load_component ("<xsl:value-of select="$name"/>:<xsl:value-of select="@name"/>", "<xsl:value-of select="@src"/>", cconf1, null);
           </xsl:otherwise>
         </xsl:choose>
-	}
+    }
       </xsl:if>
     </xsl:for-each>
   </xsl:template>

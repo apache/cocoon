@@ -25,15 +25,19 @@ import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.ComponentHolderFactory;
 import org.apache.cocoon.util.ClassUtils;
 
+import org.apache.log.LogKit;
+import org.apache.log.Logger;
+
 import org.xml.sax.SAXException;
 
 /**
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-30 18:39:17 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-11-15 19:29:42 $
  */
 public abstract class AbstractSitemap implements Sitemap {
+    protected Logger log = LogKit.getLoggerFor("cocoon");
 
     /** The component manager instance */
     protected ComponentManager manager;
