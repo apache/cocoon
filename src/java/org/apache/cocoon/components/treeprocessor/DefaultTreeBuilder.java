@@ -29,6 +29,7 @@ import org.apache.avalon.framework.component.Recomposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -52,7 +53,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DefaultTreeBuilder.java,v 1.9 2004/06/05 08:18:50 sylvain Exp $
+ * @version CVS $Id: DefaultTreeBuilder.java,v 1.10 2004/06/09 09:41:15 cziegeler Exp $
  */
 
 public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilder,
@@ -100,12 +101,6 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
 
     protected String namespace;
 
-    protected String parameterElement;
-
-    protected String languageName;
-
-    protected String fileName;
-
     /** Nodes gone through setupNode() that implement Initializable */
     private List initializableNodes = new ArrayList();
 
@@ -122,44 +117,51 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
     private Map registeredNodes = new HashMap();
 
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.parentManager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Recomposable#recompose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void recompose(ComponentManager manager) throws ComponentException {
         this.parentManager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
+     */
     public void setRoleManager(RoleManager rm) {
         this.parentRoleManager = rm;
     }
 
-    /**
-     * Configurable
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(Configuration config) throws ConfigurationException {
         this.configuration = config;
-
-        this.languageName = config.getAttribute("name");
-        if (this.getLogger().isDebugEnabled()) {
-            getLogger().debug("Configuring Builder for language : " + this.languageName);
-        }
-
-        this.fileName = config.getChild("file").getAttribute("name");
-
-        this.namespace = config.getChild("namespace").getAttribute("uri", "");
-
-        this.parameterElement = config.getChild("parameter").getAttribute("element", "parameter");
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#setAttribute(java.lang.String, java.lang.Object)
+     */
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getAttribute(java.lang.String)
+     */
     public Object getAttribute(String name) {
         return this.attributes.get(name);
     }
@@ -212,7 +214,8 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
      *
      * @return a selector for node builders
      */
-    protected ComponentSelector createBuilderSelector() throws Exception {
+    protected ComponentSelector createBuilderSelector(String sitemapVersion) 
+    throws Exception {
 
         // Create the NodeBuilder selector.
         ExcaliburComponentSelector selector = new ExtendedComponentSelector() {
@@ -225,38 +228,59 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             }
         };
 
-        // Automagically initialize the selector
+        // Merge configuration for tree builder from
+        // <nodes> and <nodes-{sitemapVersion}>
+        final Configuration base = this.configuration.getChild("nodes");
+        final Configuration layer = this.configuration.getChild("nodes-" + sitemapVersion);
+        if ( layer != null ) {
+            final DefaultConfiguration merged =
+                  new DefaultConfiguration( base.getName(),
+                                      "Merged [layer: " + layer.getLocation()
+                                      + ", base: " + base.getLocation() + "]" );
+            merged.addAllChildren(base);
+            final Configuration[] lc = layer.getChildren();
+            for( int i = 0; i < lc.length; i++ ) {
+                final String nodeName = lc[i].getAttribute("name");
+                final Configuration[] bc = base.getChildren();
+                boolean found = false;
+                int m = 0;
+                while ( m < bc.length && ! found ) {
+                    if ( nodeName.equals(bc[m].getAttribute("name")) ) {
+                        found = true;
+                    } else {
+                        m++;
+                    }
+                }
+                if ( found ) {
+                    merged.removeChild( bc[m] );
+                }
+                merged.addChild( lc[i] );
+            }
+        }
+        // Automagically initialize the selector        
         LifecycleHelper.setupComponent(selector,
             getLogger(),
             this.context,
             this.manager,
             this.roleManager,
-            this.configuration.getChild("nodes")
+            base
         );
 
         return selector;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#setProcessor(org.apache.cocoon.components.treeprocessor.ConcreteTreeProcessor)
+     */
     public void setProcessor(ConcreteTreeProcessor processor) {
         this.processor = processor;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.TreeBuilder#getProcessor()
+     */
     public ConcreteTreeProcessor getProcessor() {
         return this.processor;
-    }
-
-    /**
-     * Returns the language that is being built (e.g. "sitemap").
-     */
-    public String getLanguage() {
-        return this.languageName;
-    }
-
-    /**
-     * Returns the name of the parameter element.
-     */
-    public String getParameterName() {
-        return this.parameterElement;
     }
 
     /**
@@ -354,23 +378,29 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             SourceUtil.toSAX( source, handler );
             Configuration treeConfig = handler.getConfiguration();
 
-            return build(treeConfig);
+            this.namespace = treeConfig.getNamespace();
+            
+            // get the namespace version
+            final int pos = this.namespace.lastIndexOf('/');
+            if ( pos == -1 ) {
+                throw new ProcessingException("Namespace " + this.namespace + " does not have a version number.");
+            }
+            if ( !this.namespace.substring(0, pos).equals("http://apache.org/cocoon/sitemap") ) {
+                throw new ProcessingException("Namespace " + this.namespace + " is not a valid sitemap namespace.");                
+            }            
+            return build(treeConfig, this.namespace.substring(pos+1));
         } catch (ProcessingException e) {
             throw e;
         } catch(Exception e) {
-            throw new ProcessingException("Failed to load " + this.languageName + " from " +
+            throw new ProcessingException("Failed to load sitemap from " +
                 source.getURI(), e);
         }
-    }
-
-    public String getFileName() {
-        return this.fileName;
     }
 
     /**
      * Build a processing tree from a <code>Configuration</code>.
      */
-    public ProcessingNode build(Configuration tree) throws Exception {
+    protected ProcessingNode build(Configuration tree, String sitemapVersion) throws Exception {
 
         this.roleManager = createRoleManager();
 
@@ -384,7 +414,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
             null // configuration
         );
 
-        this.builderSelector = createBuilderSelector();
+        this.builderSelector = createBuilderSelector(sitemapVersion);
 
         // Calls to getRegisteredNode() are forbidden
         this.canGetNode = false;
@@ -465,7 +495,7 @@ public class DefaultTreeBuilder extends AbstractLogEnabled implements TreeBuilde
      */
     protected Map getParameters(Configuration config) throws ConfigurationException {
 
-        Configuration[] children = config.getChildren(this.parameterElement);
+        Configuration[] children = config.getChildren("parameter");
 
         if (children.length == 0) {
             // Parameters are only the component's location

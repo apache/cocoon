@@ -15,21 +15,8 @@
   limitations under the License.
 -->
 
-<!DOCTYPE tree-processor [
-  <!ELEMENT tree-processor (language+)>
-  <!ELEMENT language (namespace, file, parameter, roles, nodes)>
-  <!ATTLIST language
-    name CDATA #REQUIRED
-    class CDATA #REQUIRED
-    pool-min CDATA #IMPLIED
-    pool-max CDATA #IMPLIED
-  >
-  <!ELEMENT namespace EMPTY>
-  <!ATTLIST namespace uri CDATA #REQUIRED>
-  <!ELEMENT file EMPTY>
-  <!ATTLIST file name CDATA #REQUIRED>
-  <!ELEMENT parameter EMPTY>
-  <!ATTLIST parameter element CDATA #REQUIRED>
+<!DOCTYPE sitemap-language [
+  <!ELEMENT sitemap-language (parameter, roles, nodes)>
   <!ELEMENT roles (role+)>
   <!ELEMENT role (hint*)>
   <!ATTLIST role
@@ -53,27 +40,8 @@
   <!ELEMENT forbidden-children (#PCDATA)>
 ]>
 
-<tree-processor>
-  <!-- The sitemap language.
-       The "class" attribute names the implementation of TreeBuilder to be used for this language
-       
-       A language definition is a component of a ComponentSelector. Consequently, it can
-       have all attributes supported by components, including pool-settings.
-       Since it is unlikely that several sitemaps will be built simultaneously, the
-       pool-max is set to 1, meaning that only one builder is recycled.
-    -->
-  <language name="sitemap" class="org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage"
-		pool-min="1" pool-max="1">
-  
-    <!-- Namespace for this language -->
-    <namespace uri="http://apache.org/cocoon/sitemap/1.0"/>
-  
-    <!-- File name for files in this language, relative to the environment prefix -->
-    <file name="sitemap.xmap"/>
-    
-    <!-- Description of the element for nodes parameters -->
-    <parameter element="parameter"/>
-    
+<sitemap-language>
+
     <!-- New roles available to components created within a sitemap (i.e. in <map:components>) -->
     <roles>
       <role name="org.apache.cocoon.acting.ActionSelector"
@@ -115,8 +83,6 @@
         <hint shorthand="file-generator"
               class="org.apache.cocoon.generation.FileGenerator"/>
 
-        <hint shorthand="XSP-generator"
-              class="org.apache.cocoon.generation.ServerPagesGenerator"/>
       </role>
       
       <role name="org.apache.cocoon.transformation.TransformerSelector"
@@ -145,7 +111,8 @@
 
     </roles>
     
-    <!-- node definitions for the sitemap language -->
+    <!-- node definitions for the sitemap language 
+         that apply to all version -->
     <nodes>
       <!-- A node has the following attributes :
            - name : the node name, given as a local name in the language namespace (no prefix)
@@ -218,7 +185,8 @@
       <node name="handle-errors" builder="org.apache.cocoon.components.treeprocessor.sitemap.HandleErrorsNodeBuilder"/>
 
     </nodes>
-    
-  </language>
+    <!-- You can add specific nodes for a specific sitemap version, using
+         &lt;nodes-{version}&gt;
+    -->
 
-</tree-processor>
+</sitemap-language>

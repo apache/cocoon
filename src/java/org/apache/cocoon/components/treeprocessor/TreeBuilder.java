@@ -26,7 +26,7 @@ import java.util.List;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeBuilder.java,v 1.5 2004/06/05 08:18:50 sylvain Exp $
+ * @version CVS $Id: TreeBuilder.java,v 1.6 2004/06/09 09:41:15 cziegeler Exp $
  */
 
 public interface TreeBuilder extends Component {
@@ -34,16 +34,6 @@ public interface TreeBuilder extends Component {
     void setProcessor(ConcreteTreeProcessor processor);
 
     ConcreteTreeProcessor getProcessor();
-
-    /**
-     * Returns the language that is being built (e.g. "sitemap").
-     */
-    String getLanguage();
-
-    /**
-     * Returns the name of the parameter element.
-     */
-    String getParameterName();
 
     /**
      * Register a <code>ProcessingNode</code> under a given name.
@@ -65,13 +55,9 @@ public interface TreeBuilder extends Component {
     String getNamespace();
 
     /**
-     * Build a processing tree from a <code>Configuration</code>.
+     * Build a processing tree from a <code>Source</code>.
      */
-    ProcessingNode build(Configuration tree) throws Exception;
-
     ProcessingNode build(Source source) throws Exception;
-
-    String getFileName();
 
     /**
      * Return the list of <code>ProcessingNodes</code> part of this tree that are

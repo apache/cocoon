@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<cocoon version="2.1">
+<cocoon version="2.2">
 
 <!--+
     |  This is the Apache Cocoon configuration file. This is the place
@@ -43,7 +43,6 @@
   <sitemap
     file="context://sitemap.xmap"
     check-reload="yes"
-    config="resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml"
     logger="sitemap"
   />
 

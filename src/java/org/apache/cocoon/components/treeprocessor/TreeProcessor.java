@@ -51,7 +51,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.35 2004/06/06 11:40:34 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.36 2004/06/09 09:41:15 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -66,7 +66,7 @@ public class TreeProcessor
                Initializable {
 
     private static final String XCONF_URL =
-        "resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml";
+        "resource://org/apache/cocoon/components/treeprocessor/sitemap-language.xml";
 
     /** The parent TreeProcessor, if any */
     protected TreeProcessor parent;
@@ -80,11 +80,8 @@ public class TreeProcessor
     /** The role manager */
     protected RoleManager roleManager;
 
-    /** The language used by this processor */
-    protected String language;
-
-    /** Selector of TreeBuilders, the hint is the language name */
-    protected ExtendedComponentSelector builderSelector;
+    /** Sitemap TreeBuilder */
+    protected TreeBuilder treeBuilder;
 
     /** Last modification time */
     protected long lastModified = 0;
@@ -113,13 +110,13 @@ public class TreeProcessor
     /** The actual processor (package-private as needs to be accessed by ConcreteTreeProcessor) */
     ConcreteTreeProcessor concreteProcessor;
 
+    /** The tree builder configuration */
+    private Configuration treeBuilderConfiguration;
+    
     /**
      * Create a TreeProcessor.
      */
     public TreeProcessor() {
-        // Language can be overriden in the configuration.
-        this.language = "sitemap";
-
         this.checkReload = true;
         this.lastModifiedDelay = 1000;
     }
@@ -133,14 +130,13 @@ public class TreeProcessor
                             String prefix) 
     throws Exception {
         this.parent = parent;
-        this.language = (language == null) ? parent.language : language;
 
         // Copy all that can be copied from the parent
         this.enableLogging(parent.getLogger());
         this.context = parent.context;
         this.roleManager = parent.roleManager;
         this.source = sitemapSource;
-        this.builderSelector = parent.builderSelector;
+        this.treeBuilderConfiguration = parent.treeBuilderConfiguration;
         this.checkReload = checkReload;
         this.lastModifiedDelay = parent.lastModifiedDelay;
         
@@ -152,6 +148,7 @@ public class TreeProcessor
         ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
         ContainerUtil.service(this.environmentHelper, new ComponentManagerWrapper(this.manager));
         this.environmentHelper.changeContext(sitemapSource, prefix);
+        this.createTreeBuilder();
     }
 
     /**
@@ -205,11 +202,13 @@ public class TreeProcessor
 
     /** 
      * Configure the tree processor:
-     * <processor>
-     *   <reload delay="10"/>
-     *   <root-language name="sitemap"/>
-     *   <language>...</language>
-     * </processor>
+     * &lt;processor file="{Location of the sitemap}" 
+     *               check-reload="{true|false}"
+     *               config="{Location of sitemap tree processor config}&gt;
+     *   &lt;reload delay="10"/&gt;
+     * &lt;/processor&gt;
+     * 
+     * Only the file attribute is required; everything else is optional.
      * 
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
@@ -217,11 +216,6 @@ public class TreeProcessor
     throws ConfigurationException {
         this.fileName = config.getAttribute("file", null);
         this.checkReload = config.getAttributeAsBoolean("check-reload", true);
-
-        Configuration rootLangConfig = config.getChild("root-language", false);
-        if (rootLangConfig != null) {
-            this.language = rootLangConfig.getAttribute("name");
-        }
 
         // Obtain the configuration file, or use the XCONF_URL if none
         // is defined
@@ -231,13 +225,12 @@ public class TreeProcessor
         this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", 1000L);
 
         // Read the builtin languages definition file
-        Configuration builtin;
         try {
             Source source = this.resolver.resolveURI( xconfURL );
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
                 SourceUtil.toSAX( new ComponentManagerWrapper(this.manager), source, null, handler);
-                builtin = handler.getConfiguration();
+                this.treeBuilderConfiguration = handler.getConfiguration();
             } finally {
                 this.resolver.release( source );
             }
@@ -246,23 +239,34 @@ public class TreeProcessor
             throw new ConfigurationException(msg, e);
         }
 
-        // Create a selector for tree builders of all languages
-        this.builderSelector = new ExtendedComponentSelector(Thread.currentThread().getContextClassLoader());
+        this.createTreeBuilder();
+    }
+
+    /**
+     * Create a new tree builder for this sitemap
+     */
+    protected void createTreeBuilder() 
+    throws ConfigurationException {
+        // Create a builder for the sitemap language
         try {
-            LifecycleHelper.setupComponent(this.builderSelector,
+            this.treeBuilder = (TreeBuilder)Thread.currentThread()
+                    .getContextClassLoader()
+                    .loadClass("org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage").newInstance();
+
+            LifecycleHelper.setupComponent(this.treeBuilder,
                 getLogger(),
                 this.context,
                 this.manager,
                 this.roleManager,
-                builtin
+                this.treeBuilderConfiguration
             );
         } catch(ConfigurationException ce) {
             throw ce;
         } catch(Exception e) {
-            throw new ConfigurationException("Could not setup builder selector", e);
+            throw new ConfigurationException("Could not setup sitemap builder.", e);
         }
     }
-
+    
     /**
      * Process the given <code>Environment</code> producing the output.
      * @return If the processing is successfull <code>true</code> is returned.
@@ -362,7 +366,6 @@ public class TreeProcessor
         long startTime = System.currentTimeMillis();
 
         // Get a builder
-        TreeBuilder builder = (TreeBuilder)this.builderSelector.select(this.language);
         ConcreteTreeProcessor newProcessor = new ConcreteTreeProcessor(this);
         long newLastModified;
         this.setupLogger(newProcessor);
@@ -374,12 +377,12 @@ public class TreeProcessor
         // in the process of initialization.
         EnvironmentHelper.enterProcessor(this, new ComponentManagerWrapper(this.manager), env);
         try {
-            if (builder instanceof Recomposable) {
-                ((Recomposable)builder).recompose(this.manager);
+            if (this.treeBuilder instanceof Recomposable) {
+                ((Recomposable)this.treeBuilder).recompose(this.manager);
             }
-            builder.setProcessor(newProcessor);
+            this.treeBuilder.setProcessor(newProcessor);
             if (this.fileName == null) {
-                this.fileName = builder.getFileName();
+                this.fileName = "sitemap.xmap";
             }
 
             if (this.source == null) {
@@ -388,12 +391,11 @@ public class TreeProcessor
             
             newLastModified = this.source.getLastModified();
 
-            ProcessingNode root = builder.build(this.source);
+            ProcessingNode root = this.treeBuilder.build(this.source);
 
-            newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes());
+            newProcessor.setProcessorData(this.treeBuilder.getSitemapComponentManager(), root, this.treeBuilder.getDisposableNodes());
         } finally {
             EnvironmentHelper.leaveProcessor();
-            this.builderSelector.release(builder);
         }
 
         if (getLogger().isDebugEnabled()) {
@@ -419,14 +421,11 @@ public class TreeProcessor
     public void dispose() {
         // Dispose the concrete processor. No need to check for existing requests, as there
         // are none when a TreeProcessor is disposed.
-        if (this.concreteProcessor != null) {
-          this.concreteProcessor.dispose();
-        }
+        ContainerUtil.dispose(this.concreteProcessor);
+        this.concreteProcessor = null;
 
-        if (this.parent == null) {
-            // root processor : dispose the builder selector
-            this.builderSelector.dispose();
-        }
+        ContainerUtil.dispose(this.treeBuilder);
+        this.treeBuilder = null;
 
 	    if ( this.manager != null ) {
 	        if ( this.source != null ) {
