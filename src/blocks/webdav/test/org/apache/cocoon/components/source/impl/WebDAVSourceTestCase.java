@@ -21,13 +21,14 @@ import java.util.Iterator;
 
 import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.cocoon.components.source.impl.WebDAVSource;
+import org.apache.commons.httpclient.HttpURL;
 import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.TraversableSource;
 import org.apache.webdav.lib.WebdavResource;
 
 /**
- * @version $Id: WebDAVSourceTestCase.java,v 1.3 2004/03/27 17:40:11 unico Exp $
+ * @version $Id: WebDAVSourceTestCase.java,v 1.4 2004/06/29 16:10:55 unico Exp $
  */
 public class WebDAVSourceTestCase extends ExcaliburTestCase {
     
@@ -36,10 +37,9 @@ public class WebDAVSourceTestCase extends ExcaliburTestCase {
     private String m_authority = "localhost:8888";
     private String m_path = "/webdav/";
     private String m_name = "files";
-    private String m_qs = "?foo=bar";
-    private String m_location = m_scheme + "://" + m_credentials + "@" + m_authority + m_path + m_name + m_qs;
-    private String m_secure = m_scheme + "://" + m_authority + m_path + m_name + m_qs;
-    private String m_options = "&cocoon:webdav-action=" + WebdavResource.NOACTION + "&cocoon:webdav-depth=0";
+    private String m_location = m_scheme + "://" + m_credentials + "@" + m_authority + m_path + m_name;
+    private String m_secure = m_scheme + "://" + m_authority + m_path + m_name;
+    private String m_options = "?cocoon:webdav-action=" + WebdavResource.NOACTION + "&cocoon:webdav-depth=0";
     
     
     public WebDAVSourceTestCase(String name) {
@@ -73,26 +73,22 @@ public class WebDAVSourceTestCase extends ExcaliburTestCase {
 //            assertTrue(parent.isCollection());
 //            resolver.release(child);
 //        }
+//
+//        TraversableSource child = (TraversableSource) source.getChild("childcollection");
+//        assertEquals(child.getURI(), m_location + "/childcollection");
+//
+//        TraversableSource parent = (TraversableSource) child.getParent();
+//        assertEquals(m_name, parent.getName());
+//        
 //        resolver.release(source);
     }
 
     public void testModification() throws Exception {
 //        SourceResolver resolver = (SourceResolver) lookup(SourceResolver.ROLE);
 //        String uri = m_location + m_options;
+//        
 //        ModifiableTraversableSource source = (ModifiableTraversableSource) resolver.resolveURI(uri);
-//        ModifiableTraversableSource child = (ModifiableTraversableSource) source.getChild("newcol");
-//        
-//        assertTrue(!child.exists());
-//        child.makeCollection();
-//        assertTrue(child.exists());
-//        child.delete();
-//        assertTrue(!child.exists());
-//        
-//        resolver.release(child);
-//        resolver.release(source);
-//        
-//        source = (ModifiableTraversableSource) resolver.resolveURI(uri);
-//        child = (ModifiableTraversableSource) source.getChild("newdoc.txt");
+//        ModifiableTraversableSource child = (ModifiableTraversableSource) source.getChild("newdoc.txt");
 //        assertTrue(!child.exists());
 //        
 //        // create document
@@ -116,5 +112,25 @@ public class WebDAVSourceTestCase extends ExcaliburTestCase {
 //        
 //        resolver.release(source);
 //        resolver.release(child);
+    }
+    
+    public void testMakeCollection() throws Exception {
+//        SourceResolver resolver = (SourceResolver) lookup(SourceResolver.ROLE);
+//        String uri = m_location + m_options;
+//        ModifiableTraversableSource source = (ModifiableTraversableSource) resolver.resolveURI(uri);
+//        ModifiableTraversableSource child = (ModifiableTraversableSource) source.getChild("child");
+//        ModifiableTraversableSource descendant = (ModifiableTraversableSource) source.getChild("child/decendant");
+//        
+//        assertTrue(!child.exists());
+//        descendant.makeCollection();
+//        assertTrue(child.exists());
+//        assertTrue(descendant.exists());
+//        child.delete();
+//        assertTrue(!child.exists());
+//        descendant.refresh();
+//        assertTrue(!descendant.exists());
+//        
+//        resolver.release(child);
+//        resolver.release(source);
     }
 }
