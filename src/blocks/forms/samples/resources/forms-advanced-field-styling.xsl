@@ -71,6 +71,7 @@
   <xsl:template match="fi:help">
     <xsl:variable name="id" select="generate-id()"/>
     <div class="forms-help" id="help{$id}" style="visibility:hidden; position:absolute;">
+    	<span style="float:right"><a href="#" onClick="helpWin{$id}.hidePopup();return false;"><img align="top" alt="close" src="{$resources-uri}/close.gif" height="6" width="6"/></a></span>
       <xsl:apply-templates select="node()"/>
     </div>
     <script type="text/javascript">
