@@ -101,7 +101,7 @@ public class ComposedJXPathBindingBase extends JXPathBindingBase {
      * Actively performs the binding from the Woody-form to the ObjectModel 
      * by passing the task onto it's children.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
+    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
         if (this.subBindings != null) {
             int size = this.subBindings.length;
             for (int i = 0; i < size; i++) {

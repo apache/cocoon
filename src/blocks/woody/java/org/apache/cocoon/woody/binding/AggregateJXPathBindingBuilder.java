@@ -67,27 +67,20 @@ import org.w3c.dom.Element;
 public class AggregateJXPathBindingBuilder
     extends JXpathBindingBuilderBase {
 
-    /**
-     * @see org.outerj.woody.binding.BindingBuilder#buildBinding(org.w3c.dom.Element, org.outerj.woody.binding.BuilderAssistant)
-     */
-    public JXPathBindingBase buildBinding(
-        Element bindingElm,
-        JXPathBindingManager.Assistant assistant) {
+    public JXPathBindingBase buildBinding(Element bindingElm, JXPathBindingManager.Assistant assistant)
+            throws BindingException {
         try {
             String xpath = DomHelper.getAttribute(bindingElm, "path");
             String widgetId = DomHelper.getAttribute(bindingElm, "id");
 
-            JXPathBindingBase[] childBindings =
-                assistant.makeChildBindings(bindingElm);
+            JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 
-            AggregateJXPathBinding aggregateBinding =
-                new AggregateJXPathBinding(widgetId, xpath, childBindings);
+            AggregateJXPathBinding aggregateBinding = new AggregateJXPathBinding(widgetId, xpath, childBindings);
             return aggregateBinding;
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            getLogger().warn(
-                "Error building an aggregate field binding.",
-                e);
-            return null;
+            throw new BindingException("Error building aggregate field binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
 }

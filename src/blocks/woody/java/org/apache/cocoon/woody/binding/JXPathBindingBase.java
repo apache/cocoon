@@ -63,7 +63,8 @@ import org.apache.commons.jxpath.JXPathContext;
 public abstract class JXPathBindingBase implements Binding, LogEnabled {
 
     /** 
-     * Avalon Logger to use in all subclasses.     */
+     * Avalon Logger to use in all subclasses.
+     */
     private Logger logger;
 
     /**
@@ -71,9 +72,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * then on generic objects.
      * Abstract method that subclasses need to implement for specific activity.
      */
-    public abstract void loadFormFromModel(
-        Widget frmModel,
-        JXPathContext jxpc);
+    public abstract void loadFormFromModel(Widget frmModel, JXPathContext jxpc);
 
     /**
      * Hooks up with the more generic Binding of any objectModel by wrapping
@@ -95,16 +94,14 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * then on generic objects.
      * Abstract method that subclasses need to implement for specific activity.
      */
-    public abstract void saveFormToModel(
-        Widget frmModel,
-        JXPathContext jxpc);
+    public abstract void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException;
 
     /**
      * Hooks up with the more generic Binding of any objectModel by wrapping
      * it up in a JXPathContext object and then transfering control over to
      * the new overloaded version of this method.
      */
-    public void saveFormToModel(Widget frmModel, Object objModel) {
+    public void saveFormToModel(Widget frmModel, Object objModel) throws BindingException {
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);

@@ -70,14 +70,10 @@ public class SetAttributeJXPathBindingBuilder
     /**
      * Creates an instance of {@link SetAttributeJXPathBinding} according to 
      * the attributes of the provided bindingElm. 
-     * 
-     * @param bindingElm
-     * @param assistant
-     * @return
      */
     public JXPathBindingBase buildBinding(
         Element bindingElm,
-        JXPathBindingManager.Assistant assistant) {
+        JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
             String attName = DomHelper.getAttribute(bindingElm, "name");
@@ -87,9 +83,10 @@ public class SetAttributeJXPathBindingBuilder
                 new SetAttributeJXPathBinding(attName, attValue);
 
             return attBinding;
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            getLogger().warn("Error building a field binding.", e);
-            return null;
+            throw new BindingException("Error building binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
 

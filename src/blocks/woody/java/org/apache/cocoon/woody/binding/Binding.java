@@ -71,5 +71,5 @@ public interface Binding {
      * @param frmModel
      * @param objModel
      */
-    public void saveFormToModel(Widget frmModel, Object objModel);
+    public void saveFormToModel(Widget frmModel, Object objModel) throws BindingException;
 }

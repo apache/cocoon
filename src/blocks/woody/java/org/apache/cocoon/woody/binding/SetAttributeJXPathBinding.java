@@ -68,9 +68,6 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
 
     /**
      * Constructs SetAttributeJXPathBinding
-     * 
-     * @param attName
-     * @param attValue
      */
     public SetAttributeJXPathBinding(String attName, String attValue) {
         this.name = attName;
@@ -86,24 +83,15 @@ public class SetAttributeJXPathBinding extends JXPathBindingBase {
 
     /**
      * Sets the attribute value on the passed JXPathContext
-     * 
-     * @param frmModel
-     * @param jxpc
      */
     public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
         jxpc.setValue("@" + this.name, this.value);
-        getLogger().debug("done saving " + toString());
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done saving " + toString());
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString() {
-        return "SetAttributeJXPathBinding [attName="
-            + this.name
-            + ", attValue="
-            + this.value
-            + "]";
+        return "SetAttributeJXPathBinding [attName=" + this.name + ", attValue=" + this.value + "]";
     }
 
 }

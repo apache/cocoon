@@ -56,8 +56,13 @@ import java.util.Map;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.woody.util.DomHelper;
+import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.excalibur.source.Source;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -68,13 +73,14 @@ import org.xml.sax.InputSource;
  * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
  * JXPath package</a>. 
  */
-public class JXPathBindingManager implements BindingManager, LogEnabled {
+public class JXPathBindingManager implements BindingManager, LogEnabled, Serviceable, Disposable {
 
     //TODO caching of the Bindings. 
 
-    /**
-     * Avalon logger to use.     */
     private Logger logger;
+
+    private DatatypeManager datatypeManager;
+    private ServiceManager serviceManager;
 
     /**
      * Map of specific builders for the different elements in the 
@@ -108,6 +114,11 @@ public class JXPathBindingManager implements BindingManager, LogEnabled {
             new InsertBeanJXPathBindingBuilder());
     }
 
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.serviceManager = serviceManager;
+        this.datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
+    }
+
     public Binding createBinding(Source bindSrc)
         throws ProcessingException {
         try {
@@ -115,20 +126,12 @@ public class JXPathBindingManager implements BindingManager, LogEnabled {
                 DomHelper.parse(new InputSource(bindSrc.getURI()));
             Element rootElm = doc.getDocumentElement();
             JXPathBindingBase newBinding = null;
-            if (BindingManager
-                .NAMESPACE
-                .equals(rootElm.getNamespaceURI())) {
-                newBinding =
-                    getBuilderAssistant()
-                        .getBindingForConfigurationElement(
-                        rootElm);
-
+            if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
+                newBinding = getBuilderAssistant().getBindingForConfigurationElement(rootElm);
                 newBinding.enableLogging(getLogger());
-                getLogger().debug(
-                    "Creation of new Binding finished. " + newBinding);
+                getLogger().debug("Creation of new Binding finished. " + newBinding);
             } else {
-                getLogger().debug(
-                    "Root Element of said binding file is in wrong namespace.");
+                getLogger().debug("Root Element of said binding file is in wrong namespace.");
             }
             return newBinding;
         } catch (Exception e) {
@@ -156,7 +159,11 @@ public class JXPathBindingManager implements BindingManager, LogEnabled {
         return new Assistant();
     }
 
-    /** 
+    public void dispose() {
+        serviceManager.release(datatypeManager);
+    }
+
+    /**
      * Assistant Inner class discloses enough features to the created 
      * childBindings to recursively 
      * 
@@ -176,50 +183,39 @@ public class JXPathBindingManager implements BindingManager, LogEnabled {
         /**
          * Creates a {@link Binding} folowing the specification in the 
          * provided config element.
-         * 
-         * @param configElm
-         * @return
          */
-        public JXPathBindingBase getBindingForConfigurationElement(Element configElm) {
+        public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
             String bindingType = configElm.getLocalName();
-            JXPathBindingManager.this.getLogger().debug(
-                "build binding for config elm " + bindingType);
-            JXpathBindingBuilderBase bindingBuilder =
-                getBindingBuilder(bindingType);
-            JXPathBindingBase childBinding =
-                (JXPathBindingBase) bindingBuilder.buildBinding(
-                    configElm,
-                    this);
+            if (getLogger().isDebugEnabled())
+                JXPathBindingManager.this.getLogger().debug("build binding for config elm " + bindingType);
+            JXpathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
+            JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
             return childBinding;
         }
 
         /**
          * Makes an array of childBindings for the child-elements of the 
-         * provided cinfiguration element.
-         * 
-         * @param parentElement
-         * @return
+         * provided configuration element.
          */
-        public JXPathBindingBase[] makeChildBindings(Element parentElement) {
+        public JXPathBindingBase[] makeChildBindings(Element parentElement) throws BindingException {
             if (parentElement == null) {
                 return null;
             }
 
-            Element[] childElements =
-                DomHelper.getChildElements(
-                    parentElement,
-                    BindingManager.NAMESPACE);
-            if (childElements != null) {
-                JXPathBindingBase[] childBindings =
-                    new JXPathBindingBase[childElements.length];
+            Element[] childElements = DomHelper.getChildElements(parentElement, BindingManager.NAMESPACE);
+            if (childElements.length > 0) {
+                JXPathBindingBase[] childBindings = new JXPathBindingBase[childElements.length];
                 for (int i = 0; i < childElements.length; i++) {
-                    childBindings[i] =
-                        getBindingForConfigurationElement(childElements[i]);
+                    childBindings[i] = getBindingForConfigurationElement(childElements[i]);
                 }
                 return childBindings;
             } else {
                 return null;
             }
+        }
+
+        public DatatypeManager getDatatypeManager() {
+            return datatypeManager;
         }
 
     }

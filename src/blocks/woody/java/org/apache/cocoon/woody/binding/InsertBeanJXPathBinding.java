@@ -56,6 +56,7 @@ import org.apache.cocoon.woody.formmodel.Widget;
 import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.Pointer;
+import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
  * InsertBeanJXPathBinding provides an implementation of a {@link Binding} 
@@ -73,7 +74,6 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
 
     /**
      * Constructs InsertBeanJXPathBinding
-     * @param className
      */
     public InsertBeanJXPathBinding(String className, String addMethod) {
         this.className = className;
@@ -93,54 +93,40 @@ public class InsertBeanJXPathBinding extends JXPathBindingBase {
      * The factory will insert a new instance of the specified bean (classname) 
      * inside this object into the target objectmodel.
      */
-    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) {
+    public void saveFormToModel(Widget frmModel, JXPathContext jxpc) throws BindingException {
         jxpc.setFactory(new AbstractFactory() {
-            public boolean createObject(
-                JXPathContext context,
-                Pointer pointer,
-                Object parent,
-                String name,
-                int index) {
-
+            public boolean createObject(JXPathContext context, Pointer pointer,
+                                        Object parent, String name, int index) {
                 try {
                     Object[] args = new Object[1];
                     Class[] argTypes = new Class[1];
                     
                     // instantiate the new object
-                    argTypes[0] =
-                        Class.forName(InsertBeanJXPathBinding.this.className);
+                    argTypes[0] = Class.forName(InsertBeanJXPathBinding.this.className);
                     args[0] = argTypes[0].newInstance();
                     // lookup the named method on the parent
                     
                     Method addMethod =
-                        parent.getClass().getMethod(
-                            InsertBeanJXPathBinding.this.addMethodName,
-                            argTypes);
+                        parent.getClass().getMethod(InsertBeanJXPathBinding.this.addMethodName, argTypes);
                     // invoke this method with this new beast.
                     
                     addMethod.invoke(parent, args);
-                    
-                    InsertBeanJXPathBinding.this.getLogger().debug(
-                        "InsertBean jxpath factory executed for index."
-                            + index);
+
+                    if (getLogger().isDebugEnabled())
+                        getLogger().debug("InsertBean jxpath factory executed for index " + index);
                     return true;
                 } catch (Exception e) {
-                    InsertBeanJXPathBinding.this.getLogger().warn("InsertBean jxpath factory failed.", e);
-                    return false;
+                    throw new CascadingRuntimeException("InsertBean jxpath factory failed.", e);
                 }
             }
         });
 
-        getLogger().debug(
-            "done registered factory for inserting node -- " + toString());
+        if (getLogger().isDebugEnabled())
+            getLogger().debug("done registered factory for inserting node -- " + toString());
     }
 
     public String toString() {
-        return "InsertBeanJXPathBinding [for class "
-            + this.className
-            + " to addMethod "
-            + this.addMethodName
-            + "]";
+        return "InsertBeanJXPathBinding [for class " + this.className + " to addMethod " + this.addMethodName + "]";
     }
 
 }

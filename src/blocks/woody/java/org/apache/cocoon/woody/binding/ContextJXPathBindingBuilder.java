@@ -70,22 +70,20 @@ public class ContextJXPathBindingBuilder extends JXpathBindingBuilderBase {
      * Creates an instance of ContextJXPathBinding with the configured 
      * path and nested child bindings from the declarations in the bindingElm
      */
-    public JXPathBindingBase buildBinding(
-        Element bindingElm,
-        JXPathBindingManager.Assistant assistant) {
+    public JXPathBindingBase buildBinding(Element bindingElm,
+        JXPathBindingManager.Assistant assistant) throws BindingException {
 
         try {
             String xpath = DomHelper.getAttribute(bindingElm, "path");
 
-            JXPathBindingBase[] childBindings =
-                assistant.makeChildBindings(bindingElm);
+            JXPathBindingBase[] childBindings = assistant.makeChildBindings(bindingElm);
 
-            ContextJXPathBinding contextBinding =
-                new ContextJXPathBinding(xpath, childBindings);
+            ContextJXPathBinding contextBinding = new ContextJXPathBinding(xpath, childBindings);
             return contextBinding;
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            getLogger().warn("Error building a field binding.", e);
-            return null;
+            throw new BindingException("Error building context binding defined at " + DomHelper.getLocation(bindingElm), e);
         }
     }
 }
