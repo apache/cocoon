@@ -7,7 +7,7 @@
   <title>Installing Cocoon2</title>
   <authors>
    <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
-   <person name="Sven Künzler" email="svenk@tzi.org"/>
+   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch"/>
   </authors>
  </header>
 
@@ -15,8 +15,7 @@
 
  <s1 title="System Requirements">
   <p>
-   Cocoon requires the following systems to be already installed in your
-   system:
+   Cocoon requires the following systems to be already installed in your system:
   </p>
 
   <ul>
@@ -27,190 +26,69 @@
     one installed.
    </li>
    <li><strong>Servlet Engine</strong>
-    A Servlet 2.2 compliant servlet engine  must be present in order to support
+    A Servlet 2.2 compliant servlet engine must be present in order to support
     servlet operation and dynamic request handling. Note that this requirement
     is optional for command line operation.
    </li>
   </ul>
  </s1>
 
- <s1 title="Required Components">
-  <p>
-   Cocoon is a publishing framework and was designed to be highly modular to
-   allow users to choose their preferred implementation for the required
-   component and to allow better and faster parallel development.
-  </p>
+ <s1 title="Installing Cocoon2 on Apache Tomcat (standalone only)">
 
   <p>
-   Previous releases of Cocoon forced you to download all the basic required
-   packages for the installation, but this generated lots of problems for
-   lack of synch between the projects and the complexity of the operation.
-   For this reason, Cocoon now ships with all the required packages,
-   a sort of a simple distribution to make things easier for you. We apologize
-   for the increased size of the distribution, but we think this will be
-   worthwhile even for users with low bandwidth.
+    First copy all jar archives from <code>[path-to-Cocoon2]/lib</code>
+    to <code>[path-to-Tomcat]/lib</code> except <code>ant.jar</code>, <code>servlet_2_2.jar</code>
+    and <code>stylebook-1.0-b2.jar</code>.
   </p>
-
+  
   <p>
-   In the <code>/lib</code> directory you'll find all the required packages.
-   Now jump to the installation instructions for your servlet engine.
+    Copy <code>[path-to-Cocoon2]/bin/cocoon.jar</code> to
+    <code>[path-to-Tomcat]/lib</code>, as well.
   </p>
-
-  <note>
-   The Ant and Stylebook packages are only used in the build system and
-   are <strong>not</strong> used by Cocoon at run-time. So you can safely
-   ignore them in the installation.
-  </note>
+  
+  <p>
+    If you are running running Tomcat on a Windows operating system you have 
+    to adjust your classpath to include all jar files copied so far in the 
+    <code>[path-to-Tomcat]/bin/tomcat.bat</code> file. Add the following lines 
+    right after the line <code>set CLASSPATH=.</code>
+  </p>
+  
+  <source>
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\cocoon.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xerces_1_1_1.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xalan_1_0_1.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\fop_0_13_0.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\svgv_0_8.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jstyle.jar
+    set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\js.jar
+  </source>
+  
+  <p>
+    On UNIX operating systems, Tomcat will automatically handle the setup of 
+    the classpath based on alphabetical order.  If you use a newer version of 
+    Tomcat (i.e. current CVS version) that requires <code>jaxp.jar</code> and 
+    <code>parser.jar</code> instead of <code>xml.jar</code> you should rename 
+    <code>parser.jar</code> to <code>zparser.jar</code> to make it 
+    appear as last, otherwise Cocoon will not work because it requires SAX2
+    and DOM2 to operate which are included in Xerces so must appear in front.
+  </p>
+  
+  <p>
+    Copy <code>[path-to-Cocoon]/webapps/cocoon.war</code> to 
+    <code>[path-to-Tomcat]/webapps</code>.  Tomcat will create the new Cocoon 
+    context out of the <code>cocoon.war</code> file as soon as it's restarted.
+  </p>
+  
+  <p>
+    Finally, restart Tomcat, point your browser to...
+  </p>
+  
+  <source><link href="http://localhost:8080/cocoon/welcome">http://localhost:8080/cocoon/welcome</link></source>
+  
+  <p>
+    ... where you'll experience samples of Cocoon functionality.
+  </p>
  </s1>
-
- <s1 title="Installing Cocoon2">
-  <p>
-   Being Cocoon a servlet, you should be able to install it on every compliant
-   servlet engine by associating the "org.apache.cocoon.servlet.CocoonServlet" 
-   servlet with the requests you want it to handle. In order to do this, there 
-   is no standard way, so we try to provide detailed information for the most 
-   used servlet systems.
-  </p>
-
-  <s2 title="Installing Cocoon2 on Apache JServ">
-   <p>
-    First thing to do is to make sure that Cocoon and all the needed components
-    (as explained in the previous section) are visible. This implies adding
-    this to the servlet engine classpath by adding a bunch of classpath lines
-    to your <code>jserv.properties</code> file for each jar package.
-   </p>
-
-<source>wrapper.classpath=[path-to-jar]/[jar-name].jar</source>
-
-   <p>
-    Here is an example:
-   </p>
-
-<source>
-wrapper.classpath=/usr/local/java/lib/xerces.jar
-wrapper.classpath=/usr/local/java/lib/xalan.jar
-wrapper.classpath=/usr/local/java/lib/fop.jar
-...
-</source>
-
-   <note>
-    We suggest you <strong>do not</strong> place the package <code>cocoon.jar</code> in the
-    classpath but rather follow the instructions in details. 
-   </note>
-
-   <note>
-    JServ is a Servlet 2.0 compliant servlet engine and will not work if you
-    place the Servlet_2.2.jar in its classpath. So ignore the servlet_2.2.jar
-    package that is shipped with Cocoon if you use Jserv.
-   </note>
-
-   <p>
-    At this point, you must installe the Cocoon package and set the Cocoon 
-    configurations. To do this, you must choose the servlet zone(s) where you 
-    want Cocoon to reside. If you don't know what a servlet zone is, open the
-    <code>zone.properties</code> file.
-   </p>
-
-   <p>
-    To configure Cocoon, you must pass the <code>cocoon.xconf</code>
-    file location to the <em>cocoon</em> servlet and you do so by adding the 
-    following lines to the servlet zone properties:
-   </p>
-
-<source>servlet.cocoon.code = org.apache.cocoon.servlet.CocoonServlet
-servlet.cocoon.initArgs=configurations=[path-to-cocoon]/conf/cocoon.xconf</source>
-
-   <p>
-    That file contains XML configurations for Cocoon in order to do its job and
-    you should not need to change <em>anything</em> to test Cocoon installation
-    at this point.
-   </p>
-
-   <p>
-    Now your cocoon servlet is properly configured, but you should tell Apache
-    to direct any call to a resource you want Cocoon to process it. To do this
-    add the following lines to your <code>jserv.conf</code> file:
-   </p>
-
-<source><![CDATA[Action cocoon /servlet/cocoon
-
-<location /cocoon>
- SetHandler cocoon
-</location>]]>
-</source>
-
-   <p>
-    Restart Apache (or just Apache JServ if in manual mode), then point your
-    browser to the following URI:
-   </p>
-
-<source>http://localhost/cocoon/hello</source>
-
-   <p>
-    where Cocoon will greet you.
-   </p>
-
-   <note>
-    If this doesn't work, it's a bug in Cocoon2. The above should be the correct
-    behavior and we should aim to have Cocoon2 work that way. So, if it doesn't 
-    work, please help us fixing it. Thank you!
-   </note>
-  </s2>
-
-  <s2 title="Installing Cocoon2 on Jakarta Tomcat 3.1">
-	<note>This describes how to install Cocoon2 with a stand-alone, default
-	  configuration of Tomcat 3.1. If you are using Tomcat along with Apache
-	  or another web server,  you will most probably have to edit the
-	  configuration of that server as well.</note> 
-	<p>
-	  First copy all jar archives from <code>[path-to-Cocoon2]/lib</code>
-	  to <code>[path-to-Tomcat]/lib</code> except ant.jar, servlet_2_2.jar 
-          and stylebook-1.0-b2.jar.  
-          Copy <code>[path-to-Cocoon2]/build/cocoon.jar</code> to
-	  <code>[path-to-Tomcat]/lib</code>, as well.  Note that if you are running 
-          Tomcat on a Windows operating system you have to adjust the classpath to 
-          include all jar files copied so far in the 
-          <code>[path-to-Tomcat]/bin/tomcat.bat</code> file. Add the following lines 
-          right after the line <code>set CLASSPATH=.</code>
-        </p>
-
-        <source>
-          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xerces_1_0_3.jar
-          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\fop_0_12_1.jar
-          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\js.jar
-          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\jstyle.jar
-          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\svgv_0_8.jar
-          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\xalan_1_0_1.jar
-          set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\cocoon.jar
-        </source>
-
-        <p>
-          On unix like operating 
-          systems Tomcat will automatically handle the setup of the classpath based 
-          on alphabetical order.  If you use a newer version of Tomcat 
-          (i.e. current CVS version) that requires jaxp.jar and parser.jar instead 
-          of xml.jar you should rename parser.jar to zparser.jar to make it appear 
-          as last.
-	</p>
-	<p>Copy <code>[path-to-Cocoon]/build/cocoon.war</code> to 
-          <code>[path-to-Tomcat]/webapps</code>.  The new Context for Cocoon2 will be 
-          created out of the cocoon.war file as soon as you restart Tomcat.
-	</p>
-	<p>Finally, restart Tomcat, point your
-	  browser to the following URI...
-	</p>
-
-	<source>http://localhost:8080/cocoon/hello</source>
-	
-	<p>
-	  ... and say "Hello!" to Cocoon2.
-	</p>
-	<p>Use the following URI to browse the samples...
-	</p>
-
-	<source>http://localhost:8080/cocoon/samples/</source>
-		
-      </s2>
-    </s1>
-</body>
+ 
+ </body>
 </document>
