@@ -66,8 +66,10 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
+
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -85,11 +87,10 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.4 2003/04/11 08:38:26 bruno Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.5 2003/06/11 00:11:15 joerg Exp $
  */
-public abstract class AbstractTextSerializer
-extends AbstractSerializer
-implements Configurable, CacheableProcessingComponent {
+public abstract class AbstractTextSerializer extends AbstractSerializer
+        implements Configurable, CacheableProcessingComponent {
 
     /**
      * The trax <code>TransformerFactory</code> used by this serializer.
@@ -161,16 +162,14 @@ implements Configurable, CacheableProcessingComponent {
     /**
      * Helper for TransformerFactory.
      */
-    protected SAXTransformerFactory getTransformerFactory()
-    {
+    protected SAXTransformerFactory getTransformerFactory() {
         return tfactory;
     }
 
     /**
      * Helper for TransformerHandler.
      */
-    protected TransformerHandler getTransformerHandler()
-    throws javax.xml.transform.TransformerException {
+    protected TransformerHandler getTransformerHandler() throws TransformerException {
         return this.getTransformerFactory().newTransformerHandler();
     }
 
@@ -178,32 +177,30 @@ implements Configurable, CacheableProcessingComponent {
      * Set the {@link OutputStream} where the requested resource should
      * be serialized.
      */
-    public void setOutputStream(OutputStream out) 
-    throws IOException {
+    public void setOutputStream(OutputStream out) throws IOException {
         /*
          * Add a level of buffering to the output stream. Xalan serializes
          * every character individually. In conjunction with chunked
          * transfer encoding this would otherwise lead to a whopping 6-fold
          * increase of data on the wire.
          */
-      //  if (outputBufferSize > 0) {
-      //      super.setOutputStream(
-      //        new BufferedOutputStream(out, outputBufferSize));
-      //  } else {
-            super.setOutputStream(out);
-      //  }
+        //  if (outputBufferSize > 0) {
+        //      super.setOutputStream(
+        //        new BufferedOutputStream(out, outputBufferSize));
+        //  } else {
+        super.setOutputStream(out);
+        //  }
     }
 
     /**
      * Set the configurations for this serializer.
      */
-    public void configure(Configuration conf)
-      throws ConfigurationException {
+    public void configure(Configuration conf) throws ConfigurationException {
 
         // configure buffer size
-     //   Configuration bsc = conf.getChild("buffer-size", false);
-     //   if(null != bsc)
-      //    outputBufferSize = bsc.getValueAsInteger(DEFAULT_BUFFER_SIZE);
+        //   Configuration bsc = conf.getChild("buffer-size", false);
+        //   if(null != bsc)
+        //    outputBufferSize = bsc.getValueAsInteger(DEFAULT_BUFFER_SIZE);
 
         // configure xalan
         Configuration cdataSectionElements = conf.getChild("cdata-section-elements");
@@ -217,53 +214,53 @@ implements Configurable, CacheableProcessingComponent {
         Configuration standAlone = conf.getChild("standalone");
         Configuration version = conf.getChild("version");
 
-        if (! cdataSectionElements.getLocation().equals("-")) {
-            format.put(OutputKeys.CDATA_SECTION_ELEMENTS,cdataSectionElements.getValue());
+        if (!cdataSectionElements.getLocation().equals("-")) {
+            format.put(OutputKeys.CDATA_SECTION_ELEMENTS, cdataSectionElements.getValue());
         }
-        if (! dtPublic.getLocation().equals("-")) {
-            format.put(OutputKeys.DOCTYPE_PUBLIC,dtPublic.getValue());
+        if (!dtPublic.getLocation().equals("-")) {
+            format.put(OutputKeys.DOCTYPE_PUBLIC, dtPublic.getValue());
         }
-        if (! dtSystem.getLocation().equals("-")) {
-            format.put(OutputKeys.DOCTYPE_SYSTEM,dtSystem.getValue());
+        if (!dtSystem.getLocation().equals("-")) {
+            format.put(OutputKeys.DOCTYPE_SYSTEM, dtSystem.getValue());
         }
-        if (! encoding.getLocation().equals("-")) {
-            format.put(OutputKeys.ENCODING,encoding.getValue());
+        if (!encoding.getLocation().equals("-")) {
+            format.put(OutputKeys.ENCODING, encoding.getValue());
         }
-        if (! indent.getLocation().equals("-")) {
-            format.put(OutputKeys.INDENT,indent.getValue());
+        if (!indent.getLocation().equals("-")) {
+            format.put(OutputKeys.INDENT, indent.getValue());
         }
-        if (! mediaType.getLocation().equals("-")) {
-            format.put(OutputKeys.MEDIA_TYPE,mediaType.getValue());
+        if (!mediaType.getLocation().equals("-")) {
+            format.put(OutputKeys.MEDIA_TYPE, mediaType.getValue());
         }
-        if (! method.getLocation().equals("-")) {
-            format.put(OutputKeys.METHOD,method.getValue());
+        if (!method.getLocation().equals("-")) {
+            format.put(OutputKeys.METHOD, method.getValue());
         }
-        if (! omitXMLDeclaration.getLocation().equals("-")) {
-            format.put(OutputKeys.OMIT_XML_DECLARATION,omitXMLDeclaration.getValue());
+        if (!omitXMLDeclaration.getLocation().equals("-")) {
+            format.put(OutputKeys.OMIT_XML_DECLARATION, omitXMLDeclaration.getValue());
         }
-        if (! standAlone.getLocation().equals("-")) {
-            format.put(OutputKeys.STANDALONE,standAlone.getValue());
+        if (!standAlone.getLocation().equals("-")) {
+            format.put(OutputKeys.STANDALONE, standAlone.getValue());
         }
-        if (! version.getLocation().equals("-")) {
-            format.put(OutputKeys.VERSION,version.getValue());
+        if (!version.getLocation().equals("-")) {
+            format.put(OutputKeys.VERSION, version.getValue());
         }
 
         Configuration tFactoryConf = conf.getChild("transformer-factory", false);
         if (tFactoryConf != null) {
             String tFactoryClass = tFactoryConf.getValue();
             try {
-            	this.tfactory = (SAXTransformerFactory)ClassUtils.newInstance(tFactoryClass);
-            	if (getLogger().isDebugEnabled()) {
-            	   getLogger().debug("Using transformer factory " + tFactoryClass);
-            	}
-            } catch(Exception e) {
-            	throw new ConfigurationException("Cannot load transformer factory " + tFactoryClass, e);
+                this.tfactory = (SAXTransformerFactory) ClassUtils.newInstance(tFactoryClass);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Using transformer factory " + tFactoryClass);
+                }
+            } catch (Exception e) {
+                throw new ConfigurationException("Cannot load transformer factory " + tFactoryClass, e);
             }
         } else {
-           // Standard TrAX behaviour
-           this.tfactory = (SAXTransformerFactory)TransformerFactory.newInstance();
+            // Standard TrAX behaviour
+            this.tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
         }
-        
+
         tfactory.setErrorListener(new TraxErrorHandler(getLogger()));
 
         // Check if we need namespace as attributes.
@@ -273,7 +270,7 @@ implements Configurable, CacheableProcessingComponent {
                 this.namespacePipe = new NamespaceAsAttributes();
                 this.namespacePipe.enableLogging(getLogger());
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             getLogger().warn("Cannot know if transformer needs namespaces attributes - assuming NO.", e);
         }
     }
@@ -285,7 +282,6 @@ implements Configurable, CacheableProcessingComponent {
             this.namespacePipe.recycle();
         }
     }
-
 
     /**
      * Generate the unique key.
@@ -323,10 +319,9 @@ implements Configurable, CacheableProcessingComponent {
 
         SAXTransformerFactory factory = getTransformerFactory();
 
-        Boolean cacheValue = (Boolean)needsNamespaceCache.get(factory.getClass().getName());
+        Boolean cacheValue = (Boolean) needsNamespaceCache.get(factory.getClass().getName());
         if (cacheValue != null) {
             return cacheValue.booleanValue();
-
         } else {
             // Serialize a minimal document to check how namespaces are handled.
             StringWriter writer = new StringWriter();
@@ -352,8 +347,7 @@ implements Configurable, CacheableProcessingComponent {
             // Check if the namespace is there (replace " by ' to be sure of what we search in)
             boolean needsIt = (text.replace('"', '\'').indexOf(check) == -1);
 
-            String msg = needsIt ? " needs namespace attributes (will be slower)." :
-                " handles correctly namespaces.";
+            String msg = needsIt ? " needs namespace attributes (will be slower)." : " handles correctly namespaces.";
 
             getLogger().debug("Trax handler " + handler.getClass().getName() + msg);
 
@@ -406,8 +400,7 @@ implements Configurable, CacheableProcessingComponent {
          * Track mappings to be able to add <code>xmlns:</code> attributes
          * in <code>startElement()</code>.
          */
-        public void startPrefixMapping(String prefix, String uri)
-          throws SAXException {
+        public void startPrefixMapping(String prefix, String uri) throws SAXException {
             // Store the mappings to reconstitute xmlns:attributes
             // except prefixes starting with "xml": these are reserved
             // VG: (uri != null) fixes NPE in startElement
@@ -418,7 +411,7 @@ implements Configurable, CacheableProcessingComponent {
 
                 // append the prefix colon now, in order to save concatenations later, but
                 // only for non-empty prefixes.
-                if(prefix.length() > 0) {
+                if (prefix.length() > 0) {
                     this.uriToPrefixMap.put(uri, prefix + ":");
                 } else {
                     this.uriToPrefixMap.put(uri, prefix);
@@ -436,12 +429,12 @@ implements Configurable, CacheableProcessingComponent {
          * ignores <code>start/endPrefixMapping()</code>.
          */
         public void startElement(String eltUri, String eltLocalName, String eltQName, Attributes attrs)
-          throws SAXException {
+                throws SAXException {
 
             // try to restore the qName. The map already contains the colon
-            if (null != eltUri && eltUri.length() != 0 && this.uriToPrefixMap.containsKey(eltUri))
-              eltQName = (String) this.uriToPrefixMap.get(eltUri) + eltLocalName;
-
+            if (null != eltUri && eltUri.length() != 0 && this.uriToPrefixMap.containsKey(eltUri)) {
+                eltQName = (String) this.uriToPrefixMap.get(eltUri) + eltLocalName;
+            }
             if (this.hasMappings) {
                 // Add xmlns* attributes where needed
 
@@ -451,11 +444,11 @@ implements Configurable, CacheableProcessingComponent {
                 int mappingCount = this.prefixList.size();
                 int attrCount = attrs.getLength();
 
-                for(int mapping = 0; mapping < mappingCount; mapping++) {
+                for (int mapping = 0; mapping < mappingCount; mapping++) {
 
                     // Build infos for this namespace
-                    String uri = (String)this.uriList.get(mapping);
-                    String prefix = (String)this.prefixList.get(mapping);
+                    String uri = (String) this.uriList.get(mapping);
+                    String prefix = (String) this.prefixList.get(mapping);
                     String qName = prefix.equals("") ? "xmlns" : ("xmlns:" + prefix);
 
                     // Search for the corresponding xmlns* attribute
@@ -463,8 +456,9 @@ implements Configurable, CacheableProcessingComponent {
                     for (int attr = 0; attr < attrCount; attr++) {
                         if (qName.equals(attrs.getQName(attr))) {
                             // Check if mapping and attribute URI match
-                            if (! uri.equals(attrs.getValue(attr))) {
-                                getLogger().error("URI in prefix mapping and attribute do not match : '" + uri + "' - '" + attrs.getURI(attr) + "'");
+                            if (!uri.equals(attrs.getValue(attr))) {
+                                getLogger().error("URI in prefix mapping and attribute do not match : '"
+                                                  + uri + "' - '" + attrs.getURI(attr) + "'");
                                 throw new SAXException("URI in prefix mapping and attribute do not match");
                             }
                             found = true;
@@ -477,10 +471,11 @@ implements Configurable, CacheableProcessingComponent {
                         if (newAttrs == null) {
                             // Need to test if attrs is empty or we go into an infinite loop...
                             // Well know SAX bug which I spent 3 hours to remind of :-(
-                            if (attrCount == 0)
+                            if (attrCount == 0) {
                                 newAttrs = new AttributesImpl();
-                            else
+                            } else {
                                 newAttrs = new AttributesImpl(attrs);
+                            }
                         }
 
                         if (prefix.equals("")) {
@@ -496,8 +491,7 @@ implements Configurable, CacheableProcessingComponent {
 
                 // Start element with new attributes, if any
                 super.startElement(eltUri, eltLocalName, eltQName, newAttrs == null ? attrs : newAttrs);
-            }
-            else {
+            } else {
                 // Normal job
                 super.startElement(eltUri, eltLocalName, eltQName, attrs);
             }
@@ -508,12 +502,11 @@ implements Configurable, CacheableProcessingComponent {
          * Receive notification of the end of an element.
          * Try to restore the element qName.
          */
-        public void endElement(String eltUri, String eltLocalName, String eltQName)
-          throws SAXException {
+        public void endElement(String eltUri, String eltLocalName, String eltQName) throws SAXException {
             // try to restore the qName. The map already contains the colon
-            if(null != eltUri && eltUri.length() != 0 && this.uriToPrefixMap.containsKey(eltUri) )
-              eltQName = (String) this.uriToPrefixMap.get(eltUri) + eltLocalName;
-
+            if (null != eltUri && eltUri.length() != 0 && this.uriToPrefixMap.containsKey(eltUri)) {
+                eltQName = (String) this.uriToPrefixMap.get(eltUri) + eltLocalName;
+            }
             super.endElement(eltUri, eltLocalName, eltQName);
         }
 
@@ -521,14 +514,13 @@ implements Configurable, CacheableProcessingComponent {
          * End the scope of a prefix-URI mapping:
          * remove entry from mapping tables.
          */
-        public void endPrefixMapping(String prefix)
-          throws SAXException {
+        public void endPrefixMapping(String prefix) throws SAXException {
             // remove mappings for xalan-bug-workaround.
             // Unfortunately, we're not passed the uri, but the prefix here,
             // so we need to maintain maps in both directions.
-            if(this.prefixToUriMap.containsKey(prefix)) {
-              this.uriToPrefixMap.remove((String) this.prefixToUriMap.get(prefix));
-              this.prefixToUriMap.remove(prefix);
+            if (this.prefixToUriMap.containsKey(prefix)) {
+                this.uriToPrefixMap.remove(this.prefixToUriMap.get(prefix));
+                this.prefixToUriMap.remove(prefix);
             }
 
             if (hasMappings) {
@@ -559,8 +551,7 @@ implements Configurable, CacheableProcessingComponent {
             super.endDocument();
         }
 
-        private void clearMappings()
-        {
+        private void clearMappings() {
             this.hasMappings = false;
             this.prefixList.clear();
             this.uriList.clear();
@@ -578,7 +569,7 @@ implements Configurable, CacheableProcessingComponent {
         //           this.output.flush();
         //       } catch (IOException ignored) {
         //       }
-        //   }        
+        //   }
     }
 
 }
