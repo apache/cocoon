@@ -11,6 +11,7 @@ package org.apache.cocoon;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Enumeration;
@@ -49,7 +50,7 @@ import org.apache.cocoon.components.url.URLFactory;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.69 $ $Date: 2001-04-10 17:09:03 $
+ * @version CVS $Revision: 1.4.2.70 $ $Date: 2001-04-11 15:51:38 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Disposable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -137,7 +138,8 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
             p = (Parser)this.componentManager.lookup(Roles.PARSER);
             SAXConfigurationHandler b = new SAXConfigurationHandler();
             ClassLoader cl = (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER);
-            InputSource is = new InputSource(cl.getResourceAsStream("/org/apache/cocoon/cocoon.roles"));
+            InputStream inputStream = ClassUtils.getResource("org/apache/cocoon/cocoon.roles").openStream();
+            InputSource is = new InputSource(inputStream);
             p.setContentHandler(b);
             is.setSystemId(this.configurationFile.toExternalForm());
             p.parse(is);
