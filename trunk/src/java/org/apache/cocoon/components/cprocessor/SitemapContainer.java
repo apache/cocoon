@@ -70,10 +70,10 @@ import org.apache.cocoon.components.cprocessor.sitemap.impl.TransformerNode;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.matching.Matcher;
 import org.apache.cocoon.selection.Selector;
-import org.apache.cocoon.sitemap.NotifyingGenerator;
 import org.apache.cocoon.sitemap.ContentAggregator;
-import org.apache.cocoon.sitemap.LinkTranslator;
 import org.apache.cocoon.sitemap.LinkGatherer;
+import org.apache.cocoon.sitemap.LinkTranslator;
+import org.apache.cocoon.sitemap.NotifyingGenerator;
 
 /**
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
