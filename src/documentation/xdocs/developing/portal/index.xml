@@ -7,13 +7,19 @@
     <notice>This document is under development.</notice> 
     <abstract>
     	This document describes the use and configuration 
-    	of the cocoon portal
+    	of the (new) cocoon portal block.
     </abstract> 
   </header> 
   <body> 
 
 	<section>
 		<title>Introducing the Cocoon Portal</title>
+        <p>
+    	This document describes the use and configuration 
+    	of the (new) cocoon portal that you can find in the "portal" block.
+    	(Don't mix this with the older portal version that you can
+    	find in the "portal-fw" block.)
+        </p>
 		<section>
 			<title>Important parts of the Cocoon Portal</title>
 		</section>
@@ -387,13 +393,11 @@
    </xsl:if>
   </td>
  </tr>
- <xsl:if test="status!=0">
   <tr>
    <td colSpan="2">
     <xsl:apply-templates select="content"/>
    </td>
   </tr>
- </xsl:if>
 </table>
 </xsl:template>
 ...]]></source>
@@ -401,7 +405,7 @@
   </section>
 
 	<section>
-		<title>Furter topics</title>
+		<title>Further topics</title>
 	</section>
 
   </body> 
