@@ -316,7 +316,7 @@ PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
  <section>
   <para>This sample application demonstrates the use of catalogs for
    entity resolution. &note; see the Apache Cocoon documentation
-   <link href="/cocoon/documents/catalog.html">Entity resolution with
+   <link href="/cocoon/docs/catalog.html">Entity resolution with
    catalogs</link> for the full background and explanation, and the XML
    source of this document (test.xml).
   </para>
@@ -534,14 +534,14 @@ PUBLIC "-//OASIS//DTD Simplified DocBook XML V4.1.2.5//EN"
   <p>
    The XML Commons Apache project has <code>org.apache.xml.resolver</code>
    which provides a <strong>CatalogResolver</strong>. This is incorporated
-   into Cocoon via <code>org.apache.cocoon.components.resolver</code> 
+   into Cocoon via <code>org.apache.excalibur.xml.EntityResolver</code> 
   </p>
 
   <p>
    <link href="#default">Default configuration</link> is achieved via
-   <code>org.apache.cocoon.components.resolver.ResolverImpl.java</code> 
+   <code>org.apache.cocoon.components.resolver.DefaultResolver.java</code> 
    which initialises the catalog resolver and loads a default system catalog.
-   The <code>ResolverImpl.java</code> enables <link href="#config">local
+   The <code>DefaultResolver.java</code> enables <link href="#config">local
    configuration</link> by applying properties from the
    <code>CatalogManager.properties</code> file and then further configuration
    from <code>cocoon.xconf</code> parameters.
