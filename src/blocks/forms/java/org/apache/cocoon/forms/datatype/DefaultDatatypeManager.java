@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * Currently the list of datatype and validationrule builders is hardcoded, but this will
  * become externally configurable in the future.
  * 
- * @version $Id: DefaultDatatypeManager.java,v 1.2 2004/04/15 18:09:03 bruno Exp $
+ * @version $Id: DefaultDatatypeManager.java,v 1.3 2004/04/21 13:20:27 bruno Exp $
  *
  */
 public class DefaultDatatypeManager extends AbstractLogEnabled implements DatatypeManager, ThreadSafe, Serviceable,
@@ -67,11 +67,13 @@ public class DefaultDatatypeManager extends AbstractLogEnabled implements Dataty
 
     public void initialize() throws Exception {
         typeBuilderSelector = new SimpleServiceSelector("datatype", DatatypeBuilder.class);
+        typeBuilderSelector.enableLogging(getLogger());
         typeBuilderSelector.contextualize(context);
         typeBuilderSelector.service(serviceManager);
         typeBuilderSelector.configure(configuration.getChild("datatypes"));
 
         validationRuleBuilderSelector = new SimpleServiceSelector("validation-rule", ValidationRuleBuilder.class);
+        validationRuleBuilderSelector.enableLogging(getLogger());
         validationRuleBuilderSelector.contextualize(context);
         validationRuleBuilderSelector.service(serviceManager);
         validationRuleBuilderSelector.configure(configuration.getChild("validation-rules"));

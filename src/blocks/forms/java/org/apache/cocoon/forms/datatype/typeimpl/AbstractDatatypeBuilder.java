@@ -24,6 +24,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.datatype.DatatypeBuilder;
 import org.apache.cocoon.forms.datatype.DatatypeManager;
@@ -37,9 +38,9 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for datatype builders, most concrete datatype builders
  * will derive from this class.
- * @version $Id: AbstractDatatypeBuilder.java,v 1.3 2004/04/15 18:09:03 bruno Exp $
+ * @version $Id: AbstractDatatypeBuilder.java,v 1.4 2004/04/21 13:20:27 bruno Exp $
  */
-public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Serviceable, Configurable, Contextualizable {
+public abstract class AbstractDatatypeBuilder extends AbstractLogEnabled implements DatatypeBuilder, Serviceable, Configurable, Contextualizable {
     protected ServiceManager serviceManager;
     private SimpleServiceSelector convertorBuilders;
     private String defaultConvertorHint;
@@ -57,6 +58,7 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Servic
     public void configure(Configuration configuration) throws ConfigurationException {
         convertorBuilders = new SimpleServiceSelector("convertor", ConvertorBuilder.class);
         try {
+            convertorBuilders.enableLogging(getLogger());
             convertorBuilders.contextualize(context);
             convertorBuilders.service(serviceManager);
         } catch (Exception e) {
