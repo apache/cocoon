@@ -46,7 +46,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:context&gt;
  * </code></pre>
  *
- * @version CVS $Id: CustomJXPathBindingBuilder.java,v 1.1 2004/04/01 22:49:56 mpo Exp $
+ * @version CVS $Id: CustomJXPathBindingBuilder.java,v 1.2 2004/04/05 11:38:54 mpo Exp $
  */
 public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
     private static final Class[] DOMELEMENT_METHODARGS;
@@ -88,12 +88,16 @@ public class CustomJXPathBindingBuilder extends JXPathBindingBuilderBase {
                 
                 Class builderClass = Class.forName(builderClassName);
                 Method factoryMethod = null; 
-                Object[] args;
-                if (configNode != null) {                    
+                Object[] args = null;
+                try {
                     factoryMethod = builderClass.getMethod(factoryMethodName, DOMELEMENT_METHODARGS);
                     args = new Object[1];
-                    args[1] = configNode;
-                } else {
+                    args[0] = configNode; 
+                } catch (NoSuchMethodException e) {
+                    factoryMethod = null;
+                }
+                
+                if (factoryMethod == null) {
                     factoryMethod = builderClass.getMethod(factoryMethodName, EMPTY_METHODARGS);
                     args = null;
                 }
