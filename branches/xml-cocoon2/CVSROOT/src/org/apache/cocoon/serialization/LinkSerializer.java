@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.IOException;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -21,7 +21,7 @@ import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-01 00:18:45 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-15 20:30:08 $
  */
 
 public class LinkSerializer extends ExtendedXLinkPipe implements Serializer {
@@ -40,7 +40,7 @@ public class LinkSerializer extends ExtendedXLinkPipe implements Serializer {
      * Get the mime-type of the output of this <code>Component</code>.
      */
     public String getMimeType() {
-        return Cocoon.LINK_CONTENT_TYPE;
+        return Constants.LINK_CONTENT_TYPE;
     }
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr)

@@ -32,12 +32,14 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-02-07 12:15:08 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-02-15 20:29:10 $
  */
-public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
+public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe, Composer {
 
   /** The class loader */
   private ClassLoaderManager classLoaderManager;
+
+  //private ComponentManager manager;
 
   /**
    * Return the language name
@@ -90,13 +92,11 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
    * @param manager The global component manager
    */
   public void compose(ComponentManager manager) {
-    super.compose(manager);
-
     if (this.classLoaderManager == null) {
       try {
           log.debug("Looking up " + Roles.CLASS_LOADER);
           this.classLoaderManager =
-            (ClassLoaderManager) this.manager.lookup(Roles.CLASS_LOADER);
+            (ClassLoaderManager) manager.lookup(Roles.CLASS_LOADER);
       } catch (Exception e) {
           log.error("Could not find component", e);
       }
@@ -161,13 +161,13 @@ public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadS
 
       String systemClasspath = System.getProperty("java.class.path");
       String systemExtDirs = System.getProperty("java.ext.dirs");
-	  String systemExtClasspath = null;
-	  
-	  try {
-		systemExtClasspath = expandDirs(systemExtDirs);
-	  } catch (Exception e) {
-		log.warn("Could not expand Directory:" + systemExtDirs, e);
-	  }
+      String systemExtClasspath = null;
+
+      try {
+        systemExtClasspath = expandDirs(systemExtDirs);
+      } catch (Exception e) {
+        log.warn("Could not expand Directory:" + systemExtDirs, e);
+      }
 
       compiler.setClasspath(
         baseDirectory.getCanonicalPath() +

@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-12 13:30:45 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-15 20:29:50 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -64,8 +64,8 @@ public class ResourceReader extends AbstractReader implements Composer {
      * Generates the requested resource.
      */
     public void generate() throws IOException, ProcessingException {
-        HttpServletRequest req = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
-        HttpServletResponse res = (HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);
+        HttpServletRequest req = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
+        HttpServletResponse res = (HttpServletResponse) objectModel.get(Constants.RESPONSE_OBJECT);
         URLFactory urlFactory = null;
 
         try {

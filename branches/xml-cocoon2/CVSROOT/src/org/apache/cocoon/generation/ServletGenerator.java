@@ -19,7 +19,7 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Poolable;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 
 import org.xml.sax.EntityResolver;
@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-11 19:13:19 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-15 20:29:42 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer, Poolable {
@@ -37,11 +37,11 @@ implements Composer, Poolable {
     protected HttpServletResponse response=null;
     protected ServletContext context=null;
 
-    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) 
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
       super.setup(resolver, objectModel, src, par);
-      this.request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
-      this.response = (HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);
-      this.context = (ServletContext) objectModel.get(Cocoon.CONTEXT_OBJECT);
+      this.request = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
+      this.response = (HttpServletResponse) objectModel.get(Constants.RESPONSE_OBJECT);
+      this.context = (ServletContext) objectModel.get(Constants.CONTEXT_OBJECT);
     }
 }

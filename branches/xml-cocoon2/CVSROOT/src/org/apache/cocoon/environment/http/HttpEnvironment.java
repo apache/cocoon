@@ -19,9 +19,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.ComponentManager;
-
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
 import org.xml.sax.InputSource;
@@ -51,16 +49,16 @@ public class HttpEnvironment extends AbstractEnvironment {
                             HttpServletResponse response,
                             ServletContext servletContext)
     throws MalformedURLException, IOException {
-        super(uri, request.getParameter(Cocoon.VIEW_PARAM), servletContext.getRealPath("/"), request.getParameter(Cocoon.ACTION_PARAM));
+        super(uri, request.getParameter(Constants.VIEW_PARAM), servletContext.getRealPath("/"), request.getParameter(Constants.ACTION_PARAM));
         this.request = new HttpRequest (request, this);
         this.servletRequest = request;
         this.response = new HttpResponse (response);
         this.servletResponse = response;
         this.servletContext = servletContext;
         this.outputStream = response.getOutputStream();
-        this.objectModel.put(Cocoon.REQUEST_OBJECT, this.request);
-        this.objectModel.put(Cocoon.RESPONSE_OBJECT, this.response);
-        this.objectModel.put(Cocoon.CONTEXT_OBJECT, this.servletContext);
+        this.objectModel.put(Constants.REQUEST_OBJECT, this.request);
+        this.objectModel.put(Constants.RESPONSE_OBJECT, this.response);
+        this.objectModel.put(Constants.CONTEXT_OBJECT, this.servletContext);
     }
 
     /**

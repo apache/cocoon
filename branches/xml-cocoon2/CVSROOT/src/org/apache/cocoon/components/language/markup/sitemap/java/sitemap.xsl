@@ -76,7 +76,7 @@
     import org.apache.regexp.RE;
     import org.apache.regexp.REProgram;
 
-    import org.apache.cocoon.Cocoon;
+    import org.apache.cocoon.Constants;
     import org.apache.cocoon.ProcessingException;
     import org.apache.cocoon.ResourceNotFoundException;
     import org.apache.cocoon.acting.Action;
@@ -95,7 +95,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.76 2001-02-15 00:58:59 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.77 2001-02-15 20:34:39 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -994,7 +994,7 @@
           }
         </xsl:for-each>
         // performing link translation
-        if (environment.getObjectModel().containsKey(Cocoon.LINK_OBJECT)) {
+        if (environment.getObjectModel().containsKey(Constants.LINK_OBJECT)) {
             pipeline.addTransformer ("!transformer:link-translator!", null, emptyParam);
         }
       </xsl:if>

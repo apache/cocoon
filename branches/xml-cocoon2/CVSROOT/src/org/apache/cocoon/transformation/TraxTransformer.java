@@ -30,7 +30,7 @@ import org.apache.avalon.Recyclable;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Loggable;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
@@ -58,7 +58,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-15 13:26:06 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-15 20:30:38 $
  */
 public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Recyclable, Configurable {
@@ -161,7 +161,7 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
     throws SAXException, ProcessingException, IOException {
 
         /** The Request object */
-        HttpServletRequest request = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
+        HttpServletRequest request = (HttpServletRequest) objectModel.get(Constants.REQUEST_OBJECT);
 
         // Check the stylesheet uri
         String xsluri = src;
@@ -270,14 +270,14 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
 
     public void recycle()
     {
-        //FIXME: Patch for Xalan2J, to stop transform threads if 
-        //       there is a failure in the pipeline. 
+        //FIXME: Patch for Xalan2J, to stop transform threads if
+        //       there is a failure in the pipeline.
         try {
-            Class clazz = 
+            Class clazz =
                 Class.forName("org.apache.xalan.stree.SourceTreeHandler");
-            Class  paramTypes[] = 
+            Class  paramTypes[] =
                     new Class[]{ Exception.class };
-            Object params[] = 
+            Object params[] =
                     new Object[] { new SAXException("Dummy Exception") };
             if(clazz.isInstance(transformerHandler)) {
                 Method method = clazz.getMethod("setExceptionThrown",paramTypes);
@@ -287,6 +287,6 @@ implements Transformer, Composer, Poolable, Recyclable, Configurable {
             log.debug("Exception in recycle:", e);
         }
         this.transformerHandler = null;
-        super.recycle();    
+        super.recycle();
     }
 }

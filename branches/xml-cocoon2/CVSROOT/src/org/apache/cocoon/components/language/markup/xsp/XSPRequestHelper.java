@@ -16,21 +16,21 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.SAXException;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 
 /**
  * The <code>HttpServletRequest</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-12-14 13:36:49 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-15 20:28:53 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
    * Assign values to the object's namespace uri and prefix
    */
   static {
-    URI = Cocoon.XSP_REQUEST_URI;
-    PREFIX = Cocoon.XSP_REQUEST_PREFIX;
+    URI = Constants.XSP_REQUEST_URI;
+    PREFIX = Constants.XSP_REQUEST_PREFIX;
   }
 
   /**
@@ -231,23 +231,23 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @param defaultValue Value to substitute in absence of a parameter value
    */
   public static String getSessionAttribute(
-	HttpServletRequest request, 
-	String name, 
-	String defaultValue) {
- 
-	HttpSession session = request.getSession(false);
-	String value = null;
+    HttpServletRequest request,
+    String name,
+    String defaultValue) {
 
-	if (session != null) {
-		value = (String) session.getAttribute(name);
-	}
+    HttpSession session = request.getSession(false);
+    String value = null;
 
-	if (value == null) {
-		value = defaultValue;
-	}
+    if (session != null) {
+        value = (String) session.getAttribute(name);
+    }
 
-	return value;
-  }  
+    if (value == null) {
+        value = defaultValue;
+    }
+
+    return value;
+  }
 
   /**
    * Output the given session attribute value or a user-provided default if
@@ -260,21 +260,21 @@ public class XSPRequestHelper extends XSPObjectHelper {
    * @exception SAXException If a SAX error occurs
    */
   public static void getSessionAttribute(
-	HttpServletRequest request,
-	ContentHandler contentHandler,
-	String name,
-	String defaultValue
+    HttpServletRequest request,
+    ContentHandler contentHandler,
+    String name,
+    String defaultValue
   )
-	throws SAXException
+    throws SAXException
   {
-	AttributesImpl attr = new AttributesImpl();
-	addAttribute(attr, "name", name);
+    AttributesImpl attr = new AttributesImpl();
+    addAttribute(attr, "name", name);
 
-	elementData(
-	  contentHandler,
-	  "attribute",
-	  getSessionAttribute(request, name, defaultValue),
-	  attr
-	);
-  }   
+    elementData(
+      contentHandler,
+      "attribute",
+      getSessionAttribute(request, name, defaultValue),
+      attr
+    );
+  }
 }

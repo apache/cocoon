@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.selection.helpers;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 
 import java.util.Map;
 
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpSession;
  * variables for developer ease.
  *
  * @author <a href="mailto:Marcus.Crafter@osa.de">Marcus Crafter</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-12-04 12:07:00 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-15 20:29:58 $
  */
 public abstract class CodedSelectorHelper
 {
@@ -35,11 +35,11 @@ public abstract class CodedSelectorHelper
     protected void initialize(Map objectModel)
     {
         context = (ServletContext)
-                  objectModel.get(Cocoon.CONTEXT_OBJECT);
+                  objectModel.get(Constants.CONTEXT_OBJECT);
         request = (HttpServletRequest)
-                  objectModel.get(Cocoon.REQUEST_OBJECT);
+                  objectModel.get(Constants.REQUEST_OBJECT);
         response = (HttpServletResponse)
-                   objectModel.get(Cocoon.RESPONSE_OBJECT);
+                   objectModel.get(Constants.RESPONSE_OBJECT);
         session = request.getSession();
     }
 

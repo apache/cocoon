@@ -16,7 +16,7 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.SAXException;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 
 import org.apache.log.LogKit;
 
@@ -24,15 +24,15 @@ import org.apache.log.LogKit;
  * The XSP <code>HttpResponse</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-18 16:55:14 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-02-15 20:28:57 $
  */
 public class XSPResponseHelper extends XSPObjectHelper {
   /**
    * Assign values to the object's namespace uri and prefix
    */
   static {
-    URI = Cocoon.XSP_RESPONSE_URI;
-    PREFIX = Cocoon.XSP_RESPONSE_PREFIX;
+    URI = Constants.XSP_RESPONSE_URI;
+    PREFIX = Constants.XSP_RESPONSE_PREFIX;
   }
 
   /**

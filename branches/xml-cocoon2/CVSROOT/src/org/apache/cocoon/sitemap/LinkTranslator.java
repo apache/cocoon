@@ -22,7 +22,7 @@ import org.xml.sax.EntityResolver;
 
 import org.apache.avalon.Parameters;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 import org.apache.cocoon.transformation.Transformer;
@@ -30,7 +30,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-19 14:44:19 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-15 20:30:28 $
  */
 
 public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {
@@ -43,7 +43,7 @@ public class LinkTranslator extends ExtendedXLinkPipe implements Transformer {
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
     throws ProcessingException, SAXException, IOException {
-        this.links = (Map) objectModel.get(Cocoon.LINK_OBJECT);
+        this.links = (Map) objectModel.get(Constants.LINK_OBJECT);
     }
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri, String name, String raw, Attributes attr)

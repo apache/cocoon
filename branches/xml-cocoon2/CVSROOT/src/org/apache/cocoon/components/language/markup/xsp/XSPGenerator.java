@@ -7,7 +7,6 @@
  *****************************************************************************/
 package org.apache.cocoon.components.language.markup.xsp;
 
-import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Roles;
 import org.apache.avalon.ComponentManager;
 import org.apache.cocoon.components.parser.Parser;
@@ -21,7 +20,7 @@ import org.apache.cocoon.generation.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-22 21:56:35 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-15 20:34:48 $
  */
 public abstract class XSPGenerator extends AbstractServerPage implements Loggable {
 

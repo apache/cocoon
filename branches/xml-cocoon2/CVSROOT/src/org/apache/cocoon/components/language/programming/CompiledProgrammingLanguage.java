@@ -12,9 +12,9 @@ package org.apache.cocoon.components.language.programming;
 import java.io.File;
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Composer;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.cocoon.Cocoon;
+import org.apache.avalon.Context;
+import org.apache.avalon.Contextualizable;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.components.language.LanguageException;
@@ -23,14 +23,11 @@ import org.apache.cocoon.components.language.LanguageException;
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-20 13:49:24 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-15 20:29:04 $
  */
-public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Composer {
+public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Contextualizable {
     /** The compiler */
     protected Class compilerClass;
-
-    /** The component manager */
-    protected ComponentManager manager;
 
     /** The local classpath */
     protected String classpath;
@@ -57,14 +54,8 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
      * Set the global component manager
      * @param manager The global component manager
      */
-    public void compose(ComponentManager manager) {
-        this.manager = manager;
-        try {
-            log.debug("Looking up " + Roles.COCOON);
-            this.classpath = ((Cocoon)this.manager.lookup(Roles.COCOON)).getClasspath();
-        } catch (Exception e) {
-            log.error("Could not find component", e);
-        }
+    public void contextualize(Context context) {
+        this.classpath = (String) context.get(Constants.CONTEXT_CLASSPATH);
     }
 
     /**

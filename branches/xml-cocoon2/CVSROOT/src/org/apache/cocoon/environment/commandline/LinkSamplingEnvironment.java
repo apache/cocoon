@@ -26,7 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.net.MalformedURLException;
 
 import org.apache.cocoon.Main;
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
 
@@ -34,7 +34,7 @@ import org.apache.cocoon.environment.AbstractEnvironment;
  * This environment is sample the links of the resource.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-15 00:59:03 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-02-15 20:29:25 $
  */
 
 public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
@@ -43,17 +43,17 @@ public class LinkSamplingEnvironment extends AbstractCommandLineEnvironment {
 
     public LinkSamplingEnvironment(String uri, File contextFile, Map attributes, Map parameters)
     throws MalformedURLException, IOException {
-        super(uri, Cocoon.LINK_VIEW, contextFile, new ByteArrayOutputStream());
+        super(uri, Constants.LINK_VIEW, contextFile, new ByteArrayOutputStream());
         getLogger().debug("LinkSamplingEnvironment: uri=" + uri);
-        this.objectModel.put(Cocoon.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
-        this.objectModel.put(Cocoon.RESPONSE_OBJECT, new CommandLineResponse());
+        this.objectModel.put(Constants.REQUEST_OBJECT, new CommandLineRequest(null, uri, null, attributes, parameters));
+        this.objectModel.put(Constants.RESPONSE_OBJECT, new CommandLineResponse());
     }
 
     /**
      * Set the ContentType
      */
     public void setContentType(String contentType) {
-        if (!Cocoon.LINK_CONTENT_TYPE.equals(contentType)) {
+        if (Constants.LINK_CONTENT_TYPE.equals(contentType) == false) {
             this.skip = true;
         }
     }

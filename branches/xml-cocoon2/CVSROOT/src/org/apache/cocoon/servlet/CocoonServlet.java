@@ -60,7 +60,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.56 $ $Date: 2001-02-14 18:20:14 $
+ * @version CVS $Revision: 1.1.4.57 $ $Date: 2001-02-15 20:30:17 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -283,7 +283,7 @@ public class CocoonServlet extends HttpServlet {
         // This is more scalable
         long start = new Date().getTime();
 
-        Cocoon cocoon = getCocoon(req.getPathInfo(), req.getParameter(Cocoon.RELOAD_PARAM));
+        Cocoon cocoon = getCocoon(req.getPathInfo(), req.getParameter(Constants.RELOAD_PARAM));
 
         // Check if cocoon was initialized
         if (this.cocoon == null) {
@@ -380,7 +380,7 @@ public class CocoonServlet extends HttpServlet {
         String timeString = processTime(end - start);
         log.info("'" + uri + "' " + timeString);
 
-        String showTime = req.getParameter(Cocoon.SHOWTIME_PARAM);
+        String showTime = req.getParameter(Constants.SHOWTIME_PARAM);
 
         if ((showTime != null) && !showTime.equalsIgnoreCase("no")) {
             boolean hide = showTime.equalsIgnoreCase("hide");
@@ -433,7 +433,7 @@ public class CocoonServlet extends HttpServlet {
     private String processTime(long time) throws IOException {
 
         StringBuffer out = new StringBuffer("Processed by ")
-                           .append(Cocoon.COMPLETE_NAME)
+                           .append(Constants.COMPLETE_NAME)
                            .append(" in ");
 
         if (time > hour) {

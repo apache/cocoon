@@ -12,15 +12,15 @@ package org.apache.cocoon;
  * Created this interface to specify the Avalon role names.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-12 13:30:42 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-15 20:28:31 $
  */
 
 public interface Roles {
 
-    String COCOON               = "org.apache.cocoon.Cocoon";
     String PARSER               = "org.apache.cocoon.components.parser.Parser";
     String PROCESSOR            = "org.apache.cocoon.Processor";
     String STORE                = "org.apache.cocoon.components.store.Store";
+    String REPOSITORY           = "org.apache.cocoon.components.store.Repository";
 
     String MARKUP_LANGUAGE      = "org.apache.cocoon.components.language.markup.MarkupLanguageSelector";
     String PROGRAMMING_LANGUAGE = "org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector";

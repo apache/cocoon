@@ -8,7 +8,7 @@
 
 package org.apache.cocoon.environment.commandline;
 
-import org.apache.cocoon.Cocoon;
+import org.apache.cocoon.Constants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-11 15:06:05 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-15 20:29:18 $
  */
 
 /*
@@ -141,7 +141,7 @@ public class CommandLineRequest implements HttpServletRequest {
     public String getContentType() { return null; }
     public String getProtocol()  { return "cli"; }
     public String getScheme() { return "cli"; }
-    public String getServerName() { return Cocoon.COMPLETE_NAME; }
+    public String getServerName() { return Constants.COMPLETE_NAME; }
     public int getServerPort() { return -1; }
     public String getRemoteAddr() { return "127.0.0.1"; }
     public String getRemoteHost() { return "localhost"; }
