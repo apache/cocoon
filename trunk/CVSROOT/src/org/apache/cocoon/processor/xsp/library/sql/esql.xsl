@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.71 2001-03-26 20:11:48 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.72 2001-03-26 20:14:02 balld Exp $-->
 <!--
 
  ============================================================================
@@ -815,6 +815,11 @@
       </xsp:logic>
     </xsl:otherwise>
   </xsl:choose>
+</xsl:template>
+
+<xspdoc:desc>returns the number of columns in the resultset.</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-column-count">
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnCount()</xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>returns the position of the current row in the result set</xspdoc:desc>
