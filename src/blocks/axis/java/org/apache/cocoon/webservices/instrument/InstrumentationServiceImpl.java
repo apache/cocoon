@@ -30,7 +30,7 @@ import org.apache.excalibur.instrument.manager.interfaces.InstrumentSampleDescri
  * allows you to access sample information from the InstrumentManager.
  *
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
- * @version CVS $Id: InstrumentationServiceImpl.java,v 1.3 2004/06/03 12:38:54 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public final class InstrumentationServiceImpl extends AbstractLogEnabled
     implements InstrumentationService {
@@ -39,9 +39,9 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
     private static final String[] EMPTY_STRING_ARRAY = {};
 
     // instrument manager reference
-	private DefaultInstrumentManager m_iManager;
+    private DefaultInstrumentManager m_iManager;
 
-	/**
+    /**
      * Sets the {@link InstrumentManager} for this service object.
      *
      * @param iManager an {@link InstrumentManager} instance
@@ -63,7 +63,7 @@ public final class InstrumentationServiceImpl extends AbstractLogEnabled
                 "InstrumentationService only supports DefaultInstrumentManager"
             );
         }
-	}
+    }
 
     /**
      * Obtain an array of samples from a specified sample name.
