@@ -204,6 +204,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="SW" type="update">
+     Mail block: the MailSender now gets its source resolver from the service manager.
+     This allows its use from flowscript where the old SourceResolver is not available.
+   </action>
    <action dev="VG" type="fix">
      AbstractSAXTransformer namespaceURI and defaultNamespaceURI must never
      be null. When extending AbstractSAXTransformer make sure to set
