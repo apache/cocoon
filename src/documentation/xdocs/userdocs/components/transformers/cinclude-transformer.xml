@@ -15,9 +15,9 @@
  <body>
   <s1 title="CInclude Transformer">
    <p>This transformer includes XML in the current stream and acts therefore
-      as a kind of (dynamic) content aggregation. Two forms, one verbose
-      and flexible approach, and a simple approach are supported by the
-      transformer. We will first discuss the simple approach and
+      as a kind of (dynamic) content aggregation. Two forms are supported by
+      the transformer: one verbose and flexible approach, and a simple approach.
+      We will first discuss the simple approach and
       the more flexible is mentioned in the next chapter. In addition
       the cinclude transformer provides a caching mechanism (for the
       simple include form).</p>
@@ -36,7 +36,7 @@
     <li>Cacheable: no.</li>
    </ul>
    <p>
-    A simple example might help to use the CIncludeTransfomer effectivly:
+    A simple example might help to use the CIncludeTransfomer effectively:
    </p>
    <p>
     Add the CIncludeTransformer to the components in your sitemap.xmap
@@ -66,7 +66,7 @@
    <p>
     In this example pipeline it assumed that simple-cinc.xml contains
     the include element. Beside defining the include element
-    it defines the namespache URI "http://apache.org/cocoon/include/1.0".
+    it defines the namespace URI "http://apache.org/cocoon/include/1.0".
     This helps the CIncludeTransformer to find the tag to get replaced by
     the xml content referenced via the src attribute.
     The simple-cinc.xml may look like this:
@@ -201,7 +201,7 @@
     element, so only parts are cached and others are not.
    </p>
    <p>
-    A simple example might help to use the caching effectivly:
+    A simple example might help to use the caching effectively:
    </p>
    <p>
      First define your pipeline to use the CIncludeTransformer with
@@ -223,7 +223,7 @@
    <p>
     In this example-pipeline it is assumed that simple-cinc.xml contains
     the <code>cached-include</code> element. Beside defining the element
-    it uses the namespache URI "http://apache.org/cocoon/include/1.0".
+    it uses the namespace URI "http://apache.org/cocoon/include/1.0".
     This helps the transformer to find the tag to get replaced by
     the xml content referenced via the src attribute.
     The simple-cinc.xml may look like this:
