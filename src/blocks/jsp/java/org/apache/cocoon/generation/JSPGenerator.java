@@ -15,26 +15,27 @@
  */
 package org.apache.cocoon.generation;
 
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.jsp.JSPEngine;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.http.HttpEnvironment;
-import org.apache.excalibur.xml.sax.SAXParser;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.jsp.JSPEngine;
+import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Allows Servlets and JSPs to be used as a generator.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPGenerator.java,v 1.3 2004/03/05 13:01:57 bdelacretaz Exp $
+ * @version CVS $Id: JSPGenerator.java,v 1.4 2004/04/24 01:57:19 joerg Exp $
  */
 public class JSPGenerator extends ServiceableGenerator {
 
@@ -52,35 +53,35 @@ public class JSPGenerator extends ServiceableGenerator {
 
         // ensure that we are running in a servlet environment
         if (servletResponse == null || servletRequest == null || servletContext == null) {
-            throw new ProcessingException("JSPReader can only be used from within a Servlet environment.");
+            throw new ProcessingException("JSPGenerator can only be used from within a Servlet environment.");
         }
 
         JSPEngine engine = null;
         SAXParser parser = null;
+        Source inputSource = null;
+        Source contextSource = null;
         try {
-            // TODO (KP): Should we exclude not supported protocols, say 'context'?
-            String url = super.source;
-            // absolute path is processed as is
-            if (!url.startsWith("/")) {
-                // get current request path
-                String servletPath = servletRequest.getServletPath();
-                // remove sitemap URI part
-                String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
-                if (sitemapURI != null) {
-                    servletPath = servletPath.substring(0, servletPath.indexOf(sitemapURI));
-                } else {
-                    // for example when using cocoon:/ pseudo protocol
-                    servletPath = servletPath.substring(0, servletPath.lastIndexOf("/") + 1);
-                }
-                url = servletPath + url;
+            inputSource = this.resolver.resolveURI(this.source);
+            contextSource = this.resolver.resolveURI("context:/");
+
+            String inputSourceURI = inputSource.getURI();
+            String contextSourceURI = contextSource.getURI();
+
+            if (!inputSourceURI.startsWith(contextSourceURI)) {
+                throw new ProcessingException("You must not reference a file "
+                        + "outside of the servlet context at " + contextSourceURI + ".");
             }
 
-            engine = (JSPEngine) super.manager.lookup(JSPEngine.ROLE);
+            String url = inputSourceURI.substring(contextSourceURI.length());
+            if (url.charAt(0) != '/') {
+                url = "/" + url;
+            }
 
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("JSPGenerator executing:" + url);
             }
 
+            engine = (JSPEngine) super.manager.lookup(JSPEngine.ROLE);
             byte[] bytes = engine.executeJSP(url, servletRequest, servletResponse, servletContext);
 
             InputSource input = new InputSource(new ByteArrayInputStream(bytes));
@@ -103,6 +104,8 @@ public class JSPGenerator extends ServiceableGenerator {
         } finally {
             super.manager.release(parser);
             super.manager.release(engine);
+            this.resolver.release(inputSource);
+            this.resolver.release(contextSource);
         }
     }
 }
