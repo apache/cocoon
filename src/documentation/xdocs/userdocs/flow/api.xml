@@ -143,6 +143,30 @@
      source resolver is used to resolve <code>uri</code>. 
     </p>
     </s3>
+    <s3 title="getComponent">
+    <p><em>Function</em> <code>Object getComponent([String] id)</code></p>
+    <p>
+      Access an Avalon component. 
+    </p>
+    </s3>
+    <s3 title="releaseComponent">
+    <p><em>Function</em> <code>releaseComponent([Object] component)</code></p>
+    <p>
+      Release a pooled Avalon component. 
+    </p>
+    </s3>
+    <s3 title="createObject">
+    <p><em>Function</em> <code>createObject([JavaClass] componentClass)</code></p>
+    <p>
+     Create and setup an object so that it can access the information provided to regular components. This is done by calling the various Avalon lifecycle interfaces implemented by the object.
+    </p>
+    </s3>
+    <s3 title="disposeObject">
+    <p><em>Function</em> <code>disposeObject([Object] object)</code></p>
+    <p>
+     Dispose an object that has been created using <code>createObject</code>.
+    </p>
+    </s3>
     </s2>
     <s2 title="Request Object"><anchor id="request"/>
      
