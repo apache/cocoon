@@ -43,28 +43,15 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-26 20:49:01 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-02-26 21:13:39 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();
 
     /**
      * Delete a record from the database.  This action assumes that
-     * the parameter names are the request parameter names and the parameter
-     * values are the database column names.  The two notable exceptions
-     * are:
-     *
-     * <ul>
-     *   <li>
-     *     If a parameter name starts with "key:", then it is treated
-     *     as a SQL table key--and the prefix "key:" is stripped from
-     *     the name.
-     *   </li>
-     *   <li>
-     *     If a parameter name is "table", then it is the Database table
-     *     we are modifying.
-     *   </li>
-     * </ul>
+     * the file referenced by the "form-descriptor" parameter conforms
+     * to the AbstractDatabaseAction specifications.
      */
     public final Map act(EntityResolver resolver, Map objectModel, String source, Parameters param) throws Exception {
         DataSourceComponent datasource = null;
