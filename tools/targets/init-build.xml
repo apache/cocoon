@@ -131,7 +131,6 @@
   </target>
 
   <target name="init-tasks" depends="init">
-
     <!-- Set classpath for building ant tasks -->
     <path id="tasks.classpath">
       <path refid="classpath"/>
@@ -148,9 +147,9 @@
            debug="off"
            optimize="on"
            deprecation="on"
+           source="1.3"
            target="1.3"
            nowarn="on"
-           compiler="${compiler}"
            classpathref="tasks.classpath"/>
 
     <!-- A task to patch xml files -->
@@ -174,9 +173,9 @@
            debug="off"
            optimize="on"
            deprecation="on"
+           source="1.3"
            target="1.3"
-           nowarn="on"
-           compiler="${compiler}"/>
+           nowarn="on"/>
 
     <!-- Ant-Contrib tasks -->
     <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
