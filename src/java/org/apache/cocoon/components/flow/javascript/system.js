@@ -1,5 +1,5 @@
 //
-// CVS $Id: system.js,v 1.3 2003/03/20 02:46:32 vgritsenko Exp $
+// CVS $Id: system.js,v 1.4 2003/03/25 14:25:18 stefano Exp $
 //
 // JavaScript definitions
 //
@@ -60,7 +60,7 @@ function handleContinuation(kont)
 // identified by 'id'
 function handleInvalidContinuation(id)
 {
-  sendPage("invalidContinuation.xml", {"ident" : id});
+  sendPage("invalidContinuation", {"ident" : id});
 }
 
 // Action Support
