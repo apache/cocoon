@@ -3,12 +3,13 @@
 
 <document>
  <header>
-  <title>Installing Cocoon2</title>
-  <authors>
-   <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
-   <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch"/>
-  <person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/> 
-	 </authors>
+   <title>Installing Cocoon2</title>
+   <authors>
+     <person name="Stefano Mazzocchi" email="stefano@apache.org"/>
+     <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch"/>
+     <person name="Tom Klaasen" email="tom.klaasen@the-ecorp.com"/> 
+     <person name="Chris Stevenson" email="zhcchz@mail.on.net"/> 
+   </authors>
  </header>
 
  <body>
@@ -18,55 +19,229 @@
    Cocoon requires the following systems to be already installed in your system:
   </p>
 
-  <ul>
-   <li><strong>Java Virtual Machine</strong>
+  <p><strong>Java Virtual Machine</strong>
     A Java 1.2 or later compatible virtual machine must be present for both
     command line and servlet type usage of Cocoon. Note that all servlet engines
     require a JVM to run so if you are already using servlets you already have
     one installed.
-   </li>
-   <li><strong>Servlet Engine</strong>
+   </p>
+   
+   <p><strong>Servlet Engine</strong>
     A Servlet 2.2 compliant servlet engine must be present in order to support
     servlet operation and dynamic request handling. Note that this requirement
     is optional for command line operation.
-   </li>
-  </ul>
+   </p>
+  
+  <p>If you don't have a servlet engine installed, well, stop right here and 
+  go to the Apache Tomcat project 
+  <link href="http://jakarta.apache.org/tomcat/">http://jakarta.apache.org/tomcat/</link> 
+  then come back when you are done.</p>
+
  </s1>
 
- <s1 title="Installing Cocoon2 on Apache Tomcat (standalone only)">
 
-  <p>Look into the INSTALL document for now (more docs in preparation)</p>
+    <s1 title="Getting Apache Cocoon 2">
+      <s2 title="Step-by-step installation instructions for Windows">
+        <ol> 
+          <li>Download
+            <link href="ftp://cvsgui.sourceforge.net/pub/cvsgui/WinCvs11b16.zip">WinCVS
+              (v1.16 beta)</link> (homepage is <link href="http://www.wincvs.org/">http://www.wincvs.org/</link>);</li> 
+          <li>Install it;</li> 
+          <li>Start it;</li> 
+          <li>Click on admin-&gt;preferences;</li> 
+          <li> In "Enter the CVSROOT:" enter
+            ":pserver:anoncvs@xml.apache.org:/home/cvspublic" (without quotes);</li> 
+          <li>In "Authentication:" choose ""passwd" file on the cvs server";</li> 
+          <li>Click "Ok";</li> 
+          <li>Click admin-&gt;login;</li> 
+          <li> When asked for the password: anwer "anoncvs" (without quotes);</li> 
+          <li> Click "create-&gt;checkout module";</li> 
+          <li>Module name and path on the server is "xml-cocoon" (no quotes);</li> 
+          <li>Choose a dir to put the source code in;</li> 
+          <li>Click tab "checkout options";</li> 
+          <li>Select option "by revision/tag/branch";</li> 
+          <li>In the text-box behind that: "xml-cocoon2" (without quotes) </li> 
+          <li>Click "Ok";</li> 
+          <li>If everything goes well, messages will start to appear in the log
+            window;</li> 
+          <li>Wait until you see "*****CVS exited normally with code 0*****" in the
+            log window;</li> 
+          <li>The Cocoon2 source is now on your HD.</li> 
+        </ol>
+      </s2>
+      <s2 title="Step-by-step instructions for Unix">
+        <ol>
+          <li>Start the shell of your choice.</li>
+          <li>Enter "cvs -d :pserver:anoncvs@xml.apache.org:/home/cvspublic login".</li>
+          <li>When asked for the password: anwer "anoncvs".</li>
+          <li>Enter "cvs -d :pserver:anoncvs@xml.apache.org:/home/cvspublic -z3 checkout xml-cocoon -r xml-cocoon2". This will create a directory called "xml-cocoon" where the Cocoon2 source will be stored.</li>
+          <li>Wait until cvs has finished.</li>
+          <li>The Cocoon2 source is now on your HD.</li> 
+        </ol>
+        <p>In case you want to update your Cocoon2 source tree to the
+          current version, change to the "xml-cocoon" directory and
+          call "cvs -z3 update -d -P".</p>
+      </s2>
+    </s1>
+
+ <s1 title="Building Cocoon2">
+
+    <s2 title="Set JAVA_HOME enviornment variable">
+    
+      <p>Set the JAVA_HOME enviornment variable to point to the root directory of
+      the Java Development Kit installed on your machine. To do this simply type:</p>
   
+      <source>
+[unix]  JAVA_HOME=/path/to/java/
+[win32] SET JAVA_HOME=c:\path\to\java
+      </source> 
+
+      <p>Your mileage may vary, but you know how to setup environments, right?</p>
+
+    </s2>
+ 
+    <s2 title="Create the Cocoon WAR package">
+      
+      <p>To do this you simply have to type:</p>
+  
+      <source>
+[unix]  ./build.sh  -Dinclude.webapp.libs=yes webapp
+[win32] .\build.bat -Dinclude.webapp.libs=yes webapp
+      </source>
+  
+      <p>this will create the "cocoon.war" file in the 
+      './build/cocoon' directory.</p>
+      
+    </s2>
+    
  </s1>
  
- <s1 title="Step-by-step installation instructions for Windows"> 
-		<ol> 
-		  <li>Download
-			 <link href="ftp://cvsgui.sourceforge.net/pub/cvsgui/WinCvs11b16.zip">WinCVS
-		(v1.16 beta)</link> (homepage is <link href="http://www.wincvs.org/">http://www.wincvs.org/</link>);</li> 
-		<li> Install it;</li> 
-		<li> Start it;</li> 
-		<li>Click on admin-&gt;preferences;</li> 
-		<li> In "Enter the CVSROOT:" enter
-		  ":pserver:anoncvs@xml.apache.org:/home/cvspublic" (without quotes);</li> 
-		<li>In "Authentication:" choose ""passwd" file on the cvs server";</li> 
-		<li>Click "Ok";</li> 
-		<li>Click admin-&gt;login;</li> 
-		<li> When asked for the password: anwer "anoncvs" (without quotes);</li> 
-		<li> Click "create-&gt;checkout module";</li> 
-		<li>Module name and path on the server is "xml-cocoon" (no quotes);</li> 
-		<li>Choose a dir to put the source code in;</li> 
-		<li>Click tab "checkout options";</li> 
-		<li>Select option "by revision/tag/branch";</li> 
-		<li>In the text-box behind that: "xml-cocoon2" (without quotes) </li> 
-		<li>Click "Ok";</li> 
-		<li>If everything goes well, messages will start to appear in the log
-		  window;</li> 
-		<li>Wait until you see "*****CVS exited normally with code 0*****" in the
-		  log window;</li> 
-		<li>The Cocoon2 source is now on your HD;</li> 
-		<li>Refer to the INSTALL file in the cocoon-dir to create and install the
-		  cocoon.war file.</li> 
-		</ol> 
-	 </s1></body>
+ <s1 title="Installing Cocoon2">
+  
+    <p>In most servlet engines, this is just a matter of copying 
+    the war file in a specific directory and the engine will take 
+    care of installing it when restarted.</p>
+  
+    <s2 title="Installing on Tomcat 3.X">
+      
+      <p>Tomcat currently uses a different version of the XML parser 
+      than Cocoon. To get Cocoon to work, you need to perform the 
+      following steps:</p>
+      
+      <ol> 
+        
+        <li>
+          <strong>Stop Tomcat</strong>
+          Go to the tomcat/bin directory, and run the shutdown script.
+        </li>
+        
+        <li>
+          <strong>Delete tomcat/lib/jaxp.jar</strong> 
+          Tomcat's jaxp.jar is 'sealed', and since xerces contains its 
+          own implementation of the JAXP standard extension, Java
+          will fail to load xerces and report a 'Package Sealing Violation' 
+          if both are in the classpath.
+        </li>
+        
+        <li>
+          <strong>Rename tomcat/lib/parser.jar to tomcat/lib/zparser.jar</strong> 
+          Tomcat's parser.jar contains older versions of some the same
+          XML APIS that Xerces uses, and these will prevent Xerces from 
+          functioning properly if they appear before Xerces in the classpath. 
+          Since Tomcat's startup scripts automatically load all the jar files 
+          in tomcat/lib in name order, changing the name of the file causes it
+          to be loaded last in the classpath.
+        </li>
+
+        <li>
+          <strong>Copy cocoon/lib/xerces-XXX.jar file to cocoon\lib</strong>
+          Cocoon will now be able to see and use the correct XML libraries.
+        </li>
+        
+        <li>
+          <strong>Copy cocoon/build/cocoon.war into tomcat/webapps</strong>
+        </li>
+
+        <li>
+          <strong>Start Tomcat</strong>
+          Go to the tomcat/bin directory, and run the startup script.
+        </li>
+        
+        <li>
+          <strong>Start using Cocoon</strong>
+          Access the URI 
+          <link href="http://localhost:8080/cocoon/">http://localhost:8080/cocoon/</link>
+          with your favorite browser and start to enjoy the world of Cocoon. 
+          Note that the first time you access Cocoon, it will take a few 
+          seconds to start, since Cocoon needs to compile parts of itself.
+        </li>
+        
+      </ol>
+
+    </s2>
+      
+    <s2 title="Installing on Tomcat 4.X">
+      
+      <p>Note that Tomcat-4.0 beta1 will not work with Cocoon2. You
+          must use Tomcat-4.0 beta3 or a nightly build from 
+        <link href="http://jakarta.apache.org/builds/jakarta-tomcat-4.0/nightly/">http://jakarta.apache.org/builds/jakarta-tomcat-4.0/nightly/</link>
+      </p>
+
+      <p>Recent builds of Tomcat 4 have largely solved the xml library problem
+      described above. However Tomcat 4.X is not currently released, and the 
+      flip side of easier installation is alpha code. It is not recommended
+      that you use Tomcat 4.X for production servers yet. 
+      (Having said that, I do :-)</p>
+      
+      
+      <p>Tomcat 4.0 does not expose the servlet.jar file to Cocoon by default, 
+      so <strong>before you build the cocoon webapp</strong> you will need to 
+      add the following to the cocoon servlet definition in the web.xml file:</p>
+
+      <source>
+  &lt;init-param&gt;
+    &lt;!-- change param value to path to Catalina's servlet.jar --&gt;
+    &lt;param-name&gt;extra-classpath&lt;/param-name&gt;
+    &lt;param-value&gt;path\to\tomcat\common\lib\servlet.jar&lt;/param-value&gt;
+  &lt;/init-param&gt;
+      </source>
+
+      <ol> 
+        
+        <li>
+          <strong>Modify cocoon/webapp/WEB-INF/web.xml</strong>
+          Add the code shown above to the cocoon web.xml file
+        </li>
+
+        <li>
+          <strong>Build the cocoon webapp</strong>
+          Build the webapp as described above. This will now include 
+          the corrected web.xml file.
+        </li>
+        
+        <li>
+          <strong>Copy cocoon/build/cocoon.war into tomcat/webapps</strong>
+        </li>
+
+        <li>
+          <strong>Start Tomcat</strong>
+          Go to the tomcat/bin directory, and run the startup script.
+        </li>
+        
+        <li>
+          <strong>Start using Cocoon</strong>
+          Access the URI 
+          <link href="http://localhost:8080/cocoon/">http://localhost:8080/cocoon/</link>
+          with your favorite browser and start to enjoy the world of Cocoon. 
+          Note that the first time you access Cocoon, it will take a few 
+          seconds to start, since Cocoon needs to compile parts of itself.
+        </li>
+        
+      </ol>
+
+    </s2>
+    
+ </s1>
+
+</body> 
 </document>
