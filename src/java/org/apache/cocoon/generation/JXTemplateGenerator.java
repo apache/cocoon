@@ -353,7 +353,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.26 2004/01/04 01:07:53 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.27 2004/01/04 06:39:11 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -749,32 +749,51 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     static class MyJexlContext 
         extends HashMap implements JexlContext {
+
+        private MyJexlContext closure;
+
+        MyJexlContext() {
+            this(null);
+        }
+
+        MyJexlContext(MyJexlContext closure) {
+            this.closure = closure;
+        }
+
         public Map getVars() {
             return this;
         }
+
         public void setVars(Map map) {
             putAll(map);
         }
-        public Object get(Object key) {
-            Object result = super.get(key);
-            if (result != null) {
-                return result;
+
+        public boolean containsKey(Object key) {
+            if (key.equals("this")) {
+                return true;
             }
-            MyJexlContext c = closure;
-            for (; c != null; c = c.closure) {
-                result = c.get(key);
-                if (result != null) {
-                    return result;
+            boolean result = super.containsKey(key);
+            if (!result) {
+                if (closure != null) {
+                    result = closure.containsKey(key);
                 }
             }
             return result;
         }
-        MyJexlContext closure;
-        MyJexlContext() {
+
+        public Object get(Object key) {
+            if (key.equals("this")) {
+                return this;
+            }
+            Object result = super.get(key);
+            if (result == null) {
+                if (closure != null) {
+                    result = closure.get(key);
+                }
+            }
+            return result;
         }
-        MyJexlContext(MyJexlContext closure) {
-            this.closure = closure;
-        }
+
     }
 
     static class MyVariables implements Variables {
@@ -1773,12 +1792,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     }
 
     static class StartSet extends StartInstruction {
-        StartSet(StartElement raw, String var, Expression value) {
+        StartSet(StartElement raw, Expression var, Expression value) {
             super(raw);
             this.var = var;
             this.value = value;
         }
-        final String var;
+        final Expression var;
         final Expression value;
     }
 
@@ -2584,13 +2603,20 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 } else if (localName.equals(SET)) {
                     String var = attrs.getValue("var");
                     String value = attrs.getValue("value");
+                    Expression varExpr = null;
                     Expression valueExpr = null;
+                    if (var != null) {
+                        varExpr = 
+                            compileExpr(var, "set: \"var\":",
+                                        locator);
+                    } 
                     if (value != null) {
                         valueExpr = 
                             compileExpr(value, "set: \"value\":",
                                         locator);
                     } 
-                    StartSet startSet = new StartSet(startElement, var, valueExpr);
+                    StartSet startSet = new StartSet(startElement, 
+                                                     varExpr, valueExpr);
                     newEvent = startSet;
                 } else if (localName.equals(IMPORT)) {
                     // <import uri="${root}/foo/bar.xml" context="${foo}"/>
@@ -2686,11 +2712,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
             public void endDocument() throws SAXException {
                 super.endDocument();
-                gen.execute(gen.getConsumer(),
-                            gen.getJexlContext(),
-                            gen.getJXPathContext(),
-                            null,
-                            getStartEvent(), null);
+                gen.performGeneration(gen.getConsumer(),
+                                      gen.getJexlContext(),
+                                      gen.getJXPathContext(),
+                                      null,
+                                      getStartEvent(), null);
             }
 
             void setConsumer(XMLConsumer consumer) {
@@ -2727,6 +2753,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
     private static Map cache = new HashMap();
     private Source inputSource;
     private Map definitions;
+    private Map cocoon;
 
     private JXPathContext getJXPathContext() {
         return jxpathContext;
@@ -2832,7 +2859,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         final Request request = ObjectModelHelper.getRequest(objectModel);
         final Object session = request.getSession(false);
         final Object app =  ObjectModelHelper.getContext(objectModel);
-        Map cocoon = new HashMap();
+        cocoon = new HashMap();
         cocoon.put("request", 
                    FOM_JavaScriptFlowHelper.getFOM_Request(objectModel));
         if (session != null) {
@@ -2905,6 +2932,18 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                 cache.put(cacheKey, startEvent);
             }
         }
+        performGeneration(this.xmlConsumer,
+                          globalJexlContext, jxpathContext, null,
+                          startEvent, null);
+    }
+    
+    void performGeneration(final XMLConsumer consumer,
+                           MyJexlContext jexlContext,
+                           JXPathContext jxpathContext,
+                           StartElement macroCall,
+                           Event startEvent, Event endEvent) 
+        throws SAXException {
+        cocoon.put("consumer", consumer);
         execute(this.xmlConsumer,
                 globalJexlContext, jxpathContext, null,
                 startEvent, null);
@@ -3407,16 +3446,22 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } else if (ev instanceof StartSet) {
                 StartSet startSet = (StartSet)ev;
                 Object value = null;
-                if (startSet.value != null) {
-                    try {
+                String var = null;
+                try {
+                    if (startSet.var != null) {
+                        var = getStringValue(startSet.var, jexlContext, 
+                                             jxpathContext);
+                    }
+                    if (startSet.value != null) {
                         value = getNode(startSet.value,
                                         jexlContext, jxpathContext);
-                    } catch (Exception exc) {
-                        throw new SAXParseException(exc.getMessage(),
-                                                    ev.location,
-                                                    exc);
                     }
-                } else {
+                } catch (Exception exc) {
+                    throw new SAXParseException(exc.getMessage(),
+                                                ev.location,
+                                                exc);
+                }
+                if (value == null) {
                     DOMBuilder builder = new DOMBuilder();
                     builder.startDocument();
                     builder.startElement(NS,
@@ -3440,9 +3485,10 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                     value = nodeArr;
                 }
-                jxpathContext.getVariables().declareVariable(startSet.var, 
-                                                             value);
-                jexlContext.put(startSet.var, value);
+                if (var != null) {
+                    jxpathContext.getVariables().declareVariable(var, value);
+                    jexlContext.put(var, value);
+                }
                 ev = startSet.endInstruction.next;
                 continue;
             } else if (ev instanceof StartElement) {
@@ -3520,35 +3566,11 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         }
                         attributeMap.put(attributeName, attributeValue);
                     }
-                    DOMBuilder builder = new DOMBuilder();
-                    builder.startDocument();
-                    builder.startElement(startElement.namespaceURI,
-                                         startElement.localName,
-                                         startElement.raw,
-                                         EMPTY_ATTRS);
-                    executeRaw(builder, 
-                               startElement.next, 
-                               startElement.endElement);
-                    builder.endElement(startElement.namespaceURI,
-                                       startElement.localName,
-                                       startElement.raw);
-                    builder.endDocument();
-                    Node node = builder.getDocument().getDocumentElement();
                     MyVariables parent = 
                         (MyVariables)jxpathContext.getVariables();
                     MyVariables vars = new MyVariables(parent);
                     MyJexlContext localJexlContext = 
-                        new MyJexlContext(globalJexlContext);
-                    // JXPath doesn't handle NodeList, so convert it to
-                    // an array
-                    NodeList children = node.getChildNodes();
-                    int len = children.getLength();
-                    Node[] arr = new Node[len];
-                    for (int ii = 0; ii < len; ii++) {
-                        arr[ii] = children.item(ii);
-                    }
-                    localJexlContext.put("content", arr);
-                    vars.declareVariable("content", arr);
+                        new MyJexlContext(jexlContext);
                     Iterator iter = def.parameters.entrySet().iterator();
                     while (iter.hasNext()) {
                         Map.Entry e = (Map.Entry)iter.next();
@@ -3564,7 +3586,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         vars.declareVariable(key, val);
                     }
                     JXPathContext localJXPathContext =
-                        jxpathContextFactory.newContext(null, arr);
+                        jxpathContextFactory.newContext(null, jxpathContext.getContextBean());
                     localJXPathContext.setVariables(vars);
                     call(ev.location,
                          startElement,
@@ -3856,7 +3878,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                         selectJXPath = 
                             jxpathContextFactory.newContext(null, obj);
                         selectJXPath.setVariables(variables);
-                        selectJexl = new MyJexlContext(globalJexlContext);
+                        selectJexl = new MyJexlContext(jexlContext);
                         fillContext(obj, selectJexl);
                     } catch (Exception exc) {
                         throw new SAXParseException(exc.getMessage(),
@@ -3868,8 +3890,14 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                                                     null);
                     }
                 }
-                execute(consumer, selectJexl, selectJXPath, macroCall,
-                        doc.next, doc.endDocument);
+                try {
+                    execute(consumer, selectJexl, selectJXPath, macroCall,
+                            doc.next, doc.endDocument);
+                } catch (Exception exc) {
+                        throw new SAXParseException("Exception occured in imported template " + uri + ": "+ exc.getMessage(),
+                                                    ev.location,
+                                                    exc);
+                }
                 ev = startImport.endInstruction.next;
                 continue;
             }
