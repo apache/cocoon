@@ -80,17 +80,20 @@
   </xsl:template>
 
   <xsl:template match="wi:styling/@list-type | wi:styling/@list-orientation |
-                       wi:styling/@listbox-size"
+                       wi:styling/@listbox-size | wi:styling/@format"
                 mode="styling">
     <!-- They are just markers for the stylesheet and don't go through to HTML. -->
   </xsl:template>
 
-  <xsl:template match="wi:styling/@type" priority="2">
+  <xsl:template match="wi:styling/@type" mode="styling">
     <!--+ Do we have a duplicate semantic usage of @type??
-        | @type is only a marker for the stylesheet in general, but for
-        | value 'password' we need to copy it.
+        | @type is only a marker for the stylesheet in general, but some of the
+        | types must/should be in the HTML output too.
         +-->
-    <xsl:if test=". = 'password'">
+    <xsl:variable name="validHTMLTypes"
+                  select="'text hidden textarea checkbox radio password'"/>
+    <xsl:if test="normalize-space(.) and
+                  contains(concat(' ', $validHTMLTypes, ' '), concat(' ', ., ' '))">
       <xsl:copy-of select="."/>      
     </xsl:if>
   </xsl:template>
