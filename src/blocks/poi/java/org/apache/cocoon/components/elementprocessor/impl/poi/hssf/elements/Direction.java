@@ -58,8 +58,8 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Direction codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: Direction.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class Direction
 {
     public static final int DIRECTION_UNKNOWN    = -1;

@@ -58,8 +58,8 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * Contraint codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: ConstraintType.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class ConstraintType
 {
     public static final int CONSTRAINT_TYPE_NONE         = 0;

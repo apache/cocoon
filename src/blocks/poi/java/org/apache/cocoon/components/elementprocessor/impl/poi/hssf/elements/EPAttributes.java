@@ -63,8 +63,8 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * This element has no attributes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EPAttributes.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPAttributes
     extends BaseElementProcessor
 {

@@ -77,9 +77,9 @@ import java.io.IOException;
  * endProcessing method.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: ElementProcessor.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
  */
-
-public interface ElementProcessor 
+public interface ElementProcessor
                     extends org.apache.avalon.framework.component.Component
 {
 

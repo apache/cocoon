@@ -52,8 +52,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * No-op implementation of ElementProcessor to handle the "SheetName"
  * tag
@@ -64,8 +62,8 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * will be, as the gnumeric code indicates that it is a kludge
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EPSheetName.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPSheetName
     extends BaseElementProcessor
 {

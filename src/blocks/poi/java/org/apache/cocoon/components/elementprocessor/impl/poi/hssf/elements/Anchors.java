@@ -70,8 +70,8 @@ import java.io.IOException;
  * terribly mature yet.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: Anchors.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class Anchors
 {
     private static final int       _component_count                  = 4;

@@ -52,14 +52,12 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * GTK type codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: GTKTypes.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class GTKTypes
 {
     public static final int GTK_TYPE_INVALID    = 0;

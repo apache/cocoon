@@ -58,6 +58,7 @@ package org.apache.cocoon.components.elementprocessor;
  * However, the ESQL generator for instance will generate them no other way.
  * 
  * @author Andrew C. Oliver (acoliver@apache.org)
+ * @version CVS $Id: LocaleAware.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
  */
 public interface LocaleAware
 {

@@ -69,8 +69,8 @@ import java.io.IOException;
  * numeric.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EP_Type.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class EP_Type
     extends BaseElementProcessor
 {

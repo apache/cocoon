@@ -63,8 +63,8 @@ package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
  * This element is not used in HSSFSerializer 1.0
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: EP_ValString.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class EP_ValString
     extends BaseElementProcessor
 {

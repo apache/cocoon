@@ -52,8 +52,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import java.io.IOException;
 import java.util.Hashtable;
 
@@ -78,8 +76,8 @@ import org.apache.poi.hssf.util.HSSFColor;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
+ * @version CVS $Id: EPStyle.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPStyle
     extends BaseElementProcessor
 {

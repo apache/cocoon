@@ -52,8 +52,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.NumericResult;
 
 import java.io.IOException;
@@ -63,8 +61,8 @@ import java.io.IOException;
  * print orientation, and a simpler way to deal with them.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: PrintOrientation.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class PrintOrientation
 {
     private static final String        _landscape                  =

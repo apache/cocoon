@@ -82,8 +82,8 @@ import java.util.Hashtable;
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
  * @author Andrew C. Oliver (acoliver2@users.sourceforge.net)
+ * @version CVS $Id: EPFont.java,v 1.2 2003/03/11 19:05:01 vgritsenko Exp $
  */
-
 public class EPFont
     extends BaseElementProcessor
 {

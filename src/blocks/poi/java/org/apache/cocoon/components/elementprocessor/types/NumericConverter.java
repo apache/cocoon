@@ -61,8 +61,8 @@ import java.io.IOException;
  * knows how to check the results against certain criteria
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: NumericConverter.java,v 1.2 2003/03/11 19:05:09 vgritsenko Exp $
  */
-
 public class NumericConverter
 {
     private static final Validator _non_negative_validator = new Validator()

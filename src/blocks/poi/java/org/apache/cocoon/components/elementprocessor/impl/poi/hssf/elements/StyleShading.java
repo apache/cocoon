@@ -52,14 +52,12 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 /**
  * Style shading codes
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: StyleShading.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class StyleShading
 {
     public static final int STYLE_SHADING_NONE                         = 0;

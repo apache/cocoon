@@ -82,9 +82,9 @@ import org.xml.sax.helpers.AttributesImpl;
  *   Having one or more javamail objects, like Message, Folder, et al. emit SAX events
  * </p>
  *
- *@author     Bernhard Huber
- *@created    24. Oktober 2002
- *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+ * @author Bernhard Huber
+ * @since 24. Oktober 2002
+ * @version CVS $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 
 /*
@@ -834,7 +834,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     static class FolderXMLizer extends AbstractLogEnabled
              implements XMLizable, org.apache.cocoon.xml.XMLizable {
@@ -885,7 +885,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     static class MessageEnvelopeXMLizer extends AbstractLogEnabled
              implements XMLizable, org.apache.cocoon.xml.XMLizable {
@@ -961,7 +961,7 @@ public class MailContentHandlerDelegate extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    30. Dezember 2002
-     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailContentHandlerDelegate.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     static class MessageXMLizer extends AbstractLogEnabled
              implements XMLizable, org.apache.cocoon.xml.XMLizable {

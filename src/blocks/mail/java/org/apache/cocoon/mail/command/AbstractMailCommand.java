@@ -59,9 +59,9 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 /**
  *  An abstract MailCommand template
  *
- *@author     Bernhard Huber
- *@created    23. Oktober 2002
- *@version    CVS Version: $Id: AbstractMailCommand.java,v 1.1 2003/03/09 00:04:35 pier Exp $
+ * @author Bernhard Huber
+ * @since 23. Oktober 2002
+ * @version CVS $Id: AbstractMailCommand.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
  */
 public abstract class AbstractMailCommand extends AbstractLogEnabled
          implements MailCommand {

@@ -52,8 +52,6 @@
 
 package org.apache.cocoon.components.elementprocessor.impl.poi.hssf.elements;
 
-
-
 import org.apache.cocoon.components.elementprocessor.types.NumericConverter;
 import org.apache.cocoon.components.elementprocessor.types.Validator;
 
@@ -65,8 +63,8 @@ import java.io.IOException;
  * with all that information in an easily digested form.
  *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
+ * @version CVS $Id: StyleOrientation.java,v 1.2 2003/03/11 19:05:02 vgritsenko Exp $
  */
-
 public class StyleOrientation
 {
     private int                    _alignment;

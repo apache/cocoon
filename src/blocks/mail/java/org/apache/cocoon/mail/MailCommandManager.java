@@ -74,9 +74,9 @@ import org.apache.cocoon.mail.command.MailCommands;
 /**
  * Manage invocation of mail commands.
  *
- *@author     Bernhard Huber
- *@created    23. Oktober 2002
- *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+ * @author Bernhard Huber
+ * @since 23 October 2002
+ * @version CVS $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
  */
 public class MailCommandManager extends AbstractLogEnabled {
 
@@ -216,7 +216,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailFolderCatCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -259,7 +259,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailRefreshFolderCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -303,7 +303,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailListMessagesCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -362,7 +362,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailListFolderCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -429,7 +429,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailCatMessageByUIDCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -486,7 +486,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailCatMessageByIdCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -543,7 +543,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Bernhard Huber
      *@created    23. Oktober 2002
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailCatAttachmentMessageByIdCommand extends AbstractMailCommand implements Contextualizable {
 
@@ -635,7 +635,7 @@ public class MailCommandManager extends AbstractLogEnabled {
      *
      *@author     Administrator
      *@created    02. Jänner 2003
-     *@version    CVS Version: $Id: MailCommandManager.java,v 1.1 2003/03/09 00:04:34 pier Exp $
+     *@version    CVS Version: $Id: MailCommandManager.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
      */
     public static class MailSearchMessagesCommand extends AbstractMailCommand implements Contextualizable {
         private Folder aFolder;

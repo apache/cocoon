@@ -55,8 +55,9 @@ import javax.mail.MessagingException;
 /**
  *  This interface the basic contract of a MailCommand
  *
- * @author     Bernhard Huber
- * @created    23. Oktober 2002
+ * @author Bernhard Huber
+ * @since 23. Oktober 2002
+ * @version CVS $Id: MailCommand.java,v 1.2 2003/03/11 19:04:59 vgritsenko Exp $
  */
 public interface MailCommand {
     /**
