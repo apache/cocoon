@@ -95,14 +95,14 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
 
     private static final String ACTION_EL = "action";
-    
+
     /**
      * @return "action"
      */
     public String getXMLElementName() {        
         return ACTION_EL;
     }  
-    
+
     /**
      * Adds a ActionListener to this widget instance. Listeners defined
      * on the widget instance will be executed in addtion to any listeners
@@ -121,6 +121,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
             this.listener.actionPerformed(event);
         }
     }
+
     public void broadcastEvent(WidgetEvent event) {
         this.definition.fireActionEvent((ActionEvent)event);
         fireActionEvent((ActionEvent)event);
