@@ -32,7 +32,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNode.java,v 1.15 2004/06/24 13:18:01 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class MountNode extends AbstractProcessingNode 
 implements Disposable {
@@ -52,14 +52,22 @@ implements Disposable {
     /** The value of the 'check-reload' attribute */
     private final boolean checkReload;
 
+    /** The value of the 'pass-through' attribute */
+    private final boolean passThrough;
+        
+    /** The  key to get the pass_through value fron the Environment*/
+    protected final static String COCOON_PASS_THROUGH = new String("COCOON_PASS_THROUGH");    
+        
     public MountNode(VariableResolver prefix, 
                      VariableResolver source, 
                      TreeProcessor parentProcessor,
-                     boolean checkReload) {
+                     boolean checkReload,
+                     boolean passThrough) {
         this.prefix = prefix;
         this.source = source;
         this.parentProcessor = parentProcessor;
         this.checkReload = checkReload;
+        this.passThrough = passThrough;
     }
 
     /* (non-Javadoc)
@@ -68,6 +76,9 @@ implements Disposable {
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
+        Object previousPassThrough = env.getAttribute(COCOON_PASS_THROUGH);
+        env.setAttribute(COCOON_PASS_THROUGH,Boolean.valueOf(passThrough));
+        
         final Map objectModel = env.getObjectModel();
 
         String resolvedSource = this.source.resolve(context, objectModel);
@@ -102,7 +113,11 @@ implements Disposable {
         } finally {
             // Restore context
             env.setURI(oldPrefix, oldURI);
-
+            if(previousPassThrough != null){
+               env.setAttribute(COCOON_PASS_THROUGH,previousPassThrough);
+            }else{
+               env.removeAttribute(COCOON_PASS_THROUGH);
+            }    
             // Turning recomposing as a test, according to:
             // http://marc.theaimsgroup.com/?t=106802211400005&r=1&w=2
             // Recompose pipelines which may have been recomposed by subsitemap

@@ -26,6 +26,7 @@ import org.apache.cocoon.components.treeprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
+import org.apache.cocoon.components.treeprocessor.sitemap.MountNode;
 import org.apache.cocoon.environment.Environment;
 
 /**
@@ -36,7 +37,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.17 2004/07/15 12:49:50 sylvain Exp $
+ * @version CVS $Id$
  */
 public class PipelineNode
         extends AbstractParentProcessingNode
@@ -114,6 +115,17 @@ public class PipelineNode
     public final boolean invoke(Environment env, InvokeContext context)
     throws Exception {
 
+        boolean passThrough;
+
+        Object passThroughRaw = env.getAttribute(MountNode.COCOON_PASS_THROUGH);
+       
+        if(passThroughRaw == null){
+            //use legacy default value
+            passThrough = false;
+        }else{
+            passThrough = ((Boolean)passThroughRaw).booleanValue() ;
+        }
+        
         boolean externalRequest = env.isExternal();
 
         // Always fail on external request if pipeline is internal only.
@@ -125,7 +137,7 @@ public class PipelineNode
         try {
             if (invokeNodes(children, env, context)) {
                 return true;
-            } else if (!this.isLast) {
+            } else if (!this.isLast || passThrough) {
                 return false;
             } else {
                 throw new ResourceNotFoundException("No pipeline matched request: " +
