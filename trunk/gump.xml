@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.71 2003/07/26 13:26:47 cziegeler Exp $
+  CVS $Id: gump.xml,v 1.72 2003/08/04 08:39:41 bruno Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -938,6 +938,24 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/eventcache-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-apples" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="apples"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/apples-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
