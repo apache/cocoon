@@ -8,7 +8,9 @@
 
  <xsl:param name="name"/>
 
- <xsl:variable name="bugzilla">http://nagoya.apache.org/bugzilla/show_bug.cgi?id=</xsl:variable>
+ <xsl:variable name="bugzilla" select="'http://nagoya.apache.org/bugzilla/'"/>
+ <xsl:variable name="singleBug" select="concat($bugzilla, 'show_bug.cgi?id=')"/>
+ <xsl:variable name="buglist" select="concat($bugzilla, 'buglist.cgi?bug_id=')"/>
 
  <xsl:template match="/">
   <xsl:apply-templates select="//changes"/>
@@ -56,9 +58,18 @@
 
    <xsl:if test="@fixes-bug">
     <xsl:text> Fixes </xsl:text>
-    <link href="{$bugzilla}{@fixes-bug}">
-     <xsl:text>bug </xsl:text><xsl:value-of select="@fixes-bug"/>
-    </link>
+    <xsl:choose>
+     <xsl:when test="contains(@fixes-bug, ',')">
+      <link href="{$buglist}{@fixes-bug}">
+       <xsl:text>bugs </xsl:text><xsl:value-of select="@fixes-bug"/>
+      </link>
+     </xsl:when>
+     <xsl:otherwise>
+      <link href="{$singleBug}{@fixes-bug}">
+       <xsl:text>bug </xsl:text><xsl:value-of select="@fixes-bug"/>
+      </link>
+     </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>.</xsl:text>
    </xsl:if>
   </li>
