@@ -25,8 +25,19 @@
                 <map:redirect-to uri="index.html"/>
             </map:match>
 
-            <map:match pattern="*.html">
-                <map:generate src="{1}.xml"/>
+            <map:match pattern="directory.xml">
+                <map:generate type="directory" src=".">
+                    <depth>1</depth>
+                </map:generate>
+                <map:serialize type="xml"/>
+            </map:match>
+
+            <map:match pattern="index.html">
+                <map:aggregate element="combo">
+                    <map:part src="index.xml"/>
+                    <map:part src="cocoon:/directory.xml"/>
+                </map:aggregate>
+                <map:transform src="dir-links.xsl"/>
                 <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
                     <map:parameter name="servletPath" value="{request:servletPath}"/>
                     <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
@@ -38,6 +49,9 @@
             </map:match>
 
             <!-- process the explain-test page for subdirectories -->
+            <map:match pattern="**/">
+                <map:redirect-to uri="explain-test.html"/>
+            </map:match>
             <map:match pattern="**/explain-test.html">
                 <map:generate src="{1}/explain-test.xml"/>
                 <map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">

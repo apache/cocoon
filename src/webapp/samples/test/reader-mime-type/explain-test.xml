@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: explain-test.xml,v 1.1 2004/02/06 10:35:36 bdelacretaz Exp $ -->
+<!-- CVS $Id: explain-test.xml,v 1.2 2004/02/06 11:42:07 bdelacretaz Exp $ -->
 
 <page>
     <title>reader-mime-type test</title>
     <content>
-        <para>Test harness for bugzilla 25212, test mime-types on map:reader.</para>
+        <para>Test harness for
+            <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=25121">
+                bugzilla 25212
+            </a>, test mime-types on map:reader.
+        </para>
         <para>
             Test links:
             <ul>
