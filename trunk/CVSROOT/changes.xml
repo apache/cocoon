@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.107 2000-09-14 20:45:36 balld Exp $
+  $Id: changes.xml,v 1.108 2000-09-15 04:38:13 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="add">
+   added xspdoc comments to esql logicsheet and added xspdoc to document convertor in the xml.apache.org site skin directory. god only knows how i'm supposed to add it to the build procedure... help?
+  </action>
   <action dev="DB" type="add">
    added error handling to esql logicsheet and documented its use in esql sample
   </action>
