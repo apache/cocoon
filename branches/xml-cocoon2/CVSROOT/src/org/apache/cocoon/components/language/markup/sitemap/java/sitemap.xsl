@@ -41,7 +41,7 @@
     import org.apache.cocoon.matching.Matcher;
     import org.apache.cocoon.serialization.Serializer;
     import org.apache.cocoon.sitemap.AbstractSitemapProcessor;
-    import org.apache.cocoon.sitemap. SitemapProcessor;
+    import org.apache.cocoon.sitemap.SitemapProcessor;
     import org.apache.cocoon.sitemap.ResourcePipeline;
 
     import org.xml.sax.helpers.AttributesImpl;
@@ -49,7 +49,7 @@
 /**
  *
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-07-17 21:06:11 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-07-18 22:55:38 $
  */
 public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcessor {
     
@@ -94,7 +94,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
       <xsl:variable name="factory" select="@factory"/>
       <xsl:variable name="type" select="@name"/>
       <xsl:variable name="default"><xsl:if test="$type = ../@default">true</xsl:if></xsl:variable>
-      <xsl:variable name="config"><xsl:value-of select="./*"/></xsl:variable>
+      <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:match[@type=$type or (not(@type) and $default!='')]">
         <xsl:variable name="matcher-name1" select="translate(@pattern,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
         <xsl:variable name="matcher-name" select='translate($matcher-name1,"&#39;","")'/>
@@ -109,7 +109,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
       <xsl:variable name="factory" select="@factory"/>
       <xsl:variable name="type" select="@name"/>
       <xsl:variable name="default"><xsl:if test="$type = ../@default">true</xsl:if></xsl:variable>
-      <xsl:variable name="config"><xsl:value-of select="./*"/></xsl:variable>
+      <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:when[../map:select/@type=$type or (not(../map:select/@type) and $default!='')]">
         <xsl:variable name="selector-name1" select="translate(@test,'/- *?@:{}()[].#^\\$|&#33;','_')"/>
         <xsl:variable name="selector-name" select='translate($selector-name1,"&#39;","")'/>
@@ -338,8 +338,8 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
       <xsl:value-of select="concat($prefix, ':value')"/> 
     </xsl:variable> 
 
+    <xsl:variable name="ns" select="namespace-uri(.)"/> 
     <xsl:for-each select="$components"> 
-      <xsl:variable name="ns" select="namespace-uri(.)"/> 
       confBuilder.startDocument ();
       <xsl:call-template name="nested-config-components">
         <xsl:with-param name="name" select="$name"/>
@@ -371,14 +371,14 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
 
     <!-- process content -->
     <xsl:for-each select="$components">
-      <xsl:if test="$ns!=namespace-uri()">
-        confBuilder.startPrefixMapping("","<xsl:value-of select="namespace-uri()"/>"); 
+      <xsl:if test="$ns!=namespace-uri(.)">
+        confBuilder.startPrefixMapping("","<xsl:value-of select="namespace-uri(.)"/>"); 
       </xsl:if>
       attr.clear();  
       <xsl:for-each select="attribute::*[name(.)!=$qname]">
         attr.addAttribute ("", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>", "CDATA", "<xsl:value-of select="."/>"); 
       </xsl:for-each>
-      confBuilder.startElement("<xsl:value-of select="namespace-uri()"/>", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>", attr); 
+      confBuilder.startElement("<xsl:value-of select="namespace-uri(.)"/>", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>", attr); 
       <xsl:for-each select="attribute::*[name(.)=$qname]">
         confBuilder.characters("<xsl:value-of select="."/>".toCharArray(), 0, <xsl:value-of select="string-length(.)"/>); 
       </xsl:for-each>
@@ -397,12 +397,12 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemapProcesso
         <xsl:with-param name="interface"><xsl:value-of select="$interface"/></xsl:with-param> 
         <xsl:with-param name="components" select="./*"/> 
         <xsl:with-param name="type"><xsl:value-of select="$type"/></xsl:with-param>
-        <xsl:with-param name="ns"><xsl:value-of select="namespace-uri()"/></xsl:with-param>
+        <xsl:with-param name="ns"><xsl:value-of select="namespace-uri(.)"/></xsl:with-param>
         <xsl:with-param name="subname"><xsl:value-of select="$newsubname"/></xsl:with-param>
       </xsl:call-template> 
-      confBuilder.endElement("<xsl:value-of select="namespace-uri()"/>", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>"); 
-      <xsl:if test="$ns!=namespace-uri()">
-        confBuilder.endPrefixMapping("","<xsl:value-of select="namespace-uri()"/>"); 
+      confBuilder.endElement("<xsl:value-of select="namespace-uri(.)"/>", "<xsl:value-of select="local-name(.)"/>", "<xsl:value-of select="name(.)"/>"); 
+      <xsl:if test="$ns!=namespace-uri(.)">
+        confBuilder.endPrefixMapping("","<xsl:value-of select="namespace-uri(.)"/>"); 
       </xsl:if>
     </xsl:for-each> 
   </xsl:template> 
