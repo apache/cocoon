@@ -58,7 +58,7 @@ import java.sql.Connection;
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: PostgresEsqlQuery.java,v 1.3 2003/03/20 21:51:43 tcurdt Exp $
+ * @version CVS $Id: PostgresEsqlQuery.java,v 1.4 2003/07/03 07:59:59 cziegeler Exp $
  */
 final public class PostgresEsqlQuery extends AbstractEsqlQuery {
 
@@ -77,7 +77,6 @@ final public class PostgresEsqlQuery extends AbstractEsqlQuery {
     /**
      * Create a EsqlQuery of the same type
      * @param resultSet
-     * @return
      */
     public AbstractEsqlQuery newInstance(final ResultSet resultSet) {
         return(new PostgresEsqlQuery(resultSet));

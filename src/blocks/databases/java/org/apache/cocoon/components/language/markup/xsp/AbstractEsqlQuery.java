@@ -64,7 +64,7 @@ import java.util.ArrayList;
  * This is base class for all EsqlQueries
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlQuery.java,v 1.3 2003/03/20 21:51:43 tcurdt Exp $
+ * @version CVS $Id: AbstractEsqlQuery.java,v 1.4 2003/07/03 07:59:59 cziegeler Exp $
  */
 public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     private int maxRows = -1;
@@ -113,7 +113,6 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     /**
      * Create a EsqlQuery of the same type
      * @param resultSet
-     * @return
      */
     public abstract AbstractEsqlQuery newInstance(final ResultSet resultSet);
 
@@ -144,7 +143,6 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
      * ResultSet. In order to know whether there are more rows available (without an additional
      * query) we need to have at least one more row in the JDBC ResultSet. So we ask for getMaxRows()+1
      *
-     * @return
      * @throws SQLException
      */
     public String getQueryString() throws SQLException {
@@ -154,7 +152,6 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     /**
      * NOTE: Might want to be overridden by indiviual EsqlQuery implementations
      *
-     * @return
      * @throws SQLException
      */
     public PreparedStatement prepareStatement() throws SQLException {
@@ -165,7 +162,6 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     /**
      * NOTE: Might want to be overridden by indiviual EsqlQuery implementations
      *
-     * @return
      * @throws SQLException
      */
     public CallableStatement prepareCall() throws SQLException {
@@ -383,7 +379,6 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
 
     /**
      * Returns the how many rows where updated on last update
-     * @return
      */
     public final int getUpdateCount() {
         return (updateCount);
@@ -391,7 +386,6 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
 
     /**
      * Returns the number of query results
-     * @return
      */
     public final int getQueryResultsCount() {
         return (queryResultsCount);
@@ -399,7 +393,6 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
 
     /**
      * Returns the number of update results
-     * @return
      */
     public final int getUpdateResultsCount() {
         return (updateResultsCount);

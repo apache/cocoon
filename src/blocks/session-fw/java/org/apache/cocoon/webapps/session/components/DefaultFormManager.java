@@ -79,7 +79,7 @@ import org.w3c.dom.DocumentFragment;
  * Form handling
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultFormManager.java,v 1.3 2003/05/23 09:53:46 cziegeler Exp $
+ * @version CVS $Id: DefaultFormManager.java,v 1.4 2003/07/03 08:00:00 cziegeler Exp $
 */
 public final class DefaultFormManager
 extends AbstractLogEnabled
@@ -132,7 +132,7 @@ implements Composable, Component, FormManager, ThreadSafe, Contextualizable
     }
     
     /**
-     * @see FormManager.registerInputField(String, String, String, String)
+     * @see FormManager#registerInputField(String, String, String, String)
      */
     public DocumentFragment registerInputField(String contextName,
                                                String path,

@@ -62,7 +62,7 @@ import org.apache.cocoon.servlet.multipart.Part;
  *
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: FilePartDataSource.java,v 1.1 2003/04/17 20:35:37 haul Exp $
+ * @version CVS $Id: FilePartDataSource.java,v 1.2 2003/07/03 08:00:00 cziegeler Exp $
  */
 public class FilePartDataSource implements DataSource {
     private Part part;
@@ -70,16 +70,16 @@ public class FilePartDataSource implements DataSource {
     private String name = null;
     
     /** Creates a new instance of FilePartDataSource from an
-     * {@link org.apache.cocoon.components.request.multipart.FilePart} object.
-     * @param part An {@link org.apache.cocoon.components.request.multipart.FilePart} object.
+     * {@link Part} object.
+     * @param part An {@link Part} object.
      */
     public FilePartDataSource(Part part) {
         this(part,null,null);
     }
     
     /** Creates a new instance of FilePartDataSource from an
-     * {@link org.apache.cocoon.components.request.multipart.FilePart} object.
-     * @param part An {@link org.apache.cocoon.components.request.multipart.FilePart} object.
+     * {@link Part} object.
+     * @param part An {@link Part} object.
      */
     public FilePartDataSource(Part part, String type, String name) {
         this.part = part;

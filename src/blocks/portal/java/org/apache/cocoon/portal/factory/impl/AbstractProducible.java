@@ -61,7 +61,7 @@ import org.apache.cocoon.portal.factory.ProducibleDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProducible.java,v 1.2 2003/05/21 13:06:06 cziegeler Exp $
+ * @version CVS $Id: AbstractProducible.java,v 1.3 2003/07/03 08:00:00 cziegeler Exp $
  */
 public abstract class AbstractProducible 
     extends AbstractAspectalizable 
@@ -74,7 +74,7 @@ public abstract class AbstractProducible
     transient protected ProducibleDescription description;
     
     /**
-     * @return
+     * @return The configured name
      */
     public String getName() {
         return name;

@@ -59,7 +59,7 @@ import java.sql.Connection;
 
 /**
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: MysqlEsqlQuery.java,v 1.3 2003/03/20 21:51:43 tcurdt Exp $
+ * @version CVS $Id: MysqlEsqlQuery.java,v 1.4 2003/07/03 07:59:59 cziegeler Exp $
  */
 final public class MysqlEsqlQuery extends AbstractEsqlQuery {
 
@@ -78,7 +78,6 @@ final public class MysqlEsqlQuery extends AbstractEsqlQuery {
     /**
      * Create a EsqlQuery of the same type
      * @param resultSet
-     * @return
      */
     public AbstractEsqlQuery newInstance(ResultSet resultSet) {
         return( new MysqlEsqlQuery(resultSet) );

@@ -58,13 +58,13 @@ import org.apache.cocoon.portal.factory.Producible;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.6 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: Layout.java,v 1.7 2003/07/03 08:00:00 cziegeler Exp $
  */
 public interface Layout 
     extends Parameters, Producible {
 
     /**
-     * Get the name of the {@link Renderer} to draw this layout.
+     * Get the name of the {@link org.apache.cocoon.portal.layout.renderer.Renderer} to draw this layout.
      * If this layout has an own renderer {@link #getLayoutRendererName()}
      * return this, otherwise the default renderer is returned.
      * @return String The role name
@@ -72,7 +72,7 @@ public interface Layout
     String getRendererName();
     
     /** 
-     * Get the name of a custom {@link Renderer} for this layout.
+     * Get the name of a custom {@link org.apache.cocoon.portal.layout.renderer.Renderer} for this layout.
      * @return String The role name
      */
     String getLayoutRendererName();
