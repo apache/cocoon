@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!-- $Id: -->
 <!--
 
  ============================================================================
@@ -229,7 +230,7 @@
 		   </xsl:when>
 		   <xsl:otherwise>
 		    _esql_session.connection = DriverManager.getConnection(
-		     String.valueOf(<xsl:copy-of select="$dburl"/>),
+		     String.valueOf(<xsl:copy-of select="$dburl"/>)
 		    );
 		   </xsl:otherwise>
 		  </xsl:choose>
