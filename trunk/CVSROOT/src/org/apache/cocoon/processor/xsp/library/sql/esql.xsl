@@ -95,7 +95,6 @@
 			<xsp:include>java.sql.Statement</xsp:include>
 			<xsp:include>java.sql.ResultSet</xsp:include>
 			<xsp:include>java.sql.ResultSetMetaData</xsp:include>
-			<xsp:include>java.sql.Date</xsp:include>
 			<xsp:include>java.sql.SQLException</xsp:include>
 			<xsp:include>java.text.SimpleDateFormat</xsp:include>
 			<xsp:include>org.apache.turbine.util.db.pool.DBBroker</xsp:include>
