@@ -15,6 +15,7 @@
   <page id="xsp-internals" label="XSP Internals" source="xsp-internals.xml"/>
   <page id="logicsheet-concepts" label="XSP Logicsheets" source="logicsheet-concepts.xml"/>
 <separator/>
+  <page id="datasources" label="Using Databases" source="datasources.xml"/>
   <page id="sitemap" label="Sitemap" source="sitemap.xml"/>
   <page id="svg" label="SVG Serializer" source="svg-serializer.xml"/>
 <separator/>
