@@ -73,8 +73,6 @@ function Form(uri) {
         this.binding = null;
         this.eventHandler = null;
         this.formWidget = new Widget(this.form);
-        this.context = {};
-        this.context.widget = this.formWidget;
         this.local = cocoon.createPageLocal();
     } finally {
         cocoon.releaseComponent(formMgr);
@@ -111,11 +109,10 @@ Form.prototype.getWidget = function(name) {
 Form.prototype.showForm = function(uri, fun) {
     var FormContext = Packages.org.apache.cocoon.woody.FormContext;
     this.local.webContinuation = cocoon.createWebContinuation();
-    this.context.form = this.formWidget;
     // this is needed by the WoodyTemplateTransformer:
-    this.context["woody-form"] = this.formWidget.unwrap();
+    this.formWidget["woody-form"] = this.formWidget.unwrap();
     cocoon.request.setAttribute("woody-form", this.form);
-    var wk = cocoon.sendPageAndWait(uri, this.context, fun);
+    var wk = cocoon.sendPageAndWait(uri, this.formWidget, fun);
     var formContext = 
         new FormContext(cocoon.request, this.form.getLocale());
     this.isValid = this.form.process(formContext);

@@ -49,12 +49,12 @@
 
 */
 package org.apache.cocoon.woody.formmodel;
-
+import java.util.Iterator;
 
 /**
  * Interface to be implemented by Widgets which contain other widgets.
  *
- * CVS $Id: ContainerWidget.java,v 1.4 2003/12/29 17:52:12 stefano Exp $
+ * CVS $Id: ContainerWidget.java,v 1.5 2004/01/29 16:36:17 coliver Exp $
  * @author Timothy Larson
  */
 public interface ContainerWidget extends Widget {
@@ -74,4 +74,10 @@ public interface ContainerWidget extends Widget {
      * Returns null if there is no child with the given id.
      */
     public Widget getWidget(String id);
+
+    /**
+     * Returns an iterator over the widgets this object contains
+     */
+    public Iterator getChildren();
+
 }

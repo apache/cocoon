@@ -53,6 +53,7 @@ import org.apache.cocoon.woody.formmodel.AggregateField;
 import org.apache.cocoon.woody.formmodel.BooleanField;
 import org.apache.cocoon.woody.formmodel.Field;
 import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.cocoon.woody.formmodel.ContainerWidget;
 import org.apache.cocoon.woody.formmodel.MultiValueField;
 import org.apache.cocoon.woody.formmodel.Output;
 import org.apache.cocoon.woody.formmodel.Repeater;
@@ -74,6 +75,9 @@ import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
 import org.mozilla.javascript.Wrapper;
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -117,6 +121,13 @@ public class ScriptableWidget extends ScriptableObject {
             return ((Wrapper)obj).unwrap();
         }
         return obj;
+    }
+
+    private void deleteWrapper(Widget w) {
+        if (delegate instanceof Form) {
+            Map widgetMap = (Map)super.get("__widgets__", this);
+            widgetMap.remove(w);
+        }
     }
 
     private ScriptableWidget wrap(Widget w) {
@@ -191,8 +202,30 @@ public class ScriptableWidget extends ScriptableObject {
         return super.get(index, start);
     }
 
-    public void delete(String id) {
-        super.delete(id);
+    public Object[] getAllIds() {
+        Object[] result = super.getAllIds();
+        return addWidgetIds(result);
+    }
+
+    public Object[] getIds() {
+        Object[] result = super.getIds();
+        return addWidgetIds(result);
+    }
+
+    private Object[] addWidgetIds(Object[] result) {
+        if (delegate instanceof ContainerWidget) {
+            Iterator iter = ((ContainerWidget)delegate).getChildren();
+            List list = new LinkedList();
+            for (int i = 0; i < result.length; i++) {
+                list.add(result[i]);
+            }
+            while (iter.hasNext()) {
+                Widget widget = (Widget)iter.next();
+                list.add(widget.getId());
+            }
+            result = list.toArray();
+        }
+        return result;
     }
 
     public void delete(int index) {
@@ -255,7 +288,6 @@ public class ScriptableWidget extends ScriptableObject {
             Repeater repeater = (Repeater)delegate;
             return repeater.getSize();
         }
-        return 0;
     }
 
     public void jsSet_value(Object value) throws JavaScriptException {
@@ -491,12 +523,16 @@ public class ScriptableWidget extends ScriptableObject {
                 }    
                 for (int i = len-1; i >= 0; --i) {
                     if (index[i]) {
+                        Widget row = repeater.getRow(i);
+                        formWidget.deleteWrapper(row);
                         repeater.removeRow(i);
                     }
                 }
             } else if (obj instanceof Number) {
                 int index = (int)Context.toNumber(obj);
                 if (index > 0 && index < repeater.getSize()) {
+                    Widget row = repeater.getRow(index);
+                    formWidget.deleteWrapper(row);
                     repeater.removeRow(index);
                 }
             } else {
@@ -589,10 +625,6 @@ public class ScriptableWidget extends ScriptableObject {
 
     public String jsFunction_toString() {
         return "[object Widget (" + jsFunction_getWidgetClass() + ")]";
-    }
-
-    public static void install(Scriptable scope) throws Exception {
-        defineClass(scope, ScriptableWidget.class);
     }
 
 }
