@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.183 2004/03/08 21:41:19 unico Exp $
+    | CVS $Id: jars.xml,v 1.184 2004/03/09 06:47:59 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -536,7 +536,7 @@
     <description>Tidy is a HTML syntax checker and pretty printer.</description>
     <used-by>HTML generator (html block), RSSTransformer (Portal block)</used-by>
     <lib>html/lib/jtidy-04aug2000r7-dev.jar</lib>
-    <homepage>http://lempinen.net/sami/jtidy/</homepage>
+    <homepage>http://jtidy.sourceforge.net/</homepage>
   </file>
 
   <file>
@@ -563,7 +563,7 @@
     <description>Logging for java</description>
     <used-by>DELI (deli block)</used-by>
     <lib>optional/log4j-1.2.8.jar</lib>
-    <homepage>http://jakarta.apache.org/log4j</homepage>
+    <homepage>http://logging.apache.org/log4j/</homepage>
   </file>
 
   <file>
