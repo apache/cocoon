@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.24 2001-01-16 20:28:05 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.25 2001-01-16 23:06:24 balld Exp $-->
 <!--
 
  ============================================================================
@@ -66,7 +66,7 @@
 <xsl:param name="language"/>
 
 <xsl:variable name="cocoon1-environment">Cocoon 1</xsl:variable>
-<xsl:variable name="cocoon2-environment">something else</xsl:variable>
+<xsl:variable name="cocoon2-environment">Cocoon 2</xsl:variable>
 
 <xsl:variable name="cocoon1-xsp-namespace-uri">http://www.apache.org/1999/XSP/Core</xsl:variable>
 <xsl:variable name="cocoon2-xsp-namespace-uri">http://apache.org/xsp</xsl:variable>
@@ -174,26 +174,43 @@
       <xsp:include>java.text.DecimalFormat</xsp:include>
       <xsp:include>java.io.StringWriter</xsp:include>
       <xsp:include>java.io.PrintWriter</xsp:include>
-      <xsp:include>org.apache.cocoon.components.datasource.DataSourceComponent</xsp:include>
+      <xsl:choose>
+        <xsl:when test="$environment = 'cocoon1'">
+          <xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
+          <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
+        </xsl:when>
+        <xsl:when test="$environment = 'cocoon2'">
+          <xsp:include>org.apache.cocoon.components.datasource.DataSourceComponent</xsp:include>
+          <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
+        </xsl:when>
+      </xsl:choose>
     </xsp:structure>
     <xsp:logic>
-      /** environment - <xsl:value-of select="$environment"/> **/
-      private static ComponentSelector esqlSelector = null;
+      <xsl:choose>
+        <xsl:when test="$environment = 'cocoon2'">
+          private static ComponentSelector esqlSelector = null;
 
-      public void compose(ComponentManager manager) {
-          super.compose(manager);
-
-          if (esqlSelector == null) {
+          public void compose(ComponentManager manager) {
+            super.compose(manager);
+            if (esqlSelector == null) {
               try {
-                  esqlSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
+                esqlSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
               } catch (ComponentManagerException cme) {
-                  log.error("Could not look up the datasource component", cme);
+                log.error("Could not look up the datasource component", cme);
               }
+            }
           }
-      }
-      /** xsp namespace uri - <xsl:value-of select="$xsp-namespace-uri"/> **/
+        </xsl:when>
+      </xsl:choose>
       class EsqlConnection {
-        DataSourceComponent datasource = null;
+        <xsl:choose>
+          <xsl:when test="$environment = 'cocoon1'">
+            DBConnection db_connection = null;
+          </xsl:when>
+          <xsl:when test="$environment = 'cocoon2'">
+            DataSourceComponent datasource = null;
+          </xsl:when>
+        </xsl:choose>
         Connection connection = null;
         String dburl = null;
         String username = null;
@@ -217,18 +234,18 @@
 </xsl:template>
 
 <xsl:template match="xsp:page/*[not(namespace-uri(.)=$xsp-namespace-uri)]">
- <xsl:copy>
-  <xsl:apply-templates select="@*"/>
-  <xsp:logic>
-    Stack _esql_connections = new Stack();
-    EsqlConnection _esql_connection = null;
-    Stack _esql_queries = new Stack();
-    EsqlQuery _esql_query = null;
-    SQLException _esql_exception = null;
-    StringWriter _esql_exception_writer = null;
-  </xsp:logic>
- <xsl:apply-templates/>
- </xsl:copy>
+  <xsl:copy>
+    <xsl:apply-templates select="@*"/>
+    <xsp:logic>
+      Stack _esql_connections = new Stack();
+      EsqlConnection _esql_connection = null;
+      Stack _esql_queries = new Stack();
+      EsqlQuery _esql_query = null;
+      SQLException _esql_exception = null;
+      StringWriter _esql_exception_writer = null;
+    </xsp:logic>
+    <xsl:apply-templates/>
+  </xsl:copy>
 </xsl:template>
 
 <xsl:template match="esql:connection">
@@ -245,7 +262,11 @@
     _esql_connection = new EsqlConnection();
     try {
       <xsl:choose>
-        <xsl:when test="esql:pool">
+        <xsl:when test="esql:pool and $environment = 'cocoon1'">
+          _esql_connection.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$pool"/>));
+          _esql_connection.connection = _esql_connection.db_connection.getConnection();
+        </xsl:when>
+        <xsl:when test="esql:pool and $environment = 'cocoon2'">
           _esql_connection.datasource = (DataSourceComponent) esqlSelector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
           _esql_connection.connection = _esql_connection.datasource.getConnection();
         </xsl:when>
@@ -294,9 +315,14 @@
         if(!_esql_connection.connection.getAutoCommit()) {
           _esql_connection.connection.commit();
         }
-
-        _esql_connection.connection.close();
-
+        <xsl:choose>
+          <xsl:when test="esql:pool and $environment = 'cocoon1'">
+            _esql_pool.releaseConnection(_esql_connection.db_connection);
+          </xsl:when>
+          <xsl:otherwise>
+            _esql_connection.connection.close();
+          </xsl:otherwise>
+        </xsl:choose>
         if (_esql_connections.empty()) {
           _esql_connection = null;
         } else {
