@@ -55,7 +55,7 @@ package org.apache.cocoon.bean;
  * as the bean makes progress through the links to be called.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanListener.java,v 1.2 2003/09/15 19:18:17 upayavira Exp $
+ * @version CVS $Id: BeanListener.java,v 1.3 2003/09/18 12:11:50 upayavira Exp $
  */
 public interface BeanListener {
 
@@ -71,7 +71,7 @@ public interface BeanListener {
                               int linksInPage, 
                               int newLinksinPage, 
                               int pagesRemaining, 
-                              int pageComplete, 
+                              int pagesComplete, 
                               long timeTaken);
                               
     /**
@@ -79,7 +79,7 @@ public interface BeanListener {
      * include/exclude pattern.
      * @param msg            
      */
-    public void pageSkipped(String uri);
+    public void pageSkipped(String uri, String message);
     
     /**
      * Report a general message about operation of the bean

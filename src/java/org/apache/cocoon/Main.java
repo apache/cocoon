@@ -82,7 +82,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.15 2003/09/17 01:13:44 joerg Exp $
+ * @version CVS $Id: Main.java,v 1.16 2003/09/18 12:11:49 upayavira Exp $
  */
 public class Main {
 
@@ -161,6 +161,9 @@ public class Main {
     private static final String NODE_INCLUDE = "include";
     private static final String NODE_EXCLUDE = "exclude";
     private static final String ATTR_INCLUDE_EXCLUDE_PATTERN = "pattern";
+    
+    private static final String NODE_INCLUDE_LINKS = "include-links";
+    private static final String ATTR_LINK_EXTENSION = "extension";
     
     private static final String NODE_URI = "uri";
     private static final String ATTR_URI_TYPE = "type";
@@ -501,6 +504,9 @@ public class Main {
                         String pattern = Main.parseIncludeExcludeNode(cocoon, node, NODE_EXCLUDE);
                         cocoon.addExcludePattern(pattern);
 
+                    } else if (nodeName.equals(NODE_INCLUDE_LINKS)) {
+                        Main.parseIncludeLinksNode(cocoon, node);
+
                     } else if (nodeName.equals(NODE_URI)) {
                         Main.parseURINode(cocoon, node, destDir);
 
@@ -532,6 +538,12 @@ public class Main {
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength()!=0) {
             throw new IllegalArgumentException("Unexpected children of <" + NODE_LOGGING + "> node");
+        }
+    }
+
+    private static void parseIncludeLinksNode(CocoonBean cocoon, Node node) throws IllegalArgumentException {
+        if (Main.hasAttribute(node, ATTR_LINK_EXTENSION)) {
+            cocoon.addIncludeLinkExtension(Main.getAttributeValue(node, ATTR_LINK_EXTENSION));
         }
     }
 
