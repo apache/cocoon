@@ -50,10 +50,36 @@ public class Deprecation {
     private static final int FATAL_VALUE = 3;
     private static final int FATAL_ERROR_VALUE = 4;
     
+    /**
+     * Debug deprecation messages indicate features that are no more considered "current"
+     * or "best practice", but for which no removal is currently foreseen.
+     */
     public static final LogLevel DEBUG = new LogLevel("DEBUG", DEBUG_VALUE);
+
+    /**
+     * Info deprecation messages indicate features that are no more considered "current"
+     * or "best practice", and that will probably be removed in future releases.
+     */
     public static final LogLevel INFO = new LogLevel("INFO", INFO_VALUE);
+
+    /**
+     * Warning deprecation messages indicate features that will be removed in the next major
+     * version (e.g. 2.1.x --> 2.2.0). Such features should not be used if the application is
+     * planned to be migrated to newer Cocoon versions.
+     */
     public static final LogLevel WARN = new LogLevel("WARN", WARN_VALUE);
+
+    /**
+     * Error deprecation messages indicate features that will be removed in the next minor
+     * version (e.g. 2.1.6 --> 2.1.7). Although still functional, users are stronly invited to
+     * not use them.
+     */
     public static final LogLevel ERROR = new LogLevel("ERROR", ERROR_VALUE);
+
+    /**
+     * Fatal error deprecation messages indicate features that used to exist but have been removed
+     * in the current version. Logging such a message always throws a {@link DeprecationException}.
+     */
     public static final LogLevel FATAL_ERROR = new LogLevel("FATAL_ERROR", FATAL_ERROR_VALUE);
     
     public static final class LogLevel extends ValuedEnum {
