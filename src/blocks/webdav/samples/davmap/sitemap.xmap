@@ -70,7 +70,7 @@
     
     <map:component-configurations>
       <global-variables>
-        <staging>repository:./repo</staging>
+        <staging>repository:./repo/</staging>
       </global-variables>
     </map:component-configurations>
     
