@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.67 2001-02-14 18:01:33 greenrd Exp $
+  $Id: todo.xml,v 1.68 2001-02-16 19:56:09 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,6 +16,10 @@
  </devs>
 
  <actions priority="high">
+  <action context="code" bugid="11">
+   NEEDED URGENTLY FOR TOMCAT 3.3 - because CLASSPATH will be ignored!
+   Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
+  </action>
   <action context="code" assigned-to="RDG">
    LiteralFormatter
   </action>
@@ -88,9 +92,6 @@
   </action>
   <action context="docs">
    Cleanup and improve documentation. (in progress.)
-  </action>
-  <action context="code" bugid="11">
-   Add standard WEB-INF/classes and WEB-INF/lib to XSP classpath.
   </action>
   <action context="code" assigned-to="RDG" bugid="12">
    Class auto-reloading for XSP pages (and Processors)?
