@@ -67,7 +67,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.flow.AbstractInterpreter;
+import org.apache.cocoon.components.flow.CompilingInterpreter;
 import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
@@ -92,9 +92,9 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.10 2003/09/29 12:56:05 sylvain Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.11 2003/10/15 17:02:05 cziegeler Exp $
  */
-public class FOM_JavaScriptInterpreter extends AbstractInterpreter
+public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable
 {
 
@@ -133,44 +133,6 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
      * read in by the JavaScript interpreter.
      */
     List topLevelScripts = new ArrayList();
-
-    class ScriptSourceEntry {
-        final private Source source;
-        private Script script;
-        private long compileTime;
-
-        public ScriptSourceEntry(Source source) {
-            this.source = source;
-        }
-
-        public ScriptSourceEntry(Source source, Script script, long t) {
-            this.source = source;
-            this.script = script;
-            this.compileTime = t;
-        }
-
-        public Source getSource() {
-            return source;
-        }
-
-        public Script getScript(Context context, Scriptable scope,
-                                boolean refresh)
-            throws Exception {
-            if (refresh) {
-                source.refresh();
-            }
-            if (script == null || compileTime < source.getLastModified()) {
-                script = compileScript(context, scope, source);
-                compileTime = source.getLastModified();
-            }
-            return script;
-        }
-    }
-
-    /**
-     * Mapping of String objects (source uri's) to ScriptSourceEntry's
-     */
-    Map compiledScripts = new HashMap();
 
     JSErrorReporter errorReporter;
     boolean enableDebugger = false;
@@ -435,12 +397,12 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 ScriptSourceEntry entry =
                     (ScriptSourceEntry)compiledScripts.get(sourceURI);
                 if (entry == null) {
-                    Source src = environment.resolveURI(sourceURI);
+                    Source src = this.sourceresolver.resolveURI(sourceURI);
                     entry = new ScriptSourceEntry(src);
                     compiledScripts.put(sourceURI, entry);
                 }
                 // Compile the script if necessary
-                entry.getScript(context, this.scope, needsRefresh);
+                entry.getScript(context, this.scope, needsRefresh, this);
             }
             // Execute the scripts if necessary
             for (int i = 0, size = execList.size(); i < size; i++) {
@@ -448,7 +410,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 ScriptSourceEntry entry =
                     (ScriptSourceEntry)compiledScripts.get(sourceURI);
                 long lastMod = entry.getSource().getLastModified();
-                Script script = entry.getScript(context, this.scope, false);
+                Script script = entry.getScript(context, this.scope, false, this);
                 if (lastExecTime == 0 || lastMod > lastExecTime) {
                     script.exec(context, thrScope);
                     thrScope.put(LAST_EXEC_TIME, thrScope,
@@ -470,7 +432,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     Script compileScript(Context cx,
                          Environment environment,
                          String fileName) throws Exception {
-        Source src = environment.resolveURI(fileName);
+        Source src = this.sourceresolver.resolveURI(fileName);
         if (src == null) {
             throw new ResourceNotFoundException(fileName + ": not found");
         }
@@ -481,14 +443,16 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             if (entry == null) {
                 compiledScripts.put(src.getURI(),
                                     entry = new ScriptSourceEntry(src));
+            } else {
+                this.sourceresolver.release(src);
             }
-            compiledScript = entry.getScript(cx, this.scope, false);
+            compiledScript = entry.getScript(cx, this.scope, false, this);
             return compiledScript;
         }
     }
 
-    private Script compileScript(Context cx, Scriptable scope,
-                                 Source src) throws Exception {
+    protected Script compileScript(Context cx, Scriptable scope,
+                                   Source src) throws Exception {
         InputStream is = src.getInputStream();
         if (is == null) {
             throw new ResourceNotFoundException(src.getURI() + ": not found");

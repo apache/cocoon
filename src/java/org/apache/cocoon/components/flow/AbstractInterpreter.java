@@ -45,6 +45,7 @@
 */
 package org.apache.cocoon.components.flow;
 
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -78,11 +79,11 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.9 2003/10/08 20:18:34 cziegeler Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.10 2003/10/15 17:02:05 cziegeler Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,
-             SingleThreaded, Configurable
+             SingleThreaded, Configurable, Disposable
 {
     /**
      * List of source locations that need to be resolved.
@@ -92,7 +93,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     protected org.apache.cocoon.environment.Context context;
     protected ComponentManager manager;
     protected ContinuationsManager continuationsMgr;
-
+    
     /**
      * Whether reloading of scripts should be done. Specified through
      * the "reload-scripts" attribute in <code>flow.xmap</code>.
@@ -110,20 +111,28 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
         checkTime = config.getChild("check-time").getValueAsLong(1000L);
     }
 
+    /**
+     * Composable
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
-
-        // FIXME: Why is the manager null here?
-        if (manager != null) {
-            continuationsMgr
-                    = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
-        }
+        this.continuationsMgr = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
     }
 
     public void contextualize(org.apache.avalon.framework.context.Context context)
-            throws ContextException
-    {
+    throws ContextException{
         this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( (Component)this.continuationsMgr );
+            this.continuationsMgr = null;
+            this.manager = null;
+        }
     }
 
     /**

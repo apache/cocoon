@@ -85,7 +85,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.12 2003/09/29 12:56:05 sylvain Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.13 2003/10/15 17:02:05 cziegeler Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -122,9 +122,9 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     void setup(FOM_JavaScriptInterpreter interp,
-                      Environment env, 
-                      ComponentManager manager,
-                      Logger logger) {
+               Environment env, 
+               ComponentManager manager,
+               Logger logger) {
         this.interpreter = interp;
         this.environment = env;
         this.componentManager = manager;
@@ -987,7 +987,7 @@ public class FOM_Cocoon extends ScriptableObject {
         contMgr = (ContinuationsManager)
             componentManager.lookup(ContinuationsManager.ROLE);
         wk = contMgr.createWebContinuation(unwrap(k),
-                                           (WebContinuation)(parent == null ? null : parent.getWebContinuation()),
+                                           (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,
                                            null);
         FOM_WebContinuation result = new FOM_WebContinuation(wk);
