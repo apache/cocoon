@@ -46,7 +46,7 @@ In the sitemap file, each transformer has a unique name which is mapped to a jav
     <li><link href="lexer-transformer.html">Lexical Transformer</link> (optional)</li>
     <li><link href="parser-transformer.html">Parser Transformer</link> (optional)</li>
     <li><link href="pattern-transformer.html">Pattern Transformer</link> (optional)</li>
-    <li><link href="../../advanced/session/contexts.html">Session Transformer</link> (optional)</li>
+    <li><link href="../../developing/webapps/contexts.html">Session Transformer</link> (optional)</li>
   </ul>
 </s1>
 	</body>

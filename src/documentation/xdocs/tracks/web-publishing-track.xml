@@ -48,7 +48,7 @@
                <p>
                    If you need to convert different data sources to XML, you will have to study
                    the available Cocoon
-                   <link href="../userdocs/components/generators/generators.html">Generators</link>,
+                   <link href="../userdocs/generators/generators.html">Generators</link>,
                    to see what options are available. We hope to have a <em>database queries</em> track
                    soon, to give more detail about the available options to access databases.
                </p>
@@ -57,7 +57,7 @@
                <p>
                    At the other end of the pipeline, you will need a Serializer
                    to generate the target formats. Have a look a the
-                   <link href="../userdocs/components/serializers/serializers.html">available Serializers</link>
+                   <link href="../userdocs/serializers/serializers.html">available Serializers</link>
                    and the corresponding samples to find out which ones you need to to generate your target
                    output formats.
                </p>
