@@ -23,9 +23,9 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 
 
-public class WildcardURIMatcherTestCase extends SitemapComponentTestCase {
+public class RegexpURIMatcherTestCase extends SitemapComponentTestCase {
 
-    public WildcardURIMatcherTestCase(String name) {
+    public RegexpURIMatcherTestCase(String name) {
         super(name);
     }
 
@@ -43,24 +43,27 @@ public class WildcardURIMatcherTestCase extends SitemapComponentTestCase {
      * @return the Test object containing all test cases.
      */
     public static Test suite() {
-        TestSuite suite = new TestSuite(WildcardURIMatcherTestCase.class);
+        TestSuite suite = new TestSuite(RegexpURIMatcherTestCase.class);
         return suite;
     }
     
-    public void testWildcardURIMatch() throws Exception {
+    /**
+     * A simple regexp matcher test
+     */
+    public void testRegexpURIMatch() throws Exception {
         getRequest().setRequestURI("/test/foo/bla/end");
 
         Parameters parameters = new Parameters();
 
-        Map result = match("wildcard-uri", "**", parameters);
+        Map result = match("regexp-uri", "(.*)", parameters);
         System.out.println(result);
         assertNotNull("Test if resource exists", result);
-        assertEquals("Test for **", "test/foo/bla/end", result.get("1"));
+        assertEquals("Test for .*", "test/foo/bla/end", result.get("1"));
         
-        result = match("wildcard-uri", "**/bla/*", parameters);
+        result = match("regexp-uri", "(.*)/bla/(.*)", parameters);
         System.out.println(result);
         assertNotNull("Test if resource exists", result);
-        assertEquals("Test for **/bla/* {1}", "test/foo", result.get("1"));
-        assertEquals("Test for **/bla/* {2}", "end", result.get("2"));
+        assertEquals("Test for (.*)/bla/(.*) {1}", "test/foo", result.get("1"));
+        assertEquals("Test for (.*)/bla/(.*) {2}", "end", result.get("2"));
     }
 }
