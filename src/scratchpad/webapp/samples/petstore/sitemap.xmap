@@ -9,7 +9,7 @@
     </map:transformers>
     <map:generators default="file">
         <map:generator label="content,data" logger="sitemap.generator.velocity" name="velocity" src="org.apache.cocoon.generation.FlowVelocityGenerator"/>
-        <map:generator label="content,data" logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplate"/>
+        <map:generator label="content,data" logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
     </map:generators>
     <map:flow-interpreters default="JavaScript"/>
     <map:serializers default="html"/>
