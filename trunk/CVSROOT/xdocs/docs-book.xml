@@ -34,7 +34,7 @@
 <separator/>
   <page id="livesites" label="Live Sites" source="livesites.xml"/>
 <separator/>
-  <external label="Code Repository" href="http://www.apache.org/websrc/cvsview.cgi/xml-cocoon"/>
+  <external label="Code Repository" href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/"/>
   <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
   <external label="Mail Archive" href="http://mail-archives.apache.org/"/>
   <!-- <external label="Bug Database" href="http://xml.apache.org/bugs/"/> -->

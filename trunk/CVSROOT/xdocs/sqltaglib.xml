@@ -11,7 +11,7 @@
 	<s1 title="Installation">
 		<p>Check your cocoon.properties for this line and add it if it's not already there:</p>
 		<source>processor.xsp.logicsheet.sql.java = 
-  resource://org/apache/cocoon/processor/xsp/library/java/sql.xsl</source>
+  resource://org/apache/cocoon/processor/xsp/library/sql/sql.xsl</source>
   		<p>Note the line break is for formatting purposes, it should not appear in your cocoon.properties file.</p>
         <p>If you are going to use connection pools, then make sure that you have followed the 
            <link href="connection-pool.html">installation</link> steps for the connection pools.</p>

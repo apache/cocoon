@@ -19,7 +19,7 @@
  </s1>
 
  <s1 title="Introduction">
-  <p>The Cocoon Project has gone a long way since it's creation on
+  <p>The Cocoon Project has gone a long way since its creation on
   January 1999. It started as a simple servlet for static XSL styling and became
   more and more powerful as new features were added. Unfortunately, design
   decisions made early in the project influenced its evolution. Today, some of
@@ -35,20 +35,20 @@
   production.</p>
 
   <p>In an era where services rather than software will be key for
-  economical success, a better and less expensive model for web publishing will
+  economic success, a better and less expensive model for web publishing will
   be a winner, especially if based on open standards.</p>
  </s1>
 
  <s1 title="Passive APIs vs. Active APIs">
   <p>Web serving environments must be fast and scalable to be
-  useful. Cocoon1 was born as a &quot;proof of concept&quot; rather than a
-  production software and had significant design restrictions based mainly on
+  useful. Cocoon1 was born as a &quot;proof of concept&quot; rather than
+  production software and had significant design restrictions, based mainly on
   the availability of freely redistributable tools. Other issues were lack of
   detailed knowledge on the APIs available as well as underestimation of the
   project success, being created as a way to learn XSL rather than a full
   publishing system capable of taking care of all XML web publishing needs.</p>
 
-  <p>For the above reasons, Cocoon1 was based on the DOM level 1
+  <p>For the above reasons, Cocoon 1 was based on the DOM level 1
   API which is a <em>passive</em> API and was intended mainly for client side
   operation. This is mainly due to the fact that most DOM
   implementations require the document to reside in memory. While this is
@@ -56,22 +56,22 @@
   concept&quot; stage, it is now considered a main design constraint for Cocoon
   scalability.</p>
 
-  <p>Since the goal of Cocoon2 is the ability to process
+  <p>Since the goal of Cocoon 2 is the ability to process
   simultaneously multiple 100Mb documents in JVM with a few Mbs of heap size,
   careful memory use and tuning of internal components is a key issue. To reach
   this goal, an improved API model was needed. This is now identified in the SAX
   API which is, unlike DOM, event based (so <em>active</em>, in the sense that its
   design is based on the <em>inversion of control</em> principle).</p>
 
-  <p>The event model allows document generators to trigger events that get handled 
-  by the various processing stages and get finally
+  <p>The event model allows document generators to trigger events that get handled
+  by the various processing stages and finally get
   serialized onto the response stream. This has a significant impact on both
   performance (effective and user perceived) and memory needs:</p>
 
   <dl>
-    <dt>incremental operation</dt>
+    <dt>Incremental operation</dt>
     <dd>
-      the response is created during document production. 
+      The response is created during document production.
       Client's perceived performance is dramatically
       improved since clients can start receiving data as soon as it is created,
       not after all processing stages have been performed. In those cases where
@@ -80,43 +80,43 @@
       However, even in these cases performance can be increased with the use of
       tuned memory structures.
     </dd>
-    <dt>lowered memory consumption</dt>
+    <dt>Lowered memory consumption</dt>
     <dd>
-      since most of the
+      Since most of the
       server processing required in Cocoon is incremental, an incremental model
       allows XML production events to be transformed directly into output events
       and character written on streams, thus avoiding the need to store them in
       memory.
     </dd>
-    <dt>easier scalability</dt>
+    <dt>Easier scalability</dt>
     <dd>
-      reduce memory needs allow more
-      concurrent operation to be possible, thus allowing the publishing system
-      to scale as the load increases.
+      Reduced memory needs allow a greater number of
+      concurrent operations to take place simultaneously, thus allowing the
+      publishing system to scale as the load increases.
     </dd>
-    <dt>more optimizable code model</dt>
+    <dt>More optimizable code model</dt>
     <dd>
-      modern virtual machines are based on the idea of <em>hot spots</em>, 
-      code fragments that are used often and, if optimized, increase the process 
-      execution by far.
-      This new event model allows easier detection of hot spots since it's a
+      Modern virtual machines are based on the idea of <em>hotspots</em>,
+      code fragments that are used often and, if optimized, increase the process
+      execution speed by large amounts.
+      This new event model allows easier detection of hotspots since it is a
       method driven operation, rather than a memory driven one. Hot methods can
-      be identified earlier and their optimization performed better.
+      be identified earlier and can be better optimized.
     </dd>
-    <dt>reduced garbage collection</dt>
+    <dt>Reduced garbage collection</dt>
     <dd>
-      even the most advanced
+      Even the most advanced
       and lightweight DOM implementation require at least three to five times
-      (and sometimes much more than this) more memory than original document
-      size. This does not only reduce the scalability of the operation, but also
-      impact overall performance by increasing the number of memory garbage that
-      must be collected after the response in sent to the client. Even if modern
-      virtual machines reduced the overhead of garbage collection, less garbage
-      will always have performance and scalability impacts.
+      (and sometimes much more than this) more memory than the original document
+      size. This not only reduces the scalability of the operation, but also
+      impacts overall performance by increasing the amount of memory garbage that
+      must be collected, tying up CPU cycles. Even if modern
+      virtual machines have reduced the overhead of garbage collection,
+      less garbage will always benefit performance and scalability.
     </dd>
   </dl>
 
-  <p>The above points, alone, would be enough for the Cocoon2
+  <p>The above points alone would be enough for the Cocoon 2
   paradigm shift, even if this event based model impacts not only the general
   architecture of the publishing system but also its internal processing
   components such as XSLT processing and PDF formatting. These components will
@@ -128,7 +128,7 @@
 <s1 title="Reactors Reconsidered">
   <p>Another design choice that should be revised is the reactor
   pattern that was introduced to allow components to be connected in more
-  flexible way. In fact, opposed to the fixed pipe model used up to Cocoon
+  flexible way. In fact, by contrast to the fixed pipe model used up to Cocoon
   1.3.1, the reactor approach allows components to be dynamically connected,
   depending on reaction instructions introduced inside the documents.</p>
 
@@ -138,7 +138,7 @@
   model requires limitations and tradeoffs since the generated events must be
   cached until a reaction instruction is encountered.</p>
 
-  <p>But even if the technical difficulties are solved, a key limitation
+  <p>But even if the technical difficulties could be solved, a key limitation
   remains: there is no single point of management.</p>
 </s1>
 
@@ -158,46 +158,46 @@
   server side logic integration, data validation, etc...</p>
 
   <p>It is only under this light that XML and its web model reveal
-  their power: the HTML web model had too little contracts to be able to develop
-  a structured and more coherent distributed information system, reason that is
-  mainly imposed by the lack of good and algorithmically certain information
-  indexing and knowledge seeking. Lacks that tend to degrade the quality of the
-  truly distributed web in favor of more structured web sites (that based their
-  improved site structure on internal contracts).</p>
+  their power: the HTML web model had too little in the way of contracts to be
+  able to develop a structured and more coherent distributed information system,
+  a reason that is mainly imposed by the lack of good and algorithmically certain
+  information indexing and knowledge seeking systems. Lacks that tend to degrade
+  the quality of the truly distributed web in favor of more structured web sites
+  (that based their improved site structure on internal contracts).</p>
 
   <p>The simplification and engineering of web site management is
-  considered one of the most important Cocoon2 goals. This is done mainly by
-  technologically imposing a reduced number of contracts and place them in a hierarchical
-  shape suitable to replace current high-structure web site management
-  models.</p>
+  considered one of the most important Cocoon 2 goals. This is done mainly by
+  technologically imposing a reduced number of contracts and placing them in a
+  hierarchical shape, suitable for replacing current high-structure web site
+  management models.</p>
 
-  <p>The model that Cocoon2 adopts is the &quot;pyramid model of
+  <p>The model that Cocoon 2 adopts is the &quot;pyramid model of
   web contracts&quot; which is outlined in the picture below</p>
 
-  <figure src="images/pyramid-model.gif" alt="The Cocoon2 Pyramid Model of Contracts"/>
+  <figure src="images/pyramid-model.gif" alt="The Cocoon 2 Pyramid Model of Contracts"/>
 
   <p>and is composed by four different working contexts (the rectangles)</p>
 
   <dl>
     <dt>Management</dt>
     <dd>
-      the people that decide what the site should
+      The people that decide what the site should
       contain, how it should behave and how it should appear
     </dd>
     <dt>Content</dt>
     <dd>
-      the people responsible to write, own and manage
-      the site content. This context may contain several sub-contexts one
-      for each language used to express page content.
+      The people responsible for writing, owning and managing
+      the site content. This context may contain several sub-contexts -
+      one for each language used to express page content.
     </dd>
     <dt>Logic</dt>
     <dd>
-      the people responsible for integration with dynamic
+      The people responsible for integration with dynamic
       content generation technologies and database systems.
     </dd>
     <dt>Style</dt>
     <dd>
-      the people responsible for information
+      The people responsible for information
       presentation, look &amp; feel, site graphics and its maintenance.
     </dd>
   </dl>
@@ -212,8 +212,8 @@
     <li>content - style</li>
   </ul>
 
-  <p>note that there is no <em>logic - style</em> contract. Cocoon2 aims to
-  provide both software and guidelines to allow you to remove such
+  <p>Note that there is no <em>logic - style</em> contract. Cocoon 2 aims to
+  provide both software and guidelines to allow you to remove such a
   contract.</p>
 </s1>
 
@@ -223,86 +223,87 @@
   point. For example, if the W3C-recommended method to link stylesheets to XML
   documents is used, the content and style contexts overlap and it's impossible
   to change the styling behavior of the document without changing it. The same
-  is true for the processing instructions used by the Cocoon1 reactor to drive
-  the page processing: each stage concur to determine the result thus increasing
-  management and debug complexity. Another overlapping in context contracts is
-  the need for URL-encoded parameters to drive the page output. These overlaps
-  break the pyramid model and increase the management costs.</p>
+  is true for the processing instructions used by the Cocoon 1 reactor to drive
+  the page processing: each stage specifies the next stage to determine the result,
+  thus increasing management and debugging complexity. Another overlapping in
+  context contracts is the need for URL-encoded parameters to drive the page output.
+  These overlaps break the pyramid model and increase the management costs.</p>
 
-  <p>In Cocoon2, the reactor pattern will be abandoned in favor of
+  <p>In Cocoon 2, the reactor pattern will be abandoned in favor of
   a pipeline mapping technique. This is based on the fact that the number of
   different contracts is limited even for big sites and grows with a rate
   that is normally much less than its size.</p>
 
-  <p>Also, for performance reasons, Cocoon2 will try to compile
+  <p>Also, for performance reasons, Cocoon 2 will try to compile
   everything that is possibly compilable (pages/XSP into generators, stylesheets
   into transformers, etc...) so, in this new model, the <em>processing chain</em>
   that generates the page contains (in a direct executable form) all the
   information/logic that handles the requested resource to generate its
   response.</p>
 
-  <p>This means that instead of using even-driven request-time DTD
-  interpretation (done in all Cocoon1 processors), these will be either compiled
-  into transformers directly (XSLT stylesheet compilation) or compiled into
-  generators using logicsheets and XSP which will remove totally the need for
-  request-time interpretation solutions like DCP that will be removed.</p>
+  <p>This means that instead of using event-driven request-time DTD interpretation
+  (done in all Cocoon 1 processors), these will be either compiled into transformers
+  directly (XSLT stylesheet compilation) or compiled into generators using
+  logicsheets and XSP which will remove totally the need for request-time
+  interpretation solutions like DCP that will be removed.</p>
 
   <note>Some of these features are already present in latest Cocoon 1.x
-   releases but the Cocoon2 architecture will make them central to its new
-   core</note>
+   releases but the Cocoon 2 architecture will make them central to its new
+   core.</note>
 </s1>
 
 <s1 title="Sitemap">
-  <p>In Cocoon2 terminology, a <em>sitemap</em> is the collection of pipeline
+  <p>In Cocoon 2 terminology, a <em>sitemap</em> is the collection of pipeline
   matching informations that allow the Cocoon engine to associate the requested
   URI to the proper response-producing pipeline.</p>
 
   <p>The sitemap physically represents the central repository for web site
   administration, where the URI space and its handling is maintained.</p>
-  
-  <p>Please, refer to the Cocoon2 CVS module for more information on this.</p>
+
+  <p>Please, refer to the Cocoon 2 CVS module for more information on this.</p>
 
 </s1>
 
 <s1 title="Pre-compilation, Pre-generation and Caching">
-  <p>The cache system in Cocoon1 will be ported with very little
+  <p>The cache system in Cocoon 1 will be ported with very little
   design changes since it's very flexible and was not polluted by early design
-  constraints since it appeared in later versions. The issue regards static file
-  caching that, no matter what, will always be slower than direct web server
-  caching, so Cocoon2 will be the most <em>proxy friendly</em> as possible.</p>
+  constraints since it appeared in later versions. The issue regarding static
+  file caching that, no matter what, will always be slower than direct web server
+  caching, means that Cocoon 2 will be as <em>proxy friendly</em> as possible.</p>
 
-  <p>To be able to put most of the static part job back on the web
-  server (where it belongs), Cocoon2 will greatly improve it's command line
+  <p>To be able to put most of the static part of the job back on the web
+  server (where it belongs), Cocoon 2 will greatly improve its command line
   operation, allowing the creation of <em>site makefiles</em> that will
   automatically scan the web site and the source documents and will provide a
   way to <em>regenerate</em> the static part of a web site (images and tables
   included!) based on the same XML model used in the dynamic operation version.</p>
 
-  <p>Cocoon2 will, in fact, be the integration between Cocoon1 and Stylebook.</p>
+  <p>Cocoon 2 will, in fact, be the integration between Cocoon 1 and Stylebook.</p>
 
   <p>It will be up to the web server administrator to use static
   regeneration capabilities on a time basis, manually or triggered by some
-  particular event (database update signal) since Cocoon2 will only provide
+  particular event (e.g. database update signal) since Cocoon 2 will only provide
   servlet and command line capabilities. The nice integration is based on the
   fact that there will be no behavioral difference if the files are dynamically
-  generated in Cocoon2 via the servlet operation and cached internally or
+  generated in Cocoon 2 via the servlet operation and cached internally or
   pre-generated and served directly by the web server, as long as URI contracts
   are kept the same by the system administrator (via URL-rewriting or aliasing)</p>
 
-  <p>Also, it will be possible to avoid on-fly page and stylesheet
-  compilation (which make debugging harder) with command line pre-compilation
+  <p>Also, it will be possible to avoid on-the-fly page and stylesheet
+  compilation (which makes debugging harder) with command line pre-compilation
   hooks that will work like normal compilers from a developer's point of view.</p>
 </s1>
 
 <s1 title="Development Status">
-  <p>Cocoon2 development already started, but should be considered of alpha
-  quality. If you dare, you might take a look at it on the <em>xml-cocoon2</em>
-  CVS branch in the Cocoon CVS module, or, if you are not a CVS expert, this means
+  <p>Cocoon 2 development has already started, but should be considered "alpha
+  quality" - i.e. certainly not ready for use on public websites!
+  If you dare, you might take a look at it on the <em>xml-cocoon2</em>
+  CVS branch in the Cocoon CVS module. If you are not a CVS expert, this means
   typing:</p>
 
   <source>cvs checkout -r xml-cocoon2 xml-cocoon</source>
 
-  <p>For more information on CVS access, refer to the CVS-howtos on this web
+  <p>For more information on CVS access, refer to the CVS docs on this web
   site.</p>
 </s1>
 

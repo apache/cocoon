@@ -5,6 +5,12 @@
 <document><header><title>SQL Processor</title><authors><person name="Donald A. Ball Jr." email="balld@webslingerz.com"/></authors></header><body>
 
 	<s1 title="Description">
+    <note><strong>SQLProcessor is deprecated and no longer supported,</strong>
+     and it is recommended that you use
+     the <connect href="sqltaglib.xml">SQL XSP taglibs</connect>
+     instead. This documentation is provided for those who
+     are still using SQLProcessor.</note>
+
 		<p>SQLProcessor is a processor for Cocoon that performs SQL queries, translates the resultset into an XML fragment, and inserts the fragment in the original document. I wrote it because I've got quite a bit of "legacy" data in SQL databases that I wanted to be able to easily access from Cocoon. I believe that servers and data structures capable of storing and retrieving large amounts of XML data natively will arise, obviating the need for this type of middleware. I also believe that it's going to take a while for them to achieve the same performance and stability we've come to expect from SQL databases, hence the current need for SQLProcessor or something like it.</p>
 	</s1>
 

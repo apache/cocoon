@@ -37,11 +37,6 @@
     <li><strong>Jakarta-Tools</strong></li>
    </ul>
   
-   <p> 
-    This information could be added to the <strong>Working Systems</strong> table within the
-    Cocoon installation document at <code>http://xml.apache.org/cocoon/install.html</code>.
-   </p>  
- 
    <p>
     What follows is some step by step info on how I got it all working. I am submitting this
     for two reasons: one, as a reference for me for installations on other machines at a later
@@ -343,8 +338,6 @@
 
      #! /bin/sh
 
-     # $Id: installation-case-solaris-8.xml,v 1.1 2000-08-17 22:33:15 stefano Exp $
-     
      JAVA_HOME=/usr/local/j2sdk1_3_0beta_refresh 
      
      if [ -z "$JAVA_HOME" ]
@@ -361,7 +354,12 @@
      
      JAVACMD=$JAVA_HOME/bin/java
      
-     cp=../jakarta-ant/lib/ant.jar:../jakarta-tools/moo.jar:../jakarta-ant/lib/xml.jar:../build/tomcat/classes:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dev.jar
+     cp=../jakarta-ant/lib/ant.jar:\
+     ../jakarta-tools/moo.jar:\
+     ../jakarta-ant/lib/xml.jar:\
+     ../build/tomcat/classes:\
+     $JAVA_HOME/lib/tools.jar:\
+     $JAVA_HOME/lib/dev.jar
      
      $JAVACMD -classpath $cp:$CLASSPATH org.apache.tools.ant.Main "$@"
 
@@ -374,7 +372,6 @@
     <source><![CDATA[
      #!/bin/sh
      #
-     # $Id: installation-case-solaris-8.xml,v 1.1 2000-08-17 22:33:15 stefano Exp $
      
      # Shell script to start and stop the server
      
@@ -861,7 +858,7 @@
     <source><![CDATA[
       #!/bin/sh
       #
-      # $Id: installation-case-solaris-8.xml,v 1.1 2000-08-17 22:33:15 stefano Exp $
+      # $Id: installation-case-solaris-8.xml,v 1.2 2000-09-19 23:01:44 greenrd Exp $
       
       # Shell script to start and stop the server
       

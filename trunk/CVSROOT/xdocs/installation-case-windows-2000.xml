@@ -463,10 +463,10 @@
      
      <!-- uncomment the following to use Jikes for JSP compilation
      
-             <init-param>
-                 <param-name>jspCompilerPlugin</param-name>
-                 <param-value>org.apache.jasper.compiler.JikesJavaCompiler</param-value>
-             </init-param>
+       <init-param>
+         <param-name>jspCompilerPlugin</param-name>
+         <param-value>org.apache.jasper.compiler.JikesJavaCompiler</param-value>
+       </init-param>
      
      -->
      
@@ -640,9 +640,12 @@
      	    path="logs/jasper.log"
                  verbosityLevel = "INFORMATION" />
      
-         <!-- Add "home" attribute if you want tomcat to be based on a different directory
-              "home" is used to create work and to read webapps, but not for libs or CLASSPATH.
-              Note that TOMCAT_HOME is where tomcat is installed, while ContextManager home is the
+         <!-- Add "home" attribute if you want tomcat to be based on a 
+              different directory
+              "home" is used to create work and to read webapps, but not 
+              for libs or CLASSPATH.
+              Note that TOMCAT_HOME is where tomcat is installed, while 
+              ContextManager home is the
               base directory for contexts, webapps/ and work/
            -->
          <ContextManager debug="0" workDir="work" >
@@ -653,18 +656,21 @@
              <ContextInterceptor className="org.apache.tomcat.context.WebXmlReader" />
              <ContextInterceptor className="org.apache.tomcat.context.LoadOnStartupInterceptor" />
              <!-- Request processing -->
-             <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" debug="0" />
+             <RequestInterceptor className="org.apache.tomcat.request.SimpleMapper" 
+               debug="0" />
              <RequestInterceptor className="org.apache.tomcat.request.SessionInterceptor" />
              <RequestInterceptor className="org.apache.tomcat.request.SecurityCheck" />
              <RequestInterceptor className="org.apache.tomcat.request.FixHeaders" />
      
              <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
-                 <Parameter name="handler" value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
+                 <Parameter name="handler" 
+                   value="org.apache.tomcat.service.http.HttpConnectionHandler"/>
                  <Parameter name="port" value="8080"/>
              </Connector>
      
              <Connector className="org.apache.tomcat.service.SimpleTcpConnector">
-                 <Parameter name="handler" value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
+                 <Parameter name="handler" 
+                   value="org.apache.tomcat.service.connector.Ajp12ConnectionHandler"/>
                  <Parameter name="port" value="8007"/>
              </Connector>
      
@@ -721,6 +727,9 @@
 
 
    <p><code>C:\Program_Files\jakarta-tomcat\bin\tomcat.bat</code></p>
+
+   <note>Indented lines are meant to be part of the previous line. This formatting
+    is done for legibility.</note>
    
     <source><![CDATA[
 
@@ -806,7 +815,9 @@
      echo _______________________________________
      echo Starting JAKARTA-TOMCAT in a new window
      echo _______________________________________
-     start "TOMCAT is RUNNING" /min java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+     start "TOMCAT is RUNNING" /min java %TOMCAT_OPTS% 
+       -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat 
+       %2 %3 %4 %5 %6 %7 %8 %9
      echo __________________________
      echo Starting Apache Web Server
      echo __________________________
@@ -816,7 +827,8 @@
      :runServer
      rem Start the Tomcat Server
      echo Using classpath: %CLASSPATH%
-     java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
+     java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" 
+       org.apache.tomcat.startup.Tomcat %2 %3 %4 %5 %6 %7 %8 %9
      goto cleanup
      
      :stopServer
@@ -825,20 +837,24 @@
      echo ______________________
      echo Sopping JAKARTA-TOMCAT
      echo ______________________
-     java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
+     java %TOMCAT_OPTS% -Dtomcat.home="%TOMCAT_HOME%" 
+       org.apache.tomcat.startup.Tomcat -stop %2 %3 %4 %5 %6 %7 %8 %9
      goto cleanup
      
      :runAnt
      rem Run ant
      set CLASSPATH=%CLASSPATH%;%TOMCAT_HOME%\lib\ant.jar
      echo Using classpath: %CLASSPATH%
-     java %ANT_OPTS% -Dant.home="%TOMCAT_HOME%" -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main %2 %3 %4 %5 %6 %7 %8 %9
+     java %ANT_OPTS% -Dant.home="%TOMCAT_HOME%" 
+       -Dtomcat.home="%TOMCAT_HOME%" org.apache.tools.ant.Main 
+       %2 %3 %4 %5 %6 %7 %8 %9
      goto cleanup
      
      :runJspc
      rem Run ant
      echo Using classpath: %CLASSPATH%
-     java %JSPC_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.jasper.JspC %2 %3 %4 %5 %6 %7 %8 %9
+     java %JSPC_OPTS% -Dtomcat.home="%TOMCAT_HOME%" org.apache.jasper.JspC 
+       %2 %3 %4 %5 %6 %7 %8 %9
      goto cleanup
      
      :setupEnv

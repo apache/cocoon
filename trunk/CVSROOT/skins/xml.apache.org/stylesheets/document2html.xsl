@@ -460,7 +460,16 @@
  </xsl:template>
 
  <xsl:template match="connect">
-  <xsl:apply-templates/>
+  <xsl:variable name="htmlref"><xsl:choose>
+    <xsl:when test="substring(@href,string-length(@href)-4)='.xml'">
+     <xsl:value-of select="substring(@href,1,string-length(@href)-4)"/>.html
+    </xsl:when>
+    <xsl:otherwise>
+     <xsl:value-of select="@href"/>
+    </xsl:otherwise>
+   </xsl:choose></xsl:variable>
+
+  <a href="{$htmlref}#{@anchor}"><xsl:apply-templates/></a>
  </xsl:template>
 
  <xsl:template match="jump">

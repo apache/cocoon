@@ -13,6 +13,13 @@
  
  <body>
  <s1 title="Introduction">
+
+    <note><strong>DCPProcessor is deprecated,</strong>
+     and it is recommended that you use
+     the <connect href="xspprocessor.xml">XSP processor</connect>
+     instead. This documentation is provided for those who
+     are still using DCP.</note>
+
   <p>
    In addition to static content (that is, hand-written documents produced
    by web authors), web publishing also requires <em>dynamic content

@@ -44,9 +44,9 @@
    <p>
      This is probably due to incompatibilities between the
      <code>cocoon.properties</code> configuration files in the old version and the
-     new one. Since Cocoon is a very modular framework and its architecture is not
-     yet stable, we always suggest you replace your old configuration file with the
-     new one shipped with the new release.
+     new one. Since Cocoon is a very modular framework and its architecture 
+     is not yet stable, we always suggest that you replace your old
+     configuration file with the new one shipped with the new release.
    </p>
    <p>
      We are working to make sure that this won't be required any more in the
@@ -101,17 +101,19 @@
    What's wrong?</question>
   <answer>
    <p>You probably didn't add all the needed packages to your compiler's classpath.
-    Note that Cocoon supports much more packages than you normally use and you should have
-    them all on your classpath to compile the full source code.</p>
+    Note that Cocoon supports many more packages than you normally use,
+    and you should have them all on your classpath to compile the full 
+    source code.</p>
 
-   <p>Note that if you tried to just type <code>javac Cocoon.java</code>
-    or even <code>javac *.java</code> alone,
-    many classes are not compiled
-    because there is no hardcoded reference to them. Cocoon uses dynamic loading based on its
-    property file to get the modules it needs when started. For this reason, the compiler is
-    not able to tell which class will be use and its dependency checks are never complete.</p>
+   <p>If you tried to just type <code>javac Cocoon.java</code>
+    or even <code>javac *.java</code> alone, many classes are not compiled
+    because there is no hardcoded reference to them. Cocoon uses dynamic 
+    loading based on its cocoon.properties file to get the modules it
+    needs when started. For this reason, the compiler is
+    not able to tell which classes will be used, thus resulting in an
+    incomplete and non-functional build.</p>
 
-   <p>Cocoon should always be compiled and built using the
+   <p>Instead, Cocoon should always be compiled and built using the
     <link href="http://jakarta.apache.org/ant">Ant</link> build tool (included).
     Please refer to the build.xml file for more information on how to set up your
     system to compile Cocoon.</p>
@@ -142,8 +144,8 @@
     Also, on the XSLT side of things, Michael Kay's "XSLT - Programmer's Reference" is
     recommended by one of the Cocoon developers, Robin Green. It is a huge tome
     explaining nearly everything you ever wanted to know about XSLT - and it is
-    bang up to date with the W3C XSLT 1.0 Recommendation - unlike some XML books out
-    there.
+    bang up to date with the W3C XSLT 1.0 Recommendation (unlike some XML
+    books out there!)
    </p>
   </answer>
  </faq>
@@ -156,11 +158,13 @@
    to recompile. What gives?</question>
   <answer>
 
-   <p>If you use XSLT to implement a logicsheet instead of the preferred mechanism,
+   <p>If you use <![CDATA[<?xml-stylesheet?>]]>
+    to implement a logicsheet instead of the preferred mechanism,
     the <![CDATA[<?xml-logicsheet?>]]> processing
     instruction, then you need to "touch" the .xml file as well as the logicsheet
     to trigger a recompile. This is a known bug (which can be avoided by only using
-    the preferred mechanisms mentioned above) and should be fixed soon.</p>
+    the preferred mechanism - see the next question) and should be fixed
+    soon.</p>
 
    <p>If you use namespace-mapped logicsheets, see the next question.</p>
 
@@ -171,10 +175,10 @@
     needed because the XSPProcessor uses file modification dates to determine
     whether a page needs to be recompiled.</p>
 
-   <p>The other thing is external classes. If you modify a class outside an XSP
-    page, and the XSP page refers to the class, you need to not only recompile
-    the class, but also restart the servlet runner. This is a problem which is
-    planned to be fixed soon.</p>
+   <p>The other main factor is external classes. If you modify a class
+    outside an XSP page, and the XSP page refers to the class, you need to
+    not only recompile the class, but also restart the servlet 
+    runner. This is a problem which is planned to be fixed soon.</p>
   </answer>
  </faq>
 
@@ -297,8 +301,8 @@
   </question>
   <answer>
    <p>There is an encoding line for XSP in <code>cocoon.properties</code>. Uncomment it
-    and change it to the encoding you use. See also <link href="#encoding">
-    these two questions</link>.</p>
+    and change it to the encoding you use. See also <jump href="#faq-encoding">
+    these two questions</jump>.</p>
   </answer>
  </faq>
 </faqsection>
@@ -332,8 +336,8 @@
   </question>
   <answer>
    <p>There is an encoding line for XSP in <code>cocoon.properties</code>. Uncomment it
-    and change it to the encoding you use. See also <link href="#encoding">
-    these two questions</link>.</p>
+    and change it to the encoding you use. See also <jump href="#faq-encoding">
+    these two questions</jump>.</p>
   </answer>
  </faq>
 
@@ -439,23 +443,24 @@
   <question>Why is Internet Explorer not showing PDF or VRML samples?</question>
   <answer>
    <p>This is a long-time problem with Internet Explorer which doesn't look for
-   the MIME type sent by the http response, but rather parses the file extention
-   to determine what program should open it (unlike other browsers which are
-   smarter and follow the Internet standards correctly).
+   the MIME type sent by the HTTP response, but instead just looks at the
+   file extension at the end of the URL to determine what program should
+   open it (unlike other
+   browsers which are smarter and follow the Internet standards 
+   correctly).
    There is a trick that forces IE to look at the MIME type -
-   adding a <em>'?'</em> at the end of your URI. Even if Cocoon is ignoring
-   this, IE won't and will react on the MIME type and will trigger the right
-   plugin/application for that content.</p>
+   adding a <code>?</code> at the end of your URI. Cocoon should
+   ignore this, but IE won't, and will react to the MIME type and 
+   trigger the correct plugin/application for that content.</p>
 
    <p>In the last resort, renaming all your xml files to end in .pdf should always
     work. Note that this is <em>not</em> a bug in Cocoon and is completely outside
     our control.</p>
 
-   <note>There is a bug in MS Internet Explorer 5 which even ignores the question
-    mark. See the
+   <note>There is a bug in MS Internet Explorer 5 which even ignores the 
+    question mark. See the
     <link href="http://support.microsoft.com/support/kb/articles/Q177/3/21.ASP">
     Microsoft Knowledge Base</link>.</note>
-
   </answer>
  </faq>
 
@@ -521,8 +526,8 @@
     found).</p>
 
    <p>Once you have got the sample working, if your page still isn't working,
-    access it from a normal browser like IE, <link href="#fakeuseragent">
-    faking the user agent string</link> to see what is going on.</p>
+    access it from a normal browser like IE, <jump href="#faq-fakeuseragent">
+    faking the user agent string</jump> to see what is going on.</p>
   </answer>
  </faq>
 </faqsection>
@@ -565,7 +570,8 @@
    <p>You can edit this sample file or its stylesheet
     to generate totals, averages, sort, filter etc. As with all the rest of the
     cocoon codebase, contributions of improvements are welcome! Send them to
-    cocoon-dev@xml.apache.org .</p>
+    <link href="mailto:cocoon-dev@xml.apache.org">
+    cocoon-dev@xml.apache.org</link>.</p>
 
    <note>You will notice that pages take longer to produce when first accessed, or accessed
     after a change (especially XSP pages, which need to be recompiled when changed).
@@ -630,22 +636,25 @@
  </faq>
 
  <faq id="backporting">
-  <question>I see that Cocoon 1.x has starting to incorporate features planned for
-   Cocoon 2.x - why?</question>
+  <question>I see that Cocoon 1.x has started to incorporate features
+   planned for Cocoon 2.x - why?</question>
   <answer>
    <p>We believe that smooth project evolution is much better than step-wise
-    revolutionary paths. For this reason, we'll try hard to incorporate some of the
-    Cocoon2 features in the main project thus limiting the porting effort for you
-    over time.</p>
+    revolutionary paths. For this reason, we'll try hard to incorporate some 
+    of the Cocoon2 features in the main project thus limiting the porting
+    effort for you over time.</p>
    <p>Note that this doesn't mean that Cocoon won't change in the future and we
     state clearly that we do care about back compatibility but only when this is
     not limiting the evolution of the platform too much.</p>
-   <p>For this reason, while the DOM->SAX evolution might be totally painless, the
-    sitemap proposal will completely change the Cocoon configurations. Anyway, Cocoon
-    has a long way to go and if it changes during its evolution to a final state,
-    don't complain: you have been warned.</p>
-   <p>However, we DO consider and value the time you invested in Cocoon so we'll
-    do our best to make sure that unneeded back incompatibilities don't get included.</p>
+   <p>For this reason, while we plan to make the DOM->SAX evolution 
+    relatively painless, the
+    sitemap proposal will completely change the Cocoon configurations. 
+    Anyway, Cocoon
+    has a long way to go and if it changes during its evolution to a final 
+    state, don't complain: you have been warned.</p>
+   <p>However, we DO consider and value the time you invested in Cocoon so 
+    we'll do our best to make sure that unneeded back incompatibilities
+    don't get included.</p>
   </answer>
  </faq>
 </faqsection>
@@ -683,8 +692,9 @@
     ]]>
    </source>
 
-  <p>To build the URL dynamically in the above example,
-   just do something like this:</p>
+  <p>(This assumes that the "foo" servlet is returning a well-formed XML 
+   document, rather than the more usual HTML.) To build the URL
+   dynamically in the above example, just do something like this:</p>
 
    <source>
     <![CDATA[
@@ -740,6 +750,21 @@
   <answer>
    <p>Download the latest pre-release from CVS. Instructions for this are on the
     Cocoon 2 page of this documentation.</p>
+  </answer>
+ </faq>
+
+ <faq id="cvs-firewall">
+  <question>
+   I cannot access CVS because I am behind a firewall. How can I download the latest
+   in-development sources?
+  </question>
+  <answer>
+   <p>Click the Dev Snapshots link on the sidebar to your left. This contains
+    tar.gz files of the complete C1 CVS repository, generated every six hours.</p>
+   <p>You can also browse/download individual files and view CVS diffs and logs using
+    webcvs (click on the Code Repository link on the sidebar).</p>
+   <p>Alternatively you could ask your firewall administrator to set up SOCKS to allow
+    you to access CVS directly.</p>
   </answer>
  </faq>
 
@@ -852,7 +877,7 @@
   <question>Where do I get more information on XSL and XML?</question>
   <answer>
    <p>
-     See also <link href="#goodbooks">Good Books</link>.
+     See also <jump href="#faq-goodbooks">Good Books</jump>.
    </p>
 
    <p>
@@ -865,9 +890,9 @@
     <li><link href="http://www.xml.org">http://www.xml.org</link> - A very nice site for XML
       information.</li>
     <li><link href="http://www.w3.org/xml/">http://www.w3.org/xml/</link> - The XML
-      official home page at W3C</li>
+      official home page at the W3C</li>
     <li><link href="http://www.w3.org/style/xsl">http://www.w3.org/style/xsl</link> - The XSL official
-      home page W3C</li>
+      home page at the W3C</li>
     <li><link href="http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/">
      http://dmoz.org/Computers/Data_Formats/Markup_Languages/XML/</link>
      - The Open Directory's XML listings</li>

@@ -20,8 +20,11 @@
    <sl>
     <xsl:for-each select="action">
      <li>
-      <strong><xsl:text>[</xsl:text><xsl:value-of select="@context"/><xsl:text>]</xsl:text></strong><xsl:text> </xsl:text>
+      <strong>[<xsl:value-of select="@context"/>]</strong><xsl:text> </xsl:text>
       <xsl:apply-templates/>
+      <xsl:if test="@assigned-to">
+       <em>(assigned to <xsl:value-of select="@assigned-to"/>)</em>
+      </xsl:if>
      </li>
     </xsl:for-each>
    </sl>
