@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # Cocoon Unix Shell Script
 #
-# $Id: cocoon.sh,v 1.6 2003/04/13 16:26:54 morrijr Exp $
+# $Id: cocoon.sh,v 1.7 2003/05/02 06:53:08 bdelacretaz Exp $
 # -----------------------------------------------------------------------------
 
 # Configuration variables
@@ -70,8 +70,16 @@ if [ "$COCOON_HOME" = "" ] ; then
 fi
 
 if [ "$COCOON_WEBAPP_HOME" = "" ] ; then
-  COCOON_WEBAPP_HOME="$COCOON_HOME/build/webapp"
+  STANDALONE_WEBAPP=../webapp
+  if [ -d $STANDALONE_WEBAPP ] ; then
+    # for standalone-webapp setup
+    COCOON_WEBAPP_HOME=$STANDALONE_WEBAPP
+  else
+    # when in the build environment
+    COCOON_WEBAPP_HOME="$COCOON_HOME/build/webapp"
+  fi
 fi
+echo "$0: using $COCOON_WEBAPP_HOME as the webapp directory"
 
 if [ "$COCOON_LIB" = "" ] ; then
   COCOON_LIB="$COCOON_WEBAPP_HOME/WEB-INF/lib"

@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.5 2003/04/12 02:50:31 ghoward Exp $
+:: $Id: cocoon.bat,v 1.6 2003/05/02 06:53:08 bdelacretaz Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -66,8 +66,14 @@ set JETTY_ADMIN_PORT=8889
 :gotJettyAdminPort
 
 if not "%JETTY_WEBAPP%" == "" goto gotWebapp
+set DEMO_WEBAPP=..\webapp
+if not exist %DEMO_WEBAPP% goto standardWebapp
+set JETTY_WEBAPP=%DEMO_WEBAPP%
+goto gotWebapp
+:standardWebapp
 set JETTY_WEBAPP=%COCOON_HOME%\build\webapp
 :gotWebapp
+echo cocoon.bat: using %JETTY_WEBAPP% as the webapp directory
 
 if not "%JAVA_DEBUG_PORT%" == "" goto gotDebugPort
 set JAVA_DEBUG_PORT=8000
