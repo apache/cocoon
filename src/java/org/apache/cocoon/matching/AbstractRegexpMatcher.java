@@ -17,8 +17,8 @@ package org.apache.cocoon.matching;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.sitemap.SitemapParameters;
 import org.apache.regexp.RE;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
@@ -33,7 +33,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractRegexpMatcher.java,v 1.3 2004/03/05 13:02:56 bdelacretaz Exp $
+ * @version CVS $Id: AbstractRegexpMatcher.java,v 1.4 2004/03/08 12:07:39 cziegeler Exp $
  */
 
 public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher implements ThreadSafe {
@@ -74,8 +74,7 @@ public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher im
     public Map preparedMatch(Object preparedPattern, Map objectModel, Parameters parameters) throws PatternException {
 
         if(preparedPattern == null) {
-            throw new PatternException("A pattern is needed at " +
-                parameters.getParameter(Constants.SITEMAP_PARAMETERS_LOCATION, "unknown location"));
+            throw new PatternException("A pattern is needed at " + SitemapParameters.getStatementLocation(parameters));
         }
 
         RE re = new RE((REProgram)preparedPattern);
