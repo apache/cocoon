@@ -55,7 +55,7 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-01-22 21:56:51 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-01-23 17:47:14 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -68,9 +68,6 @@ implements Transformer, Composer, Poolable, Configurable {
 
     /** The trax TransformerHandler */
     private TransformerHandler transformerHandler = null;
-
-    /** Hash table for Templates */
-    private static Hashtable templatesCache = new Hashtable();
 
     /** Is the cache turned on? (default is on) */
     private boolean useCache = true;
@@ -93,8 +90,8 @@ implements Transformer, Composer, Poolable, Configurable {
             // Is this a local file
             if (systemID.startsWith("file:/") == true) {
                 // Cached is an array of the template and the caching time
-                Object[] templateAndTime = (Object[])templatesCache.get(xsluri);
-                if (templateAndTime != null) {
+                if (store.containsKey(xsluri) == true) {
+                    Object[] templateAndTime = (Object[])store.get(xsluri);
                     File xslFile = new File(systemID.substring(6));
                     long cachedTime = ((Long)templateAndTime[1]).longValue();
                     if (cachedTime < xslFile.lastModified()) {
@@ -105,7 +102,9 @@ implements Transformer, Composer, Poolable, Configurable {
                 }
             } else {
                 // only the template is cached
-                templates = (Templates)templatesCache.get(xsluri);
+                if (store.containsKey(xsluri) == true) {
+                   templates = (Templates)store.get(xsluri);
+                }
             }
         }
         if(templates == null)
@@ -119,9 +118,9 @@ implements Transformer, Composer, Poolable, Configurable {
                     Object[] templateAndTime = new Object[2];
                     templateAndTime[0] = templates;
                     templateAndTime[1] = new Long(System.currentTimeMillis());
-                    templatesCache.put(xsluri, templateAndTime);
+                    store.hold(xsluri, templateAndTime);
                 } else {
-                    templatesCache.put(xsluri,templates);
+                    store.hold(xsluri,templates);
                 }
             }
         }
