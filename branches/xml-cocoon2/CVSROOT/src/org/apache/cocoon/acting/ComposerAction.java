@@ -7,9 +7,9 @@
  *****************************************************************************/
 package org.apache.cocoon.acting;
 
-import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.Composer;
 import org.apache.cocoon.Cocoon;
 
 /**
@@ -17,7 +17,7 @@ import org.apache.cocoon.Cocoon;
  * that extends this to access SitemapComponents.
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-27 16:49:14 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-11 12:41:12 $
  */
 public abstract class ComposerAction extends AbstractAction implements Composer {
 

@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.io.IOException;
 
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
@@ -36,7 +36,7 @@ import org.xml.sax.EntityResolver;
 
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-11 10:52:34 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-11 12:41:21 $
  */
 public class NonCachingEventPipeline extends AbstractEventPipeline {
 

@@ -18,7 +18,7 @@ import org.apache.cocoon.xml.dom.*;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -38,7 +38,7 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-03-12 17:13:04 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-11 12:41:24 $
  */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, Poolable {
 

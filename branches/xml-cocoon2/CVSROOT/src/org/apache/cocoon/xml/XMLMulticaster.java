@@ -17,7 +17,7 @@ import org.xml.sax.ext.LexicalHandler;
 
 /**
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-23 17:20:48 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-11 12:41:31 $
  */
 
 public final class XMLMulticaster implements XMLConsumer {

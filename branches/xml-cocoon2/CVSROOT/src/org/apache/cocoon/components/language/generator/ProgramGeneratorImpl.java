@@ -9,44 +9,44 @@
 package org.apache.cocoon.components.language.generator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.FileNotFoundException;
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
 import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Modifiable;
 import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.ComponentSelector;
+import org.apache.avalon.Composer;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Loggable;
+import org.apache.avalon.Modifiable;
+import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
-import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.ThreadSafe;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.components.language.LanguageException;
-import org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage;
 import org.apache.cocoon.components.language.markup.MarkupLanguage;
+import org.apache.cocoon.components.language.markup.sitemap.SitemapMarkupLanguage;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
+import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.util.IOUtils;
+import org.apache.log.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.43 $ $Date: 2001-03-19 21:20:21 $
+ * @version CVS $Revision: 1.1.2.44 $ $Date: 2001-04-11 12:41:19 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -84,10 +84,10 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
 
     /** Contextualize this class */
     public void contextualize(Context context) {
-       if (this.workDir == null) {
-           this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
-           this.rootPath = (String) context.get(Constants.CONTEXT_ROOT_PATH);
-       }
+        if (this.workDir == null) {
+            this.workDir = (File) context.get(Constants.CONTEXT_WORK_DIR);
+            this.rootPath = (String) context.get(Constants.CONTEXT_ROOT_PATH);
+        }
     }
 
     /**
@@ -95,7 +95,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
      * <code>ComponentSelector</code> used as language factory for both markup and programming languages.
      * @param manager The global component manager
      */
-    public void compose(ComponentManager manager) throws ComponentManagerException {
+    public void compose(ComponentManager manager) throws ComponentException {
         if ((this.manager == null) && (manager != null)) {
             this.manager = manager;
             try {
@@ -132,7 +132,7 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
                                   String markupLanguageName,
                                   String programmingLanguageName,
                                   EntityResolver resolver)
-    throws Exception {
+        throws Exception {
 
         // Create filesystem store
         // Set filenames
@@ -223,15 +223,15 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
     }
 
     private Class generateResource(File file,
-                                  String normalizedName,
-                                  MarkupLanguage markupLanguage,
-                                  ProgrammingLanguage programmingLanguage,
-                                  EntityResolver resolver)
-    throws Exception {
+                                   String normalizedName,
+                                   MarkupLanguage markupLanguage,
+                                   ProgrammingLanguage programmingLanguage,
+                                   EntityResolver resolver)
+        throws Exception {
         // Generate code
         String code = markupLanguage.generateCode(
-            new InputSource(
-            new FileReader(file)), normalizedName, programmingLanguage, resolver);
+                                                  new InputSource(
+                                                                  new FileReader(file)), normalizedName, programmingLanguage, resolver);
         String encoding = markupLanguage.getEncoding();
         // Format source code if applicable
         CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();

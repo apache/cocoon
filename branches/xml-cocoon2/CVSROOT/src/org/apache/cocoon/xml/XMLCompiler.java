@@ -20,7 +20,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-01-23 17:20:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-11 12:41:31 $
  */
 
 public final class XMLCompiler implements ContentHandler {
@@ -186,6 +186,4 @@ public final class XMLCompiler implements ContentHandler {
 
             return str.toString();
         }
-
-
 }

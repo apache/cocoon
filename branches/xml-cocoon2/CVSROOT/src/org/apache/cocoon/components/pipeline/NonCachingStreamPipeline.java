@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.Composer;
 import org.apache.avalon.configuration.Parameters;
@@ -36,7 +36,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-04 15:42:43 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-11 12:41:21 $
  */
 public class NonCachingStreamPipeline extends AbstractLoggable implements StreamPipeline {
     private EventPipeline eventPipeline;
@@ -62,8 +62,8 @@ public class NonCachingStreamPipeline extends AbstractLoggable implements Stream
      *
      * @param manager The <code>ComponentManager</code> which this
      *               <code>Composer</code> uses.
-     * @throws ComponentManagerException  */
-    public void compose (ComponentManager manager) throws ComponentManagerException {
+     * @throws ComponentException  */
+    public void compose (ComponentManager manager) throws ComponentException {
         this.manager = manager;
     }
 

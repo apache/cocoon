@@ -15,8 +15,7 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.DefaultComponentSelector;
 
 import org.apache.cocoon.components.url.URLFactory;
@@ -24,7 +23,7 @@ import org.apache.cocoon.components.url.URLFactory;
 /** Default component manager for Cocoon's sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: SitemapComponentSelector.java,v 1.1.2.7 2001-04-05 20:15:36 bloritsch Exp $
+ * @version CVS $Id: SitemapComponentSelector.java,v 1.1.2.8 2001-04-11 12:41:28 donaldp Exp $
  */
 public class SitemapComponentSelector extends DefaultComponentSelector {
     HashMap mime_types;
@@ -41,7 +40,7 @@ public class SitemapComponentSelector extends DefaultComponentSelector {
     }
 
     protected void addSitemapComponent(Object hint, Class component, Configuration conf, String mime_type)
-    throws ComponentManagerException,
+    throws ComponentException,
            ConfigurationException {
         super.addComponent(hint, component, conf);
         this.mime_types.put(hint, mime_type);

@@ -12,6 +12,7 @@ import java.io.File;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.DefaultConfiguration;
 
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
@@ -25,7 +26,7 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-05 20:15:33 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-11 12:41:18 $
  */
 public class GeneratorSelector extends DefaultComponentSelector {
     private ClassLoaderManager classManager;
@@ -36,13 +37,13 @@ public class GeneratorSelector extends DefaultComponentSelector {
         this.classManager = (ClassLoaderManager) manager.lookup(Roles.CLASS_LOADER);
 
         try {
-            this.classManager.addDirectory((File) this.context.get(Constants.CONTEXT_WORK_DIR));
+            this.classManager.addDirectory((File) this.m_context.get(Constants.CONTEXT_WORK_DIR));
         } catch (Exception e) {
-            throw new ComponentManagerException("Could not add repository to ClassLoaderManager", e);
+            throw new ComponentException("Could not add repository to ClassLoaderManager", e);
         }
     }
 
-    public Component select(Object hint) throws ComponentManagerException {
+    public Component select(Object hint) throws ComponentException {
         try {
             return super.select(hint);
         } catch (Exception e) {
@@ -52,19 +53,19 @@ public class GeneratorSelector extends DefaultComponentSelector {
         }
     }
 
-    private void addGenerator(Object hint) throws ComponentManagerException {
+    private void addGenerator(Object hint) throws ComponentException {
         Class generator;
         String className = hint.toString().replace(File.separatorChar, '.');
         try {
             generator = this.classManager.loadClass(className);
         } catch (Exception e) {
-            throw new ComponentManagerException("Could not add component for class: " + className, e);
+            throw new ComponentException("Could not add component for class: " + className, e);
         }
 
         this.addGenerator(hint, generator);
     }
 
-    public void addGenerator(Object hint, Class generator) throws ComponentManagerException {
+    public void addGenerator(Object hint, Class generator) throws ComponentException {
         super.addComponent(hint, generator, new DefaultConfiguration("", "GeneratorSelector"));
     }
 }

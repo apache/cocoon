@@ -22,8 +22,8 @@ import org.apache.avalon.Component;
 import org.apache.avalon.Composer;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.component.ComponentException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.component.DefaultComponentSelector;
 
@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * Base class for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-04-05 20:15:35 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-04-11 12:41:28 $
  */
 public abstract class AbstractSitemap extends AbstractLoggable implements Sitemap {
     private Context context;
@@ -72,7 +72,7 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composer</code>.
      */
-    public void compose(ComponentManager manager)  throws ComponentManagerException {
+    public void compose(ComponentManager manager)  throws ComponentException {
         this.manager = manager;
 
         try {
@@ -86,7 +86,7 @@ public abstract class AbstractSitemap extends AbstractLoggable implements Sitema
             this.selectors = (DefaultComponentSelector) this.manager.lookup(Roles.SELECTORS);
         } catch (Exception e) {
             getLogger().error("cannot obtain the Component", e);
-            throw new ComponentNotFoundException ("cannot obtain the URLFactory", e);
+            throw new ComponentException ("cannot obtain the URLFactory", e);
         }
     }
 

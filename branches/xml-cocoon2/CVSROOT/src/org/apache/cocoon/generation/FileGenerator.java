@@ -29,8 +29,7 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotFoundException;
-import org.apache.avalon.ComponentNotAccessibleException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -63,7 +62,7 @@ import org.apache.avalon.Component;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.26 $ $Date: 2001-04-11 10:52:59 $
+ * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-11 12:41:23 $
  */
 public class FileGenerator extends ComposerGenerator
 implements Configurable, Cacheable {

@@ -22,7 +22,7 @@ import org.xml.sax.EntityResolver;
 
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentSelector;
-import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
@@ -40,7 +40,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-03-30 17:14:09 $
+ * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-11 12:41:12 $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction {
     protected static final Map addStatements = new HashMap();
