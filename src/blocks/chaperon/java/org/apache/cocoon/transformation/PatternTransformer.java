@@ -108,7 +108,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PatternTransformer.java,v 1.5 2003/10/24 23:44:26 joerg Exp $
+ * @version CVS $Id: PatternTransformer.java,v 1.6 2003/10/25 17:37:42 cziegeler Exp $
  */
 public class PatternTransformer extends AbstractTransformer
   implements LogEnabled, Serviceable, Recyclable, Disposable, Parameterizable,
@@ -203,11 +203,11 @@ public class PatternTransformer extends AbstractTransformer
 
                 SAXConfigurationHandler confighandler = new SAXConfigurationHandler();
 
-                if (this.lexiconSource.getInputStream()==null) {
+/*                if (this.lexiconSource.getInputStream()==null) {
                     throw new ProcessingException("Source '"+
                                                   this.lexiconSource.getURI()+
                                                   "' not found");
-                }
+                }*/
                 SourceUtil.toSAX(this.manager, this.lexiconSource, null, confighandler);
 
                 Configuration config = confighandler.getConfiguration();
