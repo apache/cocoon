@@ -27,8 +27,8 @@
   <xsl:param name="resources-uri">resources</xsl:param>
 
   <xsl:template match="head" mode="forms-field">
-    <script src="{$resources-uri}/forms-lib.js" type="text/javascript"/>
-    <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms.css"/>
+    <script src="{$resources-uri}/js/forms-lib.js" type="text/javascript"/>
+    <link rel="stylesheet" type="text/css" href="{$resources-uri}/css/forms.css"/>
   </xsl:template>
 
   <xsl:template match="body" mode="forms-field">
@@ -318,16 +318,6 @@
       <xsl:attribute name="value"><xsl:value-of select="fi:label/node()"/></xsl:attribute>
       <xsl:apply-templates select="." mode="styling"/>
     </input>
-  </xsl:template>
-
-  <!--+
-      | fi:action, link-style
-      +-->
-  <xsl:template match="fi:action[fi:styling/@type = 'link']" priority="1">
-    <a title="{fi:hint}" href="#" onclick="forms_submitForm(this, '{@id}'); return false">
-      <xsl:apply-templates select="." mode="styling"/>
-      <xsl:copy-of select="fi:label/node()"/>
-    </a>
   </xsl:template>
 
   <!--+
