@@ -2,7 +2,7 @@
 
 <!--
     SWF samples setup contributed by joerg.heinicke@gmx.de
-    $Id: swf.xsamples,v 1.1 2003/05/03 07:36:02 bdelacretaz Exp $
+    $Id: swf.xsamples,v 1.2 2003/05/05 23:46:46 vgritsenko Exp $
 -->
 
 <xsamples xpath="/samples" unless="group[@name='SWF']">
