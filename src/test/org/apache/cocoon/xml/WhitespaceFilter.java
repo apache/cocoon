@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  * XML matching process.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: WhitespaceFilter.java,v 1.2 2003/04/09 11:12:20 stephan Exp $
+ * @version CVS $Id: WhitespaceFilter.java,v 1.3 2003/04/17 07:32:02 stephan Exp $
  */
 public class WhitespaceFilter extends AbstractXMLPipe {
     private StringBuffer buffer = null;
@@ -77,12 +77,6 @@ public class WhitespaceFilter extends AbstractXMLPipe {
 
     /**
      * Receive notification of character data.
-     *
-     * @param c The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
-     *
-     * @throws SAXException
      */
     public void characters(char c[], int start, int len) throws SAXException {
         if (contentHandler==null) {
@@ -98,12 +92,6 @@ public class WhitespaceFilter extends AbstractXMLPipe {
 
     /**
      * Receive notification of ignorable whitespace in element content.
-     *
-     * @param c The characters from the XML document.
-     * @param start The start position in the array.
-     * @param len The number of characters to read from the array.
-     *
-     * @throws SAXException
      */
     public void ignorableWhitespace(char c[], int start,
                                     int len) throws SAXException {
@@ -111,18 +99,53 @@ public class WhitespaceFilter extends AbstractXMLPipe {
     }
 
     /**
-   * Receive notification of the beginning of an element.
-   *
-   * @param namespaceURI
-   * @param localName
-   * @param qName
-   * @param atts
-   *
-   * @throws SAXException
-   */
+     * Receive notification of the beginning of an element.
+     */
     public void startElement(String namespaceURI, String localName,
                              String qName,
                              Attributes atts) throws SAXException {
+
+        pushText();      
+        contentHandler.startElement(namespaceURI, localName, qName, atts);
+    }
+
+    /**
+     * Receive notification of the end of an element.
+     */
+    public void endElement(String uri, String loc, String raw)
+        throws SAXException {
+
+        pushText();
+        contentHandler.endElement(uri, loc, raw);        
+    }
+
+    /**
+     * Receive notification of a processing instruction.
+     */
+    public void processingInstruction(String target, String data)
+        throws SAXException {
+
+        pushText();
+        contentHandler.processingInstruction(target, data);
+    }
+
+    /**
+     * Report an XML comment anywhere in the document.
+     *
+     * @param ch An array holding the characters in the comment.
+     * @param start The starting position in the array.
+     * @param len The number of characters to use from the array.
+     */
+    public void comment(char ch[], int start, int len)
+        throws SAXException {
+  
+        pushText();
+        super.comment(ch, start, len);
+    }
+
+
+    public void pushText() throws SAXException {
+
         if (buffer!=null) {
             String text = buffer.toString();
 
@@ -137,7 +160,5 @@ public class WhitespaceFilter extends AbstractXMLPipe {
 
             buffer = null;
         }
-
-        contentHandler.startElement(namespaceURI, localName, qName, atts);
     }
 }
