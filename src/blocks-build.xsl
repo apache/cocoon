@@ -284,6 +284,57 @@
          </javac>
       </target>
 
+	  <!-- Check if javadocs have to be generated -->
+	  <target name="{$block-name}-javadoc-check">
+	    <mkdir dir="{string('${build.javadocs}')}"/>
+	    <condition property="{$block-name}.javadocs.notrequired" value="true">
+	     <or>
+	      <uptodate targetfile="{string('${build.javadocs}')}/packages.html" >
+	       <srcfiles dir= "{string('${blocks}')}/{$block-name}/java" includes="**/*.java,**/package.html"/>
+	      </uptodate>
+	      <istrue value="{string('${unless.exclude.javadocs}')}"/>
+	     </or>
+	    </condition>
+	  </target>
+	  
+      <target name="{$block-name}-javadoc" 
+              depends="{$block-name}-prepare, {$block-name}-javadoc-check" 
+              unless="{$block-name}.javadocs.notrequired" description="Builds the API documentation for {$block-name} (javadocs)">
+
+        <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
+          <equals arg1="1.4" arg2="${ant.java.version}"/>
+        </condition>
+        <condition property="javadoc.additionalparam" value="">
+          <not><equals arg1="1.4" arg2="{string('${ant.java.version}')}"/></not>
+        </condition>
+
+        <javadoc destdir="{string('${build.javadocs}')}"
+		             author="true"
+		             version="true"
+		             use="true"
+		             noindex="false"
+		             splitindex="true"
+		             windowtitle="{string('${Name}')} API {string('${version}')} [{string('${TODAY}')}]"
+		             doctitle="{string('${Name}')} API {string('${version}')}"
+		             bottom="Copyright &#169; {string('${year}')} Apache Software Foundation. All Rights Reserved."
+		             stylesheetfile="{string('${resources.javadocs}')}/javadoc.css"
+		             useexternalfile="yes"
+		             additionalparam="{string('${javadoc.additionalparam}')}">
+		
+		      <link offline="true" href="http://avalon.apache.org/api"                  packagelistloc="${resources.javadoc}/avalon"/>
+		      <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api"  packagelistloc="${resources.javadoc}/xerces"/>
+		      <link offline="true" href="http://xml.apache.org/xalan-j/apidocs"         packagelistloc="${resources.javadoc}/xalan"/>
+		      <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api"       packagelistloc="${resources.javadoc}/j2se"/>
+		      <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${resources.javadoc}/j2ee"/>
+		
+		      <packageset dir="{string('${blocks}')}/{$block-name}/java">
+		        <include name="**"/>
+		      </packageset>
+		      <classpath refid="{$block-name}.classpath"/>
+		    </javadoc>
+		
+      </target>
+
       <target name="{$block-name}-build" if="{$block-name}.has.build">
          <ant inheritAll="true"
               inheritRefs="false"
