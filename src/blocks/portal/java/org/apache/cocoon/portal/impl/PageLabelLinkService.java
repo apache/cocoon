@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,9 +24,9 @@ import org.apache.cocoon.portal.event.impl.ChangeAspectDataEvent;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.NamedItem;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.source.SourceUtil;
 
 /**
  * The PageLabelLinkService generates links for named items defined in the layout portal.xml.
@@ -33,7 +34,7 @@ import org.apache.excalibur.source.SourceUtil;
  *
  * @author Ralph Goers
  *
- * @version CVS $Id: $
+ * @version CVS $Id:$
  */
 public class PageLabelLinkService extends DefaultLinkService {
 
@@ -99,13 +100,12 @@ public class PageLabelLinkService extends DefaultLinkService {
                     else {
                         buffer.append('?');
                     }
-                    String encodedKey;
                     try {
-                        encodedKey = SourceUtil.encode(key.toString(), "utf-8");
-                    } catch (Exception ex) {
-                        encodedKey = SourceUtil.encode(key.toString());
+                        String encodedKey = NetUtils.encode(key.toString(), "utf-8");
+                        buffer.append(requestParameterName).append('=').append(encodedKey);
+                    } catch (UnsupportedEncodingException uee) {
+                        // ignore this as utf-8 is always supported
                     }
-                    buffer.append(requestParameterName).append('=').append(encodedKey);
                     return buffer.toString();
                 }
             }
@@ -183,8 +183,12 @@ public class PageLabelLinkService extends DefaultLinkService {
             else {
                 buffer.append('?');
             }
-            buffer.append(requestParameterName).append('=')
-                .append(SourceUtil.encode(value.toString()));
+            try {
+                buffer.append(requestParameterName).append('=')
+                      .append(NetUtils.encode(value.toString(), "utf-8"));
+            } catch (UnsupportedEncodingException uee) {
+                // ignore this as utf-8 is always supported
+            }
 
             return buffer.toString();
         }
@@ -249,13 +253,12 @@ public class PageLabelLinkService extends DefaultLinkService {
         } else {
             uri.append('?');
         }
-        String encodedLabel;
         try {
-            encodedLabel = SourceUtil.encode(label, "utf-8");
-        } catch (Exception e) {
-            encodedLabel = SourceUtil.encode(label);
+            String encodedLabel = NetUtils.encode(label, "utf-8");
+            uri.append(parmName).append('=').append(encodedLabel);
+        } catch (UnsupportedEncodingException uee) {
+            // ignore this as utf-8 is always supported
         }
-        uri.append(parmName).append('=').append(encodedLabel);
         return uri.toString();
     }
 }
