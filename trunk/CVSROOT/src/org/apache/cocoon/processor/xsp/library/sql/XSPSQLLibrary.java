@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.7 $ $Date: 2000-05-16 20:01:06 $
+ * @version $Revision: 1.8 $ $Date: 2000-06-22 19:49:18 $
  */
 
 public class XSPSQLLibrary {
@@ -143,7 +143,7 @@ public class XSPSQLLibrary {
         if (!st.execute(query)) {
 	    	/** this returns the number of rows we updated, or -1 on error **/
             int update_rows = st.getUpdateCount();
-            if (results_element != null) {
+            if (results_element != null && !"".equals(update_rows_attribute)) {
                 results_element.setAttribute(update_rows_attribute,""+update_rows);
             }
         } else {
