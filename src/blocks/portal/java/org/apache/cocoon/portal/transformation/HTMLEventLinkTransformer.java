@@ -28,8 +28,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * This transformer extends transforms html actions
- * into events.
+ * This transformer transforms html actions into events.
  * The transformer listens for the element a and form. Links
  * that only contain an anchor are ignored.
  * In addition if a link has the attribute "external" with the value
