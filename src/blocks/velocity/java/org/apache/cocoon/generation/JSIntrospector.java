@@ -95,7 +95,7 @@ public class JSIntrospector extends UberspectImpl {
                                             newArgs, scope);
                 if (result == Undefined.instance ||
                     result == ScriptableObject.NOT_FOUND) {
-                    result = "";
+                    result = null;
                 } else while (result instanceof Wrapper) {
                     result = ((Wrapper)result).unwrap();
                 }
@@ -143,7 +143,7 @@ public class JSIntrospector extends UberspectImpl {
                 Object result = ScriptableObject.getProperty(thisObj, name);
                 if (result == Undefined.instance || 
                     result == ScriptableObject.NOT_FOUND) {
-                    result = "";
+                    result = null;
                 } else while (result instanceof Wrapper) {
                     result = ((Wrapper)result).unwrap();
                 }
@@ -226,7 +226,7 @@ public class JSIntrospector extends UberspectImpl {
                 Object result = arr.get(index++, arr);
                 if (result == Undefined.instance ||
                     result == ScriptableObject.NOT_FOUND) {
-                    result = "";
+                    result = null;
                 } else while (result instanceof Wrapper) {
                     result = ((Wrapper)result).unwrap();
                 }
@@ -265,7 +265,7 @@ public class JSIntrospector extends UberspectImpl {
                                                  ids[index++].toString());
                 if (result == Undefined.instance ||
                     result == ScriptableObject.NOT_FOUND) {
-                    result = "";
+                    result = null;
                 } else while (result instanceof Wrapper) {
                     result = ((Wrapper)result).unwrap();
                 }
