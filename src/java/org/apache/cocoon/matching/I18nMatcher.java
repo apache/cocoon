@@ -226,6 +226,7 @@ public class I18nMatcher extends AbstractLogEnabled
         }
 
         if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Locale attribute name is " + this.localeAttribute);
             getLogger().debug((this.testResourceExists ? "will" : "won't") + " negotiate locale");
             getLogger().debug((this.useLocale ? "will" : "won't") + " use request locale");
             getLogger().debug((this.useLocales ? "will" : "won't") + " use request locales");

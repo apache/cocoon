@@ -243,7 +243,7 @@
     <map:matcher name="mount-table" src="org.apache.cocoon.matching.MountTableMatcher">
       <map:parameter name="ignore-missing-tables" value="true"/>
     </map:matcher>
-    <map:matcher name="i18n" src="org.apache.cocoon.matching.I18nMatcher">
+    <map:matcher logger="sitemap.matcher.i18n" name="i18n" src="org.apache.cocoon.matching.I18nMatcher">
       <!--+
           | Default configuration:
       <locale-attribute>locale</locale-attribute>
@@ -355,6 +355,8 @@
       <store-in-request>false</store-in-request>
       <store-in-session>false</store-in-session>
       <store-in-cookie>false</store-in-cookie>
+      <use-locale>true</use-locale>
+      <default-locale language="en" country="US"/>
           +-->
     </map:action>
   </map:actions>
