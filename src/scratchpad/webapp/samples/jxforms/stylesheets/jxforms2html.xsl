@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 
+
 <!-- 
 
   Basic XMLForm processing stylesheet.  
@@ -185,10 +186,20 @@
    <xsl:template match="xf:submit">
        <!-- the id attribute of the submit control is sent to the server -->
        <!-- as a conventional Cocoon Action parameter of the form cocoon-action-* -->
-      <input name="cocoon-action-{@id}" type="submit" value="{xf:label/text()}">
-        <xsl:copy-of select="@*[not(name()='id')]"/>
-        <xsl:apply-templates select="xf:hint"/>
-      </input>
+      <xsl:choose>
+          <xsl:when test="@src">
+              <input name="cocoon-action-{@id}" type="image" value="{xf:label/text()}">
+                  <xsl:copy-of select="@*[not(name()='id')]"/>
+                  <xsl:apply-templates select="xf:hint"/>
+              </input>
+          </xsl:when>
+          <xsl:otherwise>
+              <input name="cocoon-action-{@id}" type="submit" value="{xf:label/text()}">
+                  <xsl:copy-of select="@*[not(name()='id')]"/>
+                  <xsl:apply-templates select="xf:hint"/>
+              </input>
+          </xsl:otherwise>
+      </xsl:choose>
    </xsl:template>
    
    <xsl:template match="xf:hint">
@@ -205,4 +216,6 @@
       <xsl:value-of select="." />
    </xsl:template>
 
+
 </xsl:stylesheet>
+
