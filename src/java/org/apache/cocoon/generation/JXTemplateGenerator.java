@@ -2662,7 +2662,6 @@ public class JXTemplateGenerator extends ComposerGenerator {
         map = globalJexlContext.getVars();
         if (contextObject != null) {
             map.put("flowContext", contextObject);
-            map.put("continuation", kont);
             // FIXME (VG): Is this required (what it's used for - examples)?
             // Here I use Rhino's live-connect objects to allow Jexl to call
             // java constructors
@@ -2670,6 +2669,9 @@ public class JXTemplateGenerator extends ComposerGenerator {
             Object pkgs = JavaScriptFlow.getPackages(objectModel);
             map.put("java", javaPkg);
             map.put("Packages", pkgs);
+        }
+        if (kont!=null) {
+            map.put("continuation", kont);
         }
         map.put("request", request);
         map.put("response", response);
