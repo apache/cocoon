@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.90 2001-08-13 12:36:54 dims Exp $-->
+<!-- $Id: esql.xsl,v 1.91 2001-08-16 14:06:53 cziegeler Exp $-->
 <!--
 
  ============================================================================
@@ -1089,7 +1089,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
     <xsl:otherwise>
       <xsl:value-of select="$resultset"/>.getBytes(<xsl:value-of select="$column-spec"/>)
       != null ? getStringFromByteArray(<xsl:value-of select="$resultset"/>.getBytes
-        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>))
+        (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
       : ""
     </xsl:otherwise>
   </xsl:choose>
