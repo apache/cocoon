@@ -18,7 +18,7 @@
 href="document.css"
 ?>
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
-"../dtd/document-v10.dtd">
+"document-v10.dtd">
 <document>
   <header>
     <title>Fast guide to XDoc Writing</title>

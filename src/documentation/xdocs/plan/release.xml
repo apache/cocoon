@@ -14,10 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../dtd/document-v10.dtd">
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <!--
-  $Id: release.xml,v 1.12 2004/04/29 08:03:24 cziegeler Exp $
+  $Id: release.xml,v 1.13 2004/05/08 08:57:55 crossley Exp $
 -->
 
 <document>
