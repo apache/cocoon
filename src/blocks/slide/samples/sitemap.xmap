@@ -28,15 +28,6 @@
         label="content"
       />
     </map:generators>
-
-    <!--
-    <map:pipes default="noncaching">
-      <map:pipe name="event-caching" 
-                src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline">
-        <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
-      </map:pipe>
-    </map:pipes>
-    -->
   </map:components>
 
 <!-- ========================== Flowscript ================================= -->
