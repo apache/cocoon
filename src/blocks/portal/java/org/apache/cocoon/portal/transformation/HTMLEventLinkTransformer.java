@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  * Current we only support POSing of forms.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.2 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.3 2004/03/11 09:44:02 cziegeler Exp $
  */
 public class HTMLEventLinkTransformer 
 extends AbstractCopletTransformer 
@@ -79,7 +79,7 @@ implements Serviceable {
      */
     public void endElement(String uri, String name, String raw)
     throws SAXException {
-        if ( "a".equals(name) || "form".equals("name") ) {
+        if ( "a".equals(name) || "form".equals(name) ) {
             this.xmlConsumer.endElement(CopletTransformer.NAMESPACE_URI,
                                         CopletTransformer.LINK_ELEM,
                                         "coplet:" + CopletTransformer.LINK_ELEM);
