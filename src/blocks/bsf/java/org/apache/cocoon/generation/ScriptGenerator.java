@@ -55,12 +55,11 @@ import java.io.StringReader;
  * </pre>
  *
  * @author <a href="mailto:jafoster@engmail.uwaterloo.ca">Jason Foster</a>
- * @version CVS $Id: ScriptGenerator.java,v 1.5 2004/04/03 01:32:32 antonio Exp $
+ * @version CVS $Id: ScriptGenerator.java,v 1.6 2004/04/04 04:44:09 antonio Exp $
  */
 public class ScriptGenerator extends ServiceableGenerator implements Configurable {
 
-    protected class BSFLanguage
-    {
+    protected class BSFLanguage {
         public String name;
         public String engineSrc;
         public String[] extensions;
@@ -71,19 +70,15 @@ public class ScriptGenerator extends ServiceableGenerator implements Configurabl
     /** The source */
     private Source inputSource;
 
-    public void configure(Configuration conf) throws ConfigurationException
-    {
-        if (conf != null)
-        {
+    public void configure(Configuration conf) throws ConfigurationException {
+        if (conf != null) {
             //add optional support for additional languages
             Configuration languagesToAdd = conf.getChild("add-languages");
 
             Configuration[] languages = languagesToAdd.getChildren("language");
             this.additionalLanguages = new BSFLanguage[languages.length];
 
-
-            for (int i = 0; i < languages.length; ++i)
-            {
+            for (int i = 0; i < languages.length; i++) {
                 Configuration language = languages[i];
                 BSFLanguage bsfLanguage = new BSFLanguage();
 
@@ -93,16 +88,13 @@ public class ScriptGenerator extends ServiceableGenerator implements Configurabl
                 getLogger().debug("Configuring ScriptGenerator with additional BSF language " + bsfLanguage.name);
                 getLogger().debug("Configuring ScriptGenerator with BSF engine " + bsfLanguage.engineSrc);
 
-
                 Configuration[] extensions = language.getChildren("extension");
                 bsfLanguage.extensions = new String[extensions.length];
 
-                for (int j = 0; j < extensions.length; ++j)
-                {
-                    bsfLanguage.extensions[i] = extensions[i].getValue();
-                    getLogger().debug("Configuring ScriptGenerator with lang extension " + bsfLanguage.extensions[i]);
+                for (int j = 0; j < extensions.length; j++) {
+                    bsfLanguage.extensions[j] = extensions[j].getValue();
+                    getLogger().debug("Configuring ScriptGenerator with lang extension " + bsfLanguage.extensions[j]);
                 }
-
                 this.additionalLanguages[i] = bsfLanguage;
             }
         }
@@ -130,20 +122,17 @@ public class ScriptGenerator extends ServiceableGenerator implements Configurabl
             // Set up the BSF manager and register relevant helper "beans"
             BSFManager mgr = new BSFManager();
 
-            // add support for additional languages
-
-            if (this.additionalLanguages != null)
-            {
-                for (int i = 0; i < this.additionalLanguages.length; ++i)
-                {
-                    getLogger().debug("adding BSF language " + this.additionalLanguages[i].name + " with engine " + this.additionalLanguages[i].engineSrc);
+            // add BSF support for additional languages
+            if (this.additionalLanguages != null) {
+                for (int i = 0; i < this.additionalLanguages.length; ++i) {
+                    getLogger().debug("adding BSF language " + this.additionalLanguages[i].name +
+                            " with engine " + this.additionalLanguages[i].engineSrc);
 
                     BSFManager.registerScriptingEngine(this.additionalLanguages[i].name,
                                                 this.additionalLanguages[i].engineSrc,
                                                 this.additionalLanguages[i].extensions);
                 }
             }
-
             StringBuffer output = new StringBuffer();
 
             mgr.registerBean("resolver", this.resolver);
@@ -156,7 +145,6 @@ public class ScriptGenerator extends ServiceableGenerator implements Configurabl
             getLogger().debug("BSFManager execution begining");
 
             // Execute the script
-
             mgr.exec(BSFManager.getLangFromFilename(this.inputSource.getURI()),
                      this.inputSource.getURI(), 0, 0, IOUtils.getStringFromReader(in));
 
@@ -164,9 +152,7 @@ public class ScriptGenerator extends ServiceableGenerator implements Configurabl
             getLogger().debug("output = [" + output.toString() + "]");
 
             // Extract the XML string from the BSFManager and parse it
-
-            InputSource xmlInput =
-                    new InputSource(new StringReader(output.toString()));
+            InputSource xmlInput = new InputSource(new StringReader(output.toString()));
             parser = (SAXParser)(this.manager.lookup(SAXParser.ROLE));
             parser.parse(xmlInput, this.xmlConsumer);
         } catch (SourceException se) {

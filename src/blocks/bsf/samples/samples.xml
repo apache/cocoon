@@ -15,18 +15,17 @@
   limitations under the License.
 -->
 
-<xmap xpath="/sitemap/components/generators"
-      unless="generator[@name='script']">
+<!-- CVS $Id: samples.xml,v 1.1 2004/04/04 04:44:09 antonio Exp $ -->
 
-    <map:generator name="script"
-         src="org.apache.cocoon.generation.ScriptGenerator"
-         logger="sitemap.generation.scriptgenerator">
-        <!-- Groovy support -->
-        <add-languages>
-            <language name="groovy" src="org.codehaus.groovy.bsf.GroovyEngine">
-              <extension>groovy</extension>
-              <extension>gy</extension>
-            </language>
-        </add-languages>
-    </map:generator>
-</xmap>
+<samples name="BSF Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <group name="Main examples page.">
+    <sample name="Back" href="..">to Cocoon examples main page</sample>
+  </group>
+
+  <group name="Hello World!">
+    <sample name="Groovy" href="hello.gy">
+      Simple Groovy generator sample
+    </sample>
+  </group>
+</samples>
