@@ -194,19 +194,19 @@
   <xsl:variable name="smtphost"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="sendmail:smtphost"/></xsl:call-template></xsl:variable>
   <xsp:logic>
     try {
-      Properties _sendmail_properties = new Properties(this._properties);
+      Properties _sendmail_properties = new Properties(this._sendmail_properties);
       if (!"null".equals(String.valueOf(<xsl:copy-of select="$smtphost"/>))) {
         _sendmail_properties.put("mail.smtp.host",String.valueOf(<xsl:copy-of select="$smtphost"/>));
       }
-      Session _sendmail_session = Session.getDefaultInstance(_properties,null);
+      Session _sendmail_session = Session.getDefaultInstance(_sendmail_properties,null);
       Message _sendmail_message = new MimeMessage(_sendmail_session);
       InternetAddress _sendmail_from = new InternetAddress(String.valueOf(<xsl:copy-of select="$from"/>));
-      _message.setFrom(_sendmail_from);
+      _sendmail_message.setFrom(_sendmail_from);
       InternetAddress _sendmail_to = new InternetAddress(String.valueOf(<xsl:copy-of select="$to"/>));
-      _message.setRecipient(Message.RecipientType.TO,_sendmail_to);
-      _message.setSentDate(new Date());
-      _message.setSubject(String.valueOf(<xsl:copy-of select="$subject"/>));
-      _message.setText(String.valueOf(<xsl:copy-of select="$body"/>));
+      _sendmail_message.setRecipient(Message.RecipientType.TO,_sendmail_to);
+      _sendmail_message.setSentDate(new Date());
+      _sendmail_message.setSubject(String.valueOf(<xsl:copy-of select="$subject"/>));
+      _sendmail_message.setText(String.valueOf(<xsl:copy-of select="$body"/>));
       Transport.send(_sendmail_message);
     } catch (AddressException _sendmail_exception) {
       <error type="user">Your email address is invalid.</error>
