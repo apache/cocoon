@@ -40,3 +40,4 @@ function sendResult(a, b, op, result)
   cocoon.sendPage("page/displayResult",
            { "a" : a, "b" : b, "operator" : op, "result" : result });
 }
+
