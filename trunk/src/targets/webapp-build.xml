@@ -71,6 +71,12 @@
  
   <target name="prepare-webapp-scratchpad" depends="prepare-webapp, compile-scratchpad" unless="unless.exclude.webapp.scratchpad">
     <copy file="${build}/${name}-scratchpad.jar" tofile="${build.webapp.lib}/${name}-${version}-scratchpad.jar"/>
+    <copy todir="${build.webapp.lib}">
+      <fileset dir="${scratchpad.lib}">
+        <include name="*.jar"/>
+        <exclude name="servlet*.jar"/>
+      </fileset>
+    </copy>
   </target>
  
   <target name="prepare-webapp-deprecated" depends="prepare-webapp" unless="unless.exclude.deprecated">
