@@ -1,4 +1,9 @@
-<!-- === Samples Targets ======================================================= -->
+<?xml version="1.0"?>
+<project name="samples">
+
+  <description>
+    Samples Targets
+  </description>
 
   <target name="samples" depends="prepare" unless="unless.exclude.webapp.samples">
     <mkdir dir="${build.samples}"/>
@@ -45,5 +50,5 @@
             srcdir="${webapp.samples}" 
             includes="**/*.xwelcome"/>
   </target>
-
+</project>
   

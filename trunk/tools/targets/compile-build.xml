@@ -1,5 +1,10 @@
-<!-- === Compilation Targets =================================================== -->
+<?xml version="1.0"?>
+<project name="compile">
 
+  <description>
+    Compilation Targets
+  </description>
+  
   <!-- compiles everything -->
   <target name="compile" depends="compile-core, compile-deprecated, compile-tests"/>
 
@@ -131,4 +136,4 @@
       </fileset>
     </jar>
   </target>
-
+</project>

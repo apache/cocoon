@@ -1,4 +1,6 @@
-  <target name="start-instrumentation-client" depends="init">
+<?xml version="1.0"?>
+<project name="instrumentation">
+    <target name="start-instrumentation-client" depends="init">
     <property name="lib.instrumentation" value="tools/instrumentation/lib"/>
 
     <echo message="The version of the altrmi server libraries in ${lib.optional} must correspond"/>
@@ -20,3 +22,4 @@
       </classpath>
     </java>
   </target>
+</project>

@@ -1,5 +1,10 @@
-<!-- === IDE targets =========================================================== -->
-
+<?xml version="1.0"?>
+<project name="ide">
+  
+  <description>
+    IDE targets
+  </description>
+  
   <!-- Generate the Emacs JDE project file -->
   <target name="emacs-project" depends="prepare" description="Generate the Emacs project files">
     <path id="jar.files">
@@ -124,3 +129,4 @@
           <fileset dir="${build.webapp}/WEB-INF/lib" includes="*.jar"/>
       </delete>
   </target>
+</project>

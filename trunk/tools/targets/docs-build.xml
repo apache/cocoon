@@ -1,5 +1,10 @@
-<!-- === Documentation Targets ================================================= -->
+<?xml version="1.0"?>
+<project name="docs">
 
+  <description>
+    Documentation Targets
+  </description>
+  
   <target name="prepare-docs">
 
     <!-- Set classpath for documentation -->
@@ -195,4 +200,5 @@
   <target name="javadocs" 
           description="Builds the API documentation (javadocs)">
   </target>
-
+  
+</project>

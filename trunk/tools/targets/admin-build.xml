@@ -1,5 +1,10 @@
-<!-- === Admin targets ===================================================== -->
-
+<?xml version="1.0"?>
+<project name="admin">
+  
+  <description>
+    Admin targets
+  </description>
+  
   <!-- Creates the web site  -->
   <target name="site" depends="forrest, javadocs" description="[admin] Builds the site">
     <mkdir dir="${site}"/>
@@ -24,3 +29,5 @@
 
   <!-- compiles and packages the core classes and the deprecated classes -->
   <target name="gump-core" depends="package-core, package-deprecated, javadocs, validate-jars, junit-tests"/>
+  
+</project>

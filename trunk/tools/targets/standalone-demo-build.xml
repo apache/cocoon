@@ -1,8 +1,10 @@
+<?xml version="1.0"?>
+<project name="standalone">
 <!--
     ant include file for "standalone-demo" build
     @author bdelacretaz@codeconsult.ch
 
-    $Id: standalone-demo-build.xml,v 1.1 2003/11/18 18:56:12 joerg Exp $
+    $Id: standalone-demo-build.xml,v 1.2 2003/12/26 10:32:24 unico Exp $
  -->
 
 <target name="standalone-demo" depends="init, webapp" description="build webapp and copy files for standalone demo">
@@ -60,3 +62,4 @@ Your friendly neighbourhood Cocoon team.
     <echo>--------------------------------------------------------------------------</echo>
 
 </target>
+</project>

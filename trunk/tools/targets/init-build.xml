@@ -1,4 +1,9 @@
-<!-- === Initialization Targets ================================================ -->
+<?xml version="1.0"?>
+<project name="init">
+
+  <description>
+    Initialization Targets
+  </description>
 
   <target name="init">
 
@@ -186,6 +191,5 @@
   <target name="clean-standalone-demo" depends="init" description="Cleans the standalone-demo">
     <delete dir="${build.standalone.demo}"/>
   </target>
-
-
+</project>
 

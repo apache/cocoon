@@ -1,4 +1,9 @@
-<!-- === Test targets =========================================================== -->
+<?xml version="1.0"?>
+<project name="test">
+
+  <description>
+    Test targets
+  </description>
 
   <!-- Runs all tests -->
   <target name="test" depends="junit-tests" description="Runs all tests"/>
@@ -45,4 +50,4 @@
       <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
     </java>
   </target>
-
+</project>
