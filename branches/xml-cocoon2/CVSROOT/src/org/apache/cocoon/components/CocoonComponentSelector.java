@@ -37,7 +37,7 @@ import org.apache.cocoon.Roles;
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-03-19 17:08:38 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-19 19:55:52 $
  */
 public class CocoonComponentSelector extends AbstractLoggable implements Contextualizable, ComponentSelector, Composer, Configurable, ThreadSafe, Disposable {
 
@@ -127,24 +127,24 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
         Component component = null;
 
         if ( hint == null ) {
-            getLogger().error(this.conf.getName() + ": CocoonComponentSelector Attempted to retrieve component with null hint.");
+            getLogger().error(this.getName() + ": CocoonComponentSelector Attempted to retrieve component with null hint.");
             throw new ComponentManagerException("Attempted to retrieve component with null hint.");
         }
 
         handler = (CocoonComponentHandler) this.componentHandlers.get(hint);
         // Retrieve the instance of the requested component
         if ( handler == null ) {
-            throw new ComponentManagerException(this.conf.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
+            throw new ComponentManagerException(this.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
         }
 
         try {
             component = handler.get();
         } catch (Exception e) {
-            throw new ComponentManagerException(this.conf.getName() + ": CocoonComponentSelector could not access the Component for you", e);
+            throw new ComponentManagerException(this.getName() + ": CocoonComponentSelector could not access the Component for you", e);
         }
 
         if (component == null) {
-            throw new ComponentManagerException(this.conf.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
+            throw new ComponentManagerException(this.getName() + ": CocoonComponentSelector could not find the component for hint: " + hint);
         }
 
         this.componentMapping.put(component, handler);
@@ -217,4 +217,20 @@ public class CocoonComponentSelector extends AbstractLoggable implements Context
             getLogger().error("Could not set up Component for hint: " + hint, e);
         }
     }
+
+    private static final String DEFAULT_NAME = "UnnamedSelector";
+
+    /**
+     * Return this selector's configuration name or a default name if no such
+     * configuration was provided. This accounts for the case when a static
+     * component instance has been added through
+     * <code>addComponentInstance</code> with no associated configuration
+     */
+   private String getName() {
+     if (this.conf != null) {
+       return this.conf.getName();
+     }
+
+     return DEFAULT_NAME;
+   }
 }
