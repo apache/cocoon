@@ -96,6 +96,7 @@ public class AggregateField extends AbstractWidget {
 
     protected void addField(Field field) {
         fields.add(field);
+        field.setParent(this);
         fieldsById.put(field.getId(), field);
     }
 

@@ -24,7 +24,17 @@ function form1(form) {
     } else {
       print("Form is not valid");
     }
+    // Store the form as a request attribute, as the view is not
+    // flow-aware.
+    cocoon.request.setAttribute("form1", form.getWidget());
     cocoon.sendPage("form1-success-pipeline");
+}
+
+function selectCar() {
+    var form = new Form("forms/carselector_form.xml");
+    form.showForm("carselector-view");
+    cocoon.request.setAttribute("carselectorform", form.getWidget());
+    cocoon.sendPage("carselector-success");
 }
 
 function determineLocale() {

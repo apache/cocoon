@@ -27,7 +27,7 @@
         if (form == null) {
           alert("Cannot find form for " + element);
         } else {
-          form["woody_submit_id"] = name;
+          form["woody_submit_id"].value = name;
           form.submit();
         }
       }
@@ -146,7 +146,7 @@
   <!--
     wi:field with @type 'textarea'
   -->
-  <xsl:template match="wi:field[@type='textarea']">
+  <xsl:template match="wi:field[wi:styling[@type='textarea']]">
     <textarea name="{@id}" title="{wi:help}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
         <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>

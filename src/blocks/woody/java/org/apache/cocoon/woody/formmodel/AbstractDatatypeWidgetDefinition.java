@@ -50,20 +50,29 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.datatype.DynamicSelectionList;
 import org.apache.cocoon.woody.datatype.SelectionList;
-import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 import org.apache.cocoon.woody.event.ValueChangedEvent;
 import org.apache.cocoon.woody.event.ValueChangedListener;
+import org.apache.cocoon.woody.event.WidgetEventMulticaster;
 
 /**
  * Base class for WidgetDefinitions that use a Datatype and SelectionList.
  */
-public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition {
+public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDefinition implements Serviceable {
     private Datatype datatype;
     private SelectionList selectionList;
     private ValueChangedListener listener;
+    private ServiceManager manager;
 
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+    
     public Datatype getDatatype() {
         return datatype;
     }
@@ -82,6 +91,15 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
         return selectionList;
     }
     
+    /**
+     * Builds a dynamic selection list from a url. This is a helper method for widget instances whose selection
+     * list source has to be changed dynamically, and it does not modify this definition's selection list,
+     * if any.
+     */
+    public SelectionList buildSelectionList(String uri) {
+        return new DynamicSelectionList(datatype, uri, this.manager);
+    }
+    
     public void addValueChangedListener(ValueChangedListener listener) {
         this.listener = WidgetEventMulticaster.add(this.listener, listener);
     }
@@ -95,4 +113,5 @@ public abstract class AbstractDatatypeWidgetDefinition extends AbstractWidgetDef
     public boolean hasValueChangedListeners() {
         return this.listener != null;
     }
+
 }

@@ -53,7 +53,7 @@
  * woody.js in the future.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: woody2.js,v 1.1 2003/09/24 20:47:06 sylvain Exp $
+ * @version CVS $Id: woody2.js,v 1.2 2003/09/25 17:37:30 sylvain Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -148,7 +148,7 @@ Form.prototype.showForm = function(uri, bizData) {
             if (this.validator == null) {
               this.isValid = true;
             } else {
-              this.isValid = validator(this.form, bizData);
+              this.isValid = this.validator(this.form, bizData);
               finished = this.isValid;
             }
         }

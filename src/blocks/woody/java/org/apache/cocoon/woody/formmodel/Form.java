@@ -77,7 +77,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.8 2003/09/24 20:47:06 sylvain Exp $
+ * @version CVS $Id: Form.java,v 1.9 2003/09/25 17:37:30 sylvain Exp $
  */
 public class Form extends AbstractWidget {
     
@@ -166,6 +166,9 @@ public class Form extends AbstractWidget {
         if (this.submitWidget != null && this.submitWidget != widget) {
             throw new IllegalStateException("SubmitWidget can only be set once.");
         }
+        if (!(widget instanceof Action)) {
+            endProcessing(true);
+        }
         this.submitWidget = widget;
     }
 
@@ -248,9 +251,6 @@ public class Form extends AbstractWidget {
             }
             
             setSubmitWidget(submit);
-            if (!(submit instanceof Action)) {
-                endProcessing(true);
-            }
         }
         
         doReadFromRequest(formContext);
