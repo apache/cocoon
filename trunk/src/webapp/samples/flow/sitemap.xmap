@@ -3,7 +3,9 @@
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
   <map:components>
-    <map:generators default="file"/>
+    <map:generators default="file">
+        <map:generator label="content,data" logger="sitemap.generator.flow_velocity" name="flow_velocity" src="org.apache.cocoon.generation.FlowVelocityGenerator"/>
+    </map:generators>
     <map:transformers default="xslt">
      <map:transformer name="augment"
                       src="org.apache.cocoon.transformation.AugmentTransformer"
@@ -94,17 +96,17 @@
    </map:match>
 
    <map:match pattern="**images/*.png">
-    <map:read src="context://samples/tutorial/resources/images/{2}.png"
+    <map:read src="context://docs/images/{2}.png"
 	      mime-type="image/png"/>
    </map:match>
 
    <map:match pattern="**images/*.jpg">
-    <map:read src="context://samples/tutorial/resources/images/{2}.jpg"
+    <map:read src="context://docs/images/{2}.jpg"
 	      mime-type="image/jpeg"/>
    </map:match>
 
    <map:match pattern="**images/*.gif">
-    <map:read src="context://samples/tutorial/resources/images/{2}.gif"
+    <map:read src="context://docs/images/{2}.gif"
 	      mime-type="image/gif"/>
    </map:match>
 
