@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletAdapter.java,v 1.7 2004/03/15 10:31:37 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class PortletAdapter 
     extends AbstractCopletAdapter
@@ -113,7 +113,7 @@ public class PortletAdapter
             ((PortletWindowCtrl)portletWindow).setPortletEntity(portletEntity);
             PortletWindowList windowList = portletEntity.getPortletWindowList();        
             ((PortletWindowListCtrl)windowList).add(portletWindow);    
-            coplet.setAttribute("window", portletWindow);
+            coplet.setTemporaryAttribute("window", portletWindow);
             
             // load the portlet
             final Map objectModel = ContextHelper.getObjectModel(this.context);
@@ -132,7 +132,7 @@ public class PortletAdapter
             } catch (Exception e) {
                 this.getLogger().error("Error loading portlet " + portletEntityId, e);
                 // remove portlet entity
-                coplet.removeAttribute("window");
+                coplet.removeTemporaryAttribute("window");
                 ((PortletEntityListImpl)pae.getPortletEntityList()).remove(portletEntity);
             } finally {
                 PortletPortalManager.copletInstanceData.set(null);
@@ -155,7 +155,7 @@ public class PortletAdapter
                 throw new SAXException("Portlet configuration is missing.");
             }
             // get the window
-            final PortletWindow window = (PortletWindow)coplet.getAttribute("window");
+            final PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute("window");
             if ( window == null ) {
                 throw new SAXException("Portlet couldn't be loaded: " + portlet);
             }
@@ -195,9 +195,9 @@ public class PortletAdapter
         if ( this.portletContainer == null ) {
             return;
         }
-        PortletWindow window = (PortletWindow)coplet.getAttribute("window");
+        PortletWindow window = (PortletWindow)coplet.getTemporaryAttribute("window");
         if ( window != null ) {
-            coplet.removeAttribute("window");
+            coplet.removeTemporaryAttribute("window");
             PortletDefinitionRegistry registry = (PortletDefinitionRegistry) environment.getContainerService(PortletDefinitionRegistry.class);
         
             PortletApplicationEntity pae = registry.getPortletApplicationEntityList().get(ObjectIDImpl.createFromString("cocoon"));
