@@ -396,7 +396,7 @@ public class DOMStreamer implements XMLProducer {
                                 // if the prefix is null, or the prefix has not been declared, or conflicts with an in-scope binding
                                 if (declaredUri == null || !declaredUri.equals(attrNsURI)) {
                                     String availablePrefix = currentElementInfo.findPrefix(attrNsURI);
-                                    if (availablePrefix != null)
+                                    if (availablePrefix != null && !availablePrefix.equals(""))
                                         assignedAttrPrefix = availablePrefix;
                                     else {
                                         if (attrPrefix != null && declaredUri == null) {
