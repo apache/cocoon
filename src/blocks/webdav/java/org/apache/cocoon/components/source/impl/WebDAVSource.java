@@ -69,11 +69,10 @@ import org.apache.cocoon.components.source.RestrictableSource;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.cocoon.components.source.helpers.SourcePermission;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.TraversableSource;
 import org.apache.excalibur.source.impl.validity.TimeStampValidity;
 import org.apache.util.HttpURL;
 import org.apache.webdav.lib.WebdavResource;
@@ -89,10 +88,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSource.java,v 1.2 2003/07/14 16:06:21 cziegeler Exp $
+ *  @version $Id: WebDAVSource.java,v 1.3 2003/07/27 12:56:16 gianugo Exp $
 */
 public class WebDAVSource
-    implements Source, RestrictableSource, ModifiableSource, TraversableSource {
+    implements Source, RestrictableSource, ModifiableTraversableSource {
 
 
     private final String NAMESPACE = "http://apache.org/cocoon/webdav/1.0";
@@ -173,8 +172,10 @@ public class WebDAVSource
              try { 
                  return new WebDAVSource(location, principal, password, protocol, true);            
              } catch (HttpException finalHe) {
+             	finalHe.printStackTrace(System.err);
                 throw new SourceException("Error creating the source: ", finalHe);   
              } catch (IOException e) {
+				e.printStackTrace(System.err);
                 throw new SourceException("Error creating the source: ", e);                	
              }    
           } catch (IOException e) {
@@ -219,9 +220,9 @@ public class WebDAVSource
                 return bi;
             }
         } catch (HttpException he) {
-            throw new SourceException("Could get WebDAV resource", he);
+            throw new SourceException("Could not get WebDAV resource", he);
         } catch (Exception e) {
-            throw new SourceException("Could get WebDAV resource", e);
+            throw new SourceException("Could not get WebDAV resource", e);
         }
     }
 
@@ -229,7 +230,14 @@ public class WebDAVSource
      * Return the unique identifer for this source
      */
     public String getURI() {
-        return this.systemId;
+    	// Change http: to webdav:
+        //return "webdav:" + this.systemId.substring(5);
+        //add Source credentials
+        if (principal != null)
+			return "webdav://" + this.principal + ":" + this.password + "@" +  this.systemId.substring(7);
+        else
+		return "webdav://"  +  this.systemId.substring(7);
+        
     }
 
     /**
@@ -619,6 +627,21 @@ public class WebDAVSource
      */
     public void delete() throws SourceException {
         // TODO Auto-generated method stub
+    }
+
+    /**
+     * Create the collection, if it doesn't exist.
+     * @see org.apache.excalibur.source.ModifiableTraversableSource#makeCollection()
+     */
+    public void makeCollection() throws SourceException {
+    	if (resource.exists()) return;
+    	try {
+            resource.mkcolMethod();
+        } catch (HttpException e) {
+            throw new SourceException("Unable to create collection(s)", e);
+        } catch (IOException e) {
+            throw new SourceException("Unable to create collection(s)", e);			
+        }
     }
 
 }
