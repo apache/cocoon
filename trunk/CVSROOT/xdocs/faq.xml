@@ -125,8 +125,9 @@ Make sure it's there or you have writing permissions.</em> How do I fix this?
 <faq>
  <question>Why the LDAP processor doesn't work?</question>
  <answer>
-  <p>Make sure you have the <link href="http://java.sun.com/products/jndi/index.html">Sun JNDI API</link>
-   package installed in your classpath.</p>
+  <p>Make sure you have the <link href="http://java.sun.com/products/jndi/index.html">SUN JNDI API</link>
+   package installed in your classpath (named <code>jndi.jar</code>). Note you don't need
+   to download any LDAP specific package, just the JNDI API classes.</p>
  </answer>
 </faq>
 

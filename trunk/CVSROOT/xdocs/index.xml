@@ -124,7 +124,7 @@
 
  <s1 title="Where do I get it?">
   <p>
-   Here is the <link href="http://xml.apache.org/dist/">download area</link>.
+   Here is the <link href="http://xml.apache.org/cocoon/dist/">download area</link>.
   </p>
   <note>
    Since Cocoon requires many different packages to work (Xerces, Xalan, FOP, etc...)
