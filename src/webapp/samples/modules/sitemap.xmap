@@ -19,7 +19,7 @@
     | Input Modules sample sitemap.
     | Author: Konstantin Piroumian "kpiroumian@apache.org"
     |
-    | $Id: sitemap.xmap,v 1.12 2004/06/16 20:00:07 vgritsenko Exp $
+    | $Id: sitemap.xmap,v 1.13 2004/07/07 02:37:01 vgritsenko Exp $
     +-->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 
@@ -40,6 +40,16 @@
 
   <!-- =========================== Pipelines ================================= -->
   <map:pipelines>
+    <map:component-configurations>
+      <global-variables>
+         <!--+
+             | (Re)Define global parameters, used in the input modules GlobalInputModule demo.
+             +-->
+         <global-sub-sitemap>This value is defined in the samples/modules/sitemap.xmap</global-sub-sitemap>
+         <global-sitemap-override>This value was defined in the samples/sitemap.xmap, but was overridden by samples/modules/sitemap.xmap</global-sitemap-override>
+      </global-variables>
+    </map:component-configurations>
+
     <map:pipeline>
 
       <!-- Default URL matcher. Matches '/' URLs-->
@@ -358,6 +368,20 @@
         <map:serialize/>
       </map:match>
 
+      <map:match pattern="content/global.xml">
+        <map:generate type="jx" src="properties.xml">
+          <map:parameter name="global-sitemap" value="{global:global-sitemap}"/>
+          <map:parameter name="global-sub-sitemap" value="{global:global-sub-sitemap}"/>
+          <map:parameter name="global-sitemap-override" value="{global:global-sitemap-override}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="Global Input Module (GlobalInputModule)"/>
+          <map:parameter name="description" value="GlobalInputModule
+            contains 'global' values defined in the sitemap. Children sitemaps
+            can override values defined in the parent sitemap."/>
+        </map:transform>
+        <map:serialize/>
+      </map:match>
 
       <!-- Display this sitemap source-->
       <map:match pattern="sitemap.xmap">

@@ -41,6 +41,7 @@
     <menu-item label="URLEncodeModule" href="url-encode.html" desc="URLEncode passed parameter"/>
     <menu-item label="URLDecodeModule" href="url-decode.html" desc="URLDecode passed parameter"/>
     <menu-item label="NamingInputModule" href="naming.html" desc="JNDI Resources. This sample does not work with built-in Jetty as it does not provide JNDI."/>
+    <menu-item label="GlobalInputModule" href="global.html" desc="Access to the global variables defined in the sitemap."/>
   </menu>
 
   <menu label="Documentation">
