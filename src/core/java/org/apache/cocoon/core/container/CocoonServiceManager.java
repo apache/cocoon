@@ -146,6 +146,7 @@ implements ServiceManager, Configurable {
                     }
 
                     try {
+                        // FIXME use different class loader
                         final Class componentClass = this.getClass().getClassLoader().loadClass( info.getServiceClassName() );
 
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
@@ -590,7 +591,7 @@ implements ServiceManager, Configurable {
      * @param component the class of this component.
      * @param configuration the configuration for this component.
      */
-    public void addComponent( final String role,
+    public void doAddComponent( final String role,
                               final Class component,
                               final Configuration configuration )
     throws ServiceException {
