@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.156 2004/01/22 14:12:49 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.157 2004/01/26 02:11:02 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -268,8 +268,8 @@
     <title>Jakarta Commons Collections</title>
     <description>Common implementations of collection classes.</description>
     <used-by>Cocoon, OJB</used-by>
-    <lib>core/commons-collections-2.1.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/collections.html</homepage>
+    <lib>core/commons-collections-3.0.jar</lib>
+    <homepage>http://jakarta.apache.org/commons/collections/index.html</homepage>
   </file>
 
   <file>
@@ -954,7 +954,7 @@
         for Java Objects against relational databases.
     </description>
     <used-by>OJB</used-by>
-    <lib>ojb/lib/db-ojb-1.0.rc5-20040118.jar</lib>
+    <lib>ojb/lib/db-ojb-1.0.rc5-20040125.jar</lib>
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
