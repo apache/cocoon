@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!-- OJB DATABASE MAPPINGS START HERE -->
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,22 +14,19 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE descriptor-repository PUBLIC "-//Apache Software Foundation//DTD OJB Repository//EN" "repository.dtd">
-
-<descriptor-repository version="1.0" isolation-level="read-uncommitted">
 
 <!--
-Define here all used connections.
-One defined connection should be defined as the default one,
-by set default-connection="true" - this could be done at runtime too.
+  Define here all used connections.
+  One defined connection should be defined as the default one,
+  by set default-connection="true" - this could be done at runtime too.
 
-It is possible to set user/password at
-runtime or let login different users at runtime using the same
-database. Use different PBKey with same jcdAlias name but
-different user/password.
+  It is possible to set user/password at
+  runtime or let login different users at runtime using the same
+  database. Use different PBKey with same jcdAlias name but
+  different user/password.
 
-Ditto it is possible to add jdbc-connection-descriptor at runtime
-using the MetadataManager.
+  Ditto it is possible to add jdbc-connection-descriptor at runtime
+  using the MetadataManager.
 -->
     <jdbc-connection-descriptor
         jcd-alias="default"
@@ -49,7 +46,7 @@ using the MetadataManager.
             maxActive="2"
             maxIdle="2"
             whenExhaustedAction="2"
-            validationQuery="select count(*) from Department"
+            validationQuery=""
         />
         <sequence-manager className="org.apache.ojb.broker.util.sequence.SequenceManagerHighLowImpl">
             <attribute attribute-name="grabSize" attribute-value="5"/>
@@ -62,15 +59,4 @@ using the MetadataManager.
         </sequence-manager>
     </jdbc-connection-descriptor>
 
-    <class-descriptor class="org.apache.cocoon.ojb.samples.bean.Department" table="DEPARTMENT">
-        <field-descriptor name="id"   column="ID"   jdbc-type="INTEGER" primarykey="true"/>
-        <field-descriptor name="name" column="NAME" jdbc-type="VARCHAR"/>
-    </class-descriptor>
-
-    <class-descriptor class="org.apache.cocoon.ojb.samples.bean.Employee" table="EMPLOYEE">
-        <field-descriptor name="id"             column="ID"             jdbc-type="INTEGER" primarykey="true"/>
-        <field-descriptor name="departmentId" column="DEPARTMENT_ID" jdbc-type="INTEGER"/>
-        <field-descriptor name="name"           column="NAME"           jdbc-type="VARCHAR"/>
-   </class-descriptor>
-
-</descriptor-repository>
+<!-- END OF OJB DATABASE MAPPINGS-->
