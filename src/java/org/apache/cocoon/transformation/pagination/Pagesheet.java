@@ -45,7 +45,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.7 2004/07/21 13:20:30 unico Exp $
+ * @version CVS $Id: Pagesheet.java,v 1.8 2004/07/22 09:12:34 unico Exp $
  */
 
 /*
@@ -98,7 +98,7 @@ which indicates that:
  6) range link(s) will have an attribute 'range' to indicate the range size
 
 */
-public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable, Serializable {
+public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable {
 
     // Used only during parsing of pagesheet document
     private int level = 0;
