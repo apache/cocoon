@@ -49,10 +49,18 @@ find
 
   - ant.jar
   - projectx-tr2.jar
-  - tools.jar
   - servlet-2.2.0.jar
   
 that you should place into your classpath.
+
+Ok, at this point, you need to make the java compiler available so you should
+either add
+ 
+  - tools.jar
+
+that you find in your <java_home>/lib/ directory in case you have Java 1.2 or
+later. If you have Java 1.1.x, the required javac classes are located in your
+classes.zip file and should already be in your classpath (otherwise, make sure).
 
 Now that the build tool is in place, you need to download the following
 packages from the indicated URL:
@@ -133,7 +141,7 @@ of build files, give credits to the original authors. Thank you.
 
   <property name="name" value="Cocoon"/>
   <property name="version" value="1.6-dev"/>
-  <property name="year" value="1999"/>
+  <property name="year" value="1999-2000"/>
 
   <property name="build.compiler" value="classic"/>
   <property name="debug" value="off"/>
