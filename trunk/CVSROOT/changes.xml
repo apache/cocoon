@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.189 2001-01-23 02:01:30 balld Exp $ 
+  $Id: changes.xml,v 1.190 2001-01-23 16:44:51 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,10 +18,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add">
+   Added notes on each jar, with details of which are required, to Installing documentation.
+  </action>
   <action dev="DB" type="fix" due-to="Steffen Stundzig" due-to-email="steffen@smb-tec.com">
     Patched XSPProcessor - it was instantiating a XSPLogicSheet with sheetBase 'null', causing problems with SAXON.
   </action>
-  <action dev="DB" type="fix" due-to="Peter Haight" due-to-email="peterh@sapros.com">
   <action dev="DB" type="fix" due-to="Kirk Woerner" due-to-email="kirk@stoneseeker.com">
     Patched XIncludeProcessor to handle non-DOM2 nodes resulting from XSLT transformation.
   </action>

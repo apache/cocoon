@@ -79,7 +79,120 @@
   <p>
    In the <code>/bin</code> directory you'll find the <code>cocoon.jar</code>
    jar package that contains the Cocoon binary files, while the <code>/lib</code>
-   directory contains all the libraries required for Cocoon operation.
+   directory contains all the libraries required for Cocoon operation:</p>
+
+  <table>
+   <tr>
+    <th>Jar filename</th>
+    <th>Package name</th>
+    <th>Obtained from</th>
+    <th>Purpose</th>
+    <th>Needed at run-time?</th>
+    <th>Needed at build-time?</th>
+    <th>Notes</th>
+   </tr>
+   <tr>
+    <td>ant_1_1.jar</td>
+    <td>Ant 1.1</td>
+    <td><link href="http://jakarta.apache.org/ant/index.html">jakarta.apache.org</link></td>
+    <td>Cocoon build system (a bit like Make)</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Other versions of Ant may not work.</td>
+   </tr>
+   <tr>
+    <td>bsfengines.jar</td>
+    <td>Bean Scripting Framework</td>
+    <td>IBM</td>
+    <td>Xalan extension functions</td>
+    <td>Optional</td>
+    <td>No</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>bsf.jar</td>
+    <td>Bean Scripting Framework</td>
+    <td>IBM</td>
+    <td>Xalan extension functions</td>
+    <td>Optional</td>
+    <td>No</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>fop_0_15_0.jar</td>
+    <td>FOP</td>
+    <td><link href="http://xml.apache.org/fop/index.html">xml.apache.org</link></td>
+    <td>Converts xsl:fo into PDF output</td>
+    <td>Yes (unless disabled)</td>
+    <td>Yes</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>sax-bugfix.jar</td>
+    <td>-</td>
+    <td><link href="mailto:greenrd@hotmail.com">Robin Green</link></td>
+    <td>Fixes error reporting bug</td>
+    <td>Optional</td>
+    <td>No</td>
+    <td>See below</td>
+   </tr>
+   <tr>
+    <td>servlet_2_2.jar</td>
+    <td>Servlet 2.2 API</td>
+    <td><link href="http://jakarta.apache.org/">jakarta.apache.org</link></td>
+    <td>Compiling</td>
+    <td>No</td>
+    <td>Yes, always</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>stylebook-1.0-b2.jar</td>
+    <td>Stylebook</td>
+    <td>xml.apache.org CVS</td>
+    <td>Generating docs</td>
+    <td>No</td>
+    <td>Yes for docs and dist</td>
+    <td>Requires Java 2; will be obsoleted by C2</td>
+   </tr>
+   <tr>
+    <td>turbine-pool.jar</td>
+    <td>Turbine</td>
+    <td><link href="http://java.apache.org/turbine/index.html">java.apache.org</link></td>
+    <td>JDBC connection pooling</td>
+    <td>Yes, always</td>
+    <td>Yes</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>w3c.jar</td>
+    <td>?</td>
+    <td><link href="http://xml.apache.org/">xml.apache.org</link></td>
+    <td>Required by FOP</td>
+    <td>Yes</td>
+    <td>?</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>xalan_1_2_D02.jar</td>
+    <td>Xalan 1.2D02</td>
+    <td><link href="http://xml.apache.org/xalan/index.html">xml.apache.org</link></td>
+    <td>Processing XSLT stylesheets and logicsheets</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td></td>
+   </tr>
+   <tr>
+    <td>xerces_1_2.jar</td>
+    <td>Xerces 1.2</td>
+    <td><link href="http://xml.apache.org/xerces-j/index.html">xml.apache.org</link></td>
+    <td>Parsing XML and outputting XML/HTML/text.</td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Position in CLASSPATH is very important (see below)</td>
+   </tr>
+  </table>
+
+  <p>
    While these packages may not be the most up-to-date versions, they are
    guaranteed and tested to work properly with Cocoon so, we suggest that you
    use them. Note, however, that they were all redistributed untouched from
