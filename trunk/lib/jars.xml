@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.71 2003/07/29 02:07:32 vgritsenko Exp $
+    | CVS $Id: jars.xml,v 1.72 2003/07/30 08:21:42 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -45,17 +45,6 @@
  </file>
 
  <file>
-  <title>Avalon Excalibur Collections</title>
-  <description>
-   Part of avalon, it is a set of classes and patterns that
-   support high level server development.
-  </description>
-  <used-by>Cocoon</used-by>
-  <lib>core/excalibur-collections-20020820.jar</lib>
-  <homepage>http://avalon.apache.org/excalibur/</homepage>
- </file>
-
- <file>
   <title>Avalon Excalibur Component</title>
   <description>
    Part of avalon, it is a set of classes and patterns that
@@ -63,17 +52,6 @@
   </description>
   <used-by>Cocoon</used-by>
   <lib>core/excalibur-component-1.1.jar</lib>
-  <homepage>http://avalon.apache.org/excalibur/</homepage>
- </file>
-
- <file>
-  <title>Avalon Excalibur Concurrent</title>
-  <description>
-   Part of avalon, it is a set of classes and patterns that
-   support high level server development.
-  </description>
-  <used-by>Cocoon</used-by>
-  <lib>core/excalibur-concurrent-20020820.jar</lib>
   <homepage>http://avalon.apache.org/excalibur/</homepage>
  </file>
 

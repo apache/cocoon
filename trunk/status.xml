@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.99 2003/07/29 12:32:18 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.100 2003/07/30 08:21:42 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -70,8 +70,8 @@
     </action>
 
     <action context="code" assigned-to="open">
-      For 2.1: use (only) released versions of excalibur (collections,
-      concurrent, source, store, xmlutil). This requires a release of those
+      For 2.1: use (only) released versions of excalibur 
+      (source, store, xmlutil). This requires a release of those
       components in excalibur.
     </action>
 
