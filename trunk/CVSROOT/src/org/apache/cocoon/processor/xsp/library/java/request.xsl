@@ -218,6 +218,19 @@
       <xsl:call-template name="value-for-name"/>
     </xsl:variable>
 
+    <xsl:variable name="default">
+      <xsl:choose>
+        <xsl:when test="@default">"<xsl:value-of select="@default"/>"</xsl:when>
+        <xsl:when test="default">
+          <xsl:call-template name="get-nested-content">
+            <xsl:with-param name="content" select="default"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>null</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+
     <xsl:variable name="as">
       <xsl:call-template name="value-for-as">
         <xsl:with-param name="default" select="'string'"/>
@@ -229,12 +242,17 @@
         <xsl:when test="$as = 'node'">
           XSPRequestLibrary.getParameter(
             request,
-            String.valueOf(<xsl:copy-of select="$name"/>),
+	    String.valueOf(<xsl:copy-of select="$name"/>),
+            <xsl:copy-of select="$default"/>,
             document
           )
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          request.getParameter(String.valueOf(<xsl:copy-of select="$name"/>))
+          XSPRequestLibrary.getParameter(
+            request,
+	    String.valueOf(<xsl:copy-of select="$name"/>),
+            <xsl:copy-of select="$default"/>
+          )
         </xsl:when>
       </xsl:choose>
     </xsp:expr>
