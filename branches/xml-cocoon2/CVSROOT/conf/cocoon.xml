@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<cocoon version="2.0">
+  <component  role="parser"    class="org.apache.cocoon.components.parser.XercesParser"/>
+
+  <generator  name="file"      class="org.apache.cocoon.generators.FileGenerator"/>
+  <generator  name="request"   class="org.apache.cocoon.generators.RequestGenerator"/>
+  <generator  name="directory" class="org.apache.cocoon.generators.DirectoryGenerator"/>
+  <filter     name="xslt"      class="org.apache.cocoon.filters.XalanFilter"/>
+  <serializer name="xml"       class="org.apache.cocoon.serializers.XMLSerializer"/>
+  <serializer name="html"      class="org.apache.cocoon.serializers.HTMLSerializer"/>
+  
+  <!-- =========================== WARNING ===================================
+    
+       THIS IS *NOT* HOW A GOOD SITEMAP SHOULD LOOK LIKE!
+       
+       This is just my own sitemap file that I used to understand what was 
+       going on and uses hardcoded paths as examples. Do not consider this
+       mandating or anything like that, but just what it is: a clue so that
+       you are able to play around with it.
+       
+       Consider that Cocoon2 is still pre-alpha1 so don't mess around with us
+       if you don't like it, but help us fixing it.
+       
+  =========================================================================== -->       
+       
+  <sitemap>
+    <partition>
+      <process uri="hello-page.xml" source="c:/code/xml.apache.org/xml-cocoon2/samples/documents/hello-page.xml">
+        <generator name="file"/>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="c:/code/xml.apache.org/xml-cocoon2/samples/stylesheets/simple-page2html.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>
+      
+      <process uri="**/" source="**/">
+        <generator name="directory"/>
+        <filter name="xslt">
+          <parameter name="stylesheet" value="c:/code/xml.apache.org/xml-cocoon2/samples/stylesheets/simple-directory2html.xsl"/>
+        </filter>
+        <serializer name="html">
+          <parameter name="contentType" value="text/html"/>
+        </serializer>
+      </process>
+    </partition>
+  </sitemap>
+</cocoon>
