@@ -30,7 +30,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.datatype.EnumType;
+import org.apache.cocoon.forms.datatype.typeimpl.EnumType;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.impl.ResourceSource;
 import org.custommonkey.xmlunit.Diff;
@@ -38,7 +38,7 @@ import org.w3c.dom.Document;
 
 /**
  * Test case for Woody's DynamicSelectionList datatype.
- * @version CVS $Id: EnumSelectionListTestCase.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: EnumSelectionListTestCase.java,v 1.3 2004/03/10 07:55:55 cziegeler Exp $
  */
 public class EnumSelectionListTestCase extends ExcaliburTestCase {
 
