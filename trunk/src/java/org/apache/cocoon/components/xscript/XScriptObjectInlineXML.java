@@ -50,20 +50,20 @@
 */
 package org.apache.cocoon.components.xscript;
 
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
 import java.io.StringReader;
+
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
 
 /**
  * An <code>XScriptObject</code> created from an inline XML fragment.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XScriptObjectInlineXML.java,v 1.2 2003/03/11 14:42:54 vgritsenko Exp $
+ * @version CVS $Id: XScriptObjectInlineXML.java,v 1.3 2003/07/05 04:32:05 joerg Exp $
  * @since July 7, 2001
  */
 public class XScriptObjectInlineXML extends XScriptObject {
@@ -78,8 +78,7 @@ public class XScriptObjectInlineXML extends XScriptObject {
         streamHandler = new StringBufferContentHandler(stringBuffer);
     }
 
-    public XScriptObjectInlineXML(XScriptManager manager,
-                                  StringBuffer stringBuffer) {
+    public XScriptObjectInlineXML(XScriptManager manager, StringBuffer stringBuffer) {
         super(manager);
         this.stringBuffer = stringBuffer;
         streamHandler = new StringBufferContentHandler(stringBuffer);
@@ -92,9 +91,7 @@ public class XScriptObjectInlineXML extends XScriptObject {
     }
 
     public InputStream getInputStream() throws IOException {
-        // FIXME(VG): This method should never be used because it
-        // incorrectly converts characters into bytes.
-        return new StringBufferInputStream(stringBuffer.toString());
+        return new ByteArrayInputStream(stringBuffer.toString().getBytes());
     }
 
     public InputSource getInputSource() throws IOException {
