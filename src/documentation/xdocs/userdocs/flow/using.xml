@@ -67,8 +67,8 @@
  
   <p>
     Once here, the Control Flow has to decide which page needs to be sent back
-    to the client browser. To do this, the script can invoke either the
-    <link href="api.html#sendPageAndWait"><code>sendPageAndWait</code></link> or the <link href="api.html#sendPage"><code>sendPage</code></link> functions.
+    to the client browser. To do this, the script can invoke one of the
+    <link href="api.html#sendPageAndWait"><code>sendPageAndWait</code></link> or <link href="api.html#sendPage"><code>sendPage</code></link> functions.
     These functions take two parameters, the relative URL of the page to be
     sent back to the client, and a context object which can be accessed
     inside this page to extract various values and place them in the
@@ -125,7 +125,7 @@
      The business logic model which implements your application
     </li>
     <li>
-      The page templates, which describe the content of the pages, and XSLT
+      The <link href="views.html">page templates</link>, which describe the content of the pages, and XSLT
       stylesheets which describe the look of the content.
     </li>
   </ul>
@@ -175,7 +175,7 @@
     <link href="api.html#createSession"><code>cocoon.createSession()</code></link> method, which creates a servlet
     session and saves the global scope containing the global variables' value
     in it. Next time the user invokes one of the four top-level functions,
-    the values of the global variables is restored, making sharing very easy.
+    the values of the global variables are restored, making sharing very easy.
   </p>
   </s2>
  

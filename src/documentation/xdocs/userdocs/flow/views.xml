@@ -13,7 +13,7 @@
   <body>
     <s1 title="Flowscript-aware Generators">
 <p>
-The second argument to <code>sendPage</code> and <code>sendPageAndWait</code> is a context object, which can be a simple dictionary with values that need to be displayed by the View. More generally any Java or JavaScript object can be passed here, as long as the necessary get methods for the important values are provided.
+The second argument to <code><link href="api.html#sendPage">sendPage</link></code> and <code><link href="api.html#sendPageAndWait">sendPageAndWait</link></code> is a context object, which can be a simple dictionary with values that need to be displayed by the View. More generally any Java or JavaScript object can be passed here, as long as the necessary get methods for the important values are provided.
 </p>
 <p>
 The page specified by the URL is processed by the sitemap, using the normal sitemap rules.
