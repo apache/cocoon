@@ -61,7 +61,7 @@ import java.net.MalformedURLException;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.17 2004/05/16 16:13:25 cziegeler Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.18 2004/06/11 14:27:32 upayavira Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled
     implements Source, ModifiableSource, XMLizable {
@@ -493,7 +493,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 base = this.url.substring(0, this.url.lastIndexOf("/"));
                 name = this.url.substring(this.url.lastIndexOf("/")+1);
             }
-            Collection collection = DatabaseManager.getCollection(base);
+            Collection collection = DatabaseManager.getCollection(base, user, password);
 
             if (name.equals("")) {
                 name = collection.createId();
@@ -526,7 +526,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 base = k.substring(0, k.lastIndexOf("/"));
                 name = k.substring(k.lastIndexOf("/")+1);
 
-                Collection collection = DatabaseManager.getCollection(base);
+                Collection collection = DatabaseManager.getCollection(base, user, password);
 
                 CollectionManagementService service =
                         (CollectionManagementService) collection.getService("CollectionManagementService", "1.0");
@@ -541,7 +541,7 @@ public class XMLDBSource extends AbstractLogEnabled
                 base = this.url.substring(0, this.url.lastIndexOf("/"));
                 name = this.url.substring(this.url.lastIndexOf("/")+1);
 
-                Collection collection = DatabaseManager.getCollection(base);
+                Collection collection = DatabaseManager.getCollection(base, user, password);
 
                 Resource resource = collection.getResource(name);
                 if (resource == null) {
