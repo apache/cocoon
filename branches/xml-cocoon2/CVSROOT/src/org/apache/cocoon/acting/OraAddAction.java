@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.File;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -41,7 +42,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-13 18:12:17 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-03-13 19:29:44 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -152,14 +153,14 @@ public class OraAddAction extends DatabaseAddAction {
                     int index = 0;
 
                     for (int i = 0; i < values.length; i++) {
-                        Object attr = request.get(values[i].getAttribute("param"));
-                        int length = -1;
-                        InputStream stream = null;
-                        OutputStream output = null;
-                        int bufSize = 1024;
-
                         String type = values[i].getAttribute("type", "");
                         if (this.isLargeObject(type)) {
+                            Object attr = request.get(values[i].getAttribute("param"));
+                            int length = -1;
+                            InputStream stream = null;
+                            OutputStream output = null;
+                            int bufSize = 1024;
+
                             index++;
 
                             if (type.equals("ascii")) {
@@ -173,7 +174,7 @@ public class OraAddAction extends DatabaseAddAction {
                                     stream = new BufferedInputStream(new ByteArrayInputStream(asciiText.getBytes()));
                                 }
 
-                                output = ascii.getAsciiOutputStream();
+                                output = new BufferedOutputStream(ascii.getAsciiOutputStream());
                                 bufSize = ascii.getBufferSize();
                             } else {
                                 BLOB binary = set.getBLOB(index);
@@ -181,18 +182,18 @@ public class OraAddAction extends DatabaseAddAction {
                                 stream = new BufferedInputStream(new FileInputStream(binaryFile));
                                 length = (int) binaryFile.length();
 
-                                output = binary.getBinaryOutputStream();
+                                output = new BufferedOutputStream(binary.getBinaryOutputStream());
                                 bufSize = binary.getBufferSize();
                             }
-                        }
 
-                        byte[] buffer = new byte[bufSize];
-                        while ((length = stream.read(buffer)) != -1) {
-                            output.write(buffer, 0, length);
-                        }
+                            byte[] buffer = new byte[bufSize];
+                            while ((length = stream.read(buffer)) != -1) {
+                                output.write(buffer, 0, length);
+                            }
 
-                        stream.close();
-                        output.close();
+                            stream.close();
+                            output.close();
+                        }
                     }
                 }
 
