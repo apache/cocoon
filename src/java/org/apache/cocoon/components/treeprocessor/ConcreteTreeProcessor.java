@@ -114,6 +114,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.disposableNodes = disposableNodes;
         this.enterSitemapEventListeners = enterSitemapEventListeners;
         this.leaveSitemapEventListeners = leaveSitemapEventListeners;
+        this.applicationContainer = componentLocator;
     }
 
     /** Set the sitemap component configurations (called as part of the tree building process) */
