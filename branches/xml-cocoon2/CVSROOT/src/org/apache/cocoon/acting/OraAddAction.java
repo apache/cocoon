@@ -41,7 +41,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-03-12 18:23:32 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-03-12 18:44:28 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -97,6 +97,19 @@ public class OraAddAction extends DatabaseAddAction {
                 if (this.isLargeObject(values[i].getAttribute("type")) == false) {
                     this.setColumn(statement, currentIndex, request, values[i]);
                     currentIndex++;
+                } else if (values[i].getAttribute("type").equals("image")) {
+                    File binaryFile = (File) request.get(values[i].getAttribute("param"));
+                    Parameters iparam = new Parameters();
+
+                    iparam.setParameter("image-size", Long.toString(binaryFile.length()));
+
+                    int [] dimensions = ImageDirectoryGenerator.getSize(binaryFile);
+                    iparam.setParameter("image-width", Integer.toString(dimensions[0]));
+                    iparam.setParameter("image-height", Integer.toString(dimensions[1]));
+
+                    synchronized (this.files) {
+                        this.files.put(binaryFile, param);
+                    }
                 }
             }
 
@@ -149,20 +162,6 @@ public class OraAddAction extends DatabaseAddAction {
                                 File binaryFile = (File) attr;
                                 stream = new BufferedInputStream(new FileInputStream(binaryFile));
                                 length = (int) binaryFile.length();
-
-                                if (type.equals("image")) {
-                                    Parameters iparam = new Parameters();
-
-                                    iparam.setParameter("image-size", Long.toString(binaryFile.length()));
-
-                                    int [] dimensions = ImageDirectoryGenerator.getSize(binaryFile);
-                                    iparam.setParameter("image-width", Integer.toString(dimensions[0]));
-                                    iparam.setParameter("image-height", Integer.toString(dimensions[1]));
-
-                                    synchronized (this.files) {
-                                        this.files.put(binaryFile, param);
-                                    }
-                                }
 
                                 output = binary.getBinaryOutputStream();
                                 bufSize = binary.getBufferSize();
