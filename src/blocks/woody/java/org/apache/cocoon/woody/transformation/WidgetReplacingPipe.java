@@ -68,17 +68,18 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * The basic operation of this Pipe is that it replaces wi:widget tags (having an id attribute)
+ * The basic operation of this Pipe is that it replaces wt:widget (in the
+ * {@link Constants#WT_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
- * <p>These XML fragments (normally all in the {@link Constants#WI_NS "Woody Instance"} namespace, can
+ * <p>These XML fragments (normally all in the {@link Constants#WI_NS "Woody Instance"} namespace), can
  * then be translated to a HTML presentation by an XSL. This XSL will then only have to style
  * individual widget, and will not need to do the whole page layout.
  *
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.15 2003/11/17 10:04:00 joerg Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.16 2003/12/08 21:32:26 vgritsenko Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -92,34 +93,58 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     private static final String FORM_TEMPLATE_EL = "form-template";
     private static final String STYLING_EL = "styling";
 
-    /** Default key under which the woody form is stored in the JXPath context. */
+    /**
+     * Default key under which the woody form is stored in the JXPath context.
+     */
     public static final String WOODY_FORM = "woody-form";
 
     protected Widget contextWidget;
-    /** Indicates whether we're currently in a widget element. */
+
+    /**
+     * Indicates whether we're currently in a widget element.
+     */
     protected boolean inWidgetElement;
-    /** Buffer used to temporarily record SAX events. */
+
+    /**
+     * Buffer used to temporarily record SAX events.
+     */
     protected SaxBuffer saxBuffer;
-    /** Counts the element nesting. */
+
+    /**
+     * Counts the element nesting.
+     */
     protected int elementNestingCounter;
+
     /**
      * Contains the value of the {@link #elementNestingCounter} on the moment the transformer
      * encountered a wi:widget element. Used to detect the corresponding endElement call
      * for the wi:widget element.
      */
     protected int widgetElementNesting;
+
     /**
      * If {@link #inWidgetElement} = true, then this contains the widget currenlty being handled.
      */
     protected Widget widget;
-    /** Boolean indicating wether the current widget requires special repeater-treatement. */
+
+    /**
+     * Boolean indicating wether the current widget requires special repeater-treatement.
+     */
     protected boolean repeaterWidget;
 
     protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
     protected WoodyTemplateTransformer pipeContext;
 
-    /** Have we encountered a <wi:style> element in a widget ? */
+    /**
+     * Have we encountered a <wi:style> element in a widget ?
+     */
     protected boolean gotStylingElement;
+
+    /** 
+     * Namespace prefix used for the namespace <code>Constants.WT_NS</code>.
+     */
+    protected String namespacePrefix;
+    
 
     public void init(Widget newContextWidget, WoodyTemplateTransformer newPipeContext) {
         contextWidget = newContextWidget;
@@ -397,7 +422,10 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     public void startPrefixMapping(String prefix, String uri)
             throws SAXException {
-        if (inWidgetElement) {
+        if (Constants.WT_NS.equals(uri)) {
+            // We consume this namespace completely
+            this.namespacePrefix = prefix;
+        } else if (inWidgetElement) {
             saxBuffer.startPrefixMapping(prefix, uri);
         } else {
             super.startPrefixMapping(prefix, uri);
@@ -406,7 +434,9 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     public void endPrefixMapping(String prefix)
             throws SAXException {
-        if (inWidgetElement) {
+        if (prefix.equals(this.namespacePrefix)) {
+            // We consume this namespace completely
+        } else if (inWidgetElement) {
             saxBuffer.endPrefixMapping(prefix);
         } else {
             super.endPrefixMapping(prefix);
@@ -497,6 +527,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         super.recycle();
         this.contextWidget = null;
         this.widget = null;
+        this.namespacePrefix = null;
     }
 
     /**
