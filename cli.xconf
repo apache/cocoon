@@ -34,7 +34,7 @@
     |        that you use the command line parameters to configure 
     |        the CLI.</note>
     |
-    | CVS: $Id: cli.xconf,v 1.6 2003/09/19 09:09:43 upayavira Exp $
+    | CVS: $Id: cli.xconf,v 1.7 2003/09/26 17:08:08 upayavira Exp $
     +-->
     
 <cocoon verbose="true"  
@@ -207,20 +207,27 @@
        |   * type:               the method to be used to calculate
        |                         the destination URI. See above 
        |                         section on <uri> node for details.
+       | 
+       | Each <uris> node can have a name attribute. When a name
+       | attribute has been specified, the -n switch on the command
+       | line can be used to tell Cocoon to only process the URIs
+       | within this URI group. When no -n switch is given, all 
+       | <uris> nodes are processed. Thus, one xconf file can be 
+       | used to manage multiple sites.
        +-->
-   <uris follow-links="true">
+   <uris name="docs" follow-links="true">
      <uri type="append" src-prefix="docs/" src="index.html"
           dest="build/dest/" />
    </uris>
    
-   <uris follow-links="false"
+   <uris name="samples" 
+         follow-links="false"
          confirm-extensions="true"
          src-prefix="samples/"
          dest="build/dest/examples/"
          type="append"
          >
       <uri src=""/>
-      <uri src="hello-world/"/>
       <uri src="hello-world/hello.html"/>
       <uri src="hello-world/hello.xml"/>
    </uris>
