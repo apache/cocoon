@@ -30,8 +30,8 @@
   <page id="sqltaglib" label="SQL Taglib" source="sqltaglib.xml"/>
 <separator/>
   <page id="contrib" label="Contributing" source="contrib.xml"/>
-  <external label="3rd Party" href="http://xml.apache.org/cocoon/3rdparty.xml"/>
-  <external label="Patch Queue" href="http://xml.apache.org/cocoon/patches.xml"/>
+  <external label="3rd Party" href="http://cocoon.apache.org/1.x/3rdparty.xml"/>
+  <external label="Patch Queue" href="http://cocoon.apache.org/1.x/patches.xml"/>
 <separator/>
   <external label="Javadocs" href="./api/index.html"/>
 <separator/>
@@ -40,11 +40,10 @@
   <todo id="todo" label="Todo" source="todo.xml"/>
 <separator/>
   <page id="livesites" label="Live Sites" source="livesites.xml"/>
-  <external label="Cocoon Hosting" href="http://xml.apache.org/cocoon/hosting.html"/>
+  <external label="Cocoon Hosting" href="http://cocoon.apache.org/1.x/hosting.html"/>
 <separator/>
   <external label="Bug Database" href="http://nagoya.apache.org/bugzilla/"/>
-  <external label="Code Repository" href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/"/>
-  <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
+  <external label="Code Repository" href="http://cvs.apache.org/viewcvs.cgi/cocoon-1/"/>
   <page id="mail-lists" label="Mail Lists" source="mail-lists.xml"/>
   <page id="mail-archives" label="Mail Archives" source="mail-archives.xml"/>
 </book>

@@ -37,7 +37,7 @@
   <page id="3rdparty" label="3rd Party" source="3rdparty.xml"/>
   <page id="patches" label="Patch Queue" source="patches.xml"/>
 <separator/>
-  <external label="Cocoon 2 Site" href="../cocoon2/index.html"/>
+  <external label="Cocoon 2 Site" href="../2.0/"/>
 <separator/>
   <faqs id="faqs" label="FAQ" source="faq.xml"/>
   <changes id="changes" label="Changes" source="changes.xml"/>
@@ -47,8 +47,7 @@
   <page id="hosting" label="Cocoon Hosting" source="hosting.xml"/>
 <separator/>
   <external label="Bug Database" href="http://nagoya.apache.org/bugzilla/"/>  
-  <external label="Code Repository" href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/"/>
-  <external label="Dev Snapshots" href="http://xml.apache.org/from-cvs/xml-cocoon/"/>
+  <external label="Code Repository" href="http://cvs.apache.org/viewcvs.cgi/cocoon-1/"/>
   <page id="mail-lists" label="Mail Lists" source="mail-lists.xml"/>
   <page id="mail-archives" label="Mail Archives" source="mail-archives.xml"/> 
 </book>
