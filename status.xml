@@ -209,7 +209,7 @@
    <action dev="AG" type="update">
      Updated rhino to 1.5r4-20040629T1232, util.concurrent to 1.3.4, jcs to 1.1-dev-20040811,
      commons-jxpath to 1.2, commons-httpclient to 2.0.1, jdtcore to 3.0.0,
-     xreporter-expression to 20040701, lucene to 1.4, quartz to 1.4.2
+     xreporter-expression to 20040701, lucene to 1.4, quartz to 1.4.2, ehcache to 0.9
    </action>
    <action dev="CZ" type="fix" fixes-bug="26854">
      A redirect is now possible, if it's called from flow. This also fixes bug #26571.
