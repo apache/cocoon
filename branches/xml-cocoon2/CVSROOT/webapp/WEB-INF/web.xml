@@ -51,10 +51,34 @@
       <param-name>log-level</param-name>
       <param-value>DEBUG</param-value>
     </init-param>
+
+    <!--
+      This parameter indicates the directory where Cocoon should put the log file.
+      Note that this path must be specified as an absolute path into your filesystem
+      and it is not rooted at the servlets context path. Also note that the path 
+      must end with a file separator character.
+      The default location is in the servlets context root at /WEB-INF/logs/.
+
+    <init-param>
+      <param-name>log-dir</param-name>
+      <param-value>/WEB-INF/logs</param-value>
+    </init-param>
+    -->
+
+    <!--
+      This parameter specifies the name of the log file to use. It will be created in 
+      the log-dir mentioned above.
+      The default name is "cocoon.log".
+
+    <init-param>
+      <param-name>log-name</param-name>
+      <param-value>cocoon.log</param-value>
+    </init-param>
+    -->
   
     <!-- 
       Allow reinstantiating (reloading) of the cocoon instance. If this is
-      set to yes, a new cocoon instance can be created using
+      set to "yes" or "true", a new cocoon instance can be created using
       the request parameter "cocoon-reload".
     -->
     <init-param>
@@ -77,6 +101,44 @@
         @database-driver@
       </param-value>
     </init-param>
+  
+    <!-- 
+      This parameter allows to specify where Cocoon should put files 
+      which are uploaded by the upload.xsp sample. The path specified 
+      is always relative to the context path of the servlet. 
+      The default directory is "image-dir" in the work-directory
+
+    <init-param>
+      <param-name>upload-directory</param-name>
+      <param-value>/WEB-INF/work/image-dir</param-value>
+    </init-param>
+    -->
+  
+    <!-- 
+      This parameter allows to specify where Cocoon should put it's
+      working files. The path specified is always relative to the 
+      context path of the Cocoon servlet. 
+      Usually it is obtained from the servlet engine.
+
+    <init-param>
+      <param-name>work-directory</param-name>
+      <param-value>/WEB-INF/work</param-value>
+    </init-param>
+    -->
+  
+    <!-- 
+      This parameter allows to specify additional directories or jars 
+      which Cocoon should put into it's own classpath.
+      Note that you must separate them using the platforms path.separator
+      (":" for *nix and ";" for Windows systems). Also not that absolute 
+      pathes are take as such but relative pathes are rooted at the context
+      root of the Cocoon servlet.
+
+    <init-param>
+      <param-name>extra-classpath</param-name>
+      <param-value>WEB-INF/extra-classes1:/[YOU-ABSOLUTE-PATH-TO]/own.jar</param-value>
+    </init-param>
+    -->
   </servlet>
 
   <servlet-mapping>

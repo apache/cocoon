@@ -65,7 +65,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.86 $ $Date: 2001-04-20 20:50:13 $
+ * @version CVS $Revision: 1.1.4.87 $ $Date: 2001-04-25 11:34:11 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -154,7 +154,7 @@ public class CocoonServlet extends HttpServlet {
 
         // get allow reload parameter, default is true
         String value = conf.getInitParameter("allow-reload");
-        this.allowReload = (value == null || value.equals("yes"));
+        this.allowReload = (value == null || value.equals("yes") || value.equals("true"));
 
         this.createCocoon();
     }
@@ -278,7 +278,11 @@ public class CocoonServlet extends HttpServlet {
         }
 
         try {
-            final String path = logDir + "cocoon.log";
+            String logName = getInitParameter("log-name");
+            if (logName == null) {
+                logName = "cocoon.log"
+            }
+            final String path = logDir + logName ;
 
             final Category cocoonCategory = LogKit.createCategory("cocoon", logPriority);
             this.log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
