@@ -55,19 +55,20 @@ import java.text.*;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import org.w3c.dom.*;
-import org.apache.turbine.util.db.pool.*;
+import org.apache.turbine.services.db.PoolBrokerService;
+import org.apache.turbine.util.db.pool.DBConnection;
 import org.apache.turbine.util.Log;
 
 /**
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.10 $ $Date: 2000-08-07 02:24:28 $
+ * @version $Revision: 1.11 $ $Date: 2000-10-13 21:41:29 $
  */
 
 public class XSPSQLLibrary {
 
-	static DBBroker pool = DBBroker.getInstance();
+	static PoolBrokerService pool = PoolBrokerService.getInstance();
 
 	public static Element[] executeQuery(
 										 Document document,

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.20 2000-10-05 17:51:14 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.21 2000-10-13 21:41:30 balld Exp $-->
 <!--
 
  ============================================================================
@@ -102,11 +102,11 @@
 			<xsp:include>java.sql.SQLException</xsp:include>
 			<xsp:include>java.text.SimpleDateFormat</xsp:include>
 			<xsp:include>java.text.DecimalFormat</xsp:include>
-			<xsp:include>org.apache.turbine.util.db.pool.DBBroker</xsp:include>
+			<xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
 			<xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
 		</xsp:structure>
 		<xsp:logic>
-		 static DBBroker _esql_pool = DBBroker.getInstance();
+		 static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
                  class EsqlSession {
                   DBConnection db_connection=null;
                   Connection connection=null;
