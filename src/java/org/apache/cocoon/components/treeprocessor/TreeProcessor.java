@@ -89,7 +89,7 @@ import java.util.Map;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.3 2003/03/20 11:45:58 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.4 2003/04/26 14:06:50 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -258,7 +258,7 @@ public class TreeProcessor
             org.apache.excalibur.source.Source source = resolver.resolveURI( xconfURL );
             try {
                 SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX(source, handler);
+                SourceUtil.toSAX( this.manager, source, null, handler);
                 builtin = handler.getConfiguration();
             } finally {
                 resolver.release( source );
