@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.4 2003/07/19 20:16:27 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.5 2003/07/20 21:28:26 coliver Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -265,12 +265,14 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         throws Exception {
         Map objectModel = environment.getObjectModel();
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Session session = request.getSession(true);
         Scriptable scope = null;
-        HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
-        if (userScopes != null) {
-            String uriPrefix = environment.getURIPrefix();
-            scope = (Scriptable)userScopes.get(uriPrefix);
+        Session session = request.getSession(false);
+        if (session != null) {
+            HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
+            if (userScopes != null) {
+                String uriPrefix = environment.getURIPrefix();
+                scope = (Scriptable)userScopes.get(uriPrefix);
+            }
         }
         if (scope == null) {
             scope = createThreadScope();
@@ -305,7 +307,6 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
         }
         String uriPrefix = environment.getURIPrefix();
-        System.out.println("Session: setting :" + uriPrefix + ": " + System.identityHashCode(scope));
         userScopes.put(uriPrefix, scope);
         return scope;
     }
@@ -409,7 +410,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         // Check if we need to compile and/or execute scripts
         synchronized (compiledScripts) {
             List execList = new ArrayList();
-            boolean needsRefresh = lastExecTime == 0;
+            boolean needsRefresh = false;
             if (reloadScripts) {
                 long now = System.currentTimeMillis();
                 if (now >= lastTimeCheck + checkTime) {
@@ -423,7 +424,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             // then create a list of scripts to compile/execute
             if (lastExecTime == 0 || needsRefresh || needResolve.size() > 0) {
                 topLevelScripts.addAll(needResolve);
-                if (!needsRefresh) {
+                if (lastExecTime != 0 && !needsRefresh) {
                     execList.addAll(needResolve);
                 } else {
                     execList.addAll(topLevelScripts);
@@ -548,7 +549,7 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
                 cocoon.setParameters(parameters);
                 Object fun = ScriptableObject.getProperty(thrScope, funName);
                 if (fun == Scriptable.NOT_FOUND) {
-                    fun = funName; // this will produce a better error message
+                    throw new ResourceNotFoundException("Function \"javascript:"+funName+ "()\" not found");
                 }
                 ScriptRuntime.call(context, fun, thrScope, 
                                    funArgs, thrScope);
