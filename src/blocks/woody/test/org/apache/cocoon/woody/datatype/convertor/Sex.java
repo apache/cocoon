@@ -50,28 +50,25 @@
 */
 package org.apache.cocoon.woody.datatype.convertor;
 
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.w3c.dom.Element;
 
 /**
- * Builds {@link EnumConvertor}s.
- * 
- * @version CVS $Id: EnumConvertorBuilder.java,v 1.3 2003/11/16 08:55:29 ugo Exp $
+ * Description of Sex.
+ * @version CVS $Id: Sex.java,v 1.1 2003/11/16 08:55:29 ugo Exp $
  */
-public class EnumConvertorBuilder implements ConvertorBuilder {
+public class Sex {
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.convertor.ConvertorBuilder#build(org.w3c.dom.Element)
-     */
-    public Convertor build(Element configElement) throws Exception {
-        if (configElement == null) {
-            return null;
-        }
-        Element enumEl = DomHelper.getChildElement(configElement,
-                Constants.WD_NS, "enum", true);
-        String clazz = enumEl.getFirstChild().getNodeValue();
-        return new EnumConvertor(clazz);
+    public static final Sex MALE = new Sex("M");
+    public static final Sex FEMALE = new Sex("F");
+    private String code;
+
+    private Sex(String code) { this.code = code; }
+
+    public String toString() {
+      // Will probably have some i18n support here
+      switch(code.charAt(0)) {
+          case 'M' : return this.getClass().getName() + ".MALE";
+          case 'F' : return this.getClass().getName() + ".FEMALE";
+          default : return "unknown"; // Should never happen
+      }
     }
-
 }
