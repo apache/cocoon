@@ -70,7 +70,12 @@ import java.util.Map;
  * an exception will be thrown.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: RequestModule.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: RequestModule.java,v 1.3 2003/12/30 11:25:45 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=InputModule
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=request-input
  */
 public class RequestModule extends AbstractJXPathModule
     implements ThreadSafe {

@@ -87,7 +87,11 @@ import org.xml.sax.SAXException;
  * number of bytes read is equal to the getContentLength() value.
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
- * @version CVS $Id: StreamGenerator.java,v 1.8 2003/12/06 21:22:08 cziegeler Exp $
+ * @version CVS $Id: StreamGenerator.java,v 1.9 2003/12/30 11:25:45 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
  */
 public class StreamGenerator extends ServiceableGenerator
 {

@@ -90,7 +90,11 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: RequestGenerator.java,v 1.9 2003/11/27 02:16:24 vgritsenko Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.10 2003/12/30 11:25:45 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=Generator
+ * @x-avalon.lifestyle type=pooled
  */
 public class RequestGenerator extends ServiceableGenerator implements Parameterizable {
 

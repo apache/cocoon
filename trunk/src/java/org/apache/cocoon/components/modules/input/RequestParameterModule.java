@@ -75,7 +75,12 @@ import java.util.TreeSet;
  * such array is returned.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: RequestParameterModule.java,v 1.2 2003/04/23 13:37:35 haul Exp $
+ * @version CVS $Id: RequestParameterModule.java,v 1.3 2003/12/30 11:25:45 unico Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=InputModule
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=request-param-input
  */
 public class RequestParameterModule extends AbstractInputModule implements ThreadSafe {
 
