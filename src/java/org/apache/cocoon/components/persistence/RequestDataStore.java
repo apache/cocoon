@@ -31,8 +31,10 @@ package org.apache.cocoon.components.persistence;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: RequestDataStore.java,v 1.3 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: RequestDataStore.java,v 1.4 2004/07/11 14:04:35 cziegeler Exp $
  * @since 2.1.1
+ * @deprecated Use the scoped attributes on the Request object instead.
+ *             This component will be removed with Cocoon 2.3.
  */
 public interface RequestDataStore {
         
