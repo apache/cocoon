@@ -1,5 +1,5 @@
 /*
-$Id: EventImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
+$Id: EventImpl.java,v 1.3 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -82,12 +82,8 @@ public class EventImpl implements Event {
         return getName();
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param otherObject DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(Object otherObject) {
         boolean equals = false;
@@ -102,10 +98,8 @@ public class EventImpl implements Event {
         return equals;
     }
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
         return getName().hashCode();

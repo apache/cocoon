@@ -1,5 +1,5 @@
 /*
-$Id: WorkflowException.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
+$Id: WorkflowException.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -57,10 +57,10 @@ package org.apache.lenya.workflow;
 
 
 /**
- * @author andreas
+ * Workflow exception.
  *
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: WorkflowException.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
  */
 public class WorkflowException extends Exception {
     /**

@@ -1,5 +1,5 @@
 /*
-$Id: SynchronizedWorkflowInstances.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
+$Id: SynchronizedWorkflowInstances.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -57,6 +57,33 @@ package org.apache.lenya.workflow;
 
 
 /**
+ * <p>
+ * Synchronized workflow instances.
+ * </p>
+ * 
+ * <p>
+ * A set of workflow instances with the same workflow schema can be synchronized.
+ * If a transition in this schema is marked as synchronized, it can only be invoked
+ * on all instances in the set at the same time.
+ * </p>
+ *
+ * <p>
+ * When a workflow event is invoked on a set of synchronized workflow instances,
+ * the transition is invoked only if
+ * </p>
+ * <ul>
+ * <li>all instances are in the source state of the transition, and</li>
+ * <li>all conditions of the transition are complied for all instances.</li>
+ * </ul>
+ * 
+ * <p>
+ * Then the transition is invoked for all instances in the set.
+ * </p>
+ * <p>
+ * A common usecase of this concept is the simultaneous publishing of
+ * a set of documents (all language versions of a document, a section, ...).
+ * </p>
+ * 
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
  */
 public interface SynchronizedWorkflowInstances {
