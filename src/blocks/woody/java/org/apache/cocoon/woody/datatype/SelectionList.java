@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.woody.datatype;
 
+import java.util.Locale;
+
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-
-import java.util.Locale;
 
 /**
  * Interface to be implemented by selection lists.
