@@ -66,6 +66,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -112,7 +113,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.19 2004/01/19 17:53:38 coliver Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.20 2004/01/31 16:50:56 bruno Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -159,6 +160,14 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     JSErrorReporter errorReporter;
     boolean enableDebugger = false;
 
+    /**
+     * Needed to get things working with JDK 1.3. Can be removed once we
+     * don't support that platform any more.
+     */
+    private ComponentManager getComponentManager() {
+        return manager;
+    }
+
     class MyClassRepository implements CompilingClassLoader.ClassRepository {
 
         Map javaSource = new HashMap();
@@ -180,7 +189,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
         public synchronized boolean upToDateCheck() throws Exception {
             SourceResolver sourceResolver = (SourceResolver)
-                manager.lookup(SourceResolver.ROLE);
+                getComponentManager().lookup(SourceResolver.ROLE);
             Iterator iter = javaSource.entrySet().iterator();
             List invalid = new LinkedList();
             while (iter.hasNext()) {

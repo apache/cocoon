@@ -69,6 +69,8 @@ import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.commons.jxpath.JXPathException;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
 // TODO: Reduce the Element creation and deletion churn by using startElement
@@ -88,7 +90,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * for the woody template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.6 2004/01/23 18:42:52 tim Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.7 2004/01/31 16:49:54 bruno Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -217,6 +219,22 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     public void throwWrongWidgetType(String pipeName, String element, String widget) throws SAXException {
         throwSAXException(pipeName + ": Element \"" + element + "\" can only be used for " + widget + " widgets.");
+    }
+
+    /**
+     * Needed to get things working with JDK 1.3. Can be removed once we
+     * don't support that platform any more.
+     */
+    private ContentHandler getContentHandler() {
+        return this.contentHandler;
+    }
+
+    /**
+     * Needed to get things working with JDK 1.3. Can be removed once we
+     * don't support that platform any more.
+     */
+    private LexicalHandler getLexicalHandler() {
+        return this.lexicalHandler;
     }
 
     public Handler nestedTemplate() throws SAXException {
@@ -354,7 +372,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 widgetId = getWidgetId(input.attrs);
                 Widget widget = getWidget(widgetId);
-                widget.generateLabel(contentHandler);
+                widget.generateLabel(getContentHandler());
                 widget = null;
                 return this;
             case EVENT_ELEMENT:
@@ -387,8 +405,8 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_END_ELEMENT:
                 stylingHandler.recycle();
                 stylingHandler.setSaxFragment(out.getBuffer());
-                stylingHandler.setContentHandler(contentHandler);
-                stylingHandler.setLexicalHandler(lexicalHandler);
+                stylingHandler.setContentHandler(getContentHandler());
+                stylingHandler.setLexicalHandler(getLexicalHandler());
                 widget.generateSaxFragment(stylingHandler, pipeContext.getLocale());
                 widget = null;
                 out.bufferFini();
@@ -406,7 +424,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             switch(event) {
             case EVENT_START_ELEMENT:
                 getRepeaterWidget("RepeaterSizeHandler");
-                ((Repeater)widget).generateSize(contentHandler);
+                ((Repeater)widget).generateSize(getContentHandler());
                 widget = null;
                 return this;
             case EVENT_ELEMENT:
@@ -428,7 +446,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
                 String widgetId = input.attrs.getValue("widget-id");
                 if (widgetId == null || widgetId.equals(""))
                     throwSAXException("Element repeater-widget-label missing required widget-id attribute.");
-                ((Repeater)widget).generateWidgetLabel(widgetId, contentHandler);
+                ((Repeater)widget).generateWidgetLabel(widgetId, getContentHandler());
                 widget = null;
                 return this;
             case EVENT_ELEMENT:
@@ -672,11 +690,11 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             if (elementNesting == 0 && saxBuffer != null) {
                 if (gotStylingElement) {
                     // Just deserialize
-                    saxBuffer.toSAX(contentHandler);
+                    saxBuffer.toSAX(getContentHandler());
                 } else {
                     // Insert an enclosing <wi:styling>
                     out.startElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
-                    saxBuffer.toSAX(contentHandler);
+                    saxBuffer.toSAX(getContentHandler());
                     out.endElement(Constants.WI_NS, STYLING_EL, Constants.WI_PREFIX_COLON + STYLING_EL);
                 }
             }
