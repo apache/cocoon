@@ -214,7 +214,7 @@ Cocoon or change the deployed <code>cocoon.xconf</code> in the web-server WEB-IN
 				<source><![CDATA[
    <map:match pattern="deli.html">
      <map:generate src="docs/samples/hello-page.xml"/>
-     <map:transform src="stylesheets/deli_test.xsl" type="xslt">
+     <map:transform src="stylesheets/deli_test.xsl" type="deli">
          <map:parameter name="use-deli" value="true"/>
      </map:transform>
      <map:serialize type="html"/>
