@@ -248,7 +248,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.21 2003/12/23 15:28:33 joerg Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.22 2004/01/14 00:51:15 joerg Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -296,7 +296,7 @@ public class I18nTransformer extends AbstractTransformer
      * </pre>
      * The &lt;text&gt; fragment can include markup and parameters at any place.
      * Also do parameters, which can also include i18n:text, i18n:date, etc.
-     * elements (whithout keys only).
+     * elements (without keys only).
      * <p>
      *
      * @see #I18N_TEXT_ELEMENT
@@ -853,10 +853,10 @@ public class I18nTransformer extends AbstractTransformer
     private boolean translate_copy;
 
     // A flag for copying the _GOOD_ node and not others
-    // when doing in-place translation whitin i18n:choose
+    // when doing in-place translation within i18n:choose
     private boolean translate_end;
 
-    // Translated text. Inside i:translate, collects character events.
+    // Translated text. Inside i18n:translate, collects character events.
     private ParamSaxBuffer tr_text_recorder;
 
     // Current "i18n:text" events
@@ -865,7 +865,7 @@ public class I18nTransformer extends AbstractTransformer
     // Current parameter events
     private SaxBuffer param_recorder;
 
-    // Param count when not using i:param name="..."
+    // Param count when not using i18n:param name="..."
     private int param_count;
 
     // Param name attribute for substitution.
@@ -944,7 +944,7 @@ public class I18nTransformer extends AbstractTransformer
     }
 
     /**
-     * Implemenation of configurable interface.
+     * Implementation of Configurable interface.
      * Configure this transformer.
      */
     public void configure(Configuration conf) throws ConfigurationException {
@@ -2011,7 +2011,7 @@ public class I18nTransformer extends AbstractTransformer
         return result;
     }
 
-    //-- Dictionary handling routins
+    //-- Dictionary handling routines
 
     /**
      * Helper method to retrieve a message from the dictionary.
