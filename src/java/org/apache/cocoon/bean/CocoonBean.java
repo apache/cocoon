@@ -105,8 +105,8 @@ import java.util.List;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: CocoonBean.java,v 1.6 2003/06/04 09:25:53 upayavira Exp $
+ * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
+ * @version CVS $Id: CocoonBean.java,v 1.7 2003/06/04 13:48:50 upayavira Exp $
  */
 public class CocoonBean {
 
@@ -133,12 +133,6 @@ public class CocoonBean {
      */
     public static final String DEFAULT_CONF_FILE = "cocoon.xconf";
 
-    /**
-     * The default URI to be used when a URI requested refers to
-     * a directory, e.g. http://localhost:8080/site/
-     */
-    public static final String INDEX_URI = "index";
-
     // User Supplied Parameters
     private String contextDir = CocoonBean.DEFAULT_CONTEXT_DIR;
     private String configFile = null;
@@ -153,7 +147,7 @@ public class CocoonBean {
     private String logger = null;
     private String userAgent = DEFAULT_USER_AGENT;
     private String accept = DEFAULT_ACCEPT;
-    private String defaultFilename = CocoonBean.INDEX_URI;
+    private String defaultFilename = Constants.INDEX_URI;
     private boolean followLinks = true;
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
@@ -497,11 +491,11 @@ public class CocoonBean {
     public void addTarget(String type, String root, String sourceURI, String destURI){
         targets.add(new Target(type, root, sourceURI, destURI));
     }
-  
+
     public void addTarget(String type, String sourceURI, String destURI){
         targets.add(new Target(type, sourceURI, destURI));
     }
-  
+
     public void addTarget(String sourceURI, String destURI){
         targets.add(new Target(sourceURI, destURI));
     }
@@ -735,7 +729,7 @@ public class CocoonBean {
      *   </li>
      * </ul>
      * @param target a <code>Target</code> target to process
-     * @return a <code>Collection</code> containing all links found, as 
+     * @return a <code>Collection</code> containing all links found, as
      * Target objects.
      * @exception Exception if an error occurs
      */
@@ -1210,7 +1204,7 @@ public class CocoonBean {
         private String root;
         private String sourceURI;
         private String destURI;
-        
+
         public Target(String type, String root, String sourceURI, String destURI){
             this.type = type;
             this.root = root;
@@ -1233,7 +1227,7 @@ public class CocoonBean {
             newURI = newURI.substring(root.length());
             return new Target(this.type, this.root, newURI, this.destURI);
         }
-        
+
         public String getFinalURI(String actualSourceURI) throws ProcessingException {
             if (!actualSourceURI.startsWith(root)) {
                 throw new ProcessingException("Derived target does not share same root: " + actualSourceURI);
@@ -1277,7 +1271,7 @@ public class CocoonBean {
                 return destURI.substring(0,starPos) + actualSourceURI + destURI.substring(starPos+1);
             }
         }
-   
+
         public String getSourceURI() {
             return root + sourceURI;
         }

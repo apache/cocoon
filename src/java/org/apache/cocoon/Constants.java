@@ -59,15 +59,15 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: Constants.java,v 1.5 2003/06/04 09:25:53 upayavira Exp $
+ * @version CVS $Id: Constants.java,v 1.6 2003/06/04 13:48:50 upayavira Exp $
  */
 public final class Constants {
 
     /** Our properties are now here: */
     private static final String PROPS_FILE = "org/apache/cocoon/cocoon.properties";
-    
+
     static final Properties properties;
-    
+
     /**
      * Load the cocoon properties
      */
@@ -82,9 +82,9 @@ public final class Constants {
         } catch (IOException ioe) {
             throw new RuntimeException("Cocoon cannot load required properties from " + PROPS_FILE);
         }
-        
+
     }
-    
+
     /** The name of this project. */
     public static final String NAME = properties.getProperty("name");
 
@@ -269,6 +269,12 @@ public final class Constants {
      * The name of a <code>NotifyingObject</code> in the so called objectModel <code>Map</code>.
      */
     public static final String NOTIFYING_OBJECT = "notifying-object";
+
+    /**
+     * The default URI to be used when a URI requested refers to
+     * a directory, e.g. http://localhost:8080/site/
+     */
+    public static final String INDEX_URI = "index";
 
     /** The namespace URI for the Error/Exception XML */
     public static final String ERROR_NAMESPACE_URI = "http://apache.org/cocoon/error/" + CONF_VERSION;
