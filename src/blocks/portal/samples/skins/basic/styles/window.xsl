@@ -10,14 +10,13 @@
         <xsl:value-of select="@bgColor" />
     </xsl:when>
     <xsl:otherwise>
-      <xsl:text>#294563</xsl:text>
+      <xsl:text>#CCCCCC</xsl:text>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:variable>
 
-<table cellSpacing="0" cellpadding="0" width="100%">
+<table border="2" cellSpacing="0" cellpadding="0" width="100%">
 	<tr vAlign="top">
-		<td width="5" style="background-color:#294563;" valign="top"><img src="window-top-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
 		<td bgColor="{$bgColor}" valign="middle">
 			<font>
 				<xsl:attribute name="color">#ffffff</xsl:attribute>
@@ -60,19 +59,11 @@
 	  			</a>
 			</xsl:if>
 		</td>
-		<td width="5" style="background-color:#294563;" valign="top"><img src="window-top-right.gif" border="0" width="5" height="5" alt="top-right"/></td>
 	</tr>
 	<tr>
-		<td width="5" style="background-image:url(window-border-left.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
 		<td colSpan="2">
                <xsl:apply-templates select="content"/>
 		</td>
-		<td width="5" style="background-image:url(window-border-right.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
-	</tr>
-	<tr>
-		<td width="5"><img src="window-bottom-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
-		<td colspan="2" style="background-image:url(window-border-bottom.gif);"></td>
-		<td width="5"><img src="window-bottom-right.gif" border="0" width="5" height="5" alt="top-left"/></td>
 	</tr>
 </table>
 </xsl:template>
