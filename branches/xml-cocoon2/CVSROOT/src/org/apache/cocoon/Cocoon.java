@@ -47,7 +47,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.46 $ $Date: 2001-02-08 14:57:34 $
+ * @version CVS $Revision: 1.4.2.47 $ $Date: 2001-02-08 18:30:39 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Loggable {
@@ -88,7 +88,8 @@ public class Cocoon
      * Create a new <code>Cocoon</code> instance.
      */
     protected Cocoon() throws ConfigurationException {
-        // Set the system properties needed by Xalan2. setSystemProperties();
+        // Set the system properties needed by Xalan2.
+        setSystemProperties();
     }
 
     /**
@@ -248,6 +249,7 @@ public class Cocoon
 
   /**
    * Sets required system properties .
+   */
     protected void setSystemProperties()
     {
       java.util.Properties props = new java.util.Properties();
@@ -267,5 +269,4 @@ public class Cocoon
       }
       System.setProperties(systemProps);
     }
-   */
 }
