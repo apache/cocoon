@@ -180,8 +180,14 @@
   <changes>
 
  <release version="@version@" date="@date@">
-  <action dev="CZ" type="update">
-     PLACEHOLDER
+  <action dev="BRD" type="fix" fixes-bug="19423 and 15525">
+    Improved XPointer support in the XIncludeTransformer. Meanwhile improved the way xml:base
+    attributes are handled, added support for the xi:fallback element, do XInclude processing
+    on included content, and added XInclude samples.
+  </action>
+  <action dev="BRD" type="update" fixes-bug="15312" due-to="Unico Hommes" due-to-email="unico@hippo.nl">
+    Dispose the parent Component Manager if it implements Disposable. Happens when the
+    Cocoon servlet shuts down or when Cocoon is reloaded.
   </action>
  </release>
  <release version="2.1m2" date="May 20 2003">
