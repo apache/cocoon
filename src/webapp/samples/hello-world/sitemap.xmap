@@ -38,7 +38,7 @@
    </map:match>
    
    <map:match pattern="hello.vml">
-    <map:generate src="content/hello-page.xml"/>
+    <map:generate src="content/hello.xml"/>
     <map:transform src="style/xsl/page2vml.xsl"/>
     <map:serialize type="xml"/>
    </map:match>
