@@ -1,4 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 
 <!--+
     | This is the cocoon logkit configuration file.
@@ -13,20 +28,22 @@
     |
     |   http://wiki.apache.org/cocoon/ConfiguringTheLogs
     |
+    | $Id$
     +-->
-
 <logkit>
 
   <!--+
-      | Factories are responsible to create the consumers of the log events, the targets.
-      | Here we have configured just a few, the main cocoon target factory (that prints to a file)
-      | and the servlet target factory (that prints back to the servlet container log stream) but
-      | for more info on the available logkit factories, please consult
-      |  http://excalibur.apache.org/apidocs/org/apache/avalon/excalibur/logger/factory/package-summary.html
+      | Factories are responsible to create the consumers of the log events,
+      | the targets. Here we have configured just a few, the main cocoon
+      | target factory (that prints to a file) and the servlet target factory
+      | (that prints back to the servlet container log stream) but  for more
+      | info on the available logkit factories, please consult
+      | http://excalibur.apache.org/apidocs/org/apache/avalon/excalibur/logger/factory/package-summary.html
       +-->
   <factories>
     <factory type="cocoon" class="org.apache.cocoon.util.log.CocoonTargetFactory"/>
     <factory type="servlet" class="org.apache.avalon.excalibur.logger.factory.ServletTargetFactory"/>
+    <factory type="stream" class="org.apache.avalon.excalibur.logger.factory.StreamTargetFactory"/>
   </factories>
 
   <!--+
@@ -53,39 +70,43 @@
           | the error stacktrace (which tend to be very verbose and for little value).
           | If you need the stacktraces, uncomment the second format below.
           +-->
-      <format type="cocoon">%7.7{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n</format>
-      <!--format type="cocoon">%7.7{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}</format-->
+      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n</format>
+      <!--format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n%{throwable}</format-->
 
       <!--+
           | <append> if set to 'true' will make cocoon append the events
           | to the existing file, if set to 'false' cocoon will override
           | the existing ones at every new start.
           +-->
-      <append>true</append>
+      <append>false</append>
 
       <!--+
           | <rotation> allows you to rotate log files one they meet certain
           | criteria. If you uncomment the example below, the log files will
           | be rotated once they are a day old or bigger than 100 Mb.
-          +-->
-      <!--rotation type="unique" pattern="yyyyMMdd" suffix=".log">
+      <rotation type="unique" pattern="yyyyMMdd" suffix=".log">
         <or>
           <size>100m</size>
           <time>24:00:00</time>
         </or>
-      </rotation-->
+      </rotation>
+          +-->
     </cocoon>
 
     <cocoon id="deprecation">
       <filename>${context-root}/WEB-INF/logs/deprecation.log</filename>
-      <format type="cocoon">%7.7{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n</format>
+      <format type="cocoon">%5.5{priority} %{time} [%{category}] (%{uri}) %{thread}/%{class:short}: %{message}\n</format>
       <append>true</append>
     </cocoon>
 
     <servlet id="servlet">
-      <format type="extended">%7.7{priority} %5.5{time} [%8.8{category}] (%{context}): %{message}\n</format>
+      <format type="extended">%5.5{priority} %5.5{time} [%8.8{category}] (%{context}): %{message}\n</format>
     </servlet>
 
+    <stream id="console">
+      <stream>System.out</stream>
+      <format type="extended">%5.5{priority} %5.5{time} [%8.8{category}] (%{context}): %{message}\n</format>
+    </stream>
   </targets>
 
   <!--+
@@ -115,7 +136,7 @@
         | This is the main category. The empty name attribute indicates that
         | this rule will match all log events from all categories.
         +-->
-    <category log-level="ERROR" name="">
+    <category log-level="@loglevel@" name="">
       <log-target id-ref="main"/>
     </category>
 
@@ -133,13 +154,17 @@
         | sent to the log file and some others (the ones related to the sitemap), 
         | are sent to the servlet container (where they could be further relayed 
         | to the console, for example)
-        +-->
-    <!--category log-level="ERROR" name="">
+        |
+    <category log-level="ERROR" name="">
       <category log-level="DEBUG" name="sitemap">
         <log-target id-ref="servlet"/>
       </category>
+      <category log-level="INFO" name="access">
+        <log-target id-ref="console"/>
+      </category>
       <log-target id-ref="core"/>
-    </category-->
+    </category>
+        +-->
 
   </categories>
 
