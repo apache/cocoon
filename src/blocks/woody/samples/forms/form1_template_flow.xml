@@ -65,6 +65,10 @@
           <td valign="top"><wt:widget-label id="altbirthdate"/></td>
           <td valign="top"><wt:widget id="altbirthdate"/></td>
         </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="dieselprice"/></td>
+          <td valign="top"><wt:widget id="dieselprice"/></td>
+        </tr>
       </table>
 
       <wt:widget-label id="contacts"/><br/>

@@ -170,6 +170,17 @@
     </wd:datatype>
   </wd:field>
 
+  <wd:field id="dieselprice" required="true">
+    <wd:label>Price for a liter diesel:</wd:label>
+    <wd:datatype base="decimal">
+      <wd:convertor variant="number">
+        <wd:patterns>
+          <wd:pattern>#.00</wd:pattern>
+        </wd:patterns>
+      </wd:convertor>
+    </wd:datatype>
+  </wd:field>
+
   <wd:repeater id="contacts">
     <wd:field id="firstname">
       <wd:label>Firstname</wd:label>
