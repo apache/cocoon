@@ -1,4 +1,4 @@
-/*-- $Id: XSPUtil.java,v 1.17 2000-10-22 13:32:34 greenrd Exp $ --
+/*-- $Id: XSPUtil.java,v 1.18 2000-12-11 11:33:23 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,7 +62,7 @@ import org.apache.cocoon.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.17 $ $Date: 2000-10-22 13:32:34 $
+ * @version $Revision: 1.18 $ $Date: 2000-12-11 11:33:23 $
  */
 public class XSPUtil {
   public static String pathComponent(String filename) {
@@ -397,8 +397,20 @@ public class XSPUtil {
     return getContents(new URL(url).openStream());
   }
 
+  public static String getURLContents(String url, String encoding) throws IOException {
+    return getContents(new URL(url).openStream(), encoding);
+  }
+
   public static String getFileContents(String filename) throws IOException {
     return getContents(new FileReader(filename));
+  }
+
+  public static String getFileContents(String filename, String encoding) throws IOException {
+    return getContents(new FileInputStream(filename), encoding);
+  }
+
+  public static String getContents(InputStream in, String encoding) throws IOException {
+    return getContents(new InputStreamReader(in, encoding));
   }
 
   public static String getContents(InputStream in) throws IOException {

@@ -224,7 +224,7 @@
           String.valueOf(<xsl:copy-of select="$name"/>),
 	  request,
 	  (ServletContext) context
-	)
+	), "<xsl:value-of select="@encoding"/>"
       )
     </xsp:expr>
   </xsl:template>

@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.162 2000-12-10 18:30:07 greenrd Exp $ 
+  $Id: changes.xml,v 1.163 2000-12-11 11:33:19 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="add">
+   Added encoding support to util:get-file-contents and various similar
+   XSPUtil methods
+  </action>
   <action dev="RDG" type="fix" due-to="Gerard Maas" 
    due-to-email="gerard.maas@alcatel.be">
    Fixed xsp:pi to add PI before document element instead of after.
