@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URLConnection;
 import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +28,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-10-06 21:25:30 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-22 23:09:03 $
  */
 public class ResourceReader extends AbstractReader {
 
@@ -41,9 +43,27 @@ public class ResourceReader extends AbstractReader {
         String src = null;
         File file = null;
         URL url = null;
+        URLConnection conn = null;
+        InputStream is = null;
+        long len = 0;
+        long lastModified = 0;
         try {
-            src = this.resolver.resolveEntity (null,this.source).getSystemId();
-            url = new URL (src);
+            System.out.println(">>>> ResourceReader: " + this.source);
+            if(this.source.indexOf(":/")!=-1) {
+                src = this.source;
+                url = new URL (src);
+                conn = url.openConnection();
+                len = conn.getContentLength();
+                is = conn.getInputStream();
+                lastModified = conn.getLastModified();
+            } else {
+                src = this.resolver.resolveEntity (null,this.source).getSystemId();
+                url = new URL (src);
+                file = new File (url.getFile());
+                len = file.length();
+                is = new FileInputStream (file);
+                lastModified = file.lastModified();
+            }
         } catch (SAXException se) {
             throw new IOException ("ResourceReader: error resolving source \""
                 +source+"\". "+se.toString());
@@ -51,13 +71,12 @@ public class ResourceReader extends AbstractReader {
             throw new IOException ("ResourceReader: malformed source \""
                 +src+"\". "+mue.toString());
         }
-        file = new File (url.getFile());
-        FileInputStream fis = new FileInputStream (file);
-        byte[] buffer = new byte[(int) file.length()];
-        fis.read(buffer);
-        fis.close();
+        System.out.println(">>>> Length: " + len);
+        byte[] buffer = new byte[(int)len];
+        is.read(buffer);
+        is.close();
         res.setContentLength(buffer.length);
-        res.setDateHeader("Last-Modified", file.lastModified());
+        res.setDateHeader("Last-Modified", lastModified);
         res.setHeader("Accept-Ranges", "bytes");
         out.write ( buffer );
     }
