@@ -2,7 +2,7 @@
 
 <!--
     Convert the slop parser output to a collection of slides
-    $Id: filter-slop-output.xsl,v 1.1 2003/09/26 14:42:36 bdelacretaz Exp $
+    $Id: filter-slop-output.xsl,v 1.2 2003/09/27 18:45:04 bdelacretaz Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -12,6 +12,12 @@
 
     <!-- prefix for presentation hints in slides -->
     <xsl:variable name="hintPrefix" select="'hint-'"/>
+
+    <!-- key based on last preceding slide element, used to group slides content -->
+    <xsl:key
+        name="lastSlideKey"
+        match="slop:empty-line[not(self::slop:slide)]" use="generate-id(preceding::slop:slide[1])"
+    />
 
     <!--
         Extract the presentation heading and let slides extract themselves,
@@ -79,11 +85,8 @@
                 <xsl:apply-templates mode="hints" select="following-sibling::slop:*[starts-with(name(),$hintPrefix)][preceding::slop:slide[1] = $anchor]"/>
             </slide-hints>
             <slide-content>
-                <!-- recursively group paragraphs of this slide, separated by empty lines -->
-                <!-- TODO can be made more efficient using keys -->
-                <xsl:for-each select="following-sibling::slop:empty-line[preceding::slop:slide[1] = $anchor]">
-                    <xsl:apply-templates select="." mode="paragraph"/>
-                </xsl:for-each>
+                <!-- get content of this slide based on lastSlideKey -->
+                 <xsl:apply-templates select="key('lastSlideKey',generate-id(.))" mode="paragraph"/>
             </slide-content>
         </slide>
     </xsl:template>
