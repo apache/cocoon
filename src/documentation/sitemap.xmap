@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
-<!-- This sitemap is an overridden version of the main 'driver' sitemap from
-Apache Forrest v0.5 ('stable' tag).  Cocoon-specific sections are marked as
-such. -->
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
   <map:components>
     <map:generators default="file">
-      <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator" label="content" />
+      <map:generator name="file" src="org.apache.cocoon.generation.FileGenerator" />
       <!--
-      <map:generator name="html" src="org.apache.cocoon.generation.HTMLGenerator" label="content" />
-      <map:generator name="directory" src="org.apache.cocoon.generation.DirectoryGenerator" label="content" />
-      <map:generator name="libre" src="org.apache.forrest.yer.use.cocoon.HierarchyGenerator" label="content" />
-      <map:generator name="textparser" src="org.apache.cocoon.generation.TextParserGenerator" label="content" />
+      <map:generator name="html" src="org.apache.cocoon.generation.HTMLGenerator" />
+      <map:generator name="directory" src="org.apache.cocoon.generation.DirectoryGenerator" />
+      <map:generator name="libre" src="org.apache.forrest.yer.use.cocoon.HierarchyGenerator" />
+      <map:generator name="textparser" src="org.apache.cocoon.generation.TextParserGenerator" />
       -->
     </map:generators>
 
@@ -21,9 +18,6 @@ such. -->
       </map:transformer>
 
       <map:transformer name="linkrewriter" logger="sitemap.transformer.linkrewriter" src="org.apache.cocoon.transformation.LinkRewriterTransformer">
-        <input-module name="linkmap">
-          <file src="{src}" reloadable="false" />
-        </input-module>
         <input-module name="site">
           <input-module name="linkmap">
             <file src="{src}" reloadable="false" />
@@ -31,21 +25,26 @@ such. -->
           <prefix>/site//</prefix>
           <suffix>/@href</suffix>
         </input-module>
+        <input-module name="ext">
+          <input-module name="linkmap">
+            <file src="{src}" reloadable="false" />
+          </input-module>
+          <prefix>/site/external-refs//</prefix>
+          <suffix>/@href</suffix>
+        </input-module>
       </map:transformer>
 
       <map:transformer name="xpath" logger="sitemap.transformer.xpath" src="org.apache.cocoon.transformation.XPathTransformer" />
-
       <map:transformer name="xslt" src="org.apache.cocoon.transformation.TraxTransformer" logger="sitemap.transformer.xsltc" pool-max="32" pool-min="8" pool-grow="2">
         <use-request-parameters>false</use-request-parameters>
         <use-browser-capabilities-db>false</use-browser-capabilities-db>
         <use-deli>false</use-deli>
-        <xslt-processor-role>xalan</xslt-processor-role>
+        <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
+        <!--<transformer-factory>com.icl.saxon.TransformerFactoryImpl</transformer-factory>-->
+        <!--<transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory>-->
       </map:transformer>
 
       <map:transformer name="xinclude" src="org.apache.cocoon.transformation.XIncludeTransformer" logger="sitemap.transformer.xinclude" pool-grow="2" pool-max="16" pool-min="2" />
-      <map:transformer logger="sitemap.transformer.lexer" name="lexer" src="org.apache.cocoon.transformation.LexicalTransformer"/>
-      <map:transformer logger="sitemap.transformer.lexer" name="parser" src="org.apache.cocoon.transformation.ParserTransformer"/>
-      <map:transformer logger="sitemap.transformer.lexer" name="pattern" src="org.apache.cocoon.transformation.PatternTransformer"/>
     </map:transformers>
 
     <map:readers default="resource">
@@ -68,13 +67,7 @@ such. -->
       <map:serializer name="links" src="org.apache.cocoon.serialization.LinkSerializer">
         <encoding>ISO-8859-1</encoding>
       </map:serializer>
-
-      <map:serializer name="svg2jpeg" mime-type="image/jpeg" src="org.apache.cocoon.serialization.SVGSerializer">
-        <parameter name="quality" type="float" value="1.0"/>
-      </map:serializer>
-
-      <map:serializer mime-type="image/png" name="svg2png" src="org.apache.cocoon.serialization.SVGSerializer"/>
-      <!--
+     <!--
       <map:serializer mime-type="application/x-shockwave-flash" name="swf" src="org.apache.cocoon.serialization.SWFSerializer"/>
       <map:serializer mime-type="application/msword" name="fo2rtf" src="org.apache.cocoon.serialization.RTFSerializer"/>
       -->
@@ -86,26 +79,30 @@ such. -->
     </map:matchers>
 
     <map:actions>
-      <!-- <map:action logger="sitemap.action.request" name="request" src="org.apache.cocoon.acting.RequestParamAction"/> -->
       <map:action logger="sitemap.action.resource-exists" name="resource-exists" src="org.apache.cocoon.acting.ResourceExistsAction"/>
-
     </map:actions>
+
+    <map:selectors default="exists">
+      <map:selector logger="sitemap.selector.exists" name="exists"
+        src="org.apache.cocoon.selection.ResourceExistsSelector" />
+    </map:selectors>
 
     <map:pipes default="caching">
       <map:pipe name="caching" src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
+      <!--
       <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
       <map:pipe name="profile-caching" src="org.apache.cocoon.components.profiler.ProfilingCachingProcessingPipeline"/>
       <map:pipe name="profile-noncaching" src="org.apache.cocoon.components.profiler.ProfilingNonCachingProcessingPipeline"/>
+      -->
     </map:pipes>
   </map:components>
 
   <map:views>
-    <map:view name="content" from-label="content">
-      <map:serialize type="xml" />
-    </map:view>
 
     <map:view name="links" from-position="last">
-      <map:transform src="resources/stylesheets/filterlinks.xsl"/>
+      <map:transform src="resources/stylesheets/filterlinks.xsl">
+        <map:parameter name="ctxbasedir" value="{realpath:.}/"/>
+      </map:transform>
       <map:serialize type="links"/>
     </map:view>
   </map:views>
@@ -135,7 +132,8 @@ such. -->
 
       <!-- ============================================================ -->
       <!-- OUTPUT FORMATS                                               -->
-      <!-- ============================================================ -->
+      <!--                  Serves content directly to the user         -->
+      <!-- +==========================================================+ -->
 
       <!-- COCOON SPECIFIC -->
       <map:match pattern="**.txt">
@@ -145,11 +143,12 @@ such. -->
       </map:match>
       <!-- /COCOON SPECIFIC -->
 
-      <map:match type="regexp" pattern=".+">
-        <map:act type="resource-exists">
-          <map:parameter name="url" value="content/{0}" />
-          <map:mount uri-prefix="" src="raw.xmap" check-reload="yes" />
-        </map:act>
+       <map:match type="regexp" pattern="^.+$">
+        <map:select type="exists">
+          <map:when test="content/{0}">
+            <map:mount uri-prefix="" src="raw.xmap" check-reload="yes" />
+          </map:when>
+        </map:select>
       </map:match>
 
       <map:match pattern="*.html">
@@ -176,16 +175,54 @@ such. -->
         </map:call>
       </map:match>
 
-      <map:match pattern="**.pdf">
-        <map:generate src="cocoon:/{1}.xml"/>
-        <map:transform src="skins/{forrest:skin}/xslt/fo/document2fo.xsl"/>
+
+      <!-- Special matcher for FAQ PDFs, so we can pass an extra
+      'numbersections' param into document2fo.xsl -->
+      <map:match pattern="**faq.pdf">
+        <map:generate src="cocoon:/{1}faq.xml"/>
+        <map:transform src="skins/{forrest:skin}/xslt/fo/document2fo.xsl">
+          <map:parameter name="numbersections" value="false"/>
+          <map:parameter name="ctxbasedir" value="{realpath:.}/"/>
+          <map:parameter name="xmlbasedir" value="content/xdocs/{1}"/>
+        </map:transform>
         <map:serialize type="fo2pdf"/>
       </map:match>
 
+      <map:match type="regexp" pattern="^(.*?)([^/]*).pdf$">
+        <map:generate src="cocoon:/{1}{2}.xml"/>
+        <map:transform src="skins/{forrest:skin}/xslt/fo/document2fo.xsl">
+          <map:parameter name="ctxbasedir" value="{realpath:.}/"/>
+          <map:parameter name="xmlbasedir" value="content/xdocs/{1}"/>
+        </map:transform>
+        <map:serialize type="fo2pdf"/>
+      </map:match>
+
+      <map:match pattern="**changes.rss">
+        <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
+      </map:match>
+
+      <map:match pattern="profiler">
+        <map:mount uri-prefix="" src="profiler.xmap" check-reload="yes" />
+      </map:match>
+      <map:match pattern="**.js">
+        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
+      </map:match>
+      <map:match pattern="**.css">
+        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
+      </map:match>
+      <map:match pattern="**images**">
+        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
+      </map:match>
+     <map:match pattern="**favicon.ico">
+        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
+      </map:match>
     </map:pipeline>
+
 
     <!-- ============================================================ -->
     <!-- INTERMEDIATE FORMATS                                         -->
+    <!--                          Tabs, menus and body HTML.          -->
+    <!--                       Called from output format pipelines    -->
     <!-- ============================================================ -->
     <map:pipeline internal-only="false">
 
@@ -207,6 +244,10 @@ such. -->
           <map:parameter name="url" value="content/xdocs/{1}{2}.ehtml" />
           <map:generate src="content/xdocs/{../1}{../2}.ehtml" />
           <map:transform src="resources/stylesheets/html2htmlbody.xsl" />
+          <map:transform type="linkrewriter" src="cocoon:/{1}linkmap">
+            <map:parameter name="link-attrs" value="href src"/>
+            <map:parameter name="schemes" value="site ext"/>
+          </map:transform>
           <map:serialize type="xml" />
         </map:act>
       </map:match>
@@ -217,6 +258,7 @@ such. -->
         <map:generate src="cocoon:/{1}{2}.xml"/>
         <map:transform type="xinclude"/>
         <map:transform type="linkrewriter" src="cocoon:/{1}linkmap">
+          <map:parameter name="link-attrs" value="href src"/>
           <map:parameter name="schemes" value="site ext"/>
         </map:transform>
         <map:call resource="skinit">
@@ -251,24 +293,23 @@ such. -->
 
     <!-- ============================================================ -->
     <!-- SOURCE FORMATS                                               -->
+    <!--                 Raw XML sources, typically doc-v11 format    -->
     <!-- ============================================================ -->
     <map:pipeline internal-only="false">
+ 
       <map:match pattern="**book.xml">
         <map:mount uri-prefix="" src="navigation.xmap" check-reload="yes" />
       </map:match>
+
       <map:match pattern="**tab.xml">
         <map:mount uri-prefix="" src="navigation.xmap" check-reload="yes" />
       </map:match>
 
-      <map:match pattern="**changes.xml">
+      <map:match pattern="changes.xml">
         <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
       </map:match>
 
-      <map:match pattern="**changes.rss">
-        <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**todo.xml">
+      <map:match pattern="todo.xml">
         <map:mount uri-prefix="" src="status.xmap" check-reload="yes" />
       </map:match>
 
@@ -278,10 +319,6 @@ such. -->
 
       <map:match pattern="**linkmap**">
         <map:mount uri-prefix="" src="linkmap.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="community/*/**">
-        <map:mount uri-prefix="" src="revisions.xmap" check-reload="yes" />
       </map:match>
 
       <map:match pattern="**issues.xml">
@@ -298,39 +335,33 @@ such. -->
         <map:mount uri-prefix="" src="faq.xmap" check-reload="yes" />
       </map:match>
 
-      <map:match pattern="profiler">
-        <map:mount uri-prefix="" src="profiler.xmap" check-reload="yes" />
+      <map:match pattern="community/**index.xml">
+        <map:mount uri-prefix="" src="forrest.xmap" check-reload="yes" />
       </map:match>
 
-      <map:match pattern="**.js">
-        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**.css">
-        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**images**">
-        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**favicon.ico">
-        <map:mount uri-prefix="" src="static.xmap" check-reload="yes" />
+      <map:match pattern="community/*/**">
+        <map:mount uri-prefix="" src="revisions.xmap" check-reload="yes" />
       </map:match>
 
       <map:match pattern="**.xml">
         <map:mount uri-prefix="" src="forrest.xmap" check-reload="yes" />
       </map:match>
 
-      <map:match pattern="">
-        <map:mount uri-prefix="" src="redirect.xmap" check-reload="yes" />
-      </map:match>
-
-      <map:match pattern="**/">
-        <map:mount uri-prefix="" src="redirect.xmap" check-reload="yes" />
-      </map:match>
-
     </map:pipeline>
+
+    <!-- ============================================================ -->
+    <!-- REDIRECTS                                                    -->
+    <!-- ============================================================ -->
+    <map:pipeline internal-only="false">
+
+      <map:match pattern="">
+        <map:redirect-to uri="index.html" />
+      </map:match>
+      <map:match type="regexp" pattern="^.+/$">
+          <map:redirect-to uri="index.html"/>
+      </map:match>
+    </map:pipeline>
+
 
   </map:pipelines>
 </map:sitemap>
