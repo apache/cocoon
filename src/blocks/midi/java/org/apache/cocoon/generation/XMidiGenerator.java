@@ -60,6 +60,9 @@ import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.midi.xmidi.ByteLen;
+import org.apache.cocoon.components.midi.xmidi.Utils;
+import org.apache.cocoon.components.midi.xmidi.Constants;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -82,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:peter@palserv.com">Peter Loeb</a>
  */
 
-public class MIDIGenerator extends ComposerGenerator implements Parameterizable
+public class XMidiGenerator extends ComposerGenerator implements Parameterizable
 {
 
   /** The input source */
@@ -211,9 +214,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
       throw e;
     }
   }
-
-  private static final String VERSION = "1.2";
-
+  
   private int midiFormat;
   private int ppnq;
   private Hashtable ffHash;
@@ -237,7 +238,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
     AttributesImpl attr = new AttributesImpl();
     String text = "";
     this.contentHandler.startDocument();
-    attr.addAttribute("", "VERSION", "VERSION", "CDATA", VERSION);
+    attr.addAttribute("", "VERSION", "VERSION", "CDATA", Constants.VERSION);
     this.contentHandler.startElement("", "XMidi", "XMidi", attr);
 
     boolean chunkFlag = true;
@@ -259,10 +260,10 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
       }
 
       // get chunk id
-      String cid = baToString(hdr, 0, 3);
+      String cid = Utils.baToString(hdr, 0, 3);
 
       // get chunk length
-      int len = baToInt(hdr, 4, 7);
+      int len = Utils.baToInt(hdr, 4, 7);
 
       // get rest of chunk
       byte[] dta = new byte[len];
@@ -279,10 +280,10 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
         attr.addAttribute("", "TYPE", "TYPE", "CDATA", cid);
         this.contentHandler.startElement("", "MThd", "MThd", attr);
 
-        midiFormat = baToInt(dta, 0, 1);
-        numTracks = baToInt(dta, 2, 3);
-        ppnq = baToInt(dta, 4, 5);
-        String pnq = baToHex(dta, 4, 5);
+        midiFormat = Utils.baToInt(dta, 0, 1);
+        numTracks = Utils.baToInt(dta, 2, 3);
+        ppnq = Utils.baToInt(dta, 4, 5);
+        String pnq = Utils.baToHex(dta, 4, 5);
 
         attr.clear();
 
@@ -751,14 +752,14 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
     while (tFlag)
     {
       // do delta
-      ByteLen bl = deltaToInt(dta, offset);
+      ByteLen bl = Utils.deltaToInt(dta, offset);
       offset += bl.len;
-      String deltaLen = baToHex(bl.ba, 0, 3);
+      String deltaLen = Utils.baToHex(bl.ba, 0, 3);
 
       nFlag = true; // assume simple (slen) offset
       // may or may not be status
       boolean statFlag = false;
-      int first = baToInt(dta, offset, offset);
+      int first = Utils.baToInt(dta, offset, offset);
       this.getLogger().debug(
         "doTrack: in loop; deltaLen="
           + deltaLen
@@ -771,7 +772,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
       {
         // it is a status byte
         statFlag = true;
-        sval = baToHex(dta, offset, offset);
+        sval = Utils.baToHex(dta, offset, offset);
         status = first;
         this.getLogger().debug("doTrack: have status: " + sval);
         if (status < 240 && status > 127)
@@ -825,8 +826,8 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
         // note off
         slen = 2;
         // set up tag
-        int pitch = baToInt(dta, offset, offset);
-        int vel = baToInt(dta, offset + 1, offset + 1);
+        int pitch = Utils.baToInt(dta, offset, offset);
+        int vel = Utils.baToInt(dta, offset + 1, offset + 1);
         ctag = "NOTE_OFF";
         ctagAttr[0] = "PITCH";
         ctagAttrVal[0] = "" + pitch;
@@ -847,8 +848,8 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
         {
           // note on
           slen = 2;
-          int pitch = baToInt(dta, offset, offset);
-          int vel = baToInt(dta, offset + 1, offset + 1);
+          int pitch = Utils.baToInt(dta, offset, offset);
+          int vel = Utils.baToInt(dta, offset + 1, offset + 1);
           ctag = "NOTE_ON";
           ctagAttr[0] = "PITCH";
           ctagAttrVal[0] = "" + pitch;
@@ -869,8 +870,8 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
           {
             // after touch
             slen = 2;
-            int pitch = baToInt(dta, offset, offset);
-            int pres = baToInt(dta, offset + 1, offset + 1);
+            int pitch = Utils.baToInt(dta, offset, offset);
+            int pres = Utils.baToInt(dta, offset + 1, offset + 1);
             ctag = "AFTER";
             ctagAttr[0] = "PITCH";
             ctagAttrVal[0] = "" + pitch;
@@ -891,8 +892,8 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
             {
               // control change
               slen = 2;
-              int contnum = baToInt(dta, offset, offset);
-              int contval = baToInt(dta, offset + 1, offset + 1);
+              int contnum = Utils.baToInt(dta, offset, offset);
+              int contval = Utils.baToInt(dta, offset + 1, offset + 1);
               ctag = "CONTROL";
               ctagAttr[0] = "NUMBER";
               ctagAttrVal[0] = "" + contnum;
@@ -911,7 +912,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
               {
                 // program (patch) change
                 slen = 1;
-                int patch = baToInt(dta, offset, offset);
+                int patch = Utils.baToInt(dta, offset, offset);
                 ctag = "PROGRAM";
                 ctagAttr[0] = "NUMBER";
                 ctagAttrVal[0] = "" + patch;
@@ -922,7 +923,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
                 {
                   // channel pressure
                   slen = 1;
-                  int pamt = baToInt(dta, offset, offset);
+                  int pamt = Utils.baToInt(dta, offset, offset);
                   ctag = "PRESSURE";
                   ctagAttr[0] = "AMOUNT";
                   ctagAttrVal[0] = "" + pamt;
@@ -933,7 +934,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
                   {
                     // pitch wheel
                     slen = 2;
-                    int pwamt = getPW(dta, offset);
+                    int pwamt = Utils.getPW(dta, offset);
                     ctag = "WHEEL";
                     ctagAttr[0] = "AMOUNT";
                     ctagAttrVal[0] = "" + pwamt;
@@ -943,19 +944,19 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
                     if (status == 240)
                     {
                       // sysex
-                      bl = deltaToInt(dta, offset);
-                      slen = baToInt(bl.ba, 0, 3);
+                      bl = Utils.deltaToInt(dta, offset);
+                      slen = Utils.baToInt(bl.ba, 0, 3);
                       noff = bl.len;
                       nFlag = false;
                       edata =
-                        baToHex(dta, offset + noff, offset + noff + slen - 1);
+											Utils.baToHex(dta, offset + noff, offset + noff + slen - 1);
                       noff += slen;
                     }
                     else
                       if (status == 255)
                       {
                         // non midi (reset only in "live" midi")
-                        nmData = baToHex(dta, offset, offset);
+                        nmData = Utils.baToHex(dta, offset, offset);
                         //						nmData = "SNMT=\""+nmDta+"\" ";
                         snam = "non-MIDI";
                         String nmNam = (String) ffHash.get(nmData);
@@ -968,8 +969,8 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
                           snam += " - Unknown";
                         }
                         //						int nmt = baToInt(dta,offset+1,offset+1);
-                        bl = deltaToInt(dta, offset + 1);
-                        slen = baToInt(bl.ba, 0, 3);
+                        bl = Utils.deltaToInt(dta, offset + 1);
+                        slen = Utils.baToInt(bl.ba, 0, 3);
                         noff = bl.len + 1;
                         nFlag = false;
                         if (slen == 0)
@@ -979,7 +980,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
                         else
                         {
                           edata =
-                            baToHex(
+													Utils.baToHex(
                               dta,
                               offset + noff,
                               offset + noff + slen - 1);
@@ -999,7 +1000,7 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
                         else
                           if (status == 242)
                           {
-                            int tcv = getPW(dta, offset);
+                            int tcv = Utils.getPW(dta, offset);
                             Integer tc = new Integer(tcv);
                             edata = tc.toString();
                             slen = 2;
@@ -1017,8 +1018,8 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
                             }
                             else
                             { // really unknown
-                              int ol = getNextHiOrd(dta, offset);
-                              edata = baToHex(dta, offset + 1, ol);
+                              int ol = Utils.getNextHiOrd(dta, offset);
+                              edata = Utils.baToHex(dta, offset + 1, ol);
                               ol -= offset + 1;
                               slen = ol;
                             }
@@ -1132,38 +1133,6 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
     }
   }
 
-  int getPW(byte[] dta, int offset) throws ProcessingException
-  {
-    int hi = baToInt(dta, offset, offset);
-    int lo = baToInt(dta, offset + 1, offset + 1);
-    hi <<= 7;
-    lo |= hi;
-    return lo;
-  }
-
-  int getNextHiOrd(byte[] dta, int offset) throws ProcessingException
-  {
-    int ol = 0;
-    boolean tflag = true;
-    for (int o = offset + 1; o < dta.length - 1; o++)
-    {
-      if (tflag)
-      {
-        int x = baToInt(dta, o, o);
-        if ((x & 128) == 128)
-        {
-          tflag = false;
-          ol = o;
-        }
-      }
-    }
-    if (tflag)
-    {
-      ol = offset + dta.length;
-    }
-    return ol;
-  }
-
   /**
   write formatted hex data to file
   */
@@ -1182,256 +1151,18 @@ public class MIDIGenerator extends ComposerGenerator implements Parameterizable
     for (int i = 0; i < n; i++)
     {
       int strt = i * bpl;
-      bth.append(baToHex(dta, strt, strt + bpl - 1));
+      bth.append(Utils.baToHex(dta, strt, strt + bpl - 1));
     }
     if (r > 0)
     {
       int strt = n * bpl;
-      bth.append(baToHex(dta, strt, strt + r - 1));
+      bth.append(Utils.baToHex(dta, strt, strt + r - 1));
     }
 
     text = bth.toString();
     this.contentHandler.characters(text.toCharArray(), 0, text.length());
 
     this.contentHandler.endElement("", "HEXDATA", "HEXDATA");
-  }
-
-  /**
-  convert int to byte array of length c
-  */
-  byte[] intToBa(int n, int c) throws ProcessingException
-  {
-    byte[] b = new byte[c];
-    int t = n;
-    for (int i = 0; i < c; i++)
-    {
-      int j = c - i - 1;
-      int k = t % 256;
-      b[j] = (byte) k;
-      t /= 256;
-    }
-    if (t > 0)
-    {
-      throw new ProcessingException(
-        "intToBa: t is " + t + ", n = " + n + ", c = " + c);
-    }
-    return b;
-  }
-
-  /**
-  convert byte array to int
-  */
-  int baToInt(byte[] b, int strt, int end) throws ProcessingException
-  {
-    if (end > b.length - 1)
-    {
-      throw new ProcessingException(
-        "baToInt: strt = "
-          + strt
-          + ", end = "
-          + end
-          + ", b.length = "
-          + b.length);
-    }
-    int l = end - strt + 1;
-    int i = 0;
-    for (int j = 0; j < l; j++)
-    {
-      int p = strt + l - j - 1;
-      // get int value of unsigned byte into k
-      if (p > b.length - 1)
-      {
-        throw new ProcessingException(
-          "baToInt: p = "
-            + p
-            + ", strt = "
-            + strt
-            + ", end = "
-            + end
-            + ", l = "
-            + l
-            + ", j = "
-            + j
-            + ", i = "
-            + i);
-      }
-      int k = getUnsignedByte(b[p]);
-      int n = pow(256, j);
-      i += n * k;
-    }
-    return i;
-  }
-
-  /**
-  convert byte array to hex string
-  */
-  String baToHex(byte[] b, int strt, int end) throws ProcessingException
-  {
-    int l = end - strt + 1;
-    if (b.length < end)
-    {
-      throw new ProcessingException(
-        "baToHex: length error; b.length="
-          + b.length
-          + ", strt="
-          + strt
-          + ", end="
-          + end
-          + ", l="
-          + l);
-    }
-    StringBuffer sb = new StringBuffer("");
-    for (int i = 0; i < l; i++)
-    {
-      int t = getUnsignedByte(b[strt + i]);
-      int a = t / 16;
-      int aa = t % 16;
-      sb.append("0123456789ABCDEF".substring(a, a + 1));
-      sb.append("0123456789ABCDEF".substring(aa, aa + 1));
-    }
-    return sb.toString();
-  }
-
-  /**
-  convert byte array to string (not hex)
-  */
-  String baToString(byte[] b, int strt, int end)
-  {
-    int l = end - strt + 1;
-    char[] c = new char[l];
-    for (int j = 0; j < l; j++)
-    {
-      c[j] = (char) b[j];
-    }
-    return new String(c);
-  }
-
-  /**
-  convert delta time to byte array
-  a delta time is expressed as a
-  byte array, length unknown (4 or less)
-  */
-  public ByteLen deltaToInt(byte[] b, int offset) throws ProcessingException
-  {
-    /*
-    - capture up to four bytes including first with hi-ord
-    	bit off
-    - turn off hi-ord bits
-    - accumulate 4 groups of 7 into 28 bit number with
-    	hi-ord 4 bits zero.
-    */
-    int j = 0;
-    byte[] ba = new byte[4];
-    boolean jFlag = true;
-    while (jFlag)
-    {
-      if ((j + offset) > b.length)
-      {
-        throw new ProcessingException(
-          "deltaToInt: length error; j = "
-            + j
-            + ", offset = "
-            + offset
-            + ", b.length = "
-            + b.length);
-      }
-      ba[j] = b[j + offset];
-      if (ba[j] >= 0)
-      {
-        jFlag = false;
-      }
-      else
-      {
-        ba[j] &= 127;
-      }
-      this.getLogger().debug(
-        "deltaToInt: j = " + j + ", ba = " + baToInt(ba, 0, j));
-      j++;
-    }
-    int s = 0;
-    for (int i = 0; i < j; i++)
-    {
-      int k = j - i - 1;
-      int p = pow(128, i);
-      int m = (int) ba[k];
-      s += m * p;
-      this.getLogger().debug(
-        "deltaToInt: in loop: s = "
-          + s
-          + ", i = "
-          + i
-          + ", j = "
-          + j
-          + ", k = "
-          + k
-          + ", p = "
-          + p
-          + ", m = "
-          + m);
-    }
-    this.getLogger().debug("deltaToInt: s = " + s);
-    ByteLen bl = new ByteLen(intToBa(s, 4), j);
-    return bl;
-  }
-
-  /**
-  convert byte (unsigned) to int
-  */
-  int getUnsignedByte(byte b)
-  {
-    int t = 0;
-    if ((b & 128) == 128)
-    {
-      t = 1;
-    }
-    b &= 127;
-    int k = b;
-    k += t * 128;
-    return k;
-  }
-
-  /**
-  compute b to the e power (b ** e)
-  */
-  int pow(int b, int e)
-  {
-    int a = 1;
-    for (int i = 0; i < e; i++)
-    {
-      a *= b;
-    }
-    return a;
-  }
-
-  private class ByteLen
-  {
-    public ByteLen()
-    {
-    }
-
-    /**
-     * @param byte[] b - a byte array; used to set ba
-     * @param int l - a length; used to set len
-    */
-    public ByteLen(byte[] b, int l)
-    {
-      ba = b;
-      len = l;
-    }
-
-    /**
-     * A byte array.
-    */
-    public byte[] ba;
-
-    /**
-     * It is the length of the delta field being converted,
-     * not the length of the array.
-     * <p>
-     * There is nothing about this class that requires that this variable
-     * be used in this way.  It could be any int.
-    */
-    public int len;
   }
 
 }
