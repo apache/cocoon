@@ -328,7 +328,7 @@ public class TreeProcessor
 
             newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes());
         } finally {
-            CocoonComponentManager.leaveEnvironment();
+            CocoonComponentManager.leaveEnvironment(false);
             this.builderSelector.release(builder);
         }
 

@@ -447,6 +447,10 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     public void setAttribute(String name, Object value) {
         this.attributes.put(name, value);
     }
+    
+    protected boolean hasAttribute(String name) {
+        return this.attributes.containsKey(name);
+    }
 
     public void removeAttribute(String name) {
         this.attributes.remove(name);
