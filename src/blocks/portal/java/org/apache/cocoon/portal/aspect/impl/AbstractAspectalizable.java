@@ -27,10 +27,10 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspectalizable.java,v 1.6 2004/03/05 13:02:09 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractAspectalizable 
-    implements Aspectalizable {
+    implements Aspectalizable, Cloneable {
 
     transient protected AspectDataHandler aspectDataHandler;
     
@@ -58,9 +58,8 @@ public abstract class AbstractAspectalizable
     public Map getPersistentAspectData(){
     	if (this.aspectDataHandler == null) {
 	    	return this.persistentDatas;
-    	} else {
-			return this.aspectDataHandler.getPersistentAspectDatas(this);
     	}
+		return this.aspectDataHandler.getPersistentAspectDatas(this);
     }
 
     /**
@@ -86,4 +85,21 @@ public abstract class AbstractAspectalizable
         this.persistentDatas.put(aspectName, data);
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        AbstractAspectalizable clone = (AbstractAspectalizable)super.clone();
+        
+        clone.aspectDataHandler = this.aspectDataHandler;
+        final Map datas = this.aspectDataHandler.getAspectDatas(this);
+        final Iterator i = datas.entrySet().iterator();
+        while ( i.hasNext() ) {
+            final Map.Entry e = (Map.Entry)i.next();
+            clone.aspectDataHandler.setAspectData(clone, e.getKey().toString(), e.getValue());
+        }
+        clone.persistentDatas = this.persistentDatas;
+        
+        return clone;
+    }
 }

@@ -25,7 +25,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.14 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractLayout 
     extends AbstractProducible 
@@ -73,4 +73,30 @@ public abstract class AbstractLayout
         return this.rendererName;
     }
 
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        AbstractLayout clone = (AbstractLayout)super.clone();
+        
+        // we don't clone the parent; we just set it to null
+        clone.rendererName = this.rendererName;
+        clone.parameters = new LinkedMap(this.parameters);
+        clone.parent = null;
+        
+        return clone;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.Layout#copy(java.util.Map)
+     */
+    public Layout copy(Map copletInstanceDatas) {
+        try {
+            return (Layout)this.clone();
+        } catch (CloneNotSupportedException cnse) {
+            // ignore
+        }
+        return null;
+    }
 }

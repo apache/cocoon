@@ -13,44 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.portal.layout;
+package org.apache.cocoon.portal.layout.impl;
+
+import org.apache.cocoon.portal.layout.Item;
+import org.apache.cocoon.portal.layout.NamedItem;
+
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * This is a tabbed layout implementation
  * 
- * @version CVS $Id$
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: CompositeLayout.java 30941 2004-07-29 19:56:58Z vgritsenko $
  */
-public class NamedItem extends Item {
-
-	private String name;
-
-	/**
-	 * Returns the name.
-	 * @return String
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Sets the name.
-	 * @param name The name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+public class TabbedLayoutImpl 
+    extends CompositeLayoutImpl {
 
     /* (non-Javadoc)
-     * @see java.lang.Object#clone()
+     * @see org.apache.cocoon.portal.layout.CompositeLayout#createNewItem()
      */
-    protected Object clone() throws CloneNotSupportedException {
-        NamedItem clone = (NamedItem)super.clone();
-        
-        clone.name = this.name;
-        
-        return clone;
+    public Item createNewItem() {
+        return new NamedItem();
     }
-    
 }

@@ -24,10 +24,10 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractParameters.java,v 1.5 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractParameters 
-    implements Parameters {
+    implements Parameters, Cloneable {
 
     protected Map parameters = new LinkedMap();
      
@@ -36,5 +36,16 @@ public abstract class AbstractParameters
      */
     public final Map getParameters() {
         return parameters;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        AbstractParameters clone = (AbstractParameters)super.clone();
+        
+        clone.parameters = new LinkedMap(this.parameters);
+        
+        return clone;
     }
 }

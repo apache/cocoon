@@ -92,4 +92,18 @@ public final class CopletInstanceData
     public Map getTemporaryAttributes() {
         return this.temporaryAttributes;
     }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        CopletInstanceData clone = (CopletInstanceData)super.clone();
+        
+        clone.copletData = this.copletData;
+        clone.attributes = new HashMap(this.attributes);
+        clone.temporaryAttributes = new HashMap(this.temporaryAttributes);
+        
+        return clone;
+    }
+    
 }

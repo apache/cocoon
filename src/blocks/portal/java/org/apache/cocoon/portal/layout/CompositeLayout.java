@@ -24,7 +24,7 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayout.java,v 1.9 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public interface CompositeLayout 
     extends Layout {
@@ -66,5 +66,11 @@ public interface CompositeLayout
      * @param item
      */
     void removeItem(Item item);
+    
+    /**
+     * Create a new item.
+     * This item is not added to the composite layout
+     */
+    Item createNewItem();
     
 }

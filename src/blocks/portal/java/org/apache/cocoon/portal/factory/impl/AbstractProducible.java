@@ -26,7 +26,7 @@ import org.apache.cocoon.portal.factory.ProducibleDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProducible.java,v 1.5 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractProducible 
     extends AbstractAspectalizable 
@@ -83,4 +83,17 @@ public abstract class AbstractProducible
         this.id = id;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#clone()
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        AbstractProducible clone = (AbstractProducible)super.clone();
+        
+        clone.name = this.name;
+        clone.id = this.id;
+        clone.description = this.description;
+        
+        return clone;
+    }
+    
 }
