@@ -37,11 +37,14 @@ import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.FileTimeStampValidity;
 
 /**
- * A simple cache implementation
+ * This cache implementation is an extension to the default cache implementation.
+ * If a response is not found in the cache or is invalid, it also checks the
+ * file system for a cached response. This allows to update the cache information
+ * by running batch processes.
  *
  * @since 2.1.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleCache.java,v 1.2 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: SimpleCache.java,v 1.3 2004/04/15 08:04:39 cziegeler Exp $
  */
 public class SimpleCache extends CacheImpl {
 
