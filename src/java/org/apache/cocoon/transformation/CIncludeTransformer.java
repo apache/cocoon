@@ -111,7 +111,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.9 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.10 2004/03/17 11:50:21 cziegeler Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -290,7 +290,7 @@ implements Disposable, CacheableProcessingComponent {
         // parameter value
         } else if (name.equals(CINCLUDE_VALUE_ELEMENT)
                    && this.state == STATE_INCLUDE) {
-            this.startSerializedXMLRecording(XMLUtils.defaultSerializeToXMLFormat(true));
+            this.startSerializedXMLRecording(XMLUtils.createPropertiesForXML(true));
 
        } else if (name.equals(CINCLUDE_CACHED_INCLUDE_ELEMENT)) {
 

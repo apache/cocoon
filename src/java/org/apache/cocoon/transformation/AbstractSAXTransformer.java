@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.10 2004/03/05 13:02:59 bdelacretaz Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.11 2004/03/17 11:50:21 cziegeler Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -476,7 +476,7 @@ implements Serviceable, Configurable, Recyclable {
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN startSerializedXMLRecording format="+format);
         }
-        this.stack.push((format == null ? XMLUtils.defaultSerializeToXMLFormat() : format));
+        this.stack.push((format == null ? XMLUtils.createPropertiesForXML(false) : format));
         this.startRecording();
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END startSerializedXMLRecording");
@@ -628,7 +628,7 @@ implements Serviceable, Configurable, Recyclable {
         if (this.getLogger().isDebugEnabled()) {
             Object serializedXML = null;
             try {
-                serializedXML = (recordedDocFrag == null ? "null" : XMLUtils.serializeNodeToXML(recordedDocFrag));
+                serializedXML = (recordedDocFrag == null ? "null" : XMLUtils.serializeNode(recordedDocFrag, XMLUtils.createPropertiesForXML(false)));
             } catch (ProcessingException ignore) {
                 serializedXML = recordedDocFrag;
             }
