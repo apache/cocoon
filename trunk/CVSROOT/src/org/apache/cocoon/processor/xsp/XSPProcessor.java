@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.10 2000-02-13 18:29:34 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.11 2000-03-01 16:09:25 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -72,7 +72,7 @@ import org.apache.cocoon.processor.xsp.language.*;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.10 $ $Date: 2000-02-13 18:29:34 $
+ * @version $Revision: 1.11 $ $Date: 2000-03-01 16:09:25 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -192,13 +192,13 @@ public class XSPProcessor extends AbstractActor
 
     // Initialize repository
     conf = conf.getConfigurations("xsp");
-        
+
 /* How to use Cocoon's Object Store for compiled classes? */
     // FIXME: the XSP processor should use the Cocoon internal object store
-    // rather than providing its own. This is a quick and dirty hack to 
+    // rather than providing its own. This is a quick and dirty hack to
     // make it work with Ricardo's code. But we'll create smoother integration
     // in future versions (SM)
-    
+
     String repositoryName = (String) conf.get("repository");
     this.repositoryFile = new File(repositoryName);
     if (!this.repositoryFile.exists()) {
@@ -261,10 +261,21 @@ public class XSPProcessor extends AbstractActor
       try {
         InputStream stream;
 
-        if (location.startsWith("resource://")) {
-            URL x = ClassLoader.getSystemResource(location.substring("resource://".length()));
-            if (x == null) throw new IOException("Resource not found: " + location);
-            else stream = x.openStream();
+        if (location.indexOf("://") > -1) {
+            URL url;
+
+            if (location.startsWith("resource://")) {
+                // this to avoid the portability issues with the URLHandling factories
+                url = ClassLoader.getSystemResource(location.substring("resource://".length()));
+            } else {
+                url = new URL(location);
+            }
+
+            if (url == null) {
+                throw new IOException("Resource not found: " + location);
+            } else {
+                stream = url.openStream();
+            }
         } else {
             stream = new FileInputStream(location);
         }
