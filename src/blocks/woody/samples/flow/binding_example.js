@@ -91,6 +91,7 @@ function form2bean(form) {
     bean.setPhoneCountry("32");
     bean.setPhoneZone("2");
     bean.setPhoneNumber("123456");
+    bean.setBirthday(new java.util.Date());
     var contact = new Packages.org.apache.cocoon.woody.samples.Contact();
     contact.setId("1");
     contact.setFirstName("Herman");
