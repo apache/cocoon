@@ -438,7 +438,6 @@ by the main ones.
     <fixcrlf srcdir="${dist.dir}" includes="run.bat"      cr="add"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.sh"     cr="remove"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.bat"    cr="add"/>
-    <fixcrlf srcdir="${dist.dir}" includes="appendcp.bat" cr="add"/>
   </target>
 
   <!-- =================================================================== -->
