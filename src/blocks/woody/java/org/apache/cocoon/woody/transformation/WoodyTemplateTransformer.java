@@ -53,38 +53,47 @@ package org.apache.cocoon.woody.transformation;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.Variables;
 import org.xml.sax.SAXException;
 
 /**
  * See description of {@link WidgetReplacingPipe}.
  */
-public class WoodyTemplateTransformer 
-    extends WidgetReplacingPipe 
-    implements Transformer {
-    
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) throws ProcessingException,
-            SAXException, IOException {
+public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Transformer {
 
-        // get the form from a request attribute
-        String formAttribute;
-        try {
-            formAttribute = parameters.getParameter("attribute-name");
-        } catch (ParameterException e) {
-            throw new ProcessingException("Missing 'attribute-name' parameter for WoodyTemplateTransformer.");
-        }
+    /** Name of the request attribute under which the Woody form is stored (optional). */
+    protected String attributeName;
+    protected Request request;
+
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters)
+            throws ProcessingException, SAXException, IOException {
+
+        // create and set the jxpathContext...
+        Object flowContext = FlowHelper.getContextObject(objectModel);
+        WebContinuation wk = FlowHelper.getWebContinuation(objectModel);
+        JXPathContext jxpc = JXPathContext.newContext(flowContext);
+        Variables vars = jxpc.getVariables();
+        vars.declareVariable("continuation", wk);
         Request request = ObjectModelHelper.getRequest(objectModel);
-        Form form = (Form)request.getAttribute(formAttribute);
-        if (form == null) {
-            throw new ProcessingException("WoodyTemplateTransformer cannot find a form in the request attribute named " + formAttribute);
-        }
-        init(form);
+        vars.declareVariable("request", request);
+        Session session = request.getSession(false);
+        vars.declareVariable("session", session);
+        vars.declareVariable("parameters", parameters);
+
+        this.jxpathContext = jxpc;
+        this.attributeName = parameters.getParameter("attribute-name", null);
+        this.request = request;
+
+        init(null, jxpathContext);
     }
 }

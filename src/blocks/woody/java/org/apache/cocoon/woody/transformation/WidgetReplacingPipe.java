@@ -50,17 +50,23 @@
 */
 package org.apache.cocoon.woody.transformation;
 
-import org.apache.cocoon.xml.AbstractXMLPipe;
-import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.cocoon.woody.formmodel.Repeater;
-import org.apache.cocoon.woody.Constants;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Locale;
+
+import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.cocoon.components.sax.XMLByteStreamCompiler;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
-import org.apache.avalon.excalibur.pool.Recyclable;
-import org.xml.sax.SAXException;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.formmodel.Repeater;
+import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.formmodel.Form;
+import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.commons.jxpath.JXPathContext;
+import org.apache.commons.jxpath.JXPathException;
 import org.xml.sax.Attributes;
-
-import java.util.Locale;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * The basic operation of this Pipe is that it replaces wi:widget tags (having an id attribute)
@@ -77,6 +83,11 @@ import java.util.Locale;
  *
  * <p>Additionally, this transformer supports the following tags:
  * <ul>
+ *  <li><strong>form-template</strong>: all other widget related tags should appear inside a form-template
+ *  tag. The form-template tag should specify the location where the woody form can be retrieved in a "location"
+ *  attribute, using a JXPath expression. If not specified, the default expression "/woody-form" is used.
+ *  If the form-template tag has an action attribute, then all JXPath expressions in that attribute
+ *  embedded inside #{...} will be evaluated.
  *  <li><strong>widget-label</strong>: used to insert the label of a widget. Requires an "id" attribute.
  *  <li><strong>repeater-widget</strong>: provides special treatement for repeater widgets. The content
  *   of the repeater-widget element will be used as a template to generate each of the rows of the repeater.
@@ -91,7 +102,12 @@ import java.util.Locale;
  * <p>Woody ships with an XSL that can style all the widgets that are provided by the core Woody framework.
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
-    
+         
+    protected static final String FORM_TEMPLATE_EL = "form-template";
+    protected static final String STYLING_EL = "styling";
+    /** Default key under which the woody form is stored in the JXPath context. */
+    public static final String WOODY_FORM = "woody-form";
+
     protected Widget contextWidget;
     /** Indicates whether we're currently in a widget element. */
     protected boolean inWidgetElement;
@@ -112,13 +128,13 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     /** Boolean indicating wether the current widget requires special repeater-treatement. */
     protected boolean repeaterWidget;
     protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
+    protected JXPathContext jxpathContext;
 
-    protected static final String STYLING_EL = "styling";
-
-    public void init(Widget contextWidget) {
+    public void init(Widget contextWidget, JXPathContext jxpathContext) {
         this.contextWidget = contextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;
+        this.jxpathContext = jxpathContext;
     }
 
     public void startElement(String namespaceURI, String localName, String qName, Attributes attributes)
@@ -126,6 +142,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         elementNestingCounter++;
         if (!inWidgetElement && namespaceURI.equals(Constants.WT_NS)
                 && (localName.equals("widget") || localName.equals("repeater-widget"))) {
+            checkContextWidgetAvailable(qName);
             inWidgetElement = true;
             widgetElementNesting = elementNestingCounter;
             xmlCompiler.recycle();
@@ -139,9 +156,11 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             xmlCompiler.startElement(namespaceURI, localName, qName, attributes);
         } else if (namespaceURI.equals(Constants.WT_NS)) {
             if (localName.equals("widget-label")) {
+                checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 widget.generateLabel(contentHandler);
             } else if (localName.equals("repeater-widget-label")) {
+                checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 if (!(widget instanceof Repeater))
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" can only be used for repeater widgets.");
@@ -150,18 +169,126 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" requires a \"widget-id\" attribute.");
                 ((Repeater)widget).generateWidgetLabel(widgetId, contentHandler);
             } else if (localName.equals("repeater-size")) {
+                checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 if (!(widget instanceof Repeater))
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-size\" can only be used for repeater widgets.");
                 contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
                 ((Repeater)widget).generateSize(contentHandler);
                 contentHandler.endPrefixMapping(Constants.WI_PREFIX);
+            } else if (localName.equals(FORM_TEMPLATE_EL)) {
+                if (contextWidget != null)
+                    throw new SAXException("Detected nested wt:form-template elements, this is not allowed.");
+                contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
+
+                // Note: since the wt:form-template element is the top-level element in which
+                // all other widget elements must be nested, we can safely assume here that this
+                // instance of the WidgetReplacingPipe == WoodyTemplateTransformer
+                WoodyTemplateTransformer wtt = (WoodyTemplateTransformer)this;
+
+                // first look for the form using the location attribute, if any
+                String formJXPath = attributes.getValue("location");
+                if (formJXPath != null) {
+                    Object form = jxpathContext.getValue(formJXPath);
+                    if (form == null)
+                        throw new SAXException("No form found at location \"" + formJXPath + "\".");
+                    if (!(form instanceof Form))
+                        throw new SAXException("Object returned by expression \"" + formJXPath + "\" is not a Woody Form.");
+                    contextWidget = (Form)form;
+                } else if (wtt.attributeName != null) { // then see if an attribute-name was specified
+                    contextWidget = (Form)wtt.request.getAttribute(wtt.attributeName);
+                    if (contextWidget == null)
+                        throw new SAXException("No form found in request attribute with name \"" + wtt.attributeName);
+                } else { // and then see if we got a form from the flow
+                    formJXPath = "/" + WoodyTemplateTransformer.WOODY_FORM;
+                    Object form = null;
+                    try {
+                        form = jxpathContext.getValue(formJXPath);
+                    } catch (JXPathException e) {}
+                    if (form != null)
+                        contextWidget = (Form)form;
+                    else
+                        throw new SAXException("No Woody form found.");
+                }
+
+                String[] namesToTranslate = {"action"};
+                Attributes transAtts = translateAttributes(attributes, namesToTranslate);
+                contentHandler.startElement(Constants.WI_NS , FORM_TEMPLATE_EL, Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL, transAtts);                
             } else {
                 throw new SAXException("Unsupported WoodyTemplateTransformer element: " + localName);
             }
         } else {
             super.startElement(namespaceURI, localName, qName, attributes);
         }
+    }
+
+    private void checkContextWidgetAvailable(String widgetElementName) throws SAXException {
+        if (contextWidget == null)
+            throw new SAXException(widgetElementName + " cannot be used outside a wt:form-template element");
+    }
+
+    private Attributes translateAttributes(Attributes attributes, String[] names) {
+        AttributesImpl newAtts = new AttributesImpl(attributes);
+        if (names!= null) {
+            for (int i = 0; i < names.length; i++) {
+                String name = names[i];
+                int position = newAtts.getIndex(name);
+                String newValue = translateText(newAtts.getValue(position));
+                newAtts.setValue(position, newValue);                
+            }
+        }
+        return newAtts;
+    }
+
+    /**
+     * Replaces JXPath expressions embedded inside #{ and } by their value.
+     */
+    private String translateText(String original) {
+        StringBuffer expression;
+        StringBuffer translated = new StringBuffer();
+        StringReader in = new StringReader(original);
+        int chr;
+        try {
+            while ((chr = in.read()) != -1) {
+                char c = (char) chr;
+                if (c == '#') {
+                    chr = in.read();
+                    if (chr != -1) {
+                        c = (char) chr;
+                        if (c == '{') {
+                            expression = new StringBuffer();
+                            boolean more = true;
+                            while ( more ) {
+                                more = false;
+                                if ((chr = in.read()) != -1) {
+                                    c = (char)chr;
+                                    if (c != '}') {
+                                        expression.append(c);
+                                        more = true;
+                                    } else {
+                                        translated.append(evaluateExpression(expression.toString()));
+                                    }
+                                } else {
+                                    translated.append('#').append('{').append(expression);
+                                }
+                            } 
+                        }
+                    } else {
+                        translated.append((char) chr);
+                    }
+                } else {
+                    translated.append(c);
+                }
+            }
+        } catch (IOException ignored) {
+            ignored.printStackTrace();
+        }
+
+        return translated.toString();
+    }
+
+    private String evaluateExpression(String expression) {
+        return jxpathContext.getValue(expression).toString();
     }
 
     protected Widget getWidget(Attributes attributes) throws SAXException {
@@ -188,7 +315,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 Object saxFragment = xmlCompiler.getSAXFragment();
                 for (int i = 0; i < rowCount; i++) {
                     Repeater.RepeaterRow row = repeater.getRow(i);
-                    rowPipe.init(row);
+                    rowPipe.init(row, jxpathContext);
                     rowPipe.setContentHandler(contentHandler);
                     rowPipe.setLexicalHandler(lexicalHandler);
                     interpreter.setConsumer(rowPipe);
@@ -214,6 +341,10 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 (localName.equals("widget-label") || localName.equals("repeater-widget-label")
                 || localName.equals("repeater-size"))) {
             // do nothing
+        } else if (namespaceURI.equals(Constants.WT_NS) && localName.equals(FORM_TEMPLATE_EL)) {
+            contextWidget = null;
+            contentHandler.endElement(Constants.WI_NS, FORM_TEMPLATE_EL, Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL);
+            contentHandler.endPrefixMapping(Constants.WI_PREFIX);
         } else {
             super.endElement(namespaceURI, localName, qName);
         }
