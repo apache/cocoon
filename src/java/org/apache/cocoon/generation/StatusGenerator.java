@@ -74,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:skoechlin@ivision.fr">S&eacute;bastien K&oelig;chlin</a> (iVision)
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
- * @version CVS $Id: StatusGenerator.java,v 1.9 2004/05/26 14:11:34 cziegeler Exp $
+ * @version CVS $Id: StatusGenerator.java,v 1.10 2004/07/02 08:33:42 antonio Exp $
  */
 public class StatusGenerator extends ServiceableGenerator {
 
@@ -83,7 +83,6 @@ public class StatusGenerator extends ServiceableGenerator {
      */
     protected StoreJanitor storejanitor;
     protected Store store_persistent;
-
 
     /**
      * The XML namespace for the output document.
@@ -109,12 +108,12 @@ public class StatusGenerator extends ServiceableGenerator {
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        if ( this.manager.hasService(StoreJanitor.ROLE) ) {
+        if (this.manager.hasService(StoreJanitor.ROLE)) {
             this.storejanitor = (StoreJanitor)manager.lookup(StoreJanitor.ROLE);
         } else {
             getLogger().info("StoreJanitor is not available. Sorry, no cache statistics");
         }
-        if ( this.manager.hasService(Store.PERSISTENT_STORE) ) {
+        if (this.manager.hasService(Store.PERSISTENT_STORE)) {
             this.store_persistent = (Store)this.manager.lookup(Store.PERSISTENT_STORE);
         } else {
             getLogger().info("Persistent Store is not available. Sorry no cache statistics about it.");
@@ -122,9 +121,9 @@ public class StatusGenerator extends ServiceableGenerator {
     }
     
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( this.store_persistent );
-            this.manager.release( this.storejanitor );
+        if (this.manager != null) {
+            this.manager.release(this.store_persistent);
+            this.manager.release(this.storejanitor);
             this.store_persistent = null;
             this.storejanitor = null;
         }
@@ -157,7 +156,6 @@ public class StatusGenerator extends ServiceableGenerator {
 
         // The current date and time.
         String dateTime = DateFormat.getDateTimeInstance().format(new Date());
-
         String localHost;
 
         // The local host.
@@ -199,8 +197,7 @@ public class StatusGenerator extends ServiceableGenerator {
         atts.clear();
         // qName = prefix + ':' + localName
         atts.addAttribute(xlinkNamespace, "type", xlinkPrefix + ":type", "CDATA", "simple");
-        atts.addAttribute(xlinkNamespace, "href", xlinkPrefix + ":href", "CDATA",
-            SystemUtils.JAVA_VENDOR_URL);
+        atts.addAttribute(xlinkNamespace, "href", xlinkPrefix + ":href", "CDATA", SystemUtils.JAVA_VENDOR_URL);
         addValue(ch, "java-vendor", SystemUtils.JAVA_VENDOR, atts);
         endGroup(ch);
         // END JRE
@@ -230,7 +227,7 @@ public class StatusGenerator extends ServiceableGenerator {
             Iterator i = this.storejanitor.iterator();
             while (i.hasNext()) {
                 Store store = (Store) i.next();
-                startGroup(ch, store.getClass().getName()+" (hash = 0x"+Integer.toHexString(store.hashCode())+")" );
+                startGroup(ch, store.getClass().getName() + " (hash = 0x" + Integer.toHexString(store.hashCode()) + ")" );
                 int size = 0;
                 int empty = 0;
                 atts.clear();
@@ -239,7 +236,7 @@ public class StatusGenerator extends ServiceableGenerator {
                 // For each element in Store
                 Enumeration e = store.keys();
                 atts.clear();
-                while( e.hasMoreElements() ) {
+                while(e.hasMoreElements()) {
                     size++;
                     Object key  = e.nextElement();
                     Object val  = store.get( key );
@@ -253,7 +250,6 @@ public class StatusGenerator extends ServiceableGenerator {
                         ch.endElement(namespace, "line", "line");
                     }
                 }
-    
                 if (size == 0) {
                     ch.startElement(namespace, "line", "line", atts);
                     String value = "[empty]";
@@ -268,7 +264,7 @@ public class StatusGenerator extends ServiceableGenerator {
             endGroup(ch);        
         }
         
-        if ( this.store_persistent != null ) {
+        if (this.store_persistent != null) {
             startGroup(ch, store_persistent.getClass().getName()+" (hash = 0x"+Integer.toHexString(store_persistent.hashCode())+")");
             int size = 0;
             int empty = 0;
@@ -280,7 +276,7 @@ public class StatusGenerator extends ServiceableGenerator {
                 size++;
     
                 Object key  = enum.nextElement();
-                Object val  = store_persistent.get (key);
+                Object val  = store_persistent.get(key);
                 String line = null;
                 if (val == null) {
                     empty++;
@@ -291,7 +287,6 @@ public class StatusGenerator extends ServiceableGenerator {
                     ch.endElement(namespace, "line", "line");
                 }
             }
-    
             if (size == 0) {
                 ch.startElement(namespace, "line", "line", atts);
                 String value = "[empty]";
@@ -299,7 +294,7 @@ public class StatusGenerator extends ServiceableGenerator {
                 ch.endElement(namespace, "line", "line");
             }
             ch.endElement(namespace, "value", "value");
-    
+
             addValue(ch, "size", String.valueOf(size) + " items in cache (" + empty + " are empty)");
             endGroup(ch);
         }
@@ -316,12 +311,7 @@ public class StatusGenerator extends ServiceableGenerator {
 
     /** Utility function to begin a <code>group</code> tag pair with added attributes. */
     private void startGroup(ContentHandler ch, String name, Attributes atts) throws SAXException {
-        AttributesImpl ai;
-        if (atts == null) {
-            ai = new AttributesImpl();
-        } else {
-            ai = new AttributesImpl(atts);
-        }
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts); 
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "group", "group", ai);
     }
@@ -338,12 +328,7 @@ public class StatusGenerator extends ServiceableGenerator {
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
     private void addValue(ContentHandler ch, String name, String value, Attributes atts) throws SAXException {
-        AttributesImpl ai;
-        if (atts == null) {
-            ai = new AttributesImpl();
-        } else {
-            ai = new AttributesImpl(atts);
-        }
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "value", "value", ai);
         ch.startElement(namespace, "line", "line", new AttributesImpl());
@@ -363,12 +348,7 @@ public class StatusGenerator extends ServiceableGenerator {
 
     /** Utility function to begin and end a <code>value</code> tag pair with added attributes. */
     private void addMultilineValue(ContentHandler ch, String name, List values, Attributes atts) throws SAXException {
-        AttributesImpl ai;
-        if (atts == null) {
-            ai = new AttributesImpl();
-        } else {
-            ai = new AttributesImpl(atts);
-        }
+        AttributesImpl ai = (atts == null) ? new AttributesImpl() : new AttributesImpl(atts);
         ai.addAttribute(namespace, "name", "name", "CDATA", name);
         ch.startElement(namespace, "value", "value", ai);
 

@@ -39,6 +39,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +83,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ResourceReader.java,v 1.7 2004/06/23 19:14:34 vgritsenko Exp $
+ * @version CVS $Id: ResourceReader.java,v 1.8 2004/07/02 08:33:42 antonio Exp $
  */
 public class ResourceReader extends AbstractReader
                             implements CacheableProcessingComponent, Configurable {
@@ -173,7 +174,7 @@ public class ResourceReader extends AbstractReader
      *
      * @return The generated key hashes the src
      */
-    public java.io.Serializable getKey() {
+    public Serializable getKey() {
         return inputSource.getURI();
     }
 
@@ -184,7 +185,7 @@ public class ResourceReader extends AbstractReader
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        if(request.getHeader("Range") != null) {
+        if (request.getHeader("Range") != null) {
             // This is a byte range request so we can't use the cache, return null.
             return null;
         } else {
