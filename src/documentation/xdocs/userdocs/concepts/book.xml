@@ -17,6 +17,7 @@
     <menu-item label="Caching" href="caching.html"/>
     <menu-item label="Actions" href="actions.html"/>
     <menu-item label="Matchers and Selectors" href="matchers_selectors.html"/>
+    <menu-item label="Aggregation" href="aggregation.html"/>
     <menu-item label="Entity Catalogs" href="catalog.html"/>
     <menu-item label="MRUMemoryStore" href="mrustore.html"/>
     <menu-item label="Persistence" href="persistence.html"/>
