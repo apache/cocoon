@@ -259,7 +259,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * </pre></p>
  */
 
-public class JXTemplate extends AbstractGenerator {
+public class JXTemplateGenerator extends AbstractGenerator {
 
     private static final JXPathContextFactory 
         jxpathContextFactory = JXPathContextFactory.newInstance();
@@ -1048,7 +1048,7 @@ public class JXTemplate extends AbstractGenerator {
     }
 
     static class StartElement extends Event {
-        StartElement(JXTemplate template,
+        StartElement(JXTemplateGenerator gen,
                      Locator location, String namespaceURI,
                      String localName, String raw,
                      Attributes attrs) 
@@ -1088,7 +1088,7 @@ public class JXTemplate extends AbstractGenerator {
                                     Object compiledExpression;
                                     try {
                                         compiledExpression =
-                                            template.compile(str, xpath);
+                                            gen.compile(str, xpath);
                                     } catch (Exception exc) {
                                         throw new SAXParseException(exc.getMessage(),
                                                                     location,
@@ -1466,7 +1466,7 @@ public class JXTemplate extends AbstractGenerator {
 
     static class Parser implements ContentHandler, LexicalHandler {
 
-        JXTemplate template;
+        JXTemplateGenerator gen;
         StartDocument startEvent;
         Event lastEvent;
         Stack stack = new Stack();
@@ -1474,8 +1474,8 @@ public class JXTemplate extends AbstractGenerator {
         Locator charLocation;
         StringBuffer charBuf;
         
-        public Parser(JXTemplate template) {
-            this.template = template;
+        public Parser(JXTemplateGenerator gen) {
+            this.gen = gen;
         }
 
         StartDocument getStartEvent() {
@@ -1657,7 +1657,7 @@ public class JXTemplate extends AbstractGenerator {
                     begin = begin == -1 ? 0 : begin;
                     end = end == -1 ? Integer.MAX_VALUE: end;
                     Object expr;
-                    expr = template.compileExpr(items == null ? select : items,
+                    expr = gen.compileExpr(items == null ? select : items,
                                                 null, locator);
                     StartForEach startForEach = 
                         new StartForEach(locator, expr, 
@@ -1676,7 +1676,7 @@ public class JXTemplate extends AbstractGenerator {
                         throw new SAXParseException("when: \"test\" is required", locator, null);
                     }
                     Object expr;
-                    expr = template.compileExpr(test, "when: \"test\": ", locator);
+                    expr = gen.compileExpr(test, "when: \"test\": ", locator);
                     StartWhen startWhen = new StartWhen(locator, expr);
                     newEvent = startWhen;
                 } else if (localName.equals(OUT)) {
@@ -1684,7 +1684,7 @@ public class JXTemplate extends AbstractGenerator {
                     if (value == null) {
                         throw new SAXParseException("out: \"value\" is required", locator, null);
                     }
-                    Object expr = template.compileExpr(value, 
+                    Object expr = gen.compileExpr(value, 
                                                        "out: \"value\": ", 
                                                        locator);
                     newEvent = new StartOut(locator, expr);
@@ -1702,7 +1702,7 @@ public class JXTemplate extends AbstractGenerator {
                         throw new SAXParseException("if: \"test\" is required", locator, null);
                     }
                     Object expr = 
-                        template.compileExpr(test, "if: \"test\": ", locator);
+                        gen.compileExpr(test, "if: \"test\": ", locator);
                     StartIf startIf = 
                         new StartIf(locator, expr);
                     newEvent = startIf;
@@ -1749,7 +1749,7 @@ public class JXTemplate extends AbstractGenerator {
                     Object valueExpr = null;
                     if (value != null) {
                         valueExpr = 
-                            template.compileExpr(value, "set: \"value\":",
+                            gen.compileExpr(value, "set: \"value\":",
                                                  locator);
                     } 
                     StartSet startSet = new StartSet(locator, var, valueExpr);
@@ -1759,7 +1759,7 @@ public class JXTemplate extends AbstractGenerator {
                     // Allow expression substitution in "uri" attribute
                     AttributeEvent uri = null;
                     StartElement startElement = 
-                        new StartElement(template, locator, namespaceURI,
+                        new StartElement(gen, locator, namespaceURI,
                                          localName, raw, attrs);
                     Iterator iter = startElement.attributeEvents.iterator();
                     while (iter.hasNext()) {
@@ -1778,8 +1778,8 @@ public class JXTemplate extends AbstractGenerator {
                     Object expr = null;
                     if (select != null) {
                         expr = 
-                            template.compileExpr(select, "import: \"context\": ",
-                                                 locator);
+                            gen.compileExpr(select, "import: \"context\": ",
+                                            locator);
                     }
                     StartImport startImport = 
                         new StartImport(locator, uri, expr);
@@ -1793,7 +1793,7 @@ public class JXTemplate extends AbstractGenerator {
                 }
             } else {
                 StartElement startElem = 
-                    new StartElement(template, locator, namespaceURI,
+                    new StartElement(gen, locator, namespaceURI,
                                      localName, raw, attrs);
                 newEvent = startElem;
             }
@@ -1850,20 +1850,20 @@ public class JXTemplate extends AbstractGenerator {
             public TemplateConsumer(SourceResolver resolver, Map objectModel,
                                     String src, Parameters parameters) 
                 throws ProcessingException, SAXException, IOException {
-                super(new JXTemplate());
-                this.template.setup(resolver, objectModel, null, parameters);
+                super(new JXTemplateGenerator());
+                this.gen.setup(resolver, objectModel, null, parameters);
             }
 
             public void endDocument() throws SAXException {
                 super.endDocument();
-                template.execute(template.getConsumer(),
-                                 template.getJexlContext(),
-                                 template.getJXPathContext(),
-                                 getStartEvent(), null);
+                gen.execute(gen.getConsumer(),
+                            gen.getJexlContext(),
+                            gen.getJXPathContext(),
+                            getStartEvent(), null);
             }
 
             void setConsumer(XMLConsumer consumer) {
-                template.setConsumer(consumer);
+                gen.setConsumer(consumer);
             }
         }
 
@@ -1952,6 +1952,7 @@ public class JXTemplate extends AbstractGenerator {
     }
     
     private void fillContext(Object contextObject, Map map) {
+        if (contextObject == null) return;
         // Hack: I use jxpath to populate the context object's properties
         // in the jexl context
         final JXPathBeanInfo bi = 
@@ -2013,12 +2014,17 @@ public class JXTemplate extends AbstractGenerator {
         globalJexlContext = new MyJexlContext();
         globalJexlContext.setVars(map);
         map = globalJexlContext.getVars();
-        map.put("flowContext", contextObject);
-        map.put("continuation", kont);
+        if (contextObject != null) {
+            map.put("flowContext", contextObject);
+            map.put("continuation", kont);
+        }
         map.put("request", request);
         map.put("response", response);
         map.put("context", app);
-        map.put("session", request.getSession(false));
+        Object session = request.getSession(false);
+        if (session != null) {
+            map.put("session", session);
+        }
     }
 
     public void setConsumer(XMLConsumer consumer) {
@@ -2110,7 +2116,17 @@ public class JXTemplate extends AbstractGenerator {
                                     new DOMStreamer(consumer);
                                 streamer.stream((Node)val);
                                 continue;
-                            } 
+                            } else if (val instanceof NodeList) {
+                                NodeList nodeList = (NodeList)val;
+                                DOMStreamer streamer =
+                                    new DOMStreamer(consumer);
+                                for (int i  = 0, len = nodeList.getLength();
+                                     i < len; i++) {
+                                    Node n = nodeList.item(i);
+                                    streamer.stream(n);
+                                }
+                                continue;
+                            }
                             if (val != null) {
                                 chars = val.toString().toCharArray();
                             } else {
@@ -2347,12 +2363,7 @@ public class JXTemplate extends AbstractGenerator {
                     builder.endDocument();
                     Node node = builder.getDocument().getDocumentElement();
                     NodeList nodeList = node.getChildNodes();
-                    int len = nodeList.getLength(); 
-                    List children = new ArrayList(len);
-                    for (int i = 0; i < len; i++) {
-                        children.add(nodeList.item(i));
-                    }
-                    value = children;
+                    value = nodeList;
                 }
                 jxpathContext.getVariables().declareVariable(startSet.var, 
                                                              value);
@@ -2452,11 +2463,7 @@ public class JXTemplate extends AbstractGenerator {
                     MyJexlContext localJexlContext = 
                         new MyJexlContext(globalJexlContext);
                     NodeList children = node.getChildNodes();
-                    List items = new ArrayList(children.getLength());
-                    for (int j = 0, len = children.getLength(); j < len; j++) {
-                        items.add(children.item(j));
-                    }
-                    localJexlContext.put("body", items);
+                    localJexlContext.put("body", children);
                     Iterator iter = def.parameters.entrySet().iterator();
                     while (iter.hasNext()) {
                         Map.Entry e = (Map.Entry)iter.next();
@@ -2472,7 +2479,8 @@ public class JXTemplate extends AbstractGenerator {
                         vars.localVariables.put(key, val);
                     }
                     JXPathContext localJXPathContext =
-                        jxpathContextFactory.newContext(jxpathContext, items);
+                        jxpathContextFactory.newContext(jxpathContext, 
+                                                        children);
                     execute(consumer, 
                             localJexlContext, localJXPathContext,
                             def.body, def.endDefine);
