@@ -52,18 +52,17 @@ package org.apache.cocoon.i18n;
 
 import java.util.Locale;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 /**
  * Bundle Factory realizations are responsible for loading and providing
  * particular types of resource bundles, implementors of Bundle interface.
  *
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: BundleFactory.java,v 1.3 2003/11/27 02:55:50 vgritsenko Exp $
+ * @version CVS $Id: BundleFactory.java,v 1.4 2003/12/25 13:53:53 unico Exp $
  */
-public interface BundleFactory extends ComponentSelector {
+public interface BundleFactory extends ServiceSelector {
 
     String ROLE = BundleFactory.class.getName();
 
@@ -81,9 +80,9 @@ public interface BundleFactory extends ComponentSelector {
      * @param name    bundle name
      * @param locale  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
-    Component select(String base, String bundleName, String locale) throws ComponentException;
+    Bundle select(String base, String bundleName, String locale) throws ServiceException;
 
     /**
      * Select a bundle based on the catalogue base location, bundle name,
@@ -93,9 +92,9 @@ public interface BundleFactory extends ComponentSelector {
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
-    Component select(String base, String bundleName, Locale locale) throws ComponentException;
+    Bundle select(String base, String bundleName, Locale locale) throws ServiceException;
 
     /**
      * Select a bundle based on the bundle name and the locale name from
@@ -104,9 +103,9 @@ public interface BundleFactory extends ComponentSelector {
      * @param name    bundle name
      * @param locale  locale name
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
-    Component select(String bundleName, String locale) throws ComponentException;
+    Bundle select(String bundleName, String locale) throws ServiceException;
 
     /**
      * Select a bundle based on the bundle name and the locale from
@@ -115,7 +114,7 @@ public interface BundleFactory extends ComponentSelector {
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
-     * @exception     ComponentException if a bundle is not found
+     * @exception     ServiceException if a bundle is not found
      */
-    Component select(String bundleName, Locale locale) throws ComponentException;
+    Bundle select(String bundleName, Locale locale) throws ServiceException;
 }

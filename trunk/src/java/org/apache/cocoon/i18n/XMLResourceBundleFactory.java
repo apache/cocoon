@@ -57,19 +57,17 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.component.DefaultComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.DefaultServiceSelector;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.source.SourceNotFoundException;
-
 import org.xml.sax.SAXParseException;
 
 /**
@@ -80,10 +78,10 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.6 2003/12/06 21:22:09 cziegeler Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.7 2003/12/25 13:53:53 unico Exp $
  */
-public class XMLResourceBundleFactory extends DefaultComponentSelector
-        implements BundleFactory, Composable, Configurable, Disposable, ThreadSafe, LogEnabled {
+public class XMLResourceBundleFactory extends DefaultServiceSelector
+        implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
 
     /** Should we load bundles to cache on startup or not? */
     protected boolean cacheAtStartup = false;
@@ -97,8 +95,8 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
     /** The logger */
     private Logger logger;
 
-    /** Component Manager */
-    protected ComponentManager manager = null;
+    /** Service Manager */
+    protected ServiceManager manager = null;
 
 
     /** Default constructor. */
@@ -116,12 +114,12 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         return this.logger;
     }
 
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
 
     public void dispose() {
-        Iterator i = getComponentMap().values().iterator();
+        Iterator i = getObjectMap().values().iterator();
         while (i.hasNext()) {
             Object bundle = i.next();
             if (bundle instanceof Disposable) {
@@ -183,7 +181,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    public Component select(String name, String locale) throws ComponentException {
+    public Bundle select(String name, String locale) throws ServiceException {
         return select(getDirectory(), name, locale);
     }
 
@@ -195,7 +193,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    public Component select(String name, Locale locale) throws ComponentException {
+    public Bundle select(String name, Locale locale) throws ServiceException {
         return select(getDirectory(), name, locale);
     }
 
@@ -209,7 +207,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    public Component select(String directory, String name, String localeName) throws ComponentException {
+    public Bundle select(String directory, String name, String localeName) throws ServiceException {
         return select(directory, name, new Locale(localeName, localeName));
     }
 
@@ -223,10 +221,10 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
-    public Component select(String directory, String name, Locale locale) throws ComponentException {
-        Component bundle = _select(directory, name, locale, this.cacheAtStartup);
+    public Bundle select(String directory, String name, Locale locale) throws ServiceException {
+        Bundle bundle = _select(directory, name, locale, this.cacheAtStartup);
         if (bundle == null) {
-            throw new ComponentException(name, "Unable to locate resource: " + name);
+            throw new ServiceException(name, "Unable to locate resource: " + name);
         }
         return bundle;
     }
@@ -239,7 +237,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param locale            locale
      * @return                  the bundle
      */
-    protected Component selectParent(String name, Locale locale) {
+    protected Object selectParent(String name, Locale locale) {
         return _select(getDirectory(), name, getParentLocale(locale), this.cacheAtStartup);
     }
 
@@ -252,7 +250,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param cacheAtStartup    cache all the keys when constructing?
      * @return                  the bundle
      */
-    private Component _select(String base, String name, Locale locale, boolean cacheAtStartup) {
+    private Bundle _select(String base, String name, Locale locale, boolean cacheAtStartup) {
         String fileName = getFileName(base, name, locale);
         XMLResourceBundle bundle = (XMLResourceBundle)selectCached(fileName);
         if (bundle == null && !isNotFoundBundle(fileName)) {
@@ -301,7 +299,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
             }
             bundle = new XMLResourceBundle();
             bundle.enableLogging(logger);
-            bundle.compose(this.manager);
+            bundle.service(this.manager);
             bundle.init(name, fileName, locale, parentBundle, cacheAtStartup);
             return bundle;
         } catch (FileNotFoundException fe) {
@@ -319,7 +317,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         return null;
     }
 
-    public void release(Component component) {
+    public void release(Object component) {
         // Do nothing
     }
 
@@ -391,14 +389,14 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param fileName          file name of the bundle
      * @return                  the cached bundle; null, if not found
      */
-    protected Component selectCached(String fileName) {
-        Component bundle = null;
+    protected Object selectCached(String fileName) {
+        Object bundle = null;
         try {
-            bundle = super.select(fileName);
+            bundle = select(fileName);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Returning from cache: " + fileName);
             }
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Not found in cache: " + fileName);
             }

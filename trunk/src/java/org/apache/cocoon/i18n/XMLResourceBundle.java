@@ -62,20 +62,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.Logger;
-
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -87,7 +83,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.3 2003/11/27 02:51:58 vgritsenko Exp $
+ * @version CVS $Id: XMLResourceBundle.java,v 1.4 2003/12/25 13:53:53 unico Exp $
  */
 public class XMLResourceBundle extends ResourceBundle
                                implements Bundle {
@@ -117,7 +113,7 @@ public class XMLResourceBundle extends ResourceBundle
     protected XMLResourceBundle parent = null;
 
     /** Component Manager */
-    protected ComponentManager manager = null;
+    protected ServiceManager manager = null;
 
     /** XPath Processor */
     private XPathProcessor processor = null;
@@ -129,7 +125,7 @@ public class XMLResourceBundle extends ResourceBundle
      * @param manager The <code>ComponentManager</code> instance
      * @throws ComponentException if XPath processor is not found
      */
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.processor = (XPathProcessor) this.manager.lookup(XPathProcessor.ROLE);
     }
@@ -138,7 +134,7 @@ public class XMLResourceBundle extends ResourceBundle
      * Implements Disposable interface for this class.
      */
     public void dispose() {
-        this.manager.release((Component) this.processor);
+        this.manager.release(this.processor);
         this.processor = null;
     }
 
