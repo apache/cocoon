@@ -71,13 +71,6 @@
     </ul>
   </xsl:template>
 
-  <xsl:template match="option">
-   <option value="{@value}">
-    <xsl:if test="@selected = 'true'"><xsl:attribute name="selected" value=""/></xsl:if>
-    <xsl:apply-templates/>
-   </option>
-  </xsl:template>
-
   <xsl:template match="@*|node()" priority="-1">
    <xsl:copy>
     <xsl:apply-templates select="@*|node()"/>
