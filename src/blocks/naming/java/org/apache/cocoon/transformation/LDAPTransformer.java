@@ -1992,7 +1992,7 @@ public class LDAPTransformer extends AbstractTransformer {
 
                                                 /* confirm of success */
                                                 transformer.start(attrID, attr);
-                                                transformer.data(new String("replaced"));
+                                                transformer.data("replaced");
                                                 transformer.end(attrID);
                                                 /* Remove the attribute from map after replacing */
                                                 attrMap.remove(attrID);
@@ -2016,7 +2016,7 @@ public class LDAPTransformer extends AbstractTransformer {
 
                                                     /* confirm of success */
                                                     transformer.start(attrList[i], attr);
-                                                    transformer.data(new String("add"));
+                                                    transformer.data("add");
                                                     transformer.end(attrList[i]);
                                                 }
                                             }
@@ -2057,7 +2057,7 @@ public class LDAPTransformer extends AbstractTransformer {
 
                                             /* confirm of success */
                                             transformer.start(attrID, attr);
-                                            transformer.data(new String("replaced"));
+                                            transformer.data("replaced");
                                             transformer.end(attrID);
                                             /* Remove the attribute from map after replacing */
                                             attrMap.remove(attrID);
@@ -2076,7 +2076,7 @@ public class LDAPTransformer extends AbstractTransformer {
                                                 ctx.modifyAttributes(searchbase, mods);
                                                 /* confirm of success */
                                                 transformer.start(attrList[i], attr);
-                                                transformer.data(new String("add"));
+                                                transformer.data("add");
                                                 transformer.end(attrList[i]);
                                             }
                                         }
