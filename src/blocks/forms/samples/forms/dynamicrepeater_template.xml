@@ -103,7 +103,8 @@
                     <ft:widget id="removecontacts"/>
                   </jx:if>
               </p>
-            <ft:widget id="submit"/>
+            <ft:widget id="submit"/><br/>
+            <a href="./do-dynaRepeater.flow">Restart this sample</a> - <a href="./">Back to samples</a>
 
     </ft:form-template>
   </content>
