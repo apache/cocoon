@@ -29,7 +29,9 @@ Packard Company (http://www.hp.com/).
 The DELI implementation was contributed by Mark Butler, and donated to
 Cocoon by the Hewlett Packard Company (http://www.hp.com/).
 
-
+The initial code of the new portal framework is a donation by a joined development
+effort of BASF IT-Services (http://www.basf-it-services.com) 
+and s&n AG (http://www.s-und-n.de).
 
 
  Credits of included software
