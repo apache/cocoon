@@ -78,7 +78,7 @@ import org.apache.excalibur.source.SourceResolver;
  * @avalon.component
  * @avalon.service type=InputModule
  * @x-avalon.lifestyle type=singleton
- * @x-avalon.info name=properties-file-module
+ * @x-avalon.info name=properties-file-input
  */
 public class PropertiesFileModule extends AbstractJXPathModule 
 implements InputModule, Serviceable, Configurable, ThreadSafe {
