@@ -65,7 +65,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.11 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.12 2003/09/27 12:59:51 joerg Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -195,7 +195,7 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         // FIXME (VG): WebSphere 4.0/4.0.1 bug
         if (!newURL.startsWith("/") && newURL.indexOf(':') == -1 && redirect.indexOf(':') != -1) {
             if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Redirect: WebSpehere Bug Detected!");
+                getLogger().debug("Redirect: WebSphere Bug Detected!");
             }
             String base = NetUtils.getPath(request.getRequestURI());
             if (base.startsWith("/")) {
