@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.139 2003/12/12 10:00:03 stephan Exp $
+    | CVS $Id: jars.xml,v 1.140 2003/12/12 15:21:09 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -581,8 +581,8 @@
   </file>
 
   <file>
-    <title>XML XIndice</title>
-    <description>XML database</description>
+    <title>XML Xindice</title>
+    <description>Native XML Database by Apache XML project</description>
     <used-by>xmldb block</used-by>
     <lib>xmldb/lib/xindice-1.1b1.jar</lib>
     <homepage>http://xml.apache.org/xindice/</homepage>
