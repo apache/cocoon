@@ -104,7 +104,7 @@ import java.util.Map;
  * not verified.
  *
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
- * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.3 2003/05/01 16:03:38 tcurdt Exp $
+ * @version CVS $Id: DatabaseAuthenticatorAction.java,v 1.4 2003/05/21 17:53:54 tcurdt Exp $
  */
 public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe
 {
@@ -220,6 +220,11 @@ public class DatabaseAuthenticatorAction extends AbstractDatabaseAction implemen
             for (int i = 0; i < columns.length; i++) {
                 String dbcol = columns[i].getAttribute("dbcol");
                 boolean nullable = false;
+
+                if (i > 0) {
+                    queryBuffer.append (", ");
+                }
+
                 queryBuffer.append(dbcol);
 
                 String requestParameter = columns[i].getAttribute("request-param", null);
