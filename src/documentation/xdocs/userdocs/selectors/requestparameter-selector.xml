@@ -2,7 +2,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: requestparameter-selector.xml,v 1.1 2003/03/09 00:08:23 pier Exp $ 
+  <![CDATA[ CVS Version: $Id: requestparameter-selector.xml,v 1.2 2003/06/12 13:23:58 upayavira Exp $ 
   ]]>
 -->
 
@@ -89,7 +89,7 @@
       <s2 title="Sitemap component configuration example">
         <p>
           The snippet below declares a <code>RequestParameterSelector</code>
-          defining to use the request parameter <code>cmd</code>.
+          defining to use the request parameter <code>command</code>.
         </p>
         <source><![CDATA[
 <map:selectors...
@@ -115,7 +115,7 @@
           Setting up a <code>RequestParameterSelector</code> includes
         </p>
         <ul>
-          <li>Defining an optional sitemap paramter named <code>request-name</code>, it overrides
+          <li>Defining an optional sitemap parameter named <code>request-name</code>, it overrides
             the parameter-name setting in the configuration section.
           </li>
           <li>choosing the <code>&lt;map:when&gt;</code> test expressions, and a 
