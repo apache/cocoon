@@ -217,14 +217,14 @@
      XMLDB Block: Add ability to delete collections with XMLDBTransformer.
    </action>
    <action dev="VG" type="update">
-     Reworked LocaleAction and I18nMatcher to have similar logic and
+     Reworked LocaleAction and LocaleMatcher to have similar logic and
      configuration.
      <br/><strong>NOTE:</strong> Sitemap variable "lang" renamed to
      "language", removed configuration parameters: "language-attribute",
      "country-attribute", "variant-attribute".
    </action>
    <action dev="UV" type="add">
-     Added I18nMatcher for file based internationalization.
+     Added LocaleMatcher for file based internationalization.
    </action>
    <action dev="CZ" type="fix" fixes-bug="27260">
      Make implementation of Cocoon protocol compliant with the Source interface.
