@@ -114,7 +114,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.15 2003/09/09 19:03:44 joerg Exp $
+ * @version CVS $Id: Cocoon.java,v 1.16 2003/10/06 15:59:52 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -734,20 +734,22 @@ public class Cocoon
                            String programmingLanguage)
     throws Exception {
         ProgramGenerator programGenerator = null;
+        Source source = null;
         try {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("XSP generation begin:" + fileName);
             }
 
             programGenerator = (ProgramGenerator) this.componentManager.lookup(ProgramGenerator.ROLE);
-
+            source = environment.resolveURI(fileName);
             CompiledComponent xsp = programGenerator.load(this.componentManager,
-                    environment.resolveURI(fileName),
+                    source,
                     markupLanguage, programmingLanguage, environment);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("XSP generation complete:" + xsp);
             }
         } finally {
+            environment.release(source);
             this.componentManager.release(programGenerator);
         }
     }
