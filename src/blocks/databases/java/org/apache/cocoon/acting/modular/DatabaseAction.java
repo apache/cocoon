@@ -115,10 +115,11 @@ import org.apache.cocoon.util.JDBCTypeConversions;
  * <tr><td>reloadable       </td><td>dynamically reload descriptor file if change is detected</td></tr>
  * <tr><td>use-transactions </td><td>defaults to yes</td></tr>
  * <tr><td>connection       </td><td>configured datasource connection to use (overrides value from descriptor file)</td></tr>
+ * <tr><td>fail-on-empty    </td><td>(boolean) fail is statement affected zero rows (true)</td></tr>
  * </table>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAction.java,v 1.2 2003/05/21 08:45:37 haul Exp $
+ * @version CVS $Id: DatabaseAction.java,v 1.3 2003/07/01 11:23:19 haul Exp $
  * @see org.apache.cocoon.components.modules.input
  * @see org.apache.cocoon.components.modules.output
  * @see org.apache.cocoon.components.modules.database
@@ -155,6 +156,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
     protected final HashMap cachedQueryData = new HashMap();
     protected String pathSeparator = ".";
     protected int firstRow = 0;
+    protected boolean failOnEmpty = true;
 
     // ========================================================================
     // inner helper classes
@@ -245,6 +247,8 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                         getLogger().warn("problem parsing first row option "+tmp+" using default instead.");
                 };
             }
+            tmp = (String) this.settings.get("fail-on-empty",String.valueOf(this.failOnEmpty));
+            this.failOnEmpty = tmp.equalsIgnoreCase("true") || tmp.equalsIgnoreCase("yes");
         }
     }
 
@@ -628,6 +632,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
         Connection conn = null;
         Map results = new HashMap();
         int rows = 0;
+        boolean failed = false;
 
         // read global parameter settings
         boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
@@ -752,6 +757,7 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
             }
 
         } catch (Exception e) {
+            failed = true;
             if ( conn != null ) {
                 try {
                     if (getLogger().isDebugEnabled()) {
@@ -812,9 +818,9 @@ public abstract class DatabaseAction  extends AbstractComplementaryConfigurableA
                 this.dbselector.release(datasource);
         }
         if (results != null) {
-            if (rows>0) {
-                results.put("row-count",new Integer(rows));
-            } else {
+            if (rows>0 || (!failed && !this.failOnEmpty)) {
+                    results.put("row-count",new Integer(rows)); 
+            } else {    
                 results = null;
             }
         } else {

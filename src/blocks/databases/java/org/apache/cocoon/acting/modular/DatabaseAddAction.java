@@ -70,7 +70,7 @@ import org.apache.cocoon.components.modules.database.AutoIncrementModule;
  * {@link DatabaseAction} for details.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DatabaseAddAction.java,v 1.1 2003/03/09 00:03:04 pier Exp $
+ * @version CVS $Id: DatabaseAddAction.java,v 1.2 2003/07/01 11:23:19 haul Exp $
  */
 public class DatabaseAddAction extends DatabaseAction {
 
@@ -270,7 +270,9 @@ public class DatabaseAddAction extends DatabaseAction {
                         AutoIncrementModule autoincr = null;
                         try {
                             autoincrSelector=(ComponentSelector) this.manager.lookup(DATABASE_MODULE_SELECTOR); 
-                            if (queryData.columns[i].mode != null && autoincrSelector != null && autoincrSelector.hasComponent(queryData.columns[i].mode)){
+                            if (queryData.columns[i].mode != null && 
+                                autoincrSelector != null && 
+                                autoincrSelector.hasComponent(queryData.columns[i].mode)){
                                 autoincr = (AutoIncrementModule) autoincrSelector.select(queryData.columns[i].mode);
                                 
                                 if ( autoincr.includeInQuery() ) {
