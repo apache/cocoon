@@ -79,7 +79,7 @@ import org.apache.avalon.excalibur.logger.LogKitManageable;
  * To be moved to Avalon ?
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: LifecycleHelper.java,v 1.2 2003/07/16 22:46:20 bruno Exp $
+ * @version CVS $Id: LifecycleHelper.java,v 1.3 2003/07/24 10:30:52 bruno Exp $
  */
 
 // FIXME : need to handle also LogEnabled.
@@ -211,6 +211,29 @@ public class LifecycleHelper
                 logger,
                 context,
                 componentManager,
+                roles,
+                logkit,
+                configuration,
+                true );
+    }
+
+    /**
+     * Alternative setupComponent method that takes a ServiceManager instead of a ComponentManger.
+     */
+    public static Object setupComponent( final Object component,
+            final Logger logger,
+            final Context context,
+            final ServiceManager serviceManager,
+            final RoleManager roles,
+            final LogKitManager logkit,
+            final Configuration configuration )
+        throws Exception
+    {
+        return setupComponent( component,
+                logger,
+                context,
+                serviceManager,
+                null,
                 roles,
                 logkit,
                 configuration,
