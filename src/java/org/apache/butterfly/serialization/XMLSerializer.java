@@ -32,7 +32,7 @@ import org.apache.butterfly.xml.xslt.TraxTransformerFactory;
 /**
  * Description of XMLSerializer.
  * 
- * @version CVS $Id: XMLSerializer.java,v 1.2 2004/07/24 20:21:33 ugo Exp $
+ * @version CVS $Id$
  */
 public class XMLSerializer extends AbstractXMLPipe implements Serializer {
 
@@ -131,5 +131,12 @@ public class XMLSerializer extends AbstractXMLPipe implements Serializer {
      */
     public void setObjectModel(Map objectModel) {
         this.objectModel = objectModel;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.butterfly.sitemap.SitemapOutputComponent#getEncoding()
+     */
+    public String getEncoding() {
+        return (String) format.get(OutputKeys.ENCODING);
     }
 }

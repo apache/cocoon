@@ -19,12 +19,11 @@ class Sitemap extends Pipeline {
         if (requestPath == "") {
             generate "welcome.xml"
             transform "trax", "welcome.xslt" 
-            serialize "xml"
+            serialize "xml", [ 'encoding': 'UTF-8' ]
         } else if (m = (requestPath =~ "(.*)\.html")) {
-            // TODO: paths should be relative to the webapp context!
             generate m.group(1) + ".xml"
             transform "trax", "welcome.xslt" 
-            serialize "xml"
+            serialize "xml", [ 'encoding': 'UTF-8' ]
         } else if (m = (requestPath =~ "images/(.*)\.gif")) {
             read "resources/images/" + m.group(1) + ".gif", "image/gif"
         } else if (m = (requestPath =~ "styles/(.*)\.css")) {

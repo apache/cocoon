@@ -136,9 +136,13 @@ public class NonCachingProcessingPipelineTestCase extends MockObjectTestCase {
                 return false;
             }
             public void setObjectModel(Map objectModel) {}
+            public String getEncoding() {
+                return null;
+            }
+            public void setEncoding(String encoding) {}
         };
         
-        // Set up real compponents
+        // Set up real components
         SourceResolver sourceResolver = new SourceResolver();
         Map sourceFactories = new HashMap();
         sourceFactories.put("*", new FileSourceFactory());

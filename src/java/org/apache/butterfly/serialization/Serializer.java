@@ -22,8 +22,12 @@ import org.apache.butterfly.xml.XMLConsumer;
 /**
  * Description of Serializer.
  * 
- * @version CVS $Id: Serializer.java,v 1.1 2004/07/24 20:21:33 ugo Exp $
+ * @version CVS $Id$
  */
 public interface Serializer extends XMLConsumer, SitemapOutputComponent {
+
+    String getEncoding();
+    
+    void setEncoding(String encoding);
 
 }

@@ -22,7 +22,7 @@ import java.util.Map;
  * This interface marks a component as a sitemap component that produces
  * a response, like a serializer or a reader.
  * 
- * @version CVS $Id: SitemapOutputComponent.java,v 1.1 2004/07/23 08:47:20 ugo Exp $
+ * @version CVS $Id$
  */
 public interface SitemapOutputComponent {
 
@@ -36,7 +36,7 @@ public interface SitemapOutputComponent {
      * Get the mime-type of the output of this <code>Component</code>.
      */
     String getMimeType();
-
+    
     /**
      * Test if the component wants to set the content length
      */
