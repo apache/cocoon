@@ -72,8 +72,10 @@ import org.apache.cocoon.environment.Environment;
  * processing of the environment is finished. If you don't want to
  * dispose an object, use a key that starts with "global:"!
  * 
+ * TODO: THIS WILL BE REMOVED SOON
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentContext.java,v 1.1 2004/01/10 14:38:19 cziegeler Exp $
+ * @version CVS $Id: EnvironmentContext.java,v 1.2 2004/02/20 09:40:15 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentContext 

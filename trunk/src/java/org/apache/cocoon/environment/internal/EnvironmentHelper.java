@@ -81,7 +81,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.6 2004/02/06 11:42:46 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.7 2004/02/20 09:40:15 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper
@@ -89,7 +89,9 @@ extends AbstractLogEnabled
 implements SourceResolver, Serviceable, Disposable {
 
     /** The key used to store the current redirector 
-     * in the environment context */
+     * in the environment context 
+     * TODO: THIS WILL BE REMOVED SOON
+     * */
     private static final String REDIRECTOR_KEY = "global:" + Redirector.class.getName();
 
     /** The key used to store the current environment context
@@ -405,6 +407,7 @@ implements SourceResolver, Serviceable, Disposable {
         stack.pushInfo(new EnvironmentInfo(processor, stack.getOffset(), manager, env));
         stack.setOffset(stack.size()-1);
         
+        // TODO: THIS WILL BE REMOVED SOON
         EnvironmentContext ctx = (EnvironmentContext)env.getObjectModel().get(PROCESS_KEY);
         
         ForwardRedirector redirector = new ForwardRedirector(env);
@@ -457,6 +460,7 @@ implements SourceResolver, Serviceable, Disposable {
 
     /**
      * Return the environment context
+     * TODO: THIS WILL BE REMOVED SOON
      */
     public static EnvironmentContext getCurrentEnvironmentContext() {
         final EnvironmentStack stack = (EnvironmentStack) environmentStack.get();
@@ -470,6 +474,7 @@ implements SourceResolver, Serviceable, Disposable {
     
     /**
      * Return the Redirector
+     * TODO: THIS WILL BE REMOVED SOON
      */
     public static Redirector getRedirector(Environment env) {
         final EnvironmentContext ctx = getEnvironmentContext(env);
@@ -481,6 +486,7 @@ implements SourceResolver, Serviceable, Disposable {
     
     /**
      * Return the environment context
+     * TODO: THIS WILL BE REMOVED SOON
      */
     public static EnvironmentContext getEnvironmentContext(Environment environment) {
         final Map objectModel = environment.getObjectModel();
