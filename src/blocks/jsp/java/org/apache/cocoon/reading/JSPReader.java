@@ -67,7 +67,7 @@ import org.apache.cocoon.environment.http.HttpEnvironment;
  * in a sitemap pipeline.
  *
  * @author <a href="mailto:kpiroumian@flagship.ru">Konstantin Piroumian</a>
- * @version CVS $Id: JSPReader.java,v 1.1 2003/03/09 00:04:15 pier Exp $
+ * @version CVS $Id: JSPReader.java,v 1.2 2003/06/07 23:01:48 vgritsenko Exp $
  */
 public class JSPReader extends ComposerReader {
 
@@ -93,7 +93,6 @@ public class JSPReader extends ComposerReader {
 
         JSPEngine engine = null;
         try {
-
             // FIXME (KP): Should we exclude not supported protocols, say 'context'?
             String url = this.source;
 
@@ -117,6 +116,7 @@ public class JSPReader extends ComposerReader {
             byte[] buffer = new byte[8192];
             int length = -1;
 
+            // TODO: Recode from UTF8 to desired output encoding.
             ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
             while ((length = bais.read(buffer)) > -1) {
                 out.write(buffer, 0, length);
@@ -124,7 +124,6 @@ public class JSPReader extends ComposerReader {
             bais.close();
             bais = null;
             out.flush();
-            //
         } catch (ServletException e) {
             throw new ProcessingException("ServletException in JSPReader.generate()",e.getRootCause());
         } catch (IOException e) {

@@ -77,7 +77,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:miyabe@jzf.co.jp">MIYABE Tatsuhiko</a>
- * @version CVS $Id: JSPEngineImpl.java,v 1.4 2003/05/30 15:31:58 bruno Exp $
+ * @version CVS $Id: JSPEngineImpl.java,v 1.5 2003/06/07 23:01:48 vgritsenko Exp $
  */
 public class JSPEngineImpl extends AbstractLogEnabled
     implements JSPEngine, Parameterizable, ThreadSafe {
@@ -93,20 +93,18 @@ public class JSPEngineImpl extends AbstractLogEnabled
 
     /**
      * Set the sitemap-provided configuration.
-     * @param conf The configuration information
-     * @exception ConfigurationException
+     * @param params The configuration parameters
      */
     public void parameterize(Parameters params)  {
         this.jspServletClass = params.getParameter("servlet-class", DEFAULT_SERVLET_CLASS);
     }
 
     /**
-     * execute the JSP and return the output
+     * execute the JSP and return the output in UTF8 encoding
      *
      * @param context The Servlet Context
      * @exception IOException
      * @exception ServletException
-     * @exception SAXException
      * @exception Exception
      */
     public byte[] executeJSP(String url, HttpServletRequest httpRequest, HttpServletResponse httpResponse, ServletContext context)
@@ -261,6 +259,7 @@ public class JSPEngineImpl extends AbstractLogEnabled
         public void setLocale(java.util.Locale loc) {}
         public ServletOutputStream getOutputStream() {
             if (this.output == null) {
+                // FIXME: Won't it break JSPEngine contract? See JSPEngine.executeJSP
                 this.output = new MyServletOutputStream(this.encoding);
             }
             return this.output;
