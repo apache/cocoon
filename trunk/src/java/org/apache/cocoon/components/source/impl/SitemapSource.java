@@ -51,7 +51,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.32 2004/03/19 13:39:09 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.33 2004/06/09 12:12:02 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -120,7 +120,6 @@ implements Source, XMLizable {
         this.protocol = info.protocol;
 
         // does the uri point to this sitemap or to the root sitemap?
-        String prefix;
         if (info.prefix.length() == 0) {
             this.processor = EnvironmentHelper.getCurrentProcessor().getRootProcessor();
         } else {
