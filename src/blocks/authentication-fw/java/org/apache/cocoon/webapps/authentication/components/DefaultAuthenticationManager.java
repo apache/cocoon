@@ -86,7 +86,7 @@ import org.apache.excalibur.source.SourceUtil;
  * This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultAuthenticationManager.java,v 1.8 2003/05/04 20:19:40 cziegeler Exp $
+ * @version CVS $Id: DefaultAuthenticationManager.java,v 1.9 2003/05/22 14:09:34 cziegeler Exp $
 */
 public final class DefaultAuthenticationManager
 extends AbstractLogEnabled
@@ -226,7 +226,6 @@ implements AuthenticationManager, SitemapConfigurable, Serviceable, Disposable, 
         
             // update RequestState
             RequestState state = new RequestState( handler, applicationName, this.resolver );
-            RequestState.setState( state );
             
         }
         
@@ -263,7 +262,6 @@ implements AuthenticationManager, SitemapConfigurable, Serviceable, Disposable, 
         } else {
             // update state
             RequestState state = new RequestState( handler, applicationName, this.resolver );
-            RequestState.setState( state );
         }
         
 		return authenticated;

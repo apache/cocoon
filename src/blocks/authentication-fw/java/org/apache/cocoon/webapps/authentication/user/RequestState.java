@@ -65,7 +65,7 @@ import org.apache.excalibur.source.SourceResolver;
  * is currently used for this request.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestState.java,v 1.3 2003/05/04 20:19:39 cziegeler Exp $
+ * @version CVS $Id: RequestState.java,v 1.4 2003/05/22 14:09:34 cziegeler Exp $
 */
 public final class RequestState
 implements java.io.Serializable {
@@ -83,7 +83,7 @@ implements java.io.Serializable {
         return (RequestState)objectModel.get(KEY);
     }
     
-    public static void setState(RequestState status) {
+    protected static void setState(RequestState status) {
         final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
         if ( status != null ) {
             objectModel.put( KEY, status);
@@ -99,6 +99,7 @@ implements java.io.Serializable {
     throws ProcessingException {
         this.handler = handler;
         this.application = app;
+        setState(this);
         if ( this.application != null && !this.handler.getApplicationsLoaded()) {
             ApplicationConfiguration conf = (ApplicationConfiguration) this.handler.getHandlerConfiguration().getApplications().get(this.application);
             if ( !this.handler.isApplicationLoaded( conf ) ) {
