@@ -22,15 +22,15 @@ import java.util.Locale;
 
 import org.apache.cocoon.forms.datatype.Datatype;
 import org.apache.cocoon.forms.datatype.DatatypeBuilder;
-import org.apache.cocoon.forms.datatype.ValidationError;
 import org.apache.cocoon.forms.datatype.ValidationRule;
 import org.apache.cocoon.forms.datatype.convertor.Convertor;
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.outerj.expression.ExpressionContext;
 
 /**
  * Abstract base class for Datatype implementations. Most concreate datatypes
  * will derive from this class.
- * @version $Id: AbstractDatatype.java,v 1.1 2004/03/09 10:33:57 reinhard Exp $
+ * @version $Id: AbstractDatatype.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public abstract class AbstractDatatype implements Datatype {
     private List validationRules = new ArrayList();

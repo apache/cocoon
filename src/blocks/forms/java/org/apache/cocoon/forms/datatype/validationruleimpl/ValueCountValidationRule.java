@@ -16,9 +16,9 @@
 package org.apache.cocoon.forms.datatype.validationruleimpl;
 
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.datatype.ValidationError;
 import org.apache.cocoon.forms.formmodel.CannotYetResolveWarning;
 import org.apache.cocoon.forms.util.I18nMessage;
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.Expression;
 
@@ -37,7 +37,7 @@ import java.math.BigDecimal;
  *  <li>check min and max array size
  * </ul>
  * 
- * @version $Id: ValueCountValidationRule.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id: ValueCountValidationRule.java,v 1.3 2004/03/09 14:58:45 cziegeler Exp $
  */
 public class ValueCountValidationRule extends AbstractValidationRule {
     private Expression exactExpr;

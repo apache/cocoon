@@ -15,8 +15,8 @@
  */
 package org.apache.cocoon.forms.datatype.validationruleimpl;
 
-import org.apache.cocoon.forms.datatype.ValidationError;
 import org.apache.cocoon.forms.formmodel.CannotYetResolveWarning;
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.ExpressionException;
 import org.outerj.expression.Expression;
@@ -25,7 +25,7 @@ import org.outerj.expression.Expression;
  * Generic validation rule that evaluates an expression. If the outcome of the expression is true,
  * the validation is successful, otherwise not.
  * 
- * @version $Id: AssertValidationRule.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id: AssertValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public class AssertValidationRule extends AbstractValidationRule {
     private Expression testExpression;

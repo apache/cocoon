@@ -15,9 +15,9 @@
  */
 package org.apache.cocoon.forms.datatype.validationruleimpl;
 
-import org.apache.cocoon.forms.datatype.ValidationError;
 import org.apache.cocoon.forms.datatype.ValidationRule;
 import org.apache.cocoon.forms.formmodel.CannotYetResolveWarning;
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionContext;
@@ -29,7 +29,7 @@ import java.math.BigDecimal;
  * Abstract base class providing common functionality for many {@link ValidationRule}
  * implementations.
  * 
- * @version $Id: AbstractValidationRule.java,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+ * @version $Id: AbstractValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public abstract class AbstractValidationRule implements ValidationRule {
     private XMLizable failMessage;

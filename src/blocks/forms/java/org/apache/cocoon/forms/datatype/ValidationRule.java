@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.forms.datatype;
 
+import org.apache.cocoon.forms.validation.ValidationError;
 import org.outerj.expression.ExpressionContext;
 
 /**
@@ -22,7 +23,7 @@ import org.outerj.expression.ExpressionContext;
  * perform their validation by checking a number of these validation rules
  * (though strictly spoken this is not required).
  * 
- * @version $Id: ValidationRule.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version $Id: ValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public interface ValidationRule {
     /**

@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 /**
  * Test case for the {@link EnumConvertorBuilder} class.
  * 
- * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.1 2004/03/09 13:03:13 cziegeler Exp $
+ * @version CVS $Id: EnumConvertorBuilderTestCase.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
  */
 public class EnumConvertorBuilderTestCase extends TestCase {
 
@@ -62,8 +62,8 @@ public class EnumConvertorBuilderTestCase extends TestCase {
     public void testBuild() throws Exception {
         Source confSource = new ResourceSource("resource://org/apache/cocoon/woody/datatype/convertor/EnumConvertorTestCase.conf.xml");
         Document sample = parser.parse(confSource.getInputStream());
-        Element convertorElement = (Element) sample.getElementsByTagNameNS(Constants.WD_NS, "convertor").item(0);
-        String enumClassName = convertorElement.getElementsByTagNameNS(Constants.WD_NS, "enum").item(0).getFirstChild().getNodeValue();
+        Element convertorElement = (Element) sample.getElementsByTagNameNS(Constants.DEFINITION_NS, "convertor").item(0);
+        String enumClassName = convertorElement.getElementsByTagNameNS(Constants.DEFINITION_NS, "enum").item(0).getFirstChild().getNodeValue();
         EnumConvertorBuilder builder = new EnumConvertorBuilder();
         Convertor convertor = builder.build(convertorElement);
         assertTrue("The returned convertor is not an EnumConvertor",
