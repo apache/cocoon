@@ -24,11 +24,12 @@ import org.apache.cocoon.forms.FormContext;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.6 2004/04/20 22:19:27 mpo Exp $
+ * @version $Id: Union.java,v 1.7 2004/04/21 20:33:29 mpo Exp $
  */
 public class Union extends AbstractContainerWidget {
     
-    //TODO: check if this element-name shouldn't have been 'union'?
+    //Note: union instances behave like simple "field" instance with respect to 
+    //      XSLT post-processing, the choice of element-name reflects this.
     private static final String UNION_EL = "field";
     private Widget caseWidget;
     
