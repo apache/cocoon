@@ -61,7 +61,6 @@ extends NonThreadSafePoolableComponentHandler {
         this.guessWorkInterfaces( factory.getCreatedClass(), workInterfaces );
 
         this.interfaces = (Class[]) workInterfaces.toArray( new Class[workInterfaces.size()] );
-        System.out.println("New poolable handler for " + factory.getCreatedClass());
     }
     
     /* (non-Javadoc)
@@ -157,9 +156,6 @@ extends NonThreadSafePoolableComponentHandler {
         public void invoke() {
             try {
                 final Object o = this.componentHolder.get();
-                if ( o == null ) {
-                    System.out.println(this.hashCode() + "/" + Thread.currentThread() + " : Releasing null for " + this.handler.factory.getCreatedClass());
-                }
                 this.handler.putIntoPool(o);
             } catch (Exception ignore) {
                 // we ignore this

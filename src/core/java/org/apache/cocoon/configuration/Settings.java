@@ -70,14 +70,14 @@ public class Settings {
      * try setting this parameter to "true".
      */
     protected boolean initClassloader = INIT_CLASSLOADER;
-    public static final String KEY_INIT_CLASSLOADER = "init.classloader";
+    public static final String KEY_INIT_CLASSLOADER = "classloader.init";
 
     /**
      * This parameter allows to set system properties
      */
     protected Map forceProperties = new HashMap();
     /** FIXME - implement the support for this key: */
-    public static final String KEY_FORCE_PROPERTIES = "force.properties";
+    public static final String KEY_FORCE_PROPERTIES = "system.properties";
     
     /**
      * This parameter points to the main configuration file for Cocoon.
@@ -98,7 +98,7 @@ public class Settings {
      * configuration used by the environment.
      */
     protected String accessLogger;
-    public static final String KEY_LOGGING_ACCESS_LOGGER = "logging.logger.access";
+    public static final String KEY_LOGGING_ACCESS_LOGGER = "logging.logger.access.category";
 
     /**
      * This parameter indicates the category id of the logger from the LogKit
@@ -108,7 +108,7 @@ public class Settings {
      * logger="..." attribute in the component configuration file.
      */
     protected String cocoonLogger;
-    public static final String KEY_LOGGING_COCOON_LOGGER = "logging.logger.cocoon";
+    public static final String KEY_LOGGING_COCOON_LOGGER = "logging.logger.cocoon.category";
 
     /**
      * This parameter indicates the log level to use throughout startup of the
@@ -117,7 +117,7 @@ public class Settings {
      * not readable/available this log level is of importance.
      */
     protected String bootstrapLogLevel;
-    public static final String KEY_LOGGING_BOOTSTRAP_LOGLEVEL = "logging.bootstrap.level";
+    public static final String KEY_LOGGING_BOOTSTRAP_LOGLEVEL = "logging.bootstrap.loglevel";
 
     /**
      * This parameter switches the logging system from LogKit to Log4J for Cocoon.
@@ -155,7 +155,7 @@ public class Settings {
      */
     protected List loadClasses = new ArrayList();
     /** FIXME: Implement support for this: */
-    public static final String KEY_LOAD_CLASSES = "load.classes";
+    public static final String KEY_LOAD_CLASSES = "classloader.load.classes";
 
     /**
      * Causes all files in multipart requests to be processed.
