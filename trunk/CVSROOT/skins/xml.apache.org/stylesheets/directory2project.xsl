@@ -11,7 +11,7 @@
   </xsl:template>
 
   <xsl:template match="entry">
-    <xsl:if test="@directory!='true'">
+    <xsl:if test="not(@directory)">
       <resource source="{@href}" target="{$base}{@href}"/>
     </xsl:if>
   </xsl:template>
