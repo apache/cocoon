@@ -77,6 +77,7 @@ public class Messages extends AbstractWidget {
 
     protected Messages(MessagesDefinition definition) {
         this.definition = definition;
+        setLocation(definition.getLocation());
     }
 
     public String getId() {

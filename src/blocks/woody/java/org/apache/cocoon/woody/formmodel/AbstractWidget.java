@@ -57,8 +57,23 @@ import org.apache.cocoon.woody.event.WidgetEvent;
  * common to many widgets.
  */
 public abstract class AbstractWidget implements Widget {
+    private String location = null;
     private Widget parent;
     private Form form;
+
+    /**
+     * Sets the source location of this widget.
+     */
+    protected void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     * Gets the source location of this widget.
+     */
+    public String getLocation() {
+        return this.location;
+    }
 
     public Widget getParent() {
         return parent;

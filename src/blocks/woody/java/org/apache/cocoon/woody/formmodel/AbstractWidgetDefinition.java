@@ -62,8 +62,17 @@ import org.apache.excalibur.xml.sax.XMLizable;
  * Provides functionality that is common across many WidgetDefinition implementations.
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
+    private String location = null;
     private String id;
     private Map displayData;
+
+    protected void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLocation() {
+        return location;
+    }
 
     public String getId() {
         return id;

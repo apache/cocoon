@@ -62,6 +62,7 @@ import org.w3c.dom.Element;
 public class ActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         ActionDefinition actionDefinition = createDefinition();
+        setLocation(widgetElement, actionDefinition);
         setId(widgetElement, actionDefinition);
         setDisplayData(widgetElement, actionDefinition);
 

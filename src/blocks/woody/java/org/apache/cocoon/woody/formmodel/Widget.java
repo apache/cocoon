@@ -90,6 +90,12 @@ import java.util.Locale;
  * classes and objects in Java.
  */
 public interface Widget {
+
+    /**
+     * Gets the source location of this widget.
+     */
+    public String getLocation();
+
     /**
      * Returns the id of this widget.
      */

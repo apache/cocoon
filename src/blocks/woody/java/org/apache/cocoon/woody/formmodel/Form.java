@@ -77,7 +77,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.10 2003/10/31 12:26:06 bruno Exp $
+ * @version CVS $Id: Form.java,v 1.11 2003/12/19 21:28:39 tim Exp $
  */
 public class Form extends AbstractWidget {
     
@@ -97,6 +97,7 @@ public class Form extends AbstractWidget {
         widgets = new ArrayList();
         widgetsById = new HashMap();
         this.definition = definition;
+        setLocation(definition.getLocation());
     }
 
     protected void addWidget(Widget widget) {

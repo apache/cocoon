@@ -76,6 +76,7 @@ public class Repeater extends AbstractWidget {
 
     public Repeater(RepeaterDefinition repeaterDefinition) {
         this.definition = repeaterDefinition;
+        setLocation(definition.getLocation());
         // setup initial size
         removeRows();
     }
@@ -318,6 +319,10 @@ public class Repeater extends AbstractWidget {
                 widgets.add(widget);
                 widgetsById.put(widget.getId(), widget);
             }
+        }
+
+        public String getLocation() {
+            return Repeater.this.getLocation();
         }
 
         public String getId() {

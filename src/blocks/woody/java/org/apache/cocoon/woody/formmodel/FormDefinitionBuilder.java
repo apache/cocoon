@@ -61,7 +61,7 @@ public class FormDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element formElement) throws Exception {
         FormDefinition formDefinition = new FormDefinition();
-
+        setLocation(formElement, formDefinition);
         formDefinition.setId("");
         setDisplayData(formElement, formDefinition);
 

@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: RowActionDefinitionBuilder.java,v 1.1 2003/11/03 17:05:32 sylvain Exp $
+ * @version CVS $Id: RowActionDefinitionBuilder.java,v 1.2 2003/12/19 21:28:39 tim Exp $
  */
 public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     
@@ -67,6 +67,7 @@ public class RowActionDefinitionBuilder extends AbstractWidgetDefinitionBuilder 
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         String actionCommand = DomHelper.getAttribute(widgetElement, "action-command");
         RowActionDefinition definition = createDefinition(widgetElement, actionCommand);
+        setLocation(widgetElement, definition);
         setId(widgetElement, definition);
         setDisplayData(widgetElement, definition);
 

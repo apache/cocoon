@@ -11,6 +11,7 @@ import org.apache.cocoon.woody.datatype.Datatype;
 public class OutputDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
         OutputDefinition definition = new OutputDefinition();
+        setLocation(widgetElement, definition);
         setId(widgetElement, definition);
 
         Element datatypeElement = DomHelper.getChildElement(widgetElement, Constants.WD_NS, "datatype");
