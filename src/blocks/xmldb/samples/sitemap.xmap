@@ -2,7 +2,7 @@
 
 <!--+
     | XMLDB Samples Sitemap
-    | CVS $Id: sitemap.xmap,v 1.6 2004/01/12 18:08:38 ugo Exp $
+    | CVS $Id: sitemap.xmap,v 1.7 2004/01/22 03:42:12 vgritsenko Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -41,11 +41,15 @@
       </map:match>
    
       <map:match pattern="xwelcome">
-        <map:generate src="xmldb:xindice-embed:///db/cocoon/welcome"/>
+        <map:generate src="xmldb:xindice-embed:///db/cocoon/xsamples.xml"/>
         <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
           <map:parameter name="contextPath" value="{request:contextPath}"/>
         </map:transform>
         <map:serialize/>
+      </map:match>
+
+      <map:match pattern="xmount/**">
+        <map:mount uri-prefix="xmount" src="xmldb:xindice-embed:///db/cocoon/sitemap" check-reload="yes"/>
       </map:match>
 
       <map:match pattern="populate">

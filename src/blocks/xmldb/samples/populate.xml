@@ -2,60 +2,85 @@
 
 <!--+
     | Populates XMLDB with some samples data
-    | CVS $Id: populate.xml,v 1.2 2003/12/12 15:00:31 vgritsenko Exp $
+    | CVS $Id: populate.xml,v 1.3 2004/01/22 03:42:12 vgritsenko Exp $
     +-->
 
 <html>
-  <h2>Populating DB with samples data</h2>
-  <h3>Create Collection</h3>
+  <h2>Populating XML:DB with sample data</h2>
+  <h3>Create collection ...</h3>
   <p>Create collection should succeed on the first run, but will fail on subsequent runs</p>
   <textarea cols="75" rows="3">
     <x:query type="create" oid="cocoon/" xmlns:x="http://apache.org/cocoon/xmldb/1.0"/>
   </textarea>
 
-  <h3>Create Samples Document</h3>
+  <h3>Import sitemap.xmap ...</h3>
   <textarea cols="75" rows="3">
-    <x:query type="create" collection="cocoon" oid="welcome" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
-      <!-- i:include src="samples.xml" xmlns:i="http://apache.org/cocoon/include/1.0"/ -->
-      <samples name="XMLDB Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
-        <group name="Main examples page.">
-          <sample name="Back" href="..">to Cocoon examples main page</sample>
-        </group>
-        <group name="Init Database">
-          <sample name="Init" href="populate">
-            Populate sample XMLDB Database
-          </sample>
-        </group>
-        <group name="XMLDB Samples">
+    <x:query type="create" collection="cocoon" oid="sitemap.xmap" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+      <i:include src="sitemap.xmap" xmlns:i="http://apache.org/cocoon/include/1.0"/>
+    </x:query>
+  </textarea>
+      
+  <h3>Import xmldb2samples.xsl ...</h3>
+  <textarea cols="75" rows="3">
+    <x:query type="create" collection="cocoon" oid="xmldb2samples.xsl" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+      <i:include src="xmldb2samples.xsl" xmlns:i="http://apache.org/cocoon/include/1.0"/>
+    </x:query>
+  </textarea>
+
+  <h3>Import samples.xml ...</h3>
+  <textarea cols="75" rows="3">
+    <x:query type="create" collection="cocoon" oid="samples.xml" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+      <i:include src="samples.xml" xmlns:i="http://apache.org/cocoon/include/1.0"/>
+    </x:query>
+  </textarea>
+
+  <h3>Perform XUpdate on samples.xml ...</h3>
+  <textarea cols="75" rows="3">
+    <x:query type="update" collection="cocoon" oid="samples.xml" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+      <xu:modifications version="1.0" xmlns:xu="http://www.xmldb.org/xupdate">
+        <xu:remove select="/samples/group[@name = 'Init Database']"/>
+        <xu:update select="/samples/group[@name = 'XMLDB Samples']/sample[@name='Mount DB']/@name">Mount FS</xu:update>
+        <xu:update select="/samples/group[@name = 'XMLDB Samples']/sample[@name='Mount FS']/@href">..</xu:update>
+        <xu:update select="/samples/group[@name = 'XMLDB Samples']/sample[@name='Mount FS']">
+           Go back to the file system version of this page.
+        </xu:update>
+        <xu:append select="/samples/group[@name = 'XMLDB Samples']" child="1">
           <note>
-            This page is served from the XMLDB. Click below to go back to file system
+            This sitemap, page, and XSLT stylesheet for browser, all are served from
+            the XML:DB. Click below to go back to file system version.
+          </note>
+        </xu:append>
+      </xu:modifications>
+    </x:query>
+  </textarea>
+
+  <h3>Import samples.xml as xsamples.xml ...</h3>
+  <textarea cols="75" rows="3">
+    <x:query type="create" collection="cocoon" oid="xsamples.xml" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+      <i:include src="samples.xml" xmlns:i="http://apache.org/cocoon/include/1.0"/>
+    </x:query>
+  </textarea>
+
+  <h3>Perform XUpdate on xsamples.xml ...</h3>
+  <textarea cols="75" rows="3">
+    <x:query type="update" collection="cocoon" oid="xsamples.xml" xmlns:x="http://apache.org/cocoon/xmldb/1.0">
+      <xu:modifications version="1.0" xmlns:xu="http://www.xmldb.org/xupdate">
+        <xu:update select="/samples/group[@name = 'XMLDB Samples']/sample[@name='From DB']/@name">From File System</xu:update>
+        <xu:update select="/samples/group[@name = 'XMLDB Samples']/sample[@name='From File System']/@href">welcome</xu:update>
+        <xu:update select="/samples/group[@name = 'XMLDB Samples']/sample[@name='From File System']">
+           Go back to the file system version of this page.
+        </xu:update>
+        <xu:append select="/samples/group[@name = 'XMLDB Samples']" child="1">
+          <note>
+            This page is served from the XML:DB. Click below to go back to file system
             version of the file.
           </note>
-          <sample name="From File System" href="welcome">
-            This samples page, but served from the file system.
-          </sample>
-          <sample name="Browser" href="browse/">
-            Simple database browser
-          </sample>
-        </group>
-        <group name="XMLDB Source">
-          <sample name="Get Collection" href="db/cocoon/">
-            Get /db/cocoon collection.
-          </sample>
-          <sample name="Get Resource" href="db/cocoon/welcome">
-            Get /db/cocoon/welcome resource.
-          </sample>
-          <sample name="Query Collection" href="db/cocoon/?xpath=/samples/group">
-            Query /db/cocoon collection.
-          </sample>
-          <sample name="Query Collection" href="db/cocoon/welcome?xpath=/samples/group">
-            Query /db/cocoon/welcome resource (same query).
-          </sample>
-        </group>
-      </samples>
+        </xu:append>
+      </xu:modifications>
     </x:query>
   </textarea>
 
   <h3>Done</h3>
+  <p>Review results of all operations and go check other samples.</p>
   <a href="./">Go Back</a>
 </html>

@@ -3,7 +3,7 @@
 <!--+
     | XMLDB Samples
     |
-    | CVS $Id: samples.xml,v 1.3 2004/01/21 13:09:43 vgritsenko Exp $
+    | CVS $Id: samples.xml,v 1.4 2004/01/22 03:42:12 vgritsenko Exp $
     +-->
 
 <samples name="XMLDB Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -13,6 +13,9 @@
   </group>
 
   <group name="Init Database">
+    <note>
+      Init database first before checking out other samples!
+    </note>
     <sample name="Init" href="populate">
       Populate sample XMLDB Database
     </sample>
@@ -21,7 +24,9 @@
   <group name="XMLDB Samples">
     <sample name="From DB" href="xwelcome">
       This samples page, but obtained from the XMLDB database
-      (don't forget to Init database first)
+    </sample>
+    <sample name="Mount DB" href="xmount/">
+      Serve these completely from the XML:DB, including sitemap, XMLs, and XSLTs.
     </sample>
     <sample name="Browser" href="browse/">
       Simple database browser
