@@ -18,7 +18,7 @@
 <!--+
     | Main samples page
     |
-    | CVS $Id: samples.xml,v 1.34 2004/03/20 13:02:10 crossley Exp $
+    | CVS $Id: samples.xml,v 1.35 2004/03/20 13:28:29 crossley Exp $
     +-->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -56,23 +56,6 @@
     </sample>
   </group>
 
-  <group name="Cocoon Control Flow">
-    <note>
-      Since the Cocoon Control Flow is a core technology you find more examples
-      that make use of it e.g. the Petstore, JXForms and Woody block
-    </note>      
-    <sample name="Examples" href="flow/">
-      Examples of Cocoon's control flow of Web pages.
-    </sample>
-  </group>  
-
-  <group name="Cocoon Forms Processing">
-    <sample href="simpleform/" name="Simple Forms">
-      These examples show a simple way to work with HTML forms. More powerful
-      form solutions can be found in the blocks section. 
-    </sample>
-  </group>  
-
   <group name="More Core Samples">
     <sample href="modules/" name="The Power of Sitemap: Input Modules">
       This example shows the usage of Input Modules in sitemap attribute expressions.
@@ -92,14 +75,31 @@
       Some stuff that does not fit into the other groups of samples.
     </sample>
   </group>
-  
+
   <group name="Block Samples">
     <sample name="Blocks with samples" href="blocks">
       Functionality outside the core has been moved to units called "blocks".
-      This will lead to a more modular Cocoon. Here you find the samples 
+      This will lead to a more modular Cocoon. Here you find the many samples 
       provided by the currently installed blocks. 
     </sample>
   </group>
+
+  <group name="Cocoon Control Flow">
+    <note>
+      Since the Cocoon Control Flow is a core technology you find more examples
+      that make use of it e.g. the Petstore, JXForms and Woody block
+    </note>      
+    <sample name="Examples" href="flow/">
+      Examples of Cocoon's control flow of Web pages.
+    </sample>
+  </group>  
+
+  <group name="Cocoon Forms Processing">
+    <sample href="simpleform/" name="Simple Forms">
+      These examples show a simple way to work with HTML forms. More powerful
+      form solutions can be found in the blocks section. 
+    </sample>
+  </group>  
 
   <group name="Test Pages">
     <sample name="Anteater tests" href="test/">
@@ -125,6 +125,14 @@
       in a colour-coded table. Be patient - this process will take a while.
       NOTE: this will work only if you have included the documentation when 
       you built the web application
+    </sample>
+  </group>
+
+  <group name="Back">
+    <sample name="Front page" href="..">
+    </sample>
+    <sample name="Core Documentation" href="../docs/">
+      Documentation is generated from the xml source.
     </sample>
   </group>
 </samples>
