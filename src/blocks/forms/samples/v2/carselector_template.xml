@@ -17,6 +17,7 @@
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/template.jx"/>
   <title>Car selector</title>
   <para>This example illustrates how you can programmatically update the
     content of a selection list.</para>

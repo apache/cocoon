@@ -18,6 +18,7 @@
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
       xmlns:fi="http://apache.org/cocoon/forms/1.0#instance" 
       xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:import uri="resource://org/apache/cocoon/forms/generation/template.jx"/>
   <title>Sample form</title>
   <content>
     <ft:form-template action="${cocoon.continuation.id}.continue" method="POST">

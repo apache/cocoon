@@ -73,7 +73,6 @@
       <map:match pattern="*-display-pipeline">
         <!-- pipeline to show the form -->
         <map:generate type="jx" src="{1}_template.xml"/>
-        <map:transform type="forms"/>
         <map:transform type="i18n">
           <map:parameter name="locale" value="en-US"/>
         </map:transform>
