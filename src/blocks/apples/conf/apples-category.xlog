@@ -4,10 +4,11 @@
 	be equal to the root elm -->
 	
 <xlog xpath="/logkit/categories" 
-      remove="/logkit/categories/category[@name='apples']">
+      unless="category[@name='apples']">
     
-    <category log-level="DEBUG" name="apples">
+    <category log-level="ERROR" name="apples">
     	<log-target id-ref="apples" />
+    	<log-target id-ref="error" />
     </category>
     
 </xlog>

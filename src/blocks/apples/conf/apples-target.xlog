@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <xlog xpath="/logkit/targets" 
-      remove="/logkit/targets/cocoon[@id='miles']">
+      unless="cocoon[@id='apples']">
     
     <cocoon id="apples">
       <filename>${context-root}/WEB-INF/logs/apples.log</filename>
