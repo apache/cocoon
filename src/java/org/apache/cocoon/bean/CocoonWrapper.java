@@ -94,7 +94,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonWrapper.java,v 1.4 2003/09/01 14:07:33 upayavira Exp $
+ * @version CVS $Id: CocoonWrapper.java,v 1.5 2003/09/04 11:38:44 upayavira Exp $
  */
 public class CocoonWrapper {
 
@@ -149,7 +149,7 @@ public class CocoonWrapper {
             appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, cliContext);
             DefaultLogKitManager logKitManager = null;
             if (logKit != null) {
-                final FileInputStream fis = new FileInputStream(new File(this.context, logKit));
+                final FileInputStream fis = new FileInputStream(logKit);
                 final DefaultConfigurationBuilder builder =
                     new DefaultConfigurationBuilder();
                 final Configuration logKitConf = builder.build(fis);
