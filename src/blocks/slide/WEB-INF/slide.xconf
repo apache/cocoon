@@ -84,7 +84,7 @@
             <parameter name="acl_inheritance_type">path</parameter>
             
             <!--
-            <content-interceptor class="org.apache.cocoon.components.slide.impl.JMSEventCacheContentInterceptor">
+            <content-interceptor class="org.apache.cocoon.components.slide.impl.JMSContentInterceptor">
               <parameter name="topic-factory">JmsTopicConnectionFactory</parameter>
               <parameter name="topic">topic1</parameter>
               <parameter name="ack-mode">dups</parameter>
