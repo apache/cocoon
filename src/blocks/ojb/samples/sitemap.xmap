@@ -64,7 +64,7 @@
    </map:match>
 
      <!--
-        | "Form1" example, demonstrates usega of flow and woody
+        | "Form1" example, demonstrates usage of flow and woody
         -->
 
     <map:match pattern="jdo/woody/employee">
