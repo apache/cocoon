@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.6 2003/03/11 02:38:59 stefano Exp $:
+       CVS: $Id: build.xml,v 1.7 2003/03/11 11:15:09 michaelm Exp $:
 
 ============================================================================ -->
 
@@ -612,7 +612,7 @@
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
 
     <copy todir="${build.webapp}/stylesheets" filtering="on">
-      <fileset dir="${webapp}/stylesheets">
+      <fileset dir="${webapp.samples}/stylesheets">
         <include name="*.xsl*"/>
       </fileset>
     </copy>
