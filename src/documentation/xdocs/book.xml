@@ -42,7 +42,7 @@
     <menu-item label="How-Tos" href="howto/index.html"/>
     <menu-item label="Performance" href="performancetips.html"/>
     <menu-item label="Snippets" href="snippet/index.html"/>
-    <external label="Wiki Docs" href="http://wiki.cocoondev.org/"/>
+    <external label="Wiki Docs" href="http://wiki.apache.org/cocoon/"/>
   </menu>
 
   <menu label="Status">
