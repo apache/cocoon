@@ -60,7 +60,7 @@
     <depend project="excalibur-pool"/>
     <depend project="excalibur-component"/>
     <depend project="excalibur-logger"/>
-    <depend project="excalibur-event-api"/>
+    <depend project="excalibur-event"/>
     <depend project="excalibur-legacy" id="i18n"/>
     <depend project="excalibur-testcase"/>
 
