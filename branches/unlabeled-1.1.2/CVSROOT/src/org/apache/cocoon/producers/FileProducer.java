@@ -11,9 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Job;
-import org.apache.cocoon.XMLConsumer;
-import org.apache.cocoon.XMLProducer;
-import org.apache.cocoon.XMLSource;
+import org.apache.cocoon.sax.XMLConsumer;
+import org.apache.cocoon.sax.XMLProducer;
+import org.apache.cocoon.sax.XMLSource;
 import org.apache.cocoon.framework.AbstractComponent;
 import org.apache.cocoon.framework.Configurations;
 import org.apache.cocoon.framework.ConfigurationException;
@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 01:11:14 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-09 08:34:46 $
  * @since Cocoon 2.0
  */
 public class FileProducer extends AbstractComponent implements Producer {

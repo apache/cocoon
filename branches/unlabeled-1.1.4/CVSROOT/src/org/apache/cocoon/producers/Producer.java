@@ -8,7 +8,7 @@
 package org.apache.cocoon.producers;
 
 import org.apache.cocoon.Job;
-import org.apache.cocoon.XMLSource;
+import org.apache.cocoon.sax.XMLSource;
 import org.apache.cocoon.framework.Component;
 import org.apache.cocoon.framework.Configurable;
 
@@ -20,7 +20,7 @@ import org.apache.cocoon.framework.Configurable;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.4.2 $ $Date: 2000-02-09 01:11:14 $
+ * @version CVS $Revision: 1.1.4.3 $ $Date: 2000-02-09 08:34:46 $
  * @since Cocoon 2.0
  */
 public interface Producer extends Component, Configurable {

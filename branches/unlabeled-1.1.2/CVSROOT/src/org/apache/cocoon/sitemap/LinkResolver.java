@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.sitemap;
 
-import org.apache.cocoon.XMLConsumer;
+import org.apache.cocoon.sax.XMLConsumer;
 import org.xml.sax.AttributeList;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 08:35:07 $
  */
 public interface LinkResolver  {
     public String resolveLink(String target, String partition);

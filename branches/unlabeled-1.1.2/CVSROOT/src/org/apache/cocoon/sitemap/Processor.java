@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import org.apache.cocoon.Job;
-import org.apache.cocoon.XMLConsumer;
-import org.apache.cocoon.XMLSource;
+import org.apache.cocoon.sax.XMLConsumer;
+import org.apache.cocoon.sax.XMLSource;
 import org.apache.cocoon.framework.ConfigurationException;
 import org.apache.cocoon.filters.Filter;
 import org.apache.cocoon.producers.Producer;
@@ -25,7 +25,7 @@ import org.xml.sax.SAXException;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:42 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 08:35:07 $
  */
 public class Processor {
     /** The int representing '*' */

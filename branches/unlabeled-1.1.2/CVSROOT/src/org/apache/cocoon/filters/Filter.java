@@ -8,7 +8,7 @@
 package org.apache.cocoon.filters;
 
 import org.apache.cocoon.Job;
-import org.apache.cocoon.XMLConsumer;
+import org.apache.cocoon.sax.XMLConsumer;
 import org.apache.cocoon.framework.Component;
 import org.apache.cocoon.framework.Configurable;
 import org.apache.cocoon.framework.Modificable;
@@ -21,7 +21,7 @@ import org.apache.cocoon.framework.Modificable;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 01:18:30 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-02-09 08:34:28 $
  * @since Cocoon 2.0
  */
 public interface Filter extends Component, Configurable, Modificable {

@@ -7,7 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.parsers;
 
-import org.apache.cocoon.XMLProducer;
+import org.apache.cocoon.sax.XMLProducer;
 import org.apache.cocoon.framework.Configurable;
 import org.xml.sax.InputSource;
 
@@ -17,7 +17,7 @@ import org.xml.sax.InputSource;
  *         Exoffice Technologies, INC.</a>
  * @author Copyright 1999 &copy; <a href="http://www.apache.org">The Apache
  *         Software Foundation</a>. All rights reserved.
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-02-07 15:35:39 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-02-09 08:34:38 $
  */
 public interface ParserFactory extends Configurable {
     public XMLProducer getXMLProducer(InputSource src);
