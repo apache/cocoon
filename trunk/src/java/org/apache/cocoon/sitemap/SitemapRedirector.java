@@ -51,8 +51,8 @@
 package org.apache.cocoon.sitemap;
 
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 
 import java.io.IOException;
 
@@ -60,9 +60,10 @@ import java.io.IOException;
  * Wrapper for sitemap redirection
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapRedirector.java,v 1.3 2003/10/24 13:45:10 vgritsenko Exp $
+ * @version CVS $Id: SitemapRedirector.java,v 1.4 2003/10/30 13:48:46 cziegeler Exp $
  */
 public class SitemapRedirector implements Redirector {
+    
     private boolean hasRedirected = false;
     private Environment e;
 
@@ -77,16 +78,14 @@ public class SitemapRedirector implements Redirector {
      * Perform actual redirection
      */
     public void redirect(boolean sessionMode, String url) throws IOException {
-        e.redirect(sessionMode, url);
+        EnvironmentHelper.getCurrentProcessor()
+            .getEnvironmentHelper().redirect(this.e, sessionMode, url);
         this.hasRedirected = true;
     }
     
     public void globalRedirect(boolean sessionMode, String url) throws IOException {
-        if (e instanceof EnvironmentWrapper) {
-            ((EnvironmentWrapper)e).globalRedirect(sessionMode,url);
-        } else {
-            e.redirect(sessionMode, url);
-        }
+        EnvironmentHelper.getCurrentProcessor()
+            .getEnvironmentHelper().globalRedirect(this.e, sessionMode, url);
         this.hasRedirected = true;
     }
 

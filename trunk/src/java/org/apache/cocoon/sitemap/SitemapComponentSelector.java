@@ -50,16 +50,14 @@
 */
 package org.apache.cocoon.sitemap;
 
-import org.apache.avalon.framework.component.ComponentSelector;
-
 import org.apache.cocoon.components.pipeline.OutputComponentSelector;
 
 /**
  * Component manager for Cocoon's sitemap components.
  *
- * @version CVS $Id: SitemapComponentSelector.java,v 1.1 2003/03/09 00:09:38 pier Exp $
+ * @version CVS $Id: SitemapComponentSelector.java,v 1.2 2003/10/30 13:48:45 cziegeler Exp $
  */
-public interface SitemapComponentSelector extends ComponentSelector, OutputComponentSelector {
+public interface SitemapComponentSelector extends OutputComponentSelector {
 
     boolean hasLabel(Object hint, String label);
 
