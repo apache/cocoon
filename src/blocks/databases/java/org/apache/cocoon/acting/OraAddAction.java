@@ -26,6 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -91,21 +92,21 @@ public class OraAddAction extends DatabaseAddAction {
 
                 if ("manual".equals(mode)) {
                     String selectQuery = this.getSelectQuery(keys[i]);
+                    Statement stmt =null;
                     ResultSet set = null;
                     try {
-                        set = conn.createStatement().executeQuery(selectQuery);
+                        stmt = conn.createStatement();
+                        set = stmt.executeQuery(selectQuery);
                         set.next();
                         int value = set.getInt("maxid") + 1;
-    
                         statement.setInt(currentIndex, value);
-    
                         request.setAttribute(keys[i].getAttribute("param"), String.valueOf(value));
                     } catch (SQLException sqle){
-                        getLogger().warn("There was an error closing the ResultSet", sqle);
+                        getLogger().warn("There was an error retrieving the next key while inserting on the database", sqle);
                         throw sqle;
                     } finally {
                         set.close();
-                        set.getStatement().close();
+                        stmt.close();
                         currentIndex++;
                     }
                 } else if ("form".equals(mode)) {
