@@ -63,6 +63,7 @@ import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -90,7 +91,7 @@ import java.util.Map;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.9 2003/08/09 18:21:49 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.10 2003/08/16 13:30:04 sylvain Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled
@@ -106,7 +107,7 @@ implements Source, XMLizable {
     private String systemIdForCaching;
     
     /** The uri */
-    private String uri;
+//    private String uri;
 
     /** The current ComponentManager */
     private ComponentManager manager;
@@ -118,10 +119,10 @@ implements Source, XMLizable {
     private Processor pipelineProcessor;
 
     /** The environment */
-    private EnvironmentWrapper environment;
+    private MutableEnvironmentFacade environment;
 
     /** The prefix for the processing */
-    private String prefix;
+//    private String prefix;
 
     /** The <code>ProcessingPipeline</code> */
     private ProcessingPipeline processingPipeline;
@@ -160,6 +161,11 @@ implements Source, XMLizable {
 
         this.manager = manager;
         this.enableLogging(logger);
+
+
+
+
+
         boolean rawMode = false;
 
         // remove the protocol
@@ -176,6 +182,7 @@ implements Source, XMLizable {
         }
 
         // does the uri point to this sitemap or to the root sitemap?
+        String prefix;
         if (uri.startsWith("//", position)) {
             position += 2;
             try {
@@ -183,10 +190,10 @@ implements Source, XMLizable {
             } catch (ComponentException e) {
                 throw new MalformedURLException("Cannot get Processor instance");
             }
-            this.prefix = ""; // start at the root
+            prefix = ""; // start at the root
         } else if (uri.startsWith("/", position)) {
             position ++;
-            this.prefix = null;
+            prefix = null;
             this.processor = CocoonComponentManager.getCurrentProcessor();
         } else {
             throw new MalformedURLException("Malformed cocoon URI: " + uri);
@@ -201,7 +208,6 @@ implements Source, XMLizable {
         } else if (position > 0) {
             uri = uri.substring(position);
         }
-        this.uri = uri;
         
         // determine if the queryString specifies a cocoon-view
         String view = null;
@@ -227,7 +233,7 @@ implements Source, XMLizable {
         }
 
         // build the request uri which is relative to the context
-        String requestURI = (this.prefix == null ? env.getURIPrefix() + uri : uri);
+        String requestURI = (prefix == null ? env.getURIPrefix() + uri : uri);
 
         // create system ID
         this.systemId = queryString == null ?
@@ -235,8 +241,13 @@ implements Source, XMLizable {
             this.protocol + "://" + requestURI + "?" + queryString;
 
         // create environment...
-        this.environment = new EnvironmentWrapper(env, requestURI, 
+        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, requestURI, 
                                                    queryString, logger, manager, rawMode, view);
+        wrapper.setURI(prefix, uri);
+        
+        // The environment is a facade whose delegate can be changed in case of internal redirects
+        this.environment = new MutableEnvironmentFacade(wrapper);
+
         // ...and put information passed from the parent request to the internal request
         if ( null != parameters ) {
             this.environment.getObjectModel().put(ObjectModelHelper.PARENT_CONTEXT, parameters);
@@ -370,7 +381,6 @@ implements Source, XMLizable {
         this.systemIdForCaching = this.systemId;
         try {
             this.processKey = CocoonComponentManager.startProcessing(this.environment);
-            this.environment.setURI(this.prefix, this.uri);
             this.processingPipeline = this.processor.buildPipeline(this.environment);
             this.pipelineProcessor = CocoonComponentManager.getLastProcessor(this.environment); 
             this.environment.changeToLastContext();

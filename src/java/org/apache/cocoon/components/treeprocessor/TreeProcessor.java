@@ -81,14 +81,18 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
+import org.apache.cocoon.components.source.impl.SitemapSourceEnvironment;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ForwardRedirector;
+import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
+import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.excalibur.source.Source;
 
 /**
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.10 2003/07/29 07:41:27 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.11 2003/08/16 13:30:04 sylvain Exp $
  */
 
 public class TreeProcessor
@@ -101,6 +105,8 @@ public class TreeProcessor
                RoleManageable,
                Contextualizable,
                Disposable {
+
+    public static final String COCOON_REDIRECT_ATTR = "cocoon: redirect url";
 
     private static final String XCONF_URL =
         "resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml";
@@ -178,7 +184,9 @@ public class TreeProcessor
         this.language = (language == null) ? parent.language : language;
 
         // Copy all that can be copied from the parent
+        this.enableLogging(parent.getLogger());
         this.context = parent.context;
+        this.roleManager = parent.roleManager;
         this.logKit = parent.logKit;
         this.builderSelector = parent.builderSelector;
         this.checkReload = parent.checkReload;
@@ -203,10 +211,9 @@ public class TreeProcessor
         Source source)
       throws Exception {
 
-        // FIXME(VG): Why child isn't configure()d/contextualize(d)/etc ???
+        // Note: lifecycle methods aren't called, since this constructors copies all
+        // that can be copied from the parent (see above)
         TreeProcessor child = new TreeProcessor(this, manager, language);
-        child.enableLogging(getLogger());
-        child.setRoleManager(this.roleManager);
         child.source = new DelayedRefreshSourceWrapper(source, lastModifiedDelay);
         return child;
     }
@@ -312,24 +319,6 @@ public class TreeProcessor
         }
     }
 
-    protected boolean process(Environment environment, InvokeContext context)
-    throws Exception {
-
-        // first, check for sitemap changes
-        if (this.rootNode == null ||
-            (this.checkReload && this.source.getLastModified() > this.lastModified)) {
-            setupRootNode(environment);
-        }
-
-        // and now process
-        CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
-        try {
-            return this.rootNode.invoke(environment, context);
-        } finally {
-            CocoonComponentManager.leaveEnvironment();
-        }
-    }
-
     /**
      * Process the given <code>Environment</code> to assemble
      * a <code>ProcessingPipeline</code>.
@@ -350,6 +339,98 @@ public class TreeProcessor
         } finally {
             context.dispose();
         }
+    }
+
+    /**
+     * Do the actual processing, be it producing the response or just building the pipeline
+     * @param environment
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    protected boolean process(Environment environment, InvokeContext context)
+    throws Exception {
+
+        // first, check for sitemap changes
+        if (this.rootNode == null ||
+            (this.checkReload && this.source.getLastModified() > this.lastModified)) {
+            setupRootNode(environment);
+        }
+
+        // and now process
+        CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
+        try {
+            boolean success = this.rootNode.invoke(environment, context);
+            
+            if (success) {
+                // Do we have a cocoon: redirect ?
+                String cocoonRedirect = (String)environment.getAttribute(COCOON_REDIRECT_ATTR);
+                if (cocoonRedirect != null) {
+                    // Remove the redirect indication
+                    environment.removeAttribute(COCOON_REDIRECT_ATTR);
+                    // and handle the redirect
+                    return handleCocoonRedirect(cocoonRedirect, environment, context);
+                } else {
+                    // "normal" success
+                    return true;
+                }
+           
+            } else {
+                return false;
+            }
+
+        } finally {
+            CocoonComponentManager.leaveEnvironment();
+        }
+    }
+    
+    private boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception
+    {
+        
+        // Build an environment wrapper
+        // If the current env is a facade, change the delegate and continue processing the facade, since
+        // we may have other redirects that will in turn also change the facade delegate
+        
+        MutableEnvironmentFacade facade = environment instanceof MutableEnvironmentFacade ?
+            ((MutableEnvironmentFacade)environment) : null;
+        
+        if (facade != null) {
+            // Consider the facade delegate (the real environment)
+            environment = facade.getDelegate();
+        }
+        
+        Environment newEnv = new EnvironmentWrapper(environment, this.manager, uri, getLogger());
+        
+        if (facade != null) {
+            // Change the facade delegate
+            facade.setDelegate((EnvironmentWrapper)newEnv);
+            newEnv = facade;
+        }
+        
+        // Get the processor that should process this request
+        TreeProcessor processor;
+        if (newEnv.getRootContext() == newEnv.getContext()) {
+            processor = (TreeProcessor)getRootProcessor();
+        } else {
+            processor = this;
+        }
+        
+        // Process the redirect
+        context.reset();
+        return processor.process(newEnv, context);
+    }
+    
+    /**
+     * Get the root parent of this processor
+     * @since 2.1.1
+     */
+    public Processor getRootProcessor() {
+        TreeProcessor result = this;
+        while(result.parent != null) {
+            result = result.parent;
+        }
+        
+        return result;
     }
 
     /**
