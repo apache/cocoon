@@ -68,9 +68,13 @@ public class Output extends AbstractWidget {
     }
 
     public void setValue(Object object) {
-        if (object != null && !definition.getDatatype().getTypeClass().isAssignableFrom(object.getClass()))
-            throw new RuntimeException("Tried to set value of output widget \"" + getFullyQualifiedId() + "\" with an object of an incorrect type.");
-
+        if (object != null && !definition.getDatatype().getTypeClass().isAssignableFrom(object.getClass())) {
+            throw new RuntimeException("Tried to set value of output widget \""
+                                       + getFullyQualifiedId()
+                                       + "\" with an object of an incorrect type: "
+                                       + "expected " + definition.getDatatype().getTypeClass()
+                                       + ", received " + object.getClass() + ".");
+        }
         value = object;
     }
 }
