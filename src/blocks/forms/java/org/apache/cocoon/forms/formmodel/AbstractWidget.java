@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.10 2004/04/22 08:05:00 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.11 2004/04/22 09:41:49 mpo Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -286,7 +286,7 @@ public abstract class AbstractWidget implements Widget {
         AttributesImpl attrs = new AttributesImpl();
         // top-level widget-containers like forms will have their id set to ""
         // for those the @id should not be included.
-        if (getId().length() == 0) {
+        if (getId().length() != 0) {
         	attrs.addCDATAAttribute("id", getFullyQualifiedId());
         }
         return attrs;
@@ -294,10 +294,10 @@ public abstract class AbstractWidget implements Widget {
 
     /**
      * Delegates to the {@link #getDefinition()} of this widget to generate a common
-     * set of 'display' data.
+     * set of 'display' data. (i.e. help, label, hint,...)
      * 
      * Subclasses should override if the getDefinition can return <code>null</code>
-     * to avoid NPE's
+     * to avoid NPE's.
      * 
      * @param contentHandler where to send the SAX events to.
      * @throws SAXException
@@ -319,7 +319,7 @@ public abstract class AbstractWidget implements Widget {
      * 
      * <pre>
      * &lt;fi:{@link #getXMLElementName()} {@link #getXMLElementAttributes() &gt;
-     *   {@link #generateDisplayData(ContentHandler)}
+     *   {@link #generateDisplayData(ContentHandler)} (i.e. help, label, ...)
      * 
      *   {@link #generateItemSaxFragment(ContentHandler, Locale)}
      * &lt;/fi:{@link #getXMLElementName()} &gt; 
