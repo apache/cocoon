@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.19 2003/12/08 10:23:47 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.20 2004/01/05 13:54:37 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -308,8 +308,8 @@ public abstract class AbstractCachingProcessingPipeline
 
         // first step is to generate the key:
         // All pipeline components starting with the generator
-        // are tested if they are either a CacheableProcessingComponent
-        // or Cacheable (deprecated). The returned keys are chained together
+        // are tested if they are either a CacheableProcessingComponent.
+        // The returned keys are chained together
         // to build a unique key of the request
 
         // is the generator cacheable?
