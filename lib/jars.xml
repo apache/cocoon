@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.76 2003/08/15 13:42:31 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.77 2003/08/15 21:56:00 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -336,7 +336,7 @@
       the Scalable Vector Graphics (SVG) format for various purposes, such as
       viewing, generation or manipulation.</description>
     <used-by>SVG serializer (batik block)</used-by>
-    <lib>batik/lib/batik-all-1.5b5.jar</lib>
+    <lib>batik/lib/batik-all-1.5.jar</lib>
     <homepage>http://xml.apache.org/batik/</homepage>
   </file>
 
@@ -623,7 +623,7 @@
       model walker, capable of evaluating XPath expressions across multiple
       models. Currently supported are dom4j and JDOM.
     </description>
-    <used-by>core</used-by>
+    <used-by>deprecated</used-by>
     <lib>optional/jaxen-core-1.0-FCS.jar</lib>
     <homepage>http://www.jaxen.org/</homepage>
   </file>
