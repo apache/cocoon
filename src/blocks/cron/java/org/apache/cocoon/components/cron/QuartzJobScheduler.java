@@ -60,7 +60,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.9 2004/03/05 13:01:49 bdelacretaz Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.10 2004/03/08 13:43:42 unico Exp $
  *
  * @since 2.1.1
  */
@@ -222,6 +222,36 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
             new SimpleTrigger(name, DEFAULT_QUARTZ_JOB_GROUP, new Date(System.currentTimeMillis() + ms), null,
                               SimpleTrigger.REPEAT_INDEFINITELY, ms);
 
+        addJob(name, jobDataMap, timeEntry, canRunConcurrently, params, objects);
+    }
+    
+    /**
+     * Schedule a periodic job. The job is started the first time when the period has passed.  Note that if a job with
+     * the same name has already beed added it is overwritten.
+     *
+     * @param name the name of the job
+     * @param job The job object itself. It must implement either CronJob, Runnable or might also be an implementation
+     *        specific class (i.e. org.quartz.Job)
+     * @param period Every period seconds this job is started
+     * @param canRunConcurrently whether this job can run even previous scheduled runs are still running
+     * @param params Additional Parameters to setup CronJob
+     * @param objects A Map with additional object to setup CronJob
+     */
+    public void addPeriodicJob(String name, Object job, long period, boolean canRunConcurrently, Parameters params,
+                               Map objects)
+    throws CascadingException {
+        if (!(job instanceof CronJob) && !(job instanceof Runnable) && !(job instanceof Job)) {
+            throw new CascadingException("Job object is neither an instance of " + CronJob.class.getName() + "," +
+                                         Runnable.class.getName() + " nor " + Job.class.getName());
+        }
+        final JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put(DATA_MAP_OBJECT, job);
+        
+        final long ms = period * 1000;
+        final SimpleTrigger timeEntry =
+            new SimpleTrigger(name, DEFAULT_QUARTZ_JOB_GROUP, new Date(System.currentTimeMillis() + ms), null,
+                              SimpleTrigger.REPEAT_INDEFINITELY, ms);
+        
         addJob(name, jobDataMap, timeEntry, canRunConcurrently, params, objects);
     }
 
@@ -671,7 +701,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.9 2004/03/05 13:01:49 bdelacretaz Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.10 2004/03/08 13:43:42 unico Exp $
      */
     private static class ThreadPool
     extends AbstractLogEnabled
@@ -743,5 +773,6 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
             }
         }
     }
+
 
 }
