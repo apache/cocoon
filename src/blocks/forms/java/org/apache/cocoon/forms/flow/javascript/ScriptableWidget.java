@@ -281,21 +281,21 @@ public class ScriptableWidget extends ScriptableObject {
     public WidgetState jsGet_state() {
         return delegate.getState();
     }
-    
+
     public void jsSet_state(Object stateObj) {
         Object obj = unwrap(stateObj);
         WidgetState state = null;
-        
+
         if (obj instanceof String) {
             state = WidgetState.stateForName((String)obj);
         } else if (obj instanceof WidgetState) {
             state = (WidgetState)obj;
         }
-        
+
         if (state == null) {
             throw new IllegalArgumentException("Invalid value for widgetState " + stateObj);
         }
-        
+
         delegate.setState(state);
     }
 

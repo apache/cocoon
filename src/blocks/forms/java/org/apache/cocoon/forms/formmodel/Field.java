@@ -202,9 +202,9 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             this.valueState = VALUE_UNPARSED;
 
             if (hasValueChangedListeners()) {
-	        	    // Throw an event that will parse the value only if needed.
-	    	        getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
-    	        }
+                // Throw an event that will parse the value only if needed.
+                getForm().addWidgetEvent(new DeferredValueChangedEvent(this, value));
+            }
         }
     }
 
@@ -226,7 +226,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
             this.valueState = VALUE_DISPLAY_VALIDATION;
         } else if (this.valueState == VALUE_PARSE_ERROR) {
             this.valueState = VALUE_DISPLAY_PARSE_ERROR;
-    }
+        }
 
         return this.validationError == null;
     }
@@ -324,7 +324,6 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
     private static final String FIELD_EL = "field";
     private static final String VALUE_EL = "value";
     private static final String VALIDATION_MSG_EL = "validation-message";
-
 
     /**
      * @return "field"

@@ -43,21 +43,21 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     protected WidgetDefinition getDefinition() {
         return this.definition;
     }
-    
+
     public void readFromRequest(final FormContext formContext) {
         if (!getCombinedState().isAcceptingInputs())
             return;
-        
+
         Form form = getForm();
-        
+
         // Set the submit widget if we can determine it from the request
         String fullId = getRequestParameterName();
         Request request = formContext.getRequest();
-        
+
         String value = request.getParameter(fullId);
         if (value != null && value.length() > 0) {
             form.setSubmitWidget(this);
-            
+
         } else {
             // Special workaround an IE bug for <input type="image" name="foo"> :
             // in that case, IE only sends "foo.x" and "foo.y" and not "foo" whereas
@@ -70,14 +70,14 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
                 form.setSubmitWidget(this);
             }
         }
-        
+
         if (form.getSubmitWidget() == this) {
             form.addWidgetEvent(new ActionEvent(this, definition.getActionCommand()));
-            
+
             handleActivate();
         }
     }
-    
+
     /**
      * Handle the fact that this action was activated. The default here is to end the
      * current form processing and redisplay the form, which means that actual behaviour
@@ -97,14 +97,14 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
     }
 
     private static final String ACTION_EL = "action";
-    
+
     /**
      * @return "action"
      */
     public String getXMLElementName() {        
         return ACTION_EL;
     }  
-    
+
     /**
      * Adds a ActionListener to this widget instance. Listeners defined
      * on the widget instance will be executed in addtion to any listeners
@@ -123,6 +123,7 @@ public class Action extends AbstractWidget implements ActionListenerEnabled {
             this.listener.actionPerformed(event);
         }
     }
+
     public void broadcastEvent(WidgetEvent event) {
         this.definition.fireActionEvent((ActionEvent)event);
         fireActionEvent((ActionEvent)event);

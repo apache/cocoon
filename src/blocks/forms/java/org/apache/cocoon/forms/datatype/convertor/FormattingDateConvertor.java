@@ -96,11 +96,11 @@ public class FormattingDateConvertor implements Convertor {
         DateFormat dateFormat = null;
 
         if (this.variant.equals(DATE)) {
-                dateFormat = I18nSupport.getInstance().getDateFormat(style, locale);
+            dateFormat = I18nSupport.getInstance().getDateFormat(style, locale);
         } else if (this.variant.equals(TIME)) {
-                dateFormat = I18nSupport.getInstance().getTimeFormat(style, locale);
+            dateFormat = I18nSupport.getInstance().getTimeFormat(style, locale);
         } else if (this.variant.equals(DATE_TIME)) {
-                dateFormat = I18nSupport.getInstance().getDateTimeFormat(style, style, locale);
+            dateFormat = I18nSupport.getInstance().getDateTimeFormat(style, style, locale);
         }
 
         String pattern = (String)localizedPatterns.get(locale);

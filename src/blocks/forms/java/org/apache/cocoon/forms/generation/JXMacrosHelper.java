@@ -188,7 +188,7 @@ public class JXMacrosHelper {
         String value = (String)unionWidget.getValue();
         return caseValue.equals(value != null ? value : "");
     }
-    
+
     public boolean isVisible(Widget widget) {
         return widget.getCombinedState().isDisplayingValues();
     }

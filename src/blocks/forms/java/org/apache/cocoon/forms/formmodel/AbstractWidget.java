@@ -36,24 +36,24 @@ import org.xml.sax.SAXException;
  * @version $Id$
  */
 public abstract class AbstractWidget implements Widget {
-    
+
     /** 
      * Containing parent-widget to this widget.
      * NOTE: avoid directly accessing this member since subclasses can mask this
      * property through own implemented getParent()
      */
     private Widget parent;
-    
+
     /**
      * The widget's own state
      */
     private WidgetState state = WidgetState.ACTIVE;
-    
+
     /**
      * Lazy loaded reference to the top-level form.
      */
     private Form form;
-        
+
     /**
      * Validation-rules local to the widget instance
      */
@@ -63,18 +63,18 @@ public abstract class AbstractWidget implements Widget {
      * Storage for the widget allocated attributes
      */
     private Map attributes;
-    
+
     protected AbstractWidget(AbstractWidgetDefinition definition) {
         this.state = definition.getState();
     }
-    
+
     /**
      * Gets the id of this widget.
      */
     public String getId() {
         return getDefinition().getId();
     }
-    
+
     /** 
      * Concrete subclasses should allow access to their underlaying Definition
      * through this method.
@@ -88,7 +88,7 @@ public abstract class AbstractWidget implements Widget {
      *        (@link WidgetDefinition#createInstance()}
      */
     protected abstract WidgetDefinition getDefinition();
-    
+
     /**
      * @return the location-information (file, line and column) where this widget was 
      * configured.
@@ -135,14 +135,14 @@ public abstract class AbstractWidget implements Widget {
     public WidgetState getState() {
         return this.state;
     }
-    
+
     public void setState(WidgetState state) {
         if (state == null) {
             throw new IllegalArgumentException("A widget state cannot be set to null");
         }
         this.state = state;
     }
-    
+
     public WidgetState getCombinedState() {
         if (parent == null) {
             return this.state;
@@ -163,11 +163,11 @@ public abstract class AbstractWidget implements Widget {
         return getId();
     }
 
-	public Widget lookupWidget(String path)	{
-        
+    public Widget lookupWidget(String path) {
+
         if (path == null && path.equals(""))
             return this;
-        
+
         Widget relativeWidget;
         String relativePath = null;        
         int sepPosition = path.indexOf("" + Widget.PATH_SEPARATOR);
@@ -178,7 +178,7 @@ public abstract class AbstractWidget implements Widget {
             return getChild(path);
         } else if (sepPosition == 0) {
             //absolute path
-			relativeWidget = getForm();
+            relativeWidget = getForm();
             relativePath = path.substring(1);
         } else {
         	if (path.startsWith(".." + Widget.PATH_SEPARATOR))  {
@@ -190,11 +190,11 @@ public abstract class AbstractWidget implements Widget {
                 relativePath = path.substring(sepPosition+1);
             }
         }
-        
+
         if (relativeWidget == null) return null;
         return relativeWidget.lookupWidget(relativePath);
-	}
-    
+    }
+
     /**
      * Concrete widgets that contain actual child widgets should override to 
      * return the actual child-widget.
@@ -205,12 +205,12 @@ public abstract class AbstractWidget implements Widget {
     protected Widget getChild(String id) {
     	return null;
     }
-    
+
     public Widget getWidget(String id) {
         throw new UnsupportedOperationException("getWidget(id) got deprecated from the API. \n" +
                 "Consider using getChild(id) or even lookupWidget(path) instead.");
     }
-    
+
     public Object getValue() {
         return null;
     }
@@ -232,7 +232,7 @@ public abstract class AbstractWidget implements Widget {
     public void broadcastEvent(WidgetEvent event) {
         throw new UnsupportedOperationException("Widget " + this.getRequestParameterName() + " doesn't handle events.");
     }
-    
+
     /**
      * Add a validator to this widget instance.
      * 
@@ -244,7 +244,7 @@ public abstract class AbstractWidget implements Widget {
         }
         this.validators.add(validator);
     }
-    
+
     /**
      * Remove a validator from this widget instance
      * 
@@ -258,14 +258,14 @@ public abstract class AbstractWidget implements Widget {
             return false;
         }
     }
-    
+
     public boolean validate() {
-        
+
         // Consider widget valid if it doesn't accept user inputs
-        if (!getCombinedState().isAcceptingInputs()) {            
+        if (!getCombinedState().isAcceptingInputs()) {
             return true;
         }
-        
+
         // Test validators from the widget definition
         if (!getDefinition().validate(this)) {
             // Failed
@@ -308,7 +308,6 @@ public abstract class AbstractWidget implements Widget {
         }
     }
 
-    
     /**
      * Generates nested additional content nested inside the main element for this 
      * widget which is generated by {@link #generateSaxFragment(ContentHandler, Locale)}
@@ -353,7 +352,7 @@ public abstract class AbstractWidget implements Widget {
         if (getId().length() != 0) {
         	attrs.addCDATAAttribute("id", getRequestParameterName());
         }
-        
+
         // Add the "state" attribute is different from active (the default state)
         WidgetState state = getCombinedState();
         if (state != WidgetState.ACTIVE) {
@@ -402,15 +401,15 @@ public abstract class AbstractWidget implements Widget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale)    
     throws SAXException {
         if (getCombinedState().isDisplayingValues()) {
-    
-            String element = this.getXMLElementName();       
+
+            String element = this.getXMLElementName();
             AttributesImpl attrs = getXMLElementAttributes();
             contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
-    
+
             generateDisplayData(contentHandler);
-            
+
             generateItemSaxFragment(contentHandler, locale);
-            
+
             contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
         }
     }

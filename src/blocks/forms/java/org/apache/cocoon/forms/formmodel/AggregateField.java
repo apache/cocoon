@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -77,8 +77,8 @@ public class AggregateField extends Field implements ContainerWidget {
             throw new IllegalArgumentException("AggregateField can only contain fields.");
         }
         addField((Field)widget);
-    }   
-    
+    }
+
     protected void addField(Field field) {
         field.setParent(this);
         fields.add(field);
@@ -112,7 +112,7 @@ public class AggregateField extends Field implements ContainerWidget {
                 field.readFromRequest(formContext);
                 if (field.valueState == VALUE_UNPARSED) {
                     this.valueState = VALUE_UNPARSED;
-            }
+                }
             }
             if (this.valueState == VALUE_UNPARSED) {
                 combineFields();
@@ -217,7 +217,7 @@ public class AggregateField extends Field implements ContainerWidget {
         }
         if (!valid) {
             valueState = VALUE_DISPLAY_VALIDATION;
-                return false;
+            return false;
         }
 
         return super.validate();
@@ -228,10 +228,10 @@ public class AggregateField extends Field implements ContainerWidget {
     /**
      * @return "aggregatefield"
      */
-    public String getXMLElementName() {        
+    public String getXMLElementName() {
         return AGGREGATEFIELD_EL;
     }
-      
+
     public Widget getChild(String id) {
         return (Widget)fieldsById.get(id);
     }

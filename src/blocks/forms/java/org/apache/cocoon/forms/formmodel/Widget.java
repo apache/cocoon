@@ -52,7 +52,7 @@ import java.util.Locale;
  * @version CVS $Id$
  */
 public interface Widget {
-    
+
     /**
      * Widget-Separator used in path-like notations
      * @see #lookupWidget(String)
@@ -82,30 +82,30 @@ public interface Widget {
      * which case it should be called when a widget is added as child of your widget).
      */
     public void setParent(Widget widget);
-    
+
     /**
      * @return the {@link Form} to which this widget belongs. The form is the top-most ancestor
      * of the widget.
      */
     public Form getForm();
-    
+
     /**
      * Get the widget's own state. Note that this state is <em>not</em> the one actually considered
      * for handling requests and producing output. For these matters, the combined state is used.
-     * 
+     *
      * @see #getCombinedState()
      * @return the widget's own state
      */
     public WidgetState getState();
-    
+
     /**
      * Set the widget's own state. This may change its combined state, and those of its
      * children, if any.
-     * 
+     *
      * @param state the new wiget state
      */
     public void setState(WidgetState state);
-    
+
     /**
      * Get the widget's combined state, which is the strictest of its own state and parent state.
      * This combined state is the one that will be used by the widget to know if request
@@ -115,7 +115,7 @@ public interface Widget {
      * @return the combined state
      */
     public WidgetState getCombinedState();
-    
+
     /**
      * @return the id prefixed with the namespace, this name should be unique
      * accross all widgets on the form.
@@ -128,7 +128,7 @@ public interface Widget {
      * deprecated from the API, and will be removed from future releases.  
      */
     public Widget getWidget(String id);
-    
+
     /**
      * Finds a widget relative to this one based on a path-like
      * string (/-delimted) into the widget-tree structure.
@@ -137,7 +137,7 @@ public interface Widget {
      *   of the path an invalid section was encountered. 
      */
     public Widget lookupWidget(String path);
-    
+
     /**
      * Lets this widget read its data from a request. At this point the Widget
      * may try to convert the request parameter to its native datatype (if it
@@ -158,7 +158,7 @@ public interface Widget {
     public void addValidator(WidgetValidator validator);
 
     public boolean removeValidator(WidgetValidator validator);
-    
+
     /**
      * Generates an XML representation of this widget. The startDocument and endDocument
      * SAX events will not be called. It is assumed that the prefix for the CForms namespace
@@ -177,7 +177,7 @@ public interface Widget {
      * this may not make sense, those should then simply return null here.
      */
     public Object getValue();
-    
+
     /**
      * Sets the value of this widget to the given object. Some widgets may not support this
      * method, those should throw an runtime exception if you try to set their value anyway.
@@ -189,7 +189,7 @@ public interface Widget {
      * for some widgets this may not make sense, those should return false here.
      */
     public boolean isRequired();
-   
+
     /**
      * Broadcast an event previously queued by this widget to its event listeners.
      */

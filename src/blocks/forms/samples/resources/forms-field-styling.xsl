@@ -65,7 +65,7 @@
       +-->
   <xsl:template match="fi:*" mode="styling">
     <xsl:apply-templates select="fi:styling/@*" mode="styling"/>
-  	
+
   	<xsl:if test="@state = 'disabled'">
   		<xsl:attribute name="disabled">disabled</xsl:attribute>
   	</xsl:if>
@@ -323,7 +323,7 @@
       <xsl:if test="not(@name)">continuation-id</xsl:if>
     </xsl:variable>
     <div style="display: none;">
-    <input name="{$name}" type="hidden" value="{.}"/>
+      <input name="{$name}" type="hidden" value="{.}"/>
     </div>
   </xsl:template>
 

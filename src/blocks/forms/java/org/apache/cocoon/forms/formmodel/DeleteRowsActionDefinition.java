@@ -22,28 +22,28 @@ import org.apache.cocoon.forms.event.ActionEvent;
  * <p>
  * The action listeners attached to this action, if any, are called <em>before</em> the rows
  * are actually removed
- * 
+ *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @version CVS $Id$
  */
 public class DeleteRowsActionDefinition extends RepeaterActionDefinition {
-    
+
     private String selectName;
-    
+
     public DeleteRowsActionDefinition(String repeaterName, String selectName) {
         super(repeaterName);
         this.selectName = selectName;
     }
-    
+
     public boolean hasActionListeners() {
         // we always want to be notified
         return true;
     }
-    
+
     public void fireActionEvent(ActionEvent event) {
         // Call action listeners, if any
         super.fireActionEvent(event);
-        
+
         // and actually delete the rows
         Repeater repeater = ((RepeaterAction)event.getSource()).getRepeater();
         for (int i = repeater.getSize() - 1; i >= 0; i--) {

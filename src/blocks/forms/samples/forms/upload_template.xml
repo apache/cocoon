@@ -27,7 +27,7 @@
         <fi:items>
           <ft:widget id="user"/>
           <ft:widget id="upload"/>
-      <input type="submit"/>
+          <input type="submit"/>
         </fi:items>
       </fi:group>
     </ft:form-template>

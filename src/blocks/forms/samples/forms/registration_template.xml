@@ -22,17 +22,17 @@
       <fi:group>
         <fi:styling layout="columns"/>
         <fi:items>
-      <ft:widget id="name"/>
-      <ft:widget id="email"/>
-      <ft:widget id="age"/>
-      <ft:widget id="password">
-        <fi:styling type="password"/>
-      </ft:widget>
-      <ft:widget id="confirmPassword">
-        <fi:styling type="password"/>
-      </ft:widget>
-      <ft:widget id="spam"/>
-      <input type="submit"/>
+          <ft:widget id="name"/>
+          <ft:widget id="email"/>
+          <ft:widget id="age"/>
+          <ft:widget id="password">
+            <fi:styling type="password"/>
+          </ft:widget>
+          <ft:widget id="confirmPassword">
+            <fi:styling type="password"/>
+          </ft:widget>
+          <ft:widget id="spam"/>
+          <input type="submit"/>
         </fi:items>
       </fi:group>
     </ft:form-template>

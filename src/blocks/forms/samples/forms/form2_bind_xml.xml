@@ -89,7 +89,7 @@
     </fb:identity>
 
     <fb:on-bind>
-        <!-- executed on updates AND right after the insert -->
+      <!-- executed on updates AND right after the insert -->
       <fb:javascript id="id" path="@id" direction="save">
         <fb:save-form>
           var appValue = jxpathPointer.getValue();
@@ -107,8 +107,8 @@
     </fb:on-bind>
 
     <fb:on-delete-row>
-        <!-- chose on of these to test -->
-        <!--
+      <!-- chose on of these to test -->
+      <!--
       <fb:set-attribute name="row-state" value="deleted" />
       -->
       <fb:delete-node />
