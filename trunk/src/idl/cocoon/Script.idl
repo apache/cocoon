@@ -54,19 +54,40 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
- * The <b>flow</b> module defines the object model used by the <b>Flow</b>
- * system available on <b>Apache Cocoon 2.1</b>.
+ * <p>
+ *   The <code>Script</code> object represents the instance of the script
+ *   currently executed by the <b>Cocoon Flow Layer</b>.
+ * </p>
+ * <p>
+ *   When a Cocoon sitemap contains an entry like <code>&lt;map:call
+ *  function="myFunction"/&gt;</code>, the flow engine will invoke the
+ *  <code>myFunction</code> function in a user-defined subclass of this
+ *  interface.
+ * </p>
+ * <p>
+ *   For example, using the JavaScript flow, attributes and operations of
+ *   this instance can be retrieved, set or called prefixing them with the
+ *   keyword <code>this.</code>, or without any prefix, as in JavaScript
+ *   the current script defines also <b>Global</b> attributes and operations.
+ * </p>
  */
-module flow {
+interface Script {
 
-    // Interfaces definitions.
-    interface Script;
+    /**
+     * The current <b>Cocoon</b> instance associated with this script.
+     */
+    readonly attribute cocoon::Cocoon cocoon;
 
-    // Interfaces inclusions.
-    #include "cocoon/flow/Script.idl"
+    /**
+     * The current <b>Request</b> instance associated with this script.
+     */
+    readonly attribute cocoon::Request request;
 
-    // Sub-modules inclusions.
-    #include "cocoon/flow/javascript/_module.idl"
+    /**
+     * The current <b>Response</b> instance associated with this script.
+     */
+    readonly attribute cocoon::Response response;
 
 };
