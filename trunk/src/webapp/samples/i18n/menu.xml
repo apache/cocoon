@@ -39,14 +39,14 @@
   </menu>
 
   <menu label="Documentation" i18n:attr="label">
-    <external label="i18n transformer docs" href="http://cocoon.apache.org/userdocs/transformers/i18n-transformer.html" i18n:attr="label"/>   
-    <external label="i18n transformer Javadoc" href="http://cocoon.apache.org/apidocs/org/apache/cocoon/transformation/I18nTransformer.html" i18n:attr="label"/>   
-    <external label="LocaleAction Javadoc" href="http://cocoon.apache.org/apidocs/org/apache/cocoon/acting/LocaleAction.html" i18n:attr="label"/>   
+    <external label="i18n transformer docs" href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html" i18n:attr="label"/>   
+    <external label="i18n transformer Javadoc" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/transformation/I18nTransformer.html" i18n:attr="label"/>   
+    <external label="LocaleAction Javadoc" href="http://cocoon.apache.org/2.1/apidocs/org/apache/cocoon/acting/LocaleAction.html" i18n:attr="label"/>   
   </menu>
   
   <menu label="Credits" i18n:attr="label">
     <menu-item label="Konstantin Piroumian" href="mailto:kpiroumian@apache.org" i18n:attr="label" />  
-    <menu-item label="Many others..." href="http://cocoon.apache.org/who.html" i18n:attr="label"/>      
+    <menu-item label="Many others..." href="http://cocoon.apache.org/2.1/who.html" i18n:attr="label"/>      
   </menu>  
    
 </book>
