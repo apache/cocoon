@@ -148,7 +148,7 @@
    </p>
    
    <p>
-    <strong>Note</stong>: you may want Cocoon to handle two different 
+    <strong>Note</strong>: you may want Cocoon to handle two different 
     extentions with different
     configurations. To do this, you must set the two different configurations
     in two different servlet zones, then associate the extentions like this:
