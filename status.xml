@@ -19,37 +19,37 @@
 <!ELEMENT developers (person+)>
 <!ELEMENT person EMPTY>
 <!ATTLIST person
-	name CDATA #REQUIRED
-	email CDATA #REQUIRED
-	id CDATA #REQUIRED
+  name CDATA #REQUIRED
+  email CDATA #REQUIRED
+  id CDATA #REQUIRED
 >
 <!ELEMENT todo (actions+)>
 <!ELEMENT actions (action+)>
 <!ATTLIST actions
-	priority (high | medium | low) #REQUIRED
+  priority (high | medium | low) #REQUIRED
 >
 <!ELEMENT changes (release+)>
 <!ELEMENT release (action+)>
 <!ATTLIST release
-	version CDATA #REQUIRED
-	date CDATA #REQUIRED
+  version CDATA #REQUIRED
+  date CDATA #REQUIRED
 >
 <!ELEMENT action (#PCDATA | link | br | code | ul | strong)*>
 <!ATTLIST action
-	context (build | code | docs) #IMPLIED
-	assigned-to CDATA #IMPLIED
-	dev CDATA #IMPLIED
-	type (add | fix | remove | update) #IMPLIED
-	fixes-bug CDATA #IMPLIED
-	due-to CDATA #IMPLIED
-	due-to-email CDATA #IMPLIED
+  context (build | code | docs) #IMPLIED
+  assigned-to CDATA #IMPLIED
+  dev CDATA #IMPLIED
+  type (add | fix | remove | update) #IMPLIED
+  fixes-bug CDATA #IMPLIED
+  due-to CDATA #IMPLIED
+  due-to-email CDATA #IMPLIED
 >
 <!ELEMENT code (#PCDATA)>
 <!ELEMENT br EMPTY>
 <!ELEMENT strong (#PCDATA)>
 <!ELEMENT link (#PCDATA)>
 <!ATTLIST link
-	href CDATA #REQUIRED
+  href CDATA #REQUIRED
 >
 <!ELEMENT ul (li)+>
 <!ELEMENT li (#PCDATA | link | br | code | ul)*>
@@ -202,6 +202,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="TC" type="add" fixes-bug="30417">
+     Added best-fit-while-keeping-aspect-ratio option to the ImageReader
+   </action>
+   <action dev="VG" type="fix" fixes-bug="33319" due-to="Adam Ratclife" due-to-email="adam@prema.co.nz">
+     Resource Reader: Make sure response is cacheable when expires parameter is not set.
+   </action>
    <action dev="VG" type="add" fixes-bug="28973" due-to="Andrew Thornton" due-to-email="andrew@caret.cam.ac.uk">
      Mail Block: Add support for replyTo.
    </action>
@@ -228,7 +234,7 @@
    </action>
    <action dev="RP" type="add">
      hsqldb: make name and path of database parameterizable - this way the database can be located outside of Cocoon
-   </action>     
+   </action>
    <action dev="CZ" type="fix" fixes-bug="32987" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
      Apply patch for a better exception handling in the Meta-InputModule when an input module is not found.
    </action>
@@ -277,10 +283,10 @@
    </action>
    <action dev="AG" type="update">
      Updated jakarta-slide-webdavlib to 2.1, jdom to 1.0, slide-kernel to 2.1, slide-stores to 2.1, slide-webdavservlet to 2.1.
-   </action> 
+   </action>
    <action dev="RG" type="add">
-        Portal now allows Cocoon to be deployed as a war (only supports local JSR-168 portlets) and 
-        allows external portlets to be in a war.
+     Portal now allows Cocoon to be deployed as a war (only supports local JSR-168 portlets) and 
+     allows external portlets to be in a war.
    </action>
    <action dev="SW" type="fix" fixes-bug="31668">
      CForms: the parser used to read form files now uses the EntityResolver defined in cocoon.xconf.
@@ -300,10 +306,10 @@
      Update Deli to x031104 (include over 300 vendor, operator and third party profiles)
    </action>
    <action dev="AG" type="update">
-     Updated hsqldb to 1.7.3, lucene to 1.4.3, ehcache to 1.1, log4j 1.2.9.
+     Updated hsqldb to 1.7.3, lucene to 1.4.3, ehcache to 1.1, log4j to 1.2.9.
    </action>
    <action dev="TC" type="add">
-    paranoid: make the classloader implementation configurable
+     Paranoid: make the classloader implementation configurable
    </action>
    <action dev="AG" type="fix" fixes-bug="32408" due-to="Juan Jose Pablos" due-to-email="cheche@che-che.com">
      typo on the date-selector doc.
@@ -316,7 +322,7 @@
      portlets running in the Cocoon webapp.
    </action>
    <action dev="RP" type="add">
-    cForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
+    CForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
             up the result by HTMLArea fields. The cleanup process, that is based upon
             Nekohtml can be configured. One confiugration is available at
             resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml
@@ -331,7 +337,7 @@
      </code>
    </action>
    <action dev="RP" type="add">
-    cForms: 'htmlarea' fields can be directly configured in cForms templates
+    CForms: 'htmlarea' fields can be directly configured in cForms templates
     <br/>
     Example configuration (within the &lt;conf&gt; part the variable conf contains
     the configuration object of HTMLArea
@@ -355,8 +361,8 @@
     </code>
    </action>
    <action dev="RP" type="fix">
-    cForms: fields styled as 'htmlarea' can be used in tables (workaround for strange IE behaviour)
-   </action> 
+     CForms: fields styled as 'htmlarea' can be used in tables (workaround for strange IE behaviour)
+   </action>
    <action dev="SW" type="add">
      CForms: add a new "link" styling for action widgets, that renders the action
      as an hypertext link.
@@ -410,8 +416,8 @@
      be removed completely in Cocoon 2.2.
    </action>
    <action dev="RG" type="fix" fixes-bug="32159" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
-     Portal: Request content length and content type are required in portlet ActionRequest 
-     for custom upload handling.     
+     Portal: Request content length and content type are required in portlet ActionRequest
+     for custom upload handling.
    </action>
    <action dev="RG" type="add" fixes-bug="31857">
      Portal: Added support for page labels.
@@ -613,7 +619,7 @@
    <action dev="NKB" type="add">
      New @pass-through attribute for the sitemap mount node.
      If true, processing will resume in the base sitemap just after the mount node
-     if the mounted sitemap has not already generated output (usually if no match 
+     if the mounted sitemap has not already generated output (usually if no match
      is found). Previous behaviour was always to throw a ResourceNotFoundException.
      The attribute defaults to "false" for backwards compatibility.
    </action>
@@ -682,8 +688,8 @@
    </action>
    <action dev="UH" type="add">
      Enhanced JMS support by adding a JMSConnectionManager component to the JMS block.
-     This component replaces the JMSConnection component which only supported 
-     publish/subscribe messaging and which mixed some concerns. Two abstract classes: 
+     This component replaces the JMSConnection component which only supported
+     publish/subscribe messaging and which mixed some concerns. Two abstract classes:
      AbstractMessageListener and AbstractMessagePublisher should be used as basis for
      custom publish/subscribe components.
    </action>
@@ -2227,14 +2233,14 @@
     Created additional isolation level for some OutputModules.
   </action>
   <action dev="CH" type="add"
-	  due-to="Jeff Turner"
-	  due-to-email="jefft@apache.org"
-      fixes-bug="15611">
+          due-to="Jeff Turner"
+          due-to-email="jefft@apache.org"
+          fixes-bug="15611">
     Added LinkRewriterTransformer.
   </action>
   <action dev="OP" type="add"
-	  due-to="Michael Melhem"
-	  due-to-email="michaelm@ffzd0yt3.bank.dresdner.net">
+          due-to="Michael Melhem"
+          due-to-email="michaelm@ffzd0yt3.bank.dresdner.net">
     Added support for expiring continuations.
   </action>
   <action dev="OP" type="update" due-to="Ugo Cei" due-to-email="u.cei@cbim.it">
