@@ -139,6 +139,8 @@ be built with Cocoon.
 -->
 
 <!--
+    The Sitemap
+-->
 <sitemap 
     xmlns="http://xml.apache.org/cocoon/sitemap/1.0" 
     xmlns:src="http://xml.apache.org/cocoon/loaders/1.0"
