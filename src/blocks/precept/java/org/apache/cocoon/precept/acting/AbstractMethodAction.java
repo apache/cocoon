@@ -50,34 +50,24 @@
 */
 package org.apache.cocoon.precept.acting;
 
-import org.apache.avalon.framework.configuration.Configuration;
-
-import org.apache.avalon.framework.configuration.ConfigurationException;
-
-import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.cocoon.environment.Redirector;
-
-import org.apache.cocoon.environment.SourceResolver;
-
-import org.apache.cocoon.environment.Request;
-
-import org.apache.cocoon.environment.ObjectModelHelper;
-
-import org.apache.cocoon.acting.ConfigurableServiceableAction;
-
-
-import java.util.HashMap;
-
-import java.util.Map;
-import java.util.Enumeration;
-
 import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.acting.ConfigurableServiceableAction;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
 
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 25, 2002
- * @version CVS $Id: AbstractMethodAction.java,v 1.3 2003/10/15 20:47:15 cziegeler Exp $
+ * @version CVS $Id: AbstractMethodAction.java,v 1.4 2003/11/20 16:24:14 joerg Exp $
  */
 public abstract class AbstractMethodAction extends ConfigurableServiceableAction {
 
