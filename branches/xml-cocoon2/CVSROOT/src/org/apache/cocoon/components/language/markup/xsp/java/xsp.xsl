@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-12-27 21:12:03 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-01-02 11:09:51 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -70,7 +70,7 @@
         static {
             dateCreated = <xsl:value-of select="@creation-date"/>L;
             dependencies = new File[] {
-                <xsl:for-each select="xsp:dependency">
+          <xsl:for-each select="//xsp:dependency">
                   new File("<xsl:value-of select="translate(., '\','/')"/>"),
                 </xsl:for-each>
             };
@@ -82,6 +82,17 @@
         /**
         * Generate XML data.
         */
+      public void generateContent() throws SAXException {
+        AttributesImpl xspAttr = new AttributesImpl();
+
+        <!-- Process only 1st non-XSP element as generated root -->
+        <xsl:call-template name="process-first-element">
+          <xsl:with-param
+                          name="content"
+                          select="*[not(starts-with(name(.), 'xsp:'))]"/>
+        </xsl:call-template>
+      }
+
         public void generate() throws SAXException {
             this.contentHandler.startDocument();
             AttributesImpl xspAttr = new AttributesImpl();
@@ -97,11 +108,7 @@
                   );
             </xsl:for-each>
 
-            <!-- Process only 1st non-XSP element as generated root -->
-            <xsl:call-template name="process-first-element">
-              <xsl:with-param name="content"
-                              select="*[not(starts-with(name(.), 'xsp:'))]"/>
-            </xsl:call-template>
+        generateContent();
 
             <!-- End top-level namespace prefix mapping -->
             <xsl:for-each select="namespace::*[not(local-name(.) = 'xsp')]">
