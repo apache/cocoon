@@ -53,6 +53,12 @@
         </builtin-logicsheet>
 
         <builtin-logicsheet>
+          <parameter name="prefix" value="xsp-cookie"/>
+          <parameter name="uri" value="http://apache.org/xsp/cookie"/>
+          <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/cookie.xsl"/>
+        </builtin-logicsheet>
+
+        <builtin-logicsheet>
           <parameter name="prefix" value="esql"/>
           <parameter name="uri" value="http://apache.org/cocoon/SQL/v2"/>
           <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/esql.xsl"/>
