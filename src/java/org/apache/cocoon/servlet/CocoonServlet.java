@@ -31,6 +31,7 @@ import org.apache.cocoon.components.notification.Notifier;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.configuration.Settings;
 import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.CoreUtil;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.http.HttpContext;
@@ -125,7 +126,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * Avalon application context
      */
-    protected DefaultContext appContext = new DefaultContext();
+    protected DefaultContext appContext;
 
     private String containerEncoding;
 
@@ -213,23 +214,6 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        // initialize settings
-        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader, this.servletContextPath, this.servletContextURL);
-
-        this.settings = Core.createSettings(env);
-
-        this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
-
-        if (this.settings.isInitClassloader()) {
-            // Force context classloader so that JAXP can work correctly
-            // (see javax.xml.parsers.FactoryFinder.findClassLoader())
-            try {
-                Thread.currentThread().setContextClassLoader(this.classLoader);
-            } catch (Exception e) {
-                // ignore this
-            }
-        }
-
         try {
             // FIXME (VG): We shouldn't have to specify these. Need to override
             // jaxp implementation of weblogic before initializing logger.
@@ -242,6 +226,38 @@ public class CocoonServlet extends HttpServlet {
         } catch (Exception e) {
             // Ignore security exception
             System.out.println("CocoonServlet: Could not check system properties, got: " + e);
+        }
+
+        // initialize settings
+        Core.BootstrapEnvironment env = new ServletBootstrapEnvironment(conf, this.classLoader, this.servletContextPath, this.servletContextURL);
+
+        /*
+        try {
+            CoreUtil util = new CoreUtil(env);
+            this.settings = util.getCore().getSettings();
+            this.appContext = (DefaultContext)util.getCore().getContext();
+            this.log = util.log;
+            this.loggerManager = util.loggerManager;
+            this.parentServiceManager = util.parentManager;
+        } catch (Exception e) {
+            if ( e instanceof ServletException ) {
+                throw (ServletException)e;
+            }
+            throw new ServletException(e);
+        }
+        */
+        this.settings = CoreUtil.createSettings(env);
+        this.appContext = new DefaultContext();
+        this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
+
+        if (this.settings.isInitClassloader()) {
+            // Force context classloader so that JAXP can work correctly
+            // (see javax.xml.parsers.FactoryFinder.findClassLoader())
+            try {
+                Thread.currentThread().setContextClassLoader(this.classLoader);
+            } catch (Exception e) {
+                // ignore this
+            }
         }
 
         this.appContext.put(Constants.CONTEXT_ENVIRONMENT_CONTEXT, new HttpContext(this.servletContext));
@@ -380,9 +396,9 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
 
+        this.containerEncoding = getInitParameter("container-encoding", "ISO-8859-1");
         this.requestFactory = new RequestFactory(settings.isAutosaveUploads(),
                                                  new File(settings.getUploadDirectory()),
                                                  settings.isAllowOverwrite(),
@@ -390,7 +406,7 @@ public class CocoonServlet extends HttpServlet {
                                                  settings.getMaxUploadSize(),
                                                  this.containerEncoding);
         // Add the servlet configuration
-        this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
+        //this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
         createCocoon();
         if (this.exception == null) {
             this.servletContext.log("Apache Cocoon " + Constants.VERSION + " is up and ready.");
@@ -1349,14 +1365,14 @@ public class CocoonServlet extends HttpServlet {
          * @see org.apache.cocoon.core.Core.BootstrapEnvironment#configureLoggingContext(org.apache.avalon.framework.context.DefaultContext)
          */
         public void configureLoggingContext(DefaultContext context) {
-            context.put(CONTEXT_SERVLET_CONFIG, this.config.getServletContext());
+            context.put(CONTEXT_SERVLET_CONFIG, this.config);
         }
 
         /**
          * @see org.apache.cocoon.core.Core.BootstrapEnvironment#configure(org.apache.avalon.framework.context.DefaultContext)
          */
         public void configure(DefaultContext context) {
-            context.put(CONTEXT_SERVLET_CONFIG, this.config.getServletContext());
+            context.put(CONTEXT_SERVLET_CONFIG, this.config);
         }
 
         /**

@@ -17,13 +17,16 @@
 package org.apache.cocoon.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
@@ -44,6 +47,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.Core.BootstrapEnvironment;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.ClassUtils;
@@ -66,6 +70,8 @@ public class CoreUtil {
     /** Parameter map for the context protocol */
     protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
 
+    protected final static String CORE_KEY = Core.class.getName();
+
     /** The callback to the real environment */
     protected final Core.BootstrapEnvironment env;
 
@@ -75,25 +81,21 @@ public class CoreUtil {
     /** The settings */
     protected final Settings settings;
 
-    private Logger log;
-    private LoggerManager loggerManager;
+    /** The parent service manager TODO This will be made protected*/
+    public final ServiceManager parentManager;
 
-    public CoreUtil(Core.BootstrapEnvironment e) 
+    /** TODO This will be made protected */
+    public Logger log;
+    /** TODO This will be made protected */
+    public LoggerManager loggerManager;
+
+    public CoreUtil(Core.BootstrapEnvironment environment) 
     throws Exception {
-        this.env = e;
+        this.env = environment;
 
         // create settings
-        this.settings = Core.createSettings(this.env);
+        this.settings = createSettings(this.env);
         this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
-
-        this.createRootServiceManager();
-    }
-
-    /**
-     * Bootstrap Cocoon Service Manager.
-     */
-    public ServiceManager createRootServiceManager()
-    throws Exception {
 
         if (this.settings.isInitClassloader()) {
             // Force context classloader so that JAXP can work correctly
@@ -108,7 +110,7 @@ public class CoreUtil {
         // add root url
         try {
             appContext.put(ContextHelper.CONTEXT_ROOT_URL, 
-                           new URL(env.getContextURL()));            
+                           new URL(this.env.getContextURL()));            
         } catch (MalformedURLException ignore) {
             // we simply ignore this
         }
@@ -151,8 +153,8 @@ public class CoreUtil {
 
         // Output some debug info
         if (this.log.isDebugEnabled()) {
-            this.log.debug("Context URL: " + env.getContextURL());
-            this.log.debug("Writeable Context: " + env.getContextForWriting());
+            this.log.debug("Context URL: " + this.env.getContextURL());
+            this.log.debug("Writeable Context: " + this.env.getContextForWriting());
             if (workDirParam != null) {
                 this.log.debug("Using work-directory " + workDir);
             } else {
@@ -163,7 +165,7 @@ public class CoreUtil {
         final String uploadDirParam = this.settings.getUploadDirectory();
         File uploadDir;
         if (uploadDirParam != null) {
-            if (env.getContextForWriting() == null) {
+            if (this.env.getContextForWriting() == null) {
                 uploadDir = new File(uploadDirParam);
             } else {
                 // Context path exists : is upload-directory absolute ?
@@ -173,7 +175,7 @@ public class CoreUtil {
                     uploadDir = uploadDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    uploadDir = new File(env.getContextForWriting(), uploadDirParam);
+                    uploadDir = new File(this.env.getContextForWriting(), uploadDirParam);
                 }
             }
             if (this.log.isDebugEnabled()) {
@@ -192,7 +194,7 @@ public class CoreUtil {
         String cacheDirParam = this.settings.getCacheDirectory();
         File cacheDir;
         if (cacheDirParam != null) {
-            if (env.getContextForWriting() == null) {
+            if (this.env.getContextForWriting() == null) {
                 cacheDir = new File(cacheDirParam);
             } else {
                 // Context path exists : is cache-directory absolute ?
@@ -202,7 +204,7 @@ public class CoreUtil {
                     cacheDir = cacheDirParamFile;
                 } else {
                     // No : consider it relative to context path
-                    cacheDir = new File(env.getContextForWriting(), cacheDirParam);
+                    cacheDir = new File(this.env.getContextForWriting(), cacheDirParam);
                 }
             }
             if (this.log.isDebugEnabled()) {
@@ -227,18 +229,30 @@ public class CoreUtil {
         this.settings.setConfiguration(u.toExternalForm());
         this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
 
-        // create parent service manager
-        final ServiceManager parent = this.getParentServiceManager();
-
         // set encoding
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
 
-        // create new Core
-        final Core cocoon = new Core(this.settings);
+        // create parent service manager
+        final ServiceManager parent = this.getParentServiceManager();
 
-        return new RootServiceManager(parent, cocoon);
+        // create a service manager
+        this.parentManager = new RootServiceManager(parent, this.createCore());
     }
-    
+
+    public Core getCore() {
+        try {
+            return (Core)this.parentManager.lookup(CORE_KEY);
+        } catch (ServiceException ignore) {
+            // this can never happen!
+            throw new RuntimeException("Fatal error: no Cocoon core available.");
+        }
+    }
+
+    protected Core createCore() {
+        final Core c = new Core(this.settings, this.appContext);
+        return c;
+    }
+
     /**
      * Instatiates the parent service manager, as specified in the
      * parent-service-manager init parameter.
@@ -277,15 +291,67 @@ public class CoreUtil {
         return parentServiceManager;
     }
 
+    /**
+     * Get the settings for Cocoon
+     * @param env This provides access to various parts of the used environment.
+     * TODO Make a non-static, protected method out of this
+     */
+    public static Settings createSettings(BootstrapEnvironment env) {
+        // create an empty settings objects
+        final Settings s = new Settings();
+
+        String additionalPropertyFile = System.getProperty(Settings.PROPERTY_USER_SETTINGS);
+        
+        // read cocoon-settings.properties - if available
+        InputStream propsIS = env.getInputStream("cocoon-settings.properties");
+        if ( propsIS != null ) {
+            env.log("Reading settings from 'cocoon-settings.properties'");
+            final Properties p = new Properties();
+            try {
+                p.load(propsIS);
+                propsIS.close();
+                s.fill(p);
+                additionalPropertyFile = p.getProperty(Settings.PROPERTY_USER_SETTINGS, additionalPropertyFile);
+            } catch (IOException ignore) {
+                env.log("Unable to read 'cocoon-settings.properties'.", ignore);
+                env.log("Continuing initialization.");
+            }
+        }
+        // fill from the environment configuration, like web.xml etc.
+        env.configure(s);
+        
+        // read additional properties file
+        if ( additionalPropertyFile != null ) {
+            env.log("Reading user settings from '" + additionalPropertyFile + "'");
+            final Properties p = new Properties();
+            try {
+                FileInputStream fis = new FileInputStream(additionalPropertyFile);
+                p.load(fis);
+                fis.close();
+            } catch (IOException ignore) {
+                env.log("Unable to read '" + additionalPropertyFile + "'.", ignore);
+                env.log("Continuing initialization.");
+            }
+        }
+        // now overwrite with system properties
+        s.fill(System.getProperties());
+
+        return s;        
+    }
+
     protected void initLogger() {
         final DefaultContext subcontext = new DefaultContext(this.appContext);
         subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
-        if (this.env.getContextURL() == null) {
+        if (this.env.getContextForWriting() == null) {
             File logSCDir = new File(this.settings.getWorkDirectory(), "log");
             logSCDir.mkdirs();
             subcontext.put("context-root", logSCDir.toString());
         } else {
-            subcontext.put("context-root", this.env.getContextURL());
+            try {
+                subcontext.put("context-root", this.env.getContextForWriting().toURL().toExternalForm());
+            } catch (MalformedURLException ignore) {
+                // we simply ignore this
+            }
         }
         this.env.configureLoggingContext(subcontext);
 
@@ -306,8 +372,7 @@ public class CoreUtil {
         defaultHierarchy.setErrorHandler(errorHandler);
         defaultHierarchy.setDefaultLogTarget(this.env.getDefaultLogTarget());
         defaultHierarchy.setDefaultPriority(logPriority);
-        final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy()
-                .getLoggerFor(""));
+        final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
 
         // we can't pass the context-root to our resolver
         Object value = null;
@@ -490,8 +555,6 @@ public class CoreUtil {
 
     public static final class RootServiceManager implements ServiceManager {
         
-        protected final static String CORE_KEY = Core.class.getName();
-
         protected final ServiceManager parent;
         protected final Core cocoon;
 
