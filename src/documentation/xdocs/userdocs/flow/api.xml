@@ -87,7 +87,7 @@
       Passes control to the Cocoon sitemap to generate the output page.
       </p>
       <p>
-      <code>uri</code> is the relative URL of the page to be sent back to the client.
+        <code>uri</code> is the sitemap URI of the page to be sent back to the client. If the URI starts with a slash, it is resolved starting at the root sitemap, otherwise it is resolved relative to the current sitemap. The URI should not contain a scheme (such as cocoon:).
       </p>
       <p>
        <code>bean</code> is a context object which can be accessed inside this page to extract
@@ -103,7 +103,8 @@
      </p>
      <p>The flow script is suspended after the page is generated and the whole execution stack
         saved in the WebContinuation object returned from this function. </p>
-     <p><code>uri</code> is the relative URL of the page to be sent back to the client.
+      <p><code>uri</code> is the relative URL of the page to be sent back to the client. If the URI starts with a slash, it is resolved starting at the root sitemap, otherwise it is resolved relative to the current sitemap. The URI should not contain a scheme (such as cocoon:).</p>
+      <p>
         <code>bean</code> is a context object which can be accessed inside this page to extract
         various values and place them in the generated page.</p>
      <p><code>timeToLive</code> is the time to live in milliseconds for the continuation created.</p>
@@ -115,7 +116,7 @@
     <p>
      Call the Cocoon sitemap for the given URI, sending the output of the
      eventually matched pipeline to the specified <code>OutputStream</code>.</p>
-    <p><code>uri</code> is the URI for which the request should be generated.</p>
+    <p><code>uri</code> is the URI for which the request should be generated. If the URI starts with a slash, it is resolved starting at the root sitemap, otherwise it is resolved relative to the current sitemap. The URI should not contain a scheme (such as cocoon:).</p>
     <p><code>bizData</code> is the business data object
      to be made available to the forwarded pipeline</p>
      <p><code>stream</code> is an <code>OutputStream</code> where the output should be written to.</p>

@@ -84,7 +84,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.8 2003/08/04 21:07:47 ugo Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.9 2003/08/06 15:54:13 bruno Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -158,10 +158,7 @@ public class FOM_Cocoon extends ScriptableObject {
         
         String redUri = uri;
         
-        if(! uri.startsWith( "cocoon://" ) ) {
-            redUri = "cocoon://" + this.environment.getURIPrefix() + uri;
-        }
-        FOM_WebContinuation fom_wk = 
+        FOM_WebContinuation fom_wk =
             new FOM_WebContinuation(wk);
         fom_wk.setParentScope(getParentScope());
         fom_wk.setPrototype(getClassPrototype(getParentScope(), 
@@ -916,7 +913,7 @@ public class FOM_Cocoon extends ScriptableObject {
         throws Exception {
         interpreter.forwardTo(getTopLevelScope(this),
                               this, 
-                              "cocoon://" + environment.getURIPrefix() + uri,
+                              uri,
                               bean,
                               fom_wk,
                               environment);
