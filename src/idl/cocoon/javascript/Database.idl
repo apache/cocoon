@@ -54,14 +54,43 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
+ * <p>
+ *   High level interface to JDBC operations modeled after JSTL.
+ * </p>
  *
+ * <p>
+ *   <dl>
+ *     <dt><b>Authors:</b></dt>
+ *     <dd>
+ *       <a href="mailto:coliver AT apache.org">Christopher Oliver</a>.
+ *     </dd>
+ *     <dt><b>Copyright:</b></dt>
+ *     <dd>
+ *       Copyright &copy; 2002-2003
+ *       <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+ *       All rights reserved.
+ *     </dd>
+ *   </dl>
+ * </p>
  */
-module flow {
+interface Database {
 
-    interface Script {
-    };
+    /**
+     * Used to execute INSERT, UPDATE, and DELETE statements, as well as statements that create or remove database objects, such as CREATE TABLE and DROP TABLE. It returns the number of rows affected by the statement.
+     * @param sql SQL statement to execute
+     * @return the number of rows affected
+     */
+    long update(in string sql);
 
-    #include "cocoon/flow/javascript/_module.idl"
+    /**
+     * Executes a SQL SELECT statement. You can limit the result with startRow and maxRows (which are optional).
+     * @param sql SQL statement to execute
+     * @param startRow first row to be returned in result
+     * @param maxRows maximum number of rows to return in result
+     * @return Result: contains the same properties as in JSTL.
+     */
+    Result query(in string sql, in long startRow, in long maxRows);
 
 };

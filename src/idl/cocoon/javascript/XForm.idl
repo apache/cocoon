@@ -54,14 +54,99 @@
  *                                                                           *
  * ------------------------------------------------------------------------- */
 
+
 /**
+ * <p>
+ *   Interface to Cocoon XMLForm.
+ * </p>
  *
+ * <p>
+ *   <dl>
+ *     <dt><b>Authors:</b></dt>
+ *     <dd>
+ *       <a href="mailto:coliver AT apache.org">Christopher Oliver</a>.
+ *     </dd>
+ *     <dt><b>Copyright:</b></dt>
+ *     <dd>
+ *       Copyright &copy; 2002-2003
+ *       <a href="http://www.apache.org/">The Apache Software Foundation</a>.
+ *       All rights reserved.
+ *     </dd>
+ *   </dl>
+ * </p>
  */
-module flow {
+interface XForm {
 
-    interface Script {
-    };
+    /**
+     * Creates a new JavaScript wrapper of a Form object
+     * @see org.apache.cocoon.components.xmlform.Form
+     * @param id form id
+     * @param validatorNS Namespace of validator
+     * @param validatorDoc Validator document
+     */
+    cocoon::XForm constructor(in string form_id, in string validator_namespace, in string validator_document);
 
-    #include "cocoon/flow/javascript/_module.idl"
+    /**
+     * Global variable that stores XForm instances by id
+     */
+    readonly attribute cocoon::XForms forms;
 
+    /**
+     * The model object of this form: any Java bean, JavaScript, DOM, or JDOM object
+     */
+    readonly attribute Object model;
+
+
+    /**
+     * Creates a new web continuation
+     * @param lastCont previous web continuation
+     * @param timeToLive expiration time for this continuation
+     */
+
+    WebContinuation start(in WebContinuation lastCont, in long timeToLive);
+
+    /**
+     * Adds a violation to this form
+     * @param xpath xpath expression of field that contains invalid data
+     * @param message error message
+     */
+    void addViolation(in string xpath, in string message);
+
+    /**
+     * Computes the value of an xpath expression against the model of this form
+     * @param expr xpath expression
+     * @return result of computing <code>expr</code>
+     */
+    Object getValue(in string expr);
+
+    /**
+     * Returns an iterator over a nodeset value of an xpath expression
+     * evaluated against the model of this form
+     * @param expr xpath expression
+     * @return java.util.Iterator representing a nodeset
+     */
+     java::Iterator iterate(in string expr);
+
+    /**
+     * Sends view to presentation pipeline and waits for subsequent submission.
+     * Automatically resends view if validation fails.
+     * Creates two continuations: one immediately before the page is sent
+     * and one immediately after. These are used to implement automated support
+     * for back/forward navigation in the form. When you move forward in the
+     * form the second continuation is invoked. When you move back from the
+     * following page the first continuation is invoked.
+     * @param phase view to send (and phase to validate)
+     * @param uri presentation pipeline resource identifier
+     * @param validator optional function invoked to perform validation
+     */
+    void sendView(in string phase, in string uri, in cocoon::Function validator);
+
+    /**
+     * Sends view to presentation pipeline but doesn't wait for submission
+     * @param view view to send
+     * @param uri presentation pipeline uri
+     */
+
+    void finish(in string view, in string uri);
 };
+
