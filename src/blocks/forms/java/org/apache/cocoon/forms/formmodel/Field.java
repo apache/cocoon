@@ -41,7 +41,7 @@ import java.util.Locale;
  *
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Field.java,v 1.13 2004/04/30 12:19:01 bruno Exp $
+ * @version CVS $Id: Field.java,v 1.14 2004/04/30 12:23:33 bruno Exp $
  */
 public class Field extends AbstractWidget implements ValidationErrorAware, DataWidget, SelectableWidget,
         ValueChangedListenerEnabled {
@@ -195,7 +195,7 @@ public class Field extends AbstractWidget implements ValidationErrorAware, DataW
 
     /**
      * Returns the validation error, if any. There will always be a validation error in case the
-     * {@link #validate(FormContext)} method returned false.
+     * {@link #validate()} method returned false.
      */
     public ValidationError getValidationError() {
         return validationError;
