@@ -51,9 +51,7 @@
 package org.apache.cocoon.woody.binding;
 
 import org.apache.cocoon.woody.formmodel.Widget;
-import org.apache.commons.jxpath.AbstractFactory;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.Pointer;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -68,7 +66,7 @@ import org.w3c.dom.Node;
  * <li>This expects the back-end model to be an XML file.</li>
  * </ol>
  *
- * @version CVS $Id: InsertNodeJXPathBinding.java,v 1.6 2004/01/27 05:50:08 tim Exp $
+ * @version CVS $Id: InsertNodeJXPathBinding.java,v 1.7 2004/01/27 11:43:28 joerg Exp $
  */
 public class InsertNodeJXPathBinding extends JXPathBindingBase {
 
