@@ -1,8 +1,9 @@
   <target name="start-instrumentation-client" depends="init">
     <property name="lib.instrumentation" value="tools/instrumentation/lib"/>
 
-    <echo message="The version of the altrmi server libraries in ${lib.optional} must correspond"/>
-    <echo message="to the version of the altrmi client libraries in ${lib.instrumentation}."/>
+    <echo>The version of the altrmi server libraries in ${lib.optional} must correspond
+to the version of the altrmi client libraries in ${lib.instrumentation}.
+</echo>
 
     <java classname="org.apache.excalibur.instrument.client.Main" fork="true">
       <classpath>

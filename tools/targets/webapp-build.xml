@@ -141,7 +141,7 @@
     <!-- Create WAR manifest -->
     <manifest directory="${build.webapp.lib}" manifest="${build.webapp}/WEB-INF/Manifest.mf"/>
     <!-- Package WAR file -->
-    <jar jarfile="${build.war}"  manifest="${build.webapp}/WEB-INF/Manifest.mf">
+    <jar jarfile="${build.war}"  manifest="${build.webapp}/WEB-INF/Manifest.mf" index="true">
       <fileset dir="${build.webapp}"/>
     </jar>
   </target>
