@@ -53,6 +53,9 @@ package org.apache.cocoon.serialization;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.util.ClassUtils;
@@ -87,10 +90,10 @@ import java.util.Properties;
  *         (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:sylvain.wallez@anyware-tech.com">Sylvain Wallez</a>
- * @version CVS $Id: AbstractTextSerializer.java,v 1.5 2003/06/11 00:11:15 joerg Exp $
+ * @version CVS $Id: AbstractTextSerializer.java,v 1.6 2003/11/03 21:23:45 mpo Exp $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer
-        implements Configurable, CacheableProcessingComponent {
+        implements Configurable, CacheableProcessingComponent, Contextualizable {
 
     /**
      * The trax <code>TransformerFactory</code> used by this serializer.
@@ -122,6 +125,7 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
      * The pipe that adds namespaces as xmlns attributes.
      */
     private NamespaceAsAttributes namespacePipe;
+
 
     /**
      * Interpose namespace pipe if needed.
@@ -192,6 +196,16 @@ public abstract class AbstractTextSerializer extends AbstractSerializer
         //  }
     }
 
+    /**
+     * Uses the context to retrieve a default encoding for the serializers. 
+     */
+    public void contextualize(Context context) throws ContextException {
+        String defaultEncoding  = (String)context.get(Constants.CONTEXT_DEFAULT_ENCODING);
+        if (defaultEncoding != null) {
+            this.format.setProperty(OutputKeys.ENCODING, defaultEncoding);            
+        }
+    }    
+    
     /**
      * Set the configurations for this serializer.
      */
