@@ -49,8 +49,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CachedResponse;
 import org.apache.cocoon.caching.EventAware;
@@ -66,13 +66,12 @@ import org.apache.excalibur.source.impl.validity.AbstractAggregatedValidity;
  * in two MultiHashMap to facilitate efficient lookup by either as Key.
  * 
  * @author Geoff Howard (ghoward@apache.org)
- * @version $Id: EventAwareCacheImpl.java,v 1.7 2003/10/28 13:39:36 unico Exp $
+ * @version $Id: EventAwareCacheImpl.java,v 1.8 2004/02/07 15:20:09 joerg Exp $
  */
-public class EventAwareCacheImpl 
-        extends CacheImpl 
-        implements Initializable, EventAware {
+public class EventAwareCacheImpl extends CacheImpl implements Initializable,
+                                                              EventAware {
     
-    private ComponentManager m_manager;
+    private ServiceManager m_manager;
 
 	private EventRegistry m_eventRegistry;
 
@@ -116,9 +115,9 @@ public class EventAwareCacheImpl
     /**
      * Look up the EventRegistry 
      */
-	public void compose(ComponentManager manager) throws ComponentException {
+	public void service(ServiceManager manager) throws ServiceException {
 		this.m_manager = manager;
-        super.compose(manager);
+        super.service(manager);
         this.m_eventRegistry = (EventRegistry)manager.lookup(EventRegistry.ROLE);
 	}
 

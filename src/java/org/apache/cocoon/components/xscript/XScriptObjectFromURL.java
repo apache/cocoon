@@ -62,7 +62,7 @@ import java.io.InputStream;
  * An <code>XScriptObject</code> created from the contents of a URL.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XScriptObjectFromURL.java,v 1.2 2003/03/11 14:42:54 vgritsenko Exp $
+ * @version CVS $Id: XScriptObjectFromURL.java,v 1.3 2004/02/07 15:20:09 joerg Exp $
  * @since August 30, 2001
  */
 public class XScriptObjectFromURL extends XScriptObject {
@@ -88,7 +88,7 @@ public class XScriptObjectFromURL extends XScriptObject {
         SourceResolver resolver = null;
         Source source = null;
         try {
-            resolver = (SourceResolver) componentManager.lookup(SourceResolver.ROLE);
+            resolver = (SourceResolver) serviceManager.lookup(SourceResolver.ROLE);
             source = resolver.resolveURI(this.systemId);
             return source.getInputStream();
         } catch (Exception e) {
@@ -96,7 +96,7 @@ public class XScriptObjectFromURL extends XScriptObject {
         } finally {
             if (resolver != null) {
                 resolver.release(source);
-                componentManager.release(resolver);
+                serviceManager.release(resolver);
             }
         }
     }

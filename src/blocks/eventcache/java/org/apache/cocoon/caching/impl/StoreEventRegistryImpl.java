@@ -52,9 +52,9 @@ package org.apache.cocoon.caching.impl;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.excalibur.store.Store;
 
 /**
@@ -65,12 +65,12 @@ import org.apache.excalibur.store.Store;
  * 
  * @since 2.1
  * @author <a href="mailto:ghoward@apache.org">Geoff Howard</a>
- * @version CVS $Id: StoreEventRegistryImpl.java,v 1.2 2003/09/09 18:52:33 joerg Exp $
+ * @version CVS $Id: StoreEventRegistryImpl.java,v 1.3 2004/02/07 15:20:09 joerg Exp $
  */
 public class StoreEventRegistryImpl 
-		extends DefaultEventRegistryImpl implements Composable {
+		extends DefaultEventRegistryImpl implements Serviceable {
 	private static final String EVENTREGISTRYKEY = "EVENTREGWRAPPER";
-	private ComponentManager m_manager;
+	private ServiceManager m_manager;
 	private Store m_persistentStore;
 	
 	/** 
@@ -94,7 +94,7 @@ public class StoreEventRegistryImpl
 	/**
 	 * Obtain a reference to the Store
 	 */
-	public void compose(ComponentManager manager) throws ComponentException {
+	public void service(ServiceManager manager) throws ServiceException {
 		this.m_manager = manager;
 		this.m_persistentStore = (Store)manager.lookup(Store.PERSISTENT_STORE);
 	}

@@ -51,13 +51,13 @@
 package org.apache.cocoon.components.xscript;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.ContextException;
@@ -74,19 +74,19 @@ import java.util.Map;
  * The actual implementation of the <code>XScriptManager</code> interface.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: XScriptManagerImpl.java,v 1.1 2003/03/09 00:09:27 pier Exp $
+ * @version CVS $Id: XScriptManagerImpl.java,v 1.2 2004/02/07 15:20:09 joerg Exp $
  * @since August  4, 2001
  */
 public class XScriptManagerImpl
         extends AbstractLogEnabled
-        implements XScriptManager, Composable, Component, Parameterizable, Contextualizable, ThreadSafe
+        implements XScriptManager, Serviceable, Component, Parameterizable, Contextualizable, ThreadSafe
 {
     public static final String CONTEXT = "org.apache.cocoon.components.xscript.scope";
 
     /**
-     * The <code>ComponentManager</code> instance.
+     * The <code>ServiceManager</code> instance.
      */
-    protected ComponentManager manager = null;
+    protected ServiceManager manager = null;
 
     /**
      * The <code>Context</code> instance.
@@ -100,16 +100,15 @@ public class XScriptManagerImpl
         this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
 
-    public void compose(ComponentManager manager)
-            throws ComponentException
+    public void service(ServiceManager manager) throws ServiceException
     {
         this.manager = manager;
     }
 
     public void register(XScriptObject object) {
         try {
-            object.compose(manager);
-        } catch (ComponentException ignored) { }
+            object.service(manager);
+        } catch (ServiceException ignored) { }
     }
 
     public void parameterize(Parameters params)
