@@ -86,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.28 2003/10/30 12:20:45 cziegeler Exp $
+ * @version CVS $Id: Cocoon.java,v 1.29 2003/11/07 13:30:20 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -369,7 +369,7 @@ public class Cocoon
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
-//        Object key = CocoonComponentManager.startProcessing(environment);
+        Object key = EnvironmentHelper.startProcessing(environment);
         EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
         try {
             boolean result;
@@ -396,7 +396,7 @@ public class Cocoon
             throw any;
         } finally {
             EnvironmentHelper.leaveProcessor();
-//            CocoonComponentManager.endProcessing(environment, key);
+            EnvironmentHelper.endProcessing(environment, key);
             if (getLogger().isDebugEnabled()) {
                 --activeRequestCount;
             }
@@ -469,6 +469,9 @@ public class Cocoon
     throws Exception {
         ProgramGenerator programGenerator = null;
         Source source = null;
+        Object key = EnvironmentHelper.startProcessing(environment);
+        EnvironmentHelper.enterProcessor(this, this.serviceManager, environment);
+
         try {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("XSP generation begin:" + fileName);
@@ -484,6 +487,8 @@ public class Cocoon
             }
             */
         } finally {
+            EnvironmentHelper.leaveProcessor();
+            EnvironmentHelper.endProcessing(environment, key);
             this.sourceResolver.release(source);
             this.serviceManager.release(programGenerator);
         }
