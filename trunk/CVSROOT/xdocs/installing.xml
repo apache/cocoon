@@ -53,8 +53,13 @@
   </p>
 
   <p>
-   In the <code>/lib</code> directory you'll find all the required packages.
-   Now jump to the installation instructions for your servlet engine.
+   In the <code>/bin</code> directory you'll find the <code>cocoon.jar</code>
+   jar package that contains the Cocoon binary files, while the  <code>/lib</code> 
+   directory contains all the libraries required for complete Cocoon operation.
+   While these packages may not be the most up-to-date versions, they are
+   guaranteed and tested to work properly with Cocoon so, we suggest that you
+   use them. Note, however, that they were all redistributed untouched from
+   their original distributions.
   </p>
 
   <note>
@@ -89,15 +94,15 @@
 
 <source>
 wrapper.classpath=/usr/local/java/jdk/lib/tools.jar
-wrapper.classpath=/usr/local/java/lib/cocoon.jar
-wrapper.classpath=/usr/local/java/lib/xerces.jar
-wrapper.classpath=/usr/local/java/lib/xalan.jar
-wrapper.classpath=/usr/local/java/lib/fop.jar
+wrapper.classpath=/usr/local/java/cocoon/bin/cocoon.jar
+wrapper.classpath=/usr/local/java/cocoon/lib/xerces.jar
+wrapper.classpath=/usr/local/java/cocoon/lib/xalan.jar
+wrapper.classpath=/usr/local/java/cocoon/lib/fop.jar
 ...
 </source>
 
    <note>
-    The <code>cocoon.jar</code> package <strong>must</strong> be added to the 
+    The <code>./bin/cocoon.jar</code> package <strong>must</strong> be added to the 
     servlet engine classpath in order for the XSP subsystem to work correctly.
     We perfectly understand this as a limitation to Cocoon flexibility, and 
     we are working hard to make it possible for multiple cocoon instances to
@@ -148,6 +153,13 @@ AddHandler cocoon xml</source>
     and <em>/servlet/</em> is the mount point of your servlet zone (and the
     above is the standard name for servlet mapping for Apache JServ).
    </p>
+   
+   <p>
+    You need to make sure that you have the following line uncommented in your
+    <code>httpd.conf</code> or Apache will not be able to start:
+   </p>
+   
+<source>LoadModule action_module /path/to/mod_actions.so</source>
 
    <p>
     Restart both Apache and Apache JServ and try accessing the Cocoon status page:
@@ -471,6 +483,12 @@ weblogic.httpd.initArgs.*.xml=\properties=[path-to-cocoon]/bin/cocoon.properties
    <td>Apache 1.3.12</td>
    <td>Apache JServ 1.1</td>
    <td>Sun JDK 1.2.1 (SGI)</td>
+  </tr>
+  <tr>
+   <td>Microsoft Windows 2000 Professional</td>
+   <td>Apache 1.3.12</td>
+   <td>Apache JServ 1.1</td>
+   <td>Sun JDK 1.2.2</td>
   </tr>
   </table>
 

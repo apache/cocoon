@@ -19,18 +19,17 @@
 		</s1>
 		<s1 title="Configuration">
 			<p>Add this PI to the XML files to which you wish to add LDAP queries:</p>
-			<source>&lt;?cocoon:process type="ldap"?&gt;</source>
+			<source>&lt;?cocoon-process type="ldap"?&gt;</source>
 			<p>You probably want this before any "xslt" processing directives. Then add LDAP connection information to your XML files. The tagset for LDAP server defitions looks like this:</p>
-			<source>&lt;ldap-defs&gt;
+<source>&lt;ldap-defs&gt;
  &lt;ldap-server name=foo_server"&gt;
   &lt;initializer&gt;com.sun.jndi.ldap.LdapCtxFactory&lt;/initializer&gt;
   &lt;ldap-serverurl&gt;ldap://ldap.weber.edu&lt;/ldap-serverurl&gt;
  &lt;/ldap-server&gt;
-&lt;/ldap-defs&gt;
-</source>
+&lt;/ldap-defs&gt;</source>
 			<p>This tagset will be removed from the document after processing.</p>
 			<p>In addition to the ldap-server element, you can also have querydefs tags in your ldap-defs node. A ldap-defs node must have a unique name attribute. ldap-query tags (described below) may reference a querydefs tag in their defs attribute, which causes the ldap-query tag's attributes to default to the attributes of the querydefs tag. This is useful for setting commonly used groups of attributes. You may also specify a default querydefs. Here is an example:</p>
-			<source>&lt;querydefs name="standard" doc-element="options" 
+<source>&lt;querydefs name="standard" doc-element="options" 
   row-element="option" server="foo"/&gt;
 &lt;query defs="standard"/&gt;</source>
 			<p>is equivalent to</p>
@@ -39,11 +38,11 @@
 		</s1>
 		<s1 title="Usage">
 			<p>Add LDAP queries to your XML files. The tagset looks like this:</p>
-			<source>&lt;ldap-query server="foo_server"&gt;
+<source>&lt;ldap-query server="foo_server"&gt;
  sn=*Green*
 &lt;/ldap-query&gt;</source>
 			<p>This will be replaced by a tagset that looks something like this:</p>
-			<source>&lt;ldapsearch&gt;
+<source>&lt;ldapsearch&gt;
  &lt;searchresult ID="CN=DGREEN,OU=TBE,OU=AST,OU=ACAD,O=WSU"&gt;
   &lt;telephonenumber&gt;801-626-6821&lt;/telephonenumber&gt;
   &lt;facsimiletelephonenumber&gt;801-626-6650&lt;/facsimiletelephonenumber&gt;
@@ -62,7 +61,7 @@
  &lt;/searchresult&gt;
 &lt;/ldapsearch&gt;</source>
 			<p>You can also have the LdapProcessor substitute values from the servlet request into your query. The syntax for that is:</p>
-			<source>&lt;ldap-query name="foo_server"&gt;
+<source>&lt;ldap-query name="foo_server"&gt;
  sn=*{@name}*
 &lt;/ldap-query&gt;</source>
 			<p>This is, of course, highly configurable by setting attributes of the query tag. A partial list of attributes is:</p>

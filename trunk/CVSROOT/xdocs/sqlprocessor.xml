@@ -15,9 +15,9 @@
 
 	<s1 title="Configuration">
 		<p>Add this PI to the XML files to which you wish to add SQL queries:</p>
-		<source>&lt;?cocoon:process type="sql"?&gt;</source>
+		<source>&lt;?cocoon-process type="sql"?&gt;</source>
 		<p>You probably want this before any "xslt" processing directives. Then add SQL connection information to your XML files. The tagset for connection defitions looks like this:</p>
-		<source>&lt;connectiondefs&gt;
+<source>&lt;connectiondefs&gt;
  &lt;connection name="foo_connection"&gt;
   &lt;driver&gt;org.gjt.mm.mysql.Driver&lt;/driver&gt;
   &lt;dburl&gt;jdbc:mysql://mysql.example.com/foo_database&lt;/dburl&gt;

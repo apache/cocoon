@@ -122,7 +122,7 @@ public class DummyProducer
 {
           
   String dummy = "<?xml version=\"1.0\"?>" 
-      + "<?cocoon:format type=\"text/html\"?>"
+      + "<?cocoon-format type=\"text/html\"?>"
       + "<html><body>"
       + "<h1 align=\"center\">"
           + "Hello from a dummy page"
