@@ -66,12 +66,12 @@ import org.xml.sax.SAXException;
  * as a new request. So an instance looked up in the "main" request is
  * not available to a subrequest.
  * In addition, the first time this component is looked up during a request,
- * the {@link setup(SourceResolver, Map)} method is called.
+ * the {@link #setup(SourceResolver, Map)} method is called.
  * 
  * @see org.apache.cocoon.components.GlobalRequestLifecycleComponent
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.2 2003/07/11 14:17:44 cziegeler Exp $
+ * @version CVS $Id: RequestLifecycleComponent.java,v 1.3 2003/07/11 20:34:22 joerg Exp $
  */
 public interface RequestLifecycleComponent extends Poolable {
 

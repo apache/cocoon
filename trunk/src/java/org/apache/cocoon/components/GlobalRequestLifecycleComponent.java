@@ -65,12 +65,12 @@ import org.xml.sax.SAXException;
  * either the "main" request or in any of the subrequests is available to all
  * other requests in this cycle. 
  * In addition, the first time this component is looked up during a request,
- * the {@link setup(SourceResolver, Map)} method is called.
+ * the {@link #setup(SourceResolver, Map)} method is called.
  *
  * @see org.apache.cocoon.components.RequestLifecycleComponent
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.1 2003/07/11 14:17:44 cziegeler Exp $
+ * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.2 2003/07/11 20:34:22 joerg Exp $
  */
 public interface GlobalRequestLifecycleComponent {
 
