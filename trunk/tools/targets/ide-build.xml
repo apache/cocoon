@@ -33,7 +33,7 @@
       <!-- main source dir -->
       <pathelement path="${src}/java"/>
       <!-- deprecated source dir -->
-      <pathelement path="${src}/deprecated/java"/>
+      <pathelement path="${src}/deprecated"/>
       <!-- test source dir -->
       <pathelement path="${src}/test"/>
     </path>
