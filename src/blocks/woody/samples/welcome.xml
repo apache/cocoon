@@ -17,6 +17,7 @@
   <sample name="Flowscript" href="form1.flow">The same sample as above using Flowscript.</sample>
 
   <sample name="Registration" href="registration">A simple registration form.</sample>
+  <sample name="Binding" href="form2.flow">A form for just editing an XML file. (should work with simple java-beans as well)</sample>
  </group>
 
 </samples>

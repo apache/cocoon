@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" 
+       remove="/cocoon/component[@role='org.apache.cocoon.woody.binding.BindingManager']">
+       
+  <component 
+      class="org.apache.cocoon.woody.binding.JXPathBindingManager" 
+  	  role="org.apache.cocoon.woody.binding.BindingManager" 
+  	  logger="woody.binding" >
+  	  <!-- maybe in future change to woody logging? -->
+  </component>
+
+</xconf>  	
