@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
@@ -151,9 +152,10 @@ public class ContainerTestCase extends TestCase {
 
         if( resource != null ) {
             getLogger().debug( "Loading resource " + resourceName );
-            prepare( resource.openStream() );
+            this.prepare( resource.openStream() );
         } else {
             getLogger().debug( "Resource not found " + resourceName );
+            this.prepare( null );
         }
     }
 
@@ -171,17 +173,22 @@ public class ContainerTestCase extends TestCase {
     protected final void prepare( final InputStream testconf )
     throws Exception {
         if ( getLogger().isDebugEnabled() ) {
-            getLogger().debug( "ContainerTestCase.initialize" );
+            getLogger().debug( "Initializing " + this.getName() );
         }
 
         final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-        final Configuration conf = builder.build( testconf );
+        final Configuration conf;
+        if ( testconf != null ) {
+            conf = builder.build( testconf );
+        } else {
+            conf = new DefaultConfiguration("", "-");
+        }
 
-        Context context = this.setupContext( conf.getChild( "context" ) );
+        final Context context = this.setupContext( conf.getChild( "context" ) );
 
-        setupManagers( conf.getChild( "components" ),
-                       conf.getChild( "roles" ),
-                       context );
+        this.setupManagers( conf.getChild( "components" ),
+                            conf.getChild( "roles" ),
+                            context );
     }
 
     /* (non-Javadoc)
@@ -230,7 +237,7 @@ public class ContainerTestCase extends TestCase {
                 }
             }
         }
-        addContext( context );
+        this.addContext( context );
         return context ;
     }
 
