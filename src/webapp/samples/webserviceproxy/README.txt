@@ -63,7 +63,7 @@ AmazonForm.xml:
 ---------------
 
 <?xml version="1.0" ?>
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
   <xf:form id="form-amazon" view="search" action="amazon/search?t=myAmazonId-02-20&amp;l=st1&amp;mode=books&amp;p=102&amp;o=1&amp;f=xml">
     <xf:caption>Amazon book search by keyword</xf:caption>    
     <xf:textbox ref="search">

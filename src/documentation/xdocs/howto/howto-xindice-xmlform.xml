@@ -115,7 +115,7 @@
         <s3 title="artist.xform">
           <source><![CDATA[
 <?xml version="1.0"?>
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
   <xf:form id="artist-insert" view="artist"
            action="Artist.xform" method="post">
     <xf:caption>New Artist</xf:caption>

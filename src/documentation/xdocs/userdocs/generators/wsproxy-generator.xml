@@ -250,7 +250,7 @@ The content of the original XML page behind these two screenshot follows:
       <source><![CDATA[
 
  <?xml version="1.0"?>
-  <document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+  <document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
     <xf:form id="form-feedback" view="userIdentity" action="wizard" method="GET">
       <xf:caption>Personal Information</xf:caption>
       <error>

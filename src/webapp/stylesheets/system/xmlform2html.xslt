@@ -28,7 +28,7 @@
 
 <xsl:stylesheet version="1.0" 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-    xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+    xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 
    <xsl:output method = "xml" omit-xml-declaration = "no"  /> 
   

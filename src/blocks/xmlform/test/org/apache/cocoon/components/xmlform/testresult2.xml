@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
   <xf:form action="wizard" id="testform" method="GET" view="view2">
     <xf:caption>Cocoon Deployment Information</xf:caption>
     <error/>

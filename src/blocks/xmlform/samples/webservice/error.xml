@@ -4,7 +4,7 @@
     Author: Ivelin Ivanov, ivelin@apache.org, July 2002
 -->
 
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
   <error>
 	  <xf:violations form="form-feedback"/>
   </error>

@@ -164,7 +164,7 @@
         <![CDATA[
         <?xml version="1.0" ?>
 	
-	<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+	<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 	
 	
 	  <xf:form id="form-feedback" view="registration" action="howto-wizard.html">
@@ -234,7 +234,7 @@
 <?xml version="1.0" ?>
 
 
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 
   <xf:form id="form-feedback" view="interest" action="howto-wizard.html">
 
@@ -287,7 +287,7 @@
 <?xml version="1.0" ?>
 
 
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 
   <xf:form id="form-feedback" view="organicGardening" action="howto-wizard.html">
 
@@ -335,7 +335,7 @@
 <?xml version="1.0" ?>
 
 
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 
   <xf:form id="form-feedback" view="cooking" action="howto-wizard.html">
 
@@ -381,7 +381,7 @@
 <?xml version="1.0" ?>
 
 
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 
   <xf:form id="form-feedback" view="smallholdingManagement" action="howto-wizard.html">
 
@@ -435,7 +435,7 @@
 <?xml version="1.0" ?>
 
 
-<document xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002">
+<document xmlns:xf="http://apache.org/cocoon/xmlform/1.0">
 
 
   <xf:form id="form-feedback" view="confirm" action="howto-wizard.html">
