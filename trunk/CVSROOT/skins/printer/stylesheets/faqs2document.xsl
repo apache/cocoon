@@ -27,7 +27,7 @@
       </s1>
 
       <s1 title="Answers">
-        <xsl:apply-templates select="faq"/>
+        <xsl:apply-templates select="//faq"/>
       </s1>
     </body>
    </document>
@@ -48,16 +48,14 @@
   <xsl:template match="faq" mode="index">
 
     <!-- How can we modularise this to avoid copy-and-paste? (RDG) -->
-    <xsl:variable name="fragid">
-      faq-<xsl:choose>
+    <xsl:variable name="fragid">faq-<xsl:choose>
         <xsl:when test="@id">
           <xsl:value-of select="@id"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="position()"/>
         </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+      </xsl:choose></xsl:variable>
 
     <li>
       <jump anchor="{$fragid}">
@@ -68,18 +66,16 @@
 
   <xsl:template match="faq">
     <!-- How can we modularise this to avoid copy-and-paste? (RDG) -->
-    <xsl:variable name="fragid">
-      faq-<xsl:choose>
+    <xsl:variable name="fragid">faq-<xsl:choose>
         <xsl:when test="@id">
           <xsl:value-of select="@id"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="position()"/>
         </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+      </xsl:choose></xsl:variable>
 
-    <anchor id="faq-{$fragid}"/>
+    <anchor id="{$fragid}"/>
     <s2 title="{question}">
       <xsl:apply-templates/>
     </s2>
