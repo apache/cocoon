@@ -51,7 +51,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.34 2004/06/05 08:18:50 sylvain Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.35 2004/06/06 11:40:34 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -64,8 +64,6 @@ public class TreeProcessor
                Contextualizable,
                Disposable,
                Initializable {
-
-    public static final String COCOON_REDIRECT_ATTR = "sitemap:cocoon-redirect";
 
     private static final String XCONF_URL =
         "resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml";
@@ -170,19 +168,31 @@ public class TreeProcessor
         return new TreeProcessor(this, delayedSource, checkReload, prefix);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
+     */
     public void setRoleManager(RoleManager rm) {
         this.roleManager = rm;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize() throws Exception {
         // setup the environment helper
         if (this.environmentHelper == null ) {
@@ -193,13 +203,16 @@ public class TreeProcessor
         ContainerUtil.service(this.environmentHelper, new ComponentManagerWrapper(manager));
     }
 
-/*
-  <processor>
-    <reload delay="10"/>
-    <root-language name="sitemap"/>
-    <language>...</language>
-  </processor>
-*/
+    /** 
+     * Configure the tree processor:
+     * <processor>
+     *   <reload delay="10"/>
+     *   <root-language name="sitemap"/>
+     *   <language>...</language>
+     * </processor>
+     * 
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration config)
     throws ConfigurationException {
         this.fileName = config.getAttribute("file", null);
@@ -262,9 +275,9 @@ public class TreeProcessor
      */
     public boolean process(Environment environment) throws Exception {
     	
-    		setupConcreteProcessor(environment);
+        setupConcreteProcessor(environment);
     		
-    		return this.concreteProcessor.process(environment);
+        return this.concreteProcessor.process(environment);
     }
 
     
@@ -276,9 +289,9 @@ public class TreeProcessor
     public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
     	
-    		setupConcreteProcessor(environment);
+        setupConcreteProcessor(environment);
     		
-    		return this.concreteProcessor.buildPipeline(environment);
+        return this.concreteProcessor.buildPipeline(environment);
     }
       
     /* (non-Javadoc)
@@ -297,14 +310,14 @@ public class TreeProcessor
      * Set the sitemap component configurations
      */
     public void setComponentConfigurations(Configuration componentConfigurations) {
-    		this.concreteProcessor.setComponentConfigurations(componentConfigurations);
+        this.concreteProcessor.setComponentConfigurations(componentConfigurations);
     }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.Processor#getComponentConfigurations()
      */
     public Map getComponentConfigurations() {
-    		return this.concreteProcessor.getComponentConfigurations();
+        return this.concreteProcessor.getComponentConfigurations();
     }
 
     /* (non-Javadoc)
@@ -321,6 +334,10 @@ public class TreeProcessor
         return this.environmentHelper;
     }
 
+    /**
+     * The current environment helper used by the MountNode
+     * @return EnvironmentHelper 
+     */
     public EnvironmentHelper getEnvironmentHelper() {
         return this.environmentHelper;   
     }
@@ -349,7 +366,12 @@ public class TreeProcessor
         ConcreteTreeProcessor newProcessor = new ConcreteTreeProcessor(this);
         long newLastModified;
         this.setupLogger(newProcessor);
-        //FIXME (SW): why do we need to enterProcessor here?
+        // We have to do a call to enterProcessor() here as during building
+        // of the tree, components (e.g. actions) are already instantiated 
+        // (ThreadSafe ones mostly).
+        // If these components try to access the current processor or the
+        // current service manager they must get this one - which is currently
+        // in the process of initialization.
         EnvironmentHelper.enterProcessor(this, new ComponentManagerWrapper(this.manager), env);
         try {
             if (builder instanceof Recomposable) {
@@ -387,21 +409,24 @@ public class TreeProcessor
 
         // Dispose the old processor, if any
         if (oldProcessor != null) {
-                    oldProcessor.markForDisposal();
+            oldProcessor.markForDisposal();
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         // Dispose the concrete processor. No need to check for existing requests, as there
         // are none when a TreeProcessor is disposed.
         if (this.concreteProcessor != null) {
-                this.concreteProcessor.dispose();
+          this.concreteProcessor.dispose();
         }
 
         if (this.parent == null) {
-        		// root processor : dispose the builder selector
-        		this.builderSelector.dispose();
-        	}
+            // root processor : dispose the builder selector
+            this.builderSelector.dispose();
+        }
 
 	    if ( this.manager != null ) {
 	        if ( this.source != null ) {
