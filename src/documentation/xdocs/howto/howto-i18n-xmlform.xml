@@ -156,30 +156,47 @@ Create a simple XSLT stylesheet file to match the violation element in the XMLFo
        <source><![CDATA[
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002"
-    xmlns:i18n="http://apache.org/cocoon/i18n/2.0">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xf="http://xml.apache.org/cocoon/xmlform/2002"
+                xmlns:i18n="http://apache.org/cocoon/i18n/2.0">
 
-<xsl:template match="document">
-     <document>
-           <xsl:apply-templates/>
-     </document>
-</xsl:template>
+  <xsl:template match="document">
+    <document>
+      <xsl:apply-templates/>
+    </document>
+  </xsl:template>
 
-<xsl:template match="xf:violation">
-     <xf:violation>
-           <i18n:text>
-                 <xsl:value-of select="."/>
-           </i18n:text>
-     </xf:violation>
-</xsl:template>
+  <xsl:template match="xf:violation">
+    <xf:violation>
+      <i18n:text>
+        <xsl:value-of select="."/>
+      </i18n:text>
+    </xf:violation>
+  </xsl:template>
 
-<xsl:template match="node()" priority="-1">
-     <xsl:copy>
-           <xsl:copy-of select="@*"/>
-           <xsl:apply-templates/>
-     </xsl:copy>
-</xsl:template>
+  <xsl:template match="xf:output[@type='number']">
+    <xsl:variable name="value"><xsl:value-of select="xf:value"/></xsl:variable>
+    <xsl:variable name="caption"><xsl:value-of select="xf:caption"/></xsl:variable>
+    <xsl:variable name="ref"><xsl:value-of select="@ref"/></xsl:variable>
+
+    <xf:output ref="{$ref}">
+      <xf:caption><i18n:text><xsl:value-of select="$caption"/></i18n:text></xf:caption>
+      <xf:violations class="error"/>
+      <xf:value>
+        <xsl:element name="i18n:number">
+          <xsl:attribute name="src-locale">en</xsl:attribute>
+          <xsl:attribute name="value"><xsl:value-of select="$value"/></xsl:attribute>
+        </xsl:element>
+      </xf:value>
+    </xf:output>
+  </xsl:template>
+
+  <xsl:template match="node()" priority="-1">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates/>
+    </xsl:copy>
+  </xsl:template>
 </xsl:stylesheet>
 ]]></source>
 <note>       
