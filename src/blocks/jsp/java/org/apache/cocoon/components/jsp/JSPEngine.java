@@ -50,38 +50,34 @@
 */
 package org.apache.cocoon.components.jsp;
 
-import org.apache.avalon.framework.component.Component;
-import org.xml.sax.SAXException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
- * A component for loading and running JSP.
+ * A component for loading and running Servlets and JSPs.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JSPEngine.java,v 1.2 2003/06/07 23:01:48 vgritsenko Exp $
+ * @version CVS $Id: JSPEngine.java,v 1.3 2004/01/16 13:46:43 unico Exp $
  */
-public interface JSPEngine extends Component {
+public interface JSPEngine {
 
-    String ROLE = JSPEngine.class.getName();
-
+    public static final String ROLE = JSPEngine.class.getName();
+    
     /**
-     * Execute the JSP and return the output.
+     * Execute the Servlet/JSP and return the output.
      * Output of the JSPEngine <b>must</b> be in UTF8 encoding.
-     *
-     * @param context The Servlet Context
+     * 
      * @exception IOException
      * @exception ServletException
-     * @exception SAXException
      * @exception Exception
      */
-    byte[] executeJSP(String url,
-                       HttpServletRequest request,
-                       HttpServletResponse response,
-                       ServletContext context)
-        throws IOException, ServletException, SAXException, Exception;
+    public byte[] executeJSP(String url,
+                             HttpServletRequest request,
+                             HttpServletResponse response,
+                             ServletContext context)
+        throws IOException, ServletException, Exception;
 }
