@@ -70,12 +70,11 @@ import java.util.StringTokenizer;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: MIMEUtils.java,v 1.4 2003/06/01 09:17:00 jefft Exp $
+ * @version CVS $Id: MIMEUtils.java,v 1.5 2003/06/19 11:17:20 jefft Exp $
  */
 public class MIMEUtils {
 
-    /** Our properties are now here: */
-    private static final String PROPS_FILE = "org/apache/cocoon/util/mime.types";
+    private static final String MIME_MAPPING_FILE = "org/apache/cocoon/util/mime.types";
 
     /** Default extensions for MIME types. */
     final private static Map extMap = new HashMap();
@@ -87,13 +86,13 @@ public class MIMEUtils {
      */
     static {
         try {
-            final InputStream is = MIMEUtils.class.getClassLoader().getResourceAsStream(PROPS_FILE);
+            final InputStream is = MIMEUtils.class.getClassLoader().getResourceAsStream(MIME_MAPPING_FILE);
             if ( null == is ) {
-                throw new RuntimeException("Cocoon cannot load MIME type mappings from " + PROPS_FILE);
+                throw new RuntimeException("Cocoon cannot load MIME type mappings from " + MIME_MAPPING_FILE);
             }
             loadMimeTypes(new InputStreamReader(is), extMap, mimeMap);
         } catch (IOException ioe) {
-            throw new RuntimeException("Cocoon cannot load MIME type mappings from " + PROPS_FILE);
+            throw new RuntimeException("Cocoon cannot load MIME type mappings from " + MIME_MAPPING_FILE);
         }
     }
 
@@ -107,7 +106,6 @@ public class MIMEUtils {
     public static String getMIMEType(final File file)
       throws FileNotFoundException, IOException {
         BufferedInputStream in = null;
-        System.out.println("****** "+file);
 
         try {
             in = new BufferedInputStream(new FileInputStream(file));
