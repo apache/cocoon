@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xconf xpath="/logkit/targets" unless="cocoon[@name='slide']">
+<xlog xpath="/logkit/targets" unless="cocoon[@name='slide']">
     <!-- The logger for the Slide components -->
     <cocoon id="slide">
       <filename>${context-root}/WEB-INF/logs/slide.log</filename>
@@ -8,4 +8,4 @@
       </format>
       <append>false</append>
     </cocoon>
-</xconf>
+</xlog>
