@@ -9,31 +9,33 @@ import org.apache.cocoon.kernel.composition.Wirings;
 import org.apache.cocoon.kernel.resolution.Resource;
 
 /**
- * <p></p> 
+ * <p>The {@link CoreWirings} provides an implementation of the {@link Wirings}
+ * interface wrapping all blocks installed in a {@link KernelDeployer}.</p> 
  *
- * @version CVS $Revision: 1.1 $
+ * @version CVS $Revision: 1.2 $
  * @author <a href="mailto:pier_fumagalli@vnu.co.uk">Pier Fumagalli</a>
  * @author Copyright &copy; 1996-2004 <a href="http://www.vnunet.com/">VNU
  *         Business Publications LTD.</a> All rights reserved
  */
 public class CoreWirings implements Wirings {
     
-	KernelDeployer deployer = null;
+    KernelDeployer deployer = null;
 
-	/**
-	 * <p>Create a new {@link CoreWirings} instance associated with a specified
+    /**
+     * <p>Create a new {@link CoreWirings} instance associated with a specified
      * {@link KernelDeployer}.</p>
      * 
      * @param deployer a <b>non null</b> {@link KernelDeployer} instance.
      * @throws NullPointerException if the specified deployer was <b>null</b>.
-	 */
-	public CoreWirings(KernelDeployer deployer) {
-		super();
+     */
+    public CoreWirings(KernelDeployer deployer) {
+        super();
         if (deployer == null) throw new NullPointerException("Null deployer");
         this.deployer = deployer;
-	}
+    }
 
-	public Wire lookup(Class role, String name) throws WiringException {
+    public Wire lookup(Class role, String name)
+    throws WiringException {
         /* Fail if either name or role are null */
         if (name == null) throw new WiringException("No name specified");
         if (role == null) throw new WiringException("No role specified");
@@ -44,9 +46,9 @@ public class CoreWirings implements Wirings {
 
         /* Wrong wiring name specified */
         throw new WiringException("Unknown wiring \"" + name + "\"");
-	}
+    }
 
-	public Resource resolve(String name) {
-		return null;
-	}
+    public Resource resolve(String name) {
+        return null;
+    }
 }
