@@ -153,6 +153,7 @@ public abstract class AbstractEsqlConnection extends AbstractLogEnabled {
                      database.indexOf("ingres") > -1 ||
                      database.indexOf("sap db") > -1 ||
                      database.indexOf("firebird") > -1 ||
+                     database.indexOf("apache derby") > -1 ||
                      database.indexOf("informix-online") > -1 ||
                      database.indexOf("sybase sql server") > -1) {
                 query = new JdbcEsqlQuery(getConnection(),queryString);
