@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
-  Copyright 1999-2004 The Apache Software Foundation
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
                               xmlns:n="http://www.betaversion.org/linotype/news/1.0"
                               xmlns="http://www.w3.org/1999/xhtml">
 
   <xsl:param name="home"/>
+  <xsl:param name="id"/>
 
   <xsl:template match="/">
     <html>
@@ -27,9 +13,11 @@
         <title><xsl:value-of select="n:news/n:title"/></title> 
         <link rel="stylesheet" type="text/css" href="{$home}/styles/main.css"/>
         <link rel="stylesheet" type="text/css" href="{$home}/styles/editor.css"/>
+        <script src="{$home}/scripts/utils.js" type="text/javascript">//</script>
+        <script src="{$home}/scripts/browser_dependent.js" type="text/javascript">//</script>
+        <script src="{$home}/scripts/schema.js" type="text/javascript">//</script>
+        <script src="{$home}/scripts/editor.js" type="text/javascript">//</script>
         <script type="text/javascript"><![CDATA[
-
-            prefixImageSrc="image-";
 
             function doAction(action) {
                 var form = document.forms[0];
@@ -48,6 +36,7 @@
                     form.elements['date'].value = getDate();
                     form.elements['time'].value = getTime();
                     form.elements['fulldate'].value = getFullDate();
+                    form.elements['isodate'].value = getISODate();
                     form.elements['innerHTML'].value = getInnerHTML();
                     form.elements['xml:content'].value = getContent();
                 }
@@ -55,10 +44,10 @@
                 form.elements['action'].value = action;
                 form.submit();
             }
+            
 	 ]]></script>
-        <script src="{$home}/scripts/editor.js" type="text/javascript"></script>
         <noscript>
-          <h1>Dude, you don't go anywhere around here without Javascript enabled. ;-)</h1>
+          <h1>Dude, you won't go anywhere around here without Javascript enabled. ;-)</h1>
         </noscript>
       </head>
 
@@ -70,6 +59,7 @@
           <input type="hidden" name="date"/>
           <input type="hidden" name="time"/>
           <input type="hidden" name="fulldate"/>
+          <input type="hidden" name="isodate"/>
           <input type="hidden" name="xml:content"/>
           <input type="hidden" name="innerHTML"/>
 
@@ -79,15 +69,20 @@
                 <td><div class="imagebutton" id="bold"><img src="{$home}/images/icons/bold.gif" alt="Strong" title="Strong"/></div></td>
                 <td><div class="imagebutton" id="italic"><img src="{$home}/images/icons/italic.gif" alt="Emphasis" title="Emphasis"/></div></td>
                 <td><div class="imagebutton" id="strikethrough"><img src="{$home}/images/icons/strikethrough.gif" alt="Error" title="Error"/></div></td>
-                <td><div class="imagebutton" id="quote"><img src="{$home}/images/icons/quote.gif" alt="Quote" title="Quote"/></div></td>
                 <td><div class="spacer"/></td>
                 <td><div class="imagebutton" id="removeformat"><img src="{$home}/images/icons/removeformat.gif" alt="Remove Format" title="Remove Format"/></div></td>
+                <td><div class="spacer"/></td>
+                <td><div class="imagebutton" id="undo"><img src="{$home}/images/icons/undo.gif" alt="Undo" title="Undo"/></div></td>
+                <td><div class="imagebutton" id="redo"><img src="{$home}/images/icons/redo.gif" alt="Redo" title="Redo"/></div></td>
                 <td><div class="spacer"/></td>
                 <td><div class="imagebutton" id="createlink"><img src="{$home}/images/icons/link.gif" alt="Link Selection" title="Link Selection"/></div></td>
                 <td><div class="imagebutton" id="unlink"><img src="{$home}/images/icons/unlink.gif" alt="Unlink Selection" title="Unlink Selection"/></div></td>
                 <td><div class="spacer"/></td>
                 <td><div class="imagebutton" id="insertimage"><img src="{$home}/images/icons/image.gif" alt="Add Image" title="Add Image"/></div></td>
                 <td><div class="imagebutton" id="inserthorizontalrule"><img src="{$home}/images/icons/horizontalrule.gif" alt="Add Horizontal Rule" title="Add Horizontal Rule"/></div></td>
+                <td><div class="spacer"/></td>
+                <td><div class="imagebutton" id="block"><img src="{$home}/images/icons/block.gif" alt="Block" title="Block"/></div></td>
+                <td><div class="imagebutton" id="unblock"><img src="{$home}/images/icons/unblock.gif" alt="UnBlock" title="UnBlock"/></div></td>
                 <td><div class="spacer"/></td>
                 <td><div class="imagebutton" id="insertorderedlist"><img src="{$home}/images/icons/orderedlist.gif" alt="Ordered List" title="Ordered List"/></div></td>
                 <td><div class="imagebutton" id="insertunorderedlist"><img src="{$home}/images/icons/unorderedlist.gif" alt="Unordered List" title="Unordered List"/></div></td>
@@ -98,7 +93,6 @@
                   <span id="block_selector">
                     <xsl:text>Block: </xsl:text>
                     <select id="formatblock">
-                      <option value="">Normal</option>
                       <option value="p">Paragraph</option>
                       <option value="h1">Heading 1</option>
                       <option value="h2">Heading 2</option>
@@ -113,16 +107,20 @@
                     </select>
                   </span>
                 </td>
-                <td style="white-space: nowrap;">
+                <!--td style="white-space: nowrap;">
                   <input type="checkbox" name="online">
                     <xsl:if test="n:news/@online='on'">
                       <xsl:attribute name="checked">true</xsl:attribute>
                     </xsl:if>
                   </input>
                   <label for="online">published</label>
-                </td>
+                </td-->
               </tr>
             </table>
+          </div>
+
+          <div id="navigation">
+           <a href="../../../../">linotype</a> &#187; <a href="../../../">private</a> &#187; <xsl:value-of select="$id"/>
           </div>
 
           <xsl:apply-templates/>
@@ -138,8 +136,17 @@
             <input type="button" value="Delete" onclick="doAction('delete')"/> 
             <input type="button" value="Save" onclick="doAction('save')"/>
             <input type="button" value="Finish" onclick="doAction('finish')"/>
+            <input type="button" value="Publish" onclick="doAction('publish')"/>
           </div>
-
+          
+          <script type="text/javascript">
+            // NOTE(SM): This is a workaround to a bug in the intra-frame security restrictions
+            // of the latest IE6 versions, I know it's ugly as hell, but blame them not me!
+            // If you find a better way to make this work, please let me know.
+            if (IE) {
+            	document.getElementById("edit").contentWindow.document.designMode = "On";
+            }
+          </script>
         </form>
       </body>
     </html>
@@ -157,7 +164,7 @@
           </tr>
         </table>
         <iframe id="edit" src="content" width="100%" height="400px" scrolling="auto" frameborder="0">Get a modern browser</iframe>
-        <div id="path">...</div>
+        <div id="editpath">...</div>
       </div>
       <div id="previous_innerHTML">#{innerHTML}</div>
     </div>
