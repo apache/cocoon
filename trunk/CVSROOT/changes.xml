@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.38 2000-03-03 14:16:19 stefano Exp $
+  $Id: changes.xml,v 1.39 2000-03-04 02:34:57 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add">
+   Passed request parameters to Xalan as stylesheet parameters.
+  </action>
+  <action dev="SM" type="fix">
+   Fixed a thread-safety problem with Xalan.
+  </action>
   <action dev="SM" type="fix">
    Patched Ant to remove dependency on Sun ProjectX and fixed problem for
    javadoc not working if tools.jar not set in classpath.
