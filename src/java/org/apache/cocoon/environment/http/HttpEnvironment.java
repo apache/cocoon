@@ -53,19 +53,22 @@ package org.apache.cocoon.environment.http;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
-import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.cocoon.Constants;
-import org.apache.cocoon.environment.*;
+import org.apache.cocoon.environment.AbstractEnvironment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.PermanentRedirector;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.util.NetUtils;
 
 /**
- * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.12 2003/09/27 12:59:51 joerg Exp $
+ * 
+ * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
+ * @version CVS $Id: HttpEnvironment.java,v 1.13 2003/10/30 16:42:58 vgritsenko Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -92,22 +95,25 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
      * Constructs a HttpEnvironment object from a HttpServletRequest
      * and HttpServletResponse objects
      */
-    public HttpEnvironment (String uri,
-                            String root,
-                            HttpServletRequest req,
-                            HttpServletResponse res,
-                            ServletContext servletContext,
-                            HttpContext context,
-                            String containerEncoding,
-                            String defaultFormEncoding)
+    public HttpEnvironment(String uri,
+                           String root,
+                           HttpServletRequest req,
+                           HttpServletResponse res,
+                           ServletContext servletContext,
+                           HttpContext context,
+                           String containerEncoding,
+                           String defaultFormEncoding)
      throws MalformedURLException, IOException {
-        super(uri, req.getParameter(Constants.VIEW_PARAM), root, extractAction(req));
+        super(uri, null, root, null);
 
         this.request = new HttpRequest(req, this);
         this.request.setCharacterEncoding(defaultFormEncoding);
         this.request.setContainerEncoding(containerEncoding);
         this.response = new HttpResponse(res);
         this.webcontext = context;
+        
+        setView(extractView(this.request));
+        setAction(extractAction(this.request));
         
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, this.response);
@@ -119,33 +125,6 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
         this.objectModel.put(HTTP_REQUEST_OBJECT, req);
         this.objectModel.put(HTTP_RESPONSE_OBJECT, res);
         this.objectModel.put(HTTP_SERVLET_CONTEXT, servletContext);
-    }
-
-   /**
-    * extract the action portion from the request
-    * (must be static because it's called in the super() constructor.
-    *  should maybe go into a helper or directly into sitemap)
-    */
-    private final static String extractAction(HttpServletRequest req) {
-      String action = req.getParameter(Constants.ACTION_PARAM);
-      if (action != null) {
-        /* TC: still support the deprecated syntax */
-        return(action);
-      }
-      else {
-        for(Enumeration e = req.getParameterNames(); e.hasMoreElements(); ) {
-          String name = (String)e.nextElement();
-          if (name.startsWith(Constants.ACTION_PARAM_PREFIX)) {
-            if (name.endsWith(".x") || name.endsWith(".y")) {
-              return(name.substring(Constants.ACTION_PARAM_PREFIX.length(),name.length()-2));
-            }
-            else {
-              return(name.substring(Constants.ACTION_PARAM_PREFIX.length()));
-            }
-          }
-        }
-        return(null);
-      }
     }
 
     public void redirect(boolean sessionmode, String newURL) throws IOException {
@@ -323,5 +302,4 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
     public boolean isExternal() {
         return true;
     }
-
 }

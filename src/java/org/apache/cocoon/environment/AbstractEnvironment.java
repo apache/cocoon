@@ -63,6 +63,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
@@ -78,7 +79,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.16 2003/09/18 14:40:25 vgritsenko Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.17 2003/10/30 16:42:58 vgritsenko Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -154,6 +155,58 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         this.action = action;
         this.objectModel = new HashMap();
     }
+
+    /**
+     * Allow implementations to set view later than in super() constructor.
+     * View can be set only once, and should be set in implementation's constructor.
+     */
+    protected void setView(String view) {
+        if (this.view != null) {
+            throw new IllegalStateException("View was already set on this environment");
+        }
+        this.view = view;
+    }
+
+    /**
+     * Allow implementations to set action later than in super() constructor
+     * Action can be set only once, and should be set in implementation's constructor.
+     */
+    protected void setAction(String action) {
+        if (this.action != null) {
+            throw new IllegalStateException("Action was already set on this environment");
+        }
+        this.action = action;
+    }
+
+    /**
+     * Helper method to extract the view name from the request.
+     */
+    protected static String extractView(Request request) {
+        return request.getParameter(Constants.VIEW_PARAM);
+    }
+
+    /**
+     * Helper method to extract the action name from the request.
+     */
+     protected static String extractAction(Request req) {
+         String action = req.getParameter(Constants.ACTION_PARAM);
+         if (action != null) {
+             /* TC: still support the deprecated syntax */
+             return action;
+         } else {
+             for(Enumeration e = req.getParameterNames(); e.hasMoreElements(); ) {
+                 String name = (String)e.nextElement();
+                 if (name.startsWith(Constants.ACTION_PARAM_PREFIX)) {
+                     if (name.endsWith(".x") || name.endsWith(".y")) {
+                         return name.substring(Constants.ACTION_PARAM_PREFIX.length(),name.length()-2);
+                     } else {
+                         return name.substring(Constants.ACTION_PARAM_PREFIX.length());
+                     }
+                 }
+             }
+             return null;
+         }
+     }
 
     // Sitemap methods
 
