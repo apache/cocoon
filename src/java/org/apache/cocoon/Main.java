@@ -82,7 +82,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.17 2003/09/19 09:09:43 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.18 2003/09/26 08:25:21 upayavira Exp $
  */
 public class Main {
 
@@ -308,14 +308,14 @@ public class Main {
         }
 
         String destDir = null;
-        if (line.hasOption(DEST_DIR_OPT)) {
-            destDir = line.getOptionValue(DEST_DIR_OPT);
-        }
-
         if (line.hasOption(XCONF_OPT)) {
             // destDir from command line overrides one in xconf file
             destDir = Main.processXConf(cocoon, line.getOptionValue(XCONF_OPT), destDir);
         }
+        if (line.hasOption(DEST_DIR_OPT)) {
+            destDir = line.getOptionValue(DEST_DIR_OPT);
+        }
+
         if (line.hasOption(VERBOSE_OPT)) {
             cocoon.setVerbose(true);
         }
