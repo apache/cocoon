@@ -41,6 +41,8 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Ant task to patch xmlfiles.
@@ -62,7 +64,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.17 $ $Date: 2004/03/10 13:33:03 $
+ * @version CVS $Revision: 1.18 $ $Date: 2004/03/11 15:11:10 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -74,6 +76,9 @@ public final class XConfToolTask extends MatchingTask {
     private boolean addComments;
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
+		private DocumentBuilderFactory builderFactory;
+    private DocumentBuilder builder;
+    private Transformer transformer;
 
     /**
      * Set file, which should be patched.
@@ -126,15 +131,15 @@ public final class XConfToolTask extends MatchingTask {
             throw new BuildException("file attribute is required", location);
         }
         try {
-            final DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory = DocumentBuilderFactory.newInstance();
             builderFactory.setValidating(false);
             builderFactory.setExpandEntityReferences(false);
             builderFactory.setNamespaceAware(false);
             builderFactory.setAttribute(
                 "http://apache.org/xml/features/nonvalidating/load-external-dtd",
                 Boolean.FALSE);
-            final DocumentBuilder builder = builderFactory.newDocumentBuilder();
-            final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            builder = builderFactory.newDocumentBuilder();
+            transformer = TransformerFactory.newInstance().newTransformer();
 
             // load xml
             log("Reading: " + this.file, Project.MSG_DEBUG);
@@ -149,17 +154,51 @@ public final class XConfToolTask extends MatchingTask {
             boolean hasChanged = false;
             // process recursive
             File patchfile;
+						ArrayList suspended = new ArrayList();
             for (int i = 0; i < list.length; i++) {
                 patchfile = new File(this.srcdir, list[i]);
                 try {
                     // Adds configuration snippet from the file to the configuration
-                    hasChanged |= patch(document,
-                                        builder.parse(patchfile.toURL().toExternalForm()),
-                                        patchfile.toString());
+										boolean changed = patch(document, patchfile);
+                    hasChanged |= changed;
+										if (!changed) {
+										    suspended.add(patchfile);
+										}
                 } catch (SAXException e) {
                     log("Ignoring: "+patchfile+"\n(not a valid XML)");
                 }
             }
+
+						if (hasChanged && !suspended.isEmpty()) {
+						    log("Try to apply suspended patch files");
+						}
+
+						ArrayList newSuspended = new ArrayList();
+						while (hasChanged && !suspended.isEmpty()) {
+							  hasChanged = false;
+							  for(Iterator i=suspended.iterator(); i.hasNext();) {
+									  patchfile = (File)i.next();
+								    try {
+  										 	// Adds configuration snippet from the file to the configuration
+	  										boolean changed = patch(document, patchfile);
+	                      hasChanged |= changed;
+	                      if (!changed) {
+                            newSuspended.add(patchfile);
+		                    }
+		                } catch (SAXException e) {
+						  				  log("Ignoring: "+patchfile+"\n(not a valid XML)");
+										}
+							  }
+						    suspended = newSuspended;
+								newSuspended = new ArrayList();
+						}
+
+						if (!suspended.isEmpty()) {
+						    for(Iterator i=suspended.iterator(); i.hasNext();) {
+                    patchfile = (File)i.next();
+        						log("Dismiss: "+patchfile.toString());
+								}
+						}
 
             if (hasChanged) {
                 log("Writing: " + this.file);
@@ -203,17 +242,20 @@ public final class XConfToolTask extends MatchingTask {
      * @return True, if the document was successfully patched
      */
     private boolean patch(final Document configuration,
-                          final Document component,
-                          String file)
-                          throws TransformerException, IOException, DOMException {
+                          final File file)
+                          throws TransformerException, IOException, DOMException, SAXException {
+
+        Document component = builder.parse(file.toURL().toExternalForm());
+				String filename = file.toString();
+														
         // Check to see if Document is an xconf-tool document
         Element elem = component.getDocumentElement();
 
-        String extension = file.lastIndexOf(".")>0?file.substring(file.lastIndexOf(".")+1):"";
-        String basename = basename(file);
+        String extension = filename.lastIndexOf(".")>0?filename.substring(filename.lastIndexOf(".")+1):"";
+        String basename = basename(filename);
 
         if (!elem.getTagName().equals(extension)) {
-            log("Skipping non xconf-tool file: "+file);
+            log("Skipping non xconf-tool file: "+filename);
             return false;
         }
 
@@ -227,9 +269,9 @@ public final class XConfToolTask extends MatchingTask {
 
         NodeList nodes = XPathAPI.selectNodeList(configuration, xpath);
 
+				// Suspend, because the xpath returned not one node
         if (nodes.getLength() !=1 ) {
-  					log("Error in: "+file+" , returned not one node, but "+
-	              nodes.getLength() + " nodes");
+					  log("Suspending: "+filename);
 						return false;
         }
         Node root = nodes.item(0);
@@ -248,11 +290,11 @@ public final class XConfToolTask extends MatchingTask {
         }
 
         if (ifProp != null && ifProp.length() > 0 && !ifValue ) {
-            log("Skipping: " + file, Project.MSG_DEBUG);
+            log("Skipping: " + filename, Project.MSG_DEBUG);
             return false;
         } else if (testPath != null && testPath.length() > 0 &&
             XPathAPI.selectNodeList(root, testPath).getLength() != 0) {
-            log("Skipping: " + file, Project.MSG_DEBUG);
+            log("Skipping: " + filename, Project.MSG_DEBUG);
             return false;
         } else {
             // Test if component wants us to remove a list of nodes first
@@ -291,7 +333,7 @@ public final class XConfToolTask extends MatchingTask {
             if (xpath != null && xpath.length() > 0) {
                 nodes = XPathAPI.selectNodeList(root, xpath);
                 if (nodes.getLength() == 0) {
-                    log("Error in: "+file);
+                    log("Error in: "+filename);
                     throw new IOException("XPath ("+xpath+") returned zero nodes");
                 }
                 before = nodes.item(0);
@@ -300,7 +342,7 @@ public final class XConfToolTask extends MatchingTask {
                 if (xpath != null && xpath.length() > 0) {
                     nodes = XPathAPI.selectNodeList(root, xpath);
                     if (nodes.getLength() == 0) {
-                        log("Error in: "+file);
+                        log("Error in: "+filename);
                         throw new IOException("XPath ("+xpath+") zero nodes.");
                     }
                     before = nodes.item(nodes.getLength()-1).getNextSibling();
@@ -308,7 +350,7 @@ public final class XConfToolTask extends MatchingTask {
             }
 
             // Add 'component' data into 'root' node
-            log("Processing: "+file);
+            log("Processing: "+filename);
             NodeList componentNodes = component.getDocumentElement().getChildNodes();
 
             if (this.addComments) {
