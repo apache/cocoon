@@ -1,10 +1,88 @@
 <?xml version="1.0"?>
 <html>
-  <head>
-    <title>Cocoon concepts</title>
-  </head>
-  <body>
-    <h1>Sepration of Concerns (SoC)</h1>
-    <p>Unter SoC versteht man ...</p>
-  </body>
+    <head>
+        <title>Cocoon concepts</title>
+    </head>
+    <body>
+        <h1>Separation of Concerns (SoC)</h1>
+        <p>We believe the single most important Cocoon innovation is SoC-based design.</p>
+
+        <p>SoC is something that you've always been aware of: not everybody is equal,
+    not everybody performs the same job with the same ability.</p>
+
+        <p>It can be observed that separating people with common skills in different
+    working groups increases productivity and reduces management costs, but only
+    if the groups do not overlap and have clear "contracts" that define their
+    operability and their concerns.</p>
+
+        <p>For a web publishing system, the Cocoon project uses what we call the
+            <em>pyramid of contracts</em> which outlines four major concern areas and five
+            contracts between them. Here is the picture:
+        </p>
+
+        <img alt="The Cocoon Pyramid Model of Contracts" src="files/pyramid-model.gif"/>
+        <p>
+            Cocoon is <em>engineered</em> to provide you a way to isolate these four
+            concern areas using just those 5 contracts, removing the contract
+            between style and logic that has been bugging web site development since
+            the beginning of the Web.
+        </p>
+        <p>
+            Why? because programmers and graphic people have very different skills
+            and work habits... so, instead of creating GUIs to hide the things that
+            can be harmful (like graphic to programmers or logic to designers),
+            Cocoon allows you to separate the things into different files, allowing
+            you to "seal" your working groups into separate virtual rooms connected
+            with the other rooms only by those "pipes" (the contracts), that you
+            give them from the management area.
+        </p>
+        <p>
+            Let's have an example:
+        </p>
+        <pre class="code">
+&lt;page&gt;
+    &lt;content&gt;
+        &lt;para&gt;Today is &lt;dynamic:today/&gt;&lt;/para&gt;
+    &lt;/content&gt;
+&lt;/page&gt;
+        </pre>
+        <p>
+            Such a page is written by the content writers and you give them the
+            "contract" that states that the tag &lt;dynamic:today/&gt; prints out the time of the day
+            when included in the page. Content writers don't care (nor
+            should) about what language has been used for that, nor they
+            can mess up with the programming logic that generates the
+            content since it's stored in another part of the system they
+            don't have access to.
+        </p>
+        <p>
+            So &lt;dynamic:today/&gt; is the "logic - content" contract.
+        </p>
+        <p>
+            At the same time, the structure of the page is given as a contract to
+            the graphic designers who have to come up with the transformation rules
+            that transform this structure in a language that the browser can
+            understand (HTML, for example).
+        </p>
+        <p>
+            So, the page structure is the "content - style" contract.
+        </p>
+        <p>
+            As long as these contracts don't change, the three areas can work in a
+            completely parallel way without overwhelming the human resources used to
+            manage them: costs decrease because time to market is reduced and
+            maintenance costs is decreased because errors do not propagate out of
+            the concern areas.
+        </p>
+        <p>
+            For example, you can tell your designers to come up with a "Xmas look"
+            for your web site, without even telling the other people: just switch to
+            the Xmas transformation rules on Xmas morning and you're done.... just
+            imagine how painful it would be to do this on your web site today.
+        </p>
+        <p>
+            With the Cocoon architecture all this is a couple of line changes away.
+        </p>
+
+    </body>
 </html>
