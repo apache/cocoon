@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-31 15:52:35 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-11 13:11:53 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -259,7 +259,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
 
   <xsl:template match="xsp:expr">
     <xsl:choose>
-      <xsl:when test="starts-with(name(..), 'xsp:') and name(..) != 'xsp:content'">
+      <xsl:when test="starts-with(name(..), 'xsp:') and name(..) != 'xsp:content' and name(..) != 'xsp:element'">
         <!--
              Expression is nested inside another XSP tag:
              preserve its Java type
