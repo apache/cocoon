@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.portal.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -38,7 +39,7 @@ import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventConverter;
 import org.apache.cocoon.portal.event.RequestEvent;
 import org.apache.cocoon.portal.event.ConvertableEvent;
-import org.apache.excalibur.source.SourceUtil;
+import org.apache.cocoon.util.NetUtils;
 
 /**
  *
@@ -151,7 +152,11 @@ public class DefaultLinkService
                 } else {
                     buffer.append('?');
                 }
-                buffer.append((String) objects[1]).append('=').append(SourceUtil.encode((String) objects[2]));
+                try {
+                    buffer.append((String) objects[1]).append('=').append(NetUtils.encode((String) objects[2], "utf-8"));
+                } catch (UnsupportedEncodingException uee) {
+                    // ignore this as utf-8 is always supported
+                }
                 hasParams = true;
             }
         }
@@ -174,7 +179,11 @@ public class DefaultLinkService
         }
         StringBuffer value = new StringBuffer("");
         String parameterName = processEvent(event, value);
-        buffer.append(parameterName).append('=').append(SourceUtil.encode(value.toString()));
+        try {
+            buffer.append(parameterName).append('=').append(NetUtils.encode(value.toString(), "utf-8"));
+        } catch (UnsupportedEncodingException uee) {
+            // ignore this as utf-8 is always supported
+        }
         return true;
     }
     
@@ -217,7 +226,11 @@ public class DefaultLinkService
                 } else {
                     buffer.append('?');
                 }
-                buffer.append((String) objects[1]).append('=').append(SourceUtil.encode((String) objects[2]));
+                try {
+                    buffer.append((String) objects[1]).append('=').append(NetUtils.encode((String) objects[2], "utf-8"));
+                } catch (UnsupportedEncodingException uee) {
+                    // ignore this as utf-8 is always supported
+                }
                 hasParams = true;
             }
         }
@@ -279,7 +292,11 @@ public class DefaultLinkService
         } else {
             info.linkBase.append('?');
         }
-        info.linkBase.append(name).append('=').append(SourceUtil.encode(value));
+        try {
+            info.linkBase.append(name).append('=').append(NetUtils.encode(value, "utf-8"));
+        } catch (UnsupportedEncodingException uee) {
+            // ignore this as utf-8 is always supported
+        }
         info.hasParameters = true;
     }
 
@@ -331,7 +348,11 @@ public class DefaultLinkService
             } else {
                 buffer.append('?');
             }
-            buffer.append((String)objects[1]).append('=').append(SourceUtil.encode((String)objects[2]));
+            try {
+                buffer.append((String)objects[1]).append('=').append(NetUtils.encode((String)objects[2], "utf-8"));
+            } catch (UnsupportedEncodingException uee) {
+                // ignore this as utf-8 is always supported
+            }
             hasParams = true;
         }
         return buffer.toString();
@@ -371,14 +392,13 @@ public class DefaultLinkService
                 // Could not convert the event
                 value.append(this.converter.encode(event));
             } else {
-                String eventValue;
                 parameterName = DEFAULT_CONVERTABLE_EVENT_PARAMETER_NAME;
                 try {
-                    eventValue = SourceUtil.encode(eventStr, "utf-8");
-                } catch (Exception e) {
-                    eventValue = SourceUtil.encode(eventStr);
+                    String eventValue = NetUtils.encode(eventStr, "utf-8");
+                    value.append(eventParName).append('(').append(eventValue).append(')');
+                } catch (UnsupportedEncodingException uee) {
+                    // ignore this as utf-8 is always supported
                 }
-                value.append(eventParName).append('(').append(eventValue).append(')');
             }
         } else {
             if (event instanceof RequestEvent) {
