@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,7 +69,7 @@ import org.apache.cocoon.xml.AbstractXMLConsumer;
  * </pre>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ServerPagesAction.java,v 1.1 2004/03/10 12:58:04 stephan Exp $
+ * @version CVS $Id$
  */
 public class ServerPagesAction
         extends ConfigurableComposerAction
@@ -103,6 +103,9 @@ public class ServerPagesAction
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.generatorHandler != null) {
             this.generatorHandler.dispose();
