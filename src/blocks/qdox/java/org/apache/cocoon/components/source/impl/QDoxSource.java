@@ -96,7 +96,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Source implementation for XML Javadoc.
  *
  * @author <a href="mailto:b.guijt1@chello.nl">Bart Guijt</a>
- * @version CVS $Revision: 1.4 $ $Date: 2003/10/25 18:06:19 $
+ * @version CVS $Revision: 1.5 $ $Date: 2004/02/29 05:29:09 $
  */
 public final class QDoxSource
     extends AbstractSource
@@ -237,7 +237,6 @@ public final class QDoxSource
     public void toSAX(ContentHandler handler) throws SAXException {
         if (javadocClass == null) {
             logger.error("No classfile loaded! Cannot output SAX events.");
-
             return;
         }
 
@@ -752,7 +751,7 @@ public final class QDoxSource
 
         try {
             resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
-            Source source = resolver.resolveURI("javadoc:" + className);
+            Source source = resolver.resolveURI("qdox:" + className);
             if (source instanceof QDoxSource) {
                 QDoxSource javadocSource = (QDoxSource) source;
                 jClass = javadocSource.getJavadocClass();
