@@ -1087,6 +1087,9 @@ public class CocoonPortlet extends GenericPortlet {
 
         Environment env;
         try {
+            if (uri.charAt(0) == '/') {
+                uri = uri.substring(1);
+            }
             env = getEnvironment(servletPath, pathInfo, uri, request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
@@ -1239,6 +1242,9 @@ public class CocoonPortlet extends GenericPortlet {
 
         Environment env;
         try {
+            if (uri.charAt(0) == '/') {
+                uri = uri.substring(1);
+            }
             env = getEnvironment(servletPath, pathInfo, uri, request, res);
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
