@@ -3,9 +3,8 @@
 <?cocoon-process type="xinclude"?>
 <!--<?cocoon-format type="text/xml"?>-->
 
-<page 
-	xmlns:xinclude="http://www.w3.org/1999/XML/xinclude"
->
-<include xinclude:parse="text" xinclude:href="foo.txt"/>
-<include xinclude:parse="xml" xinclude:href="foo.xml"/>
+<page xmlns:xinclude="http://www.w3.org/1999/XML/xinclude" >
+<xinclude:include xinclude:parse="text" xinclude:href="foo.txt"/>
+<xinclude:include xinclude:parse="xml" xinclude:href="foo.xml"/>
 </page>
+

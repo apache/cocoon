@@ -63,7 +63,7 @@ COPYRIGHT:
 
 <!ENTITY % priorities "showstopper|high|medium|low|wish|dream">
 
-<!ENTITY % contexts "build|docs|code|admin|design">
+<!ENTITY % contexts "build|docs|code|admin|design|samples">
 
 <!-- =============================================================== -->
 <!-- Document Type Definition -->
