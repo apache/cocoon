@@ -63,21 +63,34 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * Abstract base class for configurable SourceInspectors.
+ * Abstract base class for SourceInspectors that want to 
+ * configure the set of properties they handle beforehand.
+ * 
+ * <p>
+ * Knowing which properties an inspector handles beforehand
+ * greatly improves property management performance.
+ * </p>
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  */
 public abstract class AbstractConfigurableSourceInspector extends AbstractLogEnabled 
-    implements SourceInspector, Configurable {
+implements SourceInspector, Configurable {
 
     // the set of properties this inspector is configured to handle
     private Set m_properties;
-    
+
+
+    // ---------------------------------------------------- lifecycle
+
     public AbstractConfigurableSourceInspector() {
     }
-    
+
     /**
      * Configure this source inspector to handle properties of required types.
+     * <p>
+     *  Configuration is in the form of a set of property elements as follows:<br>
+     *  <code>&lt;property name="owner" namespace="meta"&gt;</code>
+     * </p>
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         final Configuration[] properties = configuration.getChildren("property");
@@ -90,10 +103,22 @@ public abstract class AbstractConfigurableSourceInspector extends AbstractLogEna
                     + properties[i].getLocation();
                 throw new ConfigurationException(message);
             }
-            m_properties.add(namespace + "#" + name);
+            String property = namespace + "#" + name;
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Handling '" + property + "'");
+            }
+            m_properties.add(property);
         }
     }
-    
+
+    // ---------------------------------------------------- SourceInspector methods
+
+    /**
+     * Iterates over the configured set of properties to handle,
+     * for each property calls <code>doGetSourceProperty()</code>,
+     * and returns the list of properties thus obtained. Subclasses
+     * may want to overide this behavior to improve performance.
+     */
     public SourceProperty[] getSourceProperties(Source source) throws SourceException {
         final Set result = new HashSet();
         final Iterator properties = m_properties.iterator();
@@ -102,14 +127,18 @@ public abstract class AbstractConfigurableSourceInspector extends AbstractLogEna
             int index = property.indexOf('#');
             String namespace = property.substring(0,index);
             String name      = property.substring(index+1);
-            SourceProperty sp = getSourceProperty(source,namespace,name);
+            SourceProperty sp = doGetSourceProperty(source,namespace,name);
             if (sp != null) {
                 result.add(sp);
             }
         }
         return (SourceProperty[]) result.toArray(new SourceProperty[result.size()]);
     }
-    
+
+    /**
+     * Checks if this inspector is configured to handle the requested property
+     * and if so forwards the call to <code>doGetSourceProperty</code>.
+     */
     public final SourceProperty getSourceProperty(Source source, String namespace, String name) 
         throws SourceException {
         
@@ -122,15 +151,31 @@ public abstract class AbstractConfigurableSourceInspector extends AbstractLogEna
         }
         return null;
     }
-    
+
+    // ---------------------------------------------------- abstract methods
+
+    /**
+     * Do the actual work of getting the requested SourceProperty for the given Source.
+     */
+    protected abstract SourceProperty doGetSourceProperty(Source source, String ns, String name)
+        throws SourceException;
+
+
+    // ---------------------------------------------------- utility methods
+
+    /**
+     * Check if this inspector is configured to handle properties of 
+     * the given type.
+     */
     protected final boolean handlesProperty(String namespace, String name) {
         return m_properties.contains(namespace + "#" + name);
     }
     
-    protected abstract SourceProperty doGetSourceProperty(Source source, String ns, String name)
-        throws SourceException;
-    
+    /**
+     * Provide subclasses access to the set of configured properties.
+     */
     protected final Set getPropertyTypes() {
         return m_properties;
     }
+
 }
