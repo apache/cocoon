@@ -1,12 +1,12 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ * Copyright 1999-2005 The Apache Software Foundation.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,22 +15,22 @@
  */
 package org.apache.cocoon.components.modules.input;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.commons.jxpath.ClassFunctions;
-import org.apache.commons.jxpath.FunctionLibrary;
+
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathIntrospector;
-import org.apache.commons.jxpath.PackageFunctions;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id$
+ * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
+ * @version $Id$
  */
 public class JXPathHelper {
 
@@ -39,73 +39,21 @@ public class JXPathHelper {
     }
 
     /**
-     * Configure component. Preprocess list of packages and functions
-     * to add to JXPath context later.
+     * Configure component. Preprocess list of packages, functions
+     * and namespaces to add to the JXPath context later.
+     *
+     * This method used in both AbstractJXPathModule and JXPathMetaModule
+     * to configure JXPath.
      *
      * @param config a <code>Configuration</code> value
      * @exception ConfigurationException if an error occurs
      */
-    public static JXPathHelperConfiguration setup(Configuration config, boolean lenient) throws ConfigurationException {
+    public static JXPathHelperConfiguration setup(Configuration config)
+    throws ConfigurationException {
 
-        // JXPathMetaModule starts copying here
-        // please keep both in sync.
-
-        lenient = config.getChild("lenient").getValueAsBoolean(lenient);
-        FunctionLibrary library = new FunctionLibrary();
-        getFunctions(library, config);
-        getPackages(library, config);
-        // the following is necessary to be able to use methods on objects without
-        // explicitely registering extension functions (see PackageFunctions javadoc)
-        library.addFunctions(new PackageFunctions("", null));
-        return new JXPathHelperConfiguration(library, lenient);
+        return new JXPathHelperConfiguration(config);
     }
 
-    /**
-     * Register all extension functions listed in the configuration
-     * through <code>&lt;function name="fully.qualified.Class"
-     * prefix="prefix"/&gt;</code> in the given FunctionLibrary.
-     *
-     * @param lib a <code>FunctionLibrary</code> value
-     * @param conf a <code>Configuration</code> value
-     */
-    private static void getFunctions(FunctionLibrary lib, Configuration conf) {
-
-        Configuration[] children = conf.getChildren("function");
-        int i = children.length;
-        while (i-- > 0) {
-            String clazzName = children[i].getAttribute("name", null);
-            String prefix = children[i].getAttribute("prefix", null);
-            if (clazzName != null && prefix != null) {
-                try {
-                    Class clazz = Class.forName(clazzName);
-                    lib.addFunctions(new ClassFunctions(clazz, prefix));
-                } catch (ClassNotFoundException cnf) {
-                    // ignore
-                }
-            }
-        }
-    }
-
-    /**
-     * Register all extension packages listed in the configuration
-     * through <code>&lt;package name="fully.qualified.package"
-     * prefix="prefix"/&gt;</code> in the given FunctionLibrary.
-     *
-     * @param lib a <code>FunctionLibrary</code> value
-     * @param conf a <code>Configuration</code> value
-     */
-    private static void getPackages(FunctionLibrary lib, Configuration conf) {
-
-        Configuration[] children = conf.getChildren("package");
-        int i = children.length;
-        while (i-- > 0) {
-            String packageName = children[i].getAttribute("name", null);
-            String prefix = children[i].getAttribute("prefix", null);
-            if (packageName != null && prefix != null) {
-                lib.addFunctions(new PackageFunctions(packageName, prefix));
-            }
-        }
-    }
 
     /**
      * Actually add global functions and packages as well as those
@@ -115,36 +63,37 @@ public class JXPathHelper {
      * @param conf a <code>Configuration</code> value holding local
      * packages and functions.
      */
-    private static void setupExtensions(JXPathHelperConfiguration setup, JXPathContext context, Configuration conf) {
+    private static void setup(JXPathHelperConfiguration setup, JXPathContext context, Configuration conf)
+    throws ConfigurationException {
 
-        FunctionLibrary localLib = null;
+        // Create local config (if necessary)
+        JXPathHelperConfiguration local = conf == null ? setup : new JXPathHelperConfiguration(setup, conf);
 
-        if (conf != null) {
-            localLib = new FunctionLibrary();
-            localLib.addFunctions(setup.getLibrary());
-            getPackages(localLib, conf);
-            getFunctions(localLib, conf);
-        } else {
-            localLib = setup.getLibrary();
+        // Setup context with local config
+        context.setLenient(setup.isLenient());
+        context.setFunctions(local.getLibrary());
+        if (local.getNamespaces() != null) {
+            for (Iterator i = local.getNamespaces().entrySet().iterator(); i.hasNext();) {
+                final Map.Entry entry = (Map.Entry) i.next();
+                context.registerNamespace((String) entry.getKey(), (String) entry.getValue());
+            }
         }
-
-        context.setFunctions(localLib);
     }
 
-    public static Object getAttribute(
-        String name,
-        Configuration modeConf,
-        JXPathHelperConfiguration setup,
-        Object contextObj)
-        throws ConfigurationException {
+    public static Object getAttribute(String name,
+                                      Configuration modeConf,
+                                      JXPathHelperConfiguration setup,
+                                      Object contextObj)
+    throws ConfigurationException {
 
-        if (contextObj == null)
+        if (contextObj == null) {
             return null;
+        }
+
         try {
             JXPathContext jxContext = JXPathContext.newContext(contextObj);
-            setupExtensions(setup, jxContext, modeConf);
-            if (setup.isLenient())
-                jxContext.setLenient(true); // return null insted of exception on non existing property
+            setup(setup, jxContext, modeConf);
+
             Object obj = jxContext.getValue(name);
             return obj;
         } catch (Exception e) {
@@ -152,33 +101,34 @@ public class JXPathHelper {
         }
     }
 
-    public static Object[] getAttributeValues(
-        String name,
-        Configuration modeConf,
-        JXPathHelperConfiguration setup,
-        Object contextObj)
-        throws ConfigurationException {
-            
-        if (contextObj == null)
+    public static Object[] getAttributeValues(String name,
+                                              Configuration modeConf,
+                                              JXPathHelperConfiguration setup,
+                                              Object contextObj)
+    throws ConfigurationException {
+
+        if (contextObj == null) {
             return null;
+        }
+
         try {
             JXPathContext jxContext = JXPathContext.newContext(contextObj);
+            setup(setup, jxContext, modeConf);
+
             List values = null;
-            setupExtensions(setup, jxContext, modeConf);
-            if (setup.isLenient())
-                jxContext.setLenient(true); // return null insted of exception on non existing property
             Iterator i = jxContext.iterate(name);
-            if (i.hasNext()) { 
-                values = new LinkedList(); 
-            } 
+            if (i.hasNext()) {
+                values = new LinkedList();
+            }
             while (i.hasNext()) {
                 values.add(i.next());
             }
             Object[] obj = null;
             if (values != null) {
                 obj = values.toArray();
-                if (obj.length == 0)
+                if (obj.length == 0) {
                     obj = null;
+                }
             }
             return obj;
         } catch (Exception e) {
@@ -187,21 +137,25 @@ public class JXPathHelper {
     }
 
 
-    public static Iterator getAttributeNames(JXPathHelperConfiguration setup, Object contextObj) throws ConfigurationException {
+    public static Iterator getAttributeNames(JXPathHelperConfiguration setup, Object contextObj)
+    throws ConfigurationException {
 
-        if (contextObj == null)
+        if (contextObj == null) {
             return null;
+        }
+
         try {
             JXPathBeanInfo info = JXPathIntrospector.getBeanInfo(contextObj.getClass());
             java.beans.PropertyDescriptor[] properties = info.getPropertyDescriptors();
-            java.util.List names = new java.util.LinkedList();
+
+            List names = new LinkedList();
             for (int i = 0; i < properties.length; i++) {
                 names.add(properties[i].getName());
             }
+
             return names.listIterator();
         } catch (Exception e) {
             throw new ConfigurationException("Error retrieving attribute names for class: " + contextObj.getClass(), e);
         }
-
     }
 }
