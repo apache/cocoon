@@ -1,57 +1,57 @@
 <?xml version="1.0"?>
 
-<samples>
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <group name="Multimedia Hello World">
-   <sample name="HTML" url="hello.html">
+   <sample name="HTML" xlink:href="hello.html" xlink:type="simple">
     This is a very simple demostration of how to use Cocoon. A simple XML page
     is transformed into an HTML page.
    </sample>
-   <sample name="WML" url="hello.wml">
+   <sample name="WML" xlink:href="hello.wml" xlink:type="simple">
     Now something more juicy: the exact same page is translated into WAP WML.
    </sample>
-   <sample name="VoxML" url="hello.vml">
+   <sample name="VoxML" xlink:href="hello.vml" xlink:type="simple">
     Maybe you have your hands busy? with VoxML you don't need hands, just your voice.
    </sample>
-   <sample name="SVG" url="hello.svg">
+   <sample name="SVG" xlink:href="hello.svg" xlink:type="simple">
     Need a fancier look? No problem, SVG is your friend.
    </sample>
-   <sample name="VRML" url="hello.wrl">
+   <sample name="VRML" xlink:href="hello.wrl" xlink:type="simple">
     Need more space? Well, not really useful in this case, but VRML may come handy.
    </sample>
-   <sample name="PDF" url="hello.pdf">
+   <sample name="PDF" xlink:href="hello.pdf" xlink:type="simple">
     Printed HTML sucks? Don't worry, your friend Cocoon gives you a nice PDF.
    </sample>
   </group>
 
   <group name="XML-ized web sites">
-   <sample name="java.apache.org" url="sites/java.apache.org">
+   <sample name="java.apache.org" xlink:href="sites/java.apache.org">
     This page shows a much more complex example that shows how powerful
     is the style separation and how powerful XML+XSLT can be even for
     web publishing.
    </sample>
-   <sample name="jakarta.apache.org" url="sites/jakarta.apache.org">
+   <sample name="jakarta.apache.org" xlink:href="sites/jakarta.apache.org">
     This pages shows the XML-ized version of the Apache Jakarta web site.
    </sample>
   </group>
   
   <group name="Static Content">
-   <sample name="formatting objects" url="fo">
+   <sample name="formatting objects" xlink:href="fo">
     This is an example of FO translated to PDF by Apache FOP.
    </sample>
-   <sample name="scalable vector graphics" url="svg">
+   <sample name="scalable vector graphics" xlink:href="svg">
     An example of a SVG file rendered to a PNG image.
    </sample>
-   <sample name="slides" url="slides/slides">
+   <sample name="slides" xlink:href="slides/slides">
     Example of complex XSLT usage.
    </sample>
   </group>
 
   <group name="Dynamic Content">
-   <sample name="Simple XSP" url="xsp/simple">
+   <sample name="Simple XSP" xlink:href="xsp/simple">
     Simple XSP example.
    </sample>
-   <sample name="Simple SQL" url="sql/sql-page">
+   <sample name="Simple SQL" xlink:href="sql/sql-page">
     Simple SQL example. You should make sure that you have a database and 
     table according to the conf/sitemap.xmap and the documens/sql/sql-page.sql 
     definitions.
@@ -59,10 +59,10 @@
   </group>
 
   <group name="System Pages">
-   <sample name="Status Page" url="status">
+   <sample name="Status Page" xlink:href="status">
     Cocoon status page.
    </sample>
-   <sample name="Error Page" url="generror">
+   <sample name="Error Page" xlink:href="generror">
     This example shows what happens if an error is triggered in the pipeline.
    </sample>
   </group>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
 
  <xsl:template match="/">
   <html>
@@ -90,7 +90,7 @@
   <tr>
    <td width="100%" bgcolor="#ffffff" align="left">
     <font size="+0" face="arial,helvetica,sanserif" color="#000000">    
-      <a href="{@url}"><xsl:value-of select="@name"/></a><xsl:text> - </xsl:text>
+      <a href="{@href}"><xsl:value-of select="@name"/></a><xsl:text> - </xsl:text>
       <xsl:value-of select="."/>
     </font>
    </td>

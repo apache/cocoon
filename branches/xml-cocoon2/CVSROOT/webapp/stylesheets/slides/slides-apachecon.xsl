@@ -14,7 +14,7 @@
        <td>
         <table width="100%">
          <tr>
-          <td width="100%"><img src="../images/cocoon.png" border="0" height="51" width="317"/></td>
+          <td width="100%"><img src="../images/cocoon.gif" border="0"/></td>
           <td>
            <xsl:apply-templates select="navigation"/>
           </td>
