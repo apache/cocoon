@@ -29,7 +29,7 @@ import java.util.Iterator;
  * <code>Source.getLastModified()</code> which can be a costly operation.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: DelayedRefreshSourceWrapper.java,v 1.4 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: DelayedRefreshSourceWrapper.java,v 1.5 2004/03/28 20:51:24 antonio Exp $
  */
 public final class DelayedRefreshSourceWrapper
     implements Source {
@@ -112,7 +112,6 @@ public final class DelayedRefreshSourceWrapper
             // Yes
             this.refresh();
         }
-
         return this.lastModified;
     }
 

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.dom.DOMStreamer;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.xerces.dom.NodeImpl;
 import org.apache.xerces.parsers.DOMParser;
@@ -50,7 +51,7 @@ import org.xml.sax.SAXNotSupportedException;
  * able to provide information about the location of elements in their source
  * XML file. See the {@link #getLocation(Element)} method.
  * 
- * @version CVS $Id: DomHelper.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
+ * @version CVS $Id: DomHelper.java,v 1.3 2004/03/28 20:51:24 antonio Exp $
  */
 public class DomHelper {
 
@@ -246,22 +247,17 @@ public class DomHelper {
     }
 
     public static boolean getAttributeAsBoolean(Element element, 
-            String attributeName, boolean defaultValue) throws Exception {
+                String attributeName, boolean defaultValue) {
         String attrValue = element.getAttribute(attributeName);
-        if (attrValue.equals("")) {
-            return defaultValue;
-        } else if (attrValue.equalsIgnoreCase("true")
-                || attrValue.equalsIgnoreCase("yes")) {
-            return true;
-        } else if (attrValue.equalsIgnoreCase("false")
-                || attrValue.equalsIgnoreCase("no")) {
-            return false;
-        } else {
-            throw new Exception("Cannot parse the value \"" + attrValue + 
-                    "\" as a boolean in the attribute \"" + attributeName + 
-                    "\" on the element \"" + element.getTagName() + 
-                    "\" at " + getLocation(element));
+        Boolean result = BooleanUtils.toBooleanObject(attrValue, "true", "false", null);
+        if (result != null) {
+            return result.booleanValue();
         }
+        result = BooleanUtils.toBooleanObject(attrValue, "yes", "no", null);
+        if (result != null) {
+            return result.booleanValue();
+        }
+        return defaultValue;
     }
 
     public static String getElementText(Element element) {

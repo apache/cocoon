@@ -40,7 +40,7 @@ import java.util.Locale;
  * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.3 2004/03/28 20:51:24 antonio Exp $
  */
 public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
     
@@ -129,10 +129,12 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
                 throw new Exception("Excepted a wd:selection-list element at " + DomHelper.getLocation(selectionListElement));
             return selectionListElement;
         } finally {
-            if (source != null)
+            if (source != null) {
                 resolver.release(source);
-            if (resolver != null)
+            }
+            if (resolver != null) {
                 serviceManager.release(resolver);
+            }
         }
     }
 }

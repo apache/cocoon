@@ -35,6 +35,7 @@ import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.search.LuceneCocoonHelper;
 import org.apache.cocoon.components.search.LuceneXMLIndexer;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.NOPValidity;
 
@@ -57,7 +58,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:conal@nzetc.org">Conal Tuohy</a>
- * @version CVS $Id: LuceneIndexTransformer.java,v 1.12 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id: LuceneIndexTransformer.java,v 1.13 2004/03/28 20:51:24 antonio Exp $
  */
 public class LuceneIndexTransformer extends AbstractTransformer
     implements CacheableProcessingComponent, Configurable, Contextualizable {
@@ -234,8 +235,7 @@ public class LuceneIndexTransformer extends AbstractTransformer
         if (processing == STATE_GROUND) {
             if (LUCENE_URI.equals(namespaceURI) && LUCENE_QUERY_ELEMENT.equals(localName)){
                 String sCreate = atts.getValue(LUCENE_QUERY_CREATE_ATTRIBUTE);
-                createIndex = sCreate != null &&
-                    (sCreate.equalsIgnoreCase("yes") || sCreate.equalsIgnoreCase("true"));
+                createIndex = BooleanUtils.toBoolean(sCreate);
 
                 String analyzerClassname = atts.getValue(LUCENE_QUERY_ANALYZER_ATTRIBUTE);
                 String indexDirectory  = atts.getValue(LUCENE_QUERY_DIRECTORY_ATTRIBUTE);

@@ -36,7 +36,7 @@ import org.outerj.expression.ExpressionContext;
  *  <li>check min and max values (range check)
  * </ul>
  * 
- * @version $Id: RangeValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
+ * @version $Id: RangeValidationRule.java,v 1.3 2004/03/28 20:51:24 antonio Exp $
  */
 public class RangeValidationRule extends AbstractValidationRule {
     private Expression minExpr;
@@ -106,7 +106,6 @@ public class RangeValidationRule extends AbstractValidationRule {
                                                                                  new String[]{min.toString()},
                                                                                  Constants.I18N_CATALOGUE));
             }
-
             return null;
         } else if (max != null) {
             if (decimal.compareTo(max) > 0) {
@@ -114,10 +113,8 @@ public class RangeValidationRule extends AbstractValidationRule {
                                                                                  new String[]{max.toString()},
                                                                                  Constants.I18N_CATALOGUE));
             }
-
             return null;
         }
-
         return null;
     }
 

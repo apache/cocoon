@@ -26,6 +26,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -67,7 +68,7 @@ import java.util.Map;
  *  parameter "append-session" to "yes" or "true".
  *
  * @author <a href="mailto:paolo@arsenio.net">Paolo Scaffardi</a>
- * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.3 2004/03/05 13:01:50 bdelacretaz Exp $
+ * @version CVS $Id: DatabaseCookieAuthenticatorAction.java,v 1.4 2004/03/28 20:51:23 antonio Exp $
  */
 public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction implements ThreadSafe {
 
@@ -111,12 +112,10 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                     append_session = parameters.getParameter("append-session",
                     (String) this.settings.get("append-session"));
 
-            if (create_session != null &&
-                    ("no".equals(create_session.trim()) || "false".equals(create_session.trim()))) {
+            if (create_session != null && BooleanUtils.toBoolean(create_session.trim())) {
                 cs = false;
             }
-            if (append_session != null &&
-                    ("yes".equals(append_session.trim()) || "true".equals(append_session.trim()))) {
+            if (append_session != null && BooleanUtils.toBoolean(append_session.trim())) {
                 as = true;
             }
 
@@ -277,7 +276,7 @@ public class DatabaseCookieAuthenticatorAction extends AbstractDatabaseAction im
                     if (nullstr != null) {
                         nullstr = nullstr.trim();
                     }
-                    if ("yes".equals(nullstr) || "true".equals(nullstr)) {
+                    if (BooleanUtils.toBoolean(nullstr)) {
                         nullable = true;
                     }
                 } catch (Exception e1) {

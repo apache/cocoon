@@ -30,6 +30,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.w3c.dom.Document;
 
@@ -41,7 +42,7 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.24 2004/03/05 13:02:42 bdelacretaz Exp $
+ * @version CVS $Id: Main.java,v 1.25 2004/03/28 20:51:24 antonio Exp $
  */
 public class Main {
 
@@ -295,10 +296,10 @@ public class Main {
             listener.setReportFile(line.getOptionValue(BROKEN_LINK_FILE_OPT));
         }
         if (line.hasOption(FOLLOW_LINKS_OPT)) {
-            cocoon.setFollowLinks(yesno(line.getOptionValue(FOLLOW_LINKS_OPT)));
+            cocoon.setFollowLinks(BooleanUtils.toBoolean(line.getOptionValue(FOLLOW_LINKS_OPT)));
         }
         if (line.hasOption(CONFIRM_EXTENSIONS_OPT)) {
-            cocoon.setConfirmExtensions(yesno(line.getOptionValue(CONFIRM_EXTENSIONS_OPT, "yes")));
+            cocoon.setConfirmExtensions(BooleanUtils.toBoolean(line.getOptionValue(CONFIRM_EXTENSIONS_OPT, "yes")));
         }
         if (line.hasOption(LOAD_CLASS_OPT)){
             cocoon.addLoadedClasses(Arrays.asList(line.getOptionValues(LOAD_CLASS_OPT)));
@@ -322,10 +323,6 @@ public class Main {
         System.exit(exitCode);
     }
 
-    private static boolean yesno(String in) {
-        return "yes".equals(in) || "true".equals(in);
-    }
-
     private static String processXConf(CocoonBean cocoon, String filename, String destDir, String uriGroup) {
 
         try {
@@ -336,7 +333,6 @@ public class Main {
             System.out.println("ERROR: " + e.getMessage());
             return destDir;
         }
-
     }
 
     /**

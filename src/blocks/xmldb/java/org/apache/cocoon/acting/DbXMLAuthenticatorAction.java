@@ -25,6 +25,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.commons.lang.BooleanUtils;
 
 import org.apache.xpath.XPathAPI;
 import org.apache.xpath.objects.XObject;
@@ -85,7 +86,7 @@ import java.util.Map;
  * @author <a href="mailto:czoffoli@littlepenguin.org">Christian Zoffoli</a>
  * @author <a href="mailto:Martin.Man@seznam.cz">Martin Man</a>
  * @since 2002/02/03
- * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.6 2004/03/05 13:02:36 bdelacretaz Exp $
+ * @version CVS $Id: DbXMLAuthenticatorAction.java,v 1.7 2004/03/28 20:51:24 antonio Exp $
  *
  * based on DatabaseAuthenticatorAction created by Martin Man <Martin.Man@seznam.cz>
  */
@@ -205,7 +206,7 @@ public class DbXMLAuthenticatorAction extends AbstractDatabaseAction implements 
 
             if (nullstr != null) nullstr = nullstr.trim ();
 
-            if ("yes".equals (nullstr) || "true".equals (nullstr)) {
+            if (BooleanUtils.toBoolean(nullstr)) {
                 nullable = true;
             }
 

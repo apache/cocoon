@@ -35,7 +35,7 @@ import java.math.BigDecimal;
  *  <li>check min and max string length
  * </ul>
  * 
- * @version $Id: LengthValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
+ * @version $Id: LengthValidationRule.java,v 1.3 2004/03/28 20:51:24 antonio Exp $
  */
 public class LengthValidationRule extends AbstractValidationRule {
     private Expression exactExpr;
@@ -59,51 +59,60 @@ public class LengthValidationRule extends AbstractValidationRule {
 
         if (exactExpr != null) {
             Object result = evaluateNumeric(exactExpr, expressionContext, "exact", "length");
-            if (result instanceof ValidationError)
+            if (result instanceof ValidationError) {
                 return (ValidationError)result;
-            else if (result instanceof CannotYetResolveWarning)
+            } else if (result instanceof CannotYetResolveWarning) {
                 return null;
+            }
             int length = ((BigDecimal)result).intValue();
-            if (string.length() != length)
+            if (string.length() != length) {
                 return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.exact-length", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
+            }
             return null;
         } else if (minExpr != null && maxExpr != null) {
             Object result = evaluateNumeric(minExpr, expressionContext, "min", "length");
-            if (result instanceof ValidationError)
+            if (result instanceof ValidationError) {
                 return (ValidationError)result;
-            else if (result instanceof CannotYetResolveWarning)
+            } else if (result instanceof CannotYetResolveWarning) {
                 return null;
+            }
             int minLength = ((BigDecimal)result).intValue();
 
             result = evaluateNumeric(maxExpr, expressionContext, "max", "length");
-            if (result instanceof ValidationError)
+            if (result instanceof ValidationError) {
                 return (ValidationError)result;
-            else if (result instanceof CannotYetResolveWarning)
+            } else if (result instanceof CannotYetResolveWarning) {
                 return null;
+            }
             int maxLength = ((BigDecimal)result).intValue();
 
-            if (string.length() < minLength || string.length() > maxLength)
+            if (string.length() < minLength || string.length() > maxLength) {
                 return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.range-length", new String[] {String.valueOf(minLength), String.valueOf(maxLength)}, Constants.I18N_CATALOGUE));
+            }
             return null;
         } else if (minExpr != null) {
             Object result = evaluateNumeric(minExpr, expressionContext, "min", "length");
-            if (result instanceof ValidationError)
+            if (result instanceof ValidationError) {
                 return (ValidationError)result;
-            else if (result instanceof CannotYetResolveWarning)
+            } else if (result instanceof CannotYetResolveWarning) {
                 return null;
+            }
             int length = ((BigDecimal)result).intValue();
-            if (string.length() < length)
+            if (string.length() < length) {
                 return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.min-length", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
+            }
             return null;
         } else if (maxExpr != null) {
             Object result = evaluateNumeric(maxExpr, expressionContext, "max", "length");
-            if (result instanceof ValidationError)
+            if (result instanceof ValidationError) {
                 return (ValidationError)result;
-            else if (result instanceof CannotYetResolveWarning)
+            } else if (result instanceof CannotYetResolveWarning) {
                 return null;
+            }
             int length = ((BigDecimal)result).intValue();
-            if (string.length() > length)
+            if (string.length() > length) {
                 return hasFailMessage() ? getFailMessage() : new ValidationError(new I18nMessage("validation.string.max-length", new String[] {String.valueOf(length)}, Constants.I18N_CATALOGUE));
+            }
             return null;
         }
         return null;

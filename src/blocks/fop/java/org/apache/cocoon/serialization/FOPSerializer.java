@@ -48,7 +48,7 @@ import org.apache.fop.render.Renderer;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.10 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.11 2004/03/28 20:51:24 antonio Exp $
  */
 public class FOPSerializer extends AbstractSerializer implements
   Configurable, CacheableProcessingComponent, Serviceable/*, Disposable */{
@@ -155,7 +155,7 @@ public class FOPSerializer extends AbstractSerializer implements
             // New syntax: Element user-config contains URL
             configUrl = conf.getChild("user-config").getValue(null);
         }
-        
+
         if (configUrl != null) {
             Source configSource = null;
             SourceResolver resolver = null;
