@@ -56,6 +56,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -81,7 +82,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.5 2003/03/17 00:38:39 coliver Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.6 2003/03/17 04:29:48 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -542,19 +543,21 @@ public class JavaScriptInterpreter extends AbstractInterpreter
             NativeArray funArgsArray = new NativeArray(funArgs);
             Object fun = ScriptableObject.getProperty(thrScope, funName);
             if (fun == Scriptable.NOT_FOUND) {
-                fun = "funName";
+                fun = "funName"; // this will produce a better error message
             }
             Object callFunArgs[] = { fun, funArgsArray };
             Object callFun = ScriptableObject.getProperty(thrScope, "callFunction");
             if (callFun == Scriptable.NOT_FOUND) {
-                callFun = "callFunction";
+                callFun = "callFunction"; // this will produce a better error message
             }
             ScriptRuntime.call(context, callFun, thrScope, callFunArgs, thrScope);
         }
         catch (JavaScriptException ex) {
-            Context.reportError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                             ex.getMessage()));
-            throw ex;
+            EvaluatorException ee = 
+                Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
+
+                                                                        ex.getMessage()));
+            throw new CascadingRuntimeException(ee.getMessage(), unwrap(ex));
         }
         finally {
             exitContext(thrScope);
@@ -620,11 +623,23 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         try {
             ((Function)handleContFunction).call(context, kScope, kScope, args);
         } catch (JavaScriptException ex) {
-            Context.reportError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
-                                                             ex.getMessage()));
-            throw ex;
+            EvaluatorException ee = 
+                Context.reportRuntimeError(ToolErrorReporter.getMessage("msg.uncaughtJSException",
+                                                                        ex.getMessage()));
+            throw new CascadingRuntimeException(ee.getMessage(), unwrap(ex));
         } finally {
             Context.exit();
         }
+    }
+
+    private Throwable unwrap(JavaScriptException e) {
+        Object value = e.getValue();
+        while (value instanceof Wrapper) {
+            value = ((Wrapper)value).unwrap();
+        }
+        if (value instanceof Throwable) {
+            return (Throwable)value;
+        }
+        return e;
     }
 }
