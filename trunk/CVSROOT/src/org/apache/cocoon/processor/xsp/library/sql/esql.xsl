@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.36 2000-12-04 03:20:55 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.37 2000-12-06 05:49:15 balld Exp $-->
 <!--
 
  ============================================================================
@@ -329,6 +329,10 @@
       <xsl:apply-templates/>
     }
   </xsp:logic>
+</xsl:template>
+
+<xsl:template match="esql:update-results//esql:get-update-count">
+  <xsp:expr>_esql_query.position</xsp:expr>
 </xsl:template>
 
 <xsl:template match="esql:results//esql:row-results">
