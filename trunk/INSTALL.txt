@@ -60,7 +60,8 @@ Now, do the following steps to configure the blocks you want in your cocoon:
 
  1) cp blocks.properties local.blocks.properties
  2) edit local.blocks.properties
-
+ 3) rebuild (do a "build clean" first if you deactivated some blocks)
+ 
 do not modify blocks.properties directly!
 
 
