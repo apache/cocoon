@@ -85,7 +85,7 @@ import java.util.ArrayList;
  * @author Michael Homeijer
  * @author Nicola Ken Barozzi (nicolaken@apache.org)
  * @author Bernhard Huber (huber@apache.org)
- * @version CVS $Id: LinkStatusGenerator.java,v 1.2 2003/03/16 17:49:15 vgritsenko Exp $
+ * @version CVS $Id: LinkStatusGenerator.java,v 1.3 2003/05/03 04:41:22 crossley Exp $
  */
 public class LinkStatusGenerator extends ComposerGenerator implements Recyclable, Configurable {
     /** The URI of the namespace of this generator. */
@@ -379,7 +379,7 @@ public class LinkStatusGenerator extends ComposerGenerator implements Recyclable
             this.contentHandler.startPrefixMapping(PREFIX, URI);
 
             attributes.clear();
-            super.contentHandler.startElement(URI, TOP_NODE_NAME, URI + ':' + TOP_NODE_NAME, attributes);
+            super.contentHandler.startElement(URI, TOP_NODE_NAME, PREFIX + ':' + TOP_NODE_NAME, attributes);
 
             while (linksToProcess.size() > 0) {
                 Iterator i = linksToProcess.iterator();
@@ -406,7 +406,7 @@ public class LinkStatusGenerator extends ComposerGenerator implements Recyclable
                 }
             }
 
-            super.contentHandler.endElement(URI, TOP_NODE_NAME, URI + ':' + TOP_NODE_NAME);
+            super.contentHandler.endElement(URI, TOP_NODE_NAME, PREFIX + ':' + TOP_NODE_NAME);
             this.contentHandler.endPrefixMapping(PREFIX);
             this.contentHandler.endDocument();
         } catch (IOException ioe) {
@@ -606,8 +606,8 @@ public class LinkStatusGenerator extends ComposerGenerator implements Recyclable
                     + linkViewQuery;
         }
 
-        super.contentHandler.startElement(URI, LINK_NODE_NAME, URI + ':' + LINK_NODE_NAME, attributes);
-        super.contentHandler.endElement(URI, LINK_NODE_NAME, URI + ':' + LINK_NODE_NAME);
+        super.contentHandler.startElement(URI, LINK_NODE_NAME, PREFIX + ':' + LINK_NODE_NAME, attributes);
+        super.contentHandler.endElement(URI, LINK_NODE_NAME, PREFIX + ':' + LINK_NODE_NAME);
 
         return result;
     }
