@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.environment.mock;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -57,6 +59,7 @@ public class MockRequest implements Request {
     private String charEncoding;
     private String serverName;
     private int port = 80;
+    private InputStream inputStream;
     
     private Hashtable parameters = new Hashtable();
     private Hashtable headers = new Hashtable();
@@ -428,5 +431,14 @@ public class MockRequest implements Request {
         }
     }
 
-    
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.environment.Request#getInputStream()
+	 */
+	public InputStream getInputStream() throws IOException, UnsupportedOperationException {
+		return this.inputStream;
+	}
+
+    public void setInputStream(InputStream is) {
+    		this.inputStream = is;
+    }
 }

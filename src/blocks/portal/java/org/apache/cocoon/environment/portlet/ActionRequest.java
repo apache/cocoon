@@ -23,7 +23,7 @@ import java.io.InputStream;
  * Implements the {@link org.apache.cocoon.environment.Request} interface for the
  * JSR-168 (Portlet) environment.
  *
- * @version CVS $Id: ActionRequest.java,v 1.2 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id$
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
  */
@@ -68,6 +68,13 @@ public final class ActionRequest extends PortletRequest {
         return (javax.portlet.ActionRequest) getPortletRequest();
     }
 
+    public InputStream getInputStream() throws IOException {
+        return getActionRequest().getPortletInputStream();
+    }
+
+    /**
+     * @deprecated  use {@link #getInputStream()}
+     */
     public InputStream getPortletInputStream() throws IOException {
         return getActionRequest().getPortletInputStream();
     }

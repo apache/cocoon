@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.environment.wrapper;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -31,7 +33,7 @@ import org.apache.cocoon.environment.Session;
  * implementations.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractRequestWrapper.java,v 1.2 2004/07/11 13:59:12 cziegeler Exp $
+ * @version CVS $Id$
  * @since 2.2
  */
 public abstract class AbstractRequestWrapper implements Request {
@@ -235,6 +237,13 @@ public abstract class AbstractRequestWrapper implements Request {
     public Enumeration getHeaderNames() {
         return this.req.getHeaderNames();
     }
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.environment.Request#getInputStream()
+	 */
+	public InputStream getInputStream() throws IOException, UnsupportedOperationException {
+		return this.req.getInputStream();
+	}
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.environment.Request#getMethod()

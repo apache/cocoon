@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.components.flow.javascript.fom;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -604,6 +605,10 @@ public class FOM_Cocoon extends ScriptableObject {
         public boolean jsFunction_isUserInRole(String role) {
             return request.isUserInRole(role);
         }
+        
+        public InputStream jsFunction_getInputStream() throws IOException, UnsupportedOperationException {
+        	    return request.getInputStream();
+        }
 
         // Request interface
 
@@ -792,33 +797,25 @@ public class FOM_Cocoon extends ScriptableObject {
             return request.isRequestedSessionIdFromURL();
         }
 
-        /* (non-Javadoc)
-         * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
-         */
         public Object getAttribute(String name, int scope) {
             return this.request.getAttribute(name, scope);
         }
 
-        /* (non-Javadoc)
-         * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
-         */
         public Enumeration getAttributeNames(int scope) {
             return this.request.getAttributeNames(scope);
         }
 
-        /* (non-Javadoc)
-         * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
-         */
         public void removeAttribute(String name, int scope) {
             this.request.removeAttribute(name, scope);
         }
 
-        /* (non-Javadoc)
-         * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
-         */
         public void setAttribute(String name, Object o, int scope) {
             this.request.setAttribute( name, o, scope );
         }
+
+		public InputStream getInputStream() throws IOException, UnsupportedOperationException {
+			return this.request.getInputStream();
+		}
     }
 
     public static class FOM_Cookie
