@@ -24,7 +24,7 @@
   <xsl:template match="head" mode="forms-page">
     <!--+ 'forms-page-styling.xsl' relies on 'forms-field-styling.xsl' for the
         | inclusion of the correct JS and CSS files. To fix it, we have to
-        | separate the page specific parts into its own files.
+        | separate the page specific parts into their own files.
         +-->
   </xsl:template>
 
