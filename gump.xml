@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.129 2004/03/23 19:29:01 tcurdt Exp $
+    | CVS $Id: gump.xml,v 1.130 2004/03/23 20:03:20 tcurdt Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -826,26 +826,6 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/portal-block.jar"/>
-
-    <nag from="Gump" to="dev@cocoon.apache.org"/>
-  </project>
-
-  <project name="cocoon-block-xmlform" status="deprecated">
-    <package>org.apache.cocoon</package>
-
-    <ant target="gump-block">
-      <property name="block-name" value="xmlform"/>
-      <property name="version" value="@@DATE@@"/>
-    </ant>
-
-    <depend project="cocoon" inherit="all"/>
-
-    <work nested="build/cocoon-@@DATE@@/blocks/xmlform/dest"/>
-    <work nested="build/cocoon-@@DATE@@/blocks/xmlform/test"/>
-    <work nested="tools/anttasks"/>
-    <home nested="build/cocoon-@@DATE@@"/>
-
-    <jar name="blocks/xmlform-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
