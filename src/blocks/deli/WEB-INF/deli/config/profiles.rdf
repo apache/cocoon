@@ -891,7 +891,6 @@
 		<deli:deviceName>V500</deli:deviceName>
 		<deli:uaprofUri rdf:resource="http://motorola.handango.com/phoneconfig/v500/profile/v500.rdf"/>
 		<deli:useragent>MOT-V500/0B.08.8FR MIB/2.2 Profile/MIDP-2.0 Configuration/CLDC-1.0 UP.Link/1.1</deli:useragent>
-
 	</deli:Profile>
 
 
@@ -933,6 +932,7 @@
 		<deli:uaprofUri rdf:resource="http://nds.nokia.com/uaprof/N3220r100.xml"/>
 	</deli:Profile>
 	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-3330-100">
+
 		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
 		<deli:deviceName>3330</deli:deviceName>
 		<deli:release>100</deli:release>
@@ -1281,6 +1281,7 @@
 		<deli:release>100</deli:release>
 		<deli:uaprofUri rdf:resource="http://nds1.nds.nokia.com/uaprof/N6220r100.xml"/>
 		<deli:useragent>Nokia6220/2.0 Profile/MIDP-1.0 Configuration/CLDC-1.0</deli:useragent>
+
 	</deli:Profile>
 	<deli:Profile rdf:about="urn:x-hp-deli:devices/Nokia-6200-100">
 		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Nokia"><rdfs:label>Nokia</rdfs:label></rdf:Description></deli:manufacturedBy>
@@ -2129,7 +2130,6 @@
 		<deli:useragent>MOT-D8/4.1.8 UP/4.1.16s</deli:useragent>
 		<deli:supportsUAProf>false</deli:supportsUAProf>
 		<deli:provider><rdf:Description rdf:about="urn:x-hp-deli:providers/w3development.de"><rdfs:label>w3development.de</rdfs:label></rdf:Description></deli:provider>
-
 	</deli:Profile>
 	<deli:Profile rdf:about="urn:x-hp-deli:devices/Motorola-Ti260-">
 		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/Motorola"><rdfs:label>Motorola</rdfs:label></rdf:Description></deli:manufacturedBy>
@@ -2434,7 +2434,7 @@
 		<deli:manufacturedBy><rdf:Description rdf:about="urn:x-hp-deli:manufacturers/DELI"><rdfs:label>DELI</rdfs:label></rdf:Description></deli:manufacturedBy>
 		<deli:deviceName>MSIE</deli:deviceName>
                 <deli:file>msie.rdf</deli:file>
-                <deli:useragent>MSIE</deli:useragent>
+                <deli:useragent>Mozilla</deli:useragent>
                 <deli:deviceName>Internet Explorer</deli:deviceName>
         </deli:Profile>
 </rdf:RDF>
