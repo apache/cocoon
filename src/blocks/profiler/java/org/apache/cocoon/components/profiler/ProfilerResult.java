@@ -59,7 +59,7 @@ package org.apache.cocoon.components.profiler;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
- * @version CVS $Id: ProfilerResult.java,v 1.1 2003/03/09 00:05:52 pier Exp $
+ * @version CVS $Id: ProfilerResult.java,v 1.2 2003/03/20 15:04:14 stephan Exp $
  */
 public class ProfilerResult {
 
@@ -81,8 +81,11 @@ public class ProfilerResult {
     // Total times of each request
     private long[] totalTime;
 
-    // Times of each component of the latest n-requests
-    private long[][] latestTimes;
+    // Setup times of each component of the latest n-requests
+    private long[][] latestSetupTimes;
+
+    // Processing times of each component of the latest n-requests
+    private long[][] latestProcessingTimes;
 
     // SAX fragments of eac component of the latest n-requests
     private Object[][] latestFragments;
@@ -90,7 +93,8 @@ public class ProfilerResult {
     public ProfilerResult(String uri, int latestResultsCount) {
         this.uri = uri;
         this.latestEnvironmentInfo = new EnvironmentInfo[(latestResultsCount>0)?latestResultsCount:5];
-        this.latestTimes = new long[(latestResultsCount>0)?latestResultsCount:5][];
+        this.latestSetupTimes = new long[(latestResultsCount>0)?latestResultsCount:5][];
+        this.latestProcessingTimes = new long[(latestResultsCount>0)?latestResultsCount:5][];
         this.totalTime = new long[(latestResultsCount>0)?latestResultsCount:5];
         this.latestFragments = new Object[(latestResultsCount>0)?latestResultsCount:5][];
         this.count = 0;
@@ -115,24 +119,31 @@ public class ProfilerResult {
                 this.count = 0;
             }
 
-            if (latestTimes != null) {
+            if (latestProcessingTimes != null) {
                 // move the current data 
-                for (int i = latestTimes.length - 1; i > 0; i--) {
+                for (int i = latestProcessingTimes.length - 1; i > 0; i--) {
                     latestEnvironmentInfo[i] = latestEnvironmentInfo[i - 1];
                     totalTime[i] = totalTime[i - 1];
-                    latestTimes[i] = latestTimes[i - 1];
+                    latestSetupTimes[i] = latestSetupTimes[i - 1];
+                    latestProcessingTimes[i] = latestProcessingTimes[i - 1];
                     latestFragments[i] = latestFragments[i - 1];
                 }
                 latestEnvironmentInfo[0] = data.getEnvironmentInfo();
                 totalTime[0] = data.getTotalTime();
-                latestTimes[0] = new long[entries.length];
+
+                latestSetupTimes[0] = new long[entries.length];
                 for(int i=0; i<entries.length; i++)
-                    this.latestTimes[0][i] = entries[i].time;
+                    this.latestSetupTimes[0][i] = entries[i].setup;
+
+                latestProcessingTimes[0] = new long[entries.length];
+                for(int i=0; i<entries.length; i++)
+                    this.latestProcessingTimes[0][i] = entries[i].time;
+
                 latestFragments[0] = new Object[entries.length];
                 for(int i=0; i<entries.length; i++)
                     latestFragments[0][i] = entries[i].fragment;
 
-                if (count<latestTimes.length)
+                if (count<latestProcessingTimes.length)
                     count++;
             }
         }
@@ -181,32 +192,23 @@ public class ProfilerResult {
     }
 
     /**
-     * Times of each component of the latest n-requests
+     * Setup times of each component of the latest n-requests
      */
-    public long[][] getLastTimes() {
-        return latestTimes;
+    public long[][] getSetupTimes() {
+        return latestSetupTimes;
+    }
+
+    /**
+     * Processing times of each component of the latest n-requests
+     */
+    public long[][] getProcessingTimes() {
+        return latestProcessingTimes;
     }
 
     /**
      * SAX fragment of each component of the latest n-requests
      */
-    public Object[][] getLatestSAXFragments() {
+    public Object[][] getSAXFragments() {
         return latestFragments;
     }
-  
-/*    public void report()
-    {
-        System.err.println("-------------------------------------------------------------------------------");
-        System.err.println("PROFILER TOTALS FOR: " + uri);
-
-        if(totalTime != null){
-            long time = 0;
-            for(int i=0; i<totalTime.length; i++){
-                System.err.println("PROFILER TOTALS: " + totalTime[i] + "\tFOR " + roles[i] + "\t" + sources[i]);
-                time += totalTime[i];
-            }
-            System.err.println("PROFILER TOTALS: " + time + " TIMES");
-            System.err.println("PROFILER TOTALS: " + count + " REQUESTS");
-        }
-    }*/
 }

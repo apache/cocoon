@@ -21,7 +21,7 @@
    <xsl:choose>
     <xsl:when test="$component!=''">
      <xsl:apply-templates
-         select="profile:profilerinfo/profile:pipeline/profile:result/profile:component[@profile:index=$component]"
+         select="profile:profilerinfo/profile:pipeline/profile:result/profile:component[@index=$component]"
          mode="fragment"/>
     </xsl:when>
     <xsl:when test="$result!=''">
@@ -56,19 +56,19 @@
 
        <tr bgcolor="#FFFFFF">
         <td>
-         <a href="?key={@profile:key}">
-          <font face="verdana"><strong><xsl:value-of select="@profile:uri"/></strong></font>
+         <a href="?key={@key}">
+          <font face="verdana"><strong><xsl:value-of select="@uri"/></strong></font>
          </a>
         </td>
         <td>
-         <a href="?key={@profile:key}">
-          <xsl:value-of select="profile:average/@profile:time"/> ms
+         <a href="?key={@key}">
+          <xsl:value-of select="profile:average/@time"/> ms
          </a>
         </td>
         <xsl:for-each select="profile:result">
          <td>
-          <a href="?key={../@profile:key}&amp;result={@profile:index}">
-           <xsl:value-of select="@profile:time"/> ms
+          <a href="?key={../@key}&amp;result={@index}">
+           <xsl:value-of select="@time"/> ms
           </a>
          </td>
         </xsl:for-each>
@@ -87,7 +87,7 @@
  <xsl:template match="profile:pipeline" mode="results">
 
   <row>
-   <column title="{@profile:uri}">
+   <column title="{@uri}">
 
     <table width="100%" cellspacing="0" cellpadding="5" align="left">
      <font size="+0" face="arial,helvetica,sanserif" color="#000000">
@@ -107,22 +107,22 @@
          <xsl:value-of select="$pos"/>
         </td>
         <td width="10%">
-         <xsl:value-of select="@profile:role"/>
-         <xsl:if test="@profile:source">
-          (<xsl:value-of select="@profile:source"/>)
+         <xsl:value-of select="@role"/>
+         <xsl:if test="@source">
+          (<xsl:value-of select="@source"/>)
          </xsl:if>
         </td>
 
         <xsl:for-each select="../../profile:average/profile:component[position()=$pos]">
          <td>
-          <xsl:value-of select="@profile:time"/> ms
+          <xsl:value-of select="@time"/> ms
          </td>
         </xsl:for-each>
  
         <xsl:for-each select="../../profile:result/profile:component[position()=$pos]">
          <td>
-          <a href="?key={../../@profile:key}&amp;result={../@profile:index}&amp;component={@profile:index}">
-           <xsl:value-of select="@profile:time"/> ms
+          <a href="?key={../../@key}&amp;result={../@index}&amp;component={@index}">
+           <xsl:value-of select="@time"/> ms
           </a>
          </td>
         </xsl:for-each>
@@ -133,11 +133,11 @@
       <tr>
        <td></td>
        <td><b>Total time</b></td>
-       <td><b><xsl:value-of select="profile:result/@profile:time"/> ms</b></td>
+       <td><b><xsl:value-of select="profile:result/@time"/> ms</b></td>
        <xsl:for-each select="profile:result">
         <td>
          <b>
-          <xsl:value-of select="@profile:time"/> ms
+          <xsl:value-of select="@time"/> ms
          </b>
         </td>
        </xsl:for-each>
@@ -154,28 +154,36 @@
  <xsl:template match="profile:result" mode="result">
 
   <row>
-   <column title="{../@profile:uri}">
+   <column title="{../@uri}">
 
     <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2"  width="100%" align="center">
 
      <tr>
       <td align="left"><b>Components</b></td>
-      <td align="left"><b>Time</b></td>
+      <td align="left"><b>Total time</b></td>
+      <td align="left"><b>Setup time</b></td>
+      <td align="left"><b>Processing time</b></td>
      </tr>
 
 
      <xsl:for-each select="profile:component">
       <tr>
        <td>
-        <a href="?key={../../@profile:key}&amp;result={../@profile:index}&amp;component={@profile:index}">
-         <xsl:value-of select="@profile:role"/>
-         <xsl:if test="@profile:source">
-          (<xsl:value-of select="@profile:source"/>)
+        <a href="?key={../../@key}&amp;result={../@index}&amp;component={@index}">
+         <xsl:value-of select="@role"/>
+         <xsl:if test="@source">
+          (<xsl:value-of select="@source"/>)
          </xsl:if>
         </a>
        </td>
        <td>
-        <xsl:value-of select="@profile:time"/> ms
+        <xsl:value-of select="@time"/> ms
+       </td>
+       <td>
+        <xsl:value-of select="@setup"/> ms
+       </td>
+       <td>
+        <xsl:value-of select="@processing"/> ms
        </td>
       </tr>
      </xsl:for-each>
@@ -200,8 +208,8 @@
 
       <xsl:for-each select="profile:environmentinfo/profile:request-parameters/profile:parameter">
        <tr>
-        <td><xsl:value-of select="@profile:name"/></td>
-        <td><xsl:value-of select="@profile:value"/></td>
+        <td><xsl:value-of select="@name"/></td>
+        <td><xsl:value-of select="@value"/></td>
        </tr>
       </xsl:for-each>
 
@@ -231,8 +239,8 @@
   
       <xsl:for-each select="profile:environmentinfo/profile:session-attributes/profile:attribute">
        <tr>
-        <td><xsl:value-of select="@profile:name"/></td>
-        <td><xsl:value-of select="@profile:value"/></td>
+        <td><xsl:value-of select="@name"/></td>
+        <td><xsl:value-of select="@value"/></td>
        </tr>
       </xsl:for-each>
 
@@ -254,9 +262,9 @@
   <row>
    <column>
     <xsl:attribute name="title">
-     <xsl:value-of select="@profile:role"/>
-     <xsl:if test="@profile:source">
-      (<xsl:value-of select="@profile:source"/>)
+     <xsl:value-of select="@role"/>
+     <xsl:if test="@source">
+      (<xsl:value-of select="@source"/>)
      </xsl:if>
     </xsl:attribute>
 

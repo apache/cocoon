@@ -79,75 +79,82 @@ import java.util.Set;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:bruno@outerthought.org">Bruno Dumon</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: ProfilerGenerator.java,v 1.1 2003/03/09 00:05:52 pier Exp $
+ * @version CVS $Id: ProfilerGenerator.java,v 1.2 2003/03/20 15:04:16 stephan Exp $
  */
 public class ProfilerGenerator extends ComposerGenerator {
 
     /**
      * The XML PROFILER_NS for the output document.
      */
-    protected static final String PROFILER_NS = "http://apache.org/cocoon/profiler/1.0";
+    private static final String PROFILER_NS = "http://apache.org/cocoon/profiler/1.0";
 
-    protected static final String PROFILERINFO_ELEMENT = "profilerinfo";
-    protected static final String RESULTS_ELEMENT = "pipeline";
-    protected static final String RESULT_ELEMENT = "result";
-    protected static final String AVERAGERESULT_ELEMENT = "average";
-    protected static final String ENVIROMENTINFO_ELEMENT = "environmentinfo";
-    protected static final String REQUESTPARAMETERS_ELEMENT = "request-parameters";
-    protected static final String REQUESTPARAMETER_ELEMENT = "parameter";
-    protected static final String SESSIONATTRIBUTES_ELEMENT = "session-attributes";
-    protected static final String SESSIONATTRIBUTE_ELEMENT = "attribute";
-    protected static final String COMPONENT_ELEMENT = "component";
-    protected static final String FRAGMENT_ELEMENT = "fragment";
-    
+    private static final String PROFILERINFO_ELEMENT = "profilerinfo";
+    private static final String RESULTS_ELEMENT = "pipeline";
+    private static final String RESULT_ELEMENT = "result";
+    private static final String AVERAGERESULT_ELEMENT = "average";
+    private static final String ENVIROMENTINFO_ELEMENT = "environmentinfo";
+    private static final String REQUESTPARAMETERS_ELEMENT = "request-parameters";
+    private static final String REQUESTPARAMETER_ELEMENT = "parameter";
+    private static final String SESSIONATTRIBUTES_ELEMENT = "session-attributes";
+    private static final String SESSIONATTRIBUTE_ELEMENT = "attribute";
+    private static final String COMPONENT_ELEMENT = "component";
+    private static final String FRAGMENT_ELEMENT = "fragment";
 
     private Profiler profiler;
 
     // the key identifying the ProfilerResult
-    protected Long key = null;
+    private Long key = null;
 
-    // Index of the result of latest results 
-    protected int resultIndex = -1;
+    // Index of the result of latest results
+    private int resultIndex = -1;
 
     // Index of the componen of the latest results
-    protected int componentIndex = -1;
+    private int componentIndex = -1;
 
     /**
      * Composable
      */
-    public void compose(ComponentManager manager)
-    throws ComponentException {
+    public void compose(ComponentManager manager) throws ComponentException {
         super.compose(manager);
-        this.profiler = (Profiler)super.manager.lookup(Profiler.ROLE);
+        this.profiler = (Profiler) super.manager.lookup(Profiler.ROLE);
     }
 
-    public void setup(SourceResolver resolver, Map objectModel, String soure, Parameters parameters) 
-        throws ProcessingException, SAXException, IOException {
+    /**
+     * Setup of the profiler generator.
+     */
+    public void setup(SourceResolver resolver, Map objectModel, String soure,
+                      Parameters parameters)
+                        throws ProcessingException, SAXException,
+                               IOException {
 
         super.setup(resolver, objectModel, source, parameters);
         Request request = ObjectModelHelper.getRequest(objectModel);
 
-        if (request.getParameter("key")!=null)
+        if (request.getParameter("key")!=null) {
             this.key = new Long(Long.parseLong(request.getParameter("key")));
-        else
+        } else {
             this.key = null;
+        }
 
-        if ((request.getParameter("result")!=null) && (this.key!=null))
+        if ((request.getParameter("result")!=null) && (this.key!=null)) {
             this.resultIndex = Integer.parseInt(request.getParameter("result"));
-        else
+        } else {
             this.resultIndex = -1;
+        }
 
-        if ((request.getParameter("component")!=null) && (this.resultIndex!=-1))
+        if ((request.getParameter("component")!=null) &&
+            (this.resultIndex!=-1)) {
             this.componentIndex = Integer.parseInt(request.getParameter("component"));
-        else
+        } else {
             this.componentIndex = -1;
+        }
     }
 
     /**
      * Disposable
      */
     public void dispose() {
-        if (this.profiler != null){
+        if (this.profiler!=null) {
             super.manager.release(this.profiler);
             this.profiler = null;
         }
@@ -172,216 +179,310 @@ public class ProfilerGenerator extends ComposerGenerator {
         this.contentHandler.endDocument();
     }
 
-    /** Generate the main status document. */
+    /**
+     * Generate the main status document.
+     */
     private void generateProfilerInfo() throws SAXException {
         // Root element.
 
-        // The current date and time.
+        // The current date and processingTime.
         String dateTime = DateFormat.getDateTimeInstance().format(new Date());
 
         AttributesImpl atts = new AttributesImpl();
-        atts.addAttribute(PROFILER_NS, "date", "date", "CDATA", dateTime);
-        this.contentHandler.startElement(PROFILER_NS, PROFILERINFO_ELEMENT, PROFILERINFO_ELEMENT, atts);
+
+        atts.addAttribute("", "date", "date", "CDATA", dateTime);
+        this.contentHandler.startElement(PROFILER_NS, PROFILERINFO_ELEMENT,
+                                         PROFILERINFO_ELEMENT, atts);
 
         Collection resultsKeys = profiler.getResultKeys();
-        for(Iterator i = resultsKeys.iterator(); i.hasNext();) {
-            Long key = (Long)i.next();
-            if ((this.key==null) || (this.key.equals(key)))
+
+        for (Iterator i = resultsKeys.iterator(); i.hasNext(); ) {
+            Long key = (Long) i.next();
+
+            if ((this.key==null) || (this.key.equals(key))) {
                 generateResults(key, profiler.getResult(key));
+            }
         }
 
         // End root element.
-        this.contentHandler.endElement(PROFILER_NS, PROFILERINFO_ELEMENT, PROFILERINFO_ELEMENT);
+        this.contentHandler.endElement(PROFILER_NS, PROFILERINFO_ELEMENT,
+                                       PROFILERINFO_ELEMENT);
     }
 
-    private void generateResults(Long key, ProfilerResult result) throws SAXException {
+    /**
+     *
+     *
+     * @param key        
+     * @param result     
+     */
+    private void generateResults(Long key,
+                                 ProfilerResult result) throws SAXException {
         AttributesImpl atts = new AttributesImpl();
 
         int count = result.getCount();
-        String[] roles = result.getRoles(); // Roles of the components
-        String[] sources = result.getSources(); // Source of the components
-        
+        String[] roles = result.getRoles();                     // Roles of the components
+        String[] sources = result.getSources();                 // Source of the components
+
         EnvironmentInfo[] environmentInfos = result.getLatestEnvironmentInfos();
-        long[] totalTime = result.getTotalTime(); // Total time of the requests
-        long[][] timeOfComponents = result.getLastTimes(); // Time of each component
-        Object[][] fragments = result.getLatestSAXFragments(); // SAX Fragments of each component
+        long[] totalTime = result.getTotalTime();               // Total time of the requests
+        long[][] setupTimes = result.getSetupTimes();           // Setup time of each component
+        long[][] processingTimes = result.getProcessingTimes(); // Processing time of each component
+        Object[][] fragments = result.getSAXFragments();        // SAX Fragments of each component
 
         // Total time of all requests
-        long totalTimeSum = 0; 
-        for(int i=0; i < count; i++)
+        long totalTimeSum = 0;
+
+        for (int i = 0; i<count; i++)
             totalTimeSum += totalTime[i];
 
-        atts.addAttribute(PROFILER_NS, "uri", "uri", "CDATA", result.getURI());
-        atts.addAttribute(PROFILER_NS, "count", "count", "CDATA", Integer.toString(result.getCount()));
-        atts.addAttribute(PROFILER_NS, "time", "time", "CDATA", Long.toString(totalTimeSum));
-        atts.addAttribute(PROFILER_NS, "key", "key", "CDATA", key.toString());
-        this.contentHandler.startElement(PROFILER_NS, RESULTS_ELEMENT, RESULTS_ELEMENT, atts);
+        atts.addAttribute("", "uri", "uri", "CDATA", result.getURI());
+        atts.addAttribute("", "count", "count", "CDATA",
+                          Integer.toString(result.getCount()));
+        atts.addAttribute("", "processingTime", "processingTime", "CDATA",
+                          Long.toString(totalTimeSum));
+        atts.addAttribute("", "key", "key", "CDATA", key.toString());
+        this.contentHandler.startElement(PROFILER_NS, RESULTS_ELEMENT,
+                                         RESULTS_ELEMENT, atts);
         atts.clear();
 
-        // Generate average result 
-        if ((count > 0) && (this.resultIndex==-1)) {
-            atts.addAttribute(PROFILER_NS, "time", "time", "CDATA", Long.toString(totalTimeSum / count));
-            this.contentHandler.startElement(PROFILER_NS, AVERAGERESULT_ELEMENT, AVERAGERESULT_ELEMENT, atts);
+        // Generate average result
+        if ((count>0) && (this.resultIndex==-1)) {
+            atts.addAttribute("", "time", "time", "CDATA",
+                              Long.toString(totalTimeSum/count));
+            this.contentHandler.startElement(PROFILER_NS,
+                                             AVERAGERESULT_ELEMENT,
+                                             AVERAGERESULT_ELEMENT, atts);
             atts.clear();
 
             // Total time of each component for all requests
-            long[] totalTimeOfComponents = new long[roles.length]; 
-          
-            for(int i=0; i<roles.length; i++) {
+            long[] totalTimeOfComponents = new long[roles.length];
+
+            for (int i = 0; i<roles.length; i++) {
                 totalTimeOfComponents[i] = 0;
-                for(int j=0; j<count; j++) {
-                    totalTimeOfComponents[i] += timeOfComponents[j][i];
+                for (int j = 0; j<count; j++) {
+                    totalTimeOfComponents[i] += setupTimes[j][i]+
+                                                processingTimes[j][i];
                 }
             }
 
-            for(int i=0; i<roles.length; i++){
-                atts.addAttribute(PROFILER_NS, "offset", "offset", "CDATA", String.valueOf(i));
+            for (int i = 0; i<roles.length; i++) {
+                atts.addAttribute("", "offset", "offset", "CDATA",
+                                  String.valueOf(i));
 
-                if(roles[i] != null)
-                    atts.addAttribute(PROFILER_NS, "role", "role", "CDATA", roles[i]);
+                if (roles[i]!=null) {
+                    atts.addAttribute("", "role", "role", "CDATA", roles[i]);
+                }
 
-                if(sources[i] != null)
-                    atts.addAttribute(PROFILER_NS, "source", "source", "CDATA", sources[i]);
+                if (sources[i]!=null) {
+                    atts.addAttribute("", "source", "source", "CDATA",
+                                      sources[i]);
+                }
 
-                atts.addAttribute(PROFILER_NS, "time", "time", "CDATA", 
-                                  Long.toString(totalTimeOfComponents[i] / count));
+                atts.addAttribute("", "time", "time", "CDATA",
+                                  Long.toString(totalTimeOfComponents[i]/
+                                                count));
 
-                this.contentHandler.startElement(PROFILER_NS, COMPONENT_ELEMENT, COMPONENT_ELEMENT, atts);
+                this.contentHandler.startElement(PROFILER_NS,
+                                                 COMPONENT_ELEMENT,
+                                                 COMPONENT_ELEMENT, atts);
                 atts.clear();
-                this.contentHandler.endElement(PROFILER_NS, COMPONENT_ELEMENT, COMPONENT_ELEMENT);
+                this.contentHandler.endElement(PROFILER_NS,
+                                               COMPONENT_ELEMENT,
+                                               COMPONENT_ELEMENT);
             }
-            this.contentHandler.endElement(PROFILER_NS, AVERAGERESULT_ELEMENT, AVERAGERESULT_ELEMENT);
+            this.contentHandler.endElement(PROFILER_NS,
+                                           AVERAGERESULT_ELEMENT,
+                                           AVERAGERESULT_ELEMENT);
         }
 
-        for(int j=0; j<count; j++) {
-            if ((this.resultIndex==-1) || (this.resultIndex==j))
-                generateResult(j, roles, sources, environmentInfos[j], 
-                               totalTime[j], timeOfComponents[j], fragments[j]);
+        for (int j = 0; j<count; j++) {
+            if ((this.resultIndex==-1) || (this.resultIndex==j)) {
+                generateResult(j, roles, sources, environmentInfos[j],
+                               totalTime[j], setupTimes[j],
+                               processingTimes[j], fragments[j]);
+            }
         }
 
-        this.contentHandler.endElement(PROFILER_NS, RESULTS_ELEMENT, RESULTS_ELEMENT);
+        this.contentHandler.endElement(PROFILER_NS, RESULTS_ELEMENT,
+                                       RESULTS_ELEMENT);
     }
 
-    private void generateResult(int resultIndex, String[] roles, String[] sources, 
+    private void generateResult(int resultIndex, String[] roles,
+                                String[] sources,
                                 EnvironmentInfo environmentInfo,
-                                long totaltime, long[] times, Object[] fragments) throws SAXException  {
- 
+                                long totalTime, long[] setupTimes,
+                                long[] processingTimes,
+                                Object[] fragments) throws SAXException {
+
         AttributesImpl atts = new AttributesImpl();
-        atts.addAttribute(PROFILER_NS, "time", "time", "CDATA", Long.toString(totaltime));
-        atts.addAttribute(PROFILER_NS, "index", "index", "CDATA", String.valueOf(resultIndex));
-        this.contentHandler.startElement(PROFILER_NS, RESULT_ELEMENT, RESULT_ELEMENT, atts);
+
+        atts.addAttribute("", "time", "time", "CDATA",
+                          Long.toString(totalTime));
+        atts.addAttribute("", "index", "index", "CDATA",
+                          String.valueOf(resultIndex));
+        this.contentHandler.startElement(PROFILER_NS, RESULT_ELEMENT,
+                                         RESULT_ELEMENT, atts);
         atts.clear();
 
-        if (this.resultIndex!=-1)
+        if (this.resultIndex!=-1) {
             generateEnvironmentInfo(environmentInfo);
-
-        for(int i=0; i<roles.length; i++) {
-            generateComponent(i, roles[i], sources[i], times[i], fragments[i]);
         }
-        this.contentHandler.endElement(PROFILER_NS, RESULT_ELEMENT, RESULT_ELEMENT);
+
+        for (int i = 0; i<roles.length; i++) {
+            generateComponent(i, roles[i], sources[i], setupTimes[i],
+                              processingTimes[i], fragments[i]);
+        }
+        this.contentHandler.endElement(PROFILER_NS, RESULT_ELEMENT,
+                                       RESULT_ELEMENT);
     }
 
-    private void generateComponent(int componentIndex, String role, String source, long time, Object fragment) 
-        throws SAXException  {
+    private void generateComponent(int componentIndex, String role,
+                                   String source, long setupTime,
+                                   long processingTime,
+                                   Object fragment) throws SAXException {
 
         AttributesImpl atts = new AttributesImpl();
 
-        atts.addAttribute(PROFILER_NS, "index", "index", "CDATA", String.valueOf(componentIndex));
+        atts.addAttribute("", "index", "index", "CDATA",
+                          String.valueOf(componentIndex));
 
-        if (role != null)
-            atts.addAttribute(PROFILER_NS, "role", "role", "CDATA", role);
+        if (role!=null) {
+            atts.addAttribute("", "role", "role", "CDATA", role);
+        }
 
-        if (source != null)
-            atts.addAttribute(PROFILER_NS, "source", "source", "CDATA", source);
+        if (source!=null) {
+            atts.addAttribute("", "source", "source", "CDATA", source);
+        }
 
-        atts.addAttribute(PROFILER_NS, "time", "time", "CDATA", Long.toString(time));
+        atts.addAttribute("", "setup", "setup", "CDATA",
+                          Long.toString(setupTime));
 
-        this.contentHandler.startElement(PROFILER_NS, COMPONENT_ELEMENT, COMPONENT_ELEMENT, atts);
+        atts.addAttribute("", "processing", "processing", "CDATA",
+                          Long.toString(processingTime));
+
+        atts.addAttribute("", "time", "time", "CDATA",
+                          Long.toString(setupTime+processingTime));
+
+        this.contentHandler.startElement(PROFILER_NS, COMPONENT_ELEMENT,
+                                         COMPONENT_ELEMENT, atts);
         atts.clear();
 
-        if (this.componentIndex==componentIndex)
+        if (this.componentIndex==componentIndex) {
             generateSAXFragment(fragment);
+        }
 
-        this.contentHandler.endElement(PROFILER_NS, COMPONENT_ELEMENT, COMPONENT_ELEMENT);
+        this.contentHandler.endElement(PROFILER_NS, COMPONENT_ELEMENT,
+                                       COMPONENT_ELEMENT);
     }
 
-    private void generateEnvironmentInfo(EnvironmentInfo environmentInfo) throws SAXException  {
-        this.contentHandler.startElement(PROFILER_NS, ENVIROMENTINFO_ELEMENT, ENVIROMENTINFO_ELEMENT, 
+    private void generateEnvironmentInfo(EnvironmentInfo environmentInfo)
+      throws SAXException {
+        this.contentHandler.startElement(PROFILER_NS, ENVIROMENTINFO_ELEMENT,
+                                         ENVIROMENTINFO_ELEMENT,
                                          new AttributesImpl());
 
-        if (environmentInfo != null) {
+        if (environmentInfo!=null) {
             // Generate SAX events for the request parameters
-            this.contentHandler.startElement(PROFILER_NS, REQUESTPARAMETERS_ELEMENT, REQUESTPARAMETERS_ELEMENT, 
-                                        new AttributesImpl());
+            this.contentHandler.startElement(PROFILER_NS,
+                                             REQUESTPARAMETERS_ELEMENT,
+                                             REQUESTPARAMETERS_ELEMENT,
+                                             new AttributesImpl());
 
             Map requestParameters = environmentInfo.getRequestParameters();
             Set requestParamEntries = requestParameters.entrySet();
             Iterator requestParamEntriesIt = requestParamEntries.iterator();
+
             while (requestParamEntriesIt.hasNext()) {
                 AttributesImpl atts = new AttributesImpl();
-                Map.Entry entry = (Map.Entry)requestParamEntriesIt.next();
-                atts.addAttribute(PROFILER_NS, "name", "name", "CDATA", (String)entry.getKey());
-                atts.addAttribute(PROFILER_NS, "value", "value", "CDATA", (String)entry.getValue());
-                this.contentHandler.startElement(PROFILER_NS, REQUESTPARAMETER_ELEMENT, 
-                                                 REQUESTPARAMETER_ELEMENT, atts);
-                this.contentHandler.endElement(PROFILER_NS, REQUESTPARAMETER_ELEMENT, 
+                Map.Entry entry = (Map.Entry) requestParamEntriesIt.next();
+
+                atts.addAttribute("", "name", "name", "CDATA",
+                                  (String) entry.getKey());
+                atts.addAttribute("", "value", "value", "CDATA",
+                                  (String) entry.getValue());
+                this.contentHandler.startElement(PROFILER_NS,
+                                                 REQUESTPARAMETER_ELEMENT,
+                                                 REQUESTPARAMETER_ELEMENT,
+                                                 atts);
+                this.contentHandler.endElement(PROFILER_NS,
+                                               REQUESTPARAMETER_ELEMENT,
                                                REQUESTPARAMETER_ELEMENT);
             }
-            this.contentHandler.endElement(PROFILER_NS, REQUESTPARAMETERS_ELEMENT, REQUESTPARAMETERS_ELEMENT);
+            this.contentHandler.endElement(PROFILER_NS,
+                                           REQUESTPARAMETERS_ELEMENT,
+                                           REQUESTPARAMETERS_ELEMENT);
 
             // Generate SAX events for the session attributes
-            this.contentHandler.startElement(PROFILER_NS, SESSIONATTRIBUTES_ELEMENT, SESSIONATTRIBUTES_ELEMENT, 
-                                        new AttributesImpl());
+            this.contentHandler.startElement(PROFILER_NS,
+                                             SESSIONATTRIBUTES_ELEMENT,
+                                             SESSIONATTRIBUTES_ELEMENT,
+                                             new AttributesImpl());
 
             Map sessionAttributes = environmentInfo.getSessionAttributes();
             Set sessionAttrEntries = sessionAttributes.entrySet();
             Iterator sessionAttrEntriesIt = sessionAttrEntries.iterator();
+
             while (sessionAttrEntriesIt.hasNext()) {
                 AttributesImpl atts = new AttributesImpl();
-                Map.Entry entry = (Map.Entry)sessionAttrEntriesIt.next();
-                atts.addAttribute(PROFILER_NS, "name", "name", "CDATA", (String)entry.getKey());
-                atts.addAttribute(PROFILER_NS, "value", "value", "CDATA", (String)entry.getValue());
-                this.contentHandler.startElement(PROFILER_NS, SESSIONATTRIBUTE_ELEMENT, 
-                                                 SESSIONATTRIBUTE_ELEMENT, atts);
-                this.contentHandler.endElement(PROFILER_NS, SESSIONATTRIBUTE_ELEMENT, 
+                Map.Entry entry = (Map.Entry) sessionAttrEntriesIt.next();
+
+                atts.addAttribute("", "name", "name", "CDATA",
+                                  (String) entry.getKey());
+                atts.addAttribute("", "value", "value", "CDATA",
+                                  (String) entry.getValue());
+                this.contentHandler.startElement(PROFILER_NS,
+                                                 SESSIONATTRIBUTE_ELEMENT,
+                                                 SESSIONATTRIBUTE_ELEMENT,
+                                                 atts);
+                this.contentHandler.endElement(PROFILER_NS,
+                                               SESSIONATTRIBUTE_ELEMENT,
                                                SESSIONATTRIBUTE_ELEMENT);
             }
-            this.contentHandler.endElement(PROFILER_NS, SESSIONATTRIBUTES_ELEMENT, SESSIONATTRIBUTES_ELEMENT);
+            this.contentHandler.endElement(PROFILER_NS,
+                                           SESSIONATTRIBUTES_ELEMENT,
+                                           SESSIONATTRIBUTES_ELEMENT);
 
             // And the rest
-            this.contentHandler.startElement(PROFILER_NS, "uri", "uri", new AttributesImpl());
-            this.contentHandler.characters(environmentInfo.getURI().toCharArray(), 0, 
-                                           environmentInfo.getURI().length());
+            this.contentHandler.startElement(PROFILER_NS, "uri", "uri",
+                                             new AttributesImpl());
+            this.contentHandler.characters(environmentInfo.getURI().toCharArray(),
+                                           0, environmentInfo.getURI().length());
             this.contentHandler.endElement(PROFILER_NS, "uri", "uri");
         }
 
-        this.contentHandler.endElement(PROFILER_NS, ENVIROMENTINFO_ELEMENT, ENVIROMENTINFO_ELEMENT);
+        this.contentHandler.endElement(PROFILER_NS, ENVIROMENTINFO_ELEMENT,
+                                       ENVIROMENTINFO_ELEMENT);
     }
 
     public void generateSAXFragment(Object fragment) throws SAXException {
 
         if (fragment!=null) {
-
-            this.contentHandler.startElement(PROFILER_NS, FRAGMENT_ELEMENT, FRAGMENT_ELEMENT, 
+            this.contentHandler.startElement(PROFILER_NS, FRAGMENT_ELEMENT,
+                                             FRAGMENT_ELEMENT,
                                              new AttributesImpl());
 
             XMLDeserializer deserializer = null;
+
             try {
-                deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
+                deserializer = (XMLDeserializer) this.manager.lookup(XMLDeserializer.ROLE);
                 deserializer.setConsumer(new IncludeXMLConsumer(this.xmlConsumer));
                 deserializer.deserialize(fragment);
             } catch (ComponentException ce) {
-                getLogger().debug("Could not retrieve XMLDeserializer component", ce);
-                throw new SAXException("Could not retrieve XMLDeserializer component", ce);
+                getLogger().debug("Could not retrieve XMLDeserializer component",
+                                  ce);
+                throw new SAXException("Could not retrieve XMLDeserializer component",
+                                       ce);
             } catch (Exception e) {
                 getLogger().debug("Could not serialize SAX fragment", e);
                 throw new SAXException("Could not serialize SAX fragment", e);
-            } finally { 
-                if (deserializer!=null)
+            } finally {
+                if (deserializer!=null) {
                     this.manager.release(deserializer);
+                }
             }
 
-            this.contentHandler.endElement(PROFILER_NS, FRAGMENT_ELEMENT, FRAGMENT_ELEMENT);
+            this.contentHandler.endElement(PROFILER_NS, FRAGMENT_ELEMENT,
+                                           FRAGMENT_ELEMENT);
         }
     }
 }

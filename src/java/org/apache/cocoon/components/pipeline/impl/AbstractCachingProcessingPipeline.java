@@ -80,7 +80,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.2 2003/03/19 15:42:15 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.3 2003/03/20 15:04:16 stephan Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
             extends AbstractProcessingPipeline
@@ -393,6 +393,61 @@ public abstract class AbstractCachingProcessingPipeline
     }
 
     /**
+     * Generate validity objects for the new response
+     */
+    protected void setupValidities()
+    throws ProcessingException {
+
+        if (this.toCacheKey != null) {
+            // only update validity objects if we cannot use
+            // a cached response or when the cached response does
+            // cache less than now is cacheable
+            if (this.fromCacheKey == null 
+                || this.fromCacheKey.size() < this.toCacheKey.size()) {
+
+                this.toCacheSourceValidities = new SourceValidity[this.toCacheKey.size()];
+                int len = this.toCacheSourceValidities.length;
+                int i = 0;
+                while (i < len) {
+                    final SourceValidity validity = this.getValidityForInternalPipeline(i);
+
+                    if (validity == null) {
+                        if (i > 0 
+                            && (this.fromCacheKey == null || i > this.fromCacheKey.size())) {
+                            // shorten key
+                            for(int m=i; m < this.toCacheSourceValidities.length; m++) {
+                                this.toCacheKey.removeLastKey();
+                                if (!this.cacheCompleteResponse) {
+                                    this.firstNotCacheableTransformerIndex--;
+                                }
+                                this.cacheCompleteResponse = false;
+                            }
+                            SourceValidity[] copy = new SourceValidity[i];
+                            System.arraycopy(this.toCacheSourceValidities, 0,
+                                             copy, 0, copy.length);
+                            this.toCacheSourceValidities = copy;
+                            len = this.toCacheSourceValidities.length;
+                        } else {
+                            // caching is not possible!
+                            this.toCacheKey = null;
+                            this.toCacheSourceValidities = null;
+                            this.cacheCompleteResponse = false;
+                            len = 0;
+                        }
+                    } else {
+                        this.toCacheSourceValidities[i] = validity;
+                    }
+                    i++;
+                }
+            } else {
+                // we don't have to cache
+                this.toCacheKey = null;
+                this.cacheCompleteResponse = false;
+            }
+        }
+    }
+
+    /**
      * Calculate the key that can be used to get something from the cache, and 
      * handle expires properly.
      * 
@@ -602,55 +657,8 @@ public abstract class AbstractCachingProcessingPipeline
         if (this.toCacheKey != null) {
             this.validatePipeline(environment);
         }
-        
-        // now generate validity objects for the new response
-        if (this.toCacheKey != null) {
-            // only update validity objects if we cannot use
-            // a cached response or when the cached response does
-            // cache less than now is cacheable
-            if (this.fromCacheKey == null 
-                || this.fromCacheKey.size() < this.toCacheKey.size()) {
-                
-                this.toCacheSourceValidities = new SourceValidity[this.toCacheKey.size()];
-                int len = this.toCacheSourceValidities.length;
-                int i = 0;
-                while (i < len) {
-                    final SourceValidity validity = this.getValidityForInternalPipeline(i);
 
-                    if (validity == null) {
-                        if (i > 0 
-                            && (this.fromCacheKey == null || i > this.fromCacheKey.size())) {
-                            // shorten key
-                            for(int m=i; m < this.toCacheSourceValidities.length; m++) {
-                                this.toCacheKey.removeLastKey();
-                                if (!this.cacheCompleteResponse) {
-                                    this.firstNotCacheableTransformerIndex--;
-                                }
-                                this.cacheCompleteResponse = false;
-                            }
-                            SourceValidity[] copy = new SourceValidity[i];
-                            System.arraycopy(this.toCacheSourceValidities, 0,
-                                             copy, 0, copy.length);
-                            this.toCacheSourceValidities = copy;
-                            len = this.toCacheSourceValidities.length;
-                        } else {
-                            // caching is not possible!
-                            this.toCacheKey = null;
-                            this.toCacheSourceValidities = null;
-                            this.cacheCompleteResponse = false;
-                            len = 0;
-                        }
-                    } else {
-                        this.toCacheSourceValidities[i] = validity;
-                    }
-                    i++;
-                }
-            } else {
-                // we don't have to cache
-                this.toCacheKey = null;
-                this.cacheCompleteResponse = false;
-            }
-        }
+        this.setupValidities();        
     }
 
     /**

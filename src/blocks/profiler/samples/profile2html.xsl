@@ -9,7 +9,7 @@
   <xsl:template match="profile:profilerinfo">
     <html>
       <head>
-        <title>Cocoon2 profile information [<xsl:value-of select="@profile:date"/>]</title>
+        <title>Cocoon2 profile information [<xsl:value-of select="@date"/>]</title>
       </head>
       <body>
         Sort results by <a href="?sort=uri">uri</a>,
@@ -19,17 +19,17 @@
           <xsl:choose>
             <xsl:when test="$sort = 'uri'">
               <xsl:apply-templates select="profile:pipeline">
-                 <xsl:sort select="@profile:uri"/>
+                 <xsl:sort select="@uri"/>
               </xsl:apply-templates>
             </xsl:when>
             <xsl:when test="$sort = 'time'">
               <xsl:apply-templates select="profile:pipeline">
-                 <xsl:sort select="@profile:time" data-type="number"/>
+                 <xsl:sort select="@time" data-type="number"/>
               </xsl:apply-templates>
             </xsl:when>
             <xsl:when test="$sort = 'count'">
               <xsl:apply-templates select="profile:pipeline">
-                 <xsl:sort select="@profile:count" data-type="number"/>
+                 <xsl:sort select="@count" data-type="number"/>
               </xsl:apply-templates>
             </xsl:when>
             <xsl:otherwise>
@@ -54,17 +54,17 @@
     </xsl:if>
     <tr bgcolor="#C0C0FF">
      <td colspan="3">
-      <a href="?key={@profile:key}">
-       <font face="verdana"><strong><xsl:value-of select="@profile:uri"/></strong></font>
-       (<xsl:value-of select="@profile:count"/> results,
-       total time: <xsl:value-of select="@profile:time"/>,
-       average time: <xsl:value-of select="@profile:time div @profile:count"/>)
+      <a href="?key={@key}">
+       <font face="verdana"><strong><xsl:value-of select="@uri"/></strong></font>
+       (<xsl:value-of select="@count"/> results,
+       total time: <xsl:value-of select="@time"/>,
+       average time: <xsl:value-of select="@time div @count"/>)
       </a>
      </td>
      <xsl:for-each select="profile:result">
       <td>
-       <a href="?key={../@profile:key}&amp;index={@profile:index}">
-        <xsl:value-of select="@profile:index"/>
+       <a href="?key={../@key}&amp;index={@index}">
+        <xsl:value-of select="@index"/>
        </a>
       </td>
      </xsl:for-each>
@@ -82,22 +82,22 @@
         <xsl:value-of select="$pos"/>
        </td>
        <td width="10%">
-        <xsl:value-of select="@profile:role"/>
-        <xsl:if test="@profile:source">
-          (<xsl:value-of select="@profile:source"/>)
+        <xsl:value-of select="@role"/>
+        <xsl:if test="@source">
+          (<xsl:value-of select="@source"/>)
         </xsl:if>
        </td>
 
        <xsl:for-each select="../../profile:average/profile:component[position()=$pos]">
         <th>
-         <xsl:value-of select="@profile:time"/>
+         <xsl:value-of select="@time"/>
         </th>
        </xsl:for-each>
 
        <xsl:for-each select="../../profile:result/profile:component[position()=$pos]">
         <td>
-         <a href="?key={../../@profile:key}&amp;index={../@profile:index}&amp;offset={@profile:offset}">
-          <xsl:value-of select="@profile:time"/>
+         <a href="?key={../../@key}&amp;index={../@index}&amp;offset={@offset}">
+          <xsl:value-of select="@time"/>
          </a>
         </td>
        </xsl:for-each>
@@ -115,12 +115,12 @@
        </td>
 
         <th>
-         <xsl:value-of select="profile:average/@profile:time"/>
+         <xsl:value-of select="profile:average/@time"/>
         </th>
 
        <xsl:for-each select="profile:result">
         <td>
-         <xsl:value-of select="@profile:time"/>
+         <xsl:value-of select="@time"/>
         </td>
        </xsl:for-each>
 
@@ -135,7 +135,7 @@
    <table cellspacing="0" cellpadding="0">
     <tr>
      <td>
-      <xsl:value-of select="@profile:role"/>
+      <xsl:value-of select="@role"/>
      </td>
     </tr>
    </table>
@@ -164,8 +164,8 @@
         </xsl:variable>
 
         <tr bgcolor="{$bgcolor}">
-          <td><xsl:value-of select="@profile:name"/></td>
-          <td><xsl:value-of select="@profile:value"/></td>
+          <td><xsl:value-of select="@name"/></td>
+          <td><xsl:value-of select="@value"/></td>
         </tr>
       </xsl:for-each>
     </table>
@@ -189,8 +189,8 @@
         </xsl:variable>
 
         <tr bgcolor="{$bgcolor}">
-          <td><xsl:value-of select="@profile:name"/></td>
-          <td><xsl:value-of select="@profile:value"/></td>
+          <td><xsl:value-of select="@name"/></td>
+          <td><xsl:value-of select="@value"/></td>
         </tr>
       </xsl:for-each>
     </table>
