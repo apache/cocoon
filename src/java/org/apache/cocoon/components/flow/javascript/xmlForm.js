@@ -1,5 +1,5 @@
 //
-// CVS $Id: xmlForm.js,v 1.6 2003/03/28 22:56:18 coliver Exp $
+// CVS $Id: xmlForm.js,v 1.7 2003/03/29 19:12:24 coliver Exp $
 //
 // XMLForm Support
 //
@@ -160,7 +160,7 @@ XForm.prototype.sendView = function(phase, uri, validator) {
         }
         // reset the view in case this is a re-invocation of a continuation
         cocoon.request.setAttribute("view", view);
-	this.form.remove(this.id);
+	this.form.remove(cocoon.environment.objectModel, this.id);
 	this.form.save(cocoon.environment.objectModel, "request");
         this._sendView(uri, k);
         // _sendView creates a continuation, the invocation of which
