@@ -135,6 +135,20 @@
     <p>
        <code>WebContinuation</code> objects support the following functions and properties:
     </p>
+    <s4 title="getContinuation">
+    <p>
+        <em>Function</em> <code>[WebContinuation] getContinuation([Number] level)</code>
+    </p>
+    <p>
+      Return the ancestor continuation situated <code>level</code>s
+      above the current continuation. The current instance is
+      considered to be at level 0. The parent continuation of the
+      receiving instance at level 1, its parent is at level 2 relative
+      to the receiving instance. If <code>level</code> is bigger than
+      the depth of the tree, the root of the tree is returned.
+     
+    </p>
+    </s4>
     <s4 title="invalidate">
     <p>
         <em>Function</em> <code>invalidate()</code>
@@ -152,7 +166,7 @@
         <em>Property</em> <code>[String] id</code>
     </p>
     <p>
-       Returns this object's unique identifier as a String
+       Returns this unique string identifier of this continuation
     </p>
     </s4>
     </s2>
