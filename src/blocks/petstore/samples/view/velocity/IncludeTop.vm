@@ -42,7 +42,7 @@
     <td align="right"><a href="viewCart.do"><img border="0" name="img_cart" src="images/cart.gif" /></a>
       <img border="0" src="images/separator.gif" />
 
-#if ($accountForm.signOn) 
+#if ($accountForm.signOn)
       <a href="signonForm.do">
       <img border="0" name="img_signin" src="images/sign-in.gif" /></a>
 #else
@@ -64,7 +64,7 @@
   </tbody>
 </table>
 
-#parse( "view/templates/IncludeQuickHeader.vm" )
+#parse( "view/velocity/IncludeQuickHeader.vm" )
 
 <!-- Support for non-traditional but simpler use of errors... -->
 #if ($errors)

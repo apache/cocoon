@@ -13,8 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 *#
-#parse ("view/templates/IncludeTop.vm")
-
+#parse("view/velocity/IncludeTop.vm")
 
 <table align="left" bgcolor="#008800" border="0" cellspacing="2" cellpadding="2">
 <tr><td bgcolor="#FFFF88">
@@ -22,31 +21,29 @@
 </td></tr>
 </table>
 
+<p>
+<center>
+  <h2>$category.name</h2>
+</center>
 <table align="center" bgcolor="#008800" border="0" cellspacing="2" cellpadding="3">
-  <tr bgcolor="#CCCCCC">  <td> </td>  <td><b>Product ID</b></td>  <td><b>Name</b></td>  </tr>
-#foreach ($product in $searchResultsProductList)
+  <tr bgcolor="#CCCCCC">  <td><b>Product ID</b></td>  <td><b>Name</b></td>    </tr>
+#foreach ($product in $productList)
   <tr bgcolor="#FFFF88">
-  <td><a href="viewProduct.do?productId=$product.productId">
-$product.descn</image></a></td>
   <td><b><a href="viewProduct.do?productId=$product.productId"><font color="BLACK">$product.productId</font></a></b></td>
   <td>$product.name</td>
   </tr>
 #end
-  <tr>
-  <td>
+  <tr><td>
 #if (!$firstPage)
     <a href="${continuation.id}.kont?page=previous"><font color="white"><B>&lt;&lt; Prev</B></font></a>
 #end
 #if (!$lastPage)
     <a href="${continuation.id}.kont?page=next"><font color="white"><B>Next &gt;&gt;</B></font></a>
 #end
-  </td>
-  </tr>
-
+  </td></tr>
 </table>
-
-#parse ("view/templates/IncludeBottom.vm")
-
+</p>
+#parse("view/velocity/IncludeBottom.vm")
 
 
 

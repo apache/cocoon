@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 *#
-#parse ("view/templates/IncludeTop.vm")
+#parse ("view/velocity/IncludeTop.vm")
 
 <H3>Error!</H3>
 
@@ -23,4 +23,4 @@
   <B>No further information was provided.</B>
 #end
 
-#parse ("view/templates/IncludeBottom.vm")
+#parse ("view/velocity/IncludeBottom.vm")

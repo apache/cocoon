@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 *#
-#parse ("view/templates/IncludeTop.vm")
+#parse ("view/velocity/IncludeTop.vm")
 
 <table border="0" cellspacing="0" width="100%">
   <tbody>
@@ -34,7 +34,7 @@
 #if (!$accountForm.signOn)
               <b><i><font size="2" color="BLACK">Welcome $accountForm.account.firstName!</font></i></b>
 #end
-        
+
       </td>
       </tr>
 #foreach ($category in $categoryList)
@@ -59,7 +59,7 @@
         </tbody>
         </table>
 
-#parse("view/templates/IncludeBottom.vm")
+#parse("view/velocity/IncludeBottom.vm")
 
 
 

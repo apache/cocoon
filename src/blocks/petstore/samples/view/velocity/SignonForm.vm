@@ -13,7 +13,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 *#
-#parse ("view/templates/IncludeTop.vm")
+#parse ("view/velocity/IncludeTop.vm")
 
 <br clear="all" />
 <center><b><font color="RED">$message </font></b></center><br clear="all" />
@@ -52,6 +52,6 @@
 </center>
 
 
-#parse("view/templates/IncludeBottom.vm")
+#parse("view/velocity/IncludeBottom.vm")
 
 
