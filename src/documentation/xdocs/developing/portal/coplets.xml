@@ -212,6 +212,7 @@
     gettable. If you set a timeout, the content is automatically
     buffered and the <em>buffer</em> configuration is ignored.
    </p>
+  </s2>
  </s1>
  <s1 title="The URICoplet">
   <p>
@@ -263,13 +264,54 @@
   </s2>
  </s1>
  <s1 title="Coplet Rendering">
-  <!-- ACHTUNG DAS HIER SIND ASPECTE, nicht attribute!!!!!! -->
   <p>
    Each coplet can be configured for supporting different features, like minimizing
-   or removing.
+   or removing. These are aspect configurations that are configured similar to 
+   attributes.
   </p>
   <s2 title="Sizing">
-  </s2>
+   <p>
+    By default, the window size of a coplet can be changed by the user.
+    The user can choose between maximized and minimized.
+   </p>
+   <p>
+    This is configurable by the boolean aspect <em>sizable</em> on
+    the coplet data (class). The default is true:
+   </p>
+   <source>
+<![CDATA[...
+   <coplet-data id="CZ Weblog" name="standard">
+      <title>CZ's Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <aspect>
+      	<name>sizable</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      	  false
+      	</value>
+      </aspect>
+   </coplet-data>
+...]]>
+   </source>
+   <p>
+    In addition the size of a coplet (minimized/maximized) can be preconfigured
+    as well by the integer aspect value <em>size</em>. The value <em>0</em>
+    means minimized and <em>1</em> is maximized (with 1 as the default).
+   </p>
+   <source>
+<![CDATA[...
+   <coplet-data id="CZ Weblog" name="standard">
+      <title>CZ's Weblog</title>
+      <coplet-base-data>URICoplet</coplet-base-data>
+      <aspect>
+      	<name>size</name>
+      	<value xsi:type="java:java.lang.Integer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      	  0
+      	</value>
+      </aspect>
+   </coplet-data>
+...]]>
+   </source>
+ </s2>
   <s2 title="Mandatory Coplets">
    <p>
     By default, the user can delete any coplet from his portal view. However
@@ -278,7 +320,7 @@
     by the user.
    </p>
    <p>
-    This is configurable by the boolean attribute <em>mandatory</em> on
+    This is configurable by the boolean aspect <em>mandatory</em> on
     the coplet data (class). The default is false:
    </p>
    <source>
@@ -286,12 +328,12 @@
    <coplet-data id="CZ Weblog" name="standard">
       <title>CZ's Weblog</title>
       <coplet-base-data>URICoplet</coplet-base-data>
-      <attribute>
+      <aspect>
       	<name>mandatory</name>
       	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       	  true
       	</value>
-      </attribute>
+      </aspect>
    </coplet-data>
 ...]]>
    </source>
