@@ -160,7 +160,7 @@ implements Configurable, CacheableProcessingComponent {
             m_delegate = (Generator) m_generatorSelector.select(delegate);
         } catch (ServiceException e) {
             final String message =
-                "Transformer '" + delegate + "' could not be found.";
+                "Generator '" + delegate + "' could not be found.";
             throw new ProcessingException(message); 
         }        
         m_delegate.setup(resolver, objectModel, src, par);
