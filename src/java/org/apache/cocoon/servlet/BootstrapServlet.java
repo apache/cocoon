@@ -78,7 +78,7 @@ import javax.servlet.ServletException;
  * </ul>
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: BootstrapServlet.java,v 1.3 2003/07/02 18:33:38 cziegeler Exp $
+ * @version CVS $Id: BootstrapServlet.java,v 1.4 2003/07/30 02:21:31 joerg Exp $
  */
 
 public class BootstrapServlet extends ParanoidCocoonServlet {
@@ -239,15 +239,30 @@ public class BootstrapServlet extends ParanoidCocoonServlet {
         public RequestDispatcher getNamedDispatcher(String param) {
             return this.context.getNamedDispatcher(param);
         }
-    
+
+        /**
+         * @deprecated The method BootstrapServlet.ContextWrapper.getServlet(String)
+         *             overrides a deprecated method from ServletContext.
+         * @see <a href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/ServletContext.html#getServlet(java.lang.String)">ServletContext#getServlet(java.lang.String)</a>
+         */
         public Servlet getServlet(String param) throws ServletException {
             return this.context.getServlet(param);
         }
-    
+
+        /**
+         * @deprecated The method BootstrapServlet.ContextWrapper.getServlets()
+         *             overrides a deprecated method from ServletContext.
+         * @see <a href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/ServletContext.html#getServlets()">ServletContext#getServlets()</a>
+         */
         public Enumeration getServlets() {
             return this.context.getServlets();
         }
-    
+
+        /**
+         * @deprecated The method BootstrapServlet.ContextWrapper.getServletNames()
+         *             overrides a deprecated method from ServletContext.
+         * @see <a href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/javax/servlet/ServletContext.html#getServletNames()">ServletContext#getServletNames()</a>
+         */
         public Enumeration getServletNames() {
             return this.context.getServletNames();
         }
@@ -255,7 +270,8 @@ public class BootstrapServlet extends ParanoidCocoonServlet {
         public void log(String msg) {
             this.context.log(msg);
         }
-    
+
+        /** @deprecated use {@link #log(String message, Throwable throwable)} instead. */
         public void log(Exception ex, String msg) {
             this.context.log(ex, msg);
         }
