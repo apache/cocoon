@@ -26,7 +26,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.mail.MailMessageSender;
-import org.apache.cocoon.util.Tokenizer;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -105,7 +105,7 @@ import javax.mail.internet.AddressException;
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:andrzej@chaeron.com">Andrzej Taramina</a>
  * @since 2.1
- * @version CVS $Id: Sendmail.java,v 1.6 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id: Sendmail.java,v 1.7 2004/03/28 14:28:04 antonio Exp $
  */
 public class Sendmail extends AbstractAction implements ThreadSafe, Configurable {
     private final static String STATUS = "status";
@@ -192,10 +192,9 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
             }
 
             if (parameters.isParameter("attachments")) {
-                Tokenizer tz = new Tokenizer(parameters.getParameter("attachments"));
-
-                while (tz.hasMoreTokens()) {
-                    String srcName = tz.nextToken();
+                String fileName[] = StringUtils.split(parameters.getParameter("attachments"));
+                for (int i = 0; i < fileName.length; i++) {
+                    String srcName = fileName[i];
 
                     if (srcName.indexOf(":") == -1) {
                         Object obj = request.get(srcName);

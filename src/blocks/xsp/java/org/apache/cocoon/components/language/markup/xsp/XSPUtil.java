@@ -24,8 +24,9 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.NetUtils;
-import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.ContentHandler;
@@ -51,7 +52,7 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version CVS $Id: XSPUtil.java,v 1.2 2004/03/28 14:28:04 antonio Exp $
  */
 public class XSPUtil {
 
@@ -121,39 +122,15 @@ public class XSPUtil {
     }
 
     public static String[] split(String line) {
-        return split(line, " \t\r\f\n");
+        return StringUtils.split(line, " \t\r\f\n");
     }
 
     public static String[] split(String line, String delimiter) {
-        Tokenizer tokenizer = new Tokenizer(line, delimiter);
-        int tokenCount = tokenizer.countTokens();
-        String[] result = new String[tokenCount];
-        for (int i = 0; i < tokenCount; i++) {
-            result[i] = tokenizer.nextToken();
-        }
-        return result;
+        return StringUtils.split(line, delimiter);
     }
 
     public static String encodeMarkup(String string) {
-        char[] array = string.toCharArray();
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < array.length; i++) {
-            switch (array[i]) {
-                case '<':
-                    buffer.append("&lt;");
-                    break;
-                case '>':
-                    buffer.append("&gt;");
-                    break;
-                case '&':
-                    buffer.append("&amp;");
-                    break;
-                default:
-                    buffer.append(array[i]);
-                    break;
-            }
-        }
-        return buffer.toString();
+        return StringEscapeUtils.escapeXml(string);
     }
 
     public static String formEncode(String text) throws Exception {
@@ -169,7 +146,7 @@ public class XSPUtil {
 
     // Date
     public static String formatDate(Date date, String pattern) {
-        if (pattern == null || pattern.length() == 0) {
+        if (StringUtils.isEmpty(pattern)) {
             pattern = "yyyy/MM/dd hh:mm:ss aa";
         }
         try {
@@ -214,7 +191,7 @@ public class XSPUtil {
     }
 
     public static String getSourceContents(String uri, String base, SourceResolver resolver) throws IOException {
-        if (base != null && base.length() == 0) {
+        if (StringUtils.isEmpty(base)) {
             base = null;
         }
         Source source = resolver.resolveURI(uri, base, null);
@@ -257,7 +234,7 @@ public class XSPUtil {
 
     public static void includeSource(String uri, String base, SourceResolver resolver, ContentHandler contentHandler)
             throws RuntimeException {
-        if (base != null && base.length() == 0) {
+        if (StringUtils.isEmpty(base)) {
             base = null;
         }
         Source source = null;

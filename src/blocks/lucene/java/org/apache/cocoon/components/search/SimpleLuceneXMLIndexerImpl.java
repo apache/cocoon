@@ -24,7 +24,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.util.Tokenizer;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.lucene.document.DateField;
 import org.apache.lucene.document.Document;
@@ -64,7 +64,7 @@ import java.util.List;
  *
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
  * @author <a href="mailto:jeremy@apache.org">Jeremy Quinn</a>
- * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.7 2004/03/05 13:01:59 bdelacretaz Exp $
+ * @version CVS $Id: SimpleLuceneXMLIndexerImpl.java,v 1.8 2004/03/28 14:28:04 antonio Exp $
  */
 public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
          implements LuceneXMLIndexer, Configurable, Serviceable, ThreadSafe {
@@ -144,16 +144,16 @@ public class SimpleLuceneXMLIndexerImpl extends AbstractLogEnabled
             fieldTags = new HashSet();
             for (int i = 0; i < children.length; i++) {
                 String pattern = children[i].getValue();
- 								Tokenizer t = new Tokenizer(pattern, ", ");
-								while (t.hasMoreTokens()) {
-										String tokenized_pattern = t.nextToken();
-										if (!tokenized_pattern.equals("")) {
-											this.fieldTags.add(tokenized_pattern);
-											if (getLogger().isDebugEnabled()) {
-													getLogger().debug("add field: " + tokenized_pattern);
-											}
-										}
-								}
+                String params[] = StringUtils.split(pattern, ", ");
+                for (int index = 0; index < params.length; index++) {
+                    String tokenized_pattern = params[index];
+					if (!tokenized_pattern.equals("")) {
+						this.fieldTags.add(tokenized_pattern);
+						if (getLogger().isDebugEnabled()) {
+								getLogger().debug("add field: " + tokenized_pattern);
+						}
+					}
+    			}
             }
         } else {
             if (getLogger().isDebugEnabled()) {
