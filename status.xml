@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.316 2004/05/08 02:19:24 joerg Exp $:-->
+<!-- CVS $Id: status.xml,v 1.317 2004/05/08 10:57:16 crossley Exp $:-->
 
 <status>
  <developers>
@@ -201,11 +201,6 @@
       that the entries are in the session(Stephan).
     </action>
 
-    <action context="code">
-      Examples are broken, if you went first to precept example
-      (samples/precept/app/example1.html)
-      and then to the xmlform example (samples/xmlform/wizard).
-    </action>
    </actions>
   </todo>
   
