@@ -19,12 +19,11 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 /**
- * Replacement for StringTokenizer in java.util, beacuse of bug in the
+ * Replacement for StringTokenizer in java.util, because of bug in the
  * Sun's implementation.
  *
  * @author <A HREF="mailto:moravek@pobox.sk">Peter Moravek</A>
- * @version CVS $Id: Tokenizer.java,v 1.4 2004/03/28 14:34:22 antonio Exp $
- * @deprecated Use methods from org.apache.commons.lang instead
+ * @version CVS $Id: Tokenizer.java,v 1.5 2004/04/29 00:19:40 joerg Exp $
  */
 public class Tokenizer implements Enumeration {
 
