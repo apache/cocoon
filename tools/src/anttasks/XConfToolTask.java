@@ -56,6 +56,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -65,6 +66,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.Source;
@@ -85,7 +87,7 @@ import java.io.IOException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.3 $ $Date: 2003/05/14 15:21:44 $
+ * @version CVS $Revision: 1.4 $ $Date: 2003/05/16 07:06:10 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -153,6 +155,13 @@ public final class XConfToolTask extends MatchingTask {
 
             if (hasChanged) {
                 log("Writing: "+this.file);
+                // Set the DOCTYPE output option on the transformer 
+                // if we have any DOCTYPE declaration in the input xml document
+                final DocumentType doctype = document.getDoctype();
+                if (null != doctype && null != doctype.getPublicId()) {
+                    transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+                    transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+                }
                 transformer.transform(new DOMSource(document),
                                       new StreamResult(this.file));
             } else {
