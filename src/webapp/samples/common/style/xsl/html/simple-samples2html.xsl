@@ -6,12 +6,12 @@
     | Author: Nicola Ken Barozzi "nicolaken@apache.org"
     | Author: Vadim Gritsenko "vgritsenko@apache.org"
     | Author: Christian Haul "haul@apache.org"
-    | CVS $Id: simple-samples2html.xsl,v 1.7 2003/05/07 10:24:21 bdelacretaz Exp $
+    | CVS $Id: simple-samples2html.xsl,v 1.8 2003/12/10 16:32:41 giacomo Exp $
     +-->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <xsl:param name="contextPath" select="string('/cocoon')"/>
+  <xsl:param name="contextPath"/>
 
  <xsl:template match="/">
   <html>

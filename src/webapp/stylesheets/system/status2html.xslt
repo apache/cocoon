@@ -3,14 +3,14 @@
 <!--+
     | Converts output of the StatusGenerator into HTML page
     | 
-    | CVS $Id: status2html.xslt,v 1.6 2003/07/31 03:51:18 vgritsenko Exp $
+    | CVS $Id: status2html.xslt,v 1.7 2003/12/10 16:32:42 giacomo Exp $
     +-->
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:status="http://apache.org/cocoon/status/2.0">
  
-  <xsl:param name="contextPath" select="string('/cocoon')"/>
+  <xsl:param name="contextPath"/>
 
   <xsl:template match="status:statusinfo">
     <html>

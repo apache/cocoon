@@ -6,7 +6,7 @@
   version="1.0">
 
   <xsl:output indent="yes"/>
-  <xsl:param name="contextPath" select="'/cocoon'"/>
+  <xsl:param name="contextPath"/>
 
   <xsl:template match="/">
     <document>
