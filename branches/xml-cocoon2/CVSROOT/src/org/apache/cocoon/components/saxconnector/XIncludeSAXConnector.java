@@ -17,6 +17,7 @@ import org.xml.sax.Locator;
 
 import org.apache.cocoon.Roles;
 import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentSelector;
 import org.apache.avalon.parameters.Parameters;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.component.ComponentManager;
@@ -24,10 +25,16 @@ import org.apache.avalon.component.ComponentException;
 import org.apache.avalon.component.Composable;
 import org.apache.excalibur.pool.Poolable;
 
+import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.sitemap.Sitemap;
+import org.apache.cocoon.components.pipeline.EventPipeline;
+import org.apache.cocoon.components.pipeline.StreamPipeline;
+import org.apache.cocoon.xml.XMLProducer;
+import org.apache.cocoon.xml.XIncludeContentHandler;
+
 
 import org.xml.sax.SAXException;
 import org.xml.sax.EntityResolver;
@@ -38,7 +45,7 @@ import java.io.IOException;
 /**
  * Copy of code from XIncludeTransformer as a starting point for XIncludeSAXConnector.
  * @author <a href="dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-24 20:18:26 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-24 22:05:58 $
  */
 public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable, Poolable, SAXConnector, Disposable {
 
@@ -52,11 +59,9 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
     public static final String XINCLUDE_NAMESPACE_URI = "http://www.w3.org/1999/XML/xinclude";
     public static final String XINCLUDE_INCLUDE_ELEMENT = "include";
     public static final String XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE = "href";
-    public static final String XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE = "parse";
 
-
-    /** the current sitemap */
-    protected Sitemap sitemap;
+    /** The current <code>Environment</code>. */
+    protected Environment environment;
 
     protected URL base_xmlbase_uri = null;
 
@@ -78,7 +83,9 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
 
     public void setup(EntityResolver resolver, Map objectModel,
                       String source, Parameters parameters)
-            throws ProcessingException, SAXException, IOException {}
+            throws ProcessingException, SAXException, IOException {
+        environment = (Environment) resolver;
+    }
 
     public void compose(ComponentManager manager) {
         this.manager = manager;
@@ -99,11 +106,11 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
                 throw new SAXException(e);
             }
         }
+
         if (uri != null && name != null && uri.equals(XINCLUDE_NAMESPACE_URI) && name.equals(XINCLUDE_INCLUDE_ELEMENT)) {
             String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
-            String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
             try {
-                processXIncludeElement(href, parse);
+                processXIncludeElement(href);
             } catch (MalformedURLException e) {
                 getLogger().debug("XIncludeSAXConnector", e);
                 throw new SAXException(e);
@@ -159,9 +166,40 @@ public class XIncludeSAXConnector extends AbstractXMLPipe implements Composable,
         last_xmlbase_element_name = (String)xmlbase_element_name_stack.pop();
     }
 
-    protected void processXIncludeElement(String href, String parse) throws SAXException,MalformedURLException,IOException {
-        getLogger().debug("Processing XInclude element: href="+href+", parse="+parse+", sitemap="+sitemap);
-        //System.out.println("Processing XInclude element: href="+href+", parse="+parse+", sitemap="+sitemap);
+    protected void processXIncludeElement(String href) throws SAXException,MalformedURLException,IOException {
+        ComponentSelector selector = null;
+        Sitemap sitemap = null;
+        EventPipeline eventPipeline = null;
+        StreamPipeline pipeline = null;
+        try {
+            selector = (ComponentSelector) manager.lookup(Roles.SERVERPAGES);
+            sitemap = (Sitemap) selector.select("sitemap");
+            getLogger().debug("Processing XInclude element: href="+href+", sitemap="+sitemap);
+
+            eventPipeline = (EventPipeline)this.manager.lookup(Roles.EVENT_PIPELINE);
+            pipeline = (StreamPipeline)this.manager.lookup(Roles.STREAM_PIPELINE);
+            pipeline.setEventPipeline(eventPipeline);
+
+            ((XMLProducer)eventPipeline).setConsumer(this);
+
+            this.environment.pushURI(href);
+            sitemap.process(this.environment, pipeline, eventPipeline);
+            eventPipeline.process(this.environment);
+            this.environment.popURI();
+
+        } catch (Exception e) {
+            getLogger().error("Error selecting sitemap",e);
+        } finally {
+            if (selector != null) {
+                if (sitemap != null) 
+                    selector.release((Component)sitemap);
+                this.manager.release((Component)selector);
+            }
+            if(eventPipeline != null)
+                this.manager.release((Component)eventPipeline);
+            if(pipeline != null)
+                this.manager.release((Component)pipeline);
+        }
     }
 
     public void dispose()

@@ -39,7 +39,7 @@ import org.xml.sax.EntityResolver;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-24 20:18:24 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-04-24 22:05:57 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
@@ -135,7 +135,9 @@ implements EventPipeline, Disposable {
             }
         }
 
-        if (super.xmlConsumer == null) {
+        if (super.xmlConsumer == null &&
+            super.contentHandler == null && 
+            super.lexicalHandler == null) {
             return false;
         }
         return true;
