@@ -1,4 +1,4 @@
-/*
+/* -*- Mode: java; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 4 -*-
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -68,7 +68,7 @@ import java.sql.*;
  * A ScriptableConnection is also a wrapper around a real JDBC Connection and thus 
  * provides all of methods of Connection as well
  *
- * @version CVS $Id: ScriptableConnection.java,v 1.4 2003/03/17 18:53:16 coliver Exp $
+ * @version CVS $Id: ScriptableConnection.java,v 1.5 2003/03/17 19:19:25 coliver Exp $
  */
 public class ScriptableConnection extends ScriptableObject {
 
@@ -210,21 +210,21 @@ public class ScriptableConnection extends ScriptableObject {
         throws JavaScriptException {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-	    Scriptable array = (Scriptable)params;
-	    if (array != Undefined.instance) {
-		int len = (int)
-		    Context.toNumber(ScriptableObject.getProperty(array, "length"));
-		for (int i = 0; i < len; i++) {
-		    Object val = ScriptableObject.getProperty(array, i);
-		    if (val instanceof Wrapper) {
-			val = ((Wrapper)val).unwrap();
-		    }
-		    if (val == Scriptable.NOT_FOUND) {
-			val = null;
-		    }
-		    stmt.setObject(i + 1, val);
-		}
-	    }
+            Scriptable array = (Scriptable)params;
+            if (array != Undefined.instance) {
+                int len = (int)
+                    Context.toNumber(ScriptableObject.getProperty(array, "length"));
+                for (int i = 0; i < len; i++) {
+                    Object val = ScriptableObject.getProperty(array, i);
+                    if (val instanceof Wrapper) {
+                        val = ((Wrapper)val).unwrap();
+                    }
+                    if (val == Scriptable.NOT_FOUND) {
+                        val = null;
+                    }
+                    stmt.setObject(i + 1, val);
+                }
+            }
             ResultSet rs = stmt.executeQuery();
             if (maxRows == 0) {
                 maxRows = -1;
@@ -243,21 +243,21 @@ public class ScriptableConnection extends ScriptableObject {
         throws JavaScriptException {
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
-	    Scriptable array = (Scriptable)params;
-	    if (array != Undefined.instance) {
-		int len = (int)
-		    Context.toNumber(ScriptableObject.getProperty(array, "length"));
-		for (int i = 0; i < len; i++) {
-		    Object val = ScriptableObject.getProperty(array, i);
-		    if (val instanceof Wrapper) {
-			val = ((Wrapper)val).unwrap();
-		    }
-		    if (val == Scriptable.NOT_FOUND) {
-			val = null;
-		    }
-		    stmt.setObject(i + 1, val);
-		}
-	    }
+            Scriptable array = (Scriptable)params;
+            if (array != Undefined.instance) {
+                int len = (int)
+                    Context.toNumber(ScriptableObject.getProperty(array, "length"));
+                for (int i = 0; i < len; i++) {
+                    Object val = ScriptableObject.getProperty(array, i);
+                    if (val instanceof Wrapper) {
+                        val = ((Wrapper)val).unwrap();
+                    }
+                    if (val == Scriptable.NOT_FOUND) {
+                        val = null;
+                    }
+                    stmt.setObject(i + 1, val);
+                }
+            }
             stmt.execute();
             return stmt.getUpdateCount();
         } catch (Exception e) {
