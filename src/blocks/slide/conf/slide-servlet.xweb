@@ -15,8 +15,8 @@
   limitations under the License.
 -->
 <xweb xpath="/web-app" 
-  unless="comment()[contains(., 'Definition and configuration of Slide')]" 
-  insert-after="servlet[servlet-name = 'Cocoon']">
+      unless="comment()[contains(., 'Definition and configuration of Slide')]" 
+      insert-after="servlet[last()]">
 
     <!-- Definition and configuration of Slide's WebDAV servlet. -->
     <servlet>
@@ -175,9 +175,5 @@
             <role-link>user</role-link>
         </security-role-ref!-->
     </servlet>
-    <servlet-mapping>
-        <servlet-name>webdav</servlet-name>
-        <url-pattern>/webdav/*</url-pattern>
-    </servlet-mapping>
 
 </xweb>
