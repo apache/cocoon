@@ -348,7 +348,6 @@ public class AdminHelper {
         String userUri = usersPath + "/" + username;
         
         SlideToken slideToken = new SlideTokenImpl(new CredentialsToken(caller));
-        Structure structure = nat.getStructureHelper();
         Content content = nat.getContentHelper();
         
         try {
