@@ -123,7 +123,7 @@
 
    <map:match pattern="mathexp.html">
     <map:generate type="serverpages" src="misc/mathexp.xsp"/>
-    <map:transform                src="stylesheets/mathexp.xsl"/>
+<!--    <map:transform                src="stylesheets/mathexp.xsl"/>-->
     <map:transform type="lexer"   src="grammars/mathexp.xlex"/>
     <map:transform type="parser"  src="grammars/mathexp.xgrm"/>
     <map:transform                src="stylesheets/mathexp2html.xsl"/>
