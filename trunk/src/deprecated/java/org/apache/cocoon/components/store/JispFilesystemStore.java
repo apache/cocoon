@@ -80,7 +80,7 @@ import java.util.Enumeration;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JispFilesystemStore.java,v 1.1 2003/03/09 00:07:06 pier Exp $
+ * @version CVS $Id: JispFilesystemStore.java,v 1.2 2003/04/27 15:16:15 cziegeler Exp $
  */
 public final class JispFilesystemStore extends AbstractLogEnabled
     implements org.apache.excalibur.store.Store,
@@ -335,10 +335,9 @@ public final class JispFilesystemStore extends AbstractLogEnabled
 
     /**
      * Frees some values of the data file.<br>
-     * TODO: implementation
      */
     public synchronized void free() {
-       //TODO: implementation
+       // implementation is missing
     }
 
     /**
@@ -434,7 +433,6 @@ public final class JispFilesystemStore extends AbstractLogEnabled
      * @return the wrapped key object
      */
     private KeyObject wrapKeyObject(Object key) {
-        // TODO: Implementation of Integer and Long keys
         return new JispStringKey(String.valueOf(key));
     }
 

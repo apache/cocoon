@@ -82,7 +82,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MRUMemoryStore.java,v 1.1 2003/03/09 00:07:07 pier Exp $
+ * @version CVS $Id: MRUMemoryStore.java,v 1.2 2003/04/27 15:16:15 cziegeler Exp $
  */
 public final class MRUMemoryStore extends AbstractLogEnabled
     implements Store, Parameterizable, Composable, Disposable, ThreadSafe {
@@ -342,8 +342,6 @@ public final class MRUMemoryStore extends AbstractLogEnabled
 
     /**
      * This method checks if an object is seriazable.
-     * FIXME: In the moment only CachedEventObject or
-     * CachedStreamObject are stored.
      *
      * @param object The object to be checked
      * @return true if the object is storeable
@@ -354,7 +352,6 @@ public final class MRUMemoryStore extends AbstractLogEnabled
 
         try {
             String clazz = object.getClass().getName();
-            // FIXME (VG): Can class identity check work here (==)? It will be faster.
             if((clazz.equals("org.apache.cocoon.caching.CachedEventObject"))
               || (clazz.equals("org.apache.cocoon.caching.CachedStreamObject"))
               || (ClassUtils.implementsInterface(clazz, "org.apache.cocoon.caching.CacheValidity"))) {
