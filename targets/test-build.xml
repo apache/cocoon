@@ -49,6 +49,7 @@
           <exclude name="**/Abstract*.class" />
           <exclude name="**/SitemapComponentTestCase*"/>
           <exclude name="**/ContainerTestCase*"/>
+          <exclude name="**/CocoonTestCase*"/>
         </fileset>
       </batchtest>
     </junit>
