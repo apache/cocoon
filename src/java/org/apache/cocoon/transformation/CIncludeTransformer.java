@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -76,14 +76,14 @@ import java.util.Map;
  *         <!-- more can follow -->
  *     </cinclude:parameters>
  * </cinclude:includexml>
- * 
+ *
  *
  * This transformer also supports caching of the included content.
  * Therefore it triggers for the element <code>cached-include</code> in the
  * namespace "http://apache.org/cocoon/include/1.0".
  * The <code>src</code> attribute contains the url which points to
  * an xml resource which is include instead of the element.
- * First, it works like the usual include command. But it can be 
+ * First, it works like the usual include command. But it can be
  * configured with various parameters:
  * The most important one is the <code>expires</code> parameter.
  * If (and only if) this is set to a value greater than zero,
@@ -102,18 +102,18 @@ import java.util.Map;
  * in a series.
  * With the optional parameter <code>preemptive</code> set to <code>true</code>
  * a pre-emptive caching is activated. When a resource is requested with
- * pre-emptive caching, this transformer always attempts to get the 
+ * pre-emptive caching, this transformer always attempts to get the
  * content from the cache. If the content is not in the cache, it is
  * of course retrieved from the original source and cached.
  * If the cached resource has expired, it is still provided. The cache
  * is updated by a background task. This task has to be started
  * beforehand.
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.10 2004/03/17 11:50:21 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.11 2004/06/11 20:32:20 vgritsenko Exp $
  */
-public class CIncludeTransformer 
+public class CIncludeTransformer
 extends AbstractSAXTransformer
 implements Disposable, CacheableProcessingComponent {
 
@@ -142,30 +142,30 @@ implements Disposable, CacheableProcessingComponent {
 
     /** The configuration of includexml */
     protected Parameters configurationParameters;
-    
+
     /** The parameters for includexml */
     protected SourceParameters resourceParameters;
-    
+
     /** The current state: STATE_ */
     protected int state;
-    
+
     protected IncludeCacheManager cacheManager;
 
     protected IncludeCacheManagerSession cachingSession;
 
     protected boolean compiling;
-    
+
     protected IncludeXMLConsumer filter;
-    
+
     protected XMLSerializer recorder;
-    
+
     protected AttributesImpl srcAttributes = new AttributesImpl();
-    
+
     protected boolean supportCaching;
-    
+
     /** Remember the start time of the request for profiling */
     protected long startTime;
-    
+
    /**
      * Constructor
      * Set the namespace
@@ -173,7 +173,7 @@ implements Disposable, CacheableProcessingComponent {
     public CIncludeTransformer() {
         this.namespaceURI = CINCLUDE_NAMESPACE_URI;
     }
-    
+
     /**
      * Setup the component.
      */
@@ -198,10 +198,11 @@ implements Disposable, CacheableProcessingComponent {
      */
     public void service(ServiceManager manager) throws ServiceException {
         super.service(manager);
-        if ( this.manager.hasService( IncludeCacheManager.ROLE )) {
-            this.cacheManager = (IncludeCacheManager) this.manager.lookup( IncludeCacheManager.ROLE );
+        if (this.manager.hasService(IncludeCacheManager.ROLE)) {
+            this.cacheManager = (IncludeCacheManager) this.manager.lookup(IncludeCacheManager.ROLE);
         } else {
-            this.getLogger().warn("The cinclude transformer cannot find the IncludeCacheManager. Therefore caching is turned off for the include transformer.");
+            getLogger().warn("The cinclude transformer cannot find the IncludeCacheManager. " +
+                             "Therefore caching is turned off for the include transformer.");
         }
     }
 
@@ -230,8 +231,9 @@ implements Disposable, CacheableProcessingComponent {
         super.recycle();
         this.configurationParameters = null;
         this.resourceParameters = null;
-        if (this.getLogger().isErrorEnabled()) {
-            this.getLogger().debug("Finishing CachingCIncludeTransformer, time: " + (System.currentTimeMillis() - this.startTime));
+        if (getLogger().isErrorEnabled()) {
+            getLogger().debug("Finishing CachingCIncludeTransformer, time: " +
+                              (System.currentTimeMillis() - this.startTime));
             this.startTime = 0;
         }
         this.filter = null;
@@ -249,7 +251,7 @@ implements Disposable, CacheableProcessingComponent {
                                         false);
 
         // Element: include
-        } else if (name.equals(CINCLUDE_INCLUDEXML_ELEMENT) 
+        } else if (name.equals(CINCLUDE_INCLUDEXML_ELEMENT)
                    && this.state == STATE_OUTSIDE) {
             this.state = STATE_INCLUDE;
             String ignoreErrors = attr.getValue("", CINCLUDE_INCLUDEXML_ELEMENT_IGNORE_ERRORS_ATTRIBUTE);
@@ -264,26 +266,26 @@ implements Disposable, CacheableProcessingComponent {
             this.ignoreWhitespaces = true;
 
         // target
-        } else if (name.equals(CINCLUDE_SRC_ELEMENT) 
+        } else if (name.equals(CINCLUDE_SRC_ELEMENT)
                    && this.state == STATE_INCLUDE) {
             this.startTextRecording();
 
         // configparameters
-        } else if (name.equals(CINCLUDE_CONFIGURATION_ELEMENT) 
+        } else if (name.equals(CINCLUDE_CONFIGURATION_ELEMENT)
                    && this.state == STATE_INCLUDE) {
             stack.push("end");
 
         // parameters
-        } else if (name.equals(CINCLUDE_PARAMETERS_ELEMENT) 
+        } else if (name.equals(CINCLUDE_PARAMETERS_ELEMENT)
                    && this.state == STATE_INCLUDE) {
             stack.push("end");
 
         // parameter
-        } else if (name.equals(CINCLUDE_PARAMETER_ELEMENT) 
+        } else if (name.equals(CINCLUDE_PARAMETER_ELEMENT)
                    && this.state == STATE_INCLUDE) {
 
         // parameter name
-        } else if (name.equals(CINCLUDE_NAME_ELEMENT) 
+        } else if (name.equals(CINCLUDE_NAME_ELEMENT)
                    && this.state == STATE_INCLUDE) {
             this.startTextRecording();
 
@@ -302,32 +304,32 @@ implements Disposable, CacheableProcessingComponent {
                                                     this.cacheManager != null);
            if (this.compiling) {
                this.srcAttributes.addAttribute("", CINCLUDE_INCLUDE_ELEMENT_SRC_ATTRIBUTE, CINCLUDE_SRC_ELEMENT, "CDATA", src);
-               super.startTransformingElement(uri, 
-                                              CINCLUDE_CACHED_INCLUDE_PLACEHOLDER_ELEMENT, 
-                                              raw+"p", 
+               super.startTransformingElement(uri,
+                                              CINCLUDE_CACHED_INCLUDE_PLACEHOLDER_ELEMENT,
+                                              raw + "p",
                                               this.srcAttributes);
-               this.srcAttributes.clear();                                               
+               this.srcAttributes.clear();
            }
         } else {
             super.startTransformingElement(uri, name, raw, attr);
         }
     }
 
-    public void endTransformingElement(String uri, String name, String raw) 
+    public void endTransformingElement(String uri, String name, String raw)
     throws ProcessingException, IOException, SAXException {
         if (name.equals(CINCLUDE_INCLUDE_ELEMENT)) {
             // do nothing
             return;
 
-       // Element: includexml
         } else if (name.equals(CINCLUDE_INCLUDEXML_ELEMENT)
                    && this.state == STATE_INCLUDE) {
-                    
+            // Element: includexml
+
             this.state = STATE_OUTSIDE;
 
             final String resource = (String)stack.pop();
 
-            final boolean ignoreErrors = ((String)stack.pop()).equals("true");
+            final boolean ignoreErrors = stack.pop().equals("true");
 
             if (this.getLogger().isDebugEnabled()) {
                 getLogger().debug("Processing CIncludexml element: src=" + resource
@@ -336,13 +338,13 @@ implements Disposable, CacheableProcessingComponent {
                               + ", parameters=" + this.resourceParameters);
             }
             Source source = null;
-            
+
             try {
-                source = SourceUtil.getSource(resource, 
-                                              this.configurationParameters, 
+                source = SourceUtil.getSource(resource,
+                                              this.configurationParameters,
                                               this.resourceParameters,
                                               this.resolver);
-                                              
+
                 XMLSerializer serializer = null;
                 XMLDeserializer deserializer = null;
                 try {
@@ -361,7 +363,7 @@ implements Disposable, CacheableProcessingComponent {
                 } finally {
                     this.manager.release( serializer );
                     this.manager.release( deserializer );
-                }               
+                }
             } catch (SourceException se) {
                 if (!ignoreErrors) throw SourceUtil.handle(se);
             } catch (SAXException se) {
@@ -379,7 +381,7 @@ implements Disposable, CacheableProcessingComponent {
         // src element
         } else if (name.equals(CINCLUDE_SRC_ELEMENT)
                    && this.state == STATE_INCLUDE) {
-                   
+
             this.stack.push(this.endTextRecording());
 
         } else if (name.equals(CINCLUDE_PARAMETERS_ELEMENT)
@@ -420,7 +422,7 @@ implements Disposable, CacheableProcessingComponent {
 
         } else if (name.equals(CINCLUDE_PARAMETER_ELEMENT) == true
                    && this.state == STATE_INCLUDE) {
-            
+
         } else if (name.equals(CINCLUDE_NAME_ELEMENT) == true
                    && this.state == STATE_INCLUDE) {
             stack.push(this.endTextRecording());
@@ -434,9 +436,9 @@ implements Disposable, CacheableProcessingComponent {
 
         } else if (name.equals(CINCLUDE_CACHED_INCLUDE_ELEMENT)) {
             if (this.compiling) {
-               super.endTransformingElement(uri, 
+               super.endTransformingElement(uri,
                                             CINCLUDE_CACHED_INCLUDE_PLACEHOLDER_ELEMENT,
-                                            raw+"p");
+                                            raw + "p");
             }
             // do nothing else
         } else {
@@ -444,7 +446,7 @@ implements Disposable, CacheableProcessingComponent {
         }
     }
 
-    protected String processCIncludeElement(String src, String element, 
+    protected String processCIncludeElement(String src, String element,
                                             String select, String ns, String prefix,
                                             boolean cache)
     throws SAXException, IOException {
@@ -478,7 +480,7 @@ implements Disposable, CacheableProcessingComponent {
             } else {
                 this.cacheManager.stream(src, this.cachingSession, this.filter);
             }
-        
+
             return src;
         }
 
@@ -500,10 +502,10 @@ implements Disposable, CacheableProcessingComponent {
 
             if (!"".equals(select)) {
 
-                
+
                 DOMParser parser = null;
                 XPathProcessor processor = null;
-                
+
                 try {
                     parser = (DOMParser)this.manager.lookup(DOMParser.ROLE);
                     processor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
@@ -515,7 +517,7 @@ implements Disposable, CacheableProcessingComponent {
                     int length = list.getLength();
                     for (int i=0; i<length; i++) {
                           IncludeXMLConsumer.includeNode(list.item(i),
-                                               this,  
+                                               this,
                                                this);
                     }
                 } finally {
@@ -525,7 +527,7 @@ implements Disposable, CacheableProcessingComponent {
             } else {
                 String mimeType = null;
                 if ( null != this.configurationParameters ) {
-                    mimeType = this.configurationParameters.getParameter("mime-type", mimeType);                    
+                    mimeType = this.configurationParameters.getParameter("mime-type", mimeType);
                 }
                 if ( this.compiling ) {
                     SourceUtil.toSAX(source, mimeType, new IncludeXMLConsumer(this.contentHandler, this.lexicalHandler));
@@ -555,7 +557,7 @@ implements Disposable, CacheableProcessingComponent {
         }
         return src;
     }
-    
+
     /**
      * Start recording of compiled xml.
      * The incomming SAX events are recorded and a compiled representation
@@ -570,9 +572,9 @@ implements Disposable, CacheableProcessingComponent {
 
         try {
             this.recorder = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
-            
+
             this.addRecorder(recorder);
-  
+
         } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup xml serializer for compiling xml.", ce);
         }
@@ -592,7 +594,7 @@ implements Disposable, CacheableProcessingComponent {
         }
 
         XMLSerializer recorder = (XMLSerializer)this.removeRecorder();
-        Object text = (byte[])recorder.getSAXFragment();
+        Object text = recorder.getSAXFragment();
 
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("END endCompiledXMLRecording text="+text);
@@ -607,7 +609,7 @@ implements Disposable, CacheableProcessingComponent {
         this.filter = new MyFilter(this.xmlConsumer, this);
         super.startDocument();
     }
-    
+
     /**
      * @see org.xml.sax.ContentHandler#endDocument()
      */
@@ -632,8 +634,8 @@ implements Disposable, CacheableProcessingComponent {
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
      */
     public Serializable getKey() {
-        if (this.supportCaching 
-            && null != this.cacheManager 
+        if (this.supportCaching
+            && null != this.cacheManager
             && this.cachingSession.getExpires() > 0) {
             return "1";
         }
@@ -644,7 +646,7 @@ implements Disposable, CacheableProcessingComponent {
      * @see org.apache.cocoon.caching.CacheableProcessingComponent#getValidity()
      */
     public SourceValidity getValidity() {
-        if (this.supportCaching 
+        if (this.supportCaching
             && null != this.cacheManager
             && this.cachingSession.getExpires() > 0
             && !this.cachingSession.isPurging()) {
@@ -652,13 +654,13 @@ implements Disposable, CacheableProcessingComponent {
         }
         return null;
     }
-    
+
 }
 
 final class MyFilter extends IncludeXMLConsumer {
 
     private CIncludeTransformer transformer;
-    
+
     /**
      * This filter class post-processes the parallel fetching
      * @param consumer
@@ -667,17 +669,17 @@ final class MyFilter extends IncludeXMLConsumer {
         super(consumer);
         this.transformer = transformer;
     }
-    
-    
+
+
     public void endElement(String uri, String local, String qName)
     throws SAXException {
-        if (uri != null 
+        if (uri != null
             && uri.equals(CIncludeTransformer.CINCLUDE_NAMESPACE_URI)
             && local.equals(CIncludeTransformer.CINCLUDE_CACHED_INCLUDE_PLACEHOLDER_ELEMENT)) {
             // this is the placeholder element: do nothing
         } else {
             super.endElement(uri, local, qName);
-        }        
+        }
     }
 
     public void startElement(String uri,
@@ -685,7 +687,7 @@ final class MyFilter extends IncludeXMLConsumer {
                                 String qName,
                                 Attributes attr)
     throws SAXException {
-        if (uri != null 
+        if (uri != null
             && uri.equals(CIncludeTransformer.CINCLUDE_NAMESPACE_URI)
             && local.equals(CIncludeTransformer.CINCLUDE_CACHED_INCLUDE_PLACEHOLDER_ELEMENT)) {
             // this is a placeholder
@@ -697,7 +699,7 @@ final class MyFilter extends IncludeXMLConsumer {
             }
         } else {
             super.startElement(uri, local, qName, attr);
-        }        
+        }
     }
 
 }

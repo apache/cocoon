@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,13 +56,13 @@ import org.xml.sax.SAXException;
  * @cocoon.sitemap.component.documentation
  * The html generator reads HTML from a source, converts it to XHTML
  * and generates SAX Events.
- * 
+ *
  * @cocoon.sitemap.component.name   html
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.html
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xml document for validation
- * 
+ *
  * @cocoon.sitemap.component.pooling.min   4
  * @cocoon.sitemap.component.pooling.max  32
  * @cocoon.sitemap.component.pooling.grow  4
@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.12 2004/05/03 13:07:26 cziegeler Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.13 2004/06/11 20:32:19 vgritsenko Exp $
  */
 public class HTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
@@ -153,7 +153,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         super.setup(resolver, objectModel, src, par);
 
         Request request = ObjectModelHelper.getRequest(objectModel);
-        
+
         if (src == null) {
             // Handle this request as the StreamGenerator does (from the POST
             // request or from a request parameter), but try to make sure
@@ -199,8 +199,9 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         }
 
         xpath = request.getParameter("xpath");
-        if(xpath == null)
+        if (xpath == null) {
             xpath = par.getParameter("xpath",null);
+        }
 
         // append the request parameter to the URL if necessary
         if (par.getParameterAsBoolean("copy-parameters", false)
@@ -212,8 +213,9 @@ implements Configurable, CacheableProcessingComponent, Disposable {
         }
 
         try {
-            if (source != null)
+            if (source != null) {
                 this.inputSource = resolver.resolveURI(super.source);
+            }
         } catch (SourceException se) {
             throw SourceUtil.handle("Unable to resolve " + super.source, se);
         }
@@ -228,8 +230,9 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      *              is currently not cacheable.
      */
     public java.io.Serializable getKey() {
-        if (this.inputSource == null)
+        if (this.inputSource == null) {
             return null;
+        }
 
         if (this.xpath != null) {
             StringBuffer buffer = new StringBuffer(this.inputSource.getURI());
@@ -249,8 +252,9 @@ implements Configurable, CacheableProcessingComponent, Disposable {
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        if (this.inputSource == null)
+        if (this.inputSource == null) {
             return null;
+        }
         return this.inputSource.getValidity();
     }
 
@@ -313,13 +317,8 @@ implements Configurable, CacheableProcessingComponent, Disposable {
                 domStreamer.stream(doc.getDocumentElement());
             }
             this.contentHandler.endDocument();
-        } catch (IOException e){
-            throw new ResourceNotFoundException("Could not get resource "
-                + this.inputSource.getURI(), e);
         } catch (SAXException e){
-            throw e;
-        } catch (Exception e){
-            throw new ProcessingException("Exception in HTMLGenerator.generate()",e);
+            SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
     }
 

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,13 +33,13 @@ import java.util.Map;
  * The <code>FileGenerator</code> is a class that reads XML from a source
  * and generates SAX Events.
  * The FileGenerator implements the <code>CacheableProcessingComponent</code> interface.
- * 
+ *
  * @cocoon.sitemap.component.name   file
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.file
  * @cocoon.sitemap.component.documentation.caching
  *               Uses the last modification date of the xml document for validation
- * 
+ *
  * @cocoon.sitemap.component.pooling.min   8
  * @cocoon.sitemap.component.pooling.max  32
  * @cocoon.sitemap.component.pooling.grow  4
@@ -47,7 +47,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.8 2004/05/01 18:06:12 cziegeler Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.9 2004/06/11 20:32:20 vgritsenko Exp $
  */
 public class FileGenerator extends ServiceableGenerator
 implements CacheableProcessingComponent {
@@ -72,7 +72,7 @@ implements CacheableProcessingComponent {
      * Try to get the last modification date of the source for caching.
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
-        throws ProcessingException, SAXException, IOException {
+    throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, par);
         try {
@@ -106,7 +106,7 @@ implements CacheableProcessingComponent {
      * Generate XML data.
      */
     public void generate()
-        throws IOException, SAXException, ProcessingException {
+    throws IOException, SAXException, ProcessingException {
 
         try {
             if (getLogger().isDebugEnabled()) {
@@ -114,23 +114,8 @@ implements CacheableProcessingComponent {
                                   " resolved to " + this.inputSource.getURI());
             }
             SourceUtil.parse(this.manager, this.inputSource, super.xmlConsumer);
-
         } catch (SAXException e) {
-            final Exception cause = e.getException();
-            if (cause != null) {
-                if (cause instanceof ProcessingException) {
-                    throw (ProcessingException)cause;
-                }
-                if (cause instanceof IOException) {
-                    throw (IOException)cause;
-                }
-                if (cause instanceof SAXException) {
-                    throw (SAXException)cause;
-                }
-                throw new ProcessingException("Could not read resource " +
-                                              this.inputSource.getURI(), cause);
-            }
-            throw e;
+            SourceUtil.handleSAXException(this.inputSource.getURI(), e);
         }
     }
 }
