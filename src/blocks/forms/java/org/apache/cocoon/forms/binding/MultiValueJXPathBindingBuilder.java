@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  * &lt;/fb:multi-value&gt;
  * </code></pre>
  *
- * @version CVS $Id: MultiValueJXPathBindingBuilder.java,v 1.4 2004/04/06 18:39:58 mpo Exp $
+ * @version CVS $Id$
  */
 public class MultiValueJXPathBindingBuilder
     extends JXPathBindingBuilderBase {
@@ -62,8 +62,8 @@ public class MultiValueJXPathBindingBuilder
             Element convertorEl = DomHelper.getChildElement(bindingElem, Constants.DEFINITION_NS, "convertor");
             if (convertorEl != null) {
                 String datatype = DomHelper.getAttribute(convertorEl, "datatype");
-                String localeStr = convertorEl.getAttribute("datatype");
-                if (!localeStr.equals("")) {
+                String localeStr = convertorEl.getAttribute("locale");
+                if (localeStr != null && !localeStr.equals("")) {
                     convertorLocale = I18nUtils.parseLocale(localeStr);
                 }
 
