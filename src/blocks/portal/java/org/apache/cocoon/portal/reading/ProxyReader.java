@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a> 
  * 
- * @version CVS $Id: ProxyReader.java,v 1.8 2004/07/13 14:30:11 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class ProxyReader extends ServiceableReader {
 
@@ -156,13 +156,13 @@ public class ProxyReader extends ServiceableReader {
         String cookie =
             (String) copletInstanceData.getAttribute(ProxyTransformer.COOKIE);
 
-        Enumeration enum = request.getParameterNames();
+        Enumeration enumeration = request.getParameterNames();
 
         boolean firstattribute = true;
         StringBuffer query = new StringBuffer();
 
-        while (enum.hasMoreElements()) {
-            String paramName = (String) enum.nextElement();
+        while (enumeration.hasMoreElements()) {
+            String paramName = (String) enumeration.nextElement();
 
             if (!paramName.startsWith("cocoon-portal-")) {
 

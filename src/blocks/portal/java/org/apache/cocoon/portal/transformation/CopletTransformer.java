@@ -82,6 +82,9 @@ extends AbstractCopletTransformer {
     /** Create a link containing several events */
     public static final String LINKS_ELEM = "links";
 
+    /** Create a link containing several events */
+    public static final String PARAMETER_ELEM = "parameter";
+
     /** The content for the links element */
     public static final String CONTENT_ELEM = "content";
 
@@ -184,8 +187,17 @@ extends AbstractCopletTransformer {
                     this.output(href, format, newAttrs );
                 }
             }
+        } else if (name.equals(PARAMETER_ELEM)) {
+            if (this.insideLinks) {
+                this.collectedEvents.add(new LinkService.ParameterDescription(attr.getValue("href")));
+            }
         } else if (name.equals(LINKS_ELEM) ) {
             this.insideLinks = true;
+            final AttributesImpl newAttrs = new AttributesImpl();
+            newAttrs.setAttributes(attr);
+            newAttrs.removeAttribute("format");
+            this.stack.push(newAttrs);
+            
             String format = attr.getValue("format");
             if ( format == null ) {
                 format = "html-link";
@@ -214,9 +226,9 @@ extends AbstractCopletTransformer {
             this.insideLinks = false;
             final String format = (String)this.stack.pop();
             final LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
-
             final String href = linkService.getLinkURI(this.collectedEvents);
-            final AttributesImpl newAttrs = new AttributesImpl();
+
+            AttributesImpl newAttrs = (AttributesImpl)this.stack.pop();
             this.output(href, format, newAttrs );
 
             this.collectedEvents.clear();
@@ -230,7 +242,7 @@ extends AbstractCopletTransformer {
             }
         } else if ( name.equals(CONTENT_ELEM) && this.insideLinks ) {
             this.content = this.endSAXRecording();
-        } else if (!name.equals(COPLET_ELEM)) {
+        } else if (!name.equals(COPLET_ELEM) && !name.equals(PARAMETER_ELEM)) {
             super.endTransformingElement(uri, name, raw);
         }
     }
@@ -267,9 +279,9 @@ extends AbstractCopletTransformer {
             if ( addParametersAsHiddenFields ) {
                 // create hidden input fields
                 RequestParameters pars = new RequestParameters(parameters);
-                Enumeration enum = pars.getParameterNames();
-                while ( enum.hasMoreElements() ) {
-                    String pName = (String)enum.nextElement();
+                Enumeration enumeration = pars.getParameterNames();
+                while ( enumeration.hasMoreElements() ) {
+                    String pName = (String)enumeration.nextElement();
                     String pValue = pars.getParameter(pName);
                     AttributesImpl hiddenAttrs = new AttributesImpl();
                     hiddenAttrs.addCDATAAttribute("type", "hidden");

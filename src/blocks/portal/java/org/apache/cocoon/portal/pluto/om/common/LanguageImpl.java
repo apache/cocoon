@@ -34,7 +34,7 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LanguageImpl.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LanguageImpl implements Language, java.io.Serializable {
     // ResourceBundle creation part
@@ -91,8 +91,8 @@ public class LanguageImpl implements Language, java.io.Serializable {
 
         private void importData(ResourceBundle bundle) {
             if (bundle != null) {
-                for (Enumeration enum = bundle.getKeys(); enum.hasMoreElements();) {
-                    String key   = (String)enum.nextElement();
+                for (Enumeration enumeration = bundle.getKeys(); enumeration.hasMoreElements();) {
+                    String key   = (String)enumeration.nextElement();
                     Object value = bundle.getObject(key);
 
                     data.put(key, value);
