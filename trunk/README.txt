@@ -18,7 +18,7 @@
   hooking together components into pipelines without any required programming.
 
   Cocoon is "web glue for your web application development needs". It is a glue
-  that keeps concerns separate and allow parallel evolution of the two sides,
+  that keeps concerns separate and allows parallel evolution of the two sides,
   improving development pace and reducing the chance of conflicts.
 
 
@@ -36,8 +36,8 @@
 
    o  A Java 1.3 or later compatible virtual machine for your operating system.
 
-   o  Server API 2.2 compatible Servlet Engine or J2EE Application Server.
-      [optional for command line operation]
+   o  A Servlet API 2.2 compatible Servlet Engine or J2EE Application Server. 
+      [not required for command line operation]
 
 
 
@@ -63,7 +63,7 @@
   --------------------------
 
   Cocoon is licensed under the Apache Software License, a license of the BSD
-  family and contains software which is compatible with the BSD licensing style.
+  family, and contains software which is compatible with the BSD licensing style.
 
   For more information, please read the LICENSE files in the /legal directory.
 
@@ -86,5 +86,4 @@
 
                                            The Apache Cocoon Project
                                            http://cocoon.apache.org/
-
 
