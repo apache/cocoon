@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+<!-- $Id$ -->
 <!DOCTYPE role-list [
 <!ELEMENT role-list (role+)> 
 <!ELEMENT role (hint*)>
@@ -31,7 +32,7 @@
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector">
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector">
   </role>
 
   <role name="org.apache.excalibur.source.SourceResolver"
@@ -114,11 +115,8 @@
         default-class="org.apache.cocoon.components.treeprocessor.TreeProcessor"/>
   
   <!-- the tree builder for the sitemap language (additional implementations can be added here
-       or in cocoon.xconf for other implementations)
-       
-       The shorthand attribute is actually of no use, but the rolemanager requires it -->
+       or in cocoon.xconf for other implementations) -->
   <role name="org.apache.cocoon.components.treeprocessor.TreeBuilder/sitemap-1.0"
-        shorthand="treebuilder-1.0-should-actually-never-be-used"
         default-class="org.apache.cocoon.components.treeprocessor.sitemap.SitemapLanguage"/>
 
   <!-- the various elements of map:components -->
@@ -158,6 +156,19 @@
         shorthand="notifying-builder"
         default-class="org.apache.cocoon.components.notification.DefaultNotifyingBuilder"/>  
 
+  <!-- system-defined sitemap components -->
+  <role name="org.apache.cocoon.generation.Generator/&lt;notifier&gt;"
+        default-class="org.apache.cocoon.generation.NotifyingGenerator"/>
+  
+  <role name="org.apache.cocoon.generation.Generator/&lt;aggregator&gt;"
+        default-class="org.apache.cocoon.sitemap.ContentAggregator"/>
+
+  <role name="org.apache.cocoon.transformation.Transformer/&lt;translator&gt;"
+        default-class="org.apache.cocoon.sitemap.LinkTranslator"/>
+
+  <role name="org.apache.cocoon.transformation.Transformer/&lt;gatherer&gt;"
+        default-class="org.apache.cocoon.sitemap.LinkGatherer"/>
+	
   <!--=========================================================================-->
   
   <role name="org.apache.cocoon.components.classloader.ClassLoaderManager"
@@ -166,15 +177,6 @@
 
   <role name="org.apache.cocoon.components.image.ImageEncoderSelector"
         shorthand="image-encoder"/>
-
-  <role name="org.apache.avalon.excalibur.datasource.DataSourceComponentSelector"
-        shorthand="datasources"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector">
-	<hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.ResourceLimitingJdbcDataSource"/>
-    <!-- hint shorthand="jdbc" class="org.apache.avalon.excalibur.datasource.JdbcDataSource"/ -->
-    <hint shorthand="j2ee" class="org.apache.avalon.excalibur.datasource.J2eeDataSource"/>
-    <hint shorthand="informix" class="org.apache.avalon.excalibur.datasource.InformixDataSource"/>
-  </role>
 
   <role name="org.apache.excalibur.xmlizer.XMLizer"
         shorthand="xmlizer"
@@ -204,7 +206,7 @@
   <!-- Control flow layer: the interpreters selector and continuations  manager -->
   <role name="org.apache.cocoon.components.flow.Interpreter" 
         shorthand="flow-interpreters"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
   <role name="org.apache.cocoon.components.flow.ContinuationsManager" 
         shorthand="continuations-manager"
@@ -213,11 +215,11 @@
   <!-- input/output modules -->
   <role name="org.apache.cocoon.components.modules.input.InputModuleSelector"
         shorthand="input-modules"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
   <role name="org.apache.cocoon.components.modules.output.OutputModuleSelector"
         shorthand="output-modules"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector"/>
 
   <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
         shorthand="global-variables"

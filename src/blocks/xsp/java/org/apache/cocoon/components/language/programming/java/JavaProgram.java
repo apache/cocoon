@@ -49,6 +49,7 @@ public class JavaProgram extends AbstractLogEnabled implements Program {
     throws Exception {
 
         return AbstractComponentHandler.getComponentHandler(
+                null, // role
                 program,
                 new DefaultConfiguration("", "GeneratorSelector"),
                 manager, context, getLogger(), null, null);

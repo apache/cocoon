@@ -17,6 +17,7 @@
 package org.apache.cocoon.core.container;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * The DefaultComponentHandler to make sure components are initialized
@@ -35,9 +36,10 @@ extends AbstractComponentHandler {
      * @param factory The factory object which is responsible for creating the components
      *                managed by the handler.
      */
-    public SingleThreadedComponentHandler( final Logger logger,
+    public SingleThreadedComponentHandler( final ServiceInfo info,
+                                    final Logger logger,
                                     final ComponentFactory factory ) {
-        super(logger, factory);
+        super(info, logger, factory);
     }
 
     /**

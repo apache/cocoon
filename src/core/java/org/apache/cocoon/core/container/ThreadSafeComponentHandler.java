@@ -17,6 +17,7 @@
 package org.apache.cocoon.core.container;
 
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * The ThreadSafeComponentHandler to make sure components are initialized
@@ -36,11 +37,16 @@ extends AbstractComponentHandler {
      * @param factory The factory object which is responsible for creating the components
      *                managed by the handler.
      */
-    public ThreadSafeComponentHandler( final Logger logger,
+    public ThreadSafeComponentHandler( final ServiceInfo info,
+                                       final Logger logger,
                                        final ComponentFactory factory ) {
-        super(logger, factory);
+        super(info, logger, factory);
     }
     
+    public boolean isSingleton() {
+        return true;
+    }
+
     public void initialize() 
     throws Exception {
         if( this.initialized ) {

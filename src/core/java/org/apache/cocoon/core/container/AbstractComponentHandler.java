@@ -49,10 +49,13 @@ implements ComponentHandler {
 
     /** State management boolean stating whether the Handler is initialized or not */
     protected boolean initialized = false;
+    
+    private ServiceInfo info;
 
     /**
      * Looks up and returns a component handler for a given component class.
      *
+     * @param role the component's role. Can be <code>null</code> if the role isn't known.
      * @param componentClass Class of the component for which the handle is
      *                       being requested.
      * @param configuration The configuration for this component.
@@ -63,7 +66,8 @@ implements ComponentHandler {
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    public static ComponentHandler getComponentHandler( final Class componentClass,
+    public static ComponentHandler getComponentHandler( final String role,
+                                                        final Class componentClass,
                                                         final Configuration configuration,
                                                         final ServiceManager serviceManager,
                                                         final Context context,
@@ -111,23 +115,32 @@ implements ComponentHandler {
         }
         
         // Create the factory to use to create the instances of the Component.
-        ComponentFactory factory = new ComponentFactory( 
-                                         serviceManager,
-                                         context,
-                                         logger,
-                                         loggerManager,
-                                         roleManager,
-                                         info);
+        ComponentFactory factory;
+        
+        if (DefaultServiceSelector.class.isAssignableFrom(componentClass)) {
+            // Special factory for DefaultServiceSelector
+            factory = new DefaultServiceSelector.Factory(serviceManager, context, logger, loggerManager,
+                    roleManager, info, role);
+            
+        } else if (StandaloneServiceSelector.class.isAssignableFrom(componentClass)) {
+                // Special factory for StandaloneServiceSelector
+                factory = new StandaloneServiceSelector.Factory(serviceManager, context, logger, loggerManager,
+                        roleManager, info);
+                
+        } else {
+            factory = new ComponentFactory(serviceManager, context, logger, loggerManager,
+                    roleManager, info);
+        }
 
         AbstractComponentHandler handler;
         
         if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
-            handler = new PoolableComponentHandler( logger, factory, configuration );
+            handler = new PoolableComponentHandler( info, logger, factory, configuration );
         } else if( info.getModel() == ServiceInfo.MODEL_SINGLETON ) {
-            handler = new ThreadSafeComponentHandler( logger, factory );
+            handler = new ThreadSafeComponentHandler( info, logger, factory );
         } else {
             // This is a SingleThreaded component
-            handler = new SingleThreadedComponentHandler( logger, factory );
+            handler = new SingleThreadedComponentHandler( info, logger, factory );
         }
 
         return handler;
@@ -136,9 +149,14 @@ implements ComponentHandler {
     /**
      * Creates a new ComponentHandler.
      */
-    public AbstractComponentHandler(Logger logger, ComponentFactory factory) {
+    public AbstractComponentHandler(ServiceInfo info, Logger logger, ComponentFactory factory) {
+        this.info = info;
         this.logger = logger;
         this.factory = factory;
+    }
+    
+    public ServiceInfo getInfo() {
+        return this.info;
     }
 
     /**
@@ -219,6 +237,13 @@ implements ComponentHandler {
      */
     protected abstract void doPut( Object component ) throws Exception;
 
+    /**
+     * Default here is to return <code>false</code>
+     */
+    public boolean isSingleton() {
+        return false;
+    }
+    
     /**
      * Returns <code>true</code> if this component handler can safely be
      * disposed (i.e. none of the components it is handling are still

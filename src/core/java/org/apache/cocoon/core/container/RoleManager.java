@@ -16,13 +16,17 @@
  */
 package org.apache.cocoon.core.container;
 
-import java.util.Collections;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.ServiceInfo;
 
@@ -37,13 +41,13 @@ extends AbstractLogEnabled
 implements Configurable {
     
     /** Map for shorthand to role mapping */
-    private Map shorthands;
+    private Map shorthands = new HashMap();
 
     /** Map for role to default classname mapping */
-    private Map classNames;
+    private Map classNames = new HashMap();
 
     /** Map for role->key to classname mapping */
-    private Map keyClassNames;
+    private Map keyClassNames = new HashMap();
 
     /** Parent role manager for nested resolution */
     private final RoleManager parent;
@@ -157,57 +161,124 @@ implements Configurable {
      */
     public final void configure( final Configuration configuration )
     throws ConfigurationException {
-        final Map shorts = new HashMap();
-        final Map classes = new HashMap();
-        final Map keyclasses = new HashMap();
+        
+        // When reading a roles file, we only want "role" elements.
+        boolean strictMode = "roles-list".equals(configuration.getName());
 
-        final Configuration[] roles = configuration.getChildren( "role" );
+        final Configuration[] roles = configuration.getChildren();
 
         for( int i = 0; i < roles.length; i++ ) {
-            final String name = roles[ i ].getAttribute( "name" );
-            final String shorthand = roles[ i ].getAttribute( "shorthand" );
-            final String defaultClassName = roles[ i ].getAttribute( "default-class", null );
+            Configuration role = roles[i];
+            
+            if (!"role".equals(role.getName())) {
+                if (strictMode) {
+                    throw new ConfigurationException("Unexpected '" + role.getName() + "' element at " + role.getLocation());
+                } else {
+                    // Skip to next one
+                    continue;
+                }
+            }
+            
+            final String roleName = role.getAttribute("name");
+            final String shorthand = role.getAttribute("shorthand", null);
+            final String defaultClassName = role.getAttribute("default-class", null);
 
-            shorts.put( shorthand, name );
-
-            if( defaultClassName != null ) {
-                final ServiceInfo info = new ServiceInfo();
-                info.setServiceClassName(defaultClassName);
-                info.fill(roles[ i ]);
-                classes.put( name, info );
+            if (shorthand != null) {
+                // Store the shorthand and check that its consistent with any previous one
+                Object previous = this.shorthands.put( shorthand, roleName );
+                if (previous != null && !previous.equals(roleName)) {
+                    throw new ConfigurationException("Shorthand '" + shorthand + "' already used for role " +
+                            previous + ": inconsistent declaration at " + role.getLocation());
+                }
             }
 
-            final Configuration[] keys = roles[ i ].getChildren( "hint" );
-            if( keys.length > 0 ) {
-                HashMap keyMap = new HashMap();
-
-                for( int j = 0; j < keys.length; j++ ) {
-                    final String shortHand = keys[ j ].getAttribute( "shorthand" ).trim();
-                    final String className = keys[ j ].getAttribute( "class" ).trim();
-
-                    final ServiceInfo info = new ServiceInfo();
-                    info.setServiceClassName(className);
-                    info.fill(keys[ j ]);
-
-                    keyMap.put( shortHand, info );
-                    if( this.getLogger().isDebugEnabled() ) {
-                        this.getLogger().debug( "Adding key type " + shortHand +
-                                                " associated with role " + name +
-                                                " and class " + className );
+            if( defaultClassName != null ) {
+                ServiceInfo info = (ServiceInfo)this.classNames.get(roleName);
+                if (info == null) {
+                    // Create a new info and store it
+                    info = new ServiceInfo();
+                    info.setServiceClassName(defaultClassName);
+                    info.fill(role);
+                    this.classNames.put(roleName, info);
+                } else {
+                    // Check that it's consistent with the existing info
+                    if (!defaultClassName.equals(info.getServiceClassName())) {
+                        throw new ConfigurationException("Invalid redeclaration: default class already set to " + info.getServiceClassName() +
+                                " for role " + roleName + " at " + role.getLocation());
                     }
+                    //FIXME: should check also other ServiceInfo members, but they're currently not used
+                }
+            }
+
+            final Configuration[] keys = role.getChildren( "hint" );
+            if( keys.length > 0 ) {
+                Map keyMap = (Map)this.keyClassNames.get(roleName);
+                if (keyMap == null) {
+                    keyMap = new HashMap();
+                    this.keyClassNames.put(roleName, keyMap);
                 }
 
-                keyclasses.put( name, Collections.unmodifiableMap( keyMap ) );
+                for( int j = 0; j < keys.length; j++ ) {
+                    Configuration key = keys[j];
+                    
+                    final String shortHand = key.getAttribute( "shorthand" ).trim();
+                    final String className = key.getAttribute( "class" ).trim();
+
+                    ServiceInfo info = (ServiceInfo)keyMap.get(shortHand);
+                    if (info == null) {       
+                        info = new ServiceInfo();
+                        info.setServiceClassName(className);
+                        info.fill(key);
+    
+                        keyMap.put( shortHand, info );
+                        if( this.getLogger().isDebugEnabled() ) {
+                            this.getLogger().debug( "Adding key type " + shortHand +
+                                                    " associated with role " + roleName +
+                                                    " and class " + className );
+                        }
+                    } else {
+                        // Check that it's consistent with the existing info
+                        if (!className.equals(info.getServiceClassName())) {
+                            throw new ConfigurationException("Invalid redeclaration: class already set to " + info.getServiceClassName() +
+                                    " for hint " + shortHand + " at " + key.getLocation());
+                        }
+                        //FIXME: should check also other ServiceInfo members, but they're currently not used
+                    }
+                }
             }
 
             if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( "added Role " + name + " with shorthand " +
+                this.getLogger().debug( "added Role " + roleName + " with shorthand " +
                                    shorthand + " for " + defaultClassName );
             }
         }
+    }
+    
+    
+    
+    private Set loadedURLs = new HashSet();
+    
+    public void loadFromClassPath() throws Exception {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Enumeration resources = cl.getResources("/org/apache/cocoon/cocoon.roles");
+        
+        while(resources.hasMoreElements()) {
+            URL url = (URL)resources.nextElement();
+            loadURL(url.toExternalForm());
+        }
+    }
+    
+    public void loadURL(String resource) throws Exception {
+        if (!hasLoaded(resource)) {
+            loadedURLs.add(resource);
 
-        this.shorthands = Collections.unmodifiableMap( shorts );
-        this.classNames = Collections.unmodifiableMap( classes );
-        this.keyClassNames = Collections.unmodifiableMap( keyclasses );
+            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+            Configuration config = builder.build(resource);
+            configure(config);
+        }
+    }
+    
+    public boolean hasLoaded(String resource) {
+        return loadedURLs.contains(resource) || (parent != null && parent.hasLoaded(resource));
     }
 }

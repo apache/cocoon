@@ -98,6 +98,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
     /**
      * Obtain a new ComponentHandler for the specified component. 
      * 
+     * @param role the component's role.
      * @param componentClass Class of the component for which the handle is
      *                       being requested.
      * @param configuration The configuration for this component.
@@ -105,11 +106,13 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
      *
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
-    protected ComponentHandler getComponentHandler( final Class componentClass,
+    protected ComponentHandler getComponentHandler( final String role,
+                                                    final Class componentClass,
                                                     final Configuration configuration,
                                                     final ServiceManager serviceManager)
     throws Exception {
-        return AbstractComponentHandler.getComponentHandler(componentClass,
+        return AbstractComponentHandler.getComponentHandler(role,
+                                                     componentClass,
                                                      configuration,
                                                      serviceManager,
                                                      this.context,
@@ -125,7 +128,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
         // check for old excalibur class names - we only test against the selector
         // implementation
         if ( "org.apache.cocoon.components.ExtendedComponentSelector".equals(className)) {
-            className = CocoonServiceSelector.class.getName();
+            className = DefaultServiceSelector.class.getName();
         }
         
         try {
@@ -137,7 +140,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
             this.addComponent( role, clazz, configuration );
         } catch( final ClassNotFoundException cnfe ) {
             final String message = "Could not get class (" + className + ") for role "
-                                 + role + " on configuration element " + configuration.getName();
+                                 + role + " at " + configuration.getLocation();
 
             if( this.getLogger().isErrorEnabled() ) {
                 this.getLogger().error( message, cnfe );
@@ -145,8 +148,8 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
 
             throw new ConfigurationException( message, cnfe );
         } catch( final ServiceException ce ) {
-            final String message = "Bad component "+ className + " for role " + role
-                                 + " on configuration element " + configuration.getName();
+            final String message = "Cannot setup class "+ className + " for role " + role
+                                 + " at " + configuration.getLocation();
 
             if( this.getLogger().isErrorEnabled() ) {
                 this.getLogger().error( message, ce );
@@ -154,7 +157,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
 
             throw new ConfigurationException( message, ce );
         } catch( final Exception e ) {
-            final String message = "Unexpected exception for role [" + role + "]";
+            final String message = "Unexpected exception when setting up role " + role + " at " + configuration.getLocation();
             if( this.getLogger().isErrorEnabled() ) {
                 this.getLogger().error( message, e );
             }

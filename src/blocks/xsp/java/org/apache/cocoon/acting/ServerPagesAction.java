@@ -89,6 +89,7 @@ public class ServerPagesAction
     throws ConfigurationException {
         try {
             this.generatorHandler = AbstractComponentHandler.getComponentHandler(
+                null,  // role
                 ServerPagesGenerator.class,
                 conf,
                 this.manager,

@@ -147,4 +147,11 @@ function do_multipage() {
     );
 }
 
+function do_xdoceditor() {
+    var form = new Form("forms/xdoceditor.xml");
+    form.showForm("xdoceditor-display-pipeline.jx");
+
+    print(form.lookupWidget("doc").getValue());
+}
+
 

@@ -16,18 +16,14 @@
  */
 package org.apache.cocoon.components.container;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
-import org.apache.cocoon.core.container.CocoonServiceSelector;
 
 /**
  * Default service manager for Cocoon's components.
@@ -39,10 +35,6 @@ extends org.apache.cocoon.core.container.CocoonServiceManager {
     
     /** The {@link SitemapConfigurationHolder}s */
     private Map sitemapConfigurationHolders = new HashMap(15);
-
-    /** Temporary list of parent-aware components.  Will be null for most of
-     * our lifecycle. */
-    private ArrayList parentAwareComponents = new ArrayList();
 
     /** Create the ServiceManager with a Classloader and parent ServiceManager */
     public CocoonServiceManager( final ServiceManager parent, 
@@ -74,55 +66,4 @@ extends org.apache.cocoon.core.container.CocoonServiceManager {
             }
         }
     }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Initializable#initialize()
-     */
-    public void initialize()
-    throws Exception {
-        super.initialize();
-
-        if (this.parentAwareComponents == null) {
-            throw new ServiceException(null, "CocoonServiceManager already initialized");
-        }
-
-        // Set parents for parentAware components
-        Iterator iter = this.parentAwareComponents.iterator();
-        while (iter.hasNext()) {
-            String role = (String)iter.next();
-            if ( this.parentManager != null && this.parentManager.hasService( role ) ) {
-                // lookup new component
-                Object component = null;
-                try {
-                    component = this.lookup( role );
-                    ((CocoonServiceSelector)component).setParentLocator( this.parentManager, role );
-                } catch (ServiceException ignore) {
-                    // we don't set the parent then
-                } finally {
-                    this.release( component );
-                }
-            }
-        }
-        this.parentAwareComponents = null;  // null to save memory, and catch logic bugs.
-    }
-
-    /**
-     * Add a new component to the manager.
-     *
-     * @param role the role name for the new component.
-     * @param component the class of this component.
-     * @param configuration the configuration for this component.
-     */
-    public void addComponent( final String role,
-                              final Class component,
-                              final Configuration configuration )
-    throws ServiceException {
-        super.addComponent( role, component, configuration );
-        // Note that at this point, we're not initialized and cannot do
-        // lookups, so defer parental introductions to initialize().
-        if ( CocoonServiceSelector.class.isAssignableFrom( component ) ) {
-            this.parentAwareComponents.add(role);
-        }
-    }
-
 }

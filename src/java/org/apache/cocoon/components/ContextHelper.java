@@ -30,7 +30,7 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.9 2004/06/21 10:00:23 jeremy Exp $
+ * @version CVS $Id$
  */
 
 public final class ContextHelper {
@@ -48,6 +48,8 @@ public final class ContextHelper {
     public static final String CONTEXT_SITEMAP_SERVICE_MANAGER = "sitemap-service-manager";
     
     /** Application root directory @since 2.2 */
+    // FIXME(SW): it would be better for this to be named "context-root" and be a URL to be consistent
+    // with Excalibur's SourceResolverImpl. For now, we use this also in the core's SimpleSourceResolver
     public static final String CONTEXT_ROOT_URL = "root-url";
     
     private ContextHelper() {

@@ -17,45 +17,76 @@
 package org.apache.cocoon.core.container;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.ServiceInfo;
+import org.apache.cocoon.core.source.SimpleSourceResolver;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 
 /**
  * Default service manager for Cocoon's components.
  *
- * @version CVS $Revision: 1.6 $Id: CocoonServiceManager.java 55165 2004-10-20 16:51:50Z cziegeler $
+ * @version SVN $Revision: 1.6 $Id: CocoonServiceManager.java 55165 2004-10-20 16:51:50Z cziegeler $
  */
 public class CocoonServiceManager
 extends AbstractServiceManager
 implements ServiceManager, Configurable {
     
+    /** The location where this manager is defined */
+    protected String location;
+    
     /** The parent ServiceManager */
     protected ServiceManager parentManager;
-
+    
     /** added component handlers before initialization to maintain
      *  the order of initialization
      */
     private final List newComponentHandlers = new ArrayList();
+
+    /** Temporary list of parent-aware components.  Will be null for most of
+     * our lifecycle. */
+    private ArrayList parentAwareComponents = new ArrayList();
+
+    /** The resolver used to resolve includes. It is lazily loaded in {@link #getSourceResolver()}. */
+    private SourceResolver cachedSourceResolver;
 
     /** Create the ServiceManager with a Classloader and parent ServiceManager */
     public CocoonServiceManager( final ServiceManager parent, 
                                  final ClassLoader loader ) {
         super(loader);
         this.parentManager = parent;
+        
+        RoleManager parentRoleManager = null;
         // get role manager and logger manager
         if ( parent instanceof CocoonServiceManager ) {
-            this.roleManager = ((CocoonServiceManager)parent).roleManager;
+            parentRoleManager = ((CocoonServiceManager)parent).roleManager;
             this.loggerManager = ((CocoonServiceManager)parent).loggerManager;
         }
+        
+        // Always create a role manager, it can be filled several times either through
+        // the root "roles" attribute or through loading of includes
+        this.roleManager = new RoleManager(parentRoleManager);
+    }
+    
+    public void enableLogging(Logger logger) {
+        super.enableLogging(logger);
+        this.roleManager.enableLogging(logger);
     }
 
     /* (non-Javadoc)
@@ -117,7 +148,8 @@ implements ServiceManager, Configurable {
 
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
 
-                        handler = this.getComponentHandler( componentClass,
+                        handler = this.getComponentHandler(role,
+                                                       componentClass,
                                                        configuration,
                                                        this);
 
@@ -236,7 +268,7 @@ implements ServiceManager, Configurable {
             //  should not be removed until the ComponentLocator is disposed.  All
             //  other components have an entry for each instance which should be
             //  removed.
-            if( !( handler instanceof ThreadSafeComponentHandler ) ) {
+            if( !handler.isSingleton() ) {
                 // Remove the component before calling put.  This is critical to avoid the
                 //  problem where another thread calls put on the same component before
                 //  remove can be called.
@@ -258,43 +290,97 @@ implements ServiceManager, Configurable {
                               " but its handler could not be located." );
         }
     }
+    
+    public void configure(Configuration configuration) throws ConfigurationException {
+        // Setup location
+        if (this.location == null) {
+            // First call to configure()
+            this.location = configuration.getLocation();
+        }
+        
+        try {
+            // and load configuration with a empty list of loaded configurations
+            doConfigure(configuration, new HashSet());
+        } finally {
+            // Release any source resolver that may have been created to load includes
+            releaseCachedSourceResolver();
+        }
+    }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
-     */
-    public void configure( final Configuration configuration )
-    throws ConfigurationException {
-        if( null == roleManager ) {
-            final RoleManager roleInfo = new RoleManager();
-            roleInfo.enableLogging( getLogger() );
-            roleInfo.configure( configuration );
-            this.roleManager = roleInfo;
-            this.getLogger().debug( "No RoleManager given, deriving one from configuration" );
+    private void doConfigure(final Configuration configuration, Set loadedURIs) throws ConfigurationException {
+        
+        // Read roles
+        String rolesURI = configuration.getAttribute("roles", null);
+        if (rolesURI != null) {
+            Configuration roles = loadConfiguration(rolesURI, configuration.getLocation());
+            this.roleManager.configure(roles);
         }
 
         // Set components
-
         final Configuration[] configurations = configuration.getChildren();
 
         for( int i = 0; i < configurations.length; i++ ) {
-            String type = configurations[ i ].getName();
-
-            if( !type.equals( "role" ) ) {
-                String role = configurations[ i ].getAttribute( "role", "" );
-                String className = configurations[ i ].getAttribute( "class", "" );
-
-                if( role.equals( "" ) ) {
-                    role = roleManager.getRoleForName( type );
+            Configuration componentConfig = configurations[i];
+            
+            String componentName = componentConfig.getName();
+            
+            if ("include".equals(componentName)) {
+                String includeURI = componentConfig.getAttribute("src");
+                if (loadedURIs.contains(includeURI)) {
+                    // Already loaded: skip to next configuration element
+                    continue;
+                }
+                // load it and store it in the read set
+                Configuration includeConfig = loadConfiguration(includeURI, componentConfig.getLocation());
+                loadedURIs.add(includeURI);
+                
+                // what is it?
+                String includeKind = includeConfig.getName();
+                if (includeKind.equals("components")) {
+                    // more components
+                    doConfigure(includeConfig, loadedURIs);
+                } else if (includeKind.equals("role-list")) {
+                    // more roles
+                    this.roleManager.configure(includeConfig);
+                } else {
+                    throw new ConfigurationException("Unknow document '" + includeKind + "' included at " +
+                            componentConfig.getLocation());
                 }
 
-                if( null != role && !role.equals( "" ) ) {
-                    if( className.equals( "" ) ) {
-                        final ServiceInfo info = roleManager.getDefaultServiceInfoForRole( role );
-                        className = info.getServiceClassName();
+            } else {
+                // Component declaration
+                // Find the role
+                String role = componentConfig.getAttribute("role", null);
+                if (role == null) {
+                    // Get the role from the role manager if not explicitely specified
+                    role = roleManager.getRoleForName(componentName);
+                    if (role == null) {
+                        // Unknown role
+                        throw new ConfigurationException("Unknown component type '" + componentName +
+                            "' at " + componentConfig.getLocation());
                     }
-
-                    this.addComponent(className, role, configurations[i]);
                 }
+                
+                // Find the className
+                String className = componentConfig.getAttribute("class", null);
+                if (className == null) {
+                    // Get the default class name for this role
+                    final ServiceInfo info = roleManager.getDefaultServiceInfoForRole(role);
+                    if (info == null) {
+                        throw new ConfigurationException("Cannot find a class for role " + role + " at " + componentConfig.getLocation());
+                    }
+                    className = info.getServiceClassName();
+                }
+                
+                // If it has a "name" attribute, add it to the role (similar to the
+                // declaration within a service selector)
+                // Note: this has to be done *after* finding the className above as we change the role
+                String name = componentConfig.getAttribute("name", null);
+                if (name != null) {
+                    role = role + "/" + name;
+                }
+    
+                this.addComponent(className, role, componentConfig);
             }
         }
     }
@@ -353,6 +439,36 @@ implements ServiceManager, Configurable {
             }
         }
         this.newComponentHandlers.clear();
+        
+        // Initialize parent aware components
+        if (this.parentAwareComponents == null) {
+            throw new ServiceException(null, "CocoonServiceManager already initialized");
+        }
+
+        // Set parents for parentAware components
+        Iterator iter = this.parentAwareComponents.iterator();
+        while (iter.hasNext()) {
+            String role = (String)iter.next();
+            if ( this.parentManager != null && this.parentManager.hasService( role ) ) {
+                // lookup new component
+                Object component = null;
+                try {
+                    component = this.lookup( role );
+                    ((CocoonServiceSelector)component).setParentLocator( this.parentManager, role );
+                } catch (ServiceException ignore) {
+                    // we don't set the parent then
+                } finally {
+                    this.release( component );
+                }
+            }
+        }
+        this.parentAwareComponents = null;  // null to save memory, and catch logic bugs.
+        
+//        Object[] keyArray = this.componentHandlers.keySet().toArray();
+//        Arrays.sort(keyArray);
+//        for (int i = 0; i < keyArray.length; i++) {
+//            System.err.println("Component key = " + keyArray[i]);
+//        }
     }
 
     /* (non-Javadoc)
@@ -413,14 +529,22 @@ implements ServiceManager, Configurable {
                 "Cannot add components to an initialized CocoonServiceManager." );
         }
 
-        try {
-            if( this.getLogger().isDebugEnabled() ) {
-                this.getLogger().debug( "Attempting to get handler for role [" + role + "]" );
-            }
+        if( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug( "Attempting to get handler for role [" + role + "]" );
+        }
 
-            final ComponentHandler handler = this.getComponentHandler( component,
-                                                                  configuration,
-                                                                  this);
+        ComponentHandler handler = (ComponentHandler)this.componentHandlers.get(role);
+        if (handler != null) {
+            // Overloaded component: we only allow selectors to be overloaded
+            ServiceInfo info = handler.getInfo();
+            if (!DefaultServiceSelector.class.isAssignableFrom(component) ||
+                !DefaultServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
+                throw new ServiceException(role, "Component declared at " + info.getLocation() + " is redefined at " +
+                        configuration.getLocation());
+            }
+        }
+        try {
+            handler = this.getComponentHandler(role, component, configuration, this);
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( "Handler type = " + handler.getClass().getName() );
@@ -433,19 +557,80 @@ implements ServiceManager, Configurable {
         } catch( final Exception e ) {
             throw new ServiceException( role, "Could not set up component handler.", e );
         }
+        
+        if ( CocoonServiceSelector.class.isAssignableFrom( component ) ) {
+            this.parentAwareComponents.add(role);
+        }
+        // Initialize shadow selector now, it will feed this service manager
+        if ( DefaultServiceSelector.class.isAssignableFrom( component )) {
+            try {
+                handler.initialize();
+            } catch(ServiceException se) {
+                throw se;
+            } catch(Exception e) {
+                throw new ServiceException(role, "Could not initialize selector", e);
+            }
+        }
     }
     
-    void addComponentFromSelector(CocoonServiceSelector selector,
-                                  String                roleName,
-                                  String                key)
-    throws Exception {
-        if ( this.disposed ) {
-            throw new ServiceException( this.toString(),
-                    "Cannot add components to a disposed CocoonServiceManager." );           
+    /**
+     * Load a Configuration from a given URI. If the parent manager does not exist or does not
+     * provide a source resolver, a simple one is created here to load the file.
+     * 
+     * @param uri the configuration's URI
+     * @param location the location where the load occurs (used to raise meaningful errors)
+     * @return the configuration
+     * @throws ConfigurationException
+     */
+    private Configuration loadConfiguration(String uri, String location) throws ConfigurationException {
+        
+        // First get a source resolver
+        if (this.cachedSourceResolver == null) {
+            
+            if (this.parentManager != null && this.parentManager.hasService(SourceResolver.ROLE)) {
+                try {
+                    this.cachedSourceResolver = (SourceResolver)this.parentManager.lookup(SourceResolver.ROLE);
+                } catch(ServiceException se) {
+                    // Unlikely to happen
+                    throw new CascadingRuntimeException("Cannot get source resolver from parent, at " + location, se);
+                }
+            } else {
+                // Create our own
+                SimpleSourceResolver simpleSR = new SimpleSourceResolver();
+                simpleSR.enableLogging(getLogger());
+                try {
+                    simpleSR.contextualize(this.context);
+                } catch (ContextException ce) {
+                    throw new CascadingRuntimeException("Cannot setup source resolver, at " + location, ce);
+                }
+                this.cachedSourceResolver = simpleSR;
+            }
         }
-        final String role = roleName + '/' + key;
-        final ComponentHandler handler = new SelectorBasedComponentHandler(selector, key);
-        this.componentHandlers.put( role, handler );
-    }
 
+        Configuration result;
+        
+        try {
+            Source src = this.cachedSourceResolver.resolveURI(uri);
+            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+            result = builder.build(src.getInputStream(), src.getURI());
+        } catch (ConfigurationException ce) {
+            throw ce;
+        } catch (Exception e) {
+            throw new ConfigurationException("Cannot load '" + uri + "' at " + location, e);
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Release the source resolver that may have been created by the first call to
+     * loadConfiguration().
+     */
+    private void releaseCachedSourceResolver() {
+        if (this.cachedSourceResolver != null &&
+            this.parentManager != null && this.parentManager.hasService(SourceResolver.ROLE)) {
+            this.parentManager.release(this.cachedSourceResolver);
+        }
+        this.cachedSourceResolver = null;
+    }
 }

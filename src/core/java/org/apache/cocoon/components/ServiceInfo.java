@@ -46,7 +46,7 @@ public class ServiceInfo {
     public ServiceInfo() {
         this.model = MODEL_PRIMITIVE;
     }
-        
+    
     /**
      * @return Returns the model.
      */
@@ -198,6 +198,9 @@ public class ServiceInfo {
         this.configuration = configuration;
     }
     
+    public String getLocation() {
+        return this.configuration.getLocation();
+    }
     
     /* (non-Javadoc)
      * @see java.lang.Object#toString()

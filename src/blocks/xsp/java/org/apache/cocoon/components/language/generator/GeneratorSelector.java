@@ -15,19 +15,26 @@
  */
 package org.apache.cocoon.components.language.generator;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.core.container.AbstractComponentHandler;
-import org.apache.cocoon.core.container.CocoonServiceSelector;
 import org.apache.cocoon.core.container.ComponentHandler;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * This interface is the common base of all Compiled Components.  This
@@ -37,19 +44,28 @@ import java.util.List;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
-public class GeneratorSelector 
-extends CocoonServiceSelector  {
+public class GeneratorSelector extends AbstractLogEnabled implements ThreadSafe, Contextualizable, Serviceable {
 
     public static String ROLE = "org.apache.cocoon.components.language.generator.ServerPages";
 
+    private Context context;
+    
+    private ServiceManager serviceManager;
+    
+    /** Static component mapping handlers. */
+    protected final Map componentMapping = Collections.synchronizedMap(new HashMap());
+
+    /** Used to map roles to ComponentHandlers. */
+    protected final Map componentHandlers = Collections.synchronizedMap(new HashMap());
+    
     protected ClassLoaderManager classManager;
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) 
-    throws ServiceException {
-        super.service(manager);
+    public void contextualize(Context context) {
+        this.context = context;
+    }
+    
+    public void service(ServiceManager manager) throws ServiceException {
+        this.serviceManager = manager;
 
         this.classManager = (ClassLoaderManager) manager.lookup(ClassLoaderManager.ROLE);
 
@@ -60,9 +76,6 @@ extends CocoonServiceSelector  {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.ServiceSelector#select(java.lang.Object)
-     */
     public Object select(Object hint) throws ServiceException {
 
         AbstractComponentHandler handler = (AbstractComponentHandler) this.componentHandlers.get(hint);
@@ -82,9 +95,6 @@ extends CocoonServiceSelector  {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.ServiceSelector#release(java.lang.Object)
-     */
     public void release(Object component) {
         AbstractComponentHandler handler = (AbstractComponentHandler)componentMapping.remove(component);
         if (handler != null) {
@@ -127,9 +137,6 @@ extends CocoonServiceSelector  {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
     public void dispose() {
         this.serviceManager.release(this.classManager);
 
@@ -155,7 +162,5 @@ extends CocoonServiceSelector  {
 
             keyList.clear();
         }
-
-        super.dispose();
     }
 }

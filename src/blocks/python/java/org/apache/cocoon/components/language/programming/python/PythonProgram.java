@@ -67,7 +67,7 @@ public class PythonProgram extends AbstractLogEnabled implements Program {
     throws Exception {
 
         return AbstractComponentHandler.getComponentHandler(
-                clazz, config, manager, context, getLogger(), null, null);
+                null, clazz, config, manager, context, getLogger(), null, null);
     }
 
     public CompiledComponent newInstance() throws Exception {
