@@ -2,7 +2,7 @@
 
 <!--
     Convert the slop parser output to a collection of slides
-    $Id: filter-slop-output.xsl,v 1.4 2003/10/11 22:55:27 stevenn Exp $
+    $Id: filter-slop-output.xsl,v 1.5 2003/10/13 17:49:10 stevenn Exp $
 -->
 <xsl:stylesheet
     version="1.0"
@@ -114,6 +114,13 @@
 		            </xsl:for-each>
 		        </pre>
           </xsl:when>
+          <xsl:when test="following-sibling::*[1][self::slop:list]">
+		        <ul>
+		            <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
+		                <xsl:call-template name="list-grouper"/>
+		            </xsl:for-each>
+		        </ul>
+          </xsl:when>
           <xsl:otherwise>
 		        <p>
 		            <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
@@ -142,12 +149,28 @@
         </xsl:for-each>
     </xsl:template>
 
+    <!-- ditto for list items -->
+    <xsl:template name="list-grouper">
+        <xsl:apply-templates mode="list" select="."/>
+        
+        <xsl:for-each select="following-sibling::*[1][not(self::slop:empty-line) and not(self::slop:slide)]">
+            <xsl:call-template name="list-grouper"/>
+        </xsl:for-each>
+    </xsl:template>
+
     <!-- paragraph grouping mode, by default copy everything, removing slop namespace -->
     <xsl:template match="slop:*" mode="paragraph">
         <xsl:element name="{name()}">
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates/>
         </xsl:element>
+    </xsl:template>
+
+    <!-- output code slop:lines as-is, with added carriage return -->
+    <xsl:template match="slop:line" mode="list">
+        <li>
+          <xsl:copy-of select="text()"/>
+        </li>
     </xsl:template>
 
     <!-- output code slop:lines as-is, with added carriage return -->
