@@ -23,7 +23,7 @@ import org.apache.cocoon.components.language.LanguageException;
  * A compiled programming language. This class extends <code>AbstractProgrammingLanguage</code> adding support for compilation
  * and object program files
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-12-14 14:43:16 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-20 13:49:24 $
  */
 public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLanguage implements Composer {
     /** The compiler */
@@ -129,16 +129,13 @@ public abstract class CompiledProgrammingLanguage extends AbstractProgrammingLan
         // Does source file exist?
         File sourceFile = new File(baseDirectory, filename + "." + this.getSourceExtension());
         if (!sourceFile.exists()) {
-            throw new LanguageException("Can't load program - File doesn't exist: " + baseDirectory.toString() +
-                File.separator + filename);
+            throw new LanguageException("Can't load program - File doesn't exist: " + sourceFile.toString());
         }
         if (!sourceFile.isFile()) {
-            throw new LanguageException("Can't load program - File is not a normal file: " + baseDirectory.toString() +
-                File.separator + filename);
+            throw new LanguageException("Can't load program - File is not a normal file: " + sourceFile.toString());
         }
         if (!sourceFile.canRead()) {
-            throw new LanguageException("Can't load program - File cannot be read: " + baseDirectory.toString() +
-                File.separator + filename);
+            throw new LanguageException("Can't load program - File cannot be read: " + sourceFile.toString());
         }
         this.compile(filename, baseDirectory, encoding);
         if (this.deleteSources) {
