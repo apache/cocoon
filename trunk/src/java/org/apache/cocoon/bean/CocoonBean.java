@@ -105,7 +105,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.14 2003/07/18 05:00:06 joerg Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.15 2003/08/17 13:43:00 upayavira Exp $
  */
 public class CocoonBean {
 
@@ -583,7 +583,7 @@ public class CocoonBean {
         }
 
         int status =
-            getPage(deparameterizedURI, parameters, null, null, outputStream);
+            getPage(deparameterizedURI, 0L, parameters, null, null, outputStream);
 
         if (status >= 400) {
             throw new ProcessingException("Resource not found: " + status);
@@ -707,6 +707,9 @@ public class CocoonBean {
      */
     private Collection processTarget(Target target) throws Exception {
 
+        long startTimeMillis = System.currentTimeMillis();
+        int status = 0;
+        
         String uri = target.getSourceURI();
         int linkCount = 0;
 
@@ -811,9 +814,10 @@ public class CocoonBean {
             // Process URI
             DelayedOutputStream output = new DelayedOutputStream();
             try {
-                int status =
+                status =
                     getPage(
                         deparameterizedURI,
+                        target.getLastModified(filename),
                         parameters,
                         confirmExtension ? translatedLinks : null,
                         gatheredLinks,
@@ -855,7 +859,7 @@ public class CocoonBean {
                     filename,
                     DefaultNotifyingBuilder.getRootCause(pe).getMessage());
             } finally {
-                if (output != null) {
+                if (output != null && status != -1) {
 
                     ModifiableSource source = target.getSource(filename);
                     try {
@@ -863,16 +867,14 @@ public class CocoonBean {
 
                         output.setFileOutputStream(stream);
                         output.flush();
+                        output.close();
+                    } catch (IOException ioex) {
+                        log.warn(ioex.toString());
                     } finally {
                         target.releaseSource(source);
                     }
                 }
-                try {
-                    if (output != null)
-                        output.close();
-                } catch (IOException ioex) {
-                    log.warn(ioex.toString());
-                }
+                
             }
         } catch (Exception rnfe) {
             log.warn("Could not process URI: " + deparameterizedURI);
@@ -887,6 +889,9 @@ public class CocoonBean {
                 targets.add(target.getDerivedTarget(link));
             }
         }
+        double d = (System.currentTimeMillis()- startTimeMillis);
+        String time = " [" + (d/1000) + " seconds]";
+        System.out.println("        "+ time);
         return targets;
     }
 
@@ -1069,6 +1074,7 @@ public class CocoonBean {
      */
     protected int getPage(
         String deparameterizedURI,
+        long lastModified,
         Map parameters,
         Map links,
         List gatheredLinks,
@@ -1077,6 +1083,7 @@ public class CocoonBean {
         FileSavingEnvironment env =
             new FileSavingEnvironment(
                 deparameterizedURI,
+                lastModified,
                 context,
                 attributes,
                 parameters,
@@ -1090,7 +1097,9 @@ public class CocoonBean {
         cocoon.process(env);
 
         // if we get here, the page was created :-)
-        return env.getStatus();
+        int status = env.getStatus();
+        if (!env.isModified()){ status = -1 ; }
+        return status;
     }
 
     /** Class <code>NullOutputStream</code> here. */
@@ -1286,6 +1295,10 @@ public class CocoonBean {
             return (ModifiableSource) src;
         }
 
+        public long getLastModified(String filename) throws IOException, ProcessingException {
+            return getSource(filename).getLastModified();
+        }
+        
         public void releaseSource(ModifiableSource source) {
             sourceResolver.release(source);
         }

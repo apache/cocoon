@@ -53,9 +53,14 @@ package org.apache.cocoon.sitemap;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
+
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.source.impl.validity.NOPValidity;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -65,9 +70,9 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: LinkGatherer.java,v 1.2 2003/03/28 12:55:42 nicolaken Exp $
+ * @version CVS $Id: LinkGatherer.java,v 1.3 2003/08/17 13:43:00 upayavira Exp $
  */
-public class LinkGatherer extends ExtendedXLinkPipe implements Transformer {
+public class LinkGatherer extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     private List links;
 
 
@@ -78,6 +83,26 @@ public class LinkGatherer extends ExtendedXLinkPipe implements Transformer {
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par) throws ProcessingException,
         SAXException, IOException {
             this.links = (List)objectModel.get(Constants.LINK_COLLECTION_OBJECT);
+    }
+
+    /**
+     * Generate the unique key.
+     * This key must be unique inside the space of this component.
+     *
+     * @return The generated key hashes the src
+     */
+    public java.io.Serializable getKey() {
+        return "1";
+    }
+
+    /**
+     * Generate the validity object.
+     *
+     * @return The generated validity object or <code>null</code> if the
+     *         component is currently not cacheable.
+     */
+    public SourceValidity getValidity() {
+        return NOPValidity.SHARED_INSTANCE;
     }
 
     public void simpleLink(String href, String role, String arcrole, String title, String show, String actuate, String uri,

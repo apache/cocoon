@@ -66,11 +66,15 @@ import java.util.List;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: FileSavingEnvironment.java,v 1.3 2003/05/12 13:26:17 stephan Exp $
+ * @version CVS $Id: FileSavingEnvironment.java,v 1.4 2003/08/17 13:43:00 upayavira Exp $
  */
 public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
 
+    protected boolean modified = true;
+    protected long sourceLastModified = 0L;
+
     public FileSavingEnvironment(String uri,
+                                 long lastModified,
                                  File context,
                                  Map attributes,
                                  Map parameters,
@@ -84,6 +88,7 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, new CommandLineRequest(this, null, uri, null, attributes, parameters));
         this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, new CommandLineResponse());
         this.objectModel.put(ObjectModelHelper.CONTEXT_OBJECT, cliContext);
+        this.sourceLastModified = lastModified;
         if (links != null) {
             this.objectModel.put(Constants.LINK_OBJECT, links);
         }
@@ -91,6 +96,45 @@ public class FileSavingEnvironment extends AbstractCommandLineEnvironment {
             this.objectModel.put(Constants.LINK_COLLECTION_OBJECT, gatheredLinks);
         }
     }
+    public FileSavingEnvironment(String uri,
+                                 File context,
+                                 Map attributes,
+                                 Map parameters,
+                                 Map links,
+                                 List gatheredLinks,
+                                 CommandLineContext cliContext,
+                                 OutputStream stream,
+                                 Logger log)
+    throws MalformedURLException {
+        this(uri, 0L, context, attributes, parameters, links, gatheredLinks, cliContext, stream, log);
+    }
+
+    /**
+     * Check if the response has been modified since the same
+     * "resource" was requested.
+     * The caller has to test if it is really the same "resource"
+     * which is requested.
+     * @return true if the response is modified or if the
+     *         environment is not able to test it
+     */
+    public boolean isResponseModified(long cacheLastModified) {
+        if (cacheLastModified != 0) {
+            return cacheLastModified / 1000 > sourceLastModified / 1000;
+        }
+        return true;
+    }
+
+    /**
+     * Mark the response as not modified.
+     */
+    public void setResponseIsNotModified() {
+       this.modified = false;
+    }
+
+    public boolean isModified() {
+        return this.modified;
+    }
+
 }
 
 
