@@ -16,9 +16,6 @@
 
 package org.apache.cocoon.transformation;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.SitemapComponentTestCase;
 
@@ -30,22 +27,13 @@ import org.apache.cocoon.SitemapComponentTestCase;
  */
 public class FilterTransformerTestCase extends SitemapComponentTestCase {
 
-    /**
-     * Run this test suite from commandline
-     *
-     * @param args commandline arguments (ignored) 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.SitemapComponentTestCase#getSitemapComponentInfo()
      */
-    public static void main( String[] args ) {
-        TestRunner.run(suite());
-    }
-    
-    /** Create a test suite.
-     * This test suite contains all test cases of this class.
-     * @return the Test object containing all test cases.
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(FilterTransformerTestCase.class);
-        return suite;
+    protected String[] getSitemapComponentInfo() {
+        return new String[] {Transformer.class.getName(),
+                             FilterTransformer.class.getName(),
+                             "filter"};
     }
 
     /**

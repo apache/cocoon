@@ -28,10 +28,6 @@
         shorthand="xslt-processor"
         default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
 
-  <role name="org.apache.cocoon.transformation.TransformerSelector"
-        shorthand="transformers"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
-
   <role name="org.apache.excalibur.store.Store/TransientStore"
         shorthand="transient-store"
         default-class="org.apache.excalibur.store.impl.MemoryStore"/>
@@ -61,12 +57,6 @@
    <parameter name="incremental-processing" value="true"/>
   </xslt-processor>
 
-  <transformers logger="test">
-   <component-instance class="org.apache.cocoon.transformation.FilterTransformer" 
-                       name="filter">
-   </component-instance>
-
-  </transformers>
  </components>
 
 </testcase>

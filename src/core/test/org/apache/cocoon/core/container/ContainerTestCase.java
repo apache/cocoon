@@ -22,6 +22,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.apache.avalon.excalibur.logger.LoggerManager;
+import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
@@ -30,6 +31,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -291,15 +293,27 @@ public class ContainerTestCase extends TestCase {
     }
     
     private Object getComponent(String classname,
-                                  Configuration conf,
-                                  Parameters p) 
+                                Configuration conf,
+                                Parameters p) 
     throws Exception {
         final Object instance = Class.forName(classname).newInstance();
         ContainerUtil.enableLogging(instance, getLogger());
         ContainerUtil.contextualize(instance, this.context);
         ContainerUtil.service(instance, getManager());
-        ContainerUtil.configure(instance, conf);
-        ContainerUtil.parameterize(instance, p);
+        if ( instance instanceof Configurable ) {
+            // default configuration to invoke method!
+            if ( conf == null ) {
+                conf = new DefaultConfiguration("", "-");
+            }
+            ContainerUtil.configure(instance, conf);
+        }
+        if ( instance instanceof Parameterizable ) {
+            // default configuration to invoke method!
+            if ( p == null ) {
+                p = new Parameters();
+            }
+            ContainerUtil.parameterize(instance, p);                       
+        }
         ContainerUtil.initialize(instance);
         return instance;
     }
@@ -316,7 +330,12 @@ public class ContainerTestCase extends TestCase {
         return this.getComponent(classname, null, p);
     }
     
-     /**
+    protected Object getComponent(String classname) 
+    throws Exception {
+        return this.getComponent(classname, null, null);
+    }
+
+    /**
      * We use this simple logger manager that sends all output to the console (logger)
      */
     protected static class DefaultLoggerManager implements LoggerManager {

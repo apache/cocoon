@@ -30,17 +30,9 @@ import org.xml.sax.Attributes;
 /**
  * A simple testcase for AbstractDOMTransformer.
  *
- * @version CVS $Id: XAbstractDOMTransformerTestCase.java,v 1.1 2004/05/07 14:56:44 ugo Exp $
+ * @version CVS $Id$
  */
 public class XAbstractDOMTransformerTestCase extends TestCase {
-
-    /**
-     * Constructor.
-     * @param name
-     */
-    public XAbstractDOMTransformerTestCase(String name) {
-        super(name);
-    }
 
     /**
      * Test if sending two consecutive "characters" events to the transformer

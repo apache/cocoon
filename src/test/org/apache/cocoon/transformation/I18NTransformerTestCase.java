@@ -16,40 +16,16 @@
 
 package org.apache.cocoon.transformation;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
-import org.apache.cocoon.environment.internal.EnvironmentHelper;
-import org.apache.cocoon.environment.mock.MockEnvironment;
 
 /**
- * A simple testcase for FilterTransformer.
+ * A simple testcase for I18nTransformer.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
  * @version CVS $Id$
  */
 public class I18NTransformerTestCase extends SitemapComponentTestCase {
-    
-    /**
-     * Run this test suite from commandline
-     *
-     * @param args commandline arguments (ignored)
-     */
-    public static void main( String[] args ) {
-        TestRunner.run(suite());
-    }
-    
-    /** Create a test suite.
-     * This test suite contains all test cases of this class.
-     * @return the Test object containing all test cases.
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(I18NTransformerTestCase.class);
-        return suite;
-    }
     
     /** Testcase for i18n
      *
@@ -65,17 +41,8 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
         String result = "resource://org/apache/cocoon/transformation/i18n-result-1.xml";
         String src =  null;
         
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
-        
         assertEqual( load(result),
         transform("i18n", src, parameters, load(input)));
-        
-        EnvironmentHelper.leaveProcessor();
     }
     
     /** Testcase for i18n
@@ -92,16 +59,7 @@ public class I18NTransformerTestCase extends SitemapComponentTestCase {
         String result = "resource://org/apache/cocoon/transformation/i18n-result-2.xml";
         String src =  null;
         
-        // enter & leave environment, as a manager is looked up using
-        // the processing context stack
-        MockEnvironment env = new MockEnvironment();
-        Processor processor = (Processor)this.lookup(Processor.ROLE);
-        
-        EnvironmentHelper.enterProcessor(processor, this.getManager(), env);
-        
         assertEqual( load(result),
         transform("i18n", src, parameters, load(input)));
-        
-        EnvironmentHelper.leaveProcessor();
     }
 }
