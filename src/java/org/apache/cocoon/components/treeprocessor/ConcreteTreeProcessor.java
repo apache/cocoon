@@ -53,7 +53,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
     /** Root node of the processing tree */
     private ProcessingNode rootNode;
-    
+
     /** The component info needed to build child processors */
     private ProcessorComponentInfo componentInfo;
 
@@ -68,11 +68,13 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     /** Release the executor */
     private boolean releaseSitemapExecutor;
 
-	/** Builds a concrete processig, given the wrapping processor */
+	/**
+     * Builds a concrete processig, given the wrapping processor
+     */
 	public ConcreteTreeProcessor(TreeProcessor wrappingProcessor) {
         // Store our wrapping processor
-		this.wrappingProcessor = wrappingProcessor;
-        
+        this.wrappingProcessor = wrappingProcessor;
+
         // Initialize component info
         if (this.wrappingProcessor.parent == null) {
             // top-level processor
@@ -80,33 +82,31 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         } else {
             // chain to the parent processor
             this.componentInfo = new ProcessorComponentInfo(
-                this.wrappingProcessor.parent.concreteProcessor.getComponentInfo()
-            );
+                    this.wrappingProcessor.parent.concreteProcessor.getComponentInfo());
         }
-        
-        
-        
+
         // get the sitemap executor - we use the same executor for each sitemap
         this.releaseSitemapExecutor = false;
-        if ( this.wrappingProcessor.parent == null ) {
+        if (this.wrappingProcessor.parent == null) {
             final ServiceManager manager = this.wrappingProcessor.parentServiceManager;
-            
+
             // FIXME(SW): do we really need to check hasService()? If a default class is defined
             // in cocoon.roles, the lookup is always successful.
-            if ( manager.hasService(SitemapExecutor.ROLE) ) {
+            if (manager.hasService(SitemapExecutor.ROLE)) {
                 try {
                     this.sitemapExecutor = (SitemapExecutor) manager.lookup(SitemapExecutor.ROLE);
                     this.releaseSitemapExecutor = true;
-                } catch (ServiceException ce) {
+                } catch (ServiceException e) {
                     // this should not happen as we called hasComponent first
                     // but we ignore it
-                    this.getLogger().error("Unable to lookup sitemap executor.", ce);
+                    getLogger().error("Unable to lookup sitemap executor.", e);
                 }
             }
-            if ( this.sitemapExecutor == null ) {
+
+            if (this.sitemapExecutor == null) {
                 try {
-                    this.sitemapExecutor = (SitemapExecutor) this.getClass()
-                                 .getClassLoader()
+                    // FIXME: VG: Why not new DefaultExecutor() which will use getClass().getClassLoader() anyway
+                    this.sitemapExecutor = (SitemapExecutor) getClass().getClassLoader()
                                  .loadClass(DefaultExecutor.class.getName())
                                  .newInstance();
                 } catch (InstantiationException e) {
@@ -130,9 +130,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
 		this.rootNode = rootNode;
 		this.disposableNodes = disposableNodes;
-        
+
    	}
-    
+
     /** Get the component info for this processor */
     public ProcessorComponentInfo getComponentInfo() {
         return this.componentInfo;
@@ -144,17 +144,17 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     }
 
     public Configuration[] getComponentConfigurations() {
-        if ( this.componentConfigurations == null ) {
-            if ( this.wrappingProcessor.parent != null ) {
+        if (this.componentConfigurations == null) {
+            if (this.wrappingProcessor.parent != null) {
                 return this.wrappingProcessor.parent.getComponentConfigurations();
             }
             return null;
         } else {
-            if ( this.wrappingProcessor.parent == null ) {
-                return new Configuration[] { this.componentConfigurations };
+            if (this.wrappingProcessor.parent == null) {
+                return new Configuration[]{this.componentConfigurations};
             }
-            final Configuration[] parentArray = this.wrappingProcessor.parent.getComponentConfigurations();            
-            final Configuration[] newArray = new Configuration[parentArray.length+1];
+            final Configuration[] parentArray = this.wrappingProcessor.parent.getComponentConfigurations();
+            final Configuration[] newArray = new Configuration[parentArray.length + 1];
             System.arraycopy(parentArray, 0, newArray, 1, parentArray.length);
             newArray[0] = this.componentConfigurations;
             return newArray;
@@ -214,11 +214,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
      */
     public InternalPipelineDescription buildPipeline(Environment environment)
     throws Exception {
-        InvokeContext context = new InvokeContext( true );
+        InvokeContext context = new InvokeContext(true);
 
         context.enableLogging(getLogger());
         try {
-            if ( process(environment, context) ) {
+            if (process(environment, context)) {
                 return context.getInternalPipelineDescription(environment);
             } else {
                 return null;
@@ -238,53 +238,47 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     protected boolean process(Environment environment, InvokeContext context)
     throws Exception {
 
-    		// Increment the concurrent requests count
-    		synchronized(this) {
-    			requestCount++;
-    		}
+        // Increment the concurrent requests count
+        synchronized (this) {
+            requestCount++;
+        }
 
-    		try {
+        try {
+            // and now process
+            EnvironmentHelper.enterProcessor(this, this.componentInfo.getServiceManager(), environment);
+            final Redirector oldRedirector = context.getRedirector();
 
-    	        // and now process
-    	        EnvironmentHelper.enterProcessor(this, this.componentInfo.getServiceManager(), environment);
-
-    	        final Redirector oldRedirector = context.getRedirector();
-
-    	        // Build a redirector
-    	        TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
-    	        setupLogger(redirector);
-    	        context.setRedirector(redirector);
+            // Build a redirector
+            TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
+            setupLogger(redirector);
+            context.setRedirector(redirector);
             context.service(this.componentInfo.getServiceManager());
             context.setLastProcessor(this);
 
-    	        try {
-    	            boolean success = this.rootNode.invoke(environment, context);
+            try {
+                final boolean success = this.rootNode.invoke(environment, context);
+                return success;
+            } finally {
+                EnvironmentHelper.leaveProcessor();
+                // Restore old redirector
+                context.setRedirector(oldRedirector);
+            }
 
-    	            return success;
+        } finally {
+            // Decrement the concurrent request count
+            synchronized (this) {
+                requestCount--;
+            }
 
-    	        } finally {
-    	            EnvironmentHelper.leaveProcessor();
-    	            // Restore old redirector
-    	            context.setRedirector(oldRedirector);
-    	        }
-
-    		} finally {
-
-    			// Decrement the concurrent request count
-    			synchronized(this) {
-    				requestCount--;
-    			}
-
-    			if(requestCount < 0) {
-    				// Marked for disposal and no more concurrent requests.
-    				dispose();
-    			}
-    		}
+            if (requestCount < 0) {
+                // Marked for disposal and no more concurrent requests.
+                dispose();
+            }
+        }
     }
 
-
-    protected boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context) throws Exception {
-
+    protected boolean handleCocoonRedirect(String uri, Environment environment, InvokeContext context)
+    throws Exception {
         // Build an environment wrapper
         // If the current env is a facade, change the delegate and continue processing the facade, since
         // we may have other redirects that will in turn also change the facade delegate
@@ -301,8 +295,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         boolean isRedirect = (environment.getObjectModel().remove("cocoon:forward") == null);
         final SitemapSourceInfo info = SitemapSourceInfo.parseURI(environment, uri);
         Environment newEnv = new ForwardEnvironmentWrapper(environment, info, getLogger());
-        if ( isRedirect ) {
-            ((ForwardEnvironmentWrapper)newEnv).setInternalRedirect(true);
+        if (isRedirect) {
+            ((ForwardEnvironmentWrapper) newEnv).setInternalRedirect(true);
         }
 
         if (facade != null) {
@@ -313,7 +307,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 
         // Get the processor that should process this request
         ConcreteTreeProcessor processor;
-        if ( newEnv.getURIPrefix().equals("") ) {
+        if (newEnv.getURIPrefix().equals("")) {
             processor = ((TreeProcessor)getRootProcessor()).concreteProcessor;
         } else {
             processor = this;
@@ -324,11 +318,11 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
         // context.reset();
         // The following is a fix for bug #26854 and #26571
         final boolean result = processor.process(newEnv, context);
-        if ( facade != null ) {
+        if (facade != null) {
             newEnv = facade.getDelegate();
         }
-        if ( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL() != null ) {
-            environment.redirect( ((ForwardEnvironmentWrapper)newEnv).getRedirectURL(), false, false);
+        if (((ForwardEnvironmentWrapper) newEnv).getRedirectURL() != null) {
+            environment.redirect(((ForwardEnvironmentWrapper) newEnv).getRedirectURL(), false, false);
         }
         return result;
     }
@@ -352,8 +346,8 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
 	}
 
     private class TreeProcessorRedirector extends ForwardRedirector {
-
         private InvokeContext context;
+
         public TreeProcessorRedirector(Environment env, InvokeContext context) {
             super(env);
             this.context = context;
@@ -388,6 +382,4 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled implements Process
     public SitemapExecutor getSitemapExecutor() {
         return this.sitemapExecutor;
     }
-    
-
 }
