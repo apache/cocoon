@@ -164,10 +164,17 @@ public class TraversableCachingSource extends CachingSource implements Traversab
     protected SourceMeta readMeta() throws IOException {
         final TraversableSourceMeta meta = new TraversableSourceMeta();
         
+        final long lastModified = getTraversableSource().getLastModified();
+        if (lastModified > 0) {
+            meta.setLastModified(lastModified);
+        }
+        else {
+            meta.setLastModified(System.currentTimeMillis());
+        }
+        meta.setMimeType(getTraversableSource().getMimeType());
+        
         meta.setName(getTraversableSource().getName());
         meta.setIsCollection(getTraversableSource().isCollection());
-        meta.setLastModified(getTraversableSource().getLastModified());
-        meta.setMimeType(getTraversableSource().getMimeType());
         
         if (meta.isCollection()) {
             final Collection children = getTraversableSource().getChildren();
