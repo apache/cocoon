@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.generation.asciiart;
 
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.Locale;
@@ -63,7 +62,7 @@ import junit.textui.TestRunner;
  *
  * @author huber.at.apache.org
  * @since 18. Dezember 2002
- * @version CVS $Id: AsciiArtPadTestCase.java,v 1.2 2003/03/11 17:44:15 vgritsenko Exp $
+ * @version CVS $Id: AsciiArtPadTestCase.java,v 1.3 2003/03/23 11:37:02 stefano Exp $
  */
 public class AsciiArtPadTestCase extends TestCase {
 
@@ -170,7 +169,6 @@ public class AsciiArtPadTestCase extends TestCase {
 
         Iterator i = asciiArtPad.iterator();
         NumberFormat nf = NumberFormat.getInstance(Locale.US);
-        DecimalFormat df = new DecimalFormat("#0.0##");
         StringBuffer svg_lines = new StringBuffer();
         StringBuffer svg_text = new StringBuffer();
         while (i.hasNext()) {
