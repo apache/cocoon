@@ -185,10 +185,10 @@
           XSPRequestLibrary.getLocale(request, document)
         </xsl:when>
         <xsl:when test="$as = 'string'">
-          request.getLocale(request).toString()
+          request.getLocale().toString()
         </xsl:when>
         <xsl:when test="$as = 'object'">
-          request.getLocale(request)
+          request.getLocale()
         </xsl:when>
       </xsl:choose>
     </xsp:expr>
