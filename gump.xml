@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.93 2003/10/22 19:28:08 gcasper Exp $
+    | CVS $Id: gump.xml,v 1.94 2003/10/22 21:11:19 gcasper Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -109,7 +109,6 @@
     <depend project="jakarta-servletapi-4"/>
     <depend project="cocoon-block-velocity"/>
     <depend project="cocoon-block-cron"/>
-    <depend project="cocoon-block-repository"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
