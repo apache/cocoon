@@ -205,7 +205,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.6 2003/10/07 13:53:24 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.7 2003/11/06 08:58:58 cziegeler Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -223,10 +223,10 @@ public class SendMailTransformer extends AbstractSAXTransformer
     public static final String ELEMENT_ATTACHMENT         = "attachment";
     public static final String ELEMENT_ATTACHMENT_CONTENT = "content";
     public static final String ELEMENT_EMAIL_PREFIX       = "email";
-    public static final String ELEMENT_EMAIL_SUCCESS      = ELEMENT_EMAIL_PREFIX +
-                                                            ":success";
-    public static final String ELEMENT_EMAIL_FAILURE      = ELEMENT_EMAIL_PREFIX +
-                                                            ":failure";
+    public static final String ELEMENT_ERROR              = "error";
+    public static final String ELEMENT_SUCCESS            = "success";
+    public static final String ELEMENT_FAILURE            = "failure";
+    public static final String ELEMENT_RESULT              = "result";
 
     /*
      * mode-constants
@@ -298,12 +298,15 @@ public class SendMailTransformer extends AbstractSAXTransformer
         this.attachments = new Vector();
         this.appendToAddress(s, ";");
 
-        try {
-            this.subject = new StringBuffer(par.getParameter(PARAM_SUBJECT));
-            this.body    = new StringBuffer(par.getParameter(PARAM_BODY));
-        } catch (Exception e) {
-            this.getLogger().error("Error while retrieving Parameter", e);
-        }
+	try {
+	    this.subject = new StringBuffer(par.getParameter(PARAM_SUBJECT));
+	} catch (ParameterException pe) {
+	    this.getLogger().debug("Parameter <subject> not set."); 
+	} try {
+	    this.body    = new StringBuffer(par.getParameter(PARAM_BODY));
+	} catch (ParameterException pe) {
+	    this.getLogger().debug("Parameter <body> not set."); 
+	}				    
 
         this.defaultNamespaceURI = NAMESPACE;
     }
@@ -456,18 +459,20 @@ public class SendMailTransformer extends AbstractSAXTransformer
             props.put("mail.smtp.host", this.mailHost);
 
             if (this.subject == null) {
-                super.sendStartElementEvent("email:error");
+		        this.ignoreHooksCount++;
+                super.sendStartElementEventNS(ELEMENT_ERROR);
                 super.sendTextEvent("Subject not available - sending mail aborted");
-                super.sendEndElementEvent("email:error");
-
+                super.sendEndElementEventNS(ELEMENT_ERROR);
+		        this.ignoreHooksCount--;
                 return;
             }
 
             if ((this.body == null) && (this.bodyURI == null)) {
-                super.sendStartElementEvent("email:error");
+		        this.ignoreHooksCount++;
+                super.sendStartElementEventNS(ELEMENT_ERROR);
                 super.sendTextEvent("Mailbody not available - sending mail aborted");
-                super.sendEndElementEvent("email:error");
-
+                super.sendEndElementEventNS(ELEMENT_ERROR);
+		        this.ignoreHooksCount--;
                 return;
             }
 
@@ -479,7 +484,8 @@ public class SendMailTransformer extends AbstractSAXTransformer
 
             this.smtpMessage = setUpMessage(session);
 
-            super.sendStartElementEvent("email:result");
+	        this.ignoreHooksCount++;
+            super.sendStartElementEventNS(ELEMENT_RESULT);
 
             if (this.sendPartial == true) {
                 for (int i = 0; i < this.toAddresses.size(); i++) {
@@ -492,7 +498,8 @@ public class SendMailTransformer extends AbstractSAXTransformer
             }
 
             trans.close();
-            super.sendEndElementEvent("email:result");
+            super.sendEndElementEventNS(ELEMENT_RESULT);
+	    this.ignoreHooksCount--;
         } catch (Exception sE) {
             this.getLogger().error("sendMail-Error", sE);
             this.sendExceptionElement(sE);
@@ -648,27 +655,28 @@ public class SendMailTransformer extends AbstractSAXTransformer
             String tmpAddress = addressArr[i].getAddress().getAddress();
 
             if (addressArr[i].getSendMailResult() == null) {
-                impl.addAttribute(NAMESPACE, ELEMENT_EMAIL_SUCCESS, "to",
+                impl.addAttribute("", "to", "to",
                                   "CDATA", tmpAddress);
-                super.sendStartElementEvent(ELEMENT_EMAIL_SUCCESS, impl);
+                super.sendStartElementEventNS(ELEMENT_SUCCESS, impl);
                 super.sendTextEvent("Mail sent");
-                super.sendEndElementEvent(ELEMENT_EMAIL_SUCCESS);
+                super.sendEndElementEventNS(ELEMENT_SUCCESS);
             } else {
-                impl.addAttribute(NAMESPACE, ELEMENT_EMAIL_FAILURE, "to",
+                impl.addAttribute("", "to", "to",
                                   "CDATA", tmpAddress);
-                super.sendStartElementEvent(ELEMENT_EMAIL_FAILURE, impl);
+                super.sendStartElementEventNS(ELEMENT_FAILURE, impl);
                 super.sendTextEvent(addressArr[i].getSendMailResult());
-                super.sendEndElementEvent(ELEMENT_EMAIL_FAILURE);
+                super.sendEndElementEventNS(ELEMENT_FAILURE);
             }
         }
     }
 
     private void sendExceptionElement(Exception ex) {
         try {
-            super.sendStartElementEvent("email:exception");
-            super.sendStartElementEvent("email:message");
+	    this.ignoreHooksCount++;
+            super.sendStartElementEventNS("exception");
+            super.sendStartElementEventNS("message");
             super.sendTextEvent(ex.getMessage());
-            super.sendEndElementEvent("email:message");
+            super.sendEndElementEventNS("message");
             
             /* only with jdk 1.4
             super.sendStartElementEvent("email:stacktrace");
@@ -680,7 +688,8 @@ public class SendMailTransformer extends AbstractSAXTransformer
 
             super.sendEndElementEvent("email:stacktrace");*/ 
             
-            super.sendEndElementEvent("email:exception");
+            super.sendEndElementEventNS("exception");
+	    this.ignoreHooksCount--;
         } catch (SAXException e) {
             this.getLogger().error("Error while sending a SAX-Event", e);
         }
