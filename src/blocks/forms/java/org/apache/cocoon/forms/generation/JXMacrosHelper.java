@@ -22,7 +22,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.cocoon.forms.Constants;
-import org.apache.cocoon.forms.formmodel.ContainerWidget;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Repeater;
 import org.apache.cocoon.forms.formmodel.Widget;

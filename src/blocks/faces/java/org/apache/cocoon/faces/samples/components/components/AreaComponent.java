@@ -44,9 +44,6 @@ import org.apache.cocoon.faces.samples.components.model.ImageArea;
 import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
 
-import java.io.IOException;
-
-
 /**
  * <p>{@link AreaComponent} is a JavaServer Faces component that represents
  * a particular hotspot in a client-side image map defined by our parent

@@ -18,16 +18,13 @@ package org.apache.cocoon.serialization;
 
 import java.io.OutputStream;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-
 import de.tivano.flash.swf.publisher.SWFWriter;
 
 /**
  * uses the project http://developer.berlios.de/projects/spark-xml/
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: SWFSerializer.java,v 1.5 2004/05/24 08:09:29 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class SWFSerializer extends AbstractSerializer  {
     

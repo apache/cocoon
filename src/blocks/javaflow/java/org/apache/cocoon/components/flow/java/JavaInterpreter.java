@@ -32,7 +32,6 @@ import org.apache.cocoon.components.flow.AbstractInterpreter;
 import org.apache.cocoon.components.flow.FlowHelper;
 import org.apache.cocoon.components.flow.InvalidContinuationException;
 import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.Interpreter.Argument;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;

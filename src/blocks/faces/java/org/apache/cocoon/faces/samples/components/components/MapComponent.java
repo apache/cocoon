@@ -48,8 +48,6 @@ import javax.faces.event.ActionListener;
 import javax.faces.event.FacesEvent;
 import javax.faces.event.PhaseId;
 
-import java.io.IOException;
-
 /**
  * <p>{@link MapComponent} is a JavaServer Faces component that corresponds
  * to a client-side image map.  It can have one or more children of type
