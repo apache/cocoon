@@ -64,11 +64,11 @@ import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.CopletInstanceEvent;
 import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.Subscriber;
-import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.11 2003/10/20 13:36:41 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.12 2004/02/09 12:14:20 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
@@ -100,6 +100,9 @@ public class URICopletAdapter
     public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
         final String uri = (String)coplet.getCopletData().getAttribute("uri");
+        if ( uri == null ) {
+            throw new SAXException("No URI for coplet data "+coplet.getCopletData().getId()+" found.");
+        }
         this.streamContent( coplet, uri, contentHandler);
     }
 
@@ -118,7 +121,7 @@ public class URICopletAdapter
                 String sourceUri = uri;
                 
                 if ( handlePars != null && handlePars.booleanValue() ) {
-                    List list = (List) portalService.getAttribute(URICopletAdapter.class.getName());
+                    List list = (List) portalService.getTemporaryAttribute(URICopletAdapter.class.getName());
                     if ( list != null && list.contains( coplet )) {
                         // add parameters
                         if ( uri.startsWith("cocoon:raw:") ) {
@@ -177,7 +180,7 @@ public class URICopletAdapter
      * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
      */
     public Class getEventType() {
-        return ChangeCopletInstanceAspectDataEvent.class;
+        return CopletInstanceEvent.class;
     }
 
     /* (non-Javadoc)
@@ -191,7 +194,7 @@ public class URICopletAdapter
      * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
      */
     public void inform(Event e) {
-        ChangeCopletInstanceAspectDataEvent event = (ChangeCopletInstanceAspectDataEvent)e;
+        CopletInstanceEvent event = (CopletInstanceEvent)e;
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
