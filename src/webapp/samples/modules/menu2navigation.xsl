@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -16,8 +16,9 @@
 -->
 
 <!--+
-    | Transforms menu.xml to the navigation bar
-    | CVS $Id: menu2navigation.xsl,v 1.1 2004/06/16 20:00:07 vgritsenko Exp $
+    | Transforms menu.xml to the navigation bar.
+    |
+    | SVN $Id$
     +-->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:param name="page" />
