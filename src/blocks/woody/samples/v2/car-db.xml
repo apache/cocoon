@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
+<!-- $Id: car-db.xml,v 1.2 2004/02/29 05:58:11 antonio Exp $-->
 <cars>
   <!-- Enhancements to this list are welcome !
        Types with no models will automatically be filled with dumb values. -->

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0"?>
+<!-- $Id: carselector_form.xml,v 1.2 2004/02/29 05:58:11 antonio Exp $-->
 <!-- form used to illustrate programmatic changing of listbox content. -->
 <wd:form
   xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
