@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<wd:form
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+  xmlns:i18n="http://apache.org/cocoon/i18n/2.1">
+
+  <wd:widgets>
+    <wd:field id="email" required="true">
+      <wd:datatype base="string">
+        <wd:validation>
+          <wd:email/>
+        </wd:validation>
+      </wd:datatype>
+      <wd:label>Enter an <b>email</b> address:</wd:label>
+    </wd:field>
+  
+    <wd:aggregatefield id="phone" required="true">
+      <wd:label>Enter a phone number in \+([0-9]{1,3})-([0-9]{1,4})-([0-9]{5,7}) format</wd:label>
+      <wd:datatype base="string"/>
+      <wd:split pattern="\+([0-9]{1,3})-([0-9]{1,4})-([0-9]{5,7})">
+        <wd:map group="1" field="cntr"/>
+        <wd:map group="2" field="zone"/>
+        <wd:map group="3" field="number"/>
+        <wd:failmessage>The phone-number format is wrong, please try again
+        </wd:failmessage>
+      </wd:split>
+      <wd:combine expression='Concat("+", cntr, "-", zone, "-", number)'/>
+      <wd:widgets>
+        <wd:field id="cntr">
+          <wd:datatype base="string"/>
+        </wd:field>
+        <wd:field id="zone">
+          <wd:datatype base="string"/>
+        </wd:field>
+        <wd:field id="number">
+          <wd:datatype base="string"/>
+        </wd:field>
+      </wd:widgets>
+    </wd:aggregatefield>
+  
+    <wd:field id="ipaddress">
+      <wd:label>Please enter your IP address</wd:label>
+      <wd:datatype base="string">
+        <wd:validation>
+          <wd:regexp pattern="^([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])\.([01]?\d\d?|2[0-4]\d|25[0-5])$">
+            <wd:failmessage>Invalid IP address.</wd:failmessage>
+          </wd:regexp>
+        </wd:validation>
+      </wd:datatype>
+    </wd:field>
+  
+    <wd:field id="birthday" required="true">
+      <wd:label>Your birthday (dd/MM/yyyy):</wd:label>
+      <wd:datatype base="date">
+        <wd:convertor>
+          <wd:patterns>
+            <wd:pattern>dd/MM/yyyy</wd:pattern>
+            <!-- The above pattern is a non-locale-specific pattern. You can
+            also add locale-specific patterns by adding more wd:pattern elements
+            here, with a locale attribute on them. -->
+          </wd:patterns>
+        </wd:convertor>
+      </wd:datatype>
+    </wd:field>
+  
+    <wd:field id="number" required="true">
+      <wd:label>Select a number:</wd:label>
+      <wd:datatype base="integer"/>
+      <wd:selection-list>
+        <wd:item value="1"/>
+        <wd:item value="2"/>
+        <wd:item value="3"/>
+        <wd:item value="4"/>
+        <wd:item value="5"/>
+      </wd:selection-list>
+    </wd:field>
+  
+    <wd:booleanfield id="choose">
+      <wd:label>I choose</wd:label>
+    </wd:booleanfield>
+  
+    <wd:field id="sex">
+      <wd:label>Sex</wd:label>
+      <wd:datatype base="enum">
+        <wd:convertor type="enum">
+          <wd:enum>org.apache.cocoon.woody.samples.Sex</wd:enum>
+        </wd:convertor>
+      </wd:datatype>
+      <wd:selection-list type="enum" class="org.apache.cocoon.woody.samples.Sex"/>
+    </wd:field>
+  
+    <wd:multivaluefield id="drinks">
+      <wd:label>Indicate which 2 of the following drinks you'd like to receive:</wd:label>
+      <wd:datatype base="string"/>
+      <wd:validation>
+        <wd:value-count exact="2"/>
+      </wd:validation>
+      <wd:selection-list>
+        <wd:item value="Maes"/>
+        <wd:item value="Jupiler"/>
+        <wd:item value="Leffe"/>
+        <wd:item value="Hoegaarden"/>
+        <wd:item value="Coca Cola"/>
+      </wd:selection-list>
+    </wd:multivaluefield>
+
+    <wd:repeater id="contacts">
+      <wd:widgets>
+        <wd:output id="id">
+          <wd:datatype base="long"/>
+        </wd:output>
+        <wd:field id="firstname">
+          <wd:label>Firstname</wd:label>
+          <wd:datatype base="string"/>
+        </wd:field>
+        <wd:field id="lastname">
+          <wd:label>Lastname</wd:label>
+          <wd:datatype base="string"/>
+        </wd:field>
+        <wd:field id="phone">
+          <wd:label>Phone</wd:label>
+          <wd:datatype base="string"/>
+        </wd:field>
+        <wd:field id="email">
+          <wd:label>Email</wd:label>
+          <wd:datatype base="string">
+            <wd:validation>
+              <wd:email/>
+            </wd:validation>
+          </wd:datatype>
+        </wd:field>
+        <wd:booleanfield id="select">
+          <wd:label>Select</wd:label>
+        </wd:booleanfield>
+      </wd:widgets>
+    </wd:repeater>
+  
+    <wd:repeater-action id="addcontact" action-command="add-row" repeater="contacts">
+      <wd:label>Add contact</wd:label>
+    </wd:repeater-action>
+  
+    <wd:repeater-action id="removecontacts" action-command="delete-rows" repeater="contacts" select="select">
+      <wd:label>Remove selected contacts</wd:label>
+    </wd:repeater-action>
+  </wd:widgets>
+
+</wd:form>

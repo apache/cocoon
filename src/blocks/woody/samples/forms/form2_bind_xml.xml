@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!--
+    | Binding template between 
+    |   - form_data file (backend)
+    |   - and form_model file
+     -->
+<wb:context 
+            xmlns:wb="http://apache.org/cocoon/woody/binding/1.0" 
+            xmlns:wd="http://apache.org/cocoon/woody/definition/1.0" 
+            path="/data/wrapper/context" >
+
+  <wb:context path="info">
+    <!-- the email value will not be saved because of the @direction="load" -->
+    <wb:value id="email"   path="email"   direction="load"/>
+
+    <!-- jxpath binds to nodes as well as to attributes -->
+    <wb:value id="number" path="number/@value">
+      <!-- for non-string datatypes, a convertor must be specified. These are
+      the same convertors as can be used in form definitions, but require an
+      extra datatype attribute. Here we use the default convertor for longs. -->
+      <wd:convertor datatype="integer"/>
+    </wb:value>
+
+    <wb:value id="choose" path="choose/@value">
+      <wd:convertor datatype="boolean"/>
+    </wb:value>
+
+    <!-- one entry field in the client maps through aggregate fields -->
+    <wb:aggregate id="phone" path="phone" >
+      <!-- to multiple fields in the XML file -->
+      <wb:value id="number" path="number" />
+      <wb:value id="zone"   path="zone"   />
+      <wb:value id="cntr"   path="@cntr"  />
+    </wb:aggregate>
+    
+  </wb:context>
+  
+  
+  <wb:value id="ipaddress" path="ipaddress">
+    <wb:on-update>
+      <!-- if the value has changed, the attribute will be set -->
+      <wb:set-attribute name="changed" value="true"/>
+    </wb:on-update>
+  </wb:value>
+
+  <wb:value id="birthday" path="birthday">
+    <wd:convertor datatype="date" type="formatting">
+      <wd:patterns>
+        <wd:pattern>yyyy-MM-dd</wd:pattern>
+      </wd:patterns>
+    </wd:convertor>
+  </wb:value>
+
+  <wb:multi-value id="drinks" parent-path="drinks" row-path="drink"/>
+
+  <!-- repeater requires unique identification mechanism of the row-nodes -->
+  <wb:repeater id="contacts"
+    parent-path="contacts"
+    row-path="contact"
+    unique-row-id="id"
+    unique-path="@id"
+    >
+    
+    <!-- optional convertor to use for mapping the unique id -->
+    <wd:convertor datatype="long" />
+        
+    <!-- important note: the row-path is used inside jxpath-createPath context,
+         as a consequence it cannot have dependent children or predicates -->
+
+    <wb:on-bind>
+        <!-- executed on updates AND right after the insert -->
+      <wb:value id="firstname" path="firstname" />
+      <wb:value id="lastname"  path="lastname"  />
+      <wb:value id="phone"     path="phone/@nr" />
+      <wb:value id="email"     path="email"     />
+    </wb:on-bind>
+
+    <wb:on-delete-row>
+        <!-- chose on of these to test -->
+        <!--
+      <wb:set-attribute name="row-state" value="deleted" />
+      -->
+      <wb:delete-node />
+    </wb:on-delete-row>
+
+    <wb:on-insert-row>
+      <!-- The insert-node element contains a piece of template XML to be
+      inserted for new rows. Alternatively, you could also add a "src"
+      attribute on the insert-node element pointing to an external source
+      to retrieve the template from. -->
+      <wb:insert-node>
+        <!-- template inserted by the binding for new rows (mapping new nodes) -->
+        <contact id="" row-state="new">
+          <firstname/><lastname/><phone nr=""/><email/>
+        </contact>              
+      </wb:insert-node>
+    </wb:on-insert-row>
+  </wb:repeater>
+
+</wb:context>
