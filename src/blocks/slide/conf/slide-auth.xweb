@@ -1,6 +1,6 @@
 <xweb xpath="/web-app" 
   unless="comment()[contains(., 'Authentication for the Slide WebDAV servlet')]" 
-  insert-after="mime-mapping[position() = last()]">
+  insert-after="mime-mapping">
 
     <!-- Authentication for the Slide WebDAV servlet -->
     <!--
