@@ -122,10 +122,9 @@ public class BaseLinkModule extends AbstractInputModule implements ThreadSafe {
         final Map objectModel)
         throws ConfigurationException {
 
-        Object[] result = new Object[1];
-        result[0] = getAttribute(name, modeConf, objectModel);
-        return (result == null? null : result);
-
+        Object result = new Object[1];
+        result = getAttribute(name, modeConf, objectModel);
+        return (result == null? null : new Object[]{result});        
     }
 
 }
