@@ -50,14 +50,8 @@
 */
 package org.apache.cocoon.components.language.programming.javascript;
 
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.context.Context;
-
-import org.apache.avalon.excalibur.component.ComponentHandler;
-import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.component.LogkitLoggerManager;
 
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
@@ -70,7 +64,7 @@ import java.util.Iterator;
  * This class represents program in the Javascript language.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JavascriptProgram.java,v 1.2 2003/07/19 15:06:38 joerg Exp $
+ * @version CVS $Id: JavascriptProgram.java,v 1.3 2003/10/22 18:14:48 bloritsch Exp $
  */
 public class JavascriptProgram implements Program {
 
@@ -100,7 +94,7 @@ public class JavascriptProgram implements Program {
         return file.toString();
     }
 
-    public ComponentHandler getHandler(ComponentManager manager,
+/*    public ComponentHandler getHandler(ComponentManager manager,
                                        Context context,
                                        RoleManager roles,
                                        LogkitLoggerManager logKitManager)
@@ -109,7 +103,7 @@ public class JavascriptProgram implements Program {
         return ComponentHandler.getComponentHandler(
                 clazz, config, manager, context, roles, logKitManager, null, "N/A");
     }
-
+                        */
     public CompiledComponent newInstance() throws Exception {
         CompiledComponent instance = (CompiledComponent) clazz.newInstance();
         if (instance instanceof Configurable)

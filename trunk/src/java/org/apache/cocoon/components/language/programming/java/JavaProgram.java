@@ -50,14 +50,6 @@
 */
 package org.apache.cocoon.components.language.programming.java;
 
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.context.Context;
-
-import org.apache.avalon.excalibur.component.ComponentHandler;
-import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.component.LogkitLoggerManager;
-
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
 
@@ -66,7 +58,7 @@ import org.apache.cocoon.components.language.programming.Program;
  * It wraps Java Class object.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JavaProgram.java,v 1.2 2003/07/19 15:06:38 joerg Exp $
+ * @version CVS $Id: JavaProgram.java,v 1.3 2003/10/22 18:14:48 bloritsch Exp $
  */
 public class JavaProgram implements Program {
 
@@ -80,7 +72,7 @@ public class JavaProgram implements Program {
         return program.getName();
     }
 
-    public ComponentHandler getHandler(ComponentManager manager,
+/*    public ComponentHandler getHandler(ComponentManager manager,
                                        Context context,
                                        RoleManager roles,
                                        LogkitLoggerManager logKitManager)
@@ -91,7 +83,7 @@ public class JavaProgram implements Program {
                 new DefaultConfiguration("", "GeneratorSelector"),
                 manager, context, roles, logKitManager, null, "N/A");
     }
-
+  */
     public CompiledComponent newInstance() throws Exception {
         return (CompiledComponent)this.program.newInstance();
     }

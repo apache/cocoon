@@ -53,10 +53,6 @@ package org.apache.cocoon.components.language.programming;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
 
-import org.apache.avalon.excalibur.component.ComponentHandler;
-import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.component.LogkitLoggerManager;
-
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 
 /**
@@ -64,7 +60,7 @@ import org.apache.cocoon.components.language.generator.CompiledComponent;
  * For compilable languages this is the wrapper for a Java Class object.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: Program.java,v 1.1 2003/03/09 00:08:59 pier Exp $
+ * @version CVS $Id: Program.java,v 1.2 2003/10/22 18:14:48 bloritsch Exp $
  */
 public interface Program {
 
@@ -76,11 +72,11 @@ public interface Program {
     /**
      * Get ComponentHandler which holds instances of this program.
      */
-    ComponentHandler getHandler(ComponentManager manager,
+/*    ComponentHandler getHandler(ComponentManager manager,
                                 Context context,
                                 RoleManager roles,
                                 LogkitLoggerManager logKitManager) throws Exception;
-
+  */
     /**
      * Create new instance of the program.
      */
