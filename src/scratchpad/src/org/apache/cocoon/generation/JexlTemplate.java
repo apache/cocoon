@@ -162,9 +162,9 @@ import org.xml.sax.helpers.LocatorImpl;
  *    &lt;/template&gt;
  * </pre></p>
  * <p>The <code>import</code> tag allows you to include another template within the current template. The content of the imported template is compiled and will be executed in place of the <code>import</code> tag:</p><pre>
- *    &lt;import uri="${root}/foo/bar.xml"/&gt;
- * </pre></p><p>The Cocoon source resolver is used to resolve <code>uri</code>.</p>
- * <p>The <code>set</code> tag creates a local alias of an object. The <code>var</code> attribute specifies the name of a variable assign the object to. The <code>value</code> attribute specifies the object (defaults to <code>body</code> if not present):</p><pre>
+ *    &lt;import uri="URI" [context="Expression"]/&gt;
+ * </pre></p><p>The Cocoon source resolver is used to resolve <code>uri</code>. If <code>context</code> is present, then its value is used as the context for evaluating the imported template, otherwise the current context is used.</p>
+ * <p>The <code>set</code> tag creates a local alias of an object. The <code>var</code> attribute specifies the name of a variable to assign the object to. The <code>value</code> attribute specifies the object (defaults to <code>body</code> if not present):</p><pre>
  *    &lt;set var="Name" [value="Value"]&gt;
  *        [body]
  *    &lt;/set&gt;
@@ -1756,10 +1756,10 @@ public class JexlTemplate extends AbstractGenerator {
                     }
                     // If "select" is present then its value will be used
                     // as the context object in the imported template
-                    String select = attrs.getValue("select");
+                    String select = attrs.getValue("context");
                     Object expr = null;
                     if (select != null) {
-                        expr = compileExpr(select, "import: \"select\": ",
+                        expr = compileExpr(select, "import: \"context\": ",
                                            locator);
                     }
                     StartImport startImport = 
@@ -1868,6 +1868,42 @@ public class JexlTemplate extends AbstractGenerator {
                     parameters);
         definitions = new HashMap();
     }
+    
+    private void fillContext(Object contextObject, Map map) {
+        // Hack: I use jxpath to populate the context object's properties
+        // in the jexl context
+        final JXPathBeanInfo bi = 
+            JXPathIntrospector.getBeanInfo(contextObject.getClass());
+        if (bi.isDynamic()) {
+            Class cl = bi.getDynamicPropertyHandlerClass();
+            try {
+                DynamicPropertyHandler h = (DynamicPropertyHandler) cl.newInstance();
+                String[] result = h.getPropertyNames(contextObject);
+                for (int i = 0; i < result.length; i++) {
+                    try {
+                        map.put(result[i], h.getProperty(contextObject, result[i]));
+                    } catch (Exception exc) {
+                        exc.printStackTrace();
+                    }
+                }
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
+            }
+        } else {
+            PropertyDescriptor[] props =  bi.getPropertyDescriptors();
+            for (int i = 0; i < props.length; i++) {
+                try {
+                    Method read = props[i].getReadMethod();
+                    if (read != null) {
+                        map.put(props[i].getName(), 
+                                read.invoke(contextObject, null));
+                    }
+                } catch (Exception ignored) {
+                    ignored.printStackTrace();
+                }
+            }
+        }
+    }
 
     private void setContexts(Object contextObject,
                              WebContinuation kont,
@@ -1887,40 +1923,8 @@ public class JexlTemplate extends AbstractGenerator {
         if (contextObject instanceof Map) {
             map = (Map)contextObject;
         } else {
-            // Hack: I use jxpath to populate the context object's properties
-            // in the jexl context
-            final JXPathBeanInfo bi = 
-                JXPathIntrospector.getBeanInfo(contextObject.getClass());
             map = new HashMap();
-            if (bi.isDynamic()) {
-                Class cl = bi.getDynamicPropertyHandlerClass();
-                try {
-                    DynamicPropertyHandler h = (DynamicPropertyHandler) cl.newInstance();
-                    String[] result = h.getPropertyNames(contextObject);
-                    for (int i = 0; i < result.length; i++) {
-                        try {
-                            map.put(result[i], h.getProperty(contextObject, result[i]));
-                        } catch (Exception exc) {
-                            exc.printStackTrace();
-                        }
-                    }
-                } catch (Exception ignored) {
-                    ignored.printStackTrace();
-                }
-            } else {
-                PropertyDescriptor[] props =  bi.getPropertyDescriptors();
-                for (int i = 0; i < props.length; i++) {
-                    try {
-                        Method read = props[i].getReadMethod();
-                        if (read != null) {
-                            map.put(props[i].getName(), 
-                                    read.invoke(contextObject, null));
-                        }
-                    } catch (Exception ignored) {
-                        ignored.printStackTrace();
-                    }
-                }
-            }
+            fillContext(contextObject, map);
         }
         jxpathContext = jxpathContextFactory.newContext(null, contextObject);
         jxpathContext.setVariables(variables);
@@ -2152,15 +2156,13 @@ public class JexlTemplate extends AbstractGenerator {
                     Object value;
                     if (xpath) {
                         Pointer ptr = (Pointer)iter.next();
-                        Object contextObject;
                         try {
-                            contextObject = ptr.getNode();
+                            value = ptr.getNode();
                         } catch (Exception exc) {
                             throw new SAXParseException(exc.getMessage(),
                                                         ev.location,
                                                         exc);
                         }
-                        value = ptr.getNode();
                     } else {
                         value = iter.next();
                     }
@@ -2565,14 +2567,18 @@ public class JexlTemplate extends AbstractGenerator {
                         cache.put(input.getURI(), doc);
                     }
                 }
-                JXPathContext select = jxpathContext;
+                JXPathContext selectJXPath = jxpathContext;
+                MyJexlContext selectJexl = jexlContext;
                 if (startImport.select != null) {
                     try {
                         Object obj = getValue(startImport.select,
                                               jexlContext,
                                               jxpathContext);
-                        select = jxpathContextFactory.newContext(null, obj);
-                        select.setVariables(variables);
+                        selectJXPath = 
+                            jxpathContextFactory.newContext(null, obj);
+                        selectJXPath.setVariables(variables);
+                        selectJexl = new MyJexlContext(globalJexlContext);
+                        fillContext(obj, selectJexl);
                     } catch (Exception exc) {
                         throw new SAXParseException(exc.getMessage(),
                                                     ev.location,
@@ -2583,7 +2589,7 @@ public class JexlTemplate extends AbstractGenerator {
                                                     null);
                     }
                 }
-                execute(consumer, jexlContext, select, doc.next, null);
+                execute(consumer, selectJexl, selectJXPath, doc.next, null);
                 ev = startImport.endImport.next;
                 continue;
             }
