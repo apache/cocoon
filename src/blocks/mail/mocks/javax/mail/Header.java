@@ -4,15 +4,15 @@ package javax.mail;
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: MessagingException.java,v 1.2 2003/03/10 16:35:45 stefano Exp $
+ * @version CVS $Id:
  */
-public class MessagingException extends Exception {
+public class Header {
 
-	public MessagingException() {
+	public String getName() {
 		throw new NoSuchMethodError("This is a mock object");
 	}
 	
-	public MessagingException(String message, java.io.IOException ioe) {
+	public String getValue() {
 		throw new NoSuchMethodError("This is a mock object");
 	}
 }
