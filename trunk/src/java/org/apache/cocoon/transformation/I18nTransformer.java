@@ -234,7 +234,7 @@ import java.util.*;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.5 2003/05/13 07:04:16 kpiroumian Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.6 2003/05/20 14:47:13 bruno Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -618,7 +618,7 @@ public class I18nTransformer extends AbstractTransformer
      * int-currency-no-unit</code>.
      * Also used with <code>i18:translate</code> to indicate inplace
      * translations: <code>inplace</code>
-     * @deprecated since 2.1. Use nested tags instead, e.g.: 
+     * @deprecated since 2.1. Use nested tags instead, e.g.:
      * &lt;i18n:param&gt;&lt;i18n:date/&gt;&lt;/i18n:param&gt;
      */
     public static final String I18N_TYPE_ATTRIBUTE          = "type";
@@ -1046,9 +1046,12 @@ public class I18nTransformer extends AbstractTransformer
 
     private Bundle getCatalogue(String name, String location) throws Exception
     {
-        configureFactory(location);
-        return (Bundle)factory.select(name, locale);
+        synchronized (factory) {
+            configureFactory(location);
+            return (Bundle)factory.select(name, locale);
+        }
     }
+
     /**
      * Internal setup of XML resource factory.
      *
@@ -1856,7 +1859,7 @@ public class I18nTransformer extends AbstractTransformer
          int fractionDigits = -1;
          try {
              String fd = (String)params.get(I18N_FRACTION_DIGITS_ATTRIBUTE);
-             if (fd != null) 
+             if (fd != null)
                  fractionDigits = Integer.parseInt(fd);
          } catch (NumberFormatException nfe) {
              getLogger().warn("Error in number format with fraction-digits", nfe);
