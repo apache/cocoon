@@ -38,6 +38,7 @@ import org.w3c.dom.NodeList;
 import com.thoughtworks.qdox.ant.AbstractQdoxTask;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.parser.ParseException;
 
 /**
  * Generate documentation for sitemap components based on javadoc tags
@@ -154,6 +155,50 @@ public final class SitemapTask extends AbstractQdoxTask {
     public void setStable(boolean value) {
         this.stable = value;
     }
+
+    /**
+     * Determine the type of the class
+    */
+    private String classType(JavaClass clazz) {
+        if ( clazz.isA(GENERATOR) ) {
+            return "generator";
+        } else if ( clazz.isA(TRANSFORMER) ) {
+            return "transformer";
+        } else if ( clazz.isA(READER) ) {
+            return "reader";
+        } else if ( clazz.isA(SERIALIZER) ) {
+            return "serializer";
+        } else if ( clazz.isA(ACTION) ) {
+            return "action";
+        } else if ( clazz.isA(MATCHER) ) {
+            return "matcher";
+        } else if ( clazz.isA(SELECTOR) ) {
+            return "selector";
+        } else if ( clazz.isA(PIPELINE) ) {
+            return "pipe";
+        // Should qdox resolve recursively? ie: HTMLGenerator isA ServiceableGenerator isA AbstractGenerator isA Generator
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.generation") && (clazz.isA("Generator") || clazz.isA("ServiceableGenerator")) ) {
+            return "generator";
+        } else if ( clazz.isA("org.apache.cocoon.generation.ServiceableGenerator") ) {
+            return "generator";
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.transformation") && clazz.isA("Transformer") ) {
+            return "transformer";
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.reading") && clazz.isA("Reader") ) {
+            return "reader";
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.serialization") && clazz.isA("Serializer") ) {
+            return "serializer";
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.acting") && clazz.isA("Action") ) {
+            return "action";
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.matching") && clazz.isA("Matcher") ) {
+            return "matcher";
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.selection") && clazz.isA("Selector") ) {
+            return "selector";
+        } else if ( clazz.getPackage().equals("org.apache.cocoon.components.pipeline") && clazz.isA("ProcessingPipeline") ) {
+            return "pipe";
+        } else {
+            return null;
+        }            
+    }
     
     /**
      * Execute generator task.
@@ -167,7 +212,12 @@ public final class SitemapTask extends AbstractQdoxTask {
         List components = (List)cache.get(this.directory);
         if ( components == null ) {
             // this does the hard work :)
-            super.execute();
+            try {
+                super.execute();
+            }
+            catch (ParseException pe) {
+              log("ParseException: " + pe);
+            }
             components = this.collectInfo();
             cache.put(this.directory, components);
         }
@@ -221,15 +271,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             final JavaClass javaClass = (JavaClass) it.next();
 
             final DocletTag tag = javaClass.getTagByName( NAME_TAG );
-
-            if ( javaClass.isA(ACTION)
-                || javaClass.isA(GENERATOR)
-                || javaClass.isA(MATCHER)
-                || javaClass.isA(PIPELINE)
-                || javaClass.isA(READER)
-                || javaClass.isA(SELECTOR)
-                || javaClass.isA(SERIALIZER)
-                || javaClass.isA(TRANSFORMER)) {
+            if (classType(javaClass) != null) {
                 allComponentNames.add(javaClass.getFullyQualifiedName());
             }
 
@@ -427,7 +469,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
             System.out.println("==== END of implements ===");
             // END TEST CODE
-            this.type = getType(this.javaClass);
+            this.type = classType(this.javaClass);
         }
         
         /* (non-Javadoc)
@@ -705,48 +747,7 @@ public final class SitemapTask extends AbstractQdoxTask {
             row.appendChild(secondColumn);
             table.appendChild(row);
         }
-        
-        private String getType(JavaClass clazz) {
-            if ( clazz.isA(GENERATOR) ) {
-                return "generator";
-            } else if ( clazz.isA(TRANSFORMER) ) {
-                return "transformer";
-            } else if ( clazz.isA(READER) ) {
-                return "reader";
-            } else if ( clazz.isA(SERIALIZER) ) {
-                return "serializer";
-            } else if ( clazz.isA(ACTION) ) {
-                return "action";
-            } else if ( clazz.isA(MATCHER) ) {
-                return "matcher";
-            } else if ( clazz.isA(SELECTOR) ) {
-                return "selector";
-            } else if ( clazz.isA(PIPELINE) ) {
-                return "pipe";
-            // Should qdox resolve recursively? ie: HTMLGenerator isA ServiceableGenerator isA AbstractGenerator isA Generator
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.generation") && (clazz.isA("Generator") || clazz.isA("ServiceableGenerator")) ) {
-                return "generator";
-            } else if ( clazz.isA("org.apache.cocoon.generation.ServiceableGenerator") ) {
-                return "generator";
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.transformation") && clazz.isA("Transformer") ) {
-                return "transformer";
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.reading") && clazz.isA("Reader") ) {
-                return "reader";
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.serialization") && clazz.isA("Serializer") ) {
-                return "serializer";
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.acting") && clazz.isA("Action") ) {
-                return "action";
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.matching") && clazz.isA("Matcher") ) {
-                return "matcher";
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.selection") && clazz.isA("Selector") ) {
-                return "selector";
-            } else if ( clazz.getPackage().equals("org.apache.cocoon.components.pipeline") && clazz.isA("ProcessingPipeline") ) {
-                return "selector";
-            } else {
-                throw new BuildException("Sitemap component " + clazz.getFullyQualifiedName() + " does not implement a sitemap component interface.");
-            }            
-        }
-        
+
         private void setValue(Node node, String xpath, String value) {
             try {
                 final Node insertNode = (xpath == null ? node : XPathAPI.selectSingleNode(node, xpath));
