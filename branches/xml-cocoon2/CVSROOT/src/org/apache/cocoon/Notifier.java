@@ -32,7 +32,7 @@ import org.xml.sax.ContentHandler;
  *
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-09-27 16:14:50 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-09-29 01:02:51 $
  */
  
 public class Notifier {
@@ -82,8 +82,8 @@ public class Notifier {
      */
     public static void notify(Notificable n, ContentHandler ch) throws SAXException {
 
-        final String URI = Cocoon.ERROR_NAMESPACE_PREFIX;
         final String PREFIX = Cocoon.ERROR_NAMESPACE_PREFIX;
+        final String URI = Cocoon.ERROR_NAMESPACE_PREFIX;
 
         String buf;
         
@@ -138,7 +138,7 @@ public class Notifier {
         ch.endElement(URI, "notify", "notify");
 
         // End the document.
-        ch.endPrefixMapping(Cocoon.ERROR_NAMESPACE_PREFIX);
+        ch.endPrefixMapping(PREFIX);
         ch.endDocument();
     }
 }
