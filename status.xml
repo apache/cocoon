@@ -210,6 +210,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ">
+     PLACEHOLDER
+   </action>
+ </release>
+ <release version="2.1-M1" date="April 29 2003">
+ 
   <action dev="VG" type="fix" fixes-bug="10242">
     TextSerializer now can handle absence of root element in the incoming XML.
   </action>
