@@ -130,10 +130,15 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.18 2003/10/20 08:41:26 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.19 2003/10/20 13:27:17 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
+    /** Application <code>Context</code> Key for the servlet configuration 
+     *  @since 2.1.3
+     */
+    public static final String CONTEXT_SERVLET_CONFIG = "servlet-config";
+    
     // Processing time message
     protected static final String PROCESSED_BY = "Processed by "
         + Constants.COMPLETE_NAME + " in ";
@@ -504,7 +509,8 @@ public class CocoonServlet extends HttpServlet {
                                                  this.silentlyRename,
                                                  this.maxUploadSize,
                                                  this.defaultFormEncoding);
-
+        // Add the servlet configuration
+        this.appContext.put(CONTEXT_SERVLET_CONFIG, conf);
         this.createCocoon();
     }
 
