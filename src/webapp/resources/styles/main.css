@@ -6,9 +6,9 @@ h2 { color: #336699; }
 h3 { color: #336699; }
 h4 { color: #336699; }
 
-a:link { font-weight: bold; color: #336699; }
-a:visited { color: #336699; }
-a:hover { color: #800000; background-color: #ffff80; }
+a:link { color: #336699; }
+a:visited { color: #800080; }
+a:hover { color: #800080; background-color: #ffff80; }
 a:active { color: #006666; }
 
 img { border: 0; }
