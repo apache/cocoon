@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.118 2003/11/02 17:05:27 antonio Exp $
+    | CVS $Id: jars.xml,v 1.119 2003/11/04 04:46:36 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -834,7 +834,7 @@
       The BeanUtils component provides easy-to-use wrappers around these capabilities.
     </description>
     <used-by>BetwixtTransformer</used-by>
-    <lib>scratchpad/lib/commons-beanutils-1.5.jar</lib>
+    <lib>scratchpad/lib/commons-beanutils-1.6.1.jar</lib>
     <homepage>http://jakarta.apache.org/commons/beanutils/</homepage>
   </file>
 
