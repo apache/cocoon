@@ -65,7 +65,7 @@
     <div class="woody-help" id="help{generate-id()}" style="visibility:hidden; position:absolute;">
       <xsl:apply-templates select="node()"/>
     </div>
-    <script language="JavaScript">
+    <script language="JavaScript" type="text/javascript">
       var helpWin<xsl:value-of select="generate-id()"/> = woody_createPopupWindow('help<xsl:value-of select="generate-id()"/>');
     </script>
     <a id="{generate-id()}" href="#" onclick="helpWin{generate-id()}.showPopup('{generate-id()}');return false;"><img border="0" src="resources/help.gif"/></a>
@@ -106,7 +106,7 @@
               <td>
                 <input type="radio" id="{generate-id()}" name="{$id}" value="{@value}">
                   <xsl:if test="@value = $value">
-                    <xsl:attribute name="checked">true</xsl:attribute>
+                    <xsl:attribute name="checked">checked</xsl:attribute>
                   </xsl:if>
                   <xsl:if test="wi:styling/@submit-on-change='true'">
                     <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
@@ -131,7 +131,7 @@
           <xsl:for-each select="wi:selection-list/wi:item">
             <input type="radio" id="{generate-id()}" name="{$id}" value="{@value}">
               <xsl:if test="@value = $value">
-                <xsl:attribute name="checked">true</xsl:attribute>
+                <xsl:attribute name="checked">checked</xsl:attribute>
               </xsl:if>
               <xsl:if test="wi:styling/@submit-on-change='true'">
                 <xsl:attribute name="onchange">woody_submitForm(this)</xsl:attribute>
@@ -240,7 +240,7 @@
       </xsl:if>
       <xsl:copy-of select="@*[not(name() = 'submit-on-change')]"/>
       <xsl:if test="wi:value/text() = 'true'">
-        <xsl:attribute name="checked">true</xsl:attribute>
+        <xsl:attribute name="checked">checked</xsl:attribute>
       </xsl:if>
     </input>
     <xsl:apply-templates select="." mode="common"/>
@@ -296,7 +296,7 @@
         <xsl:variable name="value" select="@value"/>
         <input id="{generate-id()}" type="checkbox" value="{@value}" name="{$id}">
           <xsl:if test="$values[. = $value]">
-            <xsl:attribute name="checked">true</xsl:attribute>
+            <xsl:attribute name="checked">checked</xsl:attribute>
           </xsl:if>
         </input>
         <label for="{generate-id()}"><xsl:copy-of select="wi:label/node()"/></label>
