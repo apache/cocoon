@@ -43,6 +43,14 @@
   </xsl:template>
 
   <!--+
+      | Add wi:help to the common stuff.
+      +-->
+  <xsl:template match="wi:*" mode="common">
+    <xsl:apply-imports/>
+    <xsl:apply-templates select="wi:help"/>
+  </xsl:template>
+
+  <!--+
       | 
       +-->
   <xsl:template match="wi:help">
