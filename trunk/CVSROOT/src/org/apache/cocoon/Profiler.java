@@ -1,4 +1,4 @@
-/*-- $Id: Profiler.java,v 1.1 2000-09-16 16:04:30 greenrd Exp $ --
+/*-- $Id: Profiler.java,v 1.2 2000-12-09 01:11:30 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,6 +53,7 @@ package org.apache.cocoon;
 
 import org.apache.cocoon.framework.Actor;
 import org.apache.cocoon.framework.Director;
+import org.apache.cocoon.framework.Status;
 import org.apache.cocoon.logger.Logger;
 import org.apache.tools.DOMWriter;
 import org.w3c.dom.Document;
@@ -71,9 +72,9 @@ import javax.servlet.http.HttpServletRequest;
  * end of each process. Use getProfileTable to get the results as a DOM.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.1 $ $Date: 2000-09-16 16:04:30 $
+ * @version $Revision: 1.2 $ $Date: 2000-12-09 01:11:30 $
  */
-public class Profiler implements Actor {
+public class Profiler implements Actor, Status {
 
   public static final DateFormat DATE_FORMAT =
     DateFormat.getDateTimeInstance ();
@@ -206,5 +207,9 @@ public class Profiler implements Actor {
       return time;
     }
 
+  }
+
+  public String getStatus () {
+    return "Cocoon Performance Profiler";
   }
 }
