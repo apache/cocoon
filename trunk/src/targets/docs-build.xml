@@ -24,6 +24,11 @@
         <exclude name="images/**"/>
       </fileset>
     </copy>
+
+    <!-- Add some other documents -->
+    <copy file="status.xml"
+      tofile="${build.context}/xdocs/status.xml" filtering="on"/>
+
     <!-- Forrest needs its own file at src/documentation/sitemap.xmap, so we
     overwrite it with the old Cocoon-specific sitemap here -->
     <move file="${build.context}/sitemap-localdocs.xmap"
@@ -47,7 +52,7 @@
   <!-- Set a variable if the generated docs are already up-to-date. -->
   <target name="docs_check" depends="prepare-docs">
     <uptodate property="docs.notrequired" targetfile="${build.docs}/index.html" >
-      <srcfiles dir="." includes="changes.xml,todo.xml"/>
+      <srcfiles dir="." includes="status.xml"/>
       <srcfiles dir="${build}" includes="jars.xml"/>
       <srcfiles dir="${documentation}/xdocs" includes="**/*.xml"/>
     </uptodate>
@@ -58,7 +63,7 @@
     <echo message="-------------------------------------------------------------"/>
     <echo message="Not rebuilding docs, as they are up-to-date:"/>
     <echo message="  ${build.docs}/index.html is more recent than"/>
-    <echo message="  todo.xml, changes.xml, ${documentation}/xdocs/*.xml"/>
+    <echo message="  status.xml, ${documentation}/xdocs/*.xml"/>
     <echo message="-------------------------------------------------------------"/>
   </target>
 
@@ -110,7 +115,7 @@
   <!-- Set a variable if the generated printer docs are already up-to-date. -->
   <target name="printer-docs_check" depends="prepare">
     <uptodate property="printer-docs.notrequired" targetfile="${build.docs.printer}/index.html" >
-      <srcfiles dir="." includes="changes.xml,todo.xml"/>
+      <srcfiles dir="." includes="status.xml"/>
       <srcfiles dir="${docs}" includes="**/*.xml"/>
     </uptodate>
   </target>
@@ -120,7 +125,7 @@
     <echo message="-------------------------------------------------------------"/>
     <echo message="Not rebuilding printer docs, as they are up-to-date:"/>
     <echo message="  ${build.docs.printer}/index.html is more recent than"/>
-    <echo message="  todo.xml, changes.xml, ${docs}/*.xml"/>
+    <echo message="  status.xml, ${docs}/*.xml"/>
     <echo message="-------------------------------------------------------------"/>
   </target>
 
