@@ -76,13 +76,12 @@ import java.util.Map;
  * Warning! This classes is an experimental one.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: AbstractControllerAction.java,v 1.2 2003/05/15 10:35:14 bruno Exp $
+ * @version CVS $Id: AbstractControllerAction.java,v 1.3 2003/08/07 17:24:34 joerg Exp $
  */
 public abstract class AbstractControllerAction
   extends AbstractComplementaryConfigurableAction implements ThreadSafe {
 
     private static final String ACTION_METHOD_PREFIX = "do";
-    private static final String ACTION_METHOD_PARAMETER = "method";
 
     private HashMap methodIndex;
 
@@ -203,28 +202,6 @@ public abstract class AbstractControllerAction
             redirector.redirect(true, base+newpath);
             return null;
         }
-    }
-
-    /**
-     * Returns the entry for a given page.
-     */
-    private int getActionEntry(Configuration config, String path) {
-
-        Configuration[] actions = config.getChild("action-mappings").getChildren("action");
-
-        int entry = -1;
-
-        for (int i = 0; i<actions.length; i++)
-            if ((entry<0) &&
-                (actions[i].getAttribute("path", null).equals(path))) {
-                entry = i;
-            }
-
-        if (entry<0) {
-            throw new RuntimeException("Could not find entry for '"+path+"'");
-        }
-
-        return entry;
     }
 
     /**
