@@ -84,7 +84,7 @@ import java.util.Map;
  * of fallback elements (with loop inclusion detection).
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a> (wrote the original version)
- * @version CVS $Id: XIncludeTransformer.java,v 1.12 2004/02/07 15:20:09 joerg Exp $
+ * @version CVS $Id: XIncludeTransformer.java,v 1.13 2004/02/08 11:30:38 bruno Exp $
  */
 public class XIncludeTransformer extends AbstractTransformer implements Serviceable {
     protected SourceResolver resolver;
@@ -179,32 +179,32 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
         }
 
         public void startElement(String uri, String name, String raw, Attributes attr) throws SAXException {
+            if (xIncludeLevel == 1 && useFallback && name.equals(XINCLUDE_FALLBACK_ELEMENT) && uri.equals(XINCLUDE_NAMESPACE_URI)) {
+                fallbackLevel++;
+
+                // don't need these anymore
+                useFallback = false;
+                fallBackException = null;
+
+                return;
+            } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
+                xIncludeLevel++;
+                return;
+            }
+
+            xmlBaseSupport.startElement(uri, name, raw, attr);
             if (uri.equals(XINCLUDE_NAMESPACE_URI)) {
-                if (xIncludeLevel == 1 && useFallback && name.equals(XINCLUDE_FALLBACK_ELEMENT)) {
-                    fallbackLevel++;
-    
-                    // don't need these anymore
-                    useFallback = false;
-                    fallBackException = null;
-    
-                    return;
-                } else if (xIncludeLevel > 0 && fallbackLevel < 1) {
-                    xIncludeLevel++;
-                    return;
-                }
-    
-                xmlBaseSupport.startElement(uri, name, raw, attr);
                 if (XINCLUDE_INCLUDE_ELEMENT.equals(name)) {
                     String href = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_HREF_ATTRIBUTE);
                     if (href == null) {
                         throw new SAXException(raw + " must have a 'href' attribute at " + getLocation());
                     }
-                    
+
                     String parse = attr.getValue("",XINCLUDE_INCLUDE_ELEMENT_PARSE_ATTRIBUTE);
-    
+
                     if (null == parse) parse="xml";
                     xIncludeLevel++;
-    
+
                     try {
                         processXIncludeElement(href, parse);
                     } catch (ProcessingException e) {
@@ -216,11 +216,10 @@ public class XIncludeTransformer extends AbstractTransformer implements Servicea
                     }
                     return;
                 }
-                
+
                 throw new SAXException("Unknown XInclude element " + raw + " at " + getLocation());
-                
+
             } else {
-                xmlBaseSupport.startElement(uri, name, raw, attr);
                 super.startElement(uri,name,raw,attr);
             }
         }
