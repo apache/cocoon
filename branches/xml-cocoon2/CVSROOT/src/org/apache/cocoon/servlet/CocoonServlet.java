@@ -65,7 +65,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.84 $ $Date: 2001-04-20 13:05:07 $
+ * @version CVS $Revision: 1.1.4.85 $ $Date: 2001-04-20 17:32:16 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -105,6 +105,14 @@ public class CocoonServlet extends HttpServlet {
     throws ServletException {
 
         super.init(conf);
+
+        /* HACK for reducing class loader problems.                                     */
+        /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
+        try {
+            if(Thread.currentThread().getContextClassLoader() != this.getClass().getClassLoader())
+                Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        } catch (Exception e){}
+
         ClassLoader classloader = buildInitClassLoader();
         this.servletContext = conf.getServletContext();
 
