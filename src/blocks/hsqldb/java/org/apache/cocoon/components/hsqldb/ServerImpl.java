@@ -164,10 +164,11 @@ public class ServerImpl extends AbstractLogEnabled
     /** Stop the server */
     public void stop() {
         if (started) {
+            Statement statement = null;
             try {
                 getLogger().debug("Shutting down HSQLDB");
                 Connection connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost:" + this.port, "sa", "");
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
                 statement.executeQuery("SHUTDOWN");
                 try {
                     connection.close();
@@ -178,6 +179,14 @@ public class ServerImpl extends AbstractLogEnabled
                 }
             } catch (Exception e){
                 getLogger().error("Error while shutting down HSQLDB", e);
+            } finally {
+                try {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                } catch(SQLException sqle) {
+                    getLogger().error("Error while shutting down HSQLDB", sqle);
+                }
             }
             getLogger().debug("Shutting down HSQLDB: Done");
         }
