@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.123 2004/03/10 14:39:52 stephan Exp $
+    | CVS $Id: gump.xml,v 1.124 2004/03/11 00:12:11 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -764,7 +764,7 @@
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
 
-  <project name="cocoon-block-woody" status="unstable">
+  <project name="cocoon-block-woody" status="deprecated">
     <package>org.apache.cocoon</package>
 
     <ant target="gump-block">
