@@ -55,7 +55,7 @@ import javax.servlet.http.HttpServlet;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.3 2004/03/05 13:02:02 bdelacretaz Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.4 2004/06/18 15:27:36 sylvain Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -187,9 +187,14 @@ public class ParanoidCocoonServlet extends HttpServlet {
     throws ServletException {
         final List urlList = new ArrayList();
 
-        log("Adding classpath from " + externalClasspath);
+        File file = new File(externalClasspath);
+        if (!file.isAbsolute()) {
+            file = new File(contextDir,externalClasspath);
+        }
+
+        log("Adding classpath from " + file);
         try {
-            FileReader fileReader = new FileReader(externalClasspath);
+            FileReader fileReader = new FileReader(file);
             LineNumberReader lineReader = new LineNumberReader(fileReader);
         
             String line;
