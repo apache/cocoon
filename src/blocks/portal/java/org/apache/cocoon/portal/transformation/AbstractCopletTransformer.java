@@ -83,21 +83,6 @@ extends AbstractSAXTransformer {
             try {
                 this._portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
                 
-                if ( this._portalService.getPortalName() == null ) {
-                    // set portal name
-                    String portalName = this.parameters.getParameter(PORTAL_NAME_PARAM, 
-                                                                    (String)this.objectModel.get(Constants.PORTAL_NAME_KEY));
-                    if ( portalName == null ) {
-                        final Map context = (Map)this.objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
-                        if ( context != null ) {
-                            portalName = (String) context.get(Constants.PORTAL_NAME_KEY);
-                        }
-                    }
-                    if ( portalName == null ) {
-                        throw new SAXException("portalName must be passed as parameter or in the object model.");
-                    }
-                    this._portalService.setPortalName(portalName);
-                }
             } catch (ServiceException se) {
                 throw new SAXException("Unable to get portal service.", se);
             }

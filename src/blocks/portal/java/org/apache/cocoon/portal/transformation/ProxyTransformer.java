@@ -601,11 +601,9 @@ public class ProxyTransformer
                                                      String copletID,
                                                      String portalName)
     throws ProcessingException {
-        // set portal name
         PortalService portalService = null;
         try {
             portalService = (PortalService) manager.lookup(PortalService.ROLE);
-            portalService.setPortalName(portalName);
                 
             ProfileManager profileManager = portalService.getComponentManager().getProfileManager();
             CopletInstanceData data = profileManager.getCopletInstanceData(copletID);
@@ -646,7 +644,6 @@ public class ProxyTransformer
                 try {
                     copletId = parameters.getParameter(COPLET_ID_PARAM);
 
-                    portalService.setPortalName(parameters.getParameter(PORTAL_NAME_PARAM));
                 } catch (ParameterException e) {
                     throw new ProcessingException("copletId and portalName must be passed as parameter or in the object model within the parent context.");
                 }

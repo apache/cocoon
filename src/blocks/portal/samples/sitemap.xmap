@@ -59,6 +59,7 @@
       <map:action src="org.apache.cocoon.portal.acting.BookmarkAction" name="portal-bookmark">
         <parameter name="src" value="resources/bookmarks.xml"/>
       </map:action>
+    <map:action src="org.apache.cocoon.portal.acting.PreparePortalAction" name="portal-prepare"/>
     </map:actions>
   </map:components>
 
@@ -107,10 +108,21 @@
 
       <!-- select skin to use -->
       <map:global-variables>
-        <skin>skins/common/</skin>
+		<skin>basic</skin>
       </map:global-variables>
+
     </map:component-configurations>
 
+  <map:pipeline>
+    <!-- This action sets the portal name for the current request and
+         initializes the portal service. So this should be the first
+         taks in every request!
+    -->
+    <map:act type="portal-prepare">
+      <map:parameter name="portal-name" value="portal"/>
+    </map:act>
+  </map:pipeline>
+  
     <!-- The internal pipelines for loading and saving -->
     <map:pipeline internal-only="true">
       <map:match pattern="sunrise-authuser">
@@ -152,15 +164,15 @@
         <map:read type="portal-proxy"/>
       </map:match>
       <map:match pattern="images/*.gif">
-        <map:read mime-type="image/gif" src="{global:skin}images/{1}.gif"/>
+        <map:read mime-type="image/gif" src="{portal-skin:skin.basepath}/images/{1}.gif"/>
       </map:match>
       <map:match pattern="images/*.jpg">
-        <map:read mime-type="image/jpg" src="{global:skin}images/{1}.jpg"/>
+        <map:read mime-type="image/jpg" src="{portal-skin:skin.basepath}/images/{1}.jpg"/>
       </map:match>
 
       <!-- Cascading Stylesheets -->
       <map:match pattern="css/*.css">
-        <map:read mime-type="text/css" src="{global:skin}css/{1}.css"/>
+        <map:read mime-type="text/css" src="{portal-skin:skin.basepath}/css/{1}.css"/>
       </map:match>
 
       <map:match pattern="">
@@ -196,10 +208,8 @@
           <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 
-          <map:generate type="portal" label="content">
-            <map:parameter name="portal-name" value="portal" />
-          </map:generate>
-          <map:transform src="{global:skin}styles/portal-page.xsl">
+          <map:generate type="portal" label="content"/>
+          <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
             <map:parameter name="user" value="{ID}"/>
           </map:transform>
           <map:transform type="cinclude"/>
@@ -221,8 +231,6 @@
           <map:parameter name="application" value="portal"/>
 
           <map:act type="portal-bookmark">
-            <map:parameter name="portal-name" value="portal" />
-
             <map:redirect-to uri="portal?{uri}"/>
           </map:act>
         </map:act>
@@ -233,9 +241,7 @@
           <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 
-          <map:generate type="portal" label="content">
-            <map:parameter name="portal-name" value="portal" />
-          </map:generate>
+            <map:generate type="portal" label="content"/>
           <map:serialize type="xml"/>
         </map:act>
       </map:match>
@@ -275,21 +281,19 @@
           <map:parameter name="parameter_password" value="{request-param:password}"/>
 
           <!-- Authentication succeeded -->
-          <map:act type="portal-login">
-            <map:parameter name="portal-name" value="portal"/>
-          </map:act>
+            <map:act type="portal-login"/>
 
           <map:redirect-to uri="{request-param:resource}"/>
+
         </map:act>
         <!-- Authentication failed -->
         <map:generate src="resources/login-error.xml"/>
-        <map:transform src="{global:skin}styles/portal-page.xsl">
+        <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
           <map:parameter name="user" value="anonymous"/>
         </map:transform>
         <map:transform type="encodeURL"/>
         <map:serialize/>
       </map:match>
-
 
       <map:match pattern="loggedin">
         <map:act type="auth-protect">
@@ -297,7 +301,7 @@
           <map:parameter name="application" value="portal"/>
 
           <map:generate src="resources/logged-in.xml"/>
-          <map:transform src="{global:skin}styles/portal-page.xsl"/>
+          <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl"/>
           <map:transform type="encodeURL"/>
           <map:serialize/>
         </map:act>
@@ -309,13 +313,9 @@
           <map:parameter name="handler" value="portal-handler"/>
           <map:parameter name="application" value="portal"/>
 <!--
-          <map:act type="portal-save-profile">
-          <map:parameter name="portal-name" value="portal"/>
-          </map:act>
+            <map:act type="portal-save-profile"/>
 -->
-          <map:act type="portal-logout">
-            <map:parameter name="portal-name" value="portal"/>
-          </map:act>
+            <map:act type="portal-logout"/>
           <map:act type="auth-logout"/>
         </map:act>
         <!-- TODO logout page -->

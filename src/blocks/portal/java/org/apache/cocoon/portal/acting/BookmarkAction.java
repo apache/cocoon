@@ -172,7 +172,6 @@ implements ThreadSafe, Parameterizable {
         PortalService service = null;
         try {
             service = (PortalService)this.manager.lookup(PortalService.ROLE);
-            service.setPortalName(par.getParameter("portal-name"));
 
             PortalManager portalManager = null;
             try {
@@ -220,8 +219,6 @@ implements ThreadSafe, Parameterizable {
             result = new HashMap();
             result.put("uri", uri.substring(uri.indexOf('?')+1));
 
-        } catch (ParameterException pe) {
-            throw new ProcessingException("Parameter portal-name is required.");
         } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
