@@ -32,7 +32,7 @@ function form1(form) {
     model.drinks = ["Jupiler", "Coca Cola"];
 
     form.locale = locale;
-    form.showForm("form1-display-pipeline");
+    form.showForm("form1-display-pipeline.jx");
     print("submitId = " + form.submitId);
     if (form.isValid) {
       print("visa=" + model.visa);  
