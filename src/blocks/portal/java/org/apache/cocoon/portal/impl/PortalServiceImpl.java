@@ -67,6 +67,7 @@ import org.apache.cocoon.components.RequestLifecycleComponent;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.SAXException;
@@ -77,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.1 2003/05/07 06:22:26 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.2 2003/05/08 11:54:00 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
@@ -105,6 +106,13 @@ public class PortalServiceImpl
 
     public void setup(SourceResolver resolver, Map objectModel) throws ProcessingException, SAXException, IOException {
         this.objectModel = objectModel;
+
+		Map context = (Map)objectModel.get(ObjectModelHelper.PARENT_CONTEXT);
+		if (context != null) {
+			String portalName = (String)context.get(Constants.PORTAL_NAME_KEY);
+			if (portalName != null)
+				this.setPortalName(portalName);
+		}
     }
 
     public String getPortalName() {
