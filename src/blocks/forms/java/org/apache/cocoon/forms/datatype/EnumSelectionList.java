@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * <p>If you don't want an initial null value, add a nullable="false"
  * attribute to the wd:selection-list element.
  * 
- * @version CVS $Id: EnumSelectionList.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version CVS $Id: EnumSelectionList.java,v 1.3 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class EnumSelectionList implements SelectionList {
     public static final String I18N_NS = "http://apache.org/cocoon/i18n/2.1";
@@ -86,14 +86,14 @@ public class EnumSelectionList implements SelectionList {
         Locale locale)
         throws SAXException {
         try {
-            contentHandler.startElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
             Field fields[] = clazz.getDeclaredFields();
             // Create void element
             if (nullable) {
                 AttributesImpl voidAttrs = new AttributesImpl();
                 voidAttrs.addCDATAAttribute("value", "");
-                contentHandler.startElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL, voidAttrs);
-                contentHandler.endElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL);
+                contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, voidAttrs);
+                contentHandler.endElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL);
             }            
             for (int i = 0 ; i < fields.length ; ++i) {
                 int mods = fields[i].getModifiers();
@@ -103,18 +103,18 @@ public class EnumSelectionList implements SelectionList {
                     // Output this item
                     AttributesImpl itemAttrs = new AttributesImpl();
                     itemAttrs.addCDATAAttribute("value", stringValue);
-                    contentHandler.startElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL, itemAttrs);
-                    contentHandler.startElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+                    contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
+                    contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
                     // TODO: make i18n element optional
                     contentHandler.startElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL, Constants.EMPTY_ATTRS);
                     contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
                     contentHandler.endElement(I18N_NS, TEXT_EL, I18N_PREFIX_COLON + TEXT_EL);
-                    contentHandler.endElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL);
-                    contentHandler.endElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL);
+                    contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
+                    contentHandler.endElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL);
                 }
             }
             // End the selection-list
-            contentHandler.endElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL);
         } catch (Exception e) {
             throw new SAXException("Got exception trying to get enum's values", e);
         }

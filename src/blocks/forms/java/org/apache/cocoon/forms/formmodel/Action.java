@@ -35,7 +35,7 @@ import java.util.Locale;
  * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
  * value a non-empty value.
  * 
- * @version $Id: Action.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id: Action.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class Action extends AbstractWidget {
     protected ActionDefinition definition;
@@ -103,10 +103,10 @@ public class Action extends AbstractWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl buttonAttrs = new AttributesImpl();
         buttonAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.FI_NS, ACTION_EL, Constants.FI_PREFIX_COLON + ACTION_EL, buttonAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, ACTION_EL, Constants.INSTANCE_PREFIX_COLON + ACTION_EL, buttonAttrs);
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
-        contentHandler.endElement(Constants.FI_NS, ACTION_EL, Constants.FI_PREFIX_COLON + ACTION_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, ACTION_EL, Constants.INSTANCE_PREFIX_COLON + ACTION_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {

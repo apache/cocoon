@@ -41,7 +41,7 @@ import org.xml.sax.InputSource;
 /**
  * Component implementing the {@link FormManager} role.
  * 
- * @version $Id: DefaultFormManager.java,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+ * @version $Id: DefaultFormManager.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class DefaultFormManager 
   extends AbstractLogEnabled 
@@ -113,7 +113,7 @@ public class DefaultFormManager
             Element formElement = formDocument.getDocumentElement();
 
             // check that the root element is a wd:form element
-            if (!(formElement.getLocalName().equals("form") || Constants.FD_NS.equals(formElement.getNamespaceURI())))
+            if (!(formElement.getLocalName().equals("form") || Constants.DEFINITION_NS.equals(formElement.getNamespaceURI())))
                 throw new Exception("Expected a Woody form element at " + DomHelper.getLocation(formElement));
 
             FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");

@@ -37,7 +37,7 @@ import java.util.Locale;
  * &lt;/wb:value&gt;
  * </code></pre>
  *
- * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: ValueJXPathBindingBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class ValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
@@ -58,7 +58,7 @@ public class ValueJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
             Convertor convertor = null;
             Locale convertorLocale = Locale.US;
-            Element convertorEl = DomHelper.getChildElement(bindingElm, Constants.FD_NS, "convertor");
+            Element convertorEl = DomHelper.getChildElement(bindingElm, Constants.DEFINITION_NS, "convertor");
             if (convertorEl != null) {
                 String datatype = DomHelper.getAttribute(convertorEl, "datatype");
                 String localeStr = convertorEl.getAttribute("datatype");

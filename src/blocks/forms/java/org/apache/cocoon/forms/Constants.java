@@ -19,9 +19,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * Various constants used in the Woody form framework.
+ * Various constants used in the form framework.
  * 
- * @version $Id: Constants.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id: Constants.java,v 1.3 2004/03/09 13:08:46 cziegeler Exp $
  */
 public final class Constants {
 // TODO : see this later
@@ -35,22 +35,22 @@ public final class Constants {
 //        }
 //    };
     
-    /** Namespace for Woody Template elements */
-    public static final String FT_NS = "http://apache.org/cocoon/forms/1.0#template";
-    public static final String FT_PREFIX = "ft";
-    public static final String FT_PREFIX_COLON = "ft:";
+    /** Namespace for Template elements */
+    public static final String TEMPLATE_NS = "http://apache.org/cocoon/forms/1.0#template";
+    public static final String TEMPLATE_PREFIX = "ft";
+    public static final String TEMPLATE_PREFIX_COLON = "ft:";
 
-    /** Namespace for Woody Instance elements */
-    public static final String FI_NS = "http://apache.org/cocoon/forms/1.0#instance";
-    public static final String FI_PREFIX = "fi";
-    public static final String FI_PREFIX_COLON = "fi:";
+    /** Namespace for Instance elements */
+    public static final String INSTANCE_NS = "http://apache.org/cocoon/forms/1.0#instance";
+    public static final String INSTANCE_PREFIX = "fi";
+    public static final String INSTANCE_PREFIX_COLON = "fi:";
 
-    /** Namespace for Woody Definition elements */
-    public static final String FD_NS = "http://apache.org/cocoon/forms/1.0#definition";
-    public static final String FD_PREFIX = "fd";
-    public static final String FD_PREFIX_COLON = "fd:";
+    /** Namespace for Definition elements */
+    public static final String DEFINITION_NS = "http://apache.org/cocoon/forms/1.0#definition";
+    public static final String DEFINITION_PREFIX = "fd";
+    public static final String DEFINITION_PREFIX_COLON = "fd:";
 
-    /** I18n catalogue containing the built-in Woody messages. */
+    /** I18n catalogue containing the built-in messages. */
     public static final String I18N_CATALOGUE = "forms";
 
     public static final Attributes EMPTY_ATTRS = new AttributesImpl();

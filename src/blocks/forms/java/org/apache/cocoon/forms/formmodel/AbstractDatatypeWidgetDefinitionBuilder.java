@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 /**
  * Abstract base class for WidgetDefinitionBuilders that build widgets that have datatypes/selection lists.
  * 
- * @version $Id: AbstractDatatypeWidgetDefinitionBuilder.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: AbstractDatatypeWidgetDefinitionBuilder.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
     
@@ -37,7 +37,7 @@ public abstract class AbstractDatatypeWidgetDefinitionBuilder extends AbstractWi
         // when definition are managed like components.
         widget.service(this.serviceManager);
 
-        Element selectionListElement = DomHelper.getChildElement(widgetElement, Constants.FD_NS, "selection-list");
+        Element selectionListElement = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "selection-list");
         if (selectionListElement != null) {
             // Get an appropriate list builder
             ServiceSelector builderSelector = (ServiceSelector)this.serviceManager.lookup(SelectionListBuilder.ROLE + "Selector");

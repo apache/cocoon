@@ -26,7 +26,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: EmptySelectionList.java,v 1.1 2004/03/09 10:34:01 reinhard Exp $
+ * @version CVS $Id: EmptySelectionList.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class EmptySelectionList implements SelectionList {
     private String text;
@@ -49,15 +49,15 @@ public class EmptySelectionList implements SelectionList {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // Start wi:selection list
-        contentHandler.startElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
 
         // Start wi:item
         AttributesImpl itemAttrs = new AttributesImpl();
         itemAttrs.addCDATAAttribute("value", "");
-        contentHandler.startElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL, itemAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
 
         // Start wi:label
-        contentHandler.startElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
         if (this.text != null) {
 
             if (i18n) {
@@ -74,12 +74,12 @@ public class EmptySelectionList implements SelectionList {
         }
         
         // End wi:label
-        contentHandler.endElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
         
         // End wi:item
-        contentHandler.endElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL);
         
         // End wi:selection-list
-        contentHandler.endElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL);
     }
 }

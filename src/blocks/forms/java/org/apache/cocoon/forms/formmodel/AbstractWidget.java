@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: AbstractWidget.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public abstract class AbstractWidget implements Widget {
     private String location;
@@ -189,8 +189,8 @@ public abstract class AbstractWidget implements Widget {
     throws SAXException {
         AttributesImpl attrs = new AttributesImpl();
         attrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.FI_NS, element, Constants.FI_PREFIX_COLON + element, attrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element, attrs);
         generateItemSaxFragment(contentHandler, locale);
-        contentHandler.endElement(Constants.FI_NS, element, Constants.FI_PREFIX_COLON + element);
+        contentHandler.endElement(Constants.INSTANCE_NS, element, Constants.INSTANCE_PREFIX_COLON + element);
     }
 }

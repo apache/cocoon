@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version CVS $Id: Form.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -305,18 +305,18 @@ public class Form extends AbstractContainerWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl formAttrs = new AttributesImpl();
         formAttrs.addCDATAAttribute("id", definition.getId());
-        contentHandler.startElement(Constants.FI_NS, FORM_EL, Constants.FI_PREFIX_COLON + FORM_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, FORM_EL, Constants.INSTANCE_PREFIX_COLON + FORM_EL, Constants.EMPTY_ATTRS);
         definition.generateLabel(contentHandler);
 
-        contentHandler.startElement(Constants.FI_NS, CHILDREN_EL, Constants.FI_PREFIX_COLON + CHILDREN_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, CHILDREN_EL, Constants.INSTANCE_PREFIX_COLON + CHILDREN_EL, Constants.EMPTY_ATTRS);
         Iterator widgetIt = widgets.iterator();
         while (widgetIt.hasNext()) {
             Widget widget = (Widget)widgetIt.next();
             widget.generateSaxFragment(contentHandler, locale);
         }
-        contentHandler.endElement(Constants.FI_NS, CHILDREN_EL, Constants.FI_PREFIX_COLON + CHILDREN_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, CHILDREN_EL, Constants.INSTANCE_PREFIX_COLON + CHILDREN_EL);
 
-        contentHandler.endElement(Constants.FI_NS, FORM_EL, Constants.FI_PREFIX_COLON + FORM_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, FORM_EL, Constants.INSTANCE_PREFIX_COLON + FORM_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {

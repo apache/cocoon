@@ -35,7 +35,7 @@ import java.util.Locale;
  * cached as part of this object. In contrast, the {@link DynamicSelectionList}
  * will retrieve its content from its source each time it's needed.
  * 
- * @version $Id: StaticSelectionList.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version $Id: StaticSelectionList.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class StaticSelectionList implements SelectionList {
     /** The datatype to which this selection list belongs */
@@ -52,13 +52,13 @@ public class StaticSelectionList implements SelectionList {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         Convertor.FormatCache formatCache = new DefaultFormatCache();
-        contentHandler.startElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
         Iterator itemIt = items.iterator();
         while (itemIt.hasNext()) {
             SelectionListItem item = (SelectionListItem)itemIt.next();
             item.generateSaxFragment(contentHandler, locale, formatCache);
         }
-        contentHandler.endElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL);
     }
 
     public List getItems() {
@@ -99,15 +99,15 @@ public class StaticSelectionList implements SelectionList {
                 stringValue = datatype.getConvertor().convertToString(value, locale, formatCache);
             }
             itemAttrs.addCDATAAttribute("value", stringValue);
-            contentHandler.startElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL, itemAttrs);
-            contentHandler.startElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
+            contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
             if (label != null) {
                 label.toSAX(contentHandler);
             } else {
                 contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             }
-            contentHandler.endElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL);
-            contentHandler.endElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL);
         }
     }
 }

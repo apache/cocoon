@@ -40,7 +40,7 @@ import java.util.Locale;
  * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.1 2004/03/09 10:34:01 reinhard Exp $
+ * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
     
@@ -77,14 +77,14 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
         NodeList children = selectionListElement.getChildNodes();
         for (int i = 0; children.item(i) != null; i++) {
             Node node = children.item(i);
-            if (convertor == null && node instanceof Element && Constants.FD_NS.equals(node.getNamespaceURI()) && "convertor".equals(node.getLocalName())) {
+            if (convertor == null && node instanceof Element && Constants.DEFINITION_NS.equals(node.getNamespaceURI()) && "convertor".equals(node.getLocalName())) {
                 Element convertorConfigElement = (Element)node;
                 try {
                     convertor = datatype.getBuilder().buildConvertor(convertorConfigElement);
                 } catch (Exception e) {
                     throw new SAXException("Error building convertor from convertor configuration embedded in selection list XML.", e);
                 }
-            } else if (node instanceof Element && Constants.FD_NS.equals(node.getNamespaceURI()) && "item".equals(node.getLocalName())) {
+            } else if (node instanceof Element && Constants.DEFINITION_NS.equals(node.getNamespaceURI()) && "item".equals(node.getLocalName())) {
                 if (convertor == null) {
                     convertor = datatype.getConvertor();
                 }
@@ -104,7 +104,7 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
                 }
 
                 XMLizable label = null;
-                Element labelEl = DomHelper.getChildElement(element, Constants.FD_NS, "label");
+                Element labelEl = DomHelper.getChildElement(element, Constants.DEFINITION_NS, "label");
                 if (labelEl != null) {
                     label = DomHelper.compileElementContent(labelEl);
                 }
@@ -125,7 +125,7 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
             inputSource.setSystemId(source.getURI());
             Document document = DomHelper.parse(inputSource);
             Element selectionListElement = document.getDocumentElement();
-            if (!Constants.FD_NS.equals(selectionListElement.getNamespaceURI()) || !"selection-list".equals(selectionListElement.getLocalName()))
+            if (!Constants.DEFINITION_NS.equals(selectionListElement.getNamespaceURI()) || !"selection-list".equals(selectionListElement.getLocalName()))
                 throw new Exception("Excepted a wd:selection-list element at " + DomHelper.getLocation(selectionListElement));
             return selectionListElement;
         } finally {

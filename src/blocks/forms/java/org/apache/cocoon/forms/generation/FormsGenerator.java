@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * <li> Or else at its default-location in the flow context-object.</li>
  * </ol>
  * 
- * @version $Id: FormsGenerator.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id: FormsGenerator.java,v 1.3 2004/03/09 13:08:47 cziegeler Exp $
  */
 public class FormsGenerator extends AbstractGenerator {
     
@@ -64,15 +64,15 @@ public class FormsGenerator extends AbstractGenerator {
 
     public void generate() throws IOException, SAXException, ProcessingException {
         contentHandler.startDocument();
-        contentHandler.startPrefixMapping(Constants.FI_PREFIX, Constants.FI_NS);
+        contentHandler.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
         Attributes formAtts = this.config.getFormAttributes();
         
-        contentHandler.startElement(Constants.FI_NS, FORM_GENERATED_EL, Constants.FI_PREFIX_COLON +FORM_GENERATED_EL, formAtts);
+        contentHandler.startElement(Constants.INSTANCE_NS, FORM_GENERATED_EL, Constants.INSTANCE_PREFIX_COLON +FORM_GENERATED_EL, formAtts);
         Form form = config.findForm(); 
         form.generateSaxFragment(contentHandler, Locale.US);
-        contentHandler.endElement(Constants.FI_NS, FORM_GENERATED_EL, Constants.FI_PREFIX_COLON +FORM_GENERATED_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, FORM_GENERATED_EL, Constants.INSTANCE_PREFIX_COLON +FORM_GENERATED_EL);
         
-        contentHandler.endPrefixMapping(Constants.FI_PREFIX);
+        contentHandler.endPrefixMapping(Constants.INSTANCE_PREFIX);
         contentHandler.endDocument();
     }
 }

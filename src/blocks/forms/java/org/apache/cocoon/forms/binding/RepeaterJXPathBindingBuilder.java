@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  * &lt;/wb:repeater&gt;
  * </code></pre>
  *
- * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: RepeaterJXPathBindingBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
 
@@ -85,7 +85,7 @@ public class RepeaterJXPathBindingBuilder extends JXPathBindingBuilderBase {
             Locale convertorLocale = Locale.US;
             Element convertorEl =
                 DomHelper.getChildElement(bindingElm,
-                        Constants.FD_NS, "convertor");
+                        Constants.DEFINITION_NS, "convertor");
             if (convertorEl != null) {
                 String datatype =
                     DomHelper.getAttribute(convertorEl, "datatype");

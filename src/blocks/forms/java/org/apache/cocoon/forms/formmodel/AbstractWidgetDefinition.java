@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  * 
- * @version $Id: AbstractWidgetDefinition.java,v 1.1 2004/03/09 10:33:50 reinhard Exp $
+ * @version $Id: AbstractWidgetDefinition.java,v 1.2 2004/03/09 13:08:45 cziegeler Exp $
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
@@ -123,11 +123,11 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
                 String name = (String)entry.getKey();
                 
                 // Enclose the data into a "wi:{name}" element
-                contentHandler.startElement(Constants.FI_NS, name, Constants.FI_PREFIX_COLON + name, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, name, Constants.INSTANCE_PREFIX_COLON + name, Constants.EMPTY_ATTRS);
 
                 ((XMLizable)entry.getValue()).toSAX(contentHandler);
 
-                contentHandler.endElement(Constants.FI_NS, name, Constants.FI_PREFIX_COLON + name);
+                contentHandler.endElement(Constants.INSTANCE_NS, name, Constants.INSTANCE_PREFIX_COLON + name);
             }
         }   
     }

@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  *
  * @see org.apache.cocoon.forms.datatype.FlowJXPathSelectionListBuilder
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: FlowJXPathSelectionList.java,v 1.2 2004/03/09 11:31:11 joerg Exp $
+ * @version CVS $Id: FlowJXPathSelectionList.java,v 1.3 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class FlowJXPathSelectionList implements SelectionList {
 
@@ -98,7 +98,7 @@ public class FlowJXPathSelectionList implements SelectionList {
         }
 
         // Start the selection-list
-        contentHandler.startElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
+        contentHandler.startElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
 
         while(iter.hasNext()) {
             String stringValue = "";
@@ -129,21 +129,21 @@ public class FlowJXPathSelectionList implements SelectionList {
             // Output this item
             AttributesImpl itemAttrs = new AttributesImpl();
             itemAttrs.addCDATAAttribute("value", stringValue);
-            contentHandler.startElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL, itemAttrs);
+            contentHandler.startElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL, itemAttrs);
             if (label != null) {
-                contentHandler.startElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+                contentHandler.startElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
                 if (label instanceof XMLizable) {
                     ((XMLizable)label).toSAX(contentHandler);
                 } else {
                     String stringLabel = label.toString();
                     contentHandler.characters(stringLabel.toCharArray(), 0, stringLabel.length());
                 }
-                contentHandler.endElement(Constants.FI_NS, LABEL_EL, Constants.FI_PREFIX_COLON + LABEL_EL);
+                contentHandler.endElement(Constants.INSTANCE_NS, LABEL_EL, Constants.INSTANCE_PREFIX_COLON + LABEL_EL);
             }
-            contentHandler.endElement(Constants.FI_NS, ITEM_EL, Constants.FI_PREFIX_COLON + ITEM_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, ITEM_EL, Constants.INSTANCE_PREFIX_COLON + ITEM_EL);
         }
 
         // End the selection-list
-        contentHandler.endElement(Constants.FI_NS, SELECTION_LIST_EL, Constants.FI_PREFIX_COLON + SELECTION_LIST_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, SELECTION_LIST_EL, Constants.INSTANCE_PREFIX_COLON + SELECTION_LIST_EL);
     }
 }

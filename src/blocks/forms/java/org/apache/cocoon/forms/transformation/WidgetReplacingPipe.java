@@ -31,17 +31,17 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * The basic operation of this Pipe is that it replaces wt:widget (in the
- * {@link Constants#FT_NS} namespace) tags (having an id attribute)
+ * {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
- * <p>These XML fragments (normally all in the {@link Constants#FI_NS "Woody Instance"} namespace), can
+ * <p>These XML fragments (normally all in the {@link Constants#INSTANCE_NS "Woody Instance"} namespace), can
  * then be translated to a HTML presentation by an XSL. This XSL will then only have to style
  * individual widget, and will not need to do the whole page layout.
  *
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.1 2004/03/09 10:34:13 reinhard Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -116,11 +116,11 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
         if (inWidgetElement) {
             if (elementNestingCounter == widgetElementNesting + 1 &&
-                Constants.FI_NS.equals(namespaceURI) && STYLING_EL.equals(localName)) {
+                Constants.INSTANCE_NS.equals(namespaceURI) && STYLING_EL.equals(localName)) {
                 gotStylingElement = true;
             }
             saxBuffer.startElement(namespaceURI, localName, qName, attributes);
-        } else if (Constants.FT_NS.equals(namespaceURI)) {
+        } else if (Constants.TEMPLATE_NS.equals(namespaceURI)) {
             if (localName.equals(WIDGET) || localName.equals(REPEATER_WIDGET)) {
                 checkContextWidgetAvailable(qName);
                 inWidgetElement = true;
@@ -153,14 +153,14 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 Widget widget = getWidget(attributes);
                 if (!(widget instanceof Repeater))
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-size\" can only be used for repeater widgets.");
-                contentHandler.startPrefixMapping(Constants.FI_PREFIX, Constants.FI_NS);
+                contentHandler.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
                 ((Repeater)widget).generateSize(contentHandler);
-                contentHandler.endPrefixMapping(Constants.FI_PREFIX);
+                contentHandler.endPrefixMapping(Constants.INSTANCE_PREFIX);
             } else if (localName.equals(FORM_TEMPLATE_EL)) {
                 if (contextWidget != null) {
                     throw new SAXException("Detected nested wt:form-template elements, this is not allowed.");
                 }
-                contentHandler.startPrefixMapping(Constants.FI_PREFIX, Constants.FI_NS);
+                contentHandler.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
 
                 // ====> Retrieve the form
 
@@ -199,7 +199,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
                 String[] namesToTranslate = {"action"};
                 Attributes transAtts = translateAttributes(attributes, namesToTranslate);
-                contentHandler.startElement(Constants.FI_NS , FORM_TEMPLATE_EL, Constants.FI_PREFIX_COLON + FORM_TEMPLATE_EL, transAtts);
+                contentHandler.startElement(Constants.INSTANCE_NS , FORM_TEMPLATE_EL, Constants.INSTANCE_PREFIX_COLON + FORM_TEMPLATE_EL, transAtts);
 
             } else if (localName.equals(CONTINUATION_ID)){
                 // Insert the continuation id
@@ -210,11 +210,11 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 }
 
                 String id = idObj.toString();
-                contentHandler.startPrefixMapping(Constants.FI_PREFIX, Constants.FI_NS);
-                contentHandler.startElement(Constants.FI_NS, CONTINUATION_ID, Constants.FI_PREFIX_COLON + CONTINUATION_ID, attributes);
+                contentHandler.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
+                contentHandler.startElement(Constants.INSTANCE_NS, CONTINUATION_ID, Constants.INSTANCE_PREFIX_COLON + CONTINUATION_ID, attributes);
                 contentHandler.characters(id.toCharArray(), 0, id.length());
-                contentHandler.endElement(Constants.FI_NS, CONTINUATION_ID, Constants.FI_PREFIX_COLON + CONTINUATION_ID);
-                contentHandler.endPrefixMapping(Constants.FI_PREFIX);
+                contentHandler.endElement(Constants.INSTANCE_NS, CONTINUATION_ID, Constants.INSTANCE_PREFIX_COLON + CONTINUATION_ID);
+                contentHandler.endPrefixMapping(Constants.INSTANCE_PREFIX);
             } else {
                 throw new SAXException("WoodyTemplateTransformer: Unsupported element: " + localName);
             }
@@ -258,7 +258,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             throws SAXException {
 
         if (inWidgetElement) {
-            if (elementNestingCounter == widgetElementNesting && Constants.FT_NS.equals(namespaceURI)
+            if (elementNestingCounter == widgetElementNesting && Constants.TEMPLATE_NS.equals(namespaceURI)
                 && (localName.equals(WIDGET) || localName.equals(REPEATER_WIDGET))) {
                     if (repeaterWidget) {
                         Repeater repeater = (Repeater)widget;
@@ -277,24 +277,24 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                         stylingHandler.setSaxFragment(saxBuffer);
                         stylingHandler.setContentHandler(contentHandler);
                         stylingHandler.setLexicalHandler(lexicalHandler);
-                        contentHandler.startPrefixMapping(Constants.FI_PREFIX, Constants.FI_NS);
+                        contentHandler.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
                         widget.generateSaxFragment(stylingHandler, pipeContext.getLocale());
-                        contentHandler.endPrefixMapping(Constants.FI_PREFIX);
+                        contentHandler.endPrefixMapping(Constants.INSTANCE_PREFIX);
                     }
                     inWidgetElement = false;
                     widget = null;
                 } else {
                     saxBuffer.endElement(namespaceURI, localName, qName);
                 }
-        } else if (Constants.FT_NS.equals(namespaceURI)) {
+        } else if (Constants.TEMPLATE_NS.equals(namespaceURI)) {
             if (localName.equals(WIDGET_LABEL) || localName.equals(REPEATER_WIDGET_LABEL)
                 || localName.equals(REPEATER_SIZE) || localName.equals(CONTINUATION_ID)) {
                 // Do nothing
             } else if (localName.equals(FORM_TEMPLATE_EL)) {
                 contextWidget = null;
-                contentHandler.endElement(Constants.FI_NS, FORM_TEMPLATE_EL,
-                                          Constants.FI_PREFIX_COLON + FORM_TEMPLATE_EL);
-                contentHandler.endPrefixMapping(Constants.FI_PREFIX);
+                contentHandler.endElement(Constants.INSTANCE_NS, FORM_TEMPLATE_EL,
+                                          Constants.INSTANCE_PREFIX_COLON + FORM_TEMPLATE_EL);
+                contentHandler.endPrefixMapping(Constants.INSTANCE_PREFIX);
             } else {
                 super.endElement(namespaceURI, localName, qName);
             }
@@ -442,9 +442,9 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     saxBuffer.toSAX(contentHandler);
                 } else {
                     // Insert an enclosing <wi:styling>
-                    contentHandler.startElement(Constants.FI_NS, STYLING_EL, Constants.FI_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
+                    contentHandler.startElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL, Constants.EMPTY_ATTRS);
                     saxBuffer.toSAX(contentHandler);
-                    contentHandler.endElement(Constants.FI_NS, STYLING_EL, Constants.FI_PREFIX_COLON + STYLING_EL);
+                    contentHandler.endElement(Constants.INSTANCE_NS, STYLING_EL, Constants.INSTANCE_PREFIX_COLON + STYLING_EL);
                 } 
             }
             super.endElement(uri, loc, raw);

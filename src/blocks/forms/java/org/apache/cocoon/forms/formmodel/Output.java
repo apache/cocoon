@@ -31,7 +31,7 @@ import java.util.Locale;
  *
  * <p>An Output widget is always valid and never required.
  * 
- * @version $Id: Output.java,v 1.2 2004/03/09 11:31:12 joerg Exp $
+ * @version $Id: Output.java,v 1.3 2004/03/09 13:08:45 cziegeler Exp $
  */
 public class Output extends AbstractWidget implements DataWidget {
     private OutputDefinition definition;
@@ -68,21 +68,21 @@ public class Output extends AbstractWidget implements DataWidget {
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl outputAttrs = new AttributesImpl();
         outputAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.FI_NS, OUTPUT_EL, Constants.FI_PREFIX_COLON + OUTPUT_EL, outputAttrs);
+        contentHandler.startElement(Constants.INSTANCE_NS, OUTPUT_EL, Constants.INSTANCE_PREFIX_COLON + OUTPUT_EL, outputAttrs);
 
         // the value
         if (value != null) {
-            contentHandler.startElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
+            contentHandler.startElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL, Constants.EMPTY_ATTRS);
             String stringValue;
             stringValue = definition.getDatatype().convertToString(value, locale);
             contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
-            contentHandler.endElement(Constants.FI_NS, VALUE_EL, Constants.FI_PREFIX_COLON + VALUE_EL);
+            contentHandler.endElement(Constants.INSTANCE_NS, VALUE_EL, Constants.INSTANCE_PREFIX_COLON + VALUE_EL);
         }
 
         // generate label, help, hint, etc.
         definition.generateDisplayData(contentHandler);
 
-        contentHandler.endElement(Constants.FI_NS, OUTPUT_EL, Constants.FI_PREFIX_COLON + OUTPUT_EL);
+        contentHandler.endElement(Constants.INSTANCE_NS, OUTPUT_EL, Constants.INSTANCE_PREFIX_COLON + OUTPUT_EL);
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
