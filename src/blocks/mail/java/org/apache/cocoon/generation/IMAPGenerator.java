@@ -1,24 +1,21 @@
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.environment.SourceResolver;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.SAXException;
-
-import java.util.Map;
+import java.io.IOException;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
-import java.io.IOException;
-
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.URLName;
 
-import javax.mail.AuthenticationFailedException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.SourceResolver;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Generates an XML listing of messages from an IMAP mail server.
