@@ -5,7 +5,7 @@
     <!-- Definition and configuration of Slide's WebDAV servlet. -->
     <!--
     <servlet>
-        <servlet-name>webdav</servlet-name>
+        <servlet-name>Slide</servlet-name>
         <display-name>Slide DAV Server</display-name>
         <servlet-class>org.apache.slide.webdav.WebdavServlet</servlet-class>
         <init-param>
@@ -145,10 +145,10 @@
                 of interoperability problems.
             </description>
         </init-param>
-        <load-on-startup>1</load-on-startup>
+        <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>webdav</servlet-name>
+        <servlet-name>Slide</servlet-name>
         <url-pattern>/webdav/*</url-pattern>
     </servlet-mapping>
     -->
