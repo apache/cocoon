@@ -53,6 +53,7 @@ package org.apache.cocoon.components.language.markup.xsp;
 import java.util.Stack;
 
 import org.apache.cocoon.components.language.markup.CocoonMarkupLanguage;
+import org.apache.cocoon.components.language.markup.MarkupLanguage;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.xml.sax.Attributes;
@@ -66,14 +67,14 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:ssahuc@apache.org">Sebastien Sahuc</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XSPMarkupLanguage.java,v 1.3 2003/12/29 13:31:33 unico Exp $
+ * @version CVS $Id: XSPMarkupLanguage.java,v 1.4 2003/12/29 14:56:20 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=MarkupLanguage
  * @x-avalon.lifestyle type=singleton
  * @x-avalon.info name=xsp-markup
  */
-public class XSPMarkupLanguage extends CocoonMarkupLanguage {
+public class XSPMarkupLanguage extends CocoonMarkupLanguage implements MarkupLanguage {
 
     /**
      * Returns the root element for a valid XSP page: page element!
