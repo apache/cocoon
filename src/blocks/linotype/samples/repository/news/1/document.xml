@@ -11,7 +11,7 @@
 <li>Styling is performed entirely by <a href="http://www.w3.org/TR/REC-CSS2/">CSS2</a>.</li>
 <li>Javascript 1.5 in used for Midas customizations and for client-side XHTML serialization when the edited content is transmitted back to the server.</li>
 <li>The <a href="http://www.w3.org/Provider/Style/URI">URL space is kept clean</a>, designed to last and extension free. Extensions are used <strong xmlns:h="http://www.w3.org/1999/xhtml">only</strong> when they are meant to imply a specific MIME-type.</li>
-<li><a href="http://my.netscape.com/publish/formats/rss-spec-0.91.html">RSS</a> feeds are created automatically using Cocoon's aggregation capabilities and XSTL.</li>
+<li><a href="http://my.netscape.com/publish/formats/rss-spec-0.91.html">RSS</a> feeds are created automatically using Cocoon's aggregation capabilities and XSLT.</li>
 <li>The editing capabilities are restricted to <q>semantic</q> XHTML: you can't change style, but only structure. Style will change accordingly, depending on the CSS2 parameters associated to the various markup elements or to their semantic class.</li>
 <li>Image inclusion, resizing and uploading are all done inside the editor page without a need for external upload.</li>
 <li>The stylesheets are designed for both text readability and elegance. The use of serif fonts is intentional because it increases text readability and gives a pleasant retro style that matches the linotype concept.</li>
