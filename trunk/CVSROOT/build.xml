@@ -138,7 +138,7 @@ a Java 1.2 compatible JVM is required for this target.
     <tstamp/>
     <property name="Name" value="Cocoon"/>
     <property name="name" value="cocoon"/>
-    <property name="version" value="1.8-dev"/>
+    <property name="version" value="1.8"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="      ------------------- ${Name} ${version} [${year}] ---------"/>
@@ -376,7 +376,7 @@ a Java 1.2 compatible JVM is required for this target.
     <copydir src="${skins.dir}" dest="${dist.dir}/skins"/>
     <copydir src="${lib.dir}" dest="${dist.dir}/lib"/>
 
-    <copydir src="." dest="${dist.dir}" includes="README, LICENSE, build.*, index.html" filtering="on"/>
+    <copydir src="." dest="${dist.dir}" includes="README, LICENSE, build.*, lcp.bat, index.html" filtering="on"/>
 
     <chmod perm="+x" file="${dist.dir}/build.sh"/>
     <fixcrlf srcdir="${dist.dir}" includes="build.sh" cr="remove"/>
