@@ -16,7 +16,7 @@
   <s1 title="Live Sites powered by Apache Cocoon 2.x">
    <p>
     Here are some web sites that are proudly powered by Cocoon 2.x
-    (in order of discovery or addition):
+    (only ordered by Cocoon version):
    </p>
    <s2 title="Cocoon 2.1m2-dev">
     <ul>
@@ -25,7 +25,7 @@
    </s2>
    <s2 title="Cocoon 2.1-dev">
     <ul>
-     <li><link href="http://cupva.cbim.it/">Servizio Prima Disponibilit&agrave;</link></li>
+     <li><link href="http://cupva.cbim.it/">Servizio Prima Disponibilità</link></li>
      <li><link href="http://dir.salon.com/">Salon Directory</link></li>
      <li><link href="http://www.boonetakeout.com/">Boone Takeout</link></li>
      <li><link href="http://www.datadreamers.com/">Data Dreamers</link></li>
@@ -42,7 +42,7 @@
     <ul>
      <li><link href="http://www.adolos.com/">Adolos</link></li>
      <li><link href="http://www.dyanet.com/">Dyanet</link></li>
-     <li><link href="http://www.osmosis.gr/">Osmosis - networks and consulting</link></li>
+     <li><link href="http://www.osmosis.gr/">Osmosis</link> - networks and consulting</li>
      <li><link href="http://www.urlaubstage.de/">Urlaubstage.de</link></li>
      <li><link href="http://www.self-roster.com/">Self-Roster.com</link></li>
      <li><link href="http://www.cueandreview.org.uk/">Cue and Review Recording Services</link></li>
@@ -53,22 +53,23 @@
     <ul>
      <li><link href="http://robocode.diverman.com/">Robocode Fanatics!</link></li>
      <li><link href="http://www.mnhb.ru/">Moscow Neftekhimichesky Bank</link></li>
-     <li><link href="http://www.teratext.com/">TeraText Solutions (a division SAIC)</link></li>
+     <li><link href="http://www.teratext.com/">TeraText Solutions</link> - a division SAIC</li>
      <li><link href="http://www.beblogging.com/blog/">Be Blogging</link></li>
      <li><link href="http://www.linuxtag.org/">LinuxTag</link></li>
      <li><link href="http://istruzione.provincia.lucca.it">Pubblica Istruzione</link></li>
-     <li><link href="http://www.simauria.net">Simauria Networks - Spanish IT company focussed on Java and XML</link></li>
+     <li><link href="http://www.simauria.net">Simauria Networks</link> - Spanish IT company focussed on Java and XML</li>
      <li><!-- only the articles, the rest is FrontPage -->
       <link href="http://www.americanartists.org">The American Center for Artists</link></li>
      <li><!-- No content shown, I guess only temporary: <html><body></body></html> -->
       <link href="http://www.stu.lipetsk.ru/">Lipetsk State Technical University</link></li>
+     <li><link href="http://www.software-express.de/">Software Express</link> - Software Competence Center for business and standard software</li>
     </ul>
    </s2>
    <s2 title="Cocoon 2.0.2">
     <ul>
      <li><link href="http://www.tine.no/">TINE</link></li>
      <li><link href="http://www.corrocean.com/">CorrOcean</link></li>
-     <li><link href="http://www.warnerbros.ch/">Warner Bros.,Inc. Switzerland</link></li>
+     <li><link href="http://www.warnerbros.ch/">Warner Bros., Inc. Switzerland</link></li>
      <li><link href="http://www.sun-catalogue.com/">Sun Catalogue</link></li>
      <li><link href="http://www.caphnet.com/">CaphNet</link></li>
      <li><link href="http://help.unc.edu/">The technical support site for the University of North Carolina at Chapel Hill</link></li>
@@ -83,20 +84,20 @@
      <li><!-- the low speed of images is a hint on Cocoon (SVG generated images with bad caching) -->
       <link href="http://www.g-ne.de/">G-NE group for net-intelligence GmbH</link></li>
      <li><!-- /cocoon/ in the URL -->
-      <link href="http://www.bethe1.com/">Bethel - the employment specialist in fashion, beauty and retail</link></li>
+      <link href="http://www.bethe1.com/">Bethel</link> - the employment specialist in fashion, beauty and retail</li>
      <li><!-- I know it :-) -->
       <link href="http://www.lofex.de/">LOcal Food EXpress</link></li>
      <li><!-- /cocoon/ in the URL -->
       <link href="http://www.triptravel.net/">Wh@m Project</link></li>
      <li><link href="http://www.navigationzone.net/">NavigationZone</link></li>
-     <li><link href="http://www.intexti.it/">Intexti - supply chain management solutions (Italian)</link></li>
+     <li><link href="http://www.intexti.it/">Intexti</link> - supply chain management solutions</li>
      <li><link href="http://www.galatea.com/">Galatea Information Strategies</link></li>
      <li><link href="http://www.nzetc.org/">New Zealand Electronic Text Centre</link></li>
      <li><link href="http://www.duitslandweb.nl/">Duitsland Web</link></li>
      <li><link href="http://www.workthing.com/">workthing.com</link></li>
-     <li><link href="http://www.caida.org/">CAIDA (Cooperative Association for Internet Data Analysis)</link></li>
+     <li><link href="http://www.caida.org/">CAIDA</link> - Cooperative Association for Internet Data Analysis</li>
      <li><link href="http://www.fox-warner.ch/">20th Century Fox Switzerland</link></li>
-     <li><link href="http://www.tatry.info">High Tatras - Beautiful mountains located on the Polish-Slovakian border.</link></li>
+     <li><link href="http://www.tatry.info">High Tatras</link> - Beautiful mountains located on the Polish-Slovakian border.</li>
      <li><link href="http://www.aromax.hu/">Aromax</link></li>
      <li><!-- really?? Cocoon does not serialize attributes in upper case AFAIK!! -->
       <link href="http://newscentre.towngas.com/">Towngas NewsCentre</link></li>
@@ -105,7 +106,8 @@
     </ul>
    </s2>
 
-   <p>Of course, all of the websites listed on the Apache Forrest
+   <p>
+    Of course, all of the websites listed on the Apache Forrest
     <link href="http://xml.apache.org/forrest/live-sites.html">Live sites</link>
     page are also essentially powered by Cocoon.
    </p>
@@ -114,14 +116,14 @@
   <s1 title="Live Sites powered by Apache Cocoon 1.x">
    <p>
     Here are some web sites that are proudly powered by Cocoon 1.x
-    (in no particular order):
+    (only ordered by Cocoon version):
    </p>
    <s2 title="Cocoon 1.8.2">
     <ul>
      <li><link href="http://www.linuxtv.org/">Linux TV</link></li>
      <li><link href="http://www.cogentlogic.com/">Cogent Logic Corporation</link></li>
      <li><link href="http://www.planetsalvage.com/">Planet Salvage</link></li>
-     <li><link href="http://damocles.uc3m.es/TC/">Sentencias del Tribunal Constitucional (Univ. Carlos III, Madrid, Spain)</link></li>
+     <li><link href="http://damocles.uc3m.es/TC/">Sentencias del Tribunal Constitucional</link> - Univ. Carlos III, Madrid, Spain</li>
      <li><link href="http://www.powerfm.org/">Power FM - Web Station</link></li>
      <li><link href="http://www.estig.ipbeja.pt/">ESTIG</link></li>
     </ul>
@@ -148,7 +150,7 @@
      <li><link href="http://www.sourcepole.com/">SourcePole</link></li>
      <li><link href="http://www.rationalizer.com/">Rationalizer AG</link></li>
      <li><link href="http://www.powderhausen.com/">Powderhausen</link></li>
-     <li><link href="http://www.aujac.org/">Associaci&oacute; d&apos;Usuaris de Java de Catalunya</link></li>
+     <li><link href="http://www.aujac.org/">Associació d'Usuaris de Java de Catalunya</link></li>
      <li><link href="http://www.terracare.com/">TerraCare Software</link></li>
      <li><link href="http://www.westcoastsoaps.com/">West Coast Designer Soaps</link></li>
      <li><link href="http://www.micinfo.com/">Medical Imaging Consultants</link></li>
@@ -161,16 +163,12 @@
    <p>
     If you do not find your site here, make sure you
     <link href="mailto:cocoon-users@xml.apache.org?subject=Link Livesites:">tell us</link>.
-    Enter a meaningful title and the version of Cocoon after the words
-    &quot;Link Livesites:&quot; in the subject, provide a short summary of
-    your site, and do not forget to tell us the URL.
-    You could also follow the <link href="../contrib.html">Contributing</link>
-    page to make it easier for everyone.
+    Enter a meaningful title and the version of Cocoon after the words "Link Livesites:" in the
+    subject, provide a short summary of your site, and do not forget to tell us the URL. You could
+    also follow the <link href="../contrib.html">Contributing</link> page to make it easier for
+    everyone.
    </p>
-
-   <p>
-    We would like to see this list grow bigger every day :-)
-   </p>
+   <p>We would like to see this list grow bigger every day :-)</p>
   </s1>
  </body>
 </document>
