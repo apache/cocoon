@@ -170,7 +170,7 @@
 	&lt;cinclude:parameter&gt;
 	  &lt;cinclude:name&gt;_Process&lt;/cinclude:name&gt;
 	  &lt;cinclude:value&gt;&lt;name&gt;matti&lt;/name&gt;&lt;age&gt;36&lt;/age&gt;&lt;/cinclude:value&gt;
-	&lt;/cinclude:param&gt;
+	&lt;/cinclude:parameter&gt;
     &lt;/cinclude:parameters&gt;
 &lt;/cinclude:includexml&gt;
 &lt;/data&gt;
