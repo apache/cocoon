@@ -17,42 +17,32 @@ package org.apache.cocoon.components.source.impl;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.avalon.excalibur.testcase.ExcaliburTestCase;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.LogKitLogger;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.IdentifierCacheKey;
+import org.apache.cocoon.core.container.ContainerTestCase;
 import org.apache.cocoon.environment.mock.MockContext;
 import org.apache.cocoon.xml.LoggingContentHandler;
 import org.apache.cocoon.xml.SaxBuffer;
-import org.apache.excalibur.source.ModifiableSource;
-import org.apache.excalibur.source.ModifiableTraversableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.excalibur.source.TraversableSource;
 
 /**
  * TODO describe class
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a> 
  */
-public class CachingSourceTestCase extends ExcaliburTestCase {
-    
-    public CachingSourceTestCase(String name) {
-        super(name);
-    }
+public class CachingSourceTestCase extends ContainerTestCase {
     
     public void testResolveURI() throws Exception {
         
         SourceResolver resolver = (SourceResolver) lookup(SourceResolver.ROLE);
         
         String scheme = "async-caching";
-        String uri = "resource://org/apache/cocoon/components/" +            "source/impl/cachingsourcetest.xml?foo=bar";
+        String uri = "resource://org/apache/cocoon/components/" +
+            "source/impl/cachingsourcetest.xml?foo=bar";
         
         // resolve CachingSource
         Source source = resolver.resolveURI(
@@ -124,7 +114,7 @@ public class CachingSourceTestCase extends ExcaliburTestCase {
         
         SaxBuffer saxbuffer = new SaxBuffer();
         LoggingContentHandler handler = new LoggingContentHandler("test",saxbuffer);
-        handler.enableLogging(new LogKitLogger(getLogger().getChildLogger("handler")));
+        handler.enableLogging(getLogger().getChildLogger("handler"));
         source.toSAX(handler);
     }
     

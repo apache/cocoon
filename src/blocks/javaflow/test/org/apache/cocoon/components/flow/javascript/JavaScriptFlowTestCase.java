@@ -24,14 +24,10 @@ import org.apache.cocoon.SitemapComponentTestCase;
  *
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels </a>
- * @version CVS $Id: JavaScriptFlowTestCase.java,v 1.3 2004/06/24 16:48:53 stephan Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptFlowTestCase extends SitemapComponentTestCase {
 
-    public JavaScriptFlowTestCase(String name) {
-        super(name);
-    }
-    
     public void testCalculator() throws Exception {
         String source = "resource://org/apache/cocoon/components/flow/javascript/calc.js";
         callFunction("javascript", source, "calculator", new HashMap());
