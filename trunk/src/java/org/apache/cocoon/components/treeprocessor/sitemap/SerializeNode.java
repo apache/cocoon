@@ -65,7 +65,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: SerializeNode.java,v 1.3 2003/07/06 11:44:30 sylvain Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.4 2003/07/07 09:26:53 upayavira Exp $
  */
 
 public class SerializeNode extends PipelineEventComponentProcessingNode {
@@ -120,7 +120,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
                 "<translator>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS
             );
         }
-        if (env.getObjectModel().containsKey(Constants.LINK_COLLECTION_OBJECT)) {
+        if (env.getObjectModel().containsKey(Constants.LINK_COLLECTION_OBJECT) && env.isExternal()) {
             context.getProcessingPipeline().addTransformer(
                 "<gatherer>", null, Parameters.EMPTY_PARAMETERS, Parameters.EMPTY_PARAMETERS
             );
