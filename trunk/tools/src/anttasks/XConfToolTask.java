@@ -39,7 +39,7 @@ import java.io.IOException;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:11:45 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/03/11 15:29:13 $
  */
 
 public final class XConfToolTask extends Task {
@@ -78,7 +78,7 @@ public final class XConfToolTask extends Task {
             final String file = this.project.resolveFile(this.configuration).getCanonicalPath();
 
             // load xml
-            System.out.println("Reading: " + file);
+            // System.out.println("Reading: " + file);
             final Document configuration = builder.parse((new File(file)).toURL().toExternalForm());
 
             // process recursive
@@ -87,7 +87,7 @@ public final class XConfToolTask extends Task {
                 System.out.println("Writing: " + file);
                 transformer.transform(new DOMSource(configuration), new StreamResult(file));
             } else {
-                System.out.println("No Changes: " + file);
+                // System.out.println("No Changes: " + file);
             }
         } catch (TransformerException e) {
             throw new BuildException("TransformerException: " + e);
@@ -159,7 +159,7 @@ public final class XConfToolTask extends Task {
         String test = component.getDocumentElement().getAttribute("unless");
         if (test != null && test.length() > 0 &&
                 XPathAPI.selectNodeList(root, test).getLength() != 0) {
-            System.out.println("Skipping: " + file);
+            // System.out.println("Skipping: " + file);
             return false;
         } else {
             // Test if component wants us to remove a list of nodes first
