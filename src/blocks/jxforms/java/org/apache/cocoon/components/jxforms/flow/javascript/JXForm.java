@@ -128,7 +128,7 @@ public class JXForm extends ScriptableObject {
         form.setAutoValidate(false);
         if (validatorNamespace != null && validatorDocument != null) {
             SourceResolver resolver = (SourceResolver)
-                getCocoon().getComponentManager().lookup(SourceResolver.ROLE);
+                getCocoon().getServiceManager().lookup(SourceResolver.ROLE);
             Source schemaSrc = resolver.resolveURI(validatorDocument);
             InputSource is = SourceUtil.getInputSource(schemaSrc);
             SchemaFactory schf = SchemaFactory.lookup(validatorNamespace);

@@ -51,9 +51,6 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -64,17 +61,12 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
-
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.CocoonComponentManager;
+import org.apache.cocoon.components.ContextHelper;
+import org.apache.cocoon.components.flow.util.PipelineUtil;
 import org.apache.cocoon.environment.Context;
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
-
 import org.apache.excalibur.source.SourceUtil;
-import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 
 /**
  * Abstract superclass for various scripting languages used by Cocoon
@@ -85,10 +77,10 @@ import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.17 2004/01/28 05:46:21 coliver Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.18 2004/02/20 18:48:23 sylvain Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
-  implements Component, Composable, Serviceable, Contextualizable, Interpreter,
+  implements Component, Serviceable, Contextualizable, Interpreter,
              SingleThreaded, Configurable, Disposable
 {
     protected org.apache.avalon.framework.context.Context avalonContext;
@@ -99,8 +91,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     protected ArrayList needResolve = new ArrayList();
 
     protected org.apache.cocoon.environment.Context context;
-    protected ComponentManager manager;
-    protected ServiceManager serviceManager;
+    protected ServiceManager manager;
     protected ContinuationsManager continuationsMgr;
     
     /**
@@ -121,19 +112,10 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
     }
 
     /**
-     * Composable
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
-        //mpved below in service()
-        //this.continuationsMgr = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
-    }
-
-    /**
      * Serviceable
      */
     public void service(ServiceManager sm) throws ServiceException {
-        this.serviceManager = sm;
+        this.manager = sm;
         this.continuationsMgr = (ContinuationsManager)sm.lookup(ContinuationsManager.ROLE);
     }
 
@@ -148,7 +130,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      */
     public void dispose() {
         if ( this.manager != null ) {
-            this.manager.release( (Component)this.continuationsMgr );
+            this.manager.release( this.continuationsMgr );
             this.continuationsMgr = null;
             this.manager = null;
         }
@@ -196,79 +178,28 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      * @param uri The URI for which the request should be generated.
      * @param biz Extra data associated with the subrequest.
      * @param out An OutputStream where the output should be written to.
-     * @param env The environment of the original request.
-     * @return Whatever the Cocoon processor returns (????).
      * @exception Exception If an error occurs.
      */
-    public boolean process(String uri, Object biz, OutputStream out, Environment env)
+    public void process(String uri, Object biz, OutputStream out)
         throws Exception 
     {
-        if (SourceUtil.indexOfSchemeColon(uri) != -1) {
-            throw new Exception("uri is not allowed to contain a scheme (cocoon:/ is always automatically used)");
-        }
-        // if the uri starts with a slash, then assume that the uri contains an absolute
-        // path, starting from the root sitemap. Otherwise, the uri is relative to the current
-        // sitemap.
-        if (uri.length() > 0 && uri.charAt(0) == '/') {
-            uri = uri.substring(1);
-        } else {
-            uri = env.getURIPrefix() + uri;
-        }
-
-        // Create a wrapper environment for the subrequest to be processed.
-        EnvironmentWrapper wrapper = new EnvironmentWrapper(env, uri, "", getLogger());
-        wrapper.setURI("", uri);
-        if (out != null) {
-            wrapper.setOutputStream(out);
-        }
-        Map objectModel = env.getObjectModel();
-        FlowHelper.setContextObject(objectModel, biz);
-
-        // Attermpt to start processing the wrapper environment
-        Object key = CocoonComponentManager.startProcessing(wrapper);
-
-        Processor processor = null;
-        boolean result = false;
-        try {
-            // Retrieve a processor instance
-            processor = (Processor)this.manager.lookup(Processor.ROLE);
-            
-            // Enter the environment
-            CocoonComponentManager.enterEnvironment(wrapper, this.manager, processor);
-            
-            // Process the subrequest
-            result = processor.process(wrapper);
-            if (out != null) {
-                wrapper.commitResponse();
-                out.flush();
-            }
-            // Return whatever the processor returned us
-            return(result);
-        } catch (Exception any) {
-            throw(any);
-        } finally {
-            // Leave the environment, terminate processing and release processor
-            if ( processor != null ) {
-                // enterEnvironemnt has only been called if the
-                // processor has been looked up
-                CocoonComponentManager.leaveEnvironment();
-            }
-            CocoonComponentManager.endProcessing(wrapper, key);
-            this.manager.release(processor);
-        }
+        // FIXME (SW): should we deprecate this method in favor of PipelineUtil?
+        PipelineUtil pipeUtil = new PipelineUtil();
+        pipeUtil.contextualize(this.avalonContext);
+        pipeUtil.service(this.manager);
+        pipeUtil.processToStream(uri, biz, out);
     }
 
     public void forwardTo(String uri, Object bizData,
                           WebContinuation continuation,
-                          Environment environment)
+                          Redirector redirector)
         throws Exception
     {
         if (SourceUtil.indexOfSchemeColon(uri) == -1) {
             uri = "cocoon:/" + uri;
-            Map objectModel = environment.getObjectModel();
+            Map objectModel = ContextHelper.getObjectModel(this.avalonContext);
             FlowHelper.setWebContinuation(objectModel, continuation);
             FlowHelper.setContextObject(objectModel, bizData);
-            Redirector redirector = PipelinesNode.getRedirector(environment);
             if (redirector.hasRedirected()) {
                 throw new IllegalStateException("Pipeline has already been processed for this request");
             }

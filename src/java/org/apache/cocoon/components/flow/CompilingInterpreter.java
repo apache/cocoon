@@ -49,8 +49,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.mozilla.javascript.Context;
@@ -63,7 +63,7 @@ import org.mozilla.javascript.Scriptable;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CompilingInterpreter.java,v 1.1 2003/10/15 17:02:05 cziegeler Exp $
+ * @version CVS $Id: CompilingInterpreter.java,v 1.2 2004/02/20 18:48:23 sylvain Exp $
  */
 public abstract class CompilingInterpreter 
 extends AbstractInterpreter {
@@ -79,8 +79,8 @@ extends AbstractInterpreter {
     /**
      * Composable
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
         this.sourceresolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
