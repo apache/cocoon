@@ -70,7 +70,7 @@ import java.io.InputStream;
  * a file is uploaded.
  *
  * @author <a href="mailto:paul.crabtree@dna.co.uk">Paul Crabtree</a>
- * @version CVS $Id: PartSource.java,v 1.3 2003/11/09 16:17:13 vgritsenko Exp $
+ * @version CVS $Id: PartSource.java,v 1.4 2003/12/20 14:28:34 sylvain Exp $
  */
 public class PartSource implements Source
 {
@@ -201,5 +201,9 @@ public class PartSource implements Source
     public long getLastModified()
     {
         return 0;
+    }
+    
+    public Part getPart() {
+        return this.part;
     }
 }
