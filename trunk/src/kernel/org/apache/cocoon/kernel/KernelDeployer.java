@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.kernel;
 
+import java.net.URL;
+import java.net.MalformedURLException;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -43,7 +46,7 @@ import org.apache.cocoon.kernel.startup.Logger;
  * interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.5 $)
+ * @version 1.0 (CVS $Revision: 1.6 $)
  */
 public class KernelDeployer implements Deployer {
 
@@ -113,7 +116,19 @@ public class KernelDeployer implements Deployer {
             String location = current.getStringAttribute("descriptor");
             
             /* Parse the block descriptor and get the configuration */
-            Descriptor descriptor = DescriptorBuilder.newInstance(location);
+            URL url = null;
+            try {
+                url = new URL(configuration.locationURL(), location);
+            } catch (MalformedURLException exception) {
+                throw new ConfigurationException("Unable to relativize descript"
+                                                 + "or location \"" + location
+                                                 + "\" against configuration \""
+                                                 + configuration.location()
+                                                 + "\"");
+            }
+
+            /* Create a new descriptor instance */
+            Descriptor descriptor = DescriptorBuilder.newInstance(url);
             if (this.loader.contains(descriptor)) {
                 throw new ConfigurationException("Descriptor \"" + descriptor
                                          + "\" configured twice", current);

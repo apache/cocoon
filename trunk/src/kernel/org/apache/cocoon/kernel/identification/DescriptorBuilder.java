@@ -16,6 +16,7 @@
 package org.apache.cocoon.kernel.identification;
 
 import java.io.IOException;
+import java.net.URL;
 import org.apache.cocoon.kernel.configuration.Configuration;
 import org.apache.cocoon.kernel.configuration.ConfigurationBuilder;
 import org.apache.cocoon.kernel.configuration.ConfigurationException;
@@ -28,7 +29,7 @@ import org.apache.cocoon.kernel.configuration.ConfigurationException;
  * automatically from an original XML file.</p>
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.3 $)
+ * @version 1.0 (CVS $Revision: 1.4 $)
  */
 public class DescriptorBuilder {
 
@@ -39,11 +40,33 @@ public class DescriptorBuilder {
         super();
     }
 
+    
+    /**
+     * Create a new {@link Descriptor} instance given a {@link URL} locating
+     * a descriptor to parse.</p>
+     *
+     * @param location the location of the descriptor.
+     * @throws ConfigurationException if the specified {@link Configuration}
+     *                                did not represent a valid descriptor.
+     * @throws IdentificationException if the specified {@link Configuration}
+     *                                 specified an invalid block identifier.
+     * @throws NullPointerException if the {@link Descriptor} was <b>null</b>.
+     */
+    public static Descriptor newInstance(URL location)
+    throws ConfigurationException, IdentificationException {
+        try {
+            return newInstance(ConfigurationBuilder.parse(location));
+        } catch (IOException exception) {
+            throw new ConfigurationException("Unable to parse descriptor \""
+                                             + location + "\"", exception);
+        }
+    }
+    
     /**
      * Create a new {@link Descriptor} instance given a {@link String} locating
      * a descriptor to parse.</p>
      *
-     * @param location the location of the descriptor file.
+     * @param location the location of the descriptor.
      * @throws ConfigurationException if the specified {@link Configuration}
      *                                did not represent a valid descriptor.
      * @throws IdentificationException if the specified {@link Configuration}
