@@ -85,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.29 2004/06/28 10:10:04 unico Exp $
+ * @version $Id: WebDAVSource.java,v 1.30 2004/06/29 16:10:55 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource, MoveableSource {
@@ -602,8 +602,13 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      * @see org.apache.excalibur.source.TraversableSource#getParent()
      */
     public Source getParent() throws SourceException {
-        initResource(WebdavResource.BASIC, DepthSupport.DEPTH_0);
-        String path = this.resource.isCollection()?"..":".";
+        String path;
+        if (this.url.getEscapedPath().endsWith("/")) {
+            path = "..";
+        }
+        else {
+            path = ".";
+        }
         try {
             HttpURL parentURL;
             if (url instanceof HttpsURL) {
