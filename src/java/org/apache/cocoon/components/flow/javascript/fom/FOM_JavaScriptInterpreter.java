@@ -81,7 +81,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.28 2004/05/05 16:00:11 vgritsenko Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.29 2004/05/05 17:08:05 vgritsenko Exp $
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     implements Configurable, Initializable {
@@ -376,16 +376,20 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      */
     private Scriptable setSessionScope(Scriptable scope) throws Exception {
         Request request = ContextHelper.getRequest(this.avalonContext);
-        Session session = request.getSession(true);
 
-        HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
-        if (userScopes == null) {
-            userScopes = new HashMap();
-            session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
+        // Check that session is available (avoids IllegalStateException)
+        if (request.isRequestedSessionIdValid()) {
+            Session session = request.getSession(true);
+
+            HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
+            if (userScopes == null) {
+                userScopes = new HashMap();
+                session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
+            }
+
+            // Attach the scope to the current context
+            userScopes.put(getSitemapPath(), scope);
         }
-
-        // Attach the scope to the current context
-        userScopes.put(getSitemapPath(), scope);
         return scope;
     }
 
