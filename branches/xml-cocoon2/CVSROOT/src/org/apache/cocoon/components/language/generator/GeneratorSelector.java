@@ -26,15 +26,19 @@ import org.apache.cocoon.util.ClassUtils;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-04-11 12:41:18 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-11 16:39:39 $
  */
 public class GeneratorSelector extends DefaultComponentSelector {
     private ClassLoaderManager classManager;
 
-    public void compose (ComponentManager manager) throws ComponentManagerException {
+    public void compose (ComponentManager manager) throws ComponentException {
         super.compose(manager);
 
-        this.classManager = (ClassLoaderManager) manager.lookup(Roles.CLASS_LOADER);
+        try {
+            this.classManager = (ClassLoaderManager) manager.lookup(Roles.CLASS_LOADER);
+        } catch (ComponentManagerException cme) {
+            throw new ComponentException("GeneratorSelector", cme);
+        }
 
         try {
             this.classManager.addDirectory((File) this.m_context.get(Constants.CONTEXT_WORK_DIR));
