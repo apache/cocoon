@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="index.xsl" type="text/xsl"?>
+<?cocoon-process type="xslt"?>
+
+<samples>
+ <group name="General Examples">
+  <sample name="Hello World" url="hello/hello-page.xml">
+   This is a very simple demostration of how to use Cocoon. A simple XML page
+   is transformed into an HTML page.
+  </sample>
+ </group>
+ 
+ <group name="XML-ized web sites">
+  <sample name="java.apache.org" url="sites/java.apache.org/news-page.xml">
+   This page shows a much more complex example that shows how powerful 
+   is the style separation and how powerful XML+XSL can be even for
+   static web publishing.
+  </sample>
+  <sample name="jakarta.apache.org" url="sites/jakarta.apache.org/index-page.xml">
+   This pages shows the same thing for the Apache Jakarta web site.
+  </sample>
+ </group>
+
+ <group name="Dynamic content Generation">
+  <sample name="DCP using Java" url="dcp/java/sample-page.xml">
+   This page shows how you can use Cocoon to generate dynamic content using
+   XML processing instructions to trigger Java logic execution.
+  </sample>
+
+  <sample name="DCP using ECMAScript" url="dcp/ecmascript/sample-page.xml">
+   This page shows how you can use Cocoon to generate dynamic content using
+   XML processing instructions to trigger ECMAScript logic execution.
+  </sample>
+ </group>
+ 
+ <group name="Formatting Object Rendering">
+  <sample name="Simple FO Example" url="fo/test-fo.xml">
+   This page shows some potentials of the XSL Formatting Object specifications
+   tranformed into PDF (we suggest you to install Adobe Acrobat Reader as your
+   browser plugin for smoother integration)
+  </sample>
+  
+  <sample name="Nover FO formatting" url="fo/darkness-novel.xml">
+   In this example, part of Joseph Conrad's "The Heart of Darkness" novel
+   is taken from its orginal style-free XML format and rendered into PDF
+   using an XML->FO stylesheet.
+  </sample>
+ </group>
+ 
+ <group name="New media for your web site">
+  <sample name="Web and WAP" url="wap/example-portfolio.xml">
+   In this example, we show how Cocoon is able to understand which browser
+   is requesting the page and applies a different stylesheet to the same
+   XML page to render on the different clients. This page is formatted in 
+   WML (Wireless Markup Language) if the Nokia Wap Toolkit 1.2 browser (which 
+   you could get for free from <a href="http://www.nokia.com">Nokia</a>)
+   requests this page. Look into the example source to change this for your
+   favorite WAP browser/cell-phone/PDA.
+  </sample>
+
+  <sample name="VoiceML" url="vml/hello-page.xml">
+   This page has the same exact source file as the hello world example, but
+   the stylesheet formats it using the VoiceML language. You page has been tested
+   with the Motorola VoiceML SDK which you get for free from 
+   <a href="http://www.motorola.com">Motorola</a>, but should work with any
+   other VoiceML browser.
+  </sample>
+ </group>
+</samples>

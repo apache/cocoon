@@ -1,14 +1,10 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: fancy-page-html.xsl,v 1.2 1999-12-02 11:55:02 stefano Exp $ -->
+<!-- Version: $Id: fancy-page-html.xsl,v 1.3 1999-12-03 23:49:15 stefano Exp $ -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:output>
-  
-  </xsl:output>
-  
   <xsl:template match="page">
    <xsl:processing-instruction name="cocoon-format">type="text/html"</xsl:processing-instruction>
    <html>

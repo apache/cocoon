@@ -61,10 +61,4 @@
    <ever rate="+">87.03</ever>
   </variations>
  </stocks>
-
-<note>If loading this page takes a while, you're probably using Netscape
-Navigator which is very slow at rendering the multiple nested tables
-used in this page. Try Mozilla and feel the power of the new rendering
-engine, instead of thinking that Cocoon is slow :)</note>
-
 </portfolio>

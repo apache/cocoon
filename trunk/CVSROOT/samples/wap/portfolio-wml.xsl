@@ -2,10 +2,7 @@
 
 <!-- Written by Stefano Mazzocchi "stefano@apache.org" -->
 
-<xsl:stylesheet 
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns="http://www.wapforum.org/DTD/wml_1.1.xml"
-	result-ns="http://www.wapforum.org/DTD/wml_1.1.xml">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
  <xsl:template match="portfolio">
   <xsl:processing-instruction name="cocoon-format">type="text/wml"</xsl:processing-instruction>
@@ -30,7 +27,7 @@
      <br/>
      <br/>
      <small>
-      Copyright&#xA9; 1999<br/>
+      Copyright &#xA9; 1999<br/>
       Apache Software Foundation.<br/>
       All rights reserved.
      </small>
