@@ -153,7 +153,7 @@
   <!-- Control flow layer: the interpreters selector and continuations  manager -->
   <role name="org.apache.cocoon.components.flow.Interpreter" 
         shorthand="flow-interpreters"
-        default-class="org.apache.cocoon.components.flow.InterpreterSelector" />
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector" />
 
   <role name="org.apache.cocoon.components.flow.ContinuationsManager" 
         shorthand="continuations-manager"
