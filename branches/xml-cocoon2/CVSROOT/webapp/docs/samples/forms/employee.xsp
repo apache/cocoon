@@ -48,11 +48,12 @@
         <input type="hidden" name="employee"/>
         <para>Employee Name:
 	  <input name="name" type="text">
-	   <xsp:attribute name="value"><xsp:expr>name</xsp:expr></xsp:attribute>
+	   <xsp:attribute name="value"><xsp:expr>((name != null) ? name : "")</xsp:expr></xsp:attribute>
 	  </input>
 	</para>
         <para>Department:
           <select name="department">
+            <option value="-1">-- Select department --</option>
             <esql:connection>
               <esql:pool>personnel</esql:pool>
               <esql:execute-query>

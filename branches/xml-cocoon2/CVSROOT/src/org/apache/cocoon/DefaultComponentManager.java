@@ -38,7 +38,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-17 18:33:35 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-18 21:34:30 $
  */
 public class DefaultComponentManager implements ComponentManager, Configurable {
 
@@ -47,10 +47,6 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
     /** Hashmap of all components which this ComponentManager knows about.
      */
     private Map components;
-
-    /** Thread safe instances.
-     */
-    private Map threadSafeInstances;
 
     /** Static component instances.
      */
@@ -69,7 +65,6 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
     public DefaultComponentManager() {
         // Setup the maps.
         components = Collections.synchronizedMap(new HashMap());
-        threadSafeInstances = Collections.synchronizedMap(new HashMap());
         configurations = Collections.synchronizedMap(new HashMap());
         pools = Collections.synchronizedMap(new HashMap());
         instances = Collections.synchronizedMap(new HashMap());
@@ -77,45 +72,39 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
 
     /** Return an instance of a component.
      */
-    public Component lookup( String role ) throws
-        ComponentManagerException {
+    public Component lookup( String role )
+    throws ComponentManagerException {
 
         Component component;
 
         if ( role == null ) {
-            log.error("Attempted to retrieve a component with a null Role");
-            throw new ComponentNotFoundException("Attempted to retrieve component will null roll.");
+            log.error("DefaultComponentManager Attempted to retrieve component with null role.");
+            throw new ComponentNotFoundException("Attempted to retrieve component with null role.");
+        }
+
+        // Retrieve the instance of the requested component
+        component = (Component) this.instances.get(role);
+
+        if ( component != null ) {
+            return component;
         }
 
         // Retrieve the class of the requested component.
         Class componentClass = (Class)this.components.get(role);
 
-        if ( componentClass == null ) {
-            component = (Component)this.instances.get(role);
-            if ( component == null ) {
-                String className = RoleUtils.defaultClass(role);
-                if (className == null) {
-                    log.error(role + " could not be found");
-                    throw new ComponentNotFoundException("Could not find component for role '" + role + "'.");
-                }
-                try {
-                    componentClass = ClassUtils.loadClass(className);
-                } catch (Exception e) {
-                    throw new ComponentNotAccessibleException("Could not load component for role '" + role + "'.", e);
-                }
-                this.components.put(role, componentClass);
-                if (Configurable.class.isAssignableFrom(componentClass)) {
-                    this.configurations.put(role, new DefaultConfiguration("", "-"));
-                }
-            } else {
-                // we found an individual instance of a component.
-                log.debug("DefaultComponentManager returned instance for role " + role + ".");
-                return component;
+        if (componentClass == null) {
+            try {
+                componentClass = ClassUtils.loadClass(RoleUtils.defaultClass(role));
+            } catch (Exception e) {
+                log.error("DefaultComponentManager Could not find component for role '" + role + "'.", e);
+                throw new ComponentNotFoundException("Could not find component for role '" + role + "'.", e);
             }
+
+            this.components.put(role, componentClass);
         }
 
         if ( !Component.class.isAssignableFrom(componentClass) ) {
-            log.error("The object found is not a Component");
+            log.error("DefaultComponentManager Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.");
             throw new ComponentNotAccessibleException(
                 "Component with role '" + role + "' (" + componentClass.getName() + ")does not implement Component.",
                 null
@@ -123,28 +112,21 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
         }
 
         // Work out what class of component we're dealing with.
-        if ( ThreadSafe.class.isAssignableFrom(componentClass) ) {
-            log.debug("DefaultComponentManager using threadsafe instance of " + componentClass.getName() + " for role " + role + ".");
+        if ( ThreadSafe.class.isAssignableFrom(componentClass)) {
             component = getThreadsafeComponent(role, componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
-            log.debug("DefaultComponentManager using poolable instance of "
-                + componentClass.getName() + " for role " + role + "."
-            );
-            component = getPooledComponent(componentClass);
+            component = getPooledComponent(role, componentClass);
         } else if ( SingleThreaded.class.isAssignableFrom(componentClass) ) {
             try {
-                log.debug("DefaultComponentManager using new instance of single threaded component "
-                    + componentClass.getName() + "for role " + role + "."
-                );
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-                log.error("Could not create new instance of SingleThreaded " + role, e);
+                log.error("DefaultComponentManager Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-                log.error("Could not access class " + componentClass.getName(), e);
+                log.error("DefaultComponentManager Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -156,18 +138,15 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
              * classes, treat as normal.
              */
             try {
-                log.debug("DefaultComponentManager using new instance of unmarked component "
-                    + componentClass.getName() + " for role " + role + "."
-                );
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
-                log.error("Could not create new instance of class " + componentClass.getName(), e);
+                log.error("DefaultComponentManager Could not instantiate component " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not instantiate component " + componentClass.getName() + ": " + e.getMessage(),
                     e
                 );
             } catch ( IllegalAccessException e ) {
-                log.error("Could not access class " + componentClass.getName(), e);
+                log.error("DefaultComponentManager Could not access class " + componentClass.getName(), e);
                 throw new ComponentNotAccessibleException(
                     "Could not access class " + componentClass.getName() + ": " + e.getMessage(),
                     e
@@ -235,34 +214,26 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
      */
     private Component getThreadsafeComponent(String role, Class componentClass)
     throws ComponentManagerException {
-        Component component = (Component)threadSafeInstances.get(role);
 
-        if ( component == null ) {
-            try {
-                component = (Component)componentClass.newInstance();
-            } catch ( InstantiationException e ) {
-                log.error("Failed to instantiate component " + componentClass.getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Failed to instantiate component " + componentClass.getName() + ": " + e.getMessage(),
-                    e
-                );
-            } catch ( IllegalAccessException e ) {
-                log.error("Could not access component " + componentClass.getName(), e);
-                throw new ComponentNotAccessibleException(
-                    "Could not access component " + componentClass.getName() + ": " + e.getMessage(),
-                    e
-                );
-            }
-            setupComponent(role, component);
-            threadSafeInstances.put(role, component);
+        Component retVal;
+
+        try {
+            retVal = (Component) componentClass.newInstance();
+
+            this.setupComponent(role, retVal);
+            this.instances.put(role, retVal);
+        } catch (Exception e) {
+            log.error("Could not set up the Component for role: " + role, e);
+            throw new ComponentNotAccessibleException("Could not set up the Component for role: " + role, e);
         }
-        return component;
+
+        return retVal;
     }
 
     /** Return an instance of a component from its associated pool.
      * @param componentClass the class of the component of which we need an instance.
      */
-    private Component getPooledComponent(Class componentClass)
+    private Component getPooledComponent(String role, Class componentClass)
     throws ComponentManagerException {
         ComponentPool pool = (ComponentPool)pools.get(componentClass);
 
@@ -270,7 +241,7 @@ public class DefaultComponentManager implements ComponentManager, Configurable {
             try {
                 log.debug("Creating new component pool for " + componentClass.getName() + ".");
                 pool = new ComponentPool(
-                    new ComponentFactory(componentClass, (Configuration)configurations.get(componentClass), this),
+                    new ComponentFactory(componentClass, (Configuration)configurations.get(role), this),
                     new ComponentPoolController()
                     );
             } catch (Exception e) {
