@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.101 2003/12/02 10:13:18 mpo Exp $
+    | CVS $Id: gump.xml,v 1.102 2003/12/11 18:22:39 sylvain Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -1080,6 +1080,24 @@
     <home nested="build/cocoon-@@DATE@@"/>
 
     <jar name="blocks/repository-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+  </project>
+
+  <project name="cocoon-block-paranoid" status="unstable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="paranoid"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="jakarta-servletapi"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/paranoid-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
   </project>
