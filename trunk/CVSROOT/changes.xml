@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.36 2000-03-01 16:04:50 stefano Exp $
+  $Id: changes.xml,v 1.37 2000-03-02 23:16:19 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,12 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="SM" type="add">
+   Added the ant scripts that were left over from my environment. Now I removed
+   everything from my environment, even the classpath is empty.. so I'll be
+   experiencing more what newbies do. This fixes some problems with javadoc
+   and classpaths not being correct.
+  </action>
   <action dev="SM" type="fix">
    Fixed bug in XSP processor that wasn't using URL to find out for user-defined
    taglib logicsheets.

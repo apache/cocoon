@@ -14,6 +14,7 @@ if [ "$JAVA_HOME" = "" ] ; then
 fi
 
 LOCALCLASSPATH=$JAVA_HOME/lib/tools.jar:./lib/xerces_1_0_1.jar:./lib/xalan_0_19_5.jar:./lib/fop_0_12_1.jar:./lib/servlet_2_2.jar:./lib/ant.jar:./lib/xml.jar
+ANT_HOME=./lib
 
 echo Building with classpath $CLASSPATH:$LOCALCLASSPATH
 echo
@@ -21,4 +22,4 @@ echo
 echo Starting Ant...
 echo
 
-$JAVA_HOME/bin/java -classpath $LOCALCLASSPATH:$CLASSPATH org.apache.tools.ant.Main $*
+$JAVA_HOME/bin/java -Dant.home=$ANT_HOME -classpath $LOCALCLASSPATH:$CLASSPATH org.apache.tools.ant.Main $*
