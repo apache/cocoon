@@ -110,17 +110,12 @@
        <xsl:value-of select="$text"/>
       </link>
      </xsl:when>
-     <xsl:when test="starts-with($href,'http')">
+     <xsl:when test="starts-with($href,'http') or contains($href,'.')">
       <link href="{$href}">
        <xsl:value-of select="$text"/>
       </link>
      </xsl:when>
      <xsl:otherwise>
-      <!--
-      <link href="http://wiki.cocoondev.org/Wiki.jsp?page={$href}">
-       <xsl:value-of select="$text"/>
-      </link>
-        -->
       <link href="{$href}.html">
        <xsl:value-of select="$text"/>
       </link>
@@ -137,17 +132,15 @@
        [<xsl:value-of select="$href"/>]
       </link>
      </xsl:when>
-     <xsl:when test="starts-with($href,'http')">
+     <xsl:when test="contains($href,'.png') or contains($href,'.jpg') or contains($href,'.gif')">
+      <img src="{$href}" alt="{$href}"/>
+     </xsl:when>
+     <xsl:when test="starts-with($href,'http') or contains($href,'.')">
       <link href="{$href}">
        <xsl:value-of select="$href"/>
       </link>
      </xsl:when>
      <xsl:otherwise>
-      <!--
-      <link href="http://wiki.cocoondev.org/Wiki.jsp?page={$href}">
-       <xsl:value-of select="$href"/>
-      </link>
-        -->
       <link href="{$href}.html">
        <xsl:value-of select="$href"/>
       </link>
