@@ -80,7 +80,7 @@ import java.net.MalformedURLException;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.4 2003/03/19 15:42:16 cziegeler Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.5 2003/05/06 23:39:16 vgritsenko Exp $
  */
 public class FOPSerializer
 extends AbstractSerializer
@@ -293,8 +293,8 @@ implements Composable, Configurable, CacheableProcessingComponent {
     }
 
     /**
-      * Recycle serializer by removing references
-      */
+     * Recycle serializer by removing references
+     */
     public void recycle() {
         super.recycle();
         this.driver = null;
@@ -302,8 +302,8 @@ implements Composable, Configurable, CacheableProcessingComponent {
     }
 
     /**
-    * Test if the component wants to set the content length
-    */
+     * Test if the component wants to set the content length
+     */
     public boolean shouldSetContentLength() {
         return this.setContentLength;
     }
