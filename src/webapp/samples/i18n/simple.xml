@@ -1,63 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document xmlns:i18n="http://apache.org/cocoon/i18n/2.1" i18n:attr="language" language="language">
-	<title>
-		<i18n:text>titletext</i18n:text>
-	</title>
-	<sub-title>
-		<i18n:date-time pattern="FULL"/>
-	</sub-title>
-	<annotation>
-		<i18n:translate>
-			<i18n:text key="doclink"/>
-			<i18n:param>
-				<link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html">Cocoon 2 Web Site</link>
-			</i18n:param>
-		</i18n:translate>
-	 </annotation>
-	<content>
-		<i18n:if locale="ru">
+
+<document xmlns:i18n="http://apache.org/cocoon/i18n/2.1"
+          i18n:attr="language"
+          language="language">
+  <title>
+    <i18n:text>titletext</i18n:text>
+  </title>
+
+  <sub-title>
+    <i18n:date-time pattern="FULL"/>
+  </sub-title>
+
+  <annotation>
+    <i18n:translate>
+      <i18n:text key="doclink"/>
+      <i18n:param>
+        <link href="http://cocoon.apache.org/2.1/userdocs/transformers/i18n-transformer.html">Cocoon 2 Web Site</link>
+      </i18n:param>
+    </i18n:translate>
+  </annotation>
+
+  <content>
+    <i18n:if locale="ru">
       <para title="ru" name="i18n:when">
-				Этот текст отображается только для <strong>русского</strong> языка.
-			</para>
-		</i18n:if>
-		<para title="first" name="article" i18n:attr="title name">
-			<i18n:text key="a_key">article_text1</i18n:text>
-		</para>
-		<para title="second" name="article" i18n:attr="title name">
-			<i18n:text>article_text2</i18n:text>
-		</para>
-		<para title="third" name="article" i18n:attr="title name">
-			<i18n:translate>
-				<i18n:text key="Hello"/>
-				<i18n:param>
-					<strong><i18n:text>Kot</i18n:text></strong>
-				</i18n:param>
-			</i18n:translate>
-		</para>
-		<para title="forth" name="article" i18n:attr="title name">
-			<i18n:translate>
-				One = {one}, two = {two}, {third}! {forth} This line is not translated {forth}
-				<i18n:param name="one"><i18n:text>one</i18n:text></i18n:param>
-				<i18n:param name="two"><i18n:text>two</i18n:text></i18n:param>
-				<i18n:param name="third">baby</i18n:param>
-				<i18n:param name="forth"> ~ </i18n:param>
-			</i18n:translate>
-		</para>
-		<para title="Number formatting (not translated)" name="article" i18n:attr="name">
-			<i18n:translate>
-				Number: {0} | Currency: {1} | Percent: {2}, processed on: {3}
-				<!--Old format: i18n:param type="number" src-locale="en" value="1703.74" /-->
-				<i18n:param><i18n:number src-locale="en" value="1703.74"/></i18n:param>
-				<!--Old format: i18n:param type="currency" src-locale="en">27.24</i18n:param-->
-				<i18n:param><i18n:number type="currency" src-locale="en" value="27.24"/></i18n:param>
-				<i18n:param><i18n:number type="percent" src-locale="en" value="1.2"/></i18n:param>
-				<i18n:param><i18n:date-time pattern="MEDIUM"/></i18n:param>
-			</i18n:translate>
-		</para>
-	</content>
-	<bottom>
-		<copyright>
-			<i18n:text>copyright</i18n:text>
-		</copyright>
-	</bottom>
+        <i>Этот текст отображается только для <strong>русского</strong> языка.</i>
+      </para>
+    </i18n:if>
+
+    <para title="first" name="article" i18n:attr="title name">
+      <i18n:text key="a_key">article_text1</i18n:text>
+    </para>
+    <para title="second" name="article" i18n:attr="title name">
+      <i18n:text>article_text2</i18n:text>
+    </para>
+    <para title="third" name="article" i18n:attr="title name">
+      <i18n:translate>
+        <i18n:text key="Hello"/>
+        <i18n:param>
+          <strong><i18n:text>Kot</i18n:text></strong>
+        </i18n:param>
+      </i18n:translate>
+    </para>
+    <para title="forth" name="article" i18n:attr="title name">
+      <i18n:translate>
+        One = {one}, two = {two}, {third}!
+        {forth} This line is not translated {forth}.
+        No{fifth}thing here.
+        <i18n:param name="one"><i18n:text>one</i18n:text></i18n:param>
+        <i18n:param name="two"><i18n:text>two</i18n:text></i18n:param>
+        <i18n:param name="third">baby</i18n:param>
+        <i18n:param name="forth"> ~ </i18n:param>
+      </i18n:translate>
+    </para>
+    <para title="Number formatting (not translated)" name="article" i18n:attr="name">
+      <i18n:translate>
+        Number: {0} | Currency: {1} | Percent: {2} | Processed on: {3}
+        <!--Old format: i18n:param type="number" src-locale="en" value="1703.74" /-->
+        <i18n:param><i18n:number src-locale="en" value="1703.74"/></i18n:param>
+        <!--Old format: i18n:param type="currency" src-locale="en">27.24</i18n:param-->
+        <i18n:param><i18n:number type="currency" src-locale="en" value="27.24"/></i18n:param>
+        <i18n:param><i18n:number type="percent" src-locale="en" value="1.2"/></i18n:param>
+        <i18n:param><i18n:date-time pattern="MEDIUM"/></i18n:param>
+      </i18n:translate>
+    </para>
+  </content>
+
+  <bottom>
+    <copyright>
+      <i18n:text>copyright</i18n:text>
+    </copyright>
+  </bottom>
 </document>
