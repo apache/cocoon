@@ -53,7 +53,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionRegistryImpl.java,v 1.4 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PortletDefinitionRegistryImpl 
 extends AbstractLogEnabled
@@ -145,9 +145,18 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
             }
 
             String baseWMDir = servletContext.getRealPath("");
+            // BEGIN PATCH for IBM WebSphere
+            if (baseWMDir.endsWith(File.separator)) {
+                baseWMDir = baseWMDir.substring(0, baseWMDir.length()-1);
+            }
+            // END PATCH for IBM WebSphere
             int lastIndex = baseWMDir.lastIndexOf(File.separatorChar);
             this.contextName = baseWMDir.substring(lastIndex+1);
             baseWMDir = baseWMDir.substring(0, lastIndex+1);
+            if ( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug("servletContext.getRealPath('') ="+ servletContext.getRealPath(""));
+                this.getLogger().debug("baseWMDir = " + baseWMDir);
+            }
             this.load(baseWMDir,mappingPortletXml, mappingWebXml);
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,9 +179,11 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     throws Exception {
         File f = new File(baseWMDir);
         String[] entries = f.list();
-        for (int i=0; i<entries.length; i++)
-        {
+        for (int i=0; i<entries.length; i++) {
             File entry = new File(baseWMDir+entries[i]);
+            if ( this.getLogger().isDebugEnabled() ) {
+                this.getLogger().debug("Searching file: " + entry);
+            }
             if (entry.isDirectory()) {
                 load(baseWMDir, entries[i], portletXMLMapping, webXMLMapping);
             }
@@ -185,6 +196,9 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
                         Mapping webXMLMapping) 
     throws Exception {
         String directory = baseDir+webModule+File.separatorChar+"WEB-INF"+File.separatorChar;
+        if ( this.getLogger().isDebugEnabled() ) {
+            this.getLogger().debug("Searching in directory: " + directory);
+        }
 
         File portletXml = new File(directory+"portlet.xml");
         File webXml = new File(directory+"web.xml");
@@ -243,9 +257,13 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
                 portletApp.preBuild(structure);
                 
                 portletApp.postBuild(structure);
+
+                this.getLogger().debug("portlet.xml loaded");
             }
 
             this.registry.add( portletApp );
+
+            this.getLogger().debug("Portlet added to registry");
 
             // fill portletsKeyObjectId
             final Iterator portlets = portletApp.getPortletDefinitionList().iterator();

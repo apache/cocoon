@@ -19,6 +19,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -28,6 +32,7 @@ import java.util.StringTokenizer;
 
 import org.apache.cocoon.environment.Request;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.source.SourceParameters;
 
 /**
@@ -35,16 +40,14 @@ import org.apache.excalibur.source.SourceParameters;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.15 2004/05/01 17:04:10 ugo Exp $
+ * @version CVS $Id$
  */
-
 public class NetUtils {
 
     /**
      * Array containing the safe characters set as defined by RFC 1738
      */
     private static BitSet safeCharacters;
-
 
     private static final char[] hexadecimal =
     {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -117,12 +120,14 @@ public class NetUtils {
                             byte x = (byte)Integer.parseInt(path.substring(i + 1, i + 3), 16);
                             encodedchars[encodedcharsLength] = x;
                         } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("NetUtils.decodePath: illegal hex characters in pattern %" + path.substring(i + 1, i + 3));
+                            throw new IllegalArgumentException("NetUtils.decodePath: " +
+                                                               "Illegal hex characters in pattern %" + path.substring(i + 1, i + 3));
                         }
                         encodedcharsLength++;
                         i += 3;
                     } else {
-                        throw new IllegalArgumentException("NetUtils.decodePath: % character should be followed by 2 hexadecimal characters.");
+                        throw new IllegalArgumentException("NetUtils.decodePath: " +
+                                                           "% character should be followed by 2 hexadecimal characters.");
                     }
                 }
                 try {
@@ -476,8 +481,67 @@ public class NetUtils {
     public static String removeAuthorisation(String uri) {
         if (uri.indexOf("@")!=-1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
             return uri.substring(0, uri.indexOf(":")+2)+uri.substring(uri.indexOf("@")+1);
+        }
+        return uri;
+    }
+
+    // FIXME Remove when JDK1.3 support is removed.
+    private static Method urlEncode;
+    private static Method urlDecode;
+
+    static {
+        if (SystemUtils.isJavaVersionAtLeast(140)) {
+            try {
+	            urlEncode = URLEncoder.class.getMethod("encode", new Class[]{String.class, String.class});
+	            urlDecode = URLDecoder.class.getMethod("decode", new Class[]{String.class, String.class});
+            } catch (NoSuchMethodException e) {
+            	// EMPTY
+            }
+        } else {
+            urlEncode = null;
+            urlDecode = null;    
+        }
         } 
 
-        return uri;
+    /**
+     * Pass through to the {@link java.net.URLEncoder}. If running under JDK &lt; 1.4,
+     * default encoding will always be used.
+     */
+    public static String encode(String s, String enc) throws UnsupportedEncodingException {
+        if (urlEncode != null) {
+            try {
+                return (String)urlEncode.invoke(s, new Object[]{ s, enc } );
+            } catch (IllegalAccessException e) {
+                // EMPTY
+            } catch (InvocationTargetException e) {
+                if (e.getTargetException() instanceof UnsupportedEncodingException) {
+                    throw (UnsupportedEncodingException)e.getTargetException();
+                } else if (e.getTargetException() instanceof RuntimeException) {
+                    throw (RuntimeException)e.getTargetException();
+                }
+            }
+        }
+        return URLEncoder.encode(s);
+    }
+
+    /**
+     * Pass through to the {@link java.net.URLDecoder}. If running under JDK &lt; 1.4,
+     * default encoding will always be used.
+     */
+    public static String decode(String s, String enc) throws UnsupportedEncodingException {
+        if (urlDecode != null) {
+            try {
+                return (String)urlDecode.invoke(s, new Object[]{ s, enc } );
+            } catch (IllegalAccessException e) {
+                // EMPTY
+            } catch (InvocationTargetException e) {
+                if (e.getTargetException() instanceof UnsupportedEncodingException) {
+                    throw (UnsupportedEncodingException)e.getTargetException();
+                } else if (e.getTargetException() instanceof RuntimeException) {
+                    throw (RuntimeException)e.getTargetException();
+                }
+            }
+        }
+        return URLDecoder.decode(s);
     }
 }

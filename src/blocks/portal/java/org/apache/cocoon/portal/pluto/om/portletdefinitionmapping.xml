@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
+                           "http://castor.exolab.org/mapping.dtd">
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,8 +16,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE databases PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN"
-                           "http://castor.exolab.org/mapping.dtd">
 <mapping xmlns:portlet="http://java.sun.com/xml/ns/portlet/portlet-app_1_0.xsd">
 
   <class name="org.apache.cocoon.portal.pluto.om.common.DisplayNameImpl">

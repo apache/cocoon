@@ -29,7 +29,7 @@ import org.apache.pluto.util.StringUtils;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PreferenceImpl.java,v 1.3 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Serializable {
     private final static String NULL_VALUE = "#*!0_NULL_0!*#";
@@ -89,7 +89,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         this.name = name;
     }
 
-    public void setValues(Collection _value)
+    public void setValues(java.util.List _value)
     {
         if (this.value == null) {
             this.value = new ArrayList();
@@ -149,7 +149,7 @@ public class PreferenceImpl implements Preference, PreferenceCtrl, java.io.Seria
         value.addAll(_value);
     }
 
-    protected Collection getClonedCastorValuesAsCollection()
+    protected List getClonedCastorValuesAsList()
     {
         List returnValue = new ArrayList(value.size());
 
