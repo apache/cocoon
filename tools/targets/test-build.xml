@@ -28,13 +28,11 @@
 
   <!-- Anteater tests  -->
   <target name="anteater-tests" depends="compile-tests,block-anteater-tests">
-    <property name="host" value="localhost"/>
-    <property name="port" value="8888"/>
-    <property name="base" value="/"/>
-    <property name="anteater.home" value="D:\downloads\anteater-0.9.16"/>
+    <!-- anteater parameters are set in build.properties -->
     <available file="${anteater.home}" property="anteater.present"/>
     <fail unless="anteater.present"
-          message="Please make sure Anteater is installed in ${anteater.home} or adjust the anteater.home property"/>
+          message="To use anteater, please install it and set anteater.home (currently ${anteater.home}) in your local.build.properties"/>
+    <echo>To run these tests, another instance of Cocoon must be running at ${anteater.target.host}:${anteater.target.port} (base path=${anteater.target.base.path})</echo>
     <java classname="org.apache.tools.ant.Main" fork="true">
       <classpath>
         <fileset dir="${anteater.home}">
@@ -48,7 +46,7 @@
       <jvmarg value="-Danteater.resources=${anteater.home}/resources"/>
       <jvmarg value="-Danteater.report=${anteater.home}/resources/scripts/report.xml"/>
       <jvmarg value="-Djava.endorsed.dirs=${anteater.home}/lib"/>
-      <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${host} -Dport=${port} -Dbase=${base}"/>
+      <arg line="-f ${build.test}/anteater/all-tests.xml -Dhost=${anteater.target.host} -Dport=${anteater.target.port} -Dbase=${anteater.target.base.path}"/>
     </java>
   </target>
 
