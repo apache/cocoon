@@ -24,7 +24,7 @@ import org.apache.cocoon.Constants;
  * The <code>HttpServletRequest</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-26 16:24:53 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-26 19:40:44 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -277,10 +277,10 @@ public class XSPRequestHelper extends XSPObjectHelper {
 
     HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
     HttpSession session = request.getSession(false);
-    String value = null;
+    Object value = null;
 
     if (session != null) {
-        value = (String) session.getAttribute(name);
+        value = session.getAttribute(name);
     }
 
     if (value == null) {
@@ -302,6 +302,35 @@ public class XSPRequestHelper extends XSPObjectHelper {
 
     HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
     request.removeAttribute(name);
+  }
+
+  /**
+   * Get the specified attribute
+   *
+   * @param objectModel The Map objectModel
+   * @param name The parameter name
+   */
+  public static Object getAttribute(
+    Map objectModel,
+    String name) {
+
+    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    return request.getAttribute(name);
+  }
+
+  /**
+   * Set the specified attribute
+   *
+   * @param objectModel The Map objectModel
+   * @param name The parameter name
+   */
+  public static void setAttribute(
+    Map objectModel,
+    String name,
+    Object value) {
+
+    HttpRequest request = (HttpRequest)objectModel.get(Constants.REQUEST_OBJECT);
+    request.setAttribute(name, value);
   }
 
   /**

@@ -174,7 +174,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-03-19 21:20:10 $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-03-26 19:40:41 $
  */
 public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfigurableAction implements Configurable {
     protected Map files = new HashMap();
@@ -320,7 +320,10 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
         }
 
         String attribute = entry.getAttribute("param", "");
-        Object value = request.get(attribute);
+        Object value = request.getParameter(attribute);
+
+        if (value == null) value = request.getAttribute(attribute);
+        if (value == null) value = request.get(attribute);
 
         if (value instanceof String) {
             value = ((String) value).trim();
@@ -340,6 +343,7 @@ public abstract class AbstractDatabaseAction extends AbstractComplimentaryConfig
                     break;
                 case Types.CLOB:
                 case Types.VARCHAR:
+                case Types.OTHER:
                     break;
                 default:
                     statement.setNull(position, typeObject.intValue());

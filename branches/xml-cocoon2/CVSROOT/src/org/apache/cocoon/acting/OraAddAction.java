@@ -19,6 +19,7 @@ import org.apache.cocoon.generation.ImageDirectoryGenerator;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -42,7 +43,7 @@ import org.xml.sax.EntityResolver;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-03-19 21:20:14 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-03-26 19:40:42 $
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -251,19 +252,17 @@ public class OraAddAction extends DatabaseAddAction {
 
                 for (int i = 0; i < keys.length; i++) {
                     String mode = keys[i].getAttribute("mode", "automatic");
-                    if ("manual".equals(mode) || "form".equals(mode)) {
-                        if (numKeys > 0) {
-                            queryBuffer.append(", ");
-                        }
-
-                        queryBuffer.append(keys[i].getAttribute("dbcol"));
-
-                        if ("manual".equals(mode)) {
-                            this.setSelectQuery(table.getAttribute("name"), keys[i]);
-                        }
-
-                        numKeys++;
+                    if (numKeys > 0) {
+                        queryBuffer.append(", ");
                     }
+
+                    queryBuffer.append(keys[i].getAttribute("dbcol"));
+
+                    if ("manual".equals(mode)) {
+                        this.setSelectQuery(table.getAttribute("name"), keys[i]);
+                    }
+
+                    numKeys++;
                 }
 
                 for (int i = 0; i < values.length; i++) {
@@ -277,10 +276,23 @@ public class OraAddAction extends DatabaseAddAction {
                 queryBuffer.append(") VALUES (");
 
                 numKeys = 0;
+                ArrayList sequences = new ArrayList();
 
                 for (int i = 0; i < keys.length; i++) {
                     if (numKeys > 0) queryBuffer.append(", ");
-                    if ("automatic".equals(keys[i].getAttribute("mode", "automatic")) == false) {
+                    if ("automatic".equals(keys[i].getAttribute("mode", "automatic"))) {
+                        String sequence = keys[i].getAttribute("sequence", "");
+                        queryBuffer.append(sequence);
+
+                        if (sequences.contains(sequence)) {
+                            queryBuffer.append(".CURRVAL");
+                        } else {
+                            sequences.add(sequence);
+                            queryBuffer.append(".NEXTVAL");
+                        }
+
+                        numKeys++;
+                    } else {
                         queryBuffer.append("?");
                         numKeys++;
                     }
