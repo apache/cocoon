@@ -18,7 +18,7 @@
 <!--+
     | Session block samples sitemap.
     |
-    | CVS $Id: sitemap.xmap,v 1.11 2004/03/06 02:26:17 antonio Exp $
+    | CVS $Id$
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
