@@ -18,15 +18,13 @@ package org.apache.cocoon.components.thread;
 import org.apache.avalon.framework.logger.ConsoleLogger;
 import org.easymock.MockControl;
 
-
 /**
  * The $classType$ class ...
  *
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version $Id$
  */
-public class DefaultThreadPoolTestCase
-    extends AbstractTestCase
+public class DefaultThreadPoolTestCase extends AbstractTestCase
 {
     //~ Methods ----------------------------------------------------------------
 
@@ -38,10 +36,11 @@ public class DefaultThreadPoolTestCase
         final DefaultThreadPool pool = new DefaultThreadPool(  );
         pool.enableLogging( new ConsoleLogger( ConsoleLogger.LEVEL_DEBUG ) );
         pool.setName( "mypool" );
-        // We cannot mock the DefaultThreadFactory as the underlying 
-        // PooledExecutor of the DefaultThreadPool will again wrapp it into a 
+
+        // We cannot mock the DefaultThreadFactory as the underlying
+        // PooledExecutor of the DefaultThreadPool will again wrapp it into a
         // PooledExecutor.Worker instance that does some bookeeping.
-        // Using a easymocked DefaultThreadFactory will prevent the 
+        // Using a easymocked DefaultThreadFactory will prevent the
         // PooledExecutor from shutting down and thus hangs forever.
         final ThreadFactory threadFactory = new DefaultThreadFactory();
         threadFactory.setPriority( Thread.MAX_PRIORITY );
@@ -53,6 +52,7 @@ public class DefaultThreadPoolTestCase
         pool.setBlockPolicy( "ABORT" );
         pool.setShutdownGraceful( false );
         pool.setShutdownWaitTimeMs( 12345 );
+
         assertEquals( "block-policy", "ABORT", pool.getBlockPolicy(  ) );
         assertEquals( "keep-alive-time-ms", 11000L, pool.getKeepAliveTime(  ) );
         assertEquals( "max-queueu-size", 230, pool.getMaximumQueueSize(  ) );
@@ -82,10 +82,10 @@ public class DefaultThreadPoolTestCase
         final DefaultThreadPool pool = new DefaultThreadPool(  );
         pool.enableLogging( new ConsoleLogger( ConsoleLogger.LEVEL_DEBUG ) );
         pool.setName( "mypool" );
-        // We cannot mock the DefaultThreadFactory as the underlying 
-        // PooledExecutor of the DefaultThreadPool will again wrapp it into a 
+        // We cannot mock the DefaultThreadFactory as the underlying
+        // PooledExecutor of the DefaultThreadPool will again wrapp it into a
         // PooledExecutor.Worker instance that does some bookeeping.
-        // Using a easymocked DefaultThreadFactory will prevent the 
+        // Using a easymocked DefaultThreadFactory will prevent the
         // PooledExecutor from shutting down and thus hangs forever.
         pool.setThreadFactory( new DefaultThreadFactory() );
         pool.setQueue( 230 );
@@ -108,7 +108,7 @@ public class DefaultThreadPoolTestCase
      * @throws InterruptedException DOCUMENT ME!
      */
     public final void testShutdown(  )
-        throws InterruptedException
+    throws InterruptedException
     {
         final Runnable runnable = new Runnable(){
             public void run()

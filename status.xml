@@ -413,6 +413,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="VG" type="fix">
+     Runnable Manager: Fix bug preventing scheduling of two different jobs at the same time.
+   </action>
    <action dev="SW" type="add">
      Many changes in CForms block.
      <br/>

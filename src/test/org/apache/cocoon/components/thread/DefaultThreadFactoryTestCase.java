@@ -24,8 +24,7 @@ import junit.framework.TestCase;
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
  * @version $Id$
  */
-public class DefaultThreadFactoryTestCase
-    extends TestCase
+public class DefaultThreadFactoryTestCase extends TestCase
 {
     //~ Methods ----------------------------------------------------------------
 
@@ -100,8 +99,7 @@ public class DefaultThreadFactoryTestCase
      * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
      * @version $Id$
      */
-    private static class DummyRunnable
-        implements Runnable
+    private static class DummyRunnable implements Runnable
     {
         //~ Methods ------------------------------------------------------------
 
