@@ -18,6 +18,8 @@ xmlerror(){
 }
 if [ -e $JAVA_HOME/jre/lib/ext/xml.jar ] ;
 then xmlerror;
+elif [ -e $JAVA_HOME/jre/lib/ext/jaxp.jar ] ;
+then xmlerror;
 elif [ -e $JAVA_HOME/jre/lib/ext/parser.jar ] ;
 then xmlerror;
 elif [ -e $JAVA_HOME/jre/lib/ext/crimson.jar ] ;
