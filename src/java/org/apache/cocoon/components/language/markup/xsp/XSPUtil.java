@@ -53,7 +53,6 @@ package org.apache.cocoon.components.language.markup.xsp;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.url.URLFactory;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -63,6 +62,7 @@ import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.util.Tokenizer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.xml.sax.SAXParser;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -78,9 +78,10 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.1 2003/03/09 00:08:55 pier Exp $
+ * @version CVS $Id: XSPUtil.java,v 1.2 2003/03/10 23:03:53 stefano Exp $
  */
 public class XSPUtil {
+    
     public static String pathComponent(String filename) {
         int i = filename.lastIndexOf(File.separator);
         return (i >= 0) ? filename.substring(0, i) : filename;
@@ -157,11 +158,9 @@ public class XSPUtil {
         return result;
     }
 
-    public static void include(InputSource is, ContentHandler parentContentHandler, Parser parser)
+    public static void include(InputSource is, ContentHandler parentContentHandler, SAXParser parser)
         throws SAXException, IOException {
-            parser.setConsumer(
-                new IncludeXMLConsumer(parentContentHandler));
-            parser.parse(is);
+            parser.parse(is,new IncludeXMLConsumer(parentContentHandler));
     }
 
     public static String encodeMarkup(String string) {
@@ -187,12 +186,12 @@ public class XSPUtil {
     }
 
     public static String formEncode(String text) throws Exception {
-    return URLEncoder.encode (text);
+    	return URLEncoder.encode (text);
     }
 
     // Shameless, ain't it?
     public static String formDecode(String s) throws Exception {
-    return URLDecoder.decode (s);
+    	return URLDecoder.decode (s);
     }
 
   /* Logicsheet Utility Methods */
@@ -352,10 +351,10 @@ public class XSPUtil {
     public static void includeInputSource(InputSource source, ComponentManager manager, ContentHandler contentHandler) 
         throws RuntimeException {
         
-        Parser newParser = null;
+        SAXParser newParser = null;
         
         try {
-            newParser = (Parser) manager.lookup(Parser.ROLE);
+            newParser = (SAXParser) manager.lookup(SAXParser.ROLE);
             XSPUtil.include(source, contentHandler, newParser);
         } catch (Exception e) {
             throw new CascadingRuntimeException("Could not include page", e);
@@ -363,6 +362,4 @@ public class XSPUtil {
             if (newParser != null) manager.release((Component) newParser);
         }
     }
-        
-
 }
