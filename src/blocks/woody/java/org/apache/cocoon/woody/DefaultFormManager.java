@@ -54,7 +54,10 @@ import org.apache.cocoon.woody.formmodel.*;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceValidity;
+import org.apache.excalibur.store.Store;
 import org.apache.avalon.framework.CascadingException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
@@ -65,21 +68,22 @@ import org.w3c.dom.Element;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.io.IOException;
 
 /**
  * Component implementing the {@link FormManager} role.
  *
- * <p>Some important TODO's: cache FormDefiniton's (now they are reparsed and recreated each
- * on each request), and make the list of widget implementations configurable instead of hardcoded.
  */
-public class DefaultFormManager implements FormManager, ThreadSafe, Composable {
+public class DefaultFormManager implements FormManager, ThreadSafe, Composable, Disposable {
     private ComponentManager componentManager;
     private Map widgetDefinitionBuilders = new HashMap();
     private FormDefinitionBuilder formDefinitionBuilder;
     private boolean initialized = false;
+    private Store store;
 
     public void compose(ComponentManager componentManager) throws ComponentException {
         this.componentManager = componentManager;
+        this.store = (Store)componentManager.lookup(Store.TRANSIENT_STORE);
     }
 
     public void lazyInitialize() throws Exception {
@@ -126,31 +130,75 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable {
     }
 
     public Form createForm(Source source) throws Exception {
-        return (Form)getFormDefinition(source).createInstance();
+        FormDefinition formDefinition = getFormDefinition(source);
+        return (Form)formDefinition.createInstance();
     }
 
     public FormDefinition getFormDefinition(Source source) throws Exception {
         lazyInitialize();
 
-        // TODO caching!!
-        Document formDocument;
-        try {
-            InputSource inputSource = new InputSource(source.getInputStream());
-            inputSource.setSystemId(source.getURI());
-            formDocument = DomHelper.parse(inputSource);
+        FormDefinition formDefinition = getStoredFormDefinition(source);
+        if (formDefinition == null) {
+            Document formDocument;
+            try {
+                InputSource inputSource = new InputSource(source.getInputStream());
+                inputSource.setSystemId(source.getURI());
+                formDocument = DomHelper.parse(inputSource);
+            }
+            catch (Exception exc) {
+                throw new CascadingException("Could not parse form definition from " + source.getURI(), exc);
+            }
+
+            Element formElement = formDocument.getDocumentElement();
+
+            // check that the root element is a wd:form element
+            if (!(formElement.getLocalName().equals("form") || Constants.WD_NS.equals(formElement.getNamespaceURI())))
+                throw new Exception("Expected a Woody form element at " + DomHelper.getLocation(formElement));
+
+            formDefinition = (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
+            storeFormDefinition(formDefinition, source);
         }
-        catch (Exception exc) {
-            throw new CascadingException("Could not parse form definition from " + source.getURI(), exc);
-        }
-
-        Element formElement = formDocument.getDocumentElement();
-
-        // check that the root element is a wd:form element
-        if (!(formElement.getLocalName().equals("form") || Constants.WD_NS.equals(formElement.getNamespaceURI())))
-            throw new Exception("Expected a Woody form element at " + DomHelper.getLocation(formElement));
-
-        FormDefinition formDefinition = (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);
         return formDefinition;
+    }
+
+    private FormDefinition getStoredFormDefinition(Source source) {
+        String key = "WoodyForm:" + source.getURI();
+        SourceValidity newValidity = source.getValidity();
+
+        if (newValidity == null) {
+            store.remove(key);
+            return null;
+        }
+
+        Object[] formDefinitionAndValidity = (Object[])store.get(key);
+        if (formDefinitionAndValidity == null)
+            return null;
+
+        SourceValidity storedValidity = (SourceValidity)formDefinitionAndValidity[1];
+        int valid = storedValidity.isValid();
+        boolean isValid;
+        if (valid == 0) {
+            valid = storedValidity.isValid(newValidity);
+            isValid = (valid == 1);
+        } else {
+            isValid = (valid == 1);
+        }
+
+        if (!isValid) {
+            store.remove(key);
+            return null;
+        }
+
+        return (FormDefinition)formDefinitionAndValidity[0];
+    }
+
+    private void storeFormDefinition(FormDefinition formDefinition, Source source) throws IOException {
+        String key = "WoodyForm:" + source.getURI();
+        SourceValidity validity = source.getValidity();
+        if (validity != null) {
+            Object[] formDefinitionAndValidity = {formDefinition,  validity};
+            store.store(key, formDefinitionAndValidity);
+        }
     }
 
     public WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception {
@@ -161,5 +209,9 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable {
         if (builder == null)
             throw new Exception("Unkown kind of widget \"" + widgetName + "\" specified at " + DomHelper.getLocation(widgetDefinition));
         return builder.buildWidgetDefinition(widgetDefinition);
+    }
+
+    public void dispose() {
+        componentManager.release(store);
     }
 }
