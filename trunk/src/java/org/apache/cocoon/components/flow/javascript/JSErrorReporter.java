@@ -10,7 +10,7 @@ import org.apache.avalon.framework.logger.Logger;
  * org.mozilla.javascript.ErrorReporter}. 
  * Like ToolErrorReporter but logs to supplied logger instead of stdout
  *
- * @version CVS $Id: JSErrorReporter.java,v 1.4 2003/03/17 00:32:35 coliver Exp $
+ * @version CVS $Id: JSErrorReporter.java,v 1.5 2003/03/17 00:38:39 coliver Exp $
  */
 public class JSErrorReporter implements ErrorReporter
 {
@@ -26,16 +26,16 @@ public class JSErrorReporter implements ErrorReporter
                     String lineSrc, int column)
   {
       String errMsg = getErrorMessage("msg.error", message, 
-				      sourceName, line, lineSrc, column);
+                                      sourceName, line, lineSrc, column);
       System.err.println(errMsg);
       logger.error(errMsg);
   }
 
   public void warning(String message, String sourceName, int line,
-		      String lineSrc, int column)
+                      String lineSrc, int column)
   {
       String errMsg = getErrorMessage("msg.warning", message, 
-				    sourceName, line, lineSrc, column);
+                                    sourceName, line, lineSrc, column);
       System.err.println(errMsg);
       logger.warn(errMsg);
   }
@@ -45,8 +45,8 @@ public class JSErrorReporter implements ErrorReporter
                                          int column)
   {
       String errMsg = getErrorMessage("msg.error", message,
-				      sourceName, line,
-				      lineSrc, column);
+                                      sourceName, line,
+                                      lineSrc, column);
       System.err.println(errMsg);
       return new EvaluatorException(errMsg);
   }
@@ -69,17 +69,17 @@ public class JSErrorReporter implements ErrorReporter
    * real values
    */
     String getErrorMessage(String type,
-			   String message,
-			   String sourceName, int line,
-			   String lineSource, int column)
+                           String message,
+                           String sourceName, int line,
+                           String lineSource, int column)
     {
-	if (line > 0) {
-	    if (sourceName != null) {
-		Object[] errArgs = { sourceName, new Integer(line), message };
-		return ToolErrorReporter.getMessage("msg.format3", errArgs);
-	  } else {
-	      Object[] errArgs = { new Integer(line), message };
-	      return ToolErrorReporter.getMessage("msg.format2", errArgs);
+        if (line > 0) {
+            if (sourceName != null) {
+                Object[] errArgs = { sourceName, new Integer(line), message };
+                return ToolErrorReporter.getMessage("msg.format3", errArgs);
+          } else {
+              Object[] errArgs = { new Integer(line), message };
+              return ToolErrorReporter.getMessage("msg.format2", errArgs);
             }
         } else {
             Object[] errArgs = { message };
