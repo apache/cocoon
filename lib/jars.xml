@@ -440,15 +440,44 @@
   </file>
 
   <file>
-    <title>Transform HTML to XML</title>
+    <title>CyberNeko DTD Converter</title>
     <description>NekoHTML is a lightweight HTML syntax correcter written using Xerces Native Interface.</description>
-    <used-by>NekoHTML generator (html block)</used-by>
-    <lib>html/lib/nekohtml-0.9.3.jar</lib>
+    <used-by>Forms block</used-by>
+    <lib>forms/lib/nekodtd-0.1.10.jar</lib>
     <homepage>http://www.apache.org/~andyc/neko/</homepage>
   </file>
 
   <file>
-    <title>Search engine</title>
+    <title>CyberNeko</title>
+    <description>NekoDTD is a configuration that parses Document Type Definition (DTD) files and converts the information into an XML document.</description>
+    <used-by>NekoHTML generator (html block), Forms block</used-by>
+    <lib>optional/nekohtml-0.9.3.jar</lib>
+    <homepage>http://www.apache.org/~andyc/neko/</homepage>
+  </file>  
+  
+  <file>
+    <title>Daisy HTMLCleaner</title>
+    <description>
+      NekoHTML, but then performs further filtering, conversion and restructuring 
+      on it to have a nice output, limitted to a subset of the HTML DTD
+    </description>
+    <used-by>Forms block</used-by>
+    <lib>forms/lib/daisy-htmlcleaner-1.1.jar</lib>
+    <homepage>http://daisy.cocoondev.org/</homepage>
+  </file>  
+
+  <file>
+    <title>Daisy Utils</title>
+    <description>
+      Java Utility classes of Daisy
+    </description>
+    <used-by>Forms block - HTMLCleaner</used-by>
+    <lib>forms/lib/daisy-util-1.1.jar</lib>
+    <homepage>http://daisy.cocoondev.org/</homepage>
+  </file>    
+
+  <file>
+    <title>Lucene (Search engine)</title>
     <description>
       jakarta-lucene is a search engine toolkit designed for indexing and
       searching of documents.
