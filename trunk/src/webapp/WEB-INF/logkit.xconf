@@ -118,12 +118,6 @@
 
       <!-- Cocoon cache and stores logger -->
       <category name="store" log-level="ERROR">
-        <log-target id-ref="core"/>
-        <log-target id-ref="error"/>
-      </category>
-
-      <!-- Cocoon store logger -->
-      <category name="store" log-level="ERROR">
         <category name="janitor" log-level="ERROR">
           <log-target id-ref="core"/>
           <log-target id-ref="error"/>
