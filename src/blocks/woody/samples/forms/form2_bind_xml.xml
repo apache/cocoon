@@ -3,39 +3,23 @@
     | Binding template between 
     |   - form_data file (backend)
     |   - and form_model file
-    | Mappings
-    |   woody-widget              <> backend-xpath
-    |   __________________________________________________
-    |   {context}                    /data/wrapper/context
-    |   {relative info context}        info  
-    |   email                            email
-    |   somebool                         - - - - not implemented yet
-    |   account                          account/@size
-    |   number1                          number
-    |   drinks                           - - - - not implemented yet
-    |   phone                            phone
-    |     cntr                              @cntr
-    |     zone                              zone
-    |     number                            number
-    |
-    |   ipaddress                      ipaddress
-    
-    |   {contacts-repeater}            contacts | each row = contact
-    |     firstname                      firstname
-    |     lastname                       lastname
-    |     email                          email
-    |     phone                          phone/@nr
      -->
 <wb:context 
   xmlns:wb="http://apache.org/cocoon/woody/binding/1.0" 
+  xmlns:wd="http://apache.org/cocoon/woody/definition/1.0" 
 	path="/data/wrapper/context" >
 
   <wb:context path="info">
   	<!-- the email value will not be saved because of the @readonly -->
     <wb:field id="email"   path="email"         readonly="true"/>
+
 		<!-- jxpath binds to nodes as well as to attributes -->
-    <wb:field id="account" path="account/@size" />
-    <wb:field id="number1" path="number"        />
+    <wb:field id="number" path="number/@value">
+      <!-- for non-string datatypes, a convertor must be specified. These are
+      the same convertors as can be used in form definitions, but require an
+      extra datatype attribute. Here we use the default convertor for longs. -->
+      <wd:convertor datatype="long"/>
+    </wb:field>
 
 	  <!-- one entry field in the client maps through aggregate fields -->
     <wb:aggregate id="phone" path="phone" >
@@ -48,11 +32,19 @@
   </wb:context>
   
   
-  <wb:field id="ipaddress" path="ipaddress" >
+  <wb:field id="ipaddress" path="ipaddress">
     <wb:on-update>
     	<!-- if the value has changed, the attribute will be set -->
-      <wb:set-attribute name="changed" value="true" />
+      <wb:set-attribute name="changed" value="true"/>
     </wb:on-update>
+  </wb:field>
+
+  <wb:field id="birthday" path="birthday">
+    <wd:convertor datatype="date" type="formatting">
+      <wd:patterns>
+        <wd:pattern>yyyy-MM-dd</wd:pattern>
+      </wd:patterns>
+    </wd:convertor>
   </wb:field>
 
 

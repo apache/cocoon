@@ -4,11 +4,7 @@
 
 	<info>
 	  <email boolBindingWorks="false">yourname@yourdomain.com</email>
-    <account size="3" />
-    <number>22234</number>
-    <drinks>  <!-- no binding available yet -->
-    	<drink>Leffe</drink>
-    </drinks>
+    <number value="3"/>
     
     <phone cntr="32">
     	<zone>2</zone>
@@ -17,6 +13,7 @@
 	</info>
 	
   <ipaddress changed="false">10.34.44.78</ipaddress>
+  <birthday>1960-04-10</birthday>
 
   <contacts>
     <contact id="1" row-state="original">

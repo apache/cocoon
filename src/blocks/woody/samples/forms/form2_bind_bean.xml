@@ -13,6 +13,8 @@
   <!-- the email value will not be saved because of the @readonly -->
   <wb:field id="email" path="email" readonly="true"/>
   <wb:field id="ipaddress" path="ipAddress"/>
+  <wb:field id="birthday" path="birthday"/>
+  <wb:field id="number" path="aNumber"/>
 
   <!-- An aggregatefield is a special kind of widget that lets
   the user edit the value of multiple widgets through one text box
