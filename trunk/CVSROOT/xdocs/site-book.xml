@@ -9,8 +9,10 @@
   <page id="license" label="License" source="license.xml"/>
 <separator/>
   <page id="install" label="Install" source="installing.xml"/>
+<!-- too out of date
   <page id="install-case-solaris" label="Solaris8 Example" source="installation-case-solaris-8.xml"/>
   <page id="install-case-windows" label="Win2k Example" source="installation-case-windows-2000.xml"/>
+-->
 <separator/>
   <page id="technologies" label="Technologies" source="technologies.xml"/>
   <page id="infrastructure" label="Infrastructure" source="infrastructure.xml"/>
