@@ -19,6 +19,7 @@
   <sample name="Registration" href="registration">A simple registration form.</sample>
   <sample name="Car selector" href="carselector">Illustrates programmatically changing selectionlists.</sample>
   <sample name="Upload" href="upload">Shows an upload widget used with Flowscript</sample>
+  <sample name="Custom validation" href="customvalidationdemo">Shows custom validation and messages widget.</sample>
  </group>
 
  <group name="Binding Samples">
