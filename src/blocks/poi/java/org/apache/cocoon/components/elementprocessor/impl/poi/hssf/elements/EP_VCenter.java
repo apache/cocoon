@@ -27,10 +27,8 @@ import java.io.IOException;
  *
  * This element has a single attribute, value, which is boolean.
  *
- * This element is not used in HSSFSerializer 1.0
- *
  * @author Marc Johnson (marc_johnson27591@hotmail.com)
- * @version CVS $Id: EP_VCenter.java,v 1.5 2004/03/05 13:02:04 bdelacretaz Exp $
+ * @version CVS $Id: EP_VCenter.java,v 1.6 2004/07/04 20:57:02 antonio Exp $
  */
 public class EP_VCenter extends BaseElementProcessor {
     private static final String _value_attribute = "value";
@@ -51,9 +49,17 @@ public class EP_VCenter extends BaseElementProcessor {
      */
     public boolean getValue() throws IOException {
         if (_value == null) {
-            _value =
-                BooleanConverter.extractBoolean(getValue(_value_attribute));
+            _value = BooleanConverter.extractBoolean(this.getValue(_value_attribute));
         }
         return _value.booleanValue();
+    }
+    
+    /**
+     * Setup whether or not the worksheet content is centered (vertically)
+     * on the page when it is printed
+     * @exception IOException
+     */
+    public void endProcessing() throws IOException{
+        this.getSheet().setVCenter(this.getValue());
     }
 }   // end public class EP_VCenter
