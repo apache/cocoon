@@ -9,10 +9,8 @@
   
   <sitemap>
     <partition>
-      <process uri="*.txt" source="*.xml">
-        <generator name="request">
-          <parameter name="testName" value="testValue"/>
-         </generator>
+      <process uri="**/" source="**/">
+        <generator name="directory"/>
         <serializer name="xml">
           <parameter name="contentType" value="text/xml"/>
         </serializer>
