@@ -77,7 +77,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.5 2003/07/31 15:43:49 gianugo Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.6 2003/07/31 17:30:13 gianugo Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Component, Composable, Contextualizable, Interpreter,
@@ -199,7 +199,6 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
             result = processor.process(wrapper);
             wrapper.commitResponse();
             out.flush();
-            out.close();
 
             // Return whatever the processor returned us
             return(result);
