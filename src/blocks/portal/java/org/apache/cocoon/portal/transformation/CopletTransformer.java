@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.19 2004/04/01 10:25:41 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -267,9 +267,9 @@ extends AbstractCopletTransformer {
             if ( addParametersAsHiddenFields ) {
                 // create hidden input fields
                 RequestParameters pars = new RequestParameters(parameters);
-                Enumeration enum = pars.getParameterNames();
-                while ( enum.hasMoreElements() ) {
-                    String pName = (String)enum.nextElement();
+                Enumeration enumeration = pars.getParameterNames();
+                while ( enumeration.hasMoreElements() ) {
+                    String pName = (String)enumeration.nextElement();
                     String pValue = pars.getParameter(pName);
                     AttributesImpl hiddenAttrs = new AttributesImpl();
                     hiddenAttrs.addCDATAAttribute("type", "hidden");

@@ -136,9 +136,9 @@ extends AbstractSAXTransformer {
             if ( parameters != null && parameters.length() > 0 ) {
                 // create hidden input fields
                 RequestParameters pars = new RequestParameters(parameters);
-                Enumeration enum = pars.getParameterNames();
-                while ( enum.hasMoreElements() ) {
-                    String pName = (String)enum.nextElement();
+                Enumeration enumeration = pars.getParameterNames();
+                while ( enumeration.hasMoreElements() ) {
+                    String pName = (String)enumeration.nextElement();
                     String pValue = pars.getParameter(pName);
                     AttributesImpl hiddenAttrs = new AttributesImpl();
                     hiddenAttrs.addCDATAAttribute("type", "hidden");

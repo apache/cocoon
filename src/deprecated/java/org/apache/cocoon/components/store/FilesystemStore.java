@@ -41,7 +41,7 @@ import java.util.Enumeration;
  *
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FilesystemStore.java,v 1.3 2004/03/05 13:02:41 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class FilesystemStore extends AbstractLogEnabled
     implements Store, Contextualizable, Parameterizable, ThreadSafe {
@@ -233,9 +233,9 @@ public final class FilesystemStore extends AbstractLogEnabled
      * Returns the list of stored files as an Enumeration of Files
      */
     public synchronized Enumeration keys() {
-        final FSEnumeration enum = new FSEnumeration();
-        this.addKeys(enum, this.directoryFile);
-        return enum;
+        final FSEnumeration fsEnum = new FSEnumeration();
+        this.addKeys(fsEnum, this.directoryFile);
+        return fsEnum;
     }
 
     /**
@@ -246,14 +246,14 @@ public final class FilesystemStore extends AbstractLogEnabled
         return countKeys(this.directoryFile);
     }
 
-    protected void addKeys(FSEnumeration enum, File directory) {
+    protected void addKeys(FSEnumeration fsEnum, File directory) {
         final int subStringBegin = this.directoryFile.getAbsolutePath().length() + 1;
         final File[] files = directory.listFiles();
         for (int i=0; i<files.length; i++) {
             if (files[i].isDirectory()) {
-                this.addKeys(enum, files[i]);
+                this.addKeys(fsEnum, files[i]);
             } else {
-                enum.add(this.decode(files[i].getAbsolutePath().substring(subStringBegin)));
+                fsEnum.add(this.decode(files[i].getAbsolutePath().substring(subStringBegin)));
             }
         }
     }

@@ -263,9 +263,9 @@ public class DefaultLinkService
                 info.linkBase.delete(pos, info.linkBase.length() + 1);
                 info.hasParameters = false;
                 
-                Enumeration enum = params.getParameterNames();
-                while ( enum.hasMoreElements() ) {
-                    final String paramName = (String)enum.nextElement();
+                Enumeration enumeration = params.getParameterNames();
+                while ( enumeration.hasMoreElements() ) {
+                    final String paramName = (String)enumeration.nextElement();
                     if ( !paramName.equals(name) ) {
                         String[] values = params.getParameterValues(paramName);
                         for( int i = 0; i < values.length; i++ ) {

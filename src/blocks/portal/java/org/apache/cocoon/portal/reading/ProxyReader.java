@@ -156,13 +156,13 @@ public class ProxyReader extends ServiceableReader {
         String cookie =
             (String) copletInstanceData.getAttribute(ProxyTransformer.COOKIE);
 
-        Enumeration enum = request.getParameterNames();
+        Enumeration enumeration = request.getParameterNames();
 
         boolean firstattribute = true;
         StringBuffer query = new StringBuffer();
 
-        while (enum.hasMoreElements()) {
-            String paramName = (String) enum.nextElement();
+        while (enumeration.hasMoreElements()) {
+            String paramName = (String) enumeration.nextElement();
 
             if (!paramName.startsWith("cocoon-portal-")) {
 
