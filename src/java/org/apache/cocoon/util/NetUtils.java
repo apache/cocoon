@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.12 2004/04/28 22:14:19 ugo Exp $
+ * @version CVS $Id: NetUtils.java,v 1.13 2004/04/29 00:20:53 joerg Exp $
  */
 
 public class NetUtils {
@@ -321,10 +321,7 @@ public class NetUtils {
      * @return The normalized uri
      */
     public static String normalize(String uri) {
-        if ("".equals(uri)) {
-            return uri;
-        }
-        String[] dirty = StringUtils.split(uri, '/');
+        String[] dirty = org.apache.cocoon.util.StringUtils.split(uri, "/");
         int length = dirty.length;
         String[] clean = new String[length];
 
@@ -357,13 +354,6 @@ public class NetUtils {
         }
 
         StringBuffer b = new StringBuffer(uri.length());
-        
-        // Added this check to satisfy NetUtilsTestCase. I cannot ascertain whether
-        // this is correct or not, since the description of this method is not very
-        // clear. [Ugo Cei <ugo@apache.org> 2004-04-19]
-        if (uri.charAt(0) == '/') {
-            b.append('/');
-        }
         
         for (int i = 0; (i < length) && (clean[i] != null); i++) {
             b.append(clean[i]);
