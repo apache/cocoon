@@ -64,7 +64,7 @@ import org.apache.cocoon.environment.Response;
  * object. Some of the constants are defined in {@link org.apache.cocoon.Constants}.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ContextHelper.java,v 1.3 2003/05/30 23:07:28 joerg Exp $
+ * @version CVS $Id: ContextHelper.java,v 1.4 2003/06/01 15:55:35 vgritsenko Exp $
  */
 
 public final class ContextHelper {
@@ -108,5 +108,4 @@ public final class ContextHelper {
             throw new CascadingRuntimeException("Unable to get the object model from the context.", ce);
         }
     }
-
 }
