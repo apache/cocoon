@@ -1,4 +1,4 @@
-/*-- $Id: Configurations.java,v 1.8 2000-07-06 03:40:11 balld Exp $ --
+/*-- $Id: Configurations.java,v 1.9 2000-07-21 23:54:08 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,16 +58,16 @@ import java.io.*;
  * class to work.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 2000-07-06 03:40:11 $
+ * @version $Revision: 1.9 $ $Date: 2000-07-21 23:54:08 $
  */
 
 public class Configurations {
 
     protected String baseName;
-	protected Properties properties;
+    protected Properties properties;
 
     public Configurations() {
-		properties = new Properties();
+        properties = new Properties();
     }
 
     /**
@@ -81,11 +81,11 @@ public class Configurations {
      * Create the class with given defaults and from the file
      */
     public Configurations(String file, Configurations defaults) throws Exception {
-		if (defaults != null) {
-        	properties = new Properties(defaults.properties);
-		} else {
-			properties = new Properties();
-		}
+        if (defaults != null) {
+            properties = new Properties(defaults.properties);
+        } else {
+            properties = new Properties();
+        }
         InputStream input = new FileInputStream(file);
         properties.load(input);
         input.close();
@@ -114,7 +114,7 @@ public class Configurations {
      * Create the class with given defaults.
      */
     public Configurations(Configurations c) {
-		properties = new Properties(c.properties);
+        properties = new Properties(c.properties);
     }
 
     /**
@@ -124,12 +124,12 @@ public class Configurations {
         properties.put(key, value);
     }
 
-	/**
-	 * The JavaModule interpreter is using this method. should it?
-	 */
-	public void put(String key, Object value) {
-		properties.put(key,value);
-	}
+    /**
+     * The JavaModule interpreter is using this method. should it?
+     */
+    public void put(String key, Object value) {
+        properties.put(key,value);
+    }
 
     /**
      * Get the configuration.
@@ -201,15 +201,15 @@ public class Configurations {
     public Properties getProperties() {
         return this.properties;
     }
-	
+    
     public void setBasename(String baseName) {
         this.baseName = baseName;
     }
 
-	/**
-	 * Used by XSPProcessor, but this maybe should be getKeys()?
-	 */
-	public Enumeration keys() {
-		return properties.keys();
-	}
+    /**
+     * Used by XSPProcessor, but this maybe should be getKeys()?
+     */
+    public Enumeration keys() {
+        return properties.keys();
+    }
 }
