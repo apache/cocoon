@@ -164,7 +164,10 @@
     <li>Server name</li>
     <li>Port</li>
     <li>Rest of URI, including query string</li>
+    <li>All request headers</li>
    </ul>
+
+   <p>It is on the todo list to make this more configurable.</p>
   </s2>
 
   <s2 title="Example of caching dynamic content - Why Bother?">

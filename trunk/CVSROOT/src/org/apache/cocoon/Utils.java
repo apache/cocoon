@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.19 2000-11-16 23:44:37 greenrd Exp $ --
+/*-- $Id: Utils.java,v 1.20 2000-11-21 23:38:24 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.processor.xsp.XSPUtil;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.19 $ $Date: 2000-11-16 23:44:37 $
+ * @version $Revision: 1.20 $ $Date: 2000-11-21 23:38:24 $
  */
 
 public final class Utils {
@@ -224,6 +224,15 @@ public final class Utils {
         if (query) {
             url.append('?');
             url.append(req.getQueryString());
+        }
+
+        url.append("&headers:");
+        Enumeration headers = req.getHeaderNames();
+        while (headers.hasMoreElements()) {
+            String name = (String)headers.nextElement();
+            url.append(name);
+            url.append("=");
+            url.append((String)req.getHeader(name));
         }
         return url.toString();
     }

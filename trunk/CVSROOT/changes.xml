@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.153 2000-11-20 22:37:23 greenrd Exp $ 
+  $Id: changes.xml,v 1.154 2000-11-21 23:38:22 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="update" due-to="Ovidiu Predescu" 
+   due-to-email="ovidiu@cup.hp.com">
+   Made caching dependent on all request headers, not just user agent.
+  </action>
   <action dev="RDG" type="fix">
    Fixed XSLTProcessor and XalanTransformer to allow embedded stylesheets.
   </action>
