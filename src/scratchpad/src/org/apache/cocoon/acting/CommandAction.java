@@ -56,9 +56,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
-import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceUtil;
@@ -69,7 +67,7 @@ import org.apache.excalibur.source.SourceUtil;
  * to hold the filename as value.
  * 
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: CommandAction.java,v 1.1 2003/08/08 11:35:34 cziegeler Exp $
+ * @version CVS $Id: CommandAction.java,v 1.2 2003/08/11 20:41:26 joerg Exp $
  */
 
 public class CommandAction extends AbstractAction implements ThreadSafe {
@@ -79,7 +77,6 @@ public class CommandAction extends AbstractAction implements ThreadSafe {
 	
     public Map act( Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters param )
 	throws Exception {
-		Request request = ObjectModelHelper.getRequest(objectModel);
 		String command = param.getParameter(PARAM_COMMAND);
 		Source src = null;
 		
@@ -88,7 +85,7 @@ public class CommandAction extends AbstractAction implements ThreadSafe {
 				src = resolver.resolveURI(command);
                 File file = SourceUtil.getFile(src);
                 if ( file != null ) {
-                    Process p = Runtime.getRuntime().exec(file.getAbsolutePath());
+                    Runtime.getRuntime().exec(file.getAbsolutePath());
                 } else {
                     this.getLogger().error("Command does not point to a file " + command);
                 }
