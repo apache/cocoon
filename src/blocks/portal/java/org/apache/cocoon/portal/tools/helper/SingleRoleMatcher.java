@@ -15,7 +15,7 @@
  */
 package org.apache.cocoon.portal.tools.helper;
 
-import org.apache.cocoon.portal.tools.model.User;
+import org.apache.cocoon.portal.profile.PortalUser;
 
 /**
  * A role matcher matching against a single role.
@@ -42,7 +42,7 @@ implements RoleMatcher {
      * 
      * @see com.vodafone.veap.util.RoleMatcher#matches(com.vodafone.veap.model.User)
      */
-    public boolean matches(User user) {
-        return user.hasRole(this.role);
+    public boolean matches(PortalUser user) {
+        return user.isUserInRole(this.role);
     }
 }
