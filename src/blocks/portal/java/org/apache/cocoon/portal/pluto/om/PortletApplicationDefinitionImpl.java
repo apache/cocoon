@@ -32,13 +32,7 @@ import org.apache.cocoon.portal.pluto.om.common.Support;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletApplicationDefinitionImpl.java,v 1.3 2004/06/29 12:12:45 cziegeler Exp $
- */
-/**
- * @author CZiegeler
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * @version CVS $Id$
  */
 public class PortletApplicationDefinitionImpl 
 extends AbstractSupportSet
