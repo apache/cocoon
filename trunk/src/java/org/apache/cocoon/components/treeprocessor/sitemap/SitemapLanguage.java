@@ -50,29 +50,21 @@
 */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.avalon.excalibur.logger.LoggerLoggerManager;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.parameters.Parameterizable;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.excalibur.component.RoleManager;
-import org.apache.avalon.excalibur.component.RoleManageable;
-import org.apache.avalon.excalibur.logger.LoggerLoggerManager;
 import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
 import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.DefaultTreeBuilder;
@@ -88,7 +80,7 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.5 2003/09/10 17:44:19 proyal Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.6 2003/09/17 01:13:44 joerg Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {

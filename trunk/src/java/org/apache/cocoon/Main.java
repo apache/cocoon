@@ -50,34 +50,29 @@
 */
 package org.apache.cocoon;
 
-
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.File;
-import java.io.PrintWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.NamedNodeMap;
-
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.PosixParser;
-import org.apache.commons.cli.HelpFormatter;
-
-import org.apache.cocoon.Constants;
 import org.apache.cocoon.bean.CocoonBean;
 import org.apache.cocoon.bean.helpers.OutputStreamListener;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.PosixParser;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Command line entry point. Parses command line, create Cocoon bean and invokes it
@@ -87,7 +82,7 @@ import org.apache.cocoon.bean.helpers.OutputStreamListener;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.14 2003/09/15 19:18:17 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.15 2003/09/17 01:13:44 joerg Exp $
  */
 public class Main {
 
