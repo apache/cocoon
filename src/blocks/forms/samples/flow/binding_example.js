@@ -80,6 +80,8 @@ function form2bean(form) {
     contact.setId("1");
     contact.setFirstName("Hermann");
     bean.addContact(contact);
+    bean.addDrink("Maes");
+    bean.addDrink("Leffe");
     
     form.load(bean);
     form.showForm("form2-display-pipeline");
