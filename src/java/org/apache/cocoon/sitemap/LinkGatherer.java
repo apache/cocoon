@@ -59,7 +59,6 @@ import org.apache.cocoon.transformation.Transformer;
 import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 
 import org.apache.excalibur.source.SourceValidity;
-import org.apache.excalibur.source.impl.validity.NOPValidity;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -70,7 +69,7 @@ import java.util.Map;
 
 /**
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: LinkGatherer.java,v 1.4 2003/08/30 09:51:59 upayavira Exp $
+ * @version CVS $Id: LinkGatherer.java,v 1.5 2003/09/05 11:40:41 cziegeler Exp $
  */
 public class LinkGatherer extends ExtendedXLinkPipe implements Transformer, CacheableProcessingComponent {
     private List links;

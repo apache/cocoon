@@ -56,10 +56,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- *
+ * This interface marks a component as a sitemap component that produces
+ * a response, like a serializer or a reader.
+ * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapOutputComponent.java,v 1.1 2003/03/09 00:09:38 pier Exp $
+ * @version CVS $Id: SitemapOutputComponent.java,v 1.2 2003/09/05 11:40:41 cziegeler Exp $
  */
 public interface SitemapOutputComponent extends Component {
 

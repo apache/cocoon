@@ -53,11 +53,10 @@ package org.apache.cocoon.sitemap;
 import java.util.Map;
 import java.io.IOException;
 
-import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.notification.Notifying;
 import org.apache.cocoon.components.notification.Notifier;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.AbstractGenerator;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Constants;
@@ -70,43 +69,43 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: NotifyingGenerator.java,v 1.1 2003/03/09 00:09:38 pier Exp $
+ * @version CVS $Id: NotifyingGenerator.java,v 1.2 2003/09/05 11:40:41 cziegeler Exp $
  */
-public class NotifyingGenerator extends ComposerGenerator implements Recyclable {
-  /**
-   * The <code>Notification</code> to report.
-   */
-  private Notifying notification = null;
+public class NotifyingGenerator extends AbstractGenerator {
+    
+    /**
+     * The <code>Notification</code> to report.
+     */
+    private Notifying notification;
 
-  public void setup(SourceResolver resolver, Map objectModel, String src,
-          Parameters par) throws ProcessingException, SAXException, IOException {
-    super.setup(resolver, objectModel, src, par);
+    public void setup(SourceResolver resolver, Map objectModel, String src,
+                      Parameters par) throws ProcessingException, SAXException, IOException {
+        super.setup(resolver, objectModel, src, par);
 
-    notification  = (Notifying)objectModel.get(Constants.NOTIFYING_OBJECT);
+        this.notification  = (Notifying)objectModel.get(Constants.NOTIFYING_OBJECT);
 
-    if ( notification  == null) {
-      throw new ProcessingException("Expected Constants.NOTIFYING_OBJECT not found in object model");
+        if ( this.notification  == null) {
+            throw new ProcessingException("Expected Constants.NOTIFYING_OBJECT not found in object model");
+        }
     }
 
-  }
+    /**
+     * Generate the notification information in XML format.
+     *
+     * @exception  SAXException  Description of problem there is creating the output SAX events.
+     * @throws SAXException when there is a problem creating the
+     *      output SAX events.
+     */
+    public void generate() throws SAXException {
+        Notifier.notify(notification, this.contentHandler, "text/xml");
+    }
 
-  /**
-   * Generate the notification information in XML format.
-   *
-   * @exception  SAXException  Description of problem there is creating the output SAX events.
-   * @throws SAXException when there is a problem creating the
-   *      output SAX events.
-   */
-  public void generate() throws SAXException {
-    Notifier.notify(notification, this.contentHandler, "text/xml");
-  }
-
-  /**
-   * Recycle
-   */
-  public void recycle() {
-    super.recycle();
-    this.notification = null;
-  }
+    /**
+     * Recycle
+     */
+    public void recycle() {
+        super.recycle();
+        this.notification = null;
+    }
 }
 

@@ -144,39 +144,6 @@
         shorthand="cache"
         default-class="org.apache.cocoon.caching.impl.CacheImpl"/>
 
-  <!-- Sitemap Roles -->
-  <role name="org.apache.cocoon.acting.ActionSelector"
-        shorthand="actions"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
-  <role name="org.apache.cocoon.selection.SelectorSelector"
-        shorthand="selectors"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
-  <role name="org.apache.cocoon.matching.MatcherSelector"
-        shorthand="matchers"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
-  <role name="org.apache.cocoon.generation.GeneratorSelector"
-        shorthand="generators"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
-  <role name="org.apache.cocoon.transformation.TransformerSelector"
-        shorthand="transformers"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
-  <role name="org.apache.cocoon.serialization.SerializerSelector"
-        shorthand="serializers"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
-  <role name="org.apache.cocoon.reading.ReaderSelector"
-        shorthand="readers"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
-  <role name="org.apache.cocoon.components.pipeline.ProcessingPipelineSelector"
-        shorthand="pipelines"
-        default-class="org.apache.cocoon.sitemap.DefaultSitemapComponentSelector"/>
-
   <!-- i18n components for resource bundle handling -->
   <role name="org.apache.cocoon.i18n.BundleFactory"
         shorthand="i18n-bundles"
