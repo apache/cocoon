@@ -77,7 +77,7 @@
    	</map:match>
     
 	<!-- Cascading Stylesheets -->
-	<map:match pattern="css-*.css">
+	<map:match pattern="*.css">
     	<map:read mime-type="text/css" src="{global:skin}css/{1}.css"/>
    	</map:match>
 
@@ -98,7 +98,7 @@
             <map:generate type="portal" label="content">
         	    <map:parameter name="portal-name" value="portal" />
             </map:generate>
-            <map:transform src="{global:skin}styles/header.xsl"/>
+            <map:transform src="{global:skin}styles/portal-page.xsl"/>
             <map:transform type="cinclude"/> 
             <map:transform type="encodeURL"/>
 <!--
@@ -123,7 +123,7 @@
         </map:act>
         <map:generate src="resources/login.xml"/>
         <map:transform src="{global:skin}styles/login-html.xsl"/>
-        <map:transform src="{global:skin}styles/header.xsl"/>
+        <map:transform src="{global:skin}styles/portal-page.xsl"/>
         <map:transform type="encodeURL"/>
         <map:serialize/>
     </map:match>
@@ -140,7 +140,7 @@
           <map:redirect-to uri="portal"/>
         </map:act>
         <map:generate src="resources/login-error.xml"/>
-        <map:transform src="{global:skin}styles/header.xsl"/>
+        <map:transform src="{global:skin}styles/portal-page.xsl"/>
         <map:transform type="encodeURL"/>
         <map:serialize/>
     </map:match>
@@ -151,7 +151,7 @@
           <map:parameter name="application" value="portal"/> 
 		  
           <map:generate src="resources/logged-in.xml"/>
-          <map:transform src="{global:skin}styles/header.xsl"/>
+          <map:transform src="{global:skin}styles/portal-page.xsl"/>
           <map:transform type="encodeURL"/>
           <map:serialize/>
         </map:act>
