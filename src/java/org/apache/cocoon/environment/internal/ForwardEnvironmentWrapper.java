@@ -15,6 +15,7 @@
  */
 package org.apache.cocoon.environment.internal;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.apache.avalon.framework.logger.Logger;
@@ -26,7 +27,7 @@ import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
  * Local extension of EnvironmentWrapper to propagate otherwise blocked
  * methods to the actual environment.
  * 
- * @version CVS $Id: ForwardEnvironmentWrapper.java,v 1.1 2004/06/25 15:36:38 cziegeler Exp $
+ * @version CVS $Id$
 */
 public final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
 
@@ -78,4 +79,13 @@ public final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
     public void setResponseIsNotModified() {
         environment.setResponseIsNotModified();
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
+    public void redirect(String newURL, boolean global, boolean permanent)
+    throws IOException {
+        this.environment.redirect(newURL, global, permanent);
+    }
+     */
+    
 }
