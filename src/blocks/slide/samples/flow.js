@@ -4,9 +4,8 @@ importPackage(Packages.org.apache.cocoon.components.slide);
 importPackage(Packages.org.apache.cocoon.components.source.helpers);
 importPackage(Packages.org.apache.cocoon.samples.slide);
 importPackage(Packages.org.apache.excalibur.source);
-importPackage(Packages.org.apache.cocoon.components.repository);
 
-var repository = cocoon.getComponent(SourceRepository.ROLE);
+var repository = cocoon.getComponent('org.apache.cocoon.components.repository.SourceRepository');
 var resolver = cocoon.getComponent(SourceResolver.ROLE);
 var global = cocoon.getComponent(InputModule.ROLE + "Selector").select("global");
 var namespace = global.getAttribute("namespace",null,null);
