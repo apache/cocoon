@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.124 2004/02/07 00:23:45 joerg Exp $
+    | CVS $Id: jars.xml,v 1.125 2004/02/15 09:22:31 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -352,8 +352,8 @@
     <description>Xerces is an XML parser.</description>
     <used-by>Cocoon</used-by>
     <ant-target>jars</ant-target>
-    <lib>endorsed/xercesImpl-2.6.0.jar</lib>
-    <homepage>http://xml.apache.org/xerces-j/</homepage>
+    <lib>endorsed/xercesImpl-2.6.1.jar</lib>
+    <homepage>http://xml.apache.org/xerces2-j/</homepage>
   </file>
 
   <file>
@@ -446,7 +446,7 @@
     <title>Jakarta Commons Jexl</title>
     <description>JSTL Expression Language</description>
     <used-by>JXTemplateGenerator</used-by>
-    <lib>core/commons-jexl-1.0-beta-1.jar</lib>
+    <lib>core/commons-jexl-1.0-beta-1-20040113.jar</lib>
     <homepage>http://jakarta.apache.org/commons/jexl/</homepage>
   </file>
 
@@ -454,7 +454,7 @@
     <title>Eclipse Java Development Tools Core</title>
     <description>Eclipse Java Compiler</description>
     <used-by>XSP</used-by>
-    <lib>optional/jdtcore-2.1.0.jar</lib>
+    <lib>optional/jdtcore-2.1.2.jar</lib>
     <homepage>http://www.eclipse.org/jdt</homepage>
   </file>
 

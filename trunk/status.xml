@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.176 2004/01/26 02:34:35 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.177 2004/02/15 09:22:32 antonio Exp $:-->
 
 <status>
  <developers>
@@ -189,21 +189,24 @@
 
   <changes>
  <release version="@version@" date="@date@">
-    <action dev="AG" type="update">
+   <action dev="AG" type="update">
+     Updated jdtcore to 2.1.2, Xerces to 2.6.1 and commons-jexl to 1.0-beta-1-20040113
+   </action>
+   <action dev="AG" type="update">
      Updated commons-collections to 3.0
    </action>
-       <action dev="AG" type="update">
+   <action dev="AG" type="update">
      Updated commons-httpclient to 2.0RC3
    </action>
    <action dev="AG" type="fix"  fixes-bug="25664" due-to-email="karel.vervaeke@pandora.be" due-to="Karel Vervaeke">
-		build fails on windows without cygwin
+     build fails on windows without cygwin
    </action>
    <action dev="AG" type="update">
      Updated Ant to 1.6.0
    </action>
    <action dev="CZ" type="update">
       Remove dependencies to Xalan (from portal-fw, authentication-fw, session-fw and core)
-   </action> 
+   </action>
    <action dev="CZ" type="update">
       Portal-Engine: Added some new samples (for inter-coplet communication,
       cleaned up the sample, fixed some bugs and added some new components
