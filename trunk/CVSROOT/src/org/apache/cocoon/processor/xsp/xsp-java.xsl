@@ -70,6 +70,7 @@
     package <xsl:value-of select="@package"/>;
 
     import java.io.*;
+    import java.net.*;
     import java.util.*;
     import org.w3c.dom.*;
     import org.xml.sax.*;
@@ -104,10 +105,17 @@
         Node xspCurrentNode = document;
         Stack xspNodeStack = new Stack();
 
-	// Make session object readily available
-        HttpSession session = request.getSession(false);
+	<xsl:variable name="create-session">
+	  <xsl:choose>
+	    <xsl:when test="@create-session = 'true' or @create-session = 'yes'">true</xsl:when>
+	    <xsl:otherwise>false</xsl:otherwise>
+	  </xsl:choose>
+	</xsl:variable>
 
-        <xsl:for-each select="/processing-instruction()[not(starts-with(.,'xsp') or (contains(.,'cocoon-process') and contains(.,'xsp')))]">
+	// Make session object readily available
+        HttpSession session = request.getSession(<xsl:value-of select="$create-session"/>);
+
+        <xsl:for-each select="//processing-instruction()[not(starts-with(name(.),'xml-logicsheet') or (starts-with(name(.),'cocoon-process') and contains(.,'xsp')))]">
           document.appendChild(
             document.createProcessingInstruction(
               "<xsl:value-of select="name()"/>",
@@ -225,8 +233,15 @@
   </xsl:template>
 
   <xsl:template match="@*">
+    <xsl:variable name="attribute-name">
+      <xsl:choose>
+        <xsl:when test="starts-with(name(.), 'xsp:')">xmlns:<xsl:value-of select="substring(name(.), 5)"/></xsl:when>
+	<xsl:otherwise><xsl:value-of select="name(.)"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
     ((Element) xspCurrentNode).setAttribute(
-      "<xsl:value-of select="name(.)"/>",
+      "<xsl:value-of select="$attribute-name"/>",
       "<xsl:value-of select="."/>"
     );
   </xsl:template>
