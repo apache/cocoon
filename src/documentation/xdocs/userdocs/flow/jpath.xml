@@ -83,8 +83,8 @@ of objects:</p>
     body
  &lt;/for-each&gt;
 </source>
-<p>When using XPath expressions within <code>for-each</code> the current element is the context node and can be referenced with: 
-<code>.</code></p>
+<p>When using XPath expressions within <code>for-each</code> the current element is the context node and can be referenced with XPath dot operator: 
+<source>.</source></p>
 <p>Example:</p>
 <source>
 &lt;for-each select="cart/cartItems[position() &lt;= $count]"&gt;
