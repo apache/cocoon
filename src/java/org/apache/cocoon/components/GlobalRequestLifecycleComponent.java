@@ -53,27 +53,26 @@ package org.apache.cocoon.components;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.xml.sax.SAXException;
 
 /**
  * Components implementing this marker interface have a lifecycle of one
- * request. This means if during one request a component accepting this
+ * request-response cycle. This means if during one cycle a component accepting this
  * interface is looked up several times, it's always the same instance.
- * Each internal subrequest, e.g. using the cocoon protocol, is considered
- * as a new request. So an instance looked up in the "main" request is
- * not available to a subrequest.
+ * Each internal subrequest happens in the same cycle, so an instance looked up in 
+ * either the "main" request or in any of the subrequests is available to all
+ * other requests in this cycle. 
  * In addition, the first time this component is looked up during a request,
  * the {@link setup(SourceResolver, Map)} method is called.
- * 
- * @see org.apache.cocoon.components.GlobalRequestLifecycleComponent
+ *
+ * @see org.apache.cocoon.components.RequestLifecycleComponent
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestLifecycleComponent.java,v 1.2 2003/07/11 14:17:44 cziegeler Exp $
+ * @version CVS $Id: GlobalRequestLifecycleComponent.java,v 1.1 2003/07/11 14:17:44 cziegeler Exp $
  */
-public interface RequestLifecycleComponent extends Poolable {
+public interface GlobalRequestLifecycleComponent {
 
     /**
      * Set the {@link SourceResolver} and the objectModel 
