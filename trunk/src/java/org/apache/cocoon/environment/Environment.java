@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.3 2003/05/04 19:03:01 stephan Exp $
+ * @version CVS $Id: Environment.java,v 1.4 2003/07/06 20:37:48 sylvain Exp $
  */
 public interface Environment
     extends SourceResolver {
@@ -232,5 +232,14 @@ public interface Environment
      * This can be used to cleanup the environment object
      */
     void finishingProcessing();
+    
+    /**
+     * Is this environment external ? An external environment is one that is created in response
+     * to an external request (http, commandline, etc.). Environments created by the "cocoon:"
+     * protocol aren't external.
+     * 
+     * @return true is this environment is external
+     */
+    boolean isExternal();
 }
 

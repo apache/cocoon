@@ -65,7 +65,7 @@ import java.util.*;
  * are different.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestWrapper.java,v 1.3 2003/07/06 11:44:31 sylvain Exp $
+ * @version CVS $Id: RequestWrapper.java,v 1.4 2003/07/06 20:37:48 sylvain Exp $
  */
 public final class RequestWrapper implements Request {
 
@@ -342,10 +342,5 @@ public final class RequestWrapper implements Request {
 
     public String getAuthType() {
         return this.req.getAuthType();
-    }
-    
-    public boolean isInternal() {
-        return true;
-    }
-
+    }   
 }

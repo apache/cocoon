@@ -65,7 +65,7 @@ import org.apache.cocoon.util.NetUtils;
 
 /**
  * @author ?
- * @version CVS $Id: HttpEnvironment.java,v 1.10 2003/06/24 15:20:28 upayavira Exp $
+ * @version CVS $Id: HttpEnvironment.java,v 1.11 2003/07/06 20:37:48 sylvain Exp $
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -315,6 +315,13 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
             this.outputStream = this.response.getOutputStream();
         }
         return super.getOutputStream( bufferSize );
+    }
+    
+    /**
+     * Always return <code>true</code>.
+     */
+    public boolean isExternal() {
+        return true;
     }
 
 }

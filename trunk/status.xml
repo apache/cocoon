@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.80 2003/07/06 11:46:55 sylvain Exp $:-->
+<!-- CVS $Id: status.xml,v 1.81 2003/07/06 20:37:47 sylvain Exp $:-->
 <status>
 
   <developers>
@@ -184,8 +184,7 @@
 
  <release version="@version@" date="@date@">
   <action dev="SW" type="fix">
-    Flow view can now be in "internal-only" pipelines. This required adding a new isInternal()
-    method on the Request interface.
+    Flow view can now be in "internal-only" pipelines.
   </action>
   <action dev="JH" type="update">
    Updated FOP to 0.20.5rc3a.

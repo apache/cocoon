@@ -71,7 +71,7 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.3 2003/06/04 09:25:53 upayavira Exp $
+ * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.4 2003/07/06 20:37:48 sylvain Exp $
  */
 
 public abstract class AbstractCommandLineEnvironment
@@ -201,4 +201,12 @@ implements Redirector {
     public String getContentType() {
         return this.contentType;
     }
+    
+    /**
+     * Always return <code>true</code>.
+     */
+    public boolean isExternal() {
+        return true;
+    }
+
 }
