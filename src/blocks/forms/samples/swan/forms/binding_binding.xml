@@ -33,13 +33,13 @@ Binding for Swan form binding editor.
     <fb:case id="aggregate" path=".">
       <fb:insert-node><fb:aggregate/>
 </fb:insert-node>
-      <fb:struct id="aggregate" path="fd:aggregate">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="aggregate" path="fd:aggregate">
+        <fb:group id="stuff" path=".">
           <fb:new id="id-class"/>
           <fb:new id="path-class"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -47,12 +47,26 @@ Binding for Swan form binding editor.
     <fb:case id="class" path=".">
       <fb:insert-node><fb:class/>
 </fb:insert-node>
-      <fb:struct id="class" path="fb:class">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="class" path="fb:class">
+        <fb:group id="stuff" path=".">
           <fb:new id="id-class"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
+    </fb:case>
+  </fb:class>
+
+  <fb:class id="group-class">
+    <fb:case id="group" path=".">
+      <fb:insert-node><fd:group/>
+</fb:insert-node>
+      <fb:group id="group" path="fd:group">
+        <fb:group id="stuff" path=".">
+          <fb:new id="id-class"/>
+          <fb:new id="label-class"/>
+        </fb:group>
+        <fb:new id="items-class"/>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -60,11 +74,11 @@ Binding for Swan form binding editor.
     <fb:case id="javascript" path=".">
       <fb:insert-node><fb:javascript/>
 </fb:insert-node>
-      <fb:struct id="javascript" path="fb:javascript">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="javascript" path="fb:javascript">
+        <fb:group id="stuff" path=".">
           <fb:new id="text-class"/>
-        </fb:struct>
-      </fb:struct>
+        </fb:group>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -72,11 +86,11 @@ Binding for Swan form binding editor.
     <fb:case id="new" path=".">
       <fb:insert-node><fb:new/>
 </fb:insert-node>
-      <fb:struct id="new" path="fb:new">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="new" path="fb:new">
+        <fb:group id="stuff" path=".">
           <fb:new id="id-class"/>
-        </fb:struct>
-      </fb:struct>
+        </fb:group>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -84,16 +98,16 @@ Binding for Swan form binding editor.
     <fb:case id="repeater" path=".">
       <fb:insert-node><fb:repeater/>
 </fb:insert-node>
-      <fb:struct id="repeater" path="fb:repeater">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="repeater" path="fb:repeater">
+        <fb:group id="stuff" path=".">
           <fb:insert-node>
   <fb:on-bind/>
   </fb:insert-node>
           <fb:new id="id-class"/>
           <fb:new id="parent-path-class"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -101,16 +115,16 @@ Binding for Swan form binding editor.
     <fb:case id="temp-repeater" path=".">
       <fb:insert-node><fb:temp-repeater/>
 </fb:insert-node>
-      <fb:struct id="temp-repeater" path="fb:temp-repeater">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="temp-repeater" path="fb:temp-repeater">
+        <fb:group id="stuff" path=".">
           <fb:new id="id-class"/>
           <fb:new id="parent-path-class"/>
           <fb:insert-node>
   <fb:on-bind/>
   </fb:insert-node>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -118,16 +132,16 @@ Binding for Swan form binding editor.
     <fb:case id="union" path=".">
       <fb:insert-node><fb:union/>
 </fb:insert-node>
-      <fb:struct id="union" path="fb:union">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="union" path="fb:union">
+        <fb:group id="stuff" path=".">
           <fb:new id="id-class"/>
           <fb:new id="path-class"/>
           <fb:insert-node>
   <fd:widgets/>
   </fb:insert-node>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -135,12 +149,12 @@ Binding for Swan form binding editor.
     <fb:case id="value" path=".">
       <fb:insert-node><fb:value/>
 </fb:insert-node>
-      <fb:struct id="value" path="fb:value">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="value" path="fb:value">
+        <fb:group id="stuff" path=".">
           <fb:new id="id-class"/>
           <fb:value id="path" path="@path"/>
-        </fb:struct>
-      </fb:struct>
+        </fb:group>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -148,13 +162,13 @@ Binding for Swan form binding editor.
     <fb:case id="struct" path=".">
       <fb:insert-node><fd:struct/>
 </fb:insert-node>
-      <fb:struct id="struct" path="fd:struct">
-        <fb:struct id="stuff" path=".">
+      <fb:group id="struct" path="fd:struct">
+        <fb:group id="stuff" path=".">
           <fb:new id="id-class"/>
           <fb:new id="label-class"/>
-        </fb:struct>
+        </fb:group>
         <fb:new id="items-class"/>
-      </fb:struct>
+      </fb:group>
     </fb:case>
   </fb:class>
 
@@ -204,6 +218,7 @@ Binding for Swan form binding editor.
     <fb:union id="union" path=".">
       <fb:new id="aggregate-class"/>
       <fb:new id="class-class"/>
+      <fb:new id="group-class"/>
       <fb:new id="javascript-class"/>
       <fb:new id="new-class"/>
       <fb:new id="temp-repeater-class"/>

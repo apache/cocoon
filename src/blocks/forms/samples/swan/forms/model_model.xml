@@ -131,6 +131,7 @@
             <fd:item value="booleanfield"><fd:label>BooleanField</fd:label></fd:item>
             <fd:item value="class"><fd:label>Class</fd:label></fd:item>
             <fd:item value="field"><fd:label>Field</fd:label></fd:item>
+            <fd:item value="group"><fd:label>Group</fd:label></fd:item>
             <fd:item value="new"><fd:label>New</fd:label></fd:item>
             <fd:item value="output"><fd:label>Output</fd:label></fd:item>
             <fd:item value="repeater"><fd:label>Repeater</fd:label></fd:item>
@@ -185,155 +186,168 @@
           <fd:label>Type</fd:label>
           <fd:widgets>
 
-            <fd:struct id="action">
+            <fd:group id="action">
               <fd:label>Action</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="aggregatefield">
+            <fd:group id="aggregatefield">
               <fd:label>AggregateField</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                     <fd:new id="required-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="booleanfield">
+            <fd:group id="booleanfield">
               <fd:label>BooleanField</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="class">
+            <fd:group id="class">
               <fd:label>Class</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="field">
+            <fd:group id="field">
               <fd:label>Field</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                     <fd:new id="required-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="new">
-              <fd:label>New</fd:label>
+            <fd:group id="group">
+              <fd:label>Group</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
-                  <fd:widgets>
-                    <fd:new id="id-class"/>
-                  </fd:widgets>
-                </fd:struct>
-              </fd:widgets>
-            </fd:struct>
-
-            <fd:struct id="output">
-              <fd:label>Output</fd:label>
-              <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
+                <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="repeater">
+            <fd:group id="new">
+              <fd:label>New</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="id-class"/>
+                  </fd:widgets>
+                </fd:group>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="output">
+              <fd:label>Output</fd:label>
+              <fd:widgets>
+                <fd:group id="stuff">
+                  <fd:widgets>
+                    <fd:new id="id-class"/>
+                    <fd:new id="label-class"/>
+                  </fd:widgets>
+                </fd:group>
+              </fd:widgets>
+            </fd:group>
+
+            <fd:group id="repeater">
               <fd:label>Repeater</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                     <fd:new id="initial-size-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="row-action">
+            <fd:group id="row-action">
               <fd:label>RowAction</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="struct">
+            <fd:group id="struct">
               <fd:label>Struct</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="submit">
+            <fd:group id="submit">
               <fd:label>Submit</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
-            <fd:struct id="union">
+            <fd:group id="union">
               <fd:label>Union</fd:label>
               <fd:widgets>
-                <fd:struct id="stuff">
+                <fd:group id="stuff">
                   <fd:widgets>
                     <fd:new id="id-class"/>
                     <fd:new id="label-class"/>
                   </fd:widgets>
-                </fd:struct>
+                </fd:group>
                 <fd:new id="items-class"/>
               </fd:widgets>
-            </fd:struct>
+            </fd:group>
 
           </fd:widgets>
 

@@ -19,10 +19,6 @@
   xmlns:fi="http://apache.org/cocoon/forms/1.0#instance">
 
     <!--
-      CVS $Id: form_model_gui_template.xml,v 1.2 2004/04/12 14:05:09 tim Exp $
-    -->
-
-    <!--
     TODO: Add features to "items-class" (e.g. move-up, move-down, add-before, add-after).
     -->
 
@@ -106,18 +102,18 @@
           <!--
               <ft:union id="view">
                 <ft:case id="view">
-                  <ft:struct id="view">
-                  </ft:struct>
+                  <ft:group id="view">
+                  </ft:group>
                 </ft:case>
                 <ft:case id="edit">
-                  <ft:struct id="edit">
-                  </ft:struct>
+                  <ft:group id="edit">
+                  </ft:group>
                 </ft:case>
               </ft:union>
           -->
 
           <ft:case id="action">
-            <ft:struct id="action">
+            <ft:group id="action">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -128,11 +124,11 @@
                   <ft:new id="label-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="aggregatefield">
-            <ft:struct id="aggregatefield">
+            <ft:group id="aggregatefield">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -145,11 +141,11 @@
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="booleanfield">
-            <ft:struct id="booleanfield">
+            <ft:group id="booleanfield">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -160,11 +156,11 @@
                   <ft:new id="label-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="class">
-            <ft:struct id="class">
+            <ft:group id="class">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -175,11 +171,11 @@
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="field">
-            <ft:struct id="field">
+            <ft:group id="field">
               Hello
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
@@ -195,11 +191,28 @@
                   <ft:new id="required-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
+          </ft:case>
+
+          <ft:case id="group">
+            <ft:group id="group">
+              <ft:choose path="../../view-selector">
+                <ft:when value="view">
+                  <ft:new id="output-id-class"/>
+                  <ft:new id="output-label-class"/>
+                  <ft:new id="items-class"/>
+                </ft:when>
+                <ft:when value="edit">
+                  <ft:new id="id-class"/>
+                  <ft:new id="label-class"/>
+                  <ft:new id="items-class"/>
+                </ft:when>
+              </ft:choose>
+            </ft:group>
           </ft:case>
 
           <ft:case id="new">
-            <ft:struct id="new">
+            <ft:group id="new">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -208,11 +221,11 @@
                   <ft:new id="id-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="output">
-            <ft:struct id="output">
+            <ft:group id="output">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -223,11 +236,11 @@
                   <ft:new id="label-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="struct">
-            <ft:struct id="struct">
+            <ft:group id="struct">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -240,11 +253,11 @@
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="repeater">
-            <ft:struct id="repeater">
+            <ft:group id="repeater">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -259,11 +272,11 @@
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="row-action">
-            <ft:struct id="row-action">
+            <ft:group id="row-action">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -274,11 +287,11 @@
                   <ft:new id="label-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="submit">
-            <ft:struct id="submit">
+            <ft:group id="submit">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -289,11 +302,11 @@
                   <ft:new id="label-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
           <ft:case id="union">
-            <ft:struct id="union">
+            <ft:group id="union">
               <ft:choose path="../../view-selector">
                 <ft:when value="view">
                   <ft:new id="output-id-class"/>
@@ -306,7 +319,7 @@
                   <ft:new id="items-class"/>
                 </ft:when>
               </ft:choose>
-            </ft:struct>
+            </ft:group>
           </ft:case>
 
         </ft:union>
@@ -376,9 +389,9 @@
 
       <ft:class id="database-class">
         <b><ft:widget-label id="database"/>:</b>
-        <ft:struct id="database">
+        <ft:group id="database">
           <ft:new id="sql-class"/>
-        </ft:struct>
+        </ft:group>
       </ft:class>
 
       <ft:class id="datatype-id-class">
@@ -448,9 +461,9 @@
 
       <ft:class id="output-class">
         <b><ft:widget-label id="output"/>:</b>
-        <ft:struct id="output">
+        <ft:group id="output">
           <ft:new id="database-class"/>
-        </ft:struct>
+        </ft:group>
       </ft:class>
 
       <ft:class id="req-ds-type-class">
@@ -460,9 +473,9 @@
 
       <ft:class id="sql-class">
         <b><ft:widget-label id="sql"/>:</b>
-        <ft:struct id="sql">
+        <ft:group id="sql">
           <ft:new id="dialect-class"/>
-        </ft:struct>
+        </ft:group>
       </ft:class>
 
       <ft:class id="sql-parameter-class">
@@ -472,19 +485,19 @@
 
       <ft:class id="step-class">
         <b><ft:widget-label id="step"/>:</b>
-        <ft:struct id="step">
+        <ft:group id="step">
           <ft:new id="id-class"/>
           <ft:new id="interaction-class"/>
-        </ft:struct>
+        </ft:group>
       </ft:class>
 
       <ft:class id="step-parameter-class">
         <b><ft:widget-label id="step-parameter"/>:</b>
-        <ft:struct id="step-parameter">
+        <ft:group id="step-parameter">
           <ft:new id="id-class"/>
           <ft:new id="required-class"/>
           <ft:new id="datatype-id-class"/>
-        </ft:struct>
+        </ft:group>
       </ft:class>
 
       <table border="3">
