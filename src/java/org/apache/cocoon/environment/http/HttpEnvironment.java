@@ -33,7 +33,7 @@ import org.apache.cocoon.util.NetUtils;
 /**
  * 
  * @author <a herf="mailto:dev@cocoon.apache.org>Apache Cocoon Team</a>
- * @version CVS $Id: HttpEnvironment.java,v 1.15 2004/03/05 13:02:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class HttpEnvironment extends AbstractEnvironment implements Redirector, PermanentRedirector {
 
@@ -42,16 +42,16 @@ public class HttpEnvironment extends AbstractEnvironment implements Redirector, 
     public static final String HTTP_SERVLET_CONTEXT= "httpservletcontext";
 
     /** The HttpRequest */
-    private HttpRequest request = null;
+    private HttpRequest request;
 
     /** The HttpResponse */
-    private HttpResponse response = null;
+    private HttpResponse response;
 
     /** The HttpContext */
-    private HttpContext webcontext = null;
+    private HttpContext webcontext;
 
     /** Cache content type as there is no getContentType() in reponse object */
-    private String contentType = null;
+    private String contentType;
 
     /** Did we redirect ? */
     private boolean hasRedirected = false;
