@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS: $Id: relativize-linkmap.xsl,v 1.1 2003/03/09 00:04:25 pier Exp $ -->
+<!-- CVS: $Id: relativize-linkmap.xsl,v 1.1 2003/10/21 12:44:22 joerg Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 

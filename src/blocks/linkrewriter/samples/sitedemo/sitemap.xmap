@@ -47,14 +47,14 @@
 
      <map:match pattern="abs-linkmap">
        <map:generate src="linkmap.xml"/>
-       <map:transform src="stylesheets/absolutize-linkmap.xsl"/>
+       <map:transform src="../stylesheets/absolutize-linkmap.xsl"/>
        <map:serialize type="xml"/>
      </map:match>
 
      <map:match pattern="**linkmap">
        <map:generate src="linkmap.xml"/>
-       <map:transform src="stylesheets/absolutize-linkmap.xsl"/>
-       <map:transform src="stylesheets/relativize-linkmap.xsl">
+       <map:transform src="../stylesheets/absolutize-linkmap.xsl"/>
+       <map:transform src="../stylesheets/relativize-linkmap.xsl">
          <map:parameter name="path" value="{0}"/>
        </map:transform>
        <map:serialize type="xml"/>

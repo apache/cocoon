@@ -57,8 +57,8 @@
 
      <map:match pattern="**linkmap">
        <map:generate src="docs/book.xml"/>
-       <map:transform src="stylesheets/absolutize-linkmap.xsl"/>
-       <map:transform src="stylesheets/relativize-linkmap.xsl">
+       <map:transform src="../stylesheets/absolutize-linkmap.xsl"/>
+       <map:transform src="../stylesheets/relativize-linkmap.xsl">
          <map:parameter name="path" value="{0}"/>
        </map:transform>
        <map:serialize type="xml"/>
