@@ -1,5 +1,5 @@
 /*
-$Id: TransitionImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
+$Id: TransitionImpl.java,v 1.3 2004/03/01 11:10:00 andreas Exp $
 <License>
 
  ============================================================================
@@ -90,18 +90,16 @@ public class TransitionImpl implements Transition {
     private boolean isSynchronized = false;
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Returns the actions which are assigned tothis transition.
+     * @return An array of actions.
      */
     public Action[] getActions() {
         return (Action[]) actions.toArray(new Action[actions.size()]);
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param action DOCUMENT ME!
+     * Assigns an action to this transition.
+     * @param action The action.
      */
     public void addAction(Action action) {
         actions.add(action);
@@ -110,18 +108,16 @@ public class TransitionImpl implements Transition {
     private List conditions = new ArrayList();
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Returns the conditions which are assigned to this transition.
+     * @return An array of conditions.
      */
     public Condition[] getConditions() {
         return (Condition[]) conditions.toArray(new Condition[conditions.size()]);
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param condition DOCUMENT ME!
+     * Assigns a condition to this transition.
+     * @param condition The condition.
      */
     public void addCondition(Condition condition) {
         conditions.add(condition);
@@ -130,18 +126,16 @@ public class TransitionImpl implements Transition {
     private Event event;
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Returns the event which invokes this transition.
+     * @return An event.
      */
     public Event getEvent() {
         return event;
     }
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param anEvent DOCUMENT ME!
+     * Sets the event to invoke this transition.
+     * @param anEvent An event.
      */
     public void setEvent(Event anEvent) {
         event = anEvent;
@@ -150,9 +144,8 @@ public class TransitionImpl implements Transition {
     private StateImpl source;
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Returns the source state of this transition.
+     * @return A state.
      */
     public StateImpl getSource() {
         return source;
@@ -161,9 +154,8 @@ public class TransitionImpl implements Transition {
     private StateImpl destination;
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Returns the destination state of this transition.
+     * @return A state.
      */
     public StateImpl getDestination() {
         return destination;
