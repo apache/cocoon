@@ -17,7 +17,7 @@
 
 <table cellSpacing="0" cellpadding="0" width="100%">
 	<tr vAlign="top">
-		<td width="5" style="background-color:#294563;" valign="top"><img src="sunspotdemoimg-window-top-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
+		<td width="5" style="background-color:#294563;" valign="top"><img src="window-top-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
 		<td bgColor="{$bgColor}" valign="middle">
 			<font>
 				<xsl:attribute name="color">#ffffff</xsl:attribute>
@@ -36,45 +36,45 @@
 		<td align="right" bgColor="{$bgColor}">
 			<xsl:if test="fullscreen-uri">
 				<a href="{fullscreen-uri}">
-	  			    <img src="sunspotdemoimg-customize.gif" border="0" alt="Full Screen"/>
+	  			    <img src="customize.gif" border="0" alt="Full Screen"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="maxpage-uri">
 				<a href="{maxpage-uri}">
-	  			    <img src="sunspotdemoimg-show.gif" border="0" alt="Max Page"/>
+	  			    <img src="show.gif" border="0" alt="Max Page"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="maximize-uri">
 				<a href="{maximize-uri}">
-	  			    <img src="sunspotdemoimg-maximize.gif" border="0" alt="Maximize"/>
+	  			    <img src="maximize.gif" border="0" alt="Maximize"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="minimize-uri">
 				<a href="{minimize-uri}">
-	  			    <img src="sunspotdemoimg-minimize.gif" border="0" alt="Minimize"/>
+	  			    <img src="minimize.gif" border="0" alt="Minimize"/>
 	  			</a>
 			</xsl:if>
 			<xsl:if test="remove-uri">
 				<a href="{remove-uri}">
-	  			    <img src="sunspotdemoimg-delete.gif" border="0" alt="Delete"/>
+	  			    <img src="delete.gif" border="0" alt="Delete"/>
 	  			</a>
 			</xsl:if>
 		</td>
-		<td width="5" style="background-color:#294563;" valign="top"><img src="sunspotdemoimg-window-top-right.gif" border="0" width="5" height="5" alt="top-right"/></td>
+		<td width="5" style="background-color:#294563;" valign="top"><img src="window-top-right.gif" border="0" width="5" height="5" alt="top-right"/></td>
 	</tr>
 	<xsl:if test="status!=0">
 		<tr>
-			<td width="5" style="background-image:url(sunspotdemoimg-window-border-left.gif);"><img src="sunspotdemoimg-space.gif" border="0" width="5" height="5" alt="space"/></td>
+			<td width="5" style="background-image:url(window-border-left.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
 			<td colSpan="2">
                 <xsl:apply-templates select="content"/>
 			</td>
-			<td width="5" style="background-image:url(sunspotdemoimg-window-border-right.gif);"><img src="sunspotdemoimg-space.gif" border="0" width="5" height="5" alt="space"/></td>
+			<td width="5" style="background-image:url(window-border-right.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
 		</tr>
 	</xsl:if>
 	<tr>
-		<td width="5"><img src="sunspotdemoimg-window-bottom-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
-		<td colspan="2" style="background-image:url(sunspotdemoimg-window-border-bottom.gif);"></td>
-		<td width="5"><img src="sunspotdemoimg-window-bottom-right.gif" border="0" width="5" height="5" alt="top-left"/></td>
+		<td width="5"><img src="window-bottom-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
+		<td colspan="2" style="background-image:url(window-border-bottom.gif);"></td>
+		<td width="5"><img src="window-bottom-right.gif" border="0" width="5" height="5" alt="top-left"/></td>
 	</tr>
 </table>
 </xsl:template>

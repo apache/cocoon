@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!--+ $Id: login-html.xsl,v 1.1 2003/05/27 09:40:34 cziegeler Exp $ 
+<!--+ $Id: login-html.xsl,v 1.2 2003/05/27 11:10:20 cziegeler Exp $ 
     |
     | Description: Login page to HTML
     |
@@ -19,7 +19,7 @@
   </tr>
   <tr>
     <td bgColor="#ffffff" width="15">
-	  <img height="1" src="sunspotdemoimg-space.gif" width="15"/>
+	  <img height="1" src="space.gif" width="15"/>
     </td>
   </tr>
   <tr>

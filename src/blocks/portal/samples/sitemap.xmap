@@ -68,6 +68,19 @@
   
   <map:pipeline>
 
+    <!-- images -->
+	<map:match pattern="*.gif">
+		<map:read mime-type="image/gif" src="{global:skin}images/{1}.gif"/>
+	</map:match>
+	<map:match pattern="*.jpg">
+    	<map:read mime-type="image/jpg" src="{global:skin}images/{1}.jpg"/>
+   	</map:match>
+    
+	<!-- Cascading Stylesheets -->
+	<map:match pattern="css-*.css">
+    	<map:read mime-type="text/css" src="{global:skin}css/{1}.css"/>
+   	</map:match>
+
     <map:match pattern="">
        <map:redirect-to uri="portal"/>
     </map:match>
@@ -98,20 +111,7 @@
         </map:act>
         <map:redirect-to uri="login"/>
     </map:match>
-    
-    <!-- images -->
-	<map:match pattern="sunspotdemoimg-*.gif">
-		<map:read mime-type="image/gif" src="{global:skin}images/{1}.gif"/>
-	</map:match>
-	<map:match pattern="sunspotdemoimg-*.jpg">
-    	<map:read mime-type="image/jpg" src="{global:skin}images/{1}.jpg"/>
-   	</map:match>
-    
-	<!-- Cascading Stylesheets -->
-	<map:match pattern="sunspotdemocss-*.css">
-    	<map:read mime-type="text/css" src="{global:skin}css/{1}.css"/>
-   	</map:match>
-    
+        
     <!-- authentication stuff -->
 
     <map:match pattern="login">
@@ -173,7 +173,7 @@
   <map:pipeline internal-only="true">
     <map:match pattern="sunrise-authuser">
       <map:generate src="resources/sunrise-user.xml"/>
-      <map:transform src="styles/sunrise-user.xsl">
+      <map:transform src="styles/authenticate.xsl">
         <map:parameter name="use-request-parameters" value="true"/>
       </map:transform>
       <map:serialize type="xml"/>
