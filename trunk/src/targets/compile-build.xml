@@ -5,6 +5,12 @@
   <!-- compiles everything -->
   <target name="compile" depends="compile-core, compile-scratchpad, compile-deprecated"/>
 
+  <!-- Prepare the build directories -->
+  <target name="prepare-core" depends="prepare">
+    <mkdir dir="${build.dest}"/>
+    <mkdir dir="${build.mocks}"/>
+  </target>
+
   <!-- compiles the core -->
   <target name="compile-core" depends="prepare-core">
 
