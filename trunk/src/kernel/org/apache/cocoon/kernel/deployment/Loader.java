@@ -24,7 +24,7 @@ import org.apache.cocoon.kernel.identification.Identifier;
  * instances from their {@link Descriptor}s.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public interface Loader extends Library {
     

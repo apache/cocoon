@@ -27,7 +27,7 @@ import org.apache.cocoon.kernel.identification.Descriptor;
  * way in which a {@link Object} instance is related to its {@link Class}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public interface Block {
 
