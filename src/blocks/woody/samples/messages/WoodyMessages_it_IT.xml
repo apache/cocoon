@@ -16,7 +16,7 @@
 -->
 <!-- This catalogue file contains translations for built-in Woody messages. -->
 <catalogue xml:lang="it_IT">
-  <message key="general.field-required">Questo campo è obbligatorio.</message>
+  <message key="general.field-required">Questo campo Ã¨ obbligatorio.</message>
 
   <message key="datatype.conversion-failed">Formato {0} non valido.</message>
   <message key="datatype.long">numero intero</message>
@@ -25,17 +25,17 @@
   <message key="validation.string.exact-length">Questo campo deve essere lungo esattamente {0} caratteri.</message>
   <message key="validation.string.range-length">Questo campo deve contenere fra {0} e {1} caratteri.</message>
   <message key="validation.string.min-length">Questo campo deve essere lungo almeno {0} caratteri.</message>
-  <message key="validation.string.max-length">Questo campo deve essere lungo al più {0} caratteri.</message>
+  <message key="validation.string.max-length">Questo campo deve essere lungo al piÃ¹ {0} caratteri.</message>
   <message key="validation.string.regexp">Il valore non corrisponde alla seguente espressione regolare: {0}</message>
 
   <message key="validation.string.invalidemail">Questo campo non contiene un indirizzo email valido</message>
 
   <message key="validation.array.exact-valuecount">Selezionare esattamente {0} elementi.</message>
-  <message key="validation.array.range-valuecount">Selezionare almeno {0} e al più {1} elementi.</message>
+  <message key="validation.array.range-valuecount">Selezionare almeno {0} e al piÃ¹ {1} elementi.</message>
   <message key="validation.array.min-valuecount">Selezionare almeno {0} elementi.</message>
-  <message key="validation.array.max-valuecount">Selezionare al più {0} elementi.</message>
+  <message key="validation.array.max-valuecount">Selezionare al piÃ¹ {0} elementi.</message>
 
-  <message key="multivaluefield.conversionfailed">Uno dei valori selezionati non è del tipo corretto.</message>
+  <message key="multivaluefield.conversionfailed">Uno dei valori selezionati non Ã¨ del tipo corretto.</message>
 
   <message key="validation.numeric.range">Il valore deve essere compreso fra {0} e {1}.</message>
   <message key="validation.numeric.min">Il valore deve essere maggiore o uguale a {0}.</message>
