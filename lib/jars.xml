@@ -1100,25 +1100,25 @@
     <title>JSR-168 Portlet Spec</title>
     <description>
       JSR-168 Portlet Specification. This implentation developed by the
-      Jakarta Pluto project is an open source implementation from the
+      Apache Pluto project is an open source implementation from the
       original spec.
     </description>
     <used-by>Portal</used-by>
-    <lib>portal/lib/portlet-api-20040310.jar</lib>
-    <homepage>http://jakarta.apache.org/pluto/</homepage>
+    <lib>portal/lib/portlet-api-1.0.jar</lib>
+    <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
   <file>
     <title>JSR-168 Container Implementation</title>
     <description>
       JSR-168 Portlet Specification. This implentation developed by the
-      Jakarta Pluto project is an open source implementation from the
+      Apache Pluto project is an open source implementation from the
       original spec.
     </description>
     <used-by>Portal</used-by>
-    <lib>portal/lib/pluto-20040607.jar</lib>
-    <homepage>http://jakarta.apache.org/pluto/</homepage>
+    <lib>portal/lib/pluto-1.0.1-rc1.jar</lib>
+    <homepage>http://portals.apache.org/pluto/</homepage>
   </file>
-
+  
   <file>
     <title>Jakarta BCEL</title>
     <description>
