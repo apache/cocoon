@@ -1,4 +1,4 @@
-/*-- $Id: Manager.java,v 1.3 1999-11-09 02:30:13 dirkx Exp $ -- 
+/*-- $Id: Manager.java,v 1.4 1999-12-08 12:30:17 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -56,7 +56,7 @@ import java.util.*;
  * This class is used to create and control software actors.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:13 $
+ * @version $Revision: 1.4 $ $Date: 1999-12-08 12:30:17 $
  */
 
 public class Manager extends Hashtable implements Actor, Factory, Director {
@@ -98,8 +98,8 @@ public class Manager extends Hashtable implements Actor, Factory, Director {
             throw new RuntimeException("Error creating " + name + ": could not instantiate " + e.getMessage());
         } catch (RuntimeException e) {
             throw e;
-        } catch (java.lang.NoClassDefFoundError e) {
-            throw new RuntimeException("Error creating " + name + ": make sure the needed classes can be found in the classpath");
+        } catch (NoClassDefFoundError e) {
+            throw new RuntimeException("Error creating " + name + ": make sure the needed classes can be found in the classpath (" + e.getMessage() + ")");
         } catch (Throwable e) {
             throw new RuntimeException("Factory error:  unknown exception creating \" " + name + "\" : " + e);
         }
