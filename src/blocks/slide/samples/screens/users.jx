@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<users xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:forEach var="user" items="${users}">
+    <user>
+      <name>${user}</name>
+    </user>
+  </jx:forEach>
+</users>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<actions xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:forEach var="action" items="${actions}">
+    <action>
+      <name>${action}</name>
+    </action>
+  </jx:forEach>
+</actions>

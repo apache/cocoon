@@ -1,36 +1,37 @@
 <?xml version="1.0"?>
 <xsl:stylesheet 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  xmlns:collection="http://apache.org/cocoon/collection/1.0" 
+  xmlns:col="http://apache.org/cocoon/collection/1.0" 
   xmlns:dav="DAV:" 
   xmlns:xi="http://www.w3.org/2001/XInclude" 
   version="1.0">
 
   <xsl:output indent="yes"/>
+  <xsl:param name="base">/samples/slide</xsl:param>
   <xsl:param name="path" />
   <xsl:param name="namespace">cocoon</xsl:param>
-  <xsl:param name="principal">guest</xsl:param>
+  <xsl:param name="principal">unauthenticated</xsl:param>
 
   <xsl:template match="/">
     <document>
       <header>
         <title>Jakarta Slide example</title>
-        <tab title="users" href="../users/"/>
-        <tab title="content" href="../content/{$path}"/>
-        <tab title="properties" href="../properties/{$path}"/>
-        <tab title="permissions" href="../permissions/{$path}"/>
-        <tab title="locks" href="../locks/{$path}"/>
-        <tab title="logout" href="../logout.html"/>
+        <tab title="users" href="{$base}/users/"/>
+        <tab title="content" href="{$base}/content/{$path}"/>
+        <tab title="properties" href="{$base}/properties/{$path}"/>
+        <tab title="permissions" href="{$base}/permissions/{$path}"/>
+        <tab title="locks" href="{$base}/locks/{$path}"/>
+        <tab title="logout" href="{$base}/logout.html"/>
       </header>
       <body>
         <row>
-          <xsl:apply-templates select="collection:collection|collection:resource"/>
+          <xsl:apply-templates select="col:collection|col:resource"/>
         </row>
       </body>
     </document>
   </xsl:template>
 
-  <xsl:template match="collection:collection|collection:resource">
+  <xsl:template match="col:collection|col:resource">
     <column title="Navigation">
       <table bgcolor="#ffffff" border="0" cellspacing="0" cellpadding="2" width="100%" align="center">
         <tr>
@@ -38,7 +39,7 @@
             <br/>
           </td>
         </tr>
-        <xsl:for-each select="collection:collection|collection:resource">
+        <xsl:for-each select="col:collection|col:resource">
           <tr>
             <td width="100%" bgcolor="#ffffff" align="left">
               <font size="+0" face="arial,helvetica,sanserif" color="#000000">
@@ -71,7 +72,7 @@
                 </td>
                 <td align="right"/>
               </tr>
-              <xsl:for-each select="collection:collection|collection:resource">
+              <xsl:for-each select="col:collection|col:resource">
                 <tr>
                   <td align="left">&#xA0;&#xA0;
                    <a href="{@name}"><xsl:value-of select="@name"/></a>
@@ -86,8 +87,8 @@
                     <xsl:value-of select="@date"/>
                   </td>
                   <td align="right">
-                    <form action="../delete.do" method="post">
-                      <input type="hidden" name="parentPath" value="/{$path}" />
+                    <form action="{$base}/delete.do" method="post">
+                      <input type="hidden" name="parentPath" value="{$path}" />
                       <input type="hidden" name="resourceName" value="{@name}"/>
                       <input type="submit" name="doDeleteSource" value="Delete"/>
                     </form>
@@ -95,8 +96,8 @@
                 </tr>
               </xsl:for-each>
               <tr>
-                <form action="../upload.do" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="parentPath" value="/{$path}"/>
+                <form action="{$base}/upload.do" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="parentPath" value="{$path}"/>
                   <td align="left"><input type="text" name="resourceName" size="15" maxlength="40"/></td>
                   <td align="left" colspan="3">
                    File:
@@ -108,8 +109,8 @@
                 </form>
               </tr>
               <tr>
-                <form action="../mkcol.do" method="post">
-                  <input type="hidden" name="parentPath" value="/{$path}"/>
+                <form action="{$base}/mkcol.do" method="post">
+                  <input type="hidden" name="parentPath" value="{$path}"/>
                   <td align="left" colspan="4">
                     <input type="text" name="collectionName" size="15" maxlength="40"/>
                   </td>

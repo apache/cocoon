@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<groups xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:forEach var="group" items="${groups}">
+    <group>
+      <name>${group}</name>
+    </group>
+  </jx:forEach>
+</groups>

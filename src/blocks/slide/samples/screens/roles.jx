@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<roles xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <jx:forEach var="role" items="${roles}">
+    <role>
+      <name>${role}</name>
+    </role>
+  </jx:forEach>
+</roles>
