@@ -34,6 +34,8 @@ import javax.xml.transform.TransformerException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -57,7 +59,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  getting and setting values of nodes.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: DOMUtil.java,v 1.9 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id: DOMUtil.java,v 1.10 2004/03/28 23:57:41 antonio Exp $
 */
 public final class DOMUtil {
 
@@ -90,19 +92,14 @@ public final class DOMUtil {
         if (path == null) {
             throw new ProcessingException("Not a valid XPath: " + path);
         }
-        if (root == null)
-            return null;
-        if (path.startsWith("/") == true)
-            path = path.substring(1); // remove leading "/"
-        if (path.endsWith("/") == true) { // remove ending "/" for root node
-            path = path.substring(0, path.length() - 1);
+        if (root != null) {
+            path = StringUtils.strip(path, "/");
+            Node node = XPathUtil.searchSingleNode(processor, root, path);
+            if (node != null) {
+                return getValueOfNode(node);
+            }
         }
-
-        Node node = XPathUtil.searchSingleNode(processor, root, path);
-        if (node != null) {
-            return getValueOfNode(node);
-        }
-        return null;
+       return null;
     }
 
     /**
@@ -166,10 +163,10 @@ public final class DOMUtil {
                                                   boolean defaultValue)
     throws ProcessingException {
         String value = getValueOfNode(processor, root, path);
-        if (value == null) {
-            return defaultValue;
+        if (value != null) {
+            return BooleanUtils.toBoolean(value);
         }
-        return Boolean.valueOf(value).booleanValue();
+        return defaultValue;
     }
 
     /**
@@ -178,25 +175,24 @@ public final class DOMUtil {
      * If the node has no text nodes, <code>null</code> is returned.
      */
     public static String getValueOfNode(Node node) {
-        if (node == null)
-            return null;
-        if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-            return node.getNodeValue();
-        } else {
-            String value = null;
-            node.normalize();
-            NodeList childs = node.getChildNodes();
-            int i, l;
-            i = 0;
-            l = childs.getLength();
-            while (i < l && value == null) {
-                if (childs.item(i).getNodeType() == Node.TEXT_NODE)
-                    value = childs.item(i).getNodeValue().trim();
-                else
-                    i++;
+        if (node != null) {
+            if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+                return node.getNodeValue();
+            } else {
+                node.normalize();
+                NodeList childs = node.getChildNodes();
+                int i = 0;
+                int length = childs.getLength();
+                while (i < length) {
+                    if (childs.item(i).getNodeType() == Node.TEXT_NODE) {
+                        return childs.item(i).getNodeValue().trim();
+                    } else {
+                        i++;
+                    }
+                }
             }
-            return value;
         }
+        return null;
     }
 
     /**
@@ -206,10 +202,7 @@ public final class DOMUtil {
      * returned.
      */
     public static String getValueOfNode(Node node, String defaultValue) {
-        String value = getValueOfNode(node);
-        if (value == null)
-            value = defaultValue;
-        return value;
+        return StringUtils.defaultString(getValueOfNode(node), defaultValue);
     }
 
     /**
@@ -302,13 +295,11 @@ public final class DOMUtil {
                     frag.appendChild(child);
                 }
             }
-
         } catch (SAXException sax) {
             throw new ProcessingException("SAXException: " + sax, sax);
         } catch (IOException ioe) {
             throw new ProcessingException("IOException: " + ioe, ioe);
         }
-
         return frag;
     }
 
@@ -684,12 +675,8 @@ public final class DOMUtil {
                     + local,
                 local);
         }
-
-        if (path.startsWith("/") == true)
-            path = path.substring(1); // remove leading "/"
-        if (path.endsWith("/") == true) { // remove ending "/" for root node
-            path = path.substring(0, path.length() - 1);
-        }
+        // Remove leading "/" on both ends
+        path = StringUtils.strip(path, "/");
 
         // now step through the nodes!
         Node parent = rootNode;
@@ -856,11 +843,8 @@ public final class DOMUtil {
                 local);
         }
 
-        if (path.startsWith("/") == true)
-            path = path.substring(1); // remove leading "/"
-        if (path.endsWith("/") == true) { // remove ending "/" for root node
-            path = path.substring(0, path.length() - 1);
-        }
+        // remove leading "/" oon both ends
+        path = StringUtils.strip(path, "/");
 
         // now step through the nodes!
         Node parent = rootNode;
@@ -991,11 +975,7 @@ public final class DOMUtil {
         }
         if (root == null)
             return null;
-        if (path.startsWith("/") == true)
-            path = path.substring(1); // remove leading "/"
-        if (path.endsWith("/") == true) { // remove ending "/" for root node
-            path = path.substring(0, path.length() - 1);
-        }
+        path = StringUtils.strip(path, "/");
 
         try {
             Node node = getSingleNode(root, path);
@@ -1027,11 +1007,7 @@ public final class DOMUtil {
         }
         if (root == null)
             return null;
-        if (path.startsWith("/") == true)
-            path = path.substring(1); // remove leading "/"
-        if (path.endsWith("/") == true) { // remove ending "/" for root node
-            path = path.substring(0, path.length() - 1);
-        }
+        path = StringUtils.strip(path, "/");
 
         try {
             Node node = getSingleNode(root, path, processor);
@@ -1060,9 +1036,9 @@ public final class DOMUtil {
     public static String getValueOf(Node root, String path, String defaultValue)
         throws ProcessingException {
         String value = getValueOf(root, path);
-        if (value == null)
+        if (value == null) {
             value = defaultValue;
-
+        }
         return value;
     }
 
@@ -1081,9 +1057,9 @@ public final class DOMUtil {
                                     XPathProcessor processor)
     throws ProcessingException {
         String value = getValueOf(root, path, processor);
-        if (value == null)
+        if (value == null) {
             value = defaultValue;
-
+        }
         return value;
     }
 
@@ -1101,10 +1077,11 @@ public final class DOMUtil {
      */
     public static boolean getValueAsBooleanOf(Node root, String path) throws ProcessingException {
         String value = getValueOf(root, path);
-        if (value == null) {
+        if (value != null) {
+            return Boolean.valueOf(value).booleanValue();
+        } else {
             throw new ProcessingException("No such node: " + path);
         }
-        return Boolean.valueOf(value).booleanValue();
     }
 
     /**
@@ -1145,10 +1122,10 @@ public final class DOMUtil {
     public static boolean getValueAsBooleanOf(Node root, String path, boolean defaultValue)
         throws ProcessingException {
         String value = getValueOf(root, path);
-        if (value == null) {
-            return defaultValue;
+        if (value != null) {
+            return Boolean.valueOf(value).booleanValue();
         }
-        return Boolean.valueOf(value).booleanValue();
+        return defaultValue;
     }
 
     /**
@@ -1168,10 +1145,10 @@ public final class DOMUtil {
                                               XPathProcessor processor)
     throws ProcessingException {
         String value = getValueOf(root, path, processor);
-        if (value == null) {
-            return defaultValue;
+        if (value != null) {
+            return Boolean.valueOf(value).booleanValue();
         }
-        return Boolean.valueOf(value).booleanValue();
+        return defaultValue;        
     }
 
     /**
@@ -1203,11 +1180,10 @@ public final class DOMUtil {
     public static NodeList selectNodeList(Node contextNode, String str)
         throws TransformerException {
         String[] pathComponents = buildPathArray(str);
-        if (pathComponents == null) {
-            return XPathAPI.selectNodeList(contextNode, str);
-        } else {
+        if (pathComponents != null) {
             return getNodeListFromPath(contextNode, pathComponents);
         }
+        return XPathAPI.selectNodeList(contextNode, str);
     }
 
     /**
@@ -1224,11 +1200,10 @@ public final class DOMUtil {
     public static NodeList selectNodeList(Node contextNode, String str, XPathProcessor processor)
     throws TransformerException {
         String[] pathComponents = buildPathArray(str);
-        if (pathComponents == null) {
-            return processor.selectNodeList(contextNode, str); 
-        } else {
+        if (pathComponents != null) {
             return getNodeListFromPath(contextNode, pathComponents);
         }
+       return processor.selectNodeList(contextNode, str); 
     }
 
     /**
@@ -1479,6 +1454,7 @@ public final class DOMUtil {
         try {
             return XMLUtils.serializeNodeToXML(node);
         } catch (ProcessingException e) {
+            // Empty
         }
         return "";
     }
@@ -1529,5 +1505,4 @@ public final class DOMUtil {
     public static StringBuffer node2StringBuffer(Node node, boolean pretty, String indent) {
         return new StringBuffer(node2String(node, pretty));
     }
-
 }
