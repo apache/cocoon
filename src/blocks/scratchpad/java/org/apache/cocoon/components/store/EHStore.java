@@ -32,8 +32,12 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.store.Store;
+import org.apache.excalibur.store.StoreJanitor;
 
 /**
  * Store implementation based on EHCache.
@@ -50,20 +54,29 @@ import org.apache.excalibur.store.Store;
  * </p>
  */
 public class EHStore extends AbstractLogEnabled 
-implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
+implements Store, Parameterizable, Initializable, Disposable, ThreadSafe, Serviceable {
     
-    private Cache m_cache;
-    private CacheManager m_cacheManager;
+    private Cache cache;
+    private CacheManager cacheManager;
     
     // configuration options
-    private String m_cacheName;
-    private int m_maximumSize;
-    private boolean m_overflowToDisk;
-    private String m_configFile;
+    private String cacheName;
+    private int maximumSize;
+    private boolean overflowToDisk;
+    private String configFile;
     
-    // ---------------------------------------------------- lifecycle
+    /** The service manager */
+    private ServiceManager manager;
     
-    public EHStore() {
+    /** The store janitor */
+    private StoreJanitor storeJanitor;
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager aManager) throws ServiceException {
+        this.manager = aManager;
+        this.storeJanitor = (StoreJanitor)this.manager.lookup(StoreJanitor.ROLE);
     }
     
     /**
@@ -84,10 +97,10 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
      * </ul>
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        m_cacheName = parameters.getParameter("cache-name", "main");
-        m_maximumSize = parameters.getParameterAsInteger("maxobjects", 10000);
-        m_overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
-        m_configFile = parameters.getParameter("config-file", 
+        this.cacheName = parameters.getParameter("cache-name", "main");
+        this.maximumSize = parameters.getParameterAsInteger("maxobjects", 10000);
+        this.overflowToDisk = parameters.getParameterAsBoolean("overflow-to-disk", true);
+        this.configFile = parameters.getParameter("config-file", 
             "org/apache/cocoon/components/store/ehcache-defaults.xml");
     }
     
@@ -95,19 +108,26 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
      * Initialize the CacheManager and created the Cache.
      */
     public void initialize() throws Exception {
-        URL configFile = Thread.currentThread().getContextClassLoader().getResource(m_configFile);
-        m_cacheManager = CacheManager.create(configFile);
-        m_cache = new Cache(m_cacheName, m_maximumSize, m_overflowToDisk, true, 0, 0);
-        m_cacheManager.addCache(m_cache);
+        URL configFileURL = Thread.currentThread().getContextClassLoader().getResource(this.configFile);
+        this.cacheManager = CacheManager.create(configFileURL);
+        this.cache = new Cache(this.cacheName, this.maximumSize, this.overflowToDisk, true, 0, 0);
+        this.cacheManager.addCache(this.cache);
+        this.storeJanitor.register(this);
     }
     
     /**
      * Shutdown the CacheManager.
      */
     public void dispose() {
-        m_cacheManager.shutdown();
-        m_cacheManager = null;
-        m_cache = null;
+        if ( this.storeJanitor != null ) {
+            this.storeJanitor.unregister(this);
+            this.manager.release(this.storeJanitor);
+            this.storeJanitor = null;
+        }
+        this.manager = null;
+        this.cacheManager.shutdown();
+        this.cacheManager = null;
+        this.cache = null;
     }
     
     // ---------------------------------------------------- Store implementation
@@ -118,7 +138,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
     public Object get(Object key) {
         Object value = null;
         try {
-            final Element element = m_cache.get((Serializable) key);
+            final Element element = this.cache.get((Serializable) key);
             if (element != null) {
                 value = element.getValue();
             }
@@ -145,13 +165,14 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
             getLogger().debug("Store object " + value + " with key "+ key);
         }
         final Element element = new Element((Serializable) key, (Serializable) value);
-        m_cache.put(element);
+        this.cache.put(element);
     }
 
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#free()
      */
     public void free() {
+        // FIXME - we have to implement this!
     }
 
     /* (non-Javadoc)
@@ -161,7 +182,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Removing item " + key);
         }
-        m_cache.remove((Serializable) key);
+        this.cache.remove((Serializable) key);
     }
 
     /* (non-Javadoc)
@@ -172,7 +193,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
             getLogger().debug("Clearing the store");
         }
         try {
-            m_cache.removeAll();
+            this.cache.removeAll();
         }
         catch (IOException e) {
             getLogger().error("Failure to clearing store", e);
@@ -184,7 +205,7 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
      */
     public boolean containsKey(Object key) {
         try {
-            return m_cache.get((Serializable) key) != null;
+            return this.cache.get((Serializable) key) != null;
         }
         catch (CacheException e) {
             getLogger().error("Failure retrieving object from store",e);
@@ -196,14 +217,14 @@ implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
      * @see org.apache.excalibur.store.Store#keys()
      */
     public Enumeration keys() {
-        return Collections.enumeration(m_cache.getKeys());
+        return Collections.enumeration(this.cache.getKeys());
     }
 
     /* (non-Javadoc)
      * @see org.apache.excalibur.store.Store#size()
      */
     public int size() {
-        return m_cache.getSize();
+        return this.cache.getSize();
     }
 
 }
