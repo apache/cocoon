@@ -369,14 +369,36 @@
             and wrapped as <code>Text</code>
           </li>
           <li>
-            Java objects are wrapped as follows:
+            <code>Node</code>s (which is to say, instances of all subclasses of 
+            <code>org.w3c.dom.Node</code>) are left as-is
+            if their owner document is the same as the XSP output document, or 
+            cloned if not (in order to change the owner document). Efficiency gains
+            can be made by always creating Nodes to be inserted with 
+            <code>document</code> as their owner document (although this is probably
+            what you are doing anyway!). NOTE: You should not insert 
+            objects whose type is <strong>equal</strong> to
+            <code>Node</code> because this is considered an abstract class - instead, use
+            Element to insert one element at a time, or DocumentFragment to insert
+            multiple elements at the same time. (Here "one element" and "multiple
+            elements" refers to elements at the top level, so &lt;a&gt;&lt;b/&gt;&lt;/a&gt;
+            still counts as "one element" in this context, but &lt;a/&gt;&lt;b/&gt; counts
+            as two.)  
+          </li>
+          <li>
+            All other Java objects are wrapped as follows:
               <ul>
                 <li>
                   <code>String</code>s are directly wrapped as
-                  <code>Text</code>
+                  <code>Text</code>. <strong>WARNING:</strong> This means that if you try to
+                  insert some XML as a <code>String</code> using <code>&lt;xsp:expr&gt;</code>,
+                  it will not work! Instead, you will need to <em>either</em> use
+                  <code>&lt;util:include-expr&gt;</code>, <em>or</em> build <code>XObject</code>s
+                  or <code>org.w3c.dom.Node</code>s instead - please read the
+                  <link href="faqs.html#faq-xspinsertxml">FAQ</link> on this before asking
+                  questions about it.
                 </li>
                 <li>
-                  Arrays are wrapped as <code>DocumentFragments</code>
+                  Arrays are wrapped as <code>DocumentFragment</code>s
                   and each element is recursively applied these same
                   transformation rules.
                 </li>
@@ -386,7 +408,7 @@
                   and subsquently wrapped as <code>Text</code>.
                   Note that some types may not provide a suitable
                   string representation, so they may require a
-                  more elaborate expression
+                  more elaborate, explicit expression.
                 </li>
               </ul>
           </li>

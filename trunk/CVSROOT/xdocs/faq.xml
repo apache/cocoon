@@ -162,6 +162,41 @@
 
 <faqsection title="XSP Pages">
 
+ <faq id="xspinsertxml">
+  <question>Why does Cocoon escape my XML with &amp;lt; and &amp;gt; when I try to
+   insert an XML string in an XSP page?</question>
+  <answer>
+   <p>This is the correct behaviour, as described in the <connect href="xspprocessor.xml">
+    XSP Processor documentation</connect>. To tell Cocoon to include the XML "literally"
+    into its Document Object Model (so that it is not escaped when it is outputted),
+    there are two basic options:</p>
+
+   <ol>
+    <li>The easiest way is to simply replace <code>&lt;xsp:expr&gt;</code> with
+     <code>&lt;util:include-expr&gt;</code> (making sure to declare the util
+     logicsheet namespace in your <code>&lt;xsp:page&gt;</code> tag - instructions for 
+     this can be found in the XSP documentation). However this is not necessarily the 
+     most efficient way, because it invokes the installed XML parser to parse the 
+     string into an in-memory representation used throughout Cocoon 1.x called a 
+     <link href="http://www.w3.org/DOM/">DOM <strong>(Document Object Model)</strong>
+     </link>.
+    </li>
+    <li>It is thus better to generate DOM objects directly. This is outside the scope
+     of this documentation (except insofar as it documents the specification of 
+     <code>&lt;xsp:expr&gt;</code>) - see the DOM link above, and also the question on
+     <jump href="#faq-goodbooks">"good books"</jump>. You can also generate
+     <code>org.apache.cocoon.framework.XObject</code>s, and return both DOM and SAX,
+     thus making your code (hopefully) more forward-compatible with Cocoon 2, which will be
+     SAX-based. (Actually using SAX is not strictly necessary, since DOM can always be 
+     converted to SAX and vice-versa, but you will pay a performance penalty in Cocoon 2
+     by using DOM.)
+     Note that with either of these, you should still use <code>&lt;xsp:expr&gt;</code>,
+     <strong>not</strong> <code>&lt;util:include-expr&gt;</code>.
+    </li>
+   </ol>
+  </answer>
+ </faq>
+
  <faq id="nocompile">
   <question>I keep changing my XSP pages to try and fix a bug, and it never seems
    to recompile. What gives?</question>
@@ -473,10 +508,14 @@
     Note that this is <em>not</em> a bug in Cocoon and is completely outside
     our control.</p>
 
-   <note>There is a bug in MS Internet Explorer 5 which even ignores the 
-    question mark. See the
+   <note>There are bugs in MS Internet Explorer 5.x and/or Acrobat Reader
+    which even ignore the question mark. See the
     <link href="http://support.microsoft.com/support/kb/articles/Q177/3/21.ASP">
-    Microsoft Knowledge Base</link>.</note>
+    Microsoft Knowledge Base</link> and 
+    <link href="http://www.adobe.com/support/techdocs/3d76.htm">
+    Adobe Support Knowledgebase (1)</link>, 
+    <link href="http://www.adobe.com/support/techdocs/98fe.htm">(2)</link>.
+   </note>
   </answer>
  </faq>
 
