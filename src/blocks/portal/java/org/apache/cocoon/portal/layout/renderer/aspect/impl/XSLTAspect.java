@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
@@ -44,11 +46,28 @@ import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
 
 /**
+ * Apply a XSLT stylesheet to the contained layout. All following renderer aspects
+ * are applied first before the XML is fed into the XSLT. All layout parameters
+ * are made available to the stylesheet.
+ * 
+ * <h2>Example XML:</h2>
+ * <pre>
+ *  &lt;-- result from output of following renderers transformed by stylesheet --&gt;
+ * </pre>
+ *
+ * <h2>Applicable to:</h2>
+ * {@link org.apache.cocoon.portal.layout.Layout}
+ *
+ * <h2>Parameters</h2>
+ * <table><tbody>
+ * <tr><th>style</th><td></td><td>req</td><td>String</td><td><code>null</code></td></tr>
+ * <tr><th>xslt-processor-role</th><td></td><td>req</td><td>String</td><td><code>null</code></td></tr>
+ * </tbody></table>  
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: XSLTAspect.java,v 1.9 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: XSLTAspect.java,v 1.10 2004/04/25 20:12:04 haul Exp $
  */
 public class XSLTAspect 
     extends AbstractAspect
@@ -84,6 +103,15 @@ public class XSLTAspect
             stylesheet = resolver.resolveURI(this.getStylesheetURI(config, layout));
             processor = (XSLTProcessor) this.manager.lookup(config.xsltRole);
             TransformerHandler transformer = processor.getTransformerHandler(stylesheet);
+            Map parameter = layout.getParameters();
+            if (parameter.size() > 0) {
+                Map.Entry entry;
+                Transformer theTransformer = transformer.getTransformer();
+                for (Iterator iter = parameter.entrySet().iterator(); iter.hasNext();) {
+                    entry = (Map.Entry) iter.next();
+                    theTransformer.setParameter((String)entry.getKey(), entry.getValue());
+                }
+            }
             SAXResult result = new SAXResult(new IncludeXMLConsumer((handler)));
             if (handler instanceof LexicalHandler) {
                 result.setLexicalHandler((LexicalHandler) handler);
