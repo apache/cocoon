@@ -55,7 +55,7 @@ import java.util.Date;
  * This interface for lock of a source
  *
  * @author <a href="mailto:stephan@vern.chem.tu-berlin.de">Stephan Michels</a>
- * @version CVS $Id: SourceLock.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: SourceLock.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
 public class SourceLock {
 

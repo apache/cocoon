@@ -47,54 +47,55 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source.helpers;
+package org.apache.cocoon.components.source;
+
+import org.apache.cocoon.components.source.helpers.SourceCredential;
+import org.apache.cocoon.components.source.helpers.SourcePermission;
+
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceException;
 
 /**
- * This class represents a source permission for users
+ * A source, which is restrictable, which means you need a username and password.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PrincipalSourcePermission.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: RestrictableSource.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public class PrincipalSourcePermission extends AbstractSourcePermission {
+public interface RestrictableSource extends Source {
 
-    public final static String PRINCIPAL_SELF              = "SELF";
-    public final static String PRINCIPAL_ALL               = "ALL";
-    public final static String PRINCIPAL_GUEST             = "GUEST";
+    /** 
+     * Get the current credential for the source
+     */
+    public SourceCredential getSourceCredential() throws SourceException;
 
-    private String principal;
+    /** 
+     * Set the credential for the source
+     */
+    public void setSourceCredential(SourceCredential sourcecredential) throws SourceException;
 
     /**
-     * Creates a new permission
+     * Add a permission to this source
      *
-     * @param principal Principal of the permission
-     * @param privilege Privilege of the permission
-     * @param inheritable If the permission is inheritable
-     * @param negative If the permission is negative
-     */
-    public PrincipalSourcePermission(String principal, String privilege, 
-                                     boolean inheritable, boolean negative) {
-
-        this.principal   = principal;
-        setPrivilege(privilege);
-        setInheritable(inheritable);
-        setNegative(negative);
-    }
-
-    /**
-     * Sets the principal of the permission
+     * @param sourcepermission Permission, which should be set
      *
-     * @param principal Principal of the permission
-     */
-    public void setPrincipal(String principal) {
-        this.principal   = principal;
-    }
+     * @throws SourceException If an exception occurs during this operation
+     **/
+    public void addSourcePermission(SourcePermission sourcepermission) throws SourceException;
 
     /**
-     * Returns the principal of the permission
-     * 
-     * @return Principal of the permission
+     * Remove a permission from this source
+     *
+     * @param sourcepermission Permission, which should be removed
+     *
+     * @throws SourceException If an exception occurs during this operation
+     **/
+    public void removeSourcePermission(SourcePermission sourcepermission) throws SourceException;
+
+    /**
+     * Returns a list of the existing permissions
+     *
+     * @return Array of SourcePermission
      */
-    public String getPrincipal() {
-        return this.principal;
-    }
+    public SourcePermission[] getSourcePermissions() throws SourceException;
 }
+

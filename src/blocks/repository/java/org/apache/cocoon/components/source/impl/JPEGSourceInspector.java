@@ -64,7 +64,7 @@ import org.apache.excalibur.source.SourceException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version CVS $Id: JPEGSourceInspector.java,v 1.5 2003/09/05 07:31:45 cziegeler Exp $
+ * @version CVS $Id: JPEGSourceInspector.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
 public class JPEGSourceInspector extends AbstractLogEnabled implements 
     SourceInspector, ThreadSafe {

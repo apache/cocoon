@@ -47,29 +47,71 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source;
-
-import org.apache.avalon.framework.component.Component;
-
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceException;
-
-import org.apache.cocoon.components.source.helpers.SourceProperty;
+package org.apache.cocoon.components.source.helpers;
 
 /**
- * A source inspector helps to get properties from sources
+ * This class is an abstract implementation of a source permission
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceInspector.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: AbstractSourcePermission.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface SourceInspector extends Component {
+public abstract class AbstractSourcePermission implements SourcePermission{
 
-    public final static String ROLE = "org.apache.cocoon.components.source.SourceInspector";
+    private String  privilege;
+    private boolean inheritable;
+    private boolean negative;
 
-    public SourceProperty getSourceProperty(Source source, String namespace, String name) 
-        throws SourceException;
+    /**
+     * Sets the privilege of the permission
+     *
+     * @param privilege Privilege of the permission
+     */
+    public void setPrivilege(String privilege) {
+        this.privilege   = privilege;
+    }
 
-    public SourceProperty[] getSourceProperties(Source source) throws SourceException;
+    /**
+     * Returns the privilege of the permission
+     * 
+     * @return Privilege of the permission
+     */
+    public String getPrivilege() {
+        return this.privilege;
+    }
 
+    /**
+     * Sets the inheritable flag
+     *
+     * @param inheritable If the permission is inheritable
+     */
+    public void setInheritable(boolean inheritable) {
+        this.inheritable = inheritable;
+    }
+
+    /**
+     * Returns the inheritable flag
+     *
+     * @return If the permission is inheritable
+     */
+    public boolean isInheritable() {
+        return this.inheritable;
+    }
+
+    /**
+     * Sets the negative flag
+     *
+     * @param negative If the permission is a negative permission
+     */
+    public void setNegative(boolean negative) {
+        this.negative = negative;
+    }
+
+    /**
+     * Returns the negative flag
+     * 
+     * @return If the permission is a negative permission
+     */
+    public boolean isNegative() {
+        return this.negative;
+    }
 }
-

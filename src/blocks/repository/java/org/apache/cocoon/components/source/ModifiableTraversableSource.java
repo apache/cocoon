@@ -47,82 +47,29 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.components.source.helpers;
+package org.apache.cocoon.components.source;
+
+import org.apache.excalibur.source.ModifiableSource;
+import org.apache.excalibur.source.SourceException;
 
 /**
- * This interface represents a permission for a source
+ * A source, which can be a directory or collection of sources, which can
+ * can be modfied.
  *
+ * WARNING: Do not use this interface, it will be removed soon. Use
+ *          the version from avalon excalibur instead.
+ * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourcePermission.java,v 1.3 2003/09/05 07:31:44 cziegeler Exp $
+ * @version CVS $Id: ModifiableTraversableSource.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
-public interface SourcePermission {
-
-    public final static String PRIVILEGE_ALL               = "all";
-    public final static String PRIVILEGE_READ              = "read";
-    public final static String PRIVILEGE_WRITE             = "write";
-
-    public final static String PRIVILEGE_READ_ACL          = "read-acl";
-    public final static String PRIVILEGE_WRITE_ACL         = "write-acl";
-
-    public final static String PRIVILEGE_READ_SOURCE       = "read-source";
-    public final static String PRIVILEGE_CREATE_SOURCE     = "create-source";
-    public final static String PRIVILEGE_REMOVE_SOURCE     = "remove-source";
-
-    public final static String PRIVILEGE_LOCK_SOURCE       = "lock-source";
-    public final static String PRIVILEGE_READ_LOCKS        = "read-locks";
-
-    public final static String PRIVILEGE_READ_PROPERTY     = "read-property";
-    public final static String PRIVILEGE_CREATE_PROPERTY   = "create-property";
-    public final static String PRIVILEGE_MODIFY_PROPERTY   = "modify-property";
-    public final static String PRIVILEGE_REMOVE_PROPERTY   = "remove-property";
-
-    public final static String PRIVILEGE_READ_CONTENT      = "read-content";
-    public final static String PRIVILEGE_CREATE_CONTENT    = "create-content";
-    public final static String PRIVILEGE_MODIFY_CONTENT    = "modify-content";
-    public final static String PRIVILEGE_REMOVE_CONTENT    = "remove-content";
-
-    public final static String PRIVILEGE_GRANT_PERMISSION  = "grant-permission";
-    public final static String PRIVILEGE_REVOKE_PERMISSION = "revoke-permission";
+public interface ModifiableTraversableSource extends TraversableSource, ModifiableSource {
 
     /**
-     * Sets the privilege of the permission
+     * Create a collection of sources.
      *
-     * @param privilege Privilege of the permission
+     * @param collectionname Name of the collectiom, which 
+     *                       should be created.
      */
-    public void setPrivilege(String privilege);
-
-    /**
-     * Returns the privilege of the permission
-     * 
-     * @return Privilege of the permission
-     */
-    public String getPrivilege();
-
-    /**
-     * Sets the inheritable flag
-     *
-     * @param inheritable If the permission is inheritable
-     */
-    public void setInheritable(boolean inheritable);
-
-    /**
-     * Returns the inheritable flag
-     *
-     * @return If the permission is inheritable
-     */
-    public boolean isInheritable();
-
-    /**
-     * Sets the negative flag
-     *
-     * @param negative If the permission is a negative permission
-     */
-    public void setNegative(boolean negative);
-
-    /**
-     * Returns the negative flag
-     * 
-     * @return If the permission is a negative permission
-     */
-    public boolean isNegative();
+    void createCollection(String collectionname) throws SourceException;
 }
+

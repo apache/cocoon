@@ -65,7 +65,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:holz@fiz-chemie.de">Martin Holz</a>
- * @version CVS $Id: SourceProperty.java,v 1.5 2003/09/08 20:50:42 gcasper Exp $
+ * @version CVS $Id: SourceProperty.java,v 1.1 2003/10/22 18:53:06 gcasper Exp $
  */
 public class SourceProperty implements XMLizable {
 
