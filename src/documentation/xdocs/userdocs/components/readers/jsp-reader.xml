@@ -38,7 +38,7 @@
           <td>SINCE</td><td>Cocoon 2.0</td>
         </tr>
         <tr>
-          <td>CACHEABLE</td><td>yes</td>
+          <td>CACHEABLE</td><td>no</td>
         </tr>
       </table>
     </s1>
