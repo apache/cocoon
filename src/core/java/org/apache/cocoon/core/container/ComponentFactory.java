@@ -22,7 +22,6 @@ import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -36,25 +35,25 @@ import org.apache.cocoon.components.ServiceInfo;
  */
 public class ComponentFactory {
     
-    private final ServiceInfo serviceInfo;
+    protected final ServiceInfo serviceInfo;
     
     /** The Context for the component
      */
-    private final Context context;
+    protected final Context context;
 
     /** The service manager for this component
      */
-    private final ServiceManager serviceManager;
+    protected final ServiceManager serviceManager;
     
     /** The parameters for this component
      */
-    private Parameters parameters;
+    protected Parameters parameters;
     
-    private final Logger logger;
+    protected final Logger logger;
     
-    private final LoggerManager loggerManager;
+    protected final LoggerManager loggerManager;
 
-    private final RoleManager roleManager;
+    protected final RoleManager roleManager;
     
     /**
      * Construct a new component factory for the specified component.
@@ -73,10 +72,19 @@ public class ComponentFactory {
                              final ServiceInfo info) {
         this.serviceManager = serviceManager;
         this.context = context;
-        this.logger = logger;
         this.loggerManager = loggerManager;
         this.roleManager = roleManager;
         this.serviceInfo = info;
+        
+        Logger actualLogger = logger;
+        // If the handler is created "manually" (e.g. XSP engine), loggerManager can be null
+        if(loggerManager != null && this.serviceInfo.getConfiguration() != null) {
+            final String category = this.serviceInfo.getConfiguration().getAttribute("logger", null);
+            if(category != null) {
+                actualLogger = loggerManager.getLoggerForCategory(category);
+            }
+        }
+        this.logger = actualLogger;
     }
 
     /**
@@ -91,29 +99,9 @@ public class ComponentFactory {
                     this.serviceInfo.getServiceClass().getName() + "." );
         }
 
-        if ( component instanceof LogEnabled ) {
-            if( this.serviceInfo.getConfiguration() != null ) {
-                ContainerUtil.enableLogging( component, this.logger );
-            } else {
-                final String logger = this.serviceInfo.getConfiguration().getAttribute( "logger", null );
-                if( null == logger ) {
-                    this.logger.debug( "no logger attribute available, using standard logger" );
-                    ContainerUtil.enableLogging( component, this.logger );
-                } else {
-                    this.logger.debug( "logger attribute is " + this.logger );
-                    ContainerUtil.enableLogging( component, this.loggerManager.getLoggerForCategory( logger ) );
-                }
-            }
-        }
-
+        ContainerUtil.enableLogging(component, this.logger);
         ContainerUtil.contextualize( component, this.context );
         ContainerUtil.service( component, this.serviceManager );
-
-        if ( component instanceof CocoonServiceSelector ) {
-            ((CocoonServiceSelector)component).setLoggerManager(this.loggerManager);
-            ((CocoonServiceSelector)component).setRoleManager(this.roleManager);
-        }
-        
         ContainerUtil.configure( component, this.serviceInfo.getConfiguration() );
 
         if( component instanceof Parameterizable ) {

@@ -21,6 +21,7 @@ import java.util.LinkedList;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * The PoolableComponentHandler to make sure that poolable components are initialized
@@ -90,11 +91,12 @@ extends AbstractComponentHandler {
      *                managed by the ComponentHandler.
      * @param config The configuration to use to configure the pool.
      */
-    public PoolableComponentHandler( final Logger logger,
+    public PoolableComponentHandler( final ServiceInfo info,
+                                     final Logger logger,
                                      final ComponentFactory factory,
                                      final Configuration config )
     throws Exception {
-        super(logger, factory);
+        super(info, logger, factory);
 
         final int poolMax = config.getAttributeAsInteger( "pool-max", DEFAULT_MAX_POOL_SIZE );
         this.max = ( poolMax <= 0 ? Integer.MAX_VALUE : poolMax );

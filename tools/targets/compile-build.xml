@@ -31,8 +31,6 @@
     <copy todir="${build.dest}">
       <fileset dir="${java}">
         <exclude name="**/*.java"/>
-        <exclude name="**/*.xroles"/>
-        <exclude name="**/*.xconf"/>
       </fileset>
     </copy>
 

@@ -24,14 +24,14 @@
 
   <role name="org.apache.cocoon.components.language.markup.MarkupLanguageSelector"
         shorthand="markup-languages"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector">
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector">
     <hint shorthand="sitemap-language" class="org.apache.cocoon.components.language.markup.CocoonMarkupLanguage"/>
     <hint shorthand="xsp-language" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage"/>
   </role>
 
   <role name="org.apache.cocoon.components.language.programming.ProgrammingLanguageSelector"
         shorthand="programming-languages"
-        default-class="org.apache.cocoon.core.container.CocoonServiceSelector">
+        default-class="org.apache.cocoon.core.container.DefaultServiceSelector">
     <hint shorthand="java-language" class="org.apache.cocoon.components.language.programming.java.JavaLanguage"/>
     <hint shorthand="js-language" class="org.apache.cocoon.components.language.programming.javascript.JavascriptLanguage"/>
     <hint shorthand="python-language" class="org.apache.cocoon.components.language.programming.python.PythonLanguage"/>

@@ -16,6 +16,8 @@
  */
 package org.apache.cocoon.core.container;
 
+import org.apache.cocoon.components.ServiceInfo;
+
 /**
  * This class acts like a Factory to instantiate the correct version
  * of the component handler that you need.
@@ -40,6 +42,14 @@ public interface ComponentHandler {
      */
     void put( Object component ) 
     throws Exception;
+    
+    /**
+     * Indicates if this handler manages a single object, i.e. all calls to {@link #get()}
+     * will return the same object.
+     * 
+     * @return <code>true</code> if managed object is a singleton
+     */
+    boolean isSingleton();
 
     /**
      * Returns <code>true</code> if this component handler can safely be
@@ -60,5 +70,10 @@ public interface ComponentHandler {
      * Initialize this handler
      */
     void initialize() throws Exception;
+    
+    /**
+     * Get the service metadata for this handler
+     */
+    ServiceInfo getInfo();
 
 }

@@ -55,12 +55,6 @@
       <!-- Files, which should no compiled or otherwise processed -->
       <patternset id="unprocessed.sources">
         <exclude name="**/*.java"/>
-        <exclude name="**/*.xconf"/>
-        <exclude name="**/*.xroles"/>
-        <exclude name="**/*.xmap"/>
-        <exclude name="**/*.xpipe"/>
-        <exclude name="**/*.xlog"/>
-        <exclude name="**/*.xweb"/>
         <exclude name="**/package.html"/>
       </patternset>
 
