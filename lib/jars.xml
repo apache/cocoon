@@ -544,7 +544,7 @@
     provides robust and full-featured Unicode services on a wide variety 
     of platforms. </description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/icu4j-2.6.jar</lib>
+    <lib>deli/lib/icu4j-3.0.jar</lib>
     <homepage>http://oss.software.ibm.com/icu4j/</homepage>
   </file>
 
