@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.63 2001-01-24 02:04:52 greenrd Exp $
+  $Id: todo.xml,v 1.64 2001-01-26 23:28:01 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -37,6 +37,9 @@
   </action>
   <action context="samples" assigned-to="DB">
    Update xinclude samples for new spec.
+  </action>
+  <action context="code" bugid="64" assigned-to="DB">
+   Upgrade Turbine-pool.
   </action>
  </actions>
 
@@ -77,6 +80,9 @@
   <action context="code" assigned-to="RDG" bugid="12">
    Class auto-reloading for XSP pages
    (code written; just needs to be merged in and documented.)
+  </action>
+  <action context="code" bugid="70">
+   Dependency tracking for [bug12]. (???)
   </action>
   <action context="docs" bugid="13">
    Ensure that all HTML docs are not too wide for screen/printer width
