@@ -16,6 +16,7 @@
 
 package org.apache.cocoon.transformation.pagination;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,7 +45,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.6 2004/05/17 16:17:11 vgritsenko Exp $
+ * @version CVS $Id: Pagesheet.java,v 1.7 2004/07/21 13:20:30 unico Exp $
  */
 
 /*
@@ -97,8 +98,7 @@ which indicates that:
  6) range link(s) will have an attribute 'range' to indicate the range size
 
 */
-public class Pagesheet extends DefaultHandler
-                       implements Cloneable, Modifiable {
+public class Pagesheet extends DefaultHandler implements Cloneable, Modifiable, Serializable {
 
     // Used only during parsing of pagesheet document
     private int level = 0;
