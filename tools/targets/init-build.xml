@@ -57,14 +57,14 @@
     <condition property="unless.exclude.javadocs">
       <istrue value="${exclude.javadocs}"/>
     </condition>
-    <condition property="exclude.validate.jars">
-      <isfalse value="${validate.jars}"/>
+    <condition property="unless.exclude.validate.jars">
+      <istrue value="${exclude.validate.jars}"/>
     </condition>
-    <condition property="exclude.validate.config">
-      <isfalse value="${validate.config}"/>
+    <condition property="unless.exclude.validate.config">
+      <istrue value="${exclude.validate.config}"/>
     </condition>
-    <condition property="exclude.validate.xdocs">
-      <isfalse value="${validate.xdocs}"/>
+    <condition property="unless.exclude.validate.xdocs">
+      <istrue value="${exclude.validate.xdocs}"/>
     </condition>
 
     <filter token="Name"                value="${fullname}"/>
