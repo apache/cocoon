@@ -82,7 +82,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.8 2003/07/14 16:06:20 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.9 2003/07/31 03:54:22 vgritsenko Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends AbstractProcessingPipeline
@@ -242,7 +242,8 @@ public abstract class AbstractCachingProcessingPipeline
                 }
             } catch ( SocketException se ) {
                 if (se.getMessage().indexOf("reset") > 0
-                        || se.getMessage().indexOf("aborted") > 0) {
+                        || se.getMessage().indexOf("aborted") > 0
+                        || se.getMessage().indexOf("connection abort") > 0) {
                     throw new ConnectionResetException("Connection reset by peer", se);
                 } else {
                     throw new ProcessingException("Failed to execute reader pipeline.", se);
@@ -313,7 +314,8 @@ public abstract class AbstractCachingProcessingPipeline
 
             } catch ( SocketException se ) {
                 if (se.getMessage().indexOf("reset") > 0
-                        || se.getMessage().indexOf("aborted") > 0) {
+                        || se.getMessage().indexOf("aborted") > 0
+                        || se.getMessage().indexOf("connection abort") > 0) {
                     throw new ConnectionResetException("Connection reset by peer", se);
                 } else {
                     throw new ProcessingException("Failed to execute reader pipeline.", se);
@@ -853,7 +855,8 @@ public abstract class AbstractCachingProcessingPipeline
             }
         } catch ( SocketException se ) {
             if (se.getMessage().indexOf("reset") > 0
-                    || se.getMessage().indexOf("aborted") > 0) {
+                    || se.getMessage().indexOf("aborted") > 0
+                    || se.getMessage().indexOf("connection abort") > 0) {
                 throw new ConnectionResetException("Connection reset by peer", se);
             } else {
                 throw new ProcessingException("Failed to execute pipeline.", se);
