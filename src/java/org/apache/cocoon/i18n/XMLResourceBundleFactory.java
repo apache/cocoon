@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,12 +47,20 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class XMLResourceBundleFactory
        implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
 
-    protected Map cache = Collections.synchronizedMap(new HashMap());
+    /**
+     * Cache of the bundles by file name
+     */
+    protected final Map cache = Collections.synchronizedMap(new HashMap());
+
+    /**
+     * Cache for the file names of the bundles that were not found
+     */
+    protected final Map cacheNotFound = new HashMap();
 
     /**
      * Should we load bundles to cache on startup or not?
@@ -65,11 +73,6 @@ public class XMLResourceBundleFactory
     protected String directory;
 
     /**
-     * Cache for the names of the bundles that were not found
-     */
-    protected final Map cacheNotFound = new HashMap();
-
-    /**
      * The logger
      */
     private Logger logger;
@@ -77,7 +80,7 @@ public class XMLResourceBundleFactory
     /**
      * Service Manager
      */
-    protected ServiceManager manager = null;
+    protected ServiceManager manager;
 
     /**
      * Source resolver
@@ -139,7 +142,7 @@ public class XMLResourceBundleFactory
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Configured with: cacheAtStartup = " +
-                              cacheAtStartup + ", directory = '" + directory + "'");
+                              this.cacheAtStartup + ", directory = '" + this.directory + "'");
         }
     }
 
@@ -195,7 +198,8 @@ public class XMLResourceBundleFactory
      * @return        the bundle
      * @exception     Exception if a bundle is not found
      */
-    public Bundle select(String directory, String name, String localeName) throws Exception {
+    public Bundle select(String directory, String name, String localeName)
+    throws Exception {
         return select(directory, name, new Locale(localeName, localeName));
     }
 
@@ -209,7 +213,8 @@ public class XMLResourceBundleFactory
      * @return        the bundle
      * @exception     Exception if a bundle is not found
      */
-    public Bundle select(String directory, String name, Locale locale) throws Exception {
+    public Bundle select(String directory, String name, Locale locale)
+    throws Exception {
         String []directories = new String[1];
         directories[0] = directory;
         return select(directories, name, locale);
@@ -226,7 +231,7 @@ public class XMLResourceBundleFactory
      * @exception     Exception if a bundle is not found
      */
     public Bundle select(String[] directories, String name, Locale locale)
-            throws Exception {
+    throws Exception {
         Bundle bundle = _select(directories, 0, name, locale);
         if (bundle == null) {
             throw new Exception("Unable to locate resource: " + name);
@@ -245,7 +250,7 @@ public class XMLResourceBundleFactory
     private XMLResourceBundle _select(String[] directories, int index, String name,
                                       Locale locale) {
         if (getLogger().isDebugEnabled()) {
-            getLogger().debug("selecting from: " + name + ", locale: " + locale +
+            getLogger().debug("Selecting from: " + name + ", locale: " + locale +
                               ", directory: " + directories[index]);
         }
         String cacheKey = getCacheKey(directories, index, name, locale);
@@ -303,10 +308,10 @@ public class XMLResourceBundleFactory
             return bundle;
         } catch (ResourceNotFoundException e) {
             getLogger().info("Resource not found: " + name + ", locale: " + locale +
-                             ", bundleName: " + fileName + ". Exception: " + e.toString());
+                             ", bundleName: " + fileName + ". Exception: " + e);
         } catch (SourceNotFoundException e) {
             getLogger().info("Resource not found: " + name + ", locale: " + locale +
-                             ", bundleName: " + fileName + ". Exception: " + e.toString());
+                             ", bundleName: " + fileName + ". Exception: " + e);
         } catch (SAXParseException e) {
             getLogger().error("Incorrect resource format", e);
         } catch (Exception e) {
@@ -410,7 +415,7 @@ public class XMLResourceBundleFactory
      */
     protected XMLResourceBundle selectCached(String fileName) {
         XMLResourceBundle bundle = null;
-        bundle = (XMLResourceBundle)cache.get(fileName);
+        bundle = (XMLResourceBundle) this.cache.get(fileName);
         if (bundle != null) {
             bundle.update(fileName);
             if (getLogger().isDebugEnabled()) {
@@ -433,7 +438,7 @@ public class XMLResourceBundleFactory
      *                          otherwise, false.
      */
     protected boolean isNotFoundBundle(String fileName) {
-        String result = (String) (cacheNotFound.get(fileName));
+        String result = (String) this.cacheNotFound.get(fileName);
         if (result != null) {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Returning from not_found_cache: " + fileName);
@@ -456,7 +461,7 @@ public class XMLResourceBundleFactory
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Updating not_found_cache: " + fileName);
             }
-            cacheNotFound.put(fileName, fileName);
+            this.cacheNotFound.put(fileName, fileName);
         } else {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Updating cache: " + fileName);
