@@ -199,9 +199,11 @@
    </actions>
   </todo>
 
-
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="AG" type="">
+     Removed deprecated Pizza compiler support in XSP.
+   </action>
    <action dev="SW" type="add">
      Each sitemap can now have its own classpath using <code>&lt;map:classpath&gt;</code>. This allows
      sitemap-specific components to be deployed locally with the sitemap. Reloading the sitemap
@@ -427,6 +429,9 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="AG" type="update">
+     Deprecated Pizza compiler support in XSP. To be removed in Cocoon 2.2.
+   </action>
    <action dev="VG" type="update">
      CForms: JavaSelectionList implementations can now be Contextualizable and
      can build SelectionLists with XMLizable labels.
