@@ -28,7 +28,7 @@ import org.apache.avalon.framework.configuration.DefaultConfiguration;
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.9 2004/03/05 13:02:45 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
 public class ExtendedComponentSelector 
@@ -56,15 +56,12 @@ public class ExtendedComponentSelector
     /** This selector's location (used for debugging purposes) */
     private String location;
 
-    public ExtendedComponentSelector()
-    {
-        super();
+    public ExtendedComponentSelector() {
         this.classLoader = Thread.currentThread().getContextClassLoader();
     }
 
     /** Create the ComponentSelector with a Classloader */
-    public ExtendedComponentSelector(ClassLoader loader)
-    {
+    public ExtendedComponentSelector(ClassLoader loader) {
         super(loader);
 
         if (loader == null) {
@@ -227,8 +224,7 @@ public class ExtendedComponentSelector
                 throw new ConfigurationException(message);
             }
 
-            try
-            {
+            try {
                 Class clazz = this.classLoader.loadClass(className);
                 addComponent(hint, clazz, instance);
 
@@ -250,6 +246,9 @@ public class ExtendedComponentSelector
         return this.defaultHint;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.ComponentSelector#select(java.lang.Object)
+     */
     public Component select(Object hint) throws ComponentException {
 
         if (hint == null) {
@@ -274,6 +273,9 @@ public class ExtendedComponentSelector
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.ComponentSelector#release(org.apache.avalon.framework.component.Component)
+     */
     public void release(Component component) {
         // Was it selected on the parent ?
         if ( this.parentSelector != null &&
