@@ -1,39 +1,132 @@
 <?xml version="1.0"?>
 
-<!-- ===================================================================
+<!-- ===========================================================================
 
-   Build file for Cocoon
-
-Notes:
-   This is a build file for use with the Jakarta Ant java build tool.
-
-Installation Instructions:
-   To install Ant on your system, you need to checkout the
-   "jakarta-tools" CVS module. Then you should place the files
-     - ant.jar
-     - projectx-tr2.jar
-     - javac.jar
-   in your classpath.
-
-Build Instructions:
-   To build, run
-
-     java org.apache.tools.ant.Main <target>
-
-   on the directory where this file is located with the target you want.
-
+ Cocoon build file 
+ 
 Authors:
-  Stefano Mazzocchi <stefano@apache.org>
+ Stefano Mazzocchi <stefano@apache.org>
+ 
+Todo:
+ - write the target rule that reacts on class presence.
+ 
+Legal: 
+  Copyright (c) 1999 The Apache Software Foundation. All Rights Reserved.
 
-Fixme:
-  - design better package abstraction
+================================================================================
 
-Copyright:
-  Copyright (c) 1999 The Apache Software Foundation.
 
-   $Id: build.xml,v 1.10 1999-12-16 00:59:03 stefano Exp $
+                             How to build Cocoon
+                             ===================
+                             
+                           
+Cocoon is an highly componentized software and for its full compilation 
+requires many different packages to be present in the compiler classpath.
 
-==================================================================== -->
+This is the main reason why the distribution includes a precompiled version
+that should be handy for most users, but power users willing to further tune
+the software or developers willing to play around with it, must be able
+to compile it and test it.
+
+The Cocoon build system is based on Jakarta Ant, which is a Java building tool
+originally developed for the Jakarta Tomcat project but now used in many other
+Apache projects and extended by many developers, myself included.
+
+Ant is a little but very handy tool that uses a build file written in XML 
+(this file) as building instructions. There are targets (like in make) and
+tasks. Each task is indicated by an element and it's implemented by a 
+dynamically loaded class which is "introspected" at runtime with the 
+element attributes, using bean-like 'setter' methods.
+
+First thing you should do to be able to compile Cocoon or generate its 
+documentation, is to install Ant on your system. Unfortunately, there is no
+Ant distribution (but we're planning to create one soon), so you have to 
+use CVS to checkout the "jakarta-tools" module under the jakarta.apache.org
+CVS repository.
+
+Once, you've done the checkout, check into the "/ant" directory where you'll 
+find
+
+  - ant.jar
+  - projectx-tr2.jar
+  - tools.jar
+  
+that you should place into your classpath.
+
+Now that the build tool is in place, you need to download the following
+packages from the indicated URL:
+
+ Apache Xerces 1.0.1+   - http://xml.apache.org/dist/
+ Apache Xalan 0.19.1+   - http://xml.apache.org/dist/
+ Apache FOP 0.12.0+     - http://xml.apache.org/dist/
+ 
+ Sun ProjectX (TR2)     - jakarta-tools CVS at jakarta.apache.org
+ Sun Servlet API (2.1+) - jakarta-tools CVS at jakarta.apache.org
+ Sun JNDI API (1.2.1+)  - http://java.sun.com/products/jndi/index.html
+
+ James Clark XT         - ftp://ftp.jclark.com/pub/xml/xt.zip
+ FESI (1.21+)           - http://home.worldcom.ch/jmlugrin/fesi/download.html
+ GNU RegExp (1.0.8+)    - http://www.cacas.org/java/gnu/regexp/
+
+ StyleBook (1.0b1+)     - xml-stylebook CVS at xml.apache.org
+ 
+[stylebook is required only for documentation generation, not for compilation]
+ 
+once you have placed all the ".jar" files in your classpath, you're ready to
+build the whole thing.
+
+To do this, make your current working directory the one where this very file
+if located and type
+
+  java org.apache.tools.ant.Main
+
+if everything is right and all the required packages are visible, this action
+will generate a file called "Cocoon.jar" in the "./build" directory. Note, that
+if you do further development, compilation time is reduced since Ant is able
+to detect which files have changed an to recompile them at need.
+
+Also, you'll note that reusing a single JVM instance for each task, increases
+tremendously the performance of the whole build system, compared to other
+tools (i.e. make or shell scripts) where a new JVM is started for each task.
+
+These are the meaningful targets for this build file:
+
+ - package -> creates ./build/Cocoon.jar
+ - docs -> generates the HTML documentation in ./build/docs (requires StyleBook)
+ - javadocs -> generates the API documentation in ./build/javadocs
+ - dist -> generates the Cocoon distribution
+ - site -> generates the web site [useful only for site maintainers]
+
+    ================================ FAQ ================================
+
+1) do I really need to download all these packages?
+ 
+No, the core Cocoon classes only require the Servlet API for compilation, but
+each Cocoon module requires one of more of the above packages. We are working
+to allow Ant to execute a target if a specified class is found in the classpath:
+this will allow you to place only the packages you care about, leaving the
+unsupported classes out of the compilation. For now, it's easier to download
+all the required packages or to remove/rename the Cocoon modules you don't use.
+
+2) why not using make or more standard stuff?
+
+ - performance: Ant is faster because it allows a single JVM to be reused
+ - portability: Ant is pure java, very small, works every java platform and can
+   be easily tuned for special needs.
+ - fitness: unlike other tools, Ant is specifically developed for java building
+   and it adds features that are found in every java building process 
+   transparently reducing verbosity, increasing visibility and reducing 
+   management and portability costs.
+ - simplicity: Ant is not as flexible as other systems on purpose. This is done
+   to allow newbies, expecially from the non-Unix world to be up to speed
+   sooner, without requiring to learn other languages and paradigms.
+   
+3) can I use Ant for my stuff?
+
+Sure. We highly welcome you to do so, but please, if you clone or copy parts
+of build files, give credits to the original authors. Thank you.
+
+============================================================================ -->
 
 <project default="package" basedir=".">
 
@@ -117,6 +210,7 @@ Copyright:
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${sbk.docs}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${sbk.docs}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${sbk.docs}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${sbk.docs}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/license.xml -out ${sbk.docs}/license-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/javadoc.xml -out ${sbk.docs}/javadoc-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/guide.xml -out ${sbk.docs}/guide-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
@@ -206,6 +300,7 @@ Copyright:
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${site.dir}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${site.dir}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${site.dir}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/ldapprocessor.xml -out ${sbk.docs}/ldapprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/license.xml -out ${site.dir}/license-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/javadoc.xml -out ${site.dir}/javadoc-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
     <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/guide.xml -out ${site.dir}/guide-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
@@ -221,3 +316,6 @@ Copyright:
   </target>
 
 </project>
+
+
+<!-- End of file -->
