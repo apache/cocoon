@@ -17,6 +17,8 @@ package org.apache.cocoon.portal.profile.impl;
 
 import java.util.Map;
 
+import org.apache.cocoon.portal.layout.Layout;
+
 /**
  * This data object holds all information about the current user:
  * - references to the configuration
@@ -35,6 +37,8 @@ public class UserProfile {
     protected Map copletInstanceDatas;
     
     protected Map layouts;
+    
+    protected Layout rootLayout;
     
     /**
      * @return Returns the copletBaseDatas.
@@ -90,5 +94,19 @@ public class UserProfile {
      */
     public void setLayouts(Map layouts) {
         this.layouts = layouts;
+    }
+    
+    /**
+     * @return Returns the rootLayout.
+     */
+    public Layout getRootLayout() {
+        return rootLayout;
+    }
+    
+    /**
+     * @param rootLayout The rootLayout to set.
+     */
+    public void setRootLayout(Layout rootLayout) {
+        this.rootLayout = rootLayout;
     }
 }
