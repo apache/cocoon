@@ -78,7 +78,7 @@
   </xsl:template>
   
   <xsl:template match="wi:validation-message">
-    <a href="#" style="color:red; font-weight: bold" onclick="alert('{normalize-space(.)}'); return false;">&#160;!&#160;</a>
+    <a href="#" class="woody-validation-message-indicator" onclick="alert('{normalize-space(.)}'); return false;">&#160;!&#160;</a>
   </xsl:template>
 
   <!--
