@@ -59,7 +59,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard P\u00F6tz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.37 2004/07/07 07:58:49 cziegeler Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.38 2004/07/11 13:59:12 cziegeler Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
 
@@ -794,6 +794,33 @@ public class FOM_Cocoon extends ScriptableObject {
             return request.isRequestedSessionIdFromURL();
         }
 
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+         */
+        public Object getAttribute(String name, int scope) {
+            return this.request.getAttribute(name, scope);
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+         */
+        public Enumeration getAttributeNames(int scope) {
+            return this.request.getAttributeNames(scope);
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+         */
+        public void removeAttribute(String name, int scope) {
+            this.request.removeAttribute(name, scope);
+        }
+
+        /* (non-Javadoc)
+         * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+         */
+        public void setAttribute(String name, Object o, int scope) {
+            this.request.setAttribute( name, o, scope );
+        }
     }
 
     public static class FOM_Cookie

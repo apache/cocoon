@@ -19,6 +19,7 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.portlet.multipart.MultipartActionRequest;
+import org.apache.commons.collections.IteratorUtils;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 
@@ -40,7 +41,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletRequest.java,v 1.4 2004/07/07 07:58:49 cziegeler Exp $
+ * @version CVS $Id: PortletRequest.java,v 1.5 2004/07/11 13:59:12 cziegeler Exp $
  */
 public abstract class PortletRequest implements Request {
 
@@ -69,7 +70,8 @@ public abstract class PortletRequest implements Request {
     private Map wrappedCookieMap;
     protected String portletRequestURI;
 
-
+    private final Map attributes = new HashMap();
+    
     /**
      * Creates a PortletRequest based on a real PortletRequest object
      */
@@ -311,16 +313,6 @@ public abstract class PortletRequest implements Request {
         return true;
     }
 
-    /* The ServletRequest interface methods */
-
-    public Object getAttribute(String name) {
-        return this.request.getAttribute(name);
-    }
-
-    public Enumeration getAttributeNames() {
-        return this.request.getAttributeNames();
-    }
-
     public String getCharacterEncoding() {
         return this.form_encoding;
     }
@@ -418,14 +410,6 @@ public abstract class PortletRequest implements Request {
         return null;
     }
 
-    public void setAttribute(String name, Object o) {
-        this.request.setAttribute(name, o);
-    }
-
-    public void removeAttribute(String name) {
-        this.request.removeAttribute(name);
-    }
-
     public Locale getLocale() {
         return this.request.getLocale();
     }
@@ -504,4 +488,77 @@ public abstract class PortletRequest implements Request {
     public boolean isWindowStateAllowed(WindowState state) {
         return this.request.isWindowStateAllowed(state);
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return this.getAttribute(name, Request.GLOBAL_SCOPE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttributeNames()
+     */
+    public Enumeration getAttributeNames() {
+        return this.getAttributeNames(Request.GLOBAL_SCOPE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        this.setAttribute(name, value, Request.GLOBAL_SCOPE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
+     */
+    public void removeAttribute(String name) {
+        this.removeAttribute(name, Request.GLOBAL_SCOPE);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+     */
+    public Object getAttribute(String name, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            return this.attributes.get(name);
+        } else {
+            return this.request.getAttribute(name);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+     */
+    public Enumeration getAttributeNames(int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            return IteratorUtils.asEnumeration(this.attributes.keySet().iterator());
+        } else {
+            return this.request.getAttributeNames();
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+     */
+    public void setAttribute(String name, Object value, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            this.attributes.put(name, value);
+        } else {
+            this.request.setAttribute(name, value);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+     */
+    public void removeAttribute(String name, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            this.attributes.remove(name);
+        } else {
+            this.request.removeAttribute(name);
+        }
+    }
+    
 }

@@ -23,14 +23,36 @@ import java.util.Map;
 /**
  * Defines an interface to provide client request information .
  *
+ * A client can bind an object attribute into a <code>Request</code> by name.
+ * The <code>Request</code> interface defines two scopes for storing objects:
+ * <ul>
+ * <li><code>GLOBAL_SCOPE</code>
+ * <li><code>REQUEST_SCOPE</code>
+ * </ul>
+ * All objects stored in the request using the <code>GLOBAL_SCOPE</code> 
+ * are available to all sub requests and the main request associatiated
+ * Objects stored in the request using the <code>REQUEST_SCOPE</code> are
+ * only available for the current (sub) request.
+ * 
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.7 2004/07/07 07:58:49 cziegeler Exp $
+ * @version CVS $Id: Request.java,v 1.8 2004/07/11 13:59:12 cziegeler Exp $
  *
  */
 
 public interface Request {
+
+    /**
+     * This constant defines an request wide scope for the request attribute.
+     */
+    public static final int GLOBAL_SCOPE = 1;
+
+    /**
+     * This constant defines the scope of the request attribute to be
+     * private to the current (sub) request. 
+     */
+    public static final int REQUEST_SCOPE = 2;
 
     /**
      *
@@ -49,8 +71,9 @@ public interface Request {
 
     /**
      *
-     * Returns the value of the named attribute as an <code>Object</code>,
-     * or <code>null</code> if no attribute of the given name exists.
+     * Returns the value of the named attribute from the <code>GLOBAL_SCOPE</code>
+     * as an <code>Object</code>, or <code>null</code> if no attribute 
+     * of the given name exists.
      *
      * @param name        a <code>String</code> specifying the name of
      *                        the attribute
@@ -60,12 +83,11 @@ public interface Request {
      *                        the attribute does not exist
      *
      */
-
     Object getAttribute(String name);
 
     /**
      * Returns an <code>Enumeration</code> containing the
-     * names of the attributes available to this request.
+     * names of the attributes available to this request in the  <code>GLOBAL_SCOPE</code>.
      * This method returns an empty <code>Enumeration</code>
      * if the request has no attributes available to it.
      *
@@ -75,12 +97,11 @@ public interface Request {
      *                         of the request's attributes
      *
      */
-
     Enumeration getAttributeNames();
 
     /**
      *
-     * Stores an attribute in this request.
+     * Stores an attribute in this request in the <code>GLOBAL_SCOPE</code>.
      * Attributes are reset between requests.
      *
      * <p>Attribute names should follow the same conventions as
@@ -95,12 +116,12 @@ public interface Request {
      * @param o                                the <code>Object</code> to be stored
      *
      */
-
     void setAttribute(String name, Object o);
 
     /**
      *
-     * Removes an attribute from this request.  This method is not
+     * Removes an attribute from this request in the <code>GLOBAL_SCOPE</code>.  
+     * This method is not
      * generally needed as attributes only persist as long as the request
      * is being handled.
      *
@@ -114,9 +135,76 @@ public interface Request {
      *                                        the name of the attribute to remove
      *
      */
-
     void removeAttribute(String name);
 
+    /**
+    * Returns the value of the named attribute from the scope
+    * as an <code>Object</code>, or <code>null</code> if no attribute 
+    * of the given name exists.
+    *
+    * @param name        a <code>String</code> specifying the name of
+    *                        the attribute
+    * @param scope        scope (global or request) of the attribute
+    *
+    * @return                an <code>Object</code> containing the value
+    *                        of the attribute, or <code>null</code> if
+    *                        the attribute does not exist
+    *
+    */
+   Object getAttribute(String name, int scope);
+
+   /**
+    * Returns an <code>Enumeration</code> containing the
+    * names of the attributes available to this request in the scope.
+    * This method returns an empty <code>Enumeration</code>
+    * if the request has no attributes available to it.
+    *
+    * @param scope        scope (global or request) of the attribute
+    *
+    * @return                an <code>Enumeration</code> of strings
+    *                        containing the names
+    *                         of the request's attributes
+    *
+    */
+   Enumeration getAttributeNames(int scope);
+
+   /**
+    *
+    * Stores an attribute in this request in the scope.
+    * Attributes are reset between requests.
+    *
+    * <p>Attribute names should follow the same conventions as
+    * package names. Names beginning with <code>java.*</code>,
+    * <code>javax.*</code>, and <code>com.sun.*</code>, are
+    * reserved for use by Sun Microsystems.
+    *
+    *
+    * @param name                        a <code>String</code> specifying
+    *                                    the name of the attribute    
+    * @param o                            the <code>Object</code> to be stored
+    * @param scope        scope (global or request) of the attribute
+    *
+    */
+   void setAttribute(String name, Object o, int scope);
+
+   /**
+    * Removes an attribute from this request in the scope.  
+    * This method is not
+    * generally needed as attributes only persist as long as the request
+    * is being handled.
+    *
+    * <p>Attribute names should follow the same conventions as
+    * package names. Names beginning with <code>java.*</code>,
+    * <code>javax.*</code>, and <code>com.sun.*</code>, are
+    * reserved for use by Sun Microsystems.
+    *
+    *
+    * @param name                        a <code>String</code> specifying
+    *                                        the name of the attribute to remove
+    * @param scope        scope (global or request) of the attribute
+    *
+    */
+   void removeAttribute(String name, int scope);
 
     /**
      *
