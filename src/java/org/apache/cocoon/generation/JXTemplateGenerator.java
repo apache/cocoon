@@ -327,7 +327,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.40 2004/04/21 21:37:49 coliver Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.41 2004/04/24 15:59:52 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -1744,7 +1744,7 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     if (prev != null) {
                         throw new SAXParseException("duplicate parameter: \""+startParam.name +"\"", location, null);
                     }
-                    e = startParam.endInstruction.next;
+                    e = startParam.endInstruction;
                 } else if (e instanceof IgnorableWhitespace) {
                 } else if (e instanceof Characters) {
                     // check for whitespace
