@@ -167,6 +167,38 @@ public class JXFormsGenerator extends ServiceableGenerator {
     final static String XF_VALUE = "xf:value";
 
 
+	/**
+	 * Facade to the Locator to be set on the consumer prior to
+	 * sending other events, location member changeable
+	 */
+	public class LocatorFacade implements Locator {
+			private Locator locator;
+            
+			public LocatorFacade(Locator intialLocator) {
+				this.locator = intialLocator;
+			}
+            
+			public void setDocumentLocator(Locator newLocator) {
+				this.locator = newLocator;
+			}
+			
+			public int getColumnNumber() {
+				return this.locator.getColumnNumber();
+			}
+            
+			public int getLineNumber() {
+				return this.locator.getLineNumber();
+			}
+            
+			public String getPublicId() {
+				return this.locator.getPublicId();
+			}
+            
+			public String getSystemId() {
+				return this.locator.getSystemId();
+			}
+	}
+	
     static class XPathExpr {
 
         final CompiledExpression jxpath;
@@ -1254,8 +1286,10 @@ public class JXFormsGenerator extends ServiceableGenerator {
                          Event startEvent, Event endEvent) 
         throws SAXException {
         Event ev = startEvent;
+        LocatorFacade loc = new LocatorFacade(ev.location);
+        consumer.setDocumentLocator(loc);
         while (ev != endEvent) {
-            consumer.setDocumentLocator(ev.location);
+            loc.setDocumentLocator(ev.location);
             if (ev instanceof Characters) {
                 TextEvent text = (TextEvent)ev;
                 consumer.characters(text.chars, 0, text.chars.length);

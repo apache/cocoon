@@ -354,7 +354,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.17 2003/11/06 20:23:04 cziegeler Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.18 2003/11/07 11:53:47 cziegeler Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -394,6 +394,38 @@ public class JXTemplateGenerator extends ServiceableGenerator {
         return this.xmlConsumer;
     }
 
+    /**
+     * Facade to the Locator to be set on the consumer prior to
+     * sending other events, location member changeable
+     */
+    public class LocatorFacade implements Locator {
+        private Locator locator;
+   
+        public LocatorFacade(Locator intialLocator) {
+            this.locator = intialLocator;
+        }
+        
+        public void setDocumentLocator(Locator newLocator) {
+            this.locator = newLocator;
+        }
+       
+        public int getColumnNumber() {
+            return this.locator.getColumnNumber();
+        }
+        
+        public int getLineNumber() {
+            return this.locator.getLineNumber();
+        }
+        
+        public String getPublicId() {
+            return this.locator.getPublicId();
+        }
+        
+        public String getSystemId() {
+            return this.locator.getSystemId();
+        }
+    }
+   
     /**
      * Jexl Introspector that supports Rhino JavaScript objects
      * as well as Java Objects
@@ -2800,10 +2832,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
 
     private void executeRaw(final XMLConsumer consumer,
                             Event startEvent, Event endEvent) 
-        throws SAXException {
+    throws SAXException {
         Event ev = startEvent;
+        LocatorFacade loc = new LocatorFacade(ev.location);
+        consumer.setDocumentLocator(loc);
         while (ev != endEvent) {
-            consumer.setDocumentLocator(ev.location);
+            loc.setDocumentLocator(ev.location);
             if (ev instanceof Characters) {
                 TextEvent text = (TextEvent)ev;
                 consumer.characters(text.raw, 0, text.raw.length);
@@ -2918,10 +2952,12 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                          MyJexlContext jexlContext,
                          JXPathContext jxpathContext,
                          Event startEvent, Event endEvent) 
-        throws SAXException {
+    throws SAXException {
         Event ev = startEvent;
+        LocatorFacade loc = new LocatorFacade(ev.location);
+        consumer.setDocumentLocator(loc);
         while (ev != endEvent) {
-            consumer.setDocumentLocator(ev.location);
+            loc.setDocumentLocator(ev.location);
             if (ev instanceof Characters) {
                 TextEvent text = (TextEvent)ev;
                 Iterator iter = text.substitutions.iterator();
