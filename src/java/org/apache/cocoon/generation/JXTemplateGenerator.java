@@ -42,8 +42,8 @@ import java.util.Stack;
 import java.util.TimeZone;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.flow.FlowHelper;
@@ -54,8 +54,8 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.ServiceableTransformer;
-import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -117,7 +117,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * @cocoon.sitemap.component.pooling.grow  2
  * 
  *
- * @version CVS $Id: JXTemplateGenerator.java,v 1.51 2004/07/02 08:33:42 antonio Exp $
+ * @version CVS $Id: JXTemplateGenerator.java,v 1.52 2004/07/06 10:34:36 unico Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -3191,17 +3191,21 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
             ev = ev.next;
         }
     }
+
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.caching.CacheableProcessingComponent#getKey()
 	 */
 	public Serializable getKey() {
     	JXTExpression cacheKeyExpr = (JXTExpression)getCurrentTemplateProperty(CACHE_KEY);
         try {
-			return (Serializable) getValue(cacheKeyExpr, globalJexlContext, jxpathContext);
+            final Serializable templateKey = (Serializable) getValue(cacheKeyExpr, globalJexlContext, jxpathContext);
+            if (templateKey != null) {
+    			return new JXCacheKey(this.inputSource.getURI(), templateKey);
+            }
 		} catch (Exception e) {
 			getLogger().error("error evaluating cache key", e);
-			return null;
 		}
+		return null;
 	}
 
 	/* (non-Javadoc)
@@ -3236,5 +3240,28 @@ public class JXTemplateGenerator extends ServiceableGenerator implements Cacheab
         builder.endDocument();
         Node node = builder.getDocument().getDocumentElement();
         return node.getChildNodes();
+	}
+	
+	static final class JXCacheKey implements Serializable {
+	    private final String templateUri;
+	    private final Serializable templateKey;
+	    private JXCacheKey(String templateUri, Serializable templateKey) {
+	        this.templateUri = templateUri;
+	        this.templateKey = templateKey;
+	    }
+	    public int hashCode() {
+	        return templateUri.hashCode() + templateKey.hashCode();
+	    }
+	    public String toString() {
+	        return "TK:" + templateUri + "_" + templateKey;
+	    }
+	    public boolean equals(Object o) {
+	        if (o instanceof JXCacheKey) {
+	            JXCacheKey jxck = (JXCacheKey)o;
+	            return this.templateUri.equals(jxck.templateUri)
+                       && this.templateKey.equals(jxck.templateKey);
+	        }
+	        return false;
+	    }
 	}
 }
