@@ -269,9 +269,7 @@
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
 
     <target name="{@name}-excluded" if="exclude.block.{$block-name}">
-      <echo message="-----------------------------------------------"/>
-      <echo message="ATTENTION: {$block-name} is excluded from the build."/>
-      <echo message="-----------------------------------------------"/>
+      <echo message="NOTICE: Block '{$block-name}' is excluded from the build."/>
     </target>
 
     <target name="{@name}" unless="unless.exclude.block.{$block-name}"/>
@@ -294,11 +292,12 @@
       <available property="{$block-name}.has.mocks" type="dir" file="{string('${blocks}')}/{$block-name}/mocks/"/>
 
       <xsl:if test="@status='unstable'">
-        <echo message="-----------------------------------------------"/>
-        <echo message="ATTENTION: {$block-name} is marked unstable."/>
-        <echo message="It should be considered alpha quality"/>
-        <echo message="which means that its API might change without notice."/>
-        <echo message="-----------------------------------------------"/>
+        <echo message="==================== WARNING ======================="/>
+        <echo message=" Block '{$block-name}' should be considered unstable."/>
+        <echo message="----------------------------------------------------"/>
+        <echo message="         This means that its API, schemas "/>
+        <echo message="  and other contracts might change without notice."/>
+        <echo message="===================================================="/>
       </xsl:if>
 
       <antcall target="{$block-name}-compile"/>
@@ -342,7 +341,7 @@
       <antcall target="{$block-name}-webinf"/>
     </target>
 
-    <target name="{$block-name}-prepare">
+    <target name="{$block-name}-prepare" unless="unless.exclude.block.{$block-name}">
       <xsl:if test="depend">
         <xsl:attribute name="depends">
           <xsl:value-of select="@name"/>
