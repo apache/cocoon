@@ -136,7 +136,7 @@ Form.prototype.load = function(arg1, arg2) {
     var name;
     var object;
     if (arguments.length == 2) {
-        name == arg1;
+        name = arg1;
         object = arg2;
     } else {
         name = "default";
