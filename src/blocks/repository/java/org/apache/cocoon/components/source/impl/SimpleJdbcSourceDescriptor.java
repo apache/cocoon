@@ -74,7 +74,6 @@ import org.apache.cocoon.components.source.SourceDescriptor;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 
 /**
@@ -102,6 +101,7 @@ import org.apache.excalibur.source.SourceValidity;
  * </p>
  * 
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * @version CVS $ID$
  */
 public class SimpleJdbcSourceDescriptor
 extends AbstractConfigurableSourceDescriptor
@@ -121,7 +121,6 @@ implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSaf
         "DELETE FROM sourceprops WHERE source=? AND namespace=? AND name=?;";
     
     private ServiceManager m_manager;
-    private SourceResolver m_resolver;
     private EventAware m_cache;
     private DataSourceComponent m_datasource;
     
@@ -136,7 +135,6 @@ implements SourceDescriptor, Serviceable, Configurable, Initializable, ThreadSaf
     
     public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
-        m_resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
         if (manager.hasService(Cache.ROLE + "/EventAware")) {
             m_cache = (EventAware) manager.lookup(Cache.ROLE + "/EventAware");
         } else {
