@@ -1,47 +1,60 @@
 <!-- === Validation targets ==================================================== -->
 
-  <!-- Validate all config and documentaion files -->
-  <target name="validate" depends="validate-jars, validate-config, validate-xdocs"/>
-
   <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
-  <target name="validate-jars" depends="init">
+  <target name="validate-jars" depends="prepare">
     <path id="all.jars">
       <fileset dir="${lib}">
         <include name="**/*.jar"/>
       </fileset>
+      <fileset dir="${blocks}">
+        <include name="*/lib/*.jar"/>
+      </fileset>
     </path>
 
     <property name="all.jars" refid="all.jars"/>
-    <copy file="${lib}/jars.xml.tmpl" tofile="${build.temp}/current-jars.xml" filtering="yes" overwrite="yes">
+    <copy file="${tools.src}/jars.xml.tmpl" 
+          tofile="${build.temp}/current-jars.xml" 
+          filtering="yes" overwrite="yes">
       <filterset>
         <filter token="JARS" value="${all.jars}"/>
       </filterset>
     </copy>
 
     <!-- split the path in 'jar' XML elements -->
-    <replace file="${build.temp}/current-jars.xml" token="${path.separator}" value="&lt;/jar&gt;&#xA; &lt;jar&gt;"/>
+    <replace file="${build.temp}/current-jars.xml"
+             token="${path.separator}" 
+             value="&lt;/jar&gt;&#xA; &lt;jar&gt;"/>
+
     <!-- relativize file names by removing the current directory -->
-    <replace file="${build.temp}/current-jars.xml" token="${user}${file.separator}lib${file.separator}" value=""/>
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${user}${file.separator}lib${file.separator}" 
+             value=""/>
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${user}${file.separator}${blocks}${file.separator}" 
+             value=""/>
+
     <!-- and incase that fails, remove the base directory -->
-    <replace file="${build.temp}/current-jars.xml" token="${basedir}${file.separator}lib${file.separator}" value=""/>
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${basedir}${file.separator}lib${file.separator}" 
+             value=""/>
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${basedir}${file.separator}${blocks}${file.separator}" 
+             value=""/>
 
     <!-- replace platform-dependent path separator by '/' -->
-    <replace file="${build.temp}/current-jars.xml" token="${file.separator}" value="/"/>
+    <replace file="${build.temp}/current-jars.xml" 
+             token="${file.separator}" 
+             value="/"/>
 
     <xslt in="${lib}/jars.xml" out="${build.temp}/jars.xml"
-           processor="trax"
-           style="${tools}/src/check-jars.xsl">
+          processor="trax"
+          style="${tools}/src/check-jars.xsl">
       <param name="current-files" expression="../../${build.temp}/current-jars.xml"/>
     </xslt>
   </target>
 
-  <target name="init-jing" depends="init">
-    <!-- Jing is used in various targets for XML validation with RELAX NG -->
-    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="classpath"/>
-  </target>
-
   <!-- Validate configuration files. -->
-  <target name="validate-config" depends="init-jing" unless="exclude.validate.config">
+  <target name="validate-config" depends="prepare" unless="exclude.validate.config">
     <echo message="Validating configuration files"/>
 
     <echo message="Validating cocoon.xconf using RELAX NG ..."/>
@@ -51,7 +64,7 @@
   </target>
 
   <!-- Validation of xdocs  -->
-  <target name="validate-xdocs" depends="prepare-docs,init-jing" unless="exclude.validate.xdocs">
+  <target name="validate-xdocs" depends="prepare-docs" unless="exclude.validate.xdocs">
     <echo message="Conducting validation of core XML documentation."/>
 
     <echo message="Validating all **/book.xml instances using RELAX NG ..."/>

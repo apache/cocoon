@@ -104,7 +104,7 @@
   </target>
 
   <!-- Set a variable if the generated printer docs are already up-to-date. -->
-  <target name="printer-docs_check" depends="init">
+  <target name="printer-docs_check" depends="prepare">
     <uptodate property="printer-docs.notrequired" targetfile="${build.docs.printer}/index.html" >
       <srcfiles dir="." includes="changes.xml,todo.xml"/>
       <srcfiles dir="${docs}" includes="**/*.xml"/>
