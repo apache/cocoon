@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.105 2003/08/06 15:54:13 bruno Exp $:-->
+<!-- CVS $Id: status.xml,v 1.106 2003/08/07 00:46:25 joerg Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,15 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="fix" fixes-bug="21931, 22173" due-to="Unico Hommes"
+    due-to-email="unico@hippo.nl">
+    LDAPTransformer now handles multiple attribute values.
+    The filter element is also configurable via a sitemap parameter.
+  </action>
+  <action dev="JH" type="add" fixes-bug="20033, 22042" due-to="Yury Mikhienko"
+    due-to-email="yuryx@mobicomk.donpac.ru">
+    LDAPTransformer: Added attribute modification methods: add, replace, modify, append.
+  </action>
   <action dev="BRD" type="fix">
     IMPORTANT: Flow: cleaned up the situation with regards to the "uri" argument to the
     sendPage, sendPageAndWait, and processPipelineTo functions.  URI's starting
@@ -179,7 +188,7 @@
     found, use untranslated-text.
   </action>
   <action dev="CH" type="fix" fixes-bug="22050" due-to="Gildas Guillemot"
-due-to-email="gguillemot@rennes.jouve.fr">
+    due-to-email="gguillemot@rennes.jouve.fr">
     ESQL: explicitly release database resources.
   </action>
   <action dev="CZ" type="fix" fixes-bug="21213" due-to="Frank Taffelt"
@@ -190,7 +199,7 @@ due-to-email="gguillemot@rennes.jouve.fr">
     Configuration logkit.xconf can now be read from any location.
   </action>
   <action dev="CZ" type="fix">
-   Fix the ignoreErrors handling in the cinclude transformer.
+    Fix the ignoreErrors handling in the cinclude transformer.
   </action>
  </release>
  <release version="2.1rc1" date="July 29 2003">
