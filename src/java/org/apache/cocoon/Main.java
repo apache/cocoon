@@ -84,7 +84,7 @@ import org.apache.cocoon.bean.CocoonBean;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: Main.java,v 1.3 2003/06/04 09:25:53 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.4 2003/06/04 19:29:07 bruno Exp $
  */
 public class Main {
 
@@ -641,7 +641,7 @@ public class Main {
         formatter.printHelp("cocoon cli [options] [targets]",
                             getProlog().toString(),
                             options,
-                            "Note: the context directory defaults to '"+ CocoonBean.DEFAULT_CONTEXT_DIR + "'");
+                            "Note: the context directory defaults to '"+ Constants.DEFAULT_CONTEXT_DIR + "'");
         System.exit(0);
     }
     
