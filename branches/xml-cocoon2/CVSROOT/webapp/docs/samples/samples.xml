@@ -34,7 +34,7 @@
     This pages shows the XML-ized version of the Apache Jakarta web site.
    </sample>
   </group>
-<!--  
+
   <group name="Static Content">
    <sample name="formatting objects" href="fo">
     This is an example of FO translated to PDF by Apache FOP.
@@ -66,5 +66,5 @@
     This example shows what happens if an error is triggered in the pipeline.
    </sample>
   </group>
--->  
+
 </samples>
