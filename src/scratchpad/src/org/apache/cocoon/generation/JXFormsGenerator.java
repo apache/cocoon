@@ -1544,6 +1544,11 @@ public class JXFormsGenerator extends AbstractGenerator {
                                       startElement.localName,
                                       startElement.raw,
                                       startElement.attributes);
+                if (newForm == null) {
+                    throw new SAXParseException("A form with id=\"" + id + "\" does not exist",
+                                                ev.location,
+                                                null);
+                }
                 rootContext =
                     jxpathContextFactory.newContext(null, 
                                                     newForm.getModel());
