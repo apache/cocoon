@@ -60,7 +60,7 @@ import java.util.StringTokenizer;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.FormHandler;
+import org.apache.cocoon.woody.event.FormHandler;
 import org.apache.cocoon.woody.event.ProcessingPhase;
 import org.apache.cocoon.woody.event.ProcessingPhaseEvent;
 import org.apache.cocoon.woody.event.ProcessingPhaseListener;
@@ -77,7 +77,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.9 2003/09/25 17:37:30 sylvain Exp $
+ * @version CVS $Id: Form.java,v 1.10 2003/10/31 12:26:06 bruno Exp $
  */
 public class Form extends AbstractWidget {
     
@@ -131,6 +131,8 @@ public class Form extends AbstractWidget {
             while(cursor.hasNext()) {
                 WidgetEvent event = (WidgetEvent)cursor.next();
                 event.getSourceWidget().broadcastEvent(event);
+                if (formHandler != null)
+                    formHandler.handleEvent(event);
             }
             cursor.close();
         
@@ -255,11 +257,6 @@ public class Form extends AbstractWidget {
         
         doReadFromRequest(formContext);
         fireWidgetEvents();
-        
-        // Notify the form handler, if any
-        if (formContext.getActionEvent() != null && formHandler != null) {
-            formHandler.handleActionEvent(formContext, formContext.getActionEvent());
-        }
         
         // Notify the end of the current phase
         if (this.listener != null) {
