@@ -47,7 +47,7 @@ import org.apache.pluto.om.portlet.PortletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LocalPortletInvokerImpl.java,v 1.4 2004/03/05 13:02:14 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class LocalPortletInvokerImpl
 extends AbstractLogEnabled
@@ -137,7 +137,20 @@ implements PortletInvoker, Contextualizable, Serviceable, Initializable {
         if ( this.portlet == null ) {
             throw new PortletException("Unable to instantiate portlet from class " + this.portletDefinition.getClassName());
         }
-        this.portlet.render(request, response);
+        try
+        {
+            request.setAttribute(org.apache.pluto.Constants.METHOD_ID,
+                org.apache.pluto.Constants.METHOD_RENDER);
+            request.setAttribute(org.apache.pluto.Constants.PORTLET_REQUEST, request);
+            request.setAttribute(org.apache.pluto.Constants.PORTLET_RESPONSE,
+                response);
+            this.portlet.render(request, response);
+        } finally {
+            request.removeAttribute(org.apache.pluto.Constants.METHOD_ID);
+            request.removeAttribute(org.apache.pluto.Constants.PORTLET_REQUEST);
+            request.removeAttribute(org.apache.pluto.Constants.PORTLET_RESPONSE);
+        }
+
     }
 
     /* (non-Javadoc)

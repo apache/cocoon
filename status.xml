@@ -202,6 +202,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="RG" type="fix" fixes-bug="32417">
+     Portal: attributes "javax.portlet.request" and "javax.portlet.response" were not set for JSR-168
+     portlets running in the Cocoon webapp.
+   </action>
    <action dev="RP" type="add">
     cForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
             up the result by HTMLArea fields. The cleanup process, that is based upon
