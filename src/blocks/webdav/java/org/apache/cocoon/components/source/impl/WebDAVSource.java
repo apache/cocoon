@@ -83,7 +83,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </ul>
  * <p>
  * 
- * @version $Id: WebDAVSource.java,v 1.24 2004/03/27 15:51:21 unico Exp $
+ * @version $Id: WebDAVSource.java,v 1.25 2004/03/27 17:40:11 unico Exp $
 */
 public class WebDAVSource extends AbstractLogEnabled 
 implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSource, InspectableSource {
@@ -124,7 +124,7 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
             
             // parse optional start depth and start action qs parameters
             this.depth = sp.getParameterAsInteger("cocoon:webdav-depth", DepthSupport.DEPTH_1);
-            this.action = sp.getParameterAsInteger("cocoon:webdav-action", WebdavResource.BASIC);
+            this.action = sp.getParameterAsInteger("cocoon:webdav-action", WebdavResource.NOACTION);
             
             // [UH] FIXME: Why this alternative way of passing in credentials?
             String principal = url.getUser();
@@ -191,19 +191,27 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
     private void initResource(int action, int depth) throws SourceException, SourceNotFoundException {
 		try {
             boolean update = false;
-            if (action > this.action) {
-                this.action = action;
-                update = true;
+            if (action != WebdavResource.NOACTION) {
+                if (action > this.action) {
+                    this.action = action;
+                    update = true;
+                }
+                else {
+                    action = this.action;
+                }
             }
             if (depth > this.depth) {
                 this.depth = depth;
                 update = true;
             }
+            else {
+                depth = this.depth;
+            }
 			if (this.resource == null) {
-			    this.resource = new WebdavResource(this.url, this.action, this.depth);
+			    this.resource = new WebdavResource(this.url, action, depth);
 			}
 			else if (update) {
-			    this.resource.setProperties(this.action, this.depth);
+			    this.resource.setProperties(action, depth);
 			}
             if (this.action > WebdavResource.NOACTION) {
                 if (this.resource.isCollection()) {
@@ -525,6 +533,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      * @see org.apache.excalibur.source.TraversableSource#getChild(java.lang.String)
      */
     public Source getChild(String childName) throws SourceException {
+        if (!isCollection()) {
+            throw new SourceException(getSecureURI() + " is not a collection.");
+        }
         try {
             HttpURL childURL;
             if (this.url instanceof HttpsURL) {
@@ -748,9 +759,9 @@ implements Source, TraversableSource, ModifiableSource, ModifiableTraversableSou
      */
     public void makeCollection() throws SourceException {
         initResource(WebdavResource.NOACTION, DepthSupport.DEPTH_0);
-        if (resource.exists()) return;
+        if (this.resource.exists()) return;
     	try {
-            resource.mkcolMethod();
+            this.resource.mkcolMethod();
         } catch (HttpException e) {
             throw new SourceException("Unable to create collection(s) " + getSecureURI(), e);
         } catch (IOException e) {
