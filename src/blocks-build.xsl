@@ -27,6 +27,7 @@
         </fileset>
         <path location="{string('${build.mocks}')}"/>
         <path location="{string('${build.dest}')}"/>
+        <pathelement path="{string('${build.webapp.webinf}/classes/')}"/>
       </path>
 
       <path id="test.classpath">
