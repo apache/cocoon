@@ -1147,17 +1147,17 @@ public class CocoonServlet extends HttpServlet {
 
             } catch (ConnectionResetException e) {
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(e.getMessage(), e);
+                    getLogger().debug(e.toString(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(e.getMessage());
+                    getLogger().warn(e.toString());
                 }
 
             } catch (IOException e) {
                 // Tomcat5 wraps SocketException into ClientAbortException which extends IOException.
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug(e.getMessage(), e);
+                    getLogger().debug(e.toString(), e);
                 } else if (getLogger().isWarnEnabled()) {
-                    getLogger().warn(e.getMessage());
+                    getLogger().warn(e.toString());
                 }
 
             } catch (Exception e) {
@@ -1220,13 +1220,13 @@ public class CocoonServlet extends HttpServlet {
                 } else if (getLogger().isWarnEnabled()) {
                     getLogger().warn("SocketException while trying to close stream.");
                 }
-            // See: http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=107489037219505&w=2
-            } catch (IOException ie) {
+            } catch (IOException e) {
+                // See: http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=107489037219505
                 if (getLogger().isDebugEnabled()) {
-                    getLogger().debug("Cocoon got an IOException while trying to close stream.", ie);
+                    getLogger().debug("IOException while trying to close stream.", e);
                 }
             } catch (Exception e) {
-                getLogger().error("Cocoon got an Exception while trying to close stream.", e);
+                getLogger().error("Exception while trying to close stream.", e);
             }
         }
     }
