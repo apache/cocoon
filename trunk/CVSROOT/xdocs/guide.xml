@@ -258,7 +258,7 @@ browser.5=netscape=Mozilla
  
    <p>You now use the following XSL stylesheet with it</p>
    
- <source xml:space="preserve"><![CDATA[
+ <source><![CDATA[
  <?xml version="1.0"?>
  <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                  version="1.0">
