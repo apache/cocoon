@@ -19,7 +19,7 @@
     | CForms aggregate sample binding. Represent values of two aggregate
     | fields as multiple input fields.
     |
-    | CVS $Id: template-split.xml,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+    | CVS $Id$
     +-->
 
 <page xmlns:ft="http://apache.org/cocoon/forms/1.0#template" 
