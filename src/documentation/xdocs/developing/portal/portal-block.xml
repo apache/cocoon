@@ -4,7 +4,9 @@
 <document> 
   <header> 
     <title>Configuring the Cocoon Portal</title> 
-    <authors><person email="jgreenyer@s-und-n.de" name="Joel Greenyer"></person> 
+    <authors>
+      <person email="cziegeler@apache.org" name="Carsten Ziegeler"/> 
+      <person email="jgreenyer@s-und-n.de" name="Joel Greenyer"/> 
     </authors> 
     <notice>This document is under development.</notice> 
     <abstract>
@@ -21,15 +23,15 @@
         find in the "portal-fw" block.)
       </p>
       <s2 title="Important parts of the Cocoon Portal">
-        <p>
+        <p>TBD
         </p>
       </s2>
       <s2 title="How is a portal page created by Cocoon?">
-        <p>
+        <p>TBD
         </p>
       </s2>
       <s2 title="I want to build my own portal! An approach">
-        <p>
+        <p>TBD
         </p>
       </s2>
     </s1>
@@ -140,9 +142,64 @@
         each place, a coplet is located, a reference to a coplet instance data
         is included.
         </p>
-      </s2>
-      <s2 title="...">
         <p>
+        The Cocoon portal provides several predefined layout elements you can use
+        for your portal view to create a nice layout:
+        </p>
+        <ul>
+          <li>row - a row of items</li>
+          <li>column - a column of items</li>
+          <li>tab - a tab</li>
+        </ul>
+        <p>
+        These are the "high-level" objects, you can use to define your
+        structure. You can nest them in any order to create a complex
+        layout. The layout is defined in an XML document as well, so let's
+        have a look at an example:
+        </p>
+        <source>
+<![CDATA[...
+<composite-layout name="row">
+  <item>
+    <coplet-layout name="coplet">
+      <coplet-instance-data>Portal-Intro-1</coplet-instance-data>
+    </coplet-layout>
+  </item>
+  <item>
+    <coplet-layout name="coplet">
+      <coplet-instance-data>Portal-Bottom-1</coplet-instance-data>
+    </coplet-layout>
+  </item>
+</composite-layout>
+...]]>
+        </source>
+        <p>
+        In the example above, we define a row containing two coplets. This is done
+        by selecting the row layout and defining the childs (or items) of this
+        layout. In this case the items are two new layout objects, the coplet
+        layouts that can contain a coplet. The coplet layout has a reference
+        to the coplet instance data.
+        </p>
+      </s2>
+      <s2 title="The Rendering Process">
+        <p>
+        Each layout object has a defined renderer that is used to render this
+        layout object. You can find the renderers in the cocoon.xconf. Each renderer
+        has a unique name that is used to identify this renderer.
+        </p>
+        <p>
+        A central component, the layout factory (configured in the cocoon.xconf as
+        well), contains a list of all available layout objects, like the row,
+        the column etc. The configuration for each layout object contains also
+        the corresponding renderer information. So, here is the configuration
+        which renderer will be used to render the layout object.
+        </p>
+        <p>
+        A renderer itself can be configured in various ways. The portal engine uses
+        so called aspects (don't mess them with AOP), that are used to enhance
+        to features of renderer, allowing - simplifying - a multiple inheritance
+        which is not possible in Java. Have a look at the cocoon.xconf for
+        the different renderer configurations.
         </p>
       </s2>
     </s1>
