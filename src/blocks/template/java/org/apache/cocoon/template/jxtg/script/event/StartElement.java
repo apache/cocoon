@@ -15,10 +15,14 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.expression.Substitutions;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -39,12 +43,15 @@ public class StartElement extends Event {
             String qname = attrs.getQName(i);
             String type = attrs.getType(i);
             String value = attrs.getValue(i);
-            Substitutions substitutions = new Substitutions(getLocation(), value);
+            Substitutions substitutions = new Substitutions(getLocation(),
+                    value);
             if (substitutions.hasSubstitutions()) {
-                getAttributeEvents().add(new SubstituteAttribute(uri, local, qname, type,
-                                                                 substitutions));
+                getAttributeEvents().add(
+                        new SubstituteAttribute(uri, local, qname, type,
+                                substitutions));
             } else {
-                getAttributeEvents().add(new CopyAttribute(uri, local, qname, type, value));
+                getAttributeEvents().add(
+                        new CopyAttribute(uri, local, qname, type, value));
             }
         }
         this.attributes = new AttributesImpl(attrs);
@@ -85,5 +92,31 @@ public class StartElement extends Event {
     public void setEndElement(EndElement endElement) {
         this.endElement = endElement;
 
+    }
+
+    public Event execute(XMLConsumer consumer,
+            ExpressionContext expressionContext,
+            ExecutionContext executionContext, StartElement macroCall,
+            Event startEvent, Event endEvent) throws SAXException {
+        Iterator i = getAttributeEvents().iterator();
+        AttributesImpl attrs = new AttributesImpl();
+        while (i.hasNext()) {
+            AttributeEvent attrEvent = (AttributeEvent) i.next();
+            if (attrEvent instanceof CopyAttribute) {
+                CopyAttribute copy = (CopyAttribute) attrEvent;
+                attrs.addAttribute(copy.getNamespaceURI(), copy.getLocalName(),
+                        copy.getRaw(), copy.getType(), copy.getValue());
+            } else if (attrEvent instanceof SubstituteAttribute) {
+                SubstituteAttribute substEvent = (SubstituteAttribute) attrEvent;
+                String attributeValue = substEvent.getSubstitutions().toString(
+                        getLocation(), expressionContext);
+                attrs.addAttribute(attrEvent.getNamespaceURI(), attrEvent
+                        .getLocalName(), attrEvent.getRaw(), attrEvent
+                        .getType(), attributeValue);
+            }
+        }
+        consumer.startElement(getNamespaceURI(), getLocalName(), getRaw(),
+                attrs);
+        return getNext();
     }
 }

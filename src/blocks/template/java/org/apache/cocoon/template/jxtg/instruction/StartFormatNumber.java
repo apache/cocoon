@@ -24,8 +24,8 @@ import java.util.Stack;
 
 import org.apache.cocoon.components.expression.ExpressionContext;
 import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
-import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.template.jxtg.environment.ValueHelper;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
 import org.apache.cocoon.template.jxtg.script.event.Event;
 import org.apache.cocoon.template.jxtg.script.event.StartElement;

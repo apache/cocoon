@@ -15,10 +15,22 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 public class EndDocument extends Event {
     public EndDocument(Locator location) {
         super(location);
+    }
+    
+    public Event execute(XMLConsumer consumer,
+            ExpressionContext expressionContext,
+            ExecutionContext executionContext, StartElement macroCall,
+            Event startEvent, Event endEvent) throws SAXException {
+        consumer.endDocument();
+        return getNext();
     }
 }

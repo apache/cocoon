@@ -57,4 +57,12 @@ public class Event {
         }
         return buf.toString();
     }
+
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext,
+                         ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        return getNext();
+    }
 }

@@ -25,11 +25,14 @@ import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
 import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
 import org.apache.cocoon.template.jxtg.environment.LocatorFacade;
 import org.apache.cocoon.template.jxtg.expression.JXTExpression;
-import org.apache.cocoon.template.jxtg.expression.Literal;
-import org.apache.cocoon.template.jxtg.expression.Subst;
 import org.apache.cocoon.template.jxtg.instruction.StartDefine;
 import org.apache.cocoon.template.jxtg.instruction.StartParameter;
-import org.apache.cocoon.template.jxtg.script.event.*;
+import org.apache.cocoon.template.jxtg.script.event.AttributeEvent;
+import org.apache.cocoon.template.jxtg.script.event.CopyAttribute;
+import org.apache.cocoon.template.jxtg.script.event.Event;
+import org.apache.cocoon.template.jxtg.script.event.StartElement;
+import org.apache.cocoon.template.jxtg.script.event.StartInstruction;
+import org.apache.cocoon.template.jxtg.script.event.SubstituteAttribute;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.dom.DOMBuilder;
@@ -48,11 +51,9 @@ public class Invoker {
     private static final Attributes EMPTY_ATTRS = new AttributesImpl();
 
     public static void execute(final XMLConsumer consumer,
-                               ExpressionContext expressionContext,
-                               ExecutionContext executionContext,
-                               StartElement macroCall,
-                               Event startEvent, Event endEvent)
-            throws SAXException {
+            ExpressionContext expressionContext,
+            ExecutionContext executionContext, StartElement macroCall,
+            Event startEvent, Event endEvent) throws SAXException {
 
         Event ev = startEvent;
         LocatorFacade loc = new LocatorFacade(ev.getLocation());
@@ -61,217 +62,84 @@ public class Invoker {
             loc.setDocumentLocator(ev.getLocation());
 
             // ContentHandler methods
-            if (ev instanceof Characters) {
-                TextEvent text = (TextEvent) ev;
-                Iterator iter = text.getSubstitutions().iterator();
-                while (iter.hasNext()) {
-                    Subst subst = (Subst)iter.next();
-                    char[] chars;
-                    if (subst instanceof Literal) {
-                        chars = ((Literal)subst).getCharArray();
-                        consumer.characters(chars, 0, chars.length);
-                    } else {
-                        JXTExpression expr = (JXTExpression) subst;
-                        try {
-                            Object val = expr.getNode(expressionContext);
-                            executeNode(consumer, val);
-                        } catch (Exception e) {
-                            throw new SAXParseException(e.getMessage(),
-                                                        ev.getLocation(), e);
-                        } catch (Error err) {
-                            throw new SAXParseException(err.getMessage(),
-                                                        ev.getLocation(),
-                                                        new ErrorHolder(err));
-                        }
-                    }
-                }
-            } else if (ev instanceof EndDocument) {
-                consumer.endDocument();
-            } else if (ev instanceof EndElement) {
-                EndElement endElement = (EndElement) ev;
-                StartElement startElement = endElement.getStartElement();
-                consumer.endElement(startElement.getNamespaceURI(),
-                        startElement.getLocalName(), startElement.getRaw());
-            } else if (ev instanceof EndPrefixMapping) {
-                EndPrefixMapping endPrefixMapping = (EndPrefixMapping) ev;
-                consumer.endPrefixMapping(endPrefixMapping.getPrefix());
-            } else if (ev instanceof IgnorableWhitespace) {
-                TextEvent text = (TextEvent) ev;
-                characters(expressionContext, executionContext, text,
-                           new CharHandler() {
-                                   public void characters(char[] ch, int offset, int len)
-                                       throws SAXException {
-                                       consumer.ignorableWhitespace(ch, offset, len);
-                                   }
-                               });
-            } else if (ev instanceof ProcessingInstruction) {
-                ProcessingInstruction pi = (ProcessingInstruction) ev;
-                consumer.processingInstruction(pi.getTarget(), pi.getData());
-            } else if (ev instanceof SkippedEntity) {
-                SkippedEntity skippedEntity = (SkippedEntity) ev;
-                consumer.skippedEntity(skippedEntity.getName());
-            } else if (ev instanceof StartDocument) {
-                if (((StartDocument) ev).getEndDocument() != null) {
-                    // if this isn't a document fragment
-                    consumer.startDocument();
-                }
-            } else if (ev instanceof StartElement) {
+            if (ev instanceof StartElement) {
                 StartElement startElement = (StartElement) ev;
                 StartDefine def = (StartDefine) executionContext
                         .getDefinitions().get(startElement.getQname());
-                if (def != null) {
-                    Map attributeMap = new HashMap();
-                    Iterator i = startElement.getAttributeEvents().iterator();
-                    while (i.hasNext()) {
-                        String attributeName;
-                        Object attributeValue;
-                        AttributeEvent attrEvent = (AttributeEvent) i.next();
-                        attributeName = attrEvent.getLocalName();
-                        if (attrEvent instanceof CopyAttribute) {
-                            CopyAttribute copy = (CopyAttribute) attrEvent;
-                            attributeValue = copy.getValue();
-                        } else if (attrEvent instanceof SubstituteAttribute) {
-                            SubstituteAttribute substEvent = (SubstituteAttribute) attrEvent;
-                            if (substEvent.getSubstitutions().size() == 1
-                                && substEvent.getSubstitutions().get(0) instanceof JXTExpression) {
-                                JXTExpression expr = (JXTExpression) substEvent
-                                        .getSubstitutions().get(0);
-                                Object val;
-                                try {
-                                    val = expr.getNode(expressionContext);
-                                } catch (Exception e) {
-                                    throw new SAXParseException(e.getMessage(),
-                                                                ev.getLocation(), e);
-                                } catch (Error err) {
-                                    throw new SAXParseException(err.getMessage(),
-                                                                ev.getLocation(),
-                                                                new ErrorHolder(err));
-                                }
-                                attributeValue = val != null ? val : "";
-                            } else {
-                                attributeValue =
-                                    substEvent.getSubstitutions().toString(ev.getLocation(),
-                                                                           expressionContext);
-                            }
-                        } else {
-                            throw new Error("this shouldn't have happened");
-                        }
-                        attributeMap.put(attributeName, attributeValue);
-                    }
-                    ExpressionContext localExpressionContext =
-                        new ExpressionContext(expressionContext);
-                    HashMap macro = new HashMap();
-                    macro.put("body", startElement);
-                    macro.put("arguments", attributeMap);
-                    localExpressionContext.put("macro", macro);
-                    Iterator iter = def.getParameters().entrySet().iterator();
-                    while (iter.hasNext()) {
-                        Map.Entry e = (Map.Entry) iter.next();
-                        String key = (String) e.getKey();
-                        StartParameter startParam =
-                            (StartParameter) e.getValue();
-                        Object default_ = startParam.getDefaultValue();
-                        Object val = attributeMap.get(key);
-                        if (val == null) {
-                            val = default_;
-                        }
-                        localExpressionContext.put(key, val);
-                    }
-                    call(ev.getLocation(), startElement, consumer,
-                         localExpressionContext, executionContext,
-                         def.getBody(), def.getEndInstruction());
-                    ev = startElement.getEndElement().getNext();
+                if (def == null) {
+                    ev = ev.execute(consumer, expressionContext,
+                            executionContext, macroCall, startEvent, endEvent);
                     continue;
                 }
+
+                // this is a macro call
+                Map attributeMap = new HashMap();
                 Iterator i = startElement.getAttributeEvents().iterator();
-                AttributesImpl attrs = new AttributesImpl();
                 while (i.hasNext()) {
+                    String attributeName;
+                    Object attributeValue;
                     AttributeEvent attrEvent = (AttributeEvent) i.next();
+                    attributeName = attrEvent.getLocalName();
                     if (attrEvent instanceof CopyAttribute) {
                         CopyAttribute copy = (CopyAttribute) attrEvent;
-                        attrs.addAttribute(copy.getNamespaceURI(),
-                                           copy.getLocalName(), copy.getRaw(),
-                                           copy.getType(), copy.getValue());
+                        attributeValue = copy.getValue();
                     } else if (attrEvent instanceof SubstituteAttribute) {
                         SubstituteAttribute substEvent = (SubstituteAttribute) attrEvent;
-                        String attributeValue =
-                            substEvent.getSubstitutions().toString(ev.getLocation(),
-                                                                   expressionContext);
-                        attrs.addAttribute(attrEvent.getNamespaceURI(),
-                                           attrEvent.getLocalName(), attrEvent.getRaw(),
-                                           attrEvent.getType(), attributeValue);
+                        if (substEvent.getSubstitutions().size() == 1
+                                && substEvent.getSubstitutions().get(0) instanceof JXTExpression) {
+                            JXTExpression expr = (JXTExpression) substEvent
+                                    .getSubstitutions().get(0);
+                            Object val;
+                            try {
+                                val = expr.getNode(expressionContext);
+                            } catch (Exception e) {
+                                throw new SAXParseException(e.getMessage(), ev
+                                        .getLocation(), e);
+                            } catch (Error err) {
+                                throw new SAXParseException(err.getMessage(),
+                                        ev.getLocation(), new ErrorHolder(err));
+                            }
+                            attributeValue = val != null ? val : "";
+                        } else {
+                            attributeValue = substEvent.getSubstitutions()
+                                    .toString(ev.getLocation(),
+                                            expressionContext);
+                        }
+                    } else {
+                        throw new Error("this shouldn't have happened");
                     }
+                    attributeMap.put(attributeName, attributeValue);
                 }
-                consumer.startElement(startElement.getNamespaceURI(),
-                                      startElement.getLocalName(), startElement.getRaw(),
-                                      attrs);
-            } else if (ev instanceof StartPrefixMapping) {
-                StartPrefixMapping startPrefixMapping = (StartPrefixMapping) ev;
-                consumer.startPrefixMapping(startPrefixMapping.getPrefix(),
-                                            startPrefixMapping.getUri());
-
-                // LexicalHandler methods
-            } else if (ev instanceof EndCDATA) {
-                consumer.endCDATA();
-            } else if (ev instanceof EndDTD) {
-                consumer.endDTD();
-            } else if (ev instanceof EndEntity) {
-                consumer.endEntity(((EndEntity) ev).getName());
-            } else if (ev instanceof StartCDATA) {
-                consumer.startCDATA();
-            } else if (ev instanceof StartDTD) {
-                StartDTD startDTD = (StartDTD) ev;
-                consumer.startDTD(startDTD.getName(), startDTD.getPublicId(),
-                                  startDTD.getSystemId());
-            } else if (ev instanceof StartEntity) {
-                consumer.startEntity(((StartEntity) ev).getName());
-
-                // Instructions
-            } else if (ev instanceof StartInstruction) {
-                ev = ((StartInstruction)ev).execute(consumer,
-                                                    expressionContext, executionContext,
-                                                    macroCall, startEvent, endEvent);
-                continue;
-            }
-            ev = ev.getNext();
-        }
-    }
-
-    interface CharHandler {
-        public void characters(char[] ch, int offset, int length)
-                throws SAXException;
-    }
-
-    private static void characters(ExpressionContext expressionContext,
-                                   ExecutionContext executionContext,
-                                   TextEvent event, CharHandler handler)
-        throws SAXException {
-        Iterator iter = event.getSubstitutions().iterator();
-        while (iter.hasNext()) {
-            Object subst = iter.next();
-            char[] chars;
-            if (subst instanceof Literal) {
-                chars = ((Literal) subst).getCharArray();
-            } else {
-                JXTExpression expr = (JXTExpression) subst;
-                try {
-                    Object val = expr.getValue(expressionContext);
-                    chars = val != null ? val.toString().toCharArray()
-                            : ArrayUtils.EMPTY_CHAR_ARRAY;
-                } catch (Exception e) {
-                    throw new SAXParseException(e.getMessage(), event
-                            .getLocation(), e);
-                } catch (Error err) {
-                    throw new SAXParseException(err.getMessage(), event
-                            .getLocation(), new ErrorHolder(err));
+                ExpressionContext localExpressionContext = new ExpressionContext(
+                        expressionContext);
+                HashMap macro = new HashMap();
+                macro.put("body", startElement);
+                macro.put("arguments", attributeMap);
+                localExpressionContext.put("macro", macro);
+                Iterator iter = def.getParameters().entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry e = (Map.Entry) iter.next();
+                    String key = (String) e.getKey();
+                    StartParameter startParam = (StartParameter) e.getValue();
+                    Object default_ = startParam.getDefaultValue();
+                    Object val = attributeMap.get(key);
+                    if (val == null) {
+                        val = default_;
+                    }
+                    localExpressionContext.put(key, val);
                 }
-            }
-            handler.characters(chars, 0, chars.length);
+                call(ev.getLocation(), startElement, consumer,
+                        localExpressionContext, executionContext,
+                        def.getBody(), def.getEndInstruction());
+                ev = startElement.getEndElement().getNext();
+            } else 
+                ev = ev.execute(consumer, expressionContext, executionContext,
+                        macroCall, startEvent, endEvent);
         }
     }
 
     public static void executeNode(final XMLConsumer consumer, Object val)
-        throws SAXException {
+            throws SAXException {
 
         if (val instanceof Node) {
             executeDOM(consumer, (Node) val);
@@ -292,16 +160,14 @@ public class Invoker {
         } else if (val instanceof XMLizable) {
             ((XMLizable) val).toSAX(new IncludeXMLConsumer(consumer));
         } else {
-            char[] ch =
-                val == null ? ArrayUtils.EMPTY_CHAR_ARRAY
-                : val.toString().toCharArray();
+            char[] ch = val == null ? ArrayUtils.EMPTY_CHAR_ARRAY : val
+                    .toString().toCharArray();
             consumer.characters(ch, 0, ch.length);
         }
     }
 
     /**
-     * dump a DOM document, using an IncludeXMLConsumer to filter out start/end
-     * document events
+     * dump a DOM document, using an IncludeXMLConsumer to filter out start/end document events
      */
     public static void executeDOM(final XMLConsumer consumer, Node node)
             throws SAXException {
@@ -311,32 +177,28 @@ public class Invoker {
     }
 
     private static void call(Locator location, StartElement macroCall,
-                             final XMLConsumer consumer,
-                             ExpressionContext expressionContext,
-                             ExecutionContext executionContext,
-                             Event startEvent, Event endEvent)
-        throws SAXException {
+            final XMLConsumer consumer, ExpressionContext expressionContext,
+            ExecutionContext executionContext, Event startEvent, Event endEvent)
+            throws SAXException {
         try {
-            execute(consumer, expressionContext, executionContext,
-                    macroCall, startEvent, endEvent);
+            execute(consumer, expressionContext, executionContext, macroCall,
+                    startEvent, endEvent);
         } catch (SAXParseException exc) {
             throw new SAXParseException(macroCall.getLocalName() + ": "
-                                        + exc.getMessage(), location, exc);
+                    + exc.getMessage(), location, exc);
         }
     }
 
     public static NodeList toDOMNodeList(String elementName,
-                                         StartInstruction si,
-                                         ExpressionContext expressionContext,
-                                         ExecutionContext executionContext,
-                                         StartElement macroCall)
+            StartInstruction si, ExpressionContext expressionContext,
+            ExecutionContext executionContext, StartElement macroCall)
             throws SAXException {
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
         builder.startElement(JXTemplateGenerator.NS, elementName, elementName,
-                             EMPTY_ATTRS);
-        execute(builder, expressionContext, executionContext,
-                macroCall, si.getNext(), si.getEndInstruction());
+                EMPTY_ATTRS);
+        execute(builder, expressionContext, executionContext, macroCall, si
+                .getNext(), si.getEndInstruction());
         builder.endElement(JXTemplateGenerator.NS, elementName, elementName);
         builder.endDocument();
         Node node = builder.getDocument().getDocumentElement();

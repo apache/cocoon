@@ -15,6 +15,9 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
@@ -22,5 +25,19 @@ public class IgnorableWhitespace extends TextEvent {
     public IgnorableWhitespace(Locator location, char[] chars, int start,
             int length) throws SAXException {
         super(location, chars, start, length);
+    }
+
+    public Event execute(final XMLConsumer consumer,
+            ExpressionContext expressionContext,
+            ExecutionContext executionContext, StartElement macroCall,
+            Event startEvent, Event endEvent) throws SAXException {
+            characters(expressionContext, executionContext, this,
+                new CharHandler() {
+                    public void characters(char[] ch, int offset, int len)
+                            throws SAXException {
+                        consumer.ignorableWhitespace(ch, offset, len);
+                    }
+                });
+            return getNext();
     }
 }

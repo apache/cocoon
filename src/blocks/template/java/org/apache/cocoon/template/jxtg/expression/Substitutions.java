@@ -29,8 +29,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
-
 public class Substitutions {
 
     final private List substitutions;

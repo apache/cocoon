@@ -15,9 +15,18 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import java.util.Iterator;
+
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ErrorHolder;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.template.jxtg.expression.JXTExpression;
+import org.apache.cocoon.template.jxtg.expression.Literal;
 import org.apache.cocoon.template.jxtg.expression.Substitutions;
+import org.apache.commons.lang.ArrayUtils;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class TextEvent extends Event {
     public TextEvent(Locator location, char[] chars, int start, int length)
@@ -38,4 +47,39 @@ public class TextEvent extends Event {
     public Substitutions getSubstitutions() {
         return substitutions;
     }
+    
+    interface CharHandler {
+        public void characters(char[] ch, int offset, int length)
+                throws SAXException;
+    }
+
+    protected static void characters(ExpressionContext expressionContext,
+                                   ExecutionContext executionContext,
+                                   TextEvent event, CharHandler handler)
+        throws SAXException {
+        Iterator iter = event.getSubstitutions().iterator();
+        while (iter.hasNext()) {
+            Object subst = iter.next();
+            char[] chars;
+            if (subst instanceof Literal) {
+                chars = ((Literal) subst).getCharArray();
+            } else {
+                JXTExpression expr = (JXTExpression) subst;
+                try {
+                    Object val = expr.getValue(expressionContext);
+                    chars = val != null ? val.toString().toCharArray()
+                            : ArrayUtils.EMPTY_CHAR_ARRAY;
+                } catch (Exception e) {
+                    throw new SAXParseException(e.getMessage(), event
+                            .getLocation(), e);
+                } catch (Error err) {
+                    throw new SAXParseException(err.getMessage(), event
+                            .getLocation(), new ErrorHolder(err));
+                }
+            }
+            handler.characters(chars, 0, chars.length);
+        }
+    }
+
+    
 }
