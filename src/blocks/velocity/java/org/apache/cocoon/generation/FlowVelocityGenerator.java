@@ -50,13 +50,6 @@
 */
 package org.apache.cocoon.generation;
 
-import java.beans.PropertyDescriptor;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.*;
-
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -85,12 +78,25 @@ import org.apache.velocity.runtime.log.LogSystem;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import java.beans.PropertyDescriptor;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * <p>Cocoon {@link Generator} that produces dynamic XML SAX events
  * from a Velocity template file.</p>
  *
  * <p> This differs from VelocityGenerator only in the objects that
- * populate the velocity context passed to the template. In this 
+ * populate the velocity context passed to the template. In this
  * generator there are two objects:
  * <ul>
  * <li>this - which represents the bean that was passed to sendPage*() </li>
@@ -140,11 +146,10 @@ import org.xml.sax.SAXException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.2 2003/03/16 17:49:09 vgritsenko Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.3 2003/03/17 01:50:09 vgritsenko Exp $
  */
 public class FlowVelocityGenerator extends ComposerGenerator
-    implements Initializable, Configurable, LogSystem
-{
+        implements Initializable, Configurable, LogSystem {
 
     /**
      * Velocity {@link org.apache.velocity.runtime.resource.loader.ResourceLoader}
@@ -154,8 +159,9 @@ public class FlowVelocityGenerator extends ComposerGenerator
      *
      * @see org.apache.velocity.runtime.resource.loader.ResourceLoader
      */
-    public static class TemplateLoader extends org.apache.velocity.runtime.resource.loader.ResourceLoader
-    {
+    public static class TemplateLoader
+            extends org.apache.velocity.runtime.resource.loader.ResourceLoader {
+
         private org.apache.avalon.framework.context.Context resolverContext;
 
         /**
@@ -168,14 +174,12 @@ public class FlowVelocityGenerator extends ComposerGenerator
          * @throws IllegalArgumentException thrown if the required
          *         'context' property is not set.
          * @throws ClassCastException if the 'context' property is not
-         *         of type {@link Context}.
+         *         of type {@link org.apache.avalon.framework.context.Context}.
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#init
-     */
-        public void init(ExtendedProperties config)
-    {
-            this.resolverContext = (org.apache.avalon.framework.context.Context)config.get("context");
-            if (this.resolverContext == null)
-        {
+         */
+        public void init(ExtendedProperties config) {
+            this.resolverContext = (org.apache.avalon.framework.context.Context) config.get("context");
+            if (this.resolverContext == null) {
                 throw new IllegalArgumentException("Runtime Cocoon resolver context not specified in resource loader configuration.");
             }
         }
@@ -184,18 +188,13 @@ public class FlowVelocityGenerator extends ComposerGenerator
          * @param systemId the path to the resource
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getResourceStream
          */
-        public InputStream getResourceStream(String systemId) throws org.apache.velocity.exception.ResourceNotFoundException
-    {
-            try
-        {
+        public InputStream getResourceStream(String systemId)
+                throws org.apache.velocity.exception.ResourceNotFoundException {
+            try {
                 return resolveSource(systemId).getInputStream();
-            }
-        catch (org.apache.velocity.exception.ResourceNotFoundException ex)
-        {
+            } catch (org.apache.velocity.exception.ResourceNotFoundException ex) {
                 throw ex;
-            }
-        catch (Exception ex)
-        {
+            } catch (Exception ex) {
                 throw new org.apache.velocity.exception.ResourceNotFoundException("Unable to resolve source: " + ex);
             }
         }
@@ -203,34 +202,28 @@ public class FlowVelocityGenerator extends ComposerGenerator
         /**
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#isSourceModified
          */
-        public boolean isSourceModified(org.apache.velocity.runtime.resource.Resource resource)
-    {
+        public boolean isSourceModified(org.apache.velocity.runtime.resource.Resource resource) {
             long lastModified = 0;
-            try
-        {
+            try {
                 lastModified = resolveSource(resource.getName()).getLastModified();
-            }
-        catch (Exception ex)
-        {
-                super.rsvc.warn("Unable to determine last modified for resource: " + resource.getName() + ": " + ex);
+            } catch (Exception ex) {
+                super.rsvc.warn("Unable to determine last modified for resource: "
+                                + resource.getName() + ": " + ex);
             }
 
-            return lastModified > 0? lastModified != resource.getLastModified() : true;
+            return lastModified > 0 ? lastModified != resource.getLastModified() : true;
         }
 
         /**
          * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified
          */
-        public long getLastModified(org.apache.velocity.runtime.resource.Resource resource)
-    {
+        public long getLastModified(org.apache.velocity.runtime.resource.Resource resource) {
             long lastModified = 0;
-            try
-        {
+            try {
                 lastModified = resolveSource(resource.getName()).getLastModified();
-            }
-        catch (Exception ex)
-        {
-                super.rsvc.warn("Unable to determine last modified for resource: " + resource.getName() + ": " + ex);
+            } catch (Exception ex) {
+                super.rsvc.warn("Unable to determine last modified for resource: "
+                                + resource.getName() + ": " + ex);
             }
 
             return lastModified;
@@ -242,19 +235,18 @@ public class FlowVelocityGenerator extends ComposerGenerator
          *
          * @param systemId the path to the resource
          */
-        private Source resolveSource(String systemId) throws org.apache.velocity.exception.ResourceNotFoundException
-        {
+        private Source resolveSource(String systemId) throws org.apache.velocity.exception.ResourceNotFoundException {
             Map sourceCache;
             try {
-                sourceCache = (Map)this.resolverContext.get(CONTEXT_SOURCE_CACHE_KEY);
+                sourceCache = (Map) this.resolverContext.get(CONTEXT_SOURCE_CACHE_KEY);
             } catch (ContextException ignore) {
                 throw new org.apache.velocity.exception.ResourceNotFoundException("Runtime Cocoon source cache not specified in resource loader resolver context.");
             }
 
-            Source source = (Source)sourceCache.get(systemId);
+            Source source = (Source) sourceCache.get(systemId);
             if (source == null) {
                 try {
-                    SourceResolver resolver = (SourceResolver)this.resolverContext.get(CONTEXT_RESOLVER_KEY);
+                    SourceResolver resolver = (SourceResolver) this.resolverContext.get(CONTEXT_RESOLVER_KEY);
                     source = resolver.resolveURI(systemId);
                 } catch (ContextException ex) {
                     throw new org.apache.velocity.exception.ResourceNotFoundException("No Cocoon source resolver associated with current request.");
@@ -292,37 +284,35 @@ public class FlowVelocityGenerator extends ComposerGenerator
      * @param configuration the class configurations.
      * @see org.apache.avalon.framework.configuration.Configurable#configure
      */
-    public void configure(Configuration configuration) throws ConfigurationException
-    {
+    public void configure(Configuration configuration) throws ConfigurationException {
         this.resolverContext = new DefaultContext();
         this.tmplEngine = new VelocityEngine();
+
         // Set up a JavaScript introspector for the Cocoon flow layer
-        this.tmplEngine.setProperty(org.apache.velocity.runtime.RuntimeConstants.UBERSPECT_CLASSNAME, 
+        this.tmplEngine.setProperty(org.apache.velocity.runtime.RuntimeConstants.UBERSPECT_CLASSNAME,
                                     "org.apache.cocoon.generation.JSIntrospector");
         this.tmplEngine.setProperty(Velocity.RUNTIME_LOG_LOGSYSTEM, this);
 
         // First set up our default 'cocoon' resource loader
-        //
-        this.tmplEngine.setProperty("cocoon.resource.loader.class", TemplateLoader.class.getName());
-        this.tmplEngine.setProperty("cocoon.resource.loader.cache", configuration.getAttribute("usecache", "false"));
-        this.tmplEngine.setProperty("cocoon.resource.loader.modificationCheckInterval", configuration.getAttribute("checkInterval", "0"));
-        this.tmplEngine.setProperty("cocoon.resource.loader.context", this.resolverContext);
+        this.tmplEngine.setProperty("cocoon.resource.loader.class",
+                                    TemplateLoader.class.getName());
+        this.tmplEngine.setProperty("cocoon.resource.loader.cache",
+                                    configuration.getAttribute("usecache", "false"));
+        this.tmplEngine.setProperty("cocoon.resource.loader.modificationCheckInterval",
+                                    configuration.getAttribute("checkInterval", "0"));
+        this.tmplEngine.setProperty("cocoon.resource.loader.context",
+                                    this.resolverContext);
 
         // Read in any additional properties to pass to the VelocityEngine during initialization
-        //
         Configuration[] properties = configuration.getChildren("property");
-        for (int i=0; i < properties.length; ++i)
-    {
+        for (int i = 0; i < properties.length; ++i) {
             Configuration c = properties[i];
             String name = c.getAttribute("name");
 
-            // disallow setting of certain properties
-            //
+            // Disallow setting of certain properties
             if (name.startsWith("runtime.log")
-                || name.indexOf(".resource.loader.") != -1)
-        {
-                if (getLogger().isInfoEnabled())
-        {
+                    || name.indexOf(".resource.loader.") != -1) {
+                if (getLogger().isInfoEnabled()) {
                     getLogger().info("ignoring disallowed property '" + name + "'.");
                 }
                 continue;
@@ -330,18 +320,14 @@ public class FlowVelocityGenerator extends ComposerGenerator
             this.tmplEngine.setProperty(name, c.getAttribute("value"));
         }
 
-        // now read in any additional Velocity resource loaders
-        //
+        // Now read in any additional Velocity resource loaders
         List resourceLoaders = new ArrayList();
         Configuration[] loaders = configuration.getChildren("resource-loader");
-        for (int i=0; i < loaders.length; ++i)
-    {
+        for (int i = 0; i < loaders.length; ++i) {
             Configuration loader = loaders[i];
             String name = loader.getAttribute("name");
-            if (name.equals("cocoon"))
-        {
-                if (getLogger().isInfoEnabled())
-        {
+            if (name.equals("cocoon")) {
+                if (getLogger().isInfoEnabled()) {
                     getLogger().info("'cocoon' resource loader already defined.");
                 }
                 continue;
@@ -350,9 +336,8 @@ public class FlowVelocityGenerator extends ComposerGenerator
             String prefix = name + ".resource.loader.";
             String type = loader.getAttribute("class");
             this.tmplEngine.setProperty(prefix + "class", type);
-            Configuration [] loaderProperties = loader.getChildren("property");
-            for (int j=0; i < loaderProperties.length; ++j)
-        {
+            Configuration[] loaderProperties = loader.getChildren("property");
+            for (int j = 0; i < loaderProperties.length; ++j) {
                 Configuration c = loaderProperties[j];
                 String propName = c.getAttribute("name");
                 this.tmplEngine.setProperty(prefix + propName, c.getAttribute("value"));
@@ -362,10 +347,9 @@ public class FlowVelocityGenerator extends ComposerGenerator
         // Velocity expects resource loaders as CSV list
         //
         StringBuffer buffer = new StringBuffer("cocoon");
-        for (Iterator it = resourceLoaders.iterator(); it.hasNext(); )
-    {
+        for (Iterator it = resourceLoaders.iterator(); it.hasNext();) {
             buffer.append(',');
-            buffer.append((String)it.next());
+            buffer.append((String) it.next());
         }
         tmplEngine.setProperty(Velocity.RESOURCE_LOADER, buffer.toString());
     }
@@ -373,36 +357,33 @@ public class FlowVelocityGenerator extends ComposerGenerator
     /**
      * @see org.apache.avalon.framework.activity.Initializable#initialize
      */
-    public void initialize() throws Exception
-    {
+    public void initialize() throws Exception {
         this.tmplEngine.init();
     }
 
     /**
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup
      */
-    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters params) throws ProcessingException,SAXException,IOException
-    {
-        if (activeFlag)
-            {
-                throw new IllegalStateException("setup called on recyclable sitemap component before properly recycling previous state");
-            }
+    public void setup(SourceResolver resolver, Map objectModel, String src, Parameters params)
+            throws ProcessingException, SAXException, IOException {
+        if (activeFlag) {
+            throw new IllegalStateException("setup called on recyclable sitemap component before properly recycling previous state");
+        }
 
         super.setup(resolver, objectModel, src, params);
 
-        // pass along the SourceResolver to the Velocity resource loader
-        //
+        // Pass along the SourceResolver to the Velocity resource loader
         this.resolverContext.put(CONTEXT_RESOLVER_KEY, resolver);
         this.resolverContext.put(CONTEXT_SOURCE_CACHE_KEY, new HashMap());
-        // Initialize the Velocity context
-        //
-        final Object bean = ((Environment)resolver).getAttribute("bean-dict");
-        final WebContinuation kont = 
-            (WebContinuation)((Environment)resolver).getAttribute("kont");
-        //
+
+        // FIXME: Initialize the Velocity context. Use objectModel to pass these
+        final Object bean = ((Environment) resolver).getAttribute("bean-dict");
+        final WebContinuation kont =
+                (WebContinuation) ((Environment) resolver).getAttribute("kont");
+
         // This velocity context provides two variables: "this" which represents the
         // bean object passed to sendPage*() and "continuation" which is the
-        // current continuation. The immediate properties of the bean object are 
+        // current continuation. The immediate properties of the bean object are
         // also available in the context.
         //
         // Hack? I use JXPath to determine the properties of the bean object
@@ -412,110 +393,110 @@ public class FlowVelocityGenerator extends ComposerGenerator
         if (bi.isDynamic()) {
             Class cl = bi.getDynamicPropertyHandlerClass();
             try {
-                h = (DynamicPropertyHandler)cl.newInstance();
+                h = (DynamicPropertyHandler) cl.newInstance();
             } catch (Exception exc) {
                 exc.printStackTrace();
                 h = null;
             }
             props = null;
-         } else {
+        } else {
             h = null;
             props = bi.getPropertyDescriptors();
         }
         final DynamicPropertyHandler handler = h;
+
         this.velocityContext = new Context() {
-
-                public Object put(String key, Object value) {
-                    if (key.equals("this") || key.equals("continuation")) {
-                        return value;
-                    }
-                    if (handler != null) {
-                        handler.setProperty(bean, key, value);
-                        return value;
-                    } else {
-                        for (int i = 0; i < props.length; i++) {
-                            if (props[i].getName().equals(key)) {
-                                try {
-                                    return props[i].getWriteMethod().invoke(bean, new Object[] {value});
-                                } catch (Exception ignored) {
-                                    break;
-                                }
-                            }
-                        }
-                        return value;
-                    }
+            public Object put(String key, Object value) {
+                if (key.equals("this") || key.equals("continuation")) {
+                    return value;
                 }
-
-                public boolean containsKey(Object key) {
-                    if (key.equals("this") || key.equals("continuation")) {
-                        return true;
-                    }
-                    if (handler != null) {
-                        String[] result = handler.getPropertyNames(bean);
-                        for (int i = 0; i < result.length; i++) {
-                            if (key.equals(result[i])) {
-                                return true;
-                            }
-                        }
-                    } else {
-                        for (int i = 0; i < props.length; i++) {
-                            if (key.equals(props[i].getName())) {
-                                return true;
+                if (handler != null) {
+                    handler.setProperty(bean, key, value);
+                    return value;
+                } else {
+                    for (int i = 0; i < props.length; i++) {
+                        if (props[i].getName().equals(key)) {
+                            try {
+                                return props[i].getWriteMethod().invoke(bean, new Object[]{value});
+                            } catch (Exception ignored) {
+                                break;
                             }
                         }
                     }
-                    return false;
+                    return value;
                 }
+            }
 
-                public Object[] getKeys() {
-                    Object[] result = null;
-                    if (handler != null) {
-                        result = handler.getPropertyNames(bean);
-                    } else {
-                        result = new Object[props.length];
-                        for (int i = 0; i < props.length; i++) {
-                            result[i] = props[i].getName();
-                        }
-                    }
-                    Set set = new HashSet();
+            public boolean containsKey(Object key) {
+                if (key.equals("this") || key.equals("continuation")) {
+                    return true;
+                }
+                if (handler != null) {
+                    String[] result = handler.getPropertyNames(bean);
                     for (int i = 0; i < result.length; i++) {
-                        set.add(result[i]);
+                        if (key.equals(result[i])) {
+                            return true;
+                        }
                     }
-                    set.add("this");
-                    set.add("continuation");
-                    result = new Object[set.size()];
-                    set.toArray(result);
-                    return result;
+                } else {
+                    for (int i = 0; i < props.length; i++) {
+                        if (key.equals(props[i].getName())) {
+                            return true;
+                        }
+                    }
                 }
+                return false;
+            }
 
-                public Object get(String key) {
-                    if (key.equals("this")) {
-                        return bean;
+            public Object[] getKeys() {
+                Object[] result = null;
+                if (handler != null) {
+                    result = handler.getPropertyNames(bean);
+                } else {
+                    result = new Object[props.length];
+                    for (int i = 0; i < props.length; i++) {
+                        result[i] = props[i].getName();
                     }
-                    if (key.equals("continuation")) {
-                        return kont;
-                    }
-                    if (handler != null) {
-                        return handler.getProperty(bean, key.toString());
-                    } else {
-                        for (int i = 0; i < props.length; i++) {
-                            if (props[i].getName().equals(key)) {
-                                try {
-                                    return props[i].getReadMethod().invoke(bean, null);
-                                } catch (Exception ignored) {
-                                    break;
-                                }
+                }
+                Set set = new HashSet();
+                for (int i = 0; i < result.length; i++) {
+                    set.add(result[i]);
+                }
+                set.add("this");
+                set.add("continuation");
+                result = new Object[set.size()];
+                set.toArray(result);
+                return result;
+            }
+
+            public Object get(String key) {
+                if (key.equals("this")) {
+                    return bean;
+                }
+                if (key.equals("continuation")) {
+                    return kont;
+                }
+                if (handler != null) {
+                    return handler.getProperty(bean, key.toString());
+                } else {
+                    for (int i = 0; i < props.length; i++) {
+                        if (props[i].getName().equals(key)) {
+                            try {
+                                return props[i].getReadMethod().invoke(bean, null);
+                            } catch (Exception ignored) {
+                                break;
                             }
                         }
-                        return null;
                     }
+                    return null;
                 }
+            }
 
-                public Object remove(Object key) {
-                    // not implemented
-                    return key;
-                }
-            };
+            public Object remove(Object key) {
+                // not implemented
+                return key;
+            }
+        };
         this.activeFlag = true;
     }
 
@@ -525,16 +506,14 @@ public class FlowVelocityGenerator extends ComposerGenerator
      *
      * @see org.apache.avalon.excalibur.pool.Recyclable#recycle
      */
-    public void recycle()
-    {
+    public void recycle() {
         this.activeFlag = false;
 
-        // recycle all the Source objects resolved/used by our resource loader
-        //
+        // Recycle all the Source objects resolved/used by our resource loader
         try {
-            Map sourceCache = (Map)this.resolverContext.get(CONTEXT_SOURCE_CACHE_KEY);
+            Map sourceCache = (Map) this.resolverContext.get(CONTEXT_SOURCE_CACHE_KEY);
             for (Iterator it = sourceCache.values().iterator(); it.hasNext();) {
-                this.resolver.release((Source)it.next());
+                this.resolver.release((Source) it.next());
             }
         } catch (ContextException ignore) {
         }
@@ -549,8 +528,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
      * @see org.apache.cocoon.generation.Generator#generate
      */
     public void generate()
-    throws IOException, SAXException, ProcessingException
-    {
+            throws IOException, SAXException, ProcessingException {
         // Guard against calling generate before setup.
         if (!activeFlag) {
             throw new IllegalStateException("generate called on sitemap component before setup.");
@@ -558,7 +536,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
 
         SAXParser parser = null;
         try {
-            parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
+            parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Processing File: " + super.source);
             }
@@ -568,7 +546,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
             this.tmplEngine.mergeTemplate(super.source, velocityContext, w);
 
             InputSource xmlInput =
-            new InputSource(new StringReader(w.toString()));
+                    new InputSource(new StringReader(w.toString()));
             parser.parse(xmlInput, this.xmlConsumer);
         } catch (IOException e) {
             getLogger().warn("VelocityGenerator.generate()", e);
@@ -585,7 +563,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()", e);
         } finally {
-            this.manager.release((Component)parser);
+            this.manager.release((Component) parser);
         }
     }
 
@@ -594,8 +572,7 @@ public class FlowVelocityGenerator extends ComposerGenerator
      *
      * @see org.apache.velocity.runtime.log.LogSystem#init
      */
-    public void init(RuntimeServices rs) 
-    throws Exception {
+    public void init(RuntimeServices rs) throws Exception {
     }
 
     /**
@@ -605,16 +582,16 @@ public class FlowVelocityGenerator extends ComposerGenerator
      */
     public void logVelocityMessage(int level, String message) {
         switch (level) {
-            case LogSystem.WARN_ID :
+            case LogSystem.WARN_ID:
                 getLogger().warn(message);
                 break;
-            case LogSystem.INFO_ID :
+            case LogSystem.INFO_ID:
                 getLogger().info(message);
                 break;
-            case LogSystem.DEBUG_ID :
+            case LogSystem.DEBUG_ID:
                 getLogger().debug(message);
                 break;
-            case LogSystem.ERROR_ID :
+            case LogSystem.ERROR_ID:
                 getLogger().error(message);
                 break;
             default :
