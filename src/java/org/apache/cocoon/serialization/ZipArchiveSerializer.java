@@ -1,19 +1,18 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.serialization;
 
 import java.io.FilterOutputStream;
@@ -67,7 +66,7 @@ import org.xml.sax.helpers.NamespaceSupport;
  * </pre>
  *
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: ZipArchiveSerializer.java,v 1.8 2004/06/22 02:41:14 crossley Exp $
+ * @version CVS $Id$
  */
 
 // TODO (1) : handle more attributes on <archive> for properties of ZipOutputStream
@@ -76,10 +75,9 @@ import org.xml.sax.helpers.NamespaceSupport;
 // TODO (2) : handle more attributes on <entry> for properties of ZipEntry
 //            (compression method and level, time, comment, etc.)
 
-public class ZipArchiveSerializer 
-    extends AbstractSerializer 
-    implements Disposable, Serviceable {
-        
+public class ZipArchiveSerializer extends AbstractSerializer
+                                  implements Disposable, Serviceable {
+
     /**
      * The namespace for elements handled by this serializer,
      * "http://apache.org/cocoon/zip-archive/1.0".
@@ -105,9 +103,6 @@ public class ZipArchiveSerializer
     /** The resolver to get sources */
     protected SourceResolver resolver;
 
-    /** Temporary byte buffer to read source data */
-    protected byte[] buffer = new byte[1024];
-
     /** Serializer used when in IN_CONTENT state */
     protected Serializer serializer;
 
@@ -120,7 +115,7 @@ public class ZipArchiveSerializer
     /**
      * Store exception
      */
-    private SAXException exception = null;
+    private SAXException exception;
 
 
     /**
@@ -128,21 +123,17 @@ public class ZipArchiveSerializer
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
+        this.resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
     }
 
     /**
-     * Returns null.
+     * Returns default mime type for zip archives, <code>application/zip</code>.
+     * Can be overridden in the sitemap.
+     * @return application/zip
      */
     public String getMimeType() {
-        // FIXME: There are many applications of Zip serializer, and one of them to generate
-        // OpenOffice documents, which have different mime type than "application/x-zip".
-        // Problem is that constant returned here can not be overriden in the sitemap neither
-        // when declaring serializer, nor when using it.
-        // Bug http://issues.apache.org/bugzilla/show_bug.cgi?id=10277 might be related to this issue.
-        // WAS HERE: Always return "application/x-zip" which is the default for Zip archives
-        // return "application/x-zip";
-        return null;
+        // See also bug #10277
+        return "application/zip";
     }
 
     /**
@@ -179,7 +170,7 @@ public class ZipArchiveSerializer
      * @see org.xml.sax.ContentHandler#startElement(String, String, String, Attributes)
      */
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
-        throws SAXException {
+    throws SAXException {
 
         // Damage control. Sometimes one exception is just not enough...
         if (this.exception != null) {
@@ -253,7 +244,6 @@ public class ZipArchiveSerializer
                 new SAXException("Cannot specify both 'src' and 'serializer' on a Zip entry '" + name + "'");
         }
 
-        Source source = null;
         try {
             // Create a new Zip entry
             ZipEntry entry = new ZipEntry(name);
@@ -261,17 +251,26 @@ public class ZipArchiveSerializer
 
             if (src != null) {
                 // Get the source and its data
-                source = resolver.resolveURI(src);
-                InputStream sourceInput = source.getInputStream();
+                Source source = resolver.resolveURI(src);
+                try {
+                    InputStream sourceInput = source.getInputStream();
 
-                // Copy the source to the zip
-                int len;
-                while ((len = sourceInput.read(this.buffer)) > 0) {
-                    this.zipOutput.write(this.buffer, 0, len);
+                    // Copy the source to the zip
+                    try {
+                        int len;
+                        byte[] buffer = new byte[4096];
+                        while ((len = sourceInput.read(buffer)) > 0) {
+                            this.zipOutput.write(buffer, 0, len);
+                        }
+                    } finally {
+                        sourceInput.close();
+                    }
+
+                    // And close the entry
+                    this.zipOutput.closeEntry();
+                } finally {
+                    this.resolver.release(source);
                 }
-
-                // and close the entry
-                this.zipOutput.closeEntry();
 
             } else {
                 // Serialize content
@@ -286,8 +285,7 @@ public class ZipArchiveSerializer
                 // Direct its output to the zip file, filtering calls to close()
                 // (we don't want the archive to be closed by the serializer)
                 this.serializer.setOutputStream(new FilterOutputStream(this.zipOutput) {
-                    public void close() { /*nothing*/
-                    }
+                    public void close() { /* nothing */ }
                 });
 
                 // Set it as the current XMLConsumer
@@ -307,14 +305,12 @@ public class ZipArchiveSerializer
                 this.contentDepth = 0;
             }
 
-        } catch (RuntimeException re) {
-            throw re;
-        } catch (SAXException se) {
-            throw this.exception = se;
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (SAXException e) {
+            throw this.exception = e;
         } catch (Exception e) {
             throw this.exception = new SAXException(e);
-        } finally {
-            this.resolver.release( source );
         }
     }
 
@@ -322,7 +318,7 @@ public class ZipArchiveSerializer
      * @see org.xml.sax.ContentHandler#endElement(String, String, String)
      */
     public void endElement(String namespaceURI, String localName, String qName)
-        throws SAXException {
+    throws SAXException {
 
         // Damage control. Sometimes one exception is just not enough...
         if (this.exception != null) {
@@ -347,8 +343,8 @@ public class ZipArchiveSerializer
 
                 try {
                     this.zipOutput.closeEntry();
-                } catch (IOException ioe) {
-                    throw this.exception = new SAXException(ioe);
+                } catch (IOException e) {
+                    throw this.exception = new SAXException(e);
                 }
 
                 super.setConsumer(null);
@@ -371,8 +367,8 @@ public class ZipArchiveSerializer
             // Close the zip archive
             this.zipOutput.finish();
 
-        } catch (IOException ioe) {
-            throw new SAXException(ioe);
+        } catch (IOException e) {
+            throw new SAXException(e);
         }
     }
 
@@ -387,20 +383,19 @@ public class ZipArchiveSerializer
         if (this.selector != null) {
             this.manager.release(this.selector);
         }
-        
+
         this.nsSupport.reset();
         super.recycle();
     }
-    
+
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
-        if ( this.manager != null ) {
-            this.manager.release( this.resolver );
+        if (this.manager != null) {
+            this.manager.release(this.resolver);
             this.resolver = null;
             this.manager = null;
         }
     }
-
 }
