@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.profile;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.portal.coplet.CopletData;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.layout.Layout;
@@ -33,7 +32,7 @@ import org.apache.cocoon.portal.layout.Layout;
  * 
  * @version CVS $Id$
  */
-public interface ProfileManager extends Component {
+public interface ProfileManager {
     
     String ROLE = ProfileManager.class.getName();
     

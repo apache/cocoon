@@ -18,7 +18,6 @@ package org.apache.cocoon.components.repository.impl;
 import java.io.IOException;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -33,7 +32,7 @@ import org.apache.commons.httpclient.HttpException;
  * intended to be used by flowscripts or corresponding wrapper components.
  */
 public class WebDAVRepositoryTransactionHelper extends AbstractLogEnabled
-implements RepositoryTransactionHelper, Serviceable, Disposable, Component {
+implements RepositoryTransactionHelper, Serviceable, Disposable {
     
     /* The ServiceManager */
     private ServiceManager manager;

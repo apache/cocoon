@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 
 /**
@@ -34,10 +33,10 @@ import org.apache.avalon.framework.configuration.Configuration;
  * used by only one <code>TreeBuilder</code> at a time.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNodeBuilder.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 
-public interface ProcessingNodeBuilder extends Component {
+public interface ProcessingNodeBuilder {
 
     /**
      * Set the builder for which we are building.

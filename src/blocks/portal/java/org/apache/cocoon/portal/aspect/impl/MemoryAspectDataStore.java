@@ -18,7 +18,6 @@ package org.apache.cocoon.portal.aspect.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.aspect.AspectDataStore;
@@ -29,11 +28,11 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: MemoryAspectDataStore.java,v 1.2 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MemoryAspectDataStore 
     extends AbstractLogEnabled
-    implements Component, ThreadSafe, AspectDataStore {
+    implements ThreadSafe, AspectDataStore {
     
     protected final Map objectMap = new HashMap();
     

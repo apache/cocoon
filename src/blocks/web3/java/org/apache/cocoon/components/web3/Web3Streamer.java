@@ -20,18 +20,16 @@ import com.sap.mw.jco.JCO;
 import org.xml.sax.SAXException;
 import org.xml.sax.ContentHandler;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * The standard interface for Web3Producer.
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
  * @since 2.1
- * @version CVS $Id: Web3Streamer.java,v 1.5 2004/03/05 13:02:25 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Web3Streamer extends Component {
+public interface Web3Streamer {
 
-    String ROLE = "org.apache.cocoon.components.web3.Web3Streamer";
+    String ROLE = Web3Streamer.class.getName();
     
     void stream(JCO.Function function, 
         ContentHandler contentHandler) throws SAXException;

@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -50,7 +49,7 @@ import org.w3c.dom.Element;
  */
 public class MapProfileLS
     extends AbstractLogEnabled
-    implements Component, Serviceable, ProfileLS, ThreadSafe, Disposable {
+    implements Serviceable, ProfileLS, ThreadSafe, Disposable {
 
     /** The component manager */
     protected ServiceManager manager;

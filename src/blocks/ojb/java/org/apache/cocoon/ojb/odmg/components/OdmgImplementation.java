@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.ojb.odmg.components;
 
-import org.apache.avalon.framework.component.Component;
 import org.odmg.Implementation;
 import org.odmg.ODMGException;
 
@@ -24,9 +23,9 @@ import org.odmg.ODMGException;
  * Interface of the ODMG Implementation. It is used to get the Implementation Object to interact with ODMG using OJB
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: OdmgImplementation.java,v 1.3 2004/06/25 14:49:56 cziegeler Exp $
+ * @version CVS $Id$
  */
-public interface OdmgImplementation extends Component {
+public interface OdmgImplementation {
 
     /** The ROLE */
     String ROLE = OdmgImplementation.class.getName();

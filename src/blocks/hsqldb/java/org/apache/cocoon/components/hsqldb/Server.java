@@ -15,13 +15,12 @@
  */
 package org.apache.cocoon.components.hsqldb;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  *
  * @author <a href="mailto:dims@yahoo.org">Davanum Srinivas</a>
- * @version CVS $Id: Server.java,v 1.2 2004/03/05 13:01:56 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Server extends Component {
+public interface Server  {
+    
     String ROLE = Server.class.getName();
 }

@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.transformation;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * A transformer factory is the factory of {@link Transformer}s.
  *
@@ -31,7 +29,7 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @version CVS $Id$
  */
-public interface TransformerFactory extends Component {
+public interface TransformerFactory {
 
     String ROLE = Transformer.ROLE;
 

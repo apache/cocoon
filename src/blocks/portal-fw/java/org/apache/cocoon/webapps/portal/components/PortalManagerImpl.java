@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
@@ -77,11 +76,11 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.9 2004/06/18 14:28:55 vgritsenko Exp $
+ * @version CVS $Id$
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
-implements Disposable, Serviceable, Recyclable, Contextualizable, Component, PortalManager {
+implements Disposable, Serviceable, Recyclable, Contextualizable, PortalManager {
 
     /** The cache (store) for the profiles */
     private Store   profileStore;

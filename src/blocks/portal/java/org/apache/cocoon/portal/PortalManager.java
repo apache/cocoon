@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.xml.sax.ContentHandler;
@@ -32,9 +31,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalManager.java,v 1.3 2004/03/05 13:02:08 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface PortalManager extends Component {
+public interface PortalManager {
 
     String ROLE = PortalManager.class.getName();
     

@@ -18,7 +18,6 @@ package org.apache.cocoon.taglib;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.SourceResolver;
 
@@ -35,7 +34,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @version CVS $Id$
  */
-public interface Tag extends Component {
+public interface Tag {
     
     String ROLE = Tag.class.getName();
 

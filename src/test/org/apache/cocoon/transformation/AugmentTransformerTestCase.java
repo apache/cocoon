@@ -21,7 +21,6 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.WrapperServiceManager;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.SitemapComponentTestCase;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -81,7 +80,7 @@ public class AugmentTransformerTestCase extends SitemapComponentTestCase {
         MockEnvironment env = new MockEnvironment();
         Processor processor = (Processor)this.manager.lookup(Processor.ROLE);
         
-        EnvironmentHelper.enterProcessor(processor, new WrapperServiceManager(this.manager), env);
+        EnvironmentHelper.enterProcessor(processor, this.manager, env);
         
         Document resultDocument = load(result);
         Document inputDocument = load(input);

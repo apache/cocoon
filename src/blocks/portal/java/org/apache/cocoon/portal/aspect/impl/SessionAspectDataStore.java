@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.portal.aspect.impl;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -31,11 +30,11 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: SessionAspectDataStore.java,v 1.6 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class SessionAspectDataStore 
     extends AbstractLogEnabled
-    implements Component, ThreadSafe, AspectDataStore, Contextualizable {
+    implements ThreadSafe, AspectDataStore, Contextualizable {
     
     protected Context context;
     

@@ -25,7 +25,6 @@ import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -71,7 +70,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * @since 2.1.1
  */
 public class QuartzJobScheduler extends AbstractLogEnabled
-                                implements JobScheduler, Component, ThreadSafe,
+                                implements JobScheduler, ThreadSafe,
                                            Serviceable, Configurable, Startable,
                                            Disposable, Contextualizable, Initializable {
 

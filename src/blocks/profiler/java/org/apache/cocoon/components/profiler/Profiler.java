@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.components.profiler;
 
-import org.apache.avalon.framework.component.Component;
-
 import java.util.Collection;
 
 /**
@@ -24,10 +22,10 @@ import java.util.Collection;
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: Profiler.java,v 1.2 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version CVS $Id$
  */
-public interface Profiler extends Component
-{
+public interface Profiler {
+    
     String ROLE = Profiler.class.getName();
 
     /**

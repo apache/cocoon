@@ -26,7 +26,6 @@ import javax.xml.transform.OutputKeys;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -57,7 +56,7 @@ import org.xml.sax.SAXException;
  * A repository implementation for WebDAV.
  */
 public class WebDAVRepository extends AbstractLogEnabled
-implements Repository, Serviceable, Configurable, Initializable, Disposable, Component {
+implements Repository, Serviceable, Configurable, Initializable, Disposable {
     
     /** The name of the repository location configuration element */
     public static final String REPO_BASE_CONF = "repo-base";
