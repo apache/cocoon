@@ -324,6 +324,7 @@ public class AbstractTestCase
     protected void tearDown(  )
         throws Exception
     {
+        super.tearDown();
         m_controls = null;
     }
 

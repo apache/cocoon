@@ -67,6 +67,7 @@ public final class CommandLineContextTestCase extends TestCase {
      * The JUnit setup method
      */
     public void setUp() throws Exception {
+        super.setUp();
         commandLineContextDir = System.getProperty("java.io.tmpdir", "/tmp");
         new File(commandLineContextDir, "foo" + File.separator + "bar").mkdirs();
 
@@ -81,6 +82,7 @@ public final class CommandLineContextTestCase extends TestCase {
      * The teardown method for JUnit
      */
     public void tearDown() throws Exception {
+        super.tearDown();
         new File(commandLineContextDir, "foo" + File.separator + "bar").delete();
         new File(commandLineContextDir, "foo").delete();
     }
