@@ -21,13 +21,13 @@ import java.util.Properties;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.store.Store;
-import org.apache.excalibur.store.impl.AbstractReadWriteStore;
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCache;
@@ -40,7 +40,7 @@ import org.apache.jcs.engine.control.CompositeCacheManager;
  * @author <a href="mailto:cmoss@tvnz.co.nz">Corin Moss</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  */
-public abstract class AbstractJCSStore extends AbstractReadWriteStore
+public abstract class AbstractJCSStore extends AbstractLogEnabled
     implements Store, Parameterizable, Initializable, Disposable, ThreadSafe {
     
     /** The JCS configuration properties */
@@ -113,7 +113,7 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
      * @param key the Key object
      * @return the Object associated with Key Object
      */
-    protected Object doGet(Object key) 
+    public Object get(Object key) 
     {
         Object value = null;
         
@@ -140,7 +140,7 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
      * @param value the value object
      * @exception  IOException
      */
-    protected void doStore(Object key, Object value)
+    public void store(Object key, Object value)
         throws IOException 
     {
         
@@ -163,13 +163,13 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
      * Frees some values of the store.
      * TODO: implementation?
      */
-    protected void doFree() {
+    public void free() {
     }
     
     /**
      * Clear the Store of all elements
      */
-    protected void doClear() 
+    public void clear() 
     {
         
         if (getLogger().isDebugEnabled()) 
@@ -192,7 +192,7 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
      *
      * @param key the key object
      */
-    protected void doRemove(Object key)
+    public void remove(Object key)
     {
         if (getLogger().isDebugEnabled()) 
         {
@@ -215,7 +215,7 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
      * @param key the key object
      * @return true if Key exists and false if not
      */
-    protected boolean doContainsKey(Object key) 
+    public boolean containsKey(Object key) 
     {
         return m_JCS.get(key) != null;
     }
@@ -224,12 +224,12 @@ public abstract class AbstractJCSStore extends AbstractReadWriteStore
     /**
      * Return all existing keys.
      */
-    protected Enumeration doGetKeys() 
+    public Enumeration keys() 
     {
       return new IteratorEnumeration(this.m_JCS.getGroupKeys("").iterator());
     }
     
-    protected int doGetSize() 
+    public int size() 
     {
         return m_JCS.getSize();
     }
