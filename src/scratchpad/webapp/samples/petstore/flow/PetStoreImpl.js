@@ -503,7 +503,7 @@ PetStore.prototype.getCategoryList = function() {
 
 PetStore.prototype.getItemListByProduct = function(prodId) {
     var conn = this.getConnection(this.poolId);
-    var result = conn.query("select * from ITEM where PRODUCTID = '"+prodId + "'");
+    var result = conn.query("select * from ITEM where PRODUCTID = ?", [prodId]);
     
     conn.close();
     return result;
@@ -512,7 +512,7 @@ PetStore.prototype.getItemListByProduct = function(prodId) {
 PetStore.prototype.getItem = function(itemId) {
     print("getItem: " + itemId);
     var conn = this.getConnection(this.poolId);
-    var result = conn.query("select * from ITEM item, INVENTORY inv where item.ITEMID = inv.ITEMID and item.ITEMID = '" + itemId + "'");
+    var result = conn.query("select * from ITEM item, INVENTORY inv where item.ITEMID = inv.ITEMID and item.ITEMID = ?", [itemId]);
     conn.close();
     result.rows[0].product = this.getProduct(result.rows[0].productId);
     return result.rows[0];
@@ -520,7 +520,7 @@ PetStore.prototype.getItem = function(itemId) {
 
 PetStore.prototype.getAccount = function(username, password) {
     var conn = this.getConnection(this.poolId);
-    var result = conn.query("select * from ACCOUNT, PROFILE, SIGNON, BANNERDATA where ACCOUNT.USERID = '"+username+"' and SIGNON.USERNAME = ACCOUNT.USERID and PROFILE.USERID = ACCOUNT.USERID and PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY");
+    var result = conn.query("select * from ACCOUNT, PROFILE, SIGNON, BANNERDATA where ACCOUNT.USERID = ? and SIGNON.USERNAME = ACCOUNT.USERID and PROFILE.USERID = ACCOUNT.USERID and PROFILE.FAVCATEGORY = BANNERDATA.FAVCATEGORY", [username]);
     
     var record = result.rows[0];
     conn.close();
@@ -529,7 +529,7 @@ PetStore.prototype.getAccount = function(username, password) {
 
 PetStore.prototype.getProduct = function(key, skipResults, maxResults) {
     var conn = this.getConnection(this.poolId);
-    var result = conn.query("select * from PRODUCT where PRODUCTID = '" + key + "'", 
+    var result = conn.query("select * from PRODUCT where PRODUCTID = ?", [key],
                             skipResults, maxResults);
     
     conn.close();
@@ -538,7 +538,7 @@ PetStore.prototype.getProduct = function(key, skipResults, maxResults) {
 
 PetStore.prototype.getProductListByCategory = function(key, skipResults, maxResults) {
     var conn = this.getConnection(this.poolId);
-    var result = conn.query("select * from PRODUCT where CATEGORY = '" + key + "'", 
+    var result = conn.query("select * from PRODUCT where CATEGORY = ?", [key], 
                             skipResults, maxResults);
     conn.close();
     return result;
@@ -546,7 +546,8 @@ PetStore.prototype.getProductListByCategory = function(key, skipResults, maxResu
 
 PetStore.prototype.getProductRowCountByCategory = function(key) {
     var conn = this.getConnection(this.poolId);
-    var rs = conn.query("select count(*) as ROWCOUNT from PRODUCT where CATEGORY = '" + key + "'");
+    var rs = conn.query("select count(*) as ROWCOUNT from PRODUCT where CATEGORY = ?",
+			[key]);
     var result = rs.rows[0].ROWCOUNT;
     conn.close();
     return Number(result);
@@ -554,7 +555,8 @@ PetStore.prototype.getProductRowCountByCategory = function(key) {
 
 PetStore.prototype.getItemRowCountByProduct = function(key) {
     var conn = this.getConnection(this.poolId);
-    var rs = conn.query("select count(*) as ROWCOUNT from ITEM where PRODUCTID = '" + key + "'");
+    var rs = conn.query("select count(*) as ROWCOUNT from ITEM where PRODUCTID = ?",
+			[key]);
     var result = rs.rows[0].ROWCOUNT;
     conn.close();
     return Number(result);
@@ -562,7 +564,8 @@ PetStore.prototype.getItemRowCountByProduct = function(key) {
 
 PetStore.prototype.searchProductList = function(key, skipResults, maxResults) {
     var conn = this.getConnection(this.poolId);
-    var result = conn.query("select * from PRODUCT where lower(name) like '%" + key + "%' or lower(category) like '%" + key + "%' or lower(descn) like '%" + key + "%'", skipResults, maxResults);
+    key = "%" + key + "%";
+    var result = conn.query("select * from PRODUCT where lower(name) like ? or lower(category) like ? or lower(descn) like ?", [key, key, key], skipResults, maxResults);
     conn.close();
     return result;
 }
