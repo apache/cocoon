@@ -74,7 +74,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.Database;
 import org.xmldb.api.base.ResourceIterator;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
@@ -87,35 +86,26 @@ import org.xmldb.api.modules.XPathQueryService;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XMLDBSource.java,v 1.1 2003/03/12 09:35:39 cziegeler Exp $
+ * @version CVS $Id: XMLDBSource.java,v 1.2 2003/04/30 01:50:02 vgritsenko Exp $
  */
 public class XMLDBSource extends AbstractLogEnabled  
     implements Source, XMLizable {
-
-    /** The driver implementation class */
-    protected String driver;
-
-    /** The connection status. */
-    protected boolean connected = false;
 
     /** The requested URL */
     protected String url;
 
     /** The supplied user */
-    protected String user = null;
+    protected String user;
 
     /** The supplied password */
     protected String password;
 
     /** The part of URL after # sign */
-    protected String query = null;
+    protected String query;
 
     /** The System ID */
     protected String systemId;
 
-    /** The scheme */
-    protected String scheme;
-    
     /** ComponentManager */
     protected ComponentManager manager;
     
@@ -155,29 +145,27 @@ public class XMLDBSource extends AbstractLogEnabled
 
     protected static final String CDATA  = "CDATA";
 
+
     /**
      * The constructor.
      *
-     * @param environment the Cocoon Environment.
+     * @param logger the Logger instance.
+     * @param credential username and password
      * @param url the URL being queried.
-     * @param driver the XML:DB driver class name.
+     * @param manager component manager
      */
     public XMLDBSource(Logger logger,
-                       String driver,
                        SourceCredential credential,
                        String url,
-                       String scheme,
                        ComponentManager manager) {
         this.enableLogging(logger);
         this.manager = manager;
-        int start;
 
-        this.driver = driver;
-        this.scheme = scheme;
         this.user = credential.getPrincipal();
         this.password = credential.getPassword();
 
-        if ((start = url.indexOf('#')) != -1) {
+        int start = url.indexOf('#');
+        if (start != -1) {
             this.url = url.substring(0, start);
             this.query = url.substring(start + 1);
         } else {
@@ -186,58 +174,20 @@ public class XMLDBSource extends AbstractLogEnabled
     }
 
     /**
-     * Initialize the XML:DB connection.
-     *
-     */
-    public void connect()
-    throws ProcessingException {
-
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Initializing XML:DB connection, using driver " + driver);
-        }
-
-        try {
-
-            Class c = Class.forName(driver);
-            DatabaseManager.registerDatabase((Database)c.newInstance());
-
-        } catch (XMLDBException xde) {
-
-            String error = "Unable to connect to the XMLDB database. Error "
-                    + xde.errorCode + ": " + xde.getMessage();
-            this.getLogger().debug(error, xde);
-            throw new ProcessingException(error, xde);
-
-        } catch (Exception e) {
-
-            throw new ProcessingException("Problem setting up the connection to XML:DB: "
-                    + e.getMessage() + ". Make sure that your driver is available.", e);
-
-        }
-
-        this.connected = true;
-    }
-
-
-    /**
      * Stream SAX events to a given ContentHandler. If the requested
      * resource is a collection, build an XML view of it.
-     *
      */
     public void toSAX(ContentHandler handler) throws SAXException {
 
         try {
-            if (!connected) {
-                this.connect();
-            }
-            if (url.endsWith("/"))
+            if (url.endsWith("/")) {
                 this.collectionToSAX(handler);
-            else
+            } else {
                 this.resourceToSAX(handler);
+            }
         } catch (ProcessingException pe) {
             throw new SAXException("ProcessingException", pe);
         }
-
     }
 
     private void resourceToSAX(ContentHandler handler) throws SAXException, ProcessingException {
@@ -245,8 +195,9 @@ public class XMLDBSource extends AbstractLogEnabled
         final String col = url.substring(0, url.lastIndexOf('/'));
         final String res = url.substring(url.lastIndexOf('/') + 1);
 
+        Collection collection = null;
         try {
-            Collection collection = DatabaseManager.getCollection(col, user, password);
+            collection = DatabaseManager.getCollection(col, user, password);
             if (collection == null) {
                 throw new ResourceNotFoundException("Document " + url + " not found");
             }
@@ -258,25 +209,30 @@ public class XMLDBSource extends AbstractLogEnabled
 
             if (query != null) {
                 // Query resource
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug("Querying resource " + res + " from collection " + url + "; query= " + this.query);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Querying resource " + res + " from collection " + url + "; query= " + this.query);
                 }
 
                 queryToSAX(handler, collection, res);
             } else {
                 // Return entire resource
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug("Obtaining resource " + res + " from collection " + col);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Obtaining resource " + res + " from collection " + col);
                 }
 
                 xmlResource.getContentAsSAX(handler);
             }
-
-            collection.close();
         } catch (XMLDBException xde) {
             String error = "Unable to fetch content. Error "
-                     + xde.errorCode + ": " + xde.getMessage();
+                           + xde.errorCode + ": " + xde.getMessage();
             throw new SAXException(error, xde);
+        } finally {
+            if (collection != null) {
+                try {
+                    collection.close();
+                } catch (XMLDBException ignored) {
+                }
+            }
         }
     }
 
@@ -284,8 +240,9 @@ public class XMLDBSource extends AbstractLogEnabled
 
         AttributesImpl attributes = new AttributesImpl();
 
+        Collection collection = null;
         try {
-            Collection collection = DatabaseManager.getCollection(url, user, password);
+            collection = DatabaseManager.getCollection(url, user, password);
             if (collection == null) {
                 throw new ResourceNotFoundException("Collection " + url +
                         " not found");
@@ -293,15 +250,15 @@ public class XMLDBSource extends AbstractLogEnabled
 
             if (query != null) {
                 // Query collection
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug("Querying collection " + url + "; query= " + this.query);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Querying collection " + url + "; query= " + this.query);
                 }
 
                 queryToSAX(handler, collection, null);
             } else {
                 // List collection
-                if (this.getLogger().isDebugEnabled()) {
-                    this.getLogger().debug("Listing collection " + url);
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Listing collection " + url);
                 }
 
                 final String ncollections = Integer.toString(collection.getChildCollectionCount());
@@ -341,11 +298,16 @@ public class XMLDBSource extends AbstractLogEnabled
                 handler.endPrefixMapping(PREFIX);
                 handler.endDocument();
             }
-
-            collection.close();
         } catch (XMLDBException xde) {
             String error = "Collection listing failed. Error " + xde.errorCode + ": " + xde.getMessage();
             throw new SAXException(error, xde);
+        } finally {
+            if (collection != null) {
+                try {
+                    collection.close();
+                } catch (XMLDBException ignored) {
+                }
+            }
         }
     }
 
@@ -403,8 +365,9 @@ public class XMLDBSource extends AbstractLogEnabled
     }
 
     public void recycle() {
-        this.driver = null;
         this.url = null;
+        this.user = null;
+        this.password = null;
         this.query = null;
     }
 
@@ -465,10 +428,12 @@ public class XMLDBSource extends AbstractLogEnabled
         } catch (Exception e) {
             throw new CascadingIOException("Exception during processing of " + this.getURI(), e);
         } finally {
-            if (serializer != null) serializerSelector.release(serializer);
-            if (serializerSelector != null) this.manager.release(serializerSelector);
+            if (serializer != null) {
+                serializerSelector.release(serializer);
+            }
+            if (serializerSelector != null) {
+                this.manager.release(serializerSelector);
+            }
         }
     }
-
-
 }

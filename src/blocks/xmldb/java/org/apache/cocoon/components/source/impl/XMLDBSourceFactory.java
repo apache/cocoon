@@ -64,54 +64,69 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.components.source.helpers.SourceCredential;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceFactory;
+import org.xmldb.api.base.Database;
+import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.DatabaseManager;
 
 /**
  * This class implements the xmldb:// pseudo-protocol and allows to get XML
  * content from an XML:DB enabled XML database.
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBSourceFactory.java,v 1.1 2003/03/12 09:35:38 cziegeler Exp $
+ * @version CVS $Id: XMLDBSourceFactory.java,v 1.2 2003/04/30 01:50:02 vgritsenko Exp $
  */
-
 public final class XMLDBSourceFactory
         extends AbstractLogEnabled
         implements SourceFactory, Configurable, Composable {
 
-    /** The driver implementation class */
-    protected String driver;
-
-    /** The authentication info */
-    protected SourceCredential credential;
-
     /** The Component Manager class */
     protected ComponentManager m_manager;
-
-    /** A Map containing the driver list */
-    protected HashMap driverMap;
 
     /** A Map containing the authentication credentials */
     protected HashMap credentialMap;
 
     /**
-     * Configure the instance.
+     * Configure the instance and initialize XML:DB connections (load and register the drivers).
      */
     public void configure(final Configuration conf)
             throws ConfigurationException {
 
-        driverMap = new HashMap();
         credentialMap = new HashMap();
 
         Configuration[] xmldbConfigs = conf.getChildren("driver");
 
         for (int i = 0; i < xmldbConfigs.length; i++) {
+            String type = xmldbConfigs[i].getAttribute("type");
+            String driver = xmldbConfigs[i].getAttribute("class");
+
             SourceCredential credential = new SourceCredential(null, null);
-
-            driverMap.put(xmldbConfigs[i].getAttribute("type"),
-                          xmldbConfigs[i].getAttribute("class"));
-
             credential.setPrincipal(xmldbConfigs[i].getAttribute("user", null));
             credential.setPassword(xmldbConfigs[i].getAttribute("password", null));
-            credentialMap.put(xmldbConfigs[i].getAttribute("type"), credential);
+            credentialMap.put(type, credential);
+
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Initializing XML:DB connection, using driver " + driver);
+            }
+
+            try {
+
+                Class c = Class.forName(driver);
+                DatabaseManager.registerDatabase((Database)c.newInstance());
+
+            } catch (XMLDBException xde) {
+
+                String error = "Unable to connect to the XMLDB database. Error "
+                               + xde.errorCode + ": " + xde.getMessage();
+                getLogger().debug(error, xde);
+                throw new ConfigurationException(error, xde);
+
+            } catch (Exception e) {
+
+                getLogger().warn("There was a problem setting up the connection. "
+                                 + "Make sure that your driver is available");
+                throw new ConfigurationException("Problem setting up the connection to XML:DB: "
+                                                 + e.getMessage(), e);
+            }
         }
     }
 
@@ -119,13 +134,16 @@ public final class XMLDBSourceFactory
      * Compose this Composable object. We need to pass on the
      * ComponentManager to the actual Source.
      */
-
     public void compose(ComponentManager cm) {
         this.m_manager = cm;
     }
 
+    /**
+     * Resolve the source
+     */
     public Source getSource(String location, Map parameters)
-    throws MalformedURLException, IOException {
+            throws MalformedURLException, IOException {
+
         int start = location.indexOf(':') + 1;
         int end = location.indexOf(':', start);
 
@@ -135,17 +153,10 @@ public final class XMLDBSourceFactory
         }
 
         String type = location.substring(start, end);
-
-        driver = (String)driverMap.get(type);
-        credential = (SourceCredential)credentialMap.get(type);
-
-        if (driver == null) {
-            throw new IOException("Unable to find a driver for the \"" +
-                                          type + " \" database type, please check the configuration");
-        }
+        SourceCredential credential = (SourceCredential)credentialMap.get(type);
 
         return new XMLDBSource(this.getLogger(),
-                               driver, credential, location, location.substring(0, start-1), 
+                               credential, location,
                                this.m_manager);
     }
 
@@ -155,5 +166,4 @@ public final class XMLDBSourceFactory
             ((XMLDBSource)source).recycle();
         }
     }
-
 }
