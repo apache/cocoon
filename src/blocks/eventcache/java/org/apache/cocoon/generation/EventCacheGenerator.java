@@ -56,13 +56,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.caching.validity.Event;
@@ -114,7 +115,7 @@ import org.xml.sax.SAXException;
  * TODO: share common code with EventCacheTransformer
  * @author Unico Hommes
  */
-public class EventCacheGenerator extends ComposerGenerator 
+public class EventCacheGenerator extends ServiceableGenerator 
 implements Configurable, CacheableProcessingComponent {
 
 
@@ -144,8 +145,8 @@ implements Configurable, CacheableProcessingComponent {
     
     // ---------------------------------------------------- lifecycle methods
     
-    public void compose(ComponentManager manager)  throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager)  throws ServiceException {
+        super.service(manager);
         m_generatorSelector = (ComponentSelector) 
             manager.lookup(Generator.ROLE + "Selector");
     }
@@ -173,11 +174,8 @@ implements Configurable, CacheableProcessingComponent {
         }
     }
     
-    public void setup(
-        SourceResolver resolver,
-        Map objectModel,
-        String src,
-        Parameters par)
+    public void setup(SourceResolver resolver, Map objectModel, String src,
+                      Parameters par)
         throws ProcessingException, SAXException, IOException {
 
         // delegate
