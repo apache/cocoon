@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS: $Id: build.xml,v 1.7 2003/03/11 11:15:09 michaelm Exp $:
+       CVS: $Id: build.xml,v 1.8 2003/03/13 13:24:28 crossley Exp $:
 
 ============================================================================ -->
 
@@ -358,7 +358,7 @@
 
     <!-- make filtered copy of XML docs -->
     <copy todir="${build.context}" filtering="on">
-      <fileset dir="${context}">
+      <fileset dir="${documentation}">
         <exclude name="images/**"/>
       </fileset>
     </copy>
@@ -374,7 +374,7 @@
 
     <!-- Copy images -->
     <copy todir="${build.context}/images" filtering="off">
-      <fileset dir="${context}/images"/>
+      <fileset dir="${documentation}/images"/>
     </copy>
 
     <!-- Copy entity catalog and entities -->
@@ -392,7 +392,7 @@
     <uptodate property="docs.notrequired" targetfile="${build.docs}/index.html" >
       <srcfiles dir="." includes="changes.xml,todo.xml"/>
       <srcfiles dir="${build}" includes="jars.xml"/>
-      <srcfiles dir="${context}/xdocs" includes="**/*.xml"/>
+      <srcfiles dir="${documentation}/xdocs" includes="**/*.xml"/>
     </uptodate>
   </target>
 
@@ -401,7 +401,7 @@
     <echo message="-------------------------------------------------------------"/>
     <echo message="Not rebuilding docs, as they are up-to-date:"/>
     <echo message="  ${build.docs}/index.html is more recent than"/>
-    <echo message="  todo.xml, changes.xml, ${context}/xdocs/*.xml"/>
+    <echo message="  todo.xml, changes.xml, ${documentation}/xdocs/*.xml"/>
     <echo message="-------------------------------------------------------------"/>
   </target>
 
