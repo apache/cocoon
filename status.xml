@@ -204,9 +204,6 @@
 
   <changes>
  <release version="@version@" date="@date@">
-   <action dev="AG" type="fix" fixes-bug="31134" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
-     JXPathMetaModule incorrectly checks for null parameter (can't happen) instead of empty string.
-   </action>
    <action dev="CZ" type="add">
      New getSitemapPath() method on the Request object to get the path to the
      current sitemap even if you are in a sub sitemap. Added an abstract request
@@ -244,7 +241,7 @@
    </action>
    <action dev="AG" type="update">
      Deprecated methods in class org.apache.cocoon.util.IOUtils
-     to be removed in cocoon 2.3:
+     to be removed in Cocoon 2.3:
      <ul>
        <li>String baseName(String filename)</li>
        <li>Object bytesToObject(byte[] bytes)</li>
@@ -259,7 +256,7 @@
    </action>
    <action dev="AG" type="update">
      Deprecated class org.apache.cocoon.util.JavaArchiveFilter.
-     To be removed in cocoon 2.3. Moved to the deprecated dir.
+     To be removed in Cocoon 2.3. Moved to the deprecated dir.
    </action>
    <action dev="CZ" type="update">
      Session-fw block: Remove deprecated class AbstractSessionComponent from session
@@ -310,6 +307,10 @@
    <action dev="VG" type="fix">
      Flow preserves global variables on sitemap reload.
    </action>
+   <action dev="SW" type="add">
+     Forms block: Implementation of the CForm template language using JX macros,
+     allowing smart page layout that depends on the widgets state and value.
+   </action>
    <action dev="AG" type="remove">
      Remove jisp from distribution.
    </action>
@@ -333,7 +334,7 @@
      Cache the mime-type of readers and serializers.
    </action>
    <action dev="AG" type="fix" fixes-bug="30372" due-to="Johnson Hsu" due-to-email="johnson@soho.club.tw">
-      The daylight time cause error when timezone is CST. Updated icu4j to 3.0.
+     The daylight time cause error when timezone is CST. Updated icu4j to 3.0.
    </action>
    <action dev="AG" type="fix" fixes-bug="31407" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
      Upgrading DELI block from version 0.9.8 to x020904.
@@ -341,6 +342,10 @@
    <action dev="VG" type="update">
      Add support for translating attribute values which contain i18n expressions
      rather than complete i18n key.
+   </action>
+   <action dev="SW" type="update">
+     Mail block: the MailSender now gets its source resolver from the service manager.
+     This allows its use from flowscript where the old SourceResolver is not available.
    </action>
    <action dev="VG" type="fix">
      AbstractSAXTransformer namespaceURI and defaultNamespaceURI must never
@@ -353,6 +358,10 @@
    <action dev="VG" type="update">
      Portal block: Changed pathInfo and servletPath logic. pathInfo always starts
      with '/', while servletPath always has no '/' at the end.
+   </action>
+   <action dev="AG" type="fix" fixes-bug="31134" due-to="Ralph Goers" due-to-email="Ralph_Goers@dslextreme.com">
+     JXPathMetaModule incorrectly checks for null parameter (can't happen)
+     instead of empty string.
    </action>
    <action dev="VG" type="fix">
      Cron block: Fixed memory leak, QuartzJobExecutor was not releasing pipelines.
@@ -1154,7 +1163,7 @@
      and the unused CarSelectorHandler class.
    </action>
    <action dev="SW" type="update">
-     Serializers now can optionnaly implement the SitemapModelComponent interface, meaning then can
+     Serializers now can optionally implement the SitemapModelComponent interface, meaning then can
      be given a "src" attribute and parameters using &lt;map:parameter&gt;.
    </action>
    <action dev="SW" type="update">
