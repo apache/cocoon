@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.94 2000-07-21 23:36:47 stefano Exp $
+  $Id: changes.xml,v 1.95 2000-07-23 20:23:40 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,7 +16,7 @@
   </devs>
 
  <release version="@version@" date="@date@">
-  <action dev="SM" type="fixed">
+  <action dev="SM" type="fix">
    Fixed problem with unresolved SystemID URIs that cause problems with latest Xerces.
   </action>
   <action dev="SM" type="update">
