@@ -242,11 +242,12 @@
           (#PCDATA | 
           xsp:attribute | 
           xsp:element | 
-          xsp:logic)*>
+          xsp:logic |
+          xsp:expr)*>
 <!ATTLIST xsp:element
           name CDATA #REQUIRED>
 
-<!ELEMENT xsp:attribute (#PCDATA)>
+<!ELEMENT xsp:attribute (#PCDATA | xsp:expr)>
 <!ATTLIST xsp:attribute 
           name CDATA #REQUIRED
           xml:space (default|preserve) "preserve">
