@@ -3,7 +3,7 @@
     <!-- pseudo protocol for Jakarta Slide repositories -->
     <component-instance 
       name="slide" 
-      logger="slide.sourcefactory"
+      logger="slide.source"
       class="org.apache.cocoon.components.source.impl.SlideSourceFactory"
     />
 </xconf>
