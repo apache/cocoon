@@ -62,15 +62,13 @@
 		</td>
 		<td width="5" style="background-color:#294563;" valign="top"><img src="window-top-right.gif" border="0" width="5" height="5" alt="top-right"/></td>
 	</tr>
-	<xsl:if test="status!=0">
-		<tr>
-			<td width="5" style="background-image:url(window-border-left.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
-			<td colSpan="2">
-                <xsl:apply-templates select="content"/>
-			</td>
-			<td width="5" style="background-image:url(window-border-right.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
-		</tr>
-	</xsl:if>
+	<tr>
+		<td width="5" style="background-image:url(window-border-left.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
+		<td colSpan="2">
+            <xsl:apply-templates select="content"/>
+		</td>
+		<td width="5" style="background-image:url(window-border-right.gif);"><img src="space.gif" border="0" width="5" height="5" alt="space"/></td>
+    </tr>
 	<tr>
 		<td width="5"><img src="window-bottom-left.gif" border="0" width="5" height="5" alt="top-left"/></td>
 		<td colspan="2" style="background-image:url(window-border-bottom.gif);"></td>
