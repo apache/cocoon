@@ -15,7 +15,13 @@ import org.apache.cocoon.components.transcoder.TranscoderFactory;
 import org.apache.cocoon.components.transcoder.ExtendableTranscoderFactory;
 import org.apache.cocoon.xml.*;
 import org.apache.cocoon.xml.dom.*;
-import org.apache.avalon.*;
+import org.apache.avalon.Poolable;
+import org.apache.avalon.Composer;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.configuration.Configurable;
+import org.apache.avalon.configuration.Configuration;
+import org.apache.avalon.configuration.ConfigurationException;
 import java.io.*;
 import java.awt.*;
 import java.awt.image.*;
@@ -32,7 +38,7 @@ import org.apache.cocoon.util.ClassUtils;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:rossb@apache.org">Ross Burton</a>
- * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-03-10 15:48:42 $
+ * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-03-12 17:13:04 $
  */
 public class SVGSerializer extends SVGBuilder implements Composer, Serializer, Configurable, Poolable {
 
@@ -73,11 +79,11 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
         // for this MIME type.
         this.transcoder = factory.createTranscoder(mimetype);
         // Iterate through the parameters, looking for a transcoder reference
-        for (Iterator i = conf.getChildren("parameter"); i.hasNext(); ) {
-            Configuration paramConf = (Configuration)i.next();
-            String name = paramConf.getAttribute("name");
+        Configuration[] parameters = conf.getChildren("parameter");
+        for (int i = 0; i < parameters.length; i++) {
+            String name = parameters[i].getAttribute("name");
             if ("transcoder".equals(name)) {
-                String transcoderName = paramConf.getAttribute("value");
+                String transcoderName = parameters[i].getAttribute("value");
                 try {
                     this.transcoder = (Transcoder)ClassUtils.newInstance(transcoderName);
                 } catch (Exception ex) {
@@ -93,12 +99,11 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
                 + "no transcoder was specified in the sitemap configuration."
             );
         }
-        
+
         // Now run through the other parameters, using them as hints
         // to the transcoder
-        for (Iterator i = conf.getChildren("parameter"); i.hasNext(); ) {
-            Configuration paramConf = (Configuration)i.next();
-            String name = paramConf.getAttribute("name");
+        for (int i = 0; i < parameters.length; i++ ) {
+            String name = parameters[i].getAttribute("name");
             // Skip over the parameters we've dealt with. Ensure this
             // is kept in sync with the above list!
             if ("transcoder".equals(name)) continue;
@@ -110,26 +115,26 @@ public class SVGSerializer extends SVGBuilder implements Composer, Serializer, C
                 TranscodingHints.Key key = (TranscodingHints.Key)
                     (transcoder.getClass().getField(name).get(transcoder));
                 Object value;
-                String keyType = paramConf.getAttribute("type", "STRING").toUpperCase();
+                String keyType = parameters[i].getAttribute("type", "STRING").toUpperCase();
                 if ("FLOAT".equals(keyType)) {
                     // Can throw an exception.
-                    value = new Float(paramConf.getAttributeAsFloat("value"));
+                    value = new Float(parameters[i].getAttributeAsFloat("value"));
                 } else if ("INTEGER".equals(keyType)) {
                     // Can throw an exception.
-                    value = new Integer(paramConf.getAttributeAsInt("value"));
+                    value = new Integer(parameters[i].getAttributeAsInt("value"));
                 } else if ("BOOLEAN".equals(keyType)) {
                     // Can throw an exception.
-                    value = new Boolean(paramConf.getAttributeAsBoolean("value"));
+                    value = new Boolean(parameters[i].getAttributeAsBoolean("value"));
                 } else if ("COLOR".equals(keyType)) {
                   // Can throw an exception
-                  String stringValue = paramConf.getAttribute("value");
+                  String stringValue = parameters[i].getAttribute("value");
                   if (stringValue.startsWith("#")) {
                     stringValue = stringValue.substring(1);
                   }
                   value = new Color(Integer.parseInt(stringValue, 16));
                 } else {
                     // Assume String, and get the value. Allow an empty string.
-                    value = paramConf.getValue("");
+                    value = parameters[i].getValue("");
                 }
                 // TODO: if (logger.isDebug())
                 log.debug("SVG Serializer: adding hint \"" + name + "\" with value \"" + value.toString() + "\"");
