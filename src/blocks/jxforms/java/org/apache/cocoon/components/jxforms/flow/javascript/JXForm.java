@@ -52,14 +52,13 @@ package org.apache.cocoon.components.jxforms.flow.javascript;
 import org.apache.cocoon.components.jxforms.validation.*;
 import org.apache.cocoon.components.jxforms.xmlform.*;
 import org.mozilla.javascript.*;
+import org.mozilla.javascript.continuations.Continuation;
 import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon;
-import org.apache.cocoon.components.flow.ContinuationsManager;
-import org.apache.cocoon.components.flow.WebContinuation;
-import org.apache.cocoon.components.flow.javascript.fom.FOM_Cocoon.FOM_WebContinuation;
+import org.apache.cocoon.components.flow.javascript.fom.FOM_WebContinuation;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.Source;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.xml.sax.InputSource;
 import java.util.Set;
 import java.util.List;
@@ -121,8 +120,8 @@ public class JXForm extends ScriptableObject {
         context = JXPathContext.newContext(model);
         form.setAutoValidate(false);
         if (validatorNamespace != null && validatorDocument != null) {
-            SourceResolver resolver = 
-                getCocoon().getEnvironment();
+            SourceResolver resolver = (SourceResolver)
+                getCocoon().getComponentManager().lookup(SourceResolver.ROLE);
             Source schemaSrc = resolver.resolveURI(validatorDocument);
             InputSource is = SourceUtil.getInputSource(schemaSrc);
             SchemaFactory schf = SchemaFactory.lookup(validatorNamespace);
@@ -150,14 +149,10 @@ public class JXForm extends ScriptableObject {
         FOM_Cocoon cocoon = getCocoon();
         FOM_WebContinuation fom_wk = 
             (FOM_WebContinuation)unwrap(continuation);
-        String redUri = "cocoon://" + 
-            cocoon.getEnvironment().getURIPrefix() + uri;
-        cocoon.getInterpreter().forwardTo(getTopLevelScope(cocoon),
-                                          cocoon,
-                                          redUri, 
-                                          unwrap(bizData),
-                                          fom_wk == null ? null: fom_wk.getWebContinuation(),
-                                          cocoon.getEnvironment());
+        cocoon.forwardTo(uri,
+                         unwrap(bizData),
+                         fom_wk);
+                         
     }
 
     public void jsFunction_addViolation(String xpath, String message) 
@@ -183,8 +178,7 @@ public class JXForm extends ScriptableObject {
                                                            Object cocoon_) 
         throws Exception {
         FOM_Cocoon cocoon = (FOM_Cocoon)unwrap(cocoon_);
-        cocoon.getInterpreter().handleContinuation(kontId, null, 
-                                                   cocoon.getEnvironment());
+        cocoon.handleContinuation(kontId, null);
     }
 
     public Object jsFunction_iterate(String expr) {
@@ -195,17 +189,11 @@ public class JXForm extends ScriptableObject {
                                                               Object lastContinuation,
                                                               int ttl) 
         throws Exception {
-        FOM_Cocoon cocoon = getCocoon();
-        WebContinuation wk;
-        ContinuationsManager contMgr;
-        contMgr = (ContinuationsManager)
-            cocoon.getComponentManager().lookup(ContinuationsManager.ROLE);
+        Continuation kont = (Continuation)unwrap(k);
         FOM_WebContinuation fom_wk = 
             (FOM_WebContinuation)unwrap(lastContinuation);
-        wk = contMgr.createWebContinuation(unwrap(k),
-                                           (WebContinuation)(fom_wk == null ? null : fom_wk.getWebContinuation()),
-                                           ttl);
-        return cocoon.makeWebContinuation(wk);
+        FOM_Cocoon cocoon = getCocoon();
+        return cocoon.makeWebContinuation(kont, fom_wk, ttl);
     }
 
     // unwrap Wrapper's and convert undefined to null
@@ -220,18 +208,19 @@ public class JXForm extends ScriptableObject {
 
     public void jsFunction_removeForm() {
         FOM_Cocoon cocoon = getCocoon();
-        Form.remove(cocoon.getEnvironment().getObjectModel(), id);
+
+        Form.remove(cocoon.getObjectModel(), id);
         cocoon.getRequest().removeAttribute(this.id);
     }
 
     public void jsFunction_saveForm() {
         FOM_Cocoon cocoon = getCocoon();
-        form.save(cocoon.getEnvironment().getObjectModel(), "request");
+        form.save(cocoon.getObjectModel(), "request");
     }
 
     public void jsFunction_populateForm() {
         FOM_Cocoon cocoon = getCocoon();
-        form.populate(cocoon.getEnvironment().getObjectModel());
+        form.populate(cocoon.getObjectModel());
     }
 
     public void jsFunction_validateForm(String view) {

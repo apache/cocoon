@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document xmlns:xf="http://apache.org/cocoon/jxforms/1.0">
-  <xf:form id="form-feedback" view="confirm" action="" method="GET">
+  <xf:form id="form-feedback" view="confirm">
     <xf:label>Confirm Input</xf:label>
     <!-- from page1 -->
     <xf:output ref="firstName">

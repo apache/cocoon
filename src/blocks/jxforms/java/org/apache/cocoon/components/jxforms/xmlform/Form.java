@@ -76,7 +76,7 @@ import org.mozilla.javascript.ScriptableObject;
  *
  * @author Ivelin Ivanov, ivelin@apache.org
  * @author michael_hampel@sonynetservices.com
- * @version CVS $Id: Form.java,v 1.2 2003/07/14 21:05:48 joerg Exp $
+ * @version CVS $Id: Form.java,v 1.3 2003/07/19 20:18:49 coliver Exp $
  */
 public class Form {
 
@@ -172,6 +172,15 @@ public class Form {
         if (model_==null) {
             throw new IllegalStateException("Form model not set");
         }
+        // Convert empty string to null, before passing to jxpath
+        // so proper xpath coercions occur for number and boolean
+        if (value instanceof String &&
+            ((String)value).length() == 0) {
+            Object node = jxcontext_.getPointer(xpath).getNode();
+            if (!(node instanceof String)) {
+                value = null;
+            }
+        }
         jxcontext_.setValue(xpath, value);
     }
 
@@ -243,7 +252,7 @@ public class Form {
                 Context.exit();
             }
         } else {
-            jxcontext_.setValue(xpath, values[0]);
+            setValue(xpath, values[0]);
         }
     }
 
