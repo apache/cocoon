@@ -288,7 +288,7 @@ public class JXPathTemplate extends AbstractGenerator {
             int ch;
             boolean inExpr = false;
             try {
-                while ((ch = in.read()) != -1) {
+                top: while ((ch = in.read()) != -1) {
                     char c = (char)ch;
                     if (inExpr) {
                         if (c == '}') {
@@ -325,24 +325,26 @@ public class JXPathTemplate extends AbstractGenerator {
                             }
                         } else {
                             if (c == '#') {
-                                ch = in.read();
-                                if (ch == '{') {
-                                    if (buf.length() > 0) {
-                                        char[] charArray = 
-                                            new char[buf.length()];
-                                        
-                                        buf.getChars(0, buf.length(),
-                                                     charArray, 0);
+                                while (c == '#') {
+                                    ch = in.read();
+                                    if (ch == '{') {
+                                        if (buf.length() > 0) {
+                                            char[] charArray = 
+                                                new char[buf.length()];
+                                            
+                                            buf.getChars(0, buf.length(),
+                                                         charArray, 0);
                                         substitutions.add(charArray);
                                         buf.setLength(0);
+                                        }
+                                        inExpr = true;
+                                        continue top;
                                     }
-                                    inExpr = true;
-                                    continue;
+                                    buf.append(c);
+                                    c = (char)ch;
                                 }
-                                buf.append('#');
-                            }
-                            if (ch != -1) {
-                                buf.append((char)ch);
+                            } else {
+                                buf.append(c);
                             }
                         }
                     }
@@ -507,7 +509,7 @@ public class JXPathTemplate extends AbstractGenerator {
                 boolean inExpr = false;
                 List substEvents = new LinkedList();
                 try {
-                    while ((ch = in.read()) != -1) {
+                    top: while ((ch = in.read()) != -1) {
                         char c = (char)ch;
                         if (inExpr) {
                             if (c == '}') {
@@ -545,16 +547,19 @@ public class JXPathTemplate extends AbstractGenerator {
                                 }
                             } else {
                                 if (c == '#') {
-                                    ch = in.read();
-                                    if (ch == '{') {
-                                        if (buf.length() > 0) {
-                                            substEvents.add(new Literal(buf.toString()));
-                                            buf.setLength(0);
-                                        }
-                                        inExpr = true;
-                                        continue;
+                                    while (c == '#') {
+                                        ch = in.read();
+                                        if (ch == '{') {
+                                            if (buf.length() > 0) {
+                                                substEvents.add(new Literal(buf.toString()));
+                                                buf.setLength(0);
+                                            }
+                                            inExpr = true;
+                                            continue top;
+                                        } 
+                                        buf.append(c);
+                                        c = (char)ch;
                                     }
-                                    buf.append('#');
                                 }
                                 if (ch != -1) {
                                     buf.append((char)ch);
