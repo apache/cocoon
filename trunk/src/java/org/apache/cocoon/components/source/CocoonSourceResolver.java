@@ -57,20 +57,19 @@ import java.util.Map;
 
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.components.CocoonComponentManager;
-import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.Processor;
+import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.SourceResolverImpl;
-
 
 /**
  * This is the default implementation of the {@link SourceResolver} for
  * Cocoon.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonSourceResolver.java,v 1.1 2003/10/19 15:58:15 cziegeler Exp $
+ * @version CVS $Id: CocoonSourceResolver.java,v 1.2 2003/10/24 12:49:40 cziegeler Exp $
 */
 public class CocoonSourceResolver 
 extends SourceResolverImpl
@@ -85,10 +84,9 @@ implements SourceResolver {
     public Source resolveURI(String location, String baseURI, Map parameters)
     throws MalformedURLException, IOException, SourceException {
         if ( baseURI == null ) {
-            // TODO (CZ) Change this!
-            final Environment env = CocoonComponentManager.getCurrentEnvironment();
-            if ( env != null ) {
-                baseURI = env.getContext();
+            final Processor processor = EnvironmentHelper.getCurrentProcessor();
+            if ( processor != null ) {
+                return processor.getSourceResolver().resolveURI(location, null, parameters);
             }
         }
         if ( this.customResolver != null ) {

@@ -69,7 +69,7 @@ import org.apache.excalibur.source.Source;
  * Experimental code for cleaning up the environment handling
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.3 2003/10/20 08:15:27 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.4 2003/10/24 12:49:40 cziegeler Exp $
  * @since 2.2
  */
 
@@ -118,8 +118,9 @@ implements SourceResolver, Serviceable, Disposable {
                 source = this.resolver.resolveURI(this.context);
                 this.context = source.getURI();
                     
-                if (this.rootContext == null) // hack for EnvironmentWrapper
+                if (this.rootContext == null) {// hack for EnvironmentWrapper
                     this.rootContext = this.context;
+                }
             } catch (IOException ioe) {
                 throw new ServiceException("Unable to resolve environment context. ", ioe);
             } finally {
@@ -273,7 +274,7 @@ implements SourceResolver, Serviceable, Disposable {
             stack = new EnvironmentStack();
             environmentStack.set(stack);
         }
-        stack.push(new Object[] {processor, new Integer(stack.getOffset())});
+        stack.push(new EnvironmentInfo(processor, stack.getOffset()));
         stack.setOffset(stack.size()-1);
     }
 
@@ -283,18 +284,30 @@ implements SourceResolver, Serviceable, Disposable {
      */
     public static void leaveProcessor() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final Object[] objs = (Object[])stack.pop();
-        stack.setOffset(((Integer)objs[1]).intValue());
+        final EnvironmentInfo info = (EnvironmentInfo)stack.pop();
+        stack.setOffset(info.oldStackCount);
     }
 
+    /**
+     * Return the current processor
+     */
+    public static Processor getCurrentProcessor() {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        if ( stack != null && !stack.isEmpty()) {
+            final EnvironmentInfo info = stack.getCurrent();
+            return info.processor;
+        }
+        return null;
+    }
+    
     /**
      * Create an environment aware xml consumer for the cocoon
      * protocol
      */
     public static XMLConsumer createEnvironmentAwareConsumer(XMLConsumer consumer) {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        final Object[] objs = (Object[])stack.getCurrent();
-        return stack.getEnvironmentAwareConsumerWrapper(consumer, ((Integer)objs[1]).intValue());
+        final EnvironmentInfo info = stack.getCurrent();
+        return stack.getEnvironmentAwareConsumerWrapper(consumer, info.oldStackCount);
     }
 }
 

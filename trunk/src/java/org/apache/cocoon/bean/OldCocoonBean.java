@@ -94,7 +94,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OldCocoonBean.java,v 1.3 2003/10/24 12:31:53 cziegeler Exp $
+ * @version CVS $Id: OldCocoonBean.java,v 1.4 2003/10/24 12:49:40 cziegeler Exp $
  */
 public class OldCocoonBean extends OldCocoonWrapper {
 
@@ -102,7 +102,6 @@ public class OldCocoonBean extends OldCocoonWrapper {
     private boolean followLinks = true;
     private boolean precompileOnly = false;
     private boolean confirmExtension = true;
-    private boolean verbose = false;
     private String defaultFilename = Constants.INDEX_URI;
     private boolean brokenLinkGenerate = false;
     private String brokenLinkExtension = "";
@@ -174,10 +173,6 @@ public class OldCocoonBean extends OldCocoonWrapper {
         this.brokenLinkGenerate = brokenLinkGenerate;
     }
 
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
-    }
-    
     public void setBrokenLinkExtension(String brokenLinkExtension) {
         this.brokenLinkExtension = brokenLinkExtension;
     }

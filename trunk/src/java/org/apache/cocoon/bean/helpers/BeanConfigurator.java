@@ -67,12 +67,11 @@ import org.w3c.dom.NodeList;
  * Static class for configuring a OldCocoonBean from a DOM Document object
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: BeanConfigurator.java,v 1.3 2003/10/17 17:49:23 bloritsch Exp $
+ * @version CVS $Id: BeanConfigurator.java,v 1.4 2003/10/24 12:49:40 cziegeler Exp $
  */
 public class BeanConfigurator {
 
     private static final String NODE_ROOT = "cocoon";
-    private static final String ATTR_VERBOSE = "verbose";
 
     private static final String NODE_LOGGING = "logging";
     private static final String ATTR_LOG_KIT = "log-kit";
@@ -133,9 +132,6 @@ public class BeanConfigurator {
             throw new IllegalArgumentException("Expected root node of "+ NODE_ROOT);
         }
 
-        if (hasAttribute(root, ATTR_VERBOSE)) {
-            cocoon.setVerbose(getBooleanAttributeValue(root, ATTR_VERBOSE));
-        }
         if (hasAttribute(root, ATTR_FOLLOW_LINKS)) {
             cocoon.setFollowLinks(getBooleanAttributeValue(root, ATTR_FOLLOW_LINKS));
         }
