@@ -32,10 +32,17 @@ import org.apache.cocoon.components.classloader.RepositoryClassLoader;
  * of it.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-02-22 13:34:35 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-22 14:48:45 $
  */
 
 public class ParanoidCocoonServlet extends CocoonServlet {
+
+     /**
+      * get the classloader to use for Cocoon instantiation
+      */
+     protected ClassLoader buildInitClassLoader() {
+         return new RepositoryClassLoader(new URL[] {}, this.getClass().getClassLoader());
+     }
 
     /**
      * This builds the important ClassPath used by this Servlet.  It
@@ -55,7 +62,8 @@ public class ParanoidCocoonServlet extends CocoonServlet {
      */
      protected String getClassPath(final ServletContext context)
      throws ServletException {
-        RepositoryClassLoader classloader = new RepositoryClassLoader(new URL[] {}, (ClassLoader) this.appContext.get(Constants.CONTEXT_CLASS_LOADER));
+        RepositoryClassLoader classloader =
+            (RepositoryClassLoader) this.appContext.get(Constants.CONTEXT_CLASS_LOADER);
         StringBuffer buildClassPath = new StringBuffer();
         String classDirPath = getInitParameter("class-dir");
         String libDirPath = getInitParameter("lib-dir");
@@ -96,8 +104,6 @@ public class ParanoidCocoonServlet extends CocoonServlet {
                 }
             }
         }
-
-        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, classloader);
 
         buildClassPath.append(File.pathSeparatorChar)
                       .append(System.getProperty("java.class.path"));

@@ -62,7 +62,7 @@ import uk.co.weft.maybeupload.MaybeUploadRequestWrapper;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.65 $ $Date: 2001-02-22 14:03:48 $
+ * @version CVS $Revision: 1.1.4.66 $ $Date: 2001-02-22 14:48:44 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -98,7 +98,7 @@ public class CocoonServlet extends HttpServlet {
     throws ServletException {
 
         super.init(conf);
-        ClassLoader classloader = this.getClass().getClassLoader();
+        ClassLoader classloader = buildInitClassLoader();
         ServletContext context = conf.getServletContext();
 
         ClassUtils.setClassLoader(classloader);
@@ -124,6 +124,13 @@ public class CocoonServlet extends HttpServlet {
 
         this.createCocoon();
     }
+
+    /**
+     * get the classloader to use for Cocoon instantiation
+     */
+     protected ClassLoader buildInitClassLoader() {
+        return this.getClass().getClassLoader();
+     }
 
     /**
      * This builds the important ClassPath used by this Servlet.  It
