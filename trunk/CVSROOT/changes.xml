@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.231 2001-07-27 09:20:15 sylvain Exp $ 
+  $Id: changes.xml,v 1.232 2003-02-27 02:42:22 pier Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -19,6 +19,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="PF" type="update">
+   The repository for Cocoon 1.x is now called "cocoon-1" (the old
+   "xml-cocoon" repository is deprecated).
+  </action>
   <action dev="SW" type="add">
    New SVG formatter based on Batik.
   </action>
