@@ -393,15 +393,20 @@
   </xsl:template>
 
   <!--+
-      | wi:form-template
+      | wi:form-template|wi:form-generated 
       +-->
-  <xsl:template match="wi:form-template">
+  <xsl:template match="wi:form-template|wi:form-generated">
     <form>
       <xsl:copy-of select="@*"/>
       <xsl:attribute name="onsubmit">woody_onsubmit(); <xsl:value-of select="@onsubmit"/></xsl:attribute>
       <!-- hidden field to store the submit id -->
       <input type="hidden" name="woody_submit_id"/>
       <xsl:apply-templates/>
+      
+      <!-- TODO: consider putting this in the xml stream from the generator? -->
+      <xsl:if test="local-name(.) = 'form-generated' ">
+        <input type="submit" />
+      </xsl:if>
     </form>
   </xsl:template>
 
