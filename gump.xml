@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.52 2003/04/25 09:32:51 stephan Exp $
+  CVS $Id: gump.xml,v 1.53 2003/04/26 10:58:09 bruno Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -743,13 +743,13 @@
   <project name="cocoon-block-woody" status="unstable">
     <package>org.apache.cocoon</package>
 
-    <ant target="block">
+    <ant target="gump-block">
       <property name="block-name" value="woody"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
 
     <depend project="cocoon" inherit="all"/>
-    <depend project="xreporter-expression" version="supplied"/>
+    <depend project="xreporter-expression"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
@@ -762,7 +762,7 @@
   <project name="cocoon-block-xmlform">
     <package>org.apache.cocoon</package>
 
-    <ant target="block">
+    <ant target="gump-block">
       <property name="block-name" value="xmlform"/>
       <property name="version" value="@@DATE@@"/>
     </ant>
