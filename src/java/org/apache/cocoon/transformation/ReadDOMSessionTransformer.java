@@ -36,7 +36,7 @@ import java.util.Map;
  * in the SAX stream at a given position, using usual &lt;xsp:expr&gt; rules.
  * Object can be DOM Node, XMLizable, or any other object supported by &lt;xsp:expr&gt;.
  * 
- * @cocoon.sitemap.component.name   readDOMsession
+ * @cocoon.sitemap.component.name   readdomsession
  * @cocoon.sitemap.component.logger sitemap.transformer.readDOMsession
  * 
  * With this transformer, an object that is stored in the session, can be inserted
