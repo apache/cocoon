@@ -90,7 +90,7 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr><td bgcolor="#0086b2"><img src="images/dot.gif" width="1" height="1"/></td></tr>
           <tr>
-            <td align="center"><font size="-1" color="#0086b2"><i>
+            <td align="center"><font face="arial,helvetica,sanserif" size="-1" color="#0086b2"><i>
               Copyright &#169; <xsl:value-of select="$copyright"/>.
               All Rights Reserved.
             </i></font></td>
@@ -138,137 +138,119 @@
 <!-- document -->
 
   <xsl:template match="s2">
-    <table cellspacing="0" cellpadding="0" border="0">
+   <div align="right">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
-        <td bgcolor="666699" colspan="2">
-          <table cellspacing="0" cellpadding="0" border="1">
-            <tr>
-              <td bgcolor="#039acc" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-              <td bgcolor="#039acc" width="100%" height="1"><img src="resources/void.gif" width="100%" height="1" vspace="0" hspace="0" border="0"/></td>
-              <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-            </tr>
-            <tr>
-              <td bgcolor="#039acc" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-              <td bgcolor="#0086b2"  width="100%">
-                <font size="+1" face="arial,helvetica,sanserif" color="#ffffff">
-                  <img src="resources/void.gif" width="2" height="2" vspace="0" hspace="0" border="0"/>
-                  <b><xsl:value-of select="@title"/></b>
-                </font>
-              </td>
-              <td bgcolor="#017299" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-            </tr>
-            <tr>
-              <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-              <td bgcolor="#017299" width="100%" height="1"><img src="resources/void.gif" width="100%" height="1" vspace="0" hspace="0" border="0"/></td>
-              <td bgcolor="#017299" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-            </tr>
-          </table>
-        </td>
-      </tr>  
+        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+      </tr>
       <tr>
-        <td width="10">&#160;</td>
-        <td>
-          <font face="arial,helvetica,sanserif" color="#000000">
-            <xsl:apply-templates/>
-          </font>
-        </td>
-      </tr>  
+        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td width="100%" bgcolor="#0086b2">
+          <font size="+1" face="arial,helvetica,sanserif" color="#ffffff">
+            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
+         </td>
+        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+     </table>
+     <table border="0" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+       <td>
+        <font face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
+       </td>
+      </tr>
     </table>
-    <br/>
+   </div>
+   <br/>
   </xsl:template>
 
   <xsl:template match="s3">
-    <table cellspacing="0" cellpadding="0" border="0">
+   <br/>
+   <div align="right">
+    <table border="0" width="95%" cellspacing="0" cellpadding="0">
       <tr>
-        <td bgcolor="666699" colspan="2">
-          <table cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <td bgcolor="#039acc" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#039acc" width="482" height="1"><img src="resources/void.gif" width="482" height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-          </tr>
-          <tr>
-            <td bgcolor="#039acc" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#0086b2"  width="482">
-              <font face="arial,helvetica,sanserif" color="#ffffff">
-                <img src="resources/void.gif" width="2" height="2" vspace="0" hspace="0" border="0"/>
-                <b><xsl:value-of select="@title"/></b>
-              </font>
-            </td>
-            <td bgcolor="#017299" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-          </tr>
-          <tr>
-            <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#017299" width="482" height="1"><img src="resources/void.gif" width="482" height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#017299" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-          </tr>
-          </table>
-        </td>
-      </tr>  
+        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+      </tr>
       <tr>
-        <td width="10">&#160;</td>
-        <td>
-          <font size="-1" face="arial,helvetica,sanserif" color="#000000">
-            <xsl:apply-templates/>
-          </font>
-        </td>
-      </tr>  
+        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td width="100%" bgcolor="#0086b2">
+          <font face="arial,helvetica,sanserif" color="#ffffff">
+            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
+         </td>
+        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" width="1" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+     </table>
+     <table border="0" width="95%" cellspacing="0" cellpadding="0">
+      <tr>
+       <td>
+        <font size="-1" face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
+       </td>
+      </tr>
     </table>
-    <br/>
+   </div>
+   <br/>
   </xsl:template>
 
   <xsl:template match="s4">
-    <table cellspacing="0" cellpadding="0" border="0">
+   <br/>
+   <div align="right">
+    <table border="0" width="90%" cellspacing="0" cellpadding="0">
       <tr>
-        <td bgcolor="666699" colspan="2">
-          <table cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <td bgcolor="#039acc" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#039acc" width="472" height="1"><img src="resources/void.gif" width="472" height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-          </tr>
-          <tr>
-            <td bgcolor="#039acc" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#0086b2"  width="472">
-              <font size="-1" face="arial,helvetica,sanserif" color="#ffffff">
-                <img src="resources/void.gif" width="2" height="2" vspace="0" hspace="0" border="0"/>
-                <b><xsl:value-of select="@title"/></b>
-              </font>
-            </td>
-            <td bgcolor="#017299" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-          </tr>
-          <tr>
-            <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#017299" width="472" height="1"><img src="resources/void.gif" width="472" height="1" vspace="0" hspace="0" border="0"/></td>
-            <td bgcolor="#017299" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-          </tr>
-          </table>
-        </td>
-      </tr>  
+        <td width="9" height="7" valign="bottom" align="right"><img src="resources/bar-top-left.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-top.gif"><img src="resources/void.gif" width="1" height="5" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="7" valign="bottom" align="left"><img src="resources/bar-top-right.gif" width="9" height="7" vspace="0" hspace="0" border="0"/></td>
+      </tr>
       <tr>
-        <td width="10">&#160;</td>
-        <td>
-          <font size="-1" face="arial,helvetica,sanserif" color="#000000">
-            <xsl:apply-templates/>
-          </font>
-        </td>
-      </tr>  
+        <td width="9" background="resources/bar-border-left.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td width="100%" bgcolor="#0086b2">
+          <font size="-1" face="arial,helvetica,sanserif" color="#ffffff">
+            <img src="resources/void.gif" width="5" height="5" vspace="0" hspace="0" border="0"/><b><xsl:value-of select="@title"/></b></font>
+         </td>
+        <td width="9" background="resources/bar-border-right.gif"><img src="resources/void.gif" width="9" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td width="9" height="12" valign="top" align="right"><img src="resources/bar-bottom-left.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td background="resources/bar-border-bottom.gif"><img src="resources/void.gif" width="1" height="12" vspace="0" hspace="0" border="0"/></td>
+        <td width="9" height="12" valign="top" align="left"><img src="resources/bar-bottom-right.gif" width="9" height="12" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+     </table>
+     <table border="0" width="90%" cellspacing="0" cellpadding="0">
+      <tr>
+       <td>
+        <font size="-2" face="arial,helvetica,sanserif" color="#000000"><xsl:apply-templates/></font>
+       </td>
+      </tr>
     </table>
-    <br/>
+   </div>
+   <br/>
   </xsl:template>
 
 <!-- ###################################################################### -->
 <!-- blocks -->
 
   <xsl:template match="p">
-    <p><xsl:apply-templates/></p>
+    <p align="justify"><xsl:apply-templates/></p>
   </xsl:template>
 
   <xsl:template match="note">
+   <p>
     <table width="100%" cellspacing="3" cellpadding="0" border="0">
       <tr>
-        <td width="20" valign="top">
-          <img src="resources/note.gif" width="20" height="24" vspace="0" hspace="0" border="0" alt="Note"/>
+        <td width="28" valign="top">
+          <img src="resources/note.gif" width="28" height="29" vspace="0" hspace="0" border="0" alt="Note"/>
         </td>
         <td valign="top">
           <font size="-1" face="arial,helvetica,sanserif" color="#000000">
@@ -279,6 +261,7 @@
         </td>
       </tr>  
     </table>
+   </p>
   </xsl:template>
 
   <xsl:template match="ul">
@@ -294,21 +277,21 @@
   </xsl:template>
 
   <xsl:template match="source">
-  <div align="right">
+  <div align="center">
   <table cellspacing="4" cellpadding="0" border="0">
     <tr>
       <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-      <td bgcolor="#0086b2" width="100%" height="1"><img src="resources/void.gif" width="100%" height="1" vspace="0" hspace="0" border="0"/></td>
+      <td bgcolor="#0086b2" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
       <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
     </tr>
     <tr>
       <td bgcolor="#0086b2" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-      <td bgcolor="#ffffff" width="100%"><font size="-1"><pre><xsl:apply-templates/></pre></font></td>
+      <td bgcolor="#ffffff"><pre><xsl:apply-templates/></pre></td>
       <td bgcolor="#0086b2" width="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
     </tr>
     <tr>
       <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
-      <td bgcolor="#0086b2" width="100%" height="1"><img src="resources/void.gif" width="100%" height="1" vspace="0" hspace="0" border="0"/></td>
+      <td bgcolor="#0086b2" height="1"><img src="resources/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
       <td bgcolor="#0086b2" width="1"   height="1"><img src="resources/void.gif" width="1"   height="1" vspace="0" hspace="0" border="0"/></td>
     </tr>
   </table>
