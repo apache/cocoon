@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HandlerConfiguration.java,v 1.3 2003/11/07 11:21:50 cziegeler Exp $
+ * @version CVS $Id: HandlerConfiguration.java,v 1.4 2004/01/27 08:26:25 cziegeler Exp $
 */
 public final class HandlerConfiguration
 implements java.io.Serializable {
@@ -84,6 +84,9 @@ implements java.io.Serializable {
 
     /** The authentication resource */
     private String authenticationResource;
+    
+    /** The logout resource */
+    private String logoutResource;
     
     /** The class name of the authenticator to use */
     private String authenticatorClass;
@@ -158,6 +161,8 @@ implements java.io.Serializable {
             // the uri attribute is optional for other authenticators
             this.authenticationResource = child.getAttribute("uri", null);
         }
+        // optinal logout resource
+        this.logoutResource = child.getAttribute("logout-uri", null);
         this.authenticationResourceParameters = SourceParameters.create(child);
 
         // get load resource (optional)
@@ -254,6 +259,13 @@ implements java.io.Serializable {
         return this.authenticationResourceParameters;
     }
 
+    /**
+     * Get the logout resource
+     */
+    public String getLogoutResource() {
+        return this.logoutResource;
+    }
+    
     /** Get the save resource */
     public String getSaveResource() { 
         return this.saveResource; }
