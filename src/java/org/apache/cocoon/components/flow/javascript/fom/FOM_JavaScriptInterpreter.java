@@ -84,10 +84,9 @@ import org.mozilla.javascript.tools.shell.Global;
  * @version CVS $Id$
  */
 public class FOM_JavaScriptInterpreter extends CompilingInterpreter
-    implements Configurable, Initializable {
+        implements Configurable, Initializable {
 
     /**
-     * LAST_EXEC_TIME
      * A long value is stored under this key in each top level JavaScript
      * thread scope object. When you enter a context any scripts whose
      * modification time is later than this value will be recompiled and reexecuted,
@@ -96,9 +95,9 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
     private final static String LAST_EXEC_TIME = "__PRIVATE_LAST_EXEC_TIME__";
 
     /**
-     * Key for storing a JavaScript global scope object in the Cocoon session
+     * Prefix for session/request attribute storing JavaScript global scope object.
      */
-    public static final String USER_GLOBAL_SCOPE = "FOM JavaScript GLOBAL SCOPE";
+    public static final String USER_GLOBAL_SCOPE = "FOM JavaScript GLOBAL SCOPE/";
 
     // This is the only optimization level that supports continuations
     // in the Christoper Oliver's Rhino JavaScript implementation
@@ -338,80 +337,73 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
 
     /**
      * Returns the JavaScript scope, a Scriptable object, from the user
-     * session instance. Each sitemap can have a scope associated with it.
+     * session instance. Each interpreter instance can have a scope
+     * associated with it.
      *
-     * @return a <code>Scriptable</code> value
+     * @return a <code>ThreadScope</code> value
      */
     private ThreadScope getSessionScope() throws Exception {
-        Request request = ContextHelper.getRequest(this.avalonContext);
+        final String scopeID = USER_GLOBAL_SCOPE + getInterpreterID();
+        final Request request = ContextHelper.getRequest(this.avalonContext);
+
         ThreadScope scope = null;
+
+        // Get/create the scope attached to the current context
         Session session = request.getSession(false);
         if (session != null) {
-            HashMap userScopes =
-                    (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
-            if (userScopes != null) {
-                // Get the scope attached to the current context
-                scope = (ThreadScope)userScopes.get(getInterpreterID());
-            }
+            scope = (ThreadScope) session.getAttribute(scopeID);
+        } else {
+            scope = (ThreadScope) request.getAttribute(scopeID);
         }
+
         if (scope == null) {
             scope = createThreadScope();
+            // Save scope in the request early to allow recursive Flow calls
+            request.setAttribute(scopeID, scope);
         }
-        return scope;
-    }
 
-    void updateSession(Scriptable scope) throws Exception {
-        ThreadScope thrScope = (ThreadScope)scope;
-        if (thrScope.useSession) {
-            setSessionScope(scope);
-        }
+        return scope;
     }
 
     /**
-     * Associates a JavaScript scope, a Scriptable object, with the
-     * directory path of the current sitemap, as resolved by the
-     * source resolver.
+     * Associates a JavaScript scope, a Scriptable object, with
+     * {@link #getInterpreterID identifier} of this {@link Interpreter}
+     * instance.
      *
-     * @param scope a <code>Scriptable</code> value
+     * @param scope a <code>ThreadScope</code> value
      */
-    private Scriptable setSessionScope(Scriptable scope) throws Exception {
-        Request request = ContextHelper.getRequest(this.avalonContext);
+    private void setSessionScope(ThreadScope scope) throws Exception {
+        if (scope.useSession) {
+            final String scopeID = USER_GLOBAL_SCOPE + getInterpreterID();
+            final Request request = ContextHelper.getRequest(this.avalonContext);
 
-        // FIXME: Where "session scope" should go when session is invalidated?
-        try {
-            Session session = request.getSession(true);
-
-            HashMap userScopes = (HashMap)session.getAttribute(USER_GLOBAL_SCOPE);
-            if (userScopes == null) {
-                userScopes = new HashMap();
-                session.setAttribute(USER_GLOBAL_SCOPE, userScopes);
-            }
-
+            // FIXME: Where "session scope" should go when session is invalidated?
             // Attach the scope to the current context
-            userScopes.put(getInterpreterID(), scope);
-        } catch (IllegalStateException e) {
-            // Session might be invalidated already.
-            if (getLogger().isDebugEnabled()) {
-                getLogger().debug("Got '" + e + "' while trying to set session scope.", e);
+            try {
+                Session session = request.getSession(true);
+                session.setAttribute(scopeID, scope);
+            } catch (IllegalStateException e) {
+                // Session might be invalidated already.
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().debug("Got '" + e + "' while trying to set session scope.", e);
+                }
             }
         }
-        return scope;
     }
 
     public static class ThreadScope extends ScriptableObject {
-        static final String[] builtinPackages = {"javax", "org", "com"};
+        private static final String[] BUILTIN_PACKAGES = {"javax", "org", "com"};
 
-        ClassLoader classLoader;
+        private ClassLoader classLoader;
 
         /* true if this scope has assigned any global vars */
-        boolean useSession = false;
+        boolean useSession;
 
         public ThreadScope() {
-            final String[] names = { "importClass"};
-
+            final String[] names = { "importClass" };
             try {
-                this.defineFunctionProperties(names, ThreadScope.class,
-                                              ScriptableObject.DONTENUM);
+                defineFunctionProperties(names, ThreadScope.class,
+                                         ScriptableObject.DONTENUM);
             } catch (PropertyException e) {
                 throw new Error();  // should never happen
             }
@@ -422,31 +414,33 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
         }
 
         public void put(String name, Scriptable start, Object value) {
-            useSession = true;
+            this.useSession = true;
             super.put(name, start, value);
         }
 
         public void put(int index, Scriptable start, Object value) {
-            useSession = true;
+            this.useSession = true;
             super.put(index, start, value);
         }
 
         void reset() {
-            useSession = false;
+            this.useSession = false;
         }
 
-        // Override importClass to allow reloading of classes
-        public static void importClass(Context cx, Scriptable thisObj,
-                                       Object[] args, Function funObj) {
+        /** Override importClass to allow reloading of classes */
+        public static void importClass(Context ctx,
+                                       Scriptable thisObj,
+                                       Object[] args,
+                                       Function funObj) {
             for (int i = 0; i < args.length; i++) {
-                Object cl = args[i];
-                if (!(cl instanceof NativeJavaClass)) {
+                Object clazz = args[i];
+                if (!(clazz instanceof NativeJavaClass)) {
                     throw Context.reportRuntimeError("Not a Java class: " +
-                                                       Context.toString(cl));
+                                                     Context.toString(clazz));
                 }
-                String s = ((NativeJavaClass) cl).getClassObject().getName();
-                String n = s.substring(s.lastIndexOf('.')+1);
-                thisObj.put(n, thisObj, cl);
+                String s = ((NativeJavaClass) clazz).getClassObject().getName();
+                String n = s.substring(s.lastIndexOf('.') + 1);
+                thisObj.put(n, thisObj, clazz);
             }
         }
 
@@ -458,8 +452,8 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                 newPackages.setParentScope(this);
                 newPackages.setPrototype(ScriptableObject.getClassPrototype(this, JAVA_PACKAGE));
                 super.put("Packages", this, newPackages);
-                for (int i = 0; i < builtinPackages.length; i++) {
-                    String pkgName = builtinPackages[i];
+                for (int i = 0; i < BUILTIN_PACKAGES.length; i++) {
+                    String pkgName = BUILTIN_PACKAGES[i];
                     Scriptable pkg = new NativeJavaPackage(pkgName, cl);
                     pkg.setParentScope(this);
                     pkg.setPrototype(ScriptableObject.getClassPrototype(this, JAVA_PACKAGE));
@@ -648,13 +642,14 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
      * @param redirector
      * @exception Exception if an error occurs
      */
-    public void callFunction(String funName, List params,
-                             Redirector redirector) throws Exception {
+    public void callFunction(String funName, List params, Redirector redirector)
+    throws Exception {
         Context context = Context.enter();
         context.setOptimizationLevel(OPTIMIZATION_LEVEL);
         context.setGeneratingDebug(true);
         context.setCompileFunctionsWithDynamicScope(true);
         context.setErrorReporter(errorReporter);
+
         ThreadScope thrScope = getSessionScope();
         synchronized (thrScope) {
             ClassLoader savedClassLoader =
@@ -674,6 +669,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                             getDebugger().setVisible(true);
                         }
                     }
+
                     int size = (params != null ? params.size() : 0);
                     Object[] funArgs = new Object[size];
                     Scriptable parameters = context.newObject(thrScope);
@@ -686,6 +682,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                         parameters.put(arg.name, parameters, arg.value);
                     }
                     cocoon.setParameters(parameters);
+
                     Object fun = ScriptableObject.getProperty(thrScope, funName);
                     if (fun == Scriptable.NOT_FOUND) {
                         throw new ResourceNotFoundException("Function \"javascript:" + funName + "()\" not found");
@@ -697,7 +694,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                                                                                                     ex.getMessage()));
                     Throwable unwrapped = unwrap(ex);
                     if (unwrapped instanceof ProcessingException) {
-                        throw (ProcessingException)unwrapped;
+                        throw (ProcessingException) unwrapped;
                     }
                     throw new CascadingRuntimeException(ee.getMessage(),
                                                         unwrapped);
@@ -713,7 +710,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     throw new CascadingRuntimeException(ee.getMessage(), ee);
                 }
             } finally {
-                updateSession(thrScope);
+                setSessionScope(thrScope);
                 if (cocoon != null) {
                     cocoon.popCallContext();
                 }
@@ -800,7 +797,7 @@ public class FOM_JavaScriptInterpreter extends CompilingInterpreter
                     throw new CascadingRuntimeException(ee.getMessage(), ee);
                 }
             } finally {
-                updateSession(kScope);
+                setSessionScope(kScope);
                 if (cocoon != null) {
                     cocoon.popCallContext();
                 }
