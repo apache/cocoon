@@ -81,6 +81,9 @@ implements ServiceManager, Configurable {
         this.roleManager = new RoleManager(parentRoleManager);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.logger.LogEnabled#enableLogging(org.apache.avalon.framework.logger.Logger)
+     */
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.roleManager.enableLogging(logger);
@@ -288,6 +291,9 @@ implements ServiceManager, Configurable {
         }
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     */
     public void configure(Configuration configuration) throws ConfigurationException {
         // Setup location
         if (this.location == null) {
