@@ -24,10 +24,11 @@ import org.apache.xerces.dom.TreeWalkerImpl;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-07-27 21:49:02 $ 
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-09-27 16:07:20 $ 
  */ 
 
 public class BrowserMatcherFactory implements MatcherFactory {
+
     public String generateMethodSource (String prefix, String test_expression, 
                                         DocumentFragment conf)
     throws ConfigurationException {

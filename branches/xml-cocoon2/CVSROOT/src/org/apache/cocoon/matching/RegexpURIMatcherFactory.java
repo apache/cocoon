@@ -20,7 +20,7 @@ import org.w3c.dom.DocumentFragment;
  * for request URIs
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-04 21:11:53 $ 
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-09-27 16:07:26 $ 
  */ 
 
 public class RegexpURIMatcherFactory implements MatcherFactory {
@@ -70,7 +70,7 @@ public class RegexpURIMatcherFactory implements MatcherFactory {
         String instructions = name + "PatternInstructions";
         String pat = correctPattern (pattern);
         sb.append("java.util.ArrayList list = new java.util.ArrayList ();")
-          .append("if (").append(name).append("Pattern.match(((javax.servlet.http.HttpServletRequest)objectModel.get(\"request\")).getRequestURI())) {");
+          .append("if (").append(name).append("Pattern.match(environment.getURI()) {");
         // Count number of parens
         int i = 0;
         int j = -1;
