@@ -10,7 +10,7 @@
         <servlet-class>org.apache.slide.webdav.WebdavServlet</servlet-class>
         <init-param>
             <param-name>domain</param-name>
-            <param-value>WEB-INF/slide.xconf</param-value>
+            <param-value>/WEB-INF/slide.xconf</param-value>
             <description>
                 Path to the domain configuration file, relative to the path of the
                 web application.
