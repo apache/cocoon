@@ -77,7 +77,7 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.9 2003/12/08 15:56:26 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.10 2003/12/11 13:31:55 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
@@ -191,7 +191,7 @@ public class DefaultLinkService
     public String getLinkURI(List events) {
         final Info info = this.getInfo();
         boolean hasParams = info.hasParameters;
-        final StringBuffer buffer = new StringBuffer(info.toString());
+        final StringBuffer buffer = new StringBuffer(info.linkBase.toString());
         
         // add comparable events
         Iterator iter = info.comparableEvents.iterator();

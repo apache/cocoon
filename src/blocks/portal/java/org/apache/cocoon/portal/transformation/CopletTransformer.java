@@ -83,9 +83,11 @@ import org.xml.sax.SAXException;
  * Please see also the documentation of superclass AbstractCopletTransformer for how
  * the coplet instance data are acquired.
  *
+ * FIXME - Don't create <a> elements for links!
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.8 2003/12/11 09:44:14 cziegeler Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.9 2003/12/11 13:31:55 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
