@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: TabContentAspect.java,v 1.15 2004/04/29 07:00:49 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class TabContentAspect 
     extends CompositeContentAspect {
@@ -103,10 +103,10 @@ public class TabContentAspect
                 }
                 if (j == selected) {
                     attributes.addCDATAAttribute("selected", "true");
-                } else {
-                    ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, config.aspectName, new Integer(j));
-                    attributes.addCDATAAttribute("parameter", service.getComponentManager().getLinkService().getLinkURI(event));
                 }
+                ChangeAspectDataEvent event = new ChangeAspectDataEvent(tabLayout, config.aspectName, new Integer(j)); 
+                attributes.addCDATAAttribute("parameter", service.getComponentManager().getLinkService().getLinkURI(event)); 
+
                 // add parameters
                 final Iterator iter = tab.getParameters().entrySet().iterator();
                 while ( iter.hasNext() ) {
