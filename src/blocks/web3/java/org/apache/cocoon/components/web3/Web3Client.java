@@ -60,7 +60,8 @@ import com.sap.mw.jco.JCO.Function;
  * The standard interface for R3Clients in Web3.
  *
  * @author <a href="mailto:michael.gerzabek@at.efp.cc">Michael Gerzabek</a>
- * @version CVS $Id: Web3Client.java,v 1.3 2003/05/06 14:12:59 vgritsenko Exp $
+ * @since 2.1
+ * @version CVS $Id: Web3Client.java,v 1.4 2003/07/10 22:14:32 reinhard Exp $
  */
 public interface Web3Client extends Component {
     
