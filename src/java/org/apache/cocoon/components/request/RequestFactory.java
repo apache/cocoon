@@ -60,30 +60,37 @@ import java.io.File;
  * This is the interface of Request Wrapper in Cocoon.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: RequestFactory.java,v 1.1 2003/03/09 00:09:09 pier Exp $
+ * @version CVS $Id: RequestFactory.java,v 1.2 2003/04/03 14:16:31 stefano Exp $
  */
 public abstract class RequestFactory implements Component {
 
     public static RequestFactory getRequestFactory(String className) {
+
         RequestFactory factory = null;
+
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             Class clazz = loader.loadClass(className);
-            factory = (RequestFactory)clazz.newInstance();
+            factory = (RequestFactory) clazz.newInstance();
         } catch (Throwable t) {
-            // FIXME (VG): Is it Ok to ignore all exceptions?
+            // the try/catch mechanism is used because there is no way
+            // to know if a classloader contains a class without asking for it
         }
-        if(factory == null) {
+        
+        if (factory == null) {
             try {
                 Class clazz = Class.forName(className);
-                factory = (RequestFactory)clazz.newInstance();
+                factory = (RequestFactory) clazz.newInstance();
             } catch (Throwable t) {
-                // FIXME (VG): Is it Ok to ignore all exceptions?
+                // the try/catch mechanism is used because there is no way
+                // to know if a classloader contains a class without asking for it
             }
         }
+
         if (factory == null) {
             factory = new SimpleRequestFactoryImpl();
         }
+
         return factory;
     }
 
