@@ -20,6 +20,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 
+import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
@@ -35,9 +36,14 @@ import org.apache.cocoon.core.container.handler.ComponentHandler;
 public class JavaProgram extends AbstractLogEnabled implements Program {
 
     protected Class program;
+    
+    protected DefaultConfiguration config;
 
     public JavaProgram(Class program) {
         this.program = program;
+        this.config = new DefaultConfiguration("", "GeneratorSelector");
+        // Instruct the core to avoid proxying this class
+        this.config.setAttribute("model", ComponentInfo.TYPE_NON_THREAD_SAFE_POOLED);
     }
 
     public String getName() {
@@ -47,15 +53,12 @@ public class JavaProgram extends AbstractLogEnabled implements Program {
     public ComponentHandler getHandler(ServiceManager manager,
                                        Context context)
     throws Exception {
-        DefaultConfiguration config = new DefaultConfiguration("", "GeneratorSelector");
-        // Instruct the core to avoid proxying this class
-        config.setAttribute("model", "non-thread-safe-pooled");
         return AbstractComponentHandler.getComponentHandler(
                 program,
                 getLogger(),
                 context,
                 manager,
-                config);
+                this.config);
     }
 
     public CompiledComponent newInstance() throws Exception {
