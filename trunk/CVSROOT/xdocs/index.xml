@@ -122,6 +122,10 @@
    improvement of both processing subsystems as well as the creation and testing
    of special cache systems.
   </p>
+  <note>
+   Cocoon can <strong>not</strong> be employed to do general-purpose HTML transformations, unless
+   all the HTML involved is well-formed XHTML (i.e. XML).
+  </note>
  </s1>
 
  <s1 title="Are there books that cover this stuff?">
@@ -161,45 +165,8 @@
    <link href="http://www.apache.org/">Apache Software Foundation (ASF)</link>,
    and, in harmony with the Apache webserver itself, it is released under
    a very open license.
-   This means there are lots of ways to contribute to the project - either
-   with direct participation (coding, documenting, answering questions,
-   proposing ideas, reporting bugs, suggesting bug-fixes, etc..) or by resource
-   donations (money, time, publicity, hardware, software, conference
-   presentations, speeches, etc...).
-  </p>
-  <p>
-   For direct participation, we suggest you to subscribe to the
-   <connect href="mail-lists.xml">Cocoon mailing lists</connect>
-   (follow the link for information on how to subscribe and to access the mail
-   list archives), to checkout the <link href="http://xml.apache.org/websrc/index.cgi/xml-cocoon/">
-   latest and greatest code</link> (which you find in the xml-cocoon module in
-   the xml.apache.org CVS code repository, or from the
-   <link href="http://xml.apache.org/from-cvs/xml-cocoon/">CVS snapshots</link>),
-   control the <connect href="../todo.xml">todo</connect>
-   list and jump in. Document writers are usually the most wanted people so if
-   you like to help but you're not familiar with the innermost technical details, don't worry:
-   we have work for you.
-  </p>
-  <p>
-   For financial support in particular, the Cocoon Project and the ASF in general
-   is closely collaborating with the <link href="http://www.sourcexchange.com">Collab.net
-   SourceXchange</link> program that will provide a legal, solid and
-   well-established resource for money collecting to fund software production
-   under the open source flag. Please, feel free to contact directly Cocoon's
-   main architect and project creator <link href="mailto:stefano@apache.org">Stefano
-   Mazzocchi</link> or the ASF President and Collab.net co-founder <link href="mailto:brian@collab.net">Brian
-   Behlendorf</link> for more information on how to contribute financially to the
-   advancement of this project.
-  </p>
-  <p>
-   Anyway, a great way of contributing back to the project is to
-   allow others to know about it so that the word spreads and others may wish to
-   contribute - so, please, help us by placing the cocoon logo somewhere in your
-   site to indicate that you are using and supporting the Cocoon Project.
-  </p>
-
-  <p>
-   Thank you very much. <img src="images/cocoon-small.jpg" alt="Powered by Cocoon"/>
+   This means there are 
+   <connect href="contrib.xml">lots of ways to contribute to the project...</connect>
   </p>
  </s1>
  </body>
