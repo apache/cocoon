@@ -110,7 +110,7 @@ public class EnvironmentWrapper
                               ComponentManager manager,
                               boolean          rawMode)
     throws MalformedURLException {
-        this(env, requestURI, queryString, logger, null, rawMode,env.getView());
+        this(env, requestURI, queryString, logger, null, rawMode,env.getView(), true);
     }
     
     /**
@@ -125,17 +125,34 @@ public class EnvironmentWrapper
                               boolean          rawMode,
                               String           view)
     throws MalformedURLException {
-        super(env.getURI(), view, env.getContext(), env.getAction());
-        init(env, requestURI, queryString, logger, manager, rawMode, view);
+        this(env, requestURI, queryString, logger, manager, rawMode, view, true);
     }
 
-    private void init(Environment      env,
+    /**
+     * Constructs an EnvironmentWrapper object from a Request
+     * and Response objects
+     */
+    public EnvironmentWrapper(Environment      env,
                               String           requestURI,
                               String           queryString,
                               Logger           logger,
                               ComponentManager manager,
                               boolean          rawMode,
-                              String           view)
+                              String           view,
+                              boolean          wrapResponse)
+    throws MalformedURLException {
+        super(env.getURI(), view, env.getContext(), env.getAction());
+        init(env, requestURI, queryString, logger, manager, rawMode, view, wrapResponse);
+    }
+
+    private void init(Environment      env,
+                      String           requestURI,
+                      String           queryString,
+                      Logger           logger,
+                      ComponentManager manager,
+                      boolean          rawMode,
+                      String           view,
+                      boolean          wrapResponse)
         throws MalformedURLException {
 //        super(env.getURI(), view, env.getContext(), env.getAction());
         this.rootContext = env.getRootContext();
@@ -164,13 +181,14 @@ public class EnvironmentWrapper
                                           queryString,
                                           this,
                                           rawMode);
-        Response response = new ResponseWrapper(ObjectModelHelper.getResponse(oldObjectModel));
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
-        this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
-        
+        if (wrapResponse) {
+            Response response = new ResponseWrapper(ObjectModelHelper.getResponse(oldObjectModel));
+            this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT, response);
+        }
     }
    
-    public EnvironmentWrapper(Environment env, ComponentManager manager, String uri,  Logger logger)  throws MalformedURLException {
+    public EnvironmentWrapper(Environment env, ComponentManager manager, String uri,  Logger logger, boolean wrapResponse)  throws MalformedURLException {
         super(env.getURI(), env.getView(), env.getContext(), env.getAction());
 
         // FIXME(SW): code stolen from SitemapSource. Factorize somewhere...
@@ -249,7 +267,7 @@ public class EnvironmentWrapper
 //            this.protocol + "://" + requestURI :
 //            this.protocol + "://" + requestURI + "?" + queryString;
 
-        this.init(env, requestURI, queryString, logger, manager, rawMode, view);
+        this.init(env, requestURI, queryString, logger, manager, rawMode, view, wrapResponse);
         this.setURI(prefix, uri);
         
     }

@@ -361,7 +361,7 @@ implements Processor, Disposable {
         public ForwardEnvironmentWrapper(Environment env,
             ComponentManager manager, String uri, Logger logger) 
         throws MalformedURLException {
-            super(env, manager, uri, logger);
+            super(env, manager, uri, logger, false);
         }
 
         public void setStatus(int statusCode) {
