@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.161 2003/10/01 18:24:04 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.162 2003/10/02 04:27:46 ghoward Exp $:-->
 
 <status>
  <developers>
@@ -191,7 +191,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
- <action dev="AG" type="add">
+   <action dev="GH" type="add" fixes-bug="22813" due-to="Klaus Bertram" due-to-email="k.bertram@kbsm.de">
+     Add initial support for IE in linotype.
+   </action>
+   <action dev="AG" type="add">
      Woody block: New integer Datatype.
    </action>
    <action dev="CH" type="add">
