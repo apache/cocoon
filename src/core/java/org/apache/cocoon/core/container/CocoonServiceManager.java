@@ -141,8 +141,7 @@ implements ServiceManager, Configurable {
 
         if( handler == null ) {
             final String message = "Could not find component";
-            if( this.getLogger().isDebugEnabled() )
-            {
+            if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( message + " for role: " + role );
             }
             throw new ServiceException( role, message );
@@ -157,7 +156,6 @@ implements ServiceManager, Configurable {
                 handler.initialize();
                 component = handler.get();
                 
-                this.initialize( role, component );
             } catch( final ServiceException ce ) {
                 // Rethrow instead of wrapping a ComponentException with another one
                 throw ce;
@@ -169,6 +167,7 @@ implements ServiceManager, Configurable {
 
                 throw new ServiceException( role, message, e );
             }
+            this.initialize( role, component );
         } catch ( ServiceException se) {
             throw se;
         } catch( final Exception e ) {
