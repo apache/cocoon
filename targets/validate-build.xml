@@ -1,4 +1,9 @@
-<!-- === Validation targets ==================================================== -->
+<?xml version="1.0"?>
+<project name="validation">
+
+  <description>
+    Validation targets
+  </description>
 
   <!-- Check if all the JAR files are properly declared in lib/jars.xml    -->
   <target name="validate-jars" depends="prepare" unless="unless.exclude.validate.jars">
@@ -111,4 +116,4 @@
       <fileset dir="${build.context}/stylesheets" includes="**/*.xsl"/>
     </jing>-->
   </target>
-
+</project>

@@ -1,4 +1,9 @@
-<!-- === Forrest Targets ================================================= -->
+<?xml version="1.0"?>
+<project name="forrest">
+
+  <description>
+    Forrest Targets
+  </description>
 
   <target name="forrest" depends="prepare, prepare-docs, forrest.init, validate-jars, javadocs" description="Generates static HTML documentation">
     <!-- Add some other documents -->
@@ -149,4 +154,6 @@
     </echo>
     <fail message="Need to define $${forrest.home}"/>
   </target>
+
+</project>
 
