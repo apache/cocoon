@@ -18,10 +18,12 @@ package org.apache.cocoon.acting;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.thread.ThreadSafe;
 
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.components.language.markup.xsp.XSPModuleHelper;
+import org.apache.cocoon.components.modules.input.InputModuleHelper;
+
 import org.apache.commons.lang.BooleanUtils;
 
 import java.util.HashMap;
@@ -47,7 +49,7 @@ import java.util.Map;
  * </pre> 
  * The action invokes the 
  * {@link org.apache.cocoon.components.modules.input.InputModule#getAttributeValues(String, Configuration, Map) getAttributeValues()}
- * method and returns all results numbered from "1". If no result exists,
+ * method and returns all results numbered from "0". If no result exists,
  * "null" is returned and the nested block is skipped.
  * The name of the input module to use may be preconfigured when
  * declaring the action in your sitemap:
@@ -64,9 +66,9 @@ import java.util.Map;
  * @see org.apache.cocoon.components.modules.input.InputModule
  * 
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: InputModuleAction.java,v 1.2 2004/03/28 20:51:24 antonio Exp $
+ * @version CVS $Id: InputModuleAction.java,v 1.6 2004/04/27 22:25:29 haul Exp $
  */
-public class InputModuleAction extends ConfigurableServiceableAction {
+public class InputModuleAction extends ConfigurableServiceableAction implements ThreadSafe {
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.acting.Action#act(org.apache.cocoon.environment.Redirector, org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
@@ -86,7 +88,7 @@ public class InputModuleAction extends ConfigurableServiceableAction {
                 ((Boolean) this.settings.get("single-value")).booleanValue());
 
         if (module != null && attrib != null) {
-            XSPModuleHelper mhelper = new XSPModuleHelper();
+            InputModuleHelper mhelper = new InputModuleHelper();
             mhelper.setup(manager);
             Object[] result = null;
             if (!single) {
