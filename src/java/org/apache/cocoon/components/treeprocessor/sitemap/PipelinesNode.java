@@ -22,9 +22,7 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.components.treeprocessor.SimpleParentProcessingNode;
-import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Redirector;
 
 /**
  * Handles &lt;map:pipelines&gt;
@@ -44,12 +42,6 @@ public final class PipelinesNode extends SimpleParentProcessingNode
     private ErrorHandlerHelper errorHandlerHelper = new ErrorHandlerHelper();
 
     private ProcessingNode errorHandler;
-
-    /**
-     * Constructor
-     */
-    public PipelinesNode() {
-    }
 
     /**
      * Keep the component manager used everywhere in the tree so that we can
@@ -98,11 +90,10 @@ public final class PipelinesNode extends SimpleParentProcessingNode
         } catch (Exception ex) {
             if (this.errorHandler != null) {
                 // Invoke pipelines handler
-                return this.errorHandlerHelper.invokeErrorHandler(this.errorHandler, ex, env);
-            } else {
-                // No handler : propagate
-                throw ex;
-            }
+                return this.errorHandlerHelper.invokeErrorHandler(this.errorHandler, ex, env, context);
+            } 
+            // No handler : propagate
+            throw ex;
         }
     }
 
