@@ -571,7 +571,7 @@
         about authentication handler and application configuration.</p>
      <p>Inside your authentication handler configuration you define for each portal
         an application configuration for the portal like the example portal called
-        "sunBank" below: <![CDATA[]]></p>
+        "sunBank" below:</p>
      <source>    &lt;application name="sunBank"&gt;
   &lt;configuration name="portal"&gt;
     &lt;!-- This is the portal configuration --&gt;
