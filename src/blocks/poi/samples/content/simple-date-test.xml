@@ -68,31 +68,31 @@
         <gmr:Cell Col="1" Row="4" ValueType="60">formatted serial number '37777,7':</gmr:Cell>
         <gmr:Cell Col="2" Row="4" ValueType="60">formatted current serial number, i.e. 'now()':</gmr:Cell>
         <gmr:Cell Col="0" Row="5" ValueType="60">m/d/yy</gmr:Cell>
-        <gmr:Cell Col="1" Row="5">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="5" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="5">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="6" ValueType="60">d-mmm-yy</gmr:Cell>
-        <gmr:Cell Col="1" Row="6">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="6" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="6">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="7" ValueType="60">d-mmm</gmr:Cell>
-        <gmr:Cell Col="1" Row="7">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="7" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="7">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="8" ValueType="60">mmm-yy</gmr:Cell>
-        <gmr:Cell Col="1" Row="8">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="8" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="8">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="9" ValueType="60">h:mm AM/PM</gmr:Cell>
-        <gmr:Cell Col="1" Row="9">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="9" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="9">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="10" ValueType="60">h:mm:ss AM/PM</gmr:Cell>
-        <gmr:Cell Col="1" Row="10">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="10" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="10">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="11" ValueType="60">h:mm</gmr:Cell>
-        <gmr:Cell Col="1" Row="11">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="11" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="11">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="12" ValueType="60">h:mm:ss</gmr:Cell>
-        <gmr:Cell Col="1" Row="12">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="12" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="12">=now()</gmr:Cell>
         <gmr:Cell Col="0" Row="13" ValueType="60">m/d/yy h:mm</gmr:Cell>
-        <gmr:Cell Col="1" Row="13">37777,7</gmr:Cell>
+        <gmr:Cell Col="1" Row="13" ValueType="40">37777,7</gmr:Cell>
         <gmr:Cell Col="2" Row="13">=now()</gmr:Cell>
 
         <gmr:Cell Col="0" Row="15" ValueType="60">We can also calculate with dates:</gmr:Cell>
