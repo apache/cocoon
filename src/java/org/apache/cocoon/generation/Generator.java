@@ -58,15 +58,20 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 
 /**
- *
+ * A generator is the starting point of a pipeline. It "generates" XML
+ * and starts streaming them into the pipeline.
+ * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
- * @version CVS $Id: Generator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: Generator.java,v 1.2 2003/09/03 13:38:39 cziegeler Exp $
  */
 public interface Generator extends XMLProducer, SitemapModelComponent {
 
     String ROLE = Generator.class.getName();
 
+    /**
+     * Generate the XML and stream it into the pipeline
+     */
     void generate()
     throws IOException, SAXException, ProcessingException;
 }
