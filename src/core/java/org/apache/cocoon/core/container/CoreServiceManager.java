@@ -627,9 +627,7 @@ public class CoreServiceManager
 
             final String componentName = componentConfig.getName();
 
-            if ("classpath".equals(componentName)) {
-                // Ignore
-            } else if ("include".equals(componentName)) {
+            if ("include".equals(componentName)) {
                 handleInclude(contextURI, loadedURIs, componentConfig);
 
             } else {
