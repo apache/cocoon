@@ -74,8 +74,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.FileNotFoundException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -84,7 +86,7 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.4 2003/05/16 07:04:55 cziegeler Exp $
+ * @version CVS $Id: XSPUtil.java,v 1.5 2003/05/31 00:06:29 joerg Exp $
  */
 public class XSPUtil {
     
@@ -136,14 +138,17 @@ public class XSPUtil {
         return buffer.toString();
     }
 
-    public static String relativeFilename(String filename, Map objectModel)
-        throws IOException {
-            File file = new File(filename);
-            if (file.isAbsolute() && file.exists()) {
-                return filename;
-            }
-            Context context = ObjectModelHelper.getContext(objectModel);
-            return NetUtils.getPath(context.getResource(filename).toExternalForm());
+    public static String relativeFilename(String filename, Map objectModel) throws IOException {
+        File file = new File(filename);
+        if (file.isAbsolute() && file.exists()) {
+            return filename;
+        }
+        Context context = ObjectModelHelper.getContext(objectModel);
+        URL resource = context.getResource(filename);
+        if (resource == null) {
+            throw new FileNotFoundException("The file " + filename + " does not exist!");
+        }
+        return NetUtils.getPath(resource.toExternalForm());
     }
 
     public static boolean isAlphaNumeric(char c) {
