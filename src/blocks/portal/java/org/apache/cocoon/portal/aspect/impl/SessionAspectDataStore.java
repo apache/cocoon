@@ -69,13 +69,13 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: SessionAspectDataStore.java,v 1.3 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: SessionAspectDataStore.java,v 1.4 2003/05/26 09:52:59 cziegeler Exp $
  */
 public class SessionAspectDataStore 
     extends AbstractLogEnabled
     implements Component, ThreadSafe, AspectDataStore, Contextualizable {
     
-     protected Context context;
+    protected Context context;
     
     protected Map getMap(Aspectalizable owner) {
         final Request request = ContextHelper.getRequest(this.context);

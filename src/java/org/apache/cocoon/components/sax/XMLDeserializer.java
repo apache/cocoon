@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * the serialized data.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: XMLDeserializer.java,v 1.1 2003/03/09 00:09:11 pier Exp $
+ * @version CVS $Id: XMLDeserializer.java,v 1.2 2003/05/26 09:52:58 cziegeler Exp $
  */
 public interface XMLDeserializer extends XMLProducer, Component {
 
@@ -79,4 +79,5 @@ public interface XMLDeserializer extends XMLProducer, Component {
     */
     void deserialize(Object saxFragment)
     throws SAXException;
+    
 }

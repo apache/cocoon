@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.5 2003/05/23 15:04:04 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.6 2003/05/26 09:52:59 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
@@ -93,7 +93,7 @@ public class URICopletAdapter
     
     public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
-		String uri = (String)coplet.getCopletData().getAttribute("uri");
+		final String uri = (String)coplet.getCopletData().getAttribute("uri");
 		Source copletSource = null;
 		PortalService portalService = null;
 		try {

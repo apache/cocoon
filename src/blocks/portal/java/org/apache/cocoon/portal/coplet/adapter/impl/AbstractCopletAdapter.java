@@ -55,10 +55,16 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.sax.XMLDeserializer;
+import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
+import org.apache.cocoon.xml.ContentHandlerWrapper;
+import org.apache.cocoon.xml.XMLConsumer;
+import org.apache.cocoon.xml.XMLUtils;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * This is the adapter to use pipelines as coplets
@@ -66,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.1 2003/05/23 15:04:04 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.2 2003/05/26 09:52:59 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
@@ -84,20 +90,80 @@ public abstract class AbstractCopletAdapter
     }
 
     
+    /**
+     * Implement this and not toSAX()
+     */
     public abstract void streamContent(CopletInstanceData coplet, 
                                          ContentHandler contentHandler)
     throws SAXException; 
     
-    
     public void toSAX(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
-        this.streamContent( coplet, contentHandler );
+        Boolean bool = (Boolean)coplet.getCopletData().getAttribute("buffer");
+        if ( bool == null) {
+            bool = (Boolean)coplet.getCopletData().getCopletBaseData().getCopletConfig().get("buffer");
+        }
+        // FIXME - remove this
+        bool = new Boolean(true);
+        
+        if ( bool != null && bool.booleanValue() ) {
+            boolean read = false;
+            XMLSerializer serializer = null;
+            Object data = null;
+            try {
+                serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
+                
+                this.streamContent( coplet, serializer );
+                data = serializer.getSAXFragment();
+                read = true;
+            } catch (ComponentException ce) {
+                throw new SAXException("Unable to lookup xml serializer.", ce);
+            } catch (Exception exception ) {
+                this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), exception);
+            } finally {
+                this.manager.release( serializer );
+            }
+            
+            if ( read ) {
+                XMLDeserializer deserializer = null;
+                try {
+                    deserializer = (XMLDeserializer)this.manager.lookup(XMLDeserializer.ROLE);
+                    if ( contentHandler instanceof XMLConsumer ) {
+                        deserializer.setConsumer( (XMLConsumer)contentHandler );
+                    } else {
+                        LexicalHandler lh = (contentHandler instanceof LexicalHandler ? (LexicalHandler)contentHandler : null);
+                        deserializer.setConsumer(  new ContentHandlerWrapper(contentHandler, lh));
+                    }
+                    deserializer.deserialize( data );
+                } catch (ComponentException ce) {
+                    throw new SAXException("Unable to lookup xml deserializer.", ce);
+                } finally {
+                    this.manager.release( deserializer );
+                }
+            } else {
+                // FIXME - get correct error message
+                contentHandler.startDocument();
+                XMLUtils.startElement( contentHandler, "p");
+                XMLUtils.data( contentHandler, "The coplet " + coplet.getId() + " is currently not available.");
+                XMLUtils.endElement(contentHandler, "p");
+                contentHandler.endDocument();                
+            }
+        } else {
+            this.streamContent( coplet, contentHandler );
+        }
+        
     }
     
     public void init(CopletInstanceData coplet) {
     }
     
     public void destroy(CopletInstanceData coplet) {
+    }
+
+    public void login(CopletInstanceData coplet) {
+    }
+        
+    public void logout(CopletInstanceData coplet) {
     }
     
 }
