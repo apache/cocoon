@@ -77,7 +77,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.59 $ $Date: 2000-11-04 07:57:15 $
+     * @version CVS $Revision: 1.1.2.60 $ $Date: 2000-11-06 13:49:30 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -562,7 +562,7 @@
         if ((list = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfLists,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
           listOfLists.add (list);
           <xsl:apply-templates/>
-          listOfList.remove(list);
+          listOfLists.remove(list);
         }
       </xsl:when>
       <xsl:otherwise>
