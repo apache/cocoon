@@ -88,7 +88,7 @@ import javax.xml.transform.OutputKeys;
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
  * @author <a href="mailto:a.saglimbeni@pro-netics.com">Alfio Saglimbeni</a>
- * @version CVS $Id: SQLTransformer.java,v 1.9 2003/09/20 17:15:32 cziegeler Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.10 2003/10/06 16:24:16 bruno Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -203,6 +203,9 @@ public class SQLTransformer
         this.namespaceURI = NAMESPACE;
     }
 
+    /** The connection used by all top level queries */
+    protected Connection conn;
+
     /**
      * Composable
      */
@@ -221,6 +224,15 @@ public class SQLTransformer
      */
     public void recycle() {
         super.recycle();
+        try {
+            // Close the connection used by all top level queries
+            if (this.conn != null) {
+                this.conn.close();
+                this.conn = null;
+            }
+        } catch ( SQLException e ) {
+            getLogger().warn( "Could not close the connection", e );
+        }
         this.queries.clear();
         this.outUri = null;
         this.outPrefix = null;
@@ -304,8 +316,19 @@ public class SQLTransformer
         AttributesImpl attr = new AttributesImpl();
         Query query = (Query) queries.elementAt( index );
         boolean query_failure = false;
+        Connection conn = null;
         try {
             try {
+                if (index == 0) {
+                    if (this.conn == null) // The first top level execute-query
+                        this.conn = query.getConnection();
+                    // reuse the global connection for all top level queries
+                    conn = this.conn;
+                }
+                else // index > 0, sub queries are always executed in an own connection
+                    conn = query.getConnection();
+
+                query.setConnection(conn);
                 query.execute();
             } catch ( SQLException e ) {
                 if (getLogger().isDebugEnabled()) {
@@ -356,6 +379,8 @@ public class SQLTransformer
         } finally {
             try {
                 query.close();
+                if (index > 0) // close the connection used by a sub query
+                    conn.close();
             } catch ( SQLException e ) {
                 getLogger().warn( "SQLTransformer: Could not close JDBC connection", e );
             }
@@ -969,6 +994,10 @@ public class SQLTransformer
             }
         }
 
+        protected void setConnection(Connection conn) {
+            this.conn = conn;
+	}
+
         /** Get a Connection. Made this a separate method to separate the logic from the actual execution. */
         protected Connection getConnection() throws SQLException {
             Connection result = null;
@@ -1030,6 +1059,10 @@ public class SQLTransformer
         }
 
         protected void execute() throws SQLException {
+            if (this.conn == null) {
+                throw new SQLException("A connection must be set before executing a query");
+            }
+
             this.rowset_name = properties.getParameter( SQLTransformer.MAGIC_DOC_ELEMENT, "rowset" );
             this.row_name = properties.getParameter( SQLTransformer.MAGIC_ROW_ELEMENT, "row" );
 
@@ -1057,8 +1090,6 @@ public class SQLTransformer
             if (transformer.getTheLogger().isDebugEnabled()) {
                 transformer.getTheLogger().debug( "EXECUTING " + query );
             }
-
-            conn = getConnection();
 
             try {
                 if ( !isstoredprocedure ) {
@@ -1191,8 +1222,6 @@ public class SQLTransformer
                     cst.close();
                 cst = null;        // Prevent using cst again.
             } finally {
-                if ( conn != null )
-                    conn.close();
                 conn = null;
             }
         }
