@@ -58,7 +58,7 @@ import java.util.Map;
  * for the forms template transformer.</p>
  *
  * @author Timothy Larson
- * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.5 2004/03/15 14:21:24 tim Exp $
+ * @version CVS $Id: EffectWidgetReplacingPipe.java,v 1.6 2004/03/15 21:33:20 joerg Exp $
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
 
@@ -170,7 +170,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     protected Widget getWidget(String widgetId) throws SAXException {
         Widget widget = contextWidget.getWidget(widgetId);
         if (widget == null) {
-            if (contextWidget.getFullyQualifiedId() == null) {
+            if (contextWidget.getFullyQualifiedId().equals("")) {
                 throwSAXException("Widget with id \"" + widgetId + "\" does not exist in the form container.");
             } else {
                 throwSAXException("Widget with id \"" + widgetId + "\" does not exist in the container \"" +
