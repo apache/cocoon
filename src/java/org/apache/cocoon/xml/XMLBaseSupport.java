@@ -52,10 +52,13 @@ package org.apache.cocoon.xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.Source;
+import org.apache.avalon.framework.logger.Logger;
 
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.util.Stack;
+import java.util.Collections;
+import java.io.IOException;
 
 /**
  * Helper class for handling xml:base attributes.
@@ -67,9 +70,6 @@ import java.util.Stack;
  *  <li>forward each startElement and endElement event to this object.
  *  <li>to resolve a relative URL against the current base, call {@link #makeAbsolute}.
  * </ul>
- *
- * Internally this class makes use of the java.net.URL class, and hence only supports
- * URL schemes recognized by the JDK.
  *
  * <p>External entities are not yet taken into account when determing the current base.
  */
@@ -84,52 +84,69 @@ public class XMLBaseSupport {
      * that contained an xml:base attribute (not for the other elements).
      */
     private Stack bases = new Stack();
+    private SourceResolver resolver;
+    private Logger logger;
 
-    public void setDocumentLocation(String loc) throws MalformedURLException {
+    public XMLBaseSupport(SourceResolver resolver, Logger logger) {
+        this.resolver = resolver;
+        this.logger = logger;
+    }
+
+    public void setDocumentLocation(String loc) throws SAXException {
         // -2 is used as level to avoid this BaseInfo to be ever popped of the stack
-        bases.push(new BaseInfo(new URL(loc), -2));
+        bases.push(new BaseInfo(loc, -2));
     }
 
     public void startElement(String namespaceURI, String localName, String qName, Attributes attrs) throws SAXException {
         level++;
         String base = attrs.getValue(XMLBASE_NAMESPACE_URI, XMLBASE_ATTRIBUTE);
         if (base != null) {
-            URL baseUrl;
-            URL currentBaseUrl = getCurrentBase();
-            try {
-                if (currentBaseUrl != null)
-                    baseUrl = new URL(currentBaseUrl, base);
-                else
-                    baseUrl = new URL(base);
-            } catch (MalformedURLException e) {
-                throw new SAXException("Problem with URL in xml:base attribute: \"" + base + "\": " + e.toString());
-            }
+            String baseUrl = resolve(getCurrentBase(), base);
             bases.push(new BaseInfo(baseUrl, level));
         }
     }
 
     public void endElement(String namespaceURI, String localName, String qName) {
         if (getCurrentBaseLevel() == level)
-            bases.peek();
+            bases.pop();
         level--;
+    }
+
+    private String resolve(String baseURI, String location) throws SAXException {
+        try {
+            String url;
+            if (baseURI != null) {
+                Source source = resolver.resolveURI(location, baseURI, Collections.EMPTY_MAP);
+                try {
+                    url = source.getURI();
+                } finally {
+                    resolver.release(source);
+                }
+            } else {
+                Source source = resolver.resolveURI(location);
+                try {
+                    url = source.getURI();
+                } finally {
+                    resolver.release(source);
+                }
+            }
+            if (logger.isDebugEnabled())
+                logger.debug("XMLBaseSupport: resolved location " + location + " against base URI " + baseURI + " to " + url);
+            return url;
+        } catch (IOException e) {
+            throw new SAXException("XMLBaseSupport: problem resolving uri.", e);
+        }
     }
 
     /**
      * Makes the given path absolute based on the current base URL.
      * @param spec any URL (relative or absolute, containing a scheme or not)
      */
-    public String makeAbsolute(String spec) throws MalformedURLException {
-        if (containsScheme(spec))
-            return spec;
-
-        URL currentBaseUrl = getCurrentBase();
-        if (currentBaseUrl != null)
-            return new URL(currentBaseUrl, spec).toExternalForm();
-        else
-            return new URL(spec).toExternalForm();
+    public String makeAbsolute(String spec) throws SAXException {
+        return resolve(getCurrentBase(), spec);
     }
 
-    private URL getCurrentBase() {
+    private String getCurrentBase() {
         if (bases.size() > 0) {
             BaseInfo baseInfo = (BaseInfo)bases.peek();
             return baseInfo.getUrl();
@@ -145,23 +162,16 @@ public class XMLBaseSupport {
         return -1;
     }
 
-    /**
-     * Returns true if the specified path contains a scheme specification part.
-     */
-    private boolean containsScheme(String path) {
-        return (path.indexOf(':') < path.indexOf('/'));
-    }
-
     private static final class BaseInfo {
-        private URL url;
+        private String url;
         private int level;
 
-        public BaseInfo(URL url, int level) {
+        public BaseInfo(String url, int level) {
             this.url = url;
             this.level = level;
         }
 
-        public URL getUrl() {
+        public String getUrl() {
             return url;
         }
 
