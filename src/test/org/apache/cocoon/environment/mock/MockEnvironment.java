@@ -134,7 +134,7 @@ public class MockEnvironment implements Environment {
     }
 
     public void setContentLength(int length) {
-        this.contentlength = contentlength;
+        this.contentlength = length;
     }
 
     public int getContentLength() {
@@ -142,7 +142,7 @@ public class MockEnvironment implements Environment {
     }
 
     public void setStatus(int statusCode) {
-        this.status = status;
+        this.status = statusCode;
     }
 
     public int getStatus() {
