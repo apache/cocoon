@@ -174,13 +174,13 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.5 2003/10/01 14:50:17 haul Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.6 2003/10/10 10:49:23 cziegeler Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
     /** strip numbers from repeated element name attributes */
     private boolean stripNumber = true;
-    ;
+
     /** Symbolic names for elements */
     /** unknown element */
     private static final int ELEMENT_DEFAULT = 0;
