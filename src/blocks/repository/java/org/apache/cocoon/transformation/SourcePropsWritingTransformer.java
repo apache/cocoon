@@ -79,7 +79,7 @@ public class SourcePropsWritingTransformer
      * Set the namespace
      */
     public SourcePropsWritingTransformer() {
-        this.defaultNamespaceURI = SPWT_URI;
+        super.defaultNamespaceURI = SPWT_URI;
     }
 
     public void recycle() {

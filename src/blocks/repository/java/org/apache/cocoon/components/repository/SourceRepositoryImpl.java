@@ -34,7 +34,7 @@ import org.apache.excalibur.source.TraversableSource;
 /**
  * SourceRepository implementation.
  * 
- * @version $Id: SourceRepositoryImpl.java,v 1.6 2004/03/27 22:01:22 unico Exp $
+ * @version $Id$
  */
 public class SourceRepositoryImpl extends AbstractLogEnabled 
 implements Serviceable, ThreadSafe, SourceRepository {
@@ -368,7 +368,7 @@ implements Serviceable, ThreadSafe, SourceRepository {
                     Iterator children = origin.getChildren().iterator();
                     while (children.hasNext()) {
                         TraversableSource child = (TraversableSource) children.next();
-                        int status = copy(child,target.getChild(child.getName()),recurse);
+                        /*int status =*/ copy(child,target.getChild(child.getName()),recurse);
                         // TODO: record this status
                         // according to the spec we must continue moving files even though
                         // a part of the move has not succeeded

@@ -115,22 +115,31 @@
 
         <!--+
             | Sample trigger definitions
-        <trigger name="test-job1"
+            <trigger name="test-job1"
                  target="org.apache.cocoon.components.cron.CronJob/test"
                  concurrent-runs="false">
-            <cron>*/12 * * * * ? *</cron>
-        </trigger>
-        <trigger name="test-job2"
+                <cron>*/12 * * * * ? *</cron>
+            </trigger>
+            <trigger name="test-job2"
                  target="org.apache.cocoon.components.cron.CronJob/test"
                  concurrent-runs="true">
-            <seconds>*/12</seconds>
-            <minutes>*/5</minutes>
-            <hours>8,10,12,14,16,18</hours>
-            <days>?</days>
-            <months>*</months>
-            <weekdays>SUN-FRI</weekdays>
-        </trigger>
-            +-->
+                 <seconds>*/12</seconds>
+                 <minutes>*/5</minutes>
+                 <hours>8,10,12,14,16,18</hours>
+                 <days>?</days>
+                 <months>*</months>
+                 <weekdays>SUN-FRI</weekdays>
+            </trigger>
+            <trigger name="pipeline-test"
+	         target="org.apache.cocoon.components.cron.CronJob/pipeline-test"
+		 concurrent-runs="true">
+		 <minutes>0</minutes>
+		 <hours>12</hours>
+		 <days>?</days>
+		 <months>*</months>
+		 <weekdays>MON-FRI</weekdays>
+	    </trigger>
+            -->
       </triggers>
     </component>
   

@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
+<!-- CVS $Id$ -->
 <xsp:page language="java" xmlns:xsp="http://apache.org/xsp">
 
   <page>
@@ -92,6 +92,15 @@
       <p>
         Enter a query and search the Lucene index2 that you have created
         - using <a href="findIt2?queryString=cocoon">Cocoon Generators</a>.
+      </p>
+      <p>
+        Construct a query and search the Lucene index2 that you have created
+        - using <a href="query/advanced.html">Cocoon Forms</a>.<br/>
+        Or enter a word or two in here : 
+        	<form action="query/simple.html">
+        		<input type="text" name="query" size="20" value="cocoon"/>
+        		<input type="submit" value="Search" />
+        	</form>
       </p>
       
       <h2>Internals</h2>

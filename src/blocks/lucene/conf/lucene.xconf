@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
+<!-- CVS $Id$ -->
 <xconf xpath="/cocoon" unless="cocoon-indexer">
 
   <!-- Search:
