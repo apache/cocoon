@@ -50,47 +50,66 @@
 */
 package org.apache.cocoon.components.cron;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 
 
 /**
- * A simple test CronJob.
+ * A simple test CronJob which also calls a pipeline internally.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: TestCronJob.java,v 1.2 2003/09/05 10:22:39 giacomo Exp $
+ * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
+ * @version CVS $Id: TestCronJob.java,v 1.3 2003/12/19 09:01:43 reinhard Exp $
  *
  * @since 2.1.1
  */
-public class TestCronJob
-extends AbstractLogEnabled
-implements CronJob, Configurable, Component, ConfigurableCronJob {
+public class TestCronJob extends AbstractPipelineCallingCronJob
+    implements CronJob, Configurable, ConfigurableCronJob, Composable {
+    
     /** Parameter key for the message */
     public static final String PARAMETER_MESSAGE = "TestCronJob.Parameter.Message";
 
     /** Parameter key for the sleep value */
     public static final String PARAMETER_SLEEP = "TestCronJob.Parameter.Sleep";
 
+	/** Parameter key for the pipeline to be called */
+	public static final String PARAMETER_PIPELINE = "TestCronJob.Parameter.Pipeline";    
+
     /** The configured message */
     private String m_msg;
 
     /** The configured sleep time */
     private int m_sleep;
+    
+    /** The pipeline to be called */
+    private String pipeline = null;
+
+    /** The service manager */
+    private ComponentManager manager;
+
+    public void compose( ComponentManager manager) throws ComponentException {
+        this.manager = manager;
+    }    
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
      */
     public void configure(final Configuration config)
-    throws ConfigurationException {
+    	throws ConfigurationException {
         m_msg = config.getChild("msg").getValue("I was not configured");
         m_sleep = config.getChild("sleep").getValueAsInteger(11000);
+        pipeline = config.getChild("pipeline").getValue("samples/hello-world/hello.xhtml");
     }
 
     /* (non-Javadoc)
@@ -99,7 +118,29 @@ implements CronJob, Configurable, Component, ConfigurableCronJob {
     public void execute(String name) {
         getLogger().info("CronJob " + name + " launched at " + new Date() + " with message '" + m_msg +
                          "' and sleep timeout of " + m_sleep + "ms");
+        
+        InputStream is = null;
+        try {
+            is = process(pipeline);
+        } catch (Exception e) {
+            getLogger().error("error in execution of TestCronJob", e);
+        } 
+        StringBuffer sb = new StringBuffer();
+        try {        
+            InputStreamReader reader = new InputStreamReader(is);
+            sb = new StringBuffer();
+            char[] b = new char[8192];
+            int n;
 
+            while((n = reader.read(b)) > 0) {
+                sb.append(b, 0, n); 
+            } 
+        } catch( IOException ioe ) {
+            getLogger().error("error trying to read the InputStream returned by the Pipeline processor");
+        }
+        getLogger().info("Cronjob " + name + " called pipeline " + pipeline + 
+            " and received following content:\n" + sb.toString() );
+       
         try {
             Thread.sleep(m_sleep);
         } catch (final InterruptedException ie) {
@@ -117,6 +158,11 @@ implements CronJob, Configurable, Component, ConfigurableCronJob {
         if (null != params) {
             m_msg = params.getParameter(PARAMETER_MESSAGE, m_msg);
             m_sleep = params.getParameterAsInteger(PARAMETER_SLEEP, m_sleep);
+            pipeline = params.getParameter(PARAMETER_PIPELINE, pipeline );
+            
         }
     }
+
+
+    
 }

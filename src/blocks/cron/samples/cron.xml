@@ -63,6 +63,10 @@
                                 <td><input name="sleep" size="4" value="${sleep}"/></td>
                             </tr>
                             <tr>
+                                <td align="right">Call a pipeline:</td>
+                                <td><input name="pipeline" size="40" value="${pipeline}"/></td>
+                            </tr>                            
+                            <tr>
                                 <td align="right">
                                     <p>Choose the type of triggering:</p>
                                 </td>

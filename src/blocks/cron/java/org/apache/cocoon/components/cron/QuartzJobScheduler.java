@@ -63,12 +63,16 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.Constants;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -91,13 +95,13 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * This component can either schedule jobs or directly execute one.
  *
  * @author <a href="mailto:giacomo@apache.org">Giacomo Pati</a>
- * @version CVS $Id: QuartzJobScheduler.java,v 1.6 2003/09/18 08:54:18 giacomo Exp $
+ * @version CVS $Id: QuartzJobScheduler.java,v 1.7 2003/12/19 09:01:43 reinhard Exp $
  *
  * @since 2.1.1
  */
 public class QuartzJobScheduler
 extends AbstractLogEnabled
-implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable {
+implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable, Contextualizable {
     /** ThreadPool policy RUN */
     private static final String POLICY_RUN = "RUN";
 
@@ -300,6 +304,14 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
         m_executor = null;
     }
+
+	/* (non-Javadoc)
+	 * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+	 */
+	public void contextualize(Context context) throws ContextException {
+		org.apache.cocoon.environment.Context c = (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+		System.out.println("context: " + c.getRealPath("/") );
+	}    
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#fireTarget(java.lang.Object)
@@ -693,7 +705,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      * A ThreadPool for the Quartz Scheduler based on Doug Leas concurrency utilities PooledExecutor
      *
      * @author <a href="mailto:giacomo@otego.com">Giacomo Pati</a>
-     * @version CVS $Id: QuartzJobScheduler.java,v 1.6 2003/09/18 08:54:18 giacomo Exp $
+     * @version CVS $Id: QuartzJobScheduler.java,v 1.7 2003/12/19 09:01:43 reinhard Exp $
      */
     private static class ThreadPool
     extends AbstractLogEnabled
@@ -752,7 +764,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
             try {
                 if (m_shutdownWaitTimeMs > 0) {
                     if (!m_executor.awaitTerminationAfterShutdown(m_shutdownWaitTimeMs)) {
-                        getLogger().warn("scheduled cron jobs are not terminating withing " + m_shutdownWaitTimeMs +
+                        getLogger().warn("scheduled cron jobs are not terminating within " + m_shutdownWaitTimeMs +
                                          "ms, Will shut them down by interruption");
                         m_executor.interruptAll();
                         m_executor.shutdownNow();
@@ -765,4 +777,5 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
             }
         }
     }
+
 }
