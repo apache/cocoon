@@ -15,7 +15,8 @@
  */
 package org.apache.cocoon.samples.flow.java;
 
-import org.apache.cocoon.components.flow.java.*;
+import org.apache.cocoon.components.flow.java.AbstractContinuable;
+import org.apache.cocoon.components.flow.java.VarMap;
 
 public class CalculatorFlow extends AbstractContinuable {
 

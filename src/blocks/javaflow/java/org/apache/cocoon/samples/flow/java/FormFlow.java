@@ -15,13 +15,18 @@
  */
 package org.apache.cocoon.samples.flow.java;
 
-import org.apache.cocoon.components.flow.java.*;
-import org.apache.cocoon.forms.flow.java.*;
-import org.apache.cocoon.forms.formmodel.*;
-import org.apache.cocoon.forms.binding.*; 
-import org.apache.cocoon.forms.samples.*;
-                 
 import java.util.Date;
+
+import org.apache.cocoon.components.flow.java.AbstractContinuable;
+import org.apache.cocoon.components.flow.java.VarMap;
+import org.apache.cocoon.forms.binding.BindingException;
+import org.apache.cocoon.forms.flow.java.FormInstance;
+import org.apache.cocoon.forms.formmodel.BooleanField;
+import org.apache.cocoon.forms.formmodel.Field;
+import org.apache.cocoon.forms.formmodel.Repeater;
+import org.apache.cocoon.forms.samples.Contact;
+import org.apache.cocoon.forms.samples.Form2Bean;
+import org.apache.cocoon.forms.samples.Sex;
 
 public class FormFlow extends AbstractContinuable {
 

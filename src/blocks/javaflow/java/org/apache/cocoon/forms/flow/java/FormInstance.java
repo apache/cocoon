@@ -17,16 +17,19 @@
 package org.apache.cocoon.forms.flow.java;
                                                                                                                                                                                
 import java.util.Locale;
-                                                                                                                                                                               
-import org.apache.cocoon.components.flow.FlowHelper;
-import org.apache.cocoon.components.flow.java.*;
-import org.apache.cocoon.forms.flow.javascript.FormsFlowHelper;
-import org.apache.cocoon.forms.*;
-import org.apache.cocoon.forms.binding.*;
-import org.apache.cocoon.forms.formmodel.*;
-import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
-import org.apache.excalibur.source.*;
 
+import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.cocoon.components.flow.java.AbstractContinuable;
+import org.apache.cocoon.components.flow.java.VarMap;
+import org.apache.cocoon.forms.FormContext;
+import org.apache.cocoon.forms.FormManager;
+import org.apache.cocoon.forms.binding.Binding;
+import org.apache.cocoon.forms.binding.BindingManager;
+import org.apache.cocoon.forms.formmodel.Form;
+import org.apache.cocoon.forms.formmodel.Widget;
+import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
+import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.w3c.dom.Element;
 
 /**
@@ -34,7 +37,7 @@ import org.w3c.dom.Element;
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: FormInstance.java,v 1.3 2004/04/01 12:40:40 stephan Exp $
+ * @version CVS $Id: FormInstance.java,v 1.4 2004/04/04 06:35:08 antonio Exp $
  */
 public class FormInstance extends AbstractContinuable {
 

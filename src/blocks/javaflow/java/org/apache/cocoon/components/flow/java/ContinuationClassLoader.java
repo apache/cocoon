@@ -15,16 +15,53 @@
  */
 package org.apache.cocoon.components.flow.java;
 
-import org.apache.bcel.Constants;
-import org.apache.bcel.Repository;
-import org.apache.bcel.classfile.*;
-import org.apache.bcel.generic.*;
-import org.apache.bcel.util.ClassLoaderRepository;
-import org.apache.bcel.verifier.exc.AssertionViolatedException;
-import org.apache.bcel.verifier.structurals.*;
-
 import java.util.ArrayList;
 import java.util.Vector;
+
+import org.apache.bcel.Constants;
+import org.apache.bcel.Repository;
+import org.apache.bcel.classfile.ConstantCP;
+import org.apache.bcel.classfile.ConstantNameAndType;
+import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ACONST_NULL;
+import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.GOTO;
+import org.apache.bcel.generic.IFEQ;
+import org.apache.bcel.generic.IFNONNULL;
+import org.apache.bcel.generic.IFNULL;
+import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.InstructionConstants;
+import org.apache.bcel.generic.InstructionFactory;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InstructionTargeter;
+import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.PUSH;
+import org.apache.bcel.generic.RET;
+import org.apache.bcel.generic.ReferenceType;
+import org.apache.bcel.generic.ReturnaddressType;
+import org.apache.bcel.generic.SWAP;
+import org.apache.bcel.generic.TABLESWITCH;
+import org.apache.bcel.generic.TargetLostException;
+import org.apache.bcel.generic.Type;
+import org.apache.bcel.util.ClassLoaderRepository;
+import org.apache.bcel.verifier.exc.AssertionViolatedException;
+import org.apache.bcel.verifier.structurals.ControlFlowGraph;
+import org.apache.bcel.verifier.structurals.ExceptionHandler;
+import org.apache.bcel.verifier.structurals.ExecutionVisitor;
+import org.apache.bcel.verifier.structurals.Frame;
+import org.apache.bcel.verifier.structurals.InstConstraintVisitor;
+import org.apache.bcel.verifier.structurals.InstructionContext;
+import org.apache.bcel.verifier.structurals.LocalVariables;
+import org.apache.bcel.verifier.structurals.OperandStack;
+import org.apache.bcel.verifier.structurals.UninitializedObjectType;
 
 /**
  * The classloader breakes the methods of the classes into pieces and
@@ -35,7 +72,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ContinuationClassLoader.java,v 1.3 2004/04/01 12:40:40 stephan Exp $
+ * @version CVS $Id: ContinuationClassLoader.java,v 1.4 2004/04/04 06:35:08 antonio Exp $
  */
 public class ContinuationClassLoader extends ClassLoader {
 

@@ -15,19 +15,22 @@
  */
 package org.apache.cocoon.samples.flow.java;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 
-import javax.jdo.PersistenceManager;
-
-import org.apache.cocoon.components.flow.java.*;
-import org.apache.cocoon.forms.binding.*;
-import org.apache.cocoon.forms.flow.java.*;
-import org.apache.cocoon.forms.formmodel.Form;
+import org.apache.cocoon.components.flow.java.AbstractContinuable;
+import org.apache.cocoon.components.flow.java.Continuable;
+import org.apache.cocoon.components.flow.java.VarMap;
+import org.apache.cocoon.forms.binding.BindingException;
+import org.apache.cocoon.forms.flow.java.FormInstance;
 import org.apache.cocoon.ojb.broker.components.PBFactory;
-import org.apache.cocoon.ojb.samples.EmployeeDAO;
 import org.apache.cocoon.ojb.samples.bean.Employee;
-import org.apache.ojb.broker.*;
-import org.apache.ojb.broker.query.*;
+import org.apache.ojb.broker.Identity;
+import org.apache.ojb.broker.PersistenceBroker;
+import org.apache.ojb.broker.query.Criteria;
+import org.apache.ojb.broker.query.QueryByCriteria;
 
 public class PersistenceFlow extends AbstractContinuable {
 
