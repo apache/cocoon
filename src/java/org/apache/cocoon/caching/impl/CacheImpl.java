@@ -75,7 +75,7 @@ import org.apache.excalibur.store.Store;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.7 2003/08/08 11:15:11 cziegeler Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.8 2003/12/11 18:20:08 sylvain Exp $
  */
 public class CacheImpl
 extends AbstractLogEnabled
@@ -173,7 +173,7 @@ implements Cache, ThreadSafe, Composable, Disposable, Parameterizable {
      * @see org.apache.avalon.framework.parameters.Parameterizable#parameterize(org.apache.avalon.framework.parameters.Parameters)
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        String storeName = parameters.getParameter("store", Store.TRANSIENT_STORE);
+        String storeName = parameters.getParameter("store", Store.ROLE);
         try {
             this.store = (Store)this.manager.lookup(storeName);
         } catch (ComponentException ce) {
