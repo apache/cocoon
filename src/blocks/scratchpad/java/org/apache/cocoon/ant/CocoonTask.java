@@ -96,7 +96,7 @@ import org.apache.tools.ant.types.Reference;
  * Ant task for running Cocoon.
  *
  * @author    huber@apache.org
- * @version CVS $Id: CocoonTask.java,v 1.2 2003/09/09 19:03:44 joerg Exp $
+ * @version CVS $Id: CocoonTask.java,v 1.3 2003/09/09 19:21:45 joerg Exp $
  */
 public class CocoonTask extends Task {
 
@@ -640,7 +640,7 @@ public class CocoonTask extends Task {
                 logLevel = "WARN";
             }
 
-            // configure the logKitManager,
+            // configure the logKitLoggerManager,
             // either by using a logkit.xconf file or by a logger
             final Priority priority = Priority.getPriorityForName(logLevel);
             Hierarchy.getDefaultHierarchy().setDefaultPriority(priority);
