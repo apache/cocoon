@@ -1,6 +1,6 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 
-<!-- $Id: esql.xsl,v 1.4 2003/08/04 13:41:46 haul Exp $-->
+<!-- $Id: esql.xsl,v 1.5 2003/09/05 13:01:01 haul Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.4 $ $Date: 2003/08/04 13:41:46 $
+ * @version CVS $Revision: 1.5 $ $Date: 2003/09/05 13:01:01 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -460,6 +460,11 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
 </xsl:template>
 
 
+<xspdoc:descr>Internal helper to select the resultset-from-object attribute of the nested esql:call element.</xspdoc:descr>
+<xsl:template match="esql:call" mode="resultset">
+  <xsl:value-of select="@resultset-from-object"/>
+</xsl:template>
+
 <xsl:template match="esql:connection//esql:execute-query">
 
   <xsl:variable name="query"><xsl:choose><xsl:when test="esql:query"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:query"/></xsl:call-template></xsl:when><xsl:when test="esql:call"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:call"/></xsl:call-template></xsl:when></xsl:choose></xsl:variable>
@@ -499,7 +504,7 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
           </xsl:for-each>
           <xsl:choose>
             <xsl:when test="esql:call[@needs-query='true' or @needs-query='yes']">_esql_query.execute(true);</xsl:when>
-            <xsl:when test="esql:call[@resultset-from-object]">_esql_query.execute(<xsl:copy-of select="esql:call[@resultset-from-object]"/>);</xsl:when>
+            <xsl:when test="esql:call[@resultset-from-object]">_esql_query.execute(<xsl:apply-templates select="esql:call" mode="resultset"/>);</xsl:when>
             <xsl:otherwise>_esql_query.execute();</xsl:otherwise>
           </xsl:choose>
         </xsl:when>
