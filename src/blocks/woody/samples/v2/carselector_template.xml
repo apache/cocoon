@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<page xmlns:wt="http://apache.org/cocoon/woody/template/1.0" 
+      xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"
+      xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+  <title>Car selector</title>
+  <para>This example illustrates how you can programmatically update the
+    content of a selection list.</para>
+  <para>
+    This sample illustrates event-handling in Woody and how selection lists can be changed
+    programmatically.
+  </para>
+  <para>
+    Event-handlers are defined in the form definition to update the selection lists and set
+    the comment text below the table. This requires only a few lines of server-side JavaScript.
+    Selection widgets also have a "submit-on-change" attribute set in the form template so that
+    changes are considered immediately by the server.
+  </para>
+  <para>
+    See "carselector_form.xml" and "carselector_template.xml" to see how this is done.
+  </para>
+  <content>
+    <wt:form-template action="carselector" method="POST">
+      <wt:continuation-id/>
+      <table border="1">
+        <tr>
+          <td valign="top"><wt:widget-label id="make"/></td>
+          <td valign="top">
+            <wt:widget id="make">
+              <wi:styling submit-on-change="true"/>
+            </wt:widget>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="type"/></td>
+          <td valign="top">
+            <wt:widget id="type">
+              <wi:styling submit-on-change="true"/>
+            </wt:widget>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="model"/></td>
+          <td valign="top">
+            <wt:widget id="model">
+              <wi:styling submit-on-change="true"/>
+            </wt:widget>
+          </td>
+        </tr>
+      </table>
+
+      <br/>
+      <wt:widget id="message"/>
+      <br/>
+      <br/>
+      <input type="submit" value="Buy it!" onClick="document.forms[0].action='#{$cocoon/continuation/id}.continue';document.forms[0].submit()"/>
+      <input type="submit" name="prev" value="Back" onClick="document.forms[0].action='#{$cocoon/continuation/previousBookmark/id}.continue';document.forms[0].submit()"/>
+
+    </wt:form-template>
+  </content>
+</page>
