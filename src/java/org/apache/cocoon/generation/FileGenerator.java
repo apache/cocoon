@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,24 +32,27 @@ import java.util.Map;
 /**
  * @cocoon.sitemap.component.documentation
  * The <code>FileGenerator</code> is a class that reads XML from a source
- * and generates SAX Events.
- * The FileGenerator implements the <code>CacheableProcessingComponent</code> interface.
+ * and generates SAX Events. The <code>FileGenerator</code> implements the
+ * <code>CacheableProcessingComponent</code> interface.
+ *
+ * <br>See {@link FileGeneratorFactory} for thread safe implementation of this
+ * component.
  *
  * @cocoon.sitemap.component.name   file
  * @cocoon.sitemap.component.label  content
  * @cocoon.sitemap.component.logger sitemap.generator.file
  * @cocoon.sitemap.component.documentation.caching
- *               Uses the last modification date of the xml document for validation
+ *     Uses the last modification date of the xml document for validation
  *
  * @cocoon.sitemap.component.pooling.max  32
  *
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class FileGenerator extends ServiceableGenerator
-implements CacheableProcessingComponent {
+                           implements CacheableProcessingComponent {
 
     /** The input source */
     protected Source inputSource;
