@@ -23,19 +23,12 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractProcessingNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: AbstractProcessingNode.java,v 1.3 2004/05/25 13:30:10 cziegeler Exp $
  */
 
 public abstract class AbstractProcessingNode extends AbstractLogEnabled implements ProcessingNode {
 
     protected String location = "unknown location";
-
-    /**
-     * Get the <code>SourceResolver</code> in an object model.
-     */
-    protected static final SourceResolver getSourceResolver(Map objectModel) {
-        return (SourceResolver)objectModel.get(OBJECT_SOURCE_RESOLVER);
-    }
 
     /**
      * Get the location of this node.

@@ -22,15 +22,10 @@ import org.apache.cocoon.environment.Environment;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ProcessingNode.java,v 1.2 2004/03/05 13:02:51 bdelacretaz Exp $
+ * @version CVS $Id: ProcessingNode.java,v 1.3 2004/05/25 13:30:10 cziegeler Exp $
  */
 
 public interface ProcessingNode extends ThreadSafe {
-
-    /**
-     * The key of the <code>SourceResolver</code> in the object model.
-     */
-    String OBJECT_SOURCE_RESOLVER = "source-resolver";
 
     /**
      * Process environment.

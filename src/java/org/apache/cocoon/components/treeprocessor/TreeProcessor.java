@@ -51,7 +51,6 @@ import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.container.ComponentManagerWrapper;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
-import org.apache.cocoon.components.treeprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ForwardRedirector;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
@@ -64,7 +63,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.27 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.28 2004/05/25 13:30:10 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -336,14 +335,12 @@ public class TreeProcessor
 
         Map objectModel = environment.getObjectModel();
 
-        Object oldResolver = objectModel.get(ProcessingNode.OBJECT_SOURCE_RESOLVER);
         Object oldRedirector = environment.getAttribute(REDIRECTOR_ATTR);
 
         // Build a redirector
         TreeProcessorRedirector redirector = new TreeProcessorRedirector(environment, context);
         setupLogger(redirector);
 
-        objectModel.put(ProcessingNode.OBJECT_SOURCE_RESOLVER, environment);
         environment.setAttribute(REDIRECTOR_ATTR, redirector);
         try {
             boolean success = this.rootNode.invoke(environment, context);
@@ -354,7 +351,6 @@ public class TreeProcessor
             EnvironmentHelper.leaveProcessor();
             // Restore old redirector and resolver
             environment.setAttribute(REDIRECTOR_ATTR, oldRedirector);
-            objectModel.put(PipelinesNode.OBJECT_SOURCE_RESOLVER, oldResolver);
         }
     }
         
