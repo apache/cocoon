@@ -69,7 +69,7 @@ import org.apache.excalibur.source.SourceParameters;
  *  @author <a href="mailto:g.casper@s-und-n.de">Guido Casper</a>
  *  @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *  @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- *  @version $Id: WebDAVSourceFactory.java,v 1.1 2003/07/11 10:32:35 gianugo Exp $
+ *  @version $Id: WebDAVSourceFactory.java,v 1.2 2003/07/13 01:25:43 vgritsenko Exp $
 */
 public class WebDAVSourceFactory
     extends AbstractLogEnabled
