@@ -6,8 +6,9 @@
     <xsp:include>org.apache.cocoon.woody.formmodel.*</xsp:include>
   </xsp:structure>
 
-  <html>
-    <body>
+  <page>
+    <title>Registration result</title>
+    <content>
       <xsp:logic>
         // get reference to form and some of the widgets on it
         Form form = (Form)request.getAttribute("registrationform");
@@ -15,6 +16,6 @@
       </xsp:logic>
 
       Registration was successful for <xsp:expr>name.getValue()</xsp:expr>
-    </body>
-  </html>
+    </content>
+  </page>
 </xsp:page>
