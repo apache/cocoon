@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -47,7 +46,7 @@ import org.apache.cocoon.components.thread.RunnableManager;
  */
 public class ContinuationsManagerImpl
         extends AbstractLogEnabled
-        implements ContinuationsManager, Configurable, Disposable, ThreadSafe, Serviceable {
+        implements ContinuationsManager, Configurable, ThreadSafe, Serviceable {
 
     static final int CONTINUATION_ID_LENGTH = 20;
     static final String EXPIRE_CONTINUATIONS = "expire-continuations";
@@ -130,16 +129,6 @@ public class ContinuationsManagerImpl
     throws ServiceException
     {
         this.serviceManager = manager;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        // stop the thread
-        /*if ( this.interrupt != null ) {
-            this.interrupt.doRun = false;
-        }*/
     }
     
     public WebContinuation createWebContinuation(Object kont,
