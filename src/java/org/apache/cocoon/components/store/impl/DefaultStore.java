@@ -76,9 +76,9 @@ import org.apache.excalibur.store.impl.JispStringKey;
  *
  * @author <a href="mailto:g-froehlich@gmx.de">Gerhard Froehlich</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: DefaultStore.java,v 1.2 2003/07/14 19:09:00 cziegeler Exp $
+ * @version CVS $Id: DefaultStore.java,v 1.3 2003/07/26 13:26:47 cziegeler Exp $
  */
-public final class DefaultStore extends AbstractJispFilesystemStore
+public class DefaultStore extends AbstractJispFilesystemStore
     implements org.apache.excalibur.store.Store,
                Contextualizable,
                ThreadSafe,
