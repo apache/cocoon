@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
 /**
  * The default implementation of <code>ProgramGenerator</code>
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.29 $ $Date: 2001-02-16 22:07:34 $
+ * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-02-17 19:09:10 $
  */
 public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGenerator, Contextualizable, Composer, Configurable, ThreadSafe {
 
@@ -126,81 +126,89 @@ public class ProgramGeneratorImpl extends AbstractLoggable implements ProgramGen
      * @return The loaded program instance
      * @exception Exception If an error occurs during generation or loading
      */
-    public CompiledComponent load(File file, String markupLanguageName, String programmingLanguageName,
-        EntityResolver resolver) throws Exception {
-            // Get markup and programming languages
-            MarkupLanguage markupLanguage = (MarkupLanguage)this.markupSelector.select(markupLanguageName);
-            ProgrammingLanguage programmingLanguage =
-                (ProgrammingLanguage)this.languageSelector.select(programmingLanguageName);
-                programmingLanguage.setLanguageName(programmingLanguageName);
-            // Create filesystem store
-            // Set filenames
-            String filename = IOUtils.getFullFilename(file);
-            String normalizedName = IOUtils.normalizedFilename(filename);
-            String sourceExtension = programmingLanguage.getSourceExtension();
-            // Ensure no 2 requests for the same file overlap
-            Class program = null;
-            CompiledComponent programInstance = null;
+    public CompiledComponent load(File file,
+                                  String markupLanguageName,
+                                  String programmingLanguageName,
+                                  EntityResolver resolver)
+    throws Exception {
+        // Get markup and programming languages
+        MarkupLanguage markupLanguage = (MarkupLanguage)this.markupSelector.select(markupLanguageName);
+        ProgrammingLanguage programmingLanguage =
+            (ProgrammingLanguage)this.languageSelector.select(programmingLanguageName);
 
-            // Attempt to load program object from cache
+        programmingLanguage.setLanguageName(programmingLanguageName);
+        // Create filesystem store
+        // Set filenames
+        String filename = IOUtils.getFullFilename(file);
+        String normalizedName = IOUtils.normalizedFilename(filename);
+        String sourceExtension = programmingLanguage.getSourceExtension();
+        // Ensure no 2 requests for the same file overlap
+        Class program = null;
+        CompiledComponent programInstance = null;
+
+        // Attempt to load program object from cache
+        try {
+            programInstance = (CompiledComponent) this.cache.select(normalizedName);
+        } catch (Exception e) {
+            getLogger().debug("The instance was not accessible, creating it now.", e);
+        }
+
+        if (programInstance == null) {
             try {
-                programInstance = (CompiledComponent) this.cache.select(filename);
-                if (this.autoReload == false) return programInstance;
-            } catch (Exception e) {
-                getLogger().debug("The instance was not accessible, creating it now.");
-                try {
-                    if (programInstance == null) {
-                      /*
-                         FIXME: Passing null as encoding may result in invalid
-                         recompilation under certain circumstances!
-                      */
+                /*
+                 * FIXME: Passing null as encoding may result in invalid
+                 * recompilation under certain circumstances!
+                 */
 
-                        program = programmingLanguage.load(normalizedName, this.workDir, null);
-                        // Store loaded program in cache
-                        this.cache.addGenerator(filename, program);
-                    }
-
-                    programInstance = (CompiledComponent) this.cache.select(filename);
-
-                } catch (LanguageException le) {
-                    getLogger().debug("Language Exception", le);
-                }
-
-              /*
-                 FIXME: It's the program (not the instance) that must
-                 be queried for changes!!!
-              */
-
-                if (programInstance != null && programInstance.modifiedSince(file.lastModified())) {
-                    // Unload program
-                    programmingLanguage.unload(program, normalizedName, this.workDir);
-                    // Invalidate previous program/instance pair
-                    program = null;
-                    programInstance = null;
-                }
-
-                if (program == null) {
-                    // Generate code
-                    String code = markupLanguage.generateCode(
-                        new InputSource(
-                        new FileReader(file)), normalizedName, programmingLanguage, resolver);
-                    String encoding = markupLanguage.getEncoding();
-                    // Format source code if applicable
-                    CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();
-                    if (codeFormatter != null) {
-                        code = codeFormatter.format(code, encoding);
-                    }
-                    // Store generated code
-                    String sourceFilename = filename + "." + sourceExtension;
-                    repository.store(sourceFilename, code);
-                    // [Compile]/Load generated program
-                    program = programmingLanguage.load(normalizedName, this.workDir, encoding);
-                    // Store generated program in cache
-                    this.cache.addGenerator(filename, program);
-                }
-                // Instantiate
-                programInstance = (CompiledComponent) this.cache.select(filename);
+                program = programmingLanguage.load(normalizedName, this.workDir, null);
+                // Store loaded program in cache
+                this.cache.addGenerator(normalizedName, program);
+            } catch (LanguageException le) {
+                getLogger().debug("Language Exception", le);
             }
-            return programInstance;
+
+            try {
+                programInstance = (CompiledComponent) this.cache.select(normalizedName);
+            } catch (Exception cme) {
+                getLogger().debug("Can't load ServerPage", cme);
+            }
+        }
+
+        if (this.autoReload == false) return programInstance;
+
+        /*
+         * FIXME: It's the program (not the instance) that must
+         * be queried for changes!!!
+         */
+
+        if (programInstance != null && programInstance.modifiedSince(file.lastModified())) {
+            // Unload program
+            programmingLanguage.unload(program, normalizedName, this.workDir);
+            // Invalidate previous program/instance pair
+            program = null;
+            programInstance = null;
+        }
+
+        if (program == null) {
+            // Generate code
+            String code = markupLanguage.generateCode(
+                new InputSource(
+                new FileReader(file)), normalizedName, programmingLanguage, resolver);
+            String encoding = markupLanguage.getEncoding();
+            // Format source code if applicable
+            CodeFormatter codeFormatter = programmingLanguage.getCodeFormatter();
+            if (codeFormatter != null) {
+                code = codeFormatter.format(code, encoding);
+            }
+            // Store generated code
+            String sourceFilename = filename + "." + sourceExtension;
+            repository.store(sourceFilename, code);
+            // [Compile]/Load generated program
+            program = programmingLanguage.load(normalizedName, this.workDir, encoding);
+            // Store generated program in cache
+            this.cache.addGenerator(normalizedName, program);
+        }
+        // Instantiate
+        return (CompiledComponent) this.cache.select(normalizedName);
     }
 }

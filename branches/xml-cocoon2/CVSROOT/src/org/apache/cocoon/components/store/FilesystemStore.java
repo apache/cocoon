@@ -5,29 +5,29 @@ import java.util.Enumeration;
 
 import org.apache.cocoon.util.IOUtils;
 
-import org.apache.log.Logger;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.AbstractLoggable;
 
 import org.apache.avalon.ThreadSafe;
 
 import java.io.IOException;
 
-public class FilesystemStore implements Store, ThreadSafe, Loggable {
+public class FilesystemStore extends AbstractLoggable implements Store, ThreadSafe {
   /** The directory repository */
   protected File directoryFile;
   protected volatile String directoryPath;
 
-  private Logger log;
-
   /**
-   * Constructor
+   * Sets the repository's location
    */
-  public FilesystemStore(String directoryName) throws IOException {
-    this(new File(directoryName));
+  public void setDirectory(String directory) throws IOException {
+      this.setDirectory(new File(directory));
   }
 
-  public FilesystemStore(File directoryFile) throws IOException {
-    this.directoryFile = directoryFile;
+  /**
+   * Sets the repository's location
+   */
+  public void setDirectory(File directory) throws IOException {
+    this.directoryFile = directory;
 
     /* Save directory path prefix */
     this.directoryPath = IOUtils.getFullFilename(this.directoryFile);
@@ -55,12 +55,6 @@ public class FilesystemStore implements Store, ThreadSafe, Loggable {
       );
     }
   }
-
-    public void setLogger(Logger logger) {
-        if (this.log == null) {
-            this.log = logger;
-        }
-    }
 
   /**
    * Returns the repository's full pathname
@@ -101,7 +95,7 @@ public class FilesystemStore implements Store, ThreadSafe, Loggable {
       if (value == null) { /* Directory */
         if (file.exists()) {
           if (!file.delete()) { /* FAILURE */
-           log.error("File cannot be deleted: " + file.toString());
+           getLogger().error("File cannot be deleted: " + file.toString());
            return;
           }
         }

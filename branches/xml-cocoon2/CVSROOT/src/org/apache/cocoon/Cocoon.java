@@ -45,7 +45,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a> (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.55 $ $Date: 2001-02-16 22:07:31 $
+ * @version CVS $Revision: 1.4.2.56 $ $Date: 2001-02-17 19:08:46 $
  */
 public class Cocoon extends AbstractLoggable implements Component, Initializable, Modifiable, Processor, Contextualizable {
     /** The application context */
@@ -113,7 +113,9 @@ public class Cocoon extends AbstractLoggable implements Component, Initializable
 
         try {
             getLogger().debug("Creating Repository with this directory: " + this.workDir);
-            FilesystemStore repository = new FilesystemStore(this.workDir);
+            FilesystemStore repository = new FilesystemStore();
+            repository.setLogger(getLogger());
+            repository.setDirectory(this.workDir);
             this.componentManager.addComponentInstance(Roles.REPOSITORY, repository);
         } catch (IOException e) {
             getLogger().error("Could not create repository!", e);
