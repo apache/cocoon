@@ -53,8 +53,8 @@
 </table>
 </form>
 
-<t:if test="$(cartForm.cart.numberOfItems.intValue() > 0}">
-<br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
+<t:if test="${cartForm.cart.numberOfItems > 0}">
+  <br /><center><a href="checkout.do"><img border="0" src="images/button_checkout.gif" /></a></center>
 </t:if>
 
 </td>
