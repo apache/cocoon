@@ -89,7 +89,7 @@ import java.net.UnknownHostException;
  * @author <a href="mailto:crafterm@fztig938.bank.dresdner.net">Marcus Crafter</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Revision: 1.6 $ $Date: 2003/06/05 02:55:51 $
+ * @version CVS $Revision: 1.7 $ $Date: 2003/06/05 21:06:17 $
  */
 public final class XConfToolTask extends MatchingTask {
 
@@ -248,7 +248,7 @@ public final class XConfToolTask extends MatchingTask {
 
         // Test that 'root' node satisfies 'component' insertion criteria
         String testPath = component.getDocumentElement().getAttribute("unless-path");
-        if (testPath == null) {
+        if (testPath == null || testPath.length()==0) {
             // only look for old "unless" attr if unless-path is not present
             testPath = component.getDocumentElement().getAttribute("unless");
         }
