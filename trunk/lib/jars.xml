@@ -1,0 +1,590 @@
+<?xml version="1.0"?>
+
+<!--
+  Add an entry for each jar file used by Cocoon, following the other entries.
+  Please ensure that you use a version number or datestamp in the jar filename.
+
+  Author: Ovidiu Predescu "ovidiu@cup.hp.com"
+  Date: May 23, 2002
+ -->
+
+<jars>
+ <file>
+	<title>Doug Lea's Concurrent Utilities</title>
+	<description>The concurrency management primitives that will be the foundation of JDK 1.5 concurrency management</description>
+	<used-by>Web3 Block</used-by>
+	<lib>core/util.concurrent-1.3.1.jar</lib>
+	<homepage>http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</homepage>
+ </file>
+ <file>
+	<title>Cornerstone Excalibur ThreadContext</title>
+	<description>The version of excalibur-threadcontext-1.0.jar that comes with cornerstone src</description>
+	<used-by>Avalon Cornerstone Scheduler</used-by>
+	<lib>core/cornerstone-excalibur-threadcontext-20021213.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/cornerstone/index.html</homepage>
+ </file>
+ <file>
+	<title>Cornerstone Excalibur Thread</title>
+	<description>The version of excalibur-thread-1.0.jar that comes with cornerstone src</description>
+	<used-by>Avalon Cornerstoner Scheduler</used-by>
+	<lib>core/cornerstone-excalibur-thread-20021213.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/cornerstone/index.html</homepage>
+ </file>
+ <file>
+	<title>Avalon Cornerstone</title>
+	<description>Contains the avalon-cornerstone scheduler, threadManager and other classes (This JAR has been compiled on Java 1.3 to be run on JVM 1.3 or earlier.)</description>
+	<used-by>Cocoon-Flow</used-by>
+	<lib>core/cornerstone-20021213.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/cornerstone/index.html</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur DataSource</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development. (This JAR has been compiled on Java 1.3 to be run on JVM 1.3 or earlier.)</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/jvm1.2/excalibur-datasource-vm12-20021121.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur DataSource</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development. (This JAR has been compiled on Java 1.4 to be run on JVM 1.4.)</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/jvm1.4/excalibur-datasource-vm14-20021121.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur CLI</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-cli-1.0.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Collections</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-collections-20020820.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Component</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-component-20020916.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Concurrent</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-concurrent-20020820.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur I18n</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-i18n-1.0.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Instrument</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-instrument-20021108.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Instrument Manager</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-instrument-manager-20021108.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Instrument Manager Interfaces</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-instrument-manager-interfaces-20021108.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur IO</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-io-1.1.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Logger</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-logger-20020820.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Monitor</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-monitor-20020820.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Naming</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-naming-1.0.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Pool</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-pool-20020820.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur SourceResolve</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-sourceresolve-20030130.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur Store</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-store-20020820.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Excalibur XMLUtil</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/excalibur-xmlutil-20030306.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon Framework</title>
+	<description>Part of jakarta-avalon, it is a set of classes and patterns that
+       support high level server development.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/avalon-framework-4.1.3.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/framework/</homepage>
+ </file>
+ <file>
+	<title>Avalon AltRMI Common</title>
+	<description>Part of jakarta-avalon for communicating with a remote
+       server.</description>
+	<used-by>Cocoon</used-by>
+	<lib>optional/excalibur-altrmi-common-20030116.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/framework/</homepage>
+ </file>
+ <file>
+	<title>Avalon AltRMI Server implementation</title>
+	<description>Part of jakarta-avalon for communicating with a remote
+       server.</description>
+	<used-by>Cocoon</used-by>
+	<lib>optional/excalibur-altrmi-server-impl-20030116.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/framework/</homepage>
+ </file>
+ <file>
+	<title>Avalon AltRMI Server interfaces</title>
+	<description>Part of jakarta-avalon for communicating with a remote
+       server.</description>
+	<used-by>Cocoon</used-by>
+	<lib>optional/excalibur-altrmi-server-interfaces-20030116.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Avalon AltRMI Registry</title>
+	<description>Part of jakarta-avalon for communicating with a remote
+       server.</description>
+	<used-by>Cocoon</used-by>
+	<lib>optional/excalibur-altrmi-registry-20030116.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/excalibur/</homepage>
+ </file>
+ <file>
+	<title>Jakarta Commons Collections</title>
+	<description>Common implementations of collection classes.</description>
+	<used-by>Cocoon</used-by>
+	<lib>core/commons-collections-2.1.jar</lib>
+	<homepage>http://jakarta.apache.org/commons/collections.html</homepage>
+ </file>
+ <file>
+	<title>Jakarta Regexp</title>
+	<description>Regexp is a Java Regular Expression package that was graciously
+       donated to the Apache Software Foundation by Jonathan Locke.</description>
+	<used-by>sitemap matchers</used-by>
+	<lib>core/jakarta-regexp-1.2.jar</lib>
+	<homepage>http://jakarta.apache.org/regexp/</homepage>
+ </file>
+ <file>
+	<title>Jakarta Logkit</title>
+	<description>jakarta-avalon-logkit is a logging toolkit designed for secure
+       performance orientated logging in applications.</description>
+	<used-by>Cocoon logging</used-by>
+	<lib>core/logkit-1.1.jar</lib>
+	<homepage>http://jakarta.apache.org/avalon/logkit/</homepage>
+ </file>
+ <file>
+	<title>The XSLT processor</title>
+	<description>Xalan is an XSLT processor that fully supports the W3C specs.</description>
+        <ant-target>jar</ant-target>
+	<used-by>Cocoon</used-by>
+	<lib>endorsed/xalan-2.4.1.jar</lib>
+	<homepage>http://xml.apache.org/xalan/</homepage>
+ </file>
+ <file>
+	<title>The XSLTC processor</title>
+	<description>XLTC is an XSLT compiler that fully supports the W3C specs. 
+        It compiles XSLT programs to very efficient, reusable Bytecode called translets.
+        </description>
+        <ant-target>xsltc.jar</ant-target>
+	<used-by>Cocoon TraxTransformer</used-by>
+	<lib>endorsed/xsltc-20030211.jar</lib>
+	<homepage>http://xml.apache.org/xalan-j/xsltc_usage.html</homepage>
+ </file>
+ <file>
+	<title>The XML parser</title>
+	<description>Xerces is an XML parser.</description>
+	<used-by>Cocoon</used-by>
+        <ant-target>jars</ant-target>
+	<lib>endorsed/xercesImpl-2.1.0.jar</lib>
+	<homepage>http://xml.apache.org/xerces-j/</homepage>
+ </file>
+ <file>
+	<title>The XML APIs</title>
+	<description>JAXP, DOM and SAX interfaces. 
+       These are the common interfaces for XML processing.</description>
+        <ant-target>external</ant-target>
+	<used-by>Cocoon</used-by>
+	<lib>endorsed/xml-apis.jar</lib>
+	<homepage>http://xml.apache.org/commons/</homepage>
+ </file>
+ <file>
+	<title>Batik</title>
+	<description>Batik is a Java based toolkit for applications which handle images in
+       the Scalable Vector Graphics (SVG) format for various purposes, such as
+       viewing, generation or manipulation.</description>
+	<used-by>SVG serializer (SVG to JPG, PNG)</used-by>
+	<lib>optional/batik-all-1.5b2.jar</lib>
+	<homepage>http://xml.apache.org/batik/</homepage>
+ </file>
+ <file>
+	<title>BSF scripting framework</title>
+	<description>The Bean Scripting Framework (BSF) is an architecture for
+       incorporating scripting into, and enabling scripting against, Java
+       applications and applets. Using BSF, an application can use scripting,
+       and become scriptable, against any BSF-supported language. When BSF
+       supports additional languages, the application will automatically
+       support the additional languages.</description>
+	<used-by>Script generator, script action</used-by>
+	<lib>optional/bsf-2.2.jar</lib>
+	<homepage>http://oss.software.ibm.com/developerworks/projects/bsf</homepage>
+ </file>
+ <file>
+	<title>Device capabilities</title>
+	<description>Open Source Delivery Context Java Library supporting CC/PP and UAProf.
+      Different web-enabled devices have different input, output, hardware,
+      software, network and browser capabilities. In order for a web server or
+      web-based application to provide optimized content to different clients
+      it requires a description of the capabilities of the client known as the
+      delivery context.</description>
+	<used-by>DELI</used-by>
+	<lib>optional/deli-0.9.0.jar</lib>
+	<homepage>http://delicon.sourceforge.net</homepage>
+ </file>
+ <file>
+	<title>Jakart Commons httpClient</title>
+	<description>Although the java.net package provides basic support for accessing
+      resources via HTTP, it doesn't provide the full flexibility or
+      functionality needed by many applications. The Jakarta Commons HTTP Client
+      component seeks to fill this void by providing an efficient, up-to-date,
+      and feature-rich package implementing the client side of the most recent
+      HTTP standards and recommendations.</description>
+	<used-by>SOAP logicsheet, WebServiceProxyGenerator</used-by>
+	<lib>optional/commons-httpclient-20030210.jar</lib>
+	<lib>optional/commons-logging-1.0.2.jar</lib>
+	<homepage>http://jakarta.apache.org/commons/httpclient/</homepage>
+ </file>
+ <file>
+	<title>iText XML to PDF/HTML/RTF converter (Renderer)</title>
+	<description>iText reads XML documents and turns them into PDFs</description>
+	<used-by>iText serializer</used-by>
+	<lib>optional/itext-0.93b.jar</lib>
+	<homepage>http://www.lowagie.com/iText/</homepage>
+ </file>
+
+ <file>
+	<title>iText XML to PDF/HTML/RTF converter (XML APIs)</title>
+	<description>iText reads XML documents and turns them into PDFs</description>
+	<used-by>iText serializer</used-by>
+	<lib>optional/itext-xml-0.93.jar</lib>
+	<homepage>http://www.lowagie.com/iText/</homepage>
+ </file>
+
+ <file>
+	<title>XML FO processor</title>
+	<description>FOP is a Java application that reads a formatting object tree
+       conforming to the XSL candidate release and then turns it into a PDF
+       document or allows you to preview it directly on screen.</description>
+	<used-by>FOP serializer</used-by>
+	<lib>optional/fop-0.20.4.jar</lib>
+	<homepage>http://xml.apache.org/fop/</homepage>
+ </file>
+ <file>
+	<title>XSL-FO to RTF converter</title>
+	<description>jfor is a Java application that reads XSL-FO documents
+        and converts them to RTF format, allowing them to be loaded in
+        common wordprocessors.
+    </description>
+	<used-by>RTF serializer</used-by>
+	<lib>optional/jfor-0.7.1.jar</lib>
+	<homepage>http://www.jfor.org</homepage>
+ </file>
+ <file>
+	<title>Simple SQL database</title>
+	<description>hsqldb is a relational database engine written in Java, with a JDBC
+       driver, supporting a subset of ANSI-92 SQL. It offers a small, fast
+       database engine which offers both in memory and disk based tables.</description>
+	<used-by>Cocoon samples webapp</used-by>
+	<lib>optional/hsqldb-1.7.1.jar</lib>
+	<homepage>http://hsqldb.sourceforge.net/</homepage>
+ </file>
+ <file>
+	<title>Create proprietary file formats</title>
+	<description>The POI project consists of APIs for manipulating
+		various file formats based upon Microsoft's OLE 2 Compound Document
+		format using pure Java.</description>
+	<used-by>MS Excel serializer</used-by>
+	<lib>optional/jakarta-poi-1.7.0-dev-20020624.jar</lib>
+	<homepage>http://jakarta.apache.org/poi/</homepage>
+ </file>
+ <file>
+	<title>Jena RDF framework</title>
+	<description>Jena is a java API for manipulating RDF models.</description>
+	<used-by>DELI</used-by>
+	<lib>optional/jena-1.4.0.jar</lib>
+	<homepage>http://www.hpl.hp.com/semweb/jena-top.html</homepage>
+ </file>
+ <file>
+	<title>Image manipulation</title>
+	<description>Jimi is a class library for managing images. Its primary function is
+       image I/O.</description>
+	<used-by>FOP</used-by>
+	<lib>optional/jimi-1.0.jar</lib>
+	<homepage>http://java.sun.com/products/jimi/</homepage>
+ </file>
+ <file>
+	<title>JISP</title>
+	<description></description>
+	<used-by>JISP file storage</used-by>
+	<lib>optional/Jisp2.0.1.jar</lib>
+	<homepage>http://www.coyotegulch.com/algorithm/jisp/index.html</homepage>
+ </file>
+ <file>
+	<title>Java Formatter</title>
+	<description>This program formats Java code with consistent indentation and so
+       forth, to make it easier to read and maintain.</description>
+	<used-by>Cocoon</used-by>
+	<lib>optional/jstyle.jar</lib>
+	<homepage>http://www.redrival.com/greenrd/java/jstyle/</homepage>
+ </file>
+ <file>
+	<title>Transform HTML to XML</title>
+	<description>Tidy is a HTML syntax checker and pretty printer.</description>
+	<used-by>HTML generator</used-by>
+	<lib>optional/jtidy-04aug2000r7-dev.jar</lib>
+	<homepage>http://lempinen.net/sami/jtidy/</homepage>
+ </file>
+ <file>
+	<title>Search engine</title>
+	<description>jakarta-lucene is a search engine toolkit designed for 
+       indexing and searching of documents.</description>
+	<used-by>?</used-by>
+	<lib>optional/lucene-1.2.jar</lib>
+	<homepage>http://jakarta.apache.org/lucene/</homepage>
+ </file>
+ <file>
+	<title>File Upload</title>
+	<description>MaybeUpload is a Java language package intended to make it much easier
+       to write Servlets to handle RFC1867 file upload.</description>
+	<used-by>?</used-by>
+	<lib>optional/maybeupload_1-0-5pre3.jar</lib>
+	<homepage>http://www.weft.co.uk/library/maybeupload/</homepage>
+ </file>
+ <file>
+	<title>Java compiler</title>
+	<description>Java Compiler</description>
+	<used-by>XSP</used-by>
+	<lib>optional/pizza-1.1.jar</lib>
+	<homepage>http://pizzacompiler.sourceforge.net/</homepage>
+ </file>
+ <file>
+	<title>XML RDF parser</title>
+	<description></description>
+	<used-by>DELI</used-by>
+	<lib>optional/rdffilter.jar</lib>
+	<homepage>http://sourceforge.net/projects/rdf-filter</homepage>
+ </file>
+ <file>
+	<title>XML Catalog Entity Resolver</title>
+	<description>Maps URIs to other URIs using the mechanisms defined by
+          OASIS Catalog or XML Catalog. Mainly used for DTDs and character
+          entity sets.
+        </description>
+	<used-by>Cocoon Role entity-resolver</used-by>
+	<lib>optional/resolver-20021114.jar</lib>
+	<homepage>http://xml.apache.org/commons/</homepage>
+ </file>
+ <file name="servlet">
+	<title>Servlet API</title>
+	<description></description>
+	<used-by>Cocoon</used-by>
+	<lib>optional/servlet_2_2.jar</lib>
+	<homepage>http://jakarta.apache.org/tomcat/</homepage>
+ </file>
+ <file>
+	<title>Velocity engine</title>
+	<description>Velocity is a general purpose template engine written in Java.</description>
+	<used-by>Velocity Generator</used-by>
+	<lib>optional/velocity-1.4-dev-20030301.jar</lib>
+	<homepage>http://jakarta.apache.org/velocity/</homepage>
+ </file>
+ <file>
+	<title>XML DB APIs</title>
+	<description>Database tailored for the storage of XML data.</description>
+	<used-by>XML:DB source</used-by>
+	<lib>optional/xmldb-api-20011111.jar</lib>
+	<homepage>http://www.xmldb.org/</homepage>
+ </file>
+ <file name="jxpath">
+	<title>Jakarta Commons JXPath</title>
+	<description>XPath interpreter. Work with JavaBeans and DOM nodes</description>
+	<used-by>JXPath logicsheet and XMLForm</used-by>
+	<lib>optional/commons-jxpath-1.1b1.jar</lib>
+	<homepage>http://jakarta.apache.org/commons/jxpath/</homepage>
+ </file>
+ <file name="jdtcore">
+  <title>Eclipse Java Development Tools Core</title>
+  <description>Eclipse Java Compiler</description>
+  <used-by>XSP</used-by>
+  <lib>optional/jdtcore2.0.2.jar</lib>
+  <homepage>http://www.eclipse.org/</homepage>
+ </file>
+ <file>
+	<title>Continuations-based JavaScript engine</title>
+	<description>Rhino is an implementation of JavaScript in Java.</description>
+	<used-by>Control flow</used-by>
+	<lib>optional/rhino1.5r4-continuations-20020816.jar</lib>
+	<homepage>ftp://ftp.primaryinterface.com/pub/rhino/rhino1_5R4pre-sharedlocals.zip</homepage>
+ </file>
+ <file name="spark">
+	<title>Spark</title>
+	<description>Spark is XML2SWF and SWF2XML converter</description>
+	<used-by>SWF Serializer</used-by>
+	<lib>optional/spark.jar</lib>
+	<homepage>http://www.tivano.de/software/spark/</homepage>
+ </file>
+ <file>
+  <title>Chaperon Text Parser</title>
+  <description>chaperon is parser which could parse text files, and convert those
+        to XML files.
+  </description>
+  <used-by>Chaperon block</used-by>
+  <lib>optional/chaperon-20030208.jar</lib>
+  <homepage>http://chaperon.sourceforge.net</homepage>
+ </file>
+
+ <file name="castor">
+  <title>Castor</title>
+  <description></description>
+  <used-by>CastorTransformer and precept</used-by>
+  <lib>optional/castor-0.9.4.2-xml.jar</lib>
+  <homepage>http://castor.exolab.org</homepage>
+ </file>
+
+ <file name="jing">
+  <title>Jing</title>
+  <description>RELAX NG validator in Java</description>
+  <used-by>core</used-by>
+  <lib>optional/jing-20020724.jar</lib>
+  <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
+ </file>
+ 
+ <file name="jaxen">
+  <title>Jaxen</title>
+  <description> The Jaxen project is a Java XPath Engine. Jaxen is a universal object model walker, capable of evaluating XPath expressions across multiple models. Currently supported are dom4j and JDOM.</description>
+  <used-by>core</used-by>
+  <lib>optional/jaxen-core-1.0-FCS.jar</lib>
+  <homepage>http://www.jaxen.org/</homepage>
+ </file>
+ <file name="jaxen-dom">
+  <title>Jaxen Dom</title>
+  <description> The Jaxen project is a Java XPath Engine. Jaxen is a universal object model walker, capable of evaluating XPath expressions across multiple models. Currently supported are dom4j and JDOM.</description>
+  <used-by>core</used-by>
+  <lib>optional/jaxen-dom-1.0-FCS.jar</lib>
+  <homepage>http://www.jaxen.org/</homepage>
+ </file>
+ <file name="saxpath">
+  <title>SaxPath</title>
+  <description>SAXPath is a Java XPath engine for use on a variety of XML object models including dom4j, DOM and JavaBeans.</description>
+  <used-by>core</used-by>
+  <lib>optional/saxpath-1.0-FCS.jar</lib>
+  <homepage>http://sourceforge.net/projects/saxpath/</homepage>
+ </file>
+ <file name="slide-kernel">
+  <title>Slide kernel</title>
+  <description>The Jakarta Slide kernel API.</description>
+  <used-by>Slide block</used-by>
+  <lib>optional/slide-kernel-20030208.jar</lib>
+  <homepage>http://jakarta.apache.org/slide/</homepage>
+ </file>
+ <file name="slide-roles">
+  <title>Slide roles</title>
+  <description>The Jakarta Slide roles implementation.</description>
+  <used-by>Slide block</used-by>
+  <lib>optional/slide-roles-20030208.jar</lib>
+  <homepage>http://jakarta.apache.org/slide/</homepage>
+ </file>
+ <file name="slide-store">
+  <title>Slide stores</title>
+  <description>The Jakarta Slide stores implementation.</description>
+  <used-by>Slide block</used-by>
+  <lib>optional/slide-stores-20030208.jar</lib>
+  <homepage>http://jakarta.apache.org/slide/</homepage>
+ </file>
+ <file name="slide-webdavservlet">
+  <title>Slide WebDAV Servlet</title>
+  <description>The Jakarta Slide WebDAV servlet.</description>
+  <used-by>Slide block</used-by>
+  <lib>optional/slide-webdavservlet-20030215.jar</lib>
+  <homepage>http://jakarta.apache.org/slide/</homepage>
+ </file>
+ <file name="jdom">
+  <title>JDOM</title>
+  <description>JDOM</description>
+  <used-by>Slide block</used-by>
+  <lib>optional/jdom-dev-20020131.jar</lib>
+  <homepage>http://www.jdom.org/</homepage>
+ </file>
+</jars>
+

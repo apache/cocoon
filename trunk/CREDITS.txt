@@ -1,0 +1,36 @@
+
+                            ******************
+                            * Cocoon Credits *
+                            ******************
+                                 
+This is the file where major donations to the Cocoon project are listed and it
+should be used to give appropriate visibility to those inviduals, organizations
+or companies that donated resources to the effort. This file wants to be one of
+the ways the Cocoon community pays back.
+
+                                   -- o --
+                                   
+The Cocoon project was originally created, proposed and bootstrapped by
+Stefano Mazzocchi <stefano@apache.org>
+
+The web application framework consisting of the session handling (aka sunShine),
+the authentication framework (aka sunRise) and the portal engine (aka sunSpot)
+was created and developed by the Open Source Competence Center of 
+s&n AG (http://www.s-und-n.de), Paderborn, Germany.
+
+The interpreted sitemap engine and other contributions from Sylvain Wallez are
+made possible by the time donated by his company, Anyware Technologies (http://www.anyware-tech.com).
+
+The flow control layer, the SOAP and XScript logicsheets, and other
+changes were contributed by Ovidiu Predescu and donated by the Hewlett
+Packard Company (http://www.hp.com/).
+
+The DELI implementation was contributed by Mark Butler, and donated to
+Cocoon by the Hewlett Packard Company (http://www.hp.com/).
+
+[FIXME: fill this as you find appropriate]
+
+                                   -- o --
+
+                                                 The Apache Cocoon Community
+                                                 http://cocoon.apache.org/

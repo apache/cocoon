@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+
+ <group name="Main examples page">
+  <sample name="Back" href="..">to Cocoon examples main page</sample>
+ </group>
+
+ <group name="Core tools">
+  <sample name="LinkStatus Generator" href="linkstatus">
+    Verify that there are no broken hyperlinks in the local Cocoon
+    documentation. This sample will start at the home page of the local
+    documentation webapp and traverse each internal link, reporting its status
+    in a colour-coded table. Be patient - this process will take time.
+  </sample>
+  <sample name="Documentation" href="../../documents/plan/index.html">Please
+   help to fix broken links. Keep the documentation set and website robust.
+  </sample>
+ </group>
+
+ <group name="External tools">
+  <sample name="Linkalarm for Cocoon" href="linkalarm">Retrieve and display
+   the summary list of broken links in the current Cocoon website.
+   The LinkAlarm service interrogates the cocoon.apache.org/ site roughly
+   once per month and produces a set of reports. This sample simply retrieves
+   the current summary from the main report at
+   http://reports.linkalarm.com/373104199608/
+   The file is tab-delimited with 4 fields
+   (broken-url,referer-url,response-code,text-reason).
+  </sample>
+ </group>
+
+</samples>

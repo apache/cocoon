@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+  <title>Formvalidation and -prefilling</title>
+  <content>
+
+    <para>
+      The entered data successfully passed the validation stage.
+    </para>
+
+
+    <form name="testform" method="get">
+       <para>
+         <input type="text" size="20" name="person/firstname" readonly="true"/>
+         <input type="text" size="20" name="person/name" readonly="true"/>
+       </para>
+
+       <para>
+         <input type="text" size="30" name="person/address/street" readonly="true"/>
+       </para>
+       <para>
+         <input type="text" size="30" name="person/address/place" readonly="true"/>
+       </para>
+       <error name="*" when="ok"><para>All went <b>well.</b></para></error>
+    </form>
+
+  </content>
+</page>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE todo PUBLIC "-//APACHE//DTD Todo V1.0//EN" "src/documentation/xdocs/dtd/todo-v10.dtd">
+
+<!--
+  History of Cocoon changes
+  $Id: todo.xml,v 1.1 2003/03/09 00:01:33 pier Exp $
+-->
+
+
+<todo title="Things To Do">
+
+ <devs>
+  <!-- in strict alphabetical order -->
+  <person name="Donald Ball" email="balld@apache.org" id="DB"/>
+  <person name="Nicola Ken Barozzi" email="nicolaken@apache.org" id="NKB"/>    
+  <person name="Ross Burton" email="ross.burton@mail.com" id="RB"/>
+  <person name="Gerhard Fr&#246;hlich" email="g-froehlich@gmx.de" id="GF"/>  
+  <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
+  <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
+  <person name="Berin Loritsch" email="bloritsch@apache.org" id="BL"/>
+  <person name="Stefano Mazzocchi" email="stefano@apache.org" id="SM"/>
+  <person name="John Morrison" email="morrijr@apache.org" id="JM"/>  
+  <person name="Giacomo Pati" email="Giacomo.Pati@pwr.ch" id="GP"/>
+  <person name="Ricardo Rocha" email="ricardo@apache.org" id="RR"/>
+  <person name="Paul Russell" email="prussell@apache.org" id="PR"/>  
+  <person name="Davanum Srinivas" email="dims@yahoo.com" id="DM"/>
+  <person name="Sylvain Wallez" email="sylvain@apache.org" id="SW"/>
+  <person name="Carsten Ziegeler" email="cziegeler@apache.org" id="CZ"/>
+  <person name="Volunteer needed" email="cocoon-dev@apache.org" id="open"/>
+ </devs>
+
+ <actions priority="high">
+  <action context="code" assigned-to="CZ">
+   Redesign the SitemapConfigurable handling.
+  </action>
+  
+ <action context="docs" assigned-to="open">
+   For 2.1: Attend to any high+ issues in the
+   <link href="plan/todo-doc.html">Documentation To Do List</link>
+  </action> 
+
+ <action context="code" assigned-to="open">
+   For 2.1: use (only) released versions of excalibur (xml, source, store etc).
+   This requires a release of those components in excalibur.
+  </action> 
+
+  <action context="code" assigned-to="open">
+   Complete (means put everything we know of into even if it has to be 
+   commented) the cocoon.xconf file and put descriptions into it
+  </action>
+
+  <action context="build" assigned-to="open">
+   Complete (means put all allowed constructs and combinations)
+   the lint/sitemap.xmap file. Enhance the RELAX NG grammar for sitemap.
+  </action>
+
+  <action context="code" assigned-to="SW">
+   For 2.1: Views must start not from the first encountered label, but from the last one
+   (see http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=101784499622172&amp;w=2)
+  </action>
+  
+  <action context="code" assigned-to="NKB">
+   For 2.1: Make comprehensive samples with the handle-errors sitemap and real world
+   use cases. Add also specific Selector and a FaqBuilder to be used by the
+   as a NotifyingBuilder.
+  </action>  
+  
+  <action context="code" assigned-to="SW">
+   Change the handle-errors to enable use of any Generator.
+   DOUBLE CHECK THAT REDIRECTS ARE FORBIDDEN.
+   http://marc.theaimsgroup.com/?l=xml-cocoon-dev&amp;m=102633389301850&amp;w=2
+  </action>  
+    
+ </actions>
+
+ <actions priority="medium">
+ 
+  <action context="code">
+   Remove all useless blank strings in XSP-generated code that hinder performances.
+   This should be configurable (through an attribute?) to be able to keep them when
+   needed.
+  </action>
+
+  <action context="code">
+   For 2.1: Make a guide on how to upgrade Cocoon, and see how this can be eased.
+  </action>
+
+  <action context="code">
+   For 2.1: Redesign FragmentExtractorGenerator/Transformer so that it works on a clustered
+   server : store fragments in the session rather than in a local store. <br/>
+  </action>
+ </actions>
+
+</todo>
