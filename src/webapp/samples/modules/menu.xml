@@ -14,7 +14,7 @@
   <menu label="Modules">
     <menu-item label="RequestModule" href="request.xsp"/>
     <menu-item label="DateInputModule" href="date.xsp"/>
-    <menu-item label="DefaultsMetaModule" href="defaults.xsp"/>
+    <menu-item label="DefaultsModule" href="defaults.xsp"/>
     <menu-item label="SessionModule" href="session.xsp"/>
     <menu-item label="SessionAttributeModule" href="session-attr.xsp"/>
     <menu-item label="SystemPropertiesModule" href="system-property.xsp"/>

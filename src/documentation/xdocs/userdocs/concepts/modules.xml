@@ -96,7 +96,7 @@
    <component-instance name="date"      
       class="org.apache.cocoon.components.modules.input.DateInputModule"/>
    <component-instance name="defaults"  
-      class="org.apache.cocoon.components.modules.input.DefaultsMetaModule">
+      class="org.apache.cocoon.components.modules.input.DefaultsModule">
      <input-module name="request"/>
      <values>
         <skin>defaultSkin</skin>
