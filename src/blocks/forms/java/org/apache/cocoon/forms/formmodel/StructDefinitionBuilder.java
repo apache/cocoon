@@ -22,14 +22,13 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {StructDefinition}s.
  *
- * @version $Id: StructDefinitionBuilder.java,v 1.3 2004/04/12 14:05:09 tim Exp $
+ * @version $Id$
  */
 public class StructDefinitionBuilder extends AbstractWidgetDefinitionBuilder {
 
     public WidgetDefinition buildWidgetDefinition(Element element) throws Exception {
         StructDefinition definition = new StructDefinition();
-        setLocation(element, definition);
-        setId(element, definition);
+        setCommonProperties(element, definition);
         setDisplayData(element, definition);
         setValidators(element, definition);
 

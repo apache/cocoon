@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  * 
- * @version $Id: AbstractWidgetDefinition.java,v 1.7 2004/06/15 07:33:44 sylvain Exp $
+ * @version $Id$
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
@@ -42,6 +42,8 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     //TODO consider final on these
     private String location = null;
     private String id;
+    /** The initial map of attributes (can be null) */
+    private Map attributes;
     private Map displayData;
     private List validators;
     
@@ -89,6 +91,18 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
         this.id = id;
     }
     
+    protected void setAttributes(Map attributes) {
+        this.attributes = attributes;   
+    }
+    
+    public Object getAttribute(String name) {
+        if (this.attributes != null) {
+            return this.attributes.get(name);
+        } else {
+            return null;
+        }
+    }
+
     protected void addCreateListener(CreateListener listener) {
     		this.createListener = WidgetEventMulticaster.add(this.createListener, listener);
     }
