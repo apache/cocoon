@@ -74,7 +74,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * accessed and kept until the page is completely displayed.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XSPModuleHelper.java,v 1.2 2003/03/16 17:49:12 vgritsenko Exp $
+ * @version CVS $Id: XSPModuleHelper.java,v 1.3 2003/05/03 11:14:05 jefft Exp $
  */
 public class XSPModuleHelper {
 
@@ -109,9 +109,10 @@ public class XSPModuleHelper {
      * @param objectModel a <code>Map</code> value holding the current
      * ObjectModel
      * @return an <code>Object</code> value
-     * @exception RuntimeException if an error occurs
+     * @exception CascadingRuntimeException if an error occurs. The real
+     * exception can be obtained with <code>getCause</code>.
      */
-    private Object get(int op, String name, String attr, Map objectModel, Configuration conf) throws RuntimeException {
+    private Object get(int op, String name, String attr, Map objectModel, Configuration conf) throws CascadingRuntimeException {
 
         Object value = null;
         InputModule input = null;
@@ -149,7 +150,7 @@ public class XSPModuleHelper {
             };
 
         } catch (Exception e) {
-            throw new CascadingRuntimeException("A problem obtaining a value from "+name+" occurred: "+e,e);
+            throw new CascadingRuntimeException("Error accessing attribute '"+attr+"' from input module '"+name+"': "+e,e);
         }
 
         return value;
