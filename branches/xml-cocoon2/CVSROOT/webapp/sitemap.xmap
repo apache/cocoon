@@ -207,7 +207,7 @@
     <map:serialize/> 
    </map:match>
 
-   <map:match pattern="styles/*.css"> 
+   <map:match pattern="sites/styles/*.css"> 
     <map:read src="resources/styles/{1}.css" mime-type="text/css"/> 
    </map:match>
 
