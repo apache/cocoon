@@ -17,7 +17,11 @@ package org.apache.cocoon.portal.event.impl;
 
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.RequestEvent;
+import org.apache.cocoon.portal.event.ConvertableEvent;
 import org.apache.cocoon.portal.layout.Layout;
+import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.pluto.om.PortletWindowImpl;
+import org.apache.pluto.om.window.PortletWindow;
 
 /**
  * EventSource: copletID
@@ -25,11 +29,11 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletEvent.java,v 1.2 2004/03/05 13:02:12 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class FullScreenCopletEvent 
     extends CopletStatusEvent 
-    implements RequestEvent {
+    implements RequestEvent, ConvertableEvent {
 
     public static final String REQUEST_PARAMETER_NAME = "cocoon-portal-fs";
     
@@ -39,7 +43,26 @@ public class FullScreenCopletEvent
         this.coplet = data;
         this.layout = layout;
     }
-    
+
+    FullScreenCopletEvent(PortalService service, String eventData) {
+        int index = eventData.indexOf('_');
+        String copletId;
+        if (index > 0) {
+            copletId = eventData.substring(0, index);
+            this.coplet =
+                service.getComponentManager().getProfileManager().getCopletInstanceData(copletId);
+            if (eventData.length() > index + 1) {
+                String layoutId = eventData.substring(index + 1);
+                this.layout =
+                    service.getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
+            }
+        } else {
+            this.layout = null;
+            this.coplet =
+                service.getComponentManager().getProfileManager().getCopletInstanceData(eventData);
+        }
+    }
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.event.RequestEvent#getRequestParameterName()
      */
@@ -51,4 +74,15 @@ public class FullScreenCopletEvent
         return this.layout;
     }
 
+    public String asString() {
+        if (this.layout == null) {
+            return this.coplet.getId();
+        }
+        String layoutId = this.layout.getId();
+        if (layoutId == null) {
+            // Without a layout id this can't be marshalled.
+            return null;
+        }
+        return this.coplet.getId() + "_" + layoutId;
+    }
 }

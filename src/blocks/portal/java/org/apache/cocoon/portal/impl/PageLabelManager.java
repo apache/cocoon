@@ -67,6 +67,7 @@ public class PageLabelManager
     protected String aspectName = null;
     private String requestParameterName;
     private boolean nonStickyTabs;
+    private boolean marshallEvents;
 
     protected static final String LABEL_ARRAY = PageLabelManager.class.getName() + "A";
     protected static final String LABEL_MAP = PageLabelManager.class.getName() + "M";
@@ -91,6 +92,8 @@ public class PageLabelManager
         this.aspectName = config.getChild("aspectName").getValue("tab");
         this.nonStickyTabs =
             Boolean.valueOf(config.getChild("nonStickyTabs").getValue("false")).booleanValue();
+        this.marshallEvents =
+            Boolean.valueOf(config.getChild("marshallEvents").getValue("false")).booleanValue();
     }
 
     /* (non-Javadoc)
@@ -203,6 +206,13 @@ public class PageLabelManager
         finally {
             this.manager.release(service);
         }
+    }
+
+    /**
+     * Returns true if events are not to be exposed as request parameters
+     */
+    public boolean isMarshallEvents() {
+        return this.marshallEvents;
     }
 
     /*
