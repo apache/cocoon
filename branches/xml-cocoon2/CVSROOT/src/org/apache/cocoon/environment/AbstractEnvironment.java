@@ -134,7 +134,7 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
     /**
      * Redirect the client to a new URL
      */
-    public abstract void redirect(String newURL) throws IOException;
+    public abstract void redirect(boolean sessionmode, String newURL) throws IOException;
 
     // Request methods
 

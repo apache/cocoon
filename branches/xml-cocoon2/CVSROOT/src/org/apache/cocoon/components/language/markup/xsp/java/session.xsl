@@ -292,6 +292,48 @@
     </xsp:logic>
   </xsl:template>
 
+  <!-- encode an URL with the session ID -->
+  <xsl:template match="session:encode-url">
+    <xsl:variable name="href">
+        "<xsl:value-of select="@href"/>"
+    </xsl:variable>
+
+    <xsp:element name="a">
+       <xsp:attribute name="href">
+          <xsp:expr>response.encodeURL(String.valueOf(<xsl:copy-of select="$href"/>))</xsp:expr>
+       </xsp:attribute>
+       <xsl:value-of select="."/>
+    </xsp:element>
+
+  </xsl:template>
+
+  <!-- encode an URL with the session ID as a form-->
+  <xsl:template match="session:form-encode-url">
+    <xsl:variable name="action">
+        "<xsl:value-of select="@action"/>"
+    </xsl:variable>
+    <xsl:variable name="method">
+        "<xsl:value-of select="@method"/>"
+    </xsl:variable>
+    <xsl:variable name="onsubmit">
+        "<xsl:value-of select="@onsubmit"/>"
+    </xsl:variable>
+
+    <xsp:element name="form">
+       <xsp:attribute name="action">
+          <xsp:expr>response.encodeURL(String.valueOf(<xsl:copy-of select="$action"/>))</xsp:expr>
+       </xsp:attribute>
+       <xsp:attribute name="method">
+         <xsp:expr><xsl:copy-of select="$method"/></xsp:expr>
+       </xsp:attribute>
+       <xsp:attribute name="onsubmit">
+         <xsp:expr><xsl:copy-of select="$onsubmit"/></xsp:expr>
+       </xsp:attribute>
+       <xsl:apply-templates/>
+    </xsp:element>
+
+  </xsl:template>
+
   <xsl:template name="value-for-name">
     <xsl:choose>
       <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>

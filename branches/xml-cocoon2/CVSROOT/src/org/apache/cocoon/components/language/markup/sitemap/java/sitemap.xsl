@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.79 2001-02-19 21:57:47 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.80 2001-02-21 12:16:57 dims Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -850,10 +850,19 @@
         if(true)return resource_<xsl:value-of select="translate(@resource, '- ', '__')"/>(pipeline, listOfMaps, environment, cocoon_view);
       </xsl:when>
 
-      <!-- redirect to a external resource definition. Let the environment do the redirect -->
+      <!-- redirect to a external resource definition with optional session mode attribute. Let the environment do the redirect -->
       <xsl:when test="@uri">
-        getLogger().debug("Redirecting to '<xsl:value-of select="@uri"/>'");
-        environment.redirect (substitute(listOfMaps, "<xsl:value-of select="@uri"/>"));
+        <xsl:variable name="sess">
+          <xsl:choose>
+            <xsl:when test="@session='yes'">true</xsl:when>
+            <xsl:when test="@session='true'">true</xsl:when>
+            <xsl:when test="@session='no'">false</xsl:when>
+            <xsl:when test="@session='false'">false</xsl:when>
+            <xsl:when test="not(@session)">false</xsl:when>
+          </xsl:choose>
+        </xsl:variable>
+        getLogger().debug("Sitemap: session='<xsl:value-of select="$sess"/>', redirecting to '<xsl:value-of select="@uri"/>'");
+        environment.redirect (<xsl:value-of select="$sess"/>, substitute(listOfMaps, "<xsl:value-of select="@uri"/>"));
         if(true)return true;
       </xsl:when>
 

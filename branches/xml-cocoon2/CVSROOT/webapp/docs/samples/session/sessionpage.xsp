@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<xsp:page
+   language="java"
+   xmlns:xsp="http://apache.org/xsp"
+   xmlns:session="http://apache.org/xsp/session"
+   xmlns:xsp-request="http://apache.org/xsp/request"
+>
+
+<!-- a simple session page by Jörg Prante <joerg@7val.com> -->
+
+<page>
+  <title>A Simple URI-based Session Example</title>
+  <content>
+     <para> <xsp-request:get-uri as="xml"/> </para>
+     <para> Session ID = <session:get-id as="xml"/> </para>
+     <para>
+       Encode URL Test =
+       <session:encode-url href="sessionpage.xsp">Follow me!</session:encode-url>
+     </para>
+  </content>
+</page>
+
+</xsp:page>

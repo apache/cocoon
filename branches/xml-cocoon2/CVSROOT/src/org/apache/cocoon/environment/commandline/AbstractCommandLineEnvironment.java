@@ -20,7 +20,7 @@ import org.apache.cocoon.environment.AbstractEnvironment;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-06 21:25:27 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-02-21 12:17:10 $
  */
 
 public abstract class AbstractCommandLineEnvironment extends AbstractEnvironment {
@@ -37,7 +37,7 @@ public abstract class AbstractCommandLineEnvironment extends AbstractEnvironment
     /**
      * Redirect the client to a new URL
      */
-    public void redirect(String newURL) throws IOException {
+    public void redirect(boolean sessionmode, String newURL) throws IOException {
         throw new RuntimeException (this.getClass().getName() + ".redirect(String url) method not yet implemented!");
     }
     
