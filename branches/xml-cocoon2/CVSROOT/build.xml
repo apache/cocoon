@@ -288,7 +288,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <java fork="yes" 
           classpath="${java.class.path}:${doc.generator.package}" 
           classname="${doc.generator}"
-          args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}"/>
+          args="targetDirectory=${site} ${docs.dir}/book.xml ${browser.skin}"/>
   </target>
 
   <!-- =================================================================== -->
