@@ -13,8 +13,9 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
--->
 
+  CVS $Id$
+-->
 <components>
  <!-- THIS IS A SAMPLE PORTAL
       It demonstrates several features of the portal engine,
@@ -26,6 +27,19 @@
    <portals>
      <portal name="portal">
        <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Auth</profile-manager>
+       <!-- This is the sample portal: 
+            - we use the auth profile manager
+       -->
+       <profile-manager>org.apache.cocoon.portal.profile.ProfileManager/Auth</profile-manager>
+       <!-- These are the skins the user can choose from: -->
+       <skins>
+         <skin name="basic" base-path="context://samples/blocks/portal/skins/basic">
+           <thumbnail-path>images/thumbnail.jpg</thumbnail-path>
+         </skin>
+         <skin name="common" base-path="context://samples/blocks/portal/skins/common">
+           <thumbnail-path>images/thumbnail.jpg</thumbnail-path>
+         </skin>
+       </skins>
      </portal>
    </portals>
   </component>
