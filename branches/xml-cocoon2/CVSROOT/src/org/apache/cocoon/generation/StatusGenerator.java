@@ -23,6 +23,8 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 
+import org.apache.avalon.Poolable;
+
 
 /** Generates an XML representation of the current status of Cocoon.
  * Potted DTD:
@@ -50,9 +52,9 @@ import org.xml.sax.ContentHandler;
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a> (Luminas Limited)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-14 15:08:27 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-29 12:18:05 $
  */
-public class StatusGenerator extends ComposerGenerator {
+public class StatusGenerator extends ComposerGenerator implements Poolable {
 
     /** The XML namespace for the output document.
      */

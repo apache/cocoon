@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-11-13 18:17:28 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-11-29 12:17:20 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -76,31 +76,36 @@
 
   <xsl:template match="log:debug">
     <xsp:logic>
-      log.debug("<xsl:value-of select="."/>");
+      if(log != null)
+        log.debug("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:info">
     <xsp:logic>
-      log.info("<xsl:value-of select="."/>");
+      if(log != null)
+        log.info("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:warn">
     <xsp:logic>
-      log.warn("<xsl:value-of select="."/>");
+      if(log != null)
+        log.warn("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:error">
     <xsp:logic>
-      log.error("<xsl:value-of select="."/>");
+      if(log != null)
+        log.error("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 
   <xsl:template match="log:fatal-error">
     <xsp:logic>
-      log.fatalError("<xsl:value-of select="."/>");
+      if(log != null)
+        log.fatalError("<xsl:value-of select="."/>");
     </xsp:logic>
   </xsl:template>
 

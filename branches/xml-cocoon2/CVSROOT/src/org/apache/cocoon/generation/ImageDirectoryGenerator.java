@@ -4,14 +4,16 @@ import java.io.*;
 import java.util.*;
 import org.xml.sax.SAXException;
 
+import org.apache.avalon.Poolable;
+
 /**
  * An extension of DirectoryGenerators that adds extra attributes for image
  * files.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald A. Ball Jr.</a>
- * @version $Revision: 1.1.2.3 $ $Date: 2000-07-29 18:30:34 $
+ * @version $Revision: 1.1.2.4 $ $Date: 2000-11-29 12:17:58 $
  */
-public class ImageDirectoryGenerator extends DirectoryGenerator {
+public class ImageDirectoryGenerator extends DirectoryGenerator implements Poolable {
 
 	protected static String IMAGE_WIDTH_ATTR_NAME = "width";
 	protected static String IMAGE_HEIGHT_ATTR_NAME = "height";

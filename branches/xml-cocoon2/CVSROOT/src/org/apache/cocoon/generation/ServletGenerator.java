@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Parameters;
+import org.apache.avalon.Poolable;
 
 import org.apache.cocoon.Cocoon;
 
@@ -24,10 +25,10 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-10-19 14:43:51 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-29 12:18:03 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
-implements Composer {
+implements Composer, Poolable {
 
     protected HttpServletRequest request=null;
     protected HttpServletResponse response=null;

@@ -21,6 +21,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import org.apache.avalon.Parameters;
+import org.apache.avalon.Poolable;
 
 /**
  * Generates an XML directory listing.
@@ -55,9 +56,9 @@ import org.apache.avalon.Parameters;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2000-10-19 14:43:47 $ */
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-29 12:17:56 $ */
  
-public class DirectoryGenerator extends ComposerGenerator {
+public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
     /** The URI of the namespace of this generator. */
     protected static final String URI =

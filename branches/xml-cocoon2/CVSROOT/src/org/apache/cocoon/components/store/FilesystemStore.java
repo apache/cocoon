@@ -8,9 +8,11 @@ import org.apache.cocoon.util.IOUtils;
 import org.apache.log.Logger;
 import org.apache.log.LogKit;
 
+import org.apache.avalon.ThreadSafe;
+
 import java.io.IOException;
 
-public class FilesystemStore implements Store {
+public class FilesystemStore implements Store, ThreadSafe {
   /** The directory repository */
   protected File directoryFile;
   protected volatile String directoryPath;

@@ -21,6 +21,8 @@ import org.xml.sax.ext.LexicalHandler;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Poolable;
+
 import org.apache.cocoon.components.language.generator.ProgramGenerator;
 
 import java.io.IOException;
@@ -34,11 +36,11 @@ import org.apache.cocoon.Roles;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-10 22:38:54 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-29 12:18:01 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
-  implements ContentHandler, LexicalHandler
+  implements ContentHandler, LexicalHandler, Poolable
 {
   /**
    * The sitemap-defined server pages program generator

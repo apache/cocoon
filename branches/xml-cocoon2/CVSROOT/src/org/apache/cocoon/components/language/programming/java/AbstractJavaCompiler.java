@@ -17,10 +17,10 @@ import org.apache.cocoon.components.language.programming.*;
 /**
  * This class implements the functionality common to all Java compilers.
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.1.2.6 $ $Date: 2000-09-27 16:15:06 $
+ * @version $Revision: 1.1.2.7 $ $Date: 2000-11-29 12:17:29 $
  * @since 2.0
  */
-public abstract class AbstractJavaCompiler implements LanguageCompiler {
+public abstract class AbstractJavaCompiler implements LanguageCompiler, Recyclable {
   /**
    * The source program filename
    */
@@ -169,5 +169,18 @@ public abstract class AbstractJavaCompiler implements LanguageCompiler {
     args[i] = file;
 
     return args;
-  } 
+  }
+
+  /** Reset all internal state.
+   * This method is called by the component manager before this
+   * component is return to its pool.
+   */
+  public void recycle() {
+    file = null;
+    srcDir = null;
+    destDir = null;
+    classpath = null;
+    encoding = null;
+    errors = null;
+  }
 }

@@ -18,6 +18,7 @@ import org.apache.avalon.Parameters;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ThreadSafe;
 
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.util.ClassUtils;
@@ -30,9 +31,9 @@ import org.apache.cocoon.components.language.LanguageException;
  * The Java programming language processor
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-26 21:48:04 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-11-29 12:17:31 $
  */
-public class JavaLanguage extends CompiledProgrammingLanguage {
+public class JavaLanguage extends CompiledProgrammingLanguage implements ThreadSafe {
 
   /** The class loader */
   ClassLoaderManager classLoaderManager;

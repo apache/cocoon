@@ -13,6 +13,7 @@ import org.apache.cocoon.xml.dom.DOMFactory;
 import org.apache.xerces.dom.DocumentImpl;
 import org.apache.xerces.dom.DocumentTypeImpl;
 import org.apache.xerces.parsers.SAXParser;
+import org.apache.avalon.ThreadSafe;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -24,10 +25,10 @@ import org.w3c.dom.Document;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-06 20:21:29 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-11-29 12:17:41 $
  */
 public class XercesParser extends AbstractXMLProducer
-implements Parser, ErrorHandler, DOMFactory {
+implements Parser, ErrorHandler, DOMFactory, ThreadSafe {
 
     final SAXParser parser;
 

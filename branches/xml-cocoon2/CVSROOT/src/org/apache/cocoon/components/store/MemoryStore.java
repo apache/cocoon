@@ -10,6 +10,7 @@ package org.apache.cocoon.components.store;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.avalon.Component;
+import org.apache.avalon.ThreadSafe;
 
 /**
  *
@@ -19,9 +20,14 @@ import org.apache.avalon.Component;
  *         (Apache Software Foundation)
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-07-29 18:30:33 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-11-29 12:17:49 $
  */
-public class MemoryStore implements Store {
+public class MemoryStore implements Store, ThreadSafe {
+    /* WARNING: Hashtable is threadsafe, whereas HashMap is not.
+     * Should we move this class over to the Collections API,
+     * use Collections.synchronizedMap(Map map) to ensure
+     * accesses are synchronized.
+     */
     
     /** The shared store */
     private static Hashtable table=null;
