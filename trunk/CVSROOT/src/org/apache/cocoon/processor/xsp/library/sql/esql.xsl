@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.33 2000-11-14 00:42:26 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.34 2000-11-26 04:56:21 balld Exp $-->
 <!--
 
  ============================================================================
@@ -145,7 +145,7 @@
     Stack _esql_queries = new Stack();
     EsqlQuery _esql_query = null; 
     SQLException _esql_exception = null;
-    PrintWriter _esql_exception_writer = null;
+    StringWriter _esql_exception_writer = null;
   </xsp:logic>
  <xsl:apply-templates/>
  </xsl:copy>
@@ -288,8 +288,8 @@
       <xsl:choose>
         <xsl:when test="esql:error-results">
           _esql_exception = _esql_exception_<xsl:value-of select="generate-id(.)"/>;
-          _esql_exception_writer = new PrintWriter(new StringWriter());
-          _esql_exception.printStackTrace(_esql_exception_writer);
+          _esql_exception_writer = new StringWriter();
+          _esql_exception.printStackTrace(new PrintWriter(_esql_exception_writer));
           <xsl:apply-templates select="esql:error-results"/>
           if (!_esql_connection.connection.getAutoCommit()) {
             _esql_connection.connection.rollback();
@@ -313,27 +313,32 @@
 
 <xsl:template match="esql:query//esql:parameter">"?"</xsl:template>
 
-<xsl:template match="esql:execute-query//esql:results" priority="2">
-  <xsl:for-each select="esql:row-results[1]">
-    <xsl:apply-templates select="preceding-sibling::*[not(name()='esql:no-results')]"/>
-    <xsp:logic>
-      while (_esql_query.resultset.next()) {
-        <xsl:apply-templates/>
-        if (_esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
-          break;
-        }
-        _esql_query.position++;
+<xsl:template match="esql:execute-query//esql:results">
+  <xsl:apply-templates/>
+</xsl:template>
+
+<xsl:template match="esql:execute-query//esql:error-results">
+  <xsl:apply-templates/>
+</xsl:template>
+
+<xsl:template match="esql:execute-query//esql:no-results">
+  <xsp:logic>
+    if (_esql_query.position == _esql_query.skip_rows) {
+      <xsl:apply-templates/>
+    }
+  </xsp:logic>
+</xsl:template>
+
+<xsl:template match="esql:results//esql:row-results">
+  <xsp:logic>
+    while (_esql_query.resultset.next()) {
+      <xsl:apply-templates/>
+      if (_esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
+        break;
       }
-    </xsp:logic>
-    <xsl:apply-templates select="following-sibling::*[not(name()='esql:no-results')]"/>
-    <xsl:if test="../esql:no-results">
-      <xsp:logic>
-        if (_esql_query.position == _esql_query.skip_rows) {
-          <xsl:apply-templates select="../esql:no-results/*"/>
-        }
-      </xsp:logic>
-    </xsl:if>
-  </xsl:for-each>
+      _esql_query.position++;
+    }
+  </xsp:logic>
 </xsl:template>
 
 <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
