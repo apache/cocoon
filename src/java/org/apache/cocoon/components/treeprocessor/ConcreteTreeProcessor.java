@@ -17,7 +17,6 @@ package org.apache.cocoon.components.treeprocessor;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
