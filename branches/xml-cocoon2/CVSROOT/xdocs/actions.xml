@@ -200,7 +200,7 @@ public class HelloWorldAction extends AbstractAction {
     <source>
 <![CDATA[
    <map:match pattern="*">
-    <map:act set="my-actions">     <--- HERE -->
+    <map:act set="shop-actions">     <--- HERE -->
      <map:generate  type="serverpages" src="docs/xsp/{nextpage}.xsp"/>
      <map:transform src="stylesheets/page2html.xsl"/>
      <map:serialize type="html"/>
