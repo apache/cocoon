@@ -75,7 +75,7 @@ import java.util.TreeSet;
  * &lt;/values&gt;
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: DefaultsModule.java,v 1.2 2003/03/20 07:31:51 jefft Exp $
+ * @version CVS $Id: DefaultsModule.java,v 1.3 2004/02/22 18:14:16 cziegeler Exp $
  */
 public class DefaultsModule extends AbstractLogEnabled
     implements InputModule, Configurable, ThreadSafe {
@@ -87,7 +87,7 @@ public class DefaultsModule extends AbstractLogEnabled
         this.constants = new HashMap();
         Configuration[] consts = config.getChild("values").getChildren();
         for (int i=0; i<consts.length; i++) {
-            this.constants.put(consts[i].getName(), consts[i].getValue());
+            this.constants.put(consts[i].getName(), consts[i].getValue(""));
         }
     }
 
