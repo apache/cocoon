@@ -166,12 +166,12 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
       <xsl:call-template name="variables"><xsl:with-param name="modifier" select="'private'"/></xsl:call-template>
 
       <xsl:if test=".//esql:connection/esql:pool">
-            private static ComponentSelector _esql_selector = null;
+            private static ServiceSelector _esql_selector = null;
 
-            protected ComponentSelector _esql_get_selector() throws org.apache.avalon.framework.component.ComponentException {
+            protected ServiceSelector _esql_get_selector() throws org.apache.avalon.framework.component.ComponentException {
               if (_esql_selector == null) {
                 try {
-                  _esql_selector = (ComponentSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
+                  _esql_selector = (ServiceSelector) manager.lookup(DataSourceComponent.ROLE + "Selector");
                 } catch (ComponentException cme) {
                   getLogger().error("Could not look up the datasource component", cme);
                 }

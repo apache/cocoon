@@ -48,7 +48,7 @@
 
   <role name="org.apache.excalibur.source.SourceFactorySelector"
         shorthand="source-factories"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 
   <role name="org.apache.excalibur.source.SourceResolver"
         shorthand="source-resolver"
