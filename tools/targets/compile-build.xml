@@ -1,7 +1,8 @@
-<!-- === Compilation Targets =================================================== -->
+<!-- === Compilation Targets ============================================= -->
 
   <!-- compiles everything -->
-  <target name="compile" depends="compile-core, compile-deprecated, compile-tests"/>
+  <target name="compile"
+      depends="compile-core, compile-deprecated, compile-tests"/>
 
   <!-- compiles the core -->
   <target name="compile-core" depends="prepare">
@@ -40,13 +41,14 @@
   </target>
 
   <!-- compiles deprecated code -->
-  <target name="compile-deprecated" depends="prepare" unless="unless.exclude.deprecated">
+  <target name="compile-deprecated" depends="prepare"
+      unless="unless.exclude.deprecated">
     <mkdir dir="${build.deprecated}"/>
 
     <xpatch file="${build.dest}/org/apache/cocoon/cocoon.roles" 
             srcdir="${deprecated.conf}"
             includes="**/*.xroles"/>
-            
+
     <javac srcdir="${deprecated.src}"
            destdir="${build.deprecated}"
            debug="${compiler.debug}"
@@ -59,7 +61,7 @@
 
   <target name="compile-tests" depends="compile-core, compile-deprecated">
     <mkdir dir="${build.test}"/>
-    
+
     <!-- Copy test files to build test dir -->
     <copy todir="${build.test}" filtering="on">
       <fileset dir="${test}" excludes="**/*.java"/>
@@ -87,14 +89,15 @@
            classpathref="test.classpath"/>
   </target>
 
-<!-- === Package Targets ======================================================= -->
+<!-- === Package Targets ================================================= -->
 
   <!-- packages everything -->
-  <target name="package" depends="package-core, package-deprecated, package-testcase"/>
+  <target name="package"
+      depends="package-core, package-deprecated, package-testcase"/>
 
   <!-- package the core -->
   <target name="package-core" depends="compile-core, block-roles">
-    <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf">
+    <jar jarfile="${build}/${name}.jar" manifest="${java}/Manifest.mf" index="true">
       <fileset dir="${build.dest}">
          <exclude name="**/Manifest.mf"/>
       </fileset>
@@ -102,15 +105,16 @@
   </target>
 
   <!-- package deprecated code -->
-  <target name="package-deprecated" depends="compile-deprecated" unless="unless.exclude.deprecated">
-    <jar jarfile="${build}/${name}-deprecated.jar">
+  <target name="package-deprecated" depends="compile-deprecated"
+      unless="unless.exclude.deprecated">
+    <jar jarfile="${build}/${name}-deprecated.jar" index="true">
       <fileset dir="${build.deprecated}"/>
     </jar>
   </target>
 
   <!-- package testcase code -->
   <target name="package-testcase" depends="compile-tests">
-    <jar jarfile="${build}/${name}-testcase.jar">
+    <jar jarfile="${build}/${name}-testcase.jar" index="true">
       <fileset dir="${build.test}">
         <include name="org/apache/cocoon/environment/mock/*"/>
         <include name="org/apache/cocoon/components/source/SourceResolverAdapter*"/>
@@ -120,7 +124,7 @@
     </jar>
   </target>
 
-<!-- === Block Targets ========================================================= -->
+<!-- === Block Targets =================================================== -->
 
   <!-- prepares the blocks build -->
   <target name="prepare-blocks" depends="prepare">

@@ -2,7 +2,7 @@
     ant include file for "standalone-demo" build
     @author bdelacretaz@codeconsult.ch
 
-    $Id: standalone-demo-build.xml,v 1.1 2003/11/18 17:20:23 joerg Exp $
+    $Id: standalone-demo-build.xml,v 1.2 2003/12/20 10:02:39 antonio Exp $
  -->
 
 <target name="standalone-demo" depends="init, webapp" description="build webapp and copy files for standalone demo">
@@ -55,8 +55,9 @@ Your friendly neighbourhood Cocoon team.
 </echo>
 
     <!-- all done -->
-    <echo>--- standalone-demo build ready! -----------------------------------------</echo>
-    <echo>See ${readme.txt} for more info.</echo>
-    <echo>--------------------------------------------------------------------------</echo>
+    <echo>--- standalone-demo build ready! -----------------------------------------
+See ${readme.txt} for more info.
+--------------------------------------------------------------------------
+    </echo>
 
 </target>

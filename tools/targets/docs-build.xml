@@ -63,15 +63,18 @@
 
   <!-- If generated docs are already up-to-date, print a message saying so. -->
   <target name="docs_done" depends="docs_check" if="docs.notrequired">
-    <echo message="-------------------------------------------------------------"/>
-    <echo message="Not rebuilding docs, as they are up-to-date:"/>
-    <echo message="  ${build.docs}/index.html is more recent than"/>
-    <echo message="  status.xml, ${documentation}/xdocs/*.xml"/>
-    <echo message="-------------------------------------------------------------"/>
+    <echo>-------------------------------------------------------------
+Not rebuilding docs, as they are up-to-date:
+  ${build.docs}/index.html is more recent than
+  status.xml, ${documentation}/xdocs/*.xml
+-------------------------------------------------------------
+</echo>
   </target>
 
   <!-- Create docs -->
-  <target name="docs" depends="validate-jars, prepare-docs, validate-xdocs, docs_done, javadocs, forrest" unless="docs.notrequired" description="Builds the documentation">
+  <target name="docs"
+      depends="validate-jars, prepare-docs, validate-xdocs, docs_done, javadocs, forrest"
+      unless="docs.notrequired" description="Builds the documentation">
     <!-- The docs are created using forrest, so we simply copy them for now -->
     <mkdir dir="${build.docs}"/>
 
@@ -206,4 +209,3 @@
          inheritRefs="false"
          target="javadocs"/>
   </target>
-
