@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,7 +40,7 @@ import org.xml.sax.SAXException;
 /**
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1 $ $Date: 2004/04/30 07:20:34 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/05/01 10:49:41 $
  */
 public final class DocumentCache {
 
@@ -99,10 +100,12 @@ public final class DocumentCache {
         // Set the DOCTYPE output option on the transformer 
         // if we have any DOCTYPE declaration in the input xml document
         final DocumentType doctype = document.getDoctype();
+        Properties props = new Properties();
         if (null != doctype && null != doctype.getPublicId()) {
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
+            props.put(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
+            props.put(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
         }
+        transformer.setOutputProperties(props);
         
         try {
             transformer.transform(new DOMSource(document),

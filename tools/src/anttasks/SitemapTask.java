@@ -35,8 +35,9 @@ import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 
 /**
+ * @since 2.1.5
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1 $ $Date: 2004/04/30 07:20:34 $
+ * @version CVS $Revision: 1.2 $ $Date: 2004/05/01 10:49:41 $
  */
 public final class SitemapTask extends AbstractQdoxTask {
 
