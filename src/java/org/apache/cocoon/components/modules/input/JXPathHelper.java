@@ -30,7 +30,7 @@ import org.apache.commons.jxpath.PackageFunctions;
 
 /**
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: JXPathHelper.java,v 1.2 2004/03/05 13:02:48 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class JXPathHelper {
 
@@ -54,6 +54,9 @@ public class JXPathHelper {
         FunctionLibrary library = new FunctionLibrary();
         getFunctions(library, config);
         getPackages(library, config);
+        // the following is necessary to be able to use methods on objects without
+        // explicitely registering extension functions (see PackageFunctions javadoc)
+        library.addFunctions(new PackageFunctions("", null));
         return new JXPathHelperConfiguration(library, lenient);
     }
 
