@@ -370,6 +370,16 @@
     change your stylesheet, if necessary, to match on the new element name.)</p>
    </answer>
  </faq>
+
+ <faq id="dbdoesnothing">
+  <question>My database access page just outputs the driver, username, etc. as if
+   Cocoon hadn't processed it at all</question>
+  <answer>
+   <p>Firstly, have you checked that cocoon is working by going to Cocoon.xml ?</p>
+   <p>If that isn't the problem, you've probably misspelled or left out the necessary
+    database namespace. Consult the documentation or the samples.</p>
+  </answer>
+ </faq>
 </faqsection>
 
 <faqsection title="Output Formatting and Internationalization">
@@ -448,6 +458,17 @@
    <p>This way the client browser is able to cache the Javascript file
     for optimum performance, and you never have to bother putting CDATA
     around your Javascript.</p>
+  </answer>
+ </faq>
+
+ <faq id="linebreaking">
+  <question>How can I stop Cocoon putting line breaks in the HTML output?</question>
+  <answer>
+   <p>In your <code>cocoon.properties</code> file you will see a line like this:</p>
+
+   <source>formatter.text/html/loose.line-width = 120</source>
+
+   <p>Change this to a really big number.</p>
   </answer>
  </faq>
 
@@ -717,6 +738,31 @@
 </faqsection>
 
 <faqsection title="Site Architecture Issues">
+
+ <faq id="stylesheetreq">
+  <question>Is is possible to specify the stylesheet to be used by means
+   of a request parameter?</question>
+  <answer>
+   <p>Yes. You'll need to use XSP, as follows:</p>
+
+   <source>
+    <![CDATA[
+     <?cocoon-process type="xsp"?>
+     <?cocoon-process type="xslt"?>
+     <xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+       xmlns:request="http://www.apache.org/1999/XSP/Request">
+
+       <page>
+        <xsp:pi target="xml-stylesheet">
+          <xsp:expr>href="<request:get-parameter name="stylesheet">"</xsp:expr>
+        </xsp:pi> 
+       </page>
+     </xsp:page>
+    ]]>
+   </source>
+  </answer>
+ </faq>
+
  <faq id="servletchaining">
   <question>
    How do I call a servlet or CGI script, or include output
