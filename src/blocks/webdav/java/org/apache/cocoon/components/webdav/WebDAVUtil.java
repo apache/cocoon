@@ -52,10 +52,14 @@ public class WebDAVUtil {
     throws HttpException, IOException {
 
         if (uri == null) return null;
-        if (uri.equals(staticURI)) return staticResource;
+        if (uri.equals(staticURI)) {
+            staticResource.discoverOwnLocks();
+            return staticResource;            
+        } 
         HttpURL sourceURL = new HttpURL(uri);
         staticURI = uri;
         staticResource = new WebdavResource(sourceURL);
+        staticResource.discoverOwnLocks();
         return staticResource;
     }
 
@@ -68,15 +72,15 @@ public class WebDAVUtil {
      * @throws IOException
      * @return Success
      */
-    static public void createResource(String uri, String content)
+    static public void createResource(final String uri, final String content)
     throws HttpException, IOException {
 
-        HttpURL sourceURL = new HttpURL(uri);
-        final WebdavResource resource = new WebdavResource(sourceURL, 
-                                                           WebdavResource.NOACTION, 
-                                                           WebdavResource.getDefaultDepth());
-                
-        if(!resource.putMethod(content)) {
+        final String filename = uri.substring(uri.lastIndexOf("/"));
+        final String uriPrefix = uri.substring(0, uri.lastIndexOf("/"));
+        final HttpURL sourceURL = new HttpURL(uri);                                                                   
+        final WebdavResource resource = getWebdavResource(uriPrefix);
+                        
+        if(!resource.putMethod(uriPrefix + filename, content)) {
             throw new HttpException("Error creating resource: " + uri
                                     + " Status: " + resource.getStatusCode()
                                     + " Message: " + resource.getStatusMessage());
