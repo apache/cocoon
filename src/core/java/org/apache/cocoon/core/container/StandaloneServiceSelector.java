@@ -343,9 +343,11 @@ implements ServiceSelector, Serviceable, Configurable {
         }
 
         try {
+            final ServiceInfo info = new ServiceInfo();
+            info.setConfiguration(configuration);
+            info.setServiceClass(component);
             final ComponentHandler handler = getComponentHandler( null,
-                                                                  component,
-                                                                  configuration,
+                                                                  info,
                                                                   this.serviceManager);
 
             handler.initialize();

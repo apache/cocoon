@@ -18,7 +18,6 @@ package org.apache.cocoon.core.container;
 
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -61,59 +60,55 @@ implements ComponentHandler {
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
     public static ComponentHandler getComponentHandler( final String role,
-                                                        final Class componentClass,
-                                                        final Configuration configuration,
+                                                        final ServiceInfo info,
                                                         final ComponentEnvironment env,
                                                         final RoleManager roleManager)
     throws Exception {
         int numInterfaces = 0;
 
         // FIXME we don't need the class but a classloader
-        final ServiceInfo info = new ServiceInfo();
-        info.setServiceClass(componentClass);
-        info.setServiceClassName(componentClass.getName());
-        info.setConfiguration(configuration);
+        info.setServiceClassName(info.getServiceClass().getName());
         
         // Early check for Composable
-        if ( Composable.class.isAssignableFrom( componentClass ) ) {
+        if ( Composable.class.isAssignableFrom( info.getServiceClass() ) ) {
             throw new Exception("Interface Composable is not supported anymore. Please change class "
-                                + componentClass.getName() + " to use Serviceable instead.");
+                                + info.getServiceClassName() + " to use Serviceable instead.");
         }
 
-        if( SingleThreaded.class.isAssignableFrom( componentClass ) ) {
+        if( SingleThreaded.class.isAssignableFrom( info.getServiceClass() ) ) {
             numInterfaces++;
             info.setModel(ServiceInfo.MODEL_PRIMITIVE);
         }
 
-        if( ThreadSafe.class.isAssignableFrom( componentClass ) ) {
+        if( ThreadSafe.class.isAssignableFrom( info.getServiceClass() ) ) {
             numInterfaces++;
             info.setModel(ServiceInfo.MODEL_SINGLETON);
         }
 
-        if( Poolable.class.isAssignableFrom( componentClass ) ) {
+        if( Poolable.class.isAssignableFrom( info.getServiceClass() ) ) {
             numInterfaces++;
             info.setModel(ServiceInfo.MODEL_POOLED);
         }
 
         if( numInterfaces > 1 ) {
             throw new Exception( "[CONFLICT] More than one lifecycle interface in "
-                                 + componentClass.getName() + "  May implement no more than one of "
+                                 + info.getServiceClassName() + "  May implement no more than one of "
                                  + "SingleThreaded, ThreadSafe, or Poolable" );
         }
 
         if ( numInterfaces == 0 ) {
             // this component does not use avalon interfaces, so get the info from the configuration
-            info.fill(configuration);
+            info.fill(info.getConfiguration());
         }
         
         // Create the factory to use to create the instances of the Component.
         ComponentFactory factory;
         
-        if (DefaultServiceSelector.class.isAssignableFrom(componentClass)) {
+        if (DefaultServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
             // Special factory for DefaultServiceSelector
             factory = new DefaultServiceSelector.Factory(env, roleManager, info, role);
             
-        } else if (StandaloneServiceSelector.class.isAssignableFrom(componentClass)) {
+        } else if (StandaloneServiceSelector.class.isAssignableFrom(info.getServiceClass())) {
             // Special factory for StandaloneServiceSelector
             factory = new StandaloneServiceSelector.Factory(env, roleManager, info, role);
                 
@@ -124,7 +119,7 @@ implements ComponentHandler {
         ComponentHandler handler;
         
         if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
-            handler = new PoolableComponentHandler( info, env.logger, factory, configuration );
+            handler = new PoolableComponentHandler( info, env.logger, factory, info.getConfiguration() );
         } else if( info.getModel() == ServiceInfo.MODEL_SINGLETON ) {
             handler = new ThreadSafeComponentHandler( info, env.logger, factory );
         } else {

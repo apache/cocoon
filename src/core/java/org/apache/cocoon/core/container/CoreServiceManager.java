@@ -286,12 +286,12 @@ implements ServiceManager, Configurable {
                     try {
                         // FIXME use different class loader
                         final Class componentClass = this.getClass().getClassLoader().loadClass( info.getServiceClassName() );
-
                         final Configuration configuration = new DefaultConfiguration( "", "-" );
+                        info.setServiceClass(componentClass);
+                        info.setConfiguration(configuration);
 
                         handler = this.getComponentHandler(role,
-                                                       componentClass,
-                                                       configuration,
+                                                       info,
                                                        this);
 
                         handler.initialize();
@@ -423,7 +423,10 @@ implements ServiceManager, Configurable {
             }
         }
         try {
-            handler = this.getComponentHandler(role, component, configuration, this);
+            final ServiceInfo info = new ServiceInfo();
+            info.setConfiguration(configuration);
+            info.setServiceClass(component);
+            handler = this.getComponentHandler(role, info, this);
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( "Handler type = " + handler.getClass().getName() );

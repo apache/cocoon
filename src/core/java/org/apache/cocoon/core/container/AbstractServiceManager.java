@@ -31,6 +31,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.components.ServiceInfo;
 
 /**
  * Base class for all service managers: ServiceManager and ServiceSelector
@@ -93,8 +94,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
      * @throws Exception If there were any problems obtaining a ComponentHandler
      */
     protected ComponentHandler getComponentHandler( final String role,
-                                                    final Class componentClass,
-                                                    final Configuration configuration,
+                                                    final ServiceInfo info,
                                                     final ServiceManager serviceManager)
     throws Exception {
         final ComponentEnvironment env = new ComponentEnvironment();
@@ -103,8 +103,7 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
         env.logger = this.getLogger();
         env.loggerManager = this.loggerManager;
         return AbstractComponentHandler.getComponentHandler(role,
-                                                     componentClass,
-                                                     configuration,
+                                                     info,
                                                      env,
                                                      this.roleManager);
     }
