@@ -27,7 +27,7 @@
   </header>
   <body>
     <s1 title="Overview">
-      <p>This page details the {{xconf}} configuration format for configuring Cocoon's offline 
+      <p>This page details the <code>xconf</code> configuration format for configuring Cocoon's offline 
          page and site generation capabilities.</p>
       <p>This page gives details of how configure Cocoon. Details of the concepts behind
          offline page generation are given on the offline generation 
