@@ -16,6 +16,8 @@
 package org.apache.cocoon.webservices.system;
 
 import java.util.Properties;
+
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.util.SystemUtil;
 
 /**
@@ -41,12 +43,12 @@ public class System {
      * @return host architecture
      */
     public String getArchitecture() {
-        return SystemUtil.architecture();
+        return SystemUtils.OS_ARCH;
     }
 
     /**
      * <code>getCPUInfo</code> returns host CPU information.
-     *
+     * @deprecated This will be removed in Cocoon 2.2
      * @return host CPU information
      */
     public String getCPUInfo() {
@@ -56,7 +58,7 @@ public class System {
     /**
      * <code>getNumProcessors</code> returns the number of processors in
      * this machine.
-     *
+     * @deprecated This will be removed in Cocoon 2.2
      * @return number of processors
      */
     public int getNumProcessors() {
@@ -69,7 +71,7 @@ public class System {
      * @return host operating system
      */
     public String getOperatingSystem() {
-        return SystemUtil.operatingSystem();
+        return SystemUtils.OS_NAME;
     }
 
     /**
@@ -79,6 +81,6 @@ public class System {
      * @return host operating system version
      */
     public String getOperatingSystemVersion() {
-        return SystemUtil.osVersion();
+        return SystemUtils.OS_VERSION;
     }
 }
