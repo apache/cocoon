@@ -66,394 +66,384 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * A helper class which builds a SchematronSchema instance object
- * from a DOM source
+ * from a DOM source.
  *
  * @author Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
  * @author Michael Ratliff, mratliff@collegenet.com <mratliff@collegenet.com>, May 2002
- * @version CVS $Id: SchematronFactory.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: SchematronFactory.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
  */
 public class SchematronFactory extends SchemaFactory {
 
-	/**
-	 * the schema name space prefix used in the schema document
-	 */
-	private String schemaPrefix_;
+    /**
+     * The schema name space prefix used in the schema document.
+     */
+    private String schemaPrefix_;
 
-	/**
-	 * the default schema name space prefix
-	 */
-	private String defaultSchemaPrefix_ = "sch";
+    /**
+     * The default schema name space prefix.
+     */
+    private String defaultSchemaPrefix_ = "sch";
 
-	/**
-	 * private logger
-	 */
-	private Logger logger = setupLogger();
+    /**
+     * Private logger.
+     */
+    private Logger logger = setupLogger();
 
-	//
-	// Constructors
-	//
+    // 
+    // Constructors
+    // 
 
-	/**
-	 * initialize logger
-	 */
-	protected Logger setupLogger() {
-		Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor("XmlForm");
-		logger.setPriority(Priority.ERROR);
-		return logger;
-	}
+    /**
+     * Initialize logger.
+     */
+    protected Logger setupLogger() {
+        Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor("XmlForm");
 
-	/**
-	 * Builds a new Schema instance from
-	 * the given XML InputSource
-	 *
-	 * @param schemaSrc
-	 *        the Schema document XML InputSource
-	 */
-	public Schema compileSchema(InputSource schemaSrc)
-		throws InstantiationException {
-		SchematronSchema schema = null;
-		try {
-			// load Schema file into a DOM document
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dbld = dbf.newDocumentBuilder();
-			Document document = dbld.parse(schemaSrc);
+        logger.setPriority(Priority.ERROR);
+        return logger;
+    }
 
-			schema = buildSchema(document);
-		} catch (Exception e) {
-			logger.error("!!! Failed loading Schematron schema", e);
-			throw new CascadingRuntimeException(
-				" !!! Failed loading Schematron schema",
-				e);
-		}
-		return schema;
-	} // build
+    /**
+     * Builds a new Schema instance from
+     * the given XML InputSource.
+     *
+     * @param schemaSrc
+     *        the Schema document XML InputSource
+     */
+    public Schema compileSchema(InputSource schemaSrc)
+      throws InstantiationException {
+        SchematronSchema schema = null;
 
-	/**
-	 * Build Schematron schema object from a DOM document
-	 * @param doc DOM document containing the schema
-	 *
-	 */
-	protected SchematronSchema buildSchema(Document doc) {
-		SchematronSchema schema = new SchematronSchema();
+        try {
+            // load Schema file into a DOM document
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dbld = dbf.newDocumentBuilder();
+            Document document = dbld.parse(schemaSrc);
 
-		doc.getNamespaceURI();
-		doc.getPrefix();
+            schema = buildSchema(document);
+        } catch (Exception e) {
+            logger.error("!!! Failed loading Schematron schema", e);
+            throw new CascadingRuntimeException(" !!! Failed loading Schematron schema",
+                                                e);
+        }
+        return schema;
+    } // build
 
-		// Initialize the JXPath context
-		Element root = doc.createElement("root");
-		Element schemaElement = doc.getDocumentElement();
-		schemaPrefix_ = schemaElement.getPrefix();
-		root.appendChild(schemaElement);
-		JXPathContext jxpContext = JXPathContext.newContext(root);
-		jxpContext.setLenient(false);
+    /**
+     * Build Schematron schema object from a DOM document.
+     *
+     * @param doc DOM document containing the schema
+     */
+    protected SchematronSchema buildSchema(Document doc) {
+        SchematronSchema schema = new SchematronSchema();
 
-		// Bind sch:schema element
+        doc.getNamespaceURI();
+        doc.getPrefix();
 
-		// schema title
-		String title =
-			(String) jxpContext.getValue("/schema/title", String.class);
-		schema.setTitle(title);
-		logger.debug("Schema title: " + schema.getTitle());
+        // Initialize the JXPath context
+        Element root = doc.createElement("root");
+        Element schemaElement = doc.getDocumentElement();
 
-		bindPatterns(schema, jxpContext);
-		bindPhases(schema, jxpContext);
+        schemaPrefix_ = schemaElement.getPrefix();
+        root.appendChild(schemaElement);
+        JXPathContext jxpContext = JXPathContext.newContext(root);
 
-		return schema;
-	}
+        jxpContext.setLenient(false);
 
-	/**
-	 * populates the patterns elements from the dom tree
-	 *
-	 * @param schema the schema instance
-	 * @param jxpContext
-	 */
-	protected void bindPatterns(
-		SchematronSchema schema,
-		JXPathContext jxpContext) {
-		// ensure that mandatory elements which are not found
-		// will result in Exception
-		jxpContext.setLenient(false);
+        // Bind sch:schema element
 
-		// schema patterns
-		int ptCount =
-			((Integer) jxpContext
-				.getValue("count(/schema/pattern)", Integer.class))
-				.intValue();
-		logger.debug("\nNumber of patterns:  " + ptCount);
-		for (int i = 1; i <= ptCount; i++) {
-			logger.debug("Pattern# :  " + i);
-			Pattern pattern = new Pattern();
-			String ptprefix = "/schema/pattern[" + i + "]";
+        // schema title
+        String title = (String) jxpContext.getValue("/schema/title",
+                                                    String.class);
 
-			String name =
-				(String) jxpContext.getValue(ptprefix + "/@name", String.class);
-			pattern.setName(name);
-			logger.debug("Pattern name :  " + pattern.getName());
+        schema.setTitle(title);
+        logger.debug("Schema title: "+schema.getTitle());
 
-			String id =
-				(String) jxpContext.getValue(ptprefix + "/@id", String.class);
-			pattern.setId(id);
-			logger.debug("Pattern id :  " + pattern.getId());
+        bindPatterns(schema, jxpContext);
+        bindPhases(schema, jxpContext);
 
-			bindRules(pattern, ptprefix, jxpContext);
+        return schema;
+    }
 
-			schema.addPattern(pattern);
-		}
-	}
+    /**
+     * Populates the patterns elements from the dom tree.
+     *
+     * @param schema the schema instance
+     * @param jxpContext
+     */
+    protected void bindPatterns(SchematronSchema schema,
+                                JXPathContext jxpContext) {
+        // ensure that mandatory elements which are not found
+        // will result in Exception
+        jxpContext.setLenient(false);
 
-	/**
-	 * populates the rules elements for a pattern
-	 * from the dom tree
-	 *
-	 * @param pattern
-	 * @param pathPrefix pattern path prefix
-	 * @param jxpContext JXPathContext
-	 */
-	protected void bindRules(
-		Pattern pattern,
-		String pathPrefix,
-		JXPathContext jxpContext) {
-		// ensure that mandatory elements which are not found
-		// will result in Exception
-		jxpContext.setLenient(false);
+        // schema patterns
+        int ptCount = ((Integer) jxpContext.getValue("count(/schema/pattern)",
+                          Integer.class)).intValue();
 
-		// schema rules
-		int ruleCount =
-			((Integer) jxpContext
-				.getValue("count(" + pathPrefix + "/rule)", Integer.class))
-				.intValue();
-		logger.debug("\nNumber of rules:  " + ruleCount);
-		for (int i = 1; i <= ruleCount; i++) {
-			logger.debug("Rule# :  " + i);
-			Rule rule = new Rule();
-			String rulePrefix = pathPrefix + "/rule[" + i + "]";
+        logger.debug("\nNumber of patterns:  "+ptCount);
+        for (int i = 1; i<=ptCount; i++) {
+            logger.debug("Pattern# :  "+i);
+            Pattern pattern = new Pattern();
+            String ptprefix = "/schema/pattern["+i+"]";
 
-			String context =
-				(String) jxpContext.getValue(
-					rulePrefix + "/@context",
-					String.class);
-			rule.setContext(context);
-			logger.debug("Rule context :  " + rule.getContext());
+            String name = (String) jxpContext.getValue(ptprefix+"/@name",
+                                                       String.class);
 
-			bindAsserts(rule, rulePrefix, jxpContext);
+            pattern.setName(name);
+            logger.debug("Pattern name :  "+pattern.getName());
 
-			// Patch to make reports work in schematron
-			// Note change to name of bindRerports [sic] function
-			bindReports(rule, rulePrefix, jxpContext);
+            String id = (String) jxpContext.getValue(ptprefix+"/@id",
+                                                     String.class);
 
-			pattern.addRule(rule);
-		}
-	}
+            pattern.setId(id);
+            logger.debug("Pattern id :  "+pattern.getId());
 
-	/**
-	 * populates the assert elements for a rule
-	 * from the dom tree
-	 *
-	 * @param rule
-	 * @param pathPrefix rule path prefix
-	 * @param jxpContext JXPathContext
-	 */
-	protected void bindAsserts(
-		Rule rule,
-		String pathPrefix,
-		JXPathContext jxpContext) {
-		// ensure that mandatory elements which are not found
-		// will result in Exception
-		jxpContext.setLenient(false);
+            bindRules(pattern, ptprefix, jxpContext);
 
-		// schema reports
-		int elementCount =
-			((Integer) jxpContext
-				.getValue("count(" + pathPrefix + "/assert)", Integer.class))
-				.intValue();
-		logger.debug("\nNumber of asserts:  " + elementCount);
-		for (int i = 1; i <= elementCount; i++) {
-			logger.debug("Assert# :  " + i);
-			Assert assertion = new Assert();
-			String assertPrefix = pathPrefix + "/assert[" + i + "]";
+            schema.addPattern(pattern);
+        }
+    }
 
-			String test =
-				(String) jxpContext.getValue(
-					assertPrefix + "/@test",
-					String.class);
-			assertion.setTest(test);
-			logger.debug("Assert test :  " + assertion.getTest());
+    /**
+     * Populates the rules elements for a pattern
+     * from the dom tree.
+     *
+     * @param pattern
+     * @param pathPrefix pattern path prefix
+     * @param jxpContext JXPathContext
+     */
+    protected void bindRules(Pattern pattern, String pathPrefix,
+                             JXPathContext jxpContext) {
+        // ensure that mandatory elements which are not found
+        // will result in Exception
+        jxpContext.setLenient(false);
 
-			// since diagnostics is a non-mandatory element
-			// we will try to get its value in a lenient mode
-			jxpContext.setLenient(true);
-			String diagnostics =
-				(String) jxpContext.getValue(
-					assertPrefix + "/@diagnostics",
-					String.class);
-			assertion.setDiagnostics(diagnostics);
-			logger.debug("Assert diagnostics :  " + assertion.getDiagnostics());
-			jxpContext.setLenient(false);
+        // schema rules
+        int ruleCount = ((Integer) jxpContext.getValue("count("+pathPrefix+
+                            "/rule)", Integer.class)).intValue();
 
-			// now read the report message
-			// TODO: The current implementation does not 
-			// read xml tags used within the assert message.
-			// Solution is to use JXPath NodePointer to get 
-			// to the DOM node and then convert it to a String.
-			// e.g.
-			// NodePointer nptr = (NodePointer) jxpContext.locateValue( assertPrefix );
-			// Node msgNode = (Node) nptr.getNodeValue();
-			// convery DOMNode to String
+        logger.debug("\nNumber of rules:  "+ruleCount);
+        for (int i = 1; i<=ruleCount; i++) {
+            logger.debug("Rule# :  "+i);
+            Rule rule = new Rule();
+            String rulePrefix = pathPrefix+"/rule["+i+"]";
 
-			String message =
-				(String) jxpContext.getValue(assertPrefix, String.class);
-			assertion.setMessage(message);
-			logger.debug("Assert message :  " + assertion.getMessage());
+            String context = (String) jxpContext.getValue(rulePrefix+
+                                 "/@context", String.class);
 
-			rule.addAssert(assertion);
-		}
-	}
+            rule.setContext(context);
+            logger.debug("Rule context :  "+rule.getContext());
 
-	/**
-	 * populates the report elements for a rule
-	 * from the dom tree
-	 *
-	 * @param rule
-	 * @param pathPrefix rule path prefix
-	 * @param jxpContext JXPathContext
-	 */
+            bindAsserts(rule, rulePrefix, jxpContext);
 
-	protected void bindReports(
-		Rule rule,
-		String pathPrefix,
-		JXPathContext jxpContext) {
-		// ensure that mandatory elements which are not found
-		// will result in Exception
-		jxpContext.setLenient(false);
+            // Patch to make reports work in schematron
+            // Note change to name of bindRerports [sic] function
+            bindReports(rule, rulePrefix, jxpContext);
 
-		// schema reports
-		int elementCount =
-			((Integer) jxpContext
-				.getValue("count(" + pathPrefix + "/report)", Integer.class))
-				.intValue();
-		logger.debug("\nNumber of reports:  " + elementCount);
-		for (int i = 1; i <= elementCount; i++) {
-			logger.debug("Report# :  " + i);
-			Report report = new Report();
-			String assertPrefix = pathPrefix + "/report[" + i + "]";
+            pattern.addRule(rule);
+        }
+    }
 
-			String test =
-				(String) jxpContext.getValue(
-					assertPrefix + "/@test",
-					String.class);
-			report.setTest(test);
-			logger.debug("Report test :  " + report.getTest());
+    /**
+     * Populates the assert elements for a rule
+     * from the dom tree.
+     *
+     * @param rule
+     * @param pathPrefix rule path prefix
+     * @param jxpContext JXPathContext
+     */
+    protected void bindAsserts(Rule rule, String pathPrefix,
+                               JXPathContext jxpContext) {
+        // ensure that mandatory elements which are not found
+        // will result in Exception
+        jxpContext.setLenient(false);
 
-			// since diagnostics is a non-mandatory element
-			// we will try to get its value in a lenient mode
-			jxpContext.setLenient(true);
-			String diagnostics =
-				(String) jxpContext.getValue(
-					assertPrefix + "/@diagnostics",
-					String.class);
-			report.setDiagnostics(diagnostics);
-			logger.debug("Report diagnostics :  " + report.getDiagnostics());
-			jxpContext.setLenient(false);
+        // schema reports
+        int elementCount = ((Integer) jxpContext.getValue("count("+pathPrefix+
+                               "/assert)", Integer.class)).intValue();
 
-			String message =
-				(String) jxpContext.getValue(assertPrefix, String.class);
-			report.setMessage(message);
-			logger.debug("Report message :  " + report.getMessage());
+        logger.debug("\nNumber of asserts:  "+elementCount);
+        for (int i = 1; i<=elementCount; i++) {
+            logger.debug("Assert# :  "+i);
+            Assert assertion = new Assert();
+            String assertPrefix = pathPrefix+"/assert["+i+"]";
 
-			rule.addReport(report);
-		}
-	}
+            String test = (String) jxpContext.getValue(assertPrefix+"/@test",
+                                                       String.class);
 
-	/**
-	 * populates the phases elements from the dom tree
-	 *
-	 * @param schema the schema instance
-	 * @param jxpContext
-	 */
-	protected void bindPhases(
-		SchematronSchema schema,
-		JXPathContext jxpContext) {
-		// ensure that mandatory elements which are not found
-		// will result in Exception
-		jxpContext.setLenient(false);
+            assertion.setTest(test);
+            logger.debug("Assert test :  "+assertion.getTest());
 
-		// schema phases
-		int phaseCount =
-			((Integer) jxpContext
-				.getValue("count(/schema/phase)", Integer.class))
-				.intValue();
-		logger.debug("\nNumber of phases:  " + phaseCount);
+            // since diagnostics is a non-mandatory element
+            // we will try to get its value in a lenient mode
+            jxpContext.setLenient(true);
+            String diagnostics = (String) jxpContext.getValue(assertPrefix+
+                                     "/@diagnostics", String.class);
 
-		for (int i = 1; i <= phaseCount; i++) {
-			logger.debug("phase# :  " + i);
-			Phase phase = new Phase();
-			String phprefix = "/schema/phase[" + i + "]";
+            assertion.setDiagnostics(diagnostics);
+            logger.debug("Assert diagnostics :  "+assertion.getDiagnostics());
+            jxpContext.setLenient(false);
 
-			String id =
-				(String) jxpContext.getValue(phprefix + "/@id", String.class);
-			phase.setId(id);
-			logger.debug("phase id :  " + phase.getId());
+            // now read the report message
+            // TODO: The current implementation does not
+            // read xml tags used within the assert message.
+            // Solution is to use JXPath NodePointer to get
+            // to the DOM node and then convert it to a String.
+            // e.g.
+            // NodePointer nptr = (NodePointer) jxpContext.locateValue( assertPrefix );
+            // Node msgNode = (Node) nptr.getNodeValue();
+            // convery DOMNode to String
 
-			bindPhaseActivePatterns(phase, phprefix, jxpContext);
+            String message = (String) jxpContext.getValue(assertPrefix,
+                                 String.class);
 
-			schema.addPhase(phase);
-		}
-	}
+            assertion.setMessage(message);
+            logger.debug("Assert message :  "+assertion.getMessage());
 
-	protected void bindPhaseActivePatterns(
-		Phase phase,
-		String pathPrefix,
-		JXPathContext jxpContext) {
-		// ensure that mandatory elements which are not found
-		// will result in Exception
-		jxpContext.setLenient(false);
+            rule.addAssert(assertion);
+        }
+    }
 
-		// phase active patterns
-		int elementCount =
-			((Integer) jxpContext
-				.getValue("count(" + pathPrefix + "/active)", Integer.class))
-				.intValue();
-		logger.debug("Number of active patterns:  " + elementCount);
-		for (int i = 1; i <= elementCount; i++) {
-			logger.debug("active pattern # :  " + i);
-			ActivePattern activePattern = new ActivePattern();
-			String assertPrefix = pathPrefix + "/active[" + i + "]";
+    /**
+     * Populates the report elements for a rule
+     * from the dom tree.
+     *
+     * @param rule
+     * @param pathPrefix rule path prefix
+     * @param jxpContext JXPathContext
+     */
+    protected void bindReports(Rule rule, String pathPrefix,
+                               JXPathContext jxpContext) {
+        // ensure that mandatory elements which are not found
+        // will result in Exception
+        jxpContext.setLenient(false);
 
-			String pt =
-				(String) jxpContext.getValue(
-					assertPrefix + "/@pattern",
-					String.class);
-			activePattern.setPattern(pt);
-			logger.debug(
-				"Phase active pattern :  " + activePattern.getPattern());
+        // schema reports
+        int elementCount = ((Integer) jxpContext.getValue("count("+pathPrefix+
+                               "/report)", Integer.class)).intValue();
 
-			phase.addActive(activePattern);
-		}
-	}
+        logger.debug("\nNumber of reports:  "+elementCount);
+        for (int i = 1; i<=elementCount; i++) {
+            logger.debug("Report# :  "+i);
+            Report report = new Report();
+            String assertPrefix = pathPrefix+"/report["+i+"]";
 
-	/**
-	 * Replace all occurances of sch: with the actual Schema prefix used in the document
-	 *
-	 * TODO: fix this implementaion. There are problems with DOM.
-	 * Returns null instead of the actual namespace prefix (e.g. "sch") as expected.
-	 */
-	protected String fixns(String path) {
-		// Ironicly, at the time I am writing this
-		// JDK 1.4 is offering String.replaceAll(regex, str)
-		// I don't use it however for backward compatibility
-		StringBuffer strbuf = new StringBuffer(path);
-		int i = 0;
-		int j = 0;
-		String dprefix = defaultSchemaPrefix_ + ":";
-		int dplen = dprefix.length();
-		while ((j = path.indexOf(dprefix, i)) >= 0) {
-			strbuf.append(path.substring(i, j));
-			strbuf.append(schemaPrefix_);
-			strbuf.append(':');
-			i = j + dplen;
-		}
-		strbuf.append(path.substring(i));
-		return strbuf.toString();
-	}
+            String test = (String) jxpContext.getValue(assertPrefix+"/@test",
+                                                       String.class);
 
+            report.setTest(test);
+            logger.debug("Report test :  "+report.getTest());
+
+            // since diagnostics is a non-mandatory element
+            // we will try to get its value in a lenient mode
+            jxpContext.setLenient(true);
+            String diagnostics = (String) jxpContext.getValue(assertPrefix+
+                                     "/@diagnostics", String.class);
+
+            report.setDiagnostics(diagnostics);
+            logger.debug("Report diagnostics :  "+report.getDiagnostics());
+            jxpContext.setLenient(false);
+
+            String message = (String) jxpContext.getValue(assertPrefix,
+                                 String.class);
+
+            report.setMessage(message);
+            logger.debug("Report message :  "+report.getMessage());
+
+            rule.addReport(report);
+        }
+    }
+
+    /**
+     * Populates the phases elements from the dom tree.
+     *
+     * @param schema the schema instance
+     * @param jxpContext
+     */
+    protected void bindPhases(SchematronSchema schema,
+                              JXPathContext jxpContext) {
+        // ensure that mandatory elements which are not found
+        // will result in Exception
+        jxpContext.setLenient(false);
+
+        // schema phases
+        int phaseCount = ((Integer) jxpContext.getValue("count(/schema/phase)",
+                             Integer.class)).intValue();
+
+        logger.debug("\nNumber of phases:  "+phaseCount);
+
+        for (int i = 1; i<=phaseCount; i++) {
+            logger.debug("phase# :  "+i);
+            Phase phase = new Phase();
+            String phprefix = "/schema/phase["+i+"]";
+
+            String id = (String) jxpContext.getValue(phprefix+"/@id",
+                                                     String.class);
+
+            phase.setId(id);
+            logger.debug("phase id :  "+phase.getId());
+
+            bindPhaseActivePatterns(phase, phprefix, jxpContext);
+
+            schema.addPhase(phase);
+        }
+    }
+
+    protected void bindPhaseActivePatterns(Phase phase, String pathPrefix,
+                                           JXPathContext jxpContext) {
+        // ensure that mandatory elements which are not found
+        // will result in Exception
+        jxpContext.setLenient(false);
+
+        // phase active patterns
+        int elementCount = ((Integer) jxpContext.getValue("count("+pathPrefix+
+                               "/active)", Integer.class)).intValue();
+
+        logger.debug("Number of active patterns:  "+elementCount);
+        for (int i = 1; i<=elementCount; i++) {
+            logger.debug("active pattern # :  "+i);
+            ActivePattern activePattern = new ActivePattern();
+            String assertPrefix = pathPrefix+"/active["+i+"]";
+
+            String pt = (String) jxpContext.getValue(assertPrefix+
+                                                     "/@pattern", String.class);
+
+            activePattern.setPattern(pt);
+            logger.debug("Phase active pattern :  "+
+                         activePattern.getPattern());
+
+            phase.addActive(activePattern);
+        }
+    }
+
+    /**
+     * Replace all occurances of sch: with the actual Schema prefix used in the document.
+     *
+     * TODO: fix this implementaion. There are problems with DOM.
+     * Returns null instead of the actual namespace prefix (e.g. "sch") as expected.
+     *
+     * @param path       
+     *
+     * @return
+     */
+    protected String fixns(String path) {
+        // Ironicly, at the time I am writing this
+        // JDK 1.4 is offering String.replaceAll(regex, str)
+        // I don't use it however for backward compatibility
+        StringBuffer strbuf = new StringBuffer(path);
+        int i = 0;
+        int j = 0;
+        String dprefix = defaultSchemaPrefix_+":";
+        int dplen = dprefix.length();
+
+        while ((j = path.indexOf(dprefix, i))>=0) {
+            strbuf.append(path.substring(i, j));
+            strbuf.append(schemaPrefix_);
+            strbuf.append(':');
+            i = j+dplen;
+        }
+        strbuf.append(path.substring(i));
+        return strbuf.toString();
+    }
 }

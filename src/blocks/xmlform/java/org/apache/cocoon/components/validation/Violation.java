@@ -54,84 +54,97 @@ package org.apache.cocoon.components.validation;
  * Encapsulates an error condition which was triggered
  * by a violation of the document validity during
  * validation
- * 
+ *
  * @author  ivelin@apache.org
- * @version CVS $Id: Violation.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: Violation.java,v 1.2 2003/04/26 12:10:43 stephan Exp $
  */
 public class Violation implements Comparable {
 
-	/** 
-	* @return the XPath location of the Violation
-	*/
-	public String getPath() {
-		return xpath_;
-	}
+    /**
+     * @return the XPath location of the Violation
+     */
+    public String getPath() {
+        return xpath_;
+    }
 
-	/** 
-	* set the XPath location of the Violation
-	*/
-	public void setPath(String xpath) {
-		xpath_ = xpath;
-	}
+    /**
+     * set the XPath location of the Violation
+     *
+     * @param xpath      
+     */
+    public void setPath(String xpath) {
+        xpath_ = xpath;
+    }
 
-	/**
-	 * @return the error message
-	 */
-	public String getMessage() {
-		return message_;
-	}
+    /**
+     * @return the error message
+     */
+    public String getMessage() {
+        return message_;
+    }
 
-	/**
-	 * set the error message
-	 */
-	public void setMessage(String message) {
-		message_ = message;
-	}
+    /**
+     * set the error message
+     *
+     * @param message    
+     */
+    public void setMessage(String message) {
+        message_ = message;
+    }
 
-	public boolean equals(Object obj) {
-		if (obj == null)
-			return false;
-		if (obj == this)
-			return true;
-		if (!(obj instanceof Violation))
-			throw new java.lang.IllegalArgumentException(
-				"Can only compare to a Violation object");
-		Violation v = (Violation) obj;
-		if (getPath().equals(v.getPath())
-			&& getMessage().equals(v.getMessage()))
-			return true;
-		else
-			return false;
-	}
+    public boolean equals(Object obj) {
+        if (obj==null) {
+            return false;
+        }
+        if (obj==this) {
+            return true;
+        }
+        if ( !(obj instanceof Violation)) {
+            throw new java.lang.IllegalArgumentException("Can only compare to a Violation object");
+        }
+        Violation v = (Violation) obj;
 
-	public int hashCode() {
-		return (getPath().hashCode() ^ getMessage().hashCode());
-	}
+        if (getPath().equals(v.getPath()) &&
+            getMessage().equals(v.getMessage())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public int compareTo(Object obj) {
-		if (obj == null)
-			return 1;
-		if (obj == this)
-			return 0;
-		if (!(obj instanceof Violation))
-			throw new java.lang.IllegalArgumentException(
-				"Can only compare to a Violation object");
-		Violation v = (Violation) obj;
-		int primaryResult = getPath().compareTo(v.getPath());
-		if (primaryResult != 0)
-			return primaryResult;
-		else {
-			if (getMessage() == null) {
-				if (v.getMessage() == null)
-					return 0;
-				else
-					return -1;
-			} else
-				return (getMessage().compareTo(v.getMessage()));
-		}
-	}
+    public int hashCode() {
+        return (getPath().hashCode()^getMessage().hashCode());
+    }
 
-	private String xpath_;
-	private String message_;
+    public int compareTo(Object obj) {
+        if (obj==null) {
+            return 1;
+        }
+        if (obj==this) {
+            return 0;
+        }
+        if ( !(obj instanceof Violation)) {
+            throw new java.lang.IllegalArgumentException("Can only compare to a Violation object");
+        }
+        Violation v = (Violation) obj;
+        int primaryResult = getPath().compareTo(v.getPath());
+
+        if (primaryResult!=0) {
+            return primaryResult;
+        } else {
+            if (getMessage()==null) {
+                if (v.getMessage()==null) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                return (getMessage().compareTo(v.getMessage()));
+            }
+        }
+    }
+
+    private String xpath_;
+    private String message_;
 
 }

@@ -51,17 +51,17 @@
 package org.apache.cocoon.components.validation.schematron;
 
 /**
- * Represents a Schematron report element 
+ * Represents a Schematron report element.
  *
- * <report test="when">message</report> 
+ * <report test="when">message</report>
  * is equivalent to
- * <assert test="not(when)">message</assert> 
- * 
+ * <assert test="not(when)">message</assert>
+ *
  * example:
  * <report test="bone">This dog has a bone.</report>
  *
  * @author  Ivelin Ivanov, ivelin@acm.org, ivelin@iname.com
- * @version CVS $Id: Report.java,v 1.1 2003/04/25 08:51:11 stephan Exp $
+ * @version CVS $Id: Report.java,v 1.2 2003/04/26 12:10:44 stephan Exp $
  */
 public class Report extends Assert {
 }
