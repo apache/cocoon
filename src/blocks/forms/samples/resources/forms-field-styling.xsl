@@ -222,7 +222,7 @@
     <xsl:variable name="selected" select="fi:selection-list/fi:item[@value = $value]"/>
     <xsl:choose>
       <xsl:when test="$selected/fi:label">
-        <xsl:apply-templates select="$selected/fi:label"/>
+        <xsl:copy-of select="$selected/fi:label/node()"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="$value"/>
