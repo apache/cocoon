@@ -81,11 +81,10 @@ import java.util.Map;
  * language will be transformed into an equivalent XSLT stylesheet
  * anyway... This class should probably be based on an interface...
  *
- * @deprecated Use the avalon excalibur xslt processor instead.
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: Logicsheet.java,v 1.1 2003/03/09 00:08:53 pier Exp $
+ * @version CVS $Id: Logicsheet.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
  */
 public class Logicsheet extends AbstractLogEnabled
 {

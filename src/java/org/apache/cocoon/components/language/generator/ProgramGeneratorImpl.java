@@ -72,11 +72,9 @@ import org.apache.cocoon.components.language.markup.MarkupLanguage;
 import org.apache.cocoon.components.language.programming.CodeFormatter;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.excalibur.source.Source;
-import org.xml.sax.InputSource;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -87,7 +85,7 @@ import java.net.MalformedURLException;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.1 2003/03/09 00:08:52 pier Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.2 2003/05/22 13:02:46 vgritsenko Exp $
  */
 public class ProgramGeneratorImpl extends AbstractLogEnabled
     implements ProgramGenerator, Contextualizable, Composable, Parameterizable,
@@ -129,6 +127,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
     /** Servlet Context Directory */
     protected String contextDir;
 
+
     /** Contextualize this class */
     public void contextualize(Context context) throws ContextException {
         if (this.workDir == null) {
@@ -167,7 +166,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
      * @param manager The global component manager
      */
     public void compose(ComponentManager manager) throws ComponentException {
-        if ((this.manager == null) && (manager != null)) {
+        if (this.manager == null && manager != null) {
             this.manager = manager;
             this.cache = (GeneratorSelector) this.manager.lookup(GeneratorSelector.ROLE + "Selector");
             this.markupSelector = (ComponentSelector)this.manager.lookup(MarkupLanguage.ROLE + "Selector");
@@ -196,10 +195,10 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
         StringBuffer contextFilename = new StringBuffer(this.rootPackage.replace('.', File.separatorChar));
         contextFilename.append(File.separator);
         if(systemId.startsWith(this.contextDir)) {
-            // VG: File is located under contextDir, using relative file name
+            // VG: File is located under contextDir; using relative file name ...
             contextFilename.append(systemId.substring(this.contextDir.length()));
         } else {
-            // VG: File is located outside of contextDir, using systemId
+            // VG: File is located outside of contextDir; using systemId ...
             contextFilename.append(systemId);
         }
         return IOUtils.normalizedFilename(contextFilename.toString());
@@ -283,8 +282,7 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Successfully preloaded serverpage [" + id + "]");
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     if (getLogger().isErrorEnabled()) {
                         getLogger().error("The serverpage [" + id + "] could not be preloaded");
                     }
@@ -297,16 +295,21 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                     getLogger().debug("Creating new serverpage for [" + id + "]");
                 }
                 synchronized (this) {
-                    generateSourcecode(source, normalizedName, markupLanguage, programmingLanguage, resolver);
+                    generateSourcecode(source,
+                                       normalizedName,
+                                       markupLanguage,
+                                       programmingLanguage);
 
-                    programInstance = loadProgram(newManager, source, normalizedName, markupLanguage, programmingLanguage, resolver);
+                    programInstance = loadProgram(newManager,
+                                                  normalizedName,
+                                                  markupLanguage,
+                                                  programmingLanguage);
                 }
-            }
-            else {
+            } else {
                 // found an instance
                 if (this.autoReload) {
                     long sourceLastModified = source.getLastModified();
-                    // has XSP changed?
+                    // Has XSP changed?
                     // Note : lastModified can be 0 if source is dynamically generated.
                     // In that case, let the program instance decide if it is modified or not.
                     if (programInstance.modifiedSince(sourceLastModified)) {
@@ -323,22 +326,30 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                             programInstance = null;
                             program = null;
 
-                            generateSourcecode(source, normalizedName, markupLanguage, programmingLanguage, resolver);
+                            generateSourcecode(source,
+                                               normalizedName,
+                                               markupLanguage,
+                                               programmingLanguage);
 
-                            programInstance = loadProgram(newManager, source, normalizedName, markupLanguage, programmingLanguage, resolver);
+                            programInstance = loadProgram(newManager,
+                                                          normalizedName,
+                                                          markupLanguage,
+                                                          programmingLanguage);
                         }
-                    }
-                    else {
+                    } else {
                         // check the repository for changes at all?
                         if (this.watchSource) {
                             if (getLogger().isDebugEnabled()) {
                                 getLogger().debug("Checking sourcecode of [" + id + "] for a change");
                             }
-                            File sourcecodeFile = new File(this.workDir, normalizedName + "." + programmingLanguage.getSourceExtension());
+                            File sourcecodeFile = new File(this.workDir,
+                                                           normalizedName + "." + programmingLanguage.getSourceExtension());
                             // has sourcecode in repository changed ?
                             if (sourcecodeFile != null && sourcecodeFile.exists()) {
                                 long sourcecodeLastModified = sourcecodeFile.lastModified();
-                                if (sourcecodeLastModified > sourceLastModified || sourceLastModified == 0 || sourcecodeLastModified == 0) {
+                                if (sourcecodeLastModified > sourceLastModified
+                                        || sourceLastModified == 0
+                                        || sourcecodeLastModified == 0) {
                                     if (getLogger().isDebugEnabled()) {
                                         getLogger().debug("Create new serverpage program for [" + id + "] - repository has changed");
                                     }
@@ -352,63 +363,59 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
                                         programInstance = null;
                                         program = null;
 
-                                        programInstance = loadProgram(newManager, source, normalizedName, markupLanguage, programmingLanguage, resolver);
+                                        programInstance = loadProgram(newManager,
+                                                                      normalizedName,
+                                                                      markupLanguage,
+                                                                      programmingLanguage);
                                     }
-                                }
-                                else {
+                                } else {
                                     if (getLogger().isDebugEnabled()) {
                                         getLogger().debug("Sourcecode of [" + id + "] has not changed - returning program from cache");
                                     }
                                 }
-                            }
-                            else {
+                            } else {
                                 if (getLogger().isErrorEnabled()) {
                                     getLogger().error("Could not find sourcecode for [" + id + "]");
                                 }
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     if (getLogger().isDebugEnabled()) {
                         getLogger().debug("Not checking for modifications [autoReload=false] - using current version");
                     }
                 }
-
             }
 
-            // Recompose with the new manager if needed
+            // Recompose with the new manager if program needs it.
+            // This is required to provide XSP with manager from the correct
+            // sitemap so it will be able to find all components declared in
+            // the sitemap.
             if (programInstance instanceof Recomposable) {
                 ((Recomposable) programInstance).recompose(newManager);
             }
             return (programInstance);
-        }
-        finally {
+        } finally {
             resolver.release(source);
             this.markupSelector.release(markupLanguage);
             this.languageSelector.release(programmingLanguage);
         }
     }
 
-    private CompiledComponent loadProgram(
-            ComponentManager newManager,
-            Source source,
-            String normalizedName,
-            MarkupLanguage markupLanguage,
-            ProgrammingLanguage programmingLanguage,
-            SourceResolver resolver)
+    private CompiledComponent loadProgram(ComponentManager newManager,
+                                          String normalizedName,
+                                          MarkupLanguage markupLanguage,
+                                          ProgrammingLanguage programmingLanguage)
             throws Exception {
 
         CompiledComponent programInstance = null;
 
         try {
             return (CompiledComponent) this.cache.select(normalizedName);
-        }
-        catch (Exception cme) {
+        } catch (Exception e) {
         }
 
         try {
-
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Loading program [" + normalizedName + "]");
             }
@@ -418,20 +425,18 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Successfully loaded program [" + normalizedName + "]");
             }
-        }
-        catch (LanguageException le) {
-            if (getLogger().isErrorEnabled()) {
-                getLogger().error("Language Exception", le);
+        } catch (LanguageException le) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Got Language Exception", le);
             }
             throw new ProcessingException("Language Exception", le);
         }
 
         try {
             programInstance = (CompiledComponent) this.cache.select(normalizedName);
-        }
-        catch (Exception cme) {
-            if (getLogger().isErrorEnabled()) {
-                getLogger().error("Can't load ServerPage", cme);
+        } catch (Exception cme) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Can't load ServerPage: got exception", cme);
             }
             throw new ProcessingException("Can't load ServerPage", cme);
         }
@@ -443,19 +448,15 @@ public class ProgramGeneratorImpl extends AbstractLogEnabled
     private void generateSourcecode(Source source,
                                     String normalizedName,
                                     MarkupLanguage markupLanguage,
-                                    ProgrammingLanguage programmingLanguage,
-                                    SourceResolver resolver)
+                                    ProgrammingLanguage programmingLanguage)
             throws Exception {
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Creating sourcecode for [" + source.getURI() + "]");
         }
-        // Input Source
-        // FIXME(VG): Use Source.toSAX()
-        InputSource is = SourceUtil.getInputSource(source);
 
         // Generate code
-        String code = markupLanguage.generateCode(is, normalizedName, programmingLanguage, resolver);
+        String code = markupLanguage.generateCode(source, normalizedName, programmingLanguage);
         if (code == null || code.length() == 0) {
             // FIXME(VG): Xalan with incremental-processing=true does not propagate exceptions
             // from working thread to main thread. See

@@ -68,18 +68,14 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
 
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.excalibur.store.Store;
 import org.apache.cocoon.util.HashMap;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLFilterImpl;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -97,7 +93,7 @@ import java.util.Map;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
- * @version CVS $Id: AbstractMarkupLanguage.java,v 1.1 2003/03/09 00:08:53 pier Exp $
+ * @version CVS $Id: AbstractMarkupLanguage.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
  */
 public abstract class AbstractMarkupLanguage
         extends AbstractLogEnabled
@@ -298,15 +294,12 @@ public abstract class AbstractMarkupLanguage
      * specif action and to build a more specific transformer chain.
      *
      * @param logicsheetMarkupGenerator the logicsheet markup generator
-     * @param resolver the entity resolver
      * @return XMLFilter the filter that build on the fly the transformer chain
      */
     protected TransformerChainBuilderFilter getTransformerChainBuilder(
-        LogicsheetCodeGenerator logicsheetMarkupGenerator,
-        SourceResolver resolver)
+        LogicsheetCodeGenerator logicsheetMarkupGenerator)
     {
-        return new TransformerChainBuilderFilter(logicsheetMarkupGenerator,
-                                                 resolver);
+        return new TransformerChainBuilderFilter(logicsheetMarkupGenerator);
     }
 
     /**
@@ -322,10 +315,12 @@ public abstract class AbstractMarkupLanguage
      * @param language The target programming language
      * @return The preprocess filter
      */
-    protected XMLFilter getPreprocessFilter(String filename,
-                                            ProgrammingLanguage language)
+    protected AbstractXMLPipe getPreprocessFilter(String filename,
+                                                  AbstractXMLPipe filter,
+                                                  ProgrammingLanguage language)
     {
-        return new XMLFilterImpl();
+        // No-op
+        return filter;
     }
 
     /**
@@ -350,16 +345,16 @@ public abstract class AbstractMarkupLanguage
      * <li>Language-specific logicsheet</li>
      * </ul>
      *
-     * @param input The input source
+     * @param source The input source
      * @param filename The input document's original filename
      * @param programmingLanguage The target programming language
      * @return The generated source code
      * @exception Exception If an error occurs during code generation
      */
-    public String generateCode(InputSource input,
+    public String generateCode(Source source,
                                String filename,
-                               ProgrammingLanguage programmingLanguage,
-                               SourceResolver resolver) throws Exception {
+                               ProgrammingLanguage programmingLanguage)
+            throws Exception {
 
         String languageName = programmingLanguage.getLanguageName();
         LanguageDescriptor language = (LanguageDescriptor)this.languages.get(languageName);
@@ -367,21 +362,18 @@ public abstract class AbstractMarkupLanguage
             throw new IllegalArgumentException("Unsupported programming language: " + languageName);
         }
 
-        // Create a XMLReader
-        XMLReader reader = XMLReaderFactory.createXMLReader();
-        // Get the needed preprocess filter
-        XMLFilter preprocessFilter = this.getPreprocessFilter(filename, programmingLanguage);
-        preprocessFilter.setParent(reader);
         // Create code generator
         LogicsheetCodeGenerator codeGenerator = new LogicsheetCodeGenerator();
         codeGenerator.enableLogging(getLogger());
         codeGenerator.initialize();
-        // set the transformer chain builder filter
+        // Set the transformer chain builder filter
         TransformerChainBuilderFilter tranBuilder =
-            getTransformerChainBuilder(codeGenerator, resolver);
+                getTransformerChainBuilder(codeGenerator);
         tranBuilder.setLanguageDescriptor(language);
-        tranBuilder.setParent(preprocessFilter);
-        return codeGenerator.generateCode(tranBuilder, input, filename);
+
+        // Get the needed preprocess filter
+        AbstractXMLPipe preprocessor = getPreprocessFilter(filename, tranBuilder, programmingLanguage);
+        return codeGenerator.generateCode(source, preprocessor);
     }
 
     /**
@@ -414,15 +406,14 @@ public abstract class AbstractMarkupLanguage
 
     /**
      * Add a logicsheet to the code generator.
+     * @param language Target programming language of the logicsheet
      * @param logicsheetLocation Location of the logicsheet to be added
-     * @param document The input document
      * @exception MalformedURLException If location is invalid
      * @exception IOException IO Error
      * @exception SAXException Logicsheet parse error
      */
     protected void addLogicsheetToList(LanguageDescriptor language,
-                                       String logicsheetLocation,
-                                       SourceResolver resolver)
+                                       String logicsheetLocation)
         throws IOException, SAXException, ProcessingException
     {
         Logicsheet logicsheet = (Logicsheet)logicsheetCache.get(CACHE_PREFIX + logicsheetLocation);
@@ -476,7 +467,7 @@ public abstract class AbstractMarkupLanguage
                         getLogger().debug("Adding embedded logic sheet for "
                             + namespace + ": " + namedLogicsheetName);
                         // Add embedded logic sheets too.
-                        addLogicsheetToList(language, namedLogicsheetName, resolver);
+                        addLogicsheetToList(language, namedLogicsheetName);
                     }
                 }
             }
@@ -560,26 +551,22 @@ public abstract class AbstractMarkupLanguage
      * Each time a stylesheet is found, a call to the code generator is done
      * to add the new transformer at the end of the current transformer chain.
      */
-    public class TransformerChainBuilderFilter extends XMLFilterImpl {
+    public class TransformerChainBuilderFilter extends AbstractXMLPipe {
         /** The markup generator */
         protected LogicsheetCodeGenerator logicsheetMarkupGenerator;
 
         /** the language description */
         protected LanguageDescriptor language;
 
-        /** the entity resolver */
-        protected SourceResolver resolver;
         private boolean isRootElem;
         private List startPrefixes;
 
         /**
-         * the constructor depends on the code generator, and the entity resolver
+         * the constructor depends on the code generator
          * @param logicsheetMarkupGenerator The code generator
-         * @param resolver
          */
-        protected TransformerChainBuilderFilter(LogicsheetCodeGenerator logicsheetMarkupGenerator, SourceResolver resolver) {
+        protected TransformerChainBuilderFilter(LogicsheetCodeGenerator logicsheetMarkupGenerator) {
             this.logicsheetMarkupGenerator = logicsheetMarkupGenerator;
-            this.resolver = resolver;
         }
 
         /**
@@ -621,12 +608,12 @@ public abstract class AbstractMarkupLanguage
                         String[] prefixNamingArray = (String[]) this.startPrefixes.get(i);
                         String namedLogicsheetName = this.language.getNamedLogicsheetByURI(prefixNamingArray[1]);
                         if (namedLogicsheetName != null) {
-                            AbstractMarkupLanguage.this.addLogicsheetToList(language, namedLogicsheetName, resolver);
+                            AbstractMarkupLanguage.this.addLogicsheetToList(language, namedLogicsheetName);
                         }
                     }
 
                     // Add the language stylesheet (Always the last one)
-                    AbstractMarkupLanguage.this.addLogicsheetToList(language, this.language.getLogicsheet(), resolver);
+                    AbstractMarkupLanguage.this.addLogicsheetToList(language, this.language.getLogicsheet());
                     AbstractMarkupLanguage.this.addLogicsheetsToGenerator(this.logicsheetMarkupGenerator);
                 } catch (ProcessingException pe) {
                     throw new SAXException (pe);
