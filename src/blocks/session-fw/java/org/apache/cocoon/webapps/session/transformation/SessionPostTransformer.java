@@ -18,6 +18,9 @@ package org.apache.cocoon.webapps.session.transformation;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -47,7 +50,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * implementation of the SessionTransformer would be very unperformant).
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPostTransformer.java,v 1.5 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version CVS $Id: SessionPostTransformer.java,v 1.6 2004/03/17 12:09:51 cziegeler Exp $
  */
 public class SessionPostTransformer extends SessionPreTransformer {
 
@@ -341,7 +344,9 @@ public class SessionPostTransformer extends SessionPreTransformer {
                         }
                         if (validationNode != null && validationNode.getNodeType() == Node.ELEMENT_NODE
                                 && validationNode.getNodeName().equals(FORM_VALIDATESET_ELEMENT)) {
-                            String validationXML = XMLUtils.serializeNodeToXML(validationNode);
+                            Properties props = XMLUtils.createPropertiesForXML(false);
+                            props.put(OutputKeys.ENCODING, "ISO-8859-1");
+                            String validationXML = XMLUtils.serializeNode(validationNode, props);
                             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
                             conf = builder.build(new ByteArrayInputStream(validationXML.getBytes()));
                             session.setAttribute(this.formName + "validate-set", conf);
@@ -367,7 +372,9 @@ public class SessionPostTransformer extends SessionPreTransformer {
                     }
                     if (validationNode != null && validationNode.getNodeType() == Node.ELEMENT_NODE
                             && validationNode.getNodeName().equals("root")) {
-                        String validationXML = XMLUtils.serializeNodeToXML(validationNode);
+                        Properties props = XMLUtils.createPropertiesForXML(false);
+                        props.put(OutputKeys.ENCODING, "ISO-8859-1");
+                        String validationXML = XMLUtils.serializeNode(validationNode, props);
                         DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
                         Configuration conf = builder.build(new ByteArrayInputStream(validationXML.getBytes()));
                         Session session = this.getSessionManager().getSession(true);

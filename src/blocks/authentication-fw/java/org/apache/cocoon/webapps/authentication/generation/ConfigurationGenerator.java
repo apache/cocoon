@@ -55,7 +55,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.7 2004/03/05 13:01:41 bdelacretaz Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.8 2004/03/17 12:09:52 cziegeler Exp $
 */
 public final class ConfigurationGenerator
 extends ServiceableGenerator {
@@ -463,7 +463,7 @@ extends ServiceableGenerator {
         }
 
         if (this.getLogger().isDebugEnabled() == true) {
-            this.getLogger().debug("END getUsers fragment="+(frag == null ? "null" : XMLUtils.serializeNodeToXML(frag)));
+            this.getLogger().debug("END getUsers fragment="+(frag == null ? "null" : XMLUtils.serializeNode(frag, XMLUtils.createPropertiesForXML(false))));
         }
         return frag;
     }

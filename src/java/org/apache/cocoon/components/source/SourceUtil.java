@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
@@ -61,7 +64,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.13 2004/03/05 13:02:50 bdelacretaz Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.14 2004/03/17 12:09:51 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -539,8 +542,9 @@ public final class SourceUtil {
 						}
 	                }
                 } else {
-	                final String content = XMLUtils.serializeNode(frag,
-	                                           XMLUtils.defaultSerializeToXMLFormat(false));
+                    Properties props = XMLUtils.createPropertiesForXML(false);
+                    props.put(OutputKeys.ENCODING, "ISO-8859-1");
+	                final String content = XMLUtils.serializeNode(frag, props);
 	                OutputStream oStream = ws.getOutputStream();
 	
 	                oStream.write(content.getBytes());
@@ -580,8 +584,9 @@ public final class SourceUtil {
                     }
 					content = oStream.toString();
 				} else {
-                    content = XMLUtils.serializeNode(frag,
-                                           XMLUtils.defaultSerializeToXMLFormat(false));
+                    Properties props = XMLUtils.createPropertiesForXML(false);
+                    props.put(OutputKeys.ENCODING, "ISO-8859-1");
+                    content = XMLUtils.serializeNode(frag, props);
 				}
 				
                 if (parameters==null) {

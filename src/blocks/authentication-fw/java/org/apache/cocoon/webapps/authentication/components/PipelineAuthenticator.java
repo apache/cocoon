@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.13 2004/03/05 13:01:40 bdelacretaz Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.14 2004/03/17 12:09:52 cziegeler Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -66,7 +66,7 @@ public class PipelineAuthenticator
         // calling method is synced
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN isValidAuthenticationFragment fragment="
-                                   + XMLUtils.serializeNodeToXML(authenticationFragment));
+                                   + XMLUtils.serializeNode(authenticationFragment, XMLUtils.createPropertiesForXML(false)));
         }
         boolean isValid = false;
 

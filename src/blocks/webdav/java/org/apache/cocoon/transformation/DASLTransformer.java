@@ -17,6 +17,9 @@ package org.apache.cocoon.transformation;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Properties;
+
+import javax.xml.transform.OutputKeys;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLUtils;
@@ -181,7 +184,9 @@ public class DASLTransformer extends AbstractSAXTransformer {
         if (name.equals(QUERY_TAG) && uri.equals(DASL_QUERY_NS)) {
             DocumentFragment frag = this.endRecording();
             try {
-                query = XMLUtils.serializeNodeToXML(frag);
+                Properties props = XMLUtils.createPropertiesForXML(false);
+                props.put(OutputKeys.ENCODING, "ISO-8859-1");
+                query = XMLUtils.serializeNode(frag, props);
                 // Perform the DASL query
                 this.performSearchMethod(query);
             } catch (ProcessingException e) {

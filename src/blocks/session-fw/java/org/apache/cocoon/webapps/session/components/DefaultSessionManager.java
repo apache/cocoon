@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  *  This is the default implementation of the session manager
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSessionManager.java,v 1.5 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: DefaultSessionManager.java,v 1.6 2004/03/17 12:09:51 cziegeler Exp $
 */
 public final class DefaultSessionManager
 extends AbstractLogEnabled
@@ -182,7 +182,7 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
         frag = context.getXML(path);
 
         if (this.getLogger().isDebugEnabled() ) {
-            this.getLogger().debug("END getContextFragment documentFragment=" + (frag == null ? "null" : XMLUtils.serializeNodeToXML(frag)));
+            this.getLogger().debug("END getContextFragment documentFragment=" + (frag == null ? "null" : XMLUtils.serializeNode(frag, XMLUtils.createPropertiesForXML(false))));
         }
         return frag;
     }
@@ -248,7 +248,7 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
 
         if (this.getLogger().isDebugEnabled()) {
             this.getLogger().debug("BEGIN setContextFragment name=" + contextName + ", path=" + path +
-               ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNodeToXML(fragment)));
+               ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
         }
         // test arguments
         if (contextName == null) {
@@ -294,7 +294,7 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN appendContextFragment name=" + contextName +
                               ", path=" + path +
-                              ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNodeToXML(fragment)));
+                              ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
         }
         // test arguments
         if (contextName == null) {
@@ -339,7 +339,7 @@ implements Serviceable, Component, ThreadSafe, SessionManager, Disposable, Conte
         // synchronized via context
         if (this.getLogger().isDebugEnabled() ) {
             this.getLogger().debug("BEGIN mergeContextFragment name=" + contextName + ", path=" + path +
-                ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNodeToXML(fragment)));
+                ", fragment=" + (fragment == null ? "null" : XMLUtils.serializeNode(fragment, XMLUtils.createPropertiesForXML(false))));
         }
 
         // test arguments
