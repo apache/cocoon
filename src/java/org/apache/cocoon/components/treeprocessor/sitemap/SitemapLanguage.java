@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.avalon.framework.configuration.AbstractConfiguration;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
@@ -108,7 +109,18 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             // Go through the component lifecycle
             ContainerUtil.enableLogging(newManager, this.getLogger());
             ContainerUtil.contextualize(newManager, context);
-            ContainerUtil.configure(newManager, config);
+            // before we pass the configuration we have to strip the
+            // additional configuration parts, like classpath etc. as these
+            // are not configurations for the service manager
+            final DefaultConfiguration c = new DefaultConfiguration(config.getName(), 
+                                                                    config.getLocation(),
+                                                                    config.getNamespace(),
+                                                                    "");
+            c.addAll(config);
+            c.removeChild(config.getChild("application-container"));
+            c.removeChild(config.getChild("classpath"));
+
+            ContainerUtil.configure(newManager, c);
             ContainerUtil.initialize(newManager);
 
             // check for an application specific container
