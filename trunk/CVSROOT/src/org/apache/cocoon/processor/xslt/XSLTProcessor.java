@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.34 2001-05-22 23:10:14 balld Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.35 2001-06-11 16:12:11 sylvain Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -75,7 +75,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.34 $ $Date: 2001-05-22 23:10:14 $
+ * @version $Revision: 1.35 $ $Date: 2001-06-11 16:12:11 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -160,7 +160,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
     }
 
     private boolean isValidName (String name) {
-        if (!name) { 
+        if (name != null) { 
             return false;
         }
 	StringCharacterIterator iter = new StringCharacterIterator(name);
