@@ -38,11 +38,10 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.19 2004/06/07 08:18:17 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.20 2004/06/23 17:13:00 cziegeler Exp $
  */
 public class EnvironmentWrapper 
-    extends AbstractEnvironment 
-    implements Environment {
+    extends AbstractEnvironment {
 
     /** The wrapped environment */
     protected Environment environment;
@@ -86,6 +85,7 @@ public class EnvironmentWrapper
                               String           view) {
         super(env.getURI(), view, env.getAction());
         init(env, requestURI, queryString, logger, rawMode, view);
+        this.setURI(env.getURIPrefix(), env.getURI());
     }
     
     /**
@@ -137,8 +137,8 @@ public class EnvironmentWrapper
         this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, this.request);
     }
    
-    /**
-     * Redirect the client to a new URL is not allowed
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#redirect(java.lang.String, boolean, boolean)
      */
     public void redirect(String newURL, boolean global, boolean permanent)
     throws IOException {
@@ -149,8 +149,8 @@ public class EnvironmentWrapper
         }
     }
 
-    /**
-     * Get the output stream
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getOutputStream(int)
      */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
@@ -233,8 +233,8 @@ public class EnvironmentWrapper
         return this.contentType;
     }
 
-    /**
-     * Get the underlying object model
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Environment#getObjectModel()
      */
     public Map getObjectModel() {
         return this.objectModel;

@@ -47,7 +47,7 @@ import java.util.Map;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.9 2004/06/11 12:24:21 vgritsenko Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.10 2004/06/23 17:13:00 cziegeler Exp $
  */
 
 public class InvokeContext 
@@ -171,6 +171,11 @@ implements Recomposable, Disposable {
         this.pipelinesManager = desc.pipelineManager;
         this.lastProcessor = desc.lastProcessor;
         this.pipelineSelector = desc.pipelineSelector;
+        this.internalPipelineDescription = new Processor.InternalPipelineDescription(
+                this.processingPipeline, this.pipelineSelector, this.pipelinesManager);
+        this.internalPipelineDescription.lastProcessor = this.lastProcessor;
+        this.internalPipelineDescription.prefix = desc.prefix;
+        this.internalPipelineDescription.uri = desc.uri;        
     }
 
     /**
