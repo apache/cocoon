@@ -12,7 +12,7 @@
         <map:generator label="content,data" logger="sitemap.generator.jx" name="jx" src="org.apache.cocoon.generation.JXTemplateGenerator"/>
       <map:generator name="jxforms" src="org.apache.cocoon.generation.JXFormsGenerator" logger="sitemap.generator.jxforms"/>
     </map:generators>
-    <map:flow-interpreters default="JavaScript"/>
+    <map:flow-interpreters default="FOM_JavaScript"/>
     <map:serializers default="html"/>
     <map:matchers default="wildcard"/>
   </map:components>
@@ -50,7 +50,7 @@
   </map:resources>
 
   <!-- =========================== Pipelines ================================= -->
-    <map:flow language="JavaScript">
+    <map:flow language="FOM_JavaScript">
       <map:script src="flow/PetStoreImpl.js"/>
       <map:script src="flow/petstore.js"/>
     </map:flow>

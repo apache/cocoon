@@ -77,6 +77,8 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
         "cocoon.flow.js.fom.FOM_Session";
     public static final String FOM_CONTEXT = 
         "cocoon.flow.js.fom.FOM_Context";
+    public static final String FOM_WEB_CONTINUATION = 
+        "cocoon.flow.js.fom.FOM_WebContinuation";
 
     /** 
      * Return the JS "Packages" property (that gives access to Java
@@ -118,44 +120,55 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
         request.setAttribute(JAVA_PACKAGE_OBJECT, javaPkg);
     }
 
-    public static Scriptable getRequest(Map objectModel) {
+    public static Scriptable getFOM_Request(Map objectModel) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         return (Scriptable)request.getAttribute(FOM_REQUEST);
     }
 
-    public static void setRequest(Map objectModel, Scriptable fom_request) {
+    public static void setFOM_Request(Map objectModel, Scriptable fom_request) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(FOM_REQUEST, fom_request);
     }
 
-    public static Scriptable getResponse(Map objectModel) {
+    public static Scriptable getFOM_Response(Map objectModel) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         return (Scriptable)request.getAttribute(FOM_RESPONSE);
     }
 
-    public static void setResponse(Map objectModel, Scriptable fom_response) {
+    public static void setFOM_Response(Map objectModel, Scriptable fom_response) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(FOM_RESPONSE, fom_response);
     }
 
-    public static Scriptable getSession(Map objectModel) {
+    public static Scriptable getFOM_Session(Map objectModel) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         return (Scriptable)request.getAttribute(FOM_SESSION);
     }
 
-    public static void setSession(Map objectModel, Scriptable fom_session) {
+    public static void setFOM_Session(Map objectModel, Scriptable fom_session) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(FOM_SESSION, fom_session);
     }
 
-    public static Scriptable getContext(Map objectModel) {
+    public static Scriptable getFOM_Context(Map objectModel) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         return (Scriptable)request.getAttribute(FOM_CONTEXT);
     }
 
-    public static void setContext(Map objectModel, Scriptable fom_context) {
+    public static void setFOM_Context(Map objectModel, Scriptable fom_context) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(FOM_CONTEXT, fom_context);
+    }
+
+    public static Scriptable getFOM_WebContinuation(Map objectModel) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        return (Scriptable)request.getAttribute(FOM_WEB_CONTINUATION);
+    }
+
+    public static void setFOM_WebContinuation(Map objectModel, 
+                                              Scriptable fom_webContinuation) {
+        Request request = ObjectModelHelper.getRequest(objectModel);
+        request.setAttribute(FOM_WEB_CONTINUATION, fom_webContinuation);
     }
 }
 

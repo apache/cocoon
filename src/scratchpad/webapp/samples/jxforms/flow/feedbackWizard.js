@@ -1,6 +1,6 @@
 // Feedback Wizard Sample
 
-cocoon.load("resource://org/apache/cocoon/components/jxforms/flow/jxForm.js");
+cocoon.load("resource://org/apache/cocoon/components/jxforms/flow/javascript/JXForm.js");
 
 function feedbackWizard(form) {
     var bean = {
@@ -70,33 +70,33 @@ function feedbackWizard(form) {
     form.setModel(bean);
 
     form.sendView("view/userIdentity.xml",
-		  function(form) {
-	var bean = form.getModel();
-	print("I can also do validation in JavaScript");
-	print("age = "+form.getValue("number(/age)"));
-	print("role = "+bean.role);
-	if (bean.age > 40) {
-	    form.addViolation("/age", "Hey, you're too old");
-	}
+                  function(form) {
+        var bean = form.getModel();
+        cocoon.log.info("I can also do validation in JavaScript");
+        cocoon.log.info("age = "+form.getValue("number(/age)"));
+        cocoon.log.info("role = "+bean.role);
+        if (bean.age > 40) {
+            form.addViolation("/age", "Hey, you're too old");
+        }
     });
-    print("handling user identity");
+    cocoon.log.info("handling user identity");
 
     form.sendView("view/deployment.xml", 
-		  function(form) {
+                  function(form) {
         var bean = form.getModel();
-        print("I can also do validation in JavaScript");
+        cocoon.log.info("I can also do validation in JavaScript");
         if (bean.publish) {
             form.addViolation("/publish", "Sorry, I won't let you publish");
         }
     });
-    print("handling deployment");
+    cocoon.log.info("handling deployment");
 
     form.sendView("view/system.xml");
-    print("handling system");
+    cocoon.log.info("handling system");
 
     form.sendView("view/confirm.xml");
-    print("handling confirm");
+    cocoon.log.info("handling confirm");
 
     form.finish("view/end.xml");
-    print("done");
+    cocoon.log.info("done");
 }
