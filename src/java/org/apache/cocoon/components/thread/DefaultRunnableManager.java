@@ -819,12 +819,12 @@ public class DefaultRunnableManager
          */
         void execute(  )
         {
-            if( getLogger(  ).isDebugEnabled(  ) )
+            if( m_logger.isDebugEnabled(  ) )
             {
-                getLogger(  ).debug( "Hand over Command " +
-                                     m_command.toString(  ) + " to pool \"" +
-                                     m_pool.getName(  ) + "\" with delay=" + m_delay +
-                                     " and interval=" + m_interval );
+                m_logger.debug( "Hand over Command " +
+                                 m_command.toString(  ) + " to pool \"" +
+                                 m_pool.getName(  ) + "\" with delay=" + m_delay +
+                                 " and interval=" + m_interval );
             }
 
             synchronized( m_commandStack )
