@@ -103,6 +103,9 @@ public class JXPathBindingManager implements BindingManager, LogEnabled {
         this.bindingBuilders.put(
             "delete-node",
             new DeleteNodeJXPathBindingBuilder());
+        this.bindingBuilders.put(
+            "insert-bean",
+            new InsertBeanJXPathBindingBuilder());
     }
 
     public Binding createBinding(Source bindSrc)
