@@ -35,7 +35,7 @@ import org.apache.log.LogKit;
 
 /** Default component manager for Cocoon's non sitemap components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-30 21:40:32 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-02 13:40:05 $
  */
 public class DefaultComponentManager implements ComponentManager {
 
@@ -94,6 +94,7 @@ public class DefaultComponentManager implements ComponentManager {
                 throw new ComponentNotFoundException("Could not find component for role '" + role + "'.");
             } else {
                 // we found an individual instance of a component.
+				log.debug("DefaultComponentManager returned instance for role " + role + ".");
                 return component;
             }
         }
@@ -108,11 +109,18 @@ public class DefaultComponentManager implements ComponentManager {
 
         // Work out what class of component we're dealing with.
         if ( ThreadSafe.class.isAssignableFrom(componentClass) ) {
+			log.debug("DefaultComponentManager using threadsafe instance of " + componentClass.getName() + " for role " + role + ".");
             component = getThreadsafeComponent(componentClass);
         } else if ( Poolable.class.isAssignableFrom(componentClass) ) {
+            log.debug("DefaultComponentManager using poolable instance of "
+                + componentClass.getName() + " for role " + role + "."
+            );
             component = getPooledComponent(componentClass);
         } else if ( SingleThreaded.class.isAssignableFrom(componentClass) ) {
             try {
+                log.debug("DefaultComponentManager using new instance of single threaded component "
+                    + componentClass.getName() + "for role " + role + "."
+                );
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
                 log.error("Could not create new instance of SingleThreaded " + role, e);
@@ -133,6 +141,9 @@ public class DefaultComponentManager implements ComponentManager {
              * classes, treat as normal.
              */
             try {
+                log.debug("DefaultComponentManager using new instance of unmarked component "
+                    + componentClass.getName() + " for role " + role + "."
+                );
                 component = (Component)componentClass.newInstance();
             } catch ( InstantiationException e ) {
                 log.error("Could not create new instance of class " + componentClass.getName(), e);
@@ -192,6 +203,7 @@ public class DefaultComponentManager implements ComponentManager {
 
         if ( pool == null ) {
             try {
+                log.debug("Creating new component pool for " + componentClass.getName() + ".");
                 pool = new ComponentPool(
                     new ComponentFactory(componentClass, (Configuration)configurations.get(componentClass), this),
                     new ComponentPoolController()

@@ -17,11 +17,16 @@ import org.apache.avalon.Configurable;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ThreadSafe;
 
+import org.apache.log.Logger;
+import org.apache.log.LogKit;
+
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-11-26 21:48:01 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-12-02 13:40:05 $
  */
 public class ComponentFactory implements ObjectFactory, ThreadSafe {
+    private Logger log = LogKit.getLoggerFor("cocoon");
+	
 	/** The class which this <code>ComponentFactory</code>
 	 * should create.
 	 */
@@ -48,6 +53,10 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe {
 
 	public Poolable newInstance() throws Exception {
 		Poolable comp = (Poolable)componentClass.newInstance();
+
+        log.debug("ComponentFactory creating new instance of "
+            + componentClass.getName() + "."
+        );
 		
 		if ( comp instanceof Configurable ) {
 			((Configurable)comp).configure(this.conf);
