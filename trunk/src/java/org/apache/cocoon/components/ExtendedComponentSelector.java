@@ -50,34 +50,38 @@
 */
 package org.apache.cocoon.components;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
-
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.avalon.excalibur.component.ExcaliburComponentSelector;
 import org.apache.avalon.excalibur.component.RoleManager;
-
-import java.util.*;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentSelector;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 
 /**
  * An extension of <code>ExcaliburComponentSelector</code> that can have a parent
  * and accepts a wider variety of configurations.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ExtendedComponentSelector.java,v 1.1 2003/03/09 00:08:46 pier Exp $
+ * @version CVS $Id: ExtendedComponentSelector.java,v 1.2 2003/06/18 11:06:31 cziegeler Exp $
  */
 
-public class ExtendedComponentSelector extends ExcaliburComponentSelector {
+public class ExtendedComponentSelector 
+    extends ExcaliburComponentSelector 
+    implements ParentAware {
 
     /** The role manager */
     protected RoleManager roles;
 
     /** The parent selector, if any */
     protected ComponentSelector parentSelector;
+
+    /** The parent locator, if any */
+    protected ComponentLocator parentLocator;
 
     /** The class loader to use */
     protected ClassLoader classLoader;
@@ -162,14 +166,14 @@ public class ExtendedComponentSelector extends ExcaliburComponentSelector {
      * @param parent the parent selector
      * @throws IllegalStateException if parent is already set
      */
-    public void setParentSelector(ComponentSelector parent) {
+/*    public void setParentSelector(ComponentSelector parent) {
         if (this.parentSelector != null) {
             throw new IllegalStateException("Parent selector is already set");
         }
         this.parentSelector = parent;
         this.parentComponents = new HashSet();
     }
-
+*/
     /**
      * Get the role name for this selector. This is called by <code>configure()</code>
      * to set the value of <code>this.roleName</code>.
@@ -323,6 +327,31 @@ public class ExtendedComponentSelector extends ExcaliburComponentSelector {
             exists = this.parentSelector.hasComponent( hint );
         }
         return exists;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.ParentAware#setParentInformation(org.apache.avalon.framework.component.ComponentManager, java.lang.String)
+     */
+    public void setParentLocator(ComponentLocator locator)
+    throws ComponentException {
+        if (this.parentSelector != null) {
+            throw new ComponentException("Parent selector is already set");
+        }
+        this.parentLocator = locator;
+        this.parentSelector = (ComponentSelector) locator.lookup();
+        this.parentComponents = new HashSet();
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        super.dispose();
+        if ( this.parentLocator != null ) {
+            this.parentLocator.release( this.parentSelector );
+            this.parentLocator = null;
+            this.parentSelector = null;
+        }
     }
 
 }
