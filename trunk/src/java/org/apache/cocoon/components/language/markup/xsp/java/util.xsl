@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: util.xsl,v 1.1 2003/03/09 00:08:57 pier Exp $-->
+<!-- $Id: util.xsl,v 1.2 2003/03/11 03:00:19 vgritsenko Exp $-->
 <!--
 
  ============================================================================
@@ -57,7 +57,7 @@
  *
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
  * @author ported by <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:08:57 $
+ * @version CVS $Revision: 1.2 $ $Date: 2003/03/11 03:00:19 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -133,7 +133,7 @@
       </xsl:call-template>
     </xsl:variable>
     <xsp:expr>
-      XSPUtil.getSourceAsString(<xsl:copy-of select="$source-uri"/>,this.resolver)
+      XSPUtil.getSourceContents(<xsl:copy-of select="$source-uri"/>,this.resolver)
     </xsp:expr>
   </xsl:template>
 
