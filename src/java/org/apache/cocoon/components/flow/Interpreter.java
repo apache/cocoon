@@ -45,7 +45,6 @@
 */
 package org.apache.cocoon.components.flow;
 
-import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 
 import java.util.List;
@@ -110,7 +109,7 @@ import java.util.List;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 11, 2002
  * @see InterpreterSelector
- * @version CVS $Id: Interpreter.java,v 1.5 2004/02/20 18:48:23 sylvain Exp $
+ * @version CVS $Id: Interpreter.java,v 1.6 2004/02/20 20:45:17 cziegeler Exp $
  */
 public interface Interpreter
 {
