@@ -905,6 +905,7 @@
 
     <depend project="cocoon" inherit="all"/>
     <depend project="cocoon-block-jms"/>
+    <depend project="jms"/>
     <depend project="cocoon-block-xsp" type="samples"/>
 
     <work nested="build/cocoon-@@DATE@@/blocks/eventcache/dest"/>
