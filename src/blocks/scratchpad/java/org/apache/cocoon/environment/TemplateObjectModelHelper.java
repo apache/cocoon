@@ -22,6 +22,8 @@ import java.util.Map;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.flow.FlowHelper;
+import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
@@ -33,7 +35,7 @@ import org.apache.commons.jxpath.JXPathIntrospector;
  * 
  * Work-in-progress, derived from JXTemplateGenerator
  * 
- * @version CVS $Id: TemplateObjectModelHelper.java,v 1.1 2004/04/01 11:54:52 cziegeler Exp $
+ * @version CVS $Id: TemplateObjectModelHelper.java,v 1.2 2004/04/02 08:06:46 cziegeler Exp $
  */
 public class TemplateObjectModelHelper {
 
@@ -96,12 +98,12 @@ public class TemplateObjectModelHelper {
         
         // cocoon.request
         final Request request = ObjectModelHelper.getRequest( objectModel );
-        cocoon.put("request", request);
+        cocoon.put("request", new DynamicMap(request));
         
         // cocoon.session
         final Session session = request.getSession(false);
         if (session != null) {
-            cocoon.put("session", session);
+            cocoon.put("session", new DynamicMap(session));
         }
         
         // cocoon.context
@@ -132,4 +134,59 @@ public class TemplateObjectModelHelper {
         return map;
     }
 
+    /**
+     * This is a dynamic map that should provide the same functionality as the
+     * FOM wrappers for objects.
+     */
+    public static class DynamicMap extends HashMap {
+        
+        protected final Object information;
+        
+        public DynamicMap(Object info) {
+            this.information = info;
+        }
+        
+        /* (non-Javadoc)
+         * @see java.util.Map#get(java.lang.Object)
+         */
+        public Object get(Object key) {
+            Object result = super.get(key);
+            if ( result == null ) {
+                result = this.getDynamicInfo(key);
+            }
+            return result;
+        }
+        
+        
+        /* (non-Javadoc)
+         * @see java.util.Map#containsKey(java.lang.Object)
+         */
+        public boolean containsKey(Object key) {
+            boolean result = super.containsKey(key);
+            if ( result == false ) {
+                result = (this.getDynamicInfo(key) != null);
+            }
+            return result;
+        }
+        
+        protected Object getDynamicInfo(Object key) {
+            Object result = null;
+            try {
+                result = PropertyUtils.getProperty(this.information, key.toString());
+            } catch (Exception ignore) {                    
+            }
+            if ( result == null ) {
+                try {
+                    result = MethodUtils.invokeMethod(this.information, 
+                                                      "getAttribute", 
+                                                      key.toString());
+                } catch (Exception ignore) {                    
+                }                        
+            }
+            if ( result != null ) {
+                this.put(key, result);
+            }
+            return result;
+        }
+    }
 }
