@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<root xmlns:test="testns">
+  <test:duplicate>
+    <item>1</item>
+  </test:duplicate>
+</root>
