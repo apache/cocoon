@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.acting;
+package org.apache.cocoon.reading;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 
 /**
- * The <code>ComposerAction</code> will allow any <code>Action</code>
+ * The <code>ComposerReader</code> will allow any <code>Reader</code>
  * that extends this to access SitemapComponents.
  *
- * Basically a copy of {@link ComposerAction} that inherits from
- * {@link AbstractConfigurableAction}.
- *
- * @deprecated Use the ConfigurableServiceableAction instead
+ * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: ConfigurableComposerAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * 
+ * @deprecated Use the ServiceableReader instead
+ * @version CVS $Id: ComposerReader.java,v 1.1 2004/05/24 12:37:52 cziegeler Exp $
  */
-public abstract class ConfigurableComposerAction extends AbstractConfigurableAction implements Composable {
+public abstract class ComposerReader extends AbstractReader
+    implements Composable {
 
     /** The component manager instance */
     protected ComponentManager manager;
@@ -40,7 +39,7 @@ public abstract class ConfigurableComposerAction extends AbstractConfigurableAct
      * Set the current <code>ComponentManager</code> instance used by this
      * <code>Composable</code>.
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager=manager;
+    public void compose(final ComponentManager manager) throws ComponentException {
+        this.manager = manager;
     }
 }

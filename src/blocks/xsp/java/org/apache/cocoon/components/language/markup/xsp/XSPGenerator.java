@@ -16,8 +16,6 @@
 package org.apache.cocoon.components.language.markup.xsp;
 
 import org.apache.avalon.excalibur.pool.Recyclable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
@@ -29,7 +27,7 @@ import org.xml.sax.SAXException;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: XSPGenerator.java,v 1.1 2004/03/10 12:58:05 stephan Exp $
+ * @version CVS $Id: XSPGenerator.java,v 1.2 2004/05/24 12:37:52 cziegeler Exp $
  */
 public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable, Recyclable {
     protected Context avalonContext = null;
@@ -37,16 +35,6 @@ public abstract class XSPGenerator extends AbstractServerPage implements Compile
     /** Contextualize this class */
     public void contextualize(Context context) throws ContextException  {
         this.avalonContext = context;
-    }
-
-    /**
-     * Set the current <code>ComponentManager</code> instance used by this
-     * <code>Generator</code> and initialize relevant instance variables.
-     *
-     * @param manager The global component manager
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
     }
 
     // XSP Helper methods accessible from the page
@@ -78,4 +66,5 @@ public abstract class XSPGenerator extends AbstractServerPage implements Compile
     public void xspExpr(Object v) throws SAXException {
         XSPObjectHelper.xspExpr(this.contentHandler, v);
     }
+
 }

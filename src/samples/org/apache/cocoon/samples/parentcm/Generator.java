@@ -16,11 +16,11 @@
 package org.apache.cocoon.samples.parentcm;
 
 import org.apache.avalon.excalibur.pool.Poolable;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.ServiceableGenerator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -35,9 +35,9 @@ import java.util.Map;
  * <code>Time</code> component.
  *
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Generator.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id: Generator.java,v 1.3 2004/05/24 12:42:44 cziegeler Exp $
  */
-public class Generator extends ComposerGenerator implements Poolable {
+public class Generator extends ServiceableGenerator implements Poolable {
 
     /**
      * Current time.
@@ -52,9 +52,9 @@ public class Generator extends ComposerGenerator implements Poolable {
 
         Time timeGiver = null;
         try {
-            timeGiver = (Time) manager.lookup(Time.ROLE);
+            timeGiver = (Time) this.manager.lookup(Time.ROLE);
             this.time = timeGiver.getTime ();
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException ("Could not obtain current time.", ce);
         } finally {
             manager.release(timeGiver);

@@ -16,8 +16,6 @@
 package org.apache.cocoon.generation;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -56,10 +54,10 @@ import java.util.Map;
  * slash in the base tag is important!
  *
  * @author <a href="mailto:gianugo@rabellino.it">Gianugo Rabellino</a>
- * @version CVS $Id: XMLDBCollectionGenerator.java,v 1.4 2004/03/05 13:02:36 bdelacretaz Exp $
+ * @version CVS $Id: XMLDBCollectionGenerator.java,v 1.5 2004/05/24 12:37:52 cziegeler Exp $
  * @deprecated Use the XML:DB pseudo protocol instead.
  */
-public class XMLDBCollectionGenerator extends ComposerGenerator
+public class XMLDBCollectionGenerator extends ServiceableGenerator
         implements CacheableProcessingComponent, Configurable, Initializable {
 
     protected static final String URI =
@@ -78,10 +76,6 @@ public class XMLDBCollectionGenerator extends ComposerGenerator
     protected Database database;
     protected Collection collection;
     protected final AttributesImpl attributes = new AttributesImpl();
-
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
-    }
 
     /**
      * Recycle the component, keep only the configuration variables

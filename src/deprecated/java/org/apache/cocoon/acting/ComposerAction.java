@@ -25,7 +25,7 @@ import org.apache.avalon.framework.component.Composable;
  *
  * @deprecated Use the ServiceableAction instead
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: ComposerAction.java,v 1.3 2004/03/05 13:02:43 bdelacretaz Exp $
+ * @version CVS $Id: ComposerAction.java,v 1.1 2004/05/24 12:37:52 cziegeler Exp $
  */
 public abstract class ComposerAction extends AbstractAction implements Composable {
 
