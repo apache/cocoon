@@ -53,7 +53,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.6 2004/04/21 13:33:37 mpo Exp $
+ * @version $Id: ScriptableWidget.java,v 1.7 2004/04/23 13:02:31 mpo Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -129,7 +129,7 @@ public class ScriptableWidget extends ScriptableObject {
     public boolean has(String id, Scriptable start) {
         if (delegate != null) {
             if (!(delegate instanceof Repeater)) {
-                Widget sub = delegate.getWidget(id);
+                Widget sub = ((ContainerWidget)delegate).getWidget(id);
                 if (sub != null) {
                     return true;
                 }
@@ -159,7 +159,7 @@ public class ScriptableWidget extends ScriptableObject {
             return result;
         }
         if (delegate != null && !(delegate instanceof Repeater)) {
-            Widget sub = delegate.getWidget(id);
+            Widget sub = ((ContainerWidget)delegate).getWidget(id);
             if (sub != null) {
                 return wrap(sub);
             }
@@ -499,7 +499,7 @@ public class ScriptableWidget extends ScriptableObject {
     }
 
     public ScriptableWidget jsFunction_getWidget(String id) {
-        Widget sub = delegate.getWidget(id);
+        Widget sub = ((ContainerWidget)delegate).getWidget(id);
         return wrap(sub);
     }
 

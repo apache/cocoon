@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * Abstract base class for Widget implementations. Provides functionality
  * common to many widgets.
  * 
- * @version $Id: AbstractWidget.java,v 1.11 2004/04/22 09:41:49 mpo Exp $
+ * @version $Id: AbstractWidget.java,v 1.12 2004/04/23 13:02:31 mpo Exp $
  */
 public abstract class AbstractWidget implements Widget {
     
@@ -160,12 +160,6 @@ public abstract class AbstractWidget implements Widget {
         return false;
     }
 
-    // TODO: consider moving this from the Widget interface to the ContainerWidget
-    // then we could remove it here as well, no?
-    public Widget getWidget(String id) {
-        return null;
-    }
-    
     /**
      * @inheritDoc 
      * 

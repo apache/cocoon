@@ -54,7 +54,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.6 2004/04/22 06:57:07 mpo Exp $
+ * @version CVS $Id: Widget.java,v 1.7 2004/04/23 13:02:31 mpo Exp $
  */
 public interface Widget {
 
@@ -149,15 +149,7 @@ public interface Widget {
      * for some widgets this may not make sense, those should return false here.
      */
     public boolean isRequired();
-
-    /**
-     * Gets the child widget of this widget with the given id, or null if there isn't such a child.
-     */
-    //TODO: this is duplicated on the ContainerWidget interface
-    // and in fact only seems to be reasonable in that scope
-    // should we not remove this?
-    public Widget getWidget(String id);
-    
+   
     /**
      * Broadcast an event previously queued by this widget to its event listeners.
      */
