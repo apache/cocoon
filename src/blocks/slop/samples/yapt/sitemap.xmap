@@ -34,6 +34,9 @@
             <map:match pattern="presentations/**/*.jpg">
                 <map:read src="presentations/{1}/{2}.jpg" mime-type="image/jpeg"/>
             </map:match>
+            <map:match pattern="presentations/**/*.png">
+                <map:read src="presentations/{1}/{2}.png" mime-type="image/png"/>
+            </map:match>
             <map:match pattern="presentations/**/*.gif">
                 <map:read src="presentations/{1}/{2}.gif" mime-type="image/gif"/>
             </map:match>
