@@ -15,6 +15,20 @@
  */
 package org.apache.cocoon.portlet;
 
+import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
+import org.apache.avalon.excalibur.logger.LoggerManager;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.LogKitLogger;
+import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.Constants;
@@ -31,21 +45,9 @@ import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.IOUtils;
 import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.CocoonLogFormatter;
-import org.apache.commons.lang.BooleanUtils;
 
-import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
-import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.LogEnabled;
-import org.apache.avalon.framework.logger.LogKitLogger;
-import org.apache.avalon.framework.logger.Logger;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.instrument.InstrumentManager;
 import org.apache.excalibur.instrument.manager.DefaultInstrumentManager;
 import org.apache.log.ContextMap;
@@ -61,7 +63,6 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -103,7 +104,7 @@ public class CocoonPortlet extends GenericPortlet {
     // Used by "show-time"
     static final float SECOND = 1000;
     static final float MINUTE = 60 * SECOND;
-    static final float HOUR = 60 * MINUTE;
+    static final float HOUR   = 60 * MINUTE;
 
     private Logger log;
     private LoggerManager loggerManager;
@@ -228,6 +229,17 @@ public class CocoonPortlet extends GenericPortlet {
      * '/portlets/' + portletName.
      */
     protected String servletPath;
+
+    /**
+     * Default scope for the session attributes, either
+     * {@link javax.portlet.PortletSession#PORTLET_SCOPE} or
+     * {@link javax.portlet.PortletSession#APPLICATION_SCOPE}.
+     * This corresponds to <code>default-session-scope</code>
+     * parameter, with default value <code>portlet</code>.
+     *
+     * @see org.apache.cocoon.environment.portlet.PortletSession
+     */
+    protected int defaultSessionScope;
 
     /**
      * Initialize this <code>CocoonPortlet</code> instance.
@@ -482,6 +494,13 @@ public class CocoonPortlet extends GenericPortlet {
             }
         }
 
+        final String sessionScopeParam = getInitParameter("default-session-scope", "portlet");
+        if ("application".equalsIgnoreCase(sessionScopeParam)) {
+            this.defaultSessionScope = javax.portlet.PortletSession.APPLICATION_SCOPE;
+        } else {
+            this.defaultSessionScope = javax.portlet.PortletSession.PORTLET_SCOPE;
+        }
+
         // Add the portlet configuration
         this.appContext.put(CONTEXT_PORTLET_CONFIG, conf);
         this.createCocoon();
@@ -614,10 +633,10 @@ public class CocoonPortlet extends GenericPortlet {
         }
 
         buildClassPath.append(File.pathSeparatorChar)
-                .append(System.getProperty("java.class.path"));
+                      .append(SystemUtils.JAVA_CLASS_PATH);
 
         buildClassPath.append(File.pathSeparatorChar)
-                .append(getExtraClassPath());
+                      .append(getExtraClassPath());
         return buildClassPath.toString();
     }
 
@@ -713,7 +732,7 @@ public class CocoonPortlet extends GenericPortlet {
         String extraClassPath = this.getInitParameter("extra-classpath");
         if (extraClassPath != null) {
             StringBuffer sb = new StringBuffer();
-            StringTokenizer st = new StringTokenizer(extraClassPath, System.getProperty("path.separator"), false);
+            StringTokenizer st = new StringTokenizer(extraClassPath, SystemUtils.PATH_SEPARATOR, false);
             int i = 0;
             while (st.hasMoreTokens()) {
                 String s = st.nextToken();
@@ -770,9 +789,9 @@ public class CocoonPortlet extends GenericPortlet {
      * file.
      */
     protected void initLogger() {
-        String logLevel = getInitParameter("log-level", "INFO");
+        final String logLevel = getInitParameter("log-level", "INFO");
 
-        final String accesslogger = getInitParameter("servlet-logger");
+        final String accesslogger = getInitParameter("portlet-logger", "cocoon");
 
         final Priority logPriority = Priority.getPriorityForName(logLevel);
 
@@ -839,7 +858,8 @@ public class CocoonPortlet extends GenericPortlet {
      *
      * @throws PortletException
      */
-    private URL getConfigFile(final String configFileName) throws PortletException {
+    private URL getConfigFile(final String configFileName)
+    throws PortletException {
         final String usedFileName;
 
         if (configFileName == null) {
@@ -871,7 +891,7 @@ public class CocoonPortlet extends GenericPortlet {
 
         if (result == null) {
             File resultFile = new File(usedFileName);
-            if (resultFile.isFile())
+            if (resultFile.isFile()) {
                 try {
                     result = resultFile.getCanonicalFile().toURL();
                 } catch (Exception e) {
@@ -879,6 +899,7 @@ public class CocoonPortlet extends GenericPortlet {
                     getLogger().error(msg, e);
                     throw new PortletException(msg, e);
                 }
+            }
         }
 
         if (result == null) {
@@ -960,8 +981,12 @@ public class CocoonPortlet extends GenericPortlet {
         }
     }
 
+    /**
+     * Process the specified <code>ActionRequest</code> producing output
+     * on the specified <code>ActionResponse</code>.
+     */
     public void processAction(ActionRequest req, ActionResponse res)
-            throws PortletException, IOException {
+    throws PortletException, IOException {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
@@ -1125,8 +1150,12 @@ public class CocoonPortlet extends GenericPortlet {
         }
     }
 
+    /**
+     * Process the specified <code>RenderRequest</code> producing output
+     * on the specified <code>RenderResponse</code>.
+     */
     public void render(RenderRequest req, RenderResponse res)
-            throws PortletException, IOException {
+    throws PortletException, IOException {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
@@ -1386,7 +1415,8 @@ public class CocoonPortlet extends GenericPortlet {
                                      this.portletContext,
                                      (PortletContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
                                      this.containerEncoding,
-                                     formEncoding);
+                                     formEncoding,
+                                     this.defaultSessionScope);
         env.enableLogging(getLogger());
         return env;
     }
@@ -1413,7 +1443,8 @@ public class CocoonPortlet extends GenericPortlet {
                                      this.portletContext,
                                      (PortletContext) this.appContext.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT),
                                      this.containerEncoding,
-                                     formEncoding);
+                                     formEncoding,
+                                     this.defaultSessionScope);
         env.enableLogging(getLogger());
         return env;
     }
@@ -1427,8 +1458,10 @@ public class CocoonPortlet extends GenericPortlet {
      * @return the parent component manager, or <code>null</code>.
      */
     protected synchronized ComponentManager getParentComponentManager() {
-        if (parentComponentManager != null && parentComponentManager instanceof Disposable)
+        if (parentComponentManager != null && parentComponentManager instanceof Disposable) {
             ((Disposable) parentComponentManager).dispose();
+        }
+
         parentComponentManager = null;
         if (parentComponentManagerClass != null) {
             try {
@@ -1454,11 +1487,11 @@ public class CocoonPortlet extends GenericPortlet {
         return parentComponentManager;
     }
 
-
     /**
      * Creates the Cocoon object and handles exception handling.
      */
-    private synchronized void createCocoon() throws PortletException {
+    private synchronized void createCocoon()
+    throws PortletException {
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
@@ -1530,7 +1563,7 @@ public class CocoonPortlet extends GenericPortlet {
      * @return an <code>InstrumentManager</code> instance
      */
     private InstrumentManager getInstrumentManager()
-            throws Exception {
+    throws Exception {
         String imConfig = getInitParameter("instrumentation-config");
         if (imConfig == null) {
             throw new PortletException("Please define the init-param 'instrumentation-config' in your web.xml");
@@ -1581,7 +1614,7 @@ public class CocoonPortlet extends GenericPortlet {
      * changed or we are reloading.
      */
     private void getCocoon(final String reloadParam)
-            throws PortletException {
+    throws PortletException {
         if (this.allowReload) {
             boolean reload = false;
 
@@ -1658,9 +1691,9 @@ public class CocoonPortlet extends GenericPortlet {
                 getLogger().debug(name + " was not set - defaulting to '" + defaultValue + "'");
             }
             return defaultValue;
-        } else {
-            return BooleanUtils.toBoolean(value);
         }
+
+        return BooleanUtils.toBoolean(value);
     }
 
     protected int getInitParameterAsInteger(String name, int defaultValue) {

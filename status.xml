@@ -211,8 +211,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
-   <action dev="NN" type="update">
-     Dummy
+   <action dev="VG" type="update">
+     Portal: CocoonPortlet has new configuration parameter,
+     default-session-scope.
    </action>
  </release>
  <release version="2.1.5.1" date="July 9 2004">
