@@ -80,6 +80,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * the new overloaded version of this method.
      */
     public final void loadFormFromModel(Widget frmModel, Object objModel) {
+        if (objModel == null)
+            throw new NullPointerException("null object passed to loadFormFromModel() method");
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);
@@ -102,6 +104,8 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
      * the new overloaded version of this method.
      */
     public void saveFormToModel(Widget frmModel, Object objModel) throws BindingException {
+        if (objModel == null)
+            throw new NullPointerException("null object passed to saveFormToModel() method");
         JXPathContext jxpc;
         if (!(objModel instanceof JXPathContext)) {
             jxpc = JXPathContext.newContext(objModel);
