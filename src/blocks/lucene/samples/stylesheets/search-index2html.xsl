@@ -151,6 +151,7 @@
           <xsl:value-of select="@uri"/>
         </a>
       </td>
+      <td><xsl:value-of select="search:field[@name='title']"/></td>
     </tr>
   </xsl:template>
 

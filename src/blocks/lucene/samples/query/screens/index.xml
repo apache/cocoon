@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<page>
+	<title>Query Bean Samples</title>
+	<content>
+		<p>
+			<b>NB. You need to make an index first.</b> <br/>
+			If you have not already made an index of the Cocoon Documentation, you may do so <a href="../document-files.xsp">here</a>.
+		</p>
+		
+		<h3>Search</h3>
+		<p>You can perform any of the following search types:</p>
+		<ul>
+			<li>Quick search: 
+				<form action="simple.html">
+					<input type="text" name="query" size="20" value="cocoon"/>
+					<input type="submit" value="Search" />
+				</form>
+      </li>
+			<li><a href="simple.html">Simple</a> search: perform simple single-criteria searches.</li>
+			<li><a href="advanced.html">Advanced</a> search: perform complex multi-criteria searches.</li>
+		</ul>
+		
+		<h3>Queries</h3>
+		<p>You can view, reuse, and re-edit your previous queries:</p>
+		<ul>
+			<li><a href="history.html">History</a>: your search history.</li>
+		</ul>
+		<p>Or return to the <a href="../welcome">Lucene Samples</a></p>
+		
+		<h3>What it does.</h3>
+		<p>Allows you to assemble complex Lucene Queries without having to use the Lucene Query Language. Keeps a list of the queries you have performed in it's history (for as long as your Session lasts). Allows you to re-use and edit them.</p>
+		
+		<h3>How does it work?</h3>
+		<p>Through a combination of FlowScript (controller), CForms and JXTemplate (view), Beans (model), i18n and the CocoonLuceneSearcher component.</p>
+		<h4>FlowScript</h4>
+		The FlowScript controls the flow of the application, it instansiates Beans, manages the History, chooses which Forms and Screens to display, controls the CocoonLuceneSearcher.
+		<h4>CForms</h4>
+		<p>Cocoon Forms provideds the infrastructure to manipulate the Beans via HTML Forms. That is to change the Properties of the Beans and add and remove Criteria.</p>
+		<h4>JXTemplate</h4>
+		<p>
+			JXTemplate is used to show the results and the history (List of Query Beans).
+		</p><p>
+			The results are in the form of a <code>List</code> of <code>Map</code>s. Each Map represents a search hit. It contains the <code>url</code>, <code>score</code> and <code>rank</code> of the document, plus any Index Fields you arranged to have stored in your Index by Lucene (in this sample, the only stored field is the <code>title</code>).
+		</p><p>
+			The history is in the form of a <code>List</code> of Query Beans.
+		</p>
+		<h4>Beans</h4>
+		<p>The Beans represent an abstract (and potentially persistable) representation of your Query.</p>
+		<h4>i18n</h4>
+		<p>i18n is used to hold all of the display strings used by the Application. Form labels and hints, Query descriptions, Screen labels and hints, Error messages etc.</p>
+		<h4>CocoonLuceneSearcher</h4>
+		<p>This is the Component that does the actual searching. It is provided with the Lucene Directory and a Query by the Query Bean. If you give it a directory parameter that is a single folder name, it uses that folder in the Servlet Engine's Work Directory, if the parameter is an absolute file path, it uses that instead. It uses the default Analyser.</p>
+		
+		<h3>How to reuse this sample in your own projects?</h3>
+			<h4>Reuse the existing forms</h4>
+			<p>If you are happy with the existing forms, then all that really needs to happen to be able to re-use this sample in your own projects it to set up the menu of Search Fields, so they match your Search Index.</p>
+			<p>When the Lucene Index of Cocoon Documentation that this sample uses is created, tags within the documents are turned into Lucene Index Fields, which can be searched individually. The names of these fields are for example: <code>title</code>, <code>question</code>, <code>source</code>, <code>person@name</code> etc.</p>
+			<p>Cocoon Forms is setup to load these menus (selection-lists) from their own files. The <code>simple</code> search form uses the file <a href="screens/simple-fields.xml?cocoon-view=pretty-content">query/screens/simple-fields.xml</a>, while the <code>advanced</code> search form uses the file <a href="screens/advanced-fields.xml?cocoon-view=pretty-content">screens/advanced-fields.xml</a>.</p>
+			<p>Edit these files to match your own Search Index, for example, the item:
+				<pre><![CDATA[
+<fd:item value="title">
+	<fd:label><i18n:text i18n:catalogue="local">field.title.label</i18n:text></fd:label>
+</fd:item>
+]]></pre>
+				makes a menu item using the i18n key <code>field.title.label</code> as the menu text and <code>title</code> as the value, where the value matches one of your Index Fields.
+			</p><p>
+				Once your CForms selection-lists are setup, you will want to edit the existing i18n message keys in <a href="screens/messages.xml?cocoon-view=pretty-content">screens/messages.xml</a> and/or provide new message files in your own language.
+			</p><p>
+				The last thing you may choose to do, is to supply some CSS for the screens. The <a href="screens/history.xml?cocoon-view=pretty-content">history</a> and <a href="screens/results.xml?cocoon-view=pretty-content">results</a> screens supply what is hopefully a rich enough
+collection of CSS Classes, have a look at the HTML output to see what there is.</p>
+
+			<h4>New Forms</h4>
+				<p>If you know CForms, it would be relatively easy to develop your own Forms (<a href="screens/advanced-model.xml?cocoon-view=pretty-content">Model</a>, <a href="screens/advanced-binding.xml?cocoon-view=pretty-content">Binding</a> and <a href="screens/advanced-template.xml?cocoon-view=pretty-content">Template</a>). If you follow the existing naming scheme and you choose a new name for your form, it may not even be necessary to edit the <a href="sitemap.xmap?cocoon-view=pretty-content">Sitemap</a>.
+				</p><p>Depending on how different your Forms are to the supplied ones, it may or may not be necessary to edit the FlowScript. It is quite possible that this will not be required.</p>
+			<h4>New Beans</h4>
+			<p>
+				It is possible to build Lucene Queries that are more complex, or specialised than those produced by these sample Beans. To do so you would have to at least implement your own CriterionBean. You would probably need to rewrite the FlowScript to handle your new Bean. 
+			</p>It would also be possible to implement different kinds of Queries, like those that used the Hibernate Criterion API.<p>
+			</p><p>
+				There are two Interfaces and two Bean Implementations of those Interfaces in the sample. <code>o.a.c.bean.query.SimpleLuceneQuery</code> and <code>o.a.c.bean.query.SimpleLuceneQueryBean</code> represent a Query, which has a Collection of <code>o.a.c.bean.query.SimpleLuceneCriterion</code> (<code>o.a.c.bean.query.SimpleLuceneCriterionBean</code>) Beans.
+			</p><p>
+				The <code>bool</code> property of the QueryBean specifies how the multiple criteria are combined. The <code>field</code> property of the CriterionBean specifies which Index Field to search, the <code>match</code> property specifies how to match that field and the <code>value</code> property, is the string from which Terms are extracted. All the rest is candy.
+			</p>
+			<h4>Persistance</h4>
+			<p>Both the Query and Criterion Beans were designed to be Persistable using one of the Object-Relational mapping tools like Hibernate, JDO, ORO etc. (This is why they have the unused <code>id</code> property).</p>
+	</content>
+</page>
+

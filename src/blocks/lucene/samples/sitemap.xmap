@@ -60,6 +60,12 @@
 <map:pipelines>
   
   <map:pipeline>
+  	
+		<!-- mount query bean pipelines -->
+		<map:match pattern="query/**">
+			<map:mount check-reload="yes" src="query.xmap" uri-prefix="query"/>
+		</map:match>
+
     <map:match pattern="images/*.gif">
       <map:read src="images/{1}.gif" mime-type="image/gif">
         <map:parameter name="expires" value="60000"/>
