@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.woody.datatype.SelectionListBuilderSelector']">
+
+  <role name="org.apache.cocoon.woody.datatype.SelectionListBuilderSelector"
+        shorthand="woody-selection-lists"
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+</xroles>

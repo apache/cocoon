@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<xroles xpath="/role-list" unless="role[@name='org.apache.cocoon.woody.validation.WidgetValidatorBuilderSelector']">
+
+  <role name="org.apache.cocoon.woody.validation.WidgetValidatorBuilderSelector"
+        shorthand="woody-validators"
+        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+</xroles>

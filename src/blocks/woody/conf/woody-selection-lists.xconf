@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<xconf xpath="/cocoon" unless="woody-selection-lists">
+
+  <woody-selection-lists default="default">
+    <selection-list name="default" class="org.apache.cocoon.woody.datatype.DefaultSelectionListBuilder"/>
+    <selection-list name="flow-jxpath" class="org.apache.cocoon.woody.datatype.FlowJXPathSelectionListBuilder"/>
+    <selection-list name="enum" class="org.apache.cocoon.woody.datatype.EnumSelectionListBuilder"/>
+  </woody-selection-lists>
+  
+</xconf>
