@@ -110,7 +110,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
     /**
      * Helper method that selects a child-widget with a given id from a parent.
      *  
-     * @param parent co9ntaining the child-widget to return. 
+     * @param parent containing the child-widget to return. 
      * @param id of the childWidget to find, if this is <code>null</code> then the parent is returned.
      * @return the selected widget
      * 
