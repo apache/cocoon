@@ -12,7 +12,7 @@
   <body>
     <s1 title="Cocoon and continuations">
 	<p>With continuations in the language, you can essentially
-	store the continuation of <code>sendPageAndWait</code> (think of all
+	store the continuation of <code>sendPageAndWait()</code> (think of all
 	the stack trace, and the program counter), put it in a global
 	hash table associated with an id. The id is then encoded in
 	the <code>response.xml</code> page as an URL. When the user

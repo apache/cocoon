@@ -16,8 +16,114 @@
         <link href="http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino">extended</link>
         version of <link href="http://www.mozilla.org/rhino">Mozilla Rhino</link> that supports continuations.</p>
     </s1>
-    <s1 title="Functions">
-    <s2 title = "sendPage"><anchor id="sendPage"/>
+    <s1 title="Calling Java from JavaScript">
+    <p>
+    You can easily call any Java code from your Flowscripts, for example:
+    </p>
+    <source>
+    var map = new java.util.HashMap();
+    map.put("foo", "bar");
+    </source>
+
+    <p>Classes in packages under <code>java</code> are accessible directly in your scripts.</p>
+    <p>Note that classes under <code>java.lang</code> are not automatically imported, however:</p>
+
+    <p><source>var n = new java.lang.Integer(3);</source></p>
+
+    <p>All other java packages and classes are accessible under the property <code>Packages</code>:</p>
+
+    <p><source>var tree = new Packages.javax.swing.JTree();</source></p>
+
+    <p>You can get the effect of Java imports using the <code>importPackage()</code> and <code>importClass()</code> functions:</p>
+    <table>
+     <tr>
+       <td>
+       In Java:
+       </td>
+       <td>
+       In JavaScript:
+       </td>
+     </tr>
+     <tr>
+       <td>
+       import foo.*;
+       </td>
+       <td>
+       importPackage(Packages.foo);
+       </td>
+     </tr>
+     <tr>
+       <td>
+       import foo.Bar;
+       </td>
+       <td>
+       importClass(Packages.foo.Bar);
+       </td>
+     </tr>
+    </table>
+    <p>
+      If your Java classes have getters and setters you can access them as properties in JavaScript:</p>
+    <p>
+      <source>
+              var d = new java.util.Date();
+              d.year = 2003;    // same effect as d.setYear(2003);
+      </source>
+     </p>
+    </s1>
+    <s1 title="Flow Object Model">
+      <p>Cocoon provides a set of system objects for use by Flowscripts. We call this set of objects the <em>Flow Object Model</em>.
+      The Flow Object Model contains following objects:
+    <ul>
+      <li><link href="#cocoon">Cocoon</link></li>
+      <li><link href="#request">Request</link></li>
+      <li><link href="#response">Response</link></li>
+      <li><link href="#session">Session</link></li>
+      <li><link href="#context">Context</link></li>
+      <li><link href="#cookie">Cookie</link></li>
+      <li><link href="#log">Log</link></li>
+      <li><link href="#continuation">WebContinuation</link></li>
+    </ul>
+    </p>
+    <s2 title = "Cocoon Object"><anchor id="cocoon"/>
+    <p>The <code>cocoon</code> object represents the current Cocoon sitemap and provides the following properties and functions:</p> 
+    <s3 title="request">
+    <p>The current Cocoon request:</p>
+    <p>
+    <em>Property</em> <code>[<link href="#request">Request</link>] request</code>
+    </p>
+    </s3>
+    <s3 title="response">
+    <p>The current Cocoon response:</p>
+    <p>
+    <em>Property</em> <code>[<link href="#response">Response</link>] response</code>
+    </p>
+    </s3>
+    <s3 title="session">
+    <p>The current Cocoon session:</p>
+    <p>
+    <em>Property</em> <code>[<link href="#session">Session</link>] session</code>
+    </p>
+    </s3>
+    <s3 title="context">
+    <p>The current Cocoon application context:</p>
+    <p>
+    <em>Property</em> <code>[<link href="#context">Context</link>] context</code>
+    </p>
+    </s3>
+    <s3 title="log">
+    <p>A reference to the current logger:</p>
+    <p>
+    <em>Property</em> <code>[<link href="#log">Log</link>] log</code>
+    </p>
+    </s3>
+
+    <s3 title="parameters">
+    <p>Any parameters passed to the script by the Cocoon Sitemap</p>
+    <p>
+    <em>Property</em> <code>[Object] parameters</code>
+    </p>
+    </s3>
+    <s3 title = "sendPage"><anchor id="sendPage"/>
       <p>
       <em>Function</em> <code>sendPage([String] uri, [Object] bean)</code>
       </p>
@@ -31,8 +137,8 @@
        <code>bean</code> is a context object which can be accessed inside this page to extract
        various values and place them in the generated page.
       </p>
-    </s2>
-    <s2 title = "sendPageAndWait"><anchor id="sendPageAndWait"/>
+    </s3>
+    <s3 title = "sendPageAndWait"><anchor id="sendPageAndWait"/>
     <p>
     <em>Function</em> <code>[WebContinuation] sendPageAndWait([String] uri, [Object] bean, [Number] timeToLive)</code>
     </p>
@@ -46,57 +152,10 @@
         various values and place them in the generated page.</p>
      <p><code>timeToLive</code> is the time to live in milliseconds for the continuation created.</p>
      <p>The return value is the <link href="#WebContinuation">continuation</link> object.</p>
-    </s2>
-  </s1>
-    <s1 title="Objects">
-    <s2 title = "cocoon object">
-    <p>The <code>cocoon</code> object represents the current Cocoon sitemap and provides the following readonly properties:</p> 
-    <s3 title="request">
-    <p>The current Cocoon request:</p>
-    <p>
-    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Request.html"><code>org.apache.cocoon.environment.Request</code></link><code>] request</code>
-    </p>
     </s3>
-    <s3 title="response">
-    <p>The current Cocoon response:</p>
+    <s3 title="processPipelineTo">
     <p>
-    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Response.html"><code>org.apache.cocoon.environment.Response</code></link><code>] response</code>
-    </p>
-    </s3>
-    <s3 title="session">
-    <p>The current Cocoon session:</p>
-    <p>
-    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Session.html"><code>org.apache.cocoon.environment.Session</code></link><code>] session</code>
-    </p>
-    </s3>
-    <s3 title="context">
-    <p>The current Cocoon application context:</p>
-    <p>
-    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Context.html"><code>org.apache.cocoon.environment.Context</code></link><code>] context</code>
-    </p>
-    </s3>
-    <s3 title="environment">
-    <p>The current Cocoon environment:</p>
-    <p>
-    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Environment.html"><code>org.apache.cocoon.environment.Environment</code></link><code>] environment</code>
-    </p>
-    </s3>
-    <s3 title="componentManager">
-    <p>The current Sitemap's component manager:</p>
-    <p>
-    <em>Property</em> <code>[org.apache.avalon.framework.component.ComponentManager] componentManager</code>
-    </p>
-    </s3>
-    <s3 title="parameters">
-    <p>Any parameters passed to the script by the Sitemap:</p>
-    <p>
-    <em>Property</em> <code>[Array [org.apache.avalon.framework.parameters.Parameters]] parameters</code>
-    </p>
-    <p>The <code>cocoon</code> object also provides the following functions:</p>
-    </s3>
-    <s3 title="process">
-    <p>
-    <em>Function</em> <code>[Boolean] process([String] uri, [Object] bizData, [java.io.OutputStream] stream)</code></p>
+    <em>Function</em> <code>processPipelineTo([String] uri, [Object] bizData, [java.io.OutputStream] stream)</code></p>
     <p>
      Call the Cocoon sitemap for the given URI, sending the output of the
      eventually matched pipeline to the specified <code>OutputStream</code>.</p>
@@ -104,25 +163,6 @@
     <p><code>bizData</code> is the business data object
      to be made available to the forwarded pipeline</p>
      <p><code>stream</code> is an <code>OutputStream</code> where the output should be written to.</p>
-     <p>Returns the result from the Cocoon processor.
-     </p>
-    </s3>
-    <s3 title="createSession"><anchor id="createSession"/>
-      <p><em>Function</em> <code>createSession()</code></p>
-      <p>
-        Associate the current set of JavaScript global variables with the user's session. This means
-        that all invocations from the sitemap of a JavaScript function (using the
-        <link href="sitemap.html#callFunction">&lt;map:call function="..."&gt;</link>), will share
-        global JavaScript variables.
-      </p>
-    </s3>
-    <s3 title="removeSession">
-    <p>
-    <em>Function</em> <code>removeSession()</code>
-    </p>
-    <p>
-       Dissociate global JavaScript variables from the user's session.
-    </p>
     </s3>
     <s3 title="load">
     <p><em>Function</em> <code>load([String] uri)</code></p>
@@ -132,7 +172,216 @@
     </p>
     </s3>
     </s2>
-    <s2 title="log object"><anchor id="log"/>
+    <s2 title="Request Object"><anchor id="request"/>
+     
+    <p>The <code>Request</code> object represents the current Cocoon request. It provides the following functions and properties:</p>
+
+    <s3 title="get">
+    <p><em>Function</em> <code>[String] get([String] name)</code></p>
+    <p>
+      Get the request parameter or attribute with the specified <code>name</code>. 
+    </p>
+    </s3>
+    <s3 title="getAttribute">
+    <p><em>Function</em> <code>[String] getAttribute([String] name)</code></p>
+    <p>
+      Get the request attribute with the specified <code>name</code>. 
+    </p>
+    </s3>
+    <s3 title="getAttributeNames">
+    <p><em>Function</em> <code>[java.util.Enumeration] getAttributeNames()</code></p>
+    <p>
+      Get an enumeration of request attribute names. 
+    </p>
+    </s3>
+    <s3 title="setAttribute">
+    <p><em>Function</em> <code>setAttribute([String] name, [Object] value)</code></p>
+    <p>
+      Set the value of a request attribute. 
+    </p>
+    </s3>
+    <s3 title="removeAttribute">
+    <p><em>Function</em> <code>removeAttribute([String] name)</code></p>
+    <p>
+      Remove the attribute with the name <code>name</code> from this request. 
+    </p>
+    </s3>
+
+    <s3 title="getCharacterEncoding">
+    <p><em>Function</em> <code>[String]getCharacterEncoding()</code></p>
+    <p>
+      Return the character encoding used by this request.
+    </p>
+    </s3>
+
+    <s3 title="setCharacterEncoding">
+    <p><em>Function</em> <code>setCharacterEncoding([String] value)</code></p>
+    <p>
+      Set the character encoding used by this request.
+    </p>
+    </s3>
+
+    <s3 title="getContentLength">
+    <p><em>Function</em> <code>[Number] getContentLength()</code></p>
+    <p>
+      Get the content-length of this request
+    </p>
+    </s3>
+
+    <s3 title="getContentType">
+    <p><em>Function</em> <code>[String] getContentType()</code></p>
+    <p>
+      Get the content-type of this request
+    </p>
+    </s3>
+
+    <s3 title="getParameter">
+    <p><em>Function</em> <code>[String] getParameter([String] name)</code></p>
+    <p>
+      Get the request parameter with the specified <code>name</code>. 
+    </p>
+    </s3>
+
+    <s3 title="getParameterValues">
+    <p><em>Function</em> <code>[Array] getParameterValues([String] name)</code></p>
+    <p>
+      Get an array of request parameters with the specified <code>name</code>. 
+    </p>
+    </s3>
+
+    <s3 title="getParameterNames">
+    <p><em>Function</em> <code>[java.util.Enumeration] getParameterNames()</code></p>
+    <p>
+      Get an enumeration of the parameter names in this request.
+    </p>
+    </s3>
+
+    <s3 title="getAuthType">
+    <p><em>Function</em> <code>[String] getAuthType()</code></p>
+    <p>
+      Get the authorization type used in this request.
+    </p>
+    </s3>
+
+    <s3 title="getProtocol">
+    <p><em>Function</em> <code>[String] getProtocol()</code></p>
+    <p>
+      Get the protocol used in this request.
+    </p>
+    </s3>
+
+    <s3 title="getScheme">
+    <p><em>Function</em> <code>[String] getScheme()</code></p>
+    <p>
+      Get the scheme used in this request.
+    </p>
+    </s3>
+
+    <s3 title="getMethod">
+    <p><em>Function</em> <code>[String] getMethod()</code></p>
+    <p>
+      Get the method used in this request.
+    </p>
+    </s3>
+
+    <s3 title="getServerName">
+    <p><em>Function</em> <code>[String] getServerName()</code></p>
+    <p>
+      Get the server name of this request.
+    </p>
+    </s3>
+
+    <s3 title="getServerPort">
+    <p><em>Function</em> <code>[Number] getServerPort()</code></p>
+    <p>
+      Get the server port of this request.
+    </p>
+    </s3>
+
+    <s3 title="getRemoteAddr">
+    <p><em>Function</em> <code>[String] getRemoteAddr()</code></p>
+    <p>
+      Get the remote address of this request.
+    </p>
+    </s3>
+
+    <s3 title="isSecure">
+    <p><em>Function</em> <code>[Boolean] isSecure()</code></p>
+    <p>
+      Get the <code>secure</code> property of this request.
+    </p>
+    </s3>
+
+    <s3 title="getLocale">
+    <p><em>Function</em> <code>[String] getLocale()</code></p>
+    <p>
+      Get the locale of this request.
+    </p>
+    </s3>
+
+    <s3 title="getLocales">
+    <p><em>Function</em> <code>[Array [String]] getLocales()</code></p>
+    <p>
+      Get the locales of this request.
+    </p>
+    </s3>
+
+    <s3 title="getCookies">
+    <p><em>Function</em> <code>[Array [Cookie]] getCookies()</code></p>
+    <p>
+      Get the cookies associated with this request.
+    </p>
+    </s3>
+
+    <s3 title="getHeader">
+    <p><em>Function</em> <code>[String] getHeader([String] name)</code></p>
+    <p>
+      Get the header with <code>name</code> from this request.
+    </p>
+    </s3>
+
+    <s3 title="getHeaders">
+    <p><em>Function</em> <code>[Array] getHeaders()</code></p>
+    <p>
+      Get the headers associated with this request.
+    </p>
+    </s3>
+
+    <s3 title="getHeaderNames">
+    <p><em>Function</em> <code>[java.util.Enumeration] getHeaderNames()</code></p>
+    <p>
+      Get an enumeration of header names from this request.
+    </p>
+    </s3>
+
+    <s3 title="getRemoteUser">
+    <p><em>Function</em> <code>[String] getRemoteUser()</code></p>
+    <p>
+      Get the remote user associated with this request.
+    </p>
+    </s3>
+
+    <s3 title="getUserPrincipal">
+    <p><em>Function</em> <code>[String] getUserPrincipal()</code></p>
+    <p>
+      Get the user principal associated with this request.
+    </p>
+    </s3>
+
+    <s3 title="getUserPrincipal">
+    <p><em>Function</em> <code>[Boolean] isUserInRole([String] role)</code></p>
+    <p>
+      Returns whether the user associated with this request is in the specified <code>role</code>.
+    </p>
+    </s3>
+    <s3 title="Properties">
+    <p>
+    
+    [name] -> maps to the parameter with that name. For example <code>request.blah</code> is equivalent to <code>request.getParameter("blah")</code>
+    </p> 
+    </s3>
+    </s2>
+    <s2 title="Log Object"><anchor id="log"/>
     <p> The <code>log</code> object provides an interface to the Cocoon logging system.
     </p>
     <p>
