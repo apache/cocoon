@@ -31,7 +31,7 @@ import org.apache.cocoon.kernel.composition.Wire;
 /**
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.2 $)
+ * @version 1.0 (CVS $Revision: 1.1 $)
  */
 public class WirableConnection implements Component, Connection {
 
