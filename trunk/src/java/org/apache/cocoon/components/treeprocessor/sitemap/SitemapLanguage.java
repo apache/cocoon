@@ -53,9 +53,24 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import java.util.*;
 
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.activity.Startable;
+import org.apache.avalon.excalibur.component.RoleManager;
+import org.apache.avalon.excalibur.component.RoleManageable;
+import org.apache.avalon.excalibur.logger.LoggerLoggerManager;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.treeprocessor.CategoryNode;
@@ -73,7 +88,7 @@ import org.apache.regexp.RE;
  * The tree builder for the sitemap language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SitemapLanguage.java,v 1.4 2003/06/18 11:06:31 cziegeler Exp $
+ * @version CVS $Id: SitemapLanguage.java,v 1.5 2003/09/10 17:44:19 proyal Exp $
  */
 
 public class SitemapLanguage extends DefaultTreeBuilder {
@@ -99,16 +114,21 @@ public class SitemapLanguage extends DefaultTreeBuilder {
             config = new DefaultConfiguration("", "");
         }
 
-        ComponentManager manager = new CocoonComponentManager(this.parentManager);
+        final CocoonComponentManager manager = new CocoonComponentManager(this.parentManager);
 
-        LifecycleHelper.setupComponent(manager,
-            getLogger(),
-            this.context,
-            this.parentManager,
-            this.roleManager,
-            this.logKit,
-            config
-        );
+        manager.enableLogging(getLogger());
+        manager.setLoggerManager(new LoggerLoggerManager( getLogger()));
+
+        if (null != this.context ) {
+            manager.contextualize(this.context);
+        }
+
+        if (null != this.roleManager) {
+            manager.setRoleManager(this.roleManager);
+        }
+
+        manager.configure(config);
+        manager.initialize();
 
         return manager;
     }
