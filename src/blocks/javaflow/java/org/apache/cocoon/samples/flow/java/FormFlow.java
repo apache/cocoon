@@ -34,10 +34,10 @@ public class FormFlow extends AbstractContinuable {
 
         FormInstance form = new FormInstance("forms/form1.xml");
 
-        Field birthDate = (Field) form.getWidget("birthdate");
+        Field birthDate = (Field) form.getChild("birthdate");
         birthDate.setValue(new Date());
 
-        Repeater repeater = (Repeater) form.getWidget("contacts");
+        Repeater repeater = (Repeater) form.getChild("contacts");
         repeater.addRow();
         Field field = (Field) repeater.getWidget(0, "firstname");
         field.setValue("Jules");
@@ -48,9 +48,9 @@ public class FormFlow extends AbstractContinuable {
 
         form.show("form/form1");
 
-        sendPage("page/form1-result", new VarMap().add("email", ((Field)form.getWidget("email")).getValue())
-                                                  .add("somebool", ((BooleanField)form.getWidget("somebool")).getValue())
-                                                  .add("firstname", ((Field)((Repeater)form.getWidget("contacts")).getWidget(1, "firstname")).getValue()));
+        sendPage("page/form1-result", new VarMap().add("email", ((Field)form.getChild("email")).getValue())
+                                                  .add("somebool", ((BooleanField)form.getChild("somebool")).getValue())
+                                                  .add("firstname", ((Field)((Repeater)form.getChild("contacts")).getWidget(1, "firstname")).getValue()));
     }
 
     public void doEditForm2() throws BindingException {
