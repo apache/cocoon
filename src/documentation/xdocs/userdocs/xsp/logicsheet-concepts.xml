@@ -100,9 +100,9 @@
 
 <source><![CDATA[
 <util:time-of-day>
-  <util:parameter name="format">
+  <util:param name="format">
     <request:get-parameter name="time-format" default="hh:mm:ss"/>
-  </util:parameter>
+  </util:param>
 </util:time-of-day>
 ]]></source>
 
@@ -146,9 +146,9 @@
 
 <!-- Parameter "format" known at request time -->
 <util:time-of-day>
-  <util:parameter name="format">
+  <util:param name="format">
     <request:get-parameter name="time-format" default="hh:mm:ss"/>
-  </util:parameter>
+  </util:param>
 </util:time-of-day>
 ]]></source>
 
@@ -543,11 +543,11 @@ is-indexed="true"
 
 <!-- Parameter "format" known at request time -->
 <util:time-of-day>
-<util:parameter name="format">
+<util:param name="format">
   <xsp:expr>
     request.getParameter("format");
   </xsp:expr>
-</util:parameter>
+</util:param>
 </util:time-of-day>
 ]]></source>
 
