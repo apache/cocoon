@@ -60,7 +60,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -71,9 +70,6 @@ import org.apache.cocoon.util.BufferedOutputStream;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.excalibur.source.SourceException;
-import org.apache.excalibur.xml.sax.XMLizable;
-import org.apache.excalibur.xmlizer.XMLizer;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
@@ -82,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.11 2003/05/12 13:26:17 stephan Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.12 2003/05/16 07:04:55 cziegeler Exp $
  */
 public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
 
@@ -112,9 +108,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 
     /** The real source resolver */
     protected org.apache.excalibur.source.SourceResolver sourceResolver;
-
-    /** The real xmlizer */
-    protected org.apache.excalibur.xmlizer.XMLizer xmlizer;
 
     /** The component manager */
     protected ComponentManager manager;
@@ -518,62 +511,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     }
 
     /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     */
-    public void toSAX( org.apache.excalibur.source.Source source,
-                       ContentHandler handler )
-    throws SAXException, IOException, ProcessingException {
-        this.toSAX( source, null, handler);
-    }
-
-    public void toSAX( org.apache.excalibur.source.Source source,
-                String         mimeTypeHint,
-                ContentHandler handler )
-    throws SAXException, IOException, ProcessingException {
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        String mimeType = source.getMimeType();
-        if (null == mimeType) {
-            mimeType = mimeTypeHint;
-        }
-
-        try {
-            if (source instanceof XMLizable) {
-                ((XMLizable)source).toSAX( handler );
-            } else {
-                try {
-                    xmlizer.toSAX( source.getInputStream(),
-                                   mimeType,
-                                   source.getURI(),
-                                   handler );
-                } catch (SourceException se) {
-                    throw SourceUtil.handle(se);
-                }
-            }
-        } catch (SAXException e) {
-            final Exception cause = e.getException();
-            if (cause != null) {
-                if (cause instanceof ProcessingException) {
-                    throw (ProcessingException)cause;
-                }
-                if (cause instanceof IOException) {
-                    throw (IOException)cause;
-                }
-                if (cause instanceof SAXException) {
-                    throw (SAXException)cause;
-                }
-            }
-            throw e;
-        }
-    }
-
-    /**
      * Initialize the components for the environment
      * This gets the source resolver and the xmlizer component
      */
@@ -581,7 +518,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         this.initializedComponents = true;
         try {
             this.manager = CocoonComponentManager.getSitemapComponentManager();
-            this.xmlizer = (XMLizer)this.manager.lookup(XMLizer.ROLE);
             this.sourceResolver = (org.apache.excalibur.source.SourceResolver)this.manager.lookup(org.apache.excalibur.source.SourceResolver.ROLE);
 			if (this.tempInitContext != null) {
 				org.apache.excalibur.source.Source source = null;
@@ -617,10 +553,8 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
 	 */
 	public void finishingProcessing() {
 		if ( null != this.manager ) {
-			this.manager.release( (Component)this.xmlizer );
 			this.manager.release( this.sourceResolver );
 			this.manager = null;
-			this.xmlizer = null;
 			this.sourceResolver = null;
 		}
         this.initializedComponents = false;

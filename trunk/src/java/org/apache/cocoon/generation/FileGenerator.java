@@ -73,7 +73,7 @@ import java.util.Map;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: FileGenerator.java,v 1.2 2003/03/19 15:42:13 cziegeler Exp $
+ * @version CVS $Id: FileGenerator.java,v 1.3 2003/05/16 07:04:54 cziegeler Exp $
  */
 public class FileGenerator extends ComposerGenerator
 implements CacheableProcessingComponent {
@@ -137,7 +137,8 @@ implements CacheableProcessingComponent {
                 this.getLogger().debug("processing file " + super.source);
                 this.getLogger().debug("file resolved to " + this.inputSource.getURI());
             }
-            this.resolver.toSAX(this.inputSource, super.xmlConsumer);
+            SourceUtil.parse( this.manager, this.inputSource, super.xmlConsumer);
+
         } catch (SAXException e) {
             final Exception cause = e.getException();
             if( cause != null ) {

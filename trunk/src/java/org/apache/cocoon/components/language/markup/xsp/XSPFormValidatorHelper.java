@@ -58,6 +58,7 @@ import org.apache.excalibur.source.Source;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.acting.ConfigurationHelper;
 import org.apache.cocoon.acting.ValidatorActionResult;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
@@ -71,7 +72,7 @@ import java.util.Map;
  * The <code>ValidatorActionResult</code> object helper
  *
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: XSPFormValidatorHelper.java,v 1.1 2003/03/09 00:08:55 pier Exp $
+ * @version CVS $Id: XSPFormValidatorHelper.java,v 1.2 2003/05/16 07:04:55 cziegeler Exp $
  */
 public class XSPFormValidatorHelper {
 
@@ -408,7 +409,7 @@ public class XSPFormValidatorHelper {
                     }
 
                     SAXConfigurationHandler builder = new SAXConfigurationHandler();
-                    resolver.toSAX(source, builder);
+                    SourceUtil.toSAX(source, builder);
 
                     conf.lastModified = source.getLastModified();
                     conf.configuration = builder.getConfiguration();

@@ -150,7 +150,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.2 2003/03/19 15:42:14 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.3 2003/05/16 07:04:55 cziegeler Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -546,9 +546,9 @@ implements Disposable, CacheableProcessingComponent {
                     mimeType = this.configurationParameters.getParameter("mime-type", mimeType);                    
                 }
                 if ( this.compiling ) {
-                    this.resolver.toSAX(source, mimeType, new IncludeXMLConsumer(this.contentHandler, this.lexicalHandler));
+                    SourceUtil.toSAX(source, mimeType, new IncludeXMLConsumer(this.contentHandler, this.lexicalHandler));
                 } else {
-                    this.resolver.toSAX(source, mimeType, this.filter);
+                    SourceUtil.toSAX(source, mimeType, this.filter);
                 }
             }
 

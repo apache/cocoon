@@ -50,21 +50,19 @@
 */
 package org.apache.cocoon.environment;
 
-import org.apache.cocoon.ProcessingException;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import java.io.IOException;
+
+import org.apache.cocoon.ProcessingException;
+import org.xml.sax.SAXException;
 
 /**
  * Base interface for resolving a source by system identifiers. This 
  * component is a special extension of the Avalon Excalibur 
  * {@link org.apache.excalibur.source.SourceResolver} that is only
  * used for Cocoon sitemap components.
- * It extends the source resolver with simple to use source to SAX
- * conversion methods.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SourceResolver.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: SourceResolver.java,v 1.2 2003/05/16 07:04:55 cziegeler Exp $
  */
 
 public interface SourceResolver
@@ -79,32 +77,5 @@ extends org.apache.excalibur.source.SourceResolver {
     Source resolve(String systemID)
     throws ProcessingException, SAXException, IOException;
 
-    /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source    the data
-     * @throws ProcessingException if no suitable converter is found
-     */
-    void toSAX( org.apache.excalibur.source.Source source,
-                ContentHandler handler )
-    throws SAXException, IOException, ProcessingException;
-
-
-    /**
-     * Generates SAX events from the given source
-     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
-     * that <code>handler</code> can actually
-     * directly implement the LexicalHandler interface!
-     * @param  source       the data
-     * @param  mimeTypeHint A hint for the mime-type, if the source does not
-     *                       provide  one
-     * @throws ProcessingException if no suitable converter is found
-     */
-    void toSAX( org.apache.excalibur.source.Source source,
-                String         mimeTypeHint,
-                ContentHandler handler )
-    throws SAXException, IOException, ProcessingException;
 }
 

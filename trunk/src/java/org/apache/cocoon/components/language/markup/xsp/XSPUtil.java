@@ -53,6 +53,7 @@ package org.apache.cocoon.components.language.markup.xsp;
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Session;
@@ -83,7 +84,7 @@ import java.util.Map;
  * The XSP <code>Utility</code> object helper
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: XSPUtil.java,v 1.3 2003/03/11 03:00:19 vgritsenko Exp $
+ * @version CVS $Id: XSPUtil.java,v 1.4 2003/05/16 07:04:55 cziegeler Exp $
  */
 public class XSPUtil {
     
@@ -297,7 +298,7 @@ public class XSPUtil {
         Source source = null;
         try {
             source = resolver.resolveURI(uri, base, null);
-            resolver.toSAX(source, new IncludeXMLConsumer(contentHandler));
+            SourceUtil.toSAX(source, new IncludeXMLConsumer(contentHandler));
         } catch (Exception e) {
             throw new CascadingRuntimeException("Error including source " + base + " " + uri, e);
         } finally {

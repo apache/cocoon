@@ -75,6 +75,7 @@ import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceParameters;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.sax.XMLizable;
 import org.apache.excalibur.xmlizer.XMLizer;
 import org.apache.regexp.RE;
@@ -93,7 +94,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.5 2003/04/09 12:17:20 stephan Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.6 2003/05/16 07:04:55 cziegeler Exp $
  */
 public final class SourceUtil {
 
@@ -152,7 +153,7 @@ public final class SourceUtil {
      */
     static public void toSAX( ComponentManager manager, Source source,
                                 String mimeTypeHint,
-                              ContentHandler handler)
+                                ContentHandler handler)
     throws SAXException, IOException, ProcessingException {
         if ( source instanceof XMLizable ) {
             ((XMLizable)source).toSAX( handler );
@@ -172,6 +173,35 @@ public final class SourceUtil {
                 throw new ProcessingException("Exception during streaming source.", ce);
             } finally {
                 manager.release( (Component)xmlizer );
+            }
+        }
+    }
+
+    /**
+     * Generates SAX events from the given source by parsing it.
+     * <b>NOTE</b> : if the implementation can produce lexical events, care should be taken
+     * that <code>handler</code> can actually
+     * directly implement the LexicalHandler interface!
+     * @param  source    the data
+     * @throws ProcessingException if no suitable converter is found
+     */
+    static public void parse( ComponentManager manager, 
+                                Source source,
+                                ContentHandler handler)
+    throws SAXException, IOException, ProcessingException {
+        if ( source instanceof XMLizable ) {
+            ((XMLizable)source).toSAX( handler );
+        } else {
+            SAXParser parser = null;
+            try {
+                parser = (SAXParser) manager.lookup( SAXParser.ROLE);
+                parser.parse( getInputSource( source ), handler );
+            } catch (SourceException se) {
+                throw SourceUtil.handle(se);
+            } catch (ComponentException ce) {
+                throw new ProcessingException("Exception during parsing source.", ce);
+            } finally {
+                manager.release( (Component)parser );
             }
         }
     }
