@@ -75,7 +75,7 @@ import org.apache.excalibur.store.Store;
  * 
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CacheImpl.java,v 1.11 2004/01/31 16:54:49 unico Exp $
+ * @version CVS $Id: CacheImpl.java,v 1.12 2004/01/31 19:52:35 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=Cache
@@ -105,11 +105,11 @@ implements Cache, Serviceable, Disposable, Parameterizable {
     /**
      * Reads the value of the <code>store</code> parameter that specifies the
      * lookup hint of the Store service to use and looks it up on the service
-     * manager. If the parameter is not present the default transient store 
+     * manager. If the parameter is not present the default store 
      * is attempted.
      */
     public void parameterize(Parameters parameters) throws ParameterException {
-        String storeName = parameters.getParameter("store", Store.TRANSIENT_STORE);
+        String storeName = parameters.getParameter("store", Store.ROLE);
         try {
             this.store = (Store)this.manager.lookup(storeName);
         } catch (ServiceException ce) {

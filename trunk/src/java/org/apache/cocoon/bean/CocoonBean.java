@@ -277,6 +277,7 @@ public class CocoonBean
             Map.Entry entry = (Map.Entry)it.next();
             initContext.put(entry.getKey(), entry.getValue());
         }
+        initContext.put(Constants.CONTEXT_WORK_DIR,m_workDirectory);
 
         m_contManager = new DefaultContainerManager( initContext, m_initializationLogger );
         ContainerUtil.initialize( m_contManager );

@@ -271,13 +271,119 @@
   
   <cache id="cache" />
   
-  <mem-store id="TransientStore" />
+<!-- ============================ Object Stores =========================== -->
+
+  <!--+
+      | Store: generic store. The default implementation is an in-memory store
+      | backed by the persistent store (see below). This forms a two-stage
+      | cache composed of a fast in-memory MRU front-end and a persistent
+      | back-end storing less used objects.
+      |
+      | Common configuration parameters:
+      | maxobjects: Indicates how many objects will be hold in the cache.
+      |    When the number of maxobjects has been reached. The last object
+      |    in the cache will be thrown out.
+      +-->
+  <store id="Store" default="true" logger="core.store">
+    <parameter name="maxobjects" value="100"/>
+  </store>
   
-  <persistent-store id="persistent-store" />
+  <!--+
+      | Transient Store: holds objects that don't have to survive shutdown
+      |
+      | Common configuration parameters:
+      | maxobjects: Indicates how many objects will be hold in the cache.
+      |    When the number of maxobjects has been reached. The last object
+      |    in the cache will be thrown out.
+      +-->
+  <transient-store id="TransientStore" logger="core.store.transient">
+    <parameter name="maxobjects" value="100"/>
+  </transient-store>
+
+  <!--+
+      | Persistent Store: holds objects that have to survive shutdown.
+      | WARNING: FilesystemStore is broken. Cocoon uses DefaultPersistentStore based
+      | on the Avalon Excalibur JispStore instead.
+      |
+      | Common configuration parameters:
+      |  use-cache-directory: Indicates that cache directory specified in
+      |                       web.xml should be used.
+      |  use-work-directory: Indicates that work directory specified in
+      |                      web.xml should be used.
+      |  directory: Specifies directory to use. Absolute or relative to the
+      |             work directory.
+      |
+      | DefaultStore configuration parameters:
+      |  datafile: Name of the store file to use. Defaults to cocoon.dat
+      |  indexfile: Name of the index file to use. Defaults to cocoon.idx
+      |  order: FIXME: put description here.
+      +-->
+  <persistent-store id="PersistentStore" logger="core.store.persistent">
+    <parameter name="use-cache-directory" value="true"/>
+    <parameter name="order" value="2701"/>
+  </persistent-store>
   
-  <xml-serializer id="xml-serializer"/>
+  <!--+
+      | Store Janitor: the store garbage collector and memory usage controller.
+      |
+      | WARNING: Be careful with the heapsize and freememory parameters.
+      |           Wrong values can cause high cpu usage.
+      |
+      | Example configuration:
+      | Jvm settings:
+      |    -Xmx200000000
+      | store-janitor settings:
+      |    <parameter name="freememory" value="5000000"/>
+      |    <parameter name="heapsize" value="196000000"/>
+      |
+      | It is recommended to have heapsize equal to -Xmx, especially on Sun's
+      | JVM which are unable to shrink its heap once it grows above minimum.
+      | Freememory should be greater than amount of memory necessary for normal
+      | application operation.
+      | BUT: The heap size of the memory of the JVM is a little bit less than
+      |      the value you specify for -Xmx, so you have to set the heapsize
+      |      for the store janitor to a value which is lower (2% less seems
+      |      to be a working value).
+      +-->
+  <store-janitor id="StoreJanitor" logger="core.store.janitor">
+    <!-- How much free memory shall be available in the jvm -->
+    <parameter name="freememory" value="2048000"/>
+    <!-- Indicates the limit of the jvm memory consumption. The default max
+         heapsize for Sun's JVM is (almost) 64Mb -->
+    <parameter name="heapsize" value="66600000"/>
+    <!-- How often shall the cleanup thread check memory -->
+    <parameter name="cleanupthreadinterval" value="10"/>
+    <!-- Experimental adaptive algorithm for cleanup interval
+    <parameter name="adaptivethreadinterval" value="true"/>
+    -->
+    <!-- Indicates the thread priority of the cleanup thread -->
+    <parameter name="threadpriority" value="5"/>
+    <!-- How much percent of the elements of each registered Store
+         shall be removed when low on memory. Default 10% -->
+    <parameter name="percent_to_free" value="10"/>
+    <!-- Invoke the garbage collector when low memory is reached -->
+    <parameter name="invokegc" value="false"/>
+  </store-janitor>
   
-  <xml-deserializer id="xml-deserializer"/>
+  <!--+
+      | XML compiler/decompiler
+      |
+      | these components are used to process SAX events and produce a binary
+      | representation that is much more compact and efficient for
+      | subsequent parsing. These are used by the cache system to save
+      | the intermediate results of the pipeline stages reducing the overhead
+      | of xml parsing/serialization.
+      +-->
+  <xml-serializer
+    id="xml-serializer"
+    logger="core.xml-serializer"
+    pool-grow="4" pool-max="32" pool-min="2"
+  />
+  <xml-deserializer
+    id="xml-deserializer"
+    logger="core.xml-serializer"
+    pool-grow="4" pool-max="32" pool-min="2"
+  />
   
 <!-- TODO: entries below are still 2.1 configuration -->
 
@@ -468,91 +574,6 @@
     <component-instance logger="core.modules.output" name="request-attr-map" class="org.apache.cocoon.components.modules.output.RequestAttributeMap"/>
     <component-instance logger="core.modules.output" name="session-attr"   class="org.apache.cocoon.components.modules.output.SessionAttributeOutputModule"/>
   </output-modules>
-
-<!-- ============================ Object Stores =========================== -->
-
-  <!--+
-      | Transient Store: holds objects that don't have to survive shutdown
-      +-->
-  <transient-store logger="core.store.transient">
-
-     <!--+
-         | Indicates how many objects will be hold in the cache.
-         | When the number of maxobjects has been reached. The last object
-         | in the cache will be thrown out.
-         +-->
-     <parameter name="maxobjects" value="100"/>
-
-     <!-- Turns swapping of the objects into persistent cache on and off. -->
-     <parameter name="use-persistent-cache" value="true"/>
-  </transient-store>
-
-  <!--+
-      | Persistent Store: holds objects that have to survive shutdown.
-      | WARNING: FilesystemStore is broken. Cocoon uses DefaultStore based
-      | on the Avalon Excalibur JispStore instead.
-      |
-      | Common configuration parameters:
-      |  use-cache-directory: Indicates that cache directory specified in
-      |                       web.xml should be used.
-      |  use-work-directory: Indicates that work directory specified in
-      |                      web.xml should be used.
-      |  directory: Specifies directory to use. Absolute or relative to the
-      |             work directory.
-      |
-      | DefaultStore configuration parameters:
-      |  datafile: Name of the store file to use. Defaults to cocoon.dat
-      |  indexfile: Name of the index file to use. Defaults to cocoon.idx
-      |  order: FIXME: put description here.
-      +-->
-  <persistent-store class="org.apache.cocoon.components.store.impl.DefaultStore"
-                    logger="core.store.persistent">
-    <parameter name="use-cache-directory" value="true"/>
-    <parameter name="order" value="2701"/>
-  </persistent-store>
-
-  <!--+
-      | Store Janitor: the store garbage collector and memory usage controller.
-      |
-      | Be careful with the heapsize and freememory parameters. Wrong values
-      | can cause high cpu usage. Example configuration:
-      | Jvm settings:
-      |    -Xmx200000000
-      | store-janitor settings:
-      |    <parameter name="freememory" value="5000000"/>
-      |    <parameter name="heapsize" value="196000000"/>
-      |
-      | It is recommended to have heapsize equal to -Xmx, especially on Sun's
-      | JVM which are unable to shrink its heap once it grows above minimum.
-      | Freememory should be greater than amount of memory necessary for normal
-      | application operation.
-      | BUT: The heap size of the memory of the JVM is a little bit less than
-      |      the value you specify for -Xmx, so you have to set the heapsize
-      |      for the store janitor to a value which is lower (2% less seems
-      |      to be a working value).
-      +-->
-  <store-janitor logger="core.store.janitor">
-     <!-- How much free memory shall be available in the jvm -->
-     <parameter name="freememory" value="2048000"/>
-     <!-- Indicates the limit of the jvm memory consumption. The default max
-          heapsize for Sun's JVM is (almost) 64Mb -->
-     <parameter name="heapsize" value="66600000"/>
-     <!-- How often shall the cleanup thread check memory -->
-     <parameter name="cleanupthreadinterval" value="10"/>
-     <!-- Experimental adaptive algorithm for cleanup interval
-     <parameter name="adaptivethreadinterval" value="true"/>
-     -->
-     <!-- Indicates the thread priority of the cleanup thread -->
-     <parameter name="threadpriority" value="5"/>
-     <!-- How much percent of the elements of each registered Store
-          shall be removed when low on memory. Default 10% -->
-     <parameter name="percent_to_free" value="10"/>
-     <!-- Invoke the garbage collector when low memory is reached -->
-     <parameter name="invokegc" value="false"/>
-  </store-janitor>
-
-<!-- ========================= Protocol Handlers =========================== -->
-
 
 <!-- ================ Internationalization Catalogs =================== -->
 
@@ -798,18 +819,6 @@
       | The core classloader implementation
       +-->
   <classloader class="org.apache.cocoon.components.classloader.ClassLoaderManagerImpl" logger="core.classloader"/>
-
-  <!--+
-      | XML compiler/decompiler
-      |
-      | these components are used to process SAX events and produce a binary
-      | representation that is much more compact and efficient for
-      | subsequent parsing. These are used by the cache system to save
-      | the intermediate results of the pipeline stages reducing the overhead
-      | of xml parsing/serialization.
-      +-->
-  <xml-serializer class="org.apache.cocoon.components.sax.XMLByteStreamCompiler" logger="core.xml-serializer" pool-grow="4" pool-max="32" pool-min="8"/>
-  <xml-deserializer class="org.apache.cocoon.components.sax.XMLByteStreamInterpreter" logger="core.xml-deserializer" pool-grow="4" pool-max="32" pool-min="8"/>
 
   <!--+
       | The Monitor keeps track on changes to a Resource.
