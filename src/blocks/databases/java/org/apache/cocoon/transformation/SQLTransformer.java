@@ -86,7 +86,7 @@ import javax.xml.transform.OutputKeys;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id: SQLTransformer.java,v 1.2 2003/03/10 11:45:57 cziegeler Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.3 2003/03/13 14:22:56 cziegeler Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -1046,7 +1046,7 @@ public class SQLTransformer
                 }
             }
             
-            String query = StringUtils.deleteWhitespace(sb.toString());
+            String query = StringUtils.replace(sb.toString(), "\r", " ", -1);
             // Test, if this is an update (by comparing with select)
             if ( !isstoredprocedure && !isupdate) {
                 if (query.length() > 6 && !query.substring(0,6).equalsIgnoreCase("SELECT")) {
