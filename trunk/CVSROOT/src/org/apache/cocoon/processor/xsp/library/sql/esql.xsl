@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.81 2001-05-23 16:57:53 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.82 2001-06-13 22:07:47 giacomo Exp $-->
 <!--
 
  ============================================================================
@@ -201,7 +201,7 @@
           <xsl:when test="$environment = 'cocoon2'">
             private static ComponentSelector _esql_selector = null;
 
-            public void compose(ComponentManager manager) {
+            public void compose(ComponentManager manager) org.apache.avalon.framework.component.ComponentException {
               super.compose(manager);
               if (_esql_selector == null) {
                 try {
