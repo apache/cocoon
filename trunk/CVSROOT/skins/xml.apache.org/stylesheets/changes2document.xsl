@@ -16,7 +16,7 @@
    </body>
   </document>
  </xsl:template>
- 
+
  <xsl:template match="release">
   <s2 title="{$name} {@version} ({@date})">
    <sl>
@@ -30,10 +30,18 @@
    <icon src="images/{@type}.jpg" alt="{@type}"/>
    <xsl:apply-templates/>
    <xsl:text>(</xsl:text><xsl:value-of select="@dev"/><xsl:text>)</xsl:text>
-   
+
    <xsl:if test="@due-to">
     <xsl:text> Thanks to </xsl:text>
     <link href="mailto:{@due-to-email}"><xsl:value-of select="@due-to"/></link>
+    <xsl:text>.</xsl:text>
+   </xsl:if>
+
+   <xsl:if test="@fixes-bug">
+    <xsl:text> Fixes <xsl:text>
+    <link href="http://xml.apache.org/bugs/show_bug.cgi?id={@fixes-bug}">
+     <xsl:text>bug <xsl:text><xsl:value-of select="@fixes-bug"/>
+    </link>
     <xsl:text>.</xsl:text>
    </xsl:if>
   </li>
@@ -42,5 +50,5 @@
  <xsl:template match="devs">
   <!-- remove -->
  </xsl:template>
- 
+
 </xsl:stylesheet>
