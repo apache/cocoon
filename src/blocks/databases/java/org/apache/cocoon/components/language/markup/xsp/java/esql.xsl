@@ -1,6 +1,6 @@
 <?xml version="1.0"?><!-- -*- xsl -*- -->
 
-<!-- $Id: esql.xsl,v 1.2 2003/05/13 12:43:28 haul Exp $-->
+<!-- $Id: esql.xsl,v 1.3 2003/06/11 23:15:26 joerg Exp $-->
 <!--
 
  ============================================================================
@@ -58,7 +58,7 @@
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Revision: 1.2 $ $Date: 2003/05/13 12:43:28 $
+ * @version CVS $Revision: 1.3 $ $Date: 2003/06/11 23:15:26 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -929,28 +929,15 @@ Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-      <xsp:logic>
-      {
-          org.apache.cocoon.components.parser.Parser newParser = null;
-
-          try {
-              newParser = (org.apache.cocoon.components.parser.Parser) this.manager.lookup(org.apache.cocoon.components.parser.Parser.ROLE);
-
-              InputSource __is = new InputSource(
-                      new StringReader(
-                          String.valueOf(<xsl:copy-of select="$content"/>)
-                      )
-                  );
-
-
-              XSPUtil.include(__is, this.contentHandler, newParser);
-          } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
-              getLogger().error("Could not include page", _esql_exception_<xsl:value-of select="generate-id(.)"/>);
-          } finally {
-              if (newParser != null) this.manager.release((Component) newParser);
-          }
-      }
-      </xsp:logic>
+  <xsp:logic>
+    {
+        try {
+            XSPUtil.includeString(<xsl:copy-of select="$content"/>, this.manager, this.contentHandler);
+        } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
+            getLogger().error("Could not include XML string", _esql_exception_<xsl:value-of select="generate-id(.)"/>);
+        }
+    }
+  </xsp:logic>
 </xsl:template>
 
 <xspdoc:desc>returns the number of columns in the resultset.</xspdoc:desc>
