@@ -47,7 +47,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.45 $ $Date: 2001-01-22 21:56:32 $
+ * @version CVS $Revision: 1.4.2.46 $ $Date: 2001-02-08 14:57:34 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants, Loggable {
@@ -88,8 +88,7 @@ public class Cocoon
      * Create a new <code>Cocoon</code> instance.
      */
     protected Cocoon() throws ConfigurationException {
-        // Set the system properties needed by Xalan2.
-        setSystemProperties();
+        // Set the system properties needed by Xalan2. setSystemProperties();
     }
 
     /**
@@ -249,11 +248,11 @@ public class Cocoon
 
   /**
    * Sets required system properties .
-   */
     protected void setSystemProperties()
     {
       java.util.Properties props = new java.util.Properties();
 
+      // FIXME We shouldn't have to specify the SAXParser...
       // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
       // to locate the SAX2 driver.
       props.put("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
@@ -268,4 +267,5 @@ public class Cocoon
       }
       System.setProperties(systemProps);
     }
+   */
 }

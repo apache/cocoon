@@ -55,9 +55,9 @@ import javax.xml.transform.TransformerException;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.30 $ $Date: 2001-02-05 22:06:17 $
+ * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-02-08 14:57:56 $
  */
-public class XalanTransformer extends ContentHandlerWrapper
+public class TraxTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
     private static String FILE = "file:/";
 
@@ -261,6 +261,7 @@ implements Transformer, Composer, Poolable, Configurable {
                 c = iter.next();
             }
         }
+
         return true;
     }
 }
