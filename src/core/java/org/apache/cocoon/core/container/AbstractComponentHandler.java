@@ -22,6 +22,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
@@ -45,7 +46,7 @@ implements ComponentHandler {
     protected boolean disposed = false;
 
     /** State management boolean stating whether the Handler is initialized or not */
-    protected boolean initialized = false;
+    private boolean initialized = false;
     
     private ServiceInfo info;
 
@@ -170,14 +171,11 @@ implements ComponentHandler {
      * @exception Exception if an error occurs
      */
     public final Object get() throws Exception {
-        if( !this.initialized ) {
-            throw new IllegalStateException(
-                "You cannot get a component from an uninitialized handler." );
-        }
+        initialize();
         if( this.disposed ) {
             throw new IllegalStateException( "You cannot get a component from a disposed handler." );
         }
-
+        
         final Object component = this.doGet();
 
         synchronized( this.referenceSemaphore ) {
@@ -266,10 +264,14 @@ implements ComponentHandler {
     /* (non-Javadoc)
      * @see org.apache.cocoon.core.container.ComponentHandler#initialize()
      */
-    public void initialize() throws Exception {
+    public final void initialize() throws Exception {
         if( this.initialized ) {
             return;
         }
+
+        doInitialize();
         this.initialized = true;
     }
+    
+    protected abstract void doInitialize() throws Exception;
 }

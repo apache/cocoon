@@ -57,6 +57,8 @@ public class InstanceComponentHandler extends AbstractComponentHandler {
         // nothing
     }
     
+    protected void doInitialize() {}
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.core.container.ComponentHandler#dispose()
      */

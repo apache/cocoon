@@ -223,4 +223,6 @@ extends AbstractFactoryHandler {
             }
         }
     }
+    
+    protected void doInitialize() {}
 }

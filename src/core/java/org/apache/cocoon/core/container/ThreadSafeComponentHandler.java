@@ -47,15 +47,10 @@ extends AbstractFactoryHandler {
         return true;
     }
 
-    public void initialize() 
-    throws Exception {
-        if( this.initialized ) {
-            return;
-        }
+    public void doInitialize() throws Exception {
         if( this.instance == null ) {
             this.instance = this.factory.newInstance();
         }
-        super.initialize();
     }
 
     /**
