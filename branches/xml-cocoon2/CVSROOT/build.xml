@@ -423,7 +423,12 @@ by the main ones.
 
     <copy todir="${dist.dir}" filtering="on">
      <fileset dir=".">
-      <include name="README, LICENSE, INSTALL, WARNING, *.sh, *.bat"/>
+      <include name="README"/>
+      <include name="LICENSE"/>
+      <include name="INSTALL"/>
+      <include name="WARNING"/>
+      <include name="*.sh"/>
+      <include name="*.sh"/>
      </fileset>
     </copy>
 
