@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaProcessor.java,v 1.10 2000-05-11 12:00:20 ricardo Exp $ --
+/*-- $Id: XSPJavaProcessor.java,v 1.11 2000-08-18 22:43:59 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -55,25 +55,33 @@ import java.io.*;
 import org.w3c.dom.*;
 import javax.servlet.http.*;
 
-import sun.tools.javac.Main;
-
+import org.apache.cocoon.framework.*;
 import org.apache.cocoon.processor.xsp.*;
 import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.10 $ $Date: 2000-05-11 12:00:20 $
+ * @version $Revision: 1.11 $ $Date: 2000-08-18 22:43:59 $
  */
-public class XSPJavaProcessor implements XSPLanguageProcessor {
+public class XSPJavaProcessor implements XSPLanguageProcessor, Configurable {
   // Create class loader
   protected File repository;
   protected String encoding;
   protected XSPClassLoader classLoader;
+  protected JavaCompiler javac;
 
   protected boolean format;
 
   public XSPJavaProcessor() {
     this.format = false;
+  }
+
+  public void init(Configurations conf) {
+    String javacClassName = (String) conf.get("compiler", "org.apache.cocoon.processor.xsp.language.java.SunJavaCompiler");
+    try {
+        this.javac = (JavaCompiler) Class.forName(javacClassName).newInstance();
+    } catch (Exception e) {
+    }
   }
 
   public String getSourceExtension() {
@@ -109,40 +117,14 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
     String repositoryName = this.repository.getCanonicalPath();
     String fullFilename = repositoryName + File.separator + filename;
 
-    String[] compilerArgs = null;
-
-    if (this.encoding == null) {
-      compilerArgs = new String[] {
-        "-classpath",
-          repositoryName +
-          File.pathSeparator +
-          System.getProperty("java.class.path"),
-        "-O",
-        // "-deprecation",
-        // "-verbose",
-        fullFilename
-      };
-    } else {
-      compilerArgs = new String[] {
-        "-classpath",
-          repositoryName +
-          File.pathSeparator +
-          System.getProperty("java.class.path"),
-        "-O",
-	"-encoding", this.encoding,
-        fullFilename
-      };
-    }
-
-    ByteArrayOutputStream err = new ByteArrayOutputStream();
+    ByteArrayOutputStream err = new ByteArrayOutputStream(256);
     
-    // FIXME: we should make this reflection based and also allow other
-    // compilers to be plugged in. Maybe we can steal... ehmmm, borrow.. some
-    // Tomcat code for this :) (SM)
-    
-    Main compiler = new Main(err, "javac");
+    javac.setEncoding(this.encoding);
+    javac.setClasspath(repositoryName + File.pathSeparator + System.getProperty("java.class.path"));
+    javac.setOutputDir(repositoryName);
+    javac.setMsgOutput(err);
 
-    boolean compilationResult = compiler.compile(compilerArgs);
+    boolean compilationResult = javac.compile(fullFilename);
 
     if (!compilationResult) {
       // Massage message

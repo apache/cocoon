@@ -1,4 +1,4 @@
-/*-- $Id: XSPProcessor.java,v 1.24 2000-07-21 20:10:50 stefano Exp $ --
+/*-- $Id: XSPProcessor.java,v 1.25 2000-08-18 22:43:15 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -78,7 +78,7 @@ import org.apache.turbine.services.resources.TurbineResourceService;
  * This class implements the XSP engine.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.24 $ $Date: 2000-07-21 20:10:50 $
+ * @version $Revision: 1.25 $ $Date: 2000-08-18 22:43:15 $
  */
 public class XSPProcessor extends AbstractActor
   implements Processor, Configurable, Status
@@ -154,10 +154,13 @@ public class XSPProcessor extends AbstractActor
             String languageName = t.nextToken();
             Configurations c = conf.getConfigurations(languageName);
             XSPLogicsheet logicsheet = new XSPLogicsheet(transformer, parser, null);
-    
+
+            // Make XSP Processor class configurable via cocoon.properties (i.e. compiler)
+            Configurations cc = c.getConfigurations("processor");
+
             String processorName = (String) c.get("processor");
                 XSPLanguageProcessor languageProcessor =
-                    (XSPLanguageProcessor) this.factory.create(processorName);
+                    (XSPLanguageProcessor) this.factory.create(processorName, cc);
             this.languages.put(languageName, languageProcessor);
 
             String logicsheetName = (String) c.get("logicsheet");
