@@ -54,27 +54,25 @@ var MAX_RESULTS = 5;
 var VIEW = "jexl";
 var EXT = ".jexl";
 
+// Utility to format numbers and dates (for use by Velocity templates)
 
-function Format() {
+function Formatter() {
 }
 
-Format.prototype.formatNumber = function(num, format) {
+Formatter.prototype.formatNumber = function(num, format) {
     return new java.text.DecimalFormat(format).format(num);
 }
 
-Format.prototype.formatDate = function(date, format) {
+Formatter.prototype.formatDate = function(date, format) {
     return new java.text.SimpleDateFormat(format).format(date);
 }
 
-var fmt = new Format();
+var formatter = new Formatter();
 var petStore = null;
 var accountForm = null;
 var cartForm = null;
 var categoryList = null;
 
-function print(line) {
-    cocoon.log.info(line);
-}
 
 function main(funName) {
     var fun = this[funName];
@@ -134,7 +132,7 @@ function viewCart() {
     cocoon.sendPage("view/Cart" + EXT, {
             accountForm: accountForm,
             cartForm: cartForm,
-            fmt: fmt,
+            fmt: formatter,
             cartItems: cartItems,
             label: "Shopping Cart"
     });
@@ -150,7 +148,7 @@ function removeItemFromCart() {
         cartItems.push(cartItem);
     }
     cocoon.sendPage("view/Cart" + EXT, {
-            fmt: fmt,
+            fmt: formatter,
             accountForm: accountForm,
             cartForm: cartForm,
             cartItems: cartItems,
@@ -163,12 +161,12 @@ function updateCartQuantities() {
     for (var i in cartForm.cart.cartItems) {
         var cartItem = cartForm.cart.cartItems[i];
         var itemId = cartItem.item.itemId;
-        var quantity = new java.lang.Double(cocoon.request.get(itemId)).intValue();
+        var quantity = parseInt(cocoon.request.get(itemId));
         cartItem.updateQuantity(quantity);
         cartItems.push(cartItem);
     }
     cocoon.sendPage("view/Cart" + EXT, {
-            fmt: fmt,
+            fmt: formatter,
             accountForm: accountForm,
             cartForm:cartForm,
             cartItems: cartItems,
@@ -186,7 +184,7 @@ function addItemToCart() {
         cartItems.push(cartItem);
     }
     cocoon.sendPage("view/Cart" + EXT, {
-            fmt: fmt,
+            fmt: formatter,
             accountForm: accountForm,
             cartForm: cartForm,
             cartItems: cartItems,
@@ -199,41 +197,39 @@ function addItemToCart() {
 function viewCategory() {
     var categoryId = cocoon.request.get("categoryId");
     var category = getPetStore().getCategory(categoryId);
-    var skipResults = 0;
     var maxResults = MAX_RESULTS;
+    /* page local variable to keep track of pagination */
+    var local = cocoon.createPageLocal();
+    local.skipResults = 0;
     while (true) {
         var productList =
             getPetStore().getProductListByCategory(categoryId,
-                                                    skipResults,
-                                                    maxResults);
-        var lastPage = !productList.isLimitedByMaxRows;
-        var rowCount = productList.rowCount;
-        cocoon.sendPageAndWait("view/Category" + EXT, {
-                accountForm: accountForm,
-                productList: productList.rows,
-                category: category,
-                firstPage: skipResults == 0,
-                lastPage: lastPage
-        });
-
-        catch (break) {
-            print("zapping productList");
-            productList = null;
-        }
-
-        catch (continue) {
-            print("returning from continuation");
-            print("productList="+productList);
-        }
-
+                                                   local.skipResults,
+                                                   maxResults);
+        local.lastPage = !productList.isLimitedByMaxRows;
+        local.rowCount = productList.rowCount;
+        var contextData = {
+            accountForm: accountForm,
+            productList: productList.rows,
+            category: category,
+            firstPage: local.skipResults == 0,
+            lastPage: local.lastPage
+        };
+        cocoon.sendPageAndWait("view/Category" + EXT, 
+                               contextData, 
+                               function () {
+                                   /* release contextData and productList */
+                                   contextData = null;
+                                   productList = null;
+                               });
         var page = cocoon.request.get("page");
         if (page == "previous") {
-            if (skipResults != 0) {
-                skipResults -= maxResults;
+            if (local.skipResults != 0) {
+                local.skipResults -= maxResults;
             }
         } else if (page == "next") {
-            if (!lastPage) {
-                skipResults += rowCount;
+            if (!local.lastPage) {
+                local.skipResults += local.rowCount;
             }
         }
     }
@@ -244,30 +240,39 @@ function viewCategory() {
 function viewProduct() {
     var productId = cocoon.request.get("productId");
     var product = getPetStore().getProduct(productId);
-    var skipResults = 0;
     var maxResults = MAX_RESULTS;
-
+    /* page local variable to handle pagination */
+    var local = cocoon.createPageLocal();
+    local.skipResults = 0;
     while (true) {
         var itemList =
             getPetStore().getItemListByProduct(productId,
-                                               skipResults,
+                                               local.skipResults,
                                                maxResults);
-        cocoon.sendPageAndWait("view/Product" + EXT, {
-                        accountForm: accountForm,
-                        fmt: fmt,
-                        product: product,
-                        firstPage: skipResults == 0,
-                        lastPage: !itemList.isLimitedByMaxRows,
-                        itemList: itemList.rows
-        });
+        local.lastPage = !itemList.isLimitedByMaxRows;
+        var contextData = {
+            accountForm: accountForm,
+            fmt: formatter,
+            product: product,
+            firstPage: local.skipResults == 0,
+            lastPage: local.lastPage,
+            itemList: itemList.rows
+        };
+        cocoon.sendPageAndWait("view/Product" + EXT, 
+                               contextData,
+                               function() {
+                                   /* release contextData and itemList */
+                                   contextData = null;
+                                   itemList = null;
+                               });
         var page = cocoon.request.get("page");
         if (page == "previous") {
-            if (skipResults != 0) {
-                skipResults -= maxResults;
+            if (local.skipResults != 0) {
+                local.skipResults -= maxResults;
             }
         } else if (page == "next") {
-            if (!itemList.isLimitedByMaxRows) {
-                skipResults += itemList.rowCount;
+            if (!local.lastPage) {
+                local.skipResults += itemList.rowCount;
             }
         }
     }
@@ -284,7 +289,7 @@ function viewItem() {
              item: item,
              quantity: getPetStore().getItemRowCountByProduct(item.productId),
              product: item.product,
-             fmt: fmt
+             fmt: formatter
     });
 }
 
@@ -371,23 +376,22 @@ function editAccountData() {
     model.banneropt = accountForm.account.banneropt;
 
     editAccountDataForm.showForm("view/editAccountForm.cforms");
-    while ((model.changePwdOption == true) && ((model.password != model.retypepassword) || (model.password==null)))     {
-    model.message = "Passwords don't match!";
-    editAccountDataForm.showForm("view/editAccountForm.cforms");
+    while (model.changePwdOption && (model.password != model.retypepassword || model.password == null)) {
+        model.message = "Passwords don't match!";
+        editAccountDataForm.showForm("view/editAccountForm.cforms");
     }
 
-    if (accountForm.signOn == false) {
-    var update = getPetStore().updateAccount(model);
+    if (!accountForm.signOn) {
+        var update = getPetStore().updateAccount(model);
     } else {
-    var insert = getPetStore().insertAccount(model);
-    accountForm.signOn = false;
+        var insert = getPetStore().insertAccount(model);
+        accountForm.signOn = false;
     }
 
-    if (model.changePwdOption == true) {
+    if (model.changePwdOption) {
         var chPwd = getPetStore().updateSignon(accountForm.username, model.password);
         accountForm.password = model.password;
     }
-
     accountForm.account = getPetStore().getAccount(accountForm.username, accountForm.password);
 }
 
@@ -402,8 +406,8 @@ function newAccountData() {
 
     newAccountDataForm.showForm("view/newAccountForm.cforms");
     while (getPetStore().testDuplicateLogin(model.username) > 0) {
-    model.message = "Username already in use. Please choose another username.";
-    newAccountDataForm.showForm("view/newAccountForm.cforms");
+        model.message = "Username already in use. Please choose another username.";
+        newAccountDataForm.showForm("view/newAccountForm.cforms");
     }
     var insertNewUser = getPetStore().insertNewUser(model);
     print("insertNewUser: "+insertNewUser);
@@ -431,35 +435,44 @@ function searchProducts() {
         });
         return;
     }
-    var skipSearchResults = 0;
+    /* page local variable to manage pagination */
+    var local = cocoon.createPageLocal();
+    local.skipSearchResults = 0;
     var maxSearchResults = 3;
     while (true) {
         var result =
-            getPetStore().searchProductList(keyword, skipSearchResults,
+            getPetStore().searchProductList(keyword, 
+                                            local.skipSearchResults,
                                             maxSearchResults);
-        var lastPage = !result.isLimitedByMaxRows;
-        var rowCount = result.rowCount;
-        cocoon.sendPageAndWait("view/SearchProducts" + EXT, {
-                        accountForm: accountForm,
-                        searchResultsProductList: result.rows,
-                        firstPage: skipSearchResults == 0,
-                        lastPage: lastPage
-        });
+        local.lastPage = !result.isLimitedByMaxRows;
+        local.rowCount = result.rowCount;
+        var contextData = {
+            accountForm: accountForm,
+            searchResultsProductList: result.rows,
+            firstPage: local.skipSearchResults == 0,
+            lastPage: local.lastPage
+        };
+        cocoon.sendPageAndWait("view/SearchProducts" + EXT, 
+                               contextData, 
+                               function() {
+                                   /* release contextData and result */
+                                   contextData = null;
+                                   result = null;
+                               });
         var page = cocoon.request.get("page");
         if (page == "previous") {
-            if (skipSearchResults != 0) {
-                skipSearchResults -= maxSearchResults;
+            if (local.skipSearchResults != 0) {
+                local.skipSearchResults -= maxSearchResults;
             }
         } else if (page == "next") {
-            if (!lastPage) {
-                skipSearchResults += rowCount;
+            if (!local.lastPage) {
+                local.skipSearchResults += local.rowCount;
             }
         }
     }
 }
 
 function billingForm(order) {
-
     var billingForm = new Form("view/forms/newOrderForm_d.xml");
     var model = billingForm.getModel();
     model.cardType = order.cardType;
@@ -479,20 +492,18 @@ function billingForm(order) {
 }
 
 function shippingForm(order) {
-        var shippingForm = new Form("view/forms/newShippingForm_d.xml");
-        var model = shippingForm.getModel();
-        model.shipToFirstName = order.shipToFirstName;
-        model.shipToLastName = order.shipToLastName;
-        model.shipAddress1 = order.shipAddress1;
-        model.shipAddress2 = order.shipAddress2;
-        model.shipCity= order.shipCity;
-        model.shipState= order.shipState;
-        model.shipZip= order.shipZip;
-        model.shipCountry= order.shipCountry;
-        shippingForm.showForm("view/newShippingForm.cforms");
-        return model;
-
-
+    var shippingForm = new Form("view/forms/newShippingForm_d.xml");
+    var model = shippingForm.getModel();
+    model.shipToFirstName = order.shipToFirstName;
+    model.shipToLastName = order.shipToLastName;
+    model.shipAddress1 = order.shipAddress1;
+    model.shipAddress2 = order.shipAddress2;
+    model.shipCity= order.shipCity;
+    model.shipState= order.shipState;
+    model.shipZip= order.shipZip;
+    model.shipCountry= order.shipCountry;
+    shippingForm.showForm("view/newShippingForm.cforms");
+    return model;
 }
 
 // Checkout
@@ -506,7 +517,7 @@ function checkout() {
     cocoon.sendPageAndWait("view/Cart" + EXT, {
                     accountForm: accountForm,
                     cartForm: cartForm,
-                    fmt: fmt,
+                    fmt: formatter,
                     cartItems: cartItems,
                     label: "Checkout Summary"
     });
@@ -516,7 +527,7 @@ function checkout() {
     var orderForm = new OrderForm();
     orderForm.initOrder(accountForm, cartForm);
 
-var model = billingForm(orderForm.order);
+    var model = billingForm(orderForm.order);
     orderForm.order.billToFirstName = model.billToFirstName;
     orderForm.order.billToLastName = model.billToLastName;
     orderForm.order.billAddress1 = model.billAddress1;
@@ -530,7 +541,7 @@ var model = billingForm(orderForm.order);
     orderForm.order.expiryDate = model.expiryDate;
     orderForm.shippingAddressRequired = model.shippingAddressRequired;
     if (orderForm.shippingAddressRequired == true) {
-        var model = shippingForm(orderForm.order);
+        model = shippingForm(orderForm.order);
         orderForm.order.shipToFirstName = model.shipToFirstName;
         orderForm.order.shipToLastName = model.shipToLastName;
         orderForm.order.shipAddress1 = model.shipAddress1;
@@ -540,15 +551,16 @@ var model = billingForm(orderForm.order);
         orderForm.order.shipZip = model.shipZip;
         orderForm.order.shipCountry = model.shipCountry;
     }
-
+    
     cocoon.sendPageAndWait("view/ConfirmOrder" + EXT,
                     {accountForm: accountForm,
                     order: orderForm.order,
-                    fmt: fmt});
+                    fmt: formatter});
 
-    orderForm.confirmed = eval(cocoon.request.getParameter("confirmed"));
+    orderForm.confirmed = 
+        cocoon.request.getParameter("confirmed") == "true";
 
-    if ((cartForm.cart.numberOfItems > 0) && (orderForm.confirmed == true)) {
+    if (cartForm.cart.numberOfItems > 0 && orderForm.confirmed) {
         var lastOID = getPetStore().insertOrder(orderForm.order, accountForm.username);
         cartForm = new CartForm();
 //        cocoon.sendPage("viewOrder.do?orderId=" + lastOID);
@@ -563,25 +575,25 @@ function listOrders() {
     var orderList = getPetStore().getOrderList(accountForm.username);
     cocoon.sendPage("view/ListOrders" + EXT, {
             accountForm: accountForm,
-            fmt: fmt,
+            fmt: formatter,
             orderList: orderList
     });
 }
 
 function viewOrder(lastOID) {
-	var orderId;
-	var message;
-	if (lastOID != null) {
-		orderId = lastOID;
-		message = "Thank you, your order has been submitted.";
-	} else {
-		orderId = cocoon.request.getParameter("orderId");
-	}
+    var orderId;
+    var message;
+    if (lastOID != null) {
+        orderId = lastOID;
+        message = "Thank you, your order has been submitted.";
+    } else {
+        orderId = cocoon.request.getParameter("orderId");
+    }
     var archivedOrder = getPetStore().getOrder(orderId, accountForm.username);
     var lineItemList = getPetStore().getLineItems(orderId);
     cocoon.sendPage("view/ViewOrder" + EXT, {
             accountForm: accountForm,
-            fmt: fmt,
+            fmt: formatter,
             message: message,
             archivedOrder: archivedOrder,
             lineItemList: lineItemList.rows,
