@@ -50,17 +50,17 @@
 */
 package org.apache.cocoon.transformation.helpers;
 
-import org.apache.xerces.dom.AttributeMap;
+import java.util.ArrayList;
+import java.util.Map;
+
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Consume elements start/end and characters events and reproduce them.
@@ -68,7 +68,7 @@ import java.util.Map;
  * WARNING: THIS CLASS DOES NOT WORK PROPERLY WITH NAMESPACES
  *
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
- * @version CVS $Id: MirrorRecorder.java,v 1.2 2003/11/23 17:06:05 vgritsenko Exp $
+ * @version CVS $Id: MirrorRecorder.java,v 1.3 2003/11/24 18:39:48 joerg Exp $
  */
 public class MirrorRecorder
     extends NOPRecorder
