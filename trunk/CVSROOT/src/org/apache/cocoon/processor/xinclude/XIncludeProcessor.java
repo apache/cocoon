@@ -43,7 +43,7 @@ import org.apache.cocoon.Utils;
  * from my XInclude filter for cocoon2.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version CVS $Revision: 1.2 $ $Date: 2000-05-09 05:48:44 $ $Author: balld $
+ * @version CVS $Revision: 1.3 $ $Date: 2000-05-09 05:49:49 $ $Author: balld $
  */
 public class XIncludeProcessor extends AbstractActor implements Processor, Status {
 
@@ -260,7 +260,6 @@ class XIncludeProcessorWorker {
 				for (int i=0; i<length; i++) {
 					result_fragment.appendChild(document.importNode(list.item(i),true));
 				}
-				result_fragment.appendChild(document.importNode(included_document.getDocumentElement(),true));
 			} else {
 				result_fragment.appendChild(document.importNode(included_document.getDocumentElement(),true));
 			}
