@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.53 2001-03-26 20:30:26 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.54 2001-03-26 20:30:49 balld Exp $-->
 <!--
 
  ============================================================================
@@ -53,7 +53,7 @@
 
 <xsl:stylesheet version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+  xmlns:xsp="http://apache.org/xsp"
   xmlns:esql="http://apache.org/cocoon/SQL/v2"
   xmlns:xspdoc="http://apache.org/cocoon/XSPDoc/v1"
 >
