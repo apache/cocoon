@@ -83,7 +83,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.21 2004/06/29 15:07:14 joerg Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.22 2004/06/30 21:04:08 pier Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 
@@ -123,6 +123,8 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
         private SourceValidity validity;
         /** Source content cached as DOM Document */
         private Document document;
+        /** Remember who created us (and who's caching us) */
+        private XMLFileModule instance;
 
         /**
          * Creates a new <code>DocumentHelper</code> instance.
@@ -131,10 +133,11 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
          * @param cache a <code>boolean</code> value, whether this source should be kept in memory.
          * @param src a <code>String</code> value containing the URI
          */
-        public DocumentHelper(boolean reload, boolean cache, String src) {
+        public DocumentHelper(boolean reload, boolean cache, String src, XMLFileModule instance) {
             this.reloadable = reload;
             this.cacheable = cache;
             this.uri = src;
+            this.instance = instance;
             // defer loading of the document
         }
 
@@ -176,6 +179,17 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
                             }
                             this.validity = newValidity;
                             this.document = SourceUtil.toDOM(src);
+
+                            /*
+                             * Clear the cache, otherwise reloads won't do much.
+                             *
+                             * FIXME (pf): caches should be held in the DocumentHelper
+                             *             instance itself, clearing global cache will
+                             *             clear everything for each configured document.
+                             *             (this is a quick fix, no time to do the whole)
+                             */
+                            this.instance.expressionCache.clear();
+                            this.instance.expressionValuesCache.clear();
                         }
                     }
                 }
@@ -266,7 +280,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
             // by assigning the source uri to this.src the last one will be the default
             // OTOH caching / reload parameters can be specified in one central place
             // if multiple file tags are used.
-            this.documents.put(files[i], new DocumentHelper(reload, cache, this.src));
+            this.documents.put(files[i], new DocumentHelper(reload, cache, this.src, this));
         }
 
         // init caches
@@ -336,7 +350,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Composable, T
                 }
 
             }
-            this.documents.put(src, new DocumentHelper(reload, cache, src));
+            this.documents.put(src, new DocumentHelper(reload, cache, src, this));
         }
 
         try {
