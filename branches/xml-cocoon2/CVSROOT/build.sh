@@ -15,9 +15,9 @@ fi
 ANT_HOME=./lib
 ANT=./lib/ant.jar
 JAVAC=$JAVA_HOME/lib/tools.jar
-XERCES=./lib/xerces_1_0_3.jar
+XERCES=./lib/xerces_1_1_1.jar
 XALAN=./lib/xalan_1_0_1.jar
-FOP=./lib/fop_0_12_1.jar
+FOP=./lib/fop_0_13_0.jar
 SVG=./lib/svgv_0_8.jar
 JS=./lib/js.jar
 JSTYLE=./lib/jstyle.jar

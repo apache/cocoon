@@ -9,9 +9,9 @@ echo -------------------
 set ANT_HOME=.\lib
 set ANT=.\lib\ant.jar
 set JAVAC=%JAVA_HOME%\lib\tools.jar
-set XERCES=.\lib\xerces_1_0_3.jar
+set XERCES=.\lib\xerces_1_1_1.jar
 set XALAN=.\lib\xalan_1_0_1.jar
-set FOP=.\lib\fop_0_12_1.jar
+set FOP=.\lib\fop_0_13_0.jar
 set SVG=.\lib\svgv_0_8.jar
 set JS=./lib/js.jar
 set JSTYLE=./lib/jstyle.jar
