@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 
 /**
  * Test case for Woody's DynamicSelectionList datatype.
- * @version CVS $Id: DynamicSelectionListTestCase.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: DynamicSelectionListTestCase.java,v 1.3 2004/03/10 09:13:22 stephan Exp $
  */
 public class DynamicSelectionListTestCase extends ExcaliburTestCase {
 
@@ -83,7 +83,7 @@ public class DynamicSelectionListTestCase extends ExcaliburTestCase {
     public void testGenerateSaxFragment() throws Exception {
         DOMBuilder dest = new DOMBuilder();
         ResourceSource source = 
-            new ResourceSource("resource://org/apache/cocoon/woody/datatype/DynamicSelectionListTestCase.source.xml");
+            new ResourceSource("resource://org/apache/cocoon/forms/datatype/DynamicSelectionListTestCase.source.xml");
         Document sourceDoc = parser.parse(source.getInputStream());
         Element datatypeElement = (Element) sourceDoc.getElementsByTagNameNS(Constants.DEFINITION_NS, "convertor").item(0);
         Datatype datatype = datatypeManager.createDatatype(datatypeElement, false);
@@ -91,7 +91,7 @@ public class DynamicSelectionListTestCase extends ExcaliburTestCase {
             new DynamicSelectionList(datatype, null, serviceManager);
         list.generateSaxFragment(dest, Locale.ENGLISH, source);
         ResourceSource expectedSource =
-            new ResourceSource("resource://org/apache/cocoon/woody/datatype/DynamicSelectionListTestCase.dest.xml");
+            new ResourceSource("resource://org/apache/cocoon/forms/datatype/DynamicSelectionListTestCase.dest.xml");
         Document expected = parser.parse(expectedSource.getInputStream());
         assertEqual("Test if output is what is expected",
                 expected, dest.getDocument());

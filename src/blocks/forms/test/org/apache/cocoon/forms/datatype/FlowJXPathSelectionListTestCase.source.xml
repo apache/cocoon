@@ -17,11 +17,11 @@
 
 <!--+
     |   Source file for FlowModelSelectionList test case.
-    |   $Id: FlowJXPathSelectionListTestCase.source.xml,v 1.1 2004/03/09 13:03:10 cziegeler Exp $
+    |   $Id: FlowJXPathSelectionListTestCase.source.xml,v 1.2 2004/03/10 09:13:22 stephan Exp $
     +-->
 
-<wd:field xmlns:wd="http://apache.org/cocoon/woody/definition/1.0"
+<fd:field xmlns:fd="http://apache.org/cocoon/forms/1.0#definition"
   id="sample" required="false">
-  <wd:datatype base="string"/>
-  <wd:selection-list model="beans"/>
-</wd:field>
+  <fd:datatype base="string"/>
+  <fd:selection-list model="beans"/>
+</fd:field>

@@ -15,12 +15,12 @@
   limitations under the License.
 -->
 
-<wd:field id="sex" xmlns:wd="http://apache.org/cocoon/woody/definition/1.0">
-  <wd:label>Sex</wd:label>
-  <wd:datatype base="enum">
-  	<wd:convertor type="enum">
-      <wd:enum>org.apache.cocoon.woody.datatype.Sex</wd:enum>
-  	</wd:convertor>
-  </wd:datatype>
-  <wd:selection-list type="enum" class="org.apache.cocoon.woody.datatype.Sex"/>
-</wd:field>
+<fd:field id="sex" xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+  <fd:label>Sex</fd:label>
+  <fd:datatype base="enum">
+  	<fd:convertor type="enum">
+      <fd:enum>org.apache.cocoon.forms.datatype.Sex</fd:enum>
+  	</fd:convertor>
+  </fd:datatype>
+  <fd:selection-list type="enum" class="org.apache.cocoon.forms.datatype.Sex"/>
+</fd:field>

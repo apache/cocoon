@@ -17,15 +17,15 @@
 
 <!--+
     |   Source file for DynamicSelectionList test case.
-    |   $Id: DynamicSelectionListTestCase.source.xml,v 1.1 2004/03/09 13:03:10 cziegeler Exp $
+    |   $Id: DynamicSelectionListTestCase.source.xml,v 1.2 2004/03/10 09:13:22 stephan Exp $
     +-->
 
-<wd:selection-list xmlns:wd="http://apache.org/cocoon/woody/definition/1.0">
-  <wd:convertor type="formatting" base="date">
-    <wd:patterns>
-      <wd:pattern>yyyy-MM-dd</wd:pattern>
-    </wd:patterns>
-  </wd:convertor>
-  <wd:item value="2003-10-11"/>
-  <wd:item value="1963-02-04"><wd:label>My birthdate</wd:label></wd:item>
-</wd:selection-list>
+<fd:selection-list xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+  <fd:convertor type="formatting" base="date">
+    <fd:patterns>
+      <fd:pattern>yyyy-MM-dd</fd:pattern>
+    </fd:patterns>
+  </fd:convertor>
+  <fd:item value="2003-10-11"/>
+  <fd:item value="1963-02-04"><fd:label>My birthdate</fd:label></fd:item>
+</fd:selection-list>

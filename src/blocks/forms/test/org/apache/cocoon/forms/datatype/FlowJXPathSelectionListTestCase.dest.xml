@@ -3,7 +3,7 @@
   Copyright 1999-2004 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
+  you may not use this file except in compliance fith the License.
   You may obtain a copy of the License at
 
       http://www.apache.org/licenses/LICENSE-2.0
@@ -14,4 +14,4 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<wi:selection-list xmlns:wi="http://apache.org/cocoon/woody/instance/1.0"><wi:item value="1"><wi:label>One</wi:label></wi:item><wi:item value="2"><wi:label>Two</wi:label></wi:item></wi:selection-list>
+<fi:selection-list xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"><fi:item value="1"><fi:label>One</fi:label></fi:item><fi:item value="2"><fi:label>Two</fi:label></fi:item></fi:selection-list>
