@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<xconf xpath="/cocoon" unless="component[role='org.apache.cocoon.components.source.impl.Refresher/Delay']">
+
+  <!--+
+      | A Refresher is a component that is used by the CachingSource protocol.
+      | It is responsible for updating the cached contents of sources that are
+      | registered with it by the protocol.
+      | The DelayRefresher is an implementation that periodically updates the
+      | sources.
+      | It recognizes the following parameters:
+      | - 'write-interval' (0). The Refresher can persist its list of registered
+      |   sources to update periodically. This parameter specifies how often
+      |   it should write this list to file. Specifying a value of 0 (the default)
+      |   means that target configurations will not be persisted at all.
+      | - 'write-file' (refresher-targets.xml). Specifying a different value 
+      |   than the default for this parameter only makes sense if you configure
+      |   more than one DelayRefreshers. It represents the file name, relative to
+      |   the cocoon working directory of the file the refresher writes its list
+      |   of registered target configurations to.
+      +-->
+  <component role="org.apache.cocoon.components.source.impl.Refresher/Delay"
+             class="org.apache.cocoon.components.source.impl.DelayRefresher"
+             logger="core.refresher.delay">
+    <!--
+    <parameter name="write-interval" value="0"/>
+    <parameter name="write-file" value="refresher-targets.xml"/>
+    -->
+  </component>
+  
+</xconf>

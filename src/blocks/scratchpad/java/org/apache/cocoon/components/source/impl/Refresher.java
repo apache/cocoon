@@ -15,45 +15,37 @@
  */
 package org.apache.cocoon.components.source.impl;
 
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.caching.SimpleCacheKey;
 import org.apache.excalibur.source.SourceException;
 
 /**
- * The refresher is a component that updates uri and stores
- * there response in a cache.
- *  
+ * A Refresher is a component that updates the cached contents
+ * of a Source.
+ * <p>
+ * Implementations can for instance trigger updates based on a timeout value or
+ * in response to an external event.
+ * </p>
+ * 
  * @since 2.1.1
- * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Refresher.java,v 1.3 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: Refresher.java,v 1.4 2004/03/22 17:38:25 unico Exp $
  */
 public interface Refresher {
     
     String ROLE = Refresher.class.getName();
 
     /**
-     * Refresh the content now.
+     * Add a uri to the Refresher.
      * 
-     * @param cacheKey The key used to cache the content
-     * @param uri      The uri to cache, every valid protocol can be used, except the Cocoon protocol!
-     * @param expires  The time in seconds the cached content is valid
+     * @param cacheKey  The key used to cache the content
+     * @param uri       The uri to cache, every valid protocol can be used (except the Cocoon protocol!)
      * @param cacheRole The role of the cache component to store the content
+     * @param params    Additional parameters such as a timout value
      */
     void refresh(SimpleCacheKey cacheKey,
                  String uri,
-                 long   expires,
-                 String cacheRole)
+                 String cacheRole,
+                 Parameters params)
     throws SourceException;
 
-    /**
-     * Refresh the content periodically in the background.
-     * 
-     * @param cacheKey The key used to cache the content
-     * @param uri      The uri to cache, every valid protocol can be used, except the Cocoon protocol!
-     * @param expires  The time in seconds the cached content is valid
-     * @param cacheRole The role of the cache component to store the content
-     */
-    void refreshPeriodically(SimpleCacheKey cacheKey,
-                             String uri,
-                             long   expires,
-                             String cacheRole);
 }
