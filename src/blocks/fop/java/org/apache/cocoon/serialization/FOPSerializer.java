@@ -80,7 +80,7 @@ import java.net.MalformedURLException;
 /**
  * @author ?
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: FOPSerializer.java,v 1.2 2003/03/12 09:35:36 cziegeler Exp $
+ * @version CVS $Id: FOPSerializer.java,v 1.3 2003/03/16 04:47:53 vgritsenko Exp $
  */
 public class FOPSerializer
 extends AbstractSerializer
@@ -169,6 +169,8 @@ implements Composable, Configurable, CacheableProcessingComponent {
         // Old syntax: Attribute src of element user-config contains file
         String configUrl = conf.getChild("user-config").getAttribute("src", null);
         if (configUrl != null) {
+            getLogger().warn("Attribute src of user-config element is deprecated. "
+                             + "Provide Cocoon URI as value of the element instead");
             try {
                 // VG: Old version of serializer supported only files
                 configUrl = new File(configUrl).toURL().toExternalForm();
