@@ -105,7 +105,7 @@ import org.apache.excalibur.source.URIAbsolutizer;
  * </tr>
  * </tbody></table>
  *  
- * @version CVS $Id: CachingSourceFactory.java,v 1.5 2004/03/22 17:38:25 unico Exp $
+ * @version CVS $Id: CachingSourceFactory.java,v 1.6 2004/03/23 12:47:22 unico Exp $
  * @since 2.1.1
  */
 public final class CachingSourceFactory extends AbstractLogEnabled
@@ -293,7 +293,7 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
         if (wrappedSource instanceof TraversableSource) {
             source = new TraversableCachingSource(scheme,
                                                   location,
-                                                  uri,
+                                                  (TraversableSource) wrappedSource,
                                                   cacheName,
                                                   expires,
                                                   parameters,
@@ -302,7 +302,7 @@ implements SourceFactory, URIAbsolutizer, Serviceable, Configurable, Disposable,
         else {
             source = new CachingSource(scheme,
                                        location,
-                                       uri,
+                                       wrappedSource,
                                        cacheName,
                                        expires,
                                        parameters,
