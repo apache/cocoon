@@ -106,15 +106,13 @@ implements Serviceable, Disposable, Configurable, Component, ThreadSafe {
                 this.getLogger().debug("loading class" + className);
             }
     
-            Repository repo = (Repository)repoClass.newInstance();
+            Repository repo = (Repository) repoClass.newInstance();
             LifecycleHelper.setupComponent(repo,
                                            this.getLogger(),
                                            null,
                                            this.manager,
-                                           null,
                                            repoConfiguration,
                                            true);
-        
             repo.setCredentials(credentials);
             return repo;
 
