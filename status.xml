@@ -203,6 +203,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add" fixes-bug="30688" due-to="John Lianoglou" due-to-email="john@arachnedesign.net">
+     Mail block: Add ability to specify mime-type for email body text parameter in the mail transformer.
+   </action>
+   <action dev="CZ" type="fix">
+     Fix potential memory leaks in CForms/Woody Template Transformer and JXTemplateGenerator.
+   </action>
    <action dev="UH" type="add">
      Enhanced JMS support by adding a JMSConnectionManager component to the JMS block.
      This component replaces the JMSConnection component which only supported 
