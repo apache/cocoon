@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -93,7 +93,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.11 2004/03/17 11:50:21 cziegeler Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.12 2004/06/18 13:54:00 vgritsenko Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -173,16 +173,16 @@ implements Serviceable, Configurable, Recyclable {
     private List namespaces = new ArrayList(5);
     /** The current prefix for our namespace */
     private String ourPrefix;
-    
+
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.configuration.Configurable#configure(org.apache.avalon.framework.configuration.Configuration)
+     * @see Configurable#configure(Configuration)
      */
     public void configure(Configuration configuration)
     throws ConfigurationException {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
     public void setup(SourceResolver resolver,
                       Map            objectModel,
@@ -191,11 +191,11 @@ implements Serviceable, Configurable, Recyclable {
     throws ProcessingException,
            SAXException,
            IOException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN setup resolver="+resolver+
-                                   ", objectModel="+objectModel+
-                                   ", src="+src+
-                                   ", parameters="+par);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Setup resolver=" + resolver +
+                              ", objectModel=" + objectModel +
+                              ", src=" + src +
+                              ", parameters=" + par);
         }
 
         if (this.defaultNamespaceURI == null) {
@@ -213,16 +213,12 @@ implements Serviceable, Configurable, Recyclable {
 
         // get the current namespace
         this.namespaceURI = this.parameters.getParameter("namespaceURI",
-                    this.defaultNamespaceURI);
+                                                         this.defaultNamespaceURI);
 
         this.ignoreHooksCount = 0;
         this.ignoreEventsCount = 0;
         this.ignoreWhitespaces = true;
         this.ignoreEmptyCharacters = false;
-
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END setup");
-        }
     }
 
     /* (non-Javadoc)
@@ -244,7 +240,7 @@ implements Serviceable, Configurable, Recyclable {
     }
 
     /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     * @see org.apache.avalon.framework.service.Serviceable#service(ServiceManager)
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
@@ -253,11 +249,12 @@ implements Serviceable, Configurable, Recyclable {
     /**
      *  Process the SAX event. A new document is processed. The hook (method)
      *  <code>setupTransforming()</code> is invoked.
+     *
      *  @see org.xml.sax.ContentHandler#startDocument()
      */
     public void startDocument()
     throws SAXException {
-        if ( !this.isInitialized ) {
+        if (!this.isInitialized) {
             try {
                 this.setupTransforming();
             } catch (ProcessingException local) {
@@ -267,7 +264,9 @@ implements Serviceable, Configurable, Recyclable {
             }
             this.isInitialized = true;
         }
-        if (this.ignoreEventsCount == 0) super.startDocument();
+        if (this.ignoreEventsCount == 0) {
+            super.startDocument();
+        }
     }
 
     /**
@@ -276,7 +275,9 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void endDocument()
     throws SAXException {
-        if (this.ignoreEventsCount == 0) super.endDocument();
+        if (this.ignoreEventsCount == 0) {
+            super.endDocument();
+        }
     }
 
     /**
@@ -303,7 +304,9 @@ implements Serviceable, Configurable, Recyclable {
                 throw new SAXException("Exception occured during processing: " + ioe, ioe);
             }
         } else {
-            if (ignoreEventsCount == 0) super.startElement(uri, name, raw, attr);
+            if (ignoreEventsCount == 0) {
+                super.startElement(uri, name, raw, attr);
+            }
         }
     }
 
@@ -322,14 +325,15 @@ implements Serviceable, Configurable, Recyclable {
             // this is our namespace:
             try {
                 this.endTransformingElement(uri, name, raw);
-            } catch (ProcessingException pException) {
-                throw new SAXException("ProcessingException: " + pException,
-                    pException);
+            } catch (ProcessingException e) {
+                throw new SAXException("ProcessingException: " + e, e);
             } catch (IOException ioe) {
                 throw new SAXException("Exception occured during processing: " + ioe, ioe);
             }
         } else {
-            if (ignoreEventsCount == 0) super.endElement(uri, name, raw);
+            if (ignoreEventsCount == 0) {
+                super.endElement(uri, name, raw);
+            }
         }
     }
 
@@ -355,7 +359,9 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void ignorableWhitespace(char[] p0, int p1, int p2)
     throws SAXException {
-        if (ignoreWhitespaces == false && ignoreEventsCount == 0) super.ignorableWhitespace(p0, p1, p2);
+        if (ignoreWhitespaces == false && ignoreEventsCount == 0) {
+            super.ignorableWhitespace(p0, p1, p2);
+        }
     }
 
     /*
@@ -424,23 +430,19 @@ implements Serviceable, Configurable, Recyclable {
     }
 
     /**
-     * Start recording of text.
-     * All events are not forwarded and the characters events
-     * are merged to a string
+     * Start recording of a text.
+     * No events forwarded, and all characters events
+     * are collected into a string.
      */
     public void startTextRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN startTextRecording");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Start text recording");
         }
         XMLConsumer recorder = new TextRecorder();
-        this.addRecorder(recorder);
+        addRecorder(recorder);
 
-        this.sendStartPrefixMapping();
-
-        if (this.getLogger().isDebugEnabled()) {
-           this.getLogger().debug("END startTextRecording");
-        }
+        sendStartPrefixMapping();
     }
 
     /**
@@ -449,17 +451,12 @@ implements Serviceable, Configurable, Recyclable {
      */
     public String endTextRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN endTextRecording");
-        }
-
-        this.sendEndPrefixMapping();
+        sendEndPrefixMapping();
 
         TextRecorder recorder = (TextRecorder)this.removeRecorder();
         String text = recorder.getText();
-
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END endTextRecording text="+text);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("End text recording. Text=" + text);
         }
         return text;
     }
@@ -473,14 +470,11 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startSerializedXMLRecording(Properties format)
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN startSerializedXMLRecording format="+format);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Start serialized XML recording. Format=" + format);
         }
-        this.stack.push((format == null ? XMLUtils.createPropertiesForXML(false) : format));
-        this.startRecording();
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END startSerializedXMLRecording");
-        }
+        this.stack.push((format == null? XMLUtils.createPropertiesForXML(false): format));
+        startRecording();
     }
 
     /**
@@ -490,13 +484,10 @@ implements Serviceable, Configurable, Recyclable {
      */
     public String endSerializedXMLRecording()
     throws SAXException, ProcessingException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN endSerializedXMLRecording");
-        }
-        DocumentFragment fragment = this.endRecording();
+        DocumentFragment fragment = endRecording();
         String text = XMLUtils.serializeNode(fragment, (Properties)this.stack.pop());
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END endSerializedXMLRecording xml="+text);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("End serialized XML recording. XML=" + text);
         }
         return text;
     }
@@ -510,17 +501,13 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startParametersRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN startParametersRecording");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Start parameters recording");
         }
         XMLConsumer recorder = new ParametersRecorder();
-        this.addRecorder(recorder);
+        addRecorder(recorder);
 
-        this.sendStartPrefixMapping();
-
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END startParametersRecording");
-        }
+        sendStartPrefixMapping();
     }
 
     /**
@@ -532,17 +519,14 @@ implements Serviceable, Configurable, Recyclable {
      */
     public SourceParameters endParametersRecording(Parameters source)
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN endParametersRecording source="+source);
-        }
-        this.sendEndPrefixMapping();
-        ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
-        SourceParameters pars = recorder.getParameters(source);
+        sendEndPrefixMapping();
 
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END endParametersRecording parameters="+pars);
+        ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
+        SourceParameters parameters = recorder.getParameters(source);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("End parameters recording. Parameters=" + parameters);
         }
-        return pars;
+        return parameters;
     }
 
     /**
@@ -554,17 +538,14 @@ implements Serviceable, Configurable, Recyclable {
      */
     public SourceParameters endParametersRecording(SourceParameters source)
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN endParametersRecording source="+source);
-        }
-        this.sendEndPrefixMapping();
-        ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
-        SourceParameters pars = recorder.getParameters(source);
+        sendEndPrefixMapping();
 
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END endParametersRecording parameters="+pars);
+        ParametersRecorder recorder = (ParametersRecorder)this.removeRecorder();
+        SourceParameters parameters = recorder.getParameters(source);
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("End parameters recording. Parameters=" + parameters);
         }
-        return pars;
+        return parameters;
     }
 
     /**
@@ -574,19 +555,15 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN startRecording");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("Start recording");
         }
         DOMBuilder builder = new DOMBuilder();
-        this.addRecorder(builder);
+        addRecorder(builder);
         builder.startDocument();
         builder.startElement("", "cocoon", "cocoon", new AttributesImpl());
 
-        this.sendStartPrefixMapping();
-
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END startRecording");
-        }
+        sendStartPrefixMapping();
     }
 
     /**
@@ -596,13 +573,9 @@ implements Serviceable, Configurable, Recyclable {
      */
     public DocumentFragment endRecording()
     throws SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN endRecording");
-        }
+        sendEndPrefixMapping();
 
-        this.sendEndPrefixMapping();
-
-        DOMBuilder builder = (DOMBuilder)this.removeRecorder();
+        DOMBuilder builder = (DOMBuilder)removeRecorder();
         builder.endElement("", "cocoon", "cocoon");
         builder.endDocument();
 
@@ -611,10 +584,9 @@ implements Serviceable, Configurable, Recyclable {
         final DocumentFragment recordedDocFrag = doc.createDocumentFragment();
         final Node root = doc.getDocumentElement();
         root.normalize();
-        Node child;
         boolean appendedNode = false;
         while (root.hasChildNodes() == true) {
-            child = root.getFirstChild();
+            Node child = root.getFirstChild();
             root.removeChild(child);
             // Leave out empty text nodes before any other node
             if (appendedNode == true
@@ -625,14 +597,14 @@ implements Serviceable, Configurable, Recyclable {
             }
         }
 
-        if (this.getLogger().isDebugEnabled()) {
+        if (getLogger().isDebugEnabled()) {
             Object serializedXML = null;
             try {
-                serializedXML = (recordedDocFrag == null ? "null" : XMLUtils.serializeNode(recordedDocFrag, XMLUtils.createPropertiesForXML(false)));
+                serializedXML = recordedDocFrag == null? "null": XMLUtils.serializeNode(recordedDocFrag);
             } catch (ProcessingException ignore) {
                 serializedXML = recordedDocFrag;
             }
-            this.getLogger().debug("END endRecording fragment=" + serializedXML);
+            getLogger().debug("End recording. Fragment=" + serializedXML);
         }
         return recordedDocFrag;
     }
@@ -649,16 +621,13 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void setupTransforming()
     throws IOException, ProcessingException, SAXException {
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("BEGIN setupTransforming");
+        if (getLogger().isDebugEnabled()) {
+            getLogger().debug("setupTransforming");
         }
         this.stack.clear();
         this.recorderStack.clear();
         this.ignoreWhitespaces = true;
         this.ignoreEmptyCharacters = false;
-        if (this.getLogger().isDebugEnabled()) {
-            this.getLogger().debug("END setupTransforming");
-        }
     }
 
     /**
@@ -674,13 +643,9 @@ implements Serviceable, Configurable, Recyclable {
                                          String raw,
                                          Attributes attr)
     throws ProcessingException, IOException, SAXException {
-        //if (this.getLogger().isDebugEnabled()) {
-        //    this.getLogger().debug("BEGIN startTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ", attr=" + attr + ")");
-        //}
-        if (this.ignoreEventsCount == 0) super.startElement(uri, name, raw, attr);
-        //if (this.getLogger().isDebugEnabled()) {
-        //    this.getLogger().debug("END startTransformingElement");
-        //}
+        if (this.ignoreEventsCount == 0) {
+            super.startElement(uri, name, raw, attr);
+        }
     }
 
     /**
@@ -694,13 +659,9 @@ implements Serviceable, Configurable, Recyclable {
                                        String name,
                                        String raw)
     throws ProcessingException, IOException, SAXException {
-        //if (this.getLogger().isDebugEnabled()) {
-        //    this.getLogger().debug("BEGIN endTransformingElement uri=" + uri + ", name=" + name + ", raw=" + raw + ")");
-        //}
-        if (this.ignoreEventsCount == 0) super.endElement(uri, name, raw);
-        //if (this.getLogger().isDebugEnabled()) {
-        //    this.getLogger().debug("END endTransformingElement");
-        //}
+        if (this.ignoreEventsCount == 0) {
+            super.endElement(uri, name, raw);
+        }
     }
 
     /**
@@ -736,7 +697,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendStartElementEventNS(String localname)
     throws SAXException {
-        this.startElement(this.namespaceURI, 
+        this.startElement(this.namespaceURI,
                           localname, this.ourPrefix+':' + localname, emptyAttributes);
     }
 
@@ -763,7 +724,7 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendStartElementEventNS(String localname, Attributes attr)
     throws SAXException {
-        this.startElement(this.namespaceURI, 
+        this.startElement(this.namespaceURI,
                           localname, this.ourPrefix+':' + localname, attr);
     }
 
@@ -811,19 +772,17 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void sendParametersEvents(SourceParameters pars)
     throws SAXException {
+
         if (pars != null) {
             Iterator names = pars.getParameterNames();
-            String currentName;
-            String currentValue;
-            Iterator values;
-            while (names.hasNext() == true) {
-                currentName = (String)names.next();
-                values = pars.getParameterValues(currentName);
-                while (values.hasNext() == true) {
-                    currentValue = (String)values.next();
-                    this.sendStartElementEvent(currentName);
-                    this.sendTextEvent(currentValue);
-                    this.sendEndElementEvent(currentName);
+            while (names.hasNext()) {
+                final String currentName = (String)names.next();
+                Iterator values = pars.getParameterValues(currentName);
+                while (values.hasNext()) {
+                    final String currentValue = (String)values.next();
+                    sendStartElementEvent(currentName);
+                    sendTextEvent(currentValue);
+                    sendEndElementEvent(currentName);
                 }
             }
         }
@@ -834,7 +793,9 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startEntity (String name)
     throws SAXException {
-        if (this.ignoreEventsCount == 0) super.startEntity(name);
+        if (this.ignoreEventsCount == 0) {
+            super.startEntity(name);
+        }
     }
 
     /**
@@ -842,7 +803,9 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void endEntity (String name)
     throws SAXException {
-        if (this.ignoreEventsCount == 0) super.endEntity(name);
+        if (this.ignoreEventsCount == 0) {
+            super.endEntity(name);
+        }
     }
 
     /**
@@ -850,11 +813,10 @@ implements Serviceable, Configurable, Recyclable {
      */
     protected void sendStartPrefixMapping()
     throws SAXException {
-        int i,l;
-        l = this.namespaces.size();
-        String[] prefixAndUri;
-        for(i=0; i<l; i++) {
-           prefixAndUri = (String[])this.namespaces.get(i);
+
+        final int l = this.namespaces.size();
+        for(int i = 0; i < l; i++) {
+           String[] prefixAndUri = (String[])this.namespaces.get(i);
            super.contentHandler.startPrefixMapping(prefixAndUri[0], prefixAndUri[1]);
         }
     }
@@ -864,11 +826,10 @@ implements Serviceable, Configurable, Recyclable {
      */
     protected void sendEndPrefixMapping()
     throws SAXException {
-        int i,l;
-        l = this.namespaces.size();
-        String[] prefixAndUri;
-        for(i=0; i<l; i++) {
-           prefixAndUri = (String[])this.namespaces.get(i);
+
+        final int l = this.namespaces.size();
+        for(int i=0; i<l; i++) {
+           String[] prefixAndUri = (String[])this.namespaces.get(i);
            super.contentHandler.endPrefixMapping(prefixAndUri[0]);
         }
     }
@@ -877,7 +838,9 @@ implements Serviceable, Configurable, Recyclable {
      * SAX Event handling
      */
     public void setDocumentLocator(Locator locator) {
-        if (this.ignoreEventsCount == 0) super.setDocumentLocator(locator);
+        if (this.ignoreEventsCount == 0) {
+            super.setDocumentLocator(locator);
+        }
     }
 
     /**
@@ -885,11 +848,15 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startPrefixMapping(String prefix, String uri)
     throws SAXException {
-        if (prefix != null) this.namespaces.add(new String[] {prefix, uri});
-        if ( this.namespaceURI != null && this.namespaceURI.equals(uri)) {
+        if (prefix != null) {
+            this.namespaces.add(new String[] {prefix, uri});
+        }
+        if (this.namespaceURI != null && this.namespaceURI.equals(uri)) {
             this.ourPrefix = prefix;
         }
-        if (this.ignoreEventsCount == 0) super.startPrefixMapping(prefix, uri);
+        if (this.ignoreEventsCount == 0) {
+            super.startPrefixMapping(prefix, uri);
+        }
     }
 
     /**
@@ -897,14 +864,14 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void endPrefixMapping(String prefix)
     throws SAXException {
+
         if (prefix != null) {
             // search the namespace prefix
             boolean found = false;
             int l = this.namespaces.size();
             int i = l-1;
-            String currentPrefix;
             while (!found && i >= 0) {
-                currentPrefix = ((String[])this.namespaces.get(i))[0];
+                String currentPrefix = ((String[])this.namespaces.get(i))[0];
                 if (currentPrefix.equals(prefix)) {
                     found = true;
                 } else {
@@ -914,28 +881,30 @@ implements Serviceable, Configurable, Recyclable {
             if (!found) {
                 throw new SAXException("Namespace for prefix '"+ prefix + "' not found.");
             }
+
             this.namespaces.remove(i);
-            if ( prefix.equals(this.ourPrefix) ) {
+            if (prefix.equals(this.ourPrefix)) {
                 this.ourPrefix = null;
                 // now search if we have a different prefix for our namespace
                 found = false;
                 l = this.namespaces.size();
                 i = l-1;
-                String currentNS;
                 while (!found && i >= 0) {
-                    currentNS = ((String[])this.namespaces.get(i))[1];
+                    String currentNS = ((String[])this.namespaces.get(i))[1];
                     if (currentNS.equals(this.namespaceURI)) {
                         found = true;
                     } else {
                         i--;
                     }
                 }
-                if ( found ) {
+                if (found) {
                     this.ourPrefix = ((String[])this.namespaces.get(i))[0];
                 }
             }
         }
-        if (this.ignoreEventsCount == 0) super.endPrefixMapping(prefix);
+        if (this.ignoreEventsCount == 0) {
+            super.endPrefixMapping(prefix);
+        }
     }
 
     /* (non-Javadoc)
@@ -943,7 +912,9 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void processingInstruction(String target, String data)
     throws SAXException {
-        if (this.ignoreEventsCount == 0) super.processingInstruction(target, data);
+        if (this.ignoreEventsCount == 0) {
+            super.processingInstruction(target, data);
+        }
     }
 
     /* (non-Javadoc)
@@ -951,7 +922,9 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void skippedEntity(String name)
     throws SAXException {
-        if (this.ignoreEventsCount == 0) super.skippedEntity(name);
+        if (this.ignoreEventsCount == 0) {
+            super.skippedEntity(name);
+        }
     }
 
     /* (non-Javadoc)
@@ -959,28 +932,36 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void startDTD(String name, String public_id, String system_id)
     throws SAXException {
-        if (this.ignoreEventsCount == 0) super.startDTD(name, public_id, system_id);
+        if (this.ignoreEventsCount == 0) {
+            super.startDTD(name, public_id, system_id);
+        }
     }
 
     /* (non-Javadoc)
      * @see org.xml.sax.ext.LexicalHandler#endDTD()
      */
     public void endDTD() throws SAXException {
-        if (this.ignoreEventsCount == 0) super.endDTD();
+        if (this.ignoreEventsCount == 0) {
+            super.endDTD();
+        }
     }
 
     /* (non-Javadoc)
      * @see org.xml.sax.ext.LexicalHandler#startCDATA()
      */
     public void startCDATA() throws SAXException {
-        if (this.ignoreEventsCount == 0) super.startCDATA();
+        if (this.ignoreEventsCount == 0) {
+            super.startCDATA();
+        }
     }
 
     /* (non-Javadoc)
      * @see org.xml.sax.ext.LexicalHandler#endCDATA()
      */
     public void endCDATA() throws SAXException {
-        if (this.ignoreEventsCount == 0) super.endCDATA();
+        if (this.ignoreEventsCount == 0) {
+            super.endCDATA();
+        }
     }
 
     /* (non-Javadoc)
@@ -988,7 +969,8 @@ implements Serviceable, Configurable, Recyclable {
      */
     public void comment(char ary[], int start, int length)
     throws SAXException {
-        if (this.ignoreEventsCount == 0) super.comment(ary, start, length);
+        if (this.ignoreEventsCount == 0) {
+            super.comment(ary, start, length);
+        }
     }
-
 }
