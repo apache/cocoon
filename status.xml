@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.334 2004/05/24 11:15:40 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.335 2004/05/24 11:26:39 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -211,6 +211,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="CZ" type="update">
+     Remove deprecated XSLT Processor. Excalibur XMLUtils is used instead.
+   </action>
+   <action dev="CZ" type="update">
+     Remove deprecated Source handling. Excalibur Sourceresolve is used instead.
+   </action>
    <action dev="CZ" type="update">
      Remove deprecated getOutputStream() method from Environment.
    </action>

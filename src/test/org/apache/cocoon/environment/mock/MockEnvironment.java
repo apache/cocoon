@@ -28,7 +28,6 @@ import junit.framework.AssertionFailedError;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -114,11 +113,6 @@ public class MockEnvironment implements Environment {
         return status;
     }
 
-    public OutputStream getOutputStream() throws IOException {
-        outputstream = new ByteArrayOutputStream();
-        return outputstream;
-    }
-
     public OutputStream getOutputStream(int bufferSize) throws IOException {
         outputstream = new ByteArrayOutputStream();
         return outputstream;
@@ -172,12 +166,6 @@ public class MockEnvironment implements Environment {
         throw new AssertionFailedError("Not implemented");
     }
 
-
-    public Source resolve(String systemID)
-      throws ProcessingException, SAXException, IOException {
-  
-        throw new AssertionFailedError("Not not use deprecated methods!");
-    }
 
     public void toSAX(org.apache.excalibur.source.Source source,
                 ContentHandler handler)

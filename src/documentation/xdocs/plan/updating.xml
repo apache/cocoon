@@ -106,10 +106,12 @@
         <li><em>org.apache.cocoon.components.source.DelayedRefreshSourceWrapper</em> - org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper</li>
         <li><em>org.apache.cocoon.components.source.FileSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.FileSourceFactory</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.ModifiableTraversableSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.SitemapSource</em> - org.apache.cocoon.components.source.impl.SitemapSource</li>
         <li><em>org.apache.cocoon.components.source.SourceFactory</em> - org.apache.cocoon.components.source.impl.SitemapSourceFactory</li>
         <li><em>org.apache.cocoon.components.source.SourceHandler</em> - Not needed anymore</li>
         <li><em>org.apache.cocoon.components.source.SourceHandlerImpl</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.TraversableSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.URLSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.impl.AvalonToCocoonSource</em> - Not needed anymore</li>
         <li><em>org.apache.cocoon.components.source.impl.AvalonToCocoonSourceInvocationHandler</em> - Not needed anymore</li>
@@ -122,7 +124,7 @@
         <li><em>org.apache.cocoon.components.url.URLFactoryImpl</em> - Not needed anymore</li>
       </ul>
     </s2>
-    <s2 title="XML Parsing">
+    <s2 title="XML Parsing (TBD)">
       <ul>
         <li><em>org.apache.cocoon.components.parser.JaxpParser</em> - Excalibur XMLUtils</li>
         <li><em>org.apache.cocoon.components.parser.Parser</em> - Excalibur XMLUtils</li>
@@ -130,13 +132,13 @@
         <li><em>org.apache.cocoon.components.parser.XercesParser</em> - Excalibur XMLUtils</li>
       </ul>
     </s2>
-    <s2 title="XML Entity Resolver">
+    <s2 title="XML Entity Resolver (TBD)">
       <ul>
         <li><em>org.apache.cocoon.components.resolver.Resolver</em> - Excalibur XMLUtils</li>
         <li><em>org.apache.cocoon.components.resolver.ResolverImpl</em> - Excalibur XMLUtils</li>
       </ul>
     </s2>
-    <s2 title="Stores">
+    <s2 title="Stores (TBD)">
       <ul>
         <li><em>org.apache.cocoon.components.store.FilesystemStore</em> - Excalibur Store</li>
         <li><em>org.apache.cocoon.components.store.JispFilesystemStore</em> - Excalibur Store</li>
@@ -154,7 +156,7 @@
         <li><em>org.apache.cocoon.components.xslt.XSLTProcessorImpl</em> - Excalibur XMLUtils</li>
       </ul>
     </s2>
-    <s2 title="Sitemap Components">
+    <s2 title="Sitemap Components (TBD)">
       <ul>
         <li><em>org.apache.cocoon.matching.RegexpTargetHostMatcher</em> - org.apache.cocoon.matching.RegexpHostMatcher</li>
         <li><em>org.apache.cocoon.matching.RequestParamMatcher</em> - org.apache.cocoon.matching.RequestParameterMatcher</li>
