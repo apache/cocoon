@@ -50,13 +50,17 @@
 */
 package org.apache.cocoon.woody.binding;
 
-import org.w3c.dom.*;
-import org.apache.cocoon.woody.util.DomHelper;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.source.SourceResolver;
+import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.excalibur.source.Source;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentFragment;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * InsertNodeJXPathBindingBuilder provides a helper class for the Factory
@@ -70,7 +74,7 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  * &lt;/wb:insert-node&gt;
  * </code></pre>
  *
- * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.8 2004/02/03 12:26:21 joerg Exp $
+ * @version CVS $Id: InsertNodeJXPathBindingBuilder.java,v 1.9 2004/03/01 03:50:57 antonio Exp $
  */
 public class InsertNodeJXPathBindingBuilder
     extends JXPathBindingBuilderBase {

@@ -50,6 +50,18 @@
 */
 package org.apache.cocoon.acting;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -62,12 +74,6 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.SourceResolver;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-
 /**
  * Adds record in a database. The action can update one or more tables,
  * and can add more than one row to a table at a time. The form descriptor
@@ -77,7 +83,7 @@ import java.util.*;
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
- * @version CVS $Id: DatabaseAddAction.java,v 1.1 2003/03/09 00:03:02 pier Exp $
+ * @version CVS $Id: DatabaseAddAction.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  */
 public class DatabaseAddAction extends AbstractDatabaseAction implements ThreadSafe {
     protected static final Map addStatements = new HashMap();

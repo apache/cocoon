@@ -50,19 +50,21 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import java.util.*;
 
 /**
  * Builds a generic container node.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CategoryNodeBuilder.java,v 1.1 2003/03/09 00:09:15 pier Exp $
+ * @version CVS $Id: CategoryNodeBuilder.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  */
 
 public class CategoryNodeBuilder extends AbstractParentProcessingNodeBuilder

@@ -50,16 +50,20 @@
 */
 package org.apache.cocoon.ant;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Map;
 
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.environment.commandline.*;
-
-import org.apache.cocoon.util.*;
+import org.apache.cocoon.environment.commandline.AbstractCommandLineEnvironment;
+import org.apache.cocoon.environment.commandline.CommandLineRequest;
+import org.apache.cocoon.environment.commandline.CommandLineResponse;
+import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.MIMEUtils;
+import org.apache.cocoon.util.NetUtils;
 
 /**
  *   A command line file saving environment writing files in a delayed mode.
@@ -67,7 +71,7 @@ import org.apache.cocoon.util.*;
  *   output is written into temporary buffer
  *
  * @author    huber@apache.org
- * @version CVS $Id: DelayedFileSavingEnvironment.java,v 1.1 2003/09/04 12:42:41 cziegeler Exp $
+ * @version CVS $Id: DelayedFileSavingEnvironment.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  */
 public class DelayedFileSavingEnvironment extends AbstractCommandLineEnvironment {
 

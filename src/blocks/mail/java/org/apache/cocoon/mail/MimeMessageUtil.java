@@ -50,17 +50,24 @@
 */
 package org.apache.cocoon.mail;
 
-import javax.mail.*;
-import javax.mail.internet.*;
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimePart;
 
 /**
  *  Description of the Class
  *
  * @author Bernhard Huber
  * @since 26. Oktober 2002
- * @version CVS $Id: MimeMessageUtil.java,v 1.3 2003/12/23 15:28:32 joerg Exp $
+ * @version CVS $Id: MimeMessageUtil.java,v 1.4 2004/03/01 03:50:57 antonio Exp $
  */
 public class MimeMessageUtil {
     /**

@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.portal.impl;
 
-import java.util.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,7 @@ import org.apache.cocoon.portal.PortalComponentManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortalServiceInfo.java,v 1.1 2003/08/20 07:34:36 cziegeler Exp $
+ * @version CVS $Id: PortalServiceInfo.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  */
 public class PortalServiceInfo {
     

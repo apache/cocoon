@@ -51,12 +51,17 @@
 
 package org.apache.cocoon.components.modules.input;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * DateInputModule returns current date, optionally formated as
@@ -64,7 +69,7 @@ import java.util.*;
  * root node or nested &lt;format/&gt; tag on module declaration.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DateInputModule.java,v 1.1 2003/03/09 00:09:02 pier Exp $
+ * @version CVS $Id: DateInputModule.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  * @see java.text.SimpleDateFormat
  */
 public class DateInputModule extends AbstractInputModule implements ThreadSafe {

@@ -50,9 +50,25 @@
 */
 package org.apache.cocoon.components.deli;
 
-import com.hp.hpl.deli.Profile;
-import com.hp.hpl.deli.ProfileAttribute;
-import com.hp.hpl.deli.Workspace;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.security.Principal;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -73,20 +89,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.Servlet;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.security.Principal;
-import java.util.*;
+import com.hp.hpl.deli.Profile;
+import com.hp.hpl.deli.ProfileAttribute;
+import com.hp.hpl.deli.Workspace;
 
 /**
  * Allows the use of <a href="http://www-uk.hpl.hp.com/people/marbut/">DELI</a>
@@ -97,7 +102,7 @@ import java.util.*;
  * A Delivery Context Library for CC/PP and UAProf</a>.
  *
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
- * @version CVS $Id: DeliImpl.java,v 1.8 2004/02/06 22:46:53 joerg Exp $
+ * @version CVS $Id: DeliImpl.java,v 1.9 2004/03/01 03:50:59 antonio Exp $
  */
 public final class DeliImpl extends AbstractLogEnabled
     implements Parameterizable, Deli, Serviceable, Disposable, Initializable,

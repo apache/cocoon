@@ -50,17 +50,21 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.sitemap.PatternException;
-
-import java.util.*;
 
 /**
  * Utility class for handling {...} pattern substitutions from a List of Maps.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MapStackResolver.java,v 1.1 2003/03/09 00:07:08 pier Exp $
+ * @version CVS $Id: MapStackResolver.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  * @deprecated use {@link org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory}
  */
 

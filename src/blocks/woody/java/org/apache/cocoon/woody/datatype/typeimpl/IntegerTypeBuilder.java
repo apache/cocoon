@@ -50,14 +50,15 @@
 */
 package org.apache.cocoon.woody.datatype.typeimpl;
 
-import org.apache.cocoon.woody.datatype.*;
+import org.apache.cocoon.woody.datatype.Datatype;
+import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.w3c.dom.Element;
 
 /**
  * Builds {@link IntegerType}s.
  * 
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
- * @version CVS $Id: IntegerTypeBuilder.java,v 1.1 2003/10/01 18:20:23 antonio Exp $
+ * @version CVS $Id: IntegerTypeBuilder.java,v 1.2 2004/03/01 03:50:58 antonio Exp $
  */
 public class IntegerTypeBuilder extends AbstractDatatypeBuilder {
 	public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception {

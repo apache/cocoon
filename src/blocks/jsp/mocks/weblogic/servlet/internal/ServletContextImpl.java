@@ -50,10 +50,14 @@
 */
 package weblogic.servlet.internal;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import javax.servlet.*;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Set;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 
 /**
  * **********************************************************************
@@ -67,7 +71,7 @@ import javax.servlet.*;
  *
  * **********************************************************************
  * 
- * @version CVS $Id: ServletContextImpl.java,v 1.2 2003/07/11 17:03:27 joerg Exp $
+ * @version CVS $Id: ServletContextImpl.java,v 1.3 2004/03/01 03:50:59 antonio Exp $
  */
  
 public class ServletContextImpl implements ServletContext{

@@ -54,19 +54,25 @@
  */
 package org.apache.cocoon.components.source;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.util.ConcurrentModificationException;
+
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.util.ConcurrentModificationException;
 
 /**
  * A <code>org.apache.cocoon.environment.WriteableSource</code> for 'file:/' system IDs.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: FileSource.java,v 1.3 2003/09/24 22:34:53 cziegeler Exp $
+ * @version CVS $Id: FileSource.java,v 1.4 2004/03/01 03:50:58 antonio Exp $
  * @deprecated Use the new avalon source resolving instead
  */
 public class FileSource extends AbstractStreamWriteableSource

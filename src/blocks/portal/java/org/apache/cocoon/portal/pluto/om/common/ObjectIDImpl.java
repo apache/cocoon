@@ -45,7 +45,9 @@
 */
 package org.apache.cocoon.portal.pluto.om.common;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Wraps around the internal Object IDs. By holding both
@@ -54,7 +56,7 @@ import java.io.*;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ObjectIDImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
+ * @version CVS $Id: ObjectIDImpl.java,v 1.3 2004/03/01 03:50:57 antonio Exp $
  */
 public class ObjectIDImpl implements org.apache.pluto.om.common.ObjectID, java.io.Serializable
 {

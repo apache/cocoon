@@ -50,13 +50,18 @@
 */
 package org.apache.cocoon.environment.wrapper;
 
+import java.security.Principal;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
-
-import java.security.Principal;
-import java.util.*;
 
 
 /**
@@ -65,7 +70,7 @@ import java.util.*;
  * are different.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: RequestWrapper.java,v 1.4 2003/07/06 20:37:48 sylvain Exp $
+ * @version CVS $Id: RequestWrapper.java,v 1.5 2004/03/01 03:50:59 antonio Exp $
  */
 public final class RequestWrapper implements Request {
 

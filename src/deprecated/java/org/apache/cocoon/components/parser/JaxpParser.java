@@ -50,23 +50,31 @@
 */
 package org.apache.cocoon.components.parser;
 
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.cocoon.components.resolver.Resolver;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.xml.AbstractXMLProducer;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
-import org.xml.sax.*;
-
-import javax.xml.parsers.*;
-import java.io.IOException;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.XMLReader;
 
 /**
  * An XMLParser that is only dependant on JAXP 1.1 compliant parsers.
@@ -105,7 +113,7 @@ import java.io.IOException;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: JaxpParser.java,v 1.2 2003/04/27 15:16:16 cziegeler Exp $
+ * @version CVS $Id: JaxpParser.java,v 1.3 2004/03/01 03:50:58 antonio Exp $
  */
 public class JaxpParser extends AbstractXMLProducer
 implements Parser, ErrorHandler, Composable, Parameterizable, Disposable, Poolable {

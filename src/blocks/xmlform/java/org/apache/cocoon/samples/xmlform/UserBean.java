@@ -50,16 +50,21 @@
 */
 package org.apache.cocoon.samples.xmlform;
 
-import org.apache.avalon.framework.CascadingRuntimeException;
-import org.w3c.dom.*;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.avalon.framework.CascadingRuntimeException;
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 /**
  *
@@ -69,7 +74,7 @@ import java.util.Set;
  * DOM Nodes, which are handled correctly by the
  * framework when referenced via XPath.
  *
- * @version CVS $Id: UserBean.java,v 1.2 2003/09/05 07:40:21 cziegeler Exp $
+ * @version CVS $Id: UserBean.java,v 1.3 2004/03/01 03:50:58 antonio Exp $
  */
 public class UserBean
 {

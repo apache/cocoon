@@ -45,17 +45,26 @@
 */
 package org.apache.cocoon.portal.pluto.om.common;
 
-import org.apache.pluto.om.common.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ListResourceBundle;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+
+import org.apache.pluto.om.common.Language;
 import org.apache.pluto.util.Enumerator;
 import org.apache.pluto.util.StringUtils;
-import java.util.*;
 
 /**
  * 
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: LanguageImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: LanguageImpl.java,v 1.2 2004/03/01 03:50:57 antonio Exp $
  */
 public class LanguageImpl implements Language, java.io.Serializable {
     // ResourceBundle creation part

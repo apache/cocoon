@@ -50,15 +50,15 @@
 */
 package org.apache.cocoon.mail;
 
-import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimePart;
 
 /**
  *  Description of the Class
  *
  * @author Bernhard Huber
  * @since 26 October 2002
- * @version CVS $Id: IndexerCtPref.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+ * @version CVS $Id: IndexerCtPref.java,v 1.3 2004/03/01 03:50:57 antonio Exp $
  */
 public class IndexerCtPref implements ContentTypePreference {
     /**
