@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaPreprocessor.java,v 1.5 2000-03-22 17:44:53 stefano Exp $ -- 
+/*-- $Id: XSPJavaPreprocessor.java,v 1.6 2001-01-19 02:46:06 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -60,7 +60,7 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.5 $ $Date: 2000-03-22 17:44:53 $
+ * @version $Revision: 1.6 $ $Date: 2001-01-19 02:46:06 $
  */
 public class XSPJavaPreprocessor implements XSPPreprocessor {
   protected static XSPJavaProcessor javaProcessor = new XSPJavaProcessor();
@@ -106,7 +106,8 @@ public class XSPJavaPreprocessor implements XSPPreprocessor {
         String value = this.javaProcessor.stringEncode(node.getNodeValue());
         Text textNode = node.getOwnerDocument().createTextNode(value);
 
-        Element textElement = node.getOwnerDocument().createElement("xsp:text");
+        Element textElement = node.getOwnerDocument().createElementNS
+          ("http://www.apache.org/1999/XSP/Core", "xsp:text");
 
         textElement.appendChild(textNode);
         parent.replaceChild(textElement, node);
