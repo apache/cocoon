@@ -18,7 +18,7 @@
  * Implementation of the Cocoon Forms/FlowScript integration.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.js,v 1.12 2004/05/11 12:55:53 vgritsenko Exp $
+ * @version CVS $Id: Form.js,v 1.13 2004/05/18 15:32:27 joerg Exp $
  */
 
 // Revisit this class, so it gives access to more than the value.
@@ -65,16 +65,17 @@ Form.prototype.getWidget = function(name) {
 }
 
 /**
- * Get a Widget (the java object) from the form.
- * If <code>name</code> is undefined, the form widget itself is returned.
- * Otherwise, the form's child widget of name <code>name</code> is returned.
+ * Get a child Widget (the java object) from the form via its <code>id</code>.
  */
-Form.prototype.lookupWidget = function(name) {
-    if (name == undefined) {
-        return this.form;
-    } else {
-        return this.form.lookupWidget(name);
-    }
+Form.prototype.getChild = function(id) {
+    return this.form.getChild(id);
+}
+
+/**
+ * Get a Widget (the java object) from the form via its <code>path</code>.
+ */
+Form.prototype.lookupWidget = function(path) {
+    return this.form.lookupWidget(path);
 }
 
 /**
