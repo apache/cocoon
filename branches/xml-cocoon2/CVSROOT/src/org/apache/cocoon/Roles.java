@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-10-19 14:42:39 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-01-05 23:07:34 $
  */
 
 public interface Roles {
@@ -26,5 +26,6 @@ public interface Roles {
     String CLASS_LOADER         = "org.apache.cocoon.components.classloader.ClassLoaderManager";
     String POOL_CONTROLLER      = "org.apache.avalon.util.pool.PoolController";
     String IMAGE_ENCODER        = "org.apache.cocoon.components.image.ImageEncoderSelector";
+    String DB_CONNECTION		= "org.apache.cocoon.components.datasource.DataSourceComponentSelector";
 
 }

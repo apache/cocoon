@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.18 2000-12-29 16:55:17 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.19 2001-01-05 23:07:35 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -109,6 +109,7 @@
         <xsp:include>java.sql.SQLException</xsp:include>
         <xsp:include>java.text.SimpleDateFormat</xsp:include>
         <xsp:include>java.text.DecimalFormat</xsp:include>
+	<xsp:include>org.apache.cocoon.components.datasource.DataSourceComponent</xsp:include>
       </xsp:structure>
       <xsp:logic>
 
@@ -267,6 +268,9 @@
               esqlSession.closeConnection = false;
             </xsl:when>
             <xsl:when test="esql:use-connection">
+	      ComponentSelector esqlDSSelector = (ComponentSelector) this.manager.lookup(Roles.DB_CONNECTION);
+	      DataSourceComponent esqlDS = (DataSourceComponent) esqlDSSelector.select(String.valueOf(<xsl:copy-of select="$use-connection"/>));
+	      esqlSession.connection = esqlDS.getConnection();
               <!-- FIXME - need to do avalon pooling here maybe? -->
             </xsl:when>
             <xsl:otherwise>
@@ -377,6 +381,7 @@
               }
 
               <xsl:if test="esql:use-connection">
+	        esqlSession.connection = null;
                 <!-- FIXME - need to release avalon pooling here maybe -->
               </xsl:if>
           }
