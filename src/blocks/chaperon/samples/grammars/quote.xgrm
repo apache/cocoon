@@ -1,21 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
 <grammar xmlns="http://chaperon.sourceforge.net/schema/grammar/1.0">
 <!--This file was generated! Don't edit!-->
 <priority>
 <terminal symbol="Comma"/>
 <terminal symbol="Value"/>
-<terminal symbol="SoftBreak"/>
+<terminal symbol="Break"/>
 </priority>
 <production symbol="document">
-<nonterminal symbol="document"/>
-<terminal symbol="SoftBreak"/>
-<nonterminal symbol="row"/>
+<nonterminal symbol="rows"/>
+<terminal symbol="Break"/>
 </production>
 <production symbol="document">
-<nonterminal symbol="row"/>
-<terminal symbol="SoftBreak"/>
+<nonterminal symbol="rows"/>
 </production>
-<production symbol="document">
+<production symbol="rows">
+<nonterminal symbol="rows"/>
+<terminal symbol="Break"/>
+<nonterminal symbol="row"/>
+</production>
+<production symbol="rows">
 <nonterminal symbol="row"/>
 </production>
 <production symbol="row">

@@ -1,19 +1,27 @@
 %ignore          "^#(.*)";
 %token Comma     "\,";
 %token Value     "[^\n\r\,]+";
-%token SoftBreak "\r(\n?) | \n";
+%token Break "\r(\n?) | \n";
 
 %start document;
 
 %%
 
+// with optional last break
 document
-  : document SoftBreak row
-  | row SoftBreak
-  | row
+  : rows Break
+  | rows
   ;
 
+// each row seprated with one break
+// and optional last space
+rows
+  : rows Break row
+  | row
+  ;
+                                                                                                                                                                               
+// values separated by spaces
 row
-  : row Comma Value 
+  : row Comma Value
   | Value
   ;
