@@ -224,11 +224,6 @@
        </map:call>
      </map:match>
 
-     <map:match pattern="forms/form2_simple_data.xml">
-       <map:generate src="forms/form2_simple_data.xml"/>
-       <map:serialize type="xml"/>
-     </map:match>
-
      <map:match pattern="form2-success-pipeline">
        <map:generate src="forms/form2_data-result.xml"/>
        <map:transform type="i18n">
