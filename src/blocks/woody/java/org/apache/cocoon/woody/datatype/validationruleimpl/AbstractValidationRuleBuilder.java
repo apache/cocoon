@@ -59,6 +59,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Element;
 import org.outerj.expression.Expression;
 import org.outerj.expression.TokenMgrError;
@@ -82,7 +83,7 @@ public abstract class AbstractValidationRuleBuilder implements ValidationRuleBui
     protected void buildFailMessage(Element validationRuleElement, AbstractValidationRule rule) {
         Element failMessageElement = DomHelper.getChildElement(validationRuleElement, Constants.WD_NS, "failmessage");
         if (failMessageElement != null) {
-            Object failMessage = DomHelper.compileElementContent(failMessageElement);
+            XMLizable failMessage = DomHelper.compileElementContent(failMessageElement);
             rule.setFailMessage(failMessage);
         }
     }

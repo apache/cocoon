@@ -53,6 +53,7 @@ package org.apache.cocoon.woody.datatype.validationruleimpl;
 import org.apache.cocoon.woody.datatype.ValidationRule;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.outerj.expression.Expression;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.ExpressionException;
@@ -64,16 +65,16 @@ import java.math.BigDecimal;
  * implementations.
  */
 public abstract class AbstractValidationRule implements ValidationRule {
-    private Object failMessage;
+    private XMLizable failMessage;
 
     /**
      * Sets the failmessage to use for this validation rule, this will be used
      * instead of the validation rules' built-in message. The message itself should
-     * be an object obtained from Cocoon's XMLByteStreamCompiler. This
+     * be an object impementing XMLizable, such as a SaxBuffer instance. This
      * allows fail messages to contain mixed content (instead of just
      * being a string).
      */
-    public void setFailMessage(Object object) {
+    public void setFailMessage(XMLizable object) {
         this.failMessage = object;
     }
 

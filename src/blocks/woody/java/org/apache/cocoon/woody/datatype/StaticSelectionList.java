@@ -55,8 +55,8 @@ import org.xml.sax.SAXException;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.datatype.convertor.Convertor;
 import org.apache.cocoon.woody.datatype.convertor.DefaultFormatCache;
-import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.xml.AttributesImpl;
+import org.apache.excalibur.xml.sax.XMLizable;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -74,7 +74,6 @@ public class StaticSelectionList implements SelectionList {
     /** The datatype to which this selection list belongs */
     private Datatype datatype;
     private List items = new ArrayList();
-    private XMLByteStreamInterpreter interpreter = new XMLByteStreamInterpreter();
 
     public StaticSelectionList(Datatype datatype) {
         this.datatype = datatype;
@@ -102,17 +101,17 @@ public class StaticSelectionList implements SelectionList {
     /**
      * Adds a new item to this selection list.
      * @param value a value of the correct type (i.e. the type with which this selectionlist is associated)
-     * @param label a SAX-fragment created using the XMLByteStreamCompiler, can be null
+     * @param label a SAX-fragment such as a {@link org.apache.cocoon.xml.SaxBuffer}, can be null
      */
-    public void addItem(Object value, Object label) {
+    public void addItem(Object value, XMLizable label) {
         items.add(new SelectionListItem(value, label));
     }
 
     public final class SelectionListItem {
         private final Object value;
-        private final Object label;
+        private final XMLizable label;
 
-        public SelectionListItem(Object value, Object label) {
+        public SelectionListItem(Object value, XMLizable label) {
             this.value = value;
             this.label = label;
         }
@@ -130,9 +129,7 @@ public class StaticSelectionList implements SelectionList {
             contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
             contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
             if (label != null) {
-                interpreter.recycle();
-                interpreter.setContentHandler(contentHandler);
-                interpreter.deserialize(label);
+                label.toSAX(contentHandler);
             } else {
                 contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             }

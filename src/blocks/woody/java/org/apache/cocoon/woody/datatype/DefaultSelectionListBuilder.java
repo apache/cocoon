@@ -63,6 +63,7 @@ import org.apache.cocoon.woody.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -74,7 +75,7 @@ import java.util.Locale;
  * <p>Note: the class {@link DynamicSelectionList} also interprets the same wd:selection-list XML, so if
  * anything changes here to how that XML is interpreted, it also needs to change over there and vice versa.
  * 
- * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.1 2003/10/22 20:22:07 sylvain Exp $
+ * @version CVS $Id: DefaultSelectionListBuilder.java,v 1.2 2003/11/13 13:19:09 bruno Exp $
  */
 public class DefaultSelectionListBuilder implements SelectionListBuilder, Serviceable {
     
@@ -128,7 +129,7 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
                 if (value == null)
                     throw new Exception("Could not convert the value \"" + stringValue + "\" to the type " + datatype.getDescriptiveName() + ", defined at " + DomHelper.getLocation(element));
 
-                Object label = null;
+                XMLizable label = null;
                 Element labelEl = DomHelper.getChildElement(element, Constants.WD_NS, "label");
                 if (labelEl != null) {
                     label = DomHelper.compileElementContent(labelEl);
