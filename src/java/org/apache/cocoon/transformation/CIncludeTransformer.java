@@ -150,7 +150,7 @@ import java.util.Map;
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:acoliver@apache.org">Andrew C. Oliver</a>
- * @version CVS $Id: CIncludeTransformer.java,v 1.3 2003/05/16 07:04:55 cziegeler Exp $
+ * @version CVS $Id: CIncludeTransformer.java,v 1.4 2003/06/06 12:21:55 vgritsenko Exp $
  */
 public class CIncludeTransformer 
 extends AbstractSAXTransformer
@@ -250,6 +250,7 @@ implements Disposable, CacheableProcessingComponent {
     public void dispose() {
         if ( null != this.manager ) {
             this.manager.release( (Component)this.cacheManager );
+            this.manager = null;
         }
     }
 
