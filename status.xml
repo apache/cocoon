@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.300 2004/04/13 01:34:09 antonio Exp $:-->
+<!-- CVS $Id: status.xml,v 1.301 2004/04/15 01:16:39 crossley Exp $:-->
 
 <status>
  <developers>
@@ -212,6 +212,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="DC" type="add">
+     Added standalone build target "validate-sitemaps".
+   </action>
    <action dev="AG" type="update">
      Updated Xindice to 1.1b4, xmldb-api to 20030701, xmldb-common to 20030701 and xmldb-xupdate to 20040205
    </action>

@@ -83,7 +83,7 @@
     <echo message="Validating some important configuration files"/>
 
     <echo message="Validating cocoon.xconf using a very basic RELAX NG grammar ..."/>
-    <jing rngfile="${build.webapp}/WEB-INF/entities/any.rng">
+    <jing rngfile="${webapp}/WEB-INF/entities/any.rng">
       <fileset dir="${build.webapp}/WEB-INF" includes="cocoon.xconf"/>
     </jing>
   </target>
@@ -121,14 +121,29 @@
     </xmlvalidate>
 -->
 
-    <echo message="Validating the documentation sitemap.xmap using RELAX NG ..."/>
-    <jing rngfile="${webapp}/WEB-INF/entities/sitemap-v06.rng">
-      <fileset dir="${build.context}" includes="sitemap.xmap"/>
-    </jing>
-
 <!--    <echo message="Validating all documentation stylesheets using RELAX NG ..."/>
     <jing rngfile="${webapp}/WEB-INF/entities/xslt-20020523.rng">
       <fileset dir="${build.context}/stylesheets" includes="**/*.xsl"/>
     </jing>-->
+  </target>
+
+  <target name="validate-sitemaps" depends="init-tasks"
+          description="Standalone target to validate all sitemaps">
+    <echo message="Validating all sitemap.xmap using RELAX NG ..."/>
+    <echo>Note: This is experimental.
+You may need to tweak the sitemap-v*.rng to handle stuff that is truly valid.
+Blocks sitemaps are deliberately excluded.
+    </echo>
+    <jing rngfile="${webapp}/WEB-INF/entities/sitemap-v06.rng">
+<!--
+      <fileset dir="${blocks}" includes="**/sitemap.xmap"/>
+-->
+      <fileset dir="${webapp}" includes="**/sitemap.xmap"/>
+      <fileset dir="${documentation}" includes="sitemap*.xmap"/>
+      <fileset dir="${docs}" includes="**/drafts/sitemap-allowed.xmap"/>
+<!--
+      <fileset dir="${docs}" includes="**/drafts/sitemap-working-draft.xmap"/>
+-->
+    </jing>
   </target>
 </project>
