@@ -68,7 +68,7 @@ import org.apache.ojb.broker.metadata.JdbcConnectionDescriptor;
  * Component defined in the Cocoon configuration.
  *
  * @author giacomo at apache.org
- * @version $Id: ConnectionFactoryAvalonDataSource.java,v 1.1 2004/02/01 21:37:29 giacomo Exp $
+ * @version $Id: ConnectionFactoryAvalonDataSource.java,v 1.2 2004/02/03 11:43:03 antonio Exp $
  */
 public class ConnectionFactoryAvalonDataSource
     implements ConnectionFactory {
@@ -129,7 +129,7 @@ public class ConnectionFactoryAvalonDataSource
             con.close(); // The DataSource itself from where this connection comes from will take care of pooling
         } catch (final SQLException sqle) {
             // This should not happend, but in case 
-            throw new CascadingRuntimeException("Cannot eelase SQL Connection to DataSource", sqle);
+            throw new CascadingRuntimeException("Cannot release SQL Connection to DataSource", sqle);
         }
     }
 
