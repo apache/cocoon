@@ -2,7 +2,7 @@
 :: -----------------------------------------------------------------------------
 :: Cocoon Win32 Shell Script
 ::
-:: $Id: cocoon.bat,v 1.1 2003/03/09 00:01:33 pier Exp $
+:: $Id: cocoon.bat,v 1.2 2003/03/15 12:53:01 stefano Exp $
 :: -----------------------------------------------------------------------------
 
 :: Configuration variables
@@ -33,7 +33,7 @@
 
 if not "%JAVA_HOME%" == "" goto gotJavaHome
 echo You must set JAVA_HOME to point at your Java Development Kit installation
-goto cleanup
+goto end
 :gotJavaHome
 
 :: ----- Set Up The Classpath --------------------------------------------------
@@ -43,28 +43,32 @@ set CP=.\tools\loader
 :: ----- Check System Properties -----------------------------------------------
 
 if not "%EXEC%" == "" goto gotExec
+if not "%OS%" == "Windows_NT" goto noExecNT
 set EXEC=start "Cocoon" /D. /MAX
+goto gotExec
+:noExecNT
+set EXEC=""
 :gotExec
 
 if not "%COCOON_LIB%" == "" goto gotLib
 set COCOON_LIB=build\webapp\WEB-INF\lib
 :gotLib
 
-if not "%JETTY_PORT%" == "" goto gotPort
+if not "%JETTY_PORT%" == "" goto gotJettyPort
 set JETTY_PORT=8888
-:gotPort
+:gotJettyPort
 
-if not "%JETTY_ADMIN_PORT%" == "" goto gotPort
+if not "%JETTY_ADMIN_PORT%" == "" goto gotJettyAdminPort
 set JETTY_ADMIN_PORT=8889
-:gotPort
+:gotJettyAdminPort
 
 if not "%JETTY_WEBAPP%" == "" goto gotWebapp
 set JETTY_WEBAPP=build/webapp
 :gotWebapp
 
-if not "%JAVA_DEBUG_PORT%" == "" goto gotWebapp
+if not "%JAVA_DEBUG_PORT%" == "" goto gotDebugPort
 set JAVA_DEBUG_PORT=8000
-:gotWebapp
+:gotDebugPort
 
 :: ----- Check action ----------------------------------------------------------
 
