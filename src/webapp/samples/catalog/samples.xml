@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: samples.xml,v 1.9 2004/04/05 12:34:24 antonio Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.10 2004/05/23 08:34:31 crossley Exp $ -->
 
 <samples name="Catalogs and DocBook" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -35,6 +35,9 @@
  </group>
 
  <group name="DocBook">
+  <note>
+   Follow the configuration steps first ...
+  </note>
   <sample name="Entity Resolution With Catalogs"
           href="../../docs/userdocs/concepts/catalog.html#config">
     The Apache Cocoon documentation "Entity
