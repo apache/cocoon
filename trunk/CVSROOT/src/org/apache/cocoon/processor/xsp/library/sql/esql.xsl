@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.28 2000-11-11 21:40:18 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.29 2000-11-12 21:03:53 balld Exp $-->
 <!--
 
  ============================================================================
@@ -105,6 +105,7 @@
       <xsp:include>java.sql.SQLException</xsp:include>
       <xsp:include>java.text.SimpleDateFormat</xsp:include>
       <xsp:include>java.text.DecimalFormat</xsp:include>
+      <xsp:include>java.io.StringWriter</xsp:include>
       <xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
       <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
     </xsp:structure>
@@ -143,8 +144,9 @@
     Stack _esql_queries = new Stack();
     EsqlQuery _esql_query = null; 
     SQLException _esql_exception = null;
+    StringWriter _esql_exception_writer = null;
   </xsp:logic>
-  <xsl:apply-templates/>
+ <xsl:apply-templates/>
  </xsl:copy>
 </xsl:template>
 
@@ -154,6 +156,7 @@
   <xsl:variable name="username"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:username"/></xsl:call-template></xsl:variable>
   <xsl:variable name="password"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:password"/></xsl:call-template></xsl:variable>
   <xsl:variable name="pool"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:pool"/></xsl:call-template></xsl:variable>
+  <xsl:variable name="autocommit"><xsl:call-template name="get-nested-string"><xsl:with-param name="content" select="esql:pool"/></xsl:call-template></xsl:variable>
   <xsp:logic>
     if (_esql_connection != null) {
       _esql_connections.push(_esql_connection);
@@ -183,8 +186,16 @@
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
+      if ("false".equals(String.valueOf(<xsl:copy-of select="$autocommit"/>))) {
+        _esql_connection.connection.setAutoCommit(false);
+      } else {
+        _esql_connection.connection.setAutoCommit(true);
+      }
       <xsl:apply-templates/>
     } finally {
+      if(!_esql_connection.connection.getAutoCommit()) {
+        _esql_connection.connection.commit();
+      }
       <xsl:choose>
         <xsl:when test="esql:pool">
           _esql_pool.releaseConnection(_esql_connection.db_connection);
@@ -268,9 +279,17 @@
       <xsl:choose>
         <xsl:when test="esql:error-results">
           _esql_exception = _esql_exception_<xsl:value-of select="generate-id(.)"/>;
+          _esql_exception_writer = new PrintWriter(new StringWriter());
+          _esql_exception.printStackTrace(_esql_exception_writer);
           <xsl:apply-templates select="esql:error-results"/>
+          if (!_esql_connection.connection.getAutoCommit()) {
+            _esql_connection.rollback();
+          }
         </xsl:when>
         <xsl:otherwise>
+          if (!_esql_connection.connection.getAutoCommit()) {
+            _esql_connection.rollback();
+          }
           throw(_esql_exception_<xsl:value-of select="generate-id(.)"/>);
         </xsl:otherwise>
       </xsl:choose>
