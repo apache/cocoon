@@ -50,12 +50,12 @@
 */
 package org.apache.cocoon.components.modules.input;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
 import java.util.Iterator;
@@ -67,18 +67,25 @@ import java.util.Map;
  * extended there.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: GlobalInputModule.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: GlobalInputModule.java,v 1.2 2004/01/07 11:18:49 cziegeler Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=InputModule
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=global-input
  */
 public final class GlobalInputModule 
     extends AbstractLogEnabled
-    implements InputModule, Composable, ThreadSafe {
+    implements InputModule, Serviceable, ThreadSafe {
 
-    private ComponentManager manager;
+    private ServiceManager manager;
     
     /**
-     * Composable
+     * Serviceable
+     * 
+     * @avalon.dependency  type=SitemapVariableHolder
      */
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
     
@@ -102,7 +109,7 @@ public final class GlobalInputModule
         try {
             holder = (SitemapVariableHolder)this.manager.lookup(SitemapVariableHolder.ROLE);
             return holder.get(name); 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ConfigurationException("Unable to lookup SitemapVariableHolder.", ce);
         } finally {
             this.manager.release(holder);
@@ -123,9 +130,8 @@ public final class GlobalInputModule
         SitemapVariableHolder holder = null;
         try {
             holder = (SitemapVariableHolder)this.manager.lookup(SitemapVariableHolder.ROLE);
-            // return holder.getKeys(); 
-            return null; 
-        } catch (ComponentException ce) {
+            return holder.getKeys(); 
+        } catch (ServiceException ce) {
             throw new ConfigurationException("Unable to lookup SitemapVariableHolder.", ce);
         } finally {
             this.manager.release(holder);

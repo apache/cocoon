@@ -54,7 +54,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -69,11 +68,16 @@ import org.apache.cocoon.components.SitemapConfigurationHolder;
  * sitemap base
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapVariableHolder.java,v 1.5 2003/09/05 11:57:05 cziegeler Exp $
+ * @version CVS $Id: SitemapVariableHolder.java,v 1.6 2004/01/07 11:18:49 cziegeler Exp $
+ * 
+ * @avalon.component
+ * @avalon.service type=SitemapVariableHolder
+ * @x-avalon.lifestyle type=singleton
+ * @x-avalon.info name=global-variables
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
-    implements Component, Configurable, SitemapConfigurable, ThreadSafe
+    implements Configurable, SitemapConfigurable, ThreadSafe
 {
  
     public static final String ROLE = SitemapVariableHolder.class.getName();

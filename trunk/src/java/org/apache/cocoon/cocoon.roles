@@ -90,13 +90,13 @@
     />
   </role>
 
+  -->
   <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder">
     <component 
       shorthand="global-variables"
       class="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
     />
   </role>
-  -->
   
   <!--
   <role name="org.apache.cocoon.components.language.generator.ServerPagesSelector"
