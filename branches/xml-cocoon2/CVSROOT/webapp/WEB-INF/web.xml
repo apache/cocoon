@@ -37,11 +37,8 @@
         <!-- For IBM WebSphere: -->
         com.ibm.servlet.classloader.Handler
 
-        <!-- For PostgeSQL Database: -->
-        org.postgresql.Driver
-
-        <!-- For Oracle Database: -->
-        oracle.jdbc.driver.OracleDriver
+        <!-- For Database Driver: -->
+        @database-driver@
       </param-value>
     </init-param>
  </servlet>
