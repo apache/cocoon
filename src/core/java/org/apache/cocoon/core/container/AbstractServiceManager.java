@@ -97,13 +97,15 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
                                                     final Configuration configuration,
                                                     final ServiceManager serviceManager)
     throws Exception {
+        final ComponentEnvironment env = new ComponentEnvironment();
+        env.serviceManager = serviceManager;
+        env.context = context;
+        env.logger = this.getLogger();
+        env.loggerManager = this.loggerManager;
         return AbstractComponentHandler.getComponentHandler(role,
                                                      componentClass,
                                                      configuration,
-                                                     serviceManager,
-                                                     this.context,
-                                                     this.getLogger(),
-                                                     this.loggerManager,
+                                                     env,
                                                      this.roleManager);
     }
 
