@@ -330,4 +330,9 @@ public class MockRequest implements Request {
         parameters.clear();
         headers.clear();
     }
+    
+    public void setHeader( String key, String value ) {
+        this.headers.put(key, value );
+    }
+
 }
