@@ -88,6 +88,39 @@
     </wd:datatype>
   </wd:multivaluefield>
 
+  <wd:aggregatefield id="visa" required="true">
+    <wd:label>Enter your (16-digit) visa number (without spaces)
+      <br/>Your credit card will be billed.
+      <br/>Valid test number is: 4111111111111111</wd:label>
+    <wd:split pattern="([0-9]{4})([0-9]{4})([0-9]{4})([0-9]{4})">
+      <wd:map group="1" field="part1"/>
+      <wd:map group="2" field="part2"/>
+      <wd:map group="3" field="part3"/>
+      <wd:map group="4" field="part4"/>
+      <wd:failmessage>Not a valid 16-digit visa number.</wd:failmessage>
+    </wd:split>
+    <wd:combine expression='Concat(part1,part2,part3,part4)'/>
+    <wd:children>
+      <wd:field id="part1">
+        <wd:datatype base="string"/>
+      </wd:field>
+      <wd:field id="part2">
+        <wd:datatype base="string"/>
+      </wd:field>
+      <wd:field id="part3">
+        <wd:datatype base="string"/>
+      </wd:field>
+      <wd:field id="part4">
+        <wd:datatype base="string"/>
+      </wd:field>
+    </wd:children>
+    <wd:validation>
+      <wd:mod10>
+        <wd:failmessage>Invalid credit card number.</wd:failmessage>
+      </wd:mod10>
+    </wd:validation>
+  </wd:aggregatefield>
+
   <wd:repeater id="contacts">
     <wd:field id="firstname">
       <wd:label>Firstname</wd:label>

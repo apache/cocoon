@@ -47,6 +47,10 @@
           <td valign="top"><wt:widget-label id="drinks"/></td>
           <td valign="top"><wt:widget id="drinks"/></td>
         </tr>
+        <tr>
+          <td valign="top"><wt:widget-label id="visa"/></td>
+          <td valign="top"><wt:widget id="visa"/></td>
+        </tr>
       </table>
 
       <wt:widget-label id="contacts"/><br/>
