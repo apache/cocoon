@@ -96,8 +96,8 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.8 2004/02/10 01:08:15 crossley Exp $
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.9 2004/02/15 21:30:00 haul Exp $
+ * @author <a href="mailto:haul@apache.org">haul</a>
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
                                implements Configurable, 

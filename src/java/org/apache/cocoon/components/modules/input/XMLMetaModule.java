@@ -124,8 +124,8 @@ import org.w3c.dom.Node;
  *
  * <p>Produces Objects of type {@link org.apache.cocoon.xml.dom.DocumentWrapper DocumentWrapper}</p>
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
- * @version CVS $Id: XMLMetaModule.java,v 1.2 2003/12/18 14:29:03 cziegeler Exp $
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
+ * @version CVS $Id: XMLMetaModule.java,v 1.3 2004/02/15 21:30:00 haul Exp $
  */
 public class XMLMetaModule extends AbstractMetaModule implements ThreadSafe {
 

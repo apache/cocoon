@@ -85,8 +85,8 @@ import org.apache.cocoon.caching.validity.NamedEvent;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSEventListener.java,v 1.6 2004/01/05 17:14:44 unico Exp $
- * @author <a href="mailto:chaul@informatik.tu-darmstadt.de">chaul</a>
+ * @version CVS $Id: JMSEventListener.java,v 1.7 2004/02/15 21:30:00 haul Exp $
+ * @author <a href="mailto:chaul@apache.org">chaul</a>
  */
 public class JMSEventListener
     extends AbstractLogEnabled

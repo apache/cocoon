@@ -64,9 +64,9 @@ import org.apache.avalon.framework.configuration.Configuration;
  *
  * @deprecated use SessionAttributeSelector instead
  *
- * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
+ * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: SessionStateSelector.java,v 1.2 2003/09/27 13:01:15 joerg Exp $
+ * @version CVS $Id: SessionStateSelector.java,v 1.3 2004/02/15 21:30:00 haul Exp $
  */
 public class SessionStateSelector extends SessionAttributeSelector {
 
