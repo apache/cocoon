@@ -450,21 +450,26 @@
       </if>
 
       <!-- exclude sample classes from the block package -->
-      <mkdir dir="${{build.blocks}}/{$block-name}/samples"/>
-      <javac destdir="${{build.blocks}}/{$block-name}/samples"
-             debug="${{compiler.debug}}"
-             optimize="${{compiler.optimize}}"
-             deprecation="${{compiler.deprecation}}"
-             target="${{target.vm}}"
-             nowarn="${{compiler.nowarn}}"
-             compiler="${{compiler}}">
-        <src path="${{blocks}}/{$block-name}/java"/>
-        <!-- Currently, we have no JVM dependent sources
-        <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
-        -->
-        <classpath refid="{$block-name}.classpath"/>
-        <include name="**/samples/**/*.java"/>
-      </javac>
+      <if>
+        <isfalse value="${{internal.exclude.webapp.samples}}"/>
+        <then>
+          <mkdir dir="${{build.blocks}}/{$block-name}/samples"/>
+          <javac destdir="${{build.blocks}}/{$block-name}/samples"
+                 debug="${{compiler.debug}}"
+                 optimize="${{compiler.optimize}}"
+                 deprecation="${{compiler.deprecation}}"
+                 target="${{target.vm}}"
+                 nowarn="${{compiler.nowarn}}"
+                 compiler="${{compiler}}">
+            <src path="${{blocks}}/{$block-name}/java"/>
+            <!-- Currently, we have no JVM dependent sources
+            <src path="${{blocks}}/{$block-name}/java${{dependend.vm}}"/>
+            -->
+            <classpath refid="{$block-name}.classpath"/>
+            <include name="**/samples/**/*.java"/>
+          </javac>
+        </then>
+      </if>
     </target>
 
     <target name="{@name}-patch" unless="internal.exclude.block.{$block-name}">
