@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.15 2000-05-06 11:12:48 stefano Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.16 2000-07-21 23:55:04 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.15 $ $Date: 2000-05-06 11:12:48 $
+ * @version $Revision: 1.16 $ $Date: 2000-07-21 23:55:04 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults {
@@ -220,9 +220,7 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults {
     }
 
     private Document getDocument(Object resource) throws Exception {
-        InputSource input = new InputSource();
-        input.setSystemId(resource.toString());
-        return this.parser.parse(input, false);  // do not validate stylesheets
+        return this.parser.parse(new InputSource(resource.toString()), false);  // do not validate stylesheets
     }
 
     public boolean hasChanged(Object context) {
