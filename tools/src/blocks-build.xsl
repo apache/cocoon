@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+
 <!--
   Copyright 1999-2004 The Apache Software Foundation
 
@@ -14,8 +15,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="xml" indent="yes"/>
 
   <xsl:template match="/">
@@ -63,30 +64,54 @@
         <exclude name="**/package.html"/>
       </patternset>
 
-      <target name="init">
-        <xsl:for-each select="module/project[starts-with(@name, 'cocoon-block-')]">
-          <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
-          <condition property="include.block.{$block-name}">
-            <not>
-              <istrue value="${{exclude.block.{$block-name}}}"/>
-            </not>
-          </condition>
-          <condition property="internal.exclude.block.{$block-name}">
-            <isfalse value="${{include.block.{$block-name}}}"/>
-          </condition>
-        </xsl:for-each>
-      </target>
-
       <xsl:apply-templates select="module"/>
     </project>
   </xsl:template>
 
+
   <xsl:template match="module">
     <xsl:variable name="cocoon-blocks" select="project[starts-with(@name, 'cocoon-block-')]"/>
 
+    <target name="init">
+      <xsl:for-each select="$cocoon-blocks">
+        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+        <condition property="include.block.{$block-name}">
+          <not>
+            <istrue value="${{exclude.block.{$block-name}}}"/>
+          </not>
+        </condition>
+        <condition property="internal.exclude.block.{$block-name}">
+          <isfalse value="${{include.block.{$block-name}}}"/>
+        </condition>
+      </xsl:for-each>
+    </target>
+
+    <target name="warning" depends="init">
+      <xsl:for-each select="$cocoon-blocks[@status='unstable']">
+        <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+        <condition property="unstable.blocks.included">
+          <isfalse value="${{internal.exclude.block.{$block-name}}}"/>
+        </condition>
+      </xsl:for-each>
+      <if>
+        <istrue value="${{unstable.blocks.included}}"/>
+        <then>
+          <echo message="==================== WARNING ======================="/>
+          <xsl:for-each select="$cocoon-blocks[@status='unstable']">
+            <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
+            <echo message=" Block '{$block-name}' should be considered unstable."/>
+          </xsl:for-each>
+          <echo message="----------------------------------------------------"/>
+          <echo message="         This means that its API, schemas "/>
+          <echo message="  and other contracts might change without notice."/>
+          <echo message="===================================================="/>
+        </then>
+      </if>
+    </target>
+
     <target name="compile">
       <xsl:attribute name="depends">
-        <xsl:text>init</xsl:text>
+        <xsl:text>warning</xsl:text>
         <xsl:for-each select="$cocoon-blocks">
           <xsl:text>,</xsl:text>
           <xsl:value-of select="concat(@name, '-compile')"/>
@@ -275,6 +300,7 @@
     <xsl:apply-templates select="$cocoon-blocks"/>
   </xsl:template>
 
+
   <xsl:template match="project">
     <xsl:variable name="block-name" select="substring-after(@name,'cocoon-block-')"/>
     <xsl:variable name="cocoon-block-dependencies" select="depend[starts-with(@project,'cocoon-block-')]"/>
@@ -296,15 +322,6 @@
           </xsl:for-each>
         </xsl:if>
       </xsl:attribute>
-
-      <xsl:if test="@status='unstable'">
-        <echo message="==================== WARNING ======================="/>
-        <echo message=" Block '{$block-name}' should be considered unstable."/>
-        <echo message="----------------------------------------------------"/>
-        <echo message="         This means that its API, schemas "/>
-        <echo message="  and other contracts might change without notice."/>
-        <echo message="===================================================="/>
-      </xsl:if>
 
       <!-- Test if this block has special build -->
       <if>
@@ -443,6 +460,7 @@
       <xpatch file="${{build.webapp}}/WEB-INF/web.xml" srcdir="${{blocks}}">
         <include name="{$block-name}/conf/*.xweb"/>
       </xpatch>
+
       <!-- generate sitemap entries 
       <sitemap-components sitemap="${{build.webapp}}/sitemap.xmap" 
                           source="${{blocks}}/{$block-name}/java"
@@ -475,7 +493,13 @@
                                                                                                                                                                                
     <target name="{@name}-roles" unless="internal.exclude.block.{$block-name}">
       <xsl:if test="depend">
-        <xsl:attribute name="depends"><xsl:value-of select="@name"/><xsl:for-each select="depend[contains(@project,'cocoon-block-')]"><xsl:text>,</xsl:text><xsl:value-of select="@project"/>-roles</xsl:for-each></xsl:attribute>
+        <xsl:attribute name="depends">
+          <xsl:value-of select="@name"/>
+          <xsl:for-each select="depend[contains(@project,'cocoon-block-')]">
+            <xsl:text>,</xsl:text>
+            <xsl:value-of select="concat(@project, '-roles')"/>
+          </xsl:for-each>
+        </xsl:attribute>
       </xsl:if>
                                                                                                                                                                                
       <xpatch file="${{build.dest}}/org/apache/cocoon/cocoon.roles" srcdir="${{blocks}}">
@@ -555,7 +579,6 @@
           </copy>
         </then>
       </if>
-
     </target>
 
     <target name="{$block-name}-prepare" unless="internal.exclude.block.{$block-name}">
@@ -645,8 +668,8 @@
         </then>
       </if>
     </target>
-    <target name="{@name}-prepare-anteater-tests" unless="internal.exclude.block.{$block-name}">
 
+    <target name="{@name}-prepare-anteater-tests" unless="internal.exclude.block.{$block-name}">
       <!-- Test if this block has Anteater tests -->
       <if>
         <available file="${{blocks}}/{$block-name}/test/anteater"/>
