@@ -36,7 +36,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineNode.java,v 1.14 2004/03/11 01:31:59 joerg Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.15 2004/03/18 15:08:13 cziegeler Exp $
  */
 public class PipelineNode
         extends AbstractParentProcessingNode
@@ -136,7 +136,7 @@ public class PipelineNode
             // Will be reported by CocoonServlet, rethrowing
             throw cre;
         } catch (Exception ex) {
-            if (!externalRequest) {
+            if (!externalRequest && !env.isInternalRedirect()) {
                 // Propagate exception on internal requests
                 throw ex;
             } else if (error404 != null && ex instanceof ResourceNotFoundException) {
