@@ -15,11 +15,18 @@
  */
 package org.apache.cocoon.components.container;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.LogKitLogger;
@@ -30,6 +37,7 @@ import org.apache.cocoon.util.log.CocoonLogFormatter;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.source.TraversableSource;
 import org.apache.log.ErrorHandler;
 import org.apache.log.Hierarchy;
 import org.apache.log.LogTarget;
@@ -43,6 +51,9 @@ import org.apache.log4j.LogManager;
 */
 public class LoggingHelper {
     
+    /** Parameter map for the context protocol */
+    protected static final Map CONTEXT_PARAMETERS = Collections.singletonMap("force-traversable", Boolean.TRUE);
+
     protected final Settings settings;
     protected Logger log;
     protected LoggerManager loggerManager;
@@ -100,6 +111,34 @@ public class LoggingHelper {
                     source = this.resolver.resolveURI(logkitConfig);
                     final ConfigurationBuilder builder = new ConfigurationBuilder();
                     final Configuration conf = builder.build(source.getInputStream());
+                    final Configuration[] children = conf.getChildren("include");
+                    for(int i=0; i<children.length; i++) {
+                        String directoryURI = children[i].getAttribute("dir");                    
+                        final String ending = children[i].getAttribute("postfix", null);
+                        Source directory = null;
+                        try {
+                            directory = this.resolver.resolveURI(directoryURI, source.getURI(), CONTEXT_PARAMETERS);
+                            if ( directory instanceof TraversableSource ) {
+                                final Iterator c = ((TraversableSource)directory).getChildren().iterator();
+                                while ( c.hasNext() ) {
+                                    final Source s = (Source)c.next();
+                                    if ( ending == null || s.getURI().endsWith(ending) ) {
+                                        final Configuration includeConf = builder.build(s.getInputStream());
+                                        ((DefaultConfiguration)conf).addAllChildren(includeConf);
+                                    }
+                                }
+                            } else {
+                                throw new ConfigurationException("Include.dir must point to a directory, '" + directory.getURI() + "' is not a directory.'");
+                            }
+                        } catch (IOException ioe) {
+                            throw new ConfigurationException("Unable to read configurations from " + directoryURI);
+                        } finally {
+                            this.resolver.release(directory);
+                        }
+                        
+                        // finally remove include
+                        ((DefaultConfiguration)conf).removeChild(children[i]);
+                    }
                     ContainerUtil.configure(loggerManager, conf);
                 } finally {
                     this.resolver.release(source);
@@ -147,9 +186,10 @@ public class LoggingHelper {
     /**
      * @return Returns the log.
      */
-    public Logger getLog() {
+    public Logger getLogger() {
         return this.log;
     }
+    
     /**
      * @return Returns the loggerManager.
      */
