@@ -28,15 +28,15 @@ import java.rmi.NotBoundException;
 import org.xml.sax.InputSource; 
 import org.xml.sax.SAXException; 
 
-// import of the classes used from Cocoon 2 
+// import of the classes used from Cocoon 
 import org.apache.cocoon.ProcessingException; 
-import org.apache.cocoon.generation.ComposerGenerator; 
+import org.apache.cocoon.generation.ServiceableGenerator; 
 
 // import of the classes from the 
 // Avalon Framework 
 import org.apache.avalon.framework.parameters.Parameters; 
 import org.apache.avalon.framework.parameters.ParameterException; 
-import org.apache.avalon.framework.component.ComponentException; 
+import org.apache.avalon.framework.service.ServiceException; 
 
 // needed for obtaining parser in Cocoon 
 import org.apache.excalibur.xml.sax.SAXParser;
@@ -45,8 +45,8 @@ import org.apache.excalibur.xml.sax.SAXParser;
  * <p>
  * The <code>RMIGenerator</code> is a generator that reads a String via RMI
  * and generates SAX events. 
- * The RMIGenerator extends the <code>ComposerGenerator</code> class. This is
- * done so we can access the <code>ComponentManager</code> to obtain a
+ * The RMIGenerator extends the <code>ServiceableGenerator</code> class. This is
+ * done so we can access the <code>ServiceManager</code> to obtain a
  * <code>SAXParser</code>.
  * </p>
  *
@@ -91,9 +91,9 @@ import org.apache.excalibur.xml.sax.SAXParser;
  *
  * @author <a href="mailto:Erwin.Hermans@cs.kuleuven.ac.be">Erwin Hermans</a>
  *         (Student Computer Science Department KULeuven, 2001-2002)
- * @version CVS $Id: RMIGenerator.java,v 1.3 2004/03/06 02:26:14 antonio Exp $
+ * @version CVS $Id$
  */
-public class RMIGenerator extends ComposerGenerator { 
+public class RMIGenerator extends ServiceableGenerator { 
 
 	/**
 	 * Generate SAX events based on the parameters and the source specified
@@ -160,7 +160,7 @@ public class RMIGenerator extends ComposerGenerator {
 			parser.parse(inputSource,super.xmlConsumer); 
 		} catch (NotBoundException nbe) { 
 			throw new ProcessingException("Error looking up the RMI application server",nbe); 
-		} catch (ComponentException ce) { 
+		} catch (ServiceException ce) { 
 			throw new ProcessingException("Error obtaining a SAXParser",ce); 
 		} 
 	} 

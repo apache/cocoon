@@ -19,5 +19,5 @@
 
   <role name="org.apache.cocoon.forms.validation.WidgetValidatorBuilderSelector"
         shorthand="forms-validators"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 </xroles>

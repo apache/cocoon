@@ -19,5 +19,5 @@
 
   <role name="org.apache.cocoon.forms.event.WidgetListenerBuilderSelector"
         shorthand="forms-widgetlisteners"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 </xroles>

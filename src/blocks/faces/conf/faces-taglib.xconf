@@ -19,7 +19,7 @@
 <xconf xpath="/cocoon/component[@role='org.apache.cocoon.taglib.TagSelector']"
        unless="taglib[@name='http://java.sun.com/jsf/core']">
 
-    <taglib name="http://java.sun.com/jsf/core" logger="sitemap.taglib.jsf" class="org.apache.cocoon.components.ExtendedComponentSelector">
+    <taglib name="http://java.sun.com/jsf/core" logger="sitemap.taglib.jsf" class="org.apache.cocoon.core.container.CocoonServiceSelector">
       <tag name="actionListener" class="org.apache.cocoon.faces.taglib.ActionListenerTag" logger="sitemap.taglib.jsf"/>
       <tag name="attribute" class="org.apache.cocoon.faces.taglib.AttributeTag" logger="sitemap.taglib.jsf"/>
       <tag name="convertDateTime" class="org.apache.cocoon.faces.taglib.ConvertDateTimeTag" logger="sitemap.taglib.jsf"/>
@@ -39,7 +39,7 @@
       <tag name="verbatim" class="org.apache.cocoon.faces.taglib.VerbatimTag" logger="sitemap.taglib.jsf"/>
       <tag name="view" class="org.apache.cocoon.faces.taglib.ViewTag" logger="sitemap.taglib.jsf"/>
     </taglib>
-    <taglib name="http://java.sun.com/jsf/html" logger="sitemap.taglib.jsf.html" class="org.apache.cocoon.components.ExtendedComponentSelector">
+    <taglib name="http://java.sun.com/jsf/html" logger="sitemap.taglib.jsf.html" class="org.apache.cocoon.core.container.CocoonServiceSelector">
       <tag name="column" class="org.apache.cocoon.faces.taglib.html.ColumnTag" logger="sitemap.taglib.jsf.html"/>
       <tag name="commandButton" class="org.apache.cocoon.faces.taglib.html.CommandButtonTag" logger="sitemap.taglib.jsf.html"/>
       <tag name="commandLink" class="org.apache.cocoon.faces.taglib.html.CommandLinkTag" logger="sitemap.taglib.jsf.html"/>

@@ -122,8 +122,8 @@ implements Contextualizable, ThreadSafe, Disposable, Initializable {
                                 Object role,
                                 Configuration configuration) 
     throws ConfigurationException {
-        // check for old class names
-        // TODO We can remove this as soon as we changed cocoon.roles and cocoon.xconf
+        // check for old excalibur class names - we only test against the selector
+        // implementation
         if ( "org.apache.cocoon.components.ExtendedComponentSelector".equals(className)) {
             className = CocoonServiceSelector.class.getName();
         }

@@ -23,14 +23,14 @@ import javax.naming.InitialContext;
 import java.util.Hashtable;
 
 /**
- * This class sets up the configuration used by the ParentComponentManager sample.
+ * This class sets up the configuration used by the ParentServiceManager sample.
  * The class also holds a reference to the initial context in which the configuration
  * is available.
  * <p>
  * The configuration is bound to <code>org/apache/cocoon/samples/parentcm/ParentCMConfiguration</code>.
  *
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Configurator.java,v 1.2 2004/03/05 13:03:02 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class Configurator  {
 

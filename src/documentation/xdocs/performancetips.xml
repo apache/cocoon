@@ -72,7 +72,7 @@
 
       <li>Search for messages such as "decommissioning instance of...". This reveals some 
       undersized pools which are corrected by tuning cocoon.xconf and sitemap.xmap. 
-      Undersized pools act like an object factory, plus the ComponentManager
+      Undersized pools act like an object factory, plus the ServiceManager
       overhead.</li>
    </ul> 
  </s1>

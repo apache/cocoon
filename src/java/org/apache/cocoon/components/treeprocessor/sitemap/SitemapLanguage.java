@@ -104,14 +104,11 @@ public class SitemapLanguage extends DefaultTreeBuilder {
         setupMimeTypes(config, Serializer.ROLE, "serializers");
         setupMimeTypes(config, Reader.ROLE, "readers");
         
-        // Wrap the ComponentManager in a ServiceManager
-        ServiceManager result = newManager;
-        
         // Register manager and prevent further modifications
-        getProcessor().getComponentInfo().setServiceManager(result);
+        getProcessor().getComponentInfo().setServiceManager(newManager);
         getProcessor().getComponentInfo().lock();
         
-        return result;
+        return newManager;
     }
     
     /**

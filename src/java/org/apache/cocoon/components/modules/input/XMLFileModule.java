@@ -145,7 +145,7 @@ public class XMLFileModule extends AbstractJXPathModule implements Serviceable, 
          * Returns the Document belonging to the configured
          * source. Transparently handles reloading and caching.
          *
-         * @param manager a <code>ComponentManager</code> value
+         * @param manager a <code>ServiceManager</code> value
          * @param resolver a <code>SourceResolver</code> value
          * @return a <code>Document</code> value
          * @exception Exception if an error occurs

@@ -208,17 +208,16 @@ public class HelloWorldGenerator extends AbstractGenerator
                The only direct implementation of this of interest to us is
                <code>AbstractGenerator</code>, which gives a basic level of
                functionality. Another option would have been
-               <code>ComposerGenerator</code>, which would give us the added
+               <code>ServiceableGenerator</code>, which would give us the added
                functionality of implenting the Avalon interface 
-               <code>Composable</code>
-
+               <code>Serviceable</code>
                , which would signal the container that handles all the
                components including our generator to give us a handle back to
-               the <code>ComponentManager</code>
+               the <code>ServiceManager</code>
                during the startup of the container. If we needed to lookup a
                pooled database connection, or some other standard or custom
                Cocoon component, this is what we would do. Most of the out
-               of the box Generators extend <code>ComposerGenerator</code>.
+               of the box Generators extend <code>ServiceableGenerator</code>.
                Other abstract Generators you may choose to extend include the
                poorly named (IMHO) <code>ServletGenerator</code>
 
@@ -464,8 +463,8 @@ public class RequestExampleGenerator extends AbstractGenerator
                <p>First, notice that we now override the
                 <code>setup(...)</code> and <code>recycle()</code> methods
                 defined in <code>AbstractGenerator</code>.
-                The <code>ComponentManager</code> that handles the lifecycle of
-                all <code>component</code>s in Cocoon, calls
+                The <code>ServiceManager</code> that handles the lifecycle of
+                all <code>service</code>s in Cocoon, calls
                 <code>setup(..)</code> before each new call to
                 <code>generate()</code> to give the Generator information
                 about the current request and its environment, and calls
@@ -555,7 +554,7 @@ and in sitemap.xmap,
          <s2 title="Moving On">
          <p>From here, we will move on to cover handling ugly pseudo-xml
           (like real world html) with CDATA blocks, employing some of the
-          Avalon lifecycle method callbacks (Composable/Disposable), Database
+          Avalon lifecycle method callbacks (Serviceable/Disposable), Database
           access, and Caching.</p>
          <s3 title="The Employee SQL Example Reworked">
           <p>In the samples included with Cocoon, there is an example of a SQL
@@ -567,10 +566,10 @@ and in sitemap.xmap,
            this specific task is handled in the ESQL XSP example in just a few
            lines of code.  If your task is really this simple, there may be no
            need to create your own generator.</p>
-<source xml:space="preserve"><![CDATA[import org.apache.cocoon.generation.ComposerGenerator;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
+<source xml:space="preserve"><![CDATA[import org.apache.cocoon.generation.ServiceableGenerator;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.avalon.framework.parameters.Parameters;
@@ -588,7 +587,7 @@ import java.util.Map;
 import java.util.Date;
 import org.apache.avalon.framework.activity.Disposable;
 
-public class EmployeeGeneratorExample extends ComposerGenerator
+public class EmployeeGeneratorExample extends ServiceableGenerator
    implements Cacheable, Disposable
 {
 
@@ -610,10 +609,10 @@ public class EmployeeGeneratorExample extends ComposerGenerator
 	}
 
 	
-	public void compose(ComponentManager manager) 
-	throws ComponentException{
-	  super.compose(manager);
-	  ComponentSelector selector = (ComponentSelector)
+	public void service(ServiceManager manager) 
+	throws ServiceException{
+	  super.service(manager);
+	  ServiceSelector selector = (ServiceSelector)
             manager.lookup(DataSourceComponent.ROLE + "Selector");
 	  this.datasource = (DataSourceComponent) selector.select("personnel");
 	}
@@ -741,13 +740,13 @@ public class EmployeeGeneratorExample extends ComposerGenerator
       </s3>
 
       <s3 title="New Concepts">
-	<s4 title="Composable and Disposable">
-	<p>We've implemented the Avalon lifecycle interfaces Composable and 
+	<s4 title="Serviceable and Disposable">
+	<p>We've implemented the Avalon lifecycle interfaces Serviceable and 
     Disposable.  When Cocoon starts up (which happens when the servlet 
-    container starts up) the <code>ComponentManager</code> will call 
-    <code>compose(ComponentManager m)</code> for our component as it works 
+    container starts up) the <code>ServiceManager</code> will call 
+    <code>service(ServiceManager m)</code> for our component as it works 
     its way through all the components declared in the sitemap.  The handle 
-    to <code>ComponentManager</code> is used to look up any other Avalon 
+    to <code>ServiceManager</code> is used to look up any other Avalon 
     components that we need.  Lookups happen in an abstracted way using a 
     ROLE which enables us to change out implementations of each component 
     without affecting previously written code.  Our generator's ROLE by the 

@@ -82,7 +82,7 @@ Apache's Cocoon 2 website also enumerates the available Generators, which packag
 					<ul>
 						<li>AbstractGenerator</li>
 						<li>AbstractServerPage</li>
-						<li>ComposerGenerator</li>
+						<li>ServiceableGenerator</li>
 						<li>ServletGenerator</li>
 					</ul>
   <p>					
@@ -92,8 +92,8 @@ Java only supports single inheritance, so you'll have to choose one of these for
 				<p>There is a hierarchy between these classes, namely:</p>
 					<ul>
 						<li>AbstractGenerator</li>
-						<li>ComposerGenerator extends AbstractGenerator</li>
-						<li>ServletGenerator extends ComposerGenerator</li>
+						<li>ServiceableGenerator extends AbstractGenerator</li>
+						<li>ServletGenerator extends ServiceableGenerator</li>
 						<li>AbstractServerPage extends ServletGenerator</li>
 					</ul>
 					<p>So the choice of which class to extend will depends mostly on which is the level of abstraction required by your generator.
@@ -203,13 +203,6 @@ Java only supports single inheritance, so you'll have to choose one of these for
 		</ul>
 	</li>
 	
-	<li>From <strong>org.apache.avalon.framework.component.Component</strong>:
-		<ul>
-			<li>None</li>
-		</ul>
-		When a class implements this interface, it allows itself to be managed by a ComponentManager and by an outside element called a Composable. The Composable must know what type of Component it is accessing, so it will re-cast the Component into the type it needs.
-	</li>
-	
 	<li>From <strong>AbstractGenerator</strong> itself:
 		<ul>
 			<li><code>void setup(SourceResolver resolver, Map objectmodel, String src, Parameters par)</code>: set the SourceResolver, objectmodel Map, the source and sitemap Parameters used to process the request (implemented).
@@ -311,15 +304,15 @@ This gives us a list of variables that we can use throughout our own generator.
 </p>
 				</s4>
 				
-				<s4 title="ComposerGenerator">
-					<p><strong>Can be used as base class if you want your Generator to be an Avalon Composable</strong><br/>
+				<s4 title="ServiceableGenerator">
+					<p><strong>Can be used as base class if you want your Generator to be an Avalon Serviceable</strong><br/>
 					</p>
 					
-					<p>This <strong>abstract class</strong> extends <strong>org.apache.cocoon.generation.AbstractGenerator</strong> and extends the interfaces <strong>org.apache.avalon.framework.component.Composable</strong> and <strong>org.apache.avalon.framework.activity.Disposable</strong>.</p><p>In addition to all the methods introduced in the <strong>AbstractGenerator</strong> class, these two interfaces introduce som new methods:</p>
+					<p>This <strong>abstract class</strong> extends <strong>org.apache.cocoon.generation.AbstractGenerator</strong> and extends the interfaces <strong>org.apache.avalon.framework.service.Serviceable</strong> and <strong>org.apache.avalon.framework.activity.Disposable</strong>.</p><p>In addition to all the methods introduced in the <strong>AbstractGenerator</strong> class, these two interfaces introduce som new methods:</p>
 <ul>
-	<li>From <strong>org.apache.avalon.framework.component.Composable</strong>:
+	<li>From <strong>org.apache.avalon.framework.service.Serviceable</strong>:
 		<ul>
-			<li><code>public void compose(ComponentManager componentManager)</code>: Pass the ComponentManager to the Composable. The Composable implementation should use the specified ComponentManager to acquire the components it needs for execution.				      
+			<li><code>public void service(ServiceManager serviceManager)</code>: Pass the ServiceManager to the Serviceable. The Serviceable implementation should use the specified ServiceManager to acquire the components it needs for execution.				      
 			</li>
 		</ul>
 	</li>
@@ -332,12 +325,12 @@ This gives us a list of variables that we can use throughout our own generator.
 		The Disposable interface is used when components need to deallocate and dispose resources prior to their destruction.
 	</li>
 	
-	<li>From <strong>ComposerGenerator</strong> itself:
+	<li>From <strong>ServiceableGenerator</strong> itself:
 		<ul>
-			<li><code>public void compose(ComponentManager componentManager)</code>: Pass the ComponentManager to the Composable. The Composable implementation should use the specified ComponentManager to acquire the components it needs for execution. (implemented)
+			<li><code>public void service(ServiceManager serviceManager)</code>: Pass the ServiceManager to the Serviceable. The Serviceable implementation should use the specified ServiceManager to acquire the components it needs for execution. (implemented)
 			</li>
 			
-			<li><code>public void dispose()</code>: The dispose operation is called at the end of a components lifecycle. Components use this method to release and destroy any resources that the Component owns. (implemented - implementation sets the ComponentManager to null)
+			<li><code>public void dispose()</code>: The dispose operation is called at the end of a components lifecycle. Components use this method to release and destroy any resources that the Component owns. (implemented - implementation sets the ServiceManager to null)
 			</li>
 		</ul>
 	</li>
@@ -348,9 +341,9 @@ This gives us a list of variables that we can use throughout our own generator.
 					
 					<p>Besides these methods, also a new variable is introduced:</p>
 <ul>
-	<li>From <strong>ComposerGenerator</strong> itself:
+	<li>From <strong>ServiceableGenerator</strong> itself:
 		<ul>
-			<li><code>protected ComponentManager manager = null</code>: the component manager instance, can be accessed via <strong>this.manager</strong>.
+			<li><code>protected ServiceManager manager = null</code>: the service manager instance, can be accessed via <strong>this.manager</strong>.
 			</li>
 		</ul>
 	</li>
@@ -361,7 +354,7 @@ This gives us a list of variables that we can use throughout our own generator.
 					<p><strong>If you want to generate servlets. This is the base class for the ServerPagesGenerator</strong><br/>
 					</p>
 					
-					<p>The <strong>ServletGenerator</strong> extends <strong>ComposerGenerator</strong>. 
+					<p>The <strong>ServletGenerator</strong> extends <strong>ServiceableGenerator</strong>. 
 					</p>
 
 					<p>We are not giving a more elaborate description of this component at this time. We have not experimented with this component and we would not like to risk making any wrong assumptions.
@@ -410,13 +403,6 @@ This gives us a list of variables that we can use throughout our own generator.
 			<li><code>void setup(SourceResolver resolver, Map objectmodel, String src, Parameters par)</code>: set the SourceResolver, objectmodel Map, the source and sitemap Parameters used to process the request.
 			</li>
 		</ul>
-	</li>
-	
-	<li>From <strong>org.apache.avalon.framework.component.Component</strong>:
-		<ul>
-			<li>None</li>
-		</ul>
-		When a class implements this interface, it allows itself to be managed by a ComponentManager and by an outside element called a Composable. The Composable must know what type of Component it is accessing, so it will re-cast the Component into the type it needs.
 	</li>
 	
 	<li>From <strong>org.apache.cocoon.generation.Generator</strong> itself:
@@ -719,10 +705,10 @@ SAXParser parser = null;
 						<li><code>void parse(InputSource in, ContentHandler consumer)</code>: the implementation of this method should parse the <strong>InputSource</strong> and send the SAX events to the <strong>consumer</strong>. The consumer can be an <strong>XMLConsumer</strong> or an object that implements <strong>LexicalHandler</strong> as well.
 						</li>
 					</ul>
-					<p>This interface defines a variable <strong>ROLE</strong> of the type String that is given the value <strong>org.apache.excalibur.xml.sax.SAXParser</strong>. This variable is used to ask the <strong>ComponentManager</strong>, which is accessed by <strong>this.manager</strong>, to <strong>lookup</strong> a <strong>Component</strong> that has that role. The returned Component is then casted to a <strong>SAXParser</strong> type. We can then apply the parse method to any <strong>org.xml.sax.InputSource</strong> object and to an object that implements the <strong>ContentHandler</strong> interface. Finally, we have to tell the ComponentManager that we are finished using the parser. This allows the ComponentManager to handle the End-Of-Life Lifecycle events associated with this Component.
+					<p>This interface defines a variable <strong>ROLE</strong> of the type String that is given the value <strong>org.apache.excalibur.xml.sax.SAXParser</strong>. This variable is used to ask the <strong>ServiceManager</strong>, which is accessed by <strong>this.manager</strong>, to <strong>lookup</strong> a <strong>Component</strong> that has that role. The returned Component is then casted to a <strong>SAXParser</strong> type. We can then apply the parse method to any <strong>org.xml.sax.InputSource</strong> object and to an object that implements the <strong>ContentHandler</strong> interface. Finally, we have to tell the ServiceManager that we are finished using the parser. This allows the ServiceManager to handle the End-Of-Life Lifecycle events associated with this Component.
 				</p>
 				
-				<p><strong>NOTE:</strong> if you want to use this method to obtain a parser, it would be better to extend the <strong>ComposerGenerator</strong> class, instead of the <strong>AbstractGenerator</strong> class. The ComposerGenerator is defined to make use of a <strong>ComponentManager</strong>, while this is not the case for the <strong>AbstractGenerator</strong> class. You should envisage the given code as part of a class that extends the <strong>ComposerGenerator</strong> class or one of its children.
+				<p><strong>NOTE:</strong> if you want to use this method to obtain a parser, it would be better to extend the <strong>ServiceableGenerator</strong> class, instead of the <strong>AbstractGenerator</strong> class. The ServiceableGenerator is defined to make use of a <strong>ServiceManager</strong>, while this is not the case for the <strong>AbstractGenerator</strong> class. You should envisage the given code as part of a class that extends the <strong>ServiceableGenerator</strong> class or one of its children.
 				</p>
 			</s3>
 		</s2>
@@ -1027,7 +1013,7 @@ We only need these three parameters to define the remote server object. We do no
 				<p>We now have defined the host, port and bindname parameters, but how can we access the value of these parameters in our code? The setup method has an argument Parameters par. It is via this argument that the parameters defined in the sitemap will be passed to the generator. This argument will be assigned to the <strong>parameters</strong> variable defined in AbstractGenerator. To obtain the value of each parameter we can invoke the following method on the parameters variable: <code>public java.lang.String getParameter(java.lang.String name)</code>. This method returns the value of the specified parameter, or throws an exception if there is no such parameter.
 				</p>
 				
-				<p>With all this in mind, we can finally build our configurable RMIGenerator. Also, this time we are going to extend the <strong>ComposerGenerator</strong> instead of the <strong>AbstractGenerator</strong> class. This way, we can make use of the <strong>ComponentManager</strong> to obtain a SAXParser. 
+				<p>With all this in mind, we can finally build our configurable RMIGenerator. Also, this time we are going to extend the <strong>ServiceableGenerator</strong> instead of the <strong>AbstractGenerator</strong> class. This way, we can make use of the <strong>ServiceManager</strong> to obtain a SAXParser. 
 				</p>
 				
 				<p>At this moment we decide that if there is no value given to the src attribute in the sitemap (<strong>source is null</strong>), we will invoke the <strong>sayHello</strong> method and otherwise the getResource with the appropriate parameter. When the value of the src attribute is the <strong>empty string</strong>, the <strong>getResource</strong> method is invoked, so this should be <strong>handled by the RMI server application</strong>.
@@ -1049,21 +1035,20 @@ import java.rmi.NotBoundException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-// import of the classes used from Cocoon 2
+// import of the classes used from Cocoon
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.ServiceableGenerator;
 
 // Avalon Framework
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.framework.component.ComponentException;
 
 // needed for obtaining parser in Cocoon
 import org.apache.excalibur.xml.sax.SAXParser;
 
 import test.ServerFunctions;
 
-public class MyGenerator extends ComposerGenerator {
+public class MyGenerator extends ServiceableGenerator {
   public void generate () throws IOException, SAXException,
     ProcessingException {
       String host;
@@ -1134,7 +1119,7 @@ public class MyGenerator extends ComposerGenerator {
       } catch (NotBoundException nbe) {
 	throw new ProcessingException("
 	Error looking up the RMI server application",nbe);
-      } catch (ComponentException ce) {
+      } catch (ServiceException ce) {
         throw new ProcessingException("
         Error obtaining a SAXParser",ce);
       }
@@ -1167,7 +1152,7 @@ If your platform does not allow the use of symbolic links, you should use the co
 	</s1>
 	
 	<s1 title="Future plans">
-		<p>The first version of this generator was written as a proof-of-concept. The latest version (as given here, extending the ComposerGenerator) only foresees in the <strong>generate</strong> method. There are a number of plans we still have to extend the functionality and thus usability of this generator:</p>
+		<p>The first version of this generator was written as a proof-of-concept. The latest version (as given here, extending the ServiceableGenerator) only foresees in the <strong>generate</strong> method. There are a number of plans we still have to extend the functionality and thus usability of this generator:</p>
 			<ul>
 				<li>allow passing of a (J)DOM document instance as a resource to our generator. JDOM does require an additional entry in the classpath.</li>
 				<li>supply a possibility for caching documents</li>

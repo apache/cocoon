@@ -18,47 +18,47 @@
 
     <document>
         <header>
-            <title>Parent Component Manager</title>
+            <title>Parent Service Manager</title>
             <version>0.9</version>
             <type>Technical document</type>
             <authors>
                 <person name="Leo Sutic" email="leo.sutic@inspireinfrastructure.com"/>
             </authors>
-            <abstract>This document describes how to use a parent component manager in Cocoon.</abstract>
+            <abstract>This document describes how to use a parent service manager in Cocoon.</abstract>
         </header>
         <body>
-            <s1 title="Parent Component Manager">
+            <s1 title="Parent Service Manager">
                 <p>When using Apache Cocoon it is sometimes neccessary to obtain
                     components from other sources than the <code>user.roles</code> file,
                     or preferable to have a common component manager for several web applications.</p>
                 
-                <p>The pattern chosen for Cocoon is the dynamic loading of a component manager class.
-                    The initialization parameter parent-component-manager in web.xml specifies a class
-                    that will be loaded, instantiated and used as a parent component manager for 
-                    Cocoon's component manager.</p>
+                <p>The pattern chosen for Cocoon is the dynamic loading of a service manager class.
+                    The initialization parameter parent-service-manager in web.xml specifies a class
+                    that will be loaded, instantiated and used as a parent service manager for 
+                    Cocoon's serivce manager.</p>
                 
                 <p>The recommended procedure is for the class, when it is initialized, to create a 
-                    delegate in the form of an <code>ExcaliburComponentManager</code>, configure it
+                    delegate in the form of an <code>CocoonServiceManager</code>, configure it
                     by looking up a <code>Configuration</code> object via JNDI, and delegate any requests to it.</p>
                 
-                <p>In order to provide a way to pass parameters to the parent component manager class 
-                    (the class specified in parent-component-manager), Cocoon will instantiate the class
+                <p>In order to provide a way to pass parameters to the parent service manager class 
+                    (the class specified in parent-service-manager), Cocoon will instantiate the class
                     via the constructor that takes a single <code>String</code> argument, passing
                     anything to the right of the first <code>'/'</code> in the parameter value to the
                     constructor. Subsequently Cocoon examines whether the class implements 
                     <code>org.apache.avalon.framework.logger.LogEnabled</code> and/or 
                     <code>org.apache.avalon.framework.activity.Initializable</code> and calls
                     <code>setLogger</code> and/or <code>initialize</code>, as appropriate.
-                    The instance is then used as a parent component manager.
+                    The instance is then used as a parent service manager.
                 </p>
                                 
                 <p>Since that didn't make much sense in itself, let's look at the sample.</p>
                 
                 <p>The goal is to define a component that can give us the time of day and
-                    let it be managed by a parent component manager.</p>
+                    let it be managed by a parent service manager.</p>
                 
                 <p>So, first we need to put a Configuration object into JNDI, and then 
-                    grab that object, use it to configure an ExcaliburComponentManager,
+                    grab that object, use it to configure an CocoonServiceManager,
                     and pass on any requests to that manager.</p>
                 
                 <s2 title="Step 1: Creating a configuration object">
@@ -121,7 +121,7 @@ public class Configurator  {
     &lt;!-- For Database Driver: --&gt;
     @database-driver@
         
-    &lt;!-- For parent ComponentManager sample:
+    &lt;!-- For parent ServiceManager sample:
             This will cause the static initializer to run,
             and thus the Configuration object to be created
             and bound. --&gt;
@@ -130,26 +130,26 @@ public class Configurator  {
 &lt;/init-param&gt;</source>
                 </s2>
                 
-                <s2 title="Step 2: Write the component manager">
+                <s2 title="Step 2: Write the service manager">
                 
                     <p>Now that the configuration object is sitting there waiting for us, let's craft
-                        the component manager. Please see the file org/apache/cocoon/samples/parentcm/ParentComponentManager.java
+                        the component manager. Please see the file org/apache/cocoon/samples/parentcm/ParentServiceManager.java
                         for an example. It is too much to paste in here.</p>
                 
                 </s2>
                     
-                <s2 title="Step 3: Tell Cocoon to use the component manager">
+                <s2 title="Step 3: Tell Cocoon to use the service manager">
                     <p>Change the web.xml file to:</p>
                     
                     <source>
 &lt;init-param&gt;
-  &lt;param-name&gt;parent-component-manager&lt;/param-name&gt;
-  &lt;param-value&gt;org.apache.cocoon.samples.parentcm.ParentComponentManager/(remove this line break)
+  &lt;param-name&gt;parent-service-manager&lt;/param-name&gt;
+  &lt;param-value&gt;org.apache.cocoon.samples.parentcm.ParentServiceManager/(remove this line break)
 org/apache/cocoon/samples/parentcm/ParentCMConfiguration&lt;/param-value&gt;
 &lt;/init-param&gt;</source>
                     
                     <p>Cocoon will now do the following: First, it will split the parameter value at the first slash,
-                        in this case ending up with the strings <code>"org.apache.cocoon.samples.parentcm.ParentComponentManager"</code>
+                        in this case ending up with the strings <code>"org.apache.cocoon.samples.parentcm.ParentServiceManager"</code>
                         and <code>"org/apache/cocoon/samples/parentcm/ParentCMConfiguration"</code>. The first string is the 
                         class to instantiate. The second is the parameter that will be passed to the constructor.</p>
                     
@@ -158,13 +158,13 @@ org/apache/cocoon/samples/parentcm/ParentCMConfiguration&lt;/param-value&gt;
                         class in a manner similar to:</p>
                     
                     <source>
-ComponentManager cm = new 
-    org.apache.cocoon.samples.parentcm.ParentComponentManager(
+ServiceManager cm = new 
+    org.apache.cocoon.samples.parentcm.ParentServiceManager(
         "org/apache/cocoon/samples/parentcm/ParentCMConfiguration");</source>
                     
                     <p>
-                        After this Cocoon checks whether the parent component manager class implements <code>Initializable</code> and/or
-                        <code>LogEnabled</code>. Since the <code>ParentComponentManager</code> class implements both, Cocoon
+                        After this Cocoon checks whether the parent service manager class implements <code>Initializable</code> and/or
+                        <code>LogEnabled</code>. Since the <code>ParentServiceManager</code> class implements both, Cocoon
                         does the following (with simplification):
                     </p>
                     
@@ -172,13 +172,13 @@ ComponentManager cm = new
 ((LogEnabled) cm).enableLogging(logger);
 ((Initializable) cm).initialize();</source>
                     
-                    <p>Finally, the instance is used as parent component manager of Cocoon's own component manager.</p>
+                    <p>Finally, the instance is used as parent service manager of Cocoon's own service manager.</p>
                 </s2>
                 
                 <s2 title="Step 4: Use the component">
                 
-                    <p>Cocoon components can now use the ComponentManager given to them by Cocoon to look up the
-                        component managed by the parent component manager:</p>
+                    <p>Cocoon components can now use the ServiceManager given to them by Cocoon to look up the
+                        component managed by the parent service manager:</p>
                 
                     <p>The following code was taken from org/apache/cocoon/samples/parentcm/Generator.java</p>
                 
@@ -190,7 +190,7 @@ public void setup(SourceResolver resolver, Map objectModel, String src, Paramete
     try {
         timeGiver = (Time) manager.lookup(Time.ROLE);
         this.time = timeGiver.getTime ();
-    } catch (ComponentException ce) {
+    } catch (ServiceException ce) {
         throw new ProcessingException ("Could not obtain current time.", ce);
     } finally {
         manager.release(timeGiver);
@@ -198,7 +198,7 @@ public void setup(SourceResolver resolver, Map objectModel, String src, Paramete
 }</source>
                 </s2>
                 
-                <p>And that concludes the tour. A parent component manager was initialized with a configuration
+                <p>And that concludes the tour. A parent service manager was initialized with a configuration
                     obtained via JNDI and its components used by a Cocoon generator.</p>
             </s1>
         </body>

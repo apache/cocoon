@@ -51,7 +51,7 @@
 
   <role name="org.apache.cocoon.matching.MatcherSelector"
         shorthand="matchers"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
  </roles>
 
  <components>

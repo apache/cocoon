@@ -75,14 +75,6 @@
           spoken, same movements made, etc.), but with each actor the exact
           nuances of the performance are different.</p>
       </s2>
-      <s2 title="ComponentManager (deprecated)">
-        <p>
-          <code>org.apache.avalon.framework.component.ComponentManager</code>
-        </p>
-        <p>This is the deprecated version of the <code>ServiceManager</code>. In
-          some places this component is still used, but over time all the usages
-          of this class will be replaced with the <code>ServiceManager</code>.</p>
-      </s2>
       <s2 title="Serviceable">
         <p>
           <code>org.apache.avalon.framework.service.Serviceable</code>
@@ -93,35 +85,6 @@
           if you need to use other components in your implementation, you
           have to implement <code>Serviceable</code> to be able to get other
           components.</p>
-      </s2>
-      <s2 title="Composable (deprecated)">
-        <p>
-          <code>org.apache.avalon.framework.component.Composable</code>
-        </p>
-        <p>This is the deprecated version of <code>Serviceable</code>.  In
-          some places this component is still used, but over time all the usages
-          of this class will be replaced with <code>Serviceable</code>.</p>
-      </s2>
-      <s2 title="Component">
-        <p>
-          <code>org.apache.avalon.framework.component.Component</code>
-        </p>
-        <p>This interface identifies classes that can be used as
-          <code>Components</code> by a <code>Composable</code>.</p>
-        <p>A <code>Component</code> is the basic building block of Avalon. When
-          a class implements this interface, it allows itself to be managed by a
-          <code>ComponentManager</code> and used by an outside element called a
-          <code>Composable</code>. The <code>Composable</code> must know what
-          type of <code>Component</code> it is accessing, so it will re-cast the
-          <code>Component</code> into the type it needs.</p>
-        <p>
-          <code>Component</code>s in Cocoon are e.g. those defined in
-          <code>cocoon.xconf</code>.
-        </p>
-        <note><code>Component</code> is only required in combination with
-          <code>ComponentManager</code> and <code>Composable</code>. As these
-          are still used in Cocoon, it's required to implement <code>Component</code>
-          in order to work properly everywhere.</note>
       </s2>
       <s2 title="Configuration">
         <p>

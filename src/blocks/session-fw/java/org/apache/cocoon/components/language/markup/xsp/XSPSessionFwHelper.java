@@ -36,7 +36,7 @@ public class XSPSessionFwHelper {
     /** GetXML Fragment from the given session context and path
      *
      *
-     * @param cm The ComponentManager
+     * @param cm The ServiceManager
      * @param context The Session context tha define where to search
      * @param path The parameter path
     **/
@@ -60,7 +60,7 @@ public class XSPSessionFwHelper {
     /** GetXML Fragment from the given session context and path
      *
      *
-     * @param cm The ComponentManager
+     * @param cm The ServiceManager
      * @param context The Session context tha define where to search
      * @param path The parameter path
      **/

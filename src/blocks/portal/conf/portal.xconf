@@ -18,7 +18,7 @@
 <xconf xpath="/cocoon" unless="component[@role='org.apache.cocoon.portal.event.aspect.EventAspectSelector']">
 
  <!-- Event Aspect configuration -->
- <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.event.aspect.EventAspectSelector">
+ <component class="org.apache.cocoon.core.container.CocoonServiceSelector" role="org.apache.cocoon.portal.event.aspect.EventAspectSelector">
     <aspect name="action-counter" class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
     <aspect name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
     <aspect name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
@@ -72,7 +72,7 @@
  </component>
 
   <!-- Coplet Adapter configuration -->
-  <component class="org.apache.cocoon.components.ExtendedComponentSelector" 
+  <component class="org.apache.cocoon.core.container.CocoonServiceSelector" 
              role="org.apache.cocoon.portal.coplet.adapter.CopletAdapterSelector">
     <!-- This is the pipeline/uri based adapter -->
     <coplet-adapter name="uri" 
@@ -92,7 +92,7 @@
 
 
  <!-- Renderer Aspect configuration -->
- <component class="org.apache.cocoon.components.ExtendedComponentSelector" role="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectSelector">
+ <component class="org.apache.cocoon.core.container.CocoonServiceSelector" role="org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectSelector">
     <aspect name="composite-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.CompositeContentAspect"/>
     <aspect name="tab-content" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.TabContentAspect"/>
     <aspect name="window" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.WindowAspect"/>
@@ -127,7 +127,7 @@
  </component>
 
  <!-- Aspect Storage configuration -->
- <component class="org.apache.cocoon.components.ExtendedComponentSelector" 
+ <component class="org.apache.cocoon.core.container.CocoonServiceSelector" 
             role="org.apache.cocoon.portal.aspect.AspectDataStoreSelector">
     <store name="temporary" class="org.apache.cocoon.portal.aspect.impl.TemporaryAspectDataStore"/>
     <store name="request" class="org.apache.cocoon.portal.aspect.impl.RequestAspectDataStore"/>

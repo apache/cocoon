@@ -81,7 +81,7 @@ public interface TreeBuilder {
 
     /**
      * Get the type for a statement : it returns the 'type' attribute if present,
-     * and otherwhise the default hint for the <code>ComponentSelector</code> identified by
+     * and otherwhise the default hint for the <code>ServiceSelector</code> identified by
      * the role <code>role</code>.
      * 
      * @param statement the statement

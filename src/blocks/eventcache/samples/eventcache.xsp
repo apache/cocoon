@@ -152,7 +152,7 @@
                 </li>
             </ul>
             Note that though this example uses xsp with actions or flow, any pipeline component can be 
-            made to use EventValidity, and any code with access to the ComponentManager can 
+            made to use EventValidity, and any code with access to the ServiceManager can 
             translate real-world events to Events and notify the Cache of them.  
         </para>
         <xsp:logic>

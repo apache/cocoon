@@ -111,7 +111,7 @@ public class Cocoon
     private File workDir;
 
     /** The parent service manager. */
-    private ServiceManager parentComponentManager;
+    private ServiceManager parentServiceManager;
 
     /** flag for disposed or not */
     private boolean disposed = false;
@@ -156,7 +156,7 @@ public class Cocoon
      */
     public void service(ServiceManager manager)
     throws ServiceException {
-        this.parentComponentManager = manager;
+        this.parentServiceManager = manager;
     }
 
     /**
@@ -229,7 +229,7 @@ public class Cocoon
      * @exception Exception if an error occurs
      */
     public void initialize() throws Exception {
-        if (parentComponentManager != null) {
+        if (parentServiceManager != null) {
             // TODO: wrap parent component manager
             this.serviceManager = new CocoonServiceManager(null,
                                                                (ClassLoader) this.context.get(Constants.CONTEXT_CLASS_LOADER));
@@ -328,7 +328,7 @@ public class Cocoon
     /**
      * Configure this <code>Cocoon</code> instance.
      *
-     * @param startupManager an <code>ExcaliburComponentManager</code> value
+     * @param startupManager an <code>CocoonServiceManager</code> value
      * @exception ConfigurationException if an error occurs
      * @exception ContextException if an error occurs
      */

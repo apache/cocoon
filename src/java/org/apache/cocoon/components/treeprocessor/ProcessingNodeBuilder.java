@@ -22,15 +22,8 @@ import org.apache.avalon.framework.configuration.Configuration;
  * <p>
  * Lifecycle information : a <code>TreeBuilder</code> can be recycled
  * and used to build several <code>Processor</code>s, each one defining
- * a different <code>ComponentManager</code>. As a consequence, a
- * <code>ProcessingNodeBuilder</code> that needs access to the
- * <code>ComponentManager</code> of the <code>Processor</code> being
- * built must be not only <code>Composable</code> but also
- * <strong><code>Recomposable</code></strong>.
+ * a different <code>ServiceManager</code>.
  * <p>
- * Note however that being <code>Recomposable</code> doesn't forbid to be
- * <code>ThreadSafe</code> since a <code>ProcessingNodeBuilder</code> is
- * used by only one <code>TreeBuilder</code> at a time.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @version CVS $Id$

@@ -60,7 +60,7 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     
     /** Testcase for xinclude simple include
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testXInclude1() throws Exception {
         getLogger().debug("testXInclude1");
@@ -85,7 +85,7 @@ public class XIncludeTransformerTestCase extends SitemapComponentTestCase {
     }
     /** Testcase for xinclude simple text include
      *
-     * @throws Exception iff ComponentManager enterEnvironment fails
+     * @throws Exception if ServiceManager enterEnvironment fails
      */
     public void testXInclude2() throws Exception {
         getLogger().debug("testXInclude2");

@@ -22,7 +22,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.axis.providers.AvalonProvider;
 
 /**
- * Base class for providing Composable SOAP services.
+ * Base class for providing Serviceable SOAP services.
  *
  * <p>
  *  Note, this class is intended to be used in SOAP Services that require
@@ -37,7 +37,7 @@ import org.apache.cocoon.components.axis.providers.AvalonProvider;
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @version CVS $Id$
  */
-public abstract class AbstractComposableService
+public abstract class AbstractServiceableService
         extends AbstractLogEnabledService
         implements Serviceable {
     
@@ -73,7 +73,7 @@ public abstract class AbstractComposableService
     }
 
     /**
-     * Helper method to extract the ComponentManager reference
+     * Helper method to extract the ServiceManager reference
      * from the context.
      * @exception ComponentException if an error occurs
      */

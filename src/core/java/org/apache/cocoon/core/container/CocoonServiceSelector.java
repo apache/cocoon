@@ -55,7 +55,7 @@ implements ServiceSelector, Serviceable, Configurable {
     /** The default hint */
     protected String defaultHint;
 
-    /** Create the ComponentSelector */
+    /** Create the selector */
     public CocoonServiceSelector() {
         super(null);
     }
@@ -74,7 +74,7 @@ implements ServiceSelector, Serviceable, Configurable {
 
         if( this.disposed ) {
             throw new IllegalStateException(
-                "You cannot select a Component from a disposed ComponentSelector" );
+                "You cannot select a Component from a disposed ServiceSelector" );
         }
 
         if (hint == null) {
@@ -90,7 +90,7 @@ implements ServiceSelector, Serviceable, Configurable {
                 return this.parentSelector.select(hint);                
             }
             final String message = this.roleName
-                + ": ComponentSelector could not find the component for hint [" + hint + "]";
+                + ": ServiceSelector could not find the component for hint [" + hint + "]";
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( message );
             }
@@ -106,7 +106,7 @@ implements ServiceSelector, Serviceable, Configurable {
             throw ce;
         } catch( final Exception e ) {
             final String message = this.roleName
-                + ": ComponentSelector could not access the Component for hint [" + hint + "]";
+                + ": ServiceSelector could not access the Component for hint [" + hint + "]";
 
             if( this.getLogger().isDebugEnabled() ) {
                 this.getLogger().debug( message, e );
@@ -120,7 +120,7 @@ implements ServiceSelector, Serviceable, Configurable {
                 component = this.parentSelector.select(hint);
             } else {
                 final String message = this.roleName
-                    + ": ComponentSelector could not find the component for hint [" + hint + "]";
+                    + ": ServiceSelector could not find the component for hint [" + hint + "]";
                 if( this.getLogger().isDebugEnabled() ) {
                     this.getLogger().debug( message );
                 }
@@ -345,7 +345,7 @@ implements ServiceSelector, Serviceable, Configurable {
     throws ServiceException {
         if( this.initialized ) {
             throw new ServiceException( hint.toString(),
-                "Cannot add components to an initialized ComponentSelector", null );
+                "Cannot add components to an initialized ServiceSelector", null );
         }
 
         try {
@@ -470,9 +470,6 @@ implements ServiceSelector, Serviceable, Configurable {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.avalon.excalibur.component.ExcaliburComponentSelector#canRelease(org.apache.avalon.framework.component.Component)
-     */
     protected boolean canRelease(Object component) {
         if ( this.parentSelector != null &&
              this.parentSelector.canRelease(component) ) {

@@ -18,18 +18,14 @@ package org.apache.cocoon.servlet;
 import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
-import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
 import org.apache.avalon.framework.container.ContainerUtil;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ConnectionResetException;
@@ -191,11 +187,11 @@ public class CocoonServlet extends HttpServlet {
     protected ClassLoader classLoader = this.getClass().getClassLoader();
     protected boolean initClassLoader = false;
 
-    private String parentComponentManagerClass;
-    private String parentComponentManagerInitParam;
+    private String parentServiceManagerClass;
+    private String parentServiceManagerInitParam;
 
-    /** The parent ComponentManager, if any. Stored here in order to be able to dispose it in destroy(). */
-    private ComponentManager parentComponentManager;
+    /** The parent ServiceManager, if any. Stored here in order to be able to dispose it in destroy(). */
+    private ServiceManager parentServiceManager;
 
     protected String forceLoadParameter;
     protected String forceSystemProperty;
@@ -457,12 +453,12 @@ public class CocoonServlet extends HttpServlet {
             }
         }
 
-        parentComponentManagerClass = getInitParameter("parent-component-manager", null);
-        if (parentComponentManagerClass != null) {
-            int dividerPos = parentComponentManagerClass.indexOf('/');
+        parentServiceManagerClass = getInitParameter("parent-service-manager", null);
+        if (parentServiceManagerClass != null) {
+            int dividerPos = parentServiceManagerClass.indexOf('/');
             if (dividerPos != -1) {
-                parentComponentManagerInitParam = parentComponentManagerClass.substring(dividerPos + 1);
-                parentComponentManagerClass = parentComponentManagerClass.substring(0, dividerPos);
+                parentServiceManagerInitParam = parentServiceManagerInitParam.substring(dividerPos + 1);
+                parentServiceManagerClass = parentServiceManagerClass.substring(0, dividerPos);
             }
         }
 
@@ -507,9 +503,7 @@ public class CocoonServlet extends HttpServlet {
             this.instrumentManager.dispose();
         }
 
-        if (this.parentComponentManager != null && this.parentComponentManager instanceof Disposable) {
-            ((Disposable) this.parentComponentManager).dispose();
-        }
+        ContainerUtil.dispose( this.parentServiceManager );
     }
 
     /**
@@ -1311,41 +1305,33 @@ public class CocoonServlet extends HttpServlet {
     }
 
     /**
-     * Instatiates the parent component manager, as specified in the
-     * parent-component-manager init parameter.
+     * Instatiates the parent service manager, as specified in the
+     * parent-service-manager init parameter.
      *
      * If none is specified, the method returns <code>null</code>.
      *
-     * @return the parent component manager, or <code>null</code>.
+     * @return the parent service manager, or <code>null</code>.
      */
-    protected synchronized ComponentManager getParentComponentManager() {
-        if (parentComponentManager != null && parentComponentManager instanceof Disposable) {
-            ((Disposable) parentComponentManager).dispose();
-        }
+    protected synchronized ServiceManager getParentServiceManager() {
+        ContainerUtil.dispose(this.parentServiceManager);
 
-        parentComponentManager = null;
-        if (parentComponentManagerClass != null) {
+        this.parentServiceManager = null;
+        if (parentServiceManagerClass != null) {
             try {
-                Class pcm = ClassUtils.loadClass(parentComponentManagerClass);
+                Class pcm = ClassUtils.loadClass(parentServiceManagerClass);
                 Constructor pcmc = pcm.getConstructor(new Class[]{String.class});
-                parentComponentManager = (ComponentManager) pcmc.newInstance(new Object[]{parentComponentManagerInitParam});
+                parentServiceManager = (ServiceManager) pcmc.newInstance(new Object[]{parentServiceManagerInitParam});
 
-                if (parentComponentManager instanceof LogEnabled) {
-                    ((LogEnabled) parentComponentManager).enableLogging(getLogger());
-                }
-                if (parentComponentManager instanceof Contextualizable) {
-                    ((Contextualizable) parentComponentManager).contextualize(this.appContext);
-                }
-                if (parentComponentManager instanceof Initializable) {
-                    ((Initializable) parentComponentManager).initialize();
-                }
+                ContainerUtil.enableLogging(parentServiceManager, getLogger());
+                ContainerUtil.contextualize(parentServiceManager, this.appContext);
+                ContainerUtil.initialize(parentServiceManager);
             } catch (Exception e) {
                 if (getLogger().isErrorEnabled()) {
                     getLogger().error("Could not initialize parent component manager.", e);
                 }
             }
         }
-        return parentComponentManager;
+        return parentServiceManager;
     }
 
     /**
@@ -1376,10 +1362,9 @@ public class CocoonServlet extends HttpServlet {
             ContainerUtil.enableLogging(c, getCocoonLogger());
             c.setLoggerManager(getLoggerManager());
             ContainerUtil.contextualize(c, this.appContext);
-            // TODO - ServiceManager
-            final ComponentManager parent = this.getParentComponentManager();
+            final ServiceManager parent = this.getParentServiceManager();
             if (parent != null) {
-                ContainerUtil.compose(c, parent);
+                ContainerUtil.service(c, parent);
             }
             ContainerUtil.initialize(c);
             this.creationTime = System.currentTimeMillis();

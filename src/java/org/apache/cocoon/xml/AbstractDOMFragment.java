@@ -43,7 +43,7 @@ public abstract class AbstractDOMFragment implements XMLFragment {
      * result of <code>toDOM()</code>.
      */
     public void toSAX(ContentHandler handler) throws SAXException {
-        // The ComponentManager is unknown here : use JAXP to create a document
+        // The ServiceManager is unknown here : use JAXP to create a document
         DocumentBuilder builder;
         try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();

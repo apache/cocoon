@@ -57,7 +57,7 @@
 
   <role name="org.apache.cocoon.acting.ActionSelector"
         shorthand="actions"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 
   <role name="org.apache.cocoon.components.flow.Interpreter"
         shorthand="flow-interpreters"

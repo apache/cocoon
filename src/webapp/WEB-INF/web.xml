@@ -173,7 +173,7 @@
     <init-param>
       <param-name>load-class</param-name>
       <param-value>
-        <!-- For parent ComponentManager sample:
+        <!-- For parent ServiceManager sample:
         org.apache.cocoon.samples.parentcm.Configurator -->
         <!-- For IBM WebSphere:
         com.ibm.servlet.classloader.Handler -->
@@ -278,7 +278,7 @@
     -->
 
     <!--
-      This parameter allows you to select the parent component manager.
+      This parameter allows you to select the parent service manager.
       The class will be instantiated via the constructor that takes a single
       String as a parameter. That String will be equal to the text after the
       '/'.
@@ -290,8 +290,8 @@
       sample, which will look up a configuration via JNDI at
       org/apache/cocoon/samples/parentcm/ParentCMConfiguration and use it.
     <init-param>
-      <param-name>parent-component-manager</param-name>
-      <param-value>org.apache.cocoon.samples.parentcm.ParentComponentManager/org/apache/cocoon/samples/parentcm/ParentCMConfiguration</param-value>
+      <param-name>parent-service-manager</param-name>
+      <param-value>org.apache.cocoon.samples.parentcm.ParentServiceManager/org/apache/cocoon/samples/parentcm/ParentCMConfiguration</param-value>
     </init-param>
     -->
 

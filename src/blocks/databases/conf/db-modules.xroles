@@ -19,6 +19,6 @@
 
   <role name="org.apache.cocoon.components.modules.database.AutoIncrementModuleSelector"
         shorthand="autoincrement-modules"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
+        default-class="org.apache.cocoon.core.container.CocoonServiceSelector"/>
 
 </xroles>

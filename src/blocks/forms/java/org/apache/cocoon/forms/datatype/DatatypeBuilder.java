@@ -24,10 +24,10 @@ import org.apache.cocoon.forms.datatype.convertor.Convertor;
  *
  * <p>These builders should be threadsafe, only one instance of them will be created.
  *
- * <p>Implementations may implement Avalon's Composable interface to get access to
+ * <p>Implementations may implement Avalon's Serviceable interface to get access to
  * other components.
  * 
- * @version $Id: DatatypeBuilder.java,v 1.1 2004/03/09 10:34:00 reinhard Exp $
+ * @version $Id$
  */
 public interface DatatypeBuilder {
     public Datatype build(Element datatypeElement, boolean arrayType, DatatypeManager datatypeManager) throws Exception;
