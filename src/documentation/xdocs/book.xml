@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE book PUBLIC "-//APACHE//DTD Cocoon Documentation Book V1.0//EN" "dtd/book-cocoon-v10.dtd">
 
 <book software="Apache Cocoon" 
@@ -44,7 +45,7 @@
   <menu label="Project">
     <external label="Bug Database" href="http://nagoya.apache.org/bugzilla/index.html"/>
     <external label="Code Repository" href="http://cvs.apache.org/viewcvs.cgi/cocoon-2.1/"/>
-    <external label="Dev Snapshots" href="http://xml.apache.org/cocoon/mirror.cgi#nightly"/>
+    <external label="Dev Snapshots" href="http://cocoon.apache.org/mirror.cgi#nightly"/>
   </menu>
 
   <menu label="Links">
@@ -53,9 +54,8 @@
     <menu-item label="Cocoon Hosting" href="link/hosting.html"/>
   </menu>
 
-  <menu label="Previous Releases">
+  <menu label="Other Releases">
     <external label="Cocoon 1.x" href="http://cocoon.apache.org/1.x/"/> 
     <external label="Cocoon 2.0" href="http://cocoon.apache.org/2.0/"/> 
   </menu>
-
 </book>
