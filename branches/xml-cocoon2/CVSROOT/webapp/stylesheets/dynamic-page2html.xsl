@@ -3,8 +3,8 @@
 <xsl:stylesheet
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:xsp-request="http://xml.apache.org/cocoon/xsp/request"
-  xmlns:xsp-response="http://xml.apache.org/cocoon/xsp/response"
+  xmlns:xsp-request="http://apache.org/xsp/request"
+  xmlns:xsp-response="http://apache.org/xsp/response"
 >
 
   <xsl:include href="page/simple-page2html.xsl"/>

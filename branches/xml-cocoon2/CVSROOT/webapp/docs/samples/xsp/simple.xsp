@@ -2,9 +2,9 @@
 
 <xsp:page
           language="java"
-          xmlns:xsp="http://xml.apache.org/cocoon/xsp"
-          xmlns:xsp-request="http://xml.apache.org/cocoon/xsp/request"
-          xmlns:xsp-response="http://xml.apache.org/cocoon/xsp/response"
+          xmlns:xsp="http://apache.org/xsp"
+          xmlns:xsp-request="http://apache.org/xsp/request"
+          xmlns:xsp-response="http://apache.org/xsp/response"
 >
 
   <page>

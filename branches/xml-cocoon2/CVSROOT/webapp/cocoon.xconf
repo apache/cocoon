@@ -18,20 +18,20 @@
     <component-type name="markup-language">
       <component-instance name="xsp" class="org.apache.cocoon.components.language.markup.xsp.XSPMarkupLanguage">
         <parameter name="prefix" value="xsp"/>
-        <parameter name="uri" value="http://xml.apache.org/cocoon/xsp"/>
+        <parameter name="uri" value="http://apache.org/xsp"/>
   
         <target-language name="java">
           <parameter name="core-logicsheet" value="resource://org/apache/cocoon/components/language/markup/xsp/java/xsp.xsl"/>
 
           <builtin-logicsheet>
             <parameter name="prefix" value="xsp-request"/>
-            <parameter name="uri" value="http://xml.apache.org/cocoon/xsp/request"/>
+            <parameter name="uri" value="http://apache.org/xsp/request"/>
             <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/request.xsl"/>
           </builtin-logicsheet>
 
           <builtin-logicsheet>
             <parameter name="prefix" value="xsp-response"/>
-            <parameter name="uri" value="http://xml.apache.org/cocoon/xsp/response"/>
+            <parameter name="uri" value="http://apache.org/xsp/response"/>
             <parameter name="href" value="resource://org/apache/cocoon/components/language/markup/xsp/java/response.xsl"/>
           </builtin-logicsheet>
         </target-language>
@@ -53,7 +53,7 @@
   </component>
 
   <!-- these components are the image encoders for the SVG serializer -->
-	<component role="jaipngencoder" class="org.apache.cocoon.components.image.JAIPNGEncoder"/>
+  <component role="jaipngencoder" class="org.apache.cocoon.components.image.JAIPNGEncoder"/>
 
   <sitemap file="sitemap.xmap"/> 
 </cocoon>
