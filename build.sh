@@ -25,8 +25,8 @@ export ANT_HOME=tools
 
 # ----- Restore ANT_HOME
 export ANT_HOME=$OLD_ANT_HOME
-unset OLD_ANT_HOME=
+unset OLD_ANT_HOME
 
 # ----- Restore CLASSPATH
 export CLASSPATH=$OLD_CLASSPATH
-unset OLD_CLASSPATH=
+unset OLD_CLASSPATH
