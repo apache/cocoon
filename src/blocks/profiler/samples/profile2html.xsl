@@ -14,7 +14,7 @@
   <xsl:template match="/">
     <html>
       <head>
-        <title>Cocoon2 profile information [<xsl:value-of select="@date"/>]</title>
+        <title>Cocoon2 profile information [<xsl:value-of select="profile:profilerinfo/@date"/>]</title>
       </head>
       <body>
         <xsl:choose>
