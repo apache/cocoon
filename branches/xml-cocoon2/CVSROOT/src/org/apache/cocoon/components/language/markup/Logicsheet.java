@@ -32,11 +32,11 @@ import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.Templates;
-import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.TransformerConfigurationException;
-import org.apache.xalan.transformer.TrAXFilter;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.sax.SAXTransformerFactory;
 
 /**
  * A code-generation logicsheet. This class is actually a wrapper for
@@ -47,9 +47,14 @@ import org.apache.xalan.transformer.TrAXFilter;
  * This class should probably be based on an interface...
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-08 20:35:07 $
+ * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-11-10 12:32:01 $
  */
 public class Logicsheet {
+    /**
+    * The trax TransformerFactory
+    */
+    protected SAXTransformerFactory tfactory;
     /**
     * The trax templates
     */
@@ -66,27 +71,28 @@ public class Logicsheet {
         throws SAXException, IOException
     {
         try {
-            TransformerFactory tfactory = TransformerFactory.newInstance();
+            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
             templates = tfactory.newTemplates(new SAXSource(inputSource));
         } catch (TransformerConfigurationException e){
+            // FIXME (DIMS) - Need to handle exceptions gracefully.
             e.printStackTrace();
         }
     }
 
     /**
-    * Get the XMLFilter that performs the stylesheet transformation.
+    * Get the TransformerHandler that performs the stylesheet transformation.
     *
-    * @return The XMLFilter for the associated stylesheet.
+    * @return The TransformerHandler for the associated stylesheet.
     */
-    public XMLFilter getXMLFilter() 
+    public TransformerHandler getTransformerHandler()
     {
-        XMLFilter filter = null;
         try {
-            filter = new TrAXFilter(templates);
+            return tfactory.newTransformerHandler(templates);
         } catch (TransformerConfigurationException e){
+            // FIXME (DIMS) - Need to handle exceptions gracefully.
             e.printStackTrace();
         }
-        return filter;
+        return null;
     }
 }
 

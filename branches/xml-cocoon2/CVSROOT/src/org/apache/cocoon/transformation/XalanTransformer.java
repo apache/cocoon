@@ -36,14 +36,15 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.LexicalHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
-import org.xml.sax.XMLReader;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Templates;
-import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.TransformerConfigurationException;
-import org.apache.xalan.transformer.TransformerImpl;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.TransformerException;
 
 /**
  *
@@ -51,7 +52,7 @@ import org.apache.xalan.transformer.TransformerImpl;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2000-11-08 20:35:18 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2000-11-10 12:32:01 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable, Configurable {
@@ -59,8 +60,11 @@ implements Transformer, Composer, Poolable, Configurable {
     /** The store service instance */
     private Store store = null;
 
-    /** The XALAN Transformer */
-	javax.xml.transform.Transformer transformer = null;
+    /** The trax TransformerFactory */
+    private SAXTransformerFactory tfactory = null;
+
+    /** The trax TransformerHandler */
+	private TransformerHandler transformerHandler = null;
 
     /** Hash table for Templates */
     private static Hashtable templatesCache = new Hashtable();
@@ -68,9 +72,13 @@ implements Transformer, Composer, Poolable, Configurable {
     /** Is the cache turned on? (default is on) */
     private boolean useCache = true;
 
-    private javax.xml.transform.Transformer getTransformer(EntityResolver resolver, String xsluri)
+    TransformerHandler getTransformerHandler(EntityResolver resolver, String xsluri)
       throws SAXException, ProcessingException, IOException, TransformerConfigurationException
     {
+        // Initialize a shared Transformer factory instance.
+        if(tfactory == null)
+            tfactory = (SAXTransformerFactory) TransformerFactory.newInstance();
+            
         // Only local files are checked for midification for compatibility reasons!
         // Using the entity resolver we get the filename of the current file:
         // The systemID if such a resource starts with file:/.
@@ -99,7 +107,6 @@ implements Transformer, Composer, Poolable, Configurable {
         }
         if(templates == null)
         {
-            TransformerFactory tfactory = TransformerFactory.newInstance();
             templates = tfactory.newTemplates(new SAXSource(new InputSource(systemID)));
             if (this.useCache == true)
             {
@@ -115,7 +122,7 @@ implements Transformer, Composer, Poolable, Configurable {
                 }
             }
         }
-        return templates.newTransformer();
+        return tfactory.newTransformerHandler(templates);
     }
 
     /**
@@ -155,9 +162,9 @@ implements Transformer, Composer, Poolable, Configurable {
             throw new ProcessingException("Stylesheet URI can't be null");
         }
 
-        /** get a transformer */
+        /** Get a Transformer Handler */
         try {
-    	    transformer = getTransformer(resolver,xsluri);
+    	    transformerHandler = getTransformerHandler(resolver,xsluri);
         } catch (TransformerConfigurationException e){
             throw new ProcessingException("Problem in getTransformer:" + e.toString());  
         }
@@ -168,15 +175,14 @@ implements Transformer, Composer, Poolable, Configurable {
                 String name = (String) parameters.nextElement();
                 if (isValidXSLTParameterName(name)) {
                     String value = request.getParameter(name);
-                    transformer.setParameter(name,value);
+                    transformerHandler.getTransformer().setParameter(name,value);
                 }
             }
         }
 
-        ContentHandler chandler = ((TransformerImpl)transformer).getInputContentHandler();
-        super.setContentHandler(chandler);
-        if(chandler instanceof org.xml.sax.ext.LexicalHandler)
-            this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)chandler);
+        super.setContentHandler(transformerHandler);
+        if(transformerHandler instanceof org.xml.sax.ext.LexicalHandler)
+            this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)transformerHandler);
     }
 
     /**
@@ -196,7 +202,12 @@ implements Transformer, Composer, Poolable, Configurable {
      * accessing the protected <code>super.contentHandler</code> field.
      */
     public void setContentHandler(ContentHandler content) {
-        ((TransformerImpl)transformer).setContentHandler(content);
+        try {
+            transformerHandler.setResult(new SAXResult(content));
+        } catch (TransformerException e){
+            // FIXME (DIMS) - Need to handle exceptions gracefully.
+            e.printStackTrace();
+        }
     }
 
     /**

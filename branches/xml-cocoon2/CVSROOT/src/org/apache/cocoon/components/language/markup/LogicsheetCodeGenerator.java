@@ -13,24 +13,25 @@ import java.util.List;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.helpers.XMLFilterImpl;
 
 import java.io.IOException;
-import org.xml.sax.SAXException;
 
 import org.apache.serialize.SerializerFactory;
 import org.apache.serialize.Method;
 import org.apache.serialize.Serializer;
 import org.apache.serialize.OutputFormat;
 
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.TransformerException;
+
 /**
  * A logicsheet-based implementation of <code>MarkupCodeGenerator</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-11-08 20:35:08 $
+ * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-11-10 12:32:01 $
  */
 public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
 
@@ -42,7 +43,7 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
 
     private XMLReader rootReader;
 
-    private XMLFilter currentParent;
+    private TransformerHandler currentParent;
 
     /**
     * The default constructor
@@ -76,28 +77,33 @@ public class LogicsheetCodeGenerator implements MarkupCodeGenerator {
     * @param logicsheet The logicsheet to be added
     */
     public void addLogicsheet(Logicsheet logicsheet) {
-        if (this.currentParent==null) {
-            // Setup the first transformer of the chain.
-            this.currentParent = logicsheet.getXMLFilter();
+        try {
+            if (this.currentParent==null) {
+                // Setup the first transformer of the chain.
+                this.currentParent = logicsheet.getTransformerHandler();
 
-            // the parent is the rootReader
-            this.currentParent.setParent(this.rootReader);
+                // the parent is the rootReader
+                this.rootReader.setContentHandler(this.currentParent);;
 
-            // Set content handler for the end of the chain : serializer
-            this.currentParent.setContentHandler(this.serializerContentHandler);
+                // Set content handler for the end of the chain : serializer
+                this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
 
-        } else {
-            // Build the transformer chain on the fly
-            XMLFilter newParent=logicsheet.getXMLFilter();
+            } else {
+                // Build the transformer chain on the fly
+                TransformerHandler newParent=logicsheet.getTransformerHandler();
 
-            // the currentParent is the parent of the new logicsheet filter
-            newParent.setParent(this.currentParent);
+                // the currentParent is the parent of the new logicsheet filter
+                this.currentParent.setResult(new SAXResult(newParent));
 
-            // reset the new parent and the contentHanlder
-            this.currentParent = newParent;
-            this.currentParent.setContentHandler(this.serializerContentHandler);
+                // reset the new parent and the contentHanlder
+                this.currentParent = newParent;
+                this.currentParent.setResult(new SAXResult(this.serializerContentHandler));
+            }
+        } catch (TransformerException e) {
+            // FIXME (DIMS) - Need to handle exceptions gracefully.
+            e.printStackTrace();
         }
-    }
+    }   
 
     /**
     * Generate source code from the input document. Filename information is
