@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  * log, so actually cached content is never updated!
  * 
  *  @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.4 2003/03/12 15:35:10 cziegeler Exp $
+ *  @version CVS $Id: DefaultIncludeCacheManager.java,v 1.5 2003/07/27 11:09:17 cziegeler Exp $
  *  @since   2.1
  */
 public final class DefaultIncludeCacheManager
@@ -411,8 +411,6 @@ public final class DefaultIncludeCacheManager
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-        this.store = (Store)this.manager.lookup(Store.ROLE);
-        this.defaultCacheStorage = new StoreIncludeCacheStorageProxy(this.store, this.getLogger());
     }
 
     /**
@@ -440,6 +438,13 @@ public final class DefaultIncludeCacheManager
              && this.preemptiveLoaderURI.indexOf("://") == -1) {
             throw new ParameterException("The preemptive-loader-url must be absolute: " + this.preemptiveLoaderURI);
         }
+        final String storeRole = parameters.getParameter("use-store", Store.ROLE);
+        try {
+            this.store = (Store)this.manager.lookup(storeRole);
+        } catch (ComponentException e) {
+            throw new ParameterException("Unable to lookup store with role " + storeRole, e);
+        }
+        this.defaultCacheStorage = new StoreIncludeCacheStorageProxy(this.store, this.getLogger());
     }
 
 }
