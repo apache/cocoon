@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.servlet;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -124,7 +123,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.11 2003/07/31 13:29:54 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.12 2003/08/01 10:06:41 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
