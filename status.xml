@@ -205,17 +205,20 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="JH" type="add" fixes-bug="29715" due-to="Nuno Santos" due-to-email="nsantos@electroplus.pt">
+     Forms block: added possibility to add a SelectionList based on Java.
+   </action>
    <action dev="TC" type="add" fixes-bug="30417">
-    Added best-fit-while-keeping-aspect-ratio option to the ImageReader
+     Added best-fit-while-keeping-aspect-ratio option to the ImageReader
    </action>
    <action dev="RP" type="add" due-to="Adam Ratclif" fixes-bug="31359">
-    Apply patch: Add support for calling webservices from within Flowscript.
+     Apply patch: Add support for calling webservices from within Flowscript.
    </action>   
    <action dev="TC" type="fix" fixes-bug="31545">
-    Throw a more meaningful exception if charset classes are missing
+     Throw a more meaningful exception if charset classes are missing
    </action>
    <action dev="TC" type="fix" fixes-bug="30874">
-    Fixes the SQLTransformer not to close the statement twice
+     Fixes the SQLTransformer not to close the statement twice
    </action>
    <action dev="CZ" type="add">
      New getSitemapPath() method on the Request object to get the path to the
