@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: SVGBuilder.java,v 1.2 2003/04/27 14:48:32 cziegeler Exp $
+ * @version CVS $Id: SVGBuilder.java,v 1.3 2003/05/06 23:42:21 vgritsenko Exp $
  */
 public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled {
     protected Logger log;
@@ -92,11 +92,15 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
         }
     }
 
+    protected Logger getLogger() {
+        return this.log;
+    }
+
     /**
      * Return the newly built Document.
      */
     public Document getDocument() {
-        return(this.document);
+        return this.document;
     }
 
     /**
@@ -104,8 +108,7 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
      *
      * @exception SAXException If this method was not called appropriately.
      */
-    public void startDocument()
-    throws SAXException {
+    public void startDocument() throws SAXException {
         try {
             // Create SVG Document
             String namespaceURI = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -116,11 +119,12 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
             // it is not as general as tieing any prefix to svg namespace uri
             namespaces.put("svg", SVGDOMImplementation.SVG_NAMESPACE_URI);
         } catch (SAXException se) {
-            log.error("SVGBuilder: startDocument", se);
             throw se;
         } catch (Exception ex){
-            log.error("SVGBuilder: startDocument", ex);
-            throw new SAXException("SVGBuilder: startDocument", ex);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Got exception in startDocument, rethrowing", ex);
+            }
+            throw new SAXException("Exception in startDocument", ex);
         }
     }
 
@@ -129,8 +133,7 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
      *
      * @exception SAXException If this method was not called appropriately.
      */
-    public void endDocument ()
-    throws SAXException {
+    public void endDocument() throws SAXException {
         try {
             super.endDocument();
 
@@ -139,18 +142,18 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
 
             this.notify(this.document);
         } catch (SAXException se) {
-            log.error("SVGBuilder: endDocument", se);
             throw se;
         } catch (Exception ex){
-            log.error("SVGBuilder: endDocument", ex);
-            throw new SAXException("SVGBuilder: endDocument", ex);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Got exception in endDocument, rethrowing", ex);
+            }
+            throw new SAXException("Exception in endDocument", ex);
         }
     }
 
     /**
      * Receive notification of a successfully completed DOM tree generation.
      */
-    protected void notify(Document doc)
-    throws SAXException {
+    protected void notify(Document doc) throws SAXException {
     }
 }
