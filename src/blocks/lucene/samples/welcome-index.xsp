@@ -98,7 +98,7 @@
         - using <a href="query/advanced.html">Cocoon Forms</a>.<br/>
         Or enter a word or two in here : 
         	<form action="query/fulltext.html">
-        		<input type="text" name="query" size="20" />
+        		<input type="text" name="query" size="20" value="cocoon"/>
         		<input type="submit" value="Search" />
         	</form>
       </p>
