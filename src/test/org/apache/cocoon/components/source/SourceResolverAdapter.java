@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @version CVS $Id: SourceResolverAdapter.java,v 1.4 2003/03/16 18:03:55 vgritsenko Exp $
+ * @version CVS $Id: SourceResolverAdapter.java,v 1.5 2003/03/18 01:01:26 vgritsenko Exp $
  */
 public class SourceResolverAdapter implements SourceResolver
 {
@@ -84,7 +84,7 @@ public class SourceResolverAdapter implements SourceResolver
     /**
      * Get a <code>Source</code> object.
      * This is a shortcut for <code>resolve(location, null, null)</code>
-     * @throws SourceNotFoundException if the source cannot be found
+     * @throws org.apache.excalibur.source.SourceException if the source cannot be resolved
      */
     public org.apache.excalibur.source.Source resolveURI( String location )
         throws MalformedURLException, IOException, org.apache.excalibur.source.SourceException {
@@ -102,7 +102,7 @@ public class SourceResolverAdapter implements SourceResolver
      *               is optional and can be <code>null</code>.
      * @param parameters - Additional parameters for the URI. The parameters
      *                     are specific to the used protocol.
-     * @throws SourceNotFoundException if the source cannot be found
+     * @throws org.apache.excalibur.source.SourceException if the source cannot be resolved
      */
     public org.apache.excalibur.source.Source resolveURI( String location,
                                                           String base,
@@ -148,8 +148,6 @@ public class SourceResolverAdapter implements SourceResolver
         throws SAXException, IOException, ProcessingException {
 
         SAXParser parser = null;
-        org.apache.excalibur.source.Source assertionsource = null;
-
         try {
             parser = (SAXParser) this.manager.lookup(SAXParser.ROLE);
 
