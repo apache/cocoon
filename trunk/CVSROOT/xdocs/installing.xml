@@ -10,6 +10,7 @@
    <person name="Brett McLaughlin" email="bmclaugh@algx.net"/>
    <person name="Russell Castagnaro" email="russell@synctank.com"/>
    <person name="Robin Green" email="greenrd@hotmail.com"/>
+   <person name="Michele Bianchi" email="mic@pow2.com"/>
   </authors>
  </header>
 
@@ -401,7 +402,7 @@ AddHandler cocoon xml</source>
       Next you need to edit the <code>$TOMCAT_HOME/webapps/cocoon/WEB-INF/web.xml</code>
       file to point to the
       Cocoon properties file in the same directory. Do this by changing the text
-      <code>conf/cocoon.properties</code> to <code>WEB-INF/cocoon-properties</code>. Note that this path is a relative
+      <code>conf/cocoon.properties</code> to <code>WEB-INF/cocoon.properties</code>. Note that this path is a relative
       path, and must be so. Don't try to use an absolute path here. It won't work. Also note that
       the web.xml file describes how to map .xml requests to the Cocoon servlet.
      </p>
@@ -651,7 +652,7 @@ ApplicationServer start $appserv/
    <ol>
     <li>Copy all the required jars
      (see <jump anchor="jars">top of page</jump>)
-     to the IAS classes directory.</li>
+     to the IAS <code>[path_to_ias]/ias/lib</code> directory.</li>
     <li>Start IAS.</li>
     <li>Open the web server administration interface (not the IAS console) at
      http://your_host:9090 and login as admin.</li>
@@ -911,7 +912,7 @@ You could also make these three configuration changes via
    <td>Debian Woody</td>
    <td>JWS 2.0</td>
    <td>IAS 4.1.1</td>
-   <td>?</td>
+   <td>IBM JDK 1.3</td>
   </tr>
   <tr>
    <td>RedHat Linux 6.0</td>
@@ -983,7 +984,7 @@ You could also make these three configuration changes via
    <td>RedHat Linux 6.2</td>
    <td>JWS 2.0</td>
    <td>IAS 4.1.1</td>
-   <td>?</td>
+   <td>IBM JDK 1.3</td>
   </tr>
   <tr>
    <td>RedHat Linux 6.2 (i686)</td>
@@ -1164,12 +1165,12 @@ You could also make these three configuration changes via
    <td>Windows 2000 Professional</td>
    <td>JWS 2.0</td>
    <td>IAS 4.1.1</td>
-   <td>?</td>
+   <td>Sun JDK 1.3</td>
   </tr>
   <tr>
    <td>Windows 2000 Professional</td>
    <td colspan="2">Dynamo 4.5.1</td>
-   <td>?</td>
+   <td>Sun JDK 1.2.2</td>
   </tr>
   <tr>
    <td>Windows 2000 Advanced Server</td>
