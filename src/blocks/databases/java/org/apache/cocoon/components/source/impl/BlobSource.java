@@ -60,7 +60,7 @@ import org.apache.excalibur.source.SourceValidity;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: BlobSource.java,v 1.6 2004/03/11 15:34:30 sylvain Exp $
+ * @version CVS $Id$
  */
 public class BlobSource extends AbstractLogEnabled implements Source, Serviceable {
 
@@ -201,16 +201,18 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
 
                 default :
                     String value = rs.getString(1);
-                    stmt.close();
-                    rs.close();
-                    cnx.close();
                     return new ByteArrayInputStream(value.getBytes());
             }
         } catch(SQLException sqle) {
             String msg = "Cannot retrieve content from " + this.systemId;
             getLogger().error(msg, sqle);
-
+            // IOException would be more adequate, but ProcessingException is cascaded...
+            throw new SourceException(msg, sqle);
+        } finally {
             try {
+                if (stmt != null) {
+                    stmt.close();
+                }
                 if (cnx != null) {
                     cnx.close();
                 }
@@ -218,9 +220,6 @@ public class BlobSource extends AbstractLogEnabled implements Source, Serviceabl
                 // PITA
                 throw new SourceException("Cannot close connection", sqle2);
             }
-
-            // IOException would be more adequate, but ProcessingException is cascaded...
-            throw new SourceException(msg, sqle);
         }
     }
 

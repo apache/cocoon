@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -66,7 +67,7 @@ import org.mozilla.javascript.Wrapper;
  * A ScriptableConnection is also a wrapper around a real JDBC Connection and thus 
  * provides all of methods of Connection as well
  *
- * @version CVS $Id: ScriptableConnection.java,v 1.6 2004/03/05 13:02:03 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class ScriptableConnection extends ScriptableObject {
 
@@ -206,9 +207,11 @@ public class ScriptableConnection extends ScriptableObject {
     public Object jsFunction_query(String sql, Object params,
                                    int startRow, int maxRows,
                                    Object funObj) 
-        throws JavaScriptException {
+            throws JavaScriptException {
+
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
             Scriptable array = (Scriptable)params;
             if (array != Undefined.instance) {
                 int len = (int)
@@ -272,13 +275,22 @@ public class ScriptableConnection extends ScriptableObject {
             throw e;
         } catch (Exception e) {
             throw new JavaScriptException(e);
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException sqle) {
+                throw new JavaScriptException(sqle);
+            }
         }
     }
 
     public int jsFunction_update(String sql, Object params) 
         throws JavaScriptException {
+        PreparedStatement stmt = null;
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt = connection.prepareStatement(sql);
             Scriptable array = (Scriptable)params;
             if (array != Undefined.instance) {
                 int len = (int)
@@ -298,6 +310,14 @@ public class ScriptableConnection extends ScriptableObject {
             return stmt.getUpdateCount();
         } catch (Exception e) {
             throw new JavaScriptException(e);
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException sqle) {
+                throw new JavaScriptException(sqle);
+            }
         }
     }
 

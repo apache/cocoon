@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  * to pull the image from, and source specifies the source key information.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: DatabaseReader.java,v 1.5 2004/03/05 13:01:55 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DatabaseReader extends ServiceableReader
     implements Configurable, Disposable, CacheableProcessingComponent
@@ -91,6 +91,7 @@ public class DatabaseReader extends ServiceableReader
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
 
+        PreparedStatement statement = null;
         try {
             this.datasource = (DataSourceComponent) dbselector.select(dsn);
             this.con = datasource.getConnection();
@@ -99,7 +100,7 @@ public class DatabaseReader extends ServiceableReader
                 this.con.setAutoCommit(false);
             }
 
-            PreparedStatement statement = con.prepareStatement(getQuery());
+            statement = con.prepareStatement(getQuery());
             statement.setString(1, this.source);
             ResultSet set = statement.executeQuery();
             if (!set.next()) throw new ResourceNotFoundException("There is no resource with that key");
@@ -121,8 +122,15 @@ public class DatabaseReader extends ServiceableReader
             this.doCommit = true;
         } catch (Exception e) {
             this.doCommit = false;
-
             throw new ResourceNotFoundException("DatabaseReader error:", e);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch(SQLException sqle) {
+                throw new ResourceNotFoundException("Cannot close connection", sqle);
+            }
         }
     }
 

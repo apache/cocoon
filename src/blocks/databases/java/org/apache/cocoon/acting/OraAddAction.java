@@ -51,7 +51,7 @@ import org.apache.cocoon.util.ImageUtils;
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: OraAddAction.java,v 1.4 2004/03/30 05:50:48 antonio Exp $
+ * @version CVS $Id$
  */
 public class OraAddAction extends DatabaseAddAction {
     private static final Map selectLOBStatements = new HashMap();
@@ -91,18 +91,23 @@ public class OraAddAction extends DatabaseAddAction {
 
                 if ("manual".equals(mode)) {
                     String selectQuery = this.getSelectQuery(keys[i]);
-
-                    ResultSet set = conn.createStatement().executeQuery(selectQuery);
-                    set.next();
-                    int value = set.getInt("maxid") + 1;
-
-                    statement.setInt(currentIndex, value);
-
-                    request.setAttribute(keys[i].getAttribute("param"), String.valueOf(value));
-
-                    set.close();
-                    set.getStatement().close();
-                    currentIndex++;
+                    ResultSet set = null;
+                    try {
+                        set = conn.createStatement().executeQuery(selectQuery);
+                        set.next();
+                        int value = set.getInt("maxid") + 1;
+    
+                        statement.setInt(currentIndex, value);
+    
+                        request.setAttribute(keys[i].getAttribute("param"), String.valueOf(value));
+                    } catch (SQLException sqle){
+                        getLogger().warn("There was an error closing the ResultSet", sqle);
+                        throw sqle;
+                    } finally {
+                        set.close();
+                        set.getStatement().close();
+                        currentIndex++;
+                    }
                 } else if ("form".equals(mode)) {
                     String parameter = keys[i].getAttribute("param");
                     request.setAttribute(parameter, request.getParameter(parameter));
@@ -229,8 +234,9 @@ public class OraAddAction extends DatabaseAddAction {
                     getLogger().warn("There was an error closing the datasource", sqe);
                 }
             }
-
-            if (datasource != null) this.dbselector.release(datasource);
+            if (datasource != null) {
+                this.dbselector.release(datasource);
+            }
         }
 
         return null;
