@@ -1,4 +1,4 @@
-/*-- $Id: MemoryStore.java,v 1.13 2000-11-01 20:12:28 greenrd Exp $ --
+/*-- $Id: MemoryStore.java,v 1.14 2000-11-19 20:38:52 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -67,7 +67,7 @@ import org.apache.cocoon.framework.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:michel.lehon@outwares.com">Michel Lehon</a>
- * @version $Revision: 1.13 $ $Date: 2000-11-01 20:12:28 $
+ * @version $Revision: 1.14 $ $Date: 2000-11-19 20:38:52 $
  */
 
 public class MemoryStore implements Store, Status, Configurable, Runnable {
@@ -161,11 +161,17 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
      */
     public void run() {
         while (true) {
-            if (this.jvm.totalMemory() > this.heapsize) {
+
+            // RDG (2000/11/19): Changed the algorithm to free store entries when EITHER
+            // the heap is too big or the free RAM is too small, rather than both having to be
+            // true as was previously the case. This is more intuitive and more forgiving
+            // of configuration mistakes.
+
+            if (memoryLow ()) {
                 this.jvm.runFinalization();
                 this.jvm.gc();
                 synchronized (this) {
-                    while ((this.hashtable.size() > 0) && (this.jvm.freeMemory() < this.freememory)) {
+                    while ((this.hashtable.size() > 0) && memoryLow ()) {
                         this.free();
                     }
                 }
@@ -177,6 +183,9 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
         }
     }
 
+    public boolean memoryLow () {
+        return jvm.totalMemory () > heapsize || jvm.freeMemory () < freememory;
+    }
 
     /**
      * Store the given object in a persistent state. It is up to the
@@ -314,7 +323,7 @@ public class MemoryStore implements Store, Status, Configurable, Runnable {
             buffer.append("Daemon thread check interval: "+ this.interval +"<br>");
         }
         buffer.append("Minimum required free memory: " + this.freememory + "<br>");
-        buffer.append("Minimum heap size: " + this.heapsize + "<br>");
+        buffer.append("Soft maximum heap size: " + this.heapsize + "<br>");
         buffer.append("Current free memory: " + this.jvm.freeMemory() + "<br>");
         buffer.append("Current heap size: " + this.jvm.totalMemory() + "<br><ul>");
         Enumeration e = list();
