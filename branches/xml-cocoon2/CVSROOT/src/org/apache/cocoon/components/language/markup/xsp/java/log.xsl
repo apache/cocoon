@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-03-21 18:51:13 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-22 16:10:31 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -63,10 +63,9 @@
     <xsp:logic>
       if (getLogger() == null) {
           try {
-            Category logCategory = LogKit.createCategory(<xsl:value-of select="$name"/>,
-                                         LogKit.getPriorityForName(<xsl:value-of select="$level"/>));
-
-            setLogger(new Logger(logCategory, log));
+            org.apache.log.Category logCategory = org.apache.log.LogKit.createCategory(<xsl:value-of select="$name"/>,
+                                         org.apache.log.LogKit.getPriorityForName(<xsl:value-of select="$level"/>));
+            setLogger(new org.apache.log.Logger(logCategory, getLogger()));
           } catch (Exception e) {
             getLogger().error("Could not create logger for \"" +
                                <xsl:value-of select="$name"/> + "\".", e);
