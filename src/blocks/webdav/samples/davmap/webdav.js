@@ -20,8 +20,9 @@ var repository = cocoon.getComponent("org.apache.cocoon.components.repository.So
 
 function selectMethod() {
   var page = cocoon.parameters["page"];
+  var requestURI = cocoon.parameters["requestURI"];
   var method = cocoon.request.getMethod();
-  cocoon.sendPage(method+"/"+page, null);
+  cocoon.sendPage(method+"/"+page, {"requestURI":requestURI});
 }
 
 function sendStatus(sc) {
