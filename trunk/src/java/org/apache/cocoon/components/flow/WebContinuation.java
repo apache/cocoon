@@ -64,7 +64,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
- * @version CVS $Id: WebContinuation.java,v 1.4 2003/03/20 02:46:32 vgritsenko Exp $
+ * @version CVS $Id: WebContinuation.java,v 1.5 2003/08/26 09:05:15 mpo Exp $
  */
 public class WebContinuation extends AbstractLogEnabled
         implements Comparable {
@@ -119,6 +119,13 @@ public class WebContinuation extends AbstractLogEnabled
      * is bigger than <code>lastAccessTime + timeToLive</code>.
      */
     protected int timeToLive;
+    
+    /**
+     * Holds the <code>ContinuationsDisposer</code> to call when this continuation
+     * gets invalidated.
+     */
+    protected ContinuationsDisposer disposer;
+    
 
     /**
      * Create a <code>WebContinuation</code> object. Saves the object in
@@ -129,16 +136,20 @@ public class WebContinuation extends AbstractLogEnabled
      * @param continuation an <code>Object</code> value
      * @param parentContinuation a <code>WebContinuation</code> value
      * @param timeToLive time this continuation should live
+     * @param disposer a <code>ContinuationsDisposer</code> to call when this
+     * continuation gets invalidated.
      */
     WebContinuation(String id,
                     Object continuation,
                     WebContinuation parentContinuation,
-                    int timeToLive) {
+                    int timeToLive, 
+                    ContinuationsDisposer disposer) {
         this.id = id;
         this.continuation = continuation;
         this.parentContinuation = parentContinuation;
         this.updateLastAccessTime();
         this.timeToLive = timeToLive;
+        this.disposer = disposer;
 
         if (parentContinuation != null) {
             this.parentContinuation.children.add(this);
@@ -243,6 +254,17 @@ public class WebContinuation extends AbstractLogEnabled
      */
     public Object getUserObject() {
         return userObject;
+    }
+
+    /**
+     * Obtains the <code>ContinuationsDisposer</code> to call when this continuation
+     * is invalidated.
+     * 
+     * @return a <code>ContinuationsDisposer</code> instance or null if there are
+     * no specific clean-up actions required. 
+     */
+    ContinuationsDisposer getDisposer() {
+        return this.disposer;
     }
 
     /**
