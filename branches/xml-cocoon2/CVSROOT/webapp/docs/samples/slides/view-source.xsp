@@ -13,8 +13,8 @@
    <xsp:include>java.net.*</xsp:include>
    <xsp:include>org.apache.cocoon.components.parser.XercesParser</xsp:include>
    <xsp:include>org.apache.cocoon.xml.XMLConsumer</xsp:include>
-   <xsp:include>org.apache.cocoon.xml.DOMStreamer</xsp:include>
-   <xsp:include>org.apache.cocoon.util.dom.DOMUtils</xsp:include>
+   <xsp:include>org.apache.cocoon.xml.dom.DOMStreamer</xsp:include>
+   <xsp:include>org.apache.cocoon.util.DOMUtils</xsp:include>
    <xsp:include>javax.servlet.ServletContext</xsp:include>
    <xsp:include>javax.servlet.http.HttpServletRequest</xsp:include>
   </xsp:structure>
