@@ -29,18 +29,6 @@
     </s1>
     <s1 title="Info">
       <table>
-        <tr>
-          <td>Name</td>
-          <td/>
-        </tr>
-        <tr>
-          <td>Class</td>
-          <td/>
-        </tr>
-        <tr>
-          <td>Cacheable</td>
-          <td/>
-        </tr>
       </table>
     </s1>
   </body>
