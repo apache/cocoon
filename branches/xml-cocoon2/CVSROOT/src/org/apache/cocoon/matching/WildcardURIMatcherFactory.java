@@ -18,7 +18,7 @@ import org.w3c.dom.DocumentFragment;
  * 
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a> 
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a> 
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2000-10-19 14:44:01 $ 
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-10-23 19:44:45 $ 
  */ 
 
 public class WildcardURIMatcherFactory implements MatcherFactory {
@@ -44,8 +44,8 @@ public class WildcardURIMatcherFactory implements MatcherFactory {
                                         DocumentFragment conf) 
     throws ConfigurationException {
         StringBuffer result = new StringBuffer();
-        return result.append ("java.util.ArrayList list = new ArrayList();")
-                     .append ("if (org.apache.cocoon.matching.helpers.WildcardURIMatcher.match (list,((javax.servlet.http.HttpServletRequest)objectModel.get(org.apache.cocoon.Cocoon.REQUEST_OBJECT)).getRequestURI(), ")
+        return result.append ("ArrayList list = new ArrayList();")
+                     .append ("if (WildcardURIMatcher.match (list,((HttpServletRequest)objectModel.get(Cocoon.REQUEST_OBJECT)).getRequestURI(), ")
                      .append(prefix).append("_expr))")
                      .append ("return list;")
                      .append ("else return null;").toString();

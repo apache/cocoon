@@ -47,6 +47,8 @@
     import java.util.ArrayList;
     import java.util.Map;
 
+    import javax.servlet.http.HttpServletRequest;
+
     import org.apache.avalon.Configurable;
     import org.apache.avalon.Configuration;
     import org.apache.avalon.ConfigurationException;
@@ -62,6 +64,7 @@
     import org.apache.cocoon.sitemap.ErrorNotifier;
     import org.apache.cocoon.sitemap.Manager;
     import org.apache.cocoon.xml.SAXConfigurationBuilder;
+    import org.apache.cocoon.matching.helpers.WildcardURIMatcher;
 
     import org.xml.sax.SAXException;
     import org.xml.sax.helpers.AttributesImpl;
@@ -70,7 +73,7 @@
      * This is the automatically generated class from the sitemap definitions
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.50 $ $Date: 2000-10-19 16:39:44 $
+     * @version CVS $Revision: 1.1.2.51 $ $Date: 2000-10-23 19:44:45 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
