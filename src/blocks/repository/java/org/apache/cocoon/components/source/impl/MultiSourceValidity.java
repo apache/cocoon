@@ -62,7 +62,7 @@ import org.apache.excalibur.source.SourceValidity;
  * An aggregated validity for multiple sources.
  * 
  * @author <a href="http://www.apache.org/~sylvain">Sylvain Wallez</a>
- * @version CVS $Id: MultiSourceValidity.java,v 1.1 2003/09/04 12:42:34 cziegeler Exp $
+ * @version CVS $Id: MultiSourceValidity.java,v 1.1 2003/10/23 08:52:50 unico Exp $
  */
 public class MultiSourceValidity implements SourceValidity{
 
