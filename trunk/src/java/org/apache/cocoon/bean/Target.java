@@ -64,7 +64,7 @@ import org.apache.cocoon.ProcessingException;
  * written (the destination URI).
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Target.java,v 1.6 2003/09/18 12:11:50 upayavira Exp $
+ * @version CVS $Id: Target.java,v 1.7 2003/09/19 09:09:43 upayavira Exp $
  */
 public class Target {
     // Defult type is append
@@ -85,7 +85,11 @@ public class Target {
     private String defaultFilename = Constants.INDEX_URI;
     private String finalDestinationURI = null;
     private String extension = null;    
-            
+
+    private boolean followLinks;
+    private boolean confirmExtension;
+    private String logger;
+                 
     private transient int _hashCode;
     private transient String _toString;
 
@@ -141,6 +145,9 @@ public class Target {
         Target target = new Target(this.type, this.root, linkURI, this.destURI);
         target.setOriginalURI(originalLinkURI);
         target.setParentURI(this.sourceURI);
+        target.setConfirmExtension(this.confirmExtension);
+        target.setFollowLinks(this.followLinks);
+        target.setLogger(this.logger);
         return target;
     }
 
@@ -387,7 +394,7 @@ public class Target {
      * @return a mangled URI
      */
     private String mangle(String uri) {
-        if (uri.charAt(uri.length() - 1) == '/') {
+        if (uri.length()==0 || uri.charAt(uri.length() - 1) == '/') {
             uri += defaultFilename;
         }
         uri = uri.replace('"', '\'');
@@ -422,5 +429,31 @@ public class Target {
                     + ">";
         }
         return _toString;
+    }
+    /**
+     * @return
+     */
+    public boolean confirmExtensions() {
+        return confirmExtension;
+    }
+
+    public boolean followLinks() {
+        return followLinks;
+    }
+
+    public String getLogger() {
+        return logger;
+    }
+
+    public void setConfirmExtension(boolean b) {
+        confirmExtension = b;
+    }
+
+    public void setFollowLinks(boolean b) {
+        followLinks = b;
+    }
+
+    public void setLogger(String string) {
+        logger = string;
     }
 }

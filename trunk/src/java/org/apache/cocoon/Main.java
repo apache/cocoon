@@ -82,7 +82,7 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: Main.java,v 1.16 2003/09/18 12:11:49 upayavira Exp $
+ * @version CVS $Id: Main.java,v 1.17 2003/09/19 09:09:43 upayavira Exp $
  */
 public class Main {
 
@@ -170,6 +170,8 @@ public class Main {
     private static final String ATTR_URI_SOURCEPREFIX = "src-prefix";
     private static final String ATTR_URI_SOURCEURI = "src";
     private static final String ATTR_URI_DESTURI = "dest";
+
+    private static final String NODE_URIS = "uris";
 
     private static Options options;
     private static OutputStreamListener listener;
@@ -510,6 +512,9 @@ public class Main {
                     } else if (nodeName.equals(NODE_URI)) {
                         Main.parseURINode(cocoon, node, destDir);
 
+                    } else if (nodeName.equals(NODE_URIS)) {
+                        Main.parseURIsNode(cocoon, node, destDir);
+
                     } else if (nodeName.equals(NODE_URI_FILE)) {
                         cocoon.addTargets(Main.processURIFile(getNodeValue(node)), destDir);
 
@@ -579,6 +584,69 @@ public class Main {
         }
     }
 
+    private static void parseURIsNode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
+
+        boolean followLinks = cocoon.followLinks();
+        boolean confirmExtensions = cocoon.confirmExtensions();
+        String logger = cocoon.getLoggerName();
+        String destURI = destDir;
+        String root = null;
+        String type = null;
+
+        if (Main.hasAttribute(node, ATTR_FOLLOW_LINKS)) {
+            followLinks = Main.getBooleanAttributeValue(node, ATTR_FOLLOW_LINKS);
+        }
+        if (Main.hasAttribute(node, ATTR_CONFIRM_EXTENSIONS)) {
+            confirmExtensions = Main.getBooleanAttributeValue(node, ATTR_CONFIRM_EXTENSIONS);
+        }
+        if (Main.hasAttribute(node, ATTR_URI_TYPE)) {
+            type = Main.getAttributeValue(node, ATTR_URI_TYPE);
+        }
+        if (Main.hasAttribute(node, ATTR_URI_SOURCEPREFIX)) {
+            root = Main.getAttributeValue(node, ATTR_URI_SOURCEPREFIX);
+        }
+        if (Main.hasAttribute(node, ATTR_URI_DESTURI)) {
+            destURI = Main.getAttributeValue(node, ATTR_URI_DESTURI);
+        }
+        if (Main.hasAttribute(node, ATTR_LOGGER)) {
+            logger = Main.getAttributeValue(node, ATTR_LOGGER);
+        }
+
+        NodeList nodes = node.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node child = nodes.item(i);
+            if (child.getNodeType()== Node.ELEMENT_NODE) {
+                String childName = child.getNodeName();
+                if (childName.equals(NODE_URI)) {
+                    String _sourceURI = null;
+                    String _destURI = destURI;
+                    String _root = root;
+                    String _type = type;
+                    
+                    if (child.getAttributes().getLength() == 0) {
+                        _sourceURI = getNodeValue(child);
+                        //destURI is inherited 
+                    } else {
+                        _sourceURI = Main.getAttributeValue(child, ATTR_URI_SOURCEURI);
+
+                        if (Main.hasAttribute(child, ATTR_URI_TYPE)) {
+                            _type = Main.getAttributeValue(child, ATTR_URI_TYPE);
+                        }
+                        if (Main.hasAttribute(child, ATTR_URI_SOURCEPREFIX)) {
+                            _root = Main.getAttributeValue(child, ATTR_URI_SOURCEPREFIX);
+                        }
+                        if (Main.hasAttribute(child, ATTR_URI_DESTURI)) {
+                            _destURI = Main.getAttributeValue(child, ATTR_URI_DESTURI);
+                        }
+                    }
+                    cocoon.addTarget(_type, _root, _sourceURI, _destURI, followLinks, confirmExtensions, logger);
+                } else {
+                    throw new IllegalArgumentException("Unknown element: <" + childName + ">");
+                }
+            }
+        }
+    }
+        
     private static void parseURINode(CocoonBean cocoon, Node node, String destDir) throws IllegalArgumentException {
         NodeList nodes = node.getChildNodes();
         if (nodes.getLength() != 0) {
