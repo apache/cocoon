@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.68 2000-05-07 17:22:35 ricardo Exp $
+  $Id: changes.xml,v 1.69 2000-05-07 22:35:26 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -19,14 +19,11 @@
   <action dev="SM" type="fix">
    Changed behavior for absolute stylesheet hrefs which now point to absolute URI addresses.
   </action>
- </release>
- 
- <release version="1.7.4" date="May 6 2000">
   <action dev="RR" type="fix" due-to="Kevin Burton" due-to-email="burton@relativity.yi.org">
-  </action>
     Changed "create-session" attribute in &lt;xsp:page&gt; to accept
     only "true" and "false" as dictated by the XML Schema boolean
     datatype
+  </action>
   <action dev="RR" type="update">
     Added namespace preservation for XSP pages. To preserve namespaces in an
     XSP page, add an "xsp:xxx" attribute to the page's root element, where
