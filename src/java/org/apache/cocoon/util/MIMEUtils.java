@@ -50,27 +50,27 @@
 */
 package org.apache.cocoon.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.BufferedReader;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
- * utility methods
+ * utility methods.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:tk-cocoon@datas-world.de">Torsten Knodt</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: MIMEUtils.java,v 1.5 2003/06/19 11:17:20 jefft Exp $
+ * @version CVS $Id: MIMEUtils.java,v 1.6 2003/07/03 21:35:43 joerg Exp $
  */
 public class MIMEUtils {
 
@@ -87,7 +87,7 @@ public class MIMEUtils {
     static {
         try {
             final InputStream is = MIMEUtils.class.getClassLoader().getResourceAsStream(MIME_MAPPING_FILE);
-            if ( null == is ) {
+            if (null == is) {
                 throw new RuntimeException("Cocoon cannot load MIME type mappings from " + MIME_MAPPING_FILE);
             }
             loadMimeTypes(new InputStreamReader(is), extMap, mimeMap);
@@ -100,11 +100,10 @@ public class MIMEUtils {
      * Return the MIME type for a given file.
      *
      * @param file File.
-     *
      * @return MIME type.
      */
     public static String getMIMEType(final File file)
-      throws FileNotFoundException, IOException {
+            throws FileNotFoundException, IOException {
         BufferedInputStream in = null;
 
         try {
@@ -112,29 +111,33 @@ public class MIMEUtils {
             byte[] buf = new byte[3];
             int count = in.read(buf, 0, 3);
 
-            if (count<3) {
+            if (count < 3) {
                 return (null);
             }
 
-            if ((buf[0])==(byte) 'G' && (buf[1])==(byte) 'I' &&
-                (buf[2])==(byte) 'F') {
+            if ((buf[0]) == (byte)'G' && (buf[1]) == (byte)'I' && (buf[2]) == (byte)'F') {
                 return ("image/gif");
             }
 
-            if ((buf[0])==(byte) 0xFF && (buf[1])==(byte) 0xD8) {
+            if ((buf[0]) == (byte)0xFF && (buf[1]) == (byte)0xD8) {
                 return ("image/jpeg");
             }
 
         } finally {
-            if (in!=null) {
+            if (in != null) {
                 try {
                     in.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
         final String name = file.getName();
-
-        return getMIMEType(name.substring(name.lastIndexOf(".")));
+        int index = name.lastIndexOf(".");
+        String fileExt = ".";
+        if (index != -1) {
+            fileExt = name.substring(index);
+        }
+        return getMIMEType(fileExt);
     }
 
     /**
@@ -145,7 +148,7 @@ public class MIMEUtils {
      * @return MIME type.
      */
     public static String getMIMEType(final String ext) {
-        return (String) mimeMap.get(ext);
+        return (String)mimeMap.get(ext);
     }
 
     /**
@@ -156,9 +159,8 @@ public class MIMEUtils {
      * @return Filename extension.
      */
     public static String getDefaultExtension(final String type) {
-        return (String) extMap.get(type);
+        return (String)extMap.get(type);
     }
-
 
     /**
      * Parses a <code>mime.types</code> file, and generates mappings between
@@ -179,23 +181,27 @@ public class MIMEUtils {
     public static void loadMimeTypes(Reader in, Map extMap, Map mimeMap) throws IOException {
         BufferedReader br = new BufferedReader(in);
         String line;
-        while ( (line = br.readLine()) != null) {
-            if (line.startsWith("#")) continue;
-            if (line.trim().equals("")) continue;
+        while ((line = br.readLine()) != null) {
+            if (line.startsWith("#")) {
+                continue;
+            }
+            if (line.trim().equals("")) {
+                continue;
+            }
             StringTokenizer tok = new StringTokenizer(line, " \t");
             String mimeType = tok.nextToken();
             if (tok.hasMoreTokens()) {
                 String defaultExt = tok.nextToken();
                 if (!extMap.containsKey(mimeType)) {
-                    extMap.put(mimeType, "."+defaultExt);
+                    extMap.put(mimeType, "." + defaultExt);
                 }
-                if (!mimeMap.containsKey("."+defaultExt)) {
-                    mimeMap.put("."+defaultExt, mimeType);
+                if (!mimeMap.containsKey("." + defaultExt)) {
+                    mimeMap.put("." + defaultExt, mimeType);
                 }
                 while (tok.hasMoreTokens()) {
                     String ext = tok.nextToken();
-                    if (!mimeMap.containsKey("."+ext)) {
-                        mimeMap.put("."+ext, mimeType);
+                    if (!mimeMap.containsKey("." + ext)) {
+                        mimeMap.put("." + ext, mimeType);
                     }
                 }
             }
