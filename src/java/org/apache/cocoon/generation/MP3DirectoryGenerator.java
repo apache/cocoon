@@ -78,7 +78,7 @@ import java.io.RandomAccessFile;
  * </blockquote>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: MP3DirectoryGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: MP3DirectoryGenerator.java,v 1.2 2003/07/03 23:34:38 joerg Exp $
  */
 public class MP3DirectoryGenerator extends DirectoryGenerator
 {
@@ -101,7 +101,7 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
     protected static String MP3_VBR_ATTR_NAME   = "variable-rate";
 
     protected static String MP3_TITLE_ATTR_NAME   = "title";
-    protected static String MP3_ARTITST_ATTR_NAME = "artist";
+    protected static String MP3_ARTIST_ATTR_NAME = "artist";
     protected static String MP3_ALBUM_ATTR_NAME   = "album";
     protected static String MP3_YEAR_ATTR_NAME    = "year";
     protected static String MP3_COMMENT_ATTR_NAME = "comment";
@@ -147,19 +147,19 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
         // Check TAG presence
         if(buf[0] != 'T' || buf[1] != 'A' || buf[2] != 'G') return;
 
-        s = new String(buf, 3, 30).trim();
+        s = getID3TagValue(buf, 3, 30);
         if(s.length() > 0)
             attributes.addAttribute("", MP3_TITLE_ATTR_NAME, MP3_TITLE_ATTR_NAME, "CDATA", s);
-        s = new String(buf, 33,30).trim();
+        s = getID3TagValue(buf, 33,30);
         if(s.length() > 0)
-            attributes.addAttribute("", MP3_ARTITST_ATTR_NAME, MP3_ARTITST_ATTR_NAME, "CDATA", s);
-        s = new String(buf, 63,30).trim();
+            attributes.addAttribute("", MP3_ARTIST_ATTR_NAME, MP3_ARTIST_ATTR_NAME, "CDATA", s);
+        s = getID3TagValue(buf, 63,30);
         if(s.length() > 0)
             attributes.addAttribute("", MP3_ALBUM_ATTR_NAME, MP3_ALBUM_ATTR_NAME, "CDATA", s);
-        s = new String(buf, 93, 4).trim();
+        s = getID3TagValue(buf, 93, 4);
         if(s.length() > 0)
             attributes.addAttribute("", MP3_YEAR_ATTR_NAME, MP3_YEAR_ATTR_NAME, "CDATA", s);
-        s = new String(buf, 97,29).trim();
+        s = getID3TagValue(buf, 97,29);
         if(s.length() > 0)
             attributes.addAttribute("", MP3_COMMENT_ATTR_NAME, MP3_COMMENT_ATTR_NAME, "CDATA", s);
         if(buf[126] > 0)
@@ -168,6 +168,15 @@ public class MP3DirectoryGenerator extends DirectoryGenerator
         if(buf[127] > 0)
             attributes.addAttribute("", MP3_GENRE_ATTR_NAME, MP3_GENRE_ATTR_NAME, "CDATA",
                 Byte.toString(buf[127]));
+    }
+
+    private String getID3TagValue(byte[] buf, int offset, int length) {
+        String s = new String(buf, offset, length).trim();
+        int index = s.indexOf(0x00); 
+        if (index != -1) {
+            s = s.substring(0, index);
+        }
+        return s;
     }
 
     private void setID3HeaderAttributes(RandomAccessFile in) throws IOException
