@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='qodx']">
+<xconf xpath="/cocoon/source-factories" unless="component-instance[@name='qdox']">
     <component-instance
         class="org.apache.cocoon.components.source.impl.QDoxSourceFactory"
         logger="core.sources.qdox"
