@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<schema
+  xmlns="http://www.w3.org/2000/10/XMLSchema"
+  xmlns:esql="http://apache.org/cocoon/SQL/v2"
+>
+
+<element name="esql:connection">
+  <complexType>
+    <choice>
+      <sequence>
+        <!-- not schema strings - xsp strings -->
+        <element name="esql:driver" type="string" minOccurs="1" maxOccurs="1"/>
+        <element name="esql:dburl" type="string" minOccurs="1" maxOccurs="1"/>
+        <element name="esql:username" type="string" minOccurs="0" maxOccurs="1"/>
+        <element name="esql:password" type="string" minOccurs="0" maxOccurs="1"/>
+      </sequence>
+      <element name="esql:pool" type="string" minOccurs="1" maxOccurs="1"/>
+    </choice>
+    <element name="esql:execute-query" minOccurs="0" maxOccurs="unbounded">
+      <complexType>
+        <sequence>
+          <element name="esql:query" type="string" minOccurs="1" maxOccurs="1"/>
+          <element name="esql:results" minOccurs="0" maxOccurs="1">
+              <!-- strings and stuff from other namespaces -->
+              <element name="esql:row-results" minOccurs="0" maxOccurs="1"/>
+              <!-- strings and stuff from other namespaces -->
+              <element name="esql:no-results" minOccurs="0" maxOccurs="1"/>
+              <!-- strings and stuff from other namespaces -->
+            </complexType>
+          </element>
+          <element name="esql:update-results" minOccurs="0" maxOccurs="1"/>
+          <element name="esql:error-results" minOccurs="0" maxOccurs="1"/>
+        </sequence>
+      </complexType>
+    </element>
+  </complexType>
+</element>
+
+</schema>

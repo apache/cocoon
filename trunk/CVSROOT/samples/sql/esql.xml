@@ -1,80 +1,49 @@
 <?xml version="1.0"?>
 
 <?cocoon-process type="xsp"?>
-<?xml-logicsheet href="resource://org/apache/cocoon/processor/xsp/library/sql/esql.xsl"?>
+<?cocoon-process type="xslt"?>
+<?xml-stylesheet type="text/xsl" href="esql.xsl"?>
 
 <xsp:page
-  language="java"
-  xmlns:esql="http://apache.org/cocoon/SQL/v2"
   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
-  xmlns:request="http://www.apache.org/1999/XSP/Request"
+  xmlns:esql="http://apache.org/cocoon/SQL/v2"
 >
 
 <page>
 
-<esql:execute-query inner-method="no">
-<esql:driver>postgresql.Driver</esql:driver>
-<esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
-<esql:username>test</esql:username>
-<esql:password>test</esql:password>
-<esql:query>select * from department_table</esql:query>
-<esql:results>
- <department>
- <id><esql:get-string column="id"/></id>
- <name><esql:get-string column="name"/></name>
- <employees>
- <esql:execute-query inner-method="no">
-  <esql:query>select * from employee_table where department_id = <esql:get-string column="id" ancestor="1"/></esql:query>
-  <esql:results>
-   <employee>
-   <id><esql:get-string column="id"/></id>
-   <name><esql:get-string column="name"/></name>
-   </employee>
-  </esql:results>
- </esql:execute-query>
- </employees>
- </department>
-</esql:results>
-<esql:no-results>
- <error>no results were found</error>
-</esql:no-results>
-<esql:error-results>
- <message><esql:get-message/></message>
- <stacktrace><esql:get-stacktrace/></stacktrace>
-</esql:error-results>
-</esql:execute-query>
-
-<esql:execute-query>
-<esql:driver>postgresql.Driver</esql:driver>
-<esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
-<esql:username>test</esql:username>
-<esql:password>test</esql:password>
-<esql:statement>select * from department_table where name = <esql:parameter><request:get-parameter name="name"/></esql:parameter></esql:statement>
-<esql:results>
- <department>
- <id><esql:get-string column="id"/></id>
- <name><esql:get-string column="name"/></name>
- <employees>
- <esql:execute-query>
-  <esql:query>select * from employee_table where department_id = <esql:get-string column="id" ancestor="1"/></esql:query>
-  <esql:results>
-   <employee>
-   <id><esql:get-string column="id"/></id>
-   <name><esql:get-string column="name"/></name>
-   </employee>
-  </esql:results>
- </esql:execute-query>
- </employees>
- </department>
-</esql:results>
-<esql:no-results>
- <error>no results were found</error>
-</esql:no-results>
-<esql:error-results>
- <message><esql:get-message/></message>
- <stacktrace><esql:get-stacktrace/></stacktrace>
-</esql:error-results>
-</esql:execute-query>
+<esql:connection>
+  <esql:driver>org.postgresql.Driver</esql:driver>
+  <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+  <esql:username>test</esql:username>
+  <esql:password>test</esql:password>
+  <esql:execute-query>
+    <esql:query>select id,name from department_table</esql:query>
+    <esql:results>
+      <header>header info</header>
+      <esql:row-results>
+        <department>
+          <id><esql:get-int column="id"/></id>
+          <name><esql:get-string column="name"/></name>
+          <esql:connection>
+            <esql:driver>org.postgresql.Driver</esql:driver>
+            <esql:dburl>jdbc:postgresql://localhost/test</esql:dburl>
+            <esql:username>test</esql:username>
+            <esql:password>test</esql:password>
+            <esql:execute-query>
+              <esql:query>select name from user_table where department_id = <esql:parameter type="int"><esql:get-int ancestor="1" column="id"/></esql:parameter></esql:query>
+              <esql:results>
+                <esql:row-results>
+                  <user><esql:get-string column="name"/></user>
+                </esql:row-results>
+              </esql:results>
+            </esql:execute-query>
+          </esql:connection>
+        </department>
+      </esql:row-results>
+      <footer>footer info</footer>
+    </esql:results>
+  </esql:execute-query>
+</esql:connection>
 
 </page>
 
