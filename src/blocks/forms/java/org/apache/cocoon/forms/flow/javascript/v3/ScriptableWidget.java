@@ -51,7 +51,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.3 2004/05/07 16:43:43 mpo Exp $
+ * @version $Id: ScriptableWidget.java,v 1.4 2004/05/08 11:27:54 bruno Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject implements ValueChangedListener, ActionListener, WidgetValidator {
@@ -118,8 +118,8 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
     }
 
     public boolean has(String id, Scriptable start) {
-        if (delegate != null) {
-            Widget sub = delegate.lookupWidget(id);
+        if (delegate != null && delegate instanceof ContainerWidget) {
+            Widget sub = ((ContainerWidget)delegate).getChild(id);
             if (sub != null) {
                 return true;
             }
@@ -147,8 +147,8 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
         if (result != NOT_FOUND) {
             return result;
         }
-        if (delegate != null) {
-            Widget sub = delegate.lookupWidget(id);
+        if (delegate != null && delegate instanceof ContainerWidget) {
+            Widget sub = ((ContainerWidget)delegate).getChild(id);
             if (sub != null) {
                 return wrap(sub);
             }
@@ -520,6 +520,18 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
         }
     }
 
+    public void jsFunction_setAttribute(String name, Object value) {
+        delegate.setAttribute(name, value);
+    }
+
+    public Object jsFunction_getAttribute(String jsname) {
+        return delegate.getAttribute(jsname);
+    }
+
+    public void jsFunction_removeAttribute(String name) {
+        delegate.removeAttribute(name);
+    }
+
     public Widget jsFunction_unwrap() {
         return delegate;
     }
@@ -671,11 +683,9 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
         }
 
         if (value instanceof Function) {
-            if (delegate instanceof ValueChangedListenerEnabled) {
-                if (this.validator == null)
-                    delegate.addValidator(this);
-                this.validator = (Function)value;
-            }
+            if (this.validator == null)
+                delegate.addValidator(this);
+            this.validator = (Function)value;
         }
 
     }
