@@ -69,7 +69,7 @@ import org.apache.cocoon.environment.Environment;
  * @see org.apache.cocoon.components.treeprocessor.TreeProcessor#handleCocoonRedirect(String, Environment, InvokeContext)
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: MutableEnvironmentFacade.java,v 1.4 2003/10/19 16:21:28 cziegeler Exp $
+ * @version CVS $Id: MutableEnvironmentFacade.java,v 1.5 2003/10/27 07:32:00 cziegeler Exp $
  */
 public class MutableEnvironmentFacade implements Environment {
 
@@ -119,7 +119,11 @@ public class MutableEnvironmentFacade implements Environment {
     
     public void reset() {
         this.env.reset();
-        this.env.setURI(this.uri, this.prefix);
+        // TODO - If we remove the line below, do we break something
+        //        else again? If we leave it in, the SitemapSource
+        //        object is unusable after a call to getInputStream()
+        //        or toSAX() :(
+        //this.env.setURI(this.uri, this.prefix);
     }
     //----------------------------------
 
