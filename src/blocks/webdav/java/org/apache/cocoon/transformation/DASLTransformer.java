@@ -49,16 +49,20 @@
 */
 package org.apache.cocoon.transformation;
 
+import java.io.IOException;
 import java.util.Enumeration;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMStreamer;
 import org.apache.commons.httpclient.HttpConnection;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpState;
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.webdav.lib.BaseProperty;
+import org.apache.webdav.lib.WebdavResource;
+import org.apache.webdav.lib.methods.OptionsMethod;
 import org.apache.webdav.lib.methods.SearchMethod;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -194,23 +198,32 @@ public class DASLTransformer extends AbstractSAXTransformer {
         }
     }
 
-    protected void performSearchMethod(String query) {
+    protected void performSearchMethod(String query) throws SAXException {
         try {
             DOMStreamer propertyStreamer = new DOMStreamer(this.xmlConsumer);
+            OptionsMethod optionsMethod = new OptionsMethod(this.targetUrl);
             SearchMethod searchMethod = new SearchMethod(this.targetUrl, query);
             HttpURL url = new HttpURL(this.targetUrl);
             HttpState state = new HttpState();
             state.setCredentials(null, new UsernamePasswordCredentials(
                     url.getUser(),
-                    url.getPassword()));
+                    url.getPassword()));                       
             HttpConnection conn = new HttpConnection(url.getHost(), url.getPort());
+            WebdavResource resource = new WebdavResource(new org.apache.util.HttpURL(this.targetUrl));
+            if(!resource.exists()) {
+                throw new SAXException("The WebDAV resource don't exist");
+            }
+            optionsMethod.execute(state, conn);
+            if(!optionsMethod.isAllowed("SEARCH")) {
+                throw new SAXException("The server don't support the SEARCH method");
+            }
             searchMethod.execute(state, conn);
             Enumeration enum = searchMethod.getAllResponseURLs();
             this.contentHandler.startElement(
                 DASL_QUERY_NS,
                 RESULT_ROOT_TAG,
                 PREFIX + ":" + RESULT_ROOT_TAG,
-                null);
+                new AttributesImpl());
             while (enum.hasMoreElements()) {
                 String path = (String) enum.nextElement();
                 Enumeration properties = searchMethod.getResponseProperties(path);
@@ -236,10 +249,17 @@ public class DASLTransformer extends AbstractSAXTransformer {
                 RESULT_ROOT_TAG,
                 PREFIX + ":" + RESULT_ROOT_TAG);
         } catch (SAXException e) {
-            e.printStackTrace();
+            throw new SAXException("Unable to fetch the query data:", e);
+        } catch (HttpException e1) {
+            this.getLogger().error("Unable to contact Webdav server", e1);
+            throw new SAXException("Unable to connect with server: ", e1);
+        } catch (IOException e2) {
+            throw new SAXException("Unable to connect with server: ", e2);
+        } catch (NullPointerException e) {
+            throw new SAXException("Unable to fetch the query data:", e);
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            throw new SAXException("Generic Error:", e);
+    		}
     }
 
 }
