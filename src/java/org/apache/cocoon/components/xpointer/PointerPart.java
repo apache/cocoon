@@ -51,6 +51,7 @@
 package org.apache.cocoon.components.xpointer;
 
 import org.xml.sax.SAXException;
+import org.apache.cocoon.ResourceNotFoundException;
 
 /**
  * Interface to be implemented by pointer parts (xpointer schemes).
@@ -61,5 +62,5 @@ public interface PointerPart {
      * stream them to the XMLConsumer available from the XPointerContext and return true.
      * Otherwise this method should return false.
      */
-    public boolean process(XPointerContext xpointerContext) throws SAXException;
+    public boolean process(XPointerContext xpointerContext) throws SAXException, ResourceNotFoundException;
 }
