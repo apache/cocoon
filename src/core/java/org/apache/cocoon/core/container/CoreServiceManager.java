@@ -45,7 +45,9 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ComponentInfo;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.configuration.Settings;
+import org.apache.cocoon.core.ClassLoaderFactory;
 import org.apache.cocoon.core.Core;
+import org.apache.cocoon.core.DefaultClassLoaderFactory;
 import org.apache.cocoon.core.container.handler.AbstractComponentHandler;
 import org.apache.cocoon.core.container.handler.AliasComponentHandler;
 import org.apache.cocoon.core.container.handler.ComponentHandler;
@@ -165,7 +167,31 @@ public class CoreServiceManager
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         
-        this.componentEnv = new ComponentEnvironment(null, getLogger(), this.roleManager, this.loggerManager, this.context, this);
+        ClassLoader classLoader = null;
+        
+        Configuration classLoaderConfig = configuration.getChild("classpath", false);
+        
+        // We have a specific classpath for this manager
+        if (classLoaderConfig != null) {
+            // We need a parent manager to lookup the CL factory
+            if (this.parentManager == null) {
+                throw new ConfigurationException("Cannot set <classpath> on root ServiceManager at " +
+                        classLoaderConfig.getLocation());
+            }
+            
+            try {
+                ClassLoaderFactory clFactory = (ClassLoaderFactory)this.parentManager.lookup(ClassLoaderFactory.ROLE);
+                
+                // TODO: add classloader to constructor to be able to propagate parentManager's CL
+                classLoader = clFactory.createClassLoader(Thread.currentThread().getContextClassLoader(), classLoaderConfig);
+            } catch (ConfigurationException ce) {
+                throw ce;
+            } catch (Exception e) {
+                throw new ConfigurationException("Cannot setup classloader", e);
+            }
+        }
+        
+        this.componentEnv = new ComponentEnvironment(classLoader, getLogger(), this.roleManager, this.loggerManager, this.context, this);
         
         // Setup location
         this.location = configuration.getLocation();
@@ -618,7 +644,9 @@ public class CoreServiceManager
             
             final String componentName = componentConfig.getName();
             
-            if ("include".equals(componentName)) {
+            if ("classpath".equals(componentName)) {
+                // Ignore
+            } else if ("include".equals(componentName)) {
                 handleInclude(contextURI, loadedURIs, componentConfig);
 
             } else {
