@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.18 2000-11-20 22:37:24 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.19 2000-11-22 00:03:45 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -73,7 +73,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.18 $ $Date: 2000-11-20 22:37:24 $
+ * @version $Revision: 1.19 $ $Date: 2000-11-22 00:03:45 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
@@ -121,6 +121,32 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
         if (parameters != null) {
             while (parameters.hasMoreElements()) {
                 String name = (String) parameters.nextElement();
+                if (isValidName (name))
+                    params.put (name, request.getParameter (name));
+            }
+        }
+
+        Cookie[] cookies = request.getCookies ();
+        if (cookies != null) {
+            for (int i = 0; i < cookies.length; i++) {
+                Cookie cookie = cookies [i];
+                String name = cookie.getName ();
+                if (isValidName (name))
+                    params.put ("C_" + name, cookie.getValue ());
+            }
+        }
+        
+        Enumeration headers = request.getHeaderNames ();
+        while (headers.hasMoreElements ()) {
+            String name = (String) headers.nextElement ();
+            if (isValidName (name))
+                params.put ("R_" + name, request.getHeader (name));
+        }
+
+        return params;
+    }
+
+    private boolean isValidName (String name) {
 				StringCharacterIterator iter = new StringCharacterIterator(name);
 				boolean valid_name = true;
 				char c = iter.first();
@@ -141,14 +167,8 @@ public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cachea
 						c = iter.next();
 					}
 				}
-				
-				if (valid_name) {
-                	params.put(name, request.getParameter(name));
-				}
-            }
-        }
-        
-        return params;
+
+                                return valid_name;				
     }
     
     private Object getResource(ServletContext context, HttpServletRequest request, Document document, String path, String browser) throws ProcessorException {

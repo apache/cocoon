@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.154 2000-11-21 23:38:22 greenrd Exp $ 
+  $Id: changes.xml,v 1.155 2000-11-22 00:03:44 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,11 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="update" due-to="Ovidiu Predescu"
+   due-to-email="ovidiu@cup.hp.com">
+   Request headers (prefixed by R_) and cookies (prefixed by C_)
+   are now passed to stylesheets, as well as request parameters.
+  </action>
   <action dev="RDG" type="update" due-to="Ovidiu Predescu" 
    due-to-email="ovidiu@cup.hp.com">
    Made caching dependent on all request headers, not just user agent.
