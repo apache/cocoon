@@ -46,7 +46,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.4.2.40 $ $Date: 2001-01-05 16:20:57 $
+ * @version CVS $Revision: 1.4.2.41 $ $Date: 2001-01-15 04:44:26 $
  */
 public class Cocoon
   implements Component, Configurable, ComponentManager, Modifiable, Processor, Constants {
@@ -188,8 +188,14 @@ public class Cocoon
         Iterator e = conf.getChildren("component");
         while (e.hasNext()) {
             Configuration co = (Configuration) e.next();
-            String role = co.getAttribute("role");
+            String type = co.getAttribute("type", "");
+            String role = co.getAttribute("role", "");
             String className = co.getAttribute("class");
+
+            if (! type.equals("")) {
+                role = RoleUtils.lookup(type);
+            }
+
             try {
                 log.debug("Adding component (" + role + " = " + className + ")");
                 componentManager.addComponent(role,ClassUtils.loadClass(className),co);
