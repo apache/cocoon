@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,18 +15,17 @@
  */
 package org.apache.cocoon.components.notification;
 
-import org.apache.avalon.framework.CascadingThrowable;
 import org.apache.avalon.framework.component.Component;
 
-import org.xml.sax.SAXException;
+import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.SourceLocator;
-
+import javax.xml.transform.TransformerException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
+import java.io.Writer;
 import java.util.Map;
 
 /**
@@ -34,13 +33,14 @@ import java.util.Map;
  *
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author Marc Liyanage (futureLAB AG)
- * @version CVS $Id: DefaultNotifyingBuilder.java,v 1.3 2004/03/05 13:02:49 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
 
     /**
      * Builds a Notifying object (SimpleNotifyingBean in this case)
      * that tries to explain what the Object o can reveal.
+     *
      * @param sender who sent this Object.
      * @param o the object to use when building the SimpleNotifyingBean
      * @return the  Notifying Object that was build
@@ -54,25 +54,34 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
             SimpleNotifyingBean n = new SimpleNotifyingBean(sender);
             n.setType(Notifying.ERROR_NOTIFICATION);
             n.setTitle("An Error Occurred");
+
             if (t != null) {
+                Throwable rootCause = getRootCause(t);
+
                 n.setSource(t.getClass().getName());
 
-                Throwable rootCauseThrowable = getRootCause(t);
-                n.addExtraDescription(Notifying.EXTRA_CAUSE, rootCauseThrowable.toString());
+                // NullPointerException usually does not have a message
+                if (rootCause.getMessage() != null) {
+                    n.setMessage(rootCause.getMessage());
+                } else {
+                    n.setMessage(t.getMessage());
+                }
 
-                if (rootCauseThrowable instanceof SAXParseException) {
-                    SAXParseException saxParseException = (SAXParseException) rootCauseThrowable;
-                    n.setMessage         (                           saxParseException.getMessage()      );
+                n.setDescription(t.toString());
+                n.addExtraDescription(Notifying.EXTRA_CAUSE, rootCause.toString());
+
+                if (rootCause instanceof SAXParseException) {
+                    SAXParseException saxParseException = (SAXParseException) rootCause;
+
                     n.addExtraDescription(Notifying.EXTRA_LOCATION,
                                           String.valueOf(saxParseException.getSystemId()));
                     n.addExtraDescription(Notifying.EXTRA_LINE,
                                           String.valueOf(saxParseException.getLineNumber()));
                     n.addExtraDescription(Notifying.EXTRA_COLUMN,
                                           String.valueOf(saxParseException.getColumnNumber()));
-                } else if (rootCauseThrowable instanceof TransformerException) {
-                    TransformerException transformerException = (TransformerException) rootCauseThrowable;
+                } else if (rootCause instanceof TransformerException) {
+                    TransformerException transformerException = (TransformerException) rootCause;
                     SourceLocator sourceLocator = transformerException.getLocator();
-                    n.setMessage         (                           transformerException.getMessage()   );
 
                     if (null != sourceLocator) {
                         n.addExtraDescription(Notifying.EXTRA_LOCATION,
@@ -82,33 +91,19 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
                         n.addExtraDescription(Notifying.EXTRA_COLUMN,
                                               String.valueOf(sourceLocator.getColumnNumber()));
                     }
-                } else {
-                    n.setMessage(t.getMessage());
                 }
 
-                n.setDescription(t.toString());
-
-                // Get the stacktrace: if the exception is a SAXException,
-                // the stacktrace of the embedded exception is used as the
-                // SAXException does not append it automatically
-                Throwable stackTraceException;
-                if (t instanceof SAXException && ((SAXException) t).getException() != null) {
-                    stackTraceException = ((SAXException) t).getException();
-                } else {
-                    stackTraceException = t;
-                }
-                // org.apache.avalon.framework.ExceptionUtil.captureStackTrace();
+                // Add root cause exception stacktrace
                 StringWriter sw = new StringWriter();
-                stackTraceException.printStackTrace(new PrintWriter(sw));
+                rootCause.printStackTrace(new PrintWriter(sw));
                 n.addExtraDescription(Notifying.EXTRA_STACKTRACE, sw.toString());
-                // Add nested throwables description
+
+                // Add full exception chain
                 sw = new StringWriter();
-                appendCauses(new PrintWriter(sw), stackTraceException);
-                String causes = sw.toString();
-                if (causes != null && causes.length() != 0) {
-                    n.addExtraDescription(Notifying.EXTRA_FULLTRACE, causes);
-                }
+                appendTraceChain(sw, t);
+                n.addExtraDescription(Notifying.EXTRA_FULLTRACE, sw.toString());
             }
+
             return n;
         } else {
             SimpleNotifyingBean n = new SimpleNotifyingBean(sender);
@@ -123,6 +118,7 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
     /**
      * Builds a Notifying object (SimpleNotifyingBean in this case)
      * that explains a notification.
+     *
      * @param sender who sent this Object.
      * @param o the object to use when building the SimpleNotifyingBean
      * @param type see the Notifying apidocs
@@ -157,43 +153,26 @@ public class DefaultNotifyingBuilder implements NotifyingBuilder, Component {
 
 
     /**
-     * Print recursively all nested causes of a Throwable in a PrintWriter.
+     * Print stacktrace of the Throwable and stacktraces of its all nested causes into a Writer.
      */
-    private static void appendCauses (PrintWriter out, Throwable t) {
-        Throwable cause = null;
-        if (t instanceof CascadingThrowable) {
-            cause = ((CascadingThrowable) t).getCause();
-        } else if (t instanceof SAXException) {
-            cause = ((SAXException) t).getException();
-        } else if (t instanceof java.sql.SQLException) {
-            cause = ((java.sql.SQLException) t).getNextException();
-        }
-        if (cause != null) {
-            out.print("Original Exception: ");
-            cause.printStackTrace(out);
-            out.println();
-            // Recurse
-            appendCauses(out, cause);
+    private static void appendTraceChain(Writer out, Throwable t) {
+        PrintWriter pw = new PrintWriter(out);
+        if (SystemUtils.isJavaVersionAtLeast(140)) {
+            t.printStackTrace(pw);
+        } else {
+            for (Throwable cause = t; cause != null; cause = ExceptionUtils.getCause(cause)) {
+                if (cause != t) {
+                    pw.println();
+                }
+                cause.printStackTrace(pw);
+            }
         }
     }
 
     /**
-     * Get root Exception.
+     * Get root cause Throwable.
      */
     public static Throwable getRootCause (Throwable t) {
-        Throwable cause = null;
-        if (t instanceof CascadingThrowable) {
-            cause = ((CascadingThrowable) t).getCause();
-        } else if (t instanceof SAXException) {
-            cause = ((SAXException) t).getException();
-        } else if (t instanceof java.sql.SQLException) {
-            cause = ((java.sql.SQLException) t).getNextException();
-        }
-        if (cause == null) {
-            return t;
-        } else {
-            // Recurse
-            return getRootCause(cause);
-        }
+        return ExceptionUtils.getRootCause(t);
     }
 }
