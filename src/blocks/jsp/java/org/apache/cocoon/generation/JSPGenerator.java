@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.jsp.JSPEngine;
 import org.apache.cocoon.environment.ObjectModelHelper;
@@ -67,41 +66,39 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * Allows JSP to be used as a generator.  Builds upon the JSP servlet
- * functionality - overrides the output method in order to pipe the
- * results into SAX events.
+ * Allows Servlets and JSPs to be used as a generator.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: JspGenerator.java,v 1.11 2003/12/18 21:09:47 vgritsenko Exp $
+ * @version CVS $Id: JSPGenerator.java,v 1.1 2004/01/16 13:50:37 unico Exp $
  */
-public class JspGenerator extends ServletGenerator {
+public class JSPGenerator extends ServiceableGenerator {
 
     /**
-     * Generate XML data from JSP.
+     * Generate XML data from JSPEngine output.
      */
     public void generate() throws ProcessingException {
 
-        // ensure that we are running in a servlet environment
-        HttpServletResponse httpResponse =
-            (HttpServletResponse)this.objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
-        HttpServletRequest httpRequest =
-            (HttpServletRequest)this.objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
-        ServletContext httpContext =
-            (ServletContext)this.objectModel.get(HttpEnvironment.HTTP_SERVLET_CONTEXT);
+        final HttpServletResponse servletResponse =
+            (HttpServletResponse) this.objectModel.get(HttpEnvironment.HTTP_RESPONSE_OBJECT);
+        final HttpServletRequest servletRequest =
+            (HttpServletRequest) this.objectModel.get(HttpEnvironment.HTTP_REQUEST_OBJECT);
+        final ServletContext servletContext =
+            (ServletContext) this.objectModel.get(HttpEnvironment.HTTP_SERVLET_CONTEXT);
 
-        if (httpResponse == null || httpRequest == null || httpContext == null) {
-            throw new ProcessingException("HttpServletRequest or HttpServletResponse or ServletContext object not available");
+        // ensure that we are running in a servlet environment
+        if (servletResponse == null || servletRequest == null || servletContext == null) {
+            throw new ProcessingException("JSPReader can only be used from within a Servlet environment.");
         }
 
         JSPEngine engine = null;
         SAXParser parser = null;
         try {
             // TODO (KP): Should we exclude not supported protocols, say 'context'?
-            String url = this.source;
+            String url = super.source;
             // absolute path is processed as is
             if (!url.startsWith("/")) {
                 // get current request path
-                String servletPath = httpRequest.getServletPath();
+                String servletPath = servletRequest.getServletPath();
                 // remove sitemap URI part
                 String sitemapURI = ObjectModelHelper.getRequest(objectModel).getSitemapURI();
                 if (sitemapURI != null) {
@@ -113,32 +110,35 @@ public class JspGenerator extends ServletGenerator {
                 url = servletPath + url;
             }
 
-            engine = (JSPEngine)this.manager.lookup(JSPEngine.ROLE);
+            engine = (JSPEngine) super.manager.lookup(JSPEngine.ROLE);
 
-            getLogger().debug("JspGenerator executing JSP:" + url);
-            byte[] bytes = engine.executeJSP(url, httpRequest, httpResponse, httpContext);
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("JSPGenerator executing:" + url);
+            }
+
+            byte[] bytes = engine.executeJSP(url, servletRequest, servletResponse, servletContext);
 
             InputSource input = new InputSource(new ByteArrayInputStream(bytes));
             // utf-8 is default encoding; specified explicitely here as a reminder.
             input.setEncoding("utf-8");
 
             // pipe the results into the parser
-            parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
-            parser.parse(input, this.xmlConsumer);
+            parser = (SAXParser) super.manager.lookup(SAXParser.ROLE);
+            parser.parse(input, super.xmlConsumer);
         } catch (ServletException e) {
-            throw new ProcessingException("ServletException in JspGenerator.generate()", e.getRootCause());
+            throw new ProcessingException("ServletException while executing JSPEngine", e.getRootCause());
         } catch (SAXException e) {
             // FIXME: e.getException can be null
-            throw new ProcessingException("SAXException JspGenerator.generate()", e.getException());
+            throw new ProcessingException("SAXException while parsing JSPEngine output", e.getException());
         } catch (IOException e) {
-            throw new ProcessingException("IOException JspGenerator.generate()", e);
+            throw new ProcessingException("IOException JSPGenerator.generate()", e);
         } catch (ProcessingException e) {
             throw e;
         } catch (Exception e) {
-            throw new ProcessingException("Exception JspGenerator.generate()", e);
+            throw new ProcessingException("Exception JSPGenerator.generate()", e);
         } finally {
-            this.manager.release((Component)parser);
-            this.manager.release(engine);
+            super.manager.release(parser);
+            super.manager.release(engine);
         }
     }
 }
