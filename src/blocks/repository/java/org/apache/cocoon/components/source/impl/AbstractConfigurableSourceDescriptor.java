@@ -67,6 +67,10 @@ extends AbstractConfigurableSourceInspector implements SourceDescriptor {
         throws SourceException {
         
         if (handlesProperty(namespace,name)) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Removing property " + namespace + "#" 
+                    + name + " from source " + source.getURI());
+            }
             doRemoveSourceProperty(source,namespace,name);
         }
     }
@@ -75,6 +79,10 @@ extends AbstractConfigurableSourceInspector implements SourceDescriptor {
         throws SourceException {
         
         if (handlesProperty(property.getNamespace(),property.getName())) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug("Setting property " + property.getNamespace() + "#" 
+                    + property.getName() + " on source " + source.getURI());
+            }
             doSetSourceProperty(source,property);
         }
     }
