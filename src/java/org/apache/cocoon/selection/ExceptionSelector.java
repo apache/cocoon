@@ -52,7 +52,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @since 2.1
- * @version CVS $Id: ExceptionSelector.java,v 1.7 2004/03/05 13:02:57 bdelacretaz Exp $
+ * @version CVS $Id: ExceptionSelector.java,v 1.8 2004/06/24 07:32:53 cziegeler Exp $
  */
 
 public class ExceptionSelector extends AbstractSwitchSelector implements Configurable {
@@ -160,7 +160,7 @@ public class ExceptionSelector extends AbstractSwitchSelector implements Configu
 		return result; 
     }
     
-    class FindResult {
+    static class FindResult {
     	private String name;
     	private Throwable throwable;
     	

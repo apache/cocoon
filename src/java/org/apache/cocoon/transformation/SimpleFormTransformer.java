@@ -145,7 +145,7 @@ import java.util.Map;
  * </pre></p>
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: SimpleFormTransformer.java,v 1.16 2004/06/17 14:55:24 cziegeler Exp $
+ * @version CVS $Id: SimpleFormTransformer.java,v 1.17 2004/06/24 07:33:28 cziegeler Exp $
  */
 public class SimpleFormTransformer extends AbstractSAXTransformer implements Recyclable {
 
@@ -298,7 +298,7 @@ public class SimpleFormTransformer extends AbstractSAXTransformer implements Rec
     /**
      * Keep track of multiple values. 
      */
-    protected class ValueList {
+    protected static class ValueList {
         private int current = -1;
         private Object[] values = null;
 
