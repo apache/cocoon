@@ -25,7 +25,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 /**
-* Implementation of the JdoPMF. Create one PMF and store it for future use
+ * Implementation of the JdoPMF. Create one PMF and store it for future use
  *
  * @author <a href="mailto:antonio@apache.org">Antonio Gallardo</a>
  * @version CVS $Id$
