@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated hsqldb to 1.7.3.3.
+   </action>
    <action dev="VG" type="fix">
      Fix caching of i18n bundles with expires validities.
    </action>
