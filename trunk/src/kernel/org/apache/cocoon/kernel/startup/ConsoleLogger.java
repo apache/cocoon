@@ -18,12 +18,14 @@ package org.apache.cocoon.kernel.startup;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import org.apache.cocoon.kernel.logging.Logger;
+
 /**
  * <p>The {@link ConsoleLogger} is a simple {@link Logger} implementation
  * writing to {@link System#err} or a specified {@link PrintStream}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.4 $)
+ * @version 1.0 (CVS $Revision: 1.5 $)
  */
 public class ConsoleLogger extends AbstractLogger {
 

@@ -17,12 +17,14 @@ package org.apache.cocoon.kernel.startup;
 
 import javax.servlet.ServletContext;
 
+import org.apache.cocoon.kernel.logging.Logger;
+
 /**
  * <p>The {@link ServletLogger} is a simple {@link Logger} implementation
  * logging individual lines to a {@link ServletContext}.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.1 $)
+ * @version 1.0 (CVS $Revision: 1.2 $)
  */
 public class ServletLogger extends AbstractLogger {
 
