@@ -1,4 +1,4 @@
-/*-- $Id: LinkEncodingProcessor.java,v 1.1 2000-12-08 22:47:50 greenrd Exp $ --
+/*-- $Id: LinkEncodingProcessor.java,v 1.2 2000-12-09 00:09:44 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * Xalan-specific features in your stylesheet.
  *
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.1 $ $Date: 2000-12-08 22:47:50 $
+ * @version $Revision: 1.2 $ $Date: 2000-12-09 00:09:44 $
  */
 
 public class LinkEncodingProcessor implements Processor, Status {
@@ -100,10 +100,6 @@ public class LinkEncodingProcessor implements Processor, Status {
         }
     }
 
-    public boolean hasChanged (Object request) {
-        return true;
-    }
-
     /**
      * Matches href attributes which point to the same hostname as the request
      * (implicitly or explicitly) and are well-formed URLs.
@@ -121,10 +117,19 @@ public class LinkEncodingProcessor implements Processor, Status {
 
         public boolean matches (Object x) {
              Attr attr = (Attr) x;
-             if (!attr.getName ().equals ("href")) return false;
+             String name = attr.getName ();
+             if (!name.equalsIgnoreCase ("href") 
+                 || !name.equalsIgnoreCase ("action")) {
+               return false;
+             }
              String href = attr.getValue ();
              try {
-                 return new URL (requestBase, href).getHost ().equals (hostName);
+                 URL full = new URL (requestBase, href);
+                 String hrefHost = full.getHost ();
+                 // Allow for not-fully--qualified domain names in hrefs
+                 return (hrefHost.indexOf ('.') == -1) 
+                     ? (hostName + '.').startsWith (hrefHost + '.')
+                     : hostName.equals (hrefHost);
              }
              catch (MalformedURLException ex) {
                  return false;
