@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.210 2001-02-24 18:20:42 greenrd Exp $ 
+  $Id: changes.xml,v 1.211 2001-02-25 17:00:02 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Torsten Curdt" due-to-email="tcurdt@dff.st">
+   Added manifest to w3c.jar to fix startup problem on JRun 3.0.
+  </action>
   <action dev="RDG" type="fix" due-to="Nicolás Lichtmaier" due-to-email="nick@debian.org">
    Fixed command-line mode (again!)
   </action>
