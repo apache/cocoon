@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.331 2004/05/19 11:34:31 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.332 2004/05/24 09:56:53 cziegeler Exp $:-->
 
 <status>
  <developers>
@@ -211,6 +211,11 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="NN" type="fix">
+     Dummy placeholder
+   </action>
+ </release>
+ <release version="2.1.5" date="May 24 2004">
    <action dev="CZ" type="update">
      The store/caching system now uses JCS instead of Jisp.
    </action>
