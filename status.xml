@@ -57,7 +57,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.328 2004/05/18 15:11:48 bdelacretaz Exp $:-->
+<!-- CVS $Id: status.xml,v 1.329 2004/05/18 16:19:58 joerg Exp $:-->
 
 <status>
  <developers>
@@ -223,7 +223,7 @@
      Deprecated getWidget from the Widget interface in cforms.
      People should consider using getChild(id) or lookupWidget(path) instead.
      On the level of the flowscript 'Form' API a semantical distinct getWidget()
-     (notice: no arguments!) is still avalaible to return the actual wrapped 
+     (notice: no arguments!) is still available to return the actual wrapped 
      Java form instance.
    </action>
    <action dev="AG" type="fix" fixes-bug="28889" due-to="Juan Jose Pablos" due-to-email="cheche@che-che.com">
