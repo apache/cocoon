@@ -8,14 +8,14 @@
       <person name="Ovidiu Predescu" email="ovidiu@apache.org"/>
     </authors>
   </header>
-
+n
   <body>
 
 <s1 title="Tutorial: A Gentle Introduction to Flowscript">
-<p>We will create a simple number guessing game using Cocoon's Flowscript engine.</p>
+<p>In this tutorial, we will create a simple number guessing game using Cocoon's Flowscript engine.</p>
 
 <p>
-Now that you've got Cocoon 2.1 deployed and running, go to where you have Cocoon deployed and create a new subdirectory named <code>game</code>. Cocoon's default main sitemap will automatically mount the sitemap in the subdirectory.</p>
+After you have Cocoon 2.1 deployed and running, go to where you have Cocoon deployed and create a new subdirectory named <code>game</code>. Cocoon's default main sitemap will automatically mount the sitemap in the subdirectory.</p>
 
 <p>Create the following <code>sitemap.xmap</code> in the new subdirectory:</p>
 

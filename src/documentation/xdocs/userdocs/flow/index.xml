@@ -9,7 +9,7 @@
     </authors>
   </header>
   <body>
-    <s1 title="Control flow">
+    <s1 title="Control Flow">
       <p>Cocoon has advanced control flow, the ability to describe the
       order of Web pages that have to be sent to the client, at any
       given point in time in an application.</p>
