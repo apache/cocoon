@@ -35,7 +35,7 @@ import java.util.Stack;
  * Prepared implementation of {@link VariableResolver} for fast evaluation.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: PreparedVariableResolver.java,v 1.8 2004/04/14 09:39:45 upayavira Exp $
+ * @version CVS $Id: PreparedVariableResolver.java,v 1.9 2004/04/14 18:05:46 joerg Exp $
  */
 final public class PreparedVariableResolver extends VariableResolver implements Disposable {
     
@@ -376,7 +376,7 @@ final public class PreparedVariableResolver extends VariableResolver implements 
             for (Iterator i = tokens.iterator(); i.hasNext();) {
                 Token token = (Token)i.next();
                 if (token.hasType(THREADSAFE_MODULE)) {
-                    InputModule im = (InputModule) token.getModule();
+                    InputModule im = token.getModule();
                     this.selector.release(im);
                 }
             }
