@@ -105,7 +105,7 @@ import org.apache.excalibur.source.SourceResolver;
  * </p>
  *    
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: I18nMatcher.java,v 1.1 2004/07/11 18:50:07 upayavira Exp $
+ * @version CVS $Id: I18nMatcher.java,v 1.2 2004/07/11 21:28:58 antonio Exp $
  */
 public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSafe, Serviceable, Configurable {
 
@@ -170,7 +170,7 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
         }
             
         if (country == null) {
-            return new Locale(lang);
+            return new Locale(lang, "");
         }
         
         if (variant == null) {
@@ -190,11 +190,11 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
         
         String matchingUrl = null;
         
-        if (requestParameter != null && isValidResource(pattern, new Locale(requestParameter), map)) {
+        if (requestParameter != null && isValidResource(pattern, new Locale(requestParameter, ""), map)) {
              return map;
         }
         
-        if (sitemapParameter != null && isValidResource(pattern, new Locale(sitemapParameter), map)) {
+        if (sitemapParameter != null && isValidResource(pattern, new Locale(sitemapParameter, ""), map)) {
               return map;
         }
         
@@ -239,7 +239,7 @@ public class I18nMatcher extends AbstractLogEnabled implements Matcher, ThreadSa
             return true;        
         }
         
-        testLocale = new Locale(locale.getLanguage()); 
+        testLocale = new Locale(locale.getLanguage(), ""); 
         if (isValidResource(pattern, locale, testLocale.toString(), map)) {
             return true;        
         }
