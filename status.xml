@@ -78,6 +78,7 @@
   <person name="Gerhard Froehlich" email="froehlich@apache.org" id="GF"/>
   <person name="Pierpaolo Fumagalli" email="pier@apache.org" id="PF"/>
   <person name="Antonio Gallardo" email="antonio@apache.org" id="AG"/>
+  <person name="Leszek Gawron" email="lgawron@apache.org" id="LG"/>
   <person name="Ralph Goers" email="rgoers@apache.org" id="RG"/>
   <person name="Vadim Gritsenko" email="vgritsenko@apache.org" id="VG"/>
   <person name="Christian Haul" email="haul@apache.org" id="CH"/>
@@ -201,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+  <action dev="LG" type="fix">
+    Fix: Continuation can only be invoked for the interpreter it was originally created for.
+  </action>
    <action dev="CZ" type="add" due-to="Sascha-Matthias Kulawik" due-to-email="sascha@kulawik.de">
      Authentication block: Add authenticator for JAAS.
    </action>

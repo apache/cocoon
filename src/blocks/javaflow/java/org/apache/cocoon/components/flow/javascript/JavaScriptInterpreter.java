@@ -127,7 +127,8 @@ public class JavaScriptInterpreter extends AbstractInterpreter implements Config
 
         Continuation continuation = new Continuation(context);
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, null, timeToLive, 
+                                                                    getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();
@@ -155,7 +156,7 @@ public class JavaScriptInterpreter extends AbstractInterpreter implements Config
 
     public void handleContinuation(String id, List params, Redirector redirector) throws Exception {
 
-        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id);
+        WebContinuation parentwk = continuationsMgr.lookupWebContinuation(id, getInterpreterID());
 
         if (parentwk == null) {
         /*
@@ -187,7 +188,8 @@ public class JavaScriptInterpreter extends AbstractInterpreter implements Config
 
         ScriptHelper flow = (ScriptHelper) context.getObject();
 
-        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, null);
+        WebContinuation wk = continuationsMgr.createWebContinuation(continuation, parentwk, timeToLive, 
+                                                                    getInterpreterID(), null);
         FlowHelper.setWebContinuation(ContextHelper.getObjectModel(this.avalonContext), wk);
 
         continuation.registerThread();

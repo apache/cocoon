@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Representation of continuations in a Web environment.
@@ -34,7 +35,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 19, 2002
- * @version CVS $Id: WebContinuation.java,v 1.9 2004/05/17 18:50:53 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public class WebContinuation extends AbstractLogEnabled
                              implements Comparable {
@@ -67,6 +68,11 @@ public class WebContinuation extends AbstractLogEnabled
      * The continuation id used to represent this instance in Web pages.
      */
     protected String id;
+    
+    /**
+     * Interpreter id that this continuation is bound to
+     */
+    protected String interpreterId;
 
     /**
      * A user definable object. This is present for convenience, to
@@ -113,12 +119,14 @@ public class WebContinuation extends AbstractLogEnabled
                     Object continuation,
                     WebContinuation parentContinuation,
                     int timeToLive,
+                    String interpreterId,
                     ContinuationsDisposer disposer) {
         this.id = id;
         this.continuation = continuation;
         this.parentContinuation = parentContinuation;
         this.updateLastAccessTime();
         this.timeToLive = timeToLive;
+        this.interpreterId = interpreterId;
         this.disposer = disposer;
 
         if (parentContinuation != null) {
@@ -363,5 +371,9 @@ public class WebContinuation extends AbstractLogEnabled
      */
     public boolean disposed() {
         return this.continuation == null;
+    }
+    
+    public boolean interpreterMatches( String interpreterId ) {
+        return StringUtils.equals( this.interpreterId, interpreterId );
     }
 }

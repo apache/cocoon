@@ -90,6 +90,7 @@ public class FOM_WebContinuation extends ScriptableObject {
         wk = contMgr.createWebContinuation(c,
                                            (parent == null ? null : parent.getWebContinuation()),
                                            timeToLive,
+                                           cocoon.getInterpreterId(), 
                                            null);
         result = new FOM_WebContinuation(wk);
         result.setParentScope(getTopLevelScope(scope));
