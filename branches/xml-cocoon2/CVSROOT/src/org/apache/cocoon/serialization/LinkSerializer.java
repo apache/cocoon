@@ -11,21 +11,32 @@ package org.apache.cocoon.serialization;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Map;
 import org.apache.cocoon.Constants;
+import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.xml.xlink.ExtendedXLinkPipe;
 import org.apache.avalon.excalibur.pool.Poolable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.xml.sax.Attributes;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-04-30 14:17:38 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-05-03 14:09:33 $
  */
 
 public class LinkSerializer extends ExtendedXLinkPipe implements Serializer, Poolable {
 
     private PrintStream out;
 
+    /**
+     * Set the <code>EntityResolver</code> the object model <code>Map</code>,
+     * the source and sitemap <code>Parameters</code> used to process the request.
+     */
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {}
+    
     /**
      * Set the <code>OutputStream</code> where the requested resource should
      * be serialized.

@@ -9,15 +9,21 @@
 package org.apache.cocoon.serialization;
 
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.cocoon.xml.AbstractXMLPipe;
+import java.util.Map;
 import org.apache.avalon.excalibur.pool.Recyclable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.xml.AbstractXMLPipe;
+import org.apache.cocoon.ProcessingException;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.15 $ $Date: 2001-04-30 14:17:37 $
+ * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-05-03 14:09:28 $
  */
 
 public abstract class AbstractSerializer extends AbstractXMLPipe implements Serializer, Recyclable {
@@ -26,6 +32,13 @@ public abstract class AbstractSerializer extends AbstractXMLPipe implements Seri
      * The <code>OutputStream</code> used by this serializer.
      */
     protected OutputStream output;
+
+    /**
+     * Set the <code>EntityResolver</code> the object model <code>Map</code>,
+     * the source and sitemap <code>Parameters</code> used to process the request.
+     */
+    public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
+    throws ProcessingException, SAXException, IOException {}
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.

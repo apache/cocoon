@@ -35,7 +35,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-30 14:17:12 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-05-03 14:09:16 $
  */
 public abstract class AbstractStreamPipeline extends AbstractLoggable implements StreamPipeline, Disposable {
     protected EventPipeline eventPipeline;
@@ -122,6 +122,12 @@ public abstract class AbstractStreamPipeline extends AbstractLoggable implements
         } else {
             if ( !checkPipeline() ) {
                 throw new ProcessingException("Attempted to process incomplete pipeline.");
+            }
+
+            try {
+                this.serializer.setup((EntityResolver) environment,environment.getObjectModel(),serializerSource,serializerParam);
+            } catch ( Exception e ) {
+                throw new ProcessingException("Error in serializer setup",e);
             }
 
             setupPipeline(environment);

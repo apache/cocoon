@@ -7,6 +7,7 @@
  *****************************************************************************/
 package org.apache.cocoon.serialization;
 
+import org.apache.cocoon.sitemap.SitemapModelComponent;
 import org.apache.cocoon.sitemap.SitemapOutputComponent;
 import org.apache.cocoon.xml.XMLConsumer;
 
@@ -14,7 +15,7 @@ import org.apache.cocoon.xml.XMLConsumer;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:02 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-05-03 14:09:37 $
  */
-public interface Serializer extends XMLConsumer, SitemapOutputComponent {
+public interface Serializer extends XMLConsumer, SitemapOutputComponent, SitemapModelComponent {
 }
