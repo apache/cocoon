@@ -103,6 +103,14 @@
    <map:serialize type="xml"/>
   </map:view>
 
+  <map:view from-label="parser-output" name="parser-output">
+   <map:serialize type="xml"/>
+  </map:view>
+  
+  <map:view from-label="xdoc" name="xdoc">
+   <map:serialize type="xml"/>
+  </map:view>
+  
   <map:view from-position="last" name="links">
    <map:serialize type="links"/>
   </map:view>
@@ -184,12 +192,12 @@
     <map:serialize type="html"/>
    </map:match>
 
-    <map:match pattern="wikitest/*.html">
+   <map:match pattern="wikitest/*.html">
     <map:generate src="wikitest/{1}.txt"/>
     <map:transform type="lexer"   src="cocoon:/wiki.xlex"/>
-    <map:transform type="parser"  src="cocoon:/wiki.xgrm"/>
-    <map:transform                src="stylesheets/wiki2xdoc.xsl"/>
-    <map:transform                src="stylesheets/xdoc2html.xsl"/>
+    <map:transform label="parser-output" type="parser"  src="cocoon:/wiki.xgrm"/>
+    <map:transform label="xdoc" src="stylesheets/wiki2xdoc.xsl"/>
+    <map:transform src="stylesheets/xdoc2html.xsl"/>
     <map:serialize type="html"/>
    </map:match>
 
