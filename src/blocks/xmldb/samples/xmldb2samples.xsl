@@ -86,7 +86,7 @@
         </note>
       </group>
       <group name="Resource Content">
-<!--        <xsl:call-template name="head"/> -->
+        <xsl:call-template name="head"/>
         <xsl:apply-templates/>
       </group>
       <group name="Query">
@@ -113,7 +113,7 @@
         </note>
       </group>
       <group name="Results">
-<!--        <xsl:call-template name="head"/> -->
+        <xsl:call-template name="head"/>
         <xsl:if test="@resources = 0">
           <note>Query produced no results</note>
         </xsl:if>
@@ -142,5 +142,10 @@
       <strong><xsl:value-of select="@docid"/></strong>:
     </p>
     <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template name="head">
+    <link href="/styles/prettycontent.css" type="text/css" rel="stylesheet"/>
+    <script src="/scripts/prettycontent.js" type="text/javascript"/>
   </xsl:template>
 </xsl:stylesheet>
