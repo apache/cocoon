@@ -62,7 +62,7 @@ import java.util.List;
  * 
  * TODO Make an interface out of this
  * 
- * @version CVS $Id: CompositeLayout.java,v 1.4 2003/05/26 09:52:58 cziegeler Exp $
+ * @version CVS $Id: CompositeLayout.java,v 1.5 2003/05/26 12:49:12 cziegeler Exp $
  */
 public class CompositeLayout extends AbstractLayout {
 
@@ -80,6 +80,7 @@ public class CompositeLayout extends AbstractLayout {
 	 */
 	public final void addItem(int index, Item item) {
 		items.add(index, item);
+        item.setParent(this);
 	}
 
 	/**

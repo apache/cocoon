@@ -53,35 +53,26 @@ package org.apache.cocoon.portal.event.impl;
 import org.apache.cocoon.portal.event.ActionEvent;
 
 /**
- *
+ * This event is performed on a target
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractActionEvent.java,v 1.1 2003/05/07 06:22:23 cziegeler Exp $
+ * @version CVS $Id: AbstractActionEvent.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
  */
 public abstract class AbstractActionEvent implements ActionEvent {
 
-    final protected Object target;
+    protected Object target;
     
-    final protected int action;
-    
-    public AbstractActionEvent(Object target, int action) {
+    public AbstractActionEvent(Object target) {
         this.target = target;
-        this.action = action;
     }
     
-    /**
-     * @return int
-     */
-    public int getAction() {
-        return action;
-    }
-
     /**
      * @return Object
      */
     public Object getTarget() {
-        return target;
+        return this.target;
     }
 
 }

@@ -50,18 +50,15 @@
 */
 package org.apache.cocoon.portal.event;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
 
 /**
  * This interface marks an event as an event for a coplet instance.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: CopletInstanceEvent.java,v 1.1 2003/05/26 10:34:53 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceEvent.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
  */
 public interface CopletInstanceEvent 
-    extends Event {
+    extends ActionEvent {
         
-    CopletInstanceData getCopletInstanceData();
-
 }

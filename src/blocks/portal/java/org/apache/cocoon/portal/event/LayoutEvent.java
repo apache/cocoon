@@ -51,11 +51,13 @@
 package org.apache.cocoon.portal.event;
 
 /**
- *
+ * This interface marks an {@link ActionEvent} as targetted at a {@link Layout}
+ * object
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: LayoutEvent.java,v 1.1 2003/05/07 06:22:26 cziegeler Exp $
+ * @version CVS $Id: LayoutEvent.java,v 1.2 2003/05/26 12:49:14 cziegeler Exp $
  */
 public interface LayoutEvent extends ActionEvent {
     

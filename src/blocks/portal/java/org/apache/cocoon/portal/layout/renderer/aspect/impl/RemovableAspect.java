@@ -52,6 +52,7 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.Event;
 import org.apache.cocoon.portal.event.impl.LayoutRemoveEvent;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.impl.CopletLayout;
@@ -65,9 +66,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: RemovableAspect.java,v 1.2 2003/05/22 12:32:46 cziegeler Exp $
+ * @version CVS $Id: RemovableAspect.java,v 1.3 2003/05/26 12:49:13 cziegeler Exp $
  */
-public class RemovableAspect extends AbstractAspect {
+public class RemovableAspect 
+    extends AbstractActionAspect {
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
@@ -82,10 +84,28 @@ public class RemovableAspect extends AbstractAspect {
 
         Boolean mandatory = (Boolean)cid.getCopletData().getAspectData("mandatory");
         if ( !mandatory.booleanValue() ) {
-            LayoutRemoveEvent lre = new LayoutRemoveEvent(layout, 0);
+            LayoutRemoveEvent lre = new LayoutRemoveEvent(layout);
             XMLUtils.createElement(handler, "remove-uri", service.getLinkService().getLinkURI(lre));
         }
         context.invokeNext(layout, service, handler);
 	}
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#getEventType()
+     */
+    public Class getEventType() {
+        return LayoutRemoveEvent.class;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.event.Subscriber#inform(org.apache.cocoon.portal.event.Event)
+     */
+    public void inform(Event e) {
+        // TODO - place this subscriber at a more strategic place
+        // TODO - if this is a coplet layout remove coplet instance data
+        // TODO - if this is a composite layout, recursive remove
+        LayoutRemoveEvent event = (LayoutRemoveEvent)e;
+        Layout layout = (Layout)event.getTarget();
+        layout.getParent().getParent().removeItem(layout.getParent());
+    }
 }

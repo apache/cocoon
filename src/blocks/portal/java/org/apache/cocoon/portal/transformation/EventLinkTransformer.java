@@ -54,8 +54,8 @@ import java.util.Stack;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.cocoon.portal.LinkService;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.LinkEvent;
-import org.apache.cocoon.transformation.AbstractSAXTransformer;
 import org.w3c.dom.DocumentFragment;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -68,10 +68,10 @@ import org.xml.sax.helpers.AttributesImpl;
  *  
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: EventLinkTransformer.java,v 1.1 2003/05/08 11:54:00 cziegeler Exp $
+ * @version CVS $Id: EventLinkTransformer.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
  */
 public class EventLinkTransformer 
-extends AbstractSAXTransformer {
+extends AbstractCopletTransformer {
     
     /**
      * The namespace URI to listen for.
@@ -186,12 +186,13 @@ extends AbstractSAXTransformer {
 
                     // if attribute found that contains a link
                     if (link != null) {
+                        CopletInstanceData cid = this.getCopletInstanceData();                       
                         LinkService linkService = null;
                         try {
                             linkService = (LinkService)this.manager.lookup(LinkService.ROLE);
         
                             // create event link
-                            LinkEvent event = new LinkEvent(link);
+                            LinkEvent event = new LinkEvent(cid, link);
                             String eventLink = linkService.getLinkURI(event);
         
                             // insert event link
@@ -211,12 +212,13 @@ extends AbstractSAXTransformer {
                 if (this.elementName != null && name.equals(this.elementName)) {
                     String link = this.endTextRecording();
 
+                    CopletInstanceData cid = this.getCopletInstanceData();                       
                     LinkService linkService = null;
                     try {
                         linkService = (LinkService)this.manager.lookup(LinkService.ROLE);
         
                         // create event link
-                        LinkEvent event = new LinkEvent(link);
+                        LinkEvent event = new LinkEvent(cid, link);
                         eventLink = linkService.getLinkURI(event);
                     } catch (ComponentException e) {
                         throw new SAXException(e);

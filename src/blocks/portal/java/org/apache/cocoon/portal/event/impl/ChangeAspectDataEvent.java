@@ -51,26 +51,25 @@
 package org.apache.cocoon.portal.event.impl;
 
 import org.apache.cocoon.portal.aspect.Aspectalizable;
-import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.event.ActionEvent;
 
 /**
  * This events set the aspect data for an {@link Aspectalizable} object
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ChangeAspectDataEvent.java,v 1.2 2003/05/26 10:34:52 cziegeler Exp $
+ * @version CVS $Id: ChangeAspectDataEvent.java,v 1.3 2003/05/26 12:49:13 cziegeler Exp $
  */
 public class ChangeAspectDataEvent
-    implements Event {
+    extends AbstractActionEvent
+    implements ActionEvent {
 
-    protected Aspectalizable target;
-    
     protected String aspectName;
     
     protected Object data;
     
     public ChangeAspectDataEvent(Aspectalizable target, String aspectName, Object data) {
-        this.target = target;
+        super(target);
         this.aspectName = aspectName;
         this.data = data;
     }
@@ -79,21 +78,25 @@ public class ChangeAspectDataEvent
      * @return
      */
     public String getAspectName() {
-        return aspectName;
+        return this.aspectName;
     }
 
     /**
      * @return
      */
     public Object getData() {
-        return data;
+        return this.data;
     }
 
     /**
      * @return
      */
-    public Aspectalizable getTarget() {
-        return target;
+    public Object getTarget() {
+        return this.target;
     }
 
+
+    public Aspectalizable getAspectalizable() {
+        return (Aspectalizable)this.target;
+    }
 }

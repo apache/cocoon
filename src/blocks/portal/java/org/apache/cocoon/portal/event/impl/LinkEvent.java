@@ -50,27 +50,30 @@
 */
 package org.apache.cocoon.portal.event.impl;
 
-import org.apache.cocoon.portal.event.Event;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.event.CopletInstanceEvent;
 
 /**
  * This class realizes a link event created by the EventLinkTransformer.
  *  
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: LinkEvent.java,v 1.1 2003/05/08 11:54:00 cziegeler Exp $
+ * @version CVS $Id: LinkEvent.java,v 1.2 2003/05/26 12:49:13 cziegeler Exp $
  */
 public class LinkEvent
-implements Event {
+extends AbstractActionEvent
+implements CopletInstanceEvent {
     
     /**
      * The link to be handled by this event.
      */
-    private String link;
+    protected String link;
     
     /**
      * Creates a new LinkEvent.
      */
-    public LinkEvent(String link) {
+    public LinkEvent(CopletInstanceData target, String link) {
+        super(target);
         this.link = link;
     }
     
