@@ -202,6 +202,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="AG" type="update">
+     Updated quartz to 1.4.5.
+   </action>
    <action dev="SW" type="update">
      Refactored the Deprecation class: the "forbidden-deprecation-level" parameter in web.xml
      allows to raise deprecation exceptions depending on the log level. For example, DEBUG
