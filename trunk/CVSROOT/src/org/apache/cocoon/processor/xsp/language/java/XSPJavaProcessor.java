@@ -1,4 +1,4 @@
-/*-- $Id: XSPJavaProcessor.java,v 1.8 2000-04-27 17:57:43 stefano Exp $ --
+/*-- $Id: XSPJavaProcessor.java,v 1.9 2000-05-07 00:44:05 ricardo Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -62,11 +62,12 @@ import org.apache.cocoon.processor.xsp.language.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.8 $ $Date: 2000-04-27 17:57:43 $
+ * @version $Revision: 1.9 $ $Date: 2000-05-07 00:44:05 $
  */
 public class XSPJavaProcessor implements XSPLanguageProcessor {
   // Create class loader
   protected File repository;
+  protected String encoding;
   protected XSPClassLoader classLoader;
 
   protected boolean format;
@@ -81,6 +82,10 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
 
   public String getObjectExtension() {
     return "class";
+  }
+
+  public void setEncoding(String encoding) {
+    this.encoding = encoding;
   }
 
   public void setRepository(File repository) throws Exception {
@@ -104,16 +109,30 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
     String repositoryName = this.repository.getCanonicalPath();
     String fullFilename = repositoryName + File.separator + filename;
 
-    String[] compilerArgs = {
-      "-classpath",
-        repositoryName +
-        File.pathSeparator +
-        System.getProperty("java.class.path"),
-      "-O",
-      // "-deprecation",
-      // "-verbose",
-      fullFilename
-    };
+    String[] compilerArgs = null;
+
+    if (this.encoding == null) {
+      compilerArgs = new String[] {
+        "-classpath",
+          repositoryName +
+          File.pathSeparator +
+          System.getProperty("java.class.path"),
+        "-O",
+        // "-deprecation",
+        // "-verbose",
+        fullFilename
+      };
+    } else {
+      compilerArgs = new String[] {
+        "-classpath",
+          repositoryName +
+          File.pathSeparator +
+          System.getProperty("java.class.path"),
+        "-O",
+	"-encoding", this.encoding,
+        fullFilename
+      };
+    }
 
     ByteArrayOutputStream err = new ByteArrayOutputStream();
     
@@ -123,7 +142,9 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
     
     Main compiler = new Main(err, "javac");
 
-    if (!compiler.compile(compilerArgs)) {
+    boolean compilationResult = compiler.compile(compilerArgs);
+
+    if (!compilationResult) {
       // Massage message
       int pos = fullFilename.length() + 1;
       StringBuffer buffer = new StringBuffer();
@@ -141,6 +162,18 @@ public class XSPJavaProcessor implements XSPLanguageProcessor {
         buffer.toString()
       );
     }
+/* 
+ int pos = fullFilename.length() + 1;
+ StringBuffer buffer = new StringBuffer();
+ String[] errorLines = XSPUtil.split(err.toString(), "\r\n");
+ for (int i = 0; i < errorLines.length; i++) {
+   if (errorLines[i].startsWith(fullFilename)) {
+     errorLines[i] = errorLines[i].substring(pos);
+   }
+   buffer.append(errorLines[i] + "\n");
+ }
+ System.err.println(buffer.toString());
+*/
   }
 
   public XSPPage load(String filename) throws Exception {
