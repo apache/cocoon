@@ -17,7 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
 
 <!--
-  <![CDATA[ CVS Version: $Id: regexpuridefaults-matcher.xml,v 1.2 2004/03/06 02:25:41 antonio Exp $ 
+  <![CDATA[ CVS Version: $Id: regexpuridefaults-matcher.xml,v 1.3 2004/04/21 01:33:36 crossley Exp $ 
   ]]>
 -->
 
@@ -130,11 +130,6 @@
     <s1 title="History">
       <p>
         MM-DD-YY: initial creation
-      </p>
-    </s1>
-    <s1 title="Copyright">
-      <p>
-        Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
       </p>
     </s1>
     <s1 title="See also">
