@@ -51,7 +51,6 @@
 package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
-import org.apache.cocoon.woody.datatype.Datatype;
 import org.apache.cocoon.woody.formmodel.CannotYetResolveWarning;
 import org.outerj.expression.ExpressionContext;
 import org.outerj.expression.Expression;
@@ -129,7 +128,7 @@ public class RangeValidationRule extends AbstractValidationRule {
         return null;
     }
 
-    public boolean supportsType(Datatype datatype) {
-        return (datatype.getTypeClass().isAssignableFrom(Long.class) || datatype.getTypeClass().isAssignableFrom(BigDecimal.class)) && !datatype.isArrayType();
+    public boolean supportsType(Class clazz, boolean arrayType) {
+        return (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(BigDecimal.class)) && !arrayType;
     }
 }

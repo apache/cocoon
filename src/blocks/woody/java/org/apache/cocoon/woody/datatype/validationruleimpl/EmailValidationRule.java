@@ -51,7 +51,6 @@
 package org.apache.cocoon.woody.datatype.validationruleimpl;
 
 import org.apache.cocoon.woody.datatype.ValidationError;
-import org.apache.cocoon.woody.datatype.Datatype;
 import org.outerj.expression.ExpressionContext;
 
 /**
@@ -68,8 +67,8 @@ public class EmailValidationRule extends AbstractValidationRule {
             return hasFailMessage() ? getFailMessage() : new ValidationError("validation.string.invalidemail");
     }
 
-    public boolean supportsType(Datatype datatype) {
-        return datatype.getTypeClass().isAssignableFrom(String.class) && !datatype.isArrayType();
+    public boolean supportsType(Class clazz, boolean arrayType) {
+        return clazz.isAssignableFrom(String.class) && !arrayType;
     }
 
     private boolean isEmail(String email) {

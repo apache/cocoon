@@ -114,7 +114,7 @@ public abstract class AbstractDatatypeBuilder implements DatatypeBuilder, Compos
             Element[] validationElements = DomHelper.getChildElements(validationElement, Constants.WD_NS);
             for (int i = 0; i < validationElements.length; i++) {
                 ValidationRule rule = datatypeManager.createValidationRule(validationElements[i]);
-                if (!rule.supportsType(datatype)) {
+                if (!rule.supportsType(datatype.getTypeClass(), datatype.isArrayType())) {
                     throw new Exception("Validation rule \"" + validationElements[i].getLocalName() + "\" cannot be used with strings, error at " + DomHelper.getLocation(validationElements[i]));
                 }
                 datatype.addValidationRule(rule);
