@@ -52,9 +52,9 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.*;
 
@@ -162,8 +162,8 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl repeaterAttrs = new AttributesImpl();
-        repeaterAttrs.addAttribute("", "id", "id", "CDATA", getFullyQualifiedId());
-        repeaterAttrs.addAttribute("", "size", "size", "CDATA", String.valueOf(getSize()));
+        repeaterAttrs.addCDATAAttribute("id", getFullyQualifiedId());
+        repeaterAttrs.addCDATAAttribute("size", String.valueOf(getSize()));
         contentHandler.startElement(Constants.WI_NS, REPEATER_EL, Constants.WI_PREFIX_COLON + REPEATER_EL, repeaterAttrs);
 
         // the repeater's label
@@ -210,8 +210,8 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
      */
     public void generateSize(ContentHandler contentHandler) throws SAXException {
         AttributesImpl attrs = new AttributesImpl();
-        attrs.addAttribute("", "id", "id", "CDATA", getFullyQualifiedId());
-        attrs.addAttribute("", "size", "size", "CDATA", String.valueOf(getSize()));
+        attrs.addCDATAAttribute("id", getFullyQualifiedId());
+        attrs.addCDATAAttribute("size", String.valueOf(getSize()));
         contentHandler.startElement(Constants.WI_NS, REPEATER_SIZE_EL, Constants.WI_PREFIX_COLON + REPEATER_SIZE_EL, attrs);
         contentHandler.endElement(Constants.WI_NS, REPEATER_SIZE_EL, Constants.WI_PREFIX_COLON + REPEATER_SIZE_EL);
     }
@@ -294,7 +294,7 @@ public class Repeater extends AbstractWidget implements ContainerWidget {
 
         public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
             AttributesImpl rowAttrs = new AttributesImpl();
-            rowAttrs.addAttribute("", "id", "id", "CDATA", getFullyQualifiedId());
+            rowAttrs.addCDATAAttribute("id", getFullyQualifiedId());
             contentHandler.startElement(Constants.WI_NS, ROW_EL, Constants.WI_PREFIX_COLON + ROW_EL, rowAttrs);
             Iterator widgetIt = widgets.iterator();
             while (widgetIt.hasNext()) {

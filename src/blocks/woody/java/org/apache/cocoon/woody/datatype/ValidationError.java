@@ -52,10 +52,10 @@ package org.apache.cocoon.woody.datatype;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.transformation.I18nTransformer;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.xml.AttributesImpl;
 
 /**
  * An object that holds a validation error message. The error message can
@@ -129,7 +129,7 @@ public class ValidationError {
 
             // the i18n:text element
             AttributesImpl i18nAttrs = new AttributesImpl();
-            i18nAttrs.addAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "CDATA", "woody");
+            i18nAttrs.addCDATAAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "woody");
 
             contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
             contentHandler.characters(errorMessage.toCharArray(), 0, errorMessage.length());
@@ -153,7 +153,7 @@ public class ValidationError {
             contentHandler.startPrefixMapping("i18n", I18nTransformer.I18N_NAMESPACE_URI);
 
             AttributesImpl i18nAttrs = new AttributesImpl();
-            i18nAttrs.addAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "CDATA", "woody");
+            i18nAttrs.addCDATAAttribute(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "i18n:" + I18nTransformer.I18N_CATALOGUE_ATTRIBUTE, "woody");
 
             contentHandler.startElement(I18nTransformer.I18N_NAMESPACE_URI, I18nTransformer.I18N_TEXT_ELEMENT, "i18n:" + I18nTransformer.I18N_TEXT_ELEMENT, i18nAttrs);
             contentHandler.characters(errorMessage.toCharArray(), 0, errorMessage.length());

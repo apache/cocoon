@@ -52,9 +52,9 @@ package org.apache.cocoon.woody.formmodel;
 
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.Locale;
 
@@ -100,7 +100,7 @@ public class BooleanField extends AbstractWidget {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl fieldAttrs = new AttributesImpl();
-        fieldAttrs.addAttribute("", "id", "id", "CDATA", getFullyQualifiedId());
+        fieldAttrs.addCDATAAttribute("id", getFullyQualifiedId());
         contentHandler.startElement(Constants.WI_NS, BOOLEAN_FIELD_EL, Constants.WI_PREFIX_COLON + BOOLEAN_FIELD_EL, fieldAttrs);
 
         // value element

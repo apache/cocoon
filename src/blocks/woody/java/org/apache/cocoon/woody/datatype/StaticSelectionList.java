@@ -52,9 +52,9 @@ package org.apache.cocoon.woody.datatype;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
+import org.apache.cocoon.xml.AttributesImpl;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class StaticSelectionList implements SelectionList {
         public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException
         {
             AttributesImpl itemAttrs = new AttributesImpl();
-            itemAttrs.addAttribute("", "value", "value", "CDATA", datatype.convertToString(value));
+            itemAttrs.addCDATAAttribute("value", datatype.convertToString(value));
             contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
             contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
             if (label != null) {

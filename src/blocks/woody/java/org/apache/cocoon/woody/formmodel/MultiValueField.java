@@ -53,9 +53,9 @@ package org.apache.cocoon.woody.formmodel;
 import org.apache.cocoon.woody.datatype.ValidationError;
 import org.apache.cocoon.woody.Constants;
 import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.xml.AttributesImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 import java.util.Locale;
 
@@ -136,7 +136,7 @@ public class MultiValueField extends AbstractWidget {
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         AttributesImpl attrs = new AttributesImpl();
-        attrs.addAttribute("", "id", "id", "CDATA", getFullyQualifiedId());
+        attrs.addCDATAAttribute("id", getFullyQualifiedId());
         contentHandler.startElement(Constants.WI_NS, MULTIVALUEFIELD_EL, Constants.WI_PREFIX_COLON + MULTIVALUEFIELD_EL, attrs);
 
         contentHandler.startElement(Constants.WI_NS, VALUES_EL, Constants.WI_PREFIX_COLON + VALUES_EL, Constants.EMPTY_ATTRS);
