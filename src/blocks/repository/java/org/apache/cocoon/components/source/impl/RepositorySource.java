@@ -90,7 +90,9 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  */
 public class RepositorySource extends AbstractLogEnabled 
 implements Source, ModifiableTraversableSource, InspectableSource {
-    
+
+    // the original source prefix
+    final String m_prefix;
     // the wrapped source
     final ModifiableTraversableSource m_delegate;
     private final ServiceManager m_manager;
@@ -99,10 +101,12 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     // ---------------------------------------------------- Lifecycle
     
     public RepositorySource(
+        final String prefix,
         final ModifiableTraversableSource delegate, 
         final ServiceManager manager, 
         final Logger logger) throws SourceException {
         
+        m_prefix = prefix;
         m_delegate = delegate;
         m_manager = manager;
         enableLogging(logger);
@@ -201,11 +205,11 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     }
     
     public String getScheme() {
-        return m_delegate.getScheme();
+        return m_prefix + ":" + m_delegate.getScheme();
     }
     
     public String getURI() {
-        return m_delegate.getURI();
+        return m_prefix + ":" + m_delegate.getURI();
     }
     
     public SourceValidity getValidity() {
@@ -230,7 +234,9 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     // ---------------------------------------------------- ModifiableTraversableSource
     
     public Source getChild(String name) throws SourceException {
-        return new RepositorySource((ModifiableTraversableSource) m_delegate.getChild(name),
+        return new RepositorySource(
+            m_prefix,  
+            (ModifiableTraversableSource) m_delegate.getChild(name),
             m_manager,getLogger());
     }
 
@@ -239,6 +245,7 @@ implements Source, ModifiableTraversableSource, InspectableSource {
 		Iterator iter = m_delegate.getChildren().iterator();
     	while(iter.hasNext()) {
     		result.add(new RepositorySource(
+            m_prefix,
     		    (ModifiableTraversableSource) iter.next(),
     		    m_manager,
     		    getLogger()));
@@ -251,8 +258,10 @@ implements Source, ModifiableTraversableSource, InspectableSource {
     }
 
     public Source getParent() throws SourceException {
-        return new RepositorySource((ModifiableTraversableSource) m_delegate.getParent(), 
-        	m_manager, getLogger());
+        return new RepositorySource(
+            m_prefix,
+            (ModifiableTraversableSource) m_delegate.getParent(), 
+        	  m_manager, getLogger());
     }
 
     public boolean isCollection() {
