@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns:jx="http://apache.org/cocoon/templates/jx/1.0">
+    <body>
+        <row>
+            <column>
+                <section>
+                    <title>List of Cron Job scheduled</title>
+    
+                    <table border="1">
+                        <tr>
+                            <th>Entry name</th>
+                            <th>Job name</th>
+                            <th>Next scheduled run</th>
+                            <th>Is running</th>
+                            <th>Action</th>
+                        </tr>
+                        <jx:forEach var="entry" items="${entries}">
+                            <tr>
+                                <td>${entry.name}</td>
+                                <td>${entry.jobName}</td>
+                                <td>${entry.nextTime}</td>
+                                <td>${entry.isRunning()}</td>
+                                <td><a href="continue.${continuation.id}?action=remove&amp;name=${entry.name}">remove</a></td>
+                            </tr>
+                        </jx:forEach>
+                    </table>
+                </section>
+            </column>
+        </row>
+        <row>
+            <column>
+                <section>
+                    <title>Manage Cron Jobs scheduled</title>
+
+                    <p>
+                        Some sample will follow ...
+                    </p>
+                </section>
+            </column>
+        </row>
+        <row>
+            <column>
+                <section>
+                    <title>The Cron Scheduler Logfile</title>
+                    <p><a href="continue.${continuation.id}">refresh</a></p>
+                    <jx:forEach var="line" items="${log}">
+                    	<code>${line}</code><br/>
+                    </jx:forEach>
+                </section>
+            </column>
+        </row>
+    </body>
+</document>
