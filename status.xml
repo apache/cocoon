@@ -322,6 +322,10 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="fix" fixes-bug="27176" due-to="Guillaume Deflache" due-to-email="guillaume@anyware-tech.com">
+     XSP Block: Add space="strip" attribute support for &lt;xsp:page&gt;
+     element. When present, all extra whitespace from XSP source is stripped.
+   </action>
    <action dev="VG" type="fix" fixes-bug="30849">
      XMLDB Block: Fix NullPointerException in XMLDBTransformer if specified
      collection does not exist.
