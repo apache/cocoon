@@ -211,7 +211,7 @@
   <s1 title="A Simple Javascript Example">
    <p>
       Consider the following dynamic Cocoon XML document
-      (<link href="http://www.plenix.com/dcp/ecmascript/sample.xml?country=Canada&amp;language=English&amp;language=French">sample.xml</link>):
+      (<link href="http://www.plenix.com/dcp/ecmascript/sample-page.xml?country=Canada&amp;language=English&amp;language=French">sample.xml</link>):
    </p>
 
    <figure src="images/dcp-fig-1.gif" alt="Ecmascript Example" height="303" width="526"/>
