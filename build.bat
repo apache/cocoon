@@ -16,7 +16,7 @@ rem
 rem ----------------------------------------------------------------------------
 rem build.bat - Win32 Build Script for Apache Cocoon
 rem
-rem $Id: build.bat,v 1.10 2004/03/08 06:07:14 antonio Exp $
+rem $Id: build.bat,v 1.11 2004/03/13 17:51:10 joerg Exp $
 rem ----------------------------------------------------------------------------
 
 rem ----- Ignore system CLASSPATH variable
@@ -28,11 +28,16 @@ rem ----- Use Ant shipped with Cocoon. Ignore installed in the system Ant
 set OLD_ANT_HOME=%ANT_HOME%
 set ANT_HOME=tools
 
-call %ANT_HOME%\bin\ant -Djava.endorsed.dirs=lib\endorsed -logger org.apache.tools.ant.NoBannerLogger -emacs %1 %2 %3 %4 %5 %6 %7 %8 %9
+set OLD_ANT_OPTS=%ANT_OPTS%
+set ANT_OPTS="-Djava.endorsed.dirs=lib\endorsed"
 
-rem ----- Restore ANT_HOME
+call %ANT_HOME%\bin\ant -logger org.apache.tools.ant.NoBannerLogger -emacs %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+rem ----- Restore ANT_HOME and ANT_OPTS
 set ANT_HOME=%OLD_ANT_HOME%
 set OLD_ANT_HOME=
+set ANT_OPTS=%OLD_ANT_OPTS%
+set OLD_ANT_OPTS=
 
 rem ----- Restore CLASSPATH
 set CLASSPATH=%OLD_CLASSPATH%
