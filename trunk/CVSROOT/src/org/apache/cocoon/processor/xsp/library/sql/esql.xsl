@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.87 2001-07-24 11:38:33 dims Exp $-->
+<!-- $Id: esql.xsl,v 1.88 2001-08-10 11:51:15 dims Exp $-->
 <!--
 
  ============================================================================
@@ -70,6 +70,8 @@
 
 <xsl:variable name="cocoon1-xsp-namespace-uri">http://www.apache.org/1999/XSP/Core</xsl:variable>
 <xsl:variable name="cocoon2-xsp-namespace-uri">http://apache.org/xsp</xsl:variable>
+
+<xsl:variable name="prefix">esql</xsl:variable>
 
 <xsl:variable name="environment">
   <xsl:choose>
@@ -159,6 +161,44 @@
   </xsl:choose>
 </xsl:template>
 
+
+  <xsl:template name="get-parameter">
+    <xsl:param name="name"/>
+    <xsl:param name="default"/>
+    <xsl:param name="required">false</xsl:param>
+
+    <xsl:variable name="qname">
+      <xsl:value-of select="concat($prefix, ':param')"/>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="@*[name(.) = $name]">"<xsl:value-of select="@*[name(.) = $name]"/>"</xsl:when>
+      <xsl:when test="(*[name(.) = $qname])[@name = $name]">
+        <xsl:call-template name="get-nested-content">
+          <xsl:with-param name="content"
+                          select="(*[name(.) = $qname])[@name = $name]"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="string-length($default) = 0">
+            <xsl:choose>
+              <xsl:when test="$required = 'true'">
+                <xsl:call-template name="error">
+                  <xsl:with-param name="message">[Logicsheet processor]
+Parameter '<xsl:value-of select="$name"/>' missing in dynamic tag &lt;<xsl:value-of select="name(.)"/>&gt;
+                  </xsl:with-param>
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>""</xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+          <xsl:otherwise><xsl:copy-of select="$default"/></xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 <xsl:template match="xsp:page">
   <xsp:page>
     <xsl:apply-templates select="@*"/>
@@ -177,6 +217,12 @@
       <xsp:include>java.io.PrintWriter</xsp:include>
       <xsp:include>java.io.BufferedInputStream</xsp:include>
       <xsp:include>java.io.InputStream</xsp:include>
+      <xsp:include>java.util.Set</xsp:include>
+      <xsp:include>java.util.List</xsp:include>
+      <xsp:include>java.util.Iterator</xsp:include>
+      <xsp:include>java.util.ListIterator</xsp:include>
+      <xsp:include>java.sql.Struct</xsp:include>
+      <xsp:include>java.sql.Types</xsp:include>
       <xsl:if test="$environment = 'cocoon2'">
           <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
       </xsl:if>
@@ -193,6 +239,13 @@
       </xsl:if>
     </xsp:structure>
     <xsp:logic>
+      private Stack _esql_connections = new Stack();
+      private EsqlConnection _esql_connection = null;
+      private Stack _esql_queries = new Stack();
+      private EsqlQuery _esql_query = null;
+      private SQLException _esql_exception = null;
+      private StringWriter _esql_exception_writer = null;
+
       <xsl:if test=".//esql:connection/esql:pool">
         <xsl:choose>
           <xsl:when test="$environment = 'cocoon1'">
@@ -268,6 +321,42 @@
 
         return new String(buffer);
       }
+
+      <xsl:choose>
+        <xsl:when test="$environment = 'cocoon1'">
+        </xsl:when>
+        <xsl:when test="$environment = 'cocoon2'">
+            protected void _esql_printObject ( Object obj, AttributesImpl xspAttr) throws SAXException
+            {
+               if ( obj instanceof List) {
+	 	   ListIterator j=((List)obj).listIterator();
+	 	   <xsp:element name="sql-list">
+            	     <xsp:logic>
+            	       while (j.hasNext()){
+            		  <xsp:element name="sql-list-item">
+            		    <xsp:attribute name="pos"><xsp:expr>j.nextIndex()</xsp:expr></xsp:attribute>
+            		    <xsp:logic>this._esql_printObject(j.next(),xspAttr);</xsp:logic>
+            		  </xsp:element>
+            	       };
+            	     </xsp:logic>
+            	   </xsp:element>
+               } else if ( obj instanceof Set ) {
+	 	    Iterator j=((Set)obj).iterator();
+	 	    <xsp:element name="sql-set">
+            	      <xsp:logic>
+            	        while (j.hasNext()){
+            	           <xsp:element name="sql-set-item">
+	 	     	 <xsp:logic>this._esql_printObject(j.next(),xspAttr);</xsp:logic>
+	 	           </xsp:element>
+            	        };
+            	      </xsp:logic>
+            	    </xsp:element>
+	       } else {
+	          <xsp:content><xsp:expr>obj</xsp:expr></xsp:content>;
+	       }
+	    }
+        </xsl:when>
+      </xsl:choose>
     </xsp:logic>
     <xsl:apply-templates/>
   </xsp:page>
@@ -277,12 +366,6 @@
   <xsl:copy>
     <xsl:apply-templates select="@*"/>
     <xsp:logic>
-      Stack _esql_connections = new Stack();
-      EsqlConnection _esql_connection = null;
-      Stack _esql_queries = new Stack();
-      EsqlQuery _esql_query = null;
-      SQLException _esql_exception = null;
-      StringWriter _esql_exception_writer = null;
     </xsp:logic>
     <xsl:apply-templates/>
   </xsl:copy>
@@ -553,6 +636,8 @@
           </xsl:otherwise>
         </xsl:choose>
       } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>_2) {}
+    } catch(java.io.UnsupportedEncodingException e) {
+      throw new RuntimeException(e.toString());
     }
     if (_esql_queries.empty()) {
       _esql_query = null;
@@ -565,15 +650,21 @@
 <xsl:template match="esql:query//esql:parameter">"?"</xsl:template>
 
 <xsl:template match="esql:execute-query//esql:results">
-  <xsl:apply-templates/>
+  <xsp:content>
+    <xsl:apply-templates/>
+  </xsp:content>
 </xsl:template>
 
 <xsl:template match="esql:execute-query//esql:error-results">
-  <xsl:apply-templates/>
+  <xsp:content>
+    <xsl:apply-templates/>
+  </xsp:content>
 </xsl:template>
 
 <xsl:template match="esql:execute-query//esql:no-results">
-  <xsl:apply-templates/>
+  <xsp:content>
+    <xsl:apply-templates/>
+  </xsp:content>
 </xsl:template>
 
 <xsl:template match="esql:update-results//esql:get-update-count">
@@ -583,7 +674,9 @@
 <xsl:template match="esql:results//esql:row-results">
   <xsp:logic>
     do {
+    <xsp:content>
       <xsl:apply-templates/>
+    </xsp:content>
       if (_esql_connection.use_limit_clause == 0 &amp;&amp; _esql_query.max_rows != -1 &amp;&amp; _esql_query.position - _esql_query.skip_rows == _esql_query.max_rows-1) {
         _esql_query.position++;
         break;
@@ -592,7 +685,7 @@
     } while (_esql_query.resultset.next());
 
     if (_esql_query.resultset.next()) {
-      <xsl:apply-templates select="following-sibling::esql:more-results" mode="more"/>
+        <xsl:apply-templates select="following-sibling::esql:more-results" mode="more"/>
       _esql_query.position++;
     }
   </xsp:logic>
@@ -601,7 +694,9 @@
 <xsl:template match="esql:results//esql:more-results"/>
 
 <xsl:template match="esql:results//esql:more-results" mode="more">
-  <xsl:apply-templates/>
+  <xsp:content>
+    <xsl:apply-templates/>
+  </xsp:content>
 </xsl:template>
 
 <xspdoc:desc>results in a set of elements whose names are the names of the columns. the elements each have one text child, whose value is the value of the column interpreted as a string. No special formatting is allowed here. If you want to mess around with the names of the elements or the value of the text field, use the type-specific get methods and write out the result fragment yourself.</xspdoc:desc>
@@ -652,12 +747,35 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsp:param>
-            <xsp:expr>
-              <xsl:call-template name="get-string-encoded">
-                <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
-                <xsl:with-param name="resultset">_esql_query.resultset</xsl:with-param>
-              </xsl:call-template>
-            </xsp:expr>
+            <xsp:logic>
+              switch(_esql_query.resultset.getMetaData().getColumnType(_esql_i)){
+                 case java.sql.Types.ARRAY:
+                 case java.sql.Types.STRUCT:
+                    <xsp:element name="sql-row">
+                      <xsp:logic>
+                        Object[] _esql_struct = ((Struct) _esql_query.resultset.getObject(_esql_i)).getAttributes();
+                        for ( int _esql_k=0; _esql_k&lt;_esql_struct.length; _esql_k++){
+                        <xsp:element name="sql-row-item"><xsp:logic>this._esql_printObject(_esql_struct[_esql_k],xspAttr);</xsp:logic></xsp:element>
+                        }
+                      </xsp:logic>
+                    </xsp:element>
+                    break;
+		    
+                 case java.sql.Types.OTHER: // This is what Informix uses for Sets, Bags, Lists
+                    this._esql_printObject(_esql_query.resultset.getObject(_esql_i), xspAttr);
+                    break;
+		    
+                 default:
+                    // standard type
+                    <xsp:content>
+                    <xsp:expr>
+                      <xsl:call-template name="get-string-encoded">
+                        <xsl:with-param name="column-spec">_esql_i</xsl:with-param>
+                        <xsl:with-param name="resultset">_esql_query.resultset</xsl:with-param>
+                      </xsl:call-template>
+                    </xsp:expr></xsp:content>
+              }
+            </xsp:logic>
           </xsp:element>
         }
         this.characters("\n");
@@ -744,6 +862,16 @@
       <xsp:expr><xsl:call-template name="get-resultset"/>.getFloat(<xsl:call-template name="get-column"/>)</xsp:expr>
     </xsl:otherwise>
   </xsl:choose>
+</xsl:template>
+
+<xspdoc:desc>returns the current result set</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-resultset">
+  <xsp:expr><xsl:call-template name="get-resultset"/></xsp:expr>
+</xsl:template>
+
+<xspdoc:desc>returns the value of the given column as an object</xspdoc:desc>
+<xsl:template match="esql:row-results//esql:get-object">
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getObject(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>returns the value of the given column as an integer</xspdoc:desc>
@@ -839,6 +967,11 @@
   <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnCount()</xsp:expr>
 </xsl:template>
 
+<xspdoc:desc>returns the metadata of the resultset.</xspdoc:desc>
+<xsl:template match="esql:results//esql:get-metadata">
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData()</xsp:expr>
+</xsl:template>
+
 <xspdoc:desc>returns the position of the current row in the result set</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-row-position|esql:results//esql:get-row-position">
   <xsp:expr>_esql_query.position</xsp:expr>
@@ -846,17 +979,22 @@
 
 <xspdoc:desc>returns the name of the given column. the column mus tbe specified by number, not name.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-column-name">
-  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnName(<xsl:value-of select="@column"/>)</xsp:expr>
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnName(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>returns the label of the given column. the column mus tbe specified by number, not name.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-column-label">
-  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnLabel(<xsl:value-of select="@column"/>)</xsp:expr>
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnLabel(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>returns the name of the type of the given column. the column must be specified by number, not name.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-column-type-name">
-  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnTypeName(<xsl:value-of select="@column"/>)</xsp:expr>
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnTypeName(<xsl:call-template name="get-column"/>)</xsp:expr>
+</xsl:template>
+
+<xspdoc:desc>returns the type of the given column as int. the column must be specified by number, not name.</xspdoc:desc>
+<xsl:template match="esql:row-results//esql:get-column-type">
+  <xsp:expr><xsl:call-template name="get-resultset"/>.getMetaData().getColumnType(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
 <xspdoc:desc>allows null-column testing. Evaluates to a Java expression, which is true when the referred column contains a null-value for the current resultset row</xspdoc:desc>
@@ -898,24 +1036,29 @@
 
 <xspdoc:desc>used internally to determine which column is the given column. if a column attribute exists and its value is a number, it is taken to be the column's position. if the value is not a number, it is taken to be the column's name. if a column attribute does not exist, an esql:column element is assumed to exist and to render as a string (after all of the xsp instructions have been evaluated), which is taken to be the column's name.</xspdoc:desc>
 <xsl:template name="get-column">
+  <xsl:variable name="column">
+     <xsl:call-template name="get-parameter">
+       <xsl:with-param name="name">column</xsl:with-param>
+       <xsl:with-param name="required">true</xsl:with-param>
+     </xsl:call-template>
+  </xsl:variable>
   <xsl:choose>
-    <xsl:when test="@column">
+    <xsl:when test="starts-with($column,'&quot;')">
+      <xsl:variable name="raw-column">
+        <xsl:value-of select="substring($column,2,string-length($column)-2)"/>
+      </xsl:variable>
       <xsl:choose>
-        <xsl:when test="not(string(number(@column))='NaN')">
-          <xsl:value-of select="@column"/>
+        <xsl:when test="not(string(number($raw-column))='NaN')">
+          <xsl:value-of select="$raw-column"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>"</xsl:text>
-          <xsl:value-of select="@column"/>
-          <xsl:text>"</xsl:text>
+          <xsl:value-of select="$column"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:when>
-    <xsl:when test="esql:column">
-      <xsl:call-template name="get-nested-string">
-        <xsl:with-param name="content" select="esql:column"/>
-      </xsl:call-template>
-    </xsl:when>
+    <xsl:otherwise>
+      <xsl:copy-of select="$column"/>
+    </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
 
@@ -938,8 +1081,10 @@
       <xsl:value-of select="$resultset"/>.getString(<xsl:value-of select="$column-spec"/>)
     </xsl:when>
     <xsl:otherwise>
-      new String (<xsl:value-of select="$resultset"/>.getBytes
+      <xsl:value-of select="$resultset"/>.getBytes(<xsl:value-of select="$column-spec"/>)
+      != null ? new String (<xsl:value-of select="$resultset"/>.getBytes
         (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="$encoding"/>)
+      : ""
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
