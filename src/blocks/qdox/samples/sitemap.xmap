@@ -1,17 +1,6 @@
 <?xml version="1.0"?>
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
-  <!-- =========================== Components ================================ -->
-
-  <map:components>
-    <map:generators default="file" />
-    <map:transformers default="xslt" />
-    <map:readers default="resource" />
-    <map:serializers default="html" />
-    <map:matchers default="wildcard" />
-    <map:selectors default="browser" />
-  </map:components>
-
 
   <!-- =========================== Pipelines ================================= -->
 
@@ -19,12 +8,14 @@
     <map:pipeline>
       
       <map:match pattern="">
-        <map:redirect-to uri="samples"/>
+        <map:redirect-to uri="welcome"/>
       </map:match>
       
-      <map:match pattern="samples">
+      <map:match pattern="welcome">
         <map:generate src="samples.xml"/>
-        <map:transform type="xalan" src="context://samples/common/style/xsl/html/simple-samples2html.xsl"/>
+        <map:transform src="context://samples/common/style/xsl/html/simple-samples2html.xsl">
+          <map:parameter name="contextPath" value="{request:contextPath}"/>
+        </map:transform>
         <map:serialize/>
       </map:match>
 
