@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package org.apache.cocoon.components.flow.java.test;
 
 public class FooException extends java.lang.Exception {
