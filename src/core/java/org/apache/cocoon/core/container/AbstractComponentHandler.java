@@ -117,19 +117,22 @@ implements ComponentHandler {
         // Create the factory to use to create the instances of the Component.
         ComponentFactory factory;
         
+        final ComponentEnvironment env = new ComponentEnvironment();
+        env.serviceManager = serviceManager;
+        env.context = context;
+        env.logger = logger;
+        env.loggerManager = loggerManager;
+
         if (DefaultServiceSelector.class.isAssignableFrom(componentClass)) {
             // Special factory for DefaultServiceSelector
-            factory = new DefaultServiceSelector.Factory(serviceManager, context, logger, loggerManager,
-                    roleManager, info, role);
+            factory = new DefaultServiceSelector.Factory(env, roleManager, info, role);
             
         } else if (StandaloneServiceSelector.class.isAssignableFrom(componentClass)) {
-                // Special factory for StandaloneServiceSelector
-                factory = new StandaloneServiceSelector.Factory(serviceManager, context, logger, loggerManager,
-                        roleManager, info);
+            // Special factory for StandaloneServiceSelector
+            factory = new StandaloneServiceSelector.Factory(env, roleManager, info);
                 
         } else {
-            factory = new ComponentFactory(serviceManager, context, logger, loggerManager,
-                    roleManager, info);
+            factory = new ComponentFactory(env, info);
         }
 
         AbstractComponentHandler handler;
