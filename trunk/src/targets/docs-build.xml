@@ -135,7 +135,7 @@
 <!-- === Javadoc/IDLDoc Targets ================================================ -->
 
   <!-- Create IDL API documentation -->
-  <target name="idldocs" depends="prepare-core" unless="unless.exclude.idldocs" description="Builds the IDL API documentation for non-java language bindings">
+  <target name="idldocs" depends="prepare" unless="unless.exclude.idldocs" description="Builds the IDL API documentation for non-java language bindings">
     <mkdir dir="${build.idldocs}"/>
     <java classname="org.openorb.compiler.doc.IdlDoc">
       <arg value="-I${idl}"/>
@@ -161,7 +161,7 @@
   </target>
 
   <!-- Creates Javadocs -->
-  <target name="javadocs" depends="prepare-core, javadocs-check" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
+  <target name="javadocs" depends="prepare, javadocs-check" unless="javadocs.notrequired" description="Builds the API documentation (javadocs)">
 
     <condition property="javadoc.additionalparam" value="-breakiterator -tag todo:all:Todo:">
       <equals arg1="1.4" arg2="${ant.java.version}"/>
