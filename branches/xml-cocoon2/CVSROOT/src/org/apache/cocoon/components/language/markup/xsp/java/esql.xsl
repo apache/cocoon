@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.21 2001-01-11 04:57:13 balld Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.22 2001-01-11 18:05:39 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -174,15 +174,26 @@
       <xsp:include>java.text.DecimalFormat</xsp:include>
       <xsp:include>java.io.StringWriter</xsp:include>
       <xsp:include>java.io.PrintWriter</xsp:include>
-      <xsp:include>org.apache.turbine.services.db.PoolBrokerService</xsp:include>
-      <xsp:include>org.apache.turbine.util.db.pool.DBConnection</xsp:include>
+      <xsp:include>org.apache.cocoon.components.datasource.DataSourceComponent</xsp:include>
     </xsp:structure>
     <xsp:logic>
       /** environment - <xsl:value-of select="$environment"/> **/
+      private static ComponentSelector esqlSelector = null;
+
+      public void compose(ComponentManager manager) {
+          super.compose(manager);
+
+          if (esqlSelector == null) {
+              try {
+                  esqlSelector = (ComponentSelector) manager.lookup(Roles.DB_CONNECTION);
+              } catch (ComponentManagerException cme) {
+                  log.error("Could not look up the datasource component", cme);
+              }
+          }
+      }
       /** xsp namespace uri - <xsl:value-of select="$xsp-namespace-uri"/> **/
-      static PoolBrokerService _esql_pool = PoolBrokerService.getInstance();
       class EsqlConnection {
-        DBConnection db_connection = null;
+        DataSourceComponent datasource = null;
         Connection connection = null;
         String dburl = null;
         String username = null;
@@ -212,7 +223,7 @@
     Stack _esql_connections = new Stack();
     EsqlConnection _esql_connection = null;
     Stack _esql_queries = new Stack();
-    EsqlQuery _esql_query = null; 
+    EsqlQuery _esql_query = null;
     SQLException _esql_exception = null;
     StringWriter _esql_exception_writer = null;
   </xsp:logic>
@@ -235,15 +246,17 @@
     try {
       <xsl:choose>
         <xsl:when test="esql:pool">
-          _esql_connection.db_connection = _esql_pool.getConnection(String.valueOf(<xsl:copy-of select="$pool"/>));
-          _esql_connection.connection = _esql_connection.db_connection.getConnection();
+          _esql_connection.datasource = (DataSourceComponent) esqlSelector.select(String.valueOf(<xsl:copy-of select="$pool"/>));
+          _esql_connection.connection = _esql_connection.datasource.getConnection();
         </xsl:when>
         <xsl:otherwise>
+          <xsl:if test="esql:driver">
           try {
             Class.forName(String.valueOf(<xsl:copy-of select="$driver"/>)).newInstance();
           } catch (Exception _esql_exception_<xsl:value-of select="generate-id(.)"/>) {
             throw new RuntimeException("Error loading driver: "+String.valueOf(<xsl:copy-of select="$driver"/>));
           }
+          </xsl:if>
           try {
             <xsl:choose>
               <xsl:when test="esql:username">
@@ -274,19 +287,16 @@
         throw new RuntimeException("Error setting connection autocommit");
       }
       <xsl:apply-templates/>
+    } catch (Exception e) {
+        log.error("Error processing the page", e);
     } finally {
       try {
         if(!_esql_connection.connection.getAutoCommit()) {
           _esql_connection.connection.commit();
         }
-        <xsl:choose>
-          <xsl:when test="esql:pool">
-            _esql_pool.releaseConnection(_esql_connection.db_connection);
-          </xsl:when>
-          <xsl:otherwise>
-            _esql_connection.connection.close();
-          </xsl:otherwise>
-        </xsl:choose>
+
+        _esql_connection.connection.close();
+
         if (_esql_connections.empty()) {
           _esql_connection = null;
         } else {
@@ -559,9 +569,9 @@
   <xsp:expr><xsl:call-template name="get-resultset"/>.getShort(<xsl:call-template name="get-column"/>)</xsp:expr>
 </xsl:template>
 
- <xspdoc:desc>returns the value of the given column interpeted as an xml fragment. 
- The fragment is parsed by the default xsp parser and the document element is returned. 
- If a root attribute exists, its value is taken to be the name of an element to wrap around the contents of 
+ <xspdoc:desc>returns the value of the given column interpeted as an xml fragment.
+ The fragment is parsed by the default xsp parser and the document element is returned.
+ If a root attribute exists, its value is taken to be the name of an element to wrap around the contents of
  the fragment before parsing.</xspdoc:desc>
 <xsl:template match="esql:row-results//esql:get-xml">
   <xsl:variable name="content">
@@ -674,7 +684,7 @@
   <xsl:param name="resultset"/>
   <xsl:choose>
     <xsl:when test="@encoding">
-      new String (<xsl:value-of select="$resultset"/>.getBytes 
+      new String (<xsl:value-of select="$resultset"/>.getBytes
         (<xsl:value-of select="$column-spec"/>), <xsl:value-of select="@encoding"/>)
     </xsl:when>
     <xsl:otherwise>
