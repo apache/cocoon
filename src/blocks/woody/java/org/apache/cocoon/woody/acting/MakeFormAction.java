@@ -88,8 +88,7 @@ public class MakeFormAction implements Action, ThreadSafe, Composable {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
 
-        FormDefinition formDefinition = formManager.getFormDefinition(resolver.resolveURI(formSource));
-        Form form = (Form)formDefinition.createInstance();
+        Form form = formManager.createForm(resolver.resolveURI(formSource));
 
         Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(formAttribute, form);

@@ -52,6 +52,7 @@ package org.apache.cocoon.woody;
 
 import org.apache.cocoon.woody.formmodel.FormDefinition;
 import org.apache.cocoon.woody.formmodel.WidgetDefinition;
+import org.apache.cocoon.woody.formmodel.Form;
 import org.apache.excalibur.source.Source;
 import org.w3c.dom.Element;
 
@@ -61,7 +62,7 @@ import org.w3c.dom.Element;
 public interface FormManager {
     public static final String ROLE = "org.apache.cocoon.woody.FormManager";
 
-    public FormDefinition getFormDefinition(Source source) throws Exception;
+    public Form createForm(Source source) throws Exception;
 
     public WidgetDefinition buildWidgetDefinition(Element widgetDefinition) throws Exception;
 }

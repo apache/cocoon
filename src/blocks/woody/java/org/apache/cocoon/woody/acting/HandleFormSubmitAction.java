@@ -80,21 +80,14 @@ import java.util.Locale;
  *  <li><strong>attribute-name</strong>: name of the request attribute in which the form instance should be stored
  * </ul>
  */
-public class HandleFormSubmitAction implements Action, ThreadSafe, Composable {
-
-    FormManager formManager;
-
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        formManager = (FormManager)componentManager.lookup(FormManager.ROLE);
-    }
+public class HandleFormSubmitAction extends AbstractWoodyAction implements Action, ThreadSafe, Composable {
 
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
             throws Exception {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
 
-        FormDefinition formDefinition = formManager.getFormDefinition(resolver.resolveURI(formSource));
-        Form form = (Form)formDefinition.createInstance();
+        Form form = formManager.createForm(resolver.resolveURI(formSource));
 
         Request request = ObjectModelHelper.getRequest(objectModel);
         form.readFromRequest(request, Locale.US);

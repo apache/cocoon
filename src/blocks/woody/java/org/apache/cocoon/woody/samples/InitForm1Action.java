@@ -74,8 +74,7 @@ public class InitForm1Action extends AbstractWoodyAction {
         String formSource = parameters.getParameter("form-definition");
         String formAttribute = parameters.getParameter("attribute-name");
 
-        FormDefinition formDefinition = formManager.getFormDefinition(resolver.resolveURI(formSource));
-        Form form = (Form)formDefinition.createInstance();
+        Form form = formManager.createForm(resolver.resolveURI(formSource));
 
         Repeater repeater = (Repeater)form.getWidget("contacts");
         repeater.addRow();

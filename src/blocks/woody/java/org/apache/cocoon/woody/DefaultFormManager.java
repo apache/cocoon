@@ -121,6 +121,10 @@ public class DefaultFormManager implements FormManager, ThreadSafe, Composable {
         initialized = true;
     }
 
+    public Form createForm(Source source) throws Exception {
+        return (Form)getFormDefinition(source).createInstance();
+    }
+
     public FormDefinition getFormDefinition(Source source) throws Exception {
         lazyInitialize();
 
