@@ -36,7 +36,9 @@ public class FlowObjectModelHelper {
     public static ExpressionContext getFOMExpressionContext(final Map objectModel, 
                                                             final Parameters parameters) {
         ExpressionContext context = new ExpressionContext();
-        context.setVars((Map)TemplateObjectModelHelper.getTemplateObjectModel(objectModel, parameters));
+        Map expressionContext = (Map)TemplateObjectModelHelper.getTemplateObjectModel(objectModel, parameters);
+        expressionContext = (Map) TemplateObjectModelHelper.addJavaPackages( expressionContext );
+        context.setVars( expressionContext );
         context.setContextBean(FlowHelper.getContextObject(objectModel));
 
         return context;

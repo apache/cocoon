@@ -134,12 +134,21 @@ public class TemplateObjectModelHelper {
             fillContext(contextObject, map);
         }
         
+        return map;
+    }
+
+    /**
+     * Add java packages to object model. Allows to construct java objects.
+     * @param objectModel usually the result of invoking getTemplateObjectModel
+     */
+    public static Object addJavaPackages( Map objectModel ) {
         Object javaPkg = FOM_JavaScriptFlowHelper.getJavaPackage(objectModel);
         Object pkgs = FOM_JavaScriptFlowHelper.getPackages(objectModel);
         
+        // packages might have already been set up if flowscript is being used
         if ( javaPkg != null && pkgs != null ) {
-            map.put( "Packages", javaPkg );
-            map.put( "java", pkgs );
+            objectModel.put( "Packages", javaPkg );
+            objectModel.put( "java", pkgs );
         } else { 
             Context cx = Context.enter();
             try {
@@ -152,13 +161,12 @@ public class TemplateObjectModelHelper {
                 newPackages.setParentScope( scope );
                 newPackages.setPrototype( ScriptableObject.getClassPrototype(   scope,
                                                                                 JAVA_PACKAGE ) );
-                map.put( "Packages", newPackages );
-                map.put( "java", ScriptableObject.getProperty( scope, "java" ) );
+                objectModel.put( "Packages", newPackages );
+                objectModel.put( "java", ScriptableObject.getProperty( scope, "java" ) );
             } finally {
                 Context.exit();
             }
         }
-        return map;
+        return objectModel;
     }
-
 }

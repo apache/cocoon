@@ -15,7 +15,11 @@
  */
 package org.apache.cocoon.template.jxtg.script.event;
 
+import org.apache.cocoon.components.expression.ExpressionContext;
+import org.apache.cocoon.template.jxtg.environment.ExecutionContext;
+import org.apache.cocoon.xml.XMLConsumer;
 import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.LocatorImpl;
 
 public class Event {
@@ -52,5 +56,13 @@ public class Event {
             buf.append("." + col);
         }
         return buf.toString();
+    }
+
+    public Event execute(final XMLConsumer consumer,
+                         ExpressionContext expressionContext,
+                         ExecutionContext executionContext,
+                         StartElement macroCall, Event startEvent, Event endEvent) 
+        throws SAXException {
+        return getNext();
     }
 }
