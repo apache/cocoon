@@ -21,7 +21,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * The <code>Request</code> object helper
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.19 $ $Date: 2001-05-04 19:02:38 $
+ * @version CVS $Revision: 1.1.2.20 $ $Date: 2001-05-07 15:20:46 $
  */
 public class XSPRequestHelper extends XSPObjectHelper {
   /**
@@ -60,6 +60,20 @@ public class XSPRequestHelper extends XSPObjectHelper {
   {
     Request request = (Request)objectModel.get(Constants.REQUEST_OBJECT);
     return request.getRequestURI();
+  }
+
+  /**
+   * Output the uri associated with the given objectModel
+   *
+   * @param objectModel The Map objectModel
+   */
+  public static void getURI(
+    Map objectModel,
+    ContentHandler handler
+  )
+      throws SAXException
+  {
+    elementData(handler, "uri", getURI(objectModel));
   }
 
   /**

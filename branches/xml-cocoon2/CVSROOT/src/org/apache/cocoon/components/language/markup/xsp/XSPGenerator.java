@@ -21,12 +21,14 @@ import org.apache.avalon.excalibur.pool.Poolable;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-05-05 21:34:44 $
+ * @version CVS $Revision: 1.1.2.24 $ $Date: 2001-05-07 15:20:42 $
  */
 public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable, Poolable {
+  protected Context avalonContext = null;
 
   /** Contextualize this class */
   public void contextualize(Context context) throws ContextException  {
+      this.avalonContext = context;
   }
 
   /**

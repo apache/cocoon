@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:bloritsch@apache.org>Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-03-22 16:10:31 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-05-07 15:21:01 $
 -->
 
 <!-- XSP Response logicsheet for the Java language -->
@@ -30,18 +30,6 @@
         <xsl:when test="name">
           <xsl:call-template name="get-nested-content">
             <xsl:with-param name="content" select="log:name"/>
-          </xsl:call-template>
-        </xsl:when>
-    <xsl:otherwise>""</xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-
-    <xsl:variable name="url">
-      <xsl:choose>
-        <xsl:when test="@url">"<xsl:value-of select="@url"/>"</xsl:when>
-        <xsl:when test="url">
-          <xsl:call-template name="get-nested-content">
-            <xsl:with-param name="content" select="log:url"/>
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>""</xsl:otherwise>
@@ -63,9 +51,15 @@
     <xsp:logic>
       if (getLogger() == null) {
           try {
-            org.apache.log.Category logCategory = org.apache.log.LogKit.createCategory(<xsl:value-of select="$name"/>,
-                                         org.apache.log.LogKit.getPriorityForName(<xsl:value-of select="$level"/>));
-            setLogger(new org.apache.log.Logger(logCategory, getLogger()));
+            String category = <xsl:value-of select="$name"/>;
+            org.apache.log.Logger logger = org.apache.log.Hierarchy.getDefaultHierarchy().getLoggerFor("cocoon" + (("".equals(category))? category : "." + category));
+            String file = this.avalonContext.get(org.apache.cocoon.Constants.CONTEXT_LOG_DIR) + category + ".log";
+            org.apache.log.LogTarget[] targets = new org.apache.log.LogTarget[] {
+                new org.apache.log.output.FileOutputLogTarget(file)
+            };
+            logger.setLogTargets(targets);
+            logger.setPriority(org.apache.log.Priority.getPriorityForName(<xsl:value-of select="$level"/>));
+            this.setLogger(logger);
           } catch (Exception e) {
             getLogger().error("Could not create logger for \"" +
                                <xsl:value-of select="$name"/> + "\".", e);

@@ -56,7 +56,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.93 $ $Date: 2001-05-05 02:52:20 $
+ * @version CVS $Revision: 1.1.4.94 $ $Date: 2001-05-07 15:21:11 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -277,7 +277,7 @@ public class CocoonServlet extends HttpServlet {
 
             this.log = Hierarchy.getDefaultHierarchy().getLoggerFor("cocoon");
             this.log.setPriority(logPriority);
-            
+
             PriorityFilter filter = new PriorityFilter(Priority.ERROR);
             filter.addTarget( new ServletOutputLogTarget(context) );
             LogTarget[] targets = new LogTarget[] { new FileOutputLogTarget(path), filter };
