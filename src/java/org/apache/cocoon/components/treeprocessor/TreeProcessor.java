@@ -138,27 +138,37 @@ public class TreeProcessor
      * @param manager the component manager to be used by the child processor.
      * @return a new child processor.
      */
-    public TreeProcessor createChildProcessor(
-        ComponentManager manager,
-        Source source)
+    public TreeProcessor createChildProcessor(ComponentManager manager,
+                                              String           actualSource)
     throws Exception {
 
         // Note: lifecycle methods aren't called, since this constructors copies all
         // that can be copied from the parent (see above)
         TreeProcessor child = new TreeProcessor(this, manager);
-        child.source = new DelayedRefreshSourceWrapper(source, lastModifiedDelay);
+        child.resolver = (SourceResolver)manager.lookup(SourceResolver.ROLE);
+        child.source = new DelayedRefreshSourceWrapper(child.resolver.resolveURI(actualSource), lastModifiedDelay);
+        
         return child;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
     public void contextualize(Context context) throws ContextException {
         this.context = context;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.excalibur.component.RoleManageable#setRoleManager(org.apache.avalon.excalibur.component.RoleManager)
+     */
     public void setRoleManager(RoleManager rm) {
         this.roleManager = rm;
     }

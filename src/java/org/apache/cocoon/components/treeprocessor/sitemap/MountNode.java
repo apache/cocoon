@@ -30,8 +30,6 @@ import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.TreeProcessor;
 import org.apache.cocoon.components.treeprocessor.variables.VariableResolver;
 import org.apache.cocoon.environment.Environment;
-import org.apache.excalibur.source.Source;
-import org.apache.excalibur.source.SourceResolver;
 
 /**
  *
@@ -130,17 +128,7 @@ public class MountNode extends AbstractProcessingNode implements Composable, Dis
                 actualSource = source;
             }
             
-            SourceResolver resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-            try {
-                Source src = resolver.resolveURI(actualSource);
-                try {
-                    processor = this.parentProcessor.createChildProcessor(this.manager, src);
-                } finally {
-                    resolver.release(src);
-                }
-            } finally {
-                this.manager.release(resolver);
-            }
+            processor = this.parentProcessor.createChildProcessor(this.manager, actualSource);
 
             // Associate to the original source
             processors.put(source, processor);
