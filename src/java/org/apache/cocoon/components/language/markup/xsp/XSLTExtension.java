@@ -55,13 +55,13 @@ package org.apache.cocoon.components.language.markup.xsp;
  * generation stylesheet to escape XML characters to make a valid Java strings.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: XSLTExtension.java,v 1.3 2003/10/24 01:10:56 vgritsenko Exp $
+ * @version CVS $Id: XSLTExtension.java,v 1.4 2004/02/11 00:17:34 vgritsenko Exp $
  */
 public class XSLTExtension {
 
     /**
      * Escapes '"' and '\' characters in a String (add a '\' before them) so that it can
-     * be inserted in java source + quote special characters as utf-8
+     * be inserted in java source + quote special characters as UTF-8
      */
     public static String escapeJavaString(String string) {
         char chr[] = string.toCharArray();
@@ -109,8 +109,9 @@ public class XSLTExtension {
     }
 
     /**
-     * quote special characters as utf-8
-     * TC: it's code doublication but that way we don't
+     * Quote special characters as UTF-8
+     *
+     * TC: It's code duplication but that way we don't
      *     have to iterate through the StringBuffer twice
      */
     public static String escapeString(String string) {
@@ -140,17 +141,19 @@ public class XSLTExtension {
     }
 
     /**
-     * Escapes '"' and '\' characters in a String (add a '\' before them) so that it can
-     * be inserted in java source.
+     * @see #escapeString(String)
      */
     public String escape(String string) {
         return escapeString(string);
     }
 
+    /**
+     * This method used by Java XSP core logicsheet.
+     * @see #escapeJavaString(String)
+     */
     public String escapeJava(String string) {
         return escapeJavaString(string);
     }
-
 
     /**
      * Counts amount of spaces in the input line from the beginning
