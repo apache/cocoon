@@ -63,7 +63,7 @@ import java.util.Stack;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: StringBufferContentHandler.java,v 1.1 2003/03/09 00:09:27 pier Exp $
+ * @version CVS $Id: StringBufferContentHandler.java,v 1.2 2003/09/30 14:13:33 vgritsenko Exp $
  * @since August 30, 2001
  */
 public class StringBufferContentHandler extends DefaultHandler {
@@ -103,7 +103,6 @@ public class StringBufferContentHandler extends DefaultHandler {
         }
 
         namespaces.push(marker);
-
         stringBuffer.append("<").append(qName);
 
         for (int i = 0, len = a.getLength(); i < len; i++) {
@@ -112,7 +111,6 @@ public class StringBufferContentHandler extends DefaultHandler {
             // as an attribute. We need to catch this case so that we
             // don't end up generating the namespace declaration twice.
             String attrName = a.getQName(i);
-
             if (attrName.startsWith("xmlns:")) {
                 // We have a namespace declaration
                 String name = a.getLocalName(i);
@@ -152,9 +150,15 @@ public class StringBufferContentHandler extends DefaultHandler {
                     continue;
                 }
                 NPU npu = (NPU) obj;
-                stringBuffer.append(" xmlns:").append(npu.prefix).append("=\"").append(npu.uri).append("\"");
+                if ("".equals(npu.prefix)) {
+                    // Default namespace
+                    stringBuffer.append(" xmlns").append("=\"").append(npu.uri).append("\"");
+                } else {
+                    stringBuffer.append(" xmlns:").append(npu.prefix).append("=\"").append(npu.uri).append("\"");
+                }
             }
         }
+
         stringBuffer.append(">");
     }
 
