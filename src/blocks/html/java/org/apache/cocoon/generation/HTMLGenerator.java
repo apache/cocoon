@@ -62,13 +62,12 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
@@ -94,9 +93,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  *
- * @version CVS $Id: HTMLGenerator.java,v 1.7 2003/09/03 12:54:54 cziegeler Exp $
+ * @version CVS $Id: HTMLGenerator.java,v 1.8 2003/09/04 09:38:39 cziegeler Exp $
  */
-public class HTMLGenerator extends ComposerGenerator
+public class HTMLGenerator extends ServiceableGenerator
 implements Configurable, CacheableProcessingComponent, Disposable {
 
     /** The parameter that specifies what request attribute to use, if any */
@@ -117,9 +116,9 @@ implements Configurable, CacheableProcessingComponent, Disposable {
     /** JTidy properties */
     private Properties properties;
 
-    public void compose(ComponentManager manager)
-    throws ComponentException {
-        super.compose( manager );
+    public void service(ServiceManager manager)
+    throws ServiceException {
+        super.service( manager );
         this.processor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
     }
 
@@ -346,7 +345,7 @@ implements Configurable, CacheableProcessingComponent, Disposable {
 
     public void dispose() {
         if (this.manager != null) {
-            this.manager.release((Component)this.processor);
+            this.manager.release(this.processor);
             this.manager = null;
         }
         this.processor = null;

@@ -72,7 +72,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-public class GarbageGenerator extends ComposerGenerator {
+public class GarbageGenerator extends ServiceableGenerator {
 
     // FIXME - We should not use a static variable here: use a component instead
     protected static Map cache = new HashMap();

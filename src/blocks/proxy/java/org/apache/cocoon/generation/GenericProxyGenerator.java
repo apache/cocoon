@@ -55,9 +55,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.http.HttpEnvironment;
@@ -81,9 +81,9 @@ import org.xml.sax.helpers.AttributesImpl;
  * TODO: doesn't handle (and doubt it'll ever will) HTTP/1.1 keep-alive
  * 
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
- * @version $Id: GenericProxyGenerator.java,v 1.1 2003/08/29 17:33:24 gianugo Exp $
+ * @version $Id: GenericProxyGenerator.java,v 1.2 2003/09/04 09:38:37 cziegeler Exp $
  */
-public class GenericProxyGenerator extends ComposerGenerator {
+public class GenericProxyGenerator extends ServiceableGenerator {
  
     /** The real URL to forward requests to */
     HttpURL destination;
@@ -100,12 +100,22 @@ public class GenericProxyGenerator extends ComposerGenerator {
      * 
      * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
      */
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
-        parser = (SAXParser)manager.lookup(SAXParser.ROLE);
-      
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
+        this.parser = (SAXParser)manager.lookup(SAXParser.ROLE);
     }
 
+    /**
+     * Dispose
+     */
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( this.parser );
+            this.parser = null;
+        }
+        super.dispose();
+    }
+    
     /**
      * Setup this component by getting the (required) "url" parameter and the 
      * (optional) "path" parameter.  If path is not specified, the request URI will

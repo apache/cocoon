@@ -61,7 +61,7 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.slop.interfaces.SlopParser;
 import org.apache.cocoon.slop.parsing.SimpleSlopParser;
 import org.apache.excalibur.source.Source;
@@ -75,10 +75,10 @@ import org.xml.sax.helpers.LocatorImpl;
  * General code structure lifted from the Chaperon TextGenerator - thanks Stephan!
  *
  * @author <a href="mailto:bdelacretaz@apache.org">Bertrand Delacretaz</a>
- * @version CVS $Id: SlopGenerator.java,v 1.2 2003/08/07 11:08:06 cziegeler Exp $
+ * @version CVS $Id: SlopGenerator.java,v 1.3 2003/09/04 09:38:32 cziegeler Exp $
  */
 
-public class SlopGenerator extends ComposerGenerator
+public class SlopGenerator extends ServiceableGenerator
         implements CacheableProcessingComponent {
 
     private Source inputSource = null;

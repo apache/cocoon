@@ -50,8 +50,7 @@
 */
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.framework.component.ComponentException;
-
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.caching.CacheableProcessingComponent;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 
@@ -73,9 +72,9 @@ import org.xml.sax.SAXException;
  * <p>
  *
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Id: FragmentExtractorGenerator.java,v 1.2 2003/03/19 15:42:16 cziegeler Exp $
+ * @version CVS $Id: FragmentExtractorGenerator.java,v 1.3 2003/09/04 09:38:35 cziegeler Exp $
  */
-public class FragmentExtractorGenerator extends ComposerGenerator
+public class FragmentExtractorGenerator extends ServiceableGenerator
         implements CacheableProcessingComponent {
 
     /**
@@ -116,7 +115,7 @@ public class FragmentExtractorGenerator extends ComposerGenerator
             deserializer.setConsumer(this.xmlConsumer);
             deserializer.deserialize(fragment);
 
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             getLogger().error("Could not lookup for component.", ce);
             throw new SAXException("Could not lookup for component.", ce);
         } finally

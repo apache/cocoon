@@ -57,9 +57,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.dom.DOMStreamer;
@@ -129,7 +129,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:d.madama@pro-netics.com">Daniele Madama</a>
- * @version CVS $Id: XPathTraversableGenerator.java,v 1.2 2003/07/13 12:33:53 gianugo Exp $
+ * @version CVS $Id: XPathTraversableGenerator.java,v 1.3 2003/09/04 09:38:34 cziegeler Exp $
  */
 public class XPathTraversableGenerator extends TraversableGenerator {
 
@@ -208,12 +208,22 @@ public class XPathTraversableGenerator extends TraversableGenerator {
         }
     }
 
-    public void compose(ComponentManager manager) throws ComponentException {
-        super.compose(manager);
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service(manager);
         processor = (XPathProcessor)manager.lookup(XPathProcessor.ROLE);
         parser = (DOMParser)manager.lookup(DOMParser.ROLE);
     }
 
+    public void dispose() {
+        if ( this.manager != null ) {
+            this.manager.release( processor );
+            this.manager.release( parser );
+            this.processor = null;
+            this.parser = null;
+        }
+        super.dispose();
+    }
+    
     /**
      * Adds a single node to the generated document. If the path is a
      * directory, and depth is greater than zero, then recursive calls

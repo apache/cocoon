@@ -127,9 +127,9 @@ import java.util.Comparator;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.6 2003/08/01 17:21:15 sylvain Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.7 2003/09/04 09:38:34 cziegeler Exp $
  */
-public class TraversableGenerator extends ComposerGenerator implements CacheableProcessingComponent {
+public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
     /** The URI of the namespace of this generator. */
     protected static final String URI = "http://apache.org/cocoon/collection/1.0";

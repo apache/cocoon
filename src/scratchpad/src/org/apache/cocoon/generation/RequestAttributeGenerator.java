@@ -70,7 +70,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:Kinga_Dziembowski@hp.com">Kinga Dziembowski</a>
  * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version CVS $Id: RequestAttributeGenerator.java,v 1.3 2003/09/03 13:35:20 cziegeler Exp $
+ * @version CVS $Id: RequestAttributeGenerator.java,v 1.4 2003/09/04 09:38:34 cziegeler Exp $
  *
  * @cocoon:name                      req-attr
  * @cocoon:status                    scratchpad
@@ -85,7 +85,7 @@ import org.xml.sax.SAXException;
  *   required="yes"
  *   default="none"
  */
-public class RequestAttributeGenerator extends ComposerGenerator {
+public class RequestAttributeGenerator extends ServiceableGenerator {
     /**
      * The name of this class
      *

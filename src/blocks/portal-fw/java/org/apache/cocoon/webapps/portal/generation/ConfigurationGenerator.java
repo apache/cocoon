@@ -52,11 +52,11 @@ package org.apache.cocoon.webapps.portal.generation;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.webapps.portal.components.PortalManager;
 import org.xml.sax.SAXException;
 
@@ -65,10 +65,10 @@ import org.xml.sax.SAXException;
  * for the current user.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.2 2003/06/18 12:36:46 cziegeler Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.3 2003/09/04 09:38:33 cziegeler Exp $
 */
 public final class ConfigurationGenerator
-extends ComposerGenerator {
+extends ServiceableGenerator {
 
     public void generate()
     throws IOException, SAXException, ProcessingException {
@@ -90,7 +90,7 @@ extends ComposerGenerator {
             }
 
             this.xmlConsumer.endDocument();
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of portal failed.", ce);
         } finally {
             this.manager.release(portal);

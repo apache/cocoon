@@ -59,14 +59,13 @@ import java.io.StringWriter;
 import java.util.*;
 
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.flow.FlowHelper;
@@ -175,9 +174,9 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: VelocityGenerator.java,v 1.7 2003/07/12 19:39:41 coliver Exp $
+ * @version CVS $Id: VelocityGenerator.java,v 1.8 2003/09/04 09:38:33 cziegeler Exp $
  */
-public class VelocityGenerator extends ComposerGenerator
+public class VelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {
 
     /**
@@ -1075,7 +1074,7 @@ public class VelocityGenerator extends ComposerGenerator
         } catch (SAXException e) {
             getLogger().error("VelocityGenerator.generate()", e);
             throw e;
-        } catch (ComponentException e) {
+        } catch (ServiceException e) {
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()", e);
         } catch (ProcessingException e) {
@@ -1084,7 +1083,7 @@ public class VelocityGenerator extends ComposerGenerator
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in VelocityGenerator.generate()", e);
         } finally {
-            this.manager.release((Component) parser);
+            this.manager.release(parser);
         }
     }
 

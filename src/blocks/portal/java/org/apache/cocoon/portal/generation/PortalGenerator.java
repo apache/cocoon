@@ -53,12 +53,12 @@ package org.apache.cocoon.portal.generation;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.portal.PortalManager;
 import org.apache.cocoon.portal.PortalService;
 import org.xml.sax.SAXException;
@@ -68,10 +68,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalGenerator.java,v 1.2 2003/06/17 19:59:33 cziegeler Exp $
+ * @version CVS $Id: PortalGenerator.java,v 1.3 2003/09/04 09:38:32 cziegeler Exp $
  */
 public class PortalGenerator 
-extends ComposerGenerator {
+extends ServiceableGenerator {
 
 	/**
 	 * @see org.apache.cocoon.generation.Generator#generate()
@@ -84,7 +84,7 @@ extends ComposerGenerator {
             pm = (PortalManager)this.manager.lookup(PortalManager.ROLE);
             pm.process();
             pm.showPortal(this.xmlConsumer, this.parameters);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal manager.", ce);
         } finally {
             this.manager.release(pm);
@@ -107,7 +107,7 @@ extends ComposerGenerator {
             service.setPortalName(par.getParameter("portal-name"));
         } catch (ParameterException pe) {
             throw new ProcessingException("Parameter portal-name is required.");
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException("Unable to lookup portal service.", ce);
         } finally {
             this.manager.release(service);

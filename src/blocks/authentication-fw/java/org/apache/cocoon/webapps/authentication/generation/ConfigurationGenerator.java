@@ -63,7 +63,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.Session;
-import org.apache.cocoon.generation.ComposerGenerator;
+import org.apache.cocoon.generation.ServiceableGenerator;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.context.AuthenticationContext;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
@@ -87,10 +87,10 @@ import org.xml.sax.helpers.DefaultHandler;
  *  This is the authentication Configuration Generator.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: ConfigurationGenerator.java,v 1.4 2003/05/23 12:13:14 cziegeler Exp $
+ * @version CVS $Id: ConfigurationGenerator.java,v 1.5 2003/09/04 09:38:34 cziegeler Exp $
 */
 public final class ConfigurationGenerator
-extends ComposerGenerator {
+extends ServiceableGenerator {
 
     /** Request parameter */
     public static final String REQ_PARAMETER_STATE = "authstate";

@@ -76,7 +76,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:amal.sirvisetti@sirvisetti.com">Amal Sirvisetti</a>
  */
-public class JellyGenerator extends ComposerGenerator 
+public class JellyGenerator extends ServiceableGenerator 
 {
 
     /** The Jelly Context */
