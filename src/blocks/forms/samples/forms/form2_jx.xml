@@ -28,6 +28,8 @@
     <br/>
     I choose: ${form2bean.choose}
     <br/>
+    Enable: ${form2bean.enable}
+    <br/>
     Sex: <i18n:text xmlns:i18n="http://apache.org/cocoon/i18n/2.1">${form2bean.sex}</i18n:text>
 
     <table border="1">

@@ -280,7 +280,8 @@ function doSaveConversion(formValue, delimiter){
 function createJSBeanFor05custom() {
     var bean = {"jswrap-value": "--wrapped value--",
                 "custom-value": "**custom value**",
-                "config-value": "[[config value]]"};
+                "config-value": "[[config value]]",
+		"test-value" : ""};
     return bean;
 }
 
@@ -292,5 +293,6 @@ function createJavaBeanFor05custom() {
     bean.put("jswrap-value", "--wrapped value--");
     bean.put("custom-value", "**custom value**");
     bean.put("config-value", "[[config value]]");
+    bean.put("test-value", "");
     return bean;
 }
