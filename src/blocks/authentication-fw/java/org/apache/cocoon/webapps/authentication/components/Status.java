@@ -50,21 +50,41 @@
 */
 package org.apache.cocoon.webapps.authentication.components;
 
+import java.util.Map;
+
+import org.apache.cocoon.components.CocoonComponentManager;
+
 
 /**
  * The authentication Handler.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Status.java,v 1.1 2003/04/21 19:26:13 cziegeler Exp $
+ * @version CVS $Id: Status.java,v 1.2 2003/04/27 09:42:42 cziegeler Exp $
 */
 public final class Status
 implements java.io.Serializable {
 
+    private static final String KEY = Status.class.getName();
+    
     /** The handlers */
     private UserHandler handler;
         
     /** The application */
     private String application;
+    
+    public static Status getCurrentStatus() {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        return (Status)objectModel.get(KEY);
+    }
+    
+    public static void setStatus(Status status) {
+        final Map objectModel = CocoonComponentManager.getCurrentEnvironment().getObjectModel();
+        if ( status != null ) {
+            objectModel.put( KEY, status);
+        } else {
+            objectModel.remove( KEY );
+        }
+    }
     
     /**
      * Create a new handler object.
