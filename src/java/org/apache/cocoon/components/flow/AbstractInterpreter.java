@@ -56,6 +56,9 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
@@ -79,12 +82,14 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.10 2003/10/15 17:02:05 cziegeler Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.11 2003/11/20 15:31:29 sylvain Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
-  implements Component, Composable, Contextualizable, Interpreter,
+  implements Component, Composable, Serviceable, Contextualizable, Interpreter,
              SingleThreaded, Configurable, Disposable
 {
+    protected org.apache.avalon.framework.context.Context avalonContext;
+
     /**
      * List of source locations that need to be resolved.
      */
@@ -92,6 +97,7 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
 
     protected org.apache.cocoon.environment.Context context;
     protected ComponentManager manager;
+    protected ServiceManager serviceManager;
     protected ContinuationsManager continuationsMgr;
     
     /**
@@ -116,11 +122,21 @@ public abstract class AbstractInterpreter extends AbstractLogEnabled
      */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
-        this.continuationsMgr = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
+        //mpved below in service()
+        //this.continuationsMgr = (ContinuationsManager)manager.lookup(ContinuationsManager.ROLE);
+    }
+
+    /**
+     * Serviceable
+     */
+    public void service(ServiceManager sm) throws ServiceException {
+        this.serviceManager = sm;
+        this.continuationsMgr = (ContinuationsManager)sm.lookup(ContinuationsManager.ROLE);
     }
 
     public void contextualize(org.apache.avalon.framework.context.Context context)
     throws ContextException{
+        this.avalonContext = context;
         this.context = (Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
     }
 

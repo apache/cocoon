@@ -62,6 +62,8 @@ import java.util.Map;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.flow.ContinuationsManager;
 import org.apache.cocoon.components.flow.WebContinuation;
 import org.apache.cocoon.components.flow.Interpreter.Argument;
@@ -88,9 +90,13 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.17 2003/11/14 18:58:18 unico Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.18 2003/11/20 15:31:29 sylvain Exp $
  */
 public class FOM_Cocoon extends ScriptableObject {
+
+    private org.apache.avalon.framework.context.Context avalonContext;
+
+    private ServiceManager serviceManager;
 
     private FOM_JavaScriptInterpreter interpreter;
 
@@ -126,10 +132,14 @@ public class FOM_Cocoon extends ScriptableObject {
     void setup(FOM_JavaScriptInterpreter interp,
                Environment env, 
                ComponentManager manager,
+               ServiceManager serviceManager,
+               org.apache.avalon.framework.context.Context avalonContext,
                Logger logger) {
         this.interpreter = interp;
         this.environment = env;
         this.componentManager = manager;
+        this.serviceManager = serviceManager;
+        this.avalonContext = avalonContext;
         this.logger = logger;
     }
 
@@ -281,8 +291,37 @@ public class FOM_Cocoon extends ScriptableObject {
                                                    environment,
                                                    filename );
         return script.exec( cx, scope );
-    }    
-        
+    }
+
+    /**
+     * Setup an object so that it can access the information provided to regular components.
+     * This is done by calling the various Avalon lifecycle interfaces implemented by the object, which
+     * are <code>LogEnabled</code>, <code>Contextualizable</code>, <code>ServiceManageable</code>,
+     * <code>Composable</code> (even if deprecated) and <code>Initializable</code>.
+     * <p>
+     * <code>Contextualizable</code> is of primary importance as it gives access to the whole object model
+     * (request, response, etc.) through the {@link org.apache.cocoon.components.ContextHelper} class.
+     * <p>
+     * Note that <code>Configurable</code> is ignored, as no configuration exists in a flowscript that
+     * can be passed to the object.
+     *
+     * @param obj the object to setup
+     * @return the same object (convenience that allows to write <code>var foo = cocoon.setupObject(new Foo());</code>).
+     * @throws Exception if something goes wrong during setup.
+     */
+    public Object jsFunction_setupObject(Object obj) throws Exception {
+        LifecycleHelper.setupComponent(
+             unwrap(obj),
+             this.logger,
+             this.avalonContext,
+             this.serviceManager,
+             this.componentManager,
+             null,// roleManager
+             null,// configuration
+             true);
+         return obj;
+    }
+
     public static class FOM_Request extends ScriptableObject {
 
         Request request;
