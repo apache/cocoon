@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Composer;
+import org.apache.avalon.Configurable;
+import org.apache.avalon.Configuration;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Parameters;
 
@@ -42,10 +44,11 @@ import org.apache.trax.Processor;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2000-10-19 20:21:22 $
+ * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2000-11-01 15:01:42 $
  */
 public class XalanTransformer extends ContentHandlerWrapper
-implements Transformer, Composer, Poolable {
+implements Transformer, Composer, Poolable, Configurable {
 
     /** The store service instance */
     private Store store = null;
@@ -56,17 +59,33 @@ implements Transformer, Composer, Poolable {
     /** Hash table for Templates */
     private static Hashtable templatesCache = new Hashtable();
 
-    private static org.apache.trax.Transformer getTransformer(EntityResolver resolver, String xsluri)
+    /** Is the cache turned on? (default is on) */
+    private boolean useCache = true;
+
+    private org.apache.trax.Transformer getTransformer(EntityResolver resolver, String xsluri)
       throws SAXException, ProcessingException, IOException
     {
-        Templates templates = (Templates)templatesCache.get(xsluri);
+        Templates templates = null;
+        if (this.useCache == true) templates = (Templates)templatesCache.get(xsluri);
         if(templates == null)
         {
     	    Processor processor = Processor.newInstance("xslt");
-	    templates = processor.process(resolver.resolveEntity(null, xsluri));
-            templatesCache.put(xsluri,templates);
+	        templates = processor.process(resolver.resolveEntity(null, xsluri));
+            if (this.useCache == true) templatesCache.put(xsluri,templates);
         }
         return templates.newTransformer();
+    }
+
+    /**
+     * Configure this transformer.
+     */
+    public void configure(Configuration conf) {
+        if (conf != null) {
+            Configuration child = conf.getChild("use-cache");
+            if (child != null) {
+                this.useCache = child.getValueAsBoolean(true);
+            }
+        }
     }
 
     /**
