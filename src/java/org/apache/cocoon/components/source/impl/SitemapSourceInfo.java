@@ -24,19 +24,52 @@ import org.apache.cocoon.environment.Environment;
  * This is a helper class for the cocoon protocol.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSourceInfo.java,v 1.1 2004/05/25 07:28:24 cziegeler Exp $
+ * @version CVS $Id$
  */
 public final class SitemapSourceInfo {
     
+    /**
+     * <ul>
+     * <li><code>true</code> if the sitemap URI uses the <code>raw:</code> subprotocol,
+     * which means that request parameters of the original request are not forwarded,</li>
+     * <li><code>false</code> otherwise.
+     * </ul>
+     */
     public boolean rawMode;
-    public String protocol;
-    public String requestURI;
-    public String systemId;
-    public String view;
-    public String prefix;
-    public String queryString;
-    public String uri;
     
+    /** The protocol used in the sitemap URI, up to and excluding the colon. */
+    public String protocol;
+    
+    /** The request URI, relative to the context. */
+    public String requestURI;
+    
+    /** The system ID: &lt;protocol&gt;&lt;request-uri&gt;[?&lt;query-string&gt;]. */
+    public String systemId;
+    
+    /** The Cocoon view used in the sitemap URI or <code>null</code> if no view is used.  */
+    public String view;
+    
+    /**
+     * The prefix of the URI in progress for <code>cocoon:/</code> requests,
+     * or an empty string for <code>cocoon://</code> requests.
+     */
+    public String prefix;
+    
+    /** The query string of the sitemap URI. */
+    public String queryString;
+    
+    /** The sitemap URI without protocol identifier and query string. */
+    public String uri;
+
+    /**
+     * Determine the initial processor for the cocoon protocol request.
+     * <ul>
+     * <li><code>true</code> - start in the root sitemap (<code>cocoon://</code>)</li>
+     * <li><code>false</code> - start in the current sitemap (<code>cocoon:/</code>)</li>
+     * </ul>
+     */
+    public boolean processFromRoot;
+
     public static SitemapSourceInfo parseURI(Environment env, String sitemapURI) 
     throws MalformedURLException {
         SitemapSourceInfo info = new SitemapSourceInfo();
@@ -58,10 +91,12 @@ public final class SitemapSourceInfo {
         // does the uri point to this sitemap or to the root sitemap?
         if (sitemapURI.startsWith("//", position)) {
             position += 2;
-            info.prefix = ""; // start at the root
+            info.prefix = "";
+            info.processFromRoot = true;
         } else if (sitemapURI.startsWith("/", position)) {
             position ++;
             info.prefix = env.getURIPrefix();
+            info.processFromRoot = false;
         } else {
             throw new MalformedURLException("Malformed cocoon URI: " + sitemapURI);
         }

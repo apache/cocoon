@@ -121,7 +121,7 @@ implements Source, XMLizable {
         this.protocol = info.protocol;
 
         // does the uri point to this sitemap or to the root sitemap?
-        if (info.prefix.length() == 0) {
+        if (info.processFromRoot) {
             this.processor = EnvironmentHelper.getCurrentProcessor().getRootProcessor();
         } else {
             this.processor = EnvironmentHelper.getCurrentProcessor();
