@@ -55,24 +55,42 @@ import java.util.HashMap;
 
 import org.apache.avalon.framework.parameters.Parameters;
 
+import org.apache.cocoon.AbstractCompositeTestCase;
+
 /**
  *
- * @version CVS $Id: FileGeneratorTestCase.java,v 1.3 2003/04/16 10:56:44 stephan Exp $
+ * @version CVS $Id: FileGeneratorTestCase.java,v 1.4 2003/04/29 10:45:03 stephan Exp $
  */
-public class FileGeneratorTestCase extends AbstractGeneratorTestCase
-{
-  public FileGeneratorTestCase(String name)
-  {
-    super(name);
-  }
+public class FileGeneratorTestCase extends AbstractCompositeTestCase {
 
-  public void testFileGenerator() {
+    public FileGeneratorTestCase(String name) {
+        super(name);
+    }
 
-    String type = "file";
-    String src = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
-    Parameters parameters = new Parameters();
-    String result = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
+    public void testFileGenerator() {
 
-    assertEqual(load(result), generate(type, src, parameters));
-  }
+        String type = "file";
+        String src = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
+        Parameters parameters = new Parameters();
+        String result = "resource://org/apache/cocoon/generation/FileGeneratorTestCase.source.xml";
+
+        assertEqual(load(result), generate(type, src, parameters));
+    }
+
+    /*
+      All comments get lost. The comments within the doctype and _also_ the comments 
+      within the document.
+
+    public void testBUG17763() {
+        String type = "file";
+        String src = "resource://org/apache/cocoon/generation/filetest-input1.xml";
+        Parameters parameters = new Parameters();
+        String result = "resource://org/apache/cocoon/generation/filetest-result1.xml";
+
+        //print(generate(type, src, parameters));
+
+        //print(load(result));
+    
+        //assertEqual(load(result), generate(type, src, parameters));
+    }*/
 }
