@@ -208,6 +208,7 @@
         	<xsl:for-each select="block:requirements/block:requires">
         	  <block name="{@name}" jardir="build/public">
         	    <xsl:attribute name="path">${root.block.<xsl:value-of select="@name"/>}</xsl:attribute>
+        	    <xsl:attribute name="dynamicEclipseReference">${root.block.<xsl:value-of select="@name"/>.eclipse.dynamic}</xsl:attribute>
         	  </block>
         	</xsl:for-each>
         	
