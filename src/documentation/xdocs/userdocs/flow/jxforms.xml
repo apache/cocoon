@@ -87,7 +87,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
       // process the form's values:
       if (model.method == "cash") {
           ...
-      } else if (model.method == "credit") {
+      } else if (model.method == "cc") {
           ....
       } 
    </source>
@@ -100,11 +100,11 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <p>The JXForms tags are defined in the following namespace:</p>
  <source>http://apache.org/cocoon/jxforms/1.0</source>
  <p>JXForms supports the following controls:</p>
- <s2 title="form">
- <p>The JXForms <code>&lt;form&gt;</code> element represents the overall form. It also corresponds to a validation <em>phase</em> in your <link href="#Validation">validation</link> rules. It has no direct counterpart in W3C XForms.</p>
+ <anchor id="form"/><s2 title="form">
+ <p>The JXForms <code>&lt;form&gt;</code> element represents one page of the overall form. It also corresponds to a validation <em>phase</em> in your <link href="#Validation">validation</link> rules. It has no direct counterpart in W3C XForms.</p>
  <p>Example:</p>
       <source><![CDATA[
-  <form id="form-feedback" view="userIdentity">
+  <form id="form-feedback" view="userIdentity" action="">
     <label>Personal Information</label>
     <error>
       <violations class="error"/>
@@ -121,13 +121,10 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <ul>
    <li><code>id</code></li>
    <li><code>view</code></li>
+   <li><code>action</code></li>
  </ul>
  <p>
- The <code>id</code> attribute must match the <code>id</code> Sitemap parameter passed to the <link href="#jxForm">jxForm</link> function in <link href="#Sitemap">&lt;map:call&gt;</link>. The <code>view</code> attribute must match the <code>id</code> of a <code>&lt;phase&gt;</code> element in your Schematron <link href="#validation">validation</link> rules.
- </p>
- </s2>
- <s2 title="error">
- <p>The JXForms <code>&lt;error&gt;</code> element has no counterpart in W3C XForms. If present under the <code>form</code> element it serves as a placeholder for validation error messages associated with the entire form.
+ The <code>id</code> attribute must match the <code>id</code> Sitemap parameter passed to the <link href="#jxform">jxform</link> function in <link href="#Sitemap">&lt;map:call&gt;</link>. The <code>view</code> attribute must match the <code>id</code> of a <code>&lt;phase&gt;</code> element in your Schematron <link href="#validation">validation</link> rules. For HTML forms the <code>action</code> attribute specifies the relative URI to which the form will be submitted.
  </p>
  </s2>
  <anchor id="label"/><s2 title="label">
@@ -166,6 +163,13 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <p>JXForms <code>&lt;value&gt;</code> element is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-common-choices-value">value</link> element. This element provides a storage value to be used when an item is selected.</p>
  <p>Example:</p>
       <source><![CDATA[
+          <select1 ref="/option">
+            <label>You only have one option</label>
+            <item>
+              <label>Your only option</label>
+              <value>Some value</value>
+            </item>
+          </select1>
       ]]></source> 
  <p></p>
  </s2>
@@ -174,6 +178,17 @@ intentionally defaulted the JXForms namespace prefix here):</p>
 
  <p>Example:</p>
       <source><![CDATA[
+          <select1 ref="/option">
+            <label>You have two options</label>
+            <item>
+              <label>Your first option</label>
+              <value>Some value</value>
+            </item>
+            <item>
+              <label>Your second option</label>
+              <value>Another value</value>
+            </item>
+          </select1>
       ]]></source> 
  <p></p>
  </s2>
@@ -189,7 +204,7 @@ intentionally defaulted the JXForms namespace prefix here):</p>
  <p></p>
  </s2>
  <anchor id="violation"/><s2 title="violation">
- <p>The JXForms <code>&lt;violation&gt;</code> element has no counterpart in W3C XForms. The JXForms generator inserts a <code>violation</code> element for each validation error that occurs into the corresponding <code>&lt;violations&gt;</code> element.</p>
+ <p>The JXForms <code>&lt;violation&gt;</code> element has no counterpart in W3C XForms. The JXForms generator inserts a <code>violation</code> element for each validation error that occurs into the corresponding <code>&lt;violations&gt;</code> element of a form control.</p>
  <p>Example:</p>
     <p>Assuming you had a Schematron validation rule such as:</p>
       <source><![CDATA[
@@ -277,7 +292,7 @@ Age should be a reasonably big positive number.
    <li><code>class</code></li>
  </ul>
  </s2>
- <s2 title="select">
+ <anchor id="select"/><s2 title="select">
    <p>
     </p>
  <p>JXForms <code>&lt;select&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectMany">select</link> element. </p>
@@ -293,13 +308,18 @@ Age should be a reasonably big positive number.
    <li><code>class</code></li>
  </ul>
  </s2>
- <s2 title="select1">
- <p>JXForms <code>&lt;select&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectOne">select1</link> element. It supports the following attributes:</p>
+ <anchor id="select1"/><s2 title="select1">
+ <p>JXForms <code>&lt;select1&gt;</code> is based on the W3C XForms <link href="http://www.w3.org/TR/xforms/slice8.html#ui-selectOne">select1</link> element. 
+This form control allows the user to make a single selection from multiple choices. It supports the following attributes:</p>
  <ul>
    <li><code>ref</code></li>
    <li><code>appearance</code></li>
    <li><code>class</code></li>
  </ul>
+ <p>Example:</p>
+      <source><![CDATA[
+      ]]></source> 
+ <p></p>
  <p/>
  </s2>
  <s2 title="submit">
@@ -377,12 +397,12 @@ Age should be a reasonably big positive number.
   </source>
   <p>
   </p>
-  <anchor id="jxForm"/><s2 title="jxForm">
+  <anchor id="jxform"/><s2 title="jxform">
       <p> 
-      The entry point from the Cocoon <link href="#Sitemap">Sitemap</link> to your form is the <code>jxForm</code> function:
+      The entry point from the Cocoon <link href="#Sitemap">Sitemap</link> to your form is the <code>jxform</code> function:
       </p>
       <p>
-      <em>Function</em> <code>jxForm([String] functionName, [String] id, [String] validationSchema, [String] validationDocument)</code>
+      <em>Function</em> <code>jxform([String] functionName, [String] id, [String] validationSchema, [String] validationDocument)</code>
       </p>
       <p>
       This function creates a new <code>JXForm</code> object with the provided <code>id</code>, <code>validationSchema</code>, and <code>validationDocument</code>, and then invokes the function identified by <code>functionName</code> to process the form, passing the newly created <code>JXForm</code> object as the argument to the function. Currently, the only supported validation schema is <link href="http://www.ascc.net/xml/resource/schematron/Schematron2000.html">Schematron</link> which is identified by the namespace <code>http://www.ascc.net/xml/schematron</code>. The <code>validationDocument</code> if provided, should be a url that can be resolved by the Cocoon source resolver.
@@ -458,10 +478,10 @@ Age should be a reasonably big positive number.
          src="org.apache.cocoon.generation.JXFormsGenerator"/&gt;
 &lt;/map:generators&gt;
  </source>
- <p>To invoke your form use the Sitemap's <link href="sitemap.html#call">&lt;map:call&gt;</link> operation to invoke the <code>jxForm</code> Flowscript function, for example like this:</p>
+ <p>To invoke your form use the Sitemap's <link href="sitemap.html#call">&lt;map:call&gt;</link> operation to invoke the <code>jxform</code> Flowscript function, for example like this:</p>
 <source><![CDATA[
    <map:match pattern="feedBackWizard">
-     <map:call function="jxForm">
+     <map:call function="jxform">
         <map:parameter name="function" value="{1}"/>
         <map:parameter name="id" value="form-feedback"/>
         <map:parameter name="validator-schema-namespace" 
@@ -473,6 +493,7 @@ Age should be a reasonably big positive number.
 ]]></source>
 
   <p>
+  The required <code>function</code> parameter specifies the name of a JavaScript function that will provide the page flow for your form. The required <code>id</code> attribute must match the value of the <code>id</code> attribute of the <link href="#form">form</link> element of your form. The optional <code>validator-schema-namespace</code> and <code>validator-schema</code> parameters identify the the schema namespace and instance document of your validation rules, if provided. Currently, only the <link href="#Validation">Schematron</link> assertion language is supported.
   </p>
  </s1>  
  <s1 title="Validation"><anchor id="Validation"/>

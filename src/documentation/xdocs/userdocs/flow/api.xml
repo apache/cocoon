@@ -695,7 +695,7 @@
         <em>Function</em> <code>[Boolean] isInfoEnabled()</code>
     </p>
     <p>
-      Returns whether information message logging is enabled
+      Returns whether information message logging is enabled.
     </p>
     </s3>
     </s2>
@@ -710,7 +710,11 @@
     </p>
     <s3 title="id">
     <p><em>Property</em> <code>[String] id</code></p>
-    <p>Returns the unique string identifier of this continuation.</p>
+    <p>Returns the unique string identifier of this Web Continuation.</p>
+    </s3>
+    <s3 title="continuation">
+    <p><em>Property</em> <code>[Continuation] continuation</code></p>
+    <p>Returns the JavaScript continuation associated with this Web Continuation.</p>
     </s3>
     <s3 title="getParent">
     <p>
