@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * @cocoon.sitemap.component.documentation
  * <p>A simple transformer including resolvable sources (accessed through
  * Cocoon's {@link SourceResolver} from its input.</p>
  *
