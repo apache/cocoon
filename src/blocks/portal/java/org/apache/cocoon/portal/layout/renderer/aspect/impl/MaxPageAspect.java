@@ -51,9 +51,9 @@
 package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.aspect.CompositeLayoutStatus;
-import org.apache.cocoon.portal.layout.impl.CompositeLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.xml.sax.ContentHandler;
@@ -64,7 +64,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: MaxPageAspect.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
+ * @version CVS $Id: MaxPageAspect.java,v 1.4 2003/05/19 12:50:59 cziegeler Exp $
  */
 public class MaxPageAspect 
     extends AbstractAspect {

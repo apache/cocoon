@@ -122,6 +122,33 @@
      <renderer name="link" class="org.apache.cocoon.portal.layout.renderer.impl.DefaultLinkRenderer" logger="portal"/>
  </component>
  
+<!-- Layout factory configuration -->
+<component class="org.apache.cocoon.portal.layout.impl.DefaultLayoutFactory"
+           role="org.apache.cocoon.portal.layout.LayoutFactory">
+    <layouts>
+        <layout name="column" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
+                renderer="column">
+        </layout>
+        <layout name="row" 
+                class="org.apache.cocoon.portal.layout.impl.CompositeLayout" 
+                renderer="row">
+        </layout>
+        <layout name="tab" 
+                class="org.apache.cocoon.portal.layout.impl.TabLayout" 
+                renderer="tab">
+        </layout>
+        <layout name="frame" 
+                class="org.apache.cocoon.portal.layout.impl.FrameLayout" 
+                renderer="frame">
+        </layout>
+        <layout name="coplet" 
+                class="org.apache.cocoon.portal.layout.impl.CopletLayout" 
+                renderer="window">
+        </layout>
+    </layouts>
+</component>
+
  <component class="org.apache.cocoon.components.persistance.CastorSourceConverter" role="org.apache.cocoon.components.persistance.CastorSourceConverter">
  	<mapping-source source="layout">context://samples/portal/profiles/mapping/layout.xml</mapping-source>
  	<mapping-source source="copletbasedata">context://samples/portal/profiles/mapping/copletbasedata.xml</mapping-source>

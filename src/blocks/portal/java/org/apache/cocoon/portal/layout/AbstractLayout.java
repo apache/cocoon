@@ -60,7 +60,7 @@ import org.apache.cocoon.portal.aspect.AspectDataHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractLayout.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
+ * @version CVS $Id: AbstractLayout.java,v 1.4 2003/05/19 12:50:59 cziegeler Exp $
  */
 public abstract class AbstractLayout 
     extends AbstractParameters 
@@ -128,15 +128,15 @@ public abstract class AbstractLayout
 	}
     
     public Object getAspectData(String aspectName) {
-        return this.aspectDataHandler.getAspectData(this.getId(), aspectName);
+        return this.aspectDataHandler.getAspectData(this, aspectName);
     }
     
     public void setAspectData(String aspectName, Object data) {
-        this.aspectDataHandler.setAspectData(this.getId(), aspectName, data);
+        this.aspectDataHandler.setAspectData(this, aspectName, data);
     }
     
     public List getAspectDatas() {
-        return this.aspectDataHandler.getAspectDatas(this.getId());
+        return this.aspectDataHandler.getAspectDatas(this);
     }
     
     /**
@@ -158,6 +158,14 @@ public abstract class AbstractLayout
      */
     public void setName(String string) {
         name = string;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.Layout#getLayoutRendererName()
+     */
+    public String getLayoutRendererName() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

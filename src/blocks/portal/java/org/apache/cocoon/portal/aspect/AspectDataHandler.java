@@ -60,13 +60,14 @@ import java.util.List;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AspectDataHandler.java,v 1.1 2003/05/07 20:24:02 cziegeler Exp $
+ * @version CVS $Id: AspectDataHandler.java,v 1.2 2003/05/19 12:51:00 cziegeler Exp $
  */
 public interface AspectDataHandler {
 
-    Object getAspectData(String objectId, String aspectName);
+    Object getAspectData(Aspectalizable owner, String aspectName);
     
-    void setAspectData(String objectId, String aspectName, Object data);
+    void setAspectData(Aspectalizable owner, String aspectName, Object data);
 
-    List getAspectDatas(String objectId);
+    List getAspectDatas(Aspectalizable owner);
+    
 }

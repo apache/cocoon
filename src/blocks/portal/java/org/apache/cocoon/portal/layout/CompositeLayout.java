@@ -48,20 +48,19 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.layout.impl;
+package org.apache.cocoon.portal.layout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.cocoon.portal.layout.AbstractLayout;
-import org.apache.cocoon.portal.layout.Item;
 
 /**
- *
+ * A composite layout is a layout that contains other layouts.
+ * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CompositeLayout.java,v 1.1 2003/05/07 06:22:21 cziegeler Exp $
+ * @version CVS $Id: CompositeLayout.java,v 1.1 2003/05/19 12:50:59 cziegeler Exp $
  */
 public abstract class CompositeLayout extends AbstractLayout {
 

@@ -50,14 +50,13 @@
 */
 package org.apache.cocoon.portal.layout;
 
-import org.apache.cocoon.portal.layout.impl.CompositeLayout;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Item.java,v 1.1 2003/05/07 06:22:24 cziegeler Exp $
+ * @version CVS $Id: Item.java,v 1.2 2003/05/19 12:50:59 cziegeler Exp $
  */
 public class Item extends AbstractParameters {
 	

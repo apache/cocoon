@@ -58,17 +58,25 @@ import org.apache.cocoon.portal.aspect.Aspectalizable;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: Layout.java,v 1.3 2003/05/08 14:01:03 cziegeler Exp $
+ * @version CVS $Id: Layout.java,v 1.4 2003/05/19 12:50:59 cziegeler Exp $
  */
 public interface Layout 
     extends Parameters, Aspectalizable {
 
     /**
      * Get the name of the {@link Renderer} to draw this layout.
+     * If this layout has an own renderer {@link #getLayoutRendererName()}
+     * return this, otherwise the default renderer is returned.
      * @return String The role name
      */
     String getRendererName();
-
+    
+    /** 
+     * Get the name of a custom {@link Renderer} for this layout.
+     * @return String The role name
+     */
+    String getLayoutRendererName();
+    
     /**
      * Get the unique id of this layout object
      * @return String Unique id

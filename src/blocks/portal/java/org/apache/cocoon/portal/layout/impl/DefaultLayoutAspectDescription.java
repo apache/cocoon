@@ -47,19 +47,81 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
+ */
 package org.apache.cocoon.portal.layout.impl;
 
-import org.apache.cocoon.portal.layout.CompositeLayout;
+import org.apache.cocoon.portal.layout.LayoutAspectDescription;
+import org.apache.cocoon.util.ClassUtils;
+
+
 
 /**
- *
- * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
+ * A configured layout aspect
  * 
- * @version CVS $Id: ColumnLayout.java,v 1.2 2003/05/19 12:50:58 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
+ * 
+ * @version CVS $Id: DefaultLayoutAspectDescription.java,v 1.1 2003/05/19 12:50:58 cziegeler Exp $
  */
-public final class ColumnLayout
-	extends CompositeLayout {
+public class DefaultLayoutAspectDescription 
+    implements LayoutAspectDescription {
 
+    protected String name;
+    
+    protected String className;
+    
+    protected String persistence;
+
+    /**
+     * @return
+     */
+    public String getClassName() {
+        return className;
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param string
+     */
+    public void setClassName(String string) {
+        className = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setName(String string) {
+        name = string;
+    }
+
+    /**
+     * @return
+     */
+    public String getPersistence() {
+        return persistence;
+    }
+
+    /**
+     * @param string
+     */
+    public void setPersistence(String string) {
+        persistence = string;
+    }
+
+    /**
+     * Create a new instance
+     */
+    public Object createNewInstance() {
+        // TODO - cache class
+        try {
+            return ClassUtils.loadClass(this.className).newInstance();
+        } catch (Exception ignore) {
+            return null;
+        }
+    }
 }

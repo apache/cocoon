@@ -56,9 +56,9 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
-import org.apache.cocoon.portal.layout.impl.CompositeLayout;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.xml.sax.ContentHandler;
@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCompositeAspect.java,v 1.1 2003/05/07 06:22:22 cziegeler Exp $
+ * @version CVS $Id: AbstractCompositeAspect.java,v 1.2 2003/05/19 12:50:59 cziegeler Exp $
  */
 public abstract class AbstractCompositeAspect
     extends AbstractAspect {

@@ -59,10 +59,10 @@ import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.event.Filter;
 import org.apache.cocoon.portal.event.Subscriber;
 import org.apache.cocoon.portal.event.impl.MaximizeEvent;
+import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
 import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.aspect.MaximizableLayoutStatus;
-import org.apache.cocoon.portal.layout.impl.CompositeLayout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
 import org.apache.cocoon.portal.profile.ProfileManager;
 import org.apache.cocoon.xml.XMLUtils;
@@ -74,7 +74,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: MaximizableAspect.java,v 1.2 2003/05/08 14:01:03 cziegeler Exp $
+ * @version CVS $Id: MaximizableAspect.java,v 1.3 2003/05/19 12:50:59 cziegeler Exp $
  */
 public class MaximizableAspect 
     extends AbstractAspect
