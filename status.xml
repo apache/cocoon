@@ -205,6 +205,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="TC" type="fix" fixes-bug="31545">
+    Throw a more meaningful exception if charset classes are missing
+   </action>
    <action dev="TC" type="fix" fixes-bug="30874">
     Fixes the SQLTransformer not to close the statement twice
    </action>

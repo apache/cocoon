@@ -32,7 +32,7 @@ import java.util.zip.ZipFile;
  * 
  * 
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: CharsetFactory.java,v 1.3 2004/04/30 22:57:22 joerg Exp $
+ * @version CVS $Id$
  */
 public final class CharsetFactory {
 
@@ -61,6 +61,11 @@ public final class CharsetFactory {
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(CHARSET_LOOKUP_CLASS);
+
+        if (url == null) {
+            throw new CharsetFactoryException("Unable to load charsets "
+                    + "because their classes are not present", null);
+        }
 
         if ("jar".equals(url.getProtocol())) {
             this.loadCharsetsFromJar(url);
