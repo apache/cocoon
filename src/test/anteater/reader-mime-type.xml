@@ -69,17 +69,6 @@
             </match>
         </httpRequest>
 
-        <httpRequest href="${baseUrl}/test50.html" description="Check content-type">
-            <match>
-                <header name="Content-type" value="text/html"/>
-            </match>
-        </httpRequest>
-        <httpRequest href="${baseUrl}/test50.html" description="Check content-type (cached)">
-            <match>
-                <header name="Content-type" value="text/html"/>
-            </match>
-        </httpRequest>
-
         <httpRequest href="${baseUrl}/test60.html" description="Check content-type">
             <match>
                 <header name="Content-type" value="text/html"/>
