@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.62 2000-05-01 23:51:41 stefano Exp $
+  $Id: changes.xml,v 1.63 2000-05-02 04:52:40 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,15 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix">
+   Added code to XSLTProcessor to not import request parameters that are not valid XML Qnames.
+  </action>
+  <action dev="DB" type="update">
+   Added column formatting to XSP SQL taglib.
+  </action>
+  <action dev="DB" type="update">
+   Documented all XSP SQL taglib configuration options.
+  </action>
   <action dev="SM" type="update" due-to="Paul Lamb" due-to-email="paul@redfork.com">
    Added ability to recognize Servlet 2.1 container and get cocoon.properties
    as a ServletContext resource. This should ease installation on Tomcat.
@@ -26,7 +35,7 @@
   <action dev="SM" type="add" due-to="Manfred Riem" due-to-email="mriem@win.tue.nl">
    Patched engine creation to allow several instances of Cocoon in the same JVM.
   </action>
-  <action dev="DB" type="add" due-to="Kevin Sonney" due-to-email="kevin@webslingerZ.com">
+  <action dev="DB" type="update" due-to="Kevin Sonney" due-to-email="kevin@webslingerZ.com">
    Added code to XSP SQL library to automatically choose execute update v.s. execute query
   </action>
   <action dev="SM" type="add">
