@@ -79,7 +79,7 @@ import java.util.Enumeration;
  * will not be directly visible in another.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HttpSession.java,v 1.1 2003/03/09 00:09:30 pier Exp $
+ * @version CVS $Id: HttpSession.java,v 1.2 2003/12/23 15:28:32 joerg Exp $
  *
  */
 
@@ -182,7 +182,7 @@ implements Session {
     *                        seconds this session remains open
     *                        between client requests
     *
-    * @see                #setMaxInactiveInterval
+    * @see                #setMaxInactiveInterval(int)
     *
     *
     */

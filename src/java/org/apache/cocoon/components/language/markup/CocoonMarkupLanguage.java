@@ -82,7 +82,7 @@ import java.util.Set;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CocoonMarkupLanguage.java,v 1.2 2003/05/22 13:02:47 vgritsenko Exp $
+ * @version CVS $Id: CocoonMarkupLanguage.java,v 1.3 2003/12/23 15:28:33 joerg Exp $
  */
 public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
 {
@@ -164,8 +164,7 @@ public abstract class CocoonMarkupLanguage extends AbstractMarkupLanguage
      * elements for this purpose.
      *
      * @param location The file path of the dependent file
-     * @see <code>AbstractMarkupLanguage</code>, <code>ServerPagesGenerator</code>
-     *      and <code>AbstractServerPage</code>
+     * @see AbstractMarkupLanguage, ServerPagesGenerator, AbstractServerPage
      */
     protected void addDependency(String location) {
         dependencies.add(location);

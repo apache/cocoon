@@ -59,7 +59,7 @@ import org.apache.cocoon.environment.Cookie;
  *
  * @author <a href="mailto:alex.rudnev@dc.gov">Alex Rudnev</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PortletCookie.java,v 1.2 2003/12/03 13:20:29 vgritsenko Exp $
+ * @version CVS $Id: PortletCookie.java,v 1.3 2003/12/23 15:28:33 joerg Exp $
  */
 public final class PortletCookie implements Cookie {
 
@@ -75,7 +75,7 @@ public final class PortletCookie implements Cookie {
      *
      * @param name                         a <code>String</code> specifying the name of the cookie
      * @param value                        a <code>String</code> specifying the value of the cookie
-     * @see #setValue
+     * @see #setValue(String)
      */
     public void init(String name, String value) {
         if (this.name == null) {
@@ -100,7 +100,7 @@ public final class PortletCookie implements Cookie {
 
     /**
      * @return null
-     * @see #setComment
+     * @see #setComment(String)
      */
     public String getComment() {
         checkState();
@@ -116,7 +116,7 @@ public final class PortletCookie implements Cookie {
 
     /**
      * @return null
-     * @see #setDomain
+     * @see #setDomain(String)
      */
     public String getDomain() {
         checkState();
@@ -132,7 +132,7 @@ public final class PortletCookie implements Cookie {
 
     /**
      * @return Integer.MAX_VALUE
-     * @see #setMaxAge
+     * @see #setMaxAge(int)
      */
     public int getMaxAge() {
         checkState();
@@ -148,7 +148,7 @@ public final class PortletCookie implements Cookie {
 
     /**
      * @return empty string
-     * @see #setPath
+     * @see #setPath(String)
      */
     public String getPath() {
         checkState();
@@ -157,7 +157,7 @@ public final class PortletCookie implements Cookie {
 
     /**
      * This method does nothing
-     * @see #getSecure
+     * @see #getSecure()
      */
     public void setSecure(boolean flag) {
         checkState();
@@ -165,7 +165,7 @@ public final class PortletCookie implements Cookie {
 
     /**
      * @return false
-     * @see #setSecure
+     * @see #setSecure(boolean)
      */
     public boolean getSecure() {
         checkState();
@@ -194,7 +194,7 @@ public final class PortletCookie implements Cookie {
      * on all browsers.
      *
      * @param newValue a <code>String</code> specifying the new value
-     * @see #getValue
+     * @see #getValue()
      * @see Cookie
      */
     public void setValue(String newValue) {
@@ -207,7 +207,7 @@ public final class PortletCookie implements Cookie {
      *
      * @return                        a <code>String</code> containing the cookie's
      *                                present value
-     * @see #setValue
+     * @see #setValue(String)
      * @see Cookie
      */
     public String getValue() {
@@ -220,7 +220,7 @@ public final class PortletCookie implements Cookie {
      * with.
      *
      * @return Always 0
-     * @see #setVersion
+     * @see #setVersion(int)
      */
     public int getVersion() {
         checkState();
@@ -232,7 +232,7 @@ public final class PortletCookie implements Cookie {
      * with. This method does nothing, version 0 is always returned in
      * getVersion
      *
-     * @see #getVersion
+     * @see #getVersion()
      */
     public void setVersion(int v) {
         checkState();

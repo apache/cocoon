@@ -121,7 +121,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.6 2003/10/21 12:39:16 cziegeler Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.7 2003/12/23 15:28:33 joerg Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
@@ -286,7 +286,7 @@ implements Serviceable, Configurable, Recyclable {
     /**
      *  Process the SAX event. A new document is processed. The hook (method)
      *  <code>setupTransforming()</code> is invoked.
-     *  @see org.xml.sax.ContentHandler#startDocument
+     *  @see org.xml.sax.ContentHandler#startDocument()
      */
     public void startDocument()
     throws SAXException {
@@ -305,7 +305,7 @@ implements Serviceable, Configurable, Recyclable {
 
     /**
      *  Process the SAX event. The processing of the document is finished.
-     *  @see org.xml.sax.ContentHandler#endDocument
+     *  @see org.xml.sax.ContentHandler#endDocument()
      */
     public void endDocument()
     throws SAXException {

@@ -71,7 +71,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
- * @version CVS $Id: AbstractMetaModule.java,v 1.5 2003/09/24 21:41:12 cziegeler Exp $
+ * @version CVS $Id: AbstractMetaModule.java,v 1.6 2003/12/23 15:28:33 joerg Exp $
  */
 public abstract class AbstractMetaModule extends AbstractInputModule
     implements Composable, Disposable {
@@ -235,7 +235,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
     /**
      * Get names of available attributes in the specified (usually statically
      * assigned) Input Module.
-     * @see InputModule#getAttributeNames
+     * @see InputModule#getAttributeNames(Configuration, Map)
      */
     protected Iterator getNames(Map objectModel, 
                                 InputModule staticMod, String staticModName, Configuration staticModConf) 
@@ -248,7 +248,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * Get names of available attributes in one of the specified Input Modules
      * (static or dynamic, dynamic preferred).  Dynamic IM may be
      * <code>null</code>.
-     * @see InputModule#getAttributeNames
+     * @see InputModule#getAttributeNames(Configuration, Map)
      */
      protected Iterator getNames(Map objectModel, 
                                 InputModule staticMod, String staticModName, Configuration staticModConf,
@@ -262,7 +262,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
     /**
      * Get an attribute's value from a (usually statically assigned) Input
      * Module.
-     * @see InputModule#getAttribute
+     * @see InputModule#getAttribute(String, Configuration, Map)
      */
      protected Object getValue(String attr, Map objectModel, 
                               InputModule staticMod, String staticModName, Configuration staticModConf)
@@ -276,7 +276,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * Get attribute's value in one of the specified Input Modules 
      * (static or dynamic, dynamic preferred).  Dynamic IM may be
      * <code>null</code>.
-     * @see InputModule#getAttribute
+     * @see InputModule#getAttribute(String, Configuration, Map)
      */
      protected Object getValue(String attr, Map objectModel, 
                               InputModule staticMod, String staticModName, Configuration staticModConf,
@@ -289,7 +289,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
     /**
      * Get an attribute's values from a (usually statically assigned) Input
      * Module.
-     * @see InputModule#getAttributeValues
+     * @see InputModule#getAttributeValues(String, Configuration, Map)
      */
      protected Object[] getValues(String attr, Map objectModel, 
                                  InputModule staticMod, String staticModName, Configuration staticModConf)
@@ -302,7 +302,7 @@ public abstract class AbstractMetaModule extends AbstractInputModule
      * Get attribute's values in one of the specified Input Modules 
      * (static or dynamic, dynamic preferred).  Dynamic IM may be
      * <code>null</code>.
-     * @see InputModule#getAttributeValues
+     * @see InputModule#getAttributeValues(String, Configuration, Map)
      */
      protected Object[] getValues(String attr, Map objectModel, 
                                  InputModule staticMod, String staticModName, Configuration staticModConf,

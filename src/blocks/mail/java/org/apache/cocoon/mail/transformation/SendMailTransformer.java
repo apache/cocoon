@@ -205,7 +205,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </p>
  *
  * @author <a href="mailto:pklassen@s-und-n.de">Peter Klassen</a>
- * @version CVS $Id: SendMailTransformer.java,v 1.7 2003/11/06 08:58:58 cziegeler Exp $
+ * @version CVS $Id: SendMailTransformer.java,v 1.8 2003/12/23 15:28:33 joerg Exp $
  *
  */
 public class SendMailTransformer extends AbstractSAXTransformer
@@ -507,7 +507,7 @@ public class SendMailTransformer extends AbstractSAXTransformer
     }
 
     /**
-     * @see http://java.sun.com/products/javamail/1.3/docs/javadocs/com/sun/mail/smtp/package-summary.html
+     * @link http://java.sun.com/products/javamail/1.3/docs/javadocs/com/sun/mail/smtp/package-summary.html
      * @throws Exception
      */
     private void sendMail(Vector newAddresses, Transport trans)

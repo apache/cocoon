@@ -77,7 +77,7 @@ import java.lang.reflect.Proxy;
  *
  * @author Stefan K&ouml;hler
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AvalonToCocoonSourceInvocationHandler.java,v 1.1 2003/06/03 07:29:19 cziegeler Exp $
+ * @version CVS $Id: AvalonToCocoonSourceInvocationHandler.java,v 1.2 2003/12/23 15:28:33 joerg Exp $
  */
 public class AvalonToCocoonSourceInvocationHandler 
 implements InvocationHandler {
@@ -192,8 +192,6 @@ implements InvocationHandler {
     /**
      * Stream content to a content handler or to an XMLConsumer.
      *
-     * @throws ResourceNotFoundException if file not found or
-     *         HTTP location does not exist.
      * @throws SAXException if failed to parse source document.
      */
     public void toSAX(ContentHandler handler)

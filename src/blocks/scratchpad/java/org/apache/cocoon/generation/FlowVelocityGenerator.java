@@ -87,6 +87,7 @@ import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogSystem;
+import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.util.introspection.Info;
 import org.apache.velocity.util.introspection.UberspectImpl;
 import org.apache.velocity.util.introspection.VelMethod;
@@ -174,7 +175,7 @@ import org.xml.sax.SAXParseException;
  * element. The prefix '&lt;name&gt;.resource.loader.' is
  * automatically added to the property name.</dd>
  *
- * @version CVS $Id: FlowVelocityGenerator.java,v 1.3 2003/09/24 22:34:53 cziegeler Exp $
+ * @version CVS $Id: FlowVelocityGenerator.java,v 1.4 2003/12/23 15:28:32 joerg Exp $
  */
 public class FlowVelocityGenerator extends ServiceableGenerator
         implements Initializable, Configurable, LogSystem {
@@ -653,7 +654,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
          *         'context' property is not set.
          * @throws ClassCastException if the 'context' property is not
          *         of type {@link org.apache.avalon.framework.context.Context}.
-         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#init
+         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#init(ExtendedProperties)
          */
         public void init(ExtendedProperties config) {
             this.resolverContext = (org.apache.avalon.framework.context.Context) config.get("context");
@@ -664,7 +665,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
 
         /**
          * @param systemId the path to the resource
-         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getResourceStream
+         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getResourceStream(String)
          */
         public InputStream getResourceStream(String systemId)
                 throws org.apache.velocity.exception.ResourceNotFoundException {
@@ -678,9 +679,9 @@ public class FlowVelocityGenerator extends ServiceableGenerator
         }
 
         /**
-         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#isSourceModified
+         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#isSourceModified(Resource)
          */
-        public boolean isSourceModified(org.apache.velocity.runtime.resource.Resource resource) {
+        public boolean isSourceModified(Resource resource) {
             long lastModified = 0;
             try {
                 lastModified = resolveSource(resource.getName()).getLastModified();
@@ -693,9 +694,9 @@ public class FlowVelocityGenerator extends ServiceableGenerator
         }
 
         /**
-         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified
+         * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified(Resource)
          */
-        public long getLastModified(org.apache.velocity.runtime.resource.Resource resource) {
+        public long getLastModified(Resource resource) {
             long lastModified = 0;
             try {
                 lastModified = resolveSource(resource.getName()).getLastModified();
@@ -761,7 +762,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
      * from the configuration.
      *
      * @param configuration the class configurations.
-     * @see org.apache.avalon.framework.configuration.Configurable#configure
+     * @see org.apache.avalon.framework.configuration.Configurable#configure(Configuration)
      */
     public void configure(Configuration configuration) throws ConfigurationException {
         this.resolverContext = new DefaultContext();
@@ -834,14 +835,14 @@ public class FlowVelocityGenerator extends ServiceableGenerator
     }
 
     /**
-     * @see org.apache.avalon.framework.activity.Initializable#initialize
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
      */
     public void initialize() throws Exception {
         //this.tmplEngine.init();
     }
 
     /**
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters params)
             throws ProcessingException, SAXException, IOException {
@@ -988,7 +989,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
      * Free up the VelocityContext associated with the pipeline, and
      * release any Source objects resolved by the resource loader.
      *
-     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle
+     * @see org.apache.avalon.excalibur.pool.Recyclable#recycle()
      */
     public void recycle() {
         this.activeFlag = false;
@@ -1009,7 +1010,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
     /**
      * Generate XML data using Velocity template.
      *
-     * @see org.apache.cocoon.generation.Generator#generate
+     * @see org.apache.cocoon.generation.Generator#generate()
      */
     public void generate()
             throws IOException, SAXException, ProcessingException {
@@ -1091,7 +1092,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
     /**
      * This implementation does nothing.
      *
-     * @see org.apache.velocity.runtime.log.LogSystem#init
+     * @see org.apache.velocity.runtime.log.LogSystem#init(RuntimeServices)
      */
     public void init(RuntimeServices rs) throws Exception {
     }
@@ -1099,7 +1100,7 @@ public class FlowVelocityGenerator extends ServiceableGenerator
     /**
      * Pass along Velocity log messages to our configured logger.
      *
-     * @see org.apache.velocity.runtime.log.LogSystem#logVelocityMessage
+     * @see org.apache.velocity.runtime.log.LogSystem#logVelocityMessage(int, String)
      */
     public void logVelocityMessage(int level, String message) {
         switch (level) {

@@ -88,7 +88,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 2002
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2002
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>, February 2003
- * @version CVS $Id: HttpProxyGenerator.java,v 1.5 2003/09/25 20:07:15 tony Exp $
+ * @version CVS $Id: HttpProxyGenerator.java,v 1.6 2003/12/23 15:28:33 joerg Exp $
  */
 public class HttpProxyGenerator extends ServiceableGenerator implements Configurable {
 
@@ -391,7 +391,7 @@ public class HttpProxyGenerator extends ServiceableGenerator implements Configur
      *
      * @param list The <code>ArrayList</code> where the parameter is stored.
      * @param name The parameter name.
-     * @param list The new parameter value.
+     * @param value The new parameter value.
      * @return The same <code>List</code> of <code>NameValuePair</code> elements.
      */
     private ArrayList overrideParams(ArrayList list, String name, String value) {

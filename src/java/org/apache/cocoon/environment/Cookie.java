@@ -86,7 +86,7 @@ package org.apache.cocoon.environment;
  *
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Cookie.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: Cookie.java,v 1.2 2003/12/23 15:28:32 joerg Exp $
  *
  */
 
@@ -102,7 +102,7 @@ public interface Cookie {
      * @param purpose		a <code>String</code> specifying the comment
      *				to display to the user
      *
-     * @see #getComment
+     * @see #getComment()
      *
      */
 
@@ -118,7 +118,7 @@ public interface Cookie {
      * @return			a <code>String</code> containing the comment,
      *				or <code>null</code> if none
      *
-     * @see #setComment
+     * @see #setComment(String)
      *
      */
 
@@ -143,7 +143,7 @@ public interface Cookie {
      *				within which this cookie is visible;
      *				form is according to RFC 2109
      *
-     * @see #getDomain
+     * @see #getDomain()
      *
      */
 
@@ -159,7 +159,7 @@ public interface Cookie {
      *
      * @return			a <code>String</code> containing the domain name
      *
-     * @see #setDomain
+     * @see #setDomain(String)
      *
      */
 
@@ -187,7 +187,7 @@ public interface Cookie {
      *				the cookie
      *
      *
-     * @see #getMaxAge
+     * @see #getMaxAge()
      *
      */
 
@@ -207,7 +207,7 @@ public interface Cookie {
      *				the cookie persists until browser shutdown
      *
      *
-     * @see #setMaxAge
+     * @see #setMaxAge(int)
      *
      */
 
@@ -233,7 +233,7 @@ public interface Cookie {
      * @param uri		a <code>String</code> specifying a path
      *
      *
-     * @see #getPath
+     * @see #getPath()
      *
      */
 
@@ -251,7 +251,7 @@ public interface Cookie {
      * @return		a <code>String</code> specifying a path that contains
      *			a servlet name, for example, <i>/catalog</i>
      *
-     * @see #setPath
+     * @see #setPath(String)
      *
      */
 
@@ -271,7 +271,7 @@ public interface Cookie {
      *			to the server using only when using a secure protocol;
      *			if <code>false</code>, sent on any protocol
      *
-     * @see #getSecure
+     * @see #getSecure()
      *
      */
 
@@ -288,7 +288,7 @@ public interface Cookie {
      * @return		<code>true</code> if the browser can use
      *			any standard protocol; otherwise, <code>false</code>
      *
-     * @see #setSecure
+     * @see #setSecure(boolean)
      *
      */
 
@@ -326,7 +326,7 @@ public interface Cookie {
      * @param newValue		a <code>String</code> specifying the new value
      *
      *
-     * @see #getValue
+     * @see #getValue()
      * @see Cookie
      *
      */
@@ -342,7 +342,7 @@ public interface Cookie {
      * @return			a <code>String</code> containing the cookie's
      *				present value
      *
-     * @see #setValue
+     * @see #setValue(String)
      * @see Cookie
      *
      */
@@ -364,7 +364,7 @@ public interface Cookie {
      *				original Netscape specification; 1
      *				if the cookie complies with RFC 2109
      *
-     * @see #setVersion
+     * @see #setVersion(int)
      *
      */
 
@@ -386,7 +386,7 @@ public interface Cookie {
      *				the original Netscape specification;
      *				1 if the cookie should comply with RFC 2109
      *
-     * @see #getVersion
+     * @see #getVersion()
      *
      */
 

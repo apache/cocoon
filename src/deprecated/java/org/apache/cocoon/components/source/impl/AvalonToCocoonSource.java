@@ -72,7 +72,7 @@ import java.io.InputStream;
  * method.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AvalonToCocoonSource.java,v 1.3 2003/05/16 07:12:29 cziegeler Exp $
+ * @version CVS $Id: AvalonToCocoonSource.java,v 1.4 2003/12/23 15:28:33 joerg Exp $
  */
 public final class AvalonToCocoonSource
     implements ModifiableSource {
@@ -169,8 +169,6 @@ public final class AvalonToCocoonSource
     /**
      * Stream content to a content handler or to an XMLConsumer.
      *
-     * @throws ResourceNotFoundException if file not found or
-     *         HTTP location does not exist.
      * @throws SAXException if failed to parse source document.
      */
     public void toSAX(ContentHandler handler)

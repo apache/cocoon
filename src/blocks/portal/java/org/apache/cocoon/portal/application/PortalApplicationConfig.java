@@ -63,7 +63,7 @@ import org.w3c.dom.Text;
  * 
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: PortalApplicationConfig.java,v 1.3 2003/12/07 13:27:55 cziegeler Exp $
+ * @version CVS $Id: PortalApplicationConfig.java,v 1.4 2003/12/23 15:28:32 joerg Exp $
  */
 public class PortalApplicationConfig {
     /**
@@ -136,7 +136,7 @@ public class PortalApplicationConfig {
     /**
      * Returns true, if configuration element is the expected one.
      * @param 	elem a DOM element, that holds the configuration of one portal application
-     * @param	name the id of the coplet
+     * @param	id the id of the coplet
      */
     private static boolean isCoplet(Element elem, String id) {
         String nameAttr = elem.getAttribute("copletId");

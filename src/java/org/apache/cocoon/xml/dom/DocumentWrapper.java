@@ -78,7 +78,7 @@ import org.xml.sax.SAXException;
  *  like XMLizable and a toString() method.
  *
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: DocumentWrapper.java,v 1.2 2003/08/15 15:55:03 haul Exp $
+ * @version CVS $Id: DocumentWrapper.java,v 1.3 2003/12/23 15:28:33 joerg Exp $
 */
 public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
 
@@ -572,7 +572,6 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
      * When it is defined to be <code>null</code>, setting it has no effect.
      * @exception DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-     * @exception DOMException
      *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
      *   fit in a <code>DOMString</code> variable on the implementation
      *   platform.
@@ -881,7 +880,6 @@ public class DocumentWrapper implements org.w3c.dom.Document, XMLizable {
      * When it is defined to be <code>null</code>, setting it has no effect.
      * @exception DOMException
      *   NO_MODIFICATION_ALLOWED_ERR: Raised when the node is readonly.
-     * @exception DOMException
      *   DOMSTRING_SIZE_ERR: Raised when it would return more characters than
      *   fit in a <code>DOMString</code> variable on the implementation
      *   platform.

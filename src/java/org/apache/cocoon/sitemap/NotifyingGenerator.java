@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:proyal@managingpartners.com">Peter Royal</a>
- * @version CVS $Id: NotifyingGenerator.java,v 1.2 2003/09/05 11:40:41 cziegeler Exp $
+ * @version CVS $Id: NotifyingGenerator.java,v 1.3 2003/12/23 15:28:33 joerg Exp $
  */
 public class NotifyingGenerator extends AbstractGenerator {
     
@@ -92,7 +92,6 @@ public class NotifyingGenerator extends AbstractGenerator {
     /**
      * Generate the notification information in XML format.
      *
-     * @exception  SAXException  Description of problem there is creating the output SAX events.
      * @throws SAXException when there is a problem creating the
      *      output SAX events.
      */

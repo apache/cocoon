@@ -63,7 +63,7 @@ import java.util.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.6 2003/12/21 22:48:56 upayavira Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.7 2003/12/23 15:28:32 joerg Exp $
  */
 
 /*
@@ -310,7 +310,7 @@ public class CommandLineRequest implements Request {
      *                        ID, or <code>null</code> if the request did
      *                        not specify a session ID
      *
-     * @see                #isRequestedSessionIdValid
+     * @see                #isRequestedSessionIdValid()
      */
     public String getRequestedSessionId() {
         return (CommandLineSession.getSession(false) != null) ?
@@ -325,8 +325,8 @@ public class CommandLineRequest implements Request {
      *                                in the current session context;
      *                                <code>false</code> otherwise
      *
-     * @see                        #getRequestedSessionId
-     * @see                        #getSession
+     * @see                        #getRequestedSessionId()
+     * @see                        #getSession()
      */
     public boolean isRequestedSessionIdValid() {
         return (CommandLineSession.getSession(false) != null);
@@ -340,7 +340,7 @@ public class CommandLineRequest implements Request {
      *                                cookie; otherwise, <code>false</code>
      *
      *
-     * @see                        #getSession
+     * @see                        #getSession()
      */
     public boolean isRequestedSessionIdFromCookie() {
         return false;
@@ -355,7 +355,7 @@ public class CommandLineRequest implements Request {
      *                                <code>false</code>
      *
      *
-     * @see                        #getSession
+     * @see                        #getSession()
      */
     public boolean isRequestedSessionIdFromURL() {
         return false;

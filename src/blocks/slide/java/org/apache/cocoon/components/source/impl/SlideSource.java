@@ -115,7 +115,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSource.java,v 1.14 2003/12/22 13:35:06 joerg Exp $
+ * @version CVS $Id: SlideSource.java,v 1.15 2003/12/23 15:28:32 joerg Exp $
  */
 public class SlideSource extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Initializable, Source, ModifiableTraversableSource, 
@@ -158,11 +158,6 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      * @param nat Namespace access token
      * @param scheme Scheme of the source
      * @param path Path of the source.
-     * @param sourcecredential Credential, which should be used.
-     * @param sourcerevision Revision, which should be used.
-     * @param sourcerevisionbranch Branch, which should be used.
-     *
-     * @throws SourceException If Exception occurs during the initialization.
      */
     public SlideSource(NamespaceAccessToken nat, 
                        String scheme, 
@@ -792,7 +787,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     /**
      * Sets a property for a source.
      *
-     * @param sourceproperty Property of the source
+     * @param property Property of the source
      *
      * @throws SourceException If an exception occurs during this operation
      */
@@ -948,7 +943,6 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
      *
      * @return The current revision of the source
      *
-     * @throws SourceException If an exception occurs.
      */
     public String getSourceRevision() {
         if (m_version != null) {
@@ -960,7 +954,7 @@ implements Contextualizable, Serviceable, Initializable, Source, ModifiableTrave
     /**
      * Not implemented.
      * 
-     * @param sourcerevision The revision, which should be used.
+     * @param revision The revision, which should be used.
      *
      * @throws SourceException If an exception occurs.
      */

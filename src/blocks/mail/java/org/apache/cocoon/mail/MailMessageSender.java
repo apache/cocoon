@@ -86,7 +86,7 @@ import javax.mail.internet.MimeMultipart;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @since 2.1
- * @version CVS $Id: MailMessageSender.java,v 1.7 2003/11/15 04:21:30 joerg Exp $
+ * @version CVS $Id: MailMessageSender.java,v 1.8 2003/12/23 15:28:32 joerg Exp $
  */
 public class MailMessageSender {
 
@@ -137,7 +137,7 @@ public class MailMessageSender {
          * @param obj attachment
          * @param type override mime type
          * @param name override attachment name
-         * @param isURL obj is an instance of String and contains a URL
+         * @param isURI obj is an instance of String and contains a URL
          */
         public Attachment(Object obj, String type, String name, boolean isURI) {
             this.obj = obj;
@@ -178,7 +178,7 @@ public class MailMessageSender {
 
         /**
          * Return attachment type. The argument overrides the stored type.
-         * @param name
+         * @param type  attachment type
          * @return stored type or otherwise parameter
          */
         public String getType(String type) {
@@ -428,10 +428,10 @@ public class MailMessageSender {
 
     /** Sets the destination address(es) for the message. The address
      * is in the format, that
-     * {@link javax.mail.internet.InternetAddress#parse} can handle
+     * {@link javax.mail.internet.InternetAddress#parse(String)} can handle
      * (one or more email addresses separated by a commas).
      * @param to the destination address(es)
-     * @see javax.mail.internet.InternetAddress#parse
+     * @see javax.mail.internet.InternetAddress#parse(String)
      */
     public void setTo(String to) {
         if (!("".equals(to) || "null".equals(to))) {
@@ -444,7 +444,7 @@ public class MailMessageSender {
      * {@link javax.mail.internet.InternetAddress#parse} can handle
      * (one or more email addresses separated by a commas).
      * @param cc the address(es), which should receive a carbon copy.
-     * @see javax.mail.internet.InternetAddress#parse
+     * @see javax.mail.internet.InternetAddress#parse(String)
      */
     public void setCc(String cc) {
         if (!("".equals(cc) || "null".equals(cc))) {
@@ -457,7 +457,7 @@ public class MailMessageSender {
      * {@link javax.mail.internet.InternetAddress#parse} can handle
      * (one or more email addresses separated by a commas).
      * @param bcc the address(es), which should receive a black carbon copy.
-     * @see javax.mail.internet.InternetAddress#parse
+     * @see javax.mail.internet.InternetAddress#parse(String)
      */
     public void setBcc(String bcc) {
         if (!("".equals(bcc) || "null".equals(bcc))) {

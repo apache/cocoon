@@ -61,7 +61,7 @@ import java.util.Map;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: Request.java,v 1.4 2003/07/18 20:53:50 stephan Exp $
+ * @version CVS $Id: Request.java,v 1.5 2003/12/23 15:28:32 joerg Exp $
  *
  */
 
@@ -217,7 +217,7 @@ public interface Request {
      * @return                a <code>String</code> representing the
      *                        single value of the parameter
      *
-     * @see                 #getParameterValues
+     * @see                 #getParameterValues(String)
      *
      */
 
@@ -255,7 +255,7 @@ public interface Request {
      * @return                an array of <code>String</code> objects
      *                        containing the parameter's values
      *
-     * @see                #getParameter
+     * @see                #getParameter(String)
      *
      */
 
@@ -648,7 +648,7 @@ public interface Request {
      *                                otherwise, <code>false</code>
      *
      *
-     * @see                        #getRemoteUser
+     * @see                        #getRemoteUser()
      *
      */
 
@@ -669,7 +669,7 @@ public interface Request {
      *                        ID, or <code>null</code> if the request did
      *                        not specify a session ID
      *
-     * @see                #isRequestedSessionIdValid
+     * @see                #isRequestedSessionIdValid()
      *
      */
 
@@ -797,8 +797,8 @@ public interface Request {
      *                                in the current session context;
      *                                <code>false</code> otherwise
      *
-     * @see                        #getRequestedSessionId
-     * @see                        #getSession
+     * @see                        #getRequestedSessionId()
+     * @see                        #getSession()
      *
      */
 
@@ -813,7 +813,7 @@ public interface Request {
      *                                cookie; otherwise, <code>false</code>
      *
      *
-     * @see                        #getSession
+     * @see                        #getSession()
      *
      */
 
@@ -829,7 +829,7 @@ public interface Request {
      *                                <code>false</code>
      *
      *
-     * @see                        #getSession
+     * @see                        #getSession()
      *
      */
 
