@@ -1,0 +1,27 @@
+                       This is the infamous Cocoon2
+                       ----------------------------
+                       
+Make yourself at home :)
+
+This is a new generation and open source dynamics loves continuum rather than
+jagged steps. So it will be a difficult process to move on, but we need to do
+it.
+
+So, this is more or less a whiteboard at this point where everyone adds its
+own features and tries with new interfaces without compromising anyones job.
+
+But this is so only until we find a solidity around our interfaces and then
+stop writing stuff.
+
+CAREFUL: three anti-patterns should be highly avoided
+
+ - "the 2.0 antipattern": stuff all possible features you can in 2.0
+ - "the golden hammer antipattern": use "xxx" for everything
+ - "the flexibility syndrome": if it isn't symmetrical make it so
+ 
+Let's do things better, but do not try to solve the world's problems with
+Cocoon 2.0, we _will_ have Cocoon 3.0 to start over again :)
+
+ Stefano
+                                           
+  

@@ -1,0 +1,42 @@
+XML Design Patterns
+-------------------
+
+  Written by Stefano Mazzocchi, Scott Boag and James Tauber
+
+This note defines a number of design patterns and their implementation
+as used in the Cocoon2 framework.
+
+Abstract patterns:
+
+      Producer ................... whatever -> memory
+      Filter ..................... memory -> memory
+      Pipe ....................... (Filter)+
+      Consumer ................... memory -> whatever
+      Chain ...................... Producer -> Pipe -> Consumer
+
+Pattern implementations:
+
+      Parser ..................... stream -> API
+      Processor .................. API -> API
+      Serializer ................. API -> stream
+
+      Formatter .................. API -> areas
+      Renderer ................... areas -> (device|stream)
+
+where
+
+      API := (SAX | DOM)
+      areas := memory representation of formatting areas
+      memory := (API | areas)
+      device := (screen | printer)
+
+so that
+
+      A parser is a producer
+      A processor is a filter
+      A serializer is a consumer
+      A (processor + serializer) is a consumer
+
+      A formatter is a filter
+      A renderer is a consumer
+      A (formatter + renderer) is a consumer
