@@ -141,9 +141,9 @@ be built with Cocoon.
        pipeline processing. 
    -->
   <map:generators default="parser">
-   <map:generator type="parser" src="class://org.apache.cocoon.generator.FileGenerator"/>
+   <map:generator type="parser" src="class:///org.apache.cocoon.generator.FileGenerator"/>
    <map:generator type="dir"    src="file:///home/mystuff/java/MyDirGenerator.class"/>
-   <map:generator type="xsp"    src="class://org.apache.cocoon.generators.XSPGenerator">
+   <map:generator type="xsp"    src="class:///org.apache.cocoon.generators.XSPGenerator">
     ...
    </map:generator>
   </map:generators>
@@ -152,10 +152,10 @@ be built with Cocoon.
        Filters transform SAX events in SAX events.
    -->
   <map:filters default="xslt">
-   <map:filter type="xslt" src="class://org.apache.cocoon.filter.XSLTFilter">
+   <map:filter type="xslt" src="class:///org.apache.cocoon.filter.XSLTFilter">
     <compile-stylesheets value="true"/>
    </map:filter>
-   <map:filter type="xinclude" src="class://org.apache.cocoon.filter.XIncludeFilter"/>
+   <map:filter type="xinclude" src="class:///org.apache.cocoon.filter.XIncludeFilter"/>
   </map:filters>
 
    <!-- 
@@ -163,7 +163,7 @@ be built with Cocoon.
        final client consumption.
    -->
   <map:serializers default="html">
-   <map:serializer type="html" mime-type="text/html" src="class://org.apache.cocoon.serializer.HTMLSerializer">
+   <map:serializer type="html" mime-type="text/html" src="class:///org.apache.cocoon.serializer.HTMLSerializer">
     <doctype-public value="-//W3C//DTD HTML 4.0 Transitional//EN"/>
     <doctype-system value="http://www.w3.org/TR/REC-html40/loose.dtd"/>
     <preserve-space value="true"/>
@@ -172,18 +172,18 @@ be built with Cocoon.
     <line-width value="120"/>
    </map:serializer>
 
-   <map:serializer type="wap" mime-type="text/vnd.wap.wml" src="class://org.apache.cocoon.serializer.XMLSerializer">
+   <map:serializer type="wap" mime-type="text/vnd.wap.wml" src="class:///org.apache.cocoon.serializer.XMLSerializer">
     <doctype-public>-//WAPFORUM//DTD WML 1.1//EN</doctype-public>
     <doctype-system>http://www.wapforum.org/DTD/wml_1.1.xml</doctype-system>
     <encoding>UTF-8</encoding>
    </map:serializer>
 
-   <map:serializer type="svg2jpg" mime-type="image/jpg" src="class://org.apache.cocoon.serializer.SVGSerializer">
+   <map:serializer type="svg2jpg" mime-type="image/jpg" src="class:///org.apache.cocoon.serializer.SVGSerializer">
     <format value="jpg"/>
     <compression-level>80%</compression-level>
    </map:serializer>
 
-   <map:serializer type="svg2png" mime-type="image/png" src="class://org.apache.cocoon.serializer.SVGSerializer">
+   <map:serializer type="svg2png" mime-type="image/png" src="class:///org.apache.cocoon.serializer.SVGSerializer">
     <format>png</format>
     <color-depth value="24"/>
    </map:serializer>
@@ -198,15 +198,15 @@ be built with Cocoon.
        Choosers can only respond with true/false when called.
    -->
   <map:choosers default="browser">
-   <map:chooser type="load" src="class://org.apache.cocoon.chooser.MachineLoadChooser">
+   <map:chooser type="load" src="class:///org.apache.cocoon.chooser.MachineLoadChooser">
     ...
    </map:chooser>
 
-   <map:chooser type="user" src="class://org.apache.cocoon.chooser.AuthenticationChooser">
+   <map:chooser type="user" src="class:///org.apache.cocoon.chooser.AuthenticationChooser">
     ...
    </map:chooser>
 
-   <map:chooser type="browser" src="class://org.apache.cocoon.matcher.BrowserChooser">
+   <map:chooser type="browser" src="class:///org.apache.cocoon.matcher.BrowserChooser">
     ...
    </map:chooser>
   </map:choosers>
@@ -218,14 +218,14 @@ be built with Cocoon.
        depending on the matcher own logic (this is up to the matcher implementation).
    -->
   <map:matchers default="uri-wildcard">
-   <map:matcher type="uri-wildcard" src="class://org.apache.cocoon.matcher.WildcardURIMatcher">
-    ...
-   </matcher>
-
-   <map:matcher type="uri-regexp" src="class://org.apache.cocoon.matcher.RegexpURIMatcher">
+   <map:matcher type="uri-wildcard" src="class:///org.apache.cocoon.matcher.WildcardURIMatcher">
     ...
    </map:matcher>
-  </map:matcher>
+
+   <map:matcher type="uri-regexp" src="class:///org.apache.cocoon.matcher.RegexpURIMatcher">
+    ...
+   </map:matcher>
+  </map:matchers>
 
  </map:components>
 
@@ -247,9 +247,9 @@ be built with Cocoon.
  <map:resources>
   
   <map:resource name="Access refused">
-   <map:generator type="parser" src:local="./error-pages/restricted.xml"/>
-   <map:filter type="xslt" src:local="./stylesheets/general-browser.xsl"/>
-   <map:serializer type="html" status-code="401"/>
+   <map:generator src="./error-pages/restricted.xml"/>
+   <map:filter src="./stylesheets/general-browser.xsl"/>
+   <map:serializer status-code="401"/>
   </map:resource>
     
  </map:resources>
@@ -305,8 +305,8 @@ be built with Cocoon.
       one below 
    -->
  <map:match pattern="printer-friendly/*">
-  <map:generate src:local="{1}.xml"/>
-  <map:filter src:local="./stylesheet/printer-friendly.xsl"/>
+  <map:generate src="{1}.xml"/>
+  <map:filter src="./stylesheet/printer-friendly.xsl"/>
   <map:serialize/>
  </map:match>
 
@@ -418,13 +418,13 @@ be built with Cocoon.
  </map:match>
 
  <map:match pattern="*">
-  <map:generate src:local="{1}.xml"/>
+  <map:generate src="{1}.xml"/>
   <map:choose type="load">
    <map:when test="greaterThen('2.5')">
-    <map:filter src"./stylesheet/low-graphics.xsl"/>
+    <map:filter src="./stylesheet/low-graphics.xsl"/>
    </map:when>
    <map:otherwise>
-    <choose>
+    <map:choose>
      <map:when test="is('Mozilla5')">
       <map:filter src="./stylesheet/xul-enabled.xsl"/>
      </map:when>
@@ -439,9 +439,4 @@ be built with Cocoon.
     
 </map:sitemap>
 
-<<<<<<< sitemap-working-draft.xmap
 <!-- end of file -->
-
-=======
-<!-- end of file -->
->>>>>>> 1.1.2.2
