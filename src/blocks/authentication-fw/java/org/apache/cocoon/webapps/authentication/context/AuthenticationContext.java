@@ -56,10 +56,12 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.webapps.authentication.AuthenticationConstants;
+import org.apache.cocoon.webapps.authentication.components.DefaultAuthenticationManager;
 import org.apache.cocoon.webapps.authentication.configuration.ApplicationConfiguration;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
@@ -81,21 +83,28 @@ import org.xml.sax.helpers.AttributesImpl;
  * This is the implementation for the authentication context
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationContext.java,v 1.8 2003/05/23 12:35:32 cziegeler Exp $
+ * @version CVS $Id: AuthenticationContext.java,v 1.9 2003/07/01 19:26:40 cziegeler Exp $
 */
-public final class AuthenticationContext
+public class AuthenticationContext
 implements SessionContext {
 
-    private String          name;
-    private UserHandler     handler;
-    private SessionContext  authContext;
-    private String          handlerName;
-    private boolean        initialized;
+    protected String          name;
+    protected UserHandler     handler;
+    protected SessionContext  authContext;
+    protected String          handlerName;
+    protected boolean        initialized;
+    protected Context         context;
     
-    // FIXME
-    public static ThreadLocal     state = new InheritableThreadLocal();
+    /** Constructor */
+    public AuthenticationContext(Context context) {
+        this.context = context;
+    }
     
-    public AuthenticationContext(UserHandler handler) {
+    /**
+     * Initialize the context. This method has to be called right after
+     * the constructor.
+     */
+    public void init(UserHandler handler) {
         this.name = AuthenticationConstants.SESSION_CONTEXT_NAME;
 
         this.handler = handler;
@@ -107,8 +116,8 @@ implements SessionContext {
         }
     }
     
-    private RequestState getState() {
-        return (RequestState)state.get();
+    protected RequestState getState() {
+        return DefaultAuthenticationManager.getRequestState( this.context );
     }
     
     public void init(Document doc) 
