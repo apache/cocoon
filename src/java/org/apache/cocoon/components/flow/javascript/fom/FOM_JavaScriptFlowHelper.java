@@ -51,33 +51,36 @@
 package org.apache.cocoon.components.flow.javascript.fom;
 
 import org.apache.cocoon.components.flow.FlowHelper;
-import org.mozilla.javascript.Scriptable;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
+
+import org.mozilla.javascript.Scriptable;
+
 import java.util.Map;
 
 /**
- * Provides the interface between the JavaScript flow controller layer and the 
+ * Provides the interface between the JavaScript flow controller layer and the
  * view layer. A view can obtain the JavaScript "live connect" objects (that
  * allow access to Java constructors) through this interface, as well as
  * the FOM objects.
+ *
+ * @version CVS $Id: FOM_JavaScriptFlowHelper.java,v 1.3 2004/01/21 14:38:30 vgritsenko Exp $
  */
-
 public class FOM_JavaScriptFlowHelper extends FlowHelper {
 
     public static final String PACKAGES_OBJECT =
         "cocoon.flow.js.packages";
     public static final String JAVA_PACKAGE_OBJECT =
         "cocoon.flow.js.packages.java";
-    public static final String FOM_REQUEST = 
+    public static final String FOM_REQUEST =
         "cocoon.flow.js.fom.FOM_Request";
-    public static final String FOM_RESPONSE = 
+    public static final String FOM_RESPONSE =
         "cocoon.flow.js.fom.FOM_Response";
-    public static final String FOM_SESSION = 
+    public static final String FOM_SESSION =
         "cocoon.flow.js.fom.FOM_Session";
-    public static final String FOM_CONTEXT = 
+    public static final String FOM_CONTEXT =
         "cocoon.flow.js.fom.FOM_Context";
-    public static final String FOM_WEB_CONTINUATION = 
+    public static final String FOM_WEB_CONTINUATION =
         "cocoon.flow.js.fom.FOM_WebContinuation";
     /**
      * The parent scope to be used by nested scripts (e.g. Woody event handlers)
@@ -85,7 +88,7 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
     public static final String FOM_SCOPE =
         "cocoon.flow.js.fom.FOM_Scope";
 
-    /** 
+    /**
      * Return the JS "Packages" property (that gives access to Java
      * packages) for use by the view layer
      * @param objectModel The Cocoon Environment's object model
@@ -96,7 +99,7 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
         return (Scriptable)request.getAttribute(PACKAGES_OBJECT);
     }
 
-    /** 
+    /**
      * Set the JS "Packages" property in the current request
      * @param objectModel The Cocoon Environment's object model
      */
@@ -105,7 +108,7 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
         request.setAttribute(PACKAGES_OBJECT, pkgs);
     }
 
-    /** 
+    /**
      * Return the JS "java" property (that gives access to the "java"
      * package) for use by the view layer
      * @param objectModel The Cocoon Environment's object model
@@ -116,7 +119,7 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
         return (Scriptable)request.getAttribute(JAVA_PACKAGE_OBJECT);
     }
 
-    /** 
+    /**
      * Set the JS "java" property in the current request
      * @param objectModel The Cocoon Environment's object model
      */
@@ -170,10 +173,9 @@ public class FOM_JavaScriptFlowHelper extends FlowHelper {
         return (Scriptable)request.getAttribute(FOM_WEB_CONTINUATION);
     }
 
-    public static void setFOM_WebContinuation(Map objectModel, 
+    public static void setFOM_WebContinuation(Map objectModel,
                                               Scriptable fom_webContinuation) {
         Request request = ObjectModelHelper.getRequest(objectModel);
         request.setAttribute(FOM_WEB_CONTINUATION, fom_webContinuation);
     }
 }
-
