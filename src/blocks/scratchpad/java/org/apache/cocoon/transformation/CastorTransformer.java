@@ -119,7 +119,7 @@ import java.util.Iterator;
  * @author <a href="mailto:mauch@imkenberg.de">Thorsten Mauch</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
- * @version CVS $Id: CastorTransformer.java,v 1.5 2003/10/11 01:27:09 joerg Exp $
+ * @version CVS $Id: CastorTransformer.java,v 1.6 2003/10/24 08:49:49 cziegeler Exp $
  */
 public class CastorTransformer extends AbstractTransformer implements Configurable {
     private static final String CASTOR_URI = "http://apache.org/cocoon/castor/1.0";
@@ -138,8 +138,6 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
 
     /** The map of namespace prefixes. */
     private Map prefixMap = new HashMap();
-                                                                                                                                                               
-    private boolean in_castor_marshal = false;
                                                                                                                                                                
     private Unmarshaller unmarshaller;
     private UnmarshalHandler unmarshalHandler;
@@ -199,7 +197,6 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
                 unmarshalContentHandler.endElement(uri, name, raw);
             }
         } else if (CASTOR_URI.equals(uri)) {
-            in_castor_marshal = false;
         } else {
             super.endElement(uri,  name,  raw);
         }
@@ -222,7 +219,6 @@ public class CastorTransformer extends AbstractTransformer implements Configurab
 
     private void process (String command, Attributes attr) throws SAXException {
         if (command.equals(CMD_MARSHAL)) {
-            in_castor_marshal = true;
                                                                                                                                                                
             String scope = attr.getValue(ATTRIB_SCOPE);
             String name = attr.getValue(ATTRIB_NAME);
