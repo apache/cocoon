@@ -48,73 +48,32 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.components.modules.input;
+package org.apache.cocoon.portal.acting;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.components.modules.input.InputModule;
+import org.apache.cocoon.acting.ServiceableAction;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.portal.Constants;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.commons.jxpath.JXPathContext;
 
 /**
- * Makes accessible coplet instance data by using JXPath expressions.<br><br>
+ * Using this action, you can set values in a coplet
  *
- * Example:<br><br>
- * 
- * <pre>&lt;map:action type="foo"&gt;
- * 	&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
- * &lt;/map:action&gt;<br></pre>
- * 
- * The module will insert the boolean value specifying whether the coplet is 
- * maxpageable or not as value of attribute "value" in &lt;map:parameter&gt;. 
- * There are two possibilities how the module obtains the information required for 
- * getting the coplet instance data:<br><br>
- * 1) If it is used within a coplet pipeline and this pipeline is called using the "cocoon:" protocol,
- * all required information are passed automatically.<br>
- * 2) Otherwise the portal name and the coplet id must be passed in the object model 
- * which can be done by using the ObjectModelAction:
- *
- * <pre>&lt;map:action type="objectModel"&gt;
- *	&lt;map:parameter name="portalName" value="exampleportal"/&gt;
- *	&lt;map:parameter name="copletId" value="examplecoplet"/&gt;
- *	&lt;map:action type="foo"&gt;
- *		&lt;map:parameter name="maxpageable" value="{coplet:copletData.maxpageable}"/&gt;
- *	&lt;/map:action&gt;
- * &lt;/map:action&gt;</pre>
- *
- * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletModule.java,v 1.6 2003/12/09 10:21:56 cziegeler Exp $
+ * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
+ * @version CVS $Id: CopletSetDataAction.java,v 1.1 2003/12/09 10:21:56 cziegeler Exp $
  */
-public class CopletModule 
-implements InputModule, Serviceable, ThreadSafe {
-    
-    /**
-     * The component manager.
-     */
-    private ServiceManager manager;
-    
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
-     */
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-    }
+public class CopletSetDataAction 
+extends ServiceableAction {
 
-    /**
-     * Overridden from superclass.
-     */
-	public Object getAttribute(String name, Configuration modeConf, Map objectModel) 
-    throws ConfigurationException {
+	public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters) 
+    throws Exception {
         PortalService portalService = null;
         try {
 
@@ -127,46 +86,37 @@ implements InputModule, Serviceable, ThreadSafe {
                 copletId = (String)context.get(Constants.COPLET_ID_KEY);
             } else {
                 copletId = (String)objectModel.get(Constants.COPLET_ID_KEY);
-                
+            
                 // set portal name
                 portalService.setPortalName((String)objectModel.get(Constants.PORTAL_NAME_KEY));
             }
-            
+        
             if (copletId == null) {
                 throw new ConfigurationException("copletId must be passed in the object model either directly (e.g. by using ObjectModelAction) or within the parent context.");
             }
-            
+        
             JXPathContext jxpathContext = JXPathContext.newContext(portalService.getComponentManager().getProfileManager().getCopletInstanceData(copletId));
-            Object value = jxpathContext.getValue(name);
-                
-            if (value == null) {
-                return null;
-                //throw new ConfigurationException("Could not find value for expression "+name);
+            // now traverse parameters:
+            // parameter name is path
+            // parameter value is value
+            // if the value is null or empty, the value is not set!
+            final String[] names = parameters.getNames();
+            if ( names != null ) {
+                for(int i=0; i<names.length; i++) {
+                    final String path = names[i];
+                    final String value = parameters.getParameter(path, null );
+                    if ( value != null && value.trim().length() > 0 ) {
+                        jxpathContext.setValue(path, value);
+                    }
+                }
             }
-                
-            return value.toString();
             
+            return EMPTY_MAP;
+        
         } catch (ServiceException e) {
             throw new ConfigurationException("ComponentException ", e);
         } finally {
             this.manager.release(portalService);
         }
-	}
-
-    /**
-     * Overridden from superclass.
-     */
-	public Iterator getAttributeNames(Configuration modeConf, Map objectModel) {
-        return new Vector().iterator();
-	}
-
-    /**
-     * Overridden from superclass.
-     */
-	public Object[] getAttributeValues(String name, Configuration modeConf, Map objectModel)
-    throws ConfigurationException {
-        Object[] result = new Object[1];
-        result[0] = this.getAttribute(name, modeConf, objectModel);
-        return result;
 	}
 }
