@@ -17,6 +17,7 @@ package org.apache.cocoon.util;
 
 import org.apache.cocoon.environment.Request;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.source.SourceParameters;
 
 import java.io.ByteArrayOutputStream;
@@ -39,7 +40,7 @@ import java.util.StringTokenizer;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.16 2004/06/16 20:00:07 vgritsenko Exp $
+ * @version CVS $Id: NetUtils.java,v 1.17 2004/07/11 17:18:37 antonio Exp $
  */
 public class NetUtils {
 
@@ -481,22 +482,24 @@ public class NetUtils {
         if (uri.indexOf("@") != -1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
             return uri.substring(0, uri.indexOf(":") + 2) + uri.substring(uri.indexOf("@") + 1);
         }
-
         return uri;
     }
-
 
     // FIXME Remove when JDK1.3 support is removed.
     private static Method urlEncode;
     private static Method urlDecode;
 
     static {
-        try {
-            urlEncode = URLEncoder.class.getMethod("encode", new Class[]{String.class, String.class});
-            urlDecode = URLDecoder.class.getMethod("decode", new Class[]{String.class, String.class});
-        } catch (NoSuchMethodException e) {
+        if (SystemUtils.isJavaVersionAtLeast(140)) {
+            try {
+	            urlEncode = URLEncoder.class.getMethod("encode", new Class[]{String.class, String.class});
+	            urlDecode = URLDecoder.class.getMethod("decode", new Class[]{String.class, String.class});
+            } catch (NoSuchMethodException e) {
+            	// EMPTY
+            }
+        } else {
             urlEncode = null;
-            urlDecode = null;
+            urlDecode = null;    
         }
     }
 
@@ -509,6 +512,7 @@ public class NetUtils {
             try {
                 return (String)urlEncode.invoke(s, new Object[]{ s, enc } );
             } catch (IllegalAccessException e) {
+                // EMPTY
             } catch (InvocationTargetException e) {
                 if (e.getTargetException() instanceof UnsupportedEncodingException) {
                     throw (UnsupportedEncodingException)e.getTargetException();
@@ -517,7 +521,6 @@ public class NetUtils {
                 }
             }
         }
-
         return URLEncoder.encode(s);
     }
 
@@ -530,6 +533,7 @@ public class NetUtils {
             try {
                 return (String)urlDecode.invoke(s, new Object[]{ s, enc } );
             } catch (IllegalAccessException e) {
+                // EMPTY
             } catch (InvocationTargetException e) {
                 if (e.getTargetException() instanceof UnsupportedEncodingException) {
                     throw (UnsupportedEncodingException)e.getTargetException();
@@ -538,7 +542,6 @@ public class NetUtils {
                 }
             }
         }
-
         return URLDecoder.decode(s);
     }
 }
