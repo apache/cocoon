@@ -12,3 +12,5 @@ cocoon.sampledata
 *.iws
 mount-table.xml
 db
+tomcat
+tomcat.bat
