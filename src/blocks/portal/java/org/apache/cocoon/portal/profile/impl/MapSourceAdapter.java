@@ -66,6 +66,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.persistance.CastorSourceConverter;
 import org.apache.cocoon.portal.profile.ProfileLS;
+import org.apache.cocoon.portal.util.*;
 import org.apache.cocoon.xml.dom.DOMUtil;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
@@ -79,7 +80,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: MapSourceAdapter.java,v 1.2 2003/05/22 15:19:42 cziegeler Exp $
+ * @version CVS $Id: MapSourceAdapter.java,v 1.3 2003/05/26 14:29:53 cziegeler Exp $
  */
 public class MapSourceAdapter
     extends AbstractLogEnabled
@@ -99,15 +100,23 @@ public class MapSourceAdapter
 
 		Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
 		Object type = map.get("type");
-		String uri = null;
-		if (type == null) {
-			uri = config.getChild(profile+"-load").getAttribute("uri");
-		} else if (type.equals("global")) {
-			uri = config.getChild(profile+"-global-load").getAttribute("uri");
-		} else if (type.equals("role")) {
-			uri = config.getChild(profile+"-role-load").getAttribute("uri");
-		} else if (type.equals("user")) {
-			uri = config.getChild(profile+"-user-load").getAttribute("uri");
+		String uri = null, configKey = null;
+		try {
+			if (type == null) {
+				configKey = profile+"-load";
+				uri = config.getChild(configKey).getAttribute("uri");
+			} else if (type.equals("global")) {
+				configKey = profile+"-global-load";
+				uri = config.getChild(configKey).getAttribute("uri");
+			} else if (type.equals("role")) {
+				configKey = profile+"-role-load";
+				uri = config.getChild(configKey).getAttribute("uri");
+			} else if (type.equals("user")) {
+				configKey = profile+"-user-load";
+				uri = config.getChild(configKey).getAttribute("uri");
+			}
+		} catch (Exception e) {
+			throw new ConfigurationException("Error reading URI from configuration "+configKey, e);
 		}
 		buffer.append(uri);
 
@@ -152,15 +161,23 @@ public class MapSourceAdapter
 
 		Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
 		Object type = map.get("type");
-		String uri = null;
-		if (type == null) {
-			uri = config.getChild(profileName+"-save").getAttribute("uri");
-		} else if (type.equals("global")) {
-			uri = config.getChild(profileName+"-global-save").getAttribute("uri");
-		} else if (type.equals("role")) {
-			uri = config.getChild(profileName+"-role-save").getAttribute("uri");
-		} else if (type.equals("user")) {
-			uri = config.getChild(profileName+"-user-save").getAttribute("uri");
+		String uri = null, configKey = null;
+		try {
+			if (type == null) {
+				configKey = profileName+"-save";
+				uri = config.getChild(configKey).getAttribute("uri");
+			} else if (type.equals("global")) {
+				configKey = profileName+"-global-save";
+				uri = config.getChild(configKey).getAttribute("uri");
+			} else if (type.equals("role")) {
+				configKey = profileName+"-role-save";
+				uri = config.getChild(configKey).getAttribute("uri");
+			} else if (type.equals("user")) {
+				configKey = profileName+"-user-save";
+				uri = config.getChild(configKey).getAttribute("uri");
+			}
+		} catch (Exception e) {
+			throw new ConfigurationException("Error reading URI from configuration "+configKey, e);
 		}
 		buffer.append(uri);
 
@@ -218,15 +235,23 @@ public class MapSourceAdapter
 
 			Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
 			Object type = map.get("type");
-			String uri = null;
-			if (type == null) {
-				uri = config.getChild(profile+"-load").getAttribute("uri");
-			} else if (type.equals("global")) {
-				uri = config.getChild(profile+"-global-load").getAttribute("uri");
-			} else if (type.equals("role")) {
-				uri = config.getChild(profile+"-role-load").getAttribute("uri");
-			} else if (type.equals("user")) {
-				uri = config.getChild(profile+"-user-load").getAttribute("uri");
+			String uri = null, configKey = null;
+			try {
+				if (type == null) {
+					configKey = profile+"-load";
+					uri = config.getChild(configKey).getAttribute("uri");
+				} else if (type.equals("global")) {
+					configKey = profile+"-global-load";
+					uri = config.getChild(configKey).getAttribute("uri");
+				} else if (type.equals("role")) {
+					configKey = profile+"-role-load";
+					uri = config.getChild(configKey).getAttribute("uri");
+				} else if (type.equals("user")) {
+					configKey = profile+"-user-load";
+					uri = config.getChild(configKey).getAttribute("uri");
+				}
+			} catch (Exception e) {
+				throw new ConfigurationException("Error reading URI from configuration "+configKey, e);
 			}
 			buffer.append(uri);
 

@@ -48,55 +48,50 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.profile.impl;
+package org.apache.cocoon.portal.util;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
-import org.apache.cocoon.portal.coplet.CopletData;
 import org.exolab.castor.mapping.FieldHandler;
 
-
 /**
- * Field handler for CopletData instances.
+ * Field handler superclass for external references.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletDataFieldHandler.java,v 1.1 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: ReferenceFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public class CopletDataFieldHandler 
-implements FieldHandler {
+public abstract class ReferenceFieldHandler
+implements FieldHandler
+{
+	/**
+	 * Used to pass resolvable objects to the field handler.
+	 */
+	private static ThreadLocal threadLocalMap = new InheritableThreadLocal();
+	
+	/**
+	 * Gets the map used to pass resolvable objects to the field handler.
+	 */
+	public static Map getObjectMap() {
+		Map map = (Map)threadLocalMap.get();
 
-	public void checkValidity(Object object)
-	{
+		if (map == null) {
+			map = new HashMap();
+			threadLocalMap.set(map);
+		}
+
+		return map;
 	}
 
-	public Object getValue(Object object) 
-	{
-		Map map = ((CopletDataManager)object).getCopletData();
-		Vector result = new Vector(map.size());
-		
-		Iterator iterator = map.values().iterator();
-		while (iterator.hasNext())
-			result.addElement(iterator.next());
-		
-		return result;
-	}
-
-	public Object newInstance(Object parent)
-	{
-		return new CopletData();
-	}
-
-	public void resetValue(Object object)
-	{
-		((CopletDataManager)object).getCopletData().clear();
-	}
-
-	public void setValue(Object object, Object value)
-	{
-		CopletData data = (CopletData)value;
-		((CopletDataManager)object).getCopletData().put(data.getId(), data);
+	/**
+	 * Sets the map used to pass resolvable objects to the field handler.
+	 */
+	public static void setObjectMap(Map objectMap) {
+		if (objectMap == null) {
+			threadLocalMap.set(new HashMap());
+		} else {
+			threadLocalMap.set(objectMap);
+		}
 	}
 }

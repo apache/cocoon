@@ -48,24 +48,25 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.profile.impl;
+package org.apache.cocoon.portal.util;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.coplet.CopletBaseData;
+import org.apache.cocoon.portal.profile.impl.CopletBaseDataManager;
 import org.exolab.castor.mapping.FieldHandler;
 
 
 /**
- * Field handler for CopletInstanceData instances.
+ * Field handler for CopletBaseData instances.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceDataFieldHandler.java,v 1.1 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public class CopletInstanceDataFieldHandler 
+public class CopletBaseDataFieldHandler 
 implements FieldHandler {
 
 	public void checkValidity(Object object)
@@ -74,7 +75,7 @@ implements FieldHandler {
 
 	public Object getValue(Object object) 
 	{
-		Map map = ((CopletInstanceDataManager)object).getCopletInstanceData();
+		Map map = ((CopletBaseDataManager)object).getCopletBaseData();
 		Vector result = new Vector(map.size());
 		
 		Iterator iterator = map.values().iterator();
@@ -86,17 +87,17 @@ implements FieldHandler {
 
 	public Object newInstance(Object parent)
 	{
-		return new CopletInstanceData();
+		return new CopletBaseData();
 	}
 
 	public void resetValue(Object object)
 	{
-		((CopletInstanceDataManager)object).getCopletInstanceData().clear();
+		((CopletBaseDataManager)object).getCopletBaseData().clear();
 	}
 
 	public void setValue(Object object, Object value)
 	{
-		CopletInstanceData data = (CopletInstanceData)value;
-		((CopletInstanceDataManager)object).getCopletInstanceData().put(data.getId(), data);
+		CopletBaseData data = (CopletBaseData)value;
+		((CopletBaseDataManager)object).getCopletBaseData().put(data.getId(), data);
 	}
 }

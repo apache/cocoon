@@ -48,55 +48,57 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.profile.impl;
+package org.apache.cocoon.portal.util;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
-import org.apache.cocoon.portal.coplet.CopletBaseData;
+import org.apache.cocoon.portal.coplet.CopletData;
 import org.exolab.castor.mapping.FieldHandler;
-
+import org.exolab.castor.mapping.MapItem;
 
 /**
- * Field handler for CopletBaseData instances.
+ * Field handler for attributes of a CopletData object.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseDataFieldHandler.java,v 1.1 2003/05/21 13:06:04 cziegeler Exp $
+ * @version CVS $Id: AttributesFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public class CopletBaseDataFieldHandler 
-implements FieldHandler {
-
+public class AttributesFieldHandler
+implements FieldHandler
+{
 	public void checkValidity(Object object)
 	{
 	}
 
 	public Object getValue(Object object) 
 	{
-		Map map = ((CopletBaseDataManager)object).getCopletBaseData();
-		Vector result = new Vector(map.size());
-		
-		Iterator iterator = map.values().iterator();
-		while (iterator.hasNext())
-			result.addElement(iterator.next());
-		
-		return result;
+		HashMap map = new HashMap();
+		Iterator iterator = ((CopletData)object).getAttributes().entrySet().iterator();
+		Map.Entry entry;
+		Object key;
+		while (iterator.hasNext()) {
+			entry = (Map.Entry)iterator.next();
+			key = entry.getKey();
+			map.put(key, new MapItem(key, entry.getValue()));
+		}
+		return map;
 	}
 
 	public Object newInstance(Object parent)
 	{
-		return new CopletBaseData();
+		return new MapItem();
 	}
 
 	public void resetValue(Object object)
 	{
-		((CopletBaseDataManager)object).getCopletBaseData().clear();
+		((CopletData)object).getAttributes().clear();
 	}
 
 	public void setValue(Object object, Object value)
 	{
-		CopletBaseData data = (CopletBaseData)value;
-		((CopletBaseDataManager)object).getCopletBaseData().put(data.getId(), data);
+		MapItem item = (MapItem)value;
+		((CopletData)object).setAttribute((String)item.getKey(), item.getValue());
 	}
 }

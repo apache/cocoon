@@ -48,50 +48,45 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.profile.impl;
+package org.apache.cocoon.portal.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.exolab.castor.mapping.FieldHandler;
+import org.apache.cocoon.portal.coplet.CopletInstanceData;
+import org.apache.cocoon.portal.layout.impl.CopletLayout;
 
 /**
- * Field handler superclass for external references.
+ * Field handler for external CopletInstanceData references.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: ReferenceFieldHandler.java,v 1.1 2003/05/19 09:14:09 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceDataReferenceFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public abstract class ReferenceFieldHandler
-implements FieldHandler
-{
-	/**
-	 * Used to pass resolvable objects to the field handler.
-	 */
-	private static ThreadLocal threadLocalMap = new InheritableThreadLocal();
-	
-	/**
-	 * Gets the map used to pass resolvable objects to the field handler.
-	 */
-	public static Map getObjectMap() {
-		Map map = (Map)threadLocalMap.get();
+public class CopletInstanceDataReferenceFieldHandler
+extends ReferenceFieldHandler {
 
-		if (map == null) {
-			map = new HashMap();
-			threadLocalMap.set(map);
-		}
-
-		return map;
+	public void checkValidity(Object object) {
 	}
 
-	/**
-	 * Sets the map used to pass resolvable objects to the field handler.
-	 */
-	public static void setObjectMap(Map objectMap) {
-		if (objectMap == null) {
-			threadLocalMap.set(new HashMap());
+	public Object getValue(Object object) {
+		CopletInstanceData copletInstanceData = ((CopletLayout)object).getCopletInstanceData();
+		if (copletInstanceData != null) {
+			return copletInstanceData.getId();
 		} else {
-			threadLocalMap.set(objectMap);
+			return null;
 		}
+	}
+
+	public Object newInstance(Object parent) {
+		return new CopletInstanceData();
+	}
+
+	public void resetValue(Object object) {
+		((CopletLayout)object).setCopletInstanceData(null);
+	}
+
+	public void setValue(Object object, Object value) {
+		CopletInstanceData copletInstanceData = (CopletInstanceData)getObjectMap().get(value);
+		if (copletInstanceData == null)
+			throw new IllegalArgumentException("Referenced Coplet Instance Data "+value+" does not exist.");
+		((CopletLayout)object).setCopletInstanceData(copletInstanceData);
 	}
 }

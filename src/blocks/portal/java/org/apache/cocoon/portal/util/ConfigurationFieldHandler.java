@@ -48,49 +48,57 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.profile.impl;
+package org.apache.cocoon.portal.util;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.cocoon.portal.coplet.CopletBaseData;
-import org.apache.cocoon.portal.coplet.CopletData;
-
+import org.exolab.castor.mapping.FieldHandler;
+import org.exolab.castor.mapping.MapItem;
 
 /**
- * Field handler for external CopletBaseData references.
+ * Field handler for attributes of a CopletBaseData object.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.2 2003/05/20 14:32:36 cziegeler Exp $
+ * @version CVS $Id: ConfigurationFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public class CopletBaseDataReferenceFieldHandler 
-extends ReferenceFieldHandler {
-
+public class ConfigurationFieldHandler
+implements FieldHandler
+{
 	public void checkValidity(Object object)
 	{
 	}
 
 	public Object getValue(Object object) 
 	{
-		CopletBaseData copletBaseData = ((CopletData)object).getCopletBaseData();
-		if (copletBaseData != null) {
-			return copletBaseData.getId();
-		} else {
-			return null;
+		HashMap map = new HashMap();
+		Iterator iterator = ((CopletBaseData)object).getCopletConfig().entrySet().iterator();
+		Map.Entry entry;
+		Object key;
+		while (iterator.hasNext()) {
+			entry = (Map.Entry)iterator.next();
+			key = entry.getKey();
+			map.put(key, new MapItem(key, entry.getValue()));
 		}
+		return map;
 	}
 
 	public Object newInstance(Object parent)
 	{
-		return new CopletBaseData();
+		return new MapItem();
 	}
 
 	public void resetValue(Object object)
 	{
-		((CopletData)object).setCopletBaseData(null);
+		((CopletBaseData)object).getCopletConfig().clear();
 	}
 
 	public void setValue(Object object, Object value)
 	{
-		CopletBaseData copletBaseData = (CopletBaseData)getObjectMap().get(value);
-		((CopletData)object).setCopletBaseData(copletBaseData);
+		MapItem item = (MapItem)value;
+		((CopletBaseData)object).setCopletConfig((String)item.getKey(), item.getValue());
 	}
 }

@@ -48,24 +48,51 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.portal.aspect.impl;
+package org.apache.cocoon.portal.util;
+
+import org.apache.cocoon.portal.coplet.CopletBaseData;
+import org.apache.cocoon.portal.coplet.CopletData;
 
 
 /**
- * Used by the AspectDataFieldHandler for Castor.
+ * Field handler for external CopletBaseData references.
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: MapItem.java,v 1.1 2003/05/22 15:19:47 cziegeler Exp $
+ * @version CVS $Id: CopletBaseDataReferenceFieldHandler.java,v 1.1 2003/05/26 14:29:52 cziegeler Exp $
  */
-public class MapItem
-extends org.exolab.castor.mapping.MapItem {
+public class CopletBaseDataReferenceFieldHandler 
+extends ReferenceFieldHandler {
 
-	public MapItem() {
-		super();
+	public void checkValidity(Object object)
+	{
 	}
 
-	public MapItem(Object key, Object value) {
-		super(key, value);
+	public Object getValue(Object object) 
+	{
+		CopletBaseData copletBaseData = ((CopletData)object).getCopletBaseData();
+		if (copletBaseData != null) {
+			return copletBaseData.getId();
+		} else {
+			return null;
+		}
+	}
+
+	public Object newInstance(Object parent)
+	{
+		return new CopletBaseData();
+	}
+
+	public void resetValue(Object object)
+	{
+		((CopletData)object).setCopletBaseData(null);
+	}
+
+	public void setValue(Object object, Object value)
+	{
+		CopletBaseData copletBaseData = (CopletBaseData)getObjectMap().get(value);
+		if (copletBaseData == null)
+			throw new IllegalArgumentException("Referenced Coplet Base Data "+value+" does not exist.");
+		((CopletData)object).setCopletBaseData(copletBaseData);
 	}
 }
