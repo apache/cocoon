@@ -48,54 +48,24 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.samples;
+package org.apache.cocoon.woody.datatype;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.cocoon.woody.datatype.Enum;
+import org.apache.cocoon.woody.util.DomHelper;
+import org.w3c.dom.Element;
 
 /**
- * Description of Sex.
- * @version CVS $Id: Sex.java,v 1.3 2003/11/07 22:04:38 ugo Exp $
+ * Description of EnumSelectionListBuilder.
+ * @version CVS $Id: EnumSelectionListBuilder.java,v 1.1 2003/11/07 22:04:38 ugo Exp $
  */
-public class Sex implements Enum {
-
-    public static final Sex MALE = new Sex("M");
-    public static final Sex FEMALE = new Sex("F");
-    private String code;
-
-    private Sex(String code) { this.code = code; }
-
-    public String toString() {
-      // Will probably have some i18n support here
-      switch(code.charAt(0)) {
-          case 'M' : return "male";
-          case 'F' : return "female";
-          default : return "unknown"; // Should never happen
-      }
-    }
-
-    public static Sex fromString(String value, Locale locale) {
-        if (value.equals("male")) return Sex.MALE;
-        if (value.equals("female")) return Sex.FEMALE;
-        return null;
-    }
+public class EnumSelectionListBuilder implements SelectionListBuilder {
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.Enum#convertToString(java.lang.Object, java.util.Locale)
+     * @see org.apache.cocoon.woody.datatype.SelectionListBuilder#build(org.w3c.dom.Element, org.apache.cocoon.woody.datatype.Datatype)
      */
-    public String convertToString(Locale locale) {
-        return toString();
-    }
-    
-    public static Collection listValues() {
-        Collection values = new ArrayList(2);
-        values.add(Sex.FEMALE);
-        values.add(Sex.MALE);
-        return values;
+    public SelectionList build(Element selectionListElement, Datatype datatype)
+        throws Exception {
+        String className = DomHelper.getAttribute(selectionListElement, "class");
+        return new EnumSelectionList(className, datatype);
     }
 
 }
