@@ -73,7 +73,7 @@ import org.apache.cocoon.util.BufferedOutputStream;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentWrapper.java,v 1.8 2003/07/10 13:17:01 cziegeler Exp $
+ * @version CVS $Id: EnvironmentWrapper.java,v 1.9 2003/08/04 03:21:51 joerg Exp $
  */
 public class EnvironmentWrapper 
     extends AbstractEnvironment 
@@ -196,6 +196,7 @@ public class EnvironmentWrapper
 
     /**
      * Get the output stream
+     * @deprecated use {@link #getOutputStream(int)} instead.
      */
     public OutputStream getOutputStream()
     throws IOException {
@@ -204,10 +205,13 @@ public class EnvironmentWrapper
         : this.outputStream;
     }
 
+    /**
+     * Get the output stream
+     */
     public OutputStream getOutputStream(int bufferSize)
     throws IOException {
         return this.outputStream == null
-                ? this.environment.getOutputStream()
+                ? this.environment.getOutputStream(bufferSize)
                 : this.outputStream;
     }
 
