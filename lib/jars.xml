@@ -737,8 +737,10 @@
 
   <file>
     <title>Castor</title>
-    <description>Data binding framework for Java, including Java-to-XML
-     binding, Java-to-SQL persistence.</description>
+    <description>
+      Data binding framework for Java, including Java-to-XML
+      binding, Java-to-SQL persistence.
+    </description>
     <used-by>CastorTransformer and precept</used-by>
     <lib>optional/castor-0.9.5.3-xml.jar</lib>
     <homepage>http://castor.exolab.org/</homepage>
