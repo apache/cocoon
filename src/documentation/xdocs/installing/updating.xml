@@ -15,26 +15,83 @@
 
  <s1 title="Updating Cocoon">
   <p>Please take your time to read this document completely before trying to upgrade from
-     a Cocoon 2.0.x version to 2.1 (or above).</p>
+     a Cocoon 2.0.x installation to 2.1 (or above).</p>
   <p>
    This is a brief discussion of the changes between the latest official release @released.version@
    and the current development version of Apache Cocoon.
    You only need this information if you are updating an existing Cocoon installation, or
    if you want to know what is going on in the development of Cocoon.
   </p>
-  <p>
-   The Cocoon team has developed many Avalon components which are not specific to Cocoon and have
-   been donated to the Avalon Excalibur project and moved out
-   of Cocoon. This has led to some configuration changes which are described
-   in this document.
+  <p>The Cocoon team took great care in making this new version as compatible as
+    possible. However in order to achieve even more flexibility, usability and
+    performance, the internal architecure of Cocoon has been improved. Due to these
+    improvements it has not been possible to be compatible in every little detail. 
+    But if you follow this document closely and follow the instructions listed here, 
+    you should have running an upgraded version very quickly.
   </p>
   <p>
-    The internal architecture of cocoon has also been improved to give more flexibility, usability and performance.
+   The Cocoon team has developed many Avalon components that are not specific to Cocoon 
+   and therefore have been donated to the Avalon Excalibur project and moved out
+   of Cocoon. This has led to some configuration changes which are also described
+   in this document.
   </p>
  </s1>
   <s1 title="Sitemap">
    <p>There are some changes in the sitemap and in the configuration of some components in
      the sitemap.</p>
+   <s2 title="Pipelines configuration in the sitemap">
+     <p>
+      The configuration of the pipelines has moved from cocoon.xconf to the sitemap.
+      To update your installation, you have to remove the "event-pipeline" and "stream-pipeline" section
+      from your cocoon.xconf and add the <code>map:pipes</code> section to the <code>map:components</code> section
+      of your sitemap. You can find the pipelines components definition in the sample
+      main sitemap of Cocoon. Here is an example:
+     </p>
+     <source><![CDATA[
+<map:sitemap>
+ <map:components>
+      ...
+  <map:pipes default="caching">
+   <map:pipe name="caching"
+    src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
+   <map:pipe name="noncaching"
+    src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
+  </map:pipes>
+ </map:components>
+   ...
+</map:sitemap>
+     ]]></source>
+     <p>You can choose these different pipeline implementations
+       in the <code>map:pipeline</code> section by specifying their <code>type</code> attribute:
+     </p>
+     <source><![CDATA[
+<map:sitemap>
+  ...
+ <map:pipelines>
+  <map:pipeline type="noncaching">
+   <map:match pattern="welcome">
+                  ...
+   </map:match>
+            ..
+  </map:pipeline>
+ </map:pipelines>
+</map:sitemap>
+     ]]></source>
+     <p>This is similar to choosing the type of a generator or any other sitemap
+       component. If the type attribute is omitted, the default configuration from the <code>map:components</code>
+       section is used.
+     </p>
+     <p>The SAXConnectors have been removed, so if you upgrade manually you have to remove
+        the <em>sax-connectors</em> configuration from <em>cocoon.xconf</em>.</p>
+     <p>So it's not that bad, despite incompatible changes in the Cocoon code there is
+       little to do to update your Cocoon installation.</p>
+    </s2>
+   <s2 title="Individual configuration of pipelines">
+    <p>The sitemap now provides individual configuration of <code>map:pipeline</code> sections.
+       You can now define one pipeline using caching, another one not using
+      caching at all and a third one using a different caching implementation, for example.
+    </p>
+   </s2>
    <s2 title="FOP Serializer">
     <p>Relative paths in FOP serializer's &lt;user-config&gt; are now resolved relatively
       to the directory that contains the sitemap.</p>
@@ -70,6 +127,13 @@
     This effort has been successful except for
     one change which shouldn't affect anybody (see below).
    </p>
+   <s2 title="Cocoon Configuration (cocoon.xconf)">
+    <p>In order to reflect the new version, the version information in the <em>cocoon.xconf</em>
+       has changed from <em>2.0</em> to <em>2.1</em>.
+    </p>
+    <p>We suggest for updating the <em>cocoon.xconf</em> to start with the new cocoon.xconf and
+       incorporate your changes instead of trying to migrate the old configuration file.</p>
+   </s2>
    <s2 title="Source Resolver">
     <p>The SourceResolver is now an Avalon component
       which can be accessed using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em>.
@@ -161,59 +225,6 @@
        these components have been combined into one: the <em>processing pipeline</em>.
        The <em>SAXConnectors</em>, which were rarely used, have been removed
        to avoid overcomponentization.</p>
-   <s3 title="Individual configuration of pipelines">
-    <p>The sitemap now provides individual configuration of <code>map:pipeline</code> sections.
-       You can now define one pipeline using caching, another one not using
-      caching at all and a third one using a different caching implementation, for example.
-    </p>
-   </s3>
-   <s3 title="Pipelines configuration in the sitemap">
-     <p>
-      The configuration of the pipelines has moved from cocoon.xconf to the sitemap.
-      To update your installation, you have to remove the "event-pipeline" and "stream-pipeline" section
-      from your cocoon.xconf and add the <code>map:pipes</code> section to the <code>map:components</code> section
-      of your sitemap. You can find the pipelines components definition in the sample
-      main sitemap of Cocoon. Here is an example:
-     </p>
-     <source><![CDATA[
-<map:sitemap>
- <map:components>
-      ...
-  <map:pipes default="caching">
-   <map:pipe name="caching"
-    src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"/>
-   <map:pipe name="noncaching"
-    src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline"/>
-  </map:pipes>
- </map:components>
-   ...
-</map:sitemap>
-     ]]></source>
-     <p>You can choose these different pipeline implementations
-       in the <code>map:pipeline</code> section by specifying their <code>type</code> attribute:
-     </p>
-     <source><![CDATA[
-<map:sitemap>
-  ...
- <map:pipelines>
-  <map:pipeline type="noncaching">
-   <map:match pattern="welcome">
-                  ...
-   </map:match>
-            ..
-  </map:pipeline>
- </map:pipelines>
-</map:sitemap>
-     ]]></source>
-     <p>This is similar to choosing the type of a generator or any other sitemap
-       component. If the type attribute is omitted, the default configuration from the <code>map:components</code>
-       section is used.
-     </p>
-     <p>The SAXConnectors have been removed, so if you upgrade manually you have to remove
-        the <em>sax-connectors</em> configuration from <em>cocoon.xconf</em>.</p>
-     <p>So it's not that bad, despite incompatible changes in the Cocoon code there is
-       little to do to update your Cocoon installation.</p>
-    </s3>
    </s2>
    <s2 title="File Upload">
      <p>The class name for file upload has changed from <em>org.apache.cocoon.components.request.multipart.FilePart</em> to
