@@ -65,7 +65,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.87 $ $Date: 2001-04-25 11:34:11 $
+ * @version CVS $Revision: 1.1.4.88 $ $Date: 2001-04-25 15:27:03 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -280,7 +280,7 @@ public class CocoonServlet extends HttpServlet {
         try {
             String logName = getInitParameter("log-name");
             if (logName == null) {
-                logName = "cocoon.log"
+                logName = "cocoon.log";
             }
             final String path = logDir + logName ;
 
