@@ -78,7 +78,7 @@
 			 now?]</li>
 				<li>
 					<code>ComposerGenerator</code> - Can be used as base class if you
-			 want your <code>Generator</code> to be an <link href="avalon.html">Avalon
+			 want your <code>Generator</code> to be an <link href="avalon/avalon.html">Avalon
 		Composable</link>.</li>
 				<li>
 					<code>ServletGenerator</code> - If you want to generate servlets.

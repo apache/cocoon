@@ -13,7 +13,7 @@
   <p>
 The JXTemplate Generator is a page template processor that allows you to inject data from Java and JavaScript objects passed by a Cocoon Flowscript into a Cocoon pipeline. It provides a set of tags (similar to the <link href="http://java.sun.com/products/jsp/jstl/">JSTL</link> core tags) that allow you to iterate over Java collections (and Java or JavaScript arrays) and to test for the presence of optional or alternate bean properties, as well as embedded expressions to specify conditions and to access the properties of objects. The <em>JX</em>Template Generator gets its name from the embedded expression languages it supports, namely <link href="http://jakarta.apache.org/commons/jxpath">Apache <em>JX</em>Path</link> and <link href="http://jakarta.apache.org/commons/jexl">Apache <em>J</em>e<em>X</em>l</link>. 
   </p>
-<p>To use the JXTemplate Generator, add a generator entry to your <link href="../concepts/sitemap.html">sitemap</link> with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXTemplateGenerator</code>, for example like this:</p>
+<p>To use the JXTemplate Generator, add a generator entry to your <link href="../../user/sitemap/preface.html">sitemap</link> with the <code>src</code> attribute set to <code>org.apache.cocoon.generation.JXTemplateGenerator</code>, for example like this:</p>
 <source>
 &lt;map:generators&gt;
   &lt;map:generator label="content,data" 

@@ -24,7 +24,7 @@ A transformer is the central point in a sitemap pipeline. Within a pipeline matc
 In the sitemap file, each transformer has a unique name which is mapped to a java class. One transformer name must be declared as the default transformer. Each transformer may have additional configuration information specified in child elements.
   </p>
   <p>
- For more conceptual information about transformers see <link href="../concepts/sitemap.html">the sitemap</link>.
+ For more conceptual information about transformers see <link href="../../user/sitemap/preface.html">the sitemap</link>.
   </p>
 		 </s1>
 		 <s1 title="The Transformers in Apache Cocoon">
@@ -42,7 +42,6 @@ In the sitemap file, each transformer has a unique name which is mapped to a jav
 				<li><link href="encodeurl-transformer.html">EncodeURL Transformer</link></li>
 				<li><link href="sourcewriting-transformer.html">SourceWriting Transformer</link></li>
                                 <li><link href="augment-transformer.html">Augment Transformer</link></li>
-				<li><link href="xt-transformer.html">XT Transformer</link> (optional)</li>
 				<li><link href="ldap-transformer.html">LDAP Transformer</link> (optional)</li>
         <li><link href="lexer-transformer.html">Lexical Transformer</link> (optional)</li>
         <li><link href="parser-transformer.html">Parser Transformer</link> (optional)</li>
