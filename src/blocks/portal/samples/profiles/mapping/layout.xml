@@ -41,6 +41,9 @@
     <class name="org.apache.cocoon.portal.layout.impl.LinkLayout"
            extends="org.apache.cocoon.portal.layout.AbstractLayout">
         <map-to xml="link-layout" />
+        <field name="layoutKey" type="java.lang.String">
+            <bind-xml name="layout-key" node="attribute" />
+        </field>
         <field name="layoutId" type="java.lang.String">
             <bind-xml name="layout-id" node="attribute" />
         </field>

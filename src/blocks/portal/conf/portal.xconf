@@ -7,13 +7,14 @@
     <aspect name="action-counter" class="org.apache.cocoon.portal.event.aspect.impl.ActionCounterEventAspect"/>
     <aspect name="request-parameter" class="org.apache.cocoon.portal.event.aspect.impl.RequestParameterEventAspect"/>
     <aspect name="frame" class="org.apache.cocoon.portal.event.aspect.impl.FrameEventAspect"/>
-    <aspect name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
+    <aspect name="link"  class="org.apache.cocoon.portal.event.aspect.impl.LinkEventAspect" />    <aspect name="full-screen-coplet" class="org.apache.cocoon.portal.event.aspect.impl.FullScreenCopletEventAspect"/>
  </component>
 
  <component class="org.apache.cocoon.portal.event.impl.DefaultEventManager" logger="portal" role="org.apache.cocoon.portal.event.EventManager">
     <event-aspects>
         <aspect type="action-counter"/>
         <aspect type="frame"/>
+        <aspect type="link"/>
         <aspect type="full-screen-coplet"/>
         <aspect type="request-parameter"/>
     </event-aspects>
@@ -61,6 +62,7 @@
     <aspect name="coplet" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.DefaultCopletAspect"/>
     <aspect name="frame" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.FrameAspect"/>
     <aspect name="xslt" class="org.apache.cocoon.portal.layout.renderer.aspect.impl.XSLTAspect"/>
+    <aspect class="org.apache.cocoon.portal.layout.renderer.aspect.impl.ParameterAspect" name="parameter"/>
  </component>
 
  <!-- Aspect Storage configuration -->
