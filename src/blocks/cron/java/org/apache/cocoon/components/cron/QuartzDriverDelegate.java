@@ -343,8 +343,8 @@ public class QuartzDriverDelegate implements DriverDelegate {
     }
 
     public JobDetail selectJobForTrigger(Connection conn, String triggerName,
-            String groupName) throws SQLException {
-        return delegate.selectJobForTrigger(conn, triggerName, groupName);
+            String groupName, ClassLoadHelper loadHelper) throws SQLException, ClassNotFoundException {
+        return delegate.selectJobForTrigger(conn, triggerName, groupName, loadHelper);
     }
 
     public List selectStatefulJobsOfTriggerGroup(Connection conn,
