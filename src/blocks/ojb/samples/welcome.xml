@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- $Id: welcome.xml,v 1.8 2004/04/03 08:17:42 crossley Exp $-->
+<!-- $Id$-->
 <samples name="OJB Block Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
   <group name="Back">
     <sample name="Back" href="../..">to Cocoon Samples main page</sample>
@@ -56,9 +56,9 @@
     Your feedback is very much welcome on the Cocoon mailing lists.
   </note>
   <sample name="Apache OJB website" href="http://db.apache.org/ojb/">Apache OJB project</sample>
-  <sample name="Using JDO Tutorial" href="http://db.apache.org/ojb/tutorial4.html">How to use OJB with JDO</sample>
-  <sample name="Using ODMG Tutorial" href="http://db.apache.org/ojb/odmg-tutorial.html">How to use ODMG with OJB</sample>
-  <sample name="Using Persistence Broker Tutorial" href="http://db.apache.org/ojb/pb-tutorial.html">How to use the OJB's Persitence Broker</sample>
+  <sample name="Using JDO Tutorial" href="http://db.apache.org/ojb/docu/tutorials/jdo-tutorial.html">How to use OJB with JDO</sample>
+  <sample name="Using ODMG Tutorial" href="http://db.apache.org/ojb/docu/tutorials/odmg-tutorial.html">How to use ODMG with OJB</sample>
+  <sample name="Using Persistence Broker Tutorial" href="http://db.apache.org/ojb/docu/tutorials/pb-tutorial.html">How to use the OJB's Persitence Broker</sample>
  </group>
 
  <group name="Other Links">
@@ -66,7 +66,7 @@
    <sample name="JDO Website" href="http://java.sun.com/products/jdo/">JDO website</sample>
    <sample name="JDO Central" href="http://www.jdocentral.com/">JDO community website</sample>
    <sample name="ODMG Website" href="http://www.odmg.org/">ODMG website</sample>
-   <sample name="JDO Cocoon Wiki Documentation" href="http://wiki.cocoondev.org/Wiki.jsp?page=OJB">
+   <sample name="JDO Cocoon Wiki Documentation" href="http://wiki.apache.org/cocoon/OJBWithJDO">
     Notes of a first experiment using OJB with Cocoon.</sample>
  </group>
 </samples>
