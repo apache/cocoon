@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.11 2003/08/07 08:52:15 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.12 2003/08/11 07:33:08 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -213,12 +213,12 @@ public abstract class AbstractCachingProcessingPipeline
                         || se.getMessage().indexOf("connection abort") > 0) {
                     throw new ConnectionResetException("Connection reset by peer", se);
                 } else {
-                    throw new ProcessingException("Failed to execute reader pipeline.", se);
+                    throw new ProcessingException("Failed to execute pipeline.", se);
                 }
             } catch ( Exception e ) {
                 if (e instanceof ProcessingException)
                     throw (ProcessingException)e;
-                throw new ProcessingException("Error executing reader pipeline.",e);
+                throw new ProcessingException("Error executing pipeline.",e);
             }
         } else {
 
@@ -285,7 +285,7 @@ public abstract class AbstractCachingProcessingPipeline
                         || se.getMessage().indexOf("connection abort") > 0) {
                     throw new ConnectionResetException("Connection reset by peer", se);
                 } else {
-                    throw new ProcessingException("Failed to execute reader pipeline.", se);
+                    throw new ProcessingException("Failed to execute pipeline.", se);
                 }
             } catch ( ProcessingException e ) {
                 throw e;
