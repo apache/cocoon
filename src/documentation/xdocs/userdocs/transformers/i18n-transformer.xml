@@ -254,14 +254,15 @@
                         <li><code><![CDATA[<i18n:number type="percent" value="1.2" />]]></code> will result in localized percent value: %120 for most of the locales.</li>
                     </ul>
                 <p>
-                 If someone from US want to see sales figures from a store in Germany,
-                 the value is formatted with locale="de_DE", e.g.
-                 100,00 &#x20AC;. The decimal and grouping separator than is also in de_DE locale.
-                 This may be leading to some confusion/misunderstanding because
+                 If someone from US want to see sales figures from a store in
+                 Germany, formatted using the german currency, you would need
+                 to use locale="de_DE" to get the currency right, e.g. 100,00
+                 &#x20AC;. The decimal and grouping separator is then also from
+                 the de_DE locale.  This may lead to some confusion because
                  people from US know the "," as thousand separator.
 
-                 There is a attribute called "dec-and-grp-locale", so that the output from
-                 <code><![CDATA[<i18n:number type="currency" locale="de_DE" dec-and-grp-locale="en_US">100</i18n:number>]]></code>
+                 Therefore a "currency" attribute is available, so that the output from
+                 <code><![CDATA[<i18n:number type="currency" locale="en_US" currency="de_DE">100</i18n:number>]]></code>
                  results in 100.00 &#x20AC;
                 </p>
                 <anchor id="i18n_param"/><p>
