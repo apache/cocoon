@@ -2,7 +2,7 @@
 # -----------------------------------------------------------------------------
 # build.sh - Unix Build Script for Apache Cocoon
 #
-# $Id: build.sh,v 1.10.2.19 2000-12-08 17:00:23 dims Exp $
+# $Id: build.sh,v 1.10.2.20 2000-12-19 14:17:39 prussell Exp $
 # -----------------------------------------------------------------------------
 
 # ----- Verify and Set Required Environment Variables -------------------------
@@ -22,7 +22,9 @@ CP=$JAVA_HOME/lib/tools.jar:$ANT_HOME/lib/ant_1_2.jar:./lib/xerces_1_2_3.jar
  
 # ----- Make sure Ant script is executable ------------------------------------
 
-chmod 0755 $ANT_HOME/bin/antRun
+if [ ! -x $ANT_HOME/bin/antRun ] ; then
+	chmod 0755 $ANT_HOME/bin/antRun
+fi
 
 # ----- Execute The Requested Build -------------------------------------------
 
