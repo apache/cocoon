@@ -416,7 +416,10 @@ public class XMLDBTransformer extends AbstractTransformer
                     // Obtain collection for the current operation
                     collection = (xbase != null)? DatabaseManager.getCollection(local_base + "/" + xbase) : this.collection;
 
-                    if ("create".equals(operation)) {
+                    if (collection == null) {
+                        message = "Failed to " + operation + " resource " + this.key + ": Collection " + local_base + "/" + xbase + " not found.";
+                        getLogger().debug(message);
+                    } else if ("create".equals(operation)) {
                         if (key != null && key.endsWith("/")) {
                             try {
                                 // Cut trailing '/'
@@ -490,7 +493,7 @@ public class XMLDBTransformer extends AbstractTransformer
                     message = "Failed to get context collection for the query (base: " + local_base + ", context: " + xbase + "): " + e.errorCode;
                     getLogger().debug(message, e);
                 } finally {
-                    if (xbase != null) {
+                    if (xbase != null && collection != null) {
                         try {
                             collection.close();
                         } catch (XMLDBException ignored) {
