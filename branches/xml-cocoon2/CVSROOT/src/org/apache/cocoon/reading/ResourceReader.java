@@ -28,7 +28,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-12 09:47:47 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-12 09:53:09 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline.
@@ -89,7 +89,7 @@ public class ResourceReader extends AbstractReader {
         is.close();
         res.setContentLength(buffer.length);
         res.setDateHeader("Last-Modified", lastModified);
-        long expires = par.getParameterAsInteger("expires", -1);
+        long expires = parameters.getParameterAsInteger("expires", -1);
         if (expires > 0) {
             res.setDateHeader("Expires", System.currentTimeMillis()+expires);
         }
