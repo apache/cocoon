@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.178 2004/03/02 12:11:45 cziegeler Exp $
+    | CVS $Id: jars.xml,v 1.179 2004/03/02 15:25:29 cziegeler Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -317,16 +317,6 @@
   </file>
 
   <file>
-    <title>LogFactor5</title>
-    <description>
-      LogFactor5 is a graphical logkit browser, distributed as a part of Log4J.
-    </description>
-    <used-by>Cocoon logging</used-by>
-    <lib>optional/logfactor5-1.2.8.jar</lib>
-    <homepage>http://jakarta.apache.org/log4j/docs/lf5/overview.html</homepage>
-  </file>
-
-  <file>
     <title>The XSLT processor</title>
     <description>
       Xalan is an XSLT processor that fully supports the W3C specs.
@@ -555,7 +545,7 @@
     <title>Log4j</title>
     <description>Logging for java</description>
     <used-by>DELI (deli block)</used-by>
-    <lib>deli/lib/log4j-1.2.8.jar</lib>
+    <lib>optional/log4j-1.2.8.jar</lib>
     <homepage>http://jakarta.apache.org/log4j</homepage>
   </file>
 
