@@ -53,6 +53,11 @@ package org.apache.cocoon.xml.dom;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -65,7 +70,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Testcase for DOMStreamer and DOMBuilder.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.3 2003/04/23 06:44:50 stephan Exp $
+ * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.4 2003/04/29 10:45:03 stephan Exp $
  */
 public class DOMBuilderStreamerTestCase extends XMLTestCase {
 
@@ -166,6 +171,55 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
             // nothing
         }
     }*/
+
+    public void testBuilderWithComments() throws Exception {
+        AttributesImpl atts = new AttributesImpl();
+
+        DOMBuilder builder = new DOMBuilder();
+        builder.startDocument();
+        builder.startElement("", "root", "root", atts);
+        builder.comment("abcd".toCharArray(), 0, 4);
+        builder.endElement("", "root", "node");
+        builder.endDocument();
+
+        Document document = XMLUnit.buildControlDocument("<root><!--abcd--></root>");
+
+        assertXMLEqual(document, builder.getDocument());
+    }
+
+    public void testBuilderWithCommentWithinDocType() throws Exception {
+        AttributesImpl atts = new AttributesImpl();
+
+        DOMBuilder builder = new DOMBuilder();
+        builder.startDocument();
+        builder.startDTD("skinconfig", null, null);
+        builder.comment("abcd".toCharArray(), 0, 4);
+        builder.endDTD();
+        builder.startElement("", "root", "root", atts);
+        builder.endElement("", "root", "node");
+        builder.endDocument();
+
+        Document document = XMLUnit.buildControlDocument("<!DOCTYPE skinconfig [<!--abcd-->]><root></root>");
+
+        print(document);
+        print(builder.getDocument());
+
+        assertXMLEqual(document, builder.getDocument());
+    }
+
+    public final void print(Document document) {
+        TransformerFactory factory = (TransformerFactory) TransformerFactory.newInstance();
+        try
+        {
+          javax.xml.transform.Transformer serializer = factory.newTransformer();
+          serializer.transform(new DOMSource(document), new StreamResult(System.out));
+          System.out.println();
+        }
+        catch (TransformerException te)
+        {
+          te.printStackTrace();
+        }
+    }
 
 
     public void testTestFacility() throws Exception {
