@@ -49,7 +49,7 @@ import java.net.MalformedURLException;
  * (as opposed to Cocoon2's standard SAX events)
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-04 21:11:12 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-21 17:38:56 $
  */
 public abstract class AbstractMarkupLanguage
   extends AbstractNamedComponent
@@ -128,9 +128,9 @@ public abstract class AbstractMarkupLanguage
         LanguageDescriptor language = new LanguageDescriptor();
         language.setName(lc.getAttribute("name"));
 
-	Parameters lcp = Parameters.fromConfiguration(lc);
+	      Parameters lcp = Parameters.fromConfiguration(lc);
         String logicsheetLocation =
-	  getRequiredParameter(lcp, "core-logicsheet");
+	        getRequiredParameter(lcp, "core-logicsheet");
 
         URL logicsheetURL = IOUtils.getURL(logicsheetLocation);
         String logicsheetName = logicsheetURL.toExternalForm();
@@ -143,7 +143,7 @@ public abstract class AbstractMarkupLanguage
         Enumeration n = lc.getConfigurations("builtin-logicsheet");
         while (n.hasMoreElements()) {
           Configuration nc = (Configuration) n.nextElement();
-	  Parameters ncp = Parameters.fromConfiguration(nc);
+	        Parameters ncp = Parameters.fromConfiguration(nc);
 
           String namedLogicsheetPrefix = getRequiredParameter(ncp, "prefix");
           String namedLogicsheetUri = getRequiredParameter(ncp, "uri");
@@ -169,7 +169,6 @@ public abstract class AbstractMarkupLanguage
         this.languages.put(language.getName(), language);
       }
     } catch (Exception e) {
-e.printStackTrace();
       throw new ConfigurationException(e.getMessage(), conf);
     }
   }
