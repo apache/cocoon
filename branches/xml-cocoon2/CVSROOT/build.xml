@@ -348,6 +348,17 @@ by the main ones.
   </target>
 
   <!-- =================================================================== -->
+  <!-- Creates a local webapp directly useable as a servlet context        -->
+  <!-- =================================================================== -->
+  <target name="webapp-local" depends="prepare-webapp, prepare-webapp-libs"
+      description="Generates a local webapp directory usable as servlet context for quicker turn around">
+    <!-- delete file="${build.war}/WEB-INF/lib/${name}-${version}.jar"/ -->
+    <copy todir="${build.war}/WEB-INF/classes">
+      <fileset dir="${build.dest}"/>
+    </copy>
+  </target>
+
+  <!-- =================================================================== -->
   <!-- Removes existing uncompressed webapp                                -->
   <!-- =================================================================== -->
   <target name="remove-webapp" if="remove.webapp" description="Removes existing uncompressed webapp">
