@@ -476,7 +476,7 @@
  </xsl:template>
 
  <xsl:template match="anchor">
-   <a name="{@name}"><xsl:comment>anchor</xsl:comment></a>
+   <a name="{@id}"><xsl:comment>anchor</xsl:comment></a>
  </xsl:template>  
 
 <!-- ====================================================================== -->
