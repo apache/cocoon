@@ -1296,6 +1296,7 @@
     <library name="commons-jexl"/>
     <library name="commons-jxpath"/>
 
+    <work nested="build/cocoon-@@DATE@@/blocks/template/dest"/>
     <work nested="build/cocoon-@@DATE@@/blocks/template/test"/>
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
