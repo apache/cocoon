@@ -56,7 +56,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 
-//import org.apache.cocoon.servlet.multipart.MultipartHttpServletRequest;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.Request;
@@ -83,8 +82,12 @@ import javax.mail.internet.AddressException;
  *     be multiple addresses separated with commas.</dd>
  *   <dt>subject</dt>
  *   <dd>the subject line of the email</dd>
+ *   <dt>src</dt>
+ *   <dd>A url specifying the source of the text body of the email</dd>
+ *   <dt>srcMimeType</dt>
+ *   <dd>The optional Mime Type of the  source of the text body of the email if you specified src</dd>
  *   <dt>body</dt>
- *   <dd>the text body of the email</dd>
+ *   <dd>the text body of the email, if src is specified, body will be ignored</dd>
  * </dl>
  *
  * The following optionals parameters can be used:
@@ -135,8 +138,9 @@ import javax.mail.internet.AddressException;
  * @author <a href="mailto:frank.ridderbusch@gmx.de">Frank Ridderbusch</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
  * @author <a href="mailto:balld@apache.org">Donald Ball</a>
+ * @author <a href="mailto:andrzej@chaeron.com">Andrzej Taramina</a>
  * @since 2.1
- * @version CVS $Id: Sendmail.java,v 1.4 2003/10/22 04:44:26 antonio Exp $
+ * @version CVS $Id: Sendmail.java,v 1.5 2003/11/08 17:42:36 haul Exp $
  */
 public class Sendmail extends AbstractAction implements ThreadSafe, Configurable {
     private final static String STATUS = "status";
@@ -154,11 +158,17 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
         smtpHost = conf.getAttribute("smtphost", "127.0.0.1");
 
         if (this.getLogger().isDebugEnabled()) {
-            getLogger().debug("SendmailAction: using " + smtpHost + " as the smtp server");
+            getLogger().debug(
+                "SendmailAction: using " + smtpHost + " as the smtp server");
         }
     }
 
-    public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
+    public Map act(
+        Redirector redirector,
+        SourceResolver resolver,
+        Map objectModel,
+        String source,
+        Parameters parameters)
         throws Exception {
         boolean success = false;
         Map status = null;
@@ -174,7 +184,9 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
                 smtpHost = parameters.getParameter("smtphost", null);
 
                 if (this.getLogger().isDebugEnabled()) {
-                    getLogger().debug("SendmailAction: overriding default smtp server, using " + smtpHost);
+                    getLogger().debug(
+                        "SendmailAction: overriding default smtp server, using "
+                            + smtpHost);
                 }
             }
 
@@ -204,7 +216,13 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
                 mms.setCharset(parameters.getParameter("charset", null));
             }
 
-            if (parameters.isParameter("body")) {
+            if (parameters.isParameter("src")) {
+                mms.setBodyFromSrc(parameters.getParameter("src", null));
+                if (parameters.isParameter("srcMimeType")) {
+                    mms.setBodyFromSrcMimeType(
+                        parameters.getParameter("srcMimeType", null));
+                }
+            } else if (parameters.isParameter("body")) {
                 mms.setBody(parameters.getParameter("body", null));
             }
 
@@ -215,15 +233,16 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
                     String srcName = tz.nextToken();
 
                     if (srcName.indexOf(":") == -1) {
-                        //if (request instanceof MultipartHttpServletRequest) {
-                            Object obj = request.get(srcName);
-                            mms.addAttachment(obj);
-                            if (this.getLogger().isDebugEnabled()) {
-                                getLogger().debug("request-attachment: " + obj);
-                            }
-                        //}
+                        Object obj = request.get(srcName);
+                        mms.addAttachment(obj);
+                        if (this.getLogger().isDebugEnabled()) {
+                            getLogger().debug("request-attachment: " + obj);
+                        }
                     } else {
-                        mms.addAttachmentURL(srcName, null, srcName.substring(srcName.lastIndexOf('/') + 1));
+                        mms.addAttachmentURL(
+                            srcName,
+                            null,
+                            srcName.substring(srcName.lastIndexOf('/') + 1));
                         if (this.getLogger().isDebugEnabled()) {
                             getLogger().debug("sitemap-attachment: " + srcName);
                         }
@@ -242,7 +261,8 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
             status.put(Sendmail.STATUS, "success");
 
         } catch (AddressException ae) {
-            this.getLogger().error("SendmailAction: AddressException: " + ae.getMessage());
+            this.getLogger().error(
+                "SendmailAction: AddressException: " + ae.getMessage());
 
             status = new HashMap(2);
             status.put(Sendmail.STATUS, "user-error");
@@ -250,25 +270,32 @@ public class Sendmail extends AbstractAction implements ThreadSafe, Configurable
 
         } catch (MessagingException me) {
             this.getLogger().error(
-                "SendmailAction: MessagingException: " + "An error occured while sending email.",
+                "SendmailAction: MessagingException: "
+                    + "An error occured while sending email.",
                 me);
 
             // me contains nested exceptions providing insight on the real
             // cause.
             status = new HashMap(2);
             status.put(Sendmail.STATUS, "server-error");
-            status.put(Sendmail.MESSAGE, "An error occured while sending email: " + me.getMessage());
+            status.put(
+                Sendmail.MESSAGE,
+                "An error occured while sending email: " + me.getMessage());
 
         } catch (Exception e) {
-            this.getLogger().error("SendmailAction: An exception was thrown while sending email.", e);
+            this.getLogger().error(
+                "SendmailAction: An exception was thrown while sending email.",
+                e);
 
             status = new HashMap(2);
             status.put(Sendmail.STATUS, "server-error");
             status.put(Sendmail.MESSAGE, "An exception was thrown while sending email.");
 
         } finally {
-            ObjectModelHelper.getRequest(objectModel).setAttribute(Sendmail.REQUEST_ATTRIBUTE, status);
+            ObjectModelHelper.getRequest(objectModel).setAttribute(
+                Sendmail.REQUEST_ATTRIBUTE,
+                status);
         }
-		return (success ? status : null);
+        return (success ? status : null);
     }
 }
