@@ -4,7 +4,7 @@ package javax.mail;
  * Mock class providing the declarations required to compile the Cocoon code when
  * the actual library is not present.
  * 
- * @version CVS $Id: Folder.java,v 1.2 2003/10/17 18:10:31 tony Exp $
+ * @version CVS $Id: Folder.java,v 1.3 2003/11/06 16:23:41 cziegeler Exp $
  */
 public class Folder {
 
@@ -53,7 +53,7 @@ public class Folder {
         throw new NoSuchMethodError("This is a mock object");
     }
     
-    public String getURLName() {
+    public URLName getURLName() {
         throw new NoSuchMethodError("This is a mock object");
     }
     
