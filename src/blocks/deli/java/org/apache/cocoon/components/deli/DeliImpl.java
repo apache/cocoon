@@ -213,7 +213,7 @@ public final class DeliImpl extends AbstractLogEnabled
     /**
      * Stub implementation of Servlet Context
      */
-    public class CocoonServletContext implements ServletContext {
+    public static class CocoonServletContext implements ServletContext {
 
         org.apache.cocoon.environment.Context envContext;
 
@@ -267,7 +267,7 @@ public final class DeliImpl extends AbstractLogEnabled
     /**
      * Stub implementation of HttpServletRequest
      */
-    public class CocoonServletRequest implements HttpServletRequest {
+    public static class CocoonServletRequest implements HttpServletRequest {
         Request request;
 
         public CocoonServletRequest(Request request) {
