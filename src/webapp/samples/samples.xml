@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.22 2003/08/10 11:42:47 reinhard Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.23 2003/08/15 15:57:32 haul Exp $ -->
 
 <samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -61,6 +61,10 @@
    <sample href="xsp/" name="Extensible Server Pages">
      Extensible Server Pages.
    </sample>   
+   <sample href="simpleform/" name="Simple Forms">
+     These examples show a simple way to work with HTML forms. More powerful
+     form solutions can be found in the blocks section. 
+   </sample>
     <sample href="imagereader/" name="Imagereader">
      ImageReader
    </sample> 
