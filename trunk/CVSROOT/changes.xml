@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.204 2001-02-01 21:02:47 greenrd Exp $ 
+  $Id: changes.xml,v 1.205 2001-02-05 18:41:47 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix">
+   Fixed Utils.getLocationResource to use parent ClassLoader instead of System ClassLoader, but
+   fallback to System if resource not found.
+  </action>
   <action dev="RDG" type="fix" due-to="Sebastien Koechlin" due-to-email="skoechlin@ivision.fr">
    Reversed change in 1.8.1 that ignored query string for XSLTProcessor caching
   </action>

@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.23 2001-01-19 00:23:48 greenrd Exp $ --
+/*-- $Id: Utils.java,v 1.24 2001-02-05 18:41:52 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.processor.xsp.XSPUtil;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.23 $ $Date: 2001-01-19 00:23:48 $
+ * @version $Revision: 1.24 $ $Date: 2001-02-05 18:41:52 $
  */
 
 public final class Utils {
@@ -335,8 +335,11 @@ public final class Utils {
         if (location.indexOf("://") < 0) {
             resource = new File(location);
         } else if (location.startsWith("resource://")) {
-            // FIXME (SM): this should _not_ be system resource, but rather a resource of current classloader
-            resource = ClassLoader.getSystemResource(location.substring("resource://".length()));
+            String res = location.substring("resource://".length());
+            resource = getClass ().getClassLoader ().getResource (res);
+            if (resource == null) {
+              resource = ClassLoader.getSystemResource(res);
+            }
         } else {
             resource = new URL(location);
         }
@@ -348,8 +351,6 @@ public final class Utils {
      * Returns the resource pointed by the given location relative to the given request.
      */
     public static final Object getLocationResource(String location, HttpServletRequest request, ServletContext context) throws Exception {
-        Object resource = null;
-        
         if (location.indexOf("://") < 0) {
             if (location.charAt(0) == '/') {
                 // Location is relative to webserver's root
@@ -359,13 +360,8 @@ public final class Utils {
                 String basename = getBasename(request, context);
                 location = basename.substring(0, basename.lastIndexOf('/') + 1) + location;
             }
-            resource = new File(location);
-        } else if (location.startsWith("resource://")) {
-            // FIXME (SM): this should _not_ be system resource, but rather a resource of current classloader
-            resource = ClassLoader.getSystemResource(location.substring("resource://".length()));
-        } else {
-            resource = new URL(location);
-        }
+            return new File(location);
+        } else return getLocationResource (location);
         
         return resource;
     }
