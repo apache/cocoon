@@ -24,4 +24,8 @@
   <message key="validation.numeric.min">Number should be greater than or equal to {0}.</message>
   <message key="validation.numeric.max">Number should be less than or equal to {0}.</message>
 
+  <message key="validation.mod10">Mod 10 check failed.</message>
+
+  <message key="aggregatedfield.split-failed">Content of this field does not match the following regular expression: {0}</message>
+
 </catalogue>
