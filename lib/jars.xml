@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.123 2003/11/19 01:18:58 joerg Exp $
+    | CVS $Id: jars.xml,v 1.124 2003/11/19 03:46:22 crossley Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -533,10 +533,10 @@
     <description>
       Maps URIs to other URIs using the mechanisms defined by
       OASIS Catalog or XML Catalog. Mainly used for DTDs and character
-      entity sets.
+      entity sets, but can be used for other resources too.
     </description>
     <used-by>Cocoon Role entity-resolver</used-by>
-    <lib>core/resolver-20030708.jar</lib>
+    <lib>core/xml-commons-resolver-1.1.jar</lib>
     <homepage>http://xml.apache.org/commons/</homepage>
   </file>
 
