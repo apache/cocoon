@@ -34,9 +34,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet request wrapper for multipart parser.
  *
- * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @author Stefano Mazzocchi
- * @version CVS $Id: MultipartHttpServletRequest.java,v 1.7 2004/03/05 13:02:58 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class MultipartHttpServletRequest implements HttpServletRequest {
 

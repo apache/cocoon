@@ -37,7 +37,7 @@ import org.apache.commons.lang.SystemUtils;
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.17 2004/07/11 17:18:37 antonio Exp $
+ * @version CVS $Id$
  */
 public class NetUtils {
 
@@ -518,7 +518,7 @@ public class NetUtils {
                 }
             }
         }
-        return URLEncoder.encode(s);
+        return URLEncoder.encode(s, "UTF-8");
     }
 
     /**
@@ -539,6 +539,6 @@ public class NetUtils {
                 }
             }
         }
-        return URLDecoder.decode(s);
+        return URLDecoder.decode(s, "UTF-8");
     }
 }
