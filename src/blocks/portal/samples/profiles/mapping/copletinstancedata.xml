@@ -2,6 +2,19 @@
 <mapping>
 	<description>Coplet instance data mapping file</description>
 
+	<class name="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
+    </class>
+
+	<class name="org.apache.cocoon.portal.factory.impl.AbstractProducible"
+	       extends="org.apache.cocoon.portal.aspect.impl.AbstractAspectalizable">
+        <field name="name" type="java.lang.String">
+            <bind-xml name="name" node="attribute" />
+        </field>
+        <field name="id" type="java.lang.String" >
+            <bind-xml name="id" node="attribute" />
+        </field>
+    </class>
+
 	<class name="org.apache.cocoon.portal.profile.impl.CopletInstanceDataManager">
 		<map-to xml="coplets" />
 
@@ -10,12 +23,9 @@
 		</field>
 	</class>
 
-	<class name="org.apache.cocoon.portal.coplet.CopletInstanceData">
+	<class name="org.apache.cocoon.portal.coplet.CopletInstanceData"
+	    extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
 		<map-to xml="coplet-instance-data" />
-
-		<field name="id" type="java.lang.String">
-			<bind-xml name="id" node="attribute" />
-		</field>
 
 		<field name="status" type="java.lang.Integer">
 			<bind-xml name="status"/>

@@ -50,6 +50,8 @@
 */
 package org.apache.cocoon.portal.coplet;
 
+import org.apache.cocoon.portal.factory.impl.AbstractProducible;
+
 
 /**
  *
@@ -57,15 +59,14 @@ package org.apache.cocoon.portal.coplet;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CopletInstanceData.java,v 1.4 2003/05/21 13:06:01 cziegeler Exp $
+ * @version CVS $Id: CopletInstanceData.java,v 1.5 2003/05/21 13:23:59 cziegeler Exp $
  */
-public final class CopletInstanceData {
+public final class CopletInstanceData 
+    extends AbstractProducible {
 
 	public final static int STATUS_MINIMIZED = 0;
 	public final static int STATUS_MAXIMIZED = 1;
 
-    private String copletId;
-    
 	private CopletData copletData;
 
 	protected int status = STATUS_MAXIMIZED;
@@ -74,22 +75,6 @@ public final class CopletInstanceData {
 	 * Constructor
 	 */
 	public CopletInstanceData() {
-	}
-
-	/**
-	 * Returns the copletId.
-	 * @return String
-	 */
-	public String getId() {
-		return copletId;
-	}
-
-	/**
-	 * Sets the copletId.
-	 * @param copletId The copletId to set
-	 */
-	public void setId(String copletId) {
-		this.copletId = copletId;
 	}
 
 	/**
