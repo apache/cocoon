@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.64 2003/06/26 12:10:15 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.65 2003/06/27 23:18:51 joerg Exp $:-->
 <status>
 
   <developers>
@@ -183,6 +183,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="JH" type="fix" fixes-bug="20682" due-to="Wolfgang Kowarschick" due-to-email="kowa@fh-augsburg.de">
+    Fixed return of different DirValidity objects on multiple calls on getValidity() in the DirectoryGenerator.
+  </action>
   <action dev="DC" type="update">
     The DTDs are now completely handled by the catalog entity resolver.
     The old copies of DTDs at xdocs/dtd/ have been removed. If you are
