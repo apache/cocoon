@@ -164,7 +164,7 @@ by the main ones.
     <available property="xt.present" classname="com.jclark.xsl.sax.XMLProcessorImpl">
       <classpath refid="classpath"/>
     </available>
-    <available property="svg.present" classname="org.csiro.svg.dom.SVGDocumentImpl">
+    <available property="svg.present" classname="org.apache.batik.transcoder.TranscoderFactory">
       <classpath refid="classpath"/>
     </available>
     <available property="rhino.present" classname="org.mozilla.javascript.tools.jsc.Main">

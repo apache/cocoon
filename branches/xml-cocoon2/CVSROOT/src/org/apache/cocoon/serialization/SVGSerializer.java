@@ -11,7 +11,6 @@ package org.apache.cocoon.serialization;
 import org.apache.cocoon.*;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.components.image.ImageEncoder;
 import org.apache.cocoon.xml.*;
 import org.apache.cocoon.xml.dom.*;
 import org.apache.avalon.*;
@@ -22,7 +21,16 @@ import org.xml.sax.*;
 import org.xml.sax.ext.*;
 import org.w3c.dom.*;
 import org.w3c.dom.svg.*;
-import org.csiro.svg.dom.SVGDocumentImpl;
+
+import org.apache.batik.refimpl.transcoder.*;
+import org.apache.batik.transcoder.*;
+
+import org.apache.xml.serialize.SerializerFactory;
+import org.apache.xml.serialize.Method;
+import org.apache.xml.serialize.OutputFormat;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class SVGSerializer extends DOMBuilder implements Composer, Serializer, Configurable {
 
@@ -36,16 +44,10 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
     private Environment environment=null;
     /** The current <code>Parameters</code>. */
     private Configuration config=null;
-    /** The source URI associated with the request or <b>null</b>. */
-    private String source=null;
     /** The current <code>OutputStream</code>. */
     private OutputStream output=null;
-    /** The current <code>ImageEncoder</code>. */
-    private ImageEncoder encoder;
-    /** Does the produced image have a transparent background? */
-    private boolean transparent;
-    /** The background colour of this image if not transparent */
-    private Color backgroundColour = null;
+    /** The current <code>mime-type</code>. */
+    private String mimetype = null;
 
     /**
      * Set the <code>OutputStream</code> where the XML should be serialized.
@@ -69,41 +71,8 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
             throw new ConfigurationException("Could not find Parser", e);
         }
 
-        // What image encoder do I use?
-        String enc = this.config.getChild("encoder").getValue();
-
-        try {
-            log.debug("Selecting " + Roles.IMAGE_ENCODER + ": " + enc);
-            ComponentSelector selector = (ComponentSelector) this.manager.lookup(Roles.IMAGE_ENCODER);
-            this.encoder = (ImageEncoder) selector.select(enc);
-        } catch (Exception e) {
-            log.error("Could not select " + Roles.IMAGE_ENCODER, e);
-            throw new ConfigurationException("The ImageEncoder '"
-                + enc + "' cannot be found. Check your component configuration in the sitemap", e);
-        }
-
-        // Configure the encoder
-        if (this.encoder instanceof Configurable) {
-            ((Configurable)this.encoder).configure(conf);
-        }
-
-        // Transparent or a solid colour background?
-        this.transparent = this.config.getChild("transparent").getValueAsBoolean(false);
-
-        if (!transparent) {
-            String bg = this.config.getChild("background").getValue("#FFFFFF").trim();
-
-            if (bg.startsWith("#")) {
-                bg = bg.substring(1);
-            }
-
-            try {
-                this.backgroundColour = new Color(Integer.parseInt(bg, 16));
-            } catch (NumberFormatException e) {
-                log.debug("Invalid color(SVGSerializer)", e);
-                throw new ConfigurationException(bg + " is not a valid color.", e);
-            }
-        }
+        mimetype = this.config.getAttribute("mime-type");
+        log.debug("SVGSerializer mime-type:" + mimetype);
     }
 
     /**
@@ -154,27 +123,42 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
      */
     public void notify(Document doc) throws SAXException {
         try {
-            SVGDocumentImpl svg = new SVGDocumentImpl(doc);
-            SVGSVGElement root = svg.getRootElement();
-            SVGLength width = root.getWidth().getBaseVal();
-            SVGLength height = root.getHeight().getBaseVal();
-            width.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX);
-            height.convertToSpecifiedUnits(SVGLength.SVG_LENGTHTYPE_PX);
-            int w = (int) width.getValue();
-            int h = (int) height.getValue();
-            BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-            // Either leave this image transparent, or fill it with a solid colour
-            Graphics2D gra = img.createGraphics();
-            if (!transparent) {
-                gra.setColor(backgroundColour);
-                gra.fillRect(0, 0, w, h);
-            }
-            svg.draw(gra);
-            encoder.encode(img, this.output);
+            TranscoderFactory transcoderFactory =
+	            ConcreteTranscoderFactory.getTranscoderFactoryImplementation();
+            Transcoder transcoder = 
+                transcoderFactory.createTranscoder(mimetype);
+
+            // TODO: FIXME(DIMS) : Remove hard-coded parser name.
+            transcoder.addTranscodingHint(
+                        TranscodingHints.KEY_XML_PARSER_CLASSNAME,
+		                "org.apache.xerces.parsers.SAXParser");
+
+            // TODO: FIXME(DIMS) - batik is flaky in accepting DOM and don't 
+            // support SAX yet. So we have to create a Byte Array as an input
+            // stream for them.
+            ByteArrayOutputStream bytestream = new ByteArrayOutputStream();
+            BufferedOutputStream ostream = new BufferedOutputStream(bytestream);
+
+            OutputFormat outformat = new OutputFormat();
+            SerializerFactory serializerFactory = 
+                        SerializerFactory.getSerializerFactory(Method.XML);
+            org.apache.xml.serialize.Serializer serializer = 
+                        serializerFactory.makeSerializer(outformat);
+            serializer.setOutputByteStream(ostream);
+            serializer.asDOMSerializer().serialize(doc);
+
+            // Use the Byte Array as the InputSource for the transcoder.
+            InputSource inputSource = new InputSource(new ByteArrayInputStream
+                                                        (bytestream.toByteArray()));
+
+            // TODO: FIXME(DIMS) - Why do they need a SystemId?
+            inputSource.setSystemId("http://xml.apache.org");
+            transcoder.transcodeToStream(inputSource,this.output);
+
             this.output.flush();
-        } catch (IOException ex) {
-            log.warn("SVGSerializer: IOException writing image", ex);
-            throw new SAXException("IOException writing image ", ex);
+        } catch (Exception ex) {
+            log.warn("SVGSerializer: Exception writing image", ex);
+            throw new SAXException("Exception writing image ", ex);
         }
     }
 
@@ -182,6 +166,6 @@ public class SVGSerializer extends DOMBuilder implements Composer, Serializer, C
      * Return the MIME type.
      */
     public String getMimeType() {
-        return encoder.getMimeType();
+        return mimetype;
     }
 }

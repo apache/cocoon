@@ -43,9 +43,8 @@
     <doctype-system>http://www.w3.org/TR/2000/03/WD-SVG-20000303/</doctype-system>
    </map:serializer>
    <map:serializer name="svg2jpeg" mime-type="image/jpeg"     src="org.apache.cocoon.serialization.SVGSerializer">
-    <encoder>jpegencoder</encoder>
-    <transparent>false</transparent>
-    <background>#FFFFFF</background>
+   </map:serializer>
+   <map:serializer name="svg2png" mime-type="image/png"     src="org.apache.cocoon.serialization.SVGSerializer">
    </map:serializer>
   </map:serializers>
 
@@ -207,7 +206,7 @@
 
    <map:match pattern="svg">
     <map:generate src="docs/samples/opac.svg"/>
-    <map:serialize type="svg2jpeg"/>
+    <map:serialize type="svg2png"/>
    </map:match>
 
    <map:match pattern="slides/slides">

@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-12-08 20:40:09 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-03 13:49:00 $
  *
  */
 public class FOPSerializer extends AbstractSerializer implements MessageListener, Poolable {
@@ -57,7 +57,7 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
         this.driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
         this.driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
         this.driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
-        this.driver.setWriter(new PrintWriter(out));
+        this.driver.setOutputStream(out);
         this.setContentHandler(this.driver.getContentHandler());
      }
 
