@@ -128,15 +128,35 @@ public class GroupBasedProfileManager
             if (object instanceof Layout) {
                 service.getComponentManager().getLayoutFactory().prepareLayout((Layout)object);
             } else if (object instanceof Collection) {
-                final CopletFactory copletFactory = service.getComponentManager().getCopletFactory();
-                final Iterator iterator = ((Collection)object).iterator();
-                while (iterator.hasNext()) {
-                    final Object o = iterator.next();
-                    if ( o instanceof CopletData ) {
-                        copletFactory.prepare((CopletData)o);
-                    } else if ( o instanceof CopletInstanceData) {
-                        copletFactory.prepare((CopletInstanceData)o);
+                ServiceSelector adapterSelector = null;
+                try {
+                    final CopletFactory copletFactory = service.getComponentManager().getCopletFactory();
+                    final Iterator iterator = ((Collection)object).iterator();
+                    while (iterator.hasNext()) {
+                        final Object o = iterator.next();
+                        if ( o instanceof CopletData ) {
+                            copletFactory.prepare((CopletData)o);
+                        } else if ( o instanceof CopletInstanceData) {
+                            if ( adapterSelector == null ) {
+                                adapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");                            
+                            }
+                            CopletInstanceData cid = (CopletInstanceData)o;
+                            copletFactory.prepare(cid);
+                            // now invoke login on each instance
+                            CopletAdapter adapter = null;
+                            try {
+                                adapter = (CopletAdapter) adapterSelector.select(cid.getCopletData().getCopletBaseData().getCopletAdapterName());
+                                adapter.login( cid );
+                            } finally {
+                                adapterSelector.release( adapter );
+                            }
+                        }
                     }
+                } catch (ServiceException se) {
+                    // this should never happen
+                    throw new ProcessingException("Unable to get component.", se);
+                } finally {
+                    this.manager.release(adapterSelector);
                 }
             }
         }
