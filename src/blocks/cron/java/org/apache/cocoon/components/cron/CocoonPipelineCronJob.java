@@ -19,12 +19,14 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.parameters.Parameters;
 
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 /**
  * A simple CronJob which calls an internal cocoon:// pipeline.
@@ -41,9 +43,9 @@ import java.io.InputStreamReader;
  * @since 2.1.5
  */
 public class CocoonPipelineCronJob extends ServiceableCronJob
-                                   implements Configurable  {
+                                   implements Configurable, ConfigurableCronJob  {
 
-	private static final String CONFIG_FILE_PARAM = "pipeline";
+	public static final String PIPELINE_PARAM = "pipeline";
 
 	private String pipeline;
 
@@ -84,9 +86,15 @@ public class CocoonPipelineCronJob extends ServiceableCronJob
 	}
 
 	public void configure(final Configuration config) throws ConfigurationException {
-		this.pipeline = config.getChild(CONFIG_FILE_PARAM).getValue(null);
-		if (this.pipeline == null) {
-			throw new ConfigurationException("CocoonPipelineCronJob has no pipeline configured.");
+		this.pipeline = config.getChild(PIPELINE_PARAM).getValue("samples/hello-world/hello.xhtml");
+	}
+
+	/* (non-Javadoc)
+	 * @see org.apache.cocoon.components.cron.ConfigurableCronJob#setup(org.apache.avalon.framework.parameters.Parameters, java.util.Map)
+	 */
+	public void setup(Parameters params, Map objects) {
+		if (null != params) {
+			pipeline = params.getParameter(PIPELINE_PARAM, pipeline);
 		}
 	}
 }
