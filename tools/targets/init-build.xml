@@ -76,6 +76,9 @@
     <condition property="internal.exclude.webapp.samples">
       <istrue value="${exclude.webapp.samples}"/>
     </condition>
+    <condition property="internal.exclude.webapp.test-suite">
+      <istrue value="${exclude.webapp.test-suite}"/>
+    </condition>
 
     <condition property="internal.exclude.deprecated">
       <istrue value="${exclude.deprecated}"/>
