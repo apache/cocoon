@@ -164,6 +164,7 @@
         <map:generate type="traverse" src="{global:staging}{1}">
           <map:parameter name="depth" value="{request-header:Depth}" />
           <map:parameter name="dateFormat" value="EEE, d MMM yyyy HH:mm:ss z" />
+          <map:parameter name="locale" value="en" />
           <map:parameter name="timeZone" value="GMT" />
           <map:parameter name="properties" value="false" />
           <map:parameter name="locks" value="false" />

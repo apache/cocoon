@@ -34,6 +34,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -100,7 +101,7 @@ import java.util.TimeZone;
  *         (SMB GmbH) for Virbus AG
  * @author <a href="d.madama@pro-netics.com">Daniele Madama</a>
  * @author <a href="gianugo@apache.org">Gianugo Rabellino</a>
- * @version CVS $Id: TraversableGenerator.java,v 1.12 2004/03/25 13:21:14 unico Exp $
+ * @version CVS $Id: TraversableGenerator.java,v 1.13 2004/04/04 12:09:02 gcasper Exp $
  */
 public class TraversableGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
 
@@ -190,7 +191,12 @@ public class TraversableGenerator extends ServiceableGenerator implements Cachea
         String dateFormatString = par.getParameter("dateFormat", null);
         this.cacheKeyParList.add(dateFormatString);
         if (dateFormatString != null) {
-            this.dateFormatter = new SimpleDateFormat(dateFormatString);
+            String locale = par.getParameter("locale", null);
+            if (locale != null) {
+                this.dateFormatter = new SimpleDateFormat(dateFormatString, new Locale(locale));
+            } else {
+                this.dateFormatter = new SimpleDateFormat(dateFormatString);
+            }
         } else {
             this.dateFormatter = new SimpleDateFormat();
         }
