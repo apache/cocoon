@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.servlet;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -123,7 +124,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.10 2003/07/31 03:54:22 vgritsenko Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.11 2003/07/31 13:29:54 vgritsenko Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -1113,18 +1114,18 @@ public class CocoonServlet extends HttpServlet {
                                 rse);
                 return;
 
-            } catch ( SocketException se ) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The connection was reset", se);
-                } else if (log.isWarnEnabled()) {
-                    log.warn(se.getMessage());
-                }
-
             } catch (ConnectionResetException cre) {
                 if (log.isDebugEnabled()) {
                     log.debug(cre.getMessage(), cre);
                 } else if (log.isWarnEnabled()) {
                     log.warn(cre.getMessage());
+                }
+
+            } catch ( SocketException se ) {
+                if (log.isDebugEnabled()) {
+                    log.debug(se.getMessage(), se);
+                } else if (log.isWarnEnabled()) {
+                    log.warn(se.getMessage());
                 }
 
             } catch (Exception e) {
