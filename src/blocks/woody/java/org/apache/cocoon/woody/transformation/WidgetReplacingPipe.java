@@ -78,13 +78,20 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.13 2003/11/16 23:01:59 antonio Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.14 2003/11/17 04:27:48 antonio Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
          
+    private static final String REPEATER_SIZE = "repeater-size";
+    private static final String REPEATER_WIDGET_LABEL = "repeater-widget-label";
+    private static final String WIDGET_LABEL = "widget-label";
+    private static final String WIDGET = "widget";
+    private static final String LOCATION = "location";
+    private static final String REPEATER_WIDGET = "repeater-widget";
     private static final String CONTINUATION_ID = "continuation-id";
-    protected static final String FORM_TEMPLATE_EL = "form-template";
-    protected static final String STYLING_EL = "styling";
+    private static final String FORM_TEMPLATE_EL = "form-template";
+    private static final String STYLING_EL = "styling";
+    
     /** Default key under which the woody form is stored in the JXPath context. */
     public static final String WOODY_FORM = "woody-form";
 
@@ -112,13 +119,13 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected WoodyTemplateTransformer pipeContext;
     
     /** Have we encountered a <wi:style> element in a widget ? */
-    protected boolean gotStylingElement = false;
+    protected boolean gotStylingElement;
 
-    public void init(Widget contextWidget, WoodyTemplateTransformer pipeContext) {
-        this.contextWidget = contextWidget;
+    public void init(Widget newContextWidget, WoodyTemplateTransformer newPipeContext) {
+        contextWidget = newContextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;
-        this.pipeContext = pipeContext;
+        pipeContext = newPipeContext;
     }
 
     public void startElement(String namespaceURI, String localName, String qName, Attributes attributes)
@@ -132,7 +139,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             }
             saxBuffer.startElement(namespaceURI, localName, qName, attributes);
         } else if (namespaceURI.equals(Constants.WT_NS)) {
-            if (localName.equals("widget") || localName.equals("repeater-widget")) {
+            if (localName.equals(WIDGET) || localName.equals(REPEATER_WIDGET)) {
 				checkContextWidgetAvailable(qName);
 				inWidgetElement = true;
 				widgetElementNesting = elementNestingCounter;
@@ -140,14 +147,14 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 				saxBuffer = new SaxBuffer();
 				// retrieve widget here, but its XML will only be streamed in the endElement call
 				widget = getWidget(attributes);
-				repeaterWidget = localName.equals("repeater-widget");
+				repeaterWidget = localName.equals(REPEATER_WIDGET);
 				if (repeaterWidget && !(widget instanceof Repeater))
 					throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
-            } else if (localName.equals("widget-label")) {
+            } else if (localName.equals(WIDGET_LABEL)) {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 widget.generateLabel(contentHandler);
-            } else if (localName.equals("repeater-widget-label")) {
+            } else if (localName.equals(REPEATER_WIDGET_LABEL)) {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 if (!(widget instanceof Repeater))
@@ -156,7 +163,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 if (widgetId == null || widgetId.equals(""))
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" requires a \"widget-id\" attribute.");
                 ((Repeater)widget).generateWidgetLabel(widgetId, contentHandler);
-            } else if (localName.equals("repeater-size")) {
+            } else if (localName.equals(REPEATER_SIZE)) {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 if (!(widget instanceof Repeater))
@@ -172,11 +179,11 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 // ====> Retrieve the form
 
                 // first look for the form using the location attribute, if any
-                String formJXPath = attributes.getValue("location");
+                String formJXPath = attributes.getValue(LOCATION);
                 if (formJXPath != null) {
                     // remove the location attribute
                     AttributesImpl attrsCopy = new AttributesImpl(attributes);
-                    attrsCopy.removeAttribute(attributes.getIndex("location"));
+                    attrsCopy.removeAttribute(attributes.getIndex(LOCATION));
                     attributes = attrsCopy;
 
                     Object form = pipeContext.getJXPathContext().getValue(formJXPath);
@@ -194,7 +201,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     Object form = null;
                     try {
                         form = pipeContext.getJXPathContext().getValue(formJXPath);
-                    } catch (JXPathException e) {}
+                    } catch (JXPathException e) { /* do nothing */ }
                     if (form != null)
                         contextWidget = (Form)form;
                     else
@@ -239,7 +246,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 contentHandler.endElement(Constants.WI_NS, CONTINUATION_ID, Constants.WI_PREFIX_COLON + CONTINUATION_ID);
                 contentHandler.endPrefixMapping(Constants.WI_PREFIX);
             } else {
-                throw new SAXException("Unsupported WoodyTemplateTransformer element: " + localName);
+                throw new SAXException("WoodyTemplateTransformer: Unsupported element: " + localName);
             }
         } else {
             super.startElement(namespaceURI, localName, qName, attributes);
@@ -330,7 +337,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
         if (inWidgetElement) {
             if (elementNestingCounter == widgetElementNesting &&
                 namespaceURI.equals(Constants.WT_NS)
-                && (localName.equals("widget") || localName.equals("repeater-widget"))) {
+                && (localName.equals(WIDGET) || localName.equals(REPEATER_WIDGET))) {
                     if (repeaterWidget) {
                         Repeater repeater = (Repeater)widget;
                         WidgetReplacingPipe rowPipe = new WidgetReplacingPipe();
@@ -358,8 +365,8 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     saxBuffer.endElement(namespaceURI, localName, qName);
                 }
         } else if (namespaceURI.equals(Constants.WT_NS)) {
-            if (localName.equals("widget-label") || localName.equals("repeater-widget-label")
-                || localName.equals("repeater-size") || localName.equals(CONTINUATION_ID)) {
+            if (localName.equals(WIDGET_LABEL) || localName.equals(REPEATER_WIDGET_LABEL)
+                || localName.equals(REPEATER_SIZE) || localName.equals(CONTINUATION_ID)) {
                 // Do nothing
             } else if (localName.equals(FORM_TEMPLATE_EL)) {
                 contextWidget = null;
@@ -472,8 +479,8 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
      * element.
      */
     public class InsertStylingContentHandler extends AbstractXMLPipe implements Recyclable {
-        private int elementNesting = 0;
-        private SaxBuffer saxBuffer = null;
+        private int elementNesting;
+        private SaxBuffer saxBuffer;
 
         public void setSaxFragment(SaxBuffer saxFragment) {
             saxBuffer = saxFragment;
