@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2004 The Apache Software Foundation.
+ * Copyright 1999-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,7 +70,7 @@ import org.xml.sax.ContentHandler;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id$
+ * @version $Id$
  */
 public class CocoonWrapper {
 
@@ -113,16 +113,16 @@ public class CocoonWrapper {
         // Create a new hierarchy. This is needed when CocoonBean is called from
         // within a CocoonServlet call, in order not to mix logs
         final Hierarchy hierarchy = new Hierarchy();
-        
+
         final Priority priority = Priority.getPriorityForName(logLevel);
         hierarchy.setDefaultPriority(priority);
-        
+
         // Install a temporary logger so that getDir() can log if needed
         this.log = new LogKitLogger(hierarchy.getLoggerFor(""));
 
         try {
             // First of all, initialize the logging system
-            
+
             // Setup the application context with context-dir and work-dir that
             // can be used in logkit.xconf
             this.context = getDir(this.contextDir, "context");
@@ -507,7 +507,7 @@ public class CocoonWrapper {
      * @param deparameterizedURI a <code>String</code> value of an URI to start sampling from
      * @param parameters a <code>Map</code> value containing request parameters
      * @param links a <code>Map</code> value
-     * @param stream an <code>OutputStream</code> to write the content to
+     * @param handler an <code>ContentHandler</code> to send the content to
      * @return a <code>String</code> value for the content
      * @exception Exception if an error occurs
      */
@@ -530,9 +530,12 @@ public class CocoonWrapper {
         XMLConsumer consumer = new ContentHandlerWrapper(handler);
         Processor.InternalPipelineDescription pipeline = cocoon.buildPipeline(env);
         EnvironmentHelper.enterProcessor(pipeline.lastProcessor, getServiceManager(), env);
-        pipeline.processingPipeline.prepareInternal(env);
-        EnvironmentHelper.leaveProcessor();
-        pipeline.processingPipeline.process(env, consumer);
+        try {
+            pipeline.processingPipeline.prepareInternal(env);
+            pipeline.processingPipeline.process(env, consumer);
+        } finally {
+            EnvironmentHelper.leaveProcessor();
+        }
 
         // if we get here, the page was created :-)
         int status = env.getStatus();
