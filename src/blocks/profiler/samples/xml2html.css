@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-              BODY {font:x-small 'Verdana'; margin-right:1.5em}
+              BODY {font:small 'Verdana'; margin-right:1.5em}
                 .c  {cursor:hand}
                 .b  {color:red; font-family:'Courier New'; font-weight:bold;
                      text-decoration:none}
@@ -36,4 +36,3 @@
                      color:#888888}
                 .ci {font:small Courier; color:#888888}
                 PRE {margin:0px; display:inline}
-
