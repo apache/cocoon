@@ -50,28 +50,24 @@
 */
 package org.apache.cocoon.components.modules.input;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.avalon.excalibur.pool.Recyclable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.SitemapConfigurable;
-import org.apache.cocoon.environment.SourceResolver;
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * This "component" is a trick to get global variables on a per
  * sitemap base
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapVariableHolder.java,v 1.1 2003/03/09 00:09:03 pier Exp $
+ * @version CVS $Id: SitemapVariableHolder.java,v 1.2 2003/03/19 12:47:34 cziegeler Exp $
  */
 public final class SitemapVariableHolder
     extends AbstractLogEnabled
@@ -111,17 +107,6 @@ public final class SitemapVariableHolder
         }
     }
 
-     /**
-     * Set the <code>SourceResolver</code>, objectModel <code>Map</code>,
-     * used to process the request.
-     *  This method is automatically called for each request. Do not invoke
-     *  this method by hand.
-     */
-    public void setup(SourceResolver resolver, Map objectModel)
-    throws ProcessingException, SAXException, IOException {
-        // we don't need them...
-    }
-    
     /**
      * Set the <code>Configuration</code> from a sitemap
      */

@@ -64,6 +64,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.RequestLifecycleComponent;
 import org.apache.cocoon.components.SitemapConfigurable;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Redirector;
@@ -95,11 +96,11 @@ import org.xml.sax.SAXException;
  *  This is the basis authentication component.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AuthenticationManager.java,v 1.1 2003/03/09 00:02:18 pier Exp $
+ * @version CVS $Id: AuthenticationManager.java,v 1.2 2003/03/19 12:47:34 cziegeler Exp $
 */
 public final class AuthenticationManager
 extends AbstractSessionComponent
-implements Configurable, SitemapConfigurable {
+implements Configurable, SitemapConfigurable, RequestLifecycleComponent {
 
     /** The Avalon Role */
     public static final String ROLE = AuthenticationManager.class.getName();
