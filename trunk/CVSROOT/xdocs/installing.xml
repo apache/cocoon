@@ -18,7 +18,7 @@
 
  <s1 title="Notes for Upgraders">
  
-   <p>If you are upgrading Cocoon from a previous version, please note three
+   <p>If you are upgrading Cocoon from a previous version, please note four
     important points:</p>
  
    <ul>
@@ -288,9 +288,10 @@ AddHandler cocoon xml</source>
    </p>
 
    <p>
-    In recent versions of Tomcat under Unix, Tomcat will automatically
+    In recent versions of Tomcat under Unix and Windows, Tomcat will automatically
     detect any <code>.jar</code> files
-    in the <code>$TOMCAT_HOME/lib</code> directory. But under Windows, you must explicitly add the new
+    in the <code>$TOMCAT_HOME/lib</code> directory. But with Tomcat 3.1 under Windows only, you must explicitly add 
+the new
     <code>.jar</code> files in the appropriate place in the file <code>$TOMCAT_ROOT/bin/tomcat.bat</code>.
    </p>
 
@@ -426,7 +427,8 @@ AddHandler cocoon xml</source>
      </p>
  
  
-   <note>
+   <p>
+    <strong>IMPORTANT:</strong>
     If you get a NoSuchMethodError when starting up, 
     make sure that <code>xerces.jar</code> is located 
     <strong>before</strong> 
@@ -434,10 +436,12 @@ AddHandler cocoon xml</source>
     Tomcat 3.1 on UNIX - and Tomcat 3.2 on both UNIX and Windows -
     construct their own CLASSPATH automatically and then add the environment 
     CLASSPATH, so manually setting the CLASSPATH before running Tomcat won't work.
-    Instead, a hack which some people have found to work is (in the case of Tomcat 3.1) renaming
-    <code>xml.jar</code> as <code>zxml.jar</code>. For other versions try renaming <code>crimson.jar</code>
-    or <code>parser.jar</code>.
-   </note>
+    Instead, a hack which some people have found to work is (in the case of Tomcat 3.2) renaming
+    <code>xml.jar</code> as <code>zxml.jar</code> <strong>and</strong>
+    <code>parser.jar</code> as <code>zparser.jar</code>. For other versions try renaming <code>crimson.jar</code>.
+    (Alert readers may have noticed that xerces is lexicographically prior to xml anyway - so why does this work?
+     Well, to be quite frank - who cares? It works, okay! ;-)
+   </p>
 
    <note>
     If you have any other problems, <em>please, please</em> look at the 
