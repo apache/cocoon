@@ -46,7 +46,7 @@ import org.apache.log.output.FileOutputLogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.32 $ $Date: 2001-04-30 14:16:53 $
+ * @version CVS $Revision: 1.1.4.33 $ $Date: 2001-05-04 09:22:41 $
  */
 
 public class Main {
@@ -155,12 +155,16 @@ public class Main {
         }
 
         try {
-            LogKit.setGlobalPriority(LogKit.getPriorityForName(logLevel));
-            Category cocoonCategory = LogKit.createCategory("cocoon", LogKit.getPriorityForName(logLevel));
+            final Priority priority = Priority.getPriorityForName(logLevel);
+            LogKit.setGlobalPriority(priority);
+            log = LogKit.getLoggerFor("cocoon");
+            log.setPriority(priority);
+
+
             if(logUrl == null)
-                log = LogKit.createLogger(cocoonCategory,new LogTarget[] {new DefaultOutputLogTarget(System.out)});
+                log.setLogTargets( new LogTarget[] {new DefaultOutputLogTarget(System.out)});
             else
-                log = LogKit.createLogger(cocoonCategory,new LogTarget[] {new FileOutputLogTarget(logUrl)});
+                log.setLogTargets(new LogTarget[] {new FileOutputLogTarget(logUrl)});
         } catch (MalformedURLException mue) {
             String error = "Cannot write on the specified log file.  Please, make sure the path exists and you have write permissions.";
             LogKit.log(error, mue);

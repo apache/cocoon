@@ -44,6 +44,7 @@ import org.apache.log.LogKit;
 import org.apache.log.LogTarget;
 import org.apache.log.Logger;
 import org.apache.log.Priority;
+import org.apache.log.filter.PriorityFilter;
 import org.apache.log.output.FileOutputLogTarget;
 import org.apache.log.output.ServletOutputLogTarget;
 import org.xml.sax.SAXException;
@@ -56,7 +57,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.91 $ $Date: 2001-04-30 14:17:41 $
+ * @version CVS $Revision: 1.1.4.92 $ $Date: 2001-05-04 09:22:43 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -250,7 +251,7 @@ public class CocoonServlet extends HttpServlet {
      */
     private void initLogger(final ServletContext context)
     throws ServletException {
-        final Priority.Enum logPriority;
+        final Priority logPriority;
         String logDir = getInitParameter("log-dir");
         String logLevel = getInitParameter("log-level");
         if (logLevel != null) {
@@ -264,7 +265,7 @@ public class CocoonServlet extends HttpServlet {
         this.appContext.put(Constants.CONTEXT_LOG_DIR, logDir);
 
         if (logLevel != null) {
-            logPriority = LogKit.getPriorityForName(logLevel);
+            logPriority = Priority.getPriorityForName(logLevel);
         } else {
             logPriority = Priority.ERROR;
         }
@@ -276,11 +277,13 @@ public class CocoonServlet extends HttpServlet {
             }
             final String path = logDir + logName ;
 
-            final Category cocoonCategory = LogKit.createCategory("cocoon", logPriority);
-            this.log = LogKit.createLogger(cocoonCategory, new LogTarget[] {
-                       new FileOutputLogTarget(path),
-                       new ServletOutputLogTarget(context, Priority.ERROR)
-                });
+            this.log = LogKit.getLoggerFor("cocoon");
+            this.log.setPriority(logPriority);
+            
+            PriorityFilter filter = new PriorityFilter(Priority.ERROR);
+            filter.addTarget( new ServletOutputLogTarget(context) );
+            LogTarget[] targets = new LogTarget[] { new FileOutputLogTarget(path), filter };
+            this.log.setLogTargets( targets );
         } catch (Exception e) {
             LogKit.log("Could not set up Cocoon Logger, will use screen instead", e);
         }
