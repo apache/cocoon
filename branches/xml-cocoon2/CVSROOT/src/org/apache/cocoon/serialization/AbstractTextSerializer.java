@@ -22,7 +22,7 @@ import javax.xml.transform.sax.SAXTransformerFactory;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-03-12 04:39:00 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-03-15 22:08:50 $
  */
 public abstract class AbstractTextSerializer extends AbstractSerializer implements Configurable {
 
@@ -83,5 +83,13 @@ public abstract class AbstractTextSerializer extends AbstractSerializer implemen
         if (! version.getLocation().equals("-")) {
             format.put(OutputKeys.VERSION,version.getValue());
         }
+    }
+
+    /**
+     * Recycle serializer by removing references
+     */
+    public void recycle() {
+        this.format = new Properties();
+        super.recycle();
     }
 }
