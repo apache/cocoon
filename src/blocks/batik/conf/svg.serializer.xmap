@@ -16,7 +16,7 @@
 -->
 
 <xmap xpath="/sitemap/components/serializers" unless="serializer[@name='svg2jpeg']">
-    <map:serializer logger="sitemap.serializer.svg2png" name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer" mime-type="image/jpeg">
+    <map:serializer logger="sitemap.serializer.svg2jpeg" name="svg2jpeg" src="org.apache.cocoon.serialization.SVGSerializer" mime-type="image/jpeg">
       <parameter name="quality" type="float" value="0.9"/>
     </map:serializer>
     <map:serializer logger="sitemap.serializer.svg2png" name="svg2png" src="org.apache.cocoon.serialization.SVGSerializer" mime-type="image/png"/>
