@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.6 2003/05/26 09:52:59 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.7 2003/05/26 10:15:01 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
@@ -98,12 +98,23 @@ public class URICopletAdapter
 		PortalService portalService = null;
 		try {
 			if (uri.startsWith("cocoon:")) {
+                Boolean handlePars = (Boolean)this.getConfiguration( coplet, "handleParameters");
+                
+                String sourceUri = uri;
+                
+                if ( handlePars != null && handlePars.booleanValue() ) {
+                    // remove parameters
+                    if (!uri.startsWith("cocoon:raw:") ) {
+                        sourceUri = "cocoon:raw:" + uri.substring(7);
+                    }
+                }
+                
 				portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 				HashMap par = new HashMap();
 				par.put(Constants.PORTAL_NAME_KEY, portalService.getPortalName());
 				par.put(Constants.COPLET_ID_KEY, coplet.getId());
             
-				copletSource = this.resolver.resolveURI(uri, null, par);
+				copletSource = this.resolver.resolveURI(sourceUri, null, par);
 			} else {
 				copletSource = this.resolver.resolveURI(uri);
 			}
