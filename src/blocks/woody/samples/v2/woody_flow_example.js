@@ -101,6 +101,29 @@ function showForm1() {
     wid.dieselprice.value = 2.00;
     wid.birthdate.value = new java.util.Date();
     //
+    // You can perform actions when a new row is added to a repeater (like
+    // setting the row's 'onChange' properties or initializing its values
+    // by assigning a function to the repeater's 'onAddRow' property:
+    //
+    wid.contacts.onAddRow = function(row) {
+        row.firstname.value = "<first name>";
+        row.lastname.value = "<last name>";
+        row.select.onChange = function(oldValue, newValue) {
+            if (newValue) {
+                print("you selected: " + row.firstname.value);
+            } else {
+                print("you deselected: " + row.firstname.value);
+            }
+        }
+    }
+    //
+    // You can perform actions when a row is removed from a repeater
+    // by assigning a function to the repeater's 'onRemoveRow' property:
+    //
+    wid.contacts.onRemoveRow = function(row) {
+      print("you're about to remove: " + row.firstname.value);
+    }
+    //
     // The rows of a Repeater widget can be accessed using array syntax:
     //
     wid.contacts[0].firstname.value = "Jules";
@@ -118,14 +141,7 @@ function showForm1() {
         //
         // You can add a row using the addRow() function of Repeater
         //
-        var row = wid.contacts.addRow();
-        row.select.onChange = function(oldValue, newValue) {
-            if (newValue) {
-                print("you selected: " + row.firstname.value);
-            } else {
-                print("you deselected: " + row.firstname.value);
-            }
-        }
+        wid.contacts.addRow();
     }
     wid.removecontacts.onClick = function() {
         //
@@ -153,7 +169,7 @@ function showForm1() {
 
     //
     // By calling the Form's setBookmark() function you can set the
-    // point in your script to return to when it is redisplayed. This
+    // point in your script to return to when the form is redisplayed. This
     // is useful if you need to acquire resources to process the 
     // pipeline used by the form but also have them be released
     // before the script is suspended e.g.:
