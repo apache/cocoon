@@ -55,32 +55,58 @@ import org.apache.excalibur.source.SourceValidity;
  * The SourceValidity object for cache invalidation based on 
  * external events.
  * 
- * @author Geoff Howard(ghoward@apache.org)
- * @version $CVS$
+ * @author Geoff Howard (ghoward@apache.org)
+ * @version $CVS$ 
  */
 public class EventValidity implements SourceValidity {
     
     private Event m_event;
     
+    /**
+     * Constructor requires any subclass of Event.
+     * @param ev
+     */
     public EventValidity(Event ev) {
         m_event = ev;
     }
     
+    /**
+     * Returns the specific Event this validity is based on.
+     * 
+     * @return Event
+     */
     public Event getEvent() {
         return m_event;
     }
 
-	/** Basic implementation is always valid until event signals 
-     *  otherwise.  May never need other behavior.
+	/** 
+     * Basic implementation is always valid until event signals 
+     * otherwise.  May never need other behavior.
 	 */
 	public int isValid() {
 		return VALID;
 	}
 
+    /** 
+     * Older style of isValid
+     */
 	public int isValid(SourceValidity sv) {
 		if (sv instanceof EventValidity) {
             return VALID;
 		} 
         return INVALID;
 	}
+    
+    
+    public boolean equals(Object o) {
+        if (o instanceof EventValidity) {
+            return m_event.equals(((EventValidity)o).getEvent());
+        } 
+        return false;
+    }
+    
+	public int hashCode() {
+		return m_event.hashCode();
+	}
+
 }

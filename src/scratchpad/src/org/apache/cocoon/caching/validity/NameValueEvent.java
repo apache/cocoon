@@ -60,27 +60,35 @@ public class NameValueEvent extends Event {
 
     private String m_name;
     private String m_value;
+    private int m_hashcode;
     
+    /**
+     * Constructor requires two Strings - the name/value 
+     * pair which defines this Event.
+     * 
+     * @param name
+     * @param value
+     */
 	public NameValueEvent(String name, String value) {
         m_name = name;
         m_value = value;
+        m_hashcode = (name + value).hashCode();
 	}
     
-    private String getName() {
-        return m_name;
-    }
-    
-    private String getValue() {
-        return m_value;
-    }
-    
+    /**
+     * Must return true when both name and value are 
+     * equivalent Strings.
+     */
 	public boolean equals(Event e) {
 		if (e instanceof NameValueEvent) {
             NameValueEvent nve = (NameValueEvent)e;
-            return ( m_name.equals(nve.getName()) && 
-                m_value.equals(nve.getValue()) );
+            return ( m_name.equals(nve.m_name) && 
+                m_value.equals(nve.m_value) );
 		}
 		return false;
 	}
-
+    
+    public int hashCode() {
+        return m_hashcode;
+    }
 }

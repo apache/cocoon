@@ -59,21 +59,31 @@ package org.apache.cocoon.caching.validity;
 public class NamedEvent extends Event {
     
     private String m_name;
+    private int m_hashcode;
     
+    /**
+     * Constructor takes a simple String as event name.
+     * 
+     * @param String name
+     */
     public NamedEvent(String name) {
         m_name = name;
+        m_hashcode = name.hashCode();
     }
     
-    private String getName() {
-        return m_name;
-    }
-
+    /**
+     * Every NamedEvent where the name string is equal must 
+     * return true.
+     */
 	public boolean equals(Event e) {
         if (e instanceof NamedEvent) {
-            return m_name.equals(((NamedEvent)e).getName());
+            return m_name.equals(((NamedEvent)e).m_name);
         }
 		return false;
 	}
     
+    public int hashCode() {
+        return m_hashcode;
+    }
     
 }

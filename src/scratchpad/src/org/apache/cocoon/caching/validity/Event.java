@@ -59,7 +59,21 @@ package org.apache.cocoon.caching.validity;
  */
 public abstract class Event {
     
+    /**
+     * Used by EventValidity for equals(Object o) which 
+     * is important for determining whether a received event 
+     * should uncache a held Pipeline key.
+     * 
+     * @param event Another Event to compare.
+     * @return true if
+     */
     public abstract boolean equals(Event e);
+    
+    /**
+     * This hash code is the only way the system can locate 
+     * matching Events when a new event notification is received.
+     */
+    public abstract int hashCode();
     
     public boolean equals(Object o) {
         if (o instanceof Event) {
