@@ -54,7 +54,7 @@ import java.util.StringTokenizer;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.21 2004/04/26 21:28:39 ugo Exp $
+ * @version CVS $Id$
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -570,8 +570,15 @@ public abstract class AbstractProcessingPipeline
             } else {
                 environment.setContentType(this.sitemapReaderMimeType);
             }
+            // set the expires parameter on the pipeline if the reader is configured with one
+            if (readerParam.isParameter("expires")) {
+	            // should this checking be done somewhere else??
+	            this.expires = readerParam.getParameterAsLong("expires");
+            }
         } catch (SAXException e){
             throw new ProcessingException("Failed to execute reader pipeline.", e);
+        } catch (ParameterException e) {
+            throw new ProcessingException("Expires parameter needs to be of type long.",e);            
         } catch (IOException e){
             throw new ProcessingException("Failed to execute reader pipeline.", e);
         }
