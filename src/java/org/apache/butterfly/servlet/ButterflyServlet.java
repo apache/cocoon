@@ -18,6 +18,7 @@ package org.apache.butterfly.servlet;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.butterfly.environment.Environment;
 import org.apache.butterfly.environment.http.HttpEnvironment;
+import org.apache.butterfly.source.SourceResolver;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,6 +67,13 @@ public class ButterflyServlet extends HttpServlet {
         */
         this.containerEncoding = "ISO-8859-1";
         this.defaultFormEncoding = "ISO-8859-1";
+        // Contextualize the source resolver
+        SourceResolver resolver = (SourceResolver) this.applicationContext.getBean("sourceResolver");
+        try {
+            resolver.setBaseURL(new File(servletContext.getRealPath("/")).toURL());
+        } catch (MalformedURLException e) {
+            throw new ServletException(e);
+        }
     }
     
     /* (non-Javadoc)

@@ -32,11 +32,17 @@ public class SourceResolver {
     
     public SourceResolver() {
         try {
-            // TODO: contextualize it
             baseURL = new File(System.getProperty("user.dir")).toURL();
         } catch (MalformedURLException e) {
             throw new SourceException(e);
         }
+    }
+    
+    /**
+     * @param baseURL The baseURL to set.
+     */
+    public void setBaseURL(URL baseURL) {
+        this.baseURL = baseURL;
     }
     
     /**
