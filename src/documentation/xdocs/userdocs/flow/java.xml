@@ -74,10 +74,7 @@
    </s2>
    <s2 title="Dynamic Compilation">
    <p> 
-    Cocoon includes an embedded Java compiler that can dynamically compile Java source files and load and execute the resulting classes at runtime. During development you can take advantage of this capability to rapidly develop, test, and debug your applications. 
-   </p>
-   <p>
-   The <link href="#cocoon">Cocoon</link> object provides a <link href="#Cocoon.classes">classes</link> property that provides access to this capability. If you select the fully qualified name of a Java class under this property the Cocoon source resolver will be used to locate the source code for the class.
+    Cocoon includes an embedded Java compiler that can dynamically compile Java source files and load and execute the resulting classes at runtime. During development you can take advantage of this capability to rapidly develop, test, and debug your applications. The Cocoon source resolver is used to locate source files.
    </p>
    <p>Example:</p>
 <source>
