@@ -4,6 +4,7 @@ REM   Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
 REM   reserved.
 
 if exist "%HOME%\antrc_pre.bat" call "%HOME%\antrc_pre.bat"
+set ANT_VERSION=1.6.0
 
 if "%OS%"=="Windows_NT" @setlocal
 
@@ -29,7 +30,7 @@ rem and for NT handling to skip to.
 :doneStart
 rem find ANT_HOME if it does not exist due to either an invalid value passed
 rem by the user or the %0 problem on Windows 9x
-if exist "%ANT_HOME%\lib\ant.jar" goto checkJava
+if exist "%ANT_HOME%\lib\ant-%ANT_VERSION%.jar" goto checkJava
 
 rem check for ant in Program Files
 if not exist "%ProgramFiles%\ant" goto checkSystemDrive
