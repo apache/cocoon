@@ -117,7 +117,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  *
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>
- * @version CVS $Id: JexlTransformer.java,v 1.3 2003/04/06 06:41:40 coliver Exp $
+ * @version CVS $Id: JexlTransformer.java,v 1.4 2003/04/06 17:14:57 coliver Exp $
  */
 
 public class JexlTransformer
@@ -402,7 +402,7 @@ public class JexlTransformer
 
     /** namespace constant */
     public static final String JEXL_NAMESPACE_URI  
-	= "http://cocoon.apache.org/transformation/jexl/1.0";
+        = "http://cocoon.apache.org/transformation/jexl/1.0";
 
 
     public static final String JEXL_CHOOSE = "choose";
@@ -488,7 +488,7 @@ public class JexlTransformer
 
     public void generate()
         throws IOException, SAXException, ProcessingException {
-	try {
+        try {
             this.resolver.toSAX(this.inputSource, this);
         } catch (SAXException e) {
             if (e instanceof SAXParseException) {
@@ -535,13 +535,13 @@ public class JexlTransformer
         throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
-	if (src != null) {
-	    try {
-		this.inputSource = resolver.resolveURI(src);
-	    } catch (SourceException se) {
-		throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
-	    }
-	}
+        if (src != null) {
+            try {
+                this.inputSource = resolver.resolveURI(src);
+            } catch (SourceException se) {
+                throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
+            }
+        }
         Object bean = ((Environment)resolver).getAttribute("bean-dict");
         kont = (WebContinuation)((Environment)resolver).getAttribute("kont");
         chooseStack = new Stack();
@@ -788,7 +788,6 @@ public class JexlTransformer
         return jexlContext;
     }
 
-
     private JXPathContext getJXPathContext() {
         return (JXPathContext)jxpathContextStack.peek();
     }
@@ -806,7 +805,7 @@ public class JexlTransformer
                     if (varName.equals("continuation")) {
                         return kont;
                     }
-		    return null;
+                    return null;
                 }
 
                 public void declareVariable(String varName, Object value) {

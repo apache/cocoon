@@ -100,7 +100,7 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         jxpathContextFactory = JXPathContextFactory.newInstance();
 
     public static final String JXPATH_NAMESPACE_URI  = 
-	"http://cocoon.apache.org/transformation/jxpath/1.0";
+        "http://cocoon.apache.org/transformation/jxpath/1.0";
     public static final String JXPATH_FOR_EACH         = "for-each";
     public static final String JXPATH_CHOOSE         = "choose";
     public static final String JXPATH_WHEN         = "when";
@@ -152,7 +152,7 @@ extends AbstractSAXTransformer implements Initializable, Generator {
 
     public void generate()
         throws IOException, SAXException, ProcessingException {
-	try {
+        try {
             this.resolver.toSAX(this.inputSource, this);
         } catch (SAXException e) {
             if (e instanceof SAXParseException) {
@@ -201,13 +201,13 @@ extends AbstractSAXTransformer implements Initializable, Generator {
         throws ProcessingException, SAXException, IOException {
 
         super.setup(resolver, objectModel, src, parameters);
-	if (src != null) {
-	    try {
-		this.inputSource = resolver.resolveURI(src);
-	    } catch (SourceException se) {
-		throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
-	    }
-	}
+        if (src != null) {
+            try {
+                this.inputSource = resolver.resolveURI(src);
+            } catch (SourceException se) {
+                throw SourceUtil.handle("Error during resolving of '" + src + "'.", se);
+            }
+        }
         // setup the jxpath transformer for this thread
         // FIX ME: When we decide proper way to pass "bean" and "kont"
         Object bean = ((Environment)resolver).getAttribute("bean-dict");
@@ -226,34 +226,34 @@ extends AbstractSAXTransformer implements Initializable, Generator {
 
     String getExpr(String inStr) {
         try {
-	    inStr = inStr.trim();
-	    if (inStr.length() == 0 || inStr.charAt(0) != '{') {
-		return inStr;
-	    }
+            inStr = inStr.trim();
+            if (inStr.length() == 0 || inStr.charAt(0) != '{') {
+                return inStr;
+            }
             StringReader in = new StringReader(inStr);
             int ch;
             StringBuffer expr = new StringBuffer();
-	    in.read(); // '{'
+            in.read(); // '{'
             while ((ch = in.read()) != -1) {
                 char c = (char)ch;
-		if (c == '}') {
-		    break;
-		} else if (c == '\\') {
-		    ch = in.read();
-		    if (ch == -1) {
-			expr.append('\\');
-		    } else {
-			expr.append((char)ch);
-		    }
-		} else {
-		    expr.append(c);
-		}
-	    } 
-	    return expr.toString();
+                if (c == '}') {
+                    break;
+                } else if (c == '\\') {
+                    ch = in.read();
+                    if (ch == -1) {
+                        expr.append('\\');
+                    } else {
+                        expr.append((char)ch);
+                    }
+                } else {
+                    expr.append(c);
+                }
+            } 
+            return expr.toString();
         } catch (IOException ignored) {
             ignored.printStackTrace();
         }
-	return inStr;
+        return inStr;
     }
 
     /**
@@ -451,7 +451,7 @@ extends AbstractSAXTransformer implements Initializable, Generator {
                     if (varName.equals("continuation")) {
                         return kont;
                     }
-		    return null;
+                    return null;
                 }
 
                 public void declareVariable(String varName, Object value) {
