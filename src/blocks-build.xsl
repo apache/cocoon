@@ -521,6 +521,7 @@
       </javac>
 
       <junit printsummary="yes" haltonfailure="yes" fork="yes">
+        <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
         <classpath>
           <path refid="test.classpath"/>
           <path refid="{$block-name}.classpath"/>
