@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.9.2.3 2000-03-28 22:15:30 stefano Exp $
+  $Id: changes.xml,v 1.9.2.4 2000-04-19 06:31:31 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,15 @@
  </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="add" due-to="X Y" due-to-email="thezvi@ifrance.com">
+   Patched SQLFilter so VJ++ was happy
+  </action>
+  <action dev="DB" type="add">
+   Officially added XincludeFilter
+  </action>
+  <action dev="DB" type="add">
+   Officially added SQLFilter
+  </action>
   <action dev="SM" type="add" due-to="Sebastien Sahuc" due-to-email="ssahuc@imediation.com"> 
    Fixed order of filters that was backwards.
   </action>
