@@ -29,6 +29,11 @@
    <sample name="Simple XSP" url="simple_dynamic_page">
     Simple XSP example.
    </sample>
+   <sample name="Simple SQL" url="sql_page">
+    Simple SQL example. You should make sure that you have a database and 
+    table according to the conf/sitemap.xmap and the documens/sql/sql-page.sql 
+    definitions.
+   </sample>
   </group>
   <group name="Error Page Example">
    <sample name="Error Page" url="generror">

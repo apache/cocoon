@@ -37,7 +37,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2000-08-04 21:12:13 $ $Author: giacomo $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-08-17 20:04:23 $ $Author: giacomo $
  */
 
 public class SQLTransformer extends AbstractTransformer {
@@ -45,7 +45,7 @@ public class SQLTransformer extends AbstractTransformer {
 	protected boolean debug = true;
 
     /** The SQL namespace **/
-    public static final String my_uri = "http://xml.apache.org/cocoon/SQL";
+    public static final String my_uri = "http://apache.org/cocoon/SQL";
     public static final String my_name = "SQLTransformer";
 
     /** The SQL namespace element names **/
@@ -55,6 +55,7 @@ public class SQLTransformer extends AbstractTransformer {
     public static final String MAGIC_USERNAME = "username";
     public static final String MAGIC_PASSWORD = "password";
     public static final String MAGIC_QUERY = "query";
+    public static final String MAGIC_VALUE = "value";
 	public static final String MAGIC_ANCESTOR_VALUE = "ancestor-value";
 	public static final String MAGIC_ANCESTOR_VALUE_LEVEL_ATTRIBUTE = "level";
 	public static final String MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE = "name";
@@ -79,7 +80,7 @@ public class SQLTransformer extends AbstractTransformer {
 	protected String current_name;
 
 	/** The current state of the event receiving FSM **/
-	protected int current_state;
+	protected int current_state = STATE_OUTSIDE;
 
 	/** The value of the value element we're currently receiving **/
 	protected StringBuffer current_value = new StringBuffer();
@@ -98,18 +99,21 @@ public class SQLTransformer extends AbstractTransformer {
         // Check the driver
 		String parameter = parameters.getParameter("driver",null);
 		if (parameter != null) {
+			if (debug) { System.err.println("DRIVER: "+parameter); }
 			default_properties.setProperty("driver",parameter);
 		}
 
         // Check the dburl
 		parameter = parameters.getParameter("dburl",null);
 		if (parameter != null) {
+			if (debug) { System.err.println("DBURL: "+parameter); }
 			default_properties.setProperty("dburl",parameter);
 		}
 
         // Check the username
 		parameter = parameters.getParameter("username",null);
 		if (parameter != null) {
+			if (debug) { System.err.println("USERNAME: "+parameter); }
 			default_properties.setProperty("username",parameter);
 		}
 
@@ -129,7 +133,7 @@ public class SQLTransformer extends AbstractTransformer {
      * This will be the meat of SQLTransformer, where the query is run.
      */
     protected void executeQuery(int index) throws SAXException {
-        this.contentHandler.startPrefixMapping("",my_uri);
+	this.contentHandler.startPrefixMapping("",my_uri);
         AttributesImpl attr = new AttributesImpl();
 		Query query = (Query)queries.elementAt(index);
 		try {
@@ -151,7 +155,7 @@ public class SQLTransformer extends AbstractTransformer {
 			throw new SAXException(e);
 		}
 		this.end(query.rowset_name);
-        this.contentHandler.endPrefixMapping("");
+	        this.contentHandler.endPrefixMapping("");
     }
 
     protected static void throwIllegalStateException(String message) {
@@ -200,6 +204,7 @@ public class SQLTransformer extends AbstractTransformer {
 			case STATE_INSIDE_QUERY_ELEMENT:
 				if (current_value.length() > 0) {
 					getCurrentQuery().addQueryPart(current_value.toString());
+					if (debug) { System.err.println("QUERY IS \""+current_value.toString()+"\""); }
 					current_value.setLength(0);
 				}
 				current_state = STATE_INSIDE_EXECUTE_QUERY_ELEMENT;
@@ -252,8 +257,10 @@ public class SQLTransformer extends AbstractTransformer {
 					throwIllegalStateException("Ancestor value elements must have a "+MAGIC_ANCESTOR_VALUE_NAME_ATTRIBUTE+" attribute");
 				}
 				AncestorValue av = new AncestorValue(level,name);
+				if (debug) { System.err.println("ANCESTOR VALUE "+level+" "+name); }
 				if (current_value.length() > 0) {
 					getCurrentQuery().addQueryPart(current_value.toString());
+					if (debug) { System.err.println("QUERY IS \""+current_value.toString()+"\""); }
 					current_value.setLength(0);
 				}
 				getCurrentQuery().addQueryPart(av);
@@ -311,24 +318,27 @@ public class SQLTransformer extends AbstractTransformer {
             super.endElement(uri,name,raw);
             return;
         }
-		if (debug) { System.err.println("RECEIVED END ELEMENT "+name); }
+	if (debug) { System.err.println("RECEIVED END ELEMENT "+name+"("+uri+")"); }
         if (name.equals(MAGIC_EXECUTE_QUERY)) {
 			endExecuteQueryElement();
         } else if (name.equals(MAGIC_QUERY)) {
 			endQueryElement();
 		} else if (name.equals(MAGIC_ANCESTOR_VALUE)) {
 			endAncestorValueElement();
-		} else {
+		} else if (name.equals(MAGIC_VALUE)) {
 			endValueElement();
+		} else {
+			super.endElement(uri,name,raw);
 		}
     }
 
     public void characters(char ary[], int start, int length) 
             throws SAXException {
-        if (current_state != STATE_INSIDE_VALUE_ELEMENT) {
+        if (current_state != STATE_INSIDE_VALUE_ELEMENT
+         && current_state != STATE_INSIDE_QUERY_ELEMENT) {
             super.characters(ary,start,length);
         }
-		if (debug) { System.err.println("RECEIVED CHARACTERS: "+new String(ary,start,length)); }
+	if (debug) { System.err.println("RECEIVED CHARACTERS: "+new String(ary,start,length)); }
         current_value.append(ary,start,length);
     }
 

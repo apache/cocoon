@@ -126,6 +126,18 @@
     </map:serialize> 
    </map:match>
     
+   <map:match pattern="^sql_page$"> 
+    <map:generate src="documents/sql/sql-page.xml"/> 
+    <map:transform type="sql"> 
+      <parameter name="driver"   value="org.gjt.mm.mysql.Driver"/>
+      <parameter name="dburl"    value="jdbc:mysql://localhost/test"/>
+      <parameter name="username" value="test"/>
+      <parameter name="password" value="test"/>
+    </map:transform>
+    <map:transform src="stylesheets/sql-page2html.xsl"/> 
+    <map:serialize/> 
+   </map:match>
+    
    <map:match pattern="^generror$"> 
     <map:generate src="documents/error-giving-page.xml"/> 
     <map:transform src="stylesheets/simple-welcome2html.xsl"/> 
