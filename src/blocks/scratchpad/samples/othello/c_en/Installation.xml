@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
 <html xmlns:osm="http://osmosis.gr/osml/1.0">
-	<head>
-		<osm:pageTitle>
-			<osm:text>install</osm:text>
-		</osm:pageTitle>
-	</head>
-	<body contentID="content">
-		<p class="title">Installation</p>
-		<p class="notes">This version of othello is designed for Cocoon 2.1 and is tested in both unix and winXP</p>
-		<p>How to install othello.</p>
-		<ul>
-			<li>dowload the zip file</li>
-			<li>extract and put [othello.gr] directory somewhere in your disk</li>
-			<li>mount othello sitemap.xmap in cocoon main sitemap.xmap
+  <head>
+    <osm:pageTitle>
+      <osm:text>install</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">Installation</p>
+    <p class="notes">This version of othello is designed for Cocoon 2.1 and is tested in both unix and winXP</p>
+    <p>How to install othello.</p>
+    <ul>
+      <li>dowload the zip file</li>
+      <li>extract and put [othello.gr] directory somewhere in your disk</li>
+      <li>mount othello sitemap.xmap in cocoon main sitemap.xmap
 <pre><![CDATA[
 for example if the path to your othello.gr directory:
 c:\server\xwww\othello.gr\
@@ -38,9 +37,8 @@ or
  </map:match>
 </map:pipeline>
 ]]></pre>
-			</li>
-			<li>test othello at: [http://localhost:8080/cocoon/othello.gr/]
-</li>
-		</ul>
-	</body>
+      </li>
+      <li>test othello at: [http://localhost:8080/cocoon/othello.gr/]</li>
+    </ul>
+  </body>
 </html>

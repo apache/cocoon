@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Stavros Kounis (Osmosis) -->
 <html xmlns:osm="http://osmosis.gr/osml/1.0">
-	<head>
-		<osm:pageTitle>
-			<osm:text>othello</osm:text>
-		</osm:pageTitle>
-	</head>
-	<body contentID="content">
-		<p class="title">Othello People
-</p>
-		<p>Othello developers<ul>
+  <head>
+    <osm:pageTitle>
+      <osm:text>othello</osm:text>
+    </osm:pageTitle>
+  </head>
+  <body contentID="content">
+    <p class="title">Othello People</p>
+    <p>credits<ul>
 				<li>Stavros Kounis</li>
-				<li>Dimitris Adamos</li>
-			</ul>
-		</p>
-	</body>
+        <li>Dimitris Adamos</li>
+      </ul>
+    </p>
+  </body>
 </html>
