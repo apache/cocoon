@@ -459,12 +459,15 @@
       +-->
   <store-janitor logger="core.store.janitor">
      <!-- How much free memory shall be available in the jvm -->
-     <parameter name="freememory" value="1000000"/>
+     <parameter name="freememory" value="2048000"/>
      <!-- Indicates the limit of the jvm memory consumption. The default max
-          heapsize for Sun's JVM is 64Mb -->
-     <parameter name="heapsize" value="67108864"/>
+          heapsize for Sun's JVM is (almost) 64Mb -->
+     <parameter name="heapsize" value="66600000"/>
      <!-- How often shall the cleanup thread check memory -->
      <parameter name="cleanupthreadinterval" value="10"/>
+     <!-- Experimental adaptive algorithm for cleanup interval
+     <parameter name="adaptivethreadinterval" value="true"/>
+     -->
      <!-- Indicates the thread priority of the cleanup thread -->
      <parameter name="threadpriority" value="5"/>
      <!-- How much percent of the elements of each registered Store
