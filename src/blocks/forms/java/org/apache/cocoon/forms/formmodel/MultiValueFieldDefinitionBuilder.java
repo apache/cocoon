@@ -26,7 +26,7 @@ import org.apache.cocoon.forms.util.DomHelper;
 /**
  * Builds {@link MultiValueFieldDefinition}s.
  * 
- * @version $Id: MultiValueFieldDefinitionBuilder.java,v 1.3 2004/03/17 15:37:58 joerg Exp $
+ * @version $Id: MultiValueFieldDefinitionBuilder.java,v 1.4 2004/04/22 14:44:31 mpo Exp $
  */
 public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefinitionBuilder {
     public WidgetDefinition buildWidgetDefinition(Element widgetElement) throws Exception {
@@ -49,9 +49,6 @@ public class MultiValueFieldDefinitionBuilder extends AbstractDatatypeWidgetDefi
         boolean hasSelectionList = buildSelectionList(widgetElement, definition);
         if (!hasSelectionList)
             throw new Exception("Error: multivaluefields always require a selectionlist at " + DomHelper.getLocation(widgetElement));
-
-        boolean required = DomHelper.getAttributeAsBoolean(widgetElement, "required", false);
-        definition.setRequired(required);
 
         Iterator iter = buildEventListeners(widgetElement, "on-value-changed", ValueChangedListener.class).iterator();
         while (iter.hasNext()) {
