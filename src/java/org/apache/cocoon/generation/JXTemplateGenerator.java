@@ -352,7 +352,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.24 2003/12/28 22:54:07 coliver Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.25 2003/12/29 21:26:05 coliver Exp $
  */
 public class JXTemplateGenerator extends ServiceableGenerator {
 
@@ -907,9 +907,9 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             if (inStr == null) return null;
             StringReader in = new StringReader(inStr.trim());
             int ch;
-            StringBuffer expr = new StringBuffer();
             boolean xpath = false;
             boolean inExpr = false;
+            StringBuffer expr = new StringBuffer();
             while ((ch = in.read()) != -1) {
                 char c = (char)ch;
                 if (inExpr) {
@@ -939,6 +939,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     // just return the original and swallow exception
                     return new Expression(inStr, null);
                 }
+            }
+            if (inExpr) {
+                // unclosed #{} or ${}
+                String msg;
+                if (xpath) {
+                    msg = "Unterminated #{";
+                } else {
+                    msg = "Unterminated ${";
+                }
+                throw new Exception(msg);
             }
         } catch (IOException ignored) {
             ignored.printStackTrace();
@@ -1134,13 +1144,17 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             int ch;
             boolean inExpr = false;
             boolean xpath = false;
+            int line = location.getLineNumber();
+            int column = location.getColumnNumber();
             try {
                 top: while ((ch = in.read()) != -1) {
+                    column++;
                     char c = (char)ch;
                     processChar: while (true) {
                         if (inExpr) {
                             if (c == '\\') {
                                 ch = in.read();
+                                
                                 if (ch == -1) {
                                     buf.append('\\');
                                 } else {
@@ -1209,6 +1223,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
             } catch (IOException ignored) {
                 // won't happen
                 ignored.printStackTrace();
+            }
+            if (inExpr) {
+                // unclosed #{} or ${}
+                String str;
+                if (xpath) {
+                    str = "#{";
+                } else {
+                    str = "${";
+                }
+                buf.insert(0, str);
             }
             if (buf.length() > 0) {
                 char[] charArray = 
@@ -1436,6 +1460,16 @@ public class JXTemplateGenerator extends ServiceableGenerator {
                     }
                 } catch (IOException ignored) {
                     ignored.printStackTrace();
+                }
+                if (inExpr) {
+                    // unclosed #{} or ${}
+                    String msg;
+                    if (xpath) {
+                        msg = "Unterminated #{";
+                    } else {
+                        msg = "Unterminated ${";
+                    }
+                    throw new SAXParseException(msg, location, null);
                 }
                 if (buf.length() > 0) {
                     if (substEvents.size() == 0) {
