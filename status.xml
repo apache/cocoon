@@ -430,7 +430,7 @@
  </release>
  <release version="2.1.7" date="TBD">
    <action dev="AG" type="update">
-     Updated quartz to 1.4.5.
+     Updated quartz to 1.4.5, jcs to 1.2.5-dev-20050313.
    </action>
    <action dev="SW" type="add">
      A flowscript's file encoding can now be specified by a comment on the script's
