@@ -89,7 +89,7 @@ import java.util.List;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.18 2003/08/28 19:21:00 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.19 2003/08/29 14:05:50 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -553,9 +553,11 @@ public class CocoonBean extends CocoonWrapper {
                 targets.add(target.getDerivedTarget(link));
             }
         }
+/*  Commenting out timestamp - will reimplement properly using the BeanListener interface
         double d = (System.currentTimeMillis()- startTimeMillis);
         String time = " [" + (d/1000) + " seconds]";
         System.out.println("        "+ time);
+*/
         return targets;
     }
 
