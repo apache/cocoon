@@ -15,12 +15,6 @@
  */
 package org.apache.cocoon;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.Map;
-
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -36,6 +30,7 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.container.CocoonServiceManager;
 import org.apache.cocoon.components.container.ComponentContext;
@@ -51,11 +46,18 @@ import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.util.log.DeprecationLogger;
+
 import org.apache.commons.lang.SystemUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.impl.URLSource;
 import org.xml.sax.InputSource;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Map;
 
 /**
  * The Cocoon Object is the main Kernel for the entire Cocoon system.
@@ -149,8 +151,8 @@ public class Cocoon
             this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
                                                                      settings.getConfigurationReloadDelay());
 
-        } catch (IOException ioe) {
-            throw new ContextException("Could not open configuration file: " + settings.getConfiguration(), ioe);
+        } catch (IOException e) {
+            throw new ContextException("Could not open configuration file: " + settings.getConfiguration(), e);
         }
     }
 
@@ -180,7 +182,7 @@ public class Cocoon
         // Log the System Properties.
         dumpSystemProperties();
 
-        this.configure();
+        configure();
 
         // add the logger manager to the component locator
 
@@ -199,7 +201,7 @@ public class Cocoon
         if (this.serviceManager.hasService(RequestListener.ROLE)){
             this.requestListener = (RequestListener) this.serviceManager.lookup(RequestListener.ROLE);
         }
-        Core.cleanup();        
+        Core.cleanup();
     }
 
     /** Dump System Properties */
@@ -222,7 +224,6 @@ public class Cocoon
     /**
      * Configure this <code>Cocoon</code> instance.
      *
-     * @param startupManager an <code>CocoonServiceManager</code> value
      * @exception ConfigurationException if an error occurs
      * @exception ContextException if an error occurs
      */
@@ -263,7 +264,7 @@ public class Cocoon
             } catch (Exception e) {
                 throw new ConfigurationException("Error trying to load user-roles configuration", e);
             }
-            
+
             RoleManager urm = new RoleManager(drm);
             ContainerUtil.enableLogging(urm, getLogger().getChildLogger("roles").getChildLogger("user"));
             ContainerUtil.configure(urm, roleConfig);
@@ -291,29 +292,45 @@ public class Cocoon
     }
 
     /**
+     * Helper method to retrieve system property.
+     * Returns default value if SecurityException is caught.
+     */
+    public static String getSystemProperty(String property, String value) {
+        try {
+            return System.getProperty(property, value);
+        } catch (SecurityException e) {
+            System.err.println("Caught a SecurityException reading the system property '" + property + "';" +
+                               " Cocoon will default to '" + value + "' value.");
+            return value;
+        }
+    }
+
+    /**
      * Sets required system properties.
      */
     protected void setSystemProperties() {
-        java.util.Properties props = new java.util.Properties();
-        // FIXME We shouldn't have to specify the SAXParser...
-        // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
-        // to locate the SAX2 driver.
-        props.put("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
-        java.util.Properties systemProps = System.getProperties();
-        Enumeration propEnum = props.propertyNames();
-        while (propEnum.hasMoreElements()) {
-            String prop = (String)propEnum.nextElement();
-            if (!systemProps.containsKey(prop)) {
-                systemProps.put(prop, props.getProperty(prop));
+        try {
+            // FIXME We shouldn't have to specify the SAXParser...
+            // This is needed by Xalan2, it is used by org.xml.sax.helpers.XMLReaderFactory
+            // to locate the SAX2 driver.
+            if (getSystemProperty("org.xml.sax.driver", null) == null) {
+                System.setProperty("org.xml.sax.driver", "org.apache.xerces.parsers.SAXParser");
             }
+        } catch (SecurityException e) {
+            // Ignore security exceptions
+            System.out.println("Caught a SecurityException writing the system property: " + e);
         }
-        // FIXME We shouldn't have to specify these. Needed to override jaxp implementation of weblogic.
-        if (systemProps.containsKey("javax.xml.parsers.DocumentBuilderFactory") &&
-            systemProps.getProperty("javax.xml.parsers.DocumentBuilderFactory").startsWith("weblogic")) {
-            systemProps.put("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
-            systemProps.put("javax.xml.parsers.SAXParserFactory","org.apache.xerces.jaxp.SAXParserFactoryImpl");
+
+        try {
+            // FIXME We shouldn't have to specify these. Needed to override jaxp implementation of weblogic.
+            if (getSystemProperty("javax.xml.parsers.DocumentBuilderFactory", "").startsWith("weblogic")) {
+                System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl");
+                System.setProperty("javax.xml.parsers.SAXParserFactory","org.apache.xerces.jaxp.SAXParserFactoryImpl");
+            }
+        } catch (SecurityException e) {
+            // Ignore security exceptions
+            System.out.println("Caught a SecurityException writing the system property: " + e);
         }
-        System.setProperties(systemProps);
     }
 
     /* (non-Javadoc)
