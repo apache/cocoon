@@ -20,7 +20,7 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-19 14:42:49 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-30 18:37:40 $
  */
 public interface Action extends Component, ThreadSafe {
     /**
@@ -37,6 +37,7 @@ public interface Action extends Component, ThreadSafe {
      *                    calling environment which can be used
      *                    to select values this controller may need
      *                    (ie HttpRequest, HttpResponse).
+     * @param source      A source <code>String</code> to the Action
      * @param parameters  The <code>Parameters</code> for this invocation
      * @return List       The returned <code>List</code> object with
      *                    sitemap substitution values which can be used
@@ -47,7 +48,8 @@ public interface Action extends Component, ThreadSafe {
      *                    be skipped.
      * @exception Exception Indicates something is totally wrong
      */
-    public List act (EntityResolver resolver, Map objectModel, Parameters parameters) throws Exception;
+    public List act(EntityResolver resolver, Map objectModel, String source, Parameters par)
+    throws Exception;
 }
 
 

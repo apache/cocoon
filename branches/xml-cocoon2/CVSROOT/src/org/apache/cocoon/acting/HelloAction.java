@@ -23,14 +23,14 @@ import org.xml.sax.EntityResolver;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-19 14:42:52 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2000-10-30 18:37:41 $
  */
 public class HelloAction implements Action {
     /**
      * A simple Action that logs if the <code>Session</code> object
      * has been created
      */
-    public List act (EntityResolver resolver, Map objectModel, Parameters par) throws Exception {
+    public List act (EntityResolver resolver, Map objectModel, String src, Parameters par) throws Exception {
         HttpServletRequest req = (HttpServletRequest) objectModel.get("request");
         if (req != null) {
             HttpSession session = req.getSession (false);

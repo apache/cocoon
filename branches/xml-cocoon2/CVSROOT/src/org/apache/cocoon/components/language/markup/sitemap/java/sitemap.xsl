@@ -61,6 +61,7 @@
 
     import org.apache.cocoon.Cocoon;
     import org.apache.cocoon.ProcessingException;
+    import org.apache.cocoon.acting.Action;
     import org.apache.cocoon.environment.Environment;
     import org.apache.cocoon.sitemap.AbstractSitemap;
     import org.apache.cocoon.sitemap.ComponentHolder;
@@ -75,7 +76,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loiritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.55 $ $Date: 2000-10-25 17:47:26 $
+     * @version CVS $Revision: 1.1.2.56 $ $Date: 2000-10-30 18:37:43 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static {
@@ -165,9 +166,10 @@
           <xsl:variable name="type" select="translate(@name, '- ', '__')"/>
         <xsl:variable name="default" select="$type = ../@default"/>
         <xsl:variable name="config"><xsl:copy-of select="."/></xsl:variable>
-       private boolean <xsl:value-of select="$type"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($factory),$config)"/> pattern, Map objectModel) {
-           <xsl:value-of select="java:getMethodSource($factory-loader, string($factory),$config)"/>
-       }       <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:when[../map:select/@type=$type or (not(../map:select/@type) and $default)]">
+        private boolean <xsl:value-of select="$type"/>Select (<xsl:value-of select="java:getParameterSource($factory-loader, string($factory),$config)"/> pattern, Map objectModel) {
+          <xsl:value-of select="java:getMethodSource($factory-loader, string($factory),$config)"/>
+        }
+        <xsl:for-each select="/map:sitemap/map:pipelines/map:pipeline/descendant-or-self::map:when[../map:select/@type=$type or (not(../map:select/@type) and $default)]">
           <xsl:variable name="selector-name">
             <xsl:call-template name="generate-name">
               <xsl:with-param name="prefix">selector_</xsl:with-param>
@@ -383,20 +385,17 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <!-- get the name of this matcher in case it is defined in this sitemap ? -->
-    <xsl:variable name="local-matcher" select="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]"/>
-
     <!-- check if this matcher is a factory ? -->
     <xsl:variable name="is-factory">
       <xsl:choose>
-        <xsl:when test="not($local-matcher)">
+        <xsl:when test="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]">
           <xsl:value-of select="false()"/>
         </xsl:when>
-        <xsl:when test="$local-matcher/@factory">
+        <xsl:when test="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]/@factory">
           <xsl:value-of select="true()"/>
         </xsl:when>
-        <xsl:when test="$local-matcher/@src">
-          <xsl:value-of select="java:isFactory($factory-loader, string($local-matcher/@src))"/>
+        <xsl:when test="/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]/@src">
+          <xsl:value-of select="java:isFactory($factory-loader, string(/map:sitemap/map:components/map:matchers/map:matcher[@name=$matcher-type]/@src))"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="false()"/>
@@ -458,22 +457,17 @@
         </xsl:call-template>
       </xsl:variable>
 
-      <!-- get the name of this selector in case it is defined in this sitemap ? -->
-      <xsl:variable name="local-selector">
-        <xsl:value-of select="/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]"/>
-      </xsl:variable>
-
       <!-- check if this selector is a factory ? -->
       <xsl:variable name="is-factory">
         <xsl:choose>
-          <xsl:when test="not($local-selector)">
+          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]">
             <xsl:value-of select="false()"/>
           </xsl:when>
-          <xsl:when test="$local-selector/@factory">
+          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]/@factory">
             <xsl:value-of select="true()"/>
           </xsl:when>
-          <xsl:when test="$local-selector/@src">
-            <xsl:value-of select="java:isFactory($factory-loader, string($local-selector/@src))"/>
+          <xsl:when test="/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]/@src">
+            <xsl:value-of select="java:isFactory($factory-loader, string(/map:sitemap/map:components/map:selectors/map:selector[@name=$matcher-type]/@src))"/>
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="false()"/>
@@ -498,7 +492,7 @@
       <xsl:if test="position() > 1">
         else
       </xsl:if>
-      if (<xsl:value-of select="translate($selector-type, '- ', '__')"/>Select (<xsl:value-of select="$selector-name"/>_expr, environment)) {
+      if (<xsl:value-of select="translate($selector-type, '- ', '__')"/>Select (<xsl:value-of select="$selector-name"/>_expr, objectModel)) {
        <xsl:apply-templates/>
       }
     </xsl:for-each>
@@ -509,7 +503,7 @@
       <xsl:apply-templates/>
       }
     </xsl:for-each>
-  </xsl:template> <!-- match="/map:sitemap/map:select" -->
+  </xsl:template> <!-- match="map:select" -->
 
   <!-- processing of an act element -->
   <xsl:template match="map:act">
@@ -522,9 +516,17 @@
       </xsl:call-template>
     </xsl:variable>
 
+    <!-- get the source parameter for the Action -->
+    <xsl:variable name="action-source">
+      <xsl:call-template name="get-parameter-as-string">
+        <xsl:with-param name="parname">src</xsl:with-param>
+        <xsl:with-param name="default">null</xsl:with-param>
+      </xsl:call-template>
+    </xsl:variable>
+
     <!-- gets the string how the action is to be invoced in java code -->
     <xsl:variable name="action-name">
-      ((Action)((ComponentHolder)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$selector-type2"/>")).get()).act
+      ((Action)((ComponentHolder)super.sitemapComponentManager.lookup("action:<xsl:value-of select="$action-type"/>")).get()).act
     </xsl:variable>
 
     <!-- test if we have to define parameters for this action -->
@@ -550,14 +552,14 @@
     <!-- generate the invocation of the act method of the action component -->
     <xsl:choose>
       <xsl:when test="./*">
-        if ((list = <xsl:value-of select="$action-name"/> (environment, objectModel, <xsl:value-of select="$component-param"/>)) != null) {
+        if ((list = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfLists,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>)) != null) {
           listOfLists.add (list);
           <xsl:apply-templates/>
           listOfList.remove(list);
         }
       </xsl:when>
       <xsl:otherwise>
-        list = <xsl:value-of select="$action-name"/> (environment, objectModel, <xsl:value-of select="$component-param"/>);
+        list = <xsl:value-of select="$action-name"/> (environment, objectModel, substitute(listOfLists,<xsl:value-of select="$action-source"/>), <xsl:value-of select="$component-param"/>);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:act" -->
