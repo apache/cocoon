@@ -70,6 +70,70 @@ import org.xml.sax.ext.*;
 import org.xml.sax.helpers.*;
 import org.apache.commons.jxpath.*;
 
+/**
+ *
+ * <p>Cocoon {@link Generator} that produces dynamic XML SAX events
+ *  fom an XML template file.</p>
+ *
+ *  <p>Provides a tag library with embedded XPath expression substitution
+ *  to access data sent by Cocoon flowscripts.</p>
+ *  The embedded expression language allows a page author to access an 
+ *  object using a simplified syntax such as
+ *  <p><pre>
+ *  &lt;site signOn="{accountForm/signOn}"&gt;
+ *  </pre></p>
+ * <p>Embedded XPath expressions are contained in curly braces.</p>
+ * <p>Note that since this generator uses <a href="http://jakarta.apache.org/commons/jxpath">Apache JXPath</a>, the referenced 
+ * objects may be Java Beans, DOM, JDOM, or JavaScript objects from a 
+ * Flowscript. The current Web Continuation from the Flowscript 
+ * is also available as an XPath variable named <code>continuation</code>. You would 
+ * typically access its id:
+ * <p><pre>
+ *    &lt;form action="{$continuation/id}"&gt;
+ * </pre></p>
+ * <p>You can also reach previous continuations by using the <code>getContinuation()</code> function:</p>
+ * <p><pre>
+ *     &lt;form action="{getContinuation($continuation, 1)}" >
+ * </pre></p>
+ * <p>The <code>if</code> tag allows the conditional execution of its body 
+ * according to value of a <code>test</code> attribute:</p>
+ * <p><pre>
+ *   &lt;if test="XPathExpression"&gt;
+ *       body
+ *   &lt;/if&gt;
+ * </pre></p>
+ * <p>The <code>choose</code> tag performs conditional block execution by the 
+ * embedded <code>when</code> sub tags. It renders the body of the first 
+ * <code>when</code> tag whose <code>test</code> condition evaluates to true. 
+ * If none of the <code>test</code> conditions of nested <code>when</code> tags
+ * evaluate to <code>true</code>, then the body of an <code>otherwise</code> 
+ * tag is evaluated, if present:</p>
+ * <p><pre>
+ *  &lt;choose&gt;
+ *    &lt;when test="XPathExpression"&gt;
+ *       body
+ *    &lt;/when&gt;
+ *    &lt;otherwise&gt;
+ *       body
+ *    &lt;/otherwise&gt;
+ *  &lt;/choose&gt;
+ * </pre></p>
+ * <p>The <code>value-of</code> tag evaluates an XPath expression and outputs 
+ * the result of the evaluation:</p>
+ * <p><pre>
+ * &lt;value-of select="XPathExpression"/&gt;
+ * </pre></p>
+ * <p>The <code>for-each</code> tag allows you to iterate over a collection 
+ * of objects:<p>
+ * <p><pre>
+ *   &lt;for-each select="XPathExpression"&gt;
+ *     body
+ *  &lt;/for-each&gt;
+ * </pre></p>
+ *
+ *
+ */
+
 public class JXPathTemplate extends AbstractGenerator {
 
     private static final JXPathContextFactory 
@@ -212,17 +276,78 @@ public class JXPathTemplate extends AbstractGenerator {
         TextEvent(Locator location, 
                   char[] chars, int start, int length) {
             super(location);
-            this.chars = new char[this.length = length];
-            System.arraycopy(chars, start, this.chars, 
-                             this.start = 0, length);
+            StringBuffer buf = new StringBuffer();
+            CharArrayReader in = new CharArrayReader(chars, start, length);
+            int ch;
+            boolean inExpr = false;
+            try {
+                while ((ch = in.read()) != -1) {
+                    char c = (char)ch;
+                    if (inExpr) {
+                        if (c == '}') {
+                            String str = buf.toString();
+                            CompiledExpression compiledExpression = 
+                                JXPathContext.compile(str);
+                            substitutions.add(compiledExpression);
+                            buf.setLength(0);
+                            inExpr = false;
+                        } else if (c == '\\') {
+                            ch = in.read();
+                            if (ch == -1) {
+                                buf.append('\\');
+                            } else {
+                                buf.append((char)ch);
+                            }
+                        } else {
+                            buf.append(c);
+                        }
+                    } else {
+                        if (c == '\\') {
+                            ch = in.read();
+                            if (ch == -1) {
+                                buf.append('\\');
+                            } else {
+                                buf.append((char)ch);
+                            }
+                        } else {
+                            if (c == '{') {
+                                ch = in.read();
+                                if (ch != -1) {
+                                    if (buf.length() > 0) {
+                                        char[] charArray = 
+                                            new char[buf.length()];
+
+                                        buf.getChars(0, buf.length(),
+                                                     charArray, 0);
+                                        substitutions.add(charArray);
+                                        buf.setLength(0);
+                                    }
+                                    buf.append((char)ch);
+                                    inExpr = true;
+                                    continue;
+                                }
+                                buf.append('{');
+                            }
+                            if (ch != -1) {
+                                buf.append((char)ch);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException ignored) {
+                ignored.printStackTrace();
+            }
+            if (buf.length() > 0) {
+                char[] charArray = 
+                    new char[buf.length()];
+                buf.getChars(0, buf.length(),
+                             charArray, 0);
+                substitutions.add(charArray);
+            } else if (substitutions.size() == 0) {
+                substitutions.add(EMPTY_CHARS);
+            }
         }
-        final char[] chars;
-        final int start;
-        final int length;
-        public String toString() {
-            return new String(chars, start, length) + 
-                "("+super.locationString()+")";
-        }
+        final List substitutions = new LinkedList();
     }
 
     class Characters extends TextEvent {
@@ -248,10 +373,20 @@ public class JXPathTemplate extends AbstractGenerator {
     }
 
     class EndElement extends Event {
-        StartElement startElement;
-        EndElement(Locator location, StartElement startElement) {
+        final StartElement startElement;
+        final String namespaceURI;
+        final String localName;
+        final String raw;
+        EndElement(Locator location, 
+                   String namespaceURI,
+                   String localName,
+                   String raw,
+                   StartElement startElement) {
             super(location);
             this.startElement = startElement;
+            this.namespaceURI = namespaceURI;
+            this.localName = localName;
+            this.raw = raw;
         }
         public String toString() {
             String ns = "";
@@ -547,8 +682,8 @@ public class JXPathTemplate extends AbstractGenerator {
             this.prefix = prefix;
             this.uri = uri;
         }
-        String prefix;
-        String uri;
+        final String prefix;
+        final String uri;
     }
 
     class Comment extends TextEvent {
@@ -610,7 +745,7 @@ public class JXPathTemplate extends AbstractGenerator {
             super(location);
             this.compiledExpression = expr;
         }
-        CompiledExpression compiledExpression;
+        final CompiledExpression compiledExpression;
     }
 
     class EndValueOf extends Event {
@@ -694,12 +829,20 @@ public class JXPathTemplate extends AbstractGenerator {
                     startChoose.otherwise = startOtherwise;
                 } else if (start instanceof StartValueOf) {
                     newEvent = new EndValueOf(locator);
+                } else if (start instanceof StartChoose) {
+                    StartChoose startChoose = (StartChoose)start;
+                    newEvent = 
+                        startChoose.endChoose = new EndChoose(locator);
                 } else {
                     throw new SAXParseException("unrecognized tag: " + localName, locator, null);
                 }
             } else {
                 StartElement startElement = (StartElement)start;
-                newEvent = new EndElement(locator, startElement);
+                newEvent = new EndElement(locator, 
+                                          namespaceURI,
+                                          localName,
+                                          raw,
+                                          startElement);
             }
             addEvent(newEvent);
         }
@@ -711,15 +854,13 @@ public class JXPathTemplate extends AbstractGenerator {
         }
 
         public void ignorableWhitespace(char[] ch, int start, int length) {
-            Event chars = new IgnorableWhitespace(locator,
-                                                  ch, start, length);
+            Event chars = new IgnorableWhitespace(locator, ch, start, length);
             addEvent(chars);
         }
 
         public void processingInstruction(String target,
                                           String data) {
-            Event pi = new ProcessingInstruction(locator, target,
-                                                 data);
+            Event pi = new ProcessingInstruction(locator, target, data);
             addEvent(pi);
         }
 
@@ -748,7 +889,9 @@ public class JXPathTemplate extends AbstractGenerator {
                 if (localName.equals(FOR_EACH)) {
                     String select = attrs.getValue("select");
                     if (select == null) {
-                        throw new SAXParseException("for-each: \"select\" is required", locator, null);
+                        throw 
+                            new SAXParseException("for-each: \"select\" is required", 
+                                                  locator, null);
                     }
                     CompiledExpression expr = 
                         JXPathContext.compile(getExpr(select));
@@ -926,6 +1069,41 @@ public class JXPathTemplate extends AbstractGenerator {
         execute(rootContext, startEvent, null);
     }
 
+    final static char[] EMPTY_CHARS = "".toCharArray();
+    
+    interface CharHandler {
+        public void characters(char[] ch, int offset, int length)
+            throws SAXException;
+    }
+
+    private void characters(JXPathContext context, 
+                            TextEvent event,
+                            CharHandler handler) throws SAXException {
+        Iterator iter = event.substitutions.iterator();
+        while (iter.hasNext()) {
+            Object subst = iter.next();
+            char[] chars;
+            if (subst instanceof char[]) {
+                chars = (char[])subst;
+            } else {
+                CompiledExpression expr = (CompiledExpression)subst;
+                try {
+                    Object val = expr.getValue(context);
+                    if (val != null) {
+                        chars = val.toString().toCharArray();
+                    } else {
+                        chars = EMPTY_CHARS;
+                    }
+                } catch (Exception e) {
+                    throw new SAXParseException(e.getMessage(),
+                                                event.location,
+                                                e);
+                }
+            }
+            handler.characters(chars, 0, chars.length);
+        }
+    }
+
     private void execute(JXPathContext context,
                          Event startEvent, Event endEvent) 
         throws SAXException {
@@ -934,24 +1112,36 @@ public class JXPathTemplate extends AbstractGenerator {
             consumer.setDocumentLocator(ev.location);
             if (ev instanceof Characters) {
                 TextEvent text = (TextEvent)ev;
-                consumer.characters(text.chars, text.start,
-                                    text.length);
+                characters(context, text, new CharHandler() {
+                        public void characters(char[] ch, int offset,
+                                               int len) 
+                            throws SAXException {
+                            
+                            consumer.characters(ch, offset, len);
+                        }
+                    });
             } else if (ev instanceof EndDocument) {
                 consumer.endDocument();
             } else if (ev instanceof EndElement) {
                 EndElement endElement = (EndElement)ev;
-                StartElement startElement = (StartElement)endElement.startElement;
-                consumer.endElement(startElement.namespaceURI,
-                                    startElement.localName,
-                                    startElement.raw);
+                StartElement startElement = 
+                    (StartElement)endElement.startElement;
+                consumer.endElement(endElement.namespaceURI,
+                                    endElement.localName,
+                                    endElement.raw);
             } else if (ev instanceof EndPrefixMapping) {
                 EndPrefixMapping endPrefixMapping = 
                     (EndPrefixMapping)ev;
                 consumer.endPrefixMapping(endPrefixMapping.prefix);
             } else if (ev instanceof IgnorableWhitespace) {
                 TextEvent text = (TextEvent)ev;
-                consumer.ignorableWhitespace(text.chars, text.start,
-                                             text.length);
+                characters(context, text, new CharHandler() {
+                        public void characters(char[] ch, int offset,
+                                               int len) 
+                            throws SAXException {
+                            consumer.ignorableWhitespace(ch, offset, len);
+                        }
+                    });
             } else if (ev instanceof ProcessingInstruction) {
                 ProcessingInstruction pi = (ProcessingInstruction)ev;
                 consumer.processingInstruction(pi.target, pi.data);
@@ -1089,9 +1279,14 @@ public class JXPathTemplate extends AbstractGenerator {
                                             startPrefixMapping.uri);
             } else if (ev instanceof Comment) {
                 TextEvent text = (TextEvent)ev;
-                consumer.comment(text.chars, text.start,
-                                 text.length);
-            } else if (ev instanceof EndCDATA) {
+                characters(context, text, new CharHandler() {
+                        public void characters(char[] ch, int offset,
+                                               int len) 
+                            throws SAXException {
+                            consumer.comment(ch, offset, len);
+                        }
+                    });
+             } else if (ev instanceof EndCDATA) {
                 consumer.endCDATA();
             } else if (ev instanceof EndDTD) {
                 consumer.endDTD();
@@ -1126,6 +1321,5 @@ public class JXPathTemplate extends AbstractGenerator {
             ev = ev.next;
         }
     }
-
 
 }
