@@ -1,5 +1,5 @@
 /*
-$Id: ActionImpl.java,v 1.2 2004/03/01 10:36:22 andreas Exp $
+$Id: ActionImpl.java,v 1.3 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -77,9 +77,8 @@ public class ActionImpl implements Action {
     private String id;
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * Returns the action ID.
+     * @return A string.
      */
     public String getId() {
         return id;

@@ -1,5 +1,5 @@
 /*
-$Id: Workflow.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
+$Id: Workflow.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -55,10 +55,19 @@ $Id: Workflow.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
 */
 package org.apache.lenya.workflow;
 
-
 /**
+ * <p>A workflow schema.</p>
+ * <p>
+ * A workflow schema defines a state machine (deterministic finite
+ * automaton - DFA), consisting of
+ * </p>
+ * <ul>
+ * <li>states, including a marked initial state,</li>
+ * <li>transitions, and</li>
+ * <li>state variables.</li>
  *
- * @author  andreas
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: Workflow.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
  */
 public interface Workflow {
     String NAMESPACE = "http://apache.org/cocoon/lenya/workflow/1.0";

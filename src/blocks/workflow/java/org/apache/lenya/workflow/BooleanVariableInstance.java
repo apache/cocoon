@@ -1,5 +1,5 @@
 /*
-$Id: BooleanVariableInstance.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
+$Id: BooleanVariableInstance.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -57,10 +57,13 @@ package org.apache.lenya.workflow;
 
 
 /**
+ * An instance of a boolean variable.
  *
- * @author  andreas
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: BooleanVariableInstance.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
  */
 public interface BooleanVariableInstance {
+    
     /**
      * Sets the value of this variable.
      * @param value A boolean value.

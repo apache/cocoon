@@ -50,10 +50,11 @@
 */
 package org.apache.lenya.workflow;
 
-
 /**
  * A workflow event.
+ *
  * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: Event.java,v 1.3 2004/03/01 11:00:43 andreas Exp $
  */
 public interface Event {
 	

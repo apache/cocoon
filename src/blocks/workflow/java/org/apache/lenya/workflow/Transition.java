@@ -1,5 +1,5 @@
 /*
-$Id: Transition.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
+$Id: Transition.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -57,8 +57,25 @@ package org.apache.lenya.workflow;
 
 
 /**
- *
- * @author  andreas
+ * <p>
+ * A transition describes the switching of a workflow instance
+ * from one state to another. A transition has
+ * </p>
+ * 
+ * <ul>
+ * <li>a source state,</li>
+ * <li>a destination state,</li>
+ * <li>an event,</li>
+ * <li>a set of conditions,</li>
+ * <li>a set of assignments.</li>
+ * </ul>
+ * 
+ * <p>
+ * Additionally, a transition can be marked as synchronized.
+ * </p>
+ * 
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: Transition.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
  */
 public interface Transition {
 	

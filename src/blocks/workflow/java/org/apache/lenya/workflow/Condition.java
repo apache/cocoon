@@ -1,5 +1,5 @@
 /*
-$Id: Condition.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
+$Id: Condition.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
 <License>
 
  ============================================================================
@@ -56,8 +56,10 @@ $Id: Condition.java,v 1.1 2004/02/29 17:34:46 gregor Exp $
 package org.apache.lenya.workflow;
 
 /**
+ * Workflow condition.
  *
- * @author  andreas
+ * @author <a href="mailto:andreas@apache.org">Andreas Hartmann</a>
+ * @version $Id: Condition.java,v 1.2 2004/03/01 11:00:43 andreas Exp $
  */
 public interface Condition {
 
