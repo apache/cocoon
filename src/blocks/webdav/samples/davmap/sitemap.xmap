@@ -20,16 +20,6 @@
       />
     </map:generators>
 
-    <map:pipes default="caching">
-      <map:pipe 
-        name="event-caching" 
-        src="org.apache.cocoon.components.pipeline.impl.CachingProcessingPipeline"
-      >
-        <!-- parameter name="outputBufferSize" value="8192"/ -->
-        <parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/>
-      </map:pipe>
-    </map:pipes>
-
   </map:components>
 
 <!-- ========================== Flowscript ================================= -->
