@@ -49,7 +49,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  * also be specified as a <code>&lt;map:parameter&nbsp;.../&gt;</code> inside the
  * pipeline itself.</p>
  * 
- * @version CVS $Id: RegexpHeaderSelector.java 36086 2004-08-08 14:27:52Z ugo $
+ * @version CVS $Id$
  */
 public class RegexpHeaderSelector extends AbstractRegexpSelector {
 
