@@ -66,7 +66,7 @@ import org.apache.cocoon.bean.BeanListener;
  * with file destination.
  *
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: OutputStreamListener.java,v 1.4 2003/09/27 09:50:29 upayavira Exp $
+ * @version CVS $Id: OutputStreamListener.java,v 1.5 2003/10/06 12:40:14 upayavira Exp $
  */
 public class OutputStreamListener implements BeanListener {
     
@@ -75,6 +75,8 @@ public class OutputStreamListener implements BeanListener {
     private final long startTimeMillis;    
     private String reportFile = null;
     private String reportType = "text";
+    private long siteSize = 0L;
+    private int sitePages = 0;
    
     public OutputStreamListener(OutputStream os) {
         writer = new PrintWriter(os);
@@ -97,6 +99,9 @@ public class OutputStreamListener implements BeanListener {
                               int pagesRemaining, 
                               int pagesComplete, 
                               long timeTaken) {
+        this.siteSize += pageSize;
+        this.sitePages++;
+        
         double time = (((double)timeTaken)/1000);
         
         String size;
@@ -109,7 +114,8 @@ public class OutputStreamListener implements BeanListener {
         if (linksInPage == -1) {
             this.print("* " + sourceURI);
         } else {
-            this.print(pad(8, "* ["+linksInPage + "] ") +
+            this.print(pad(12, "* [" + pagesComplete + "/" + pagesRemaining + "] ") + 
+                       pad(10, "[" + newLinksInPage + "/" + linksInPage + "] ") +
                        pad(7,time + "s ") +
                        pad(7, size) + " " +
                        sourceURI);
@@ -125,7 +131,7 @@ public class OutputStreamListener implements BeanListener {
     }
 
     public void brokenLinkFound(String uri, String parentURI, String message, Throwable t) {
-        this.print(pad(28,"X [0] ")+uri+"\tBROKEN: "+message);
+        this.print(pad(42,"X [0] ")+uri+"\tBROKEN: "+message);
         brokenLinks.add(uri + "\t" + message);
         
 //            StringWriter sw = new StringWriter();
@@ -135,14 +141,19 @@ public class OutputStreamListener implements BeanListener {
     }
 
     public void pageSkipped(String uri, String message) {
-        this.print(pad(23, "^ ") + uri);
+        this.print(pad(37, "^ ") + uri);
     }
     
     public void complete() {
         outputBrokenLinks();
 
         long duration = System.currentTimeMillis() - startTimeMillis;
-        this.print("Total time: " + (duration / 60000) + " minutes " + (duration % 60000)/1000 + " seconds");
+        
+        this.print("Total time: " + 
+                   (duration / 60000) + " minutes " + 
+                   (duration % 60000)/1000 + " seconds, " + 
+                   " Site size: " + this.siteSize +
+                   " Site pages: " + this.sitePages);
         this.close();
     }
 
