@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,14 +48,14 @@ import java.util.Map;
  * @author     <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author     <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version    CVS $Id: Paginator.java,v 1.5 2004/03/05 13:03:00 bdelacretaz Exp $
+ * @version    CVS $Id: Paginator.java,v 1.6 2004/05/17 16:17:11 vgritsenko Exp $
  */
 public class Paginator extends AbstractTransformer
   implements Serviceable, Disposable, CacheableProcessingComponent {
 
     public static final String PAGINATE_URI = "http://apache.org/cocoon/paginate/1.0";
     public static final String PAGINATE_PREFIX = "page";
-    public static final String PAGINATE_PREFIX_TOKEN = PAGINATE_PREFIX+":";
+    public static final String PAGINATE_PREFIX_TOKEN = PAGINATE_PREFIX + ":";
 
     private ServiceManager manager;
     private SAXParser parser;
@@ -82,8 +82,9 @@ public class Paginator extends AbstractTransformer
             this.manager = manager;
             getLogger().debug("Looking up "+SAXParser.ROLE);
             this.parser = (SAXParser) manager.lookup(SAXParser.ROLE);
-            getLogger().debug("Looking up "+Store.ROLE+"/TransientStore");
-            this.store = (Store) manager.lookup(Store.ROLE+"/TransientStore");
+
+            getLogger().debug("Looking up " + Store.TRANSIENT_STORE);
+            this.store = (Store) manager.lookup(Store.TRANSIENT_STORE);
         } catch (Exception e) {
             getLogger().error("Could not find component", e);
         }

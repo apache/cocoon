@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bhtek@yahoo.com">Boon Hian Tek</a>
- * @version CVS $Id: Pagesheet.java,v 1.5 2004/05/17 13:44:47 unico Exp $
+ * @version CVS $Id: Pagesheet.java,v 1.6 2004/05/17 16:17:11 vgritsenko Exp $
  */
 
 /*
@@ -98,7 +98,7 @@ which indicates that:
 
 */
 public class Pagesheet extends DefaultHandler
-  implements Cloneable, Modifiable {
+                       implements Cloneable, Modifiable {
 
     // Used only during parsing of pagesheet document
     private int level = 0;
@@ -122,7 +122,6 @@ public class Pagesheet extends DefaultHandler
     private int descendant = 0;
 
     private static class Page {
-
         public int elementStart;
         public int elementEnd;
         public int characters;
@@ -144,7 +143,6 @@ public class Pagesheet extends DefaultHandler
     }
 
     private static class ItemList extends ArrayList {
-
         public ItemList(int capacity) {
             super(capacity);
         }
@@ -163,6 +161,7 @@ public class Pagesheet extends DefaultHandler
             return (item==this.size());
         }
     }
+
 
     public Pagesheet() {
         this.pages = new ResizableContainer(2);
@@ -216,7 +215,7 @@ public class Pagesheet extends DefaultHandler
 
             case 2 :
                 if (loc.equals("rules")) {
-                    if (this.pageRules==null) {
+                    if (this.pageRules == null) {
                         this.pageRules = new ResizableContainer(2);
                     }
                     String key = a.getValue("page");
@@ -315,10 +314,10 @@ public class Pagesheet extends DefaultHandler
     }
 
     public void endDocument() throws SAXException {
-        if (pageRules.size()==0) {
+        if (pageRules.size() == 0) {
             throw new SAXException("Pagesheet must contain at least a set of pagination rules.");
         }
-        if (pageRules.get(0)==null) {
+        if (pageRules.get(0) == null) {
             throw new SAXException("Pagesheet must contain the global pagination rules.");
         }
     }
