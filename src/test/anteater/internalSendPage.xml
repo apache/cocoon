@@ -24,13 +24,13 @@
   <target name="internal-sendpage-test">
     <property name="internal-sendpage-test" value="${anteater.env.cocoon}/samples/test/sendpage"/>
     
-    <httpRequest href="${internal-sendpage-test}/external">
+    <httpRequest href="${internal-sendpage-test}/testExternal">
       <match>
         <responseCode value="200"/>
       </match>
     </httpRequest>
     
-    <httpRequest href="${internal-sendpage-test}/internal">
+    <httpRequest href="${internal-sendpage-test}/testInternal">
       <match>
         <responseCode value="200"/>
       </match>
