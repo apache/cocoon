@@ -37,13 +37,13 @@
        is very suitable, because the object most frequently accessed is always on "top".
     </p>
     <p>If configured, the objects are also swapped to the filesystem if the
-    MRUMemoryStore reached his configured max. object limit.
+    MRUMemoryStore reached its configured maximum object limit.
     </p>
   </s1>
   <s1 title="Implementation">
     <s2 title="MRUMemoryStore">
     <p> 
-    The heart of the MRUMemoryStore ist combination of a LinkedList and a HashMap:
+    The heart of the MRUMemoryStore is a combination of a LinkedList and a HashMap:
     </p>
     <p>
     The LinkedList provides the queue mechanism, and the entries in the LinkedList 
@@ -64,7 +64,7 @@
     directory is "cache-dir" in the work-directory.
     </p>
     <p>
-    NOTE: The keys under Cocoon are Strings at the moment. Therefor the
+    NOTE: The keys under Cocoon are Strings at the moment. Therefore the
     filenames of the swapped objects can be very long. Especially Windows OS
     flavours have problems with long filenames. Use the JispFilesystemStore to
     get rid of it.
@@ -78,15 +78,15 @@
   <parameter name="use-persistent-cache" value="true"/>
 </store>]]>
   </source> 
-  <p>Explanation of the paramters:</p>
+  <p>Explanation of the parameters:</p>
     <ol> 
       <li><code>&lt;parameter name="maxobjects" value="100"/&gt;</code>:
-      Indicates how many objects will be hold in MRUMemoryStore. When the number 
+      Indicates how many objects will be held in MRUMemoryStore. When the number 
       of maxobjects has been reached, the last object in the MRUMemoryStore will be 
       thrown out.</li>
       <li><code>&lt;parameter name="use-persistent-cache" value="true"/&gt;</code>:
       If this switch is set on true, objects are swapped out to the filesystem,
-      if the MRUMemoryStore has reached his maximum object limit, or the JVM 
+      if the MRUMemoryStore has reached its maximum object limit, or the JVM 
       memory consumption is over the heap size limit. See StoreJanitor user 
       docs for more information.</li>
 	</ol>
