@@ -23,7 +23,7 @@ import java.util.EventListener;
  * <code>java.awt.AWTEventMulticaster</code> for more information on its use.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: WidgetEventMulticaster.java,v 1.1 2004/03/09 10:33:45 reinhard Exp $
+ * @version CVS $Id: WidgetEventMulticaster.java,v 1.2 2004/06/15 07:33:43 sylvain Exp $
  */
 public class WidgetEventMulticaster extends AWTEventMulticaster implements
     ActionListener, ValueChangedListener, ProcessingPhaseListener {
@@ -32,6 +32,23 @@ public class WidgetEventMulticaster extends AWTEventMulticaster implements
         super(a, b);
     }
     
+    //-- Create ---------------------------------------------------------------
+    
+    public static CreateListener add(CreateListener a, CreateListener b) {
+        return (CreateListener)addInternal(a, b);
+    }
+    
+    public static CreateListener remove(CreateListener l, CreateListener oldl) {
+        return (CreateListener)removeInternal(l, oldl);
+    }
+    
+    public void widgetCreated(CreateEvent e) {
+        ((CreateListener)a).widgetCreated(e);
+        ((CreateListener)b).widgetCreated(e);
+    }
+
+    //-- Action ---------------------------------------------------------------
+
     public static ActionListener add(ActionListener a, ActionListener b) {
         return (ActionListener)addInternal(a, b);
     }
@@ -45,6 +62,8 @@ public class WidgetEventMulticaster extends AWTEventMulticaster implements
         ((ActionListener)b).actionPerformed(e);
     }
 
+    //-- ValueChanged ---------------------------------------------------------
+
     public static ValueChangedListener add(ValueChangedListener a, ValueChangedListener b) {
         return (ValueChangedListener)addInternal(a, b);
     }
@@ -53,6 +72,13 @@ public class WidgetEventMulticaster extends AWTEventMulticaster implements
         return (ValueChangedListener)removeInternal(l, oldl);
     }
     
+    public void valueChanged(ValueChangedEvent e) {
+        ((ValueChangedListener)a).valueChanged(e);
+        ((ValueChangedListener)b).valueChanged(e);
+    }
+    
+    //-- ProcessingPhase ------------------------------------------------------
+
     public void phaseEnded(ProcessingPhaseEvent e) {
         ((ProcessingPhaseListener)a).phaseEnded(e);
         ((ProcessingPhaseListener)b).phaseEnded(e);
@@ -64,11 +90,6 @@ public class WidgetEventMulticaster extends AWTEventMulticaster implements
     
     public static ProcessingPhaseListener remove(ProcessingPhaseListener l, ProcessingPhaseListener oldl) {
         return (ProcessingPhaseListener)removeInternal(l, oldl);
-    }
-    
-    public void valueChanged(ValueChangedEvent e) {
-        ((ValueChangedListener)a).valueChanged(e);
-        ((ValueChangedListener)b).valueChanged(e);
     }
     
     /**

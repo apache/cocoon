@@ -16,6 +16,7 @@
 package org.apache.cocoon.forms.event.impl;
 
 import org.apache.cocoon.forms.event.ActionListener;
+import org.apache.cocoon.forms.event.CreateListener;
 import org.apache.cocoon.forms.event.ValueChangedListener;
 import org.apache.cocoon.forms.event.WidgetListener;
 import org.apache.cocoon.forms.event.WidgetListenerBuilder;
@@ -32,16 +33,16 @@ import org.w3c.dom.Element;
  * <p>
  * The syntax for this listener is as follows :
  * <pre>
- *   &lt;javascript&gt;
+ *   &lt;fd:javascript&gt;
  *     var widget = event.sourceWidget;
  *     sourceWidget.setValue("Yeah");
- *   &lt;/javascript&gt;
+ *   &lt;/fd:javascript&gt;
  * </pre>
  * As shown above, the event that fired this listener is published as the <code>event</code>
  * variable.
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptWidgetListenerBuilder.java,v 1.2 2004/04/27 12:02:13 bruno Exp $
+ * @version CVS $Id: JavaScriptWidgetListenerBuilder.java,v 1.3 2004/06/15 07:33:43 sylvain Exp $
  */
 public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder, ThreadSafe, Contextualizable {
 
@@ -57,6 +58,8 @@ public class JavaScriptWidgetListenerBuilder implements WidgetListenerBuilder, T
 
         if (listenerClass == ActionListener.class) {
             return new JavaScriptWidgetListener.JSActionListener(script, context);
+        } else if (listenerClass == CreateListener.class) {
+            return new JavaScriptWidgetListener.JSCreateListener(script, context);
         } else if (listenerClass == ValueChangedListener.class) {
             return new JavaScriptWidgetListener.JSValueChangedListener(script, context);
         } else {

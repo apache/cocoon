@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.cocoon.forms.Constants;
+import org.apache.cocoon.forms.event.CreateEvent;
+import org.apache.cocoon.forms.event.CreateListener;
+import org.apache.cocoon.forms.event.WidgetEventMulticaster;
 import org.apache.cocoon.forms.validation.WidgetValidator;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -30,7 +33,7 @@ import org.xml.sax.SAXException;
 /**
  * Provides functionality that is common across many WidgetDefinition implementations.
  * 
- * @version $Id: AbstractWidgetDefinition.java,v 1.6 2004/04/29 08:46:19 cziegeler Exp $
+ * @version $Id: AbstractWidgetDefinition.java,v 1.7 2004/06/15 07:33:44 sylvain Exp $
  */
 public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private FormDefinition formDefinition;
@@ -41,6 +44,8 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
     private String id;
     private Map displayData;
     private List validators;
+    
+    protected CreateListener createListener;
 
     public FormDefinition getFormDefinition() {
         if (this.formDefinition == null) {
@@ -82,6 +87,16 @@ public abstract class AbstractWidgetDefinition implements WidgetDefinition {
 
     protected void setId(String id) {
         this.id = id;
+    }
+    
+    protected void addCreateListener(CreateListener listener) {
+    		this.createListener = WidgetEventMulticaster.add(this.createListener, listener);
+    }
+    
+    public void fireCreateEvent(CreateEvent event) {
+        if (this.createListener != null) {
+        	    this.createListener.widgetCreated(event);
+        }
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {

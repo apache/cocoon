@@ -22,6 +22,9 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -42,11 +45,11 @@ import org.xml.sax.InputSource;
 /**
  * Component implementing the {@link FormManager} role.
  * 
- * @version $Id: DefaultFormManager.java,v 1.5 2004/06/01 10:51:28 bruno Exp $
+ * @version $Id: DefaultFormManager.java,v 1.6 2004/06/15 07:33:43 sylvain Exp $
  */
 public class DefaultFormManager 
   extends AbstractLogEnabled 
-  implements FormManager, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
+  implements FormManager, Contextualizable, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
       
     protected static final String PREFIX = "CocoonForm:";
     protected ServiceManager manager;
@@ -54,7 +57,18 @@ public class DefaultFormManager
     protected SimpleServiceSelector widgetDefinitionBuilderSelector;
     protected CacheManager cacheManager;
 
-    public void service(ServiceManager serviceManager) throws ServiceException {
+    private Context avalonContext;
+    public void contextualize(Context context) throws ContextException {
+		this.avalonContext = context;
+	}
+    
+    /** Temporary internal method, don't rely on it's existence! Needed to access the context from flowscript. */
+    // FIXME (SW). Extending the FOM is needed.
+    public Context getAvalonContext() {
+    		return this.avalonContext;
+    }
+
+	public void service(ServiceManager serviceManager) throws ServiceException {
         this.manager = serviceManager;
         this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
     }
@@ -190,4 +204,5 @@ public class DefaultFormManager
         this.manager = null;
         this.cacheManager = null;
     }
+
 }
