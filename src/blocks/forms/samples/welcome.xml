@@ -112,11 +112,4 @@
   <sample name="New Flowscript API example" href="v2/example">example</sample>
  </group>
 
- <group name="Pre-alpha Cocoon Forms-based xml editor">
-  <note>
-    This demonstrates the potential to have a Cocoon Forms-based gui for creating Cocoon apps.
-  </note>
-  <sample name="Swan" href="swan/">Start page</sample>
- </group>
-
 </samples>
