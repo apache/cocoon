@@ -13,12 +13,12 @@
    <xsp:include>java.net.*</xsp:include>
    <xsp:include>org.apache.cocoon.components.parser.XercesParser</xsp:include>
    <xsp:include>org.apache.cocoon.xml.XMLConsumer</xsp:include>
-   <xsp:include>org.apache.cocoon.xml.util.DOMStreamer</xsp:include>
-   <xsp:include>org.apache.cocoon.util.DOMUtils</xsp:include>
+   <xsp:include>org.apache.cocoon.xml.DOMStreamer</xsp:include>
+   <xsp:include>org.apache.cocoon.util.dom.DOMUtils</xsp:include>
    <xsp:include>javax.servlet.ServletContext</xsp:include>
    <xsp:include>javax.servlet.http.HttpServletRequest</xsp:include>
   </xsp:structure>
-  
+
   <xsp:logic><![CDATA[
     private static final String ATTR_NAME_COLOR = "darkblue";
     private static final String ATTR_VALUE_COLOR = "navy";
@@ -44,7 +44,7 @@
     }
 
 
-    protected String relativeFilename(String filename, HttpServletRequest request, ServletContext context) 
+    protected String relativeFilename(String filename, HttpServletRequest request, ServletContext context)
         throws IOException {
       File file = new File(filename);
 
@@ -65,7 +65,7 @@
 
     protected String getBasename(HttpServletRequest request, Object context) {
       String path;
-        
+
       try {
         // detect if the engine supports at least Servlet API 2.2
         request.getContextPath();
@@ -127,7 +127,7 @@
           break;
         case Node.ELEMENT_NODE: {
           Element element = (Element) node;
-  
+
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
           result.appendChild(factory.createTextNode("<"));
@@ -151,10 +151,10 @@
 
           NamedNodeMap attributes = element.getAttributes();
           int attributeCount = attributes.getLength();
-  
+
           for (int i = 0; i < attributeCount; i++) {
             Attr attribute = (Attr) attributes.item(i);
-  
+
             result = factory.createElement("font");
             result.setAttribute("color", ATTR_NAME_COLOR);
             result.appendChild(
@@ -169,10 +169,10 @@
             );
             fragment.appendChild(result);
           }
-  
+
           NodeList nodeList = element.getChildNodes();
           int childCount = nodeList.getLength();
-  
+
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
           result.appendChild(
@@ -185,7 +185,7 @@
           } else {
             textColor = TEXT_COLOR;
           }
-            
+
           result = factory.createElement("font");
           result.setAttribute("color", textColor);
 
@@ -212,20 +212,20 @@
             result.appendChild(factory.createTextNode(">"));
             fragment.appendChild(result);
           }
-  
+
           break;
         }
         case Node.DOCUMENT_NODE:
         case Node.DOCUMENT_FRAGMENT_NODE: {
           NodeList nodeList = node.getChildNodes();
           int childCount = nodeList.getLength();
-  
+
           for (int i = 0; i < childCount; i++) {
             fragment.appendChild(
               doColorize(nodeList.item(i), factory, level + 1, textColor)
             );
           }
-  
+
           break;
         }
         case Node.COMMENT_NODE:
@@ -248,12 +248,12 @@
           result.setAttribute("color", DELIMITER_COLOR);
           result.appendChild(factory.createTextNode("<?"));
           fragment.appendChild(result);
-  
+
           result = factory.createElement("font");
           result.setAttribute("color", PI_COLOR);
           result.appendChild(factory.createTextNode(pi.getTarget() + " " + pi.getData()));
           fragment.appendChild(result);
-  
+
           result = factory.createElement("font");
           result.setAttribute("color", DELIMITER_COLOR);
           result.appendChild(factory.createTextNode("?>\n"));
@@ -293,7 +293,7 @@
       <xsp:logic>
         String filename = request.getParameter("filename");
         String resourcename = request.getParameter("url");
-        
+
         if (filename != null) {
           String filepath = null;
           try {
@@ -323,11 +323,11 @@
           } catch (MalformedURLException mue) {
             throw new SAXException (mue);
           }
-          
+
           <h3 style="color:navy; text-align: center">
             <xsp:expr>resourcename</xsp:expr>
           </h3>
-      
+
           InputSource is = null;
           try {
             is = new InputSource (resource.openStream());
