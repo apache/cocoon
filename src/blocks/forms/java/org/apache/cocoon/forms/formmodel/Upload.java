@@ -30,12 +30,12 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 /**
- * A file-uploading Widget. This widget gives access via Woody, to Cocoon's 
+ * A file-uploading Widget. This widget gives access via Cocoon Forms, to Cocoon's 
  * file upload functionality.
  * 
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Upload.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id: Upload.java,v 1.4 2004/03/11 02:56:33 joerg Exp $
  */
 public class Upload extends AbstractWidget implements ValidationErrorAware {
     private UploadDefinition uploadDefinition;

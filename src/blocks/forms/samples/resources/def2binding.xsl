@@ -18,7 +18,7 @@
   Transforms a form definition file into a binding file. This is an attempt at merging
   these two files in only one.
   To use it, simply load the form bindings from a cocoon: pipeline that applies this stylesheet
-  on a form definition. Next step will by to rewrite this directly into Woody's binding system.
+  on a form definition. Next step will by to rewrite this directly into Cocoon Forms binding system.
   
   The binding is created according to the following rules :
   - fb:* attributes on widget definitions lead to the creation of
@@ -28,7 +28,7 @@
   - if a <fd:binding> is present, its content is copied as is with the @id of the enclosing widget
   
   @author Sylvain Wallez
-  @version CVS $Id: def2binding.xsl,v 1.1 2004/03/09 10:34:10 reinhard Exp $
+  @version CVS $Id: def2binding.xsl,v 1.2 2004/03/11 02:56:31 joerg Exp $
 -->
 
 <xsl:stylesheet

@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/forms.js");
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
 function customValidationDemo() {
     var form = new Form("forms/customvalidationdemo_form.xml");
@@ -27,7 +27,7 @@ function customValidationDemo() {
 
 function myValidator(form) {
     // Add an error message to specific widgets as follows:
-    var validationError = new Packages.org.apache.cocoon.forms.datatype.ValidationError("This is so wrong.");
+    var validationError = new Packages.org.apache.cocoon.forms.validation.ValidationError("This is so wrong.");
     form.getWidget("number1").setValidationError(validationError);
     form.getWidget("number2").setValidationError(validationError);
 

@@ -41,13 +41,13 @@ import org.xml.sax.InputSource;
 /**
  * Component implementing the {@link FormManager} role.
  * 
- * @version $Id: DefaultFormManager.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version $Id: DefaultFormManager.java,v 1.3 2004/03/11 02:56:33 joerg Exp $
  */
 public class DefaultFormManager 
   extends AbstractLogEnabled 
   implements FormManager, ThreadSafe, Serviceable, Disposable, Configurable, Component, Initializable {
       
-    protected static final String PREFIX = "WoodyForm:";
+    protected static final String PREFIX = "CocoonForm:";
     protected ServiceManager manager;
     protected Configuration configuration;
     protected SimpleServiceSelector widgetDefinitionBuilderSelector;
@@ -112,9 +112,9 @@ public class DefaultFormManager
 
             Element formElement = formDocument.getDocumentElement();
 
-            // check that the root element is a wd:form element
+            // check that the root element is a fd:form element
             if (!(formElement.getLocalName().equals("form") || Constants.DEFINITION_NS.equals(formElement.getNamespaceURI())))
-                throw new Exception("Expected a Woody form element at " + DomHelper.getLocation(formElement));
+                throw new Exception("Expected a Cocoon Forms form element at " + DomHelper.getLocation(formElement));
 
             FormDefinitionBuilder formDefinitionBuilder = (FormDefinitionBuilder)widgetDefinitionBuilderSelector.select("form");
             formDefinition = (FormDefinition)formDefinitionBuilder.buildWidgetDefinition(formElement);

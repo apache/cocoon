@@ -16,7 +16,7 @@
 -->
 <!--
    | WARNING: this XSL is not maintained anymore. Please use instead the XSL's
-   |          found in the woody/samples/resources directory, which provide
+   |          found in the forms/samples/resources directory, which provide
    |          much more features. This XSL will be removed in the future.
    -->
 <xsl:stylesheet

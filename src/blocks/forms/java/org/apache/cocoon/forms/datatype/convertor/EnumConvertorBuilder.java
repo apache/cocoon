@@ -22,12 +22,12 @@ import org.w3c.dom.Element;
 /**
  * Builds {@link EnumConvertor}s.
  * 
- * @version CVS $Id: EnumConvertorBuilder.java,v 1.2 2004/03/09 13:08:46 cziegeler Exp $
+ * @version CVS $Id: EnumConvertorBuilder.java,v 1.3 2004/03/11 02:56:32 joerg Exp $
  */
 public class EnumConvertorBuilder implements ConvertorBuilder {
 
     /* (non-Javadoc)
-     * @see org.apache.cocoon.woody.datatype.convertor.ConvertorBuilder#build(org.w3c.dom.Element)
+     * @see org.apache.cocoon.form.datatype.convertor.ConvertorBuilder#build(org.w3c.dom.Element)
      */
     public Convertor build(Element configElement) throws Exception {
         if (configElement == null) {

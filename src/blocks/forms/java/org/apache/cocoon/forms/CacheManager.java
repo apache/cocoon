@@ -19,9 +19,9 @@ import java.io.IOException;
 import org.apache.excalibur.source.Source;
 
 /**
- * Work interface for the component that caches objects for Woody.
+ * Work interface for the component that caches objects for Cocoon Forms.
  * 
- * @version $Id: CacheManager.java,v 1.1 2004/03/09 10:34:12 reinhard Exp $
+ * @version $Id: CacheManager.java,v 1.2 2004/03/11 02:56:33 joerg Exp $
  */
 public interface CacheManager {
     

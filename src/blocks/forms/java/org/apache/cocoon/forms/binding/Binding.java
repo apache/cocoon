@@ -20,9 +20,9 @@ import org.apache.cocoon.forms.formmodel.Widget;
 /**
  * Binding declares the methods to 'bind' (i.e. 'load' and 'save')
  * information elements from some back-end model (2nd argument) to and from
- * a existing Woody Widget.
+ * a existing Cocoon Form Widget.
  *
- * @version CVS $Id: Binding.java,v 1.1 2004/03/09 10:33:55 reinhard Exp $
+ * @version CVS $Id: Binding.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public interface Binding {
 

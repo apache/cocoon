@@ -24,18 +24,18 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.formmodel.Form;
-import org.apache.cocoon.forms.transformation.FormsPipelineConfig;
+import org.apache.cocoon.forms.transformation.FormPipelineConfig;
 import org.apache.cocoon.generation.AbstractGenerator;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
- * A generator that streams an XML representation of a Woody {@link Form}. This will
+ * A generator that streams an XML representation of a {@link Form}. This will
  * recursively contain the XML for all widgets on the form. This can then be styled
  * using an XSLT.
  *
  * <p>An alternative approach that requires less (or even none) XSLT work is offered by
- * the {@link org.apache.cocoon.forms.transformation.FormsTemplateTransformer}.
+ * the {@link org.apache.cocoon.forms.transformation.FormTemplateTransformer}.
  *
  * <p>The Form whose XML should be produced should reside either 
  * <ol><li> In a request attribute, whose name should be provided to this 
@@ -43,18 +43,18 @@ import org.xml.sax.SAXException;
  * <li> Or else at its default-location in the flow context-object.</li>
  * </ol>
  * 
- * @version $Id: FormsGenerator.java,v 1.3 2004/03/09 13:08:47 cziegeler Exp $
+ * @version $Id: FormGenerator.java,v 1.1 2004/03/11 02:56:33 joerg Exp $
  */
-public class FormsGenerator extends AbstractGenerator {
+public class FormGenerator extends AbstractGenerator {
     
-    protected FormsPipelineConfig config;
+    protected FormPipelineConfig config;
     private static final String FORM_GENERATED_EL = "form-generated";
 
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters par)
             throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         
-        this.config = FormsPipelineConfig.createConfig(objectModel, parameters);            
+        this.config = FormPipelineConfig.createConfig(objectModel, parameters);            
     }
 
     public void recycle() {

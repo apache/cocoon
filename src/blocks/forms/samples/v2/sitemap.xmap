@@ -23,7 +23,7 @@
       <map:transformer name="i18n" src="org.apache.cocoon.transformation.I18nTransformer">
         <catalogues default="other">
           <catalogue id="other" name="OtherMessages" location="../messages"/>
-          <catalogue id="forms" name="WoodyMessages" location="../messages"/>
+          <catalogue id="forms" name="FormMessages" location="../messages"/>
         </catalogues>
         <cache-at-startup>true</cache-at-startup>
       </map:transformer>
@@ -81,7 +81,7 @@
       <map:match pattern="*-display-pipeline">
         <!-- pipeline to show the form -->
         <map:generate type="jx" src="{1}_template.xml"/>
-        <map:transform type="forms"/>
+        <map:transform type="form"/>
         <map:transform type="i18n">
           <map:parameter name="locale" value="en-US"/>
         </map:transform>

@@ -25,7 +25,7 @@
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 
-  <xsl:template match="head" mode="woody-calendar">
+  <xsl:template match="head" mode="forms-calendar">
     <script src="{$resources-uri}/mattkruse-lib/CalendarPopup.js" type="text/javascript"/>
     <script src="{$resources-uri}/mattkruse-lib/date.js" type="text/javascript"/>
     <script type="text/javascript">
@@ -39,7 +39,7 @@
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms-calendar.css"/>
   </xsl:template>
 
-  <xsl:template match="body" mode="woody-calendar">
+  <xsl:template match="body" mode="forms-calendar">
     <div id="forms_calendarDiv"/>
   </xsl:template>
 

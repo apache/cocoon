@@ -14,7 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!-- This catalogue file contains translations for built-in Woody messages. -->
+<!-- This catalogue file contains translations for built-in CForms messages. -->
 <catalogue>
   <message key="general.field-required">This field is required.</message>
 

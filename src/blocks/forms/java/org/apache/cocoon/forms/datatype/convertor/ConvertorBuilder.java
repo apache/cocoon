@@ -22,11 +22,11 @@ import org.w3c.dom.Element;
  * based on a XML configuration (supplied as DOM Element).
  *
  * <p>The element will (should)
- * always have the local name "convertor" and the woody definition namespace,
+ * always have the local name "convertor" and the cforms definition namespace,
  * but attributes and content of the element can vary depending on the
  * ConvertorBuilder implementation.
  *
- * @version CVS $Id: ConvertorBuilder.java,v 1.1 2004/03/09 10:34:06 reinhard Exp $
+ * @version CVS $Id: ConvertorBuilder.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public interface ConvertorBuilder {
     /**

@@ -94,10 +94,10 @@ Form.prototype.showForm = function(uri, fun, ttl) {
         this.setBookmark();
     }
     var FormContext = Packages.org.apache.cocoon.forms.FormContext;
-    // this is needed by the FormsTemplateTransformer:
+    // this is needed by the FormTemplateTransformer:
     var javaWidget = this.formWidget_.unwrap();;
-    this.formWidget_["woody-form"] = javaWidget;
-    cocoon.request.setAttribute("woody-form", javaWidget);
+    this.formWidget_["CocoonForm"] = javaWidget;
+    cocoon.request.setAttribute("CocoonForm", javaWidget);
     var wk = cocoon.sendPageAndWait(uri, this.formWidget_, fun, ttl); 
     var formContext = 
         new FormContext(cocoon.request, javaWidget.getLocale());

@@ -32,11 +32,11 @@ import org.mozilla.javascript.Scriptable;
 import org.w3c.dom.Element;
 
 /**
- * Helper methods to use JavaScript in various locations of the Woody configuration files
+ * Helper methods to use JavaScript in various locations of the Cocoon Forms configuration files
  * such as event listeners and bindings.
  * 
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptHelper.java,v 1.1 2004/03/09 10:34:09 reinhard Exp $
+ * @version CVS $Id: JavaScriptHelper.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
 public class JavaScriptHelper {
 

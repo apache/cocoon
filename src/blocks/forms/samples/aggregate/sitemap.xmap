@@ -18,7 +18,7 @@
 <!--+
     | Cocoon Forms aggregate sample sitemap.
     |
-    | CVS $Id: sitemap.xmap,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+    | CVS $Id: sitemap.xmap,v 1.2 2004/03/11 02:56:33 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -63,7 +63,7 @@
       <map:match pattern="*-display-pipeline">
         <!-- pipeline to show the form -->
         <map:generate type="jx" src="template-{1}.xml"/>
-        <map:transform type="forms"/>
+        <map:transform type="form"/>
         <map:call resource="simple-page2html">
           <map:parameter name="file" value="{1}_template.xml"/>
         </map:call>

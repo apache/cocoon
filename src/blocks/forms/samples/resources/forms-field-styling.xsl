@@ -19,19 +19,19 @@
                 xmlns:fi="http://apache.org/cocoon/forms/1.0#instance"
                 exclude-result-prefixes="fi">
   <!--+
-      | This stylesheet is designed to be included by 'woody-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.2 2004/03/10 21:52:00 reinhard Exp $
+      | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
+      | Version CVS $Id: forms-field-styling.xsl,v 1.3 2004/03/11 02:56:31 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
   <xsl:param name="resources-uri">resources</xsl:param>
 
-  <xsl:template match="head" mode="woody-field">
+  <xsl:template match="head" mode="forms-field">
     <script src="{$resources-uri}/forms-lib.js" type="text/javascript"/>
     <link rel="stylesheet" type="text/css" href="{$resources-uri}/forms.css"/>
   </xsl:template>
 
-  <xsl:template match="body" mode="woody-field">
+  <xsl:template match="body" mode="forms-field">
     <xsl:attribute name="onload">forms_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
   </xsl:template>
 
@@ -53,7 +53,7 @@
     <xsl:apply-templates select="fi:validation-message"/>
     <!-- required mark -->
     <xsl:if test="@required='true'">
-      <span class="woody-field-required"> * </span>
+      <span class="forms-field-required"> * </span>
     </xsl:if>
   </xsl:template>
 
@@ -117,7 +117,7 @@
       |
       +-->
   <xsl:template match="fi:validation-message">
-    <a href="#" class="woody-validation-message" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
+    <a href="#" class="forms-validation-message" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
   </xsl:template>
 
   <!--+
@@ -465,7 +465,7 @@
           <xsl:copy-of select="header"/>
         </xsl:when>
         <xsl:otherwise>
-          <p class="woody-validation-errors">The following errors have been detected (marked with !):</p>
+          <p class="forms-validation-errors">The following errors have been detected (marked with !):</p>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -475,7 +475,7 @@
           <xsl:copy-of select="footer"/>
         </xsl:when>
         <xsl:otherwise>
-          <p class="woody-validation-errors">Please, correct them and re-submit the form.</p>
+          <p class="forms-validation-errors">Please, correct them and re-submit the form.</p>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -484,7 +484,7 @@
       <xsl:copy-of select="$header"/>
       <ul>
         <xsl:for-each select="$frm//fi:validation-message">
-          <li class="woody-validation-error">
+          <li class="forms-validation-error">
             <xsl:if test="../fi:label">
               <xsl:value-of select="../fi:label"/><xsl:text>: </xsl:text>
             </xsl:if>

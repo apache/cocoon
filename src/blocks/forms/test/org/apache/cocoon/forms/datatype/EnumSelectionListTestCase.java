@@ -37,8 +37,8 @@ import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
 
 /**
- * Test case for Woody's DynamicSelectionList datatype.
- * @version CVS $Id: EnumSelectionListTestCase.java,v 1.4 2004/03/10 09:13:22 stephan Exp $
+ * Test case for CForms's DynamicSelectionList datatype.
+ * @version CVS $Id: EnumSelectionListTestCase.java,v 1.5 2004/03/11 02:56:32 joerg Exp $
  */
 public class EnumSelectionListTestCase extends ExcaliburTestCase {
 

@@ -35,14 +35,15 @@ import org.xml.sax.helpers.AttributesImpl;
  * {@link Constants#TEMPLATE_NS} namespace) tags (having an id attribute)
  * by the XML representation of the corresponding widget instance.
  *
- * <p>These XML fragments (normally all in the {@link Constants#INSTANCE_NS "Woody Instance"} namespace), can
- * then be translated to a HTML presentation by an XSL. This XSL will then only have to style
- * individual widget, and will not need to do the whole page layout.
+ * <p>These XML fragments (normally all in the
+ * {@link Constants#INSTANCE_NS "Cocoon Forms Instance"} namespace), can then be
+ * translated to a HTML presentation by an XSL. This XSL will then only have to
+ * style individual widget, and will not need to do the whole page layout.
  *
  * <p>For more information about the supported tags and their function, see the user documentation
- * for the woody template transformer.</p>
+ * for the forms template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.4 2004/03/11 02:56:32 joerg Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
 
@@ -91,7 +92,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected boolean repeaterWidget;
 
     protected WidgetReplacingPipe.InsertStylingContentHandler stylingHandler = new WidgetReplacingPipe.InsertStylingContentHandler();
-    protected FormsPipelineConfig pipeContext;
+    protected FormPipelineConfig pipeContext;
 
     /**
      * Have we encountered a <wi:style> element in a widget ?
@@ -104,7 +105,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected String namespacePrefix;
     
 
-    public void init(Widget newContextWidget, FormsPipelineConfig newPipeContext) {
+    public void init(Widget newContextWidget, FormPipelineConfig newPipeContext) {
         contextWidget = newContextWidget;
         inWidgetElement = false;
         elementNestingCounter = 0;
@@ -132,7 +133,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 widget = getWidget(attributes);
                 repeaterWidget = localName.equals(REPEATER_WIDGET);
                 if (repeaterWidget && !(widget instanceof Repeater)) {
-                    throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
+                    throw new SAXException("FormsTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
                 }
             } else if (localName.equals(WIDGET_LABEL)) {
                 checkContextWidgetAvailable(qName);
@@ -142,24 +143,24 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 if (!(widget instanceof Repeater)) {
-                    throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" can only be used for repeater widgets.");
+                    throw new SAXException("FormsTemplateTransformer: the element \"repeater-widget-label\" can only be used for repeater widgets.");
                 }
                 String widgetId = attributes.getValue("widget-id");
                 if (widgetId == null || widgetId.equals("")) {
-                    throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" requires a \"widget-id\" attribute.");
+                    throw new SAXException("FormsTemplateTransformer: the element \"repeater-widget-label\" requires a \"widget-id\" attribute.");
                 }
                 ((Repeater)widget).generateWidgetLabel(widgetId, contentHandler);
             } else if (localName.equals(REPEATER_SIZE)) {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
                 if (!(widget instanceof Repeater))
-                    throw new SAXException("WoodyTemplateTransformer: the element \"repeater-size\" can only be used for repeater widgets.");
+                    throw new SAXException("FormsTemplateTransformer: the element \"repeater-size\" can only be used for repeater widgets.");
                 contentHandler.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
                 ((Repeater)widget).generateSize(contentHandler);
                 contentHandler.endPrefixMapping(Constants.INSTANCE_PREFIX);
             } else if (localName.equals(FORM_TEMPLATE_EL)) {
                 if (contextWidget != null) {
-                    throw new SAXException("Detected nested wt:form-template elements, this is not allowed.");
+                    throw new SAXException("Detected nested ft:form-template elements, this is not allowed.");
                 }
                 contentHandler.startPrefixMapping(Constants.INSTANCE_PREFIX, Constants.INSTANCE_NS);
 
@@ -217,7 +218,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 contentHandler.endElement(Constants.INSTANCE_NS, CONTINUATION_ID, Constants.INSTANCE_PREFIX_COLON + CONTINUATION_ID);
                 contentHandler.endPrefixMapping(Constants.INSTANCE_PREFIX);
             } else {
-                throw new SAXException("WoodyTemplateTransformer: Unsupported element: " + localName);
+                throw new SAXException("FormsTemplateTransformer: Unsupported element: " + localName);
             }
         } else {
             super.startElement(namespaceURI, localName, qName, attributes);
@@ -246,11 +247,11 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     protected Widget getWidget(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
         if (widgetId == null || widgetId.equals("")) {
-            throw new SAXException("WoodyTemplateTransformer: missing id attribute on a woody element.");
+            throw new SAXException("FormsTemplateTransformer: missing id attribute on a Cocoon Forms element.");
         }
         Widget widget = contextWidget.getWidget(widgetId);
         if (widget == null) {
-            throw new SAXException("WoodyTemplateTransformer: widget with id \"" + widgetId + "\" does not exist in the container " + contextWidget.getFullyQualifiedId());
+            throw new SAXException("FormsTemplateTransformer: widget with id \"" + widgetId + "\" does not exist in the container " + contextWidget.getFullyQualifiedId());
         }
         return widget;
     }

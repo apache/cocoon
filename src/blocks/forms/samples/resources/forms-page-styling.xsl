@@ -21,14 +21,14 @@
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
       +-->
-  <xsl:template match="head" mode="woody-page">
-    <!--+ 'woody-page-styling.xsl' relies on 'woody-field-styling.xsl' for the
+  <xsl:template match="head" mode="forms-page">
+    <!--+ 'forms-page-styling.xsl' relies on 'forms-field-styling.xsl' for the
         | inclusion of the correct JS and CSS files. To fix it, we have to
         | separate the page specific parts into its own files.
         +-->
   </xsl:template>
 
-  <xsl:template match="body" mode="woody-page"/>
+  <xsl:template match="body" mode="forms-page"/>
 
   <!--
     fi:group : default is to enclose items in a div
@@ -45,8 +45,8 @@
   -->
   <xsl:template match="fi:group[fi:styling/@type='tabs']">
     <!-- find the currently selected tab.
-         Thoughts still needed here, such as autogenerating a field in the woodytransformer
-         to hold this state.
+         Thoughts still needed here, such as autogenerating a field in the
+         forms transformer to hold this state.
     -->
     <xsl:variable name="active">
       <xsl:variable name="value" select="normalize-space(fi:state/fi:*/fi:value)"/>
@@ -77,7 +77,7 @@
             </xsl:attribute>
             <xsl:copy-of select="fi:label/node()"/>
             <xsl:if test="fi:items/*//fi:validation-message">
-              <span class="woody-validation-message">&#160;!&#160;</span>
+              <span class="forms-validation-message">&#160;!&#160;</span>
             </xsl:if>
           </span>
         </xsl:for-each>
@@ -141,7 +141,7 @@
           </xsl:for-each>
         </select>
         <xsl:if test="fi:items/*//fi:validation-message">
-          <span class="woody-validation-message">&#160;!&#160;</span>
+          <span class="forms-validation-message">&#160;!&#160;</span>
         </xsl:if>
       </legend>
       <!-- a div for each of the items -->

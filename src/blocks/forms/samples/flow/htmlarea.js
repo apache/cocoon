@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/forms.js");
+cocoon.load("resource://org/apache/cocoon/forms/flow/javascript/Form.js");
 
 function htmlarea() {
     var form = new Form("forms/htmlarea.xml");

@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Bruno Dumon
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: Form.java,v 1.3 2004/03/09 13:17:26 cziegeler Exp $
+ * @version CVS $Id: Form.java,v 1.4 2004/03/11 02:56:33 joerg Exp $
  */
 public class Form extends AbstractContainerWidget {
     
@@ -198,7 +198,7 @@ public class Form extends AbstractContainerWidget {
         this.phase = ProcessingPhase.READ_FROM_REQUEST;
         // Find the submit widget, if not an action
         this.submitWidget = null;
-        String submitId = formContext.getRequest().getParameter("woody_submit_id");
+        String submitId = formContext.getRequest().getParameter("forms_submit_id");
         if (submitId != null && submitId.length() > 0) {
             StringTokenizer stok = new StringTokenizer(submitId, ".");
             Widget submit = this;

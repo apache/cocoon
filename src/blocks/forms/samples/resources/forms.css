@@ -41,35 +41,35 @@
     z-index: 2;
 }
 
-.woody-validation-message, a.woody-validation-message:link {
+.forms-validation-message, a.forms-validation-message:link {
     color: red;
     font-weight: bold;
 }
 
-.woody-validation-errors {
+.forms-validation-errors {
 }
 
-.woody-validation-error {
+.forms-validation-error {
 }
 
-.woody-field-required {
+.forms-field-required {
 	color:blue;
     font-weight: bold;
 }
 
-.woody-help {
+.forms-help {
     border-style: dotted;
     border-width: 1px;
     padding: 5px;
     background-color:#FFFFC0; /* light yellow */
     width: 200px; /* otherwise IE does a weird layout */
-    z-index:1000; /* must be higher than woody-tabContent */
+    z-index:1000; /* must be higher than forms-tabContent */
 }
 
-.woody-doubleList select {
+.forms-doubleList select {
     width: 150px;
 }
 
-.woody-doubleList input {
+.forms-doubleList input {
     width: 40px;
 }

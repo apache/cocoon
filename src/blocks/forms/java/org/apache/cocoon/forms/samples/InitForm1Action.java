@@ -19,7 +19,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.forms.acting.AbstractFormsAction;
+import org.apache.cocoon.forms.acting.AbstractFormAction;
 import org.apache.cocoon.forms.formmodel.Field;
 import org.apache.cocoon.forms.formmodel.Form;
 import org.apache.cocoon.forms.formmodel.Repeater;
@@ -29,13 +29,14 @@ import java.util.Map;
 import java.util.Date;
 
 /**
- * An action that creates an instance of a specific example form included with Woody,
- * and adds some rows to its repeater widget. This example is meant to illustrate
- * how you can prepopulate a Form instance before its initial display.
+ * An action that creates an instance of a specific example form included with
+ * Cocoon Forms, and adds some rows to its repeater widget. This example is
+ * meant to illustrate how you can prepopulate a Form instance before its
+ * initial display.
  * 
- * @version $Id: InitForm1Action.java,v 1.1 2004/03/09 10:34:08 reinhard Exp $
+ * @version $Id: InitForm1Action.java,v 1.2 2004/03/11 02:56:32 joerg Exp $
  */
-public class InitForm1Action extends AbstractFormsAction {
+public class InitForm1Action extends AbstractFormAction {
     public Map act(Redirector redirector, SourceResolver resolver, Map objectModel, String source, Parameters parameters)
             throws Exception {
         String formSource = parameters.getParameter("form-definition");

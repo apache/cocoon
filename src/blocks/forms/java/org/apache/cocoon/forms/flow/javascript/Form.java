@@ -24,14 +24,14 @@ import org.apache.cocoon.components.flow.javascript.fom.FOM_WebContinuation;
 import org.apache.cocoon.environment.Request;
 
 /**
- * Woody-flowscript integration helper class.
- * @version $Id: Forms.java,v 1.1 2004/03/09 10:34:13 reinhard Exp $
+ * cforms flowscript integration helper class.
+ * @version $Id: Form.java,v 1.1 2004/03/11 02:56:32 joerg Exp $
  */
-public class Forms extends ScriptableObject {
+public class Form extends ScriptableObject {
     FOM_Cocoon cocoon;
 
     public String getClassName() {
-        return "Woody";
+        return "Form";
     }
 
     private FOM_Cocoon getCocoon() {
