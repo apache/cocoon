@@ -86,7 +86,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
- * @version $Id: ScriptableWidget.java,v 1.10 2004/02/11 10:43:32 antonio Exp $
+ * @version $Id: ScriptableWidget.java,v 1.11 2004/02/16 04:54:20 coliver Exp $
  * 
  */
 public class ScriptableWidget extends ScriptableObject {
@@ -238,11 +238,17 @@ public class ScriptableWidget extends ScriptableObject {
         return result;
     }
 
+    private void deleteRow(Repeater repeater, int index) {
+        Widget row = repeater.getRow(index);
+        formWidget.deleteWrapper(row);
+        repeater.removeRow(index);
+    }
+
     public void delete(int index) {
         if (delegate instanceof Repeater) {
             Repeater repeater = (Repeater)delegate;
             if (index >= 0 && index < repeater.getSize()) {
-                repeater.removeRow(index);
+                deleteRow(repeater, index);
                 return;
             }
         } else if (delegate instanceof MultiValueField) {
@@ -283,7 +289,7 @@ public class ScriptableWidget extends ScriptableObject {
             int size = repeater.getSize();
             if (size > len) {
                 while (repeater.getSize() > len) {
-                    repeater.removeRow(repeater.getSize() -1);
+                    deleteRow(repeater, repeater.getSize() - 1);
                 }
             } else {
                 for (int i = size; i < len; ++i) {
@@ -343,7 +349,7 @@ public class ScriptableWidget extends ScriptableObject {
                 Object length = getProperty(arr, "length");
                 int len = ((Number)length).intValue();
                 for (int i = repeater.getSize(); i >= len; --i) {
-                    repeater.removeRow(i);
+                    deleteRow(repeater, i);
                 }
                 for (int i = 0; i < len; i++) {
                     Object elemValue = getProperty(arr, i);
@@ -553,17 +559,13 @@ public class ScriptableWidget extends ScriptableObject {
                 }    
                 for (int i = len-1; i >= 0; --i) {
                     if (index[i]) {
-                        Widget row = repeater.getRow(i);
-                        formWidget.deleteWrapper(row);
-                        repeater.removeRow(i);
+                        deleteRow(repeater, i);
                     }
                 }
             } else if (obj instanceof Number) {
                 int index = (int)Context.toNumber(obj);
                 if (index > 0 && index < repeater.getSize()) {
-                    Widget row = repeater.getRow(index);
-                    formWidget.deleteWrapper(row);
-                    repeater.removeRow(index);
+                    deleteRow(repeater, index);
                 }
             } else {
                 //...
