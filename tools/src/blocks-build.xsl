@@ -529,13 +529,15 @@
       </xsl:if>
 
       <!-- Copy the library depencies -->
-      <copy filtering="off" todir="${{build.webapp.lib}}">
-        <fileset dir="${{lib.optional}}">
-          <xsl:for-each select="library">
-            <include name="{@name}*.jar"/>
-          </xsl:for-each>
-        </fileset>
-      </copy>
+      <xsl:if test="library">
+        <copy filtering="off" todir="${{build.webapp.lib}}">
+          <fileset dir="${{lib.optional}}">
+            <xsl:for-each select="library">
+              <include name="{@name}*.jar"/>
+            </xsl:for-each>
+          </fileset>
+        </copy>
+      </xsl:if>
 
       <!-- Test if this block has global WEB-INF files -->
       <if>
@@ -566,11 +568,13 @@
 
       <path id="{$block-name}.classpath">
         <path refid="classpath"/>
-        <fileset dir="${{lib.optional}}">
-          <xsl:for-each select="library">
-            <include name="{@name}*.jar"/>
-          </xsl:for-each>
-        </fileset>
+        <xsl:if test="library">
+          <fileset dir="${{lib.optional}}">
+            <xsl:for-each select="library">
+              <include name="{@name}*.jar"/>
+            </xsl:for-each>
+          </fileset>
+        </xsl:if>
         <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
         <pathelement location="${{build.blocks}}/{$block-name}/dest"/>
         <pathelement location="${{build.blocks}}/{$block-name}/samples"/>
