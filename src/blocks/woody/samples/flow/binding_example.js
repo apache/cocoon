@@ -50,37 +50,27 @@
 cocoon.load("resource://org/apache/cocoon/woody/flow/javascript/woody.js");
 
 // The purpose of the form2 example is to edit the contents of an XML file
-// through a Woody form
-
-// Note: this is a quick hack to get things working. More integration of the
-// binding into the Woody - Javascript API is to be done.
+// or a Java bean through a Woody form
 
 // the form2 function is not directly called by the sitemap but by
 // a generic "woody" function that instantiates the form based on
 // parameters passed from the sitemap (see woody.js file)
-function form2xml(form, documentURI, bindingURI) {
-    // document contains the document to be edited as a DOM tree
-    // (loadDocument is an utility function that looks up the
-    //  Avalon DOMParser component to parse the file)
-    var document = loadDocument(documentURI);
-    // binding contains an object that can bind data between
-    // a DOM-tree and Woody form (bidirectional). The binding
-    // is described in an XML file and is based on JXPath
-    // (loadBinding is an utility function that looks up an
-    //  Avalon component which builds this binding)
-    var binding = loadBinding(bindingURI);
+function form2xml(form) {
+    // get the documentURI parameter from the sitemap which contains the
+    // location of the file to be edited
+    var documentURI = cocoon.parameters["documentURI"];
 
-    // we start by binding the document data to the form
-    // the 'form' variable is a javascript wrapper around the
-    // actual form, and 'form.form' is the actual Java form object
-    binding.loadFormFromModel(form.form, document);
+    // parse the document to a DOM-tree
+    var document = loadDocument(documentURI);
+
+    // bind the document data to the form
+    form.load(document);
 
     // shows the form to the user until is validated successfully
     form.show("form2-display-pipeline", formHandler);
 
-    // use the binding to update the DOM-tree with the
-    // data from the form
-    binding.saveFormToModel(form.form, document);
+    // bind the form's data back to the document
+    form.save(document);
 
     // save the DOM-tree back to an XML file, the makeTargetURI
     // function makes a modified filename so that the
@@ -92,7 +82,7 @@ function form2xml(form, documentURI, bindingURI) {
 }
 
 // bean variant of the binding sample
-function form2bean(form, documentURI, bindingURI) {
+function form2bean(form) {
     var bean = new Packages.org.apache.cocoon.woody.samples.Form2Bean();
 
     // fill bean with some data to avoid users having to type to much
@@ -106,13 +96,9 @@ function form2bean(form, documentURI, bindingURI) {
     contact.setFirstName("Herman");
     bean.addContact(contact);
 
-    var binding = loadBinding(bindingURI);
-
-    binding.loadFormFromModel(form.form, bean);
-
+    form.load(bean);
     form.show("form2-display-pipeline", formHandler);
-
-    binding.saveFormToModel(form.form, bean);
+    form.save(bean);
 
     cocoon.sendPage("form2bean-success-pipeline", { "form2bean": bean });
     form.finish();
@@ -140,23 +126,6 @@ function formHandler(form) {
         return true;
     }
     return false;
-}
-
-function loadBinding(uri) {
-    var bindingManager = null;
-    var source = null;
-    var resolver = null;
-    try {
-        bindingManager = cocoon.getComponent(Packages.org.apache.cocoon.woody.binding.BindingManager.ROLE);
-        resolver = cocoon.getComponent(Packages.org.apache.cocoon.environment.SourceResolver.ROLE);
-        source = resolver.resolveURI(uri);
-        return bindingManager.createBinding(source);
-    } finally {
-        if (source != null)
-            resolver.release(source);
-        cocoon.releaseComponent(bindingManager);
-        cocoon.releaseComponent(resolver);
-    }
 }
 
 /**
