@@ -554,6 +554,9 @@
    <action dev="AG" type="fix" fixes-bug="29369" due-to="Juan Jose Pablos">
      Move commons-logging-1.0.4.jar to lib/core as jcs.jar depends on it.
    </action>
+   <action dev="AG" type="fix" fixes-bug="17924" due-to="Jorg Heymans">
+     Apply patch: Cached resources don't have Expires-Header.
+   </action>
    <action dev="AG" type="fix" fixes-bug="29752" due-to="Leszek Gawron">
      Apply patch: Caching JXTemplateGenerator.
    </action>
