@@ -1,4 +1,4 @@
-// $Id: SessionPropagatorAction.java,v 1.1.2.4 2001-04-30 14:16:59 bloritsch Exp $
+// $Id: SessionPropagatorAction.java,v 1.1.2.5 2001-05-02 16:22:46 mman Exp $
 package org.apache.cocoon.acting;
 
 import java.util.Collections;
@@ -27,7 +27,7 @@ import org.xml.sax.EntityResolver;
  * </pre>
  *
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-30 14:16:59 $
+ * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-05-02 16:22:46 $
  */
 public class SessionPropagatorAction extends ComposerAction
 {
@@ -41,14 +41,14 @@ public class SessionPropagatorAction extends ComposerAction
         HashMap actionMap = new HashMap ();
 
         if (req == null) {
-            getLogger ().debug ("SESSIONVALIDATOR: no request object");
+            getLogger ().debug ("SESSIONPROPAGATOR: no request object");
             return null;
         }
 
         /* check session validity */
         Session session = req.getSession (false);
         if (session == null) {
-            getLogger ().debug ("SESSIONVALIDATOR: no session object");
+            getLogger ().debug ("SESSIONPROPAGATOR: no session object");
             return null;
         }
 
@@ -77,6 +77,6 @@ public class SessionPropagatorAction extends ComposerAction
     }
 }
 
-// $Id: SessionPropagatorAction.java,v 1.1.2.4 2001-04-30 14:16:59 bloritsch Exp $
+// $Id: SessionPropagatorAction.java,v 1.1.2.5 2001-05-02 16:22:46 mman Exp $
 // vim: set et ts=4 sw=4:
 
