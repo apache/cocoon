@@ -53,7 +53,7 @@
   </component>
 
   <!-- these components are the image encoders for the SVG serializer -->
-  <component role="jaipngencoder" class="org.apache.cocoon.components.image.JAIPNGEncoder"/>
+  <component role="jpegencoder" class="org.apache.cocoon.components.image.JPEGEncoder"/>
 
   <sitemap file="sitemap.xmap"/> 
 </cocoon>
