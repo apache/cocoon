@@ -502,8 +502,8 @@
 	<title>Continuations-based JavaScript engine</title>
 	<description>Rhino is an implementation of JavaScript in Java.</description>
 	<used-by>Control flow</used-by>
-	<lib>optional/rhino1.5r4-continuations-20020816.jar</lib>
-	<homepage>ftp://ftp.primaryinterface.com/pub/rhino/rhino1_5R4pre-sharedlocals.zip</homepage>
+	<lib>optional/rhino1.5r4-continuations-20030317.jar</lib>
+	<homepage>http://cvs.cocoondev.org/cgi-bin/viewcvs.cgi/?cvsroot=rhino</homepage>
  </file>
  <file name="spark">
 	<title>Spark</title>
