@@ -90,7 +90,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: JavaScriptInterpreter.java,v 1.14 2003/04/01 12:31:25 stefano Exp $
+ * @version CVS $Id: JavaScriptInterpreter.java,v 1.15 2003/04/01 19:19:30 coliver Exp $
  */
 public class JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -417,9 +417,9 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         cocoon.setContext(manager, environment);
 
         // Check if we need to compile and/or execute scripts
-        List execList = new ArrayList();
-        boolean needsRefresh = false;
-        synchronized (this) {
+        synchronized (compiledScripts) {
+            List execList = new ArrayList();
+            boolean needsRefresh = false;
             if (reloadScripts) {
                 long now = System.currentTimeMillis();
                 if (now >= lastTimeCheck + checkTime) {
@@ -427,7 +427,11 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 }
                 lastTimeCheck = now;
             }
-            if (needsRefresh || needResolve.size() > 0) {
+            // If we've never executed scripts in this scope or
+            // if reload-scripts is true and the check interval has expired
+            // or if new scripts have been specified in the sitemap,
+            // then create a list of scripts to compile/execute
+            if (lastExecTime == 0 || needsRefresh || needResolve.size() > 0) {
                 topLevelScripts.addAll(needResolve);
                 if (!newScope && !needsRefresh) {
                     execList.addAll(needResolve);
@@ -436,33 +440,33 @@ public class JavaScriptInterpreter extends AbstractInterpreter
                 }
                 needResolve.clear();
             }
-        }
-        thrScope.put(LAST_EXEC_TIME, thrScope, 
-                     new Long(System.currentTimeMillis()));
-        // Compile all the scripts first. That way you can set breakpoints
-        // in the debugger before they execute.
-        for (int i = 0, size = execList.size(); i < size; i++) {
-            String sourceURI = (String)execList.get(i);
-            ScriptSourceEntry entry = 
-                (ScriptSourceEntry)compiledScripts.get(sourceURI);
-            if (entry == null) {
-                Source src = environment.resolveURI(sourceURI);
-                entry = new ScriptSourceEntry(src);
-                compiledScripts.put(sourceURI, entry);
+            thrScope.put(LAST_EXEC_TIME, thrScope, 
+                         new Long(System.currentTimeMillis()));
+            // Compile all the scripts first. That way you can set breakpoints
+            // in the debugger before they execute.
+            for (int i = 0, size = execList.size(); i < size; i++) {
+                String sourceURI = (String)execList.get(i);
+                ScriptSourceEntry entry = 
+                    (ScriptSourceEntry)compiledScripts.get(sourceURI);
+                if (entry == null) {
+                    Source src = environment.resolveURI(sourceURI);
+                    entry = new ScriptSourceEntry(src);
+                    compiledScripts.put(sourceURI, entry);
+                }
+                // Compile the script if necessary
+                entry.getScript(context, this.scope, needsRefresh);
             }
-            // Compile the script if necessary
-            entry.getScript(context, this.scope, needsRefresh);
-        }
-        // Execute the scripts if necessary
-        for (int i = 0, size = execList.size(); i < size; i++) {
-            String sourceURI = (String)execList.get(i);
-            ScriptSourceEntry entry = 
-                (ScriptSourceEntry)compiledScripts.get(sourceURI);
-            long lastMod = entry.getSource().getLastModified();
-            Script script = entry.getScript(context, this.scope, false);
-            if (lastExecTime == 0 || lastMod > lastExecTime) {
-                script.exec(context, thrScope);
-            } 
+            // Execute the scripts if necessary
+            for (int i = 0, size = execList.size(); i < size; i++) {
+                String sourceURI = (String)execList.get(i);
+                ScriptSourceEntry entry = 
+                    (ScriptSourceEntry)compiledScripts.get(sourceURI);
+                long lastMod = entry.getSource().getLastModified();
+                Script script = entry.getScript(context, this.scope, false);
+                if (lastExecTime == 0 || lastMod > lastExecTime) {
+                    script.exec(context, thrScope);
+                } 
+            }
         }
         return thrScope;
     }
@@ -498,15 +502,17 @@ public class JavaScriptInterpreter extends AbstractInterpreter
         if (src == null) {
             throw new ResourceNotFoundException(fileName + ": not found");
         }
-        ScriptSourceEntry entry = 
-            (ScriptSourceEntry)compiledScripts.get(src.getURI());
-        Script compiledScript = null;
-        if (entry == null) {
-            compiledScripts.put(src.getURI(),
-                                entry = new ScriptSourceEntry(src));
-        } 
-        compiledScript = entry.getScript(cx, this.scope, false);
-        return compiledScript;
+        synchronized (compiledScripts) {
+            ScriptSourceEntry entry = 
+                (ScriptSourceEntry)compiledScripts.get(src.getURI());
+            Script compiledScript = null;
+            if (entry == null) {
+                compiledScripts.put(src.getURI(),
+                                    entry = new ScriptSourceEntry(src));
+            } 
+            compiledScript = entry.getScript(cx, this.scope, false);
+            return compiledScript;
+        }
     }
 
     private Script compileScript(Context cx, Scriptable scope,
