@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS: $Id: scratchpad-samples.xml,v 1.2 2003/03/15 22:53:10 stefano Exp $ -->
+<!-- CVS: $Id: scratchpad-samples.xml,v 1.3 2003/03/15 22:57:13 stefano Exp $ -->
 
 <samples>
 
@@ -34,12 +34,6 @@
     </sample>
     <sample name="Image 50x50" href="imagereader/image-50">
       Image scaled down to the size 50 x 50
-    </sample>
-  </group>
-  
-  <group name="Taglib">
-    <sample name="Taglib" href="taglib/TagLibTest.xhtml">
-      Show the usage of the Taglib
     </sample>
   </group>
 
