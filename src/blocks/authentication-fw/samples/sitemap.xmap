@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 
 <!--+
-    | Authentiction block samples sitemap.
+    | Authentication block samples sitemap.
     |
-    | CVS $Id: sitemap.xmap,v 1.5 2003/07/29 03:15:45 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.6 2003/09/17 08:44:49 upayavira Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
+
+  <map:flow language="javascript">
+     <map:script src="flow/sample.js"/>
+  </map:flow>
 
 <!-- =========================== Pipelines ================================= -->
   <map:pipelines>
