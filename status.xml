@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.253 2004/02/29 06:07:37 vgritsenko Exp $:-->
+<!-- CVS $Id: status.xml,v 1.254 2004/03/03 09:26:24 antonio Exp $:-->
 
 <status>
  <developers>
@@ -196,6 +196,12 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="AG" type="update" fixes-bug="24457" due-to-email="ouzo@wlkp.org" due-to="Leszek Gawron">
+     Updated xalan to 2.6.0
+   </action>
+   <action dev="AG" type="update">
+     CForms: Support for multiple unique-row-id in a repeater
+   </action>
    <action dev="VG" type="update">
      CForms: Aggregate field supports both directions (split / combine), and arbitrary
      types (not strings only).
@@ -221,10 +227,10 @@
    <action dev="CZ" type="update">
      Adding basket coplet to the portal.
    </action>
-   <action dev="CZ" type="update" fixes-bug="25093" due-to-email="Alfred.Nathaniel@swx.com " due-to="Alfred.Nathaniel">
+   <action dev="CZ" type="update" fixes-bug="25093" due-to-email="Alfred.Nathaniel@swx.com" due-to="Alfred.Nathaniel">
      Patch for allowing empty values in configuration of defaults input module.
    </action>
-   <action dev="CZ" type="update" fixes-bug="26896" due-to-email="m_rolappe@web.de " due-to="Marco Rolappe">
+   <action dev="CZ" type="update" fixes-bug="26896" due-to-email="m_rolappe@web.de" due-to="Marco Rolappe">
      Patch for disposing components in the properties in xml file module.
    </action>
    <action dev="AG" type="update">
