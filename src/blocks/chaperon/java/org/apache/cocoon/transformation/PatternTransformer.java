@@ -108,7 +108,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * </pre>
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: PatternTransformer.java,v 1.3 2003/04/09 12:17:20 stephan Exp $
+ * @version CVS $Id: PatternTransformer.java,v 1.4 2003/09/05 07:10:53 cziegeler Exp $
  */
 public class PatternTransformer extends AbstractTransformer
   implements LogEnabled, Composable, Recyclable, Disposable, Parameterizable,
@@ -275,6 +275,7 @@ public class PatternTransformer extends AbstractTransformer
         }
 
         this.automaton = null;
+        super.recycle();
     }
 
     /**
