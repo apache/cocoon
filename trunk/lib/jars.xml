@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.94 2003/09/10 15:33:49 reinhard Exp $
+    | CVS $Id: jars.xml,v 1.95 2003/09/11 23:53:51 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -620,41 +620,6 @@
     <homepage>http://www.thaiopensource.com/relaxng/jing.html</homepage>
   </file>
   -->
-
-  <file>
-    <title>Jaxen</title>
-    <description>
-      The Jaxen project is a Java XPath Engine. Jaxen is a universal object
-      model walker, capable of evaluating XPath expressions across multiple
-      models. Currently supported are dom4j and JDOM.
-    </description>
-    <used-by>deprecated</used-by>
-    <lib>optional/jaxen-core-1.0-FCS.jar</lib>
-    <homepage>http://www.jaxen.org/</homepage>
-  </file>
-
-  <file>
-    <title>Jaxen Dom</title>
-    <description>
-      The Jaxen project is a Java XPath Engine. Jaxen is a universal object
-      model walker, capable of evaluating XPath expressions across multiple
-      models. Currently supported are dom4j and JDOM.
-    </description>
-    <used-by>core</used-by>
-    <lib>optional/jaxen-dom-1.0-FCS.jar</lib>
-    <homepage>http://www.jaxen.org/</homepage>
-  </file>
-
-  <file>
-    <title>SaxPath</title>
-    <description>
-      SAXPath is a Java XPath engine for use on a variety of XML object models
-      including dom4j, DOM and JavaBeans.
-    </description>
-    <used-by>core</used-by>
-    <lib>optional/saxpath-1.0-FCS.jar</lib>
-    <homepage>http://sourceforge.net/projects/saxpath/</homepage>
-  </file>
 
   <file>
     <title>Slide kernel</title>
