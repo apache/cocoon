@@ -137,11 +137,15 @@ public class Repeater extends AbstractWidget {
             } catch (NumberFormatException exc) {
                 // do nothing
             }
+
+            // some protection against people who might try to exhaust the server by supplying very large
+            // size parameters
+            if (size > 500)
+                throw new RuntimeException("Client is not allowed to specify a repeater size larger than 500.");
+
             int currentSize = getSize();
             if (currentSize < size) {
                 for (int i = currentSize; i < size; i++) {
-                    // TODO: a person with bad intents could pass a very large size parameter, maybe we should
-                    // check for a built-in limit or something.
                     addRow();
                 }
             } else if (currentSize > size) {
