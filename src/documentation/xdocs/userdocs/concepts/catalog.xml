@@ -120,7 +120,8 @@
   <p>
    (Note: The <link href="http://xml.apache.org/commons/">Apache XML
    Commons</link> project provides the Java package that has been added to
-   Cocoon as the <code>lib/core/resolver.jar</code> package. There are also
+   Cocoon as the <code>lib/core/xml-commons-resolver.jar</code> package.
+   There are also
    API javadocs for <code>resolver</code> that have further information.
    However, you do not need to know the gory details to understand catalogs
    and configure them.)
@@ -537,7 +538,9 @@ PUBLIC "-//OASIS//DTD Simplified DocBook XML V4.1.2.5//EN"
   </p>
 
   <p>
-   The XML Commons Apache project has <code>org.apache.xml.resolver</code>
+   The 
+   <link href="http://xml.apache.org/commons/">Apache XML Commons</link>
+   project has <code>org.apache.xml.resolver</code>
    which provides a <strong>CatalogResolver</strong>. This is incorporated
    into Cocoon via <code>org.apache.excalibur.xml.EntityResolver</code> 
   </p>
@@ -549,7 +552,22 @@ PUBLIC "-//OASIS//DTD Simplified DocBook XML V4.1.2.5//EN"
    The <code>DefaultResolver.java</code> enables <link href="#config">local
    configuration</link> by applying properties from the
    <code>CatalogManager.properties</code> file and then further configuration
-   from <code>cocoon.xconf</code> parameters.
+   from <code>WEB-INF/cocoon.xconf</code> parameters.
+  </p>
+ </s1>
+
+ <anchor id="debug"/>
+ <s1 title="Debugging the resolver configuration">
+  <p>
+    Raise the verbosity level as described in cocoon.xconf and watch the
+    messages that go to standard output.
+  </p>
+  <p>
+    The "Resolved public" messages should show that the Public Identifiers
+    are being used to find the local copies of the resources. If a "Resolved
+    public" message does not occur for a particular resource, then Cocoon
+    will be retrieving it from the specified location. Use a packet watching
+    tool like "ngrep" to see the HTTP request for the resource.
   </p>
  </s1>
 
@@ -640,8 +658,9 @@ PUBLIC "-//OASIS//DTD Simplified DocBook XML V4.1.2.5//EN"
     <br/> - Issue Three: 
     <link href="http://www.arbortext.com/html/issue_three.html">If You Can Name It, You Can Claim It!</link></li>
    <li>
-    The Apache project
-    <link href="http://xml.apache.org/commons/">XML Commons</link> provides the
+    The
+    <link href="http://xml.apache.org/commons/">Apache XML Commons</link>
+    project provides the
     entity resolver Java classes (which are used in Cocoon) and evolution of
     the Arbortext article into
     <link href="http://xml.apache.org/commons/components/resolver/">XML
@@ -653,6 +672,10 @@ PUBLIC "-//OASIS//DTD Simplified DocBook XML V4.1.2.5//EN"
    <li><link href="http://www.oasis-open.org/docbook/">DocBook</link>:
      <link href="http://www.docbook.org/">The Definitive Guide</link>
      - Section 2.3 Public Identifiers, System Identifiers, and Catalog Files
+   </li>
+   <li>
+     FAQ <link href="http://www.dpawson.co.uk/docbook/catalogs.html">Catalogs
+     and Docbook</link>
    </li>
    <li>OASIS is the <link href="http://www.oasis-open.org/docbook/">official
     home</link> of the DocBook DTDs
