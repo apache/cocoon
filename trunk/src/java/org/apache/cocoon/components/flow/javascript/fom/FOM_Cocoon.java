@@ -85,7 +85,7 @@ import org.mozilla.javascript.continuations.Continuation;
  * @since 2.1 
  * @author <a href="mailto:coliver.at.apache.org">Christopher Oliver</a>
  * @author <a href="mailto:reinhard.at.apache.org">Reinhard Pötz</a>
- * @version CVS $Id: FOM_Cocoon.java,v 1.11 2003/09/02 20:49:21 ugo Exp $
+ * @version CVS $Id: FOM_Cocoon.java,v 1.12 2003/09/29 12:56:05 sylvain Exp $
  */
 
 public class FOM_Cocoon extends ScriptableObject {
@@ -132,6 +132,10 @@ public class FOM_Cocoon extends ScriptableObject {
     }
 
     void invalidate() {
+        // Clear the scope attribute
+        this.getRequest().removeAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE);
+        
+        // Cleanup everything
         this.request = null;
         this.response = null;
         this.session = null;
