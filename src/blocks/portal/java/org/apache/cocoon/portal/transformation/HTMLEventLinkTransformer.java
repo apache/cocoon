@@ -1,12 +1,12 @@
 /*
  * Copyright 2004,2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,19 +33,19 @@ import org.xml.sax.SAXException;
  * The transformer listens for the element a and form. Links
  * that only contain an anchor are ignored.
  * Current we only support POSTing of forms.
- * 
+ *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.5 2004/03/26 09:36:30 cziegeler Exp $
+ * @version CVS $Id: HTMLEventLinkTransformer.java,v 1.6 2004/03/31 20:32:45 vgritsenko Exp $
  */
-public class HTMLEventLinkTransformer 
+public class HTMLEventLinkTransformer
 extends AbstractCopletTransformer {
-    
+
     /** The temporary attribute used to store the uri */
     protected String attributeName;
-    
+
     /** The jxpath for the attribute */
     protected String jxPath;
-    
+
     /* (non-Javadoc)
      * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(org.apache.cocoon.environment.SourceResolver, java.util.Map, java.lang.String, org.apache.avalon.framework.parameters.Parameters)
      */
@@ -67,7 +67,7 @@ extends AbstractCopletTransformer {
         boolean processed = false;
         if ("a".equals(name) ) {
             final boolean isRemoteAnchor = this.isRemoteAnchor(name, attr);
-            this.stack.push(Boolean.valueOf(isRemoteAnchor));
+            this.stack.push(isRemoteAnchor? Boolean.TRUE: Boolean.FALSE);
             if ( isRemoteAnchor ) {
                 this.createAnchorEvent(uri, name, raw, attr);
                 processed = true;
@@ -101,18 +101,18 @@ extends AbstractCopletTransformer {
                     CopletTransformer.LINK_ELEM,
                     "coplet:" + CopletTransformer.LINK_ELEM);
             this.xmlConsumer.endPrefixMapping("coplet");
-            processed = true;            
+            processed = true;
         }
         if ( !processed ) {
             super.endElement(uri, name, raw);
         }
     }
 
-    protected void createAnchorEvent(String uri, String name, String raw, Attributes attributes) 
+    protected void createAnchorEvent(String uri, String name, String raw, Attributes attributes)
     throws SAXException {
         AttributesImpl newAttributes = new AttributesImpl();
         String link = attributes.getValue("href");
-        
+
         CopletInstanceData cid = this.getCopletInstanceData();
         link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), link);
 
@@ -127,14 +127,14 @@ extends AbstractCopletTransformer {
                                       newAttributes);
     }
 
-    protected void createFormEvent(String uri, String name, String raw, Attributes attributes) 
+    protected void createFormEvent(String uri, String name, String raw, Attributes attributes)
     throws SAXException {
         AttributesImpl newAttributes = new AttributesImpl();
         String link = attributes.getValue("action");
-        
+
         CopletInstanceData cid = this.getCopletInstanceData();
         link = this.getLink((String)cid.getTemporaryAttribute(this.attributeName), link);
-        
+
         newAttributes.addCDATAAttribute("path", this.jxPath);
         newAttributes.addCDATAAttribute("value", link);
         newAttributes.addCDATAAttribute("coplet", cid.getId());
@@ -147,33 +147,33 @@ extends AbstractCopletTransformer {
                 newAttributes);
 
     }
-    
+
     protected String getLink(String base, String link) {
         final String v = SourceUtil.absolutize(base, link);
         return v;
     }
-    
-        
+
+
     /**
      * Determine if the element is an url and if the url points to some
-     * remote source. 
-     * 
+     * remote source.
+     *
      * @param name the name of the element
      * @param attributes the attributes of the element
      * @return true if the href url is an anchor pointing to a remote source
      */
     protected boolean isRemoteAnchor(String name, Attributes attributes) {
         String link = attributes.getValue("href");
-            
-        // no empty link to current document 
+
+        // no empty link to current document
         if (link != null && link.trim().length() > 0) {
             // check reference to document fragment
             if (!link.trim().startsWith("#")) {
                 return true;
             }
         }
-          
+
         return false;
     }
-    
+
 }
