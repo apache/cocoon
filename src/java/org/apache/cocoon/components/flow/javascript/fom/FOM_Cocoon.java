@@ -466,6 +466,10 @@ public class FOM_Cocoon extends ScriptableObject {
 
     /**
      * JS wrapper for Cocoon's request object.
+     * <p>
+     * Request <em>parameters</em> are also present as properties on this object.
+     * Note that this is different from <code>FOM_Context</code> and <code>FOM_Session</code>
+     * that do the same with <em>attributes</em>.
      */
     public static class FOM_Request extends AttributeHolderJavaObject {
         private final Request request;
@@ -476,16 +480,18 @@ public class FOM_Cocoon extends ScriptableObject {
         }
         
         protected Enumeration getAttributeNames() {
-            return this.request.getAttributeNames();
+            return this.request.getParameterNames();
         }
         
         protected Object getAttribute(String name) {
-            return this.request.getAttribute(name);
+            return this.request.getParameter(name);
         }
     }
 
     /**
      * JS wrapper for Cocoon's session object.
+     * <p>
+     * Session attributes are also present as properties on this object.
      */
     public static class FOM_Session extends AttributeHolderJavaObject {
         private final Session session;
@@ -506,6 +512,8 @@ public class FOM_Cocoon extends ScriptableObject {
 
     /**
      * JS wrapper for Cocoon's context object.
+     * <p>
+     * Context attributes are also present as properties on this object.
      */
     public static class FOM_Context extends AttributeHolderJavaObject {
         private final org.apache.cocoon.environment.Context context;
