@@ -201,10 +201,7 @@
 
 
   <changes>
- <release version="@version@" date="@date@">
-   <action dev="UV" type="add">
-    CocoonBean can now process a URL to a SAX ContentHandler (skipping the serialiser), via cocoon.process(uri, handler).
-   </action>
+  <release version="@version@" date="@date@">
    <action dev="CZ" type="update">
     Create proxies for pooled components. Pooled components can now be used in the same
     way as thread safe components, the client code does not need to know if they are pooled anymore.
@@ -221,9 +218,6 @@
     cleaner context handling,
     for the moment removed the dependency to the form block
    </action>
-   <action dev="RP" type="add">
-     hsqldb: make name and path of database parameterizable - this way the database can be located outside of Cocoon
-   </action>   
    <action dev="JH" type="fix" fixes-bug="33097">
     Fixed caching of i18n bundles when using multiple locations.
    </action>
@@ -243,73 +237,13 @@
      into separate projects.
    </action>
    <action dev="TC" type="add">
-    esql: added support for derby
-   </action>
-   <action dev="LG" type="add">
-     ContinuationsManager default implementation can now store continuations in user session. 
-     Continuations are not available outside user session and invalidated automatically 
-     when session gets invalidated by servlet container. This is a good security option for web applications. 
+     esql: added support for derby
    </action>
    <action dev="LG" type="add" due-to="Jonas Ekstedt" due-to-email="ekstedt@ibg.uu.se">
-    initial revision of new block: Cocoon Templates
-   </action>
-   <action dev="RP" type="add">
-    cForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
-            up the result by HTMLArea fields. The cleanup process, that is based upon
-            Nekohtml can be configured. One confiugration is available at
-            resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml
-            and guarantees valid XHTML
-     <br/>
-     Example:
-     <code>
-&lt;fd:datatype base="string"&gt;
-  &lt;fd:convertor type="htmlcleaner"
-      config="resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml"/&gt;
-&lt;/fd:datatype&gt;
-     </code>
-   </action>
-   <action dev="RP" type="add">
-    cForms: 'htmlarea' fields can be directly configured in cForms templates
-    <br/>
-    Example configuration (within the &lt;conf&gt; part the variable conf contains
-    the configuration object of HTMLArea
-    <code>
-&lt;fi:styling type="htmlarea" rows="8" style="width:100%"&gt;
-  &lt;conf&gt;
-    conf.statusBar = false;
-    conf.sizeIncludesToolbar = false;
-    conf.fullPage = false;
-    conf.toolbar = [
-      [ "bold", "italic", "separator",
-        "subscript", "superscript", "separator",
-        "insertorderedlist", "insertunorderedlist",
-        "outdent", "indent", "separator",
-        "inserthorizontalrule", "separator",
-        "copy", "cut", "paste", "space", "undo", "redo",
-        "separator", "showhelp"]
-      ];
-  &lt;/conf&gt;
-&lt;/fi:styling&gt;
-    </code>
-   </action>
-   <action dev="RP" type="fix">
-    cForms: fields styled as 'htmlarea' can be used in tables (workaround for strange IE behaviour)
+     initial revision of new block: Cocoon Templates
    </action>
    <action dev="JQ" type="add">
-    Added querybean block, functionality moved from the lucene block as we hope to add a dependency on OJB so querybeans can be persisted.
-   </action>
-   <action dev="JH" type="fix" fixes-bug="32342">
-     Batik block: Fixed handling for empty extract URIs when matching on null
-     namespace URIs.
-   </action>
-   <action dev="GP" type="add">
-    Allow attribute values to be matches as well for EncodeURLTransformer.
-   </action>
-   <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
-     I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
-   </action>
-   <action dev="LG" type="fix">
-     Fix: Continuation can only be invoked for the interpreter it was originally created for.
+     Added querybean block, functionality moved from the lucene block as we hope to add a dependency on OJB so querybeans can be persisted.
    </action>
    <action dev="CZ" type="add" due-to="Sascha-Matthias Kulawik" due-to-email="sascha@kulawik.de">
      Authentication block: Add authenticator for JAAS.
@@ -324,8 +258,8 @@
      to compatibility issues:
      <ul>
         <li>catch(return)</li>
-  <li>catch(continue)</li>
-  <li>catch(break)</li>
+        <li>catch(continue)</li>
+        <li>catch(break)</li>
      </ul>
      aren't supported any more. catch(break) can be replaced by passing the function
      to cocoon.sendPageAndWait([pipeline], [bizdata], [function], [time-to-live]).
@@ -375,9 +309,6 @@
    </action>
    <action dev="CZ" type="add">
      Own implementation of Avalon based container.
-   </action>
-   <action dev="TC" type="add" fixes-bug="30417">
-     Added best-fit-while-keeping-aspect-ratio option to the ImageReader
    </action>
    <action dev="RP" type="add" due-to="Adam Ratclif" fixes-bug="31359">
      Apply patch: Add support for calling webservices from within Flowscript.
@@ -482,8 +413,17 @@
    </action>
  </release>
  <release version="2.1.7" date="TBD">
+   <action dev="TC" type="add" fixes-bug="30417">
+     Added best-fit-while-keeping-aspect-ratio option to the ImageReader
+   </action>
+   <action dev="VG" type="fix" fixes-bug="33319" due-to="Adam Ratclife" due-to-email="adam@prema.co.nz">
+     Resource Reader: Make sure response is cacheable when expires parameter is not set.
+   </action>
    <action dev="VG" type="add" fixes-bug="28973" due-to="Andrew Thornton" due-to-email="andrew@caret.cam.ac.uk">
      Mail Block: Add support for replyTo.
+   </action>
+   <action dev="UV" type="add">
+     CocoonBean can now process a URL to a SAX ContentHandler (skipping the serialiser), via cocoon.process(uri, handler).
    </action>
    <action dev="VG" type="update">
      OJB Block: Integrated OJB logging with Cocoon logging.
@@ -495,19 +435,22 @@
      Updated commons-transaction to 1.0.1, castor to 0.9.6, groovy to beta-9, quartz to 1.4.4.
    </action>
    <action dev="SW" type="update">
-    Remove restrictions on the flowscript object model (FOM): the objects available through the
-    <code>cocoon</code> object (request, session, response, etc) now provide the full API of the
-    corresponding Java classes.
+     Remove restrictions on the flowscript object model (FOM): the objects available through the
+     <code>cocoon</code> object (request, session, response, etc) now provide the full API of the
+     corresponding Java classes.
    </action>
    <action dev="CZ" type="fix">
-    CForms: forms generator and template transformer now use the same object model as the JXTG: access
-            to objects have to use the "cocoon" object, like "cocoon/continuation/id".
+     CForms: forms generator and template transformer now use the same object model as the JXTG: access
+             to objects have to use the "cocoon" object, like "cocoon/continuation/id".
+   </action>
+   <action dev="RP" type="add">
+     hsqldb: make name and path of database parameterizable - this way the database can be located outside of Cocoon
    </action>
    <action dev="CZ" type="fix" fixes-bug="32987" due-to="Michal Durdina" due-to-email="durdina@asset.sk">
      Apply patch for a better exception handling in the Meta-InputModule when an input module is not found.
    </action>
    <action dev="JH" type="fix" fixes-bug="33097">
-    Fixed caching of i18n bundles when using multiple locations.
+     Fixed caching of i18n bundles when using multiple locations.
    </action>
    <action dev="SW" type="fix" fixes-bug="33178" due-to="Jean-Baptiste Quenot" due-to-email="jbq@anyware-tech.com">
      Fix handling of environment context when returning from a pass-through sitemap mount.
@@ -519,8 +462,8 @@
      Build system: External blocks can be built together with Cocoon.
    </action>
    <action dev="RG" type="fix" fixes-bug="33091">
-      Refreshing a page with a JSR-168 portlet in it could cause unexpected results. JSR-168 urls can
-      now be configured to contain the data required to generated the required events.
+     Refreshing a page with a JSR-168 portlet in it could cause unexpected results. JSR-168 urls can
+     now be configured to contain the data required to generated the required events.
    </action>
    <action dev="RG" type="fix" fixes-bug="32838" due-to="Roy Huang" due-to-email="lingererhuang@hotmail.com">
      PageLabel url's were not properly encoded.
@@ -537,8 +480,8 @@
      Updated jakarta-slide-webdavlib to 2.1, jdom to 1.0, slide-kernel to 2.1, slide-stores to 2.1, slide-webdavservlet to 2.1.
    </action>
    <action dev="RG" type="add">
-        Portal now allows Cocoon to be deployed as a war (only supports local JSR-168 portlets) and 
-        allows external portlets to be in a war.
+     Portal now allows Cocoon to be deployed as a war (only supports local JSR-168 portlets) and 
+     allows external portlets to be in a war.
    </action>
    <action dev="SW" type="fix" fixes-bug="31668">
      CForms: the parser used to read form files now uses the EntityResolver defined in cocoon.xconf.
@@ -548,6 +491,11 @@
    </action>
    <action dev="RG" type="fix" fixes-bug="32645">
      Modified PortletURLProviderImpl.toString() to create a copy of itself and register that with the event.
+   </action>
+   <action dev="LG" type="add">
+     ContinuationsManager default implementation can now store continuations in user session. 
+     Continuations are not available outside user session and invalidated automatically 
+     when session gets invalidated by servlet container. This is a good security option for web applications. 
    </action>
    <action dev="AG" type="fix" fixes-bug="32083" due-to="Mark H. Butler" due-to-email="mark-h.butler@hp.com">
      Update Deli to x031104 (include over 300 vendor, operator and third party profiles)
@@ -565,6 +513,48 @@
      Portal: attributes "javax.portlet.request" and "javax.portlet.response" were not set for JSR-168
      portlets running in the Cocoon webapp.
    </action>
+   <action dev="RP" type="add">
+    CForms: added HTMLCleaning convertor (taken from Outerthought's Daisy) that cleans
+            up the result by HTMLArea fields. The cleanup process, that is based upon
+            Nekohtml can be configured. One confiugration is available at
+            resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml
+            and guarantees valid XHTML
+     <br/>
+     Example:
+     <code>
+&lt;fd:datatype base="string"&gt;
+  &lt;fd:convertor type="htmlcleaner"
+      config="resource://org/apache/cocoon/forms/datatype/convertor/HtmlCleanerConfiguration.xml"/&gt;
+&lt;/fd:datatype&gt;
+     </code>
+   </action>
+   <action dev="RP" type="add">
+    CForms: 'htmlarea' fields can be directly configured in cForms templates
+    <br/>
+    Example configuration (within the &lt;conf&gt; part the variable conf contains
+    the configuration object of HTMLArea
+    <code>
+&lt;fi:styling type="htmlarea" rows="8" style="width:100%"&gt;
+  &lt;conf&gt;
+    conf.statusBar = false;
+    conf.sizeIncludesToolbar = false;
+    conf.fullPage = false;
+    conf.toolbar = [
+      [ "bold", "italic", "separator",
+        "subscript", "superscript", "separator",
+        "insertorderedlist", "insertunorderedlist",
+        "outdent", "indent", "separator",
+        "inserthorizontalrule", "separator",
+        "copy", "cut", "paste", "space", "undo", "redo",
+        "separator", "showhelp"]
+      ];
+  &lt;/conf&gt;
+&lt;/fi:styling&gt;
+    </code>
+   </action>
+   <action dev="RP" type="fix">
+     CForms: fields styled as 'htmlarea' can be used in tables (workaround for strange IE behaviour)
+   </action>
    <action dev="SW" type="add">
      CForms: add a new "link" styling for action widgets, that renders the action
      as an hypertext link.
@@ -574,6 +564,19 @@
    </action>
    <action dev="RG" type="add">
      Portal: Added support for storing JSR-168 Portlet preferences.
+   </action>
+   <action dev="JH" type="fix" fixes-bug="32342">
+     Batik block: Fixed handling for empty extract URIs when matching on null
+     namespace URIs.
+   </action>
+   <action dev="GP" type="add">
+     Allow attribute values to be matches as well for EncodeURLTransformer.
+   </action>
+   <action dev="BRD" type="fix" due-to="Neil Bacon" fixes-bug="31887" due-to-email="nbacon@pinnaclesoftware.com.au">
+     I18n (ParamSaxBuffer): handle case where substitution params like {0} are split over multiple character events.
+   </action>
+   <action dev="LG" type="fix">
+     Fix: Continuation can only be invoked for the interpreter it was originally created for.
    </action>
  </release>
  <release version="2.1.6" date="November 19 2004">
@@ -2418,14 +2421,14 @@
     Created additional isolation level for some OutputModules.
   </action>
   <action dev="CH" type="add"
-    due-to="Jeff Turner"
-    due-to-email="jefft@apache.org"
-      fixes-bug="15611">
+          due-to="Jeff Turner"
+          due-to-email="jefft@apache.org"
+          fixes-bug="15611">
     Added LinkRewriterTransformer.
   </action>
   <action dev="OP" type="add"
-    due-to="Michael Melhem"
-    due-to-email="michaelm@ffzd0yt3.bank.dresdner.net">
+          due-to="Michael Melhem"
+          due-to-email="michaelm@ffzd0yt3.bank.dresdner.net">
     Added support for expiring continuations.
   </action>
   <action dev="OP" type="update" due-to="Ugo Cei" due-to-email="u.cei@cbim.it">
