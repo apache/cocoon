@@ -306,7 +306,7 @@
     <description>Common implementations of collection classes.</description>
     <used-by>Cocoon, OJB</used-by>
     <lib>core/commons-collections-3.1.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/collections/index.html</homepage>
+    <homepage>http://jakarta.apache.org/commons/collections/</homepage>
   </file>
 
   <file>
@@ -403,7 +403,7 @@
   </file>
 
   <file>
-    <title>ASM </title>
+    <title>ASM</title>
     <description>
       ASM is a Java bytecode manipulation framework. It can be used to
 	  dynamically generate stub classes or other proxy classes, directly in
@@ -418,10 +418,8 @@
   <file>
     <title>ASM Util</title>
     <description>
-      ASM is a Java bytecode manipulation framework. It can be used to
-          dynamically generate stub classes or other proxy classes, directly in
-          binary form, or to dynamically modify classes at load time, i.e., just
-          before they are loaded into the Java Virtual Machine.
+      Part of ASM (a Java bytecode manipulation framework). Provides some ASM
+      class visitors that can be useful for programming and debugging purposes.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
     <lib>bsf/lib/asm-util-1.4.3.jar</lib>
@@ -465,7 +463,7 @@
     </description>
     <used-by>Jakarta Commons HttpClient, Chaperon</used-by>
     <lib>core/commons-logging-1.0.4.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/logging.html</homepage>
+    <homepage>http://jakarta.apache.org/commons/logging/</homepage>
   </file>
 
   <file>
@@ -594,7 +592,7 @@
   <file>
     <title>Log4j</title>
     <description>Logging for java</description>
-    <used-by>DELI (deli block)</used-by>
+    <used-by>Core and DELI (deli block)</used-by>
     <lib>optional/log4j-1.2.8.jar</lib>
     <homepage>http://logging.apache.org/log4j/</homepage>
   </file>
@@ -635,7 +633,7 @@
   </file>
 
   <file>
-    <title>XML DB APIs</title>
+    <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>xmldb/lib/xmldb-api-20030701.jar</lib>
@@ -643,7 +641,7 @@
   </file>
 
   <file>
-    <title>XML DB APIs</title>
+    <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>xmldb/lib/xmldb-common-20030701.jar</lib>
@@ -651,7 +649,7 @@
   </file>
 
   <file>
-    <title>XML DB APIs</title>
+    <title>XML:DB APIs</title>
     <description>Database tailored for the storage of XML data.</description>
     <used-by>XML:DB source (xmldb block)</used-by>
     <lib>xmldb/lib/xmldb-xupdate-20040205.jar</lib>
@@ -664,6 +662,17 @@
     <used-by>xmldb block</used-by>
     <lib>xmldb/lib/xindice-1.1b4.jar</lib>
     <homepage>http://xml.apache.org/xindice/</homepage>
+  </file>
+
+  <file>
+    <title>XML-RPC</title>
+    <description>
+      Java implementation of XML-RPC, a popular protocol that uses XML over
+      HTTP to implement remote procedure calls.
+    </description>
+    <used-by>xmldb block</used-by>
+    <lib>xmldb/lib/xmlrpc-1.1.jar</lib>
+    <homepage>http://ws.apache.org/xmlrpc/</homepage>
   </file>
 
   <file>
@@ -738,7 +747,10 @@
 
   <file>
     <title>Castor</title>
-    <description></description>
+    <description>
+      Data binding framework for Java, including Java-to-XML
+      binding, Java-to-SQL persistence.
+    </description>
     <used-by>CastorTransformer and precept</used-by>
     <lib>optional/castor-0.9.5.3-xml.jar</lib>
     <homepage>http://castor.exolab.org/</homepage>
@@ -927,7 +939,7 @@
     </description>
     <used-by>QDoxSource (qdox block)</used-by>
     <lib>qdox/lib/qdox-1.5.jar</lib>
-    <homepage>http://qdox.codehaus.org</homepage>
+    <homepage>http://qdox.codehaus.org/</homepage>
    </file>
 
    <file>
@@ -935,7 +947,7 @@
     <description>Quartz Scheduler</description>
     <used-by>Cron block</used-by>
     <lib>cron/lib/quartz-1.4.2.jar</lib>
-    <homepage>http://www.quartzscheduler.org/quartz/</homepage>
+    <homepage>http://sourceforge.net/projects/quartz/</homepage>
    </file>
 
    <file>
@@ -1030,6 +1042,7 @@
     <homepage>http://db.apache.org/ojb/</homepage>
   </file>
   <!-- OJB block end (6-Aug-2003) -->
+
   <!-- JMS block begin -->
   <file>
     <title>JMS Spec</title>
@@ -1090,7 +1103,9 @@
     <lib>jms/lib/jndi-1.2.1.jar</lib>
     <homepage>http://java.sun.com/jndi</homepage>
   </file>
-  JMS block end -->
+  -->
+  <!-- JMS block end -->
+
   <file>
     <title>JSR-168 Portlet Spec</title>
     <description>
@@ -1113,6 +1128,7 @@
     <lib>portal/lib/pluto-20040607.jar</lib>
     <homepage>http://jakarta.apache.org/pluto/</homepage>
   </file>
+
   <file>
     <title>Jakarta BCEL</title>
     <description>
