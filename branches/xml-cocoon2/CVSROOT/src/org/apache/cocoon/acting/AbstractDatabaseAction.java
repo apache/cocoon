@@ -141,7 +141,7 @@ import org.apache.cocoon.components.parser.Parser;
  * </table>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-02-27 16:49:15 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-27 17:06:00 $
  */
 public abstract class AbstractDatabaseAction extends ComposerAction implements Configurable {
     private static Map configurations = new HashMap();
@@ -259,7 +259,7 @@ public abstract class AbstractDatabaseAction extends ComposerAction implements C
         String attribute = entry.getAttribute("param", "");
         String value = request.getParameter(attribute);
 
-        getLogger().info("Setting parameter '" + attribute + "' to: " + value);
+        getLogger().info("Setting parameter " + position + " '" + attribute + "' to: " + value);
 
         if (value == null) {
             statement.setNull(position, typeObject.intValue());
