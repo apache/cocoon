@@ -457,7 +457,7 @@
       |             work directory.
       |
       +-->
-  <persistent-store class="org.apache.cocoon.components.store.impl.JCSPersistentStore"
+  <persistent-store class="org.apache.cocoon.components.store.impl.JCSDefaultStore"
                     logger="core.store.persistent">
     <parameter name="use-cache-directory" value="true"/>
     <parameter name="maxobjects" value="1000"/>
