@@ -61,12 +61,13 @@ import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.PatternException;
+import org.apache.cocoon.transformation.Transformer;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: TransformNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: TransformNode.java,v 1.2 2003/12/28 22:11:19 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -76,6 +77,7 @@ import org.apache.cocoon.sitemap.PatternException;
 public class TransformNode extends PipelineEventComponentProcessingNode {
 
     private VariableResolver m_src;
+    private String m_transformerRole;
 
     public TransformNode() {
     }
@@ -91,12 +93,21 @@ public class TransformNode extends PipelineEventComponentProcessingNode {
         }
     }
     
+    public void initialize() throws Exception {
+        super.initialize();
+        m_transformerRole = Transformer.ROLE;
+        String hint = getComponentId();
+        if (hint != null) {
+            m_transformerRole += "/" + hint;
+        }
+    }
+    
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {
 
         Map objectModel = env.getObjectModel();
-
+        
         context.getProcessingPipeline().addTransformer(
-            getComponentId(),
+            m_transformerRole,
             m_src.resolve(context, objectModel),
             VariableResolver.buildParameters(super.m_parameters, context, objectModel),
             super.m_pipelineHints == null

@@ -63,13 +63,14 @@ import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.generation.Generator;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: GenerateNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.2 2003/12/28 22:11:19 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -80,6 +81,7 @@ public class GenerateNode extends PipelineEventComponentProcessingNode
 implements ProcessingNode {
 
     private VariableResolver m_src;
+    private String m_generatorRole;
 
     public GenerateNode() {
     }
@@ -96,12 +98,21 @@ implements ProcessingNode {
         super.m_labels.add(ViewNode.FIRST_POS_LABEL);
     }
     
+    public void initialize() throws Exception {
+        super.initialize();
+        m_generatorRole = Generator.ROLE;
+        String hint = getComponentId();
+        if (hint != null) {
+            m_generatorRole += "/" + hint;
+        }
+    }
+    
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {
         
         Map objectModel = env.getObjectModel();
         
         context.getProcessingPipeline().setGenerator(
-            getComponentId(),
+            m_generatorRole,
             m_src.resolve(context, objectModel),
             VariableResolver.buildParameters(super.m_parameters, context, objectModel),
             super.m_pipelineHints == null

@@ -90,7 +90,7 @@ import org.xml.sax.SAXException;
  *
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractProcessingPipeline.java,v 1.20 2003/12/28 21:18:29 unico Exp $
+ * @version CVS $Id: AbstractProcessingPipeline.java,v 1.21 2003/12/28 22:11:19 unico Exp $
  */
 public abstract class AbstractProcessingPipeline
   extends AbstractLogEnabled
@@ -105,7 +105,6 @@ public abstract class AbstractProcessingPipeline
     protected ArrayList transformers = new ArrayList();
     protected ArrayList transformerParams = new ArrayList();
     protected ArrayList transformerSources = new ArrayList();
-    protected ArrayList transformerSelectors = new ArrayList();
 
     // Serializer stuff
     protected Serializer serializer;
@@ -273,15 +272,8 @@ public abstract class AbstractProcessingPipeline
         if (this.generator == null) {
             throw new ProcessingException ("You must set a generator first before you can use a transformer.");
         }
-        ServiceSelector selector = null;
         try {
-            selector = (ServiceSelector) this.newManager.lookup(Transformer.ROLE + "Selector");
-        } catch (ServiceException ce) {
-            throw new ProcessingException("Lookup of transformer selector failed.", ce);
-        }
-        try {
-            this.transformers.add(selector.select(role));
-            this.transformerSelectors.add(selector);
+            this.transformers.add(newManager.lookup(role));
         } catch (ServiceException ce) {
             throw new ProcessingException("Lookup of transformer for role '"+role+"' failed.", ce);
         }
@@ -313,7 +305,6 @@ public abstract class AbstractProcessingPipeline
         this.serializerSource = source;
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
-//        this.sitemapSerializerMimeType = serializerSelector.getMimeTypeForHint(role);
         this.lastConsumer = this.serializer;
     }
 
@@ -338,7 +329,6 @@ public abstract class AbstractProcessingPipeline
         this.readerSource = source;
         this.readerParam = param;
         this.readerMimeType = mimeType;
-        // this.sitemapReaderMimeType = readerSelector.getMimeTypeForHint(role);
     }
 
     /**
@@ -645,14 +635,10 @@ public abstract class AbstractProcessingPipeline
         }
 
         // Release transformers
-        int size = this.transformerSelectors.size();
+        int size = this.transformers.size();
         for (int i = 0; i < size; i++) {
-            final ServiceSelector selector =
-                (ServiceSelector)this.transformerSelectors.get(i);
-            selector.release( this.transformers.get(i) );
-            this.newManager.release( selector );
+            newManager.release( this.transformers.get(i) );
         }
-        this.transformerSelectors.clear();
         this.transformers.clear();
         this.transformerParams.clear();
         this.transformerSources.clear();

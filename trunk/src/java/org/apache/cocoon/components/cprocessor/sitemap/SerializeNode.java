@@ -62,6 +62,7 @@ import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
@@ -69,7 +70,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SerializeNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: SerializeNode.java,v 1.2 2003/12/28 22:11:19 unico Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode
@@ -80,6 +81,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
 
     private VariableResolver m_mimeType;
     private int m_statusCode;
+    private String m_serializerRole;
 
     public SerializeNode() {
     }
@@ -94,6 +96,15 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
             throw new ConfigurationException(e.toString());
         }
         m_statusCode = config.getAttributeAsInteger("status-code",-1);
+    }
+    
+    public void initialize() throws Exception {
+        super.initialize();
+        m_serializerRole = Serializer.ROLE;
+        String hint = getComponentId();
+        if (hint != null) {
+            m_serializerRole += "/" + hint;
+        }
     }
     
     public final boolean invoke(Environment env, InvokeContext context) throws Exception {
@@ -136,7 +147,7 @@ public class SerializeNode extends PipelineEventComponentProcessingNode {
         }
         
         pipeline.setSerializer(
-            getComponentId(),
+            m_serializerRole,
             null,
             VariableResolver.buildParameters(m_parameters, context, objectModel),
             super.m_pipelineHints == null
