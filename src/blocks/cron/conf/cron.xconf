@@ -45,6 +45,14 @@
             <!-- The maximum time to wait for running jobs to complete. Defaults to unlimited time (<0 == default) -->
             <shutdown-wait-time-ms>5000</shutdown-wait-time-ms>
         </thread-pool>
+        <!-- Definition of the JobStore -->
+        <!-- store type is one of "ram" (default), "tx", or "cmt" -->
+        <store type="ram"/>
+        <!--
+        <store type="tx">
+          <datasource>jdbc/MyJobStoreDS</datasource>
+        </store>
+        -->
         <!-- Definintions of triggers -->
         <triggers>
             <!-- Sample definition of a trigger -->
