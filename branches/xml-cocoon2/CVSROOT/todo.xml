@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: todo.xml,v 1.6.2.15 2001-01-04 22:39:21 dims Exp $
+  $Id: todo.xml,v 1.6.2.16 2001-02-07 19:43:18 bloritsch Exp $
 -->
 
 
@@ -23,6 +23,13 @@
 
  <actions priority="high">
   <action context="code">
+    Remove complete dependancy on Xerces/Xalan.  There is something
+    in the Sitemap which causes SAXON not to work.  Also, there should
+    be the ability to choose the Parser/Transformer to use without
+    additional bulk.
+  </action>
+
+  <action context="code">
    Finish writing the command line interface and design the link rewriting
    behavior that cannot work with views.
   </action>
@@ -34,13 +41,6 @@
   <action context="code">
    Write a better error handling code for CocoonServlet to avoid hardcoding
    HTML inside the servlet which sucks big time.
-  </action>
-
-  <action context="code">
-   Complete ResourceProcessor.java to allow Cocoon to read resources from its
-   URI space without attempting to process them (should use context.getResource()
-   but how do we make that instance available and maintain the engine abstracted
-   enough? we should implement the "loading" abstraction).
   </action>
 
   <action context="code">
