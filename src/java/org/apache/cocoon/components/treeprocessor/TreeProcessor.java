@@ -50,6 +50,7 @@
 */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +73,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.ChainedConfiguration;
@@ -90,7 +92,7 @@ import org.apache.excalibur.source.Source;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.12 2003/08/16 13:42:40 sylvain Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.13 2003/08/31 20:33:19 sylvain Exp $
  */
 
 public class TreeProcessor
@@ -397,7 +399,7 @@ public class TreeProcessor
             environment = facade.getDelegate();
         }
         
-        Environment newEnv = new EnvironmentWrapper(environment, this.manager, uri, getLogger());
+        Environment newEnv = new ForwardEnvironmentWrapper(environment, this.manager, uri, getLogger());
         
         if (facade != null) {
             // Change the facade delegate
@@ -556,4 +558,33 @@ public class TreeProcessor
             this.disposableNodes = null;
         }
     }
+    
+    /**
+     * Local extension of EnvironmentWrapper to propagate otherwise blocked
+     * methods to the actual environment.
+     */
+    private static final class ForwardEnvironmentWrapper extends EnvironmentWrapper {
+
+        public ForwardEnvironmentWrapper(Environment env,
+            ComponentManager manager, String uri, Logger logger) throws MalformedURLException {
+            super(env, manager, uri, logger);
+        }
+
+        public void setStatus(int statusCode) {
+            environment.setStatus(statusCode);
+        }
+
+        public void setContentLength(int length) {
+            environment.setContentLength(length);
+        }
+
+        public void setContentType(String contentType) {
+            environment.setContentType(contentType);
+        }
+
+        public String getContentType() {
+            return environment.getContentType();
+        }
+    }
+
 }
