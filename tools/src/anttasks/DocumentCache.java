@@ -16,6 +16,7 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -35,12 +36,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.3 $ $Date: 2004/05/01 16:12:05 $
+ * @version CVS $Revision: 1.4 $ $Date: 2004/05/01 18:06:12 $
  */
 public final class DocumentCache {
 
@@ -91,15 +93,26 @@ public final class DocumentCache {
         return document;
     }
     
+    public static Document getDocument(String string) {
+        try {
+            final InputSource is = new InputSource(new StringReader(string));
+            return builder.parse(is);
+        } catch (Exception e) {
+            throw new BuildException("Unable to parse string.");
+        }
+    }
+    
     public static void storeDocument(File file, Document document, Task task) 
-    throws IOException {  
+    throws IOException {
         task.log("Storing file in cache: " + file, Project.MSG_DEBUG);
         final String fileName = file.toURL().toExternalForm();
         fileCache.put(fileName, document);
     }
 
     public static void writeDocument(File file, Document document, Task task) {
-        task.log("Writing: " + file);
+        if ( task != null ) {
+            task.log("Writing: " + file);
+        }
         // Set the DOCTYPE output option on the transformer 
         // if we have any DOCTYPE declaration in the input xml document
         final DocumentType doctype = document.getDoctype();
