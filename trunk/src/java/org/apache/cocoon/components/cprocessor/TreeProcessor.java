@@ -362,7 +362,7 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
             parser.parse(SourceUtil.getInputSource(source), pipe);
             if ( domBuilder != null ) {
                 this.getLogger().debug("Configuration from sitemap: " + this.m_source.getURI());
-                this.getLogger().debug(XMLUtils.serializeNodeToXML(domBuilder.getDocument()));
+                this.getLogger().debug(XMLUtils.serializeNode(domBuilder.getDocument(), XMLUtils.createPropertiesForXML(false)));
             }
             Configuration config = configHandler.getConfiguration();
             

@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.xml.transform.OutputKeys;
 
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
@@ -58,7 +61,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.14 2004/03/17 12:26:59 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.15 2004/03/17 12:33:34 cziegeler Exp $
  */
 public final class SourceUtil {
 

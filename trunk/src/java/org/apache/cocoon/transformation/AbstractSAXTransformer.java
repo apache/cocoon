@@ -31,10 +31,12 @@ import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.helpers.ParametersRecorder;
 import org.apache.cocoon.transformation.helpers.TextRecorder;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
+import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
 import org.apache.cocoon.xml.dom.DOMBuilder;
 import org.apache.excalibur.source.SourceParameters;
+import org.apache.excalibur.xml.sax.XMLizable;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -85,7 +87,7 @@ import java.util.*;
  *
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractSAXTransformer.java,v 1.11 2004/03/17 12:26:59 cziegeler Exp $
+ * @version CVS $Id: AbstractSAXTransformer.java,v 1.12 2004/03/17 12:33:34 cziegeler Exp $
 */
 public abstract class AbstractSAXTransformer
 extends AbstractTransformer
