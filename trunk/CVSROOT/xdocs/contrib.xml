@@ -29,7 +29,8 @@
   </p>
   <p>
    To begin with, we suggest you to subscribe to the
-   <connect href="mail-lists.xml">Cocoon mailing lists</connect>
+   <link href="http://cocoon.apache.org/community/mail-lists.html">Cocoon
+   mailing lists</link>
    (follow the link for information on how to subscribe and to access the mail
    list archives), to checkout the <link href="http://cvs.apache.org/viewcvs.cgi/cocoon-1/">
    latest and greatest code</link> (which you find in the cocoon-1 module in
