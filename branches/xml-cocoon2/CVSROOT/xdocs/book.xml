@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<book software="Cocoon" title="Cocoon documentation" copyright="1999-2000 The Apache Software Foundation">
+
+  <page id="index" label="Index" source="index.xml"/>
+  <page id="license" label="License" source="license.xml"/>
+  <page id="install" label="Install" source="installing.xml"/>
+  <page id="xsp-internals" label="XSP Internals" source="xsp-internals.xml"/>
+  <page id="logicsheet-concepts" label="Logicsheet Concepts" source="logicsheet-concepts.xml"/>
+<separator/>
+  <faqs id="faqs" label="FAQ" source="faq.xml"/>
+  <changes id="changes" label="Changes" source="changes.xml"/>
+  <todo id="todo" label="Todo" source="todo.xml"/>
+<separator/>
+  <external label="Mail Archive" href="http://xml-archive.webweaving.org"/>
+  <external label="Bug Database" href="http://xml.apache.org/bugs/"/>
+</book>
