@@ -59,6 +59,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.webapps.authentication.configuration.HandlerConfiguration;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
 import org.apache.cocoon.webapps.session.MediaManager;
@@ -80,7 +81,7 @@ import org.xml.sax.SAXException;
  * This is a helper class that could be made pluggable if required.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: PipelineAuthenticator.java,v 1.8 2003/10/24 08:43:50 cziegeler Exp $
+ * @version CVS $Id: PipelineAuthenticator.java,v 1.9 2003/11/24 04:00:34 antonio Exp $
 */
 public class PipelineAuthenticator 
     extends AbstractLogEnabled
@@ -174,16 +175,16 @@ public class PipelineAuthenticator
         try {
             Source source = null;
             try {
-                source = org.apache.cocoon.components.source.SourceUtil.getSource(authenticationResourceName, 
+                source = SourceUtil.getSource(authenticationResourceName, 
                                                                                   null, 
                                                                                   parameters, 
                                                                                   this.resolver);
                 
-                doc = org.apache.cocoon.components.source.SourceUtil.toDOM(source);
+                doc = SourceUtil.toDOM(source);
             } catch (SAXException se) {
                 throw new ProcessingException(se);
             } catch (SourceException se) {
-                throw org.apache.cocoon.components.source.SourceUtil.handle(se);
+                throw SourceUtil.handle(se);
             } catch (IOException e) {
                 throw new ProcessingException(e);
 			} finally {
