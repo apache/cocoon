@@ -54,31 +54,31 @@
     <s3 title="request">
     <p>The current Cocoon request:</p>
     <p>
-    <em>Property</em> <code>[</code><link href="../../../api/java/org/apache/cocoon/environment/Request.html"><code>org.apache.cocoon.environment.Request</code></link><code>] request</code>
+    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Request.html"><code>org.apache.cocoon.environment.Request</code></link><code>] request</code>
     </p>
     </s3>
     <s3 title="response">
     <p>The current Cocoon response:</p>
     <p>
-    <em>Property</em> <code>[</code><link href="../../../api/java/org/apache/cocoon/environment/Response.html"><code>org.apache.cocoon.environment.Response</code></link><code>] response</code>
+    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Response.html"><code>org.apache.cocoon.environment.Response</code></link><code>] response</code>
     </p>
     </s3>
     <s3 title="session">
     <p>The current Cocoon session:</p>
     <p>
-    <em>Property</em> <code>[</code><link href="../../../api/java/org/apache/cocoon/environment/Session.html"><code>org.apache.cocoon.environment.Session</code></link><code>] session</code>
+    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Session.html"><code>org.apache.cocoon.environment.Session</code></link><code>] session</code>
     </p>
     </s3>
     <s3 title="context">
     <p>The current Cocoon application context:</p>
     <p>
-    <em>Property</em> <code>[</code><link href="../../../api/java/org/apache/cocoon/environment/Context.html"><code>org.apache.cocoon.environment.Context</code></link><code>] context</code>
+    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Context.html"><code>org.apache.cocoon.environment.Context</code></link><code>] context</code>
     </p>
     </s3>
     <s3 title="environment">
     <p>The current Cocoon environment:</p>
     <p>
-    <em>Property</em> <code>[</code><link href="../../../api/java/org/apache/cocoon/environment/Environment.html"><code>org.apache.cocoon.environment.Environment</code></link><code>] environment</code>
+    <em>Property</em> <code>[</code><link href="../../apidocs/java/org/apache/cocoon/environment/Environment.html"><code>org.apache.cocoon.environment.Environment</code></link><code>] environment</code>
     </p>
     </s3>
     <s3 title="componentManager">

@@ -28,13 +28,13 @@
    </source>
    <p>In addition the following implicit objects are always available in the Velocity context:</p>
    <dl>
-    <dt><link href="../../../api/java/org/apache/cocoon/environment/Request.html">org.apache.cocoon.environment.Request</link> <code>$request</code> </dt>
+    <dt><link href="../../apidocs/java/org/apache/cocoon/environment/Request.html">org.apache.cocoon.environment.Request</link> <code>$request</code> </dt>
     <dd>The current Cocoon request</dd>
-    <dt><link href="../../../api/java/org/apache/cocoon/environment/Response.html">org.apache.cocoon.environment.Response</link> <code>$response</code> </dt>
+    <dt><link href="../../apidocs/java/org/apache/cocoon/environment/Response.html">org.apache.cocoon.environment.Response</link> <code>$response</code> </dt>
     <dd>The Cocoon response associated with the current request</dd>
-    <dt><link href="../../../api/java/org/apache/cocoon/environment/Session.html">org.apache.cocoon.environment.Session</link> <code>$session</code> </dt>
+    <dt><link href="../../apidocs/java/org/apache/cocoon/environment/Session.html">org.apache.cocoon.environment.Session</link> <code>$session</code> </dt>
     <dd>The Cocoon session associated with the current request</dd>
-    <dt><link href="../../../api/java/org/apache/cocoon/environment/Context.html">org.apache.cocoon.environment.Context</link> <code>$context</code> </dt>
+    <dt><link href="../../apidocs/java/org/apache/cocoon/environment/Context.html">org.apache.cocoon.environment.Context</link> <code>$context</code> </dt>
     <dd>The Cocoon context associated with the current request</dd>
     <dt><code>org.apache.avalon.framework.parameters.Parameters</code> <code>$parameters</code> </dt>
     <dd>Any parameters passed to the generator in the pipeline</dd>
