@@ -31,6 +31,7 @@
       <binding name="delete-node" src="org.apache.cocoon.forms.binding.DeleteNodeJXPathBindingBuilder"/>
       <binding name="insert-bean" src="org.apache.cocoon.forms.binding.InsertBeanJXPathBindingBuilder"/>
       <binding name="javascript" src="org.apache.cocoon.forms.binding.JavaScriptJXPathBindingBuilder"/>
+      <binding name="custom" src="org.apache.cocoon.forms.binding.CustomJXPathBindingBuilder" />
       <binding name="case" src="org.apache.cocoon.forms.binding.CaseJXPathBindingBuilder"/>
       <binding name="class" src="org.apache.cocoon.forms.binding.ClassJXPathBindingBuilder"/>
       <binding name="new" src="org.apache.cocoon.forms.binding.NewJXPathBindingBuilder"/>
