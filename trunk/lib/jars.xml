@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.95 2003/09/11 23:53:51 vgritsenko Exp $
+    | CVS $Id: jars.xml,v 1.96 2003/09/23 03:15:49 vgritsenko Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -660,12 +660,12 @@
     <lib>webdav/lib/slide-webdavlib-20030711.jar</lib>
     <homepage>http://jakarta.apache.org/slide/</homepage>
   </file>
-<!-- seems to be unused -->
+
   <file>
     <title>JDOM</title>
     <description>JDOM</description>
     <used-by>Slide block</used-by>
-    <lib>optional/jdom-dev-20020131.jar</lib>
+    <lib>slide/lib/jdom-dev-20020131.jar</lib>
     <homepage>http://www.jdom.org/</homepage>
   </file>
 
