@@ -47,7 +47,7 @@ import org.apache.log.Priority;
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
- * @version CVS $Revision: 1.1.4.28 $ $Date: 2000-11-15 15:24:07 $
+ * @version CVS $Revision: 1.1.4.29 $ $Date: 2000-11-15 15:51:47 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -178,6 +178,7 @@ public class CocoonServlet extends HttpServlet {
 
         // We got it... Process the request
         String uri =  req.getServletPath();
+        if (uri == null) uri = "";
         String pathInfo = req.getPathInfo();
         if (pathInfo != null) uri += pathInfo;
 
@@ -188,7 +189,11 @@ public class CocoonServlet extends HttpServlet {
                     "".charAt(0)
                else process URI normally
             */
-            res.sendRedirect(req.getRequestURI()+"/");
+            String prefix = req.getRequestURI();
+
+            if (prefix == null) prefix = "";
+
+            res.sendRedirect(prefix + "/");
             return;
         }
 
