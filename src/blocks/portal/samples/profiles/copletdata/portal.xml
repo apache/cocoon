@@ -246,4 +246,16 @@
       	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
       </attribute>
    </coplet-data>
+   <coplet-data id="TestPortlet1" name="standard">
+      <title>Portlet-Test</title>
+      <coplet-base-data>Portlet</coplet-base-data>
+      <attribute>
+      	<name>portlet</name>
+      	<value xsi:type="java:java.lang.String" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">webapp.TestPortlet1</value>
+      </attribute>
+      <attribute>
+      	<name>buffer</name>
+      	<value xsi:type="java:java.lang.Boolean" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">true</value>
+      </attribute>
+   </coplet-data>
 </coplets>

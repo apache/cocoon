@@ -75,4 +75,8 @@
       <coplet-data>Portlet2</coplet-data>
    </coplet-instance-data>
 
+   <coplet-instance-data id="TestPortlet-1" name="standard">
+      <coplet-data>TestPortlet1</coplet-data>
+   </coplet-instance-data>
+
 </coplets>

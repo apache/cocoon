@@ -80,7 +80,7 @@ import org.xml.sax.InputSource;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionRegistryImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: PortletDefinitionRegistryImpl.java,v 1.2 2004/01/27 08:05:34 cziegeler Exp $
  */
 public class PortletDefinitionRegistryImpl 
 extends AbstractLogEnabled
@@ -104,7 +104,10 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
     // Helper lists and hashtables to access the data as fast as possible
     // List containing all portlet applications available in the system
     protected PortletApplicationDefinitionListImpl registry = new PortletApplicationDefinitionListImpl();
+    /** All portlet definitions, hashed by ObjectId */
     protected Map portletsKeyObjectId = new HashMap();
+    /** Our context name */
+    protected String contextName;
 
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
@@ -152,7 +155,9 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
             }
 
             String baseWMDir = servletContext.getRealPath("");
-            baseWMDir = baseWMDir.substring(0, baseWMDir.lastIndexOf(File.separatorChar)+1);
+            int lastIndex = baseWMDir.lastIndexOf(File.separatorChar);
+            this.contextName = baseWMDir.substring(lastIndex+1);
+            baseWMDir = baseWMDir.substring(0, lastIndex+1);
             this.load(baseWMDir,mappingPortletXml, mappingWebXml);
         } catch (Exception e) {
             e.printStackTrace();
@@ -254,8 +259,11 @@ implements PortletDefinitionRegistry, Contextualizable, Initializable, Serviceab
             final Iterator portlets = portletApp.getPortletDefinitionList().iterator();
             while (portlets.hasNext()) {
                 final PortletDefinition portlet = (PortletDefinition)portlets.next();
-
                 portletsKeyObjectId.put(portlet.getId(), portlet);
+                
+                if (this.contextName.equals(webModule)) {
+                    ((PortletDefinitionImpl)portlet).setLocalPortlet(true);
+                }
 
             }
         }

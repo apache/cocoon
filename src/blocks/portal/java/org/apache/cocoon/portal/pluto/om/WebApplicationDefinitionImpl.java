@@ -74,35 +74,34 @@ import org.apache.cocoon.portal.pluto.om.common.DisplayNameSetImpl;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.2 2004/01/23 12:34:31 joerg Exp $
+ * @version CVS $Id: WebApplicationDefinitionImpl.java,v 1.3 2004/01/27 08:05:34 cziegeler Exp $
  */
 public class WebApplicationDefinitionImpl 
 implements WebApplicationDefinition, Support {
 
 
     // <not used variables - only for castor>
-    public String icon = null;
-    public String distributable = null;
-    public String sessionConfig = null;
-    public String mimeMapping = null;
-    public String welcomeFileList = null;
-    public String errorPage = null;
-    public String taglib = null;
-    public String resourceRef = null;
-    public String securityConstraint = null;
-    public String loginConfig = null;
-    public String securityRole = null;
-    public String envEntry = null;
-    public String ejbRef = null;
+    public String icon;
+    public String distributable;
+    public String sessionConfig;
+    public String welcomeFileList;
+    public String errorPage;
+    public String taglib;
+    public String resourceRef;
+    public String securityConstraint;
+    public String loginConfig;
+    public String securityRole;
+    public String envEntry;
+    public String ejbRef;
     // </not used variables - only for castor>
 
 
-    private String contextPath = null;        
+    private String contextPath;        
     private DescriptionSet descriptions = new DescriptionSetImpl();
     private DisplayNameSet displayNames =  new DisplayNameSetImpl();
     private String id = "";
     private ParameterSet initParams = new ParameterSetImpl();
-    private ObjectID objectId = null;
+    private ObjectID objectId;
     private Collection servletMappings = new ArrayList();
     private ServletDefinitionList servlets = new ServletDefinitionListImpl();
     private SecurityRoleSet securityRoles = new SecurityRoleSetImpl();

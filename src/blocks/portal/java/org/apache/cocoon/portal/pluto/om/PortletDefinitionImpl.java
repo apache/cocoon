@@ -59,6 +59,7 @@ import org.apache.cocoon.portal.pluto.om.common.ParameterSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.PreferenceSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.SecurityRoleRefSetImpl;
 import org.apache.cocoon.portal.pluto.om.common.Support;
+import org.apache.pluto.invoker.PortletInvoker;
 import org.apache.pluto.om.common.Description;
 import org.apache.pluto.om.common.DescriptionSet;
 import org.apache.pluto.om.common.DisplayName;
@@ -79,7 +80,7 @@ import org.apache.pluto.om.servlet.ServletDefinition;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: PortletDefinitionImpl.java,v 1.1 2004/01/22 14:01:20 cziegeler Exp $
+ * @version CVS $Id: PortletDefinitionImpl.java,v 1.2 2004/01/27 08:05:34 cziegeler Exp $
  */
 public class PortletDefinitionImpl 
 implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Support {
@@ -112,10 +113,15 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
     // contains Locale objects
     private ArrayList supportedLocales = new ArrayList();
 
+    /** is this a local portlet? */
+    protected boolean localPortlet = false;
+    
+    /** The local portlet invoker */
+    protected PortletInvoker localPortletInvoker;
+    
     // PortletDefinition implementation.
 
-    public ObjectID getId()
-    {        
+    public ObjectID getId() {        
         if (objectId==null) {
             objectId = org.apache.cocoon.portal.pluto.om.common.ObjectIDImpl.createFromString(getGUID());            
         }
@@ -123,13 +129,11 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
         return objectId;
     }
 
-    public String getClassName()
-    {
+    public String getClassName() {
         return className;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
@@ -140,67 +144,55 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
         return descriptions.get(locale);
     }
 
-    public LanguageSet getLanguageSet()
-    {
+    public LanguageSet getLanguageSet() {
         ((LanguageSetImpl)castorResources).setClassLoader(this.getPortletClassLoader());
         return castorResources; 
     }
 
-    public ParameterSet getInitParameterSet()
-    {
+    public ParameterSet getInitParameterSet() {
         return initParams;
     }
 
-    public SecurityRoleRefSet getInitSecurityRoleRefSet()
-    {
+    public SecurityRoleRefSet getInitSecurityRoleRefSet() {
         return initSecurityRoleRefs;
     }
 
-    public PreferenceSet getPreferenceSet()
-    {
+    public PreferenceSet getPreferenceSet() {
         ((PreferenceSetImpl)preferences).setClassLoader(this.getPortletClassLoader());
         return preferences;
     }
 
-    public ContentTypeSet getContentTypeSet()
-    {
+    public ContentTypeSet getContentTypeSet() {
         return contentTypes;
     }
 
-    public PortletApplicationDefinition getPortletApplicationDefinition()
-    {
+    public PortletApplicationDefinition getPortletApplicationDefinition() {
         return application;
     }
 
-    public ServletDefinition getServletDefinition()
-    {
+    public ServletDefinition getServletDefinition() {
         return servlet;
     }
 
-    public DisplayName getDisplayName(Locale locale)
-    {
+    public DisplayName getDisplayName(Locale locale) {
         return displayNames.get(locale);
     }
 
-    public String getExpirationCache()
-    {
+    public String getExpirationCache() {
         return expirationCache;
     }
 
     // PortletDefinitionCtrl implementation.
 
-    public void setId(String id)
-    {
+    public void setId(String id) {
         // todo excep
     }
 
-    public void setClassName(String className)
-    {
+    public void setClassName(String className) {
         this.className = className;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -211,24 +203,20 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
         this.descriptions = descriptions;
     }
 
-    public void setDisplayNames(DisplayNameSet displayNames)
-    {
+    public void setDisplayNames(DisplayNameSet displayNames) {
         this.displayNames = displayNames;
     }
 
-    public void setPortletClassLoader(ClassLoader loader)
-    {
+    public void setPortletClassLoader(ClassLoader loader) {
         this.classLoader = loader;
     }
     
-    public void store() throws java.io.IOException
-    {
+    public void store() throws java.io.IOException {
         // not supported
     }
 
 
-    public void postBuild(Object parameter) throws Exception
-    {
+    public void postBuild(Object parameter) throws Exception {
         setServletDefinition((ServletDefinition)parameter);
         ((Support)contentTypes).postBuild(this);
         if (castorResources!=null) {
@@ -236,8 +224,7 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
         }
     }
 
-    public void postLoad(Object parameter) throws Exception
-    {
+    public void postLoad(Object parameter) throws Exception {
         ((Support)contentTypes).postLoad(this);        
 
         // create Locale objects for given locale entries
@@ -271,23 +258,20 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
         ((Support)displayNames).postLoad(parameter);
 
     }
-    public void postStore(Object parameter) throws Exception
-    {
+    public void postStore(Object parameter) throws Exception {
         ((Support)contentTypes).postStore(this);
         if (castorResources!=null) {
             ((Support)castorResources).postStore(this);
         }
     }
-    public void preBuild(Object parameter) throws Exception
-    {
+    public void preBuild(Object parameter) throws Exception {
         setPortletApplicationDefinition((PortletApplicationDefinition)parameter);
         ((Support)contentTypes).preBuild(this);
         if (castorResources!=null) {
             ((Support)castorResources).preBuild(this);
         }
     }
-    public void preStore(Object parameter) throws Exception
-    {
+    public void preStore(Object parameter) throws Exception {
         ((Support)contentTypes).preStore(this);
         if (castorResources!=null) {
             ((Support)castorResources).preStore(this);
@@ -296,43 +280,35 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
 
     // additional methods.
 
-    public Collection getCastorContentTypes()
-    {
+    public Collection getCastorContentTypes() {
         return(ContentTypeSetImpl)contentTypes;
     }
 
-    public Collection getCastorDisplayNames()
-    {
+    public Collection getCastorDisplayNames() {
         return(DisplayNameSetImpl)displayNames;
     }
 
-    public Collection getCastorDescriptions()
-    {
+    public Collection getCastorDescriptions() {
         return(DescriptionSetImpl)descriptions;
     }
 
-    public Collection getDescriptions()
-    {
+    public Collection getDescriptions() {
         return(DescriptionSetImpl)descriptions;
     }
 
-    public Collection getCastorInitParams()
-    {
+    public Collection getCastorInitParams() {
         return(ParameterSetImpl)initParams;        
     }
 
-    public SecurityRoleRefSet getCastorInitSecurityRoleRefs()
-    {
+    public SecurityRoleRefSet getCastorInitSecurityRoleRefs() {
         return initSecurityRoleRefs;
     }
 
-    public PreferenceSet getCastorPreferences()
-    {
+    public PreferenceSet getCastorPreferences() {
         return preferences;
     }
 
-    public LanguageSet getCastorResources()
-    {
+    public LanguageSet getCastorResources() {
         return castorResources;
     } 
 
@@ -349,14 +325,12 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
 
     // additional internal methods
 
-    public Collection getCastorSupportedLocales()
-    {
+    public Collection getCastorSupportedLocales() {
         return castorSupportedLocales;
     }
 
 
-    private String getGUID()
-    {
+    private String getGUID() {
         String portletID = "";
         if (getName()!=null) portletID += getName();
 
@@ -364,80 +338,92 @@ implements PortletDefinition, PortletDefinitionCtrl, java.io.Serializable, Suppo
         return portletID;
     }
 
-    public ClassLoader getPortletClassLoader()
-    {
+    public ClassLoader getPortletClassLoader() {
         return classLoader;
     }
 
-    public String getResourceBundle()
-    {
+    public String getResourceBundle() {
         return this.resourceBundle;
     }    
 
-    public Collection getSupportedLocales()
-    {
+    public Collection getSupportedLocales() {
         return supportedLocales;
     }
 
-    public void setCastorContentTypes(ContentTypeSet castorContentTypes)
-    {
+    public void setCastorContentTypes(ContentTypeSet castorContentTypes) {
         this.contentTypes = castorContentTypes;
     }    
 
-    public void setCastorInitParams(ParameterSet castorInitParams)
-    {
+    public void setCastorInitParams(ParameterSet castorInitParams) {
         this.initParams = castorInitParams;
     }
 
-    public void setCastorInitSecurityRoleRefs(SecurityRoleRefSet castorInitSecurityRoleRefs)
-    {
+    public void setCastorInitSecurityRoleRefs(SecurityRoleRefSet castorInitSecurityRoleRefs) {
         this.initSecurityRoleRefs = castorInitSecurityRoleRefs;
     }
 
-    public void setCastorDisplayNames(DisplayNameSet castorDisplayNames)
-    {
+    public void setCastorDisplayNames(DisplayNameSet castorDisplayNames) {
         this.displayNames = castorDisplayNames;
     }
 
-    public void setCastorDescriptions(DescriptionSet castorDescriptions)
-    {
+    public void setCastorDescriptions(DescriptionSet castorDescriptions) {
         this.descriptions = castorDescriptions;
     }
 
-    public void setCastorPreferences(PreferenceSet castorPreferences)
-    {
+    public void setCastorPreferences(PreferenceSet castorPreferences) {
         this.preferences = castorPreferences;
     }
 
-    public void setCastorResources(LanguageSet resources)
-    {
+    public void setCastorResources(LanguageSet resources) {
         this.castorResources = resources;
     } 
 
-    public void setCastorSupportedLocales(Collection castorSupportedLocales)
-    {
+    public void setCastorSupportedLocales(Collection castorSupportedLocales) {
         this.castorSupportedLocales = (ArrayList)castorSupportedLocales;
     }
 
-    public void setExpirationCache(String expirationCache)
-    {
+    public void setExpirationCache(String expirationCache) {
         this.expirationCache = expirationCache;
     }
 
-    protected void setPortletApplicationDefinition(PortletApplicationDefinition application)
-    {
+    protected void setPortletApplicationDefinition(PortletApplicationDefinition application) {
         this.application = application;
     }
 
-    public void setResourceBundle(String resourceBundle)
-    {
+    public void setResourceBundle(String resourceBundle) {
         this.resourceBundle = resourceBundle;
     }    
 
-    protected void setServletDefinition(ServletDefinition servlet)
-    {
+    protected void setServletDefinition(ServletDefinition servlet) {
         this.servlet = servlet;
     }
 
+    /**
+     * @return Returns the localPortlet.
+     */
+    public boolean isLocalPortlet() {
+        return this.localPortlet;
+    }
 
+    /**
+     * @param localPortlet The localPortlet to set.
+     */
+    public void setLocalPortlet(boolean localPortlet) {
+        this.localPortlet = localPortlet;
+    }
+
+    /**
+     * @return Returns the localPortletInvoker.
+     */
+    public PortletInvoker getLocalPortletInvoker() {
+        return this.localPortletInvoker;
+    }
+
+    /**
+     * Set a local portlet invoker for caching
+     * @param localPortletInvoker The localPortletInvoker to set.
+     */
+    public void setLocalPortletInvoker(PortletInvoker localPortletInvoker) {
+        this.localPortletInvoker = localPortletInvoker;
+    }
 }

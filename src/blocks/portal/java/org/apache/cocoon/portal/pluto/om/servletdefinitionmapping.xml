@@ -189,9 +189,6 @@
     <field name="sessionConfig" transient="true" direct="true">
         <bind-xml name="session-config" node="element"/>
     </field>
-    <field name="mimeMapping" transient="true" direct="true">
-        <bind-xml name="mime-mapping" node="element"/>
-    </field>
     <field name="welcomeFileList" transient="true" direct="true">
         <bind-xml name="welcome-file-list" node="element"/>
     </field>
