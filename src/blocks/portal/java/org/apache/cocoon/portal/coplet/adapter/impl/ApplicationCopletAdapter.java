@@ -50,7 +50,7 @@
 */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.application.PortalApplicationConfigFactory;
 import org.apache.cocoon.portal.coplet.CopletData;
@@ -74,7 +74,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: ApplicationCopletAdapter.java,v 1.1 2003/08/25 07:41:18 cziegeler Exp $
+ * @version CVS $Id: ApplicationCopletAdapter.java,v 1.2 2003/10/20 13:36:41 cziegeler Exp $
  */
 public class ApplicationCopletAdapter extends CachingURICopletAdapter {
 
@@ -171,8 +171,7 @@ public class ApplicationCopletAdapter extends CachingURICopletAdapter {
 
             newItem.setName(getNewInstanceTabName(tabLayout));
             tabLayout.addItem(newItem);
-        }
-        catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new ProcessingException(
                 "Unable to lookup profile manager.",
                 ce);

@@ -52,10 +52,10 @@ package org.apache.cocoon.portal.event.aspect.impl;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -75,19 +75,26 @@ import org.apache.cocoon.portal.layout.Layout;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.3 2003/07/18 14:41:45 cziegeler Exp $
+ * @version CVS $Id: FullScreenCopletEventAspect.java,v 1.4 2003/10/20 13:36:42 cziegeler Exp $
  */
 public class FullScreenCopletEventAspect
 	extends AbstractLogEnabled
 	implements EventAspect, 
                 ThreadSafe, 
-                Composable,
+                Serviceable,
                 Disposable, 
                 Subscriber, 
                 Initializable {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.event.aspect.EventAspect#process(org.apache.cocoon.portal.event.aspect.EventAspectContext, org.apache.cocoon.portal.PortalService)
 	 */
@@ -138,19 +145,12 @@ public class FullScreenCopletEventAspect
             try {
                 portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
                 portalService.getComponentManager().getProfileManager().setEntryLayout( startingLayout );
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 // ignore
             } finally {
                 this.manager.release(portalService);
             }
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
     }
 
     /* (non-Javadoc)

@@ -54,19 +54,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: EventAspectChain.java,v 1.1 2003/05/22 15:19:43 cziegeler Exp $
+ * @version CVS $Id: EventAspectChain.java,v 1.2 2003/10/20 13:36:42 cziegeler Exp $
  */
 public final class EventAspectChain {
     
@@ -74,7 +73,7 @@ public final class EventAspectChain {
     
     private List configs = new ArrayList();
     
-    public void configure(ComponentSelector selector, Configuration conf) 
+    public void configure(ServiceSelector selector, Configuration conf) 
     throws ConfigurationException {
         if ( conf != null ) {
             Configuration[] aspects = conf.getChildren("aspect");
@@ -85,7 +84,7 @@ public final class EventAspectChain {
                     try {
                         this.aspects.add(selector.select(role));
                         this.configs.add(Parameters.fromConfiguration(current));
-                    } catch (ComponentException se) {
+                    } catch (ServiceException se) {
                         throw new ConfigurationException("Unable to lookup aspect " + role, se);
                     }
                 }
@@ -103,10 +102,10 @@ public final class EventAspectChain {
         return this.configs.iterator();
     }
     
-    public void dispose(ComponentSelector selector) {
+    public void dispose(ServiceSelector selector) {
         Iterator i = this.aspects.iterator();
         while (i.hasNext()) {
-            selector.release((Component)i.next()); 
+            selector.release(i.next()); 
         }
         this.aspects.clear();
     }

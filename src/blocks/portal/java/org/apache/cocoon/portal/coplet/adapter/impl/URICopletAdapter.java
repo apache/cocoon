@@ -57,8 +57,8 @@ import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.portal.Constants;
@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: URICopletAdapter.java,v 1.10 2003/05/27 14:07:16 cziegeler Exp $
+ * @version CVS $Id: URICopletAdapter.java,v 1.11 2003/10/20 13:36:41 cziegeler Exp $
  */
 public class URICopletAdapter 
     extends AbstractCopletAdapter
@@ -89,15 +89,13 @@ public class URICopletAdapter
     /** The source resolver */
     protected SourceResolver resolver;
     
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager componentManager)
-    throws ComponentException {
-        super.compose( componentManager );
+    public void service(ServiceManager manager) throws ServiceException {
+        super.service( manager );
         this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
-
     
     public void streamContent(CopletInstanceData coplet, ContentHandler contentHandler)
     throws SAXException {
@@ -147,7 +145,7 @@ public class URICopletAdapter
 			throw new SAXException("IOException", ioe);
 		} catch (ProcessingException pe) {
 			throw new SAXException("ProcessingException", pe);
-		} catch (ComponentException ce) {
+		} catch (ServiceException ce) {
 			throw new SAXException("ComponentException", ce);
 		} finally {
 			this.resolver.release(copletSource);
@@ -203,7 +201,7 @@ public class URICopletAdapter
             }
             list.add(event.getTarget());
             service.setTemporaryAttribute(URICopletAdapter.class.getName(), list);
-        } catch (ComponentException ignore ) {            
+        } catch (ServiceException ignore ) {            
         } finally {
             this.manager.release(service);
         }

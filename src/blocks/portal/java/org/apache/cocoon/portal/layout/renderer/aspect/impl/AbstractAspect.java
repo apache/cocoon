@@ -52,33 +52,51 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.portal.PortalService;
+import org.apache.cocoon.portal.layout.Layout;
 import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect;
+import org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractAspect.java,v 1.4 2003/06/15 16:56:09 cziegeler Exp $
+ * @version CVS $Id: AbstractAspect.java,v 1.5 2003/10/20 13:37:10 cziegeler Exp $
  */
 public abstract class AbstractAspect
     extends AbstractLogEnabled
-    implements Composable, ThreadSafe, RendererAspect {
+    implements Serviceable, ThreadSafe, RendererAspect {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.manager = componentManager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.layout.renderer.aspect.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.aspect.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
+     */
+    public void toSAX(
+        RendererAspectContext context,
+        Layout layout,
+        PortalService service,
+        ContentHandler handler)
+        throws SAXException {
+        // TODO Auto-generated method stub
+
     }
 
     /**

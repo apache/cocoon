@@ -52,7 +52,6 @@ package org.apache.cocoon.portal.layout.renderer.aspect.impl;
 
 import java.util.Iterator;
 
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.layout.CompositeLayout;
 import org.apache.cocoon.portal.layout.Item;
@@ -67,12 +66,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCompositeAspect.java,v 1.4 2003/09/02 08:34:17 cziegeler Exp $
+ * @version CVS $Id: AbstractCompositeAspect.java,v 1.5 2003/10/20 13:37:10 cziegeler Exp $
  */
 public abstract class AbstractCompositeAspect
     extends AbstractAspect {
-
-    private ComponentSelector rendererSelector;
 
 	/* (non-Javadoc)
 	 * @see org.apache.cocoon.portal.layout.renderer.RendererAspect#toSAX(org.apache.cocoon.portal.layout.renderer.RendererAspectContext, org.apache.cocoon.portal.layout.Layout, org.apache.cocoon.portal.PortalService, org.xml.sax.ContentHandler)
@@ -104,17 +101,6 @@ public abstract class AbstractCompositeAspect
         final String rendererName = layout.getRendererName();
         final Renderer renderer = service.getComponentManager().getRenderer(rendererName);
         renderer.toSAX(layout, service, handler);
-    }
-
-    /**
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        if (null != this.manager) {
-            this.manager.release(this.rendererSelector);
-            this.manager = null;
-            this.rendererSelector = null;
-        }
     }
 
 }

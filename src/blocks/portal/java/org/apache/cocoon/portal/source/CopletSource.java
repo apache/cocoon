@@ -53,10 +53,10 @@ package org.apache.cocoon.portal.source;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.coplet.adapter.CopletAdapter;
 import org.apache.excalibur.source.Source;
@@ -72,12 +72,12 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSource.java,v 1.3 2003/07/03 08:00:00 cziegeler Exp $
+ * @version CVS $Id: CopletSource.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class CopletSource 
-    implements Source, XMLizable, Composable {
+    implements Source, XMLizable, Serviceable {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
     protected String uri;
     protected String copletControllerName;
@@ -86,6 +86,13 @@ public class CopletSource
     /** The used protocol */
     protected String scheme;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
     public CopletSource(String location, String protocol,
                          CopletInstanceData coplet) {
         this.uri = location;
@@ -147,14 +154,14 @@ public class CopletSource
 	 */
 	public void toSAX(ContentHandler handler) 
     throws SAXException {
-        ComponentSelector copletAdapterSelector = null;
+        ServiceSelector copletAdapterSelector = null;
         CopletAdapter copletAdapter = null;
         try {
-            copletAdapterSelector = (ComponentSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
+            copletAdapterSelector = (ServiceSelector)this.manager.lookup(CopletAdapter.ROLE+"Selector");
             copletAdapter = (CopletAdapter)copletAdapterSelector.select(this.copletControllerName);
             
             copletAdapter.toSAX(this.copletInstanceData, handler);
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new SAXException("Unable to lookup coplet adaptor or adaptor selector.", ce);
         } finally {
             if ( null != copletAdapter ) {
@@ -163,14 +170,6 @@ public class CopletSource
             this.manager.release(copletAdapterSelector);
         }
             
-	}
-
-	/**
-	 * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
-	 */
-	public void compose(ComponentManager componentManager)
-		throws ComponentException {
-        this.manager = componentManager;
 	}
 
     /**

@@ -54,10 +54,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
@@ -71,20 +71,19 @@ import org.apache.excalibur.source.SourceFactory;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: CopletSourceFactory.java,v 1.4 2003/07/18 14:41:44 cziegeler Exp $
+ * @version CVS $Id: CopletSourceFactory.java,v 1.5 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class CopletSourceFactory     
     extends AbstractLogEnabled
-    implements SourceFactory, Composable, ThreadSafe {
+    implements SourceFactory, Serviceable, ThreadSafe {
 
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager componentManager)
-        throws ComponentException {
-        this.manager = componentManager;
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.manager = serviceManager;
     }
 
 	/**
@@ -110,9 +109,9 @@ public class CopletSourceFactory
             CopletSource copletSource =
                 new CopletSource(uri, protocol,
                                  coplet);
-            copletSource.compose(this.manager);
+            copletSource.service(this.manager);
             return copletSource;
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             throw new SourceException("Unable to lookup profile manager.", ce);
         } finally {
             this.manager.release(service);

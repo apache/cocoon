@@ -55,10 +55,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -67,6 +63,9 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.components.persistence.RequestDataStore;
@@ -80,11 +79,11 @@ import org.apache.cocoon.portal.PortalService;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: PortalServiceImpl.java,v 1.8 2003/08/21 06:41:19 cziegeler Exp $
+ * @version CVS $Id: PortalServiceImpl.java,v 1.9 2003/10/20 13:36:56 cziegeler Exp $
  */
 public class PortalServiceImpl
     extends AbstractLogEnabled
-    implements Composable,
+    implements Serviceable,
                 ThreadSafe, 
                 PortalService, 
                 Contextualizable,
@@ -93,7 +92,7 @@ public class PortalServiceImpl
 
     protected Context context;
     
-    protected ComponentManager manager;
+    protected ServiceManager manager;
 
     protected Map portalComponentManagers = new HashMap();
     
@@ -101,8 +100,11 @@ public class PortalServiceImpl
     
     final protected String key = this.getClass().getName();
     
-    public void compose(ComponentManager componentManager) throws ComponentException {
-        this.manager = componentManager;
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager serviceManager) throws ServiceException {
+        this.manager = serviceManager;
         this.dataStore = (RequestDataStore) this.manager.lookup(RequestDataStore.ROLE);
     }
 
@@ -175,7 +177,7 @@ public class PortalServiceImpl
      */
     public void dispose() {
         if ( this.manager != null ) {
-            this.manager.release( (Component)this.dataStore );
+            this.manager.release( this.dataStore );
             this.manager = null;
             this.dataStore = null;
         }
@@ -199,7 +201,7 @@ public class PortalServiceImpl
                 this.portalComponentManagers.put( name, c );
                 ContainerUtil.enableLogging( c, this.getLogger() );
                 ContainerUtil.contextualize( c, this.context );
-                ContainerUtil.compose( c, this.manager );
+                ContainerUtil.service( c, this.manager );
                 ContainerUtil.configure( c, current );
                 ContainerUtil.initialize( c );
             } catch (Exception e) {

@@ -55,13 +55,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.Request;
@@ -77,11 +77,11 @@ import org.apache.excalibur.source.SourceUtil;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: DefaultLinkService.java,v 1.6 2003/06/17 19:59:31 cziegeler Exp $
+ * @version CVS $Id: DefaultLinkService.java,v 1.7 2003/10/20 13:36:56 cziegeler Exp $
  */
 public class DefaultLinkService 
     extends AbstractLogEnabled
-    implements ThreadSafe, LinkService, Composable, Disposable, Contextualizable {
+    implements ThreadSafe, LinkService, Serviceable, Disposable, Contextualizable {
 
 
     class Info {
@@ -92,9 +92,17 @@ public class DefaultLinkService
     
     
     protected EventConverter   converter;
-    protected ComponentManager manager;
+    protected ServiceManager manager;
     protected Context context;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+        this.converter = (EventConverter)this.manager.lookup(EventConverter.ROLE);
+    }
+
     protected Info getInfo() {
         final Request request = ContextHelper.getRequest( this.context );
         Info info = (Info)request.getAttribute(DefaultLinkService.class.getName());
@@ -222,15 +230,6 @@ public class DefaultLinkService
         return info.linkBase.toString();
     }
     
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager)
-    throws ComponentException {
-        this.manager = manager;
-        this.converter = (EventConverter)this.manager.lookup(EventConverter.ROLE);
-    }
-
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */

@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.portal.coplet.adapter.impl;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.sax.XMLDeserializer;
 import org.apache.cocoon.components.sax.XMLSerializer;
@@ -73,21 +73,20 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * 
- * @version CVS $Id: AbstractCopletAdapter.java,v 1.5 2003/05/28 13:47:30 cziegeler Exp $
+ * @version CVS $Id: AbstractCopletAdapter.java,v 1.6 2003/10/20 13:36:41 cziegeler Exp $
  */
 public abstract class AbstractCopletAdapter 
     extends AbstractLogEnabled
-    implements CopletAdapter, ThreadSafe, Composable {
+    implements CopletAdapter, ThreadSafe, Serviceable {
 	
-    /** The component manager */
-    protected ComponentManager manager;
+    /** The service manager */
+    protected ServiceManager manager;
 
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager componentManager)
-        throws ComponentException {
-        this.manager = componentManager;
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
     }
 
     /**
@@ -145,7 +144,7 @@ public abstract class AbstractCopletAdapter
                     data = serializer.getSAXFragment();
                     read = true;
                 }
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 throw new SAXException("Unable to lookup xml serializer.", ce);
             } catch (Exception exception ) {
                 this.getLogger().warn("Unable to get content of coplet: " + coplet.getId(), exception);
@@ -164,7 +163,7 @@ public abstract class AbstractCopletAdapter
                         deserializer.setConsumer(  new ContentHandlerWrapper(contentHandler, lh));
                     }
                     deserializer.deserialize( data );
-                } catch (ComponentException ce) {
+                } catch (ServiceException ce) {
                     throw new SAXException("Unable to lookup xml deserializer.", ce);
                 } finally {
                     this.manager.release( deserializer );

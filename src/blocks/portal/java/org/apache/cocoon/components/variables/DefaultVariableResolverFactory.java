@@ -52,13 +52,13 @@ package org.apache.cocoon.components.variables;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.sitemap.PatternException;
 
@@ -70,15 +70,22 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  *
- * @version CVS $Id: DefaultVariableResolverFactory.java,v 1.1 2003/06/10 19:38:54 cziegeler Exp $
+ * @version CVS $Id: DefaultVariableResolverFactory.java,v 1.2 2003/10/20 13:36:42 cziegeler Exp $
  */
 public class DefaultVariableResolverFactory 
     extends AbstractLogEnabled
-    implements ThreadSafe, VariableResolverFactory, Component, Composable, Contextualizable {
+    implements ThreadSafe, VariableResolverFactory, Component, Serviceable, Contextualizable {
     
-    protected ComponentManager manager;
-    protected Context          context;
+    protected ServiceManager manager;
+    protected Context        context;
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
+     */
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
+    }
+
     /**
      * Get a resolver for a given expression. Chooses the most efficient implementation
      * depending on <code>expression</code>.
@@ -128,13 +135,6 @@ public class DefaultVariableResolverFactory
         }
         // Nothing found...
         return false;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
-     */
-    public void compose(ComponentManager manager) throws ComponentException {
-        this.manager = manager;
     }
 
     /* (non-Javadoc)

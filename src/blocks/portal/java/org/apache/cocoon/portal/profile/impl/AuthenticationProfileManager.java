@@ -56,11 +56,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletFactory;
@@ -84,7 +83,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.10 2003/08/04 03:06:30 joerg Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.11 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -102,11 +101,11 @@ public class AuthenticationProfileManager
         try {
             authManager = (AuthenticationManager)this.manager.lookup(AuthenticationManager.ROLE);
             return authManager.getState();    
-        } catch (ComponentException ce) {
+        } catch (ServiceException ce) {
             // ignore this here
             return null;
         } finally {
-            this.manager.release( (Component)authManager );
+            this.manager.release( authManager );
         }
     }
         
@@ -117,7 +116,7 @@ public class AuthenticationProfileManager
                                 PortalService service,
                                 CopletFactory copletFactory,
                                 LayoutFactory layoutFactory,
-                                ComponentSelector adapterSelector) 
+                                ServiceSelector adapterSelector) 
     throws Exception {
         final RequestState state = this.getRequestState();
         final UserHandler handler = state.getHandler();
@@ -206,7 +205,7 @@ public class AuthenticationProfileManager
 			// TODO
 			throw new CascadingRuntimeException("Exception during save profile", e);
 		} finally {
-			this.manager.release((Component)adapter);
+			this.manager.release(adapter);
 			this.manager.release(service);
 		}
     }
@@ -303,7 +302,7 @@ public class AuthenticationProfileManager
 				
                 //adapter.saveProfile(keyMap, parameters, result);
 			} finally {
-				this.manager.release((Component)adapter);
+				this.manager.release(adapter);
 			}
 		}
 		
@@ -354,7 +353,7 @@ public class AuthenticationProfileManager
 
 			return new Object[]{object, Boolean.TRUE};
 		} finally {
-			this.manager.release((Component) adapter);
+			this.manager.release(adapter);
 		}
 	}
 	
@@ -400,7 +399,7 @@ public class AuthenticationProfileManager
 
 			return object;
 		} finally {
-			this.manager.release((Component) adapter);
+			this.manager.release(adapter);
 		}
 	}
 

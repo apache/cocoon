@@ -62,12 +62,12 @@ import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Map;
 
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
@@ -97,11 +97,11 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:friedrich.klenner@rzb.at">Friedrich Klenner</a>  
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: ProxyTransformer.java,v 1.3 2003/09/24 21:22:33 cziegeler Exp $
+ * @version CVS $Id: ProxyTransformer.java,v 1.4 2003/10/20 13:37:10 cziegeler Exp $
  */
 public class ProxyTransformer
     extends AbstractTransformer
-    implements Composable, Parameterizable {
+    implements Serviceable, Parameterizable {
 
     /**
      * Parameter for specifying the envelope tag
@@ -146,7 +146,7 @@ public class ProxyTransformer
     /**
      * The Avalon component manager
      */
-    protected ComponentManager componentManager;
+    protected ServiceManager manager;
 
     /**
      * The coplet instance data
@@ -168,20 +168,12 @@ public class ProxyTransformer
      */
     protected String userAgent = null;
 
-    /**
-     * @see org.apache.avalon.framework.component.Composable#compose(ComponentManager)
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
      */
-    public void compose(ComponentManager componentManager)
-        throws ComponentException {
-        this.componentManager = componentManager;
-    }
+    public void service(ServiceManager manager) throws ServiceException {
+        this.manager = manager;
 
-    /**
-     * Recycle this component.
-     * All instance variables are set to <code>null</code>.
-     */
-    public void recycle() {
-        super.recycle();
     }
 
     /**
@@ -216,7 +208,7 @@ public class ProxyTransformer
         request = ObjectModelHelper.getRequest(objectModel);
 
         copletInstanceData =
-            getInstanceData(this.componentManager, objectModel, parameters);
+            getInstanceData(this.manager, objectModel, parameters);
 
         PortalApplicationConfig pac =
             (PortalApplicationConfig) copletInstanceData.getAttribute(CONFIG);
@@ -641,7 +633,7 @@ public class ProxyTransformer
     }
 
     public static CopletInstanceData getInstanceData(
-        ComponentManager manager,
+        ServiceManager manager,
         Map objectModel,
         String copletID,
         String portalName)
@@ -666,7 +658,7 @@ public class ProxyTransformer
                 profileManager.getCopletInstanceData(copletID);
             return data;
         }
-        catch (ComponentException e) {
+        catch (ServiceException e) {
             throw new ProcessingException("Error getting profile manager.", e);
         }
         finally {
@@ -685,7 +677,7 @@ public class ProxyTransformer
     * @throws SAXException
     */
     public static CopletInstanceData getInstanceData(
-        ComponentManager manager,
+        ServiceManager manager,
         Map objectModel,
         Parameters parameters)
         throws ProcessingException, IOException, SAXException {
@@ -726,7 +718,7 @@ public class ProxyTransformer
             }
             return profileManager.getCopletInstanceData(copletId);
         }
-        catch (ComponentException e) {
+        catch (ServiceException e) {
             throw new ProcessingException("Error getting profile manager.", e);
         }
         finally {
