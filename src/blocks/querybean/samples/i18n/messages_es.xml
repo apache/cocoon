@@ -35,7 +35,7 @@
 
 	<!-- these keys are bound to your Index Field names -->
 	<!-- these keys are used to describe the queries -->
-  <message key="search.abstract.field">resument del documento</message>
+  <message key="search.abstract.field">Resumen del documento</message>
   <message key="search.answer.field">faq respuesta</message>
   <message key="search.any.field">cualquier campo</message>
   <message key="search.code.field">código del documento</message>
@@ -59,42 +59,42 @@
 	<!-- editing criteria -->
   <message key="criterion.add.hint">Agregar un criterio nuevo</message>
   <message key="criterion.add.label">Agregar criterio</message>
-  <message key="criterion.delete.hint">borrar este criterio</message>
-  <message key="criterion.delete.label">borrar</message>
-  <message key="criterion.field.hint">cuales campos se deben buscar en</message>
+  <message key="criterion.delete.hint">Borrar este criterio</message>
+  <message key="criterion.delete.label">Borrar</message>
+  <message key="criterion.field.hint">Cuales campos se deben buscar en</message>
   <message key="criterion.field.label">Campo de búsqueda</message>
-  <message key="criterion.match.hint">la forma en que sus términos de búsqueda se cumplen</message>
-  <message key="criterion.match.label">cumple</message>
-  <message key="criterion.term.hint">la palabra o palabras que busca</message>
+  <message key="criterion.match.hint">La forma en que sus términos de búsqueda se cumplen</message>
+  <message key="criterion.match.label">Cumple</message>
+  <message key="criterion.term.hint">La palabra o palabras que busca</message>
   <message key="criterion.term.label">Palabra o palabras</message>
 	<!-- displaying history -->
   <message key="history.date.label">Tiempo</message>
-  <message key="history.edit.hint">editar esta consulta</message>
+  <message key="history.edit.hint">Editar esta consulta</message>
   <message key="history.edit.label">Editar</message>
   <message key="history.hits.label">Aciertos</message>
   <message key="history.none">Sin historia</message>
   <message key="history.page.title">Haba de Consulta : Historia</message>
   <message key="history.queries.title">Consultas</message>
   <message key="history.query.label">Consulta</message>
-  <message key="history.search.hint">re-buscar esta consulta</message>
+  <message key="history.search.hint">Re-buscar esta consulta</message>
   <message key="history.search.label">Buscar</message>
   <message key="history.title.label">Títulos</message>
   <message key="history.cleared.note">Su historia de búsquedas esta limpia.</message>
-  <message key="history.save.label">!!Save</message>
-  <message key="history.save.hint">!!save this query in your favourites</message>
+  <message key="history.save.label">Guardar</message>
+  <message key="history.save.hint">Guarde esta búsqueda en sus favoritos.</message>
   <!-- displaying favourites -->
-  <message key="favourites.page.title">!!Search Favourites</message>
-  <message key="favourites.queries.title">!!Queries</message>
-  <message key="favourites.date.label">!!Date</message>
-  <message key="favourites.query.label">!!Query</message>
-  <message key="favourites.title.label">!!Title</message>
-  <message key="favourites.search.label">!!Search</message>
-  <message key="favourites.search.hint">!!perform a search using this favourite</message>
-  <message key="favourites.delete.label">!!Delete</message>
-  <message key="favourites.delete.hint">!!permanently delete this favourite</message>
-  <message key="cancel.save.note">!!you cancelled your save</message>
-  <message key="history.title.label">!!Title</message>
-  <message key="search.fave.hint">!!one of your favourite searches</message>  
+  <message key="favourites.page.title">Consultas favoritas</message>
+  <message key="favourites.queries.title">Consultas</message>
+  <message key="favourites.date.label">Fecha</message>
+  <message key="favourites.query.label">Consulta</message>
+  <message key="favourites.title.label">Título</message>
+  <message key="favourites.search.label">Búsqueda</message>
+  <message key="favourites.search.hint">Buscar utilizando este favorito.</message>
+  <message key="favourites.delete.label">Borrar</message>
+  <message key="favourites.delete.hint">Borre permanentemente este favorito.</message>
+  <message key="cancel.save.note">Guardar esta búsqueda fué cancelado.</message>
+  <message key="history.title.label">Título</message>
+  <message key="search.fave.hint">Una de sus búsquedas favoritas.</message>  
 	<!-- linking -->
   <message key="link.home.hint">Página principal de los ejemplo de haba de consulta</message>
   <message key="link.home.label">Hogar</message>
