@@ -3,17 +3,8 @@
 <xsamples xpath="/samples" unless="group[@name='Java Flow']">
 
   <group name="Java Flow">
-    <sample name="Java Flow Block: Calculator" href="javaflow/calculator.do">
-      Example for the Java Flow implementation
-    </sample>
-    <sample name="Java Flow Block: Cocoon Forms" href="javaflow/editForm1.do">
-      Example for the Cocoon Forms and Java Flow.
-    </sample>
-    <sample name="Java Flow Block: Cocoon Forms Binding" href="javaflow/editForm2.do">
-      Example for the Cocoon Forms Binding and Java Flow.
-    </sample>
-    <sample name="Java Flow Block: Apache OJB" href="javaflow/showEmployee.do">
-      Example for the Cocoon Forms and Java Flow and Apache OJB.
+    <sample name="Java Flow Block" href="javaflow/">
+      Cocoon Java Flow examples.
     </sample>
   </group>
 
