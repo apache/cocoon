@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!--+
-    | CVS $Id: jars.xml,v 1.107 2003/09/27 12:50:23 joerg Exp $
+    | CVS $Id: jars.xml,v 1.108 2003/09/28 04:31:10 antonio Exp $
     |
     | Add an entry for each jar file used by Cocoon, following the other entries.
     | Please ensure that you use a version number or datestamp in the jar filename.
@@ -852,4 +852,48 @@
     <homepage>http://jakarta.apache.org/commons/digester/</homepage>
   </file>  
 
+  <!-- OJB interface (6-Aug-2003) -->
+  <file>
+    <title>Antlr - ANother Tool for Language Recognition</title>
+	<description>
+	  language tool that provides a framework for constructing recognizers, compilers, and
+	  translators from grammatical descriptions containing Java, C#, or C++ actions
+	</description>
+	<used-by>OJB</used-by>
+	<lib>ojb/lib/antlr.jar</lib>
+	<homepage>http://www.antlr.org/</homepage>
+  </file>
+  
+  <file>
+    <title>Jakarta Commons DBCP</title>
+	<description>
+	   Database Connection Pool API
+	</description>
+	<used-by>OJB</used-by>
+	<lib>ojb/lib/commons-dbcp.jar</lib>
+	<homepage>http://jakarta.apache.org/commons/dbcp/</homepage>
+  </file>
+  
+  <file>
+    <title>Jakarta Commons Pool</title>
+	<description>
+	   defines a handful of pooling interfaces and some base classes that
+	   may be useful when creating new pool implementations.
+	</description>
+	<used-by>OJB</used-by>
+	<lib>ojb/lib/commons-pool.jar</lib>
+	<homepage>http://jakarta.apache.org/commons/pool/</homepage>
+  </file>
+  
+  <file>
+    <title>Apache  ObJectRelationalBridge</title>
+	<description>
+	    OJB is an Object/Relational mapping tool that allows transparent persistence
+	    for Java Objects against relational databases.
+	</description>
+	<used-by>OJB</used-by>
+	<lib>ojb/lib/db-ojb-1.0.rc4-20030926.jar</lib>
+	<homepage>http://db.apache.org/ojb/</homepage>
+  </file>
+  <!-- OJB block end (6-Aug-2003) -->
 </jars>
