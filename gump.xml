@@ -2,7 +2,7 @@
 
 <!--
   Cocoon GUMP Descriptor
-  CVS $Id: gump.xml,v 1.25 2003/03/24 14:31:46 stefano Exp $
+  CVS $Id: gump.xml,v 1.26 2003/03/27 23:41:00 asavory Exp $
 -->
 
 <module name="cocoon-2.1">
@@ -794,7 +794,7 @@
   <project name="spark">
     <url href="http://www.tivano.de/software/spark/index.shtml"/>
     <description>
-      Spart is a library for converting XML to Flash (swf)
+      Spark is a library for converting XML to Flash (swf)
     </description>
     <home nested="src/blocks/swf/lib"/>
     <jar name="spark.jar"/>
