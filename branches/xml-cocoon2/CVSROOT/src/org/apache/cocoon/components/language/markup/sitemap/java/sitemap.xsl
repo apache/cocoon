@@ -99,7 +99,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.112 2001-05-09 18:33:26 bloritsch Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.113 2001-05-09 20:14:00 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -569,6 +569,32 @@
       </xsl:call-template>
     </xsl:variable>
 
+    <!-- Modified 20010509 L.Sutic Changed to pass sitemap parameters. -->
+
+    <!-- test if we have to define parameters for this action -->
+    <xsl:if test="count(parameter)>0">
+      param = new Parameters ();
+    </xsl:if>
+
+    <!-- generate the value used for the parameter argument in the invocation of the act method of this action -->
+    <xsl:variable name="component-param">
+      <xsl:choose>
+        <xsl:when test="count(parameter)>0">
+          param
+        </xsl:when>
+        <xsl:otherwise>
+          emptyParam
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <!-- collect the parameters -->
+    <xsl:apply-templates select="parameter">
+        <xsl:with-param name="param">param</xsl:with-param>
+    </xsl:apply-templates>
+
+    <!-- modification end -->
+
     <!-- loop through all the when cases -->
     <xsl:for-each select="./map:when">
 
@@ -604,6 +630,7 @@
         </xsl:choose>
       </xsl:variable>
 
+      <!-- Modified 20010509 L.Sutic Changed to pass sitemap parameters. -->
       <!-- gets the string how the selector is to be invoced in java code -->
       <xsl:variable name="selector-name">
         <!-- check if we have a selector definition in this sitemap otherwise get it from the parent -->
