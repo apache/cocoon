@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 package org.apache.cocoon.components.cron;
-
-import java.text.ParseException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 import org.apache.avalon.framework.CascadingException;
 import org.apache.avalon.framework.activity.Disposable;
@@ -38,7 +32,12 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+
 import org.apache.cocoon.Constants;
+
+import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 import org.quartz.CronTrigger;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -48,16 +47,19 @@ import org.quartz.SchedulerException;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.impl.DirectSchedulerFactory;
-import org.quartz.impl.jdbcjobstore.JobStoreCMT;
+import org.quartz.impl.jdbcjobstore.InvalidConfigurationException;
 import org.quartz.impl.jdbcjobstore.JobStoreSupport;
-import org.quartz.impl.jdbcjobstore.JobStoreTX;
 import org.quartz.simpl.RAMJobStore;
 import org.quartz.spi.JobStore;
+import org.quartz.utils.ConnectionProvider;
+import org.quartz.utils.DBConnectionManager;
+import org.quartz.utils.JNDIConnectionProvider;
 
-import EDU.oswego.cs.dl.util.concurrent.BoundedBuffer;
-import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
-import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
-
+import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * This component can either schedule jobs or directly execute one.
@@ -67,13 +69,14 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  *
  * @since 2.1.1
  */
-public class QuartzJobScheduler
-extends AbstractLogEnabled
-implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Startable, Disposable,
-    Contextualizable, Initializable {
-	private org.apache.cocoon.environment.Context environmentContext;
+public class QuartzJobScheduler extends AbstractLogEnabled
+                                implements JobScheduler, Component, ThreadSafe,
+                                           Serviceable, Configurable, Startable,
+                                           Disposable, Contextualizable, Initializable {
 
-	/** ThreadPool policy RUN */
+    private org.apache.cocoon.environment.Context environmentContext;
+
+    /** ThreadPool policy RUN */
     private static final String POLICY_RUN = "RUN";
 
     /** ThreadPool policy WAIT */
@@ -88,6 +91,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     /** ThreadPool policy DISCARD-OLDEST */
     private static final String POLICY_DISCARD_OLDEST = "DISCARDOLDEST";
 
+
     /** Map key for the component role */
     static final String DATA_MAP_ROLE = "QuartzJobScheduler.ROLE";
 
@@ -99,7 +103,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
     /** Map key for the service manager */
     static final String DATA_MAP_MANAGER = "QuartzJobScheduler.ServiceManager";
-    
+
     /** Map key for the environment context (needed by BackgroundEnvironment) */
     static final String DATA_MAP_ENV_CONTEXT = "QuartzJobScheduler.EnvironmentContext";
 
@@ -118,6 +122,10 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
     /** Map key for the last JobExecutionContext */
     static final String DATA_MAP_JOB_EXECUTION_CONTEXT = "QuartzJobScheduler.JobExecutionContext";
 
+    /** Map key for the run status */
+    static final String DATA_MAP_KEY_ISRUNNING = "QuartzJobExecutor.isRunning";
+
+
     /** The group name */
     static final String DEFAULT_QUARTZ_JOB_GROUP = "Cocoon";
 
@@ -132,7 +140,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
     /** The ServiceManager instance */
     private ServiceManager manager;
-    
+
     /** The configuration, parsed in initialize() */
     private Configuration config;
 
@@ -236,7 +244,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
         addJob(name, jobDataMap, timeEntry, canRunConcurrently, params, objects);
     }
-    
+
     /**
      * Schedule a periodic job. The job is started the first time when the period has passed.  Note that if a job with
      * the same name has already beed added it is overwritten.
@@ -258,12 +266,12 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         }
         final JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(DATA_MAP_OBJECT, job);
-        
+
         final long ms = period * 1000;
         final SimpleTrigger timeEntry =
             new SimpleTrigger(name, DEFAULT_QUARTZ_JOB_GROUP, new Date(System.currentTimeMillis() + ms), null,
                               SimpleTrigger.REPEAT_INDEFINITELY, ms);
-        
+
         addJob(name, jobDataMap, timeEntry, canRunConcurrently, params, objects);
     }
 
@@ -272,7 +280,7 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
      */
     public void configure(final Configuration config)
     throws ConfigurationException {
-    	this.config = config;
+        this.config = config;
     }
 
     /* (non-Javadoc)
@@ -295,38 +303,37 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         this.executor = null;
     }
 
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-	 */
-	public void contextualize(Context context) throws ContextException {
-		this.environmentContext = (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
-	}
-	
-	public void initialize() throws Exception {
-		try {
-			// If cocoon reloads (or is it the container that reload us?) 
-			// we cannot create the same scheduler again
-			final String runID = new Date().toString().replace(' ', '_');
-			final ThreadPool pool = createThreadPool(this.config.getChild("thread-pool"));
-            final JobStore store = createJobStore(this.config.getChild("job-store"));
-			DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool,store);
-			// scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
-			scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME);
-		} catch (final SchedulerException se) {
-			throw new ConfigurationException("cannot create a quartz scheduler", se);
-		}
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
+     */
+    public void contextualize(Context context) throws ContextException {
+        this.environmentContext = (org.apache.cocoon.environment.Context)context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+    }
 
-		final Configuration[] triggers = this.config.getChild("triggers").getChildren("trigger");
-		createTriggers(triggers);
-		
-		// We're finished with the configuration
-		this.config = null;
+    public void initialize() throws Exception {
+        try {
+            // If cocoon reloads (or is it the container that reload us?)
+            // we cannot create the same scheduler again
+            final String runID = new Date().toString().replace(' ', '_');
+            final ThreadPool pool = createThreadPool(this.config.getChild("thread-pool"));
+            final JobStore store = createJobStore(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, this.config.getChild("store"));
+            DirectSchedulerFactory.getInstance().createScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID, pool, store);
+            // scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME, runID);
+            scheduler = DirectSchedulerFactory.getInstance().getScheduler(DEFAULT_QUARTZ_SCHEDULER_NAME);
+        } catch (final SchedulerException se) {
+            throw new ConfigurationException("cannot create a quartz scheduler", se);
+        }
 
-		if (getLogger().isDebugEnabled() && (triggers.length == 0)) {
-			getLogger().debug("no triggers configured at startup");
-		}
+        final Configuration[] triggers = this.config.getChild("triggers").getChildren("trigger");
+        createTriggers(triggers);
 
-	}
+        // We're finished with the configuration
+        this.config = null;
+
+        if (getLogger().isDebugEnabled() && (triggers.length == 0)) {
+            getLogger().debug("no triggers configured at startup");
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.apache.cocoon.components.cron.JobScheduler#fireTarget(java.lang.Object)
@@ -540,9 +547,9 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
 
         jobDataMap.put(DATA_MAP_NAME, name);
         jobDataMap.put(DATA_MAP_LOGGER, getLogger());
-        jobDataMap.put(DATA_MAP_MANAGER, manager);
-        jobDataMap.put(DATA_MAP_RUN_CONCURRENT, new Boolean(canRunConcurrently));
+        jobDataMap.put(DATA_MAP_MANAGER, this.manager);
         jobDataMap.put(DATA_MAP_ENV_CONTEXT, this.environmentContext);
+        jobDataMap.put(DATA_MAP_RUN_CONCURRENT, new Boolean(canRunConcurrently));
 
         if (null != params) {
             jobDataMap.put(DATA_MAP_PARAMETERS, params);
@@ -690,23 +697,56 @@ implements JobScheduler, Component, ThreadSafe, Serviceable, Configurable, Start
         }
     }
 
-    private JobStore createJobStore(final Configuration configuration)
+    private JobStore createJobStore(String instanceName, String instanceID, final Configuration configuration)
     throws ConfigurationException {
         String type = configuration.getAttribute("type", "ram");
         if (type.equals("ram")) {
             return new RAMJobStore();
         }
+
         JobStoreSupport store = null;
         if (type.equals("tx")) {
-            store = new JobStoreTX();
-        }
-        else if (type.equals("cmt")) {
-            store = new JobStoreCMT();
-        }
-        else {
+            store = new QuartzJobStoreTX(getLogger(), this.manager, this.environmentContext);
+        } else if (type.equals("cmt")) {
+            store = new QuartzJobStoreCMT(getLogger(), this.manager, this.environmentContext);
+        } else {
             throw new ConfigurationException("Unknown store type: " + type);
         }
-        store.setDataSource(configuration.getChild("datasource").getValue());
+
+        Configuration dsConfig = configuration.getChild("datasource", false);
+        if (dsConfig == null) {
+            throw new ConfigurationException("Store " + type + " requires datasource configuration.");
+        }
+
+        String dsName = dsConfig.getValue();
+        String dsType = dsConfig.getAttribute("provider", "jndi");
+
+        ConnectionProvider provider;
+        if (dsType.equals("jndi")) {
+            provider = new JNDIConnectionProvider(dsName, false);
+        } else {
+            // assume class name
+            try {
+                provider = (ConnectionProvider)Class.forName(dsType).newInstance();
+            } catch (Exception e) {
+                throw new ConfigurationException("Could not instantiate ConnectionProvider class " + dsType);
+            }
+        }
+
+        store.setInstanceName(instanceName);
+        store.setInstanceId(instanceID);
+        store.setDataSource(dsType + ":" + dsName);
+        DBConnectionManager.getInstance().addConnectionProvider(dsType + ":" + dsName, provider);
+
+        String delegate = configuration.getAttribute("delegate", null);
+        try {
+            if (delegate != null) {
+                store.setDriverDelegateClass(delegate);
+            }
+        } catch (InvalidConfigurationException e) {
+            throw new ConfigurationException("Could not instantiate DriverDelegate class " + delegate, e);
+        }
+
         return store;
     }
 
