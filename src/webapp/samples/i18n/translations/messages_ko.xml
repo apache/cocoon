@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Korean message catalogue file for Cocoon 2 i18n sample -->
-<!-- $Id: messages_ko.xml,v 1.1 2003/03/09 00:11:12 pier Exp $ -->
+
+<!--+
+    | Korean message catalogue file for Cocoon 2 i18n sample
+    |
+    | CVS $Id: messages_ko.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="ko">
   <message key="a_key">이것은 키 값입니다.</message>
   <message key="language">영어</message>

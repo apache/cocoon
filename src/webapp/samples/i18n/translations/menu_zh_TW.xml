@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Chinese message catalogue file for menu in Cocoon 2 i18n sample -->
-<!-- $Id: menu_zh_TW.xml,v 1.1 2003/03/09 00:11:11 pier Exp $ -->
+
+<!--+
+    | Chinese message catalogue file for menu in Cocoon 2 i18n sample
+    |
+    | CVS $Id: menu_zh_TW.xml,v 1.2 2003/07/29 02:36:30 vgritsenko Exp $
+    +-->
+
 <catalogue xml:lang="zh_TW">
     <message key="Apache Cocoon i18n Samples">國際化 例題</message>
     <message key="Samples">例題</message>
