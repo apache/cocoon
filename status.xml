@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.100 2003/07/30 08:21:42 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.101 2003/08/01 10:28:38 cziegeler Exp $:-->
 <status>
 
  <developers>
@@ -167,6 +167,9 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="CZ" type="add">
+    Configuration logkit.xconf can now be read from any location.
+  </action>
   <action dev="CZ" type="fix">
    Fix the ignoreErrors handling in the cinclude transformer.
   </action>
