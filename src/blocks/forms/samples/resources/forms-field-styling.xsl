@@ -20,7 +20,7 @@
                 exclude-result-prefixes="fi">
   <!--+
       | This stylesheet is designed to be included by 'forms-samples-styling.xsl'.
-      | Version CVS $Id: forms-field-styling.xsl,v 1.13 2004/06/30 18:51:48 joerg Exp $
+      | Version CVS $Id: forms-field-styling.xsl,v 1.14 2004/07/01 23:45:45 joerg Exp $
       +-->
 
   <!-- Location of the resources directory, where JS libs and icons are stored -->
@@ -368,7 +368,10 @@
       <xsl:when test="fi:value">
         <!-- Has a value (filename): display it with a change button -->
         <span title="{fi:hint}">
-          [<xsl:value-of select="fi:value"/>] <input type="submit" id="{@id}" name="{@id}" value="..."/>
+          <xsl:text>[</xsl:text>
+          <xsl:value-of select="fi:value"/>
+          <xsl:text>] </xsl:text>
+          <input type="button" id="{@id}" name="{@id}" value="..." onclick="forms_submitForm(this)"/>
         </span>
       </xsl:when>
       <xsl:otherwise>
