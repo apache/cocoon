@@ -15,9 +15,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletContext;
 
 import org.apache.cocoon.Cocoon;
@@ -28,17 +30,19 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-01-12 09:53:09 $
+ * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-13 13:39:19 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
- * in a sitemap pipeline.
+ * in a sitemap pipeline. It makes use of HTTP Headers to determine if
+ * the requested resource should be written to the <code>OutputStream</code>
+ * or if it can signal that it hasn't changed.
  *
  * Parameters:
  *   <dl>
  *     <dt>&lt;expires&gt;</dt>
  *       <dd>This parameter is optional. When specified it determines how long
- *           in miliseconds the resources can be cached by any proxy between
- *           Cocoon2 and the requesting browser.
+ *           in miliseconds the resources can be cached by any proxy or browser
+ *           between Cocoon2 and the requesting visitor.
  *       </dd>
  *   </dl>
  */
@@ -48,9 +52,14 @@ public class ResourceReader extends AbstractReader {
      * Generates the requested resource.
      */
     public void generate() throws IOException, ProcessingException {
+        HttpServletRequest req = (HttpServletRequest) objectModel.get(Cocoon.REQUEST_OBJECT);
         HttpServletResponse res = (HttpServletResponse) objectModel.get(Cocoon.RESPONSE_OBJECT);
+
         if (res == null) {
            throw new ProcessingException ("Missing a Response object in the objectModel");
+        }
+        if (req == null) {
+           throw new ProcessingException ("Missing a Request object in the objectModel");
         }
         String src = null;
         File file = null;
@@ -58,22 +67,25 @@ public class ResourceReader extends AbstractReader {
         URLConnection conn = null;
         InputStream is = null;
         long len = 0;
-        long lastModified = 0;
         try {
-            if(this.source.indexOf(":/")!=-1) {
+            if(this.source.indexOf(":/") != -1) {
                 src = this.source;
                 url = new URL (src);
                 conn = url.openConnection();
+                if (!modified (conn.getLastModified(), req, res)) {
+                    return;
+                }
                 len = conn.getContentLength();
                 is = conn.getInputStream();
-                lastModified = conn.getLastModified();
             } else {
                 src = this.resolver.resolveEntity (null,this.source).getSystemId();
                 url = new URL (src);
                 file = new File (url.getFile());
+                if (!modified (file.lastModified(), req, res)) {
+                    return;
+                }
                 len = file.length();
                 is = new FileInputStream (file);
-                lastModified = file.lastModified();
             }
         } catch (SAXException se) {
             log.error("ResourceReader: error resolving source \"" + source + "\"", se);
@@ -88,7 +100,6 @@ public class ResourceReader extends AbstractReader {
         is.read(buffer);
         is.close();
         res.setContentLength(buffer.length);
-        res.setDateHeader("Last-Modified", lastModified);
         long expires = parameters.getParameterAsInteger("expires", -1);
         if (expires > 0) {
             res.setDateHeader("Expires", System.currentTimeMillis()+expires);
@@ -96,6 +107,20 @@ public class ResourceReader extends AbstractReader {
         res.setHeader("Accept-Ranges", "bytes");
         out.write ( buffer );
     }
+
+    /**
+     * Checks if the file has been modified
+     */
+    private boolean modified (long lastModified, HttpServletRequest req, HttpServletResponse res) {
+        res.setDateHeader("Last-Modified", lastModified);
+        long if_modified_since = req.getDateHeader("if-modified-since");
+        if (if_modified_since >= lastModified) {
+            res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+        }
+        log.debug("ResourceReader: resource has " + ((if_modified_since < lastModified) ? "" : "not ") + "been modified");
+        return (if_modified_since < lastModified);
+    }
+
     /**
      * Returns the mime-type of the resource in process.
      */
