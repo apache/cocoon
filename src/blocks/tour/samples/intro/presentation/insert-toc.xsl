@@ -125,7 +125,7 @@
     </xsl:template>
 
     <xsl:template match="line" mode="copyright">
-        <xsl:copy-of select="."/>
+        <xsl:copy-of select="text()"/>
         <br/>
     </xsl:template>
 </xsl:stylesheet>
