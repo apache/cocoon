@@ -556,10 +556,6 @@ public class ProxyTransformer
             return uri;
         }
 
-        if (uri == null) {
-            throw new IllegalArgumentException("URI to be resolved must not be null!");
-        }
-
         if (documentBase == null) {
             throw new IllegalArgumentException("Documentbase String must not be null!");
         }
