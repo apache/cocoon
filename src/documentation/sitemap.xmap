@@ -39,9 +39,7 @@ such. -->
         <use-request-parameters>false</use-request-parameters>
         <use-browser-capabilities-db>false</use-browser-capabilities-db>
         <use-deli>false</use-deli>
-        <transformer-factory>org.apache.xalan.processor.TransformerFactoryImpl</transformer-factory>
-        <!--<transformer-factory>com.icl.saxon.TransformerFactoryImpl</transformer-factory>-->
-        <!--<transformer-factory>org.apache.xalan.xsltc.trax.TransformerFactoryImpl</transformer-factory>-->
+        <xslt-processor-role>xalan</xslt-processor-role>
       </map:transformer>
 
       <map:transformer name="xinclude" src="org.apache.cocoon.transformation.XIncludeTransformer" logger="sitemap.transformer.xinclude" pool-grow="2" pool-max="16" pool-min="2" />
