@@ -116,17 +116,19 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public String getNamespace() {
-        if (getParent() != null && getParent().getNamespace().length() > 0)
+        if (getParent() != null && getParent().getNamespace().length() > 0) {
             return getParent().getNamespace() + "." + getId();
-        else
+        } else {
             return getId();
+        }
     }
 
     public String getFullyQualifiedId() {
         if (parent != null) {
             String namespace = parent.getNamespace();
-            if (namespace.length() > 0)
+            if (namespace.length() > 0) {
                 return namespace + "." + getId();
+            }
         }
         return getId();
     }
@@ -152,15 +154,17 @@ public abstract class AbstractWidget implements Widget {
     }
 
     public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        if (definition != null)
+        if (definition != null) {
             definition.generateDisplayData("label", contentHandler);
+        }
     }
 
     public void generateItemSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
         // Do nothing
     }
 
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String element, WidgetDefinition definition) throws SAXException {
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale, String element, WidgetDefinition definition)
+    throws SAXException {
         AttributesImpl attrs = new AttributesImpl();
         attrs.addCDATAAttribute("id", getFullyQualifiedId());
         contentHandler.startElement(Constants.WI_NS, element, Constants.WI_PREFIX_COLON + element, attrs);
