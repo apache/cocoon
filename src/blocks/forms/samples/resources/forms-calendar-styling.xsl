@@ -44,15 +44,19 @@
   </xsl:template>
 
   <!--+
-      | fi:field with @type 'date' : use CalendarPopup
+      | fi:field with either
+      | - explicit styling @type = 'date' or
+      | - implicit if no styling @type is specified,
+      |   but datatype @type = 'date', selection lists must be excluded here
       +-->
-  <xsl:template match="fi:field[fi:datatype/@type='date'][not(fi:selection-list)]">
+  <xsl:template match="fi:field[fi:styling/@type='date'] |
+                       fi:field[not(fi:styling/@type)][fi:datatype[@type='date']][not(fi:selection-list)]">
     <xsl:variable name="id" select="generate-id()"/>
     
     <xsl:variable name="format">
       <xsl:choose>
-        <xsl:when test="fi:datatype/fi:convertor/@pattern">
-          <xsl:value-of select="fi:datatype/fi:convertor/@pattern"/>
+        <xsl:when test="fi:datatype[@type='date']/fi:convertor/@pattern">
+          <xsl:value-of select="fi:datatype[@type='date']/fi:convertor/@pattern"/>
         </xsl:when>
         <xsl:otherwise>yyyy-MM-dd</xsl:otherwise>
       </xsl:choose>
