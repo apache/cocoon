@@ -67,8 +67,11 @@ import java.util.HashMap;
 /**
  * This is the entry point for Cocoon execution as an JSR168 Portlet.
  *
- * @author <a href="mailto:vadim.gritsenko@dc.gov">Vadim Gritsenko</a>
- * @version CVS $Id: ManagedCocoonPortlet.java,v 1.1 2004/07/06 20:26:12 vgritsenko Exp $
+ * <p>This implementation of the Portlet interface requires that someone will
+ * first create and initialize an instance of the Cocoon object, and this
+ * Portlet will use this instance to process requests.</p>
+ *
+ * @version CVS $Id: ManagedCocoonPortlet.java,v 1.2 2004/07/06 22:38:28 vgritsenko Exp $
  */
 public class ManagedCocoonPortlet extends GenericPortlet {
 
