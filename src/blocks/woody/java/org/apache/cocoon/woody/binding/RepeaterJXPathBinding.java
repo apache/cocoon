@@ -185,6 +185,7 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
         //again iterate nodes for deletion  
         Iterator rowPointers = repeaterContext.iteratePointers(this.rowPath);
+        List rowsToDelete = new ArrayList();
         while (rowPointers.hasNext()) {
             Pointer jxp = (Pointer) rowPointers.next();
             JXPathContext rowContext = repeaterContext.getRelativeContext(jxp);
@@ -193,12 +194,19 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
             // check if matchPath was in list of updates, if not --> bind for delete
             if (!updatedRowIds.contains(matchId)) {
-                if (this.deleteRowBinding != null) {
-                    this.deleteRowBinding.saveFormToModel(frmModel, rowContext);                    
-                } else {
-                    getLogger().warn("RepeaterBinding has detected rows to delete, " +
-                        "but misses the <on-delete-row> binding to do it.");
-                }
+                rowsToDelete.add(rowContext);
+            }
+        }
+
+        if (rowsToDelete.size() > 0) {
+            if (this.deleteRowBinding == null) {
+                getLogger().warn("RepeaterBinding has detected rows to delete, " +
+                    "but misses the <on-delete-row> binding to do it.");
+            }
+            else {
+                // run backwards through the list, so that we don't get into trouble by shifting indexes
+                for (int i = rowsToDelete.size() - 1; i >= 0; i--)
+                    this.deleteRowBinding.saveFormToModel(frmModel, rowsToDelete.get(i));
             }
         }
 
