@@ -2,7 +2,7 @@
 
 <!--+
     | FOP block samples sitemap
-    | CVS $Id: sitemap.xmap,v 1.8 2003/07/29 03:15:46 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.9 2004/02/03 02:03:28 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -70,7 +70,7 @@
       <!-- reuse the XSP caching example for our caching test -->
       <map:match pattern="cache-test-*.pdf">
         <!-- note that caching didn't work when accessing the XSP using the cocoon:/ protocol -->
-        <map:generate src="../xsp/xsp/cacheable.xsp" type="serverpages"/>
+        <map:generate src="../xsp/java/cacheable.xsp" type="serverpages"/>
         <map:transform src="cache-test/xsp-sample-to-fo.xsl">
            <map:parameter name="pages" value="{1}"/>
         </map:transform>
