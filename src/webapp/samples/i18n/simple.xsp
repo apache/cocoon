@@ -95,7 +95,8 @@
           <i18n:param name="forth">~</i18n:param>
         </i18n:translate>
       </para>
-      <para title="Number formatting (not translated)" name="article" i18n:attr="name">
+
+      <para title="Number formatting (not translated)" name="Article">
         <i18n:translate>
           Number: {0} | Currency: {1} | Percent: {2} | Processed on: {3}
           <!--Old format: i18n:param type="number" src-locale="en" value="1703.74" /-->
@@ -110,7 +111,15 @@
           <i18n:param><i18n:date-time pattern="MEDIUM"/></i18n:param>
         </i18n:translate>
       </para>
+
+      <!--
+        - Possibly bug in XSP: requires escaping of '\'
+        -->
+      <para title="Evaluated {first}, {second}, escaped \\{third\\}." name="i18n:expr" i18n:expr="title">
+        This paragraph is an example of attribute expression evaluation.
+      </para>
     </content>
+
     <bottom>
       <copyright>
         <i18n:text>copyright</i18n:text>

@@ -323,6 +323,10 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="update">
+     Add support for translating attribute values which contain i18n expressions
+     rather than complete i18n key.
+   </action>
    <action dev="VG" type="fix">
      AbstractSAXTransformer namespaceURI and defaultNamespaceURI must never
      be null. When extending AbstractSAXTransformer make sure to set
