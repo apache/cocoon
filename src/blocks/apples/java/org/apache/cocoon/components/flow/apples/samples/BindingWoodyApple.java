@@ -215,13 +215,6 @@ public class BindingWoodyApple extends AbstractLogEnabled implements AppleContro
         }
     }
 
-    private Object makeInstance(String fqcn)
-        throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-
-        Class clazz = Class.forName(fqcn);
-        return clazz.newInstance();
-    }
-
     private void completeResult(AppleResponse res, String uri, boolean finished) {
         res.sendPage(uri, getContextMap());
         // TODO think about transferring the fact that the use case has ended.
