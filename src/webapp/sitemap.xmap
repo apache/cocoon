@@ -12,7 +12,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.35 2003/10/28 14:17:34 unico Exp $
+    | CVS $Id: sitemap.xmap,v 1.36 2003/10/28 19:53:57 cziegeler Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -82,6 +82,7 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <xslt-processor-role>xalan</xslt-processor-role>
+      <check-includes>true</check-includes>
     </map:transformer>
 
     <!-- NOTE: This is the same as the default processor but with a different name (for compatibility) -->
@@ -90,6 +91,7 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <xslt-processor-role>xalan</xslt-processor-role>
+      <check-includes>true</check-includes>
     </map:transformer>
 
     <!-- NOTE: You can also try XSLTC as the default processor. If you use Xalan extensions, use the "xalan" transformer. -->
@@ -98,6 +100,7 @@
       <use-session-parameters>false</use-session-parameters>
       <use-cookie-parameters>false</use-cookie-parameters>
       <xslt-processor-role>xsltc</xslt-processor-role>
+      <check-includes>true</check-includes>
     </map:transformer>
 
     <map:transformer logger="sitemap.transformer.xinclude" name="xinclude" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.transformation.XIncludeTransformer"/>
@@ -337,18 +340,10 @@
            | individual map:pipeline elements (using map:parameter syntax).
            +-->
        <!-- parameter name="outputBufferSize" value="8192"/ -->
-       <!--+
-           | If you want to use an alternate cache implementation you can specify
-           | the cache-role parameter to indicate the component key of the cache 
-           | implementation you want to use. The EventAware implementation in the
-           | example below requires that the eventcache block is present.
-           + -->
-       <!-- parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/ -->
      </map:pipe>
      <map:pipe name="caching-point" src="org.apache.cocoon.components.pipeline.impl.CachingPointProcessingPipeline">
        <autoCachingPoint>On</autoCachingPoint>
        <!-- parameter name="outputBufferSize" value="8192"/ -->
-       <!-- parameter name="cache-role" value="org.apache.cocoon.caching.Cache/EventAware"/ -->
      </map:pipe>
      <map:pipe name="noncaching" src="org.apache.cocoon.components.pipeline.impl.NonCachingProcessingPipeline">
        <!-- parameter name="outputBufferSize" value="8192"/ -->

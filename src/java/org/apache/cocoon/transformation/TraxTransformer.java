@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.lang.reflect.Method;
 
 import javax.xml.transform.sax.SAXResult;
@@ -97,9 +98,10 @@ import org.xml.sax.SAXException;
  *   &lt;use-request-parameters&gt;false&lt;/use-request-parameters&gt;
  *   &lt;use-browser-capabilities-db&gt;false&lt;/use-browser-capabilities-db&gt;
  *   &lt;use-session-info&gt;false&lt;/use-session-info&gt;
- *   &lt;xslt-processor&gt;xslt&lt;/xslt-processor&gt;
+ *   &lt;xslt-processor-role&gt;xslt&lt;/xslt-processor-role&gt;
  *   &lt;transformer-factory&gt;org.apache.xalan.processor.TransformerFactoryImpl&lt;/transformer-factory&gt;
  * &lt;/map:transformer&gt;
+ *   &lt;check-includess&gt;true&lt;/check-includes&gt
  * </pre>
  *
  * The &lt;use-request-parameter&gt; configuration forces the transformer to make all
@@ -135,6 +137,15 @@ import org.xml.sax.SAXException;
  * compatibility reasons. Please configure the xslt processor in the cocoon.xconf properly
  * and use the xslt-processor-role configuration mentioned above.
  *
+ * The &lt;check-includes&gt; configuration specifies if the included stylesheets are
+ * also checked for changes during chaching. If this is set to true (default), the
+ * included stylesheets are also checked for changes; if this is set to false, only
+ * the main stylesheet is checked. Setting this to false improves the performance,
+ * and should be used whenever no includs are in the stylesheet. However, if
+ * you have includes, you have to be careful when changing included stylesheets
+ * as the changes might not take effect immediately. You should touch the main
+ * stylesheet as well.
+ * 
  * <p>
  * <b>In a map:sitemap/map:pipelines/map:pipeline:</b><br>
  * <pre>
@@ -152,7 +163,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @author <a href="mailto:marbut@hplb.hpl.hp.com">Mark H. Butler</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: TraxTransformer.java,v 1.7 2003/10/24 12:50:08 vgritsenko Exp $
+ * @version CVS $Id: TraxTransformer.java,v 1.8 2003/10/28 19:53:57 cziegeler Exp $
  */
 public class TraxTransformer extends AbstractTransformer
 implements Transformer, Composable, Configurable, CacheableProcessingComponent, Disposable {
@@ -178,11 +189,14 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
     private boolean useSessionInfo = false;
     private boolean _useSessionInfo = false;
 
+    /** Do we check included stylesheets for changes? */
+    private boolean checkIncludes = true;
+    
     /** The trax TransformerHandler */
     protected TransformerHandler transformerHandler;
 
     /** The validity of the Transformer */
-    SourceValidity transformerValidity;
+    protected SourceValidity transformerValidity;
 
     /** The Source */
     private Source inputSource;
@@ -200,6 +214,9 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
     /** Xalan's DTMManager.getIncremental() method. See recycle() method to see what we need this for. */
     private Method xalanDtmManagerGetIncrementalMethod;
 
+    /** Exception that might occur during setConsumer */
+    private SAXException exceptionDuringSetConsumer;
+    
     /**
      * Configure this transformer.
      */
@@ -228,12 +245,16 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         if (!xsltProcessorRole.startsWith(XSLTProcessor.ROLE)) {
             xsltProcessorRole = XSLTProcessor.ROLE + '/' + xsltProcessorRole;
         }
+        
+        child = conf.getChild("check-includes");
+        this.checkIncludes = child.getValueAsBoolean(this.checkIncludes);
+        
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Use parameters is " + this.useParameters);
             getLogger().debug("Use cookies is " + this.useCookies);
             getLogger().debug("Use session info is " + this.useSessionInfo);
             getLogger().debug("Use TrAX Processor " + xsltProcessorRole);
-
+            getLogger().debug("Check for included stylesheets is " + this.checkIncludes);
             if (traxFactory != null) {
                 getLogger().debug("Use TrAX Transformer Factory " + traxFactory);
             } else {
@@ -292,20 +313,30 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         _useParameters = par.getParameterAsBoolean("use-request-parameters", this.useParameters);
         _useCookies = par.getParameterAsBoolean("use-cookies", this.useCookies);
         _useSessionInfo = par.getParameterAsBoolean("use-session-info", this.useSessionInfo);
-
+        final boolean _checkIncludes = par.getParameterAsBoolean("check-includes", this.checkIncludes);
+        
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Using stylesheet: '" + this.inputSource.getURI() + "' in " + this);
+            getLogger().debug("Use parameters is " + this._useParameters);
+            getLogger().debug("Use cookies is " + this._useCookies);
+            getLogger().debug("Use session info is " + this._useSessionInfo);
+            getLogger().debug("Check for included stylesheets is " + _checkIncludes);
         }
 
-        /** Get a Transformer Handler */
+        // Get a Transformer Handler if we check for includes
+        // If we don't check the handler is get during setConsumer()
         try {
-            XSLTProcessor.TransformerHandlerAndValidity handlerAndValidity =
-                    this.xsltProcessor.getTransformerHandlerAndValidity(inputSource, null);
-            this.transformerHandler = handlerAndValidity.getTransfomerHandler();
-            this.transformerValidity = handlerAndValidity.getTransfomerValidity();
+            if ( _checkIncludes ) {
+                XSLTProcessor.TransformerHandlerAndValidity handlerAndValidity =
+                        this.xsltProcessor.getTransformerHandlerAndValidity(this.inputSource, null);
+                this.transformerHandler = handlerAndValidity.getTransfomerHandler();
+                this.transformerValidity = handlerAndValidity.getTransfomerValidity();
+            } else {
+                this.transformerValidity = this.inputSource.getValidity();
+            }
         } catch (XSLTProcessorException se) {
-            throw new ProcessingException("Unable to get transformer handler for " + src, se);
-        }
+            throw new ProcessingException("Unable to get transformer handler for " + this.inputSource.getURI(), se);
+        }            
     }
 
     /**
@@ -340,12 +371,12 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
      *         component is currently not cacheable.
      */
     public SourceValidity getValidity() {
-        /*
-        * VG: Key is generated using parameter/value pairs,
-        * so this information does not need to be verified again
-        * (if parameter added/removed or value changed, key should
-        * change also), only stylesheet's validity is included.
-        */
+        //
+        // VG: Key is generated using parameter/value pairs,
+        // so this information does not need to be verified again
+        // (if parameter added/removed or value changed, key should
+        // change also), only stylesheet's validity is included.
+        //
         return this.transformerValidity;
     }
 
@@ -354,27 +385,41 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
      */
     public void setConsumer(XMLConsumer consumer) {
 
-        Map map = getLogicSheetParameters();
+        if ( this.transformerHandler == null ) {
+            try {
+                this.transformerHandler = this.xsltProcessor.getTransformerHandler(this.inputSource);            
+            } catch (XSLTProcessorException se) {
+                // the exception will be thrown during startDocument()
+                this.exceptionDuringSetConsumer =
+                   new SAXException("Unable to get transformer handler for " + this.inputSource.getURI(), se);
+                return;
+            }
+        }
+        final Map map = getLogicSheetParameters();
         if (map != null) {
-            Iterator iterator = map.keySet().iterator();
-            while(iterator.hasNext()) {
-                String name = (String)iterator.next();
-                transformerHandler.getTransformer().setParameter(name,map.get(name));
+            final javax.xml.transform.Transformer transformer = this.transformerHandler.getTransformer();
+            final Iterator iterator = map.entrySet().iterator();
+            while (iterator.hasNext()) {
+                final Map.Entry entry = (Entry) iterator.next();
+                transformer.setParameter((String)entry.getKey(), entry.getValue());
             }
         }
 
-        super.setContentHandler(transformerHandler);
-        super.setLexicalHandler(transformerHandler);
+        super.setContentHandler(this.transformerHandler);
+        super.setLexicalHandler(this.transformerHandler);
 
-        if (transformerHandler instanceof LogEnabled) {
-        	((LogEnabled)transformerHandler).enableLogging(getLogger());
+        if (this.transformerHandler instanceof LogEnabled) {
+        	((LogEnabled)this.transformerHandler).enableLogging(getLogger());
         }
         // According to TrAX specs, all TransformerHandlers are LexicalHandlers
-        SAXResult result = new SAXResult(consumer);
+        final SAXResult result = new SAXResult(consumer);
         result.setLexicalHandler(consumer);
-        transformerHandler.setResult(result);
+        this.transformerHandler.setResult(result);
     }
 
+    /**
+     * Get the parameters for the logicsheet
+     */
     protected Map getLogicSheetParameters() {
         if (this.logicSheetParameters != null) {
             return this.logicSheetParameters;
@@ -417,10 +462,10 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         }
 
         if (this._useSessionInfo) {
-            Request request = ObjectModelHelper.getRequest(objectModel);
+            final Request request = ObjectModelHelper.getRequest(objectModel);
             if (map == null) map = new HashMap(5);
 
-            Session session = request.getSession(false);
+            final Session session = request.getSession(false);
             if (session != null) {
                 map.put("session-available","true");
                 map.put("session-is-new",session.isNew()?"true":"false");
@@ -451,9 +496,12 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         }
 
         this.logicSheetParameters = map;
-        return map;
+        return this.logicSheetParameters;
     }
 
+    /**
+     * Test if the name is a valid parameter name for XSLT
+     */
     static boolean isValidXSLTParameterName(String name) {
         if (name.length() == 0) {
             return false;
@@ -498,7 +546,7 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         }
         this.resolver = null;
         this.par = null;
-        if (this.finishedDocument == false && transformerHandler != null) {
+        if (!this.finishedDocument && transformerHandler != null) {
             // This situation will only occur if an exception occured during pipeline execution.
             // If Xalan is used in incremental mode, it is important that endDocument is called, otherwise
             // the thread on which it runs the transformation will keep waiting.
@@ -506,18 +554,20 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
             // serializer will write output to the outputstream after what's already there (the error page),
             // see also bug 13186.
             if (xalanDtmManagerGetIncrementalMethod != null
-                    && transformerHandler.getClass().getName().equals("org.apache.xalan.transformer.TransformerHandlerImpl")) {
+                && transformerHandler.getClass().getName().equals("org.apache.xalan.transformer.TransformerHandlerImpl")) {
                 try {
-                    boolean incremental = ((Boolean)xalanDtmManagerGetIncrementalMethod.invoke(null, null)).booleanValue();
-                    if (incremental)
+                    final boolean incremental = ((Boolean)xalanDtmManagerGetIncrementalMethod.invoke(null, null)).booleanValue();
+                    if (incremental) {
                         super.endDocument();
+                    }
                 } catch (Exception ignore) {}
             }
         }
-        this.finishedDocument = false;
+        this.finishedDocument = true;
         this.logicSheetParameters = null;
         this.transformerHandler = null;
         this.transformerValidity = null;
+        this.exceptionDuringSetConsumer = null;
         super.recycle();
     }
 
@@ -529,4 +579,18 @@ implements Transformer, Composable, Configurable, CacheableProcessingComponent, 
         super.endDocument();
         this.finishedDocument = true;
     }
+    
+    /* (non-Javadoc)
+     * @see org.xml.sax.ContentHandler#startDocument()
+     */
+    public void startDocument() throws SAXException {
+        // did an exception occur during setConsumer?
+        // if so, throw it here
+        if ( this.exceptionDuringSetConsumer != null ) {
+            throw this.exceptionDuringSetConsumer;
+        }
+        this.finishedDocument = false;
+        super.startDocument();
+    }
+
 }
