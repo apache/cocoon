@@ -64,7 +64,7 @@ import java.util.ArrayList;
  * This is base class for all EsqlQueries
  *
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: AbstractEsqlQuery.java,v 1.6 2003/08/18 09:42:29 haul Exp $
+ * @version CVS $Id: AbstractEsqlQuery.java,v 1.7 2003/10/06 15:36:08 tcurdt Exp $
  */
 public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
     private int maxRows = -1;
@@ -359,6 +359,7 @@ public abstract class AbstractEsqlQuery extends AbstractLogEnabled {
             if (resultSet != null) {
                 resultSetMetaData = resultSet.getMetaData();
                 queryResultsCount++;
+                hasResultSet = true;
                 return (true);
             }
             else {
