@@ -22,14 +22,13 @@ package org.apache.cocoon.core.container.util;
  *
  * @version CVS $Id: AbstractComponentHandler.java 123887 2005-01-02 15:12:01Z sylvain $
  */
-
 public class PropertyHelper {
 
     /**
      * Replace all property references in the string with the current value
      * and return it.
      */
-    static String replace(String value) {
+    public static String replace(String value) {
         // quick test for null or no references
         if ( value == null || value.indexOf("${") == -1 ) {
             return value;

@@ -27,6 +27,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.cocoon.core.container.util.PropertyHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -271,7 +272,7 @@ public class ConfigurationBuilder
             } else {
                 finishedValue = accumulatedValue.trim();
             }
-            finishedConfiguration.setValue( finishedValue );
+            finishedConfiguration.setValue( PropertyHelper.replace(finishedValue) );
         } else {
             final String trimmedValue = accumulatedValue.trim();
             if( trimmedValue.length() > 0 ) {
@@ -338,8 +339,7 @@ public class ConfigurationBuilder
         AttributesImpl componentAttr = new AttributesImpl();
 
         for( int i = 0; i < attributes.getLength(); i++ ) {
-            if( attributes.getQName( i ).startsWith( "xmlns" ) )
-            {
+            if( attributes.getQName( i ).startsWith( "xmlns" ) ) {
                 prefixes.add( attributes.getLocalName( i ) );
                 this.startPrefixMapping( attributes.getLocalName( i ),
                                          attributes.getValue( i ) );
@@ -367,7 +367,7 @@ public class ConfigurationBuilder
         for( int i = 0; i < attributesSize; i++ ) {
             final String name = componentAttr.getQName( i );
             final String value = componentAttr.getValue( i );
-            configuration.setAttribute( name, value );
+            configuration.setAttribute( name, PropertyHelper.replace(value) );
         }
     }
 
