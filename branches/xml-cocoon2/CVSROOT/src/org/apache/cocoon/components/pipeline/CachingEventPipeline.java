@@ -57,7 +57,7 @@ import org.xml.sax.EntityResolver;
  * does not cache! (If it would cache, the response would be cached twice!)
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-17 10:33:12 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-19 11:30:38 $
  */
 public final class CachingEventPipeline
 extends AbstractEventPipeline
@@ -383,6 +383,7 @@ implements Disposable, CacheableEventPipeline {
     }
 
     public void dispose() {
+        super.dispose();
         if(this.eventCache != null)
             this.manager.release((Component)this.eventCache);
     }

@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-04-18 12:05:54 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-19 11:30:42 $
  */
 
 public interface Environment extends EntityResolver {
@@ -74,6 +74,16 @@ public interface Environment extends EntityResolver {
      * Get the underlying object model
      */
     Map getObjectModel();
+
+    /**
+     * Push a new URI for processing
+     */
+    void pushURI(String uri);
+
+    /**
+     * Pop last pushed URI
+     */
+    String popURI();
 
 }
 

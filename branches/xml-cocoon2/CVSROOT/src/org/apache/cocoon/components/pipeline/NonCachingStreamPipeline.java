@@ -20,7 +20,7 @@ import org.apache.cocoon.environment.Environment;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2001-04-17 10:33:15 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-19 11:30:39 $
  */
 public final class NonCachingStreamPipeline extends AbstractStreamPipeline {
 
@@ -44,7 +44,6 @@ public final class NonCachingStreamPipeline extends AbstractStreamPipeline {
      */
     public void recycle() {
         getLogger().debug("Recycling of NonCachingStreamPipeline");
-
         super.recycle();
     }
 }

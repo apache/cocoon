@@ -27,12 +27,12 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  *         (Apache Software Foundation, Computer Associates)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-04-15 13:56:05 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-04-19 11:30:44 $
  */
 public class ContentHandlerWrapper extends AbstractXMLConsumer implements Recyclable {
 
     /** The current <code>ContentHandler</code>. */
-    protected ContentHandler documentHandler=null;
+    protected ContentHandler documentHandler;
 
     /**
      * Create a new <code>ContentHandlerWrapper</code> instance.

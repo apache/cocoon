@@ -38,7 +38,7 @@ import org.xml.sax.EntityResolver;
 /**
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-13 16:02:22 $
+ * @version CVS $Revision: 1.1.2.4 $ $Date: 2001-04-19 11:30:37 $
  */
 public abstract class AbstractEventPipeline
 extends AbstractXMLProducer
@@ -85,6 +85,10 @@ implements EventPipeline, Disposable {
         this.generatorParam = param;
     }
 
+    public Generator getGenerator() {
+        return this.generator;
+    }
+    
     public void addTransformer (String role, String source, Parameters param)
     throws Exception {
         this.transformers.add ((Transformer)transformerSelector.select(role));

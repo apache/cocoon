@@ -21,7 +21,7 @@ import org.apache.cocoon.Processor;
  * Base interface for generated <code>Sitemap</code> classes
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.4.16 $ $Date: 2001-04-12 16:00:58 $
+ * @version CVS $Revision: 1.1.4.17 $ $Date: 2001-04-19 11:30:32 $
  */
 public interface Sitemap extends CompiledComponent, Configurable, Contextualizable, Processor {
     int GENERATOR = 1;
@@ -31,6 +31,11 @@ public interface Sitemap extends CompiledComponent, Configurable, Contextualizab
     int ACTION = READER << 1;
     int MATCHER = ACTION << 1;
     int SELECTOR = MATCHER << 1;
+
+    /**
+     * Process the given <code>Environment</code> 
+     */
+    boolean process(Environment environment) throws Exception;
 
     /**
      * Process the given <code>Environment</code> assebling 

@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ import org.apache.log.LogKit;
 public abstract class AbstractEnvironment extends AbstractLoggable implements Environment {
 
     /** The current uri in progress */
-    protected String uri = null;
+    protected ArrayList uris = new ArrayList();
 
     /** The current prefix to strip off from the request uri */
     protected StringBuffer prefix = new StringBuffer();
@@ -73,7 +74,7 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
      */
     public AbstractEnvironment(String uri, String view, File context, String action)
     throws MalformedURLException {
-        this.uri = uri;
+        this.pushURI(uri);
         this.view = view;
         this.context = context.toURL();
         this.action = action;
@@ -86,7 +87,7 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
      * Returns the uri in progress. The prefix is stripped off
      */
     public String getURI() {
-        return this.uri;
+        return (String)this.uris.get(this.uris.size()-1);
     }
 
     /**
@@ -94,6 +95,7 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
      */
     public void changeContext(String prefix, String context)
     throws MalformedURLException {
+        String uri = (String)this.uris.get(this.uris.size()-1);
         LogKit.getLoggerFor("cocoon").debug("Changing Cocoon context(" + context + ") to prefix(" + prefix + ")");
         LogKit.getLoggerFor("cocoon").debug("\tfrom context(" + this.context.toExternalForm() + ") and prefix(" + this.prefix + ")");
         LogKit.getLoggerFor("cocoon").debug("\tat URI " + uri);
@@ -126,6 +128,7 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
             );
         }
         LogKit.getLoggerFor("cocoon").debug("New context is " + this.context.toExternalForm());
+        this.uris.set(this.uris.size()-1, uri);
     }
 
     /**
@@ -182,5 +185,21 @@ public abstract class AbstractEnvironment extends AbstractLoggable implements En
         if (systemId.charAt(0) == '/')
             return new InputSource(this.context.getProtocol() + ":" + systemId);
         return new InputSource(new URL(this.context,systemId).toExternalForm());
+    }
+
+    /**
+     * Push a new URI for processing
+     */
+    public void pushURI(String uri) {
+        this.uris.add(uri);
+    }
+
+    /**
+     * Pop last pushed URI
+     */
+    public String popURI() {
+        String uri = (String)this.uris.get(this.uris.size()-1);
+        this.uris.remove(this.uris.size()-1);
+        return uri;
     }
 }

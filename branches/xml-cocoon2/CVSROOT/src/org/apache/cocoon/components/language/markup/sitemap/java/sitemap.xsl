@@ -65,6 +65,7 @@
     import java.util.HashMap;
     import java.util.Stack;
 
+    import org.apache.avalon.Component;
     import org.apache.avalon.configuration.Configurable;
     import org.apache.avalon.configuration.Configuration;
     import org.apache.avalon.configuration.ConfigurationException;
@@ -87,6 +88,7 @@
     import org.apache.cocoon.components.pipeline.EventPipeline;
     import org.apache.cocoon.sitemap.Sitemap;
     import org.apache.cocoon.sitemap.ErrorNotifier;
+    import org.apache.cocoon.sitemap.ContentAggregator;
     import org.apache.cocoon.sitemap.Manager;
     import org.apache.cocoon.components.language.markup.xsp.XSPRequestHelper;
     import org.apache.cocoon.components.language.markup.xsp.XSPResponseHelper;
@@ -96,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.97 2001-04-17 15:00:11 cziegeler Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.98 2001-04-19 11:30:35 giacomo Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -199,6 +201,7 @@
         try {
           <!-- configure well known components first -->
           load_component (Sitemap.GENERATOR, "!error-notifier!", "org.apache.cocoon.sitemap.ErrorNotifier", new DefaultConfiguration("", LOCATION), null);
+          load_component (Sitemap.GENERATOR, "!content-aggregator!", "org.apache.cocoon.sitemap.ContentAggregator", new DefaultConfiguration("", LOCATION), null);
           load_component (Sitemap.TRANSFORMER, "!link-translator!", "org.apache.cocoon.sitemap.LinkTranslator", new DefaultConfiguration("", LOCATION), null);
 
           Configurer configurer = new Configurer(this, LOCATION);
@@ -209,6 +212,7 @@
           configurer.configMatchers();
           configurer.configSelectors();
           configurer.configActions();
+          configurer = null;
 
         /* catch any exception thrown by a component during configuration */
         } catch (Exception e) {
@@ -962,6 +966,64 @@
     if ("<xsl:value-of select="@name"/>".equals(cocoon_view))
       return view_<xsl:value-of select="translate(@name, '- ', '__')"/> (pipeline, eventPipeline, listOfMaps, environment, internalRequest);
   </xsl:template> <!-- match="map:label" -->
+
+  <!-- generate the code to match a aggregate definition -->
+  <xsl:template match="map:aggregate">
+    <xsl:call-template name="setup-component">
+      <xsl:with-param name="default-component">!content-aggregator!</xsl:with-param>
+      <xsl:with-param name="method">eventPipeline.setGenerator</xsl:with-param>
+      <xsl:with-param name="prefix">generator</xsl:with-param>
+    </xsl:call-template>
+    <xsl:variable name="ca">contentAggregator_<xsl:value-of select="generate-id(.)"/></xsl:variable>
+    ContentAggregator <xsl:value-of select="$ca"/> = (ContentAggregator)eventPipeline.getGenerator();
+    <xsl:value-of select="$ca"/>.setSitemap(this);
+    <xsl:value-of select="$ca"/>.setEnvironment(environment);
+    <xsl:if test="not (@element)">
+      <xsl:call-template name="error">
+        <xsl:with-param name="message">
+          element attribute missing in aggregate element
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@ns">
+        <xsl:value-of select="$ca"/>.setRootElement("<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$ca"/>.setRootElement("<xsl:value-of select="@element"/>", null);
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:apply-templates select="./map:part">
+      <xsl:with-param name="ca"><xsl:value-of select="$ca"/></xsl:with-param>
+    </xsl:apply-templates>
+  </xsl:template> <!-- match="map:aggregate" -->
+
+  <!-- generate the code to match a aggregates part definition -->
+  <xsl:template match="map:aggregate/map:part">
+    <xsl:param name="ca"/>
+    <xsl:if test="not (@src)">
+      <xsl:call-template name="error">
+        <xsl:with-param name="message">
+          src attribute missing in aggregates part element
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:if test="not (@element)">
+      <xsl:call-template name="error">
+        <xsl:with-param name="message">
+          element attribute missing in aggregates part element
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@ns">
+        <xsl:value-of select="$ca"/>.addPart("<xsl:value-of select="@src"/>", "<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$ca"/>.addPart("<xsl:value-of select="@src"/>", "<xsl:value-of select="@element"/>", null);
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template> <!-- match="map:aggregate/map:part" -->
 
   <!-- collect parameter definitions -->
   <xsl:template match="map:pipeline//parameter | map:action-set//parameter">

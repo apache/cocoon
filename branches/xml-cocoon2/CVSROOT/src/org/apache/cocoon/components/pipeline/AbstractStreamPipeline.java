@@ -38,7 +38,7 @@ import org.xml.sax.EntityResolver;
  * resource
  * </UL>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-18 12:05:52 $
+ * @version CVS $Revision: 1.1.2.3 $ $Date: 2001-04-19 11:30:38 $
  */
 public abstract class AbstractStreamPipeline extends AbstractLoggable implements StreamPipeline, Disposable {
     protected EventPipeline eventPipeline;
@@ -80,14 +80,6 @@ public abstract class AbstractStreamPipeline extends AbstractLoggable implements
         this.eventPipeline = eventPipeline;
     }
 
-    public void setGenerator (String role, String source, Parameters param, Exception e) throws Exception {
-        this.eventPipeline.setGenerator (role, source, param);
-    }
-
-    public void setGenerator (String role, String source, Parameters param) throws Exception {
-        this.eventPipeline.setGenerator (role, source, param);
-    }
-
     public EventPipeline getEventPipeline () {
         return this.eventPipeline;
     }
@@ -124,10 +116,6 @@ public abstract class AbstractStreamPipeline extends AbstractLoggable implements
         this.serializerParam = param;
         this.serializerMimeType = mimeType;
         this.sitemapSerializerMimeType = serializerSelector.getMimeTypeForRole(role);
-    }
-
-    public void addTransformer (String role, String source, Parameters param) throws Exception {
-        this.eventPipeline.addTransformer (role, source, param);
     }
 
     public boolean process(Environment environment)
