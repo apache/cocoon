@@ -49,7 +49,7 @@
     	</target>  
       
     	<target depends="init" name="compile" 
-    	  description="Compile this block and all blocks it depends on"  
+    	  description="Compile (block + all required blocks)"  
     	  >
     	  <!-- check whether parameters are set, unless stop script execution -->
         <condition property="cond.root.core">
@@ -106,7 +106,7 @@
                classpathref="classpath"/>
     	</target>    
     	
-      <target name="package" depends="init">
+      <target name="package" depends="init" description="Create JAR file (this block + required blocks))">
           <!-- here is the root of a small bug: because of recursive calls this is also called on 
                targets that block depends on what's unnecessary but doesn't really harm because 
                the javac task recognizes that nothing has changed and doesn't compile again -->
@@ -125,7 +125,7 @@
           </jar>		
       </target>    	 
     	
-     	<target depends="init" name="clean-all" description="Clean the build directory of this block and all blocks it depends on">  
+     	<target depends="init" name="clean-all" description="Clean (this block + all required blocks)">  
      	  <!-- clean all dependand blocks -->
     		<antcall target="clean-required-blocks">
     		  <param name="toplevelcall" value="{$cond.toplevelcall}"/>
@@ -133,7 +133,7 @@
     		<antcall target="clean"/>
       </target>
 
-     	<target depends="init" name="clean" description="Clean the build directory of this block only"> 		
+     	<target depends="init" name="clean" description="Clean the build directory(this block)"> 		
      		<xsl:variable name="build.root">${build.root}</xsl:variable>   
      		<xsl:call-template name="info">
     		  <xsl:with-param name="msg">Cleaning block <xsl:value-of select="block:name"/></xsl:with-param>
@@ -155,7 +155,7 @@
                classpathref="classpath"/>	    	  
     	</target>
     	
-    	<target depends="compile-eclipse-task" name="eclipse-project" description="Create Eclipse project files">
+    	<target depends="compile-eclipse-task" name="eclipse-project" description="Create Eclipse project (this block)">
       		<xsl:call-template name="info">
       		  <xsl:with-param name="msg">Building Eclipse project files for block <xsl:value-of select="block:name"/></xsl:with-param>
       		</xsl:call-template>      	  
@@ -210,7 +210,7 @@
          style="{$blockbuilder.root}/targets/block-descriptor2eclipse-project.xsl"/>
 	    </target>
     
-      <target name="eclipse-project-all" description="Create Eclipse project files for this block and all dependencies">
+      <target name="eclipse-project-all" description="Create Eclipse project files (this block + req. blocks)">
      	  <!-- clean all dependant blocks -->
     		<antcall target="eclipse-project-required-blocks">
     		  <param name="toplevelcall" value="{$cond.toplevelcall}"/>
