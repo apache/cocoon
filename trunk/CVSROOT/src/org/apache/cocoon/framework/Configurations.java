@@ -1,4 +1,4 @@
-/*-- $Id: Configurations.java,v 1.4 2000-01-03 01:46:00 stefano Exp $ --
+/*-- $Id: Configurations.java,v 1.5 2000-02-02 07:42:21 balld Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -58,15 +58,16 @@ import java.io.*;
  * class to work.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 2000-01-03 01:46:00 $
+ * @version $Revision: 1.5 $ $Date: 2000-02-02 07:42:21 $
  */
 
-public class Configurations extends Properties {
+public class Configurations {
 
-    private String baseName;
+    protected String baseName;
+	protected Properties properties;
 
     public Configurations() {
-        super();
+		properties = new Properties();
     }
 
     /**
@@ -80,9 +81,13 @@ public class Configurations extends Properties {
      * Create the class with given defaults and from the file
      */
     public Configurations(String file, Configurations defaults) throws Exception {
-        this(defaults);
+		if (defaults != null) {
+        	properties = new Properties(defaults.properties);
+		} else {
+			properties = new Properties();
+		}
         InputStream input = new FileInputStream(file);
-        load(input);
+        properties.load(input);
         input.close();
     }
 
@@ -90,28 +95,35 @@ public class Configurations extends Properties {
      * Create the class with given defaults.
      */
     public Configurations(Configurations c) {
-        super(c);
+		properties = new Properties(c.properties);
     }
 
     /**
      * Set the configuration.
      */
     public void set(String key, Object value) {
-        super.put(key, value);
+        properties.put(key, value);
     }
+
+	/**
+	 * The JavaModule interpreter is using this method. should it?
+	 */
+	public void put(String key, Object value) {
+		properties.put(key,value);
+	}
 
     /**
      * Get the configuration.
      */
     public Object get(String key) {
-        return super.get(key);
+        return properties.get(key);
     }
 
     /**
      * Get the configuration and use the given default value if not found.
      */
     public Object get(String key, Object def) {
-        Object o = super.get(key);
+        Object o = properties.get(key);
         return (o == null) ? def : o;
     }
 
@@ -119,7 +131,7 @@ public class Configurations extends Properties {
      * Get the configuration, throw an exception if not present.
      */
     public Object getNotNull(String key) {
-        Object o = super.get(key);
+        Object o = properties.get(key);
         if (o == null) {
             throw new RuntimeException("Cocoon configuration item '" + ((baseName == null) ? "" : baseName + "." + key) + "' is not set");
         } else {
@@ -150,7 +162,7 @@ public class Configurations extends Properties {
         c.setBasename((baseName == null) ? base : baseName + "." + base);
         String prefix = base + ".";
 
-        Enumeration keys = this.propertyNames();
+        Enumeration keys = properties.propertyNames();
         while (keys.hasMoreElements()) {
             String key = (String) keys.nextElement();
 
@@ -167,4 +179,11 @@ public class Configurations extends Properties {
     public void setBasename(String baseName) {
         this.baseName = baseName;
     }
+
+	/**
+	 * Used by XSPProcessor, but this maybe should be getKeys()?
+	 */
+	public Enumeration keys() {
+		return properties.keys();
+	}
 }
