@@ -109,7 +109,9 @@ public class DefaultFormManager
 
     public Form createForm(Source source) throws Exception {
         FormDefinition formDefinition = getFormDefinition(source);
-        return (Form)formDefinition.createInstance();
+        Form form = (Form)formDefinition.createInstance();
+        form.initialize();
+        return form;
     }
 
     public Form createForm(String uri) throws Exception {
@@ -133,7 +135,9 @@ public class DefaultFormManager
     }
 
     public Form createForm(Element formElement) throws Exception {
-        return (Form)getFormDefinition(formElement).createInstance();
+        Form form = (Form)getFormDefinition(formElement).createInstance();
+        form.initialize();
+        return form;
     }
 
     public FormDefinition createFormDefinition(Element formElement) throws Exception {

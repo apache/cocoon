@@ -24,7 +24,7 @@ import org.apache.cocoon.forms.FormContext;
  * for the widget id, just wrap the widget(s) in a container widget named
  * with the desired case id.
  *
- * @version $Id: Union.java,v 1.12 2004/06/29 13:06:04 sylvain Exp $
+ * @version $Id$
  */
 public class Union extends AbstractContainerWidget {
     
@@ -46,20 +46,18 @@ public class Union extends AbstractContainerWidget {
         return definition;
     }
 
-    // TODO: This whole union mess is too dependent on undefined sequences of execution.
-    // These need to be ordered into a contract of sequences.
-
-    public void setParent(Widget widget) {
-        super.setParent(widget);
-        resolve();
-    }
-
-    // TODO: The "resolve" step currently expands each "New" into the list of widgets in the corresponding "Class".
-    // "resolve" should be changed to "expand", and a new step, "resolve" should be introduced which patches up any
-    // *widget* (not definition) references after the expansion has put all of the widgets in place.
-    public void resolve() {
+    /**
+     * Called after widget's environment has been setup,
+     * to allow for any contextual initalization such as
+     * looking up case widgets for union widgets.
+     */
+    public void initialize() {
         String caseWidgetId = definition.getCaseWidgetId();
-        caseWidget = ((ContainerWidget)getParent()).getChild(caseWidgetId);
+        this.caseWidget = getParent().lookupWidget(caseWidgetId);
+        if(this.caseWidget == null) {
+            throw new RuntimeException("Could not find case widget \""
+                + caseWidgetId + "\" for union \"" + getId() + "\" at " + getLocation());
+        }
     }
 
     /**
@@ -112,8 +110,12 @@ public class Union extends AbstractContainerWidget {
     }
 
     public Widget getChild(String id) {
-        if (!widgets.hasWidget(id) && ((ContainerDefinition)definition).hasWidget(id))
+        if (!widgets.hasWidget(id) && ((ContainerDefinition)definition).hasWidget(id)) {
             ((ContainerDefinition)definition).createWidget(this, id);
+            Widget child = super.getChild(id);
+            child.initialize();
+            return child;
+         }
         return super.getChild(id);
     }
 

@@ -49,7 +49,7 @@ import java.util.Locale;
  * keeps the Widgets small and light to create. This mechanism is similar to
  * classes and objects in Java.
  * 
- * @version CVS $Id: Widget.java,v 1.15 2004/05/11 12:55:53 vgritsenko Exp $
+ * @version CVS $Id$
  */
 public interface Widget {
     
@@ -58,6 +58,13 @@ public interface Widget {
      * @see #lookupWidget(String)
      */
     public static final char PATH_SEPARATOR = '/';
+
+    /**
+     * Called after widget's environment has been setup,
+     * to allow for any contextual initalization such as
+     * looking up case widgets for union widgets.
+     */
+    public void initialize();
 
     /**
      * @return  the source location of this widget.
