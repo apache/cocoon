@@ -247,10 +247,10 @@
         version="true">
 
       <!--
-       | Links to other JavaDocs on the web (J2SDK 1.4.1 and JXPATH).
+       | Links to other JavaDocs on the web (J2SDK 1.4.2 and JXPATH).
        +-->
       <link href="http://jakarta.apache.org/commons/jxpath/apidocs/"/>
-      <link href="http://java.sun.com/j2se/1.4.1/docs/api"/>
+      <link href="http://java.sun.com/j2se/1.4.2/docs/api"/>
 
       <!--
        | Visual extravaganza...

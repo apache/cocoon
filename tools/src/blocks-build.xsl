@@ -173,7 +173,7 @@
                splitindex="true"
                windowtitle="{string('${Name}')} API {string('${version}')} [{string('${TODAY}')}]"
                doctitle="{string('${Name}')} API {string('${version}')}"
-               bottom="Copyright &#169; {string('${year}')} Apache Software Foundation. All Rights Reserved."
+               bottom="Copyright &#169; {string('${year}')} The Apache Software Foundation. All Rights Reserved."
                stylesheetfile="{string('${resources.javadoc}')}/javadoc.css"
                useexternalfile="yes"
                additionalparam="{string('${javadoc.additionalparam}')}"
@@ -183,7 +183,7 @@
         <link offline="true" href="http://avalon.apache.org/excalibur/api" packagelistloc="${{resources.javadoc}}/avalon-excalibur"/>
         <link offline="true" href="http://xml.apache.org/xerces2-j/javadocs/api" packagelistloc="${{resources.javadoc}}/xerces"/>
         <link offline="true" href="http://xml.apache.org/xalan-j/apidocs" packagelistloc="${{resources.javadoc}}/xalan"/>
-        <link offline="true" href="http://java.sun.com/j2se/1.4.1/docs/api" packagelistloc="${{resources.javadoc}}/j2se"/>
+        <link offline="true" href="http://java.sun.com/j2se/1.4.2/docs/api" packagelistloc="${{resources.javadoc}}/j2se"/>
         <link offline="true" href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api" packagelistloc="${{resources.javadoc}}/j2ee"/>
 
         <tag name="avalon.component"   scope="types"   description="Avalon component" />

@@ -84,7 +84,7 @@ call "%EXECUTABLE%" jpda start %CMD_LINE_ARGS%
         "<code>jdb -connect com.sun.jdi.SocketAttach:port=8000</code>" instead.
         <br/>
         More information on this can be found in the
-        <link href="http://java.sun.com/j2se/1.4.1/docs/guide/jpda/conninv.html">
+        <link href="http://java.sun.com/j2se/1.4.2/docs/guide/jpda/conninv.html">
         JPDA documentation</link>.
       </p>
       <note>
