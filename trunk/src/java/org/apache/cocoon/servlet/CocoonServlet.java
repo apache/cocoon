@@ -102,7 +102,7 @@ import java.util.jar.Manifest;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.21 2003/10/21 13:48:31 bloritsch Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.22 2003/10/21 13:54:03 bloritsch Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -119,8 +119,6 @@ public class CocoonServlet extends HttpServlet {
     static final float SECOND = 1000;
     static final float MINUTE = 60 * SECOND;
     static final float HOUR   = 60 * MINUTE;
-
-    private Logger log;
 
     /**
      * The time the cocoon instance was created
@@ -1419,6 +1417,6 @@ public class CocoonServlet extends HttpServlet {
 
     protected Logger getLogger()
     {
-        return this.log;
+        return cocoonBean.getInitializationLogger();
     }
 }
