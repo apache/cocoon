@@ -633,7 +633,7 @@
 
     <depend project="xml-cocoon2"/>
     <depend project="cocoon-block-axis"/>
-    <depend project="axis" version="supplied"/>
+    <depend project="xml-axis" version="supplied"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon"/>
