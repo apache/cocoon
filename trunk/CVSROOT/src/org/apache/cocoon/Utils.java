@@ -1,4 +1,4 @@
-/*-- $Id: Utils.java,v 1.24 2001-02-05 18:41:52 greenrd Exp $ --
+/*-- $Id: Utils.java,v 1.25 2001-02-06 12:29:49 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -66,7 +66,7 @@ import org.apache.cocoon.processor.xsp.XSPUtil;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:greenrd@hotmail.com">Robin Green</a>
- * @version $Revision: 1.24 $ $Date: 2001-02-05 18:41:52 $
+ * @version $Revision: 1.25 $ $Date: 2001-02-06 12:29:49 $
  */
 
 public final class Utils {
@@ -336,7 +336,7 @@ public final class Utils {
             resource = new File(location);
         } else if (location.startsWith("resource://")) {
             String res = location.substring("resource://".length());
-            resource = getClass ().getClassLoader ().getResource (res);
+            resource = Utils.class.getClassLoader ().getResource (res);
             if (resource == null) {
               resource = ClassLoader.getSystemResource(res);
             }
@@ -362,7 +362,5 @@ public final class Utils {
             }
             return new File(location);
         } else return getLocationResource (location);
-        
-        return resource;
     }
 }
