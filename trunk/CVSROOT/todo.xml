@@ -3,7 +3,7 @@
 <!DOCTYPE todo SYSTEM "./xdocs/dtd/todo-v10.dtd">
 
 <!--
-  $Id: todo.xml,v 1.50 2000-12-01 17:59:28 greenrd Exp $
+  $Id: todo.xml,v 1.51 2000-12-20 19:54:21 greenrd Exp $
 -->
 
 <todo title="Things To Do for Cocoon 1.x">
@@ -16,8 +16,8 @@
  </devs>
 
  <actions priority="high">
-  <action context="code">
-   Track down cause of OutOfMemoryError.
+  <action context="code" assigned-to="RDG">
+   Track down cause of OutOfMemoryError and multiple PDF problems.
   </action>
   <action context="code">
    Work out how to integrate inline XSP docs (such as inline esql docs)
@@ -27,12 +27,17 @@
   <action context="docs" assigned-to="RDG">
    Fix dead links in docs.
   </action>
+  <action context="docs" assigned-to="RDG">
+   Apply corrections to install instructions
+  </action>
  </actions>
 
  <actions priority="medium">
   <action context="code" assigned-to="RDG">
-   Write a LinkEncodingProcessor (useful for cookieless clients e.g. WML)
-   which runs all HTTP links through response.encodeURL.
+   Fix remaining caching bugs. Cleanup caching code, which is messy.
+  </action>
+  <action context="code" assigned-to="RDG">
+   Better HTTP support and conformance
   </action>
   <action context="docs" assigned-to="RDG">
    Write a full guide to logicsheets, including: (1) What they are and how
@@ -42,13 +47,10 @@
    specify logicsheet execution order with the as-yet-undocumented 
    &lt;?xml-logicsheet?&gt; processing instruction. Partial contributions welcome! :-) 
   </action>
-  <action context="code">
-   Fix remaining caching bugs. Cleanup caching code, which is messy.
-  </action>
   <action context="code" assigned-to="RDG">
    Fix stylesheet-chaining bug.
   </action>
-  <action context="code">
+  <action context="code" assigned-to="RDG">
    Add a working version of JQ's multiline string template to util logicsheet.
   </action>
   <action context="docs">
@@ -77,6 +79,9 @@
   <action context="code">
    Taglib (not part of esql) to dynamically specify connection parameters
    (with or without connection pooling).
+  </action>
+  <action context="code">
+   Make handle.errors.internally return a suitable HTTP error code.
   </action>
   <action context="code">
    Add hooks for user-defined error-handling (better than just handle.errors.internally
