@@ -58,8 +58,14 @@ import org.apache.excalibur.xml.DefaultEntityResolver;
  * This component simply inherits from the excalibur implementation and
  * adds the context: protocol to each relative uri.
  *
+ * The catalog is by default loaded from "WEB-INF/entities/catalog".
+ * This can be configured by the "catalog" parameter in the cocoon.xconf:
+ * &lt;entity-resolver&gt;
+ *   &lt;parameter name="catalog" value="mycatalog"/&gt;
+ * &lt;/entity-resolver&gt;
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultResolver.java,v 1.1 2003/03/12 09:35:38 cziegeler Exp $
+ * @version CVS $Id: DefaultResolver.java,v 1.2 2003/03/12 10:15:44 cziegeler Exp $
  * @since 2.1
  */
 public class DefaultResolver
@@ -74,5 +80,12 @@ public class DefaultResolver
             file = "context://" + file;
         }
         super.parseCatalog( file );
+    }
+    
+    /**
+     * Default catalog path
+     */
+    protected String defaultCatalog() {
+        return "/WEB-INF/entities/catalog";
     }
 }
