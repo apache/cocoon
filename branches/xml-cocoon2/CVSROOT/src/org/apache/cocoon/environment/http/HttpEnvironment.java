@@ -48,7 +48,6 @@ public class HttpEnvironment extends AbstractEnvironment {
                             HttpServletResponse response, 
                             ServletContext servletContext) 
     throws MalformedURLException, IOException {
-//        super(uri, request.getHeader("cocoon-view"), servletContext.getRealPath("/"));
         super(uri, request.getParameter("cocoon-view"), servletContext.getRealPath("/"));
         this.request = new HttpRequest (request, this);
         this.servletRequest = request;

@@ -7,8 +7,6 @@
  *****************************************************************************/
 package org.apache.cocoon.util;
 
-import java.net.URL;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FileReader;
@@ -16,39 +14,21 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-16 00:25:06 $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-02 11:07:32 $
  */
 public class IOUtils {
 
-  /**
-   * Create a URL from a location. This method supports the
-   * <i>resource://</i> pseudo-protocol for loading resources
-   * accessible to this same class' <code>ClassLoader</code>
-   *
-   * @param location The location
-   * @return The URL pointed to by the location
-   * @exception MalformedURLException If the location is malformed
-   */
-  public static URL getURL(String location) throws MalformedURLException {
-    if (location.indexOf("://") < 0) {
-      return (new File(location)).toURL();
-    } else if (location.startsWith("resource://")) {
-      URL u = ClassUtils.getClassLoader().getResource(location.substring("resource://".length()));
-      if (u != null) return u;
-      else throw new RuntimeException(location + " could not be found. (possible classloader problem)");
-    } else {
-      return new URL(location);
-    }
-  }
+  // **********************
+  // Serialize Methods
+  // **********************
 
   /**
    * Dump a <code>String</code> to a text file.
@@ -124,7 +104,7 @@ public class IOUtils {
   }
 
   // **********************
-  // Filename Methods
+  // File Methods
   // **********************
 
   /**
@@ -173,7 +153,7 @@ public class IOUtils {
    */
   public static String pathComponent(String filename) {
     int i = filename.lastIndexOf(File.separator);
-    return (i >= 0) ? filename.substring(0, i) : filename;
+    return (i > -1) ? filename.substring(0, i) : filename;
   }
 
   /**
@@ -185,7 +165,7 @@ public class IOUtils {
    */
   public static String fileComponent(String filename) {
     int i = filename.lastIndexOf(File.separator);
-    return (i >= 0) ? filename.substring(i + 1) : filename;
+    return (i > -1) ? filename.substring(i + 1) : filename;
   }
 
   /**
@@ -196,17 +176,8 @@ public class IOUtils {
    * @return The filename sans extension
    */
   public static String baseName(String filename) {
-    return baseName(filename, ".");
-  }
-
-  public static String baseName(String filename, String suffix) {
-    int lastDot = filename.lastIndexOf(suffix);
-
-    if (lastDot >= 0) {
-      filename = filename.substring(0, lastDot);
-    }
-
-    return filename;
+    int i = filename.lastIndexOf('.');
+    return (i > -1) ? filename.substring(0, i) : filename;
   }
 
   /**
@@ -225,5 +196,19 @@ public class IOUtils {
     } catch (IOException e) {
       return file.getAbsolutePath();
     }
+  }
+
+  /**
+   * Return a file with the given filename creating the necessary
+   * directories if not present.
+   *
+   * @param filename The file
+   * @return The created File instance
+   */
+  public static File createFile(File destDir, String filename) {
+    File file = new File(destDir, filename);
+    File parent = file.getParentFile();
+    if (parent != null) parent.mkdirs();
+    return file;
   }
 }

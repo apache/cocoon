@@ -10,15 +10,16 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-09-29 01:02:51 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-02 11:07:25 $
  */
 
 public interface Constants {
 
-    public static final String NAME         = "@name@";
-    public static final String VERSION      = "@version@";
-    public static final String CONF_VERSION = "2.0";
-    public static final String YEAR         = "@year@";
+    public static final String NAME          = "@name@";
+    public static final String VERSION       = "@version@";
+    public static final String COMPLETE_NAME = NAME + " " + VERSION;
+    public static final String CONF_VERSION  = "2.0";
+    public static final String YEAR          = "@year@";
 
     public static final String RELOAD_PARAM   = "cocoon-reload";
     public static final String SHOWTIME_PARAM = "cocoon-showtime";

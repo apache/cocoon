@@ -11,7 +11,7 @@
 
 <!--
  * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
- * @version CVS $Revision: 1.1.2.41 $ $Date: 2000-10-01 00:19:53 $
+ * @version CVS $Revision: 1.1.2.42 $ $Date: 2000-10-02 11:07:27 $
 -->
 
 <!-- Sitemap Core logicsheet for the Java language -->
@@ -135,7 +135,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
           </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="java:getClassSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
-        private List <xsl:value-of select="$matcher-name"/> (String pattern, Environment environment) {
+        private List <xsl:value-of select="$matcher-name"/> (String pattern, Map objectModel) {
           <xsl:value-of select="java:getMethodSource($factory-loader,string($factory),string($matcher-name),string(@pattern),$config)"/>
         }
       </xsl:for-each>
@@ -369,7 +369,7 @@ public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
         </xsl:choose>
       </xsl:for-each>
     </xsl:variable>
-    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", environment)) != null) {
+    if ((list = <xsl:value-of select="$matcher-name"/> ("<xsl:value-of select="$pattern-value"/>", objectModel)) != null) {
       listOfLists.add (list);
       <xsl:apply-templates/>
       listOfLists.remove (list);

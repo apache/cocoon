@@ -8,7 +8,9 @@
 package org.apache.cocoon.components.language.markup;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.Vector;
 import java.util.Hashtable;
@@ -22,25 +24,20 @@ import org.w3c.dom.NamedNodeMap;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
-
-import org.apache.avalon.utils.Parameters;
-import org.apache.avalon.AbstractNamedComponent;
-
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.AbstractNamedComponent;
+import org.apache.avalon.utils.Parameters;
 
 import org.apache.cocoon.util.IOUtils;
+import org.apache.cocoon.util.NetUtils;
 import org.apache.cocoon.components.store.MemoryStore;
-
 import org.apache.cocoon.components.language.programming.ProgrammingLanguage;
-
-import java.io.IOException;
-import org.xml.sax.SAXException;
-import java.net.MalformedURLException;
 
 /**
  * Base implementation of <code>MarkupLanguage</code>. This class uses
@@ -49,7 +46,7 @@ import java.net.MalformedURLException;
  * (as opposed to Cocoon2's standard SAX events)
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-08-21 17:38:56 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-10-02 11:07:26 $
  */
 public abstract class AbstractMarkupLanguage
   extends AbstractNamedComponent
@@ -132,7 +129,7 @@ public abstract class AbstractMarkupLanguage
         String logicsheetLocation =
 	        getRequiredParameter(lcp, "core-logicsheet");
 
-        URL logicsheetURL = IOUtils.getURL(logicsheetLocation);
+        URL logicsheetURL = NetUtils.getURL(logicsheetLocation);
         String logicsheetName = logicsheetURL.toExternalForm();
         Logicsheet logicsheet = new Logicsheet();
         logicsheet.setInputSource(new InputSource(logicsheetURL.openStream()));
@@ -150,7 +147,7 @@ public abstract class AbstractMarkupLanguage
           String namedLogicsheetLocation = getRequiredParameter(ncp, "href");
 
           // FIXME: This is repetitive; add method for both cases
-          URL namedLogicsheetURL = IOUtils.getURL(namedLogicsheetLocation);
+          URL namedLogicsheetURL = NetUtils.getURL(namedLogicsheetLocation);
           String namedLogicsheetName = namedLogicsheetURL.toExternalForm();
           NamedLogicsheet namedLogicsheet = new NamedLogicsheet();
           namedLogicsheet.setInputSource(

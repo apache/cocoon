@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ArrayList;
+import java.util.Map;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,14 +30,23 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Main;
 import org.apache.cocoon.environment.AbstractEnvironment;
 
+/**
+ * This environment is sample the links of the resource.
+ *
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-10-02 11:07:29 $
+ */
+
 public class LinkSamplingEnvironment extends AbstractEnvironment {
 
     private boolean skip = false;
     private ByteArrayOutputStream stream = new ByteArrayOutputStream();
     
-    public LinkSamplingEnvironment(String uri, File context) 
+    public LinkSamplingEnvironment(String uri, File contextFile, Map attributes, Map parameters) 
     throws MalformedURLException, IOException {
-        super(uri, Cocoon.LINK_VIEW, context);
+        super(uri, Cocoon.LINK_VIEW, contextFile);
+        this.objectModel.put("request", new CommandLineRequest(null, uri, null, attributes, parameters));
+        this.objectModel.put("response", new CommandLineResponse());
     }
 
     /** 
