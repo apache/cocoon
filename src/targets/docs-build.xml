@@ -46,6 +46,8 @@
     <copy todir="${build.context}/WEB-INF/classes" filtering="on">
       <fileset dir="${webapp}/WEB-INF/classes"/>
     </copy>
+
+    <!-- Copy the logkit configuration -->
     <copy todir="${build.context}" filtering="on" file="${webapp}/WEB-INF/logkit.xconf"/>
 
   </target>
