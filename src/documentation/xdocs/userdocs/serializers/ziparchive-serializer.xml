@@ -17,19 +17,19 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>Zip archive Serializer</title>
-		<version>1.0</version>
-		<type>Technical document</type>
-		<authors>
-		  <person name="Sylvain Wallez" email="sylvain@apache.org"/>
-		 </authors>
-		 <abstract>This document describes the Zip archive serializer of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Zip archive Serializer">
-		  <p>The Zip archive serializer generates a zip archive by aggregating several sources.</p>
-		
+  <header>
+    <title>Zip archive Serializer</title>
+    <version>1.0</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Sylvain Wallez" email="sylvain@apache.org"/>
+     </authors>
+     <abstract>This document describes the Zip archive serializer of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Zip archive Serializer">
+      <p>The Zip archive serializer generates a zip archive by aggregating several sources.</p>
+    
  <p>The input document should describe entries of the archive by means of
  their name (which can be a path) and their content either as URLs or
  inline data :</p>
@@ -60,11 +60,11 @@
 &lt;/zip:archive&gt;
 </source>
 
-		   <ul>
-		     <li>Name: zip</li>
-		     <li>Class: org.apache.cocoon.serialization.ZipArchiveSerializer</li>
-	             <li>Cacheable: no</li>
-		   </ul>
-		</s1>
-	</body>
+       <ul>
+         <li>Name: zip</li>
+         <li>Class: org.apache.cocoon.serialization.ZipArchiveSerializer</li>
+               <li>Cacheable: no</li>
+       </ul>
+    </s1>
+  </body>
 </document>

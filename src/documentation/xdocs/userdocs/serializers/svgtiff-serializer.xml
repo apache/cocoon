@@ -86,7 +86,7 @@
       </p>
       <table>
         <tr><th>Parameter</th><th>Type</th><th>Comment</th></tr>
-	<tr><td>force_transparent_white</td><td>boolean</td><td>It controls whether the encoder should
+  <tr><td>force_transparent_white</td><td>boolean</td><td>It controls whether the encoder should
           force the image's fully transparent pixels to be fully transparent
           white instead of fully transparent black.  This is usefull when the
           encoded TIFF is displayed in a viewer which does not support TIFF

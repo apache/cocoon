@@ -405,12 +405,12 @@
 
    <s2 title="Other Validations">
 
-	<p>
-	 In addition to validating form input, other actions exists that validate
-	 values from different sources using the same techniques and syntax. For
-	 example, the <code>SessionValidatorAction</code> operates on session
-	 attributes.
-	</p>
+  <p>
+   In addition to validating form input, other actions exists that validate
+   values from different sources using the same techniques and syntax. For
+   example, the <code>SessionValidatorAction</code> operates on session
+   attributes.
+  </p>
 
    </s2>
 

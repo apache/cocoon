@@ -17,29 +17,29 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
-	<header>
-		<title>Selectors</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-			<person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
-			<person name="Diana Shannon, ed." email="shannon@apache.org"/>
-		 </authors>
-		 <abstract>This document describes all of the available selectors of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Goal">
-			<p>
+  <header>
+    <title>Selectors</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
+      <person name="Gianugo Rabellino" email="gianugo@rabellino.it"/>
+      <person name="Diana Shannon, ed." email="shannon@apache.org"/>
+     </authors>
+     <abstract>This document describes all of the available selectors of Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="Goal">
+      <p>
       This document lists all of the available selectors of Apache Cocoon and
       describes their purpose.
       You may also wish to read  
       <link href="../concepts/matchers_selectors.html">Using and Implementing
       Matchers and Selectors</link>.
       </p>
-		 </s1>
-		 <s1 title="Overview">
-			<p>
+     </s1>
+     <s1 title="Overview">
+      <p>
       Selectors in Apache Cocoon have a role similar to matchers 
       with additional flexibility. If you haven't learned about
       matchers yet, read about them <link href="../matchers/matchers.html">here</link>
@@ -93,40 +93,40 @@
 ]]>
 </source>
       
-		 </s1>
-		 <s1 title="The Selectors in Cocoon">
-			<p>
+     </s1>
+     <s1 title="The Selectors in Cocoon">
+      <p>
       Available Selectors in Cocoon include the following:
       </p>
-			<ul>
-				<li><strong>BrowserSelector</strong>: matches the value of the &quot;test&quot;
+      <ul>
+        <li><strong>BrowserSelector</strong>: matches the value of the &quot;test&quot;
         parameter against the HTTP User-Agent header, allowing it to 
         recognize the browser issuing the request;</li>
         
-				<li><strong>CodeSelector</strong>: matches a snippet of Java code
+        <li><strong>CodeSelector</strong>: matches a snippet of Java code
         given as the &quot;test&quot; parameter against the environment;</li>
 
-				<li><strong>HostSelector</strong>: matches the &quot;test&quot; parameter value
+        <li><strong>HostSelector</strong>: matches the &quot;test&quot; parameter value
         against the Host request header</li>
 
-				<li><link href="parameter-selector.html">ParameterSelector</link>: matches the string specified
+        <li><link href="parameter-selector.html">ParameterSelector</link>: matches the string specified
         in the &quot;test&quot; parameter against a specified Cocoon internal
         (e.g. sitemap) parameter;</li>
 
-				<li><strong>HeaderSelector</strong>: same as the Parameter selector,
+        <li><strong>HeaderSelector</strong>: same as the Parameter selector,
         but matches against the request headers;</li>
 
-				<li><link href="regular-expression-header-selector.html">RegexpHeaderSelector</link>: same as the Header selector,
+        <li><link href="regular-expression-header-selector.html">RegexpHeaderSelector</link>: same as the Header selector,
         but uses a regular expression for matching;</li>
 
-				<li><strong>RequestSelector</strong>: again, same as the Parameter selector,
+        <li><strong>RequestSelector</strong>: again, same as the Parameter selector,
         but matches against the Request parameters;</li>
 
-				<li><strong>SessionSelector</strong>: finally, this selector is used as
+        <li><strong>SessionSelector</strong>: finally, this selector is used as
         the Parameter selector to match against an arbitrary session
         attribute;</li>
 
-			</ul>
-		</s1>
-	</body>
+      </ul>
+    </s1>
+  </body>
 </document>
