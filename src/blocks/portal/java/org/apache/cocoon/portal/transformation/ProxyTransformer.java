@@ -242,12 +242,12 @@ public class ProxyTransformer
             StringBuffer query = new StringBuffer();
 
             boolean firstparameter = true;
-            Enumeration enum = request.getParameterNames();
+            Enumeration enumeration = request.getParameterNames();
 
             boolean post = ("POST".equals(request.getMethod()));
 
-            while (enum.hasMoreElements()) {
-                String paramName = (String) enum.nextElement();
+            while (enumeration.hasMoreElements()) {
+                String paramName = (String) enumeration.nextElement();
 
                 if (!paramName.startsWith("cocoon-portal-")) {
                     String[] paramValues =

@@ -136,9 +136,9 @@ public class JellyGenerator
     protected void updateContext() throws ProcessingException {
         try {
             Request request = ObjectModelHelper.getRequest( this.objectModel );
-            Enumeration enum = request.getParameterNames();
-            while (enum.hasMoreElements()) {
-                String var = (String) enum.nextElement();
+            Enumeration enumeration = request.getParameterNames();
+            while (enumeration.hasMoreElements()) {
+                String var = (String) enumeration.nextElement();
                 String val = request.getParameter(var);
                 this.jellyContext.setVariable( var, val );
             }
