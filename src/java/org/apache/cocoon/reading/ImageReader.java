@@ -49,12 +49,16 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * Parameters:
  *   <dl>
  *     <dt>&lt;width&gt;</dt>
- *     <dd>This parameter is optional. When specified it determines the width
- *         of the image that should be served.
+ *     <dd> This parameter is optional. When specified, it determines the
+ *          width of the binary image.
+ *          If no height parameter is specified, the aspect ratio
+ *          of the image is kept.
  *     </dd>
  *     <dt>&lt;height&gt;</dt>
- *     <dd>This parameter is optional. When specified it determines the height
- *         of the image that should be served.
+ *     <dd> This parameter is optional. When specified, it determines the
+ *          height of the binary image.
+ *          If no width parameter is specified, the aspect ratio
+ *          of the image is kept.
  *     </dd>
  *     <dt>&lt;scale(Red|Green|Blue)&gt;</dt>
  *     <dd>This parameter is optional. When specified it will cause the
@@ -74,9 +78,9 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  *     <dd>This parameter is optional. By default, if the image is smaller
  *         than the specified width and height, the image will be enlarged.
  *         In some circumstances this behaviour is undesirable, and can be
- *         switched off by setting this parameter to "no" so that images will
- *         be reduced in size, but not enlarged. The default is "yes".
-
+ *         switched off by setting this parameter to "<code>false</code>" so that
+ *         images will be reduced in size, but not enlarged. The default is
+ *         "<code>true</code>".
  *     </dd>
  *   </dl>
  *
@@ -86,8 +90,9 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @version CVS $Id$
  */
 final public class ImageReader extends ResourceReader {
-    private static final String GRAYSCALE_DEFAULT = "false";
+    private static final boolean GRAYSCALE_DEFAULT = false;
     private static final boolean ENLARGE_DEFAULT = true;
+    private static final boolean FIT_DEFAULT = false;
 
     private int width;
     private int height;
@@ -95,6 +100,7 @@ final public class ImageReader extends ResourceReader {
     private float[] offsetColor = new float[3];
 
     private boolean enlarge;
+    private boolean fitUniform;
     private RescaleOp colorFilter;
     private ColorConvertOp grayscaleFilter;
 
@@ -128,12 +134,12 @@ final public class ImageReader extends ResourceReader {
             this.colorFilter = new RescaleOp(scaleColor, offsetColor, null);
         }
 
-        String grayscalePar = par.getParameter("grayscale", GRAYSCALE_DEFAULT);
-        if (BooleanUtils.toBoolean(grayscalePar)) {
+        if (par.getParameterAsBoolean("grayscale", GRAYSCALE_DEFAULT)) {
             this.grayscaleFilter = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
         }
 
         this.enlarge = par.getParameterAsBoolean("allow-enlarging", ENLARGE_DEFAULT);
+        this.fitUniform = par.getParameterAsBoolean("fit-uniform", FIT_DEFAULT);
 
         super.setup(resolver, objectModel, src, par);
     }
@@ -158,7 +164,7 @@ final public class ImageReader extends ResourceReader {
      * Returns the affine transform that implements the scaling.
      * The behavior is the following: if both the new width and height values
      * are positive, the image is rescaled according to these new values and
-     * the original aspect ration is lost.
+     * the original aspect ratio is lost.
      * Otherwise, if one of the two parameters is zero or negative, the
      * aspect ratio is maintained and the positive parameter indicates the
      * scaling.
@@ -168,6 +174,19 @@ final public class ImageReader extends ResourceReader {
     private AffineTransform getTransform(double ow, double oh, double nw, double nh) {
         double wm = 1.0d;
         double hm = 1.0d;
+
+        if (fitUniform) {
+            //
+            // Compare aspect ratio of image vs. that of the "box"
+            // defined by nw and nh
+            //
+            if (ow/oh > nw/nh) {
+                nh = 0;    // Original image is proportionately wider than the box,
+                        // so scale to fit width
+            } else {
+                nw = 0;    // Scale to fit height
+            }
+        }
 
         if (nw > 0) {
             wm = nw / ow;
