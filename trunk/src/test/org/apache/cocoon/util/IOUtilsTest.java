@@ -58,7 +58,7 @@ import junit.framework.TestCase;
  * Test Cases for the IOUtils Class.
  *
  * @author <a href="mailto:stuart.roebuck@adolos.com">Stuart Roebuck</a>
- * @version CVS $Revision: 1.1 $ $Date: 2003/03/09 00:10:41 $
+ * @version CVS $Id: IOUtilsTest.java,v 1.2 2003/03/16 18:03:56 vgritsenko Exp $
  */
 public class IOUtilsTest extends TestCase {
 

@@ -1,6 +1,6 @@
 /*
- * $Revision: 1.1 $
- * $Date: 2003/03/09 00:10:04 $
+ * $Revision: 1.2 $
+ * $Date: 2003/03/16 18:03:53 $
  *
  * ====================================================================
  * The Apache Software License, Version 1.1
@@ -68,12 +68,11 @@ import org.apache.cocoon.acting.AbstractXMLFormAction;
  * This action implements a REST web service
  *
  * @author Ivelin Ivanov <ivelin@apache.org>
+ * @version CVS $Id: UsageFeedbackAction.java,v 1.2 2003/03/16 18:03:53 vgritsenko Exp $
  */
 public class UsageFeedbackAction
   extends AbstractXMLFormAction
-
 {
-  
 
   // Web Service Response names
   final String SERVICE_RESPONSE_OK = "ok";

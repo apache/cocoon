@@ -52,6 +52,7 @@ package org.apache.cocoon.components.validation.test;
 
 /**
  * just a test bean
+ * @version CVS $Id: ZNestedBean.java,v 1.2 2003/03/16 18:03:55 vgritsenko Exp $
  */
 public class ZNestedBean {
 	private String kind = "mammal";

@@ -77,6 +77,8 @@ import java.util.Map;
  * This particular action copies all available parameters obtained
  * from the input component to the output component or, if a specific
  * parameter is specified through parameter-name, just one parameter.
+ *
+ * @version CVS $Id: TestAction.java,v 1.2 2003/03/16 18:03:53 vgritsenko Exp $
  */
 public class TestAction extends ComposerAction 
     implements Configurable, ThreadSafe {

@@ -62,8 +62,8 @@ import org.apache.log.Priority;
 /**
  * A simple test case for CommandLineContext.
  *
- * @author     <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
- * @version    CVS $Id: CommandLineContextTestCase.java,v 1.2 2003/03/12 15:02:14 bloritsch Exp $
+ * @author <a href="mailto:berni_huber@a1.net">Bernhard Huber</a>
+ * @version CVS $Id: CommandLineContextTestCase.java,v 1.3 2003/03/16 18:03:56 vgritsenko Exp $
  */
 public final class CommandLineContextTestCase
          extends TestCase
