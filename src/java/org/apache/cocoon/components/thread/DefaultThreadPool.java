@@ -17,7 +17,6 @@ package org.apache.cocoon.components.thread;
 
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.tools.ant.taskdefs.Get;
 
 import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
