@@ -167,7 +167,8 @@ a Java 1.2 compatible JVM is required for this target.
     <property name="build.docs" value="./build/docs"/>
     <property name="build.javadocs" value="./build/javadocs"/>
 
-    <property name="dist.dir" value="./dist"/>
+    <property name="dist.root" value="./dist"/>
+    <property name="dist.dir" value="${dist.root}/${name}-${version}"/>
 
     <property name="site" value="../xml-site/targets/cocoon"/>
 
@@ -366,7 +367,7 @@ a Java 1.2 compatible JVM is required for this target.
   <!-- Packages the distribution with .tar.gzip                            -->
   <!-- =================================================================== -->
   <target name="dist-tgz" depends="dist">
-    <tar tarfile="${Name}-${version}.tar" basedir="${dist.dir}" includes="**"/>
+    <tar tarfile="${Name}-${version}.tar" basedir="${dist.root}" includes="**"/>
     <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
   </target>
 
@@ -381,7 +382,7 @@ a Java 1.2 compatible JVM is required for this target.
   </target>
 
   <target name="distclean" depends="clean">
-    <deltree dir="${dist.dir}"/>
+    <deltree dir="${dist.root}"/>
     <delete file="${Name}-${version}.tar.gz"/>
     <delete file="${Name}-${version}.tar"/>
     <delete file="${Name}-${version}.zip"/>
