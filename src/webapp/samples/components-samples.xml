@@ -15,7 +15,7 @@
   limitations under the License.
 -->
 
-<!-- CVS $Id: components-samples.xml,v 1.5 2004/03/20 12:43:40 crossley Exp $ -->
+<!-- CVS $Id: components-samples.xml,v 1.6 2004/03/21 03:23:10 crossley Exp $ -->
 
 <samples xmlns:xlink="http://www.w3.org/1999/xlink" name="Components Samples">
   
@@ -39,6 +39,9 @@
     </sample>   
     <sample href="request.html" name="Request Page">
       This example shows the usage of the RequestGenerator.
+    </sample>
+    <sample href="imagereader/list" name="Image Directory Generator">
+      Read a directory, process images and find their attributes.
     </sample>
   </group>
 
