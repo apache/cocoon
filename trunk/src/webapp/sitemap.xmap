@@ -27,7 +27,7 @@
     | the accompanying documentation. The sitemaps which come with each
     | sample and each block will help to explain.
     |
-    | CVS $Id: sitemap.xmap,v 1.42 2004/03/10 18:00:11 unico Exp $
+    | CVS $Id: sitemap.xmap,v 1.43 2004/03/26 00:00:20 joerg Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -630,7 +630,7 @@
       <!-- macosx -->
       <!--map:mount check-reload="yes" src="/Users/{1}/Sites/" uri-prefix="~{1}"/-->
       <!-- win32 -->
-      <!--map:mount check-reload="yes" src="/Documents and Settings/{1}/My Documents/My Website" uri-prefix="~{1}"/-->
+      <!--map:mount check-reload="yes" src="/Documents and Settings/{1}/My Documents/My Website/" uri-prefix="~{1}"/-->
     </map:match>
     
     <!--+
