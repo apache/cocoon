@@ -63,7 +63,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Interpreted tree-traversal implementation of a pipeline assembly language.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.28 2004/05/25 13:30:10 cziegeler Exp $
+ * @version CVS $Id: TreeProcessor.java,v 1.29 2004/05/25 13:42:51 cziegeler Exp $
  */
 
 public class TreeProcessor
@@ -518,6 +518,7 @@ public class TreeProcessor
         // Get a builder
         TreeBuilder builder = (TreeBuilder)this.builderSelector.select(this.language);
         ProcessingNode root;
+        EnvironmentHelper.enterProcessor(this, new ComponentManagerWrapper(this.manager), env);
         try {
             if (builder instanceof Recomposable) {
                 ((Recomposable)builder).recompose(this.manager);
@@ -537,6 +538,7 @@ public class TreeProcessor
             
             this.disposableNodes = builder.getDisposableNodes();
         } finally {
+            EnvironmentHelper.leaveProcessor();
             this.builderSelector.release(builder);
         }
 
