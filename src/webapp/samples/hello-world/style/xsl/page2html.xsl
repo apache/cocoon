@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- CVS $Id: page2html.xsl,v 1.2 2003/05/07 04:57:13 vgritsenko Exp $ -->
+<!-- CVS $Id: page2html.xsl,v 1.3 2003/05/07 19:15:51 vgritsenko Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -20,6 +20,10 @@
 
   <xsl:template match="title">
    <h1><xsl:apply-templates/></h1>
+  </xsl:template>
+
+  <xsl:template match="content">
+   <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="para">
