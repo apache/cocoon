@@ -75,6 +75,7 @@ import org.apache.cocoon.xml.ContentHandlerWrapper;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
+import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
 import org.apache.excalibur.source.impl.validity.ExpiresValidity;
@@ -89,8 +90,21 @@ import org.xml.sax.SAXException;
  * to get the content. This implementation can cache the content for
  * a given period of time
  * 
+ * <h2>Syntax for Protocol</h2>
+ * <p>
+ * The URL needs to contain the URL of the cached source, an expiration
+ * period in second, and optionally a cache key: <code>cached://60@http://www.s-und-n.de</code>
+ * or <code>cached://60@main@http://www.s-und-n.de</code> 
+ * </p>
+ * <p>
+ * The above examples show how the real source <code>http://www.s-und-n.de</code>
+ * is wrapped and the cached contents is used for <code>60</code> seconds.
+ * The second example extends the cache key with the string <code>main</code>
+ * allowing multiple cache entries for the same source.
+ * </p>
+ * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CachingSource.java,v 1.2 2003/10/25 18:06:19 joerg Exp $
+ * @version CVS $Id: CachingSource.java,v 1.3 2004/02/15 20:33:19 haul Exp $
  */
 public class CachingSource
 extends AbstractLogEnabled
@@ -360,49 +374,17 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
         
         if ( this.cachedResponse == null
              && (!alternative || !(this.source instanceof XMLizable)) ) {
-            // resd the content
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            final byte[] buffer = new byte[2048];
-            final InputStream inputStream = this.source.getInputStream();
-            int length;
-        
-            while ((length = inputStream.read(buffer)) > -1) {
-                baos.write(buffer, 0, length);
-            }
-            baos.flush();
-            inputStream.close();
-            this.cachedResponse = new ExtendedCachedResponse(new ExpiresValidity(this.expires), 
-                                                             baos.toByteArray());                                                            
+            
+			this.cachedResponse = new ExtendedCachedResponse(
+					new ExpiresValidity(this.expires), this.readBinaryResponse());
             storeResponse = true;                                                             
         } else if ( this.cachedResponse == null ) {
-            this.cachedResponse = new ExtendedCachedResponse(new ExpiresValidity(this.expires), 
-                                                             null);                                                            
+            this.cachedResponse = new ExtendedCachedResponse(new ExpiresValidity(this.expires), null);                                                            
         }
         
         // we cache both
         if ( alternative && this.cachedResponse.getAlternativeResponse() == null ) {
-            XMLSerializer serializer = null;
-            SAXParser parser = null;
-            try {
-                serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
-                if (this.source instanceof XMLizable) {
-                    ((XMLizable)this.source).toSAX(serializer);
-                } else {
-                    parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
-                    
-                    final InputSource inputSource = new InputSource(new ByteArrayInputStream(this.cachedResponse.getResponse()));
-                    inputSource.setSystemId(this.source.getURI());
-                    
-                    parser.parse(inputSource, serializer);
-                }
-                
-                this.cachedResponse.setAlternativeResponse((byte[])serializer.getSAXFragment());
-            } catch (ServiceException se) {
-                throw new CascadingIOException("Unable to lookup xml serializer.", se);
-            } finally {
-                this.manager.release(parser);
-                this.manager.release(serializer);
-            }
+            this.cachedResponse.setAlternativeResponse(this.readXMLResponse());
             storeResponse = true;
         }
         
@@ -415,7 +397,63 @@ implements Source, Serviceable, Initializable, Disposable, XMLizable {
         }
     }
     
-    /* (non-Javadoc)
+    /**
+     * Read XML content from source.
+     * 
+	 * @return content from source
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws CascadingIOException
+	 */
+	private byte[] readXMLResponse() throws SAXException, IOException, CascadingIOException {
+		XMLSerializer serializer = null;
+		SAXParser parser = null;
+        byte[] result = null;
+		try {
+		    serializer = (XMLSerializer)this.manager.lookup(XMLSerializer.ROLE);
+		    if (this.source instanceof XMLizable) {
+		        ((XMLizable)this.source).toSAX(serializer);
+		    } else {
+		        parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
+		        
+		        final InputSource inputSource = new InputSource(new ByteArrayInputStream(this.cachedResponse.getResponse()));
+		        inputSource.setSystemId(this.source.getURI());
+		        
+		        parser.parse(inputSource, serializer);
+		    }
+		    
+		    result = (byte[])serializer.getSAXFragment();
+		} catch (ServiceException se) {
+		    throw new CascadingIOException("Unable to lookup xml serializer.", se);
+		} finally {
+		    this.manager.release(parser);
+		    this.manager.release(serializer);
+		}
+		return result;
+	}
+
+	/**
+     * Read binary content from source.
+     * 
+	 * @return content from source
+	 * @throws IOException
+	 * @throws SourceNotFoundException
+	 */
+	private byte[] readBinaryResponse() throws IOException, SourceNotFoundException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final byte[] buffer = new byte[2048];
+		final InputStream inputStream = this.source.getInputStream();
+		int length;
+      
+		while ((length = inputStream.read(buffer)) > -1) {
+		    baos.write(buffer, 0, length);
+		}
+		baos.flush();
+		inputStream.close();
+		return baos.toByteArray();
+	}
+
+	/* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
