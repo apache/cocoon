@@ -84,12 +84,12 @@ import java.util.Map;
  *         (Apache Software Foundation)
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RequestGenerator.java,v 1.1 2003/03/09 00:09:31 pier Exp $
+ * @version CVS $Id: RequestGenerator.java,v 1.2 2003/05/19 10:40:39 stephan Exp $
  */
 public class RequestGenerator extends ServletGenerator implements Parameterizable {
 
     /** The URI of the namespace of this generator. */
-    private String URI="http://xml.apache.org/cocoon/requestgenerator/2.0";
+    private String URI="http://apache.org/cocoon/request/2.0";
     private String global_container_encoding;
     private String global_form_encoding;
     private String container_encoding;

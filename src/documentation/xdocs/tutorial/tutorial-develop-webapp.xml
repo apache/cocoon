@@ -858,7 +858,7 @@ ALTER TABLE employee ADD
          It is best used for debugging purposes.  The resulting XML follows:</p>
 <source>
   <![CDATA[
-<request xmlns="http://xml.apache.org/cocoon/requestgenerator/2.0"
+<request xmlns="http://apache.org/cocoon/request/2.0"
          target="index.html" source="context://docs/index.xml">
 
   <requestHeaders>
