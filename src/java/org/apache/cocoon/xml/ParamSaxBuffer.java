@@ -17,6 +17,8 @@ package org.apache.cocoon.xml;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.io.Writer;
+import java.io.IOException;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -29,7 +31,7 @@ import org.xml.sax.SAXException;
  * passed to the {@link #toSAX(ContentHandler, Map)} method.
  * 
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParamSaxBuffer.java,v 1.5 2004/03/18 23:59:12 vgritsenko Exp $
+ * @version CVS $Id: ParamSaxBuffer.java,v 1.6 2004/05/06 10:09:03 bruno Exp $
  */
 public class ParamSaxBuffer extends SaxBuffer {
 
@@ -118,6 +120,10 @@ public class ParamSaxBuffer extends SaxBuffer {
             if (value != null) {
                 value.toSAX(contentHandler);
             }
+        }
+
+        public void dump(Writer writer) throws IOException {
+            writer.write("[ParamSaxBuffer.Parameter] name=" + name);
         }
     }
 }
