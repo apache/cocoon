@@ -66,7 +66,7 @@ public class Javac extends AbstractJavaCompiler {
     return result;
   }
 
-  /**
+  /*
    * Parse the compiler error stream to produce a list of
    * <code>CompilerError</code>s
    *
@@ -146,7 +146,7 @@ public class Javac extends AbstractJavaCompiler {
     }
   }
 
-  /**
+  /*
    * Parse the compiler error stream to produce a list of
    * <code>CompilerError</code>s
    *
@@ -184,7 +184,7 @@ public class Javac extends AbstractJavaCompiler {
     }
   }
 */
-  /**
+  /*
    * Parse an individual compiler error message with classic style.
    *
    * @param error The error text
