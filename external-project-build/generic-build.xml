@@ -87,7 +87,7 @@
         <!-- customize Cocoon -->
         <copy todir="${build.webapp.dir}/WEB-INF/xconf" filtering="on" overwrite="true">
             <fileset dir="${local.conf.dir}">
-                <include name="*.xconf"/>
+                <include name="*xconf"/>
             </fileset>
         </copy>
 
