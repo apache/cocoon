@@ -7,8 +7,12 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.util.Enumeration;
+import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,11 +20,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.php.servlet;
 import org.apache.avalon.component.Component;
+import org.apache.avalon.component.ComponentManager;
+import org.apache.avalon.logger.AbstractLoggable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.environment.http.HttpEnvironment;
+import org.apache.cocoon.xml.AbstractXMLProducer;
+import org.apache.cocoon.xml.XMLProducer;
 import org.apache.excalibur.pool.Poolable;
+import org.apache.log.Logger;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -30,7 +40,7 @@ import org.xml.sax.SAXException;
  * results into SAX events.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version CVS $Revision: 1.1.2.21 $ $Date: 2001-04-25 17:07:43 $
+ * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-25 21:18:13 $
  */
 public class PhpGenerator extends ServletGenerator implements Poolable {
 

@@ -7,8 +7,6 @@
  *****************************************************************************///
 package org.apache.cocoon.util;
 
-import java.io.*;
-
 /**
  * A very efficient java hash algorithm, based on the BuzHash algoritm
  * by Robert Uzgalis (see http://www.serve.net/buz/hash.adt/java.000.html
@@ -18,7 +16,7 @@ import java.io.*;
  *
  * @author <a href="mailto:buz@zis.com">Robert Uzgalis</a>
  * @author <a href="mailto:cziegeler@Carsten Ziegeler">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2001-04-11 10:53:09 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2001-04-25 21:18:17 $
  */
 public final class HashUtil {
 
