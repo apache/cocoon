@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.76 2000-05-22 13:46:05 stefano Exp $
+  $Id: changes.xml,v 1.77 2000-05-23 06:02:18 balld Exp $
 -->
 
 <changes title="History of Changes">
@@ -16,6 +16,10 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="DB" type="fix" due-to="Antonio Cabezuelo Vivo" due-to-email="antonio.cabezuelo@eresmas.com">
+   fixed null pointer exception in XIncludeProcessor
+  </action>
+
   <action dev="SM" type="add">
    Added printer friendly skin so tha documentation can now be generated to
    be printer friendly when needed.
