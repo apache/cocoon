@@ -1,4 +1,4 @@
-// $Id: AbstractValidatorAction.java,v 1.1.2.7 2001-05-02 16:22:38 mman Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.8 2001-05-10 14:14:13 mman Exp $
 package org.apache.cocoon.acting;
 
 import org.apache.avalon.framework.configuration.Configurable;
@@ -71,7 +71,7 @@ import java.util.Map;
  * </tr>
  * </table>
  * @author Martin Man &lt;Martin.Man@seznam.cz&gt;
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-05-02 16:22:38 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-05-10 14:14:13 $
  */
 public abstract class AbstractValidatorAction
 extends AbstractComplementaryConfigurableAction
@@ -120,6 +120,8 @@ implements Configurable
             /* check parameter's type */
             type = conf[i].getAttribute ("type");
         } catch (Exception e) {
+            getLogger ().debug ("VALIDATOR: no type specified for parameter "
+                    + name);
             return null;
         }
 
@@ -150,8 +152,12 @@ implements Configurable
             Configuration conf, Map params, boolean is_string) {
         Object param = params.get (name);
         String value = null;
+        getLogger().debug ("VALIDATOR: validating string parameter "
+                + name + " (encoded in a string: " + is_string + ")");
         value = getStringValue (name, conf, param, is_string);
         if (value == null) {
+            getLogger().debug ("VALIDATOR: string parameter "
+                    + name + " is null");
             return null;
         }
         if (constraints != null) {
@@ -160,16 +166,24 @@ implements Configurable
 
             // Validate whether param is equal to constant
             if (!"".equals (eq)) {
-                if (!value.equals (eq))
+                getLogger().debug ("VALIDATOR: string parameter "
+                        + name + "should be equal to " + eq);
+                if (!value.equals (eq)) {
+                    getLogger().debug ("VALIDATOR: and it is not");
                     return null;
+                }
             }
 
             // Validate whether param is equal to another param
             // FIXME: take default value of param being compared with into
             // account?
             if (!"".equals (eqp)) {
-                if (!value.equals (params.get (eqp)))
+                getLogger().debug ("VALIDATOR: string parameter "
+                        + name + "should be equal to " + params.get (eqp));
+                if (!value.equals (params.get (eqp))) {
+                    getLogger().debug ("VALIDATOR: and it is not");
                     return null;
+                }
             }
         }
         return value;
@@ -183,8 +197,12 @@ implements Configurable
             Configuration conf, Map params, boolean is_string) {
         Object param = params.get (name);
         Long value = null;
+        getLogger().debug ("VALIDATOR: validating long parameter "
+                + name + " (encoded in a string: " + is_string + ")");
         value = getLongValue (name, conf, param, is_string);
         if (value == null) {
+            getLogger().debug ("VALIDATOR: long parameter "
+                    + name + " is null");
             return null;
         }
         if (constraints != null) {
@@ -201,8 +219,12 @@ implements Configurable
             Configuration conf, Map params, boolean is_string) {
         Object param = params.get (name);
         Double value = null;
+        getLogger().debug ("VALIDATOR: validating double parameter "
+                + name + " (encoded in a string: " + is_string + ")");
         value = getDoubleValue (name, conf, param, is_string);
         if (value == null) {
+            getLogger().debug ("VALIDATOR: double parameter "
+                    + name + " is null");
             return null;
         }
         if (constraints != null) {
@@ -241,7 +263,7 @@ implements Configurable
             }
             try {
                 value = Double.valueOf (tmp);
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 value = null;
             }
         } else {
@@ -289,7 +311,7 @@ implements Configurable
             }
             try {
                 value = Long.decode (tmp);
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 value = null;
             }
         } else {
@@ -361,5 +383,5 @@ implements Configurable
     }
 }
 
-// $Id: AbstractValidatorAction.java,v 1.1.2.7 2001-05-02 16:22:38 mman Exp $
+// $Id: AbstractValidatorAction.java,v 1.1.2.8 2001-05-10 14:14:13 mman Exp $
 // vim: set et ts=4 sw=4:
