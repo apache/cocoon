@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.ComponentManager;
@@ -42,7 +44,7 @@ import org.apache.cocoon.util.NullOutputStream;
  * for pipeline calls which are not externally triggered.
  * 
  * @author <a href="http://apache.org/~reinhard">Reinhard Poetz</a> 
- * @version CVS $Id: BackgroundEnvironment.java,v 1.3 2004/03/11 15:38:31 sylvain Exp $
+ * @version CVS $Id: BackgroundEnvironment.java,v 1.4 2004/03/19 18:19:25 sylvain Exp $
  *
  * @since 2.1.4
  */
@@ -60,7 +62,15 @@ public class BackgroundEnvironment extends AbstractEnvironment {
 		this.outputStream = new NullOutputStream();    
      
 		// TODO Would special Background*-objects have advantages?
-		Request request = new CommandLineRequest(this, "", "", null, null, null);
+		Request request = new CommandLineRequest(
+            this,                  // environment
+            "",                    // context path
+            "",                    // servlet path
+            "",                    // path info
+            new HashMap(),         // attributes
+            Collections.EMPTY_MAP, // parameters
+            Collections.EMPTY_MAP  // headers
+        );
 		this.objectModel.put(ObjectModelHelper.REQUEST_OBJECT, request);  
 		this.objectModel.put(ObjectModelHelper.RESPONSE_OBJECT,
 							 new CommandLineResponse());
