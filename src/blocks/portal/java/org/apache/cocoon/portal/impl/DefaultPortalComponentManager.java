@@ -33,6 +33,7 @@ import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.portal.LinkService;
 import org.apache.cocoon.portal.PortalComponentManager;
 import org.apache.cocoon.portal.coplet.CopletFactory;
+import org.apache.cocoon.portal.event.EventManager;
 import org.apache.cocoon.portal.layout.LayoutFactory;
 import org.apache.cocoon.portal.layout.renderer.Renderer;
 import org.apache.cocoon.portal.profile.ProfileManager;
@@ -46,7 +47,13 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultPortalComponentManager.java,v 1.4 2004/03/05 13:02:13 bdelacretaz Exp $
+ * @version CVS $Id: DefaultPortalComponentManager.java,v 1.5 2004/06/21 11:09:45 cziegeler Exp $
+ */
+/**
+ * @author CZiegeler
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class DefaultPortalComponentManager
     extends AbstractLogEnabled
@@ -75,6 +82,8 @@ public class DefaultPortalComponentManager
     protected CopletFactory copletFactory;
     
     protected LayoutFactory layoutFactory;
+    
+    protected EventManager eventManager;
     
     /* (non-Javadoc)
      * @see org.apache.avalon.framework.service.Serviceable#service(org.apache.avalon.framework.service.ServiceManager)
@@ -112,6 +121,20 @@ public class DefaultPortalComponentManager
     }
 
     /* (non-Javadoc)
+     * @see org.apache.cocoon.portal.PortalComponentManager#getEventManager()
+     */
+    public EventManager getEventManager() {
+        if ( null == this.eventManager ) {
+            try {
+                this.eventManager = (EventManager)this.manager.lookup( EventManager.ROLE );
+            } catch (ServiceException e) {
+                throw new CascadingRuntimeException("Unable to lookup event manager with role " + EventManager.ROLE, e);
+            }
+        }
+        return this.eventManager;
+    }
+    
+    /* (non-Javadoc)
      * @see org.apache.avalon.framework.activity.Disposable#dispose()
      */
     public void dispose() {
@@ -134,6 +157,8 @@ public class DefaultPortalComponentManager
             this.copletFactory = null;
             this.layoutFactory = null;
             this.manager = null;
+            this.manager.release(this.eventManager);
+            this.eventManager = null;
         }
     }
 

@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: CachingURICopletAdapter.java,v 1.5 2004/04/25 20:09:34 haul Exp $
+ * @version CVS $Id: CachingURICopletAdapter.java,v 1.6 2004/06/21 11:09:45 cziegeler Exp $
  */
 public class CachingURICopletAdapter
     extends URICopletAdapter
@@ -119,11 +119,11 @@ public class CachingURICopletAdapter
 
                 bi.deserialize(bc.getSAXFragment());
             } else {
-            this.toCache(coplet, bc.getSAXFragment());
+                this.toCache(coplet, bc.getSAXFragment());
 
-            this.toSAXFromCache(coplet, contentHandler);
+                this.toSAXFromCache(coplet, contentHandler);
+            }
         }
-    }
     }
 
     /**
