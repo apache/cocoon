@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Author: Stefano Mazzocchi "stefano@apache.org" -->
-<!-- Version: $Id: page-html.xsl,v 1.5 2000-03-01 16:05:36 stefano Exp $ -->
+<!-- Version: $Id: page-html.xsl,v 1.6 2001-03-06 17:50:57 greenrd Exp $ -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
@@ -65,6 +65,7 @@
 
   <xsl:template match="p|a">
    <xsl:copy>
+    <xsl:copy-of select="@*"/>
     <xsl:apply-templates/>
    </xsl:copy>
   </xsl:template>
