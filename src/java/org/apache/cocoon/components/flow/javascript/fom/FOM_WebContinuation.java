@@ -60,41 +60,45 @@ import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Wrapper;
 
+/**
+ *
+ * @version CVS $Id: FOM_WebContinuation.java,v 1.3 2004/01/22 16:53:57 vgritsenko Exp $
+ */
 public class FOM_WebContinuation extends ScriptableObject {
-    
+
     WebContinuation wk;
-    
+
     public FOM_WebContinuation() {
     }
-    
+
     public FOM_WebContinuation(Object wk) {
         if (wk instanceof Wrapper) {
             wk = ((Wrapper)wk).unwrap();
         }
         this.wk = (WebContinuation)wk;
     }
-    
+
     public String getClassName() {
         return "FOM_WebContinuation";
     }
-    
+
     public String jsGet_id() {
         return wk.getId();
     }
-    
+
     public FOM_WebContinuation jsFunction_getParent() {
         WebContinuation parent = wk.getParentContinuation();
         if (parent == null) return null;
         FOM_WebContinuation pwk = new FOM_WebContinuation(parent);
         pwk.setParentScope(getParentScope());
-        pwk.setPrototype(getClassPrototype(getParentScope(), 
+        pwk.setPrototype(getClassPrototype(getParentScope(),
                                            pwk.getClassName()));
         return pwk;
     }
-    
+
     public NativeArray jsFunction_getChildren() throws Exception {
         List list = wk.getChildren();
-        NativeArray arr = 
+        NativeArray arr =
             (NativeArray)org.mozilla.javascript.Context.getCurrentContext().newObject(getParentScope(),
                                                                                       "Array",
                                                                                       new Object[]{new Integer(list.size())});
@@ -103,25 +107,29 @@ public class FOM_WebContinuation extends ScriptableObject {
             WebContinuation child = (WebContinuation)iter.next();
             FOM_WebContinuation cwk = new FOM_WebContinuation(child);
             cwk.setParentScope(getParentScope());
-            cwk.setPrototype(getClassPrototype(getParentScope(), 
+            cwk.setPrototype(getClassPrototype(getParentScope(),
                                                cwk.getClassName()));
             arr.put(i, arr, cwk);
         }
         return arr;
     }
-    
+
     public void jsFunction_invalidate() throws Exception {
         ContinuationsManager contMgr = null;
-        FOM_Cocoon cocoon = 
+        FOM_Cocoon cocoon =
             (FOM_Cocoon)getProperty(getTopLevelScope(this),
                                     "cocoon");
-        ComponentManager componentManager = 
+        ComponentManager componentManager =
             cocoon.getComponentManager();
         contMgr = (ContinuationsManager)
             componentManager.lookup(ContinuationsManager.ROLE);
         contMgr.invalidateWebContinuation(wk);
     }
-    
+
+    public void jsFunction_display() {
+        wk.display();
+    }
+
     public WebContinuation getWebContinuation() {
         return wk;
     }
