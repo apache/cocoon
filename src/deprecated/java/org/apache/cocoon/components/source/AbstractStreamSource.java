@@ -93,7 +93,7 @@ import java.util.Properties;
  * @deprecated Use the new Avalon Excalibur Source Resolving
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractStreamSource.java,v 1.3 2003/04/27 15:16:15 cziegeler Exp $
+ * @version CVS $Id: AbstractStreamSource.java,v 1.4 2003/12/23 15:28:33 joerg Exp $
  */
 public abstract class AbstractStreamSource extends AbstractLogEnabled
     implements ModifiableSource {
@@ -183,8 +183,6 @@ public abstract class AbstractStreamSource extends AbstractLogEnabled
     /**
      * Stream content to a content handler or to an XMLConsumer.
      *
-     * @throws ResourceNotFoundException if file not found or
-     *         HTTP location does not exist.
      * @throws SAXException if failed to parse source document.
      */
     public void toSAX(ContentHandler handler) throws SAXException {

@@ -61,7 +61,7 @@ import java.util.Map;
  * or to match with a request-time evaluated pattern (for {..} substitution).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: PreparableMatcher.java,v 1.2 2003/12/23 15:28:32 joerg Exp $
  */
 public interface PreparableMatcher extends Matcher {
 
@@ -75,7 +75,7 @@ public interface PreparableMatcher extends Matcher {
      * @param pattern The pattern to prepare. Depending on the implementation the pattern
      *                can contain wildcards or regular expressions.
      * @return an optimized representation of the pattern.
-     * @throws a <code>PatternException</code> if the pattern couldn't be prepared.
+     * @throws PatternException if the pattern couldn't be prepared.
      */
     Object preparePattern(String pattern) throws PatternException;
 

@@ -79,7 +79,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:barozzi@nicolaken.com">Nicola Ken Barozzi</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: XMLUtils.java,v 1.4 2003/10/24 13:42:01 vgritsenko Exp $
+ * @version CVS $Id: XMLUtils.java,v 1.5 2003/12/23 15:28:33 joerg Exp $
  */
 public class XMLUtils {
 
@@ -382,7 +382,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElement(ContentHandler contentHandler, String localName) 
     throws SAXException {
@@ -398,7 +398,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElement(ContentHandler contentHandler, String localName, String stringValue)
         throws SAXException {
@@ -416,7 +416,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElement(ContentHandler contentHandler, String localName, Attributes atts) 
@@ -436,7 +436,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElement(ContentHandler contentHandler, String localName, Attributes atts, String stringValue)
@@ -452,7 +452,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElementNS(ContentHandler contentHandler, String namespaceURI, String localName)
         throws SAXException {
@@ -468,7 +468,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void createElementNS(
         ContentHandler contentHandler,
@@ -490,7 +490,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElementNS(
@@ -514,7 +514,7 @@ public class XMLUtils {
      * @param stringValue The content of the Element
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void createElementNS(
@@ -565,7 +565,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void startElement(ContentHandler contentHandler, String localName) 
     throws SAXException {
@@ -580,7 +580,7 @@ public class XMLUtils {
      * @param localName The local name (without prefix)
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      */
     public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName)
     throws SAXException {
@@ -596,7 +596,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void startElement(ContentHandler contentHandler, String localName, Attributes atts) 
@@ -615,7 +615,7 @@ public class XMLUtils {
      *        Attributes object.
      * @exception org.xml.sax.SAXException Any SAX exception, possibly
      *            wrapping another exception.
-     * @see #endElement
+     * @see #endElement(ContentHandler, String)
      * @see org.xml.sax.Attributes
      */
     public static void startElement(ContentHandler contentHandler, String namespaceURI, String localName, Attributes atts)

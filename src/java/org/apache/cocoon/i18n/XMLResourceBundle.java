@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  * are instances of the {@link ParamSaxBuffer} class.
  * 
  * @author <a href="mailto:dev@cocoon.apache.org">Apache Cocoon Team</a>
- * @version CVS $Id: XMLResourceBundle.java,v 1.4 2003/12/10 15:37:37 vgritsenko Exp $
+ * @version CVS $Id: XMLResourceBundle.java,v 1.5 2003/12/23 15:28:33 joerg Exp $
  */
 public class XMLResourceBundle extends AbstractLogEnabled
                                implements Bundle, Serviceable {
@@ -272,7 +272,7 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * Compose this instance
      *
      * @param manager The <code>ServiceManager</code> instance
-     * @throws ComponentException if XPath processor is not found
+     * @throws ServiceException
      */
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
@@ -314,10 +314,9 @@ public class XMLResourceBundle extends AbstractLogEnabled
      * Load the XML bundle, based on the source URL.
      *
      * @param sourceURL source URL of the XML bundle
-     * @return the DOM tree
      *
      * @exception IOException if an IO error occurs while reading the file
-     * @exception ParserConfigurationException if no parser is configured
+     * @exception ProcessingException if no parser is configured
      * @exception SAXException if an error occurs while parsing the file
      */
     protected void load(String sourceURL)

@@ -60,7 +60,7 @@ import java.io.*;
  *
  * @author Bernhard Huber
  * @since 26. Oktober 2002
- * @version CVS $Id: MimeMessageUtil.java,v 1.2 2003/03/11 19:04:58 vgritsenko Exp $
+ * @version CVS $Id: MimeMessageUtil.java,v 1.3 2003/12/23 15:28:32 joerg Exp $
  */
 public class MimeMessageUtil {
     /**
@@ -197,11 +197,10 @@ public class MimeMessageUtil {
 
 
     /**
-     *  Description of the Method
      *
-     *@param  part    Description of the Parameter
-     *@param  ctPref  Description of the Parameter
-     *@param  v       Description of the Parameter
+     *@param  part
+     *@param  ctPref
+     *@param  l
      */
     private static void flattenMessageHelper
             (MimePart part, ContentTypePreference ctPref, List l) {

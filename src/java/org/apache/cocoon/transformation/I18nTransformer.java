@@ -248,7 +248,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * @author <a href="mailto:mattam@netcourrier.com">Matthieu Sozeau</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:Michael.Enke@wincor-nixdorf.com">Michael Enke</a>
- * @version CVS $Id: I18nTransformer.java,v 1.20 2003/12/22 13:51:43 joerg Exp $
+ * @version CVS $Id: I18nTransformer.java,v 1.21 2003/12/23 15:28:33 joerg Exp $
  */
 public class I18nTransformer extends AbstractTransformer
         implements CacheableProcessingComponent,
@@ -2053,7 +2053,7 @@ public class I18nTransformer extends AbstractTransformer
      * mattam: now only used for i:attr.
      * A default value is returned if message is not found
      *
-     * @param catalogueId if not null, this catalogue will be used instead of the default one.
+     * @param catalogueID if not null, this catalogue will be used instead of the default one.
      */
     private String getString(String catalogueID, String key, String defaultValue) {
         final SaxBuffer res = getMessage(catalogueID, key);

@@ -114,7 +114,7 @@ import org.apache.cocoon.matching.helpers.WildcardHelper;
  * 
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since Sept, 2003
- * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.8 2003/09/24 22:00:34 cziegeler Exp $
+ * @version CVS $Id: JavaScriptAspectWeaver.java,v 1.9 2003/12/23 15:28:32 joerg Exp $
  */
 public class JavaScriptAspectWeaver extends AbstractLogEnabled {
     
@@ -653,9 +653,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
             }
         }
         
-        /**
-         * @param string
-         */
         public void writeToFile( Source source ) throws Exception {
             if( source.getScheme().equals( "file" ) ) {
                 String filename = source.getURI().substring("file:/".length() ) + 
@@ -674,7 +671,7 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
         /**
          * Add all tokens in the correct order 
          * 
-         * @param interceptionsList - sorted list of all available interceptions
+         * @param interceptionGroupList - sorted list of all available interceptions
          * @param functionName - name of the intercepted function
          * @param eventType - event type
          * @param tokensListIt - ListIterator where the new tokens found 
@@ -1223,9 +1220,6 @@ public class JavaScriptAspectWeaver extends AbstractLogEnabled {
             this.type = type;
         }
 
-        /**
-         * @param string
-         */
         public void setBaseScript(String src) {
             this.baseScript = src;
         }

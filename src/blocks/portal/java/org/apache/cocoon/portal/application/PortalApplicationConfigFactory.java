@@ -66,7 +66,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author <a href="mailto:gerald.kahrer@rizit.at">Gerald Kahrer</a>
  * 
- * @version CVS $Id: PortalApplicationConfigFactory.java,v 1.2 2003/09/18 14:38:46 vgritsenko Exp $
+ * @version CVS $Id: PortalApplicationConfigFactory.java,v 1.3 2003/12/23 15:28:32 joerg Exp $
  */
 public class PortalApplicationConfigFactory {
     /**
@@ -177,7 +177,7 @@ public class PortalApplicationConfigFactory {
      * Returns the PortalApplicationConfig object for a given coplet. This is a modification of
      * getConfig with the special feature, that the configuration is parsed again before the
      * searched configuration is returned.
-     * @param	copletId the id of the coplet
+     * @param	specialId the id of the coplet
      * @return	PortalApplicationConfig the config object
      */
     private PortalApplicationConfig getSpecialConfig(String specialId)

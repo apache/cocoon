@@ -61,7 +61,7 @@ import org.apache.cocoon.portal.factory.ProducibleDescription;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: AbstractProducible.java,v 1.3 2003/07/03 08:00:00 cziegeler Exp $
+ * @version CVS $Id: AbstractProducible.java,v 1.4 2003/12/23 15:28:33 joerg Exp $
  */
 public abstract class AbstractProducible 
     extends AbstractAspectalizable 
@@ -103,8 +103,7 @@ public abstract class AbstractProducible
     }
 
     /**
-     * Get the unique id of this object
-     * @return String Unique id
+     * Set the unique id of this object
      */
     public void setId(String id) {
         this.id = id;

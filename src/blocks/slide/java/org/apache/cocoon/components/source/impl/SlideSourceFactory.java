@@ -76,7 +76,7 @@ import org.apache.slide.common.NamespaceAccessToken;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SlideSourceFactory.java,v 1.11 2003/12/22 13:35:06 joerg Exp $
+ * @version CVS $Id: SlideSourceFactory.java,v 1.12 2003/12/23 15:28:32 joerg Exp $
  * 
  * @avalon.component
  * @avalon.service type="SourceFactory"
@@ -118,7 +118,7 @@ implements SourceFactory, ThreadSafe, Serviceable, Contextualizable {
     /**
      * Get a <code>Source</code> object.
      *
-     * @param uri URI of the source.
+     * @param location URI of the source.
      * @param parameters This is optional.
      *
      * @return A new source object.

@@ -94,7 +94,7 @@ public class JellyGenerator
     }
 
     /**
-     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup
+     * @see org.apache.cocoon.sitemap.SitemapModelComponent#setup(SourceResolver, Map, String, Parameters)
      */
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters params) 
     throws ProcessingException,SAXException,IOException {

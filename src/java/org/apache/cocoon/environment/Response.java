@@ -57,7 +57,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Response.java,v 1.1 2003/03/09 00:09:28 pier Exp $
+ * @version CVS $Id: Response.java,v 1.2 2003/12/23 15:28:32 joerg Exp $
  *
  */
 
@@ -88,7 +88,7 @@ public interface Response {
      *
      * @param loc  the locale of the response
      *
-     * @see                 #getLocale
+     * @see                 #getLocale()
      *
      */
 
@@ -98,7 +98,7 @@ public interface Response {
      * Returns the locale assigned to the response.
      *
      *
-     * @see                 #setLocale
+     * @see                 #setLocale(Locale)
      *
      */
 
@@ -188,8 +188,8 @@ public interface Response {
      * @param        name        the name of the header to set
      * @param        date        the assigned date value
      *
-     * @see #containsHeader
-     * @see #addDateHeader
+     * @see #containsHeader(String)
+     * @see #addDateHeader(String, long)
      */
 
     void setDateHeader(String name, long date);
@@ -204,7 +204,7 @@ public interface Response {
      * @param        name        the name of the header to set
      * @param        date        the additional date value
      *
-     * @see #setDateHeader
+     * @see #setDateHeader(String, long)
      */
 
     void addDateHeader(String name, long date);
@@ -220,8 +220,8 @@ public interface Response {
      * @param        name        the name of the header
      * @param        value        the header value
      *
-     * @see #containsHeader
-     * @see #addHeader
+     * @see #containsHeader(String)
+     * @see #addHeader(String, String)
      */
 
     void setHeader(String name, String value);
@@ -233,7 +233,7 @@ public interface Response {
      * @param        name        the name of the header
      * @param        value        the additional header value
      *
-     * @see #setHeader
+     * @see #setHeader(String, String)
      */
 
     void addHeader(String name, String value);
@@ -248,8 +248,8 @@ public interface Response {
      * @param        name        the name of the header to set
      * @param        value       the assigned int value
      *
-     * @see #containsHeader
-     * @see #addIntHeader
+     * @see #containsHeader(String)
+     * @see #addIntHeader(String, int)
      */
 
     void setIntHeader(String name, int value);
@@ -262,7 +262,7 @@ public interface Response {
      * @param        name        the name of the header to set
      * @param        value       the additional int value
      *
-     * @see #setIntHeader
+     * @see #setIntHeader(String, int)
      */
 
     void addIntHeader(String name, int value);

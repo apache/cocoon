@@ -93,7 +93,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:mark.leicester@energyintellect.com">Mark Leicester</a>
- * @version CVS $Id: SitemapComponentTestCase.java,v 1.1 2003/11/26 16:27:22 stephan Exp $
+ * @version CVS $Id: SitemapComponentTestCase.java,v 1.2 2003/12/23 15:28:33 joerg Exp $
  */
 public abstract class SitemapComponentTestCase extends ExcaliburTestCase
 {
@@ -564,7 +564,6 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
     /**
      * Assert that the result of an XML comparison is similar.
      *
-     * @param msg The assertion message
      * @param expected The expected XML document
      * @param actual The actual XML Document
      */  
@@ -598,7 +597,6 @@ public abstract class SitemapComponentTestCase extends ExcaliburTestCase
     /**
      * Assert that the result of an XML comparison is identical.
      *
-     * @param msg The assertion message
      * @param expected The expected XML document
      * @param actual The actual XML Document
      */

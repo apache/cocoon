@@ -98,7 +98,7 @@ import org.xml.sax.SAXException;
  * @see javax.servlet.jsp.jstl.core.LoopTagSupport
  *
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
- * @version CVS $Id: LoopTagSupport.java,v 1.3 2003/09/24 22:34:52 cziegeler Exp $
+ * @version CVS $Id: LoopTagSupport.java,v 1.4 2003/12/23 15:28:33 joerg Exp $
  */
 public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, IterationTag //, TryCatchFinally
 {
@@ -197,8 +197,6 @@ public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, I
      * does not simply call for an Iterator from its subtags.)</p>
      * 
      * @return the java.lang.Object to use in the next round of iteration
-     * @exception NoSuchElementException
-     *            if next() is called but no new elements are available
      * @exception org.xml.sax.SAXException
      *            for other, unexpected exceptions
      */
@@ -216,7 +214,7 @@ public abstract class LoopTagSupport extends VarTagSupport implements LoopTag, I
      * @return <tt>true</tt> if there is at least one more item to iterate
      *         over, <tt>false</tt> otherwise
      * @exception org.xml.sax.SAXException
-     * @see #next
+     * @see #next()
      */
     protected abstract boolean hasNext() throws SAXException;
 

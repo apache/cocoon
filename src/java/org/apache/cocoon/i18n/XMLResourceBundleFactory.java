@@ -78,7 +78,7 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.7 2003/12/10 15:37:37 vgritsenko Exp $
+ * @version CVS $Id: XMLResourceBundleFactory.java,v 1.8 2003/12/23 15:28:33 joerg Exp $
  */
 public class XMLResourceBundleFactory extends DefaultComponentSelector
         implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
@@ -211,9 +211,9 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * Select a bundle based on the catalogue base location, bundle name,
      * and the locale name.
      *
-     * @param base    catalogue base location (URI)
+     * @param directory    catalogue base location (URI)
      * @param name    bundle name
-     * @param locale  locale name
+     * @param localeName  locale name
      * @return        the bundle
      * @exception     ComponentException if a bundle is not found
      */
@@ -225,7 +225,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * Select a bundle based on the catalogue base location, bundle name,
      * and the locale.
      *
-     * @param base    catalogue base location (URI)
+     * @param directory    catalogue base location (URI)
      * @param name    bundle name
      * @param locale  locale
      * @return        the bundle
@@ -257,7 +257,6 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param base              catalogue location
      * @param name              bundle name
      * @param locale            locale
-     * @param cacheAtStartup    cache all the keys when constructing?
      * @return                  the bundle
      */
     private Bundle _select(String base, String name, Locale locale) {
@@ -292,7 +291,6 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      * @param name              bundle name
      * @param fileName          full path to source XML file
      * @param locale            locale
-     * @param cacheAtStartup    cache all the keys when constructing?
      * @return                  the bundle, null if loading failed
      */
     private XMLResourceBundle _loadBundle(String name, String fileName, Locale locale) {
