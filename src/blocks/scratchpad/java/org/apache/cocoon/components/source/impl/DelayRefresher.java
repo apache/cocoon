@@ -57,7 +57,7 @@ import org.apache.excalibur.source.SourceResolver;
  * Default implementation of the refresher.
  * 
  * @since 2.1.1
- * @version CVS $Id: DelayRefresher.java,v 1.3 2004/03/23 20:06:41 joerg Exp $
+ * @version CVS $Id: DelayRefresher.java,v 1.4 2004/04/02 08:08:03 cziegeler Exp $
  */
 public class DelayRefresher extends AbstractLogEnabled
 implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSafe, Refresher, CronJob {
@@ -130,7 +130,7 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
             this.setupRefreshJobSource(parameters);
             final Configuration conf = this.readRefreshJobConfiguration();
             this.setupRefreshJobs(conf);
-            this.registerSelfWithScheduler(parameters, writeInterval);
+            this.registerSelfWithScheduler(writeInterval);
         }
         else {
         	if (getLogger().isInfoEnabled()) {
@@ -224,10 +224,9 @@ implements Contextualizable, Serviceable, Parameterizable, Disposable, ThreadSaf
     }
     
     /**
-	 * @param parameters
 	 * @param writeInterval
 	 */
-	private void registerSelfWithScheduler(Parameters parameters, int writeInterval) {
+	private void registerSelfWithScheduler(int writeInterval) {
 		try {
 		    this.scheduler.addPeriodicJob(this.getClass().getName(), 
 		                                  this,
