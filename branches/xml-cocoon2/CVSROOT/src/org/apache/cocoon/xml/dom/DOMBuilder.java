@@ -40,7 +40,7 @@ import org.apache.log.Logger;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.9 $ $Date: 2001-01-23 17:59:39 $
+ * @version CVS $Revision: 1.1.2.10 $ $Date: 2001-02-09 11:49:40 $
  */
 public class DOMBuilder implements XMLConsumer, Loggable {
     protected Logger log;
@@ -243,6 +243,10 @@ public class DOMBuilder implements XMLConsumer, Loggable {
                                           "'"+location());
             // Recreate the document since no DTD was specified
             } else {
+				/* DISABLED pending us tracking down what's causing document 
+				 * hierachy errors when we do this. This may well break people's
+				 * code, but hopefully that will provide some enlightenment
+				 * anyhow.
                 // Recreate the document element
                 Document doc=this.factory.newDocument(n.getQName());
                 // Copy the old document root PIs
@@ -253,6 +257,7 @@ public class DOMBuilder implements XMLConsumer, Loggable {
                 }
                 // Declare the new document as the new real document
                 this.document=doc;
+				*/
                 this.current=this.document;
             }
             // Change the state before continuing
