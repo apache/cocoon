@@ -41,10 +41,11 @@ span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
 
 /* Samples */
 
-/* background-color: #ffffcc; would make the groups even more visible but it's a bit heavy IMHO */
 .samplesGroup {
+    /* a tasteful shade of blue */
+    background-color: #BFCCDF;
     color: black;
-    border-width: 0px 0px 1px 1px;
+    border-width: 0px 0px 2px 0px;
     border-style: solid;
     border-color: #336699;
     font-size:120%;
@@ -53,6 +54,10 @@ span.switch { cursor: pointer; margin-left: 5px; text-decoration: underline; }
     padding-bottom: 0.2em;
     margin-top: 1em;
     margin-bottom: 0;
+ 
+    /* mozilla and some others support the fancy CSS3 borders */
+    -moz-border-radius-bottomleft: 1em;
+    border-radius-bottomleft: 1em;
 }
 
 .samplesNote {
