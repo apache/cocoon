@@ -4,7 +4,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.92 2003/07/17 12:24:52 gianugo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.93 2003/07/18 11:24:29 gianugo Exp $:-->
 <status>
 
   <developers>
@@ -184,6 +184,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+  <action dev="GR" type="add">
+    Added an (unstable) HTMLTransformer to the html block, to parse and
+    tidy an XML containing escaped (and possibly incorrect) HTML
+  </action>
   <action dev="GR" type="update">
     Added URL encoding of user/password in the WebDAV source 
     (webdav://user:password@host/path)
