@@ -306,10 +306,13 @@
      Remove deprecated methods from XMLUtils, DOMUtil, DOMBuilder and SourceUtil.
    </action>
  </release>
+ <release version="2.1.6" date="TBD">
+   <action dev="AG" type="remove">
+     Remove jisp from distribution.
+   </action>
    <action dev="AG" type="fix" fixes-bug="31493" due-to="Rob Berens" due-to-email="rberens@osirion.nl">
      XSP logicsheet jpath.xsl: incorrect call to JXPathContext.compile
    </action>
- <release version="2.1.6" date="TBD">
    <action dev="VG" type="fix" fixes-bug="28485">
      Mail block: Support multiple SMTP servers, not only default one.
    </action>
