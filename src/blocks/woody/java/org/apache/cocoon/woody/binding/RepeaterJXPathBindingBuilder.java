@@ -111,24 +111,31 @@ public class RepeaterJXPathBindingBuilder
                     bindingElm,
                     BindingManager.NAMESPACE,
                     "on-bind");
-            JXPathBindingBase[] childBindings =
-                assistant.makeChildBindings(childWrapElement);
+
+            if (childWrapElement == null) throw new BindingException("RepeaterBinding misses '<on-bind>' child definition. " + DomHelper.getLocation(bindingElm));
+            
+            JXPathBindingBase[] childBindings = assistant.makeChildBindings(childWrapElement);
 
             Element deleteWrapElement =
                 DomHelper.getChildElement(
                     bindingElm,
                     BindingManager.NAMESPACE,
                     "on-delete-row");
-            JXPathBindingBase[] deleteBindings =
-                assistant.makeChildBindings(deleteWrapElement);
+            JXPathBindingBase[] deleteBindings = null;
+            if(deleteWrapElement != null) {
+                deleteBindings = assistant.makeChildBindings(deleteWrapElement);
+            }
 
             Element insertWrapElement =
                 DomHelper.getChildElement(
                     bindingElm,
                     BindingManager.NAMESPACE,
                     "on-insert-row");
-            JXPathBindingBase insertBinding =
-                assistant.makeChildBindings(insertWrapElement)[0];
+            JXPathBindingBase insertBinding = null;
+            if (insertWrapElement != null) {
+                insertBinding = assistant.makeChildBindings(insertWrapElement)[0];
+                
+            }
 
             RepeaterJXPathBinding repeaterBinding =
                 new RepeaterJXPathBinding(

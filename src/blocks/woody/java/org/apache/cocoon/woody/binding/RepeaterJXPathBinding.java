@@ -192,7 +192,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
 
             // check if matchPath was in list of updates, if not --> bind for delete
             if (!updatedRowIds.contains(matchId)) {
-                this.deleteRowBinding.saveFormToModel(frmModel, rowContext);
+                if (this.deleteRowBinding != null) {
+                    this.deleteRowBinding.saveFormToModel(frmModel, rowContext);                    
+                } else {
+                    getLogger().warn("RepeaterBinding has detected rows to delete, " +
+                        "but misses the <on-delete-row> binding to do it.");
+                }
             }
         }
 
@@ -205,21 +210,29 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
         }
 
         // end with rows to insert (to make sure they don't get deleted!)
-        Iterator rowIterator = rowsToInsert.iterator();
-        //register the factory!
-        this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
-        while (rowIterator.hasNext()) {
-            Repeater.RepeaterRow thisRow = (Repeater.RepeaterRow) rowIterator.next();
-            // -->  create the path to let the context be created
-            Pointer newRowContextPointer = repeaterContext.createPath(this.rowPath + "[" + indexCount + "]");
-            JXPathContext newRowContext = repeaterContext.getRelativeContext(newRowContextPointer);
-            if (getLogger().isDebugEnabled())
-                getLogger().debug("inserted row at " + newRowContextPointer.asPath());
-            //    + rebind to children for update
-            this.rowBinding.saveFormToModel(thisRow, newRowContext);
-            getLogger().debug("bound new row");
-            indexCount++;
+        if(rowsToInsert.size() > 0) {
+            if (this.insertRowBinding != null) {
+                Iterator rowIterator = rowsToInsert.iterator();
+                //register the factory!
+                this.insertRowBinding.saveFormToModel(repeater, repeaterContext);
+                while (rowIterator.hasNext()) {
+                    Repeater.RepeaterRow thisRow = (Repeater.RepeaterRow) rowIterator.next();
+                    // -->  create the path to let the context be created
+                    Pointer newRowContextPointer = repeaterContext.createPath(this.rowPath + "[" + indexCount + "]");
+                    JXPathContext newRowContext = repeaterContext.getRelativeContext(newRowContextPointer);
+                    if (getLogger().isDebugEnabled())
+                        getLogger().debug("inserted row at " + newRowContextPointer.asPath());
+                    //    + rebind to children for update
+                    this.rowBinding.saveFormToModel(thisRow, newRowContext);
+                    getLogger().debug("bound new row");
+                    indexCount++;
+                }                
+            } else {
+                getLogger().warn("RepeaterBinding has detected rows to insert, " +
+                    "but misses the <on-insert-row> binding to do it.");
+            }
         }
+        
 
         if (getLogger().isDebugEnabled())
             getLogger().debug("done saving rows " + toString());
@@ -232,8 +245,12 @@ public class RepeaterJXPathBinding extends JXPathBindingBase {
     public void enableLogging(Logger logger) {
         super.enableLogging(logger);
         this.uniqueFieldBinding.enableLogging(logger);
-        this.deleteRowBinding.enableLogging(logger);
-        this.insertRowBinding.enableLogging(logger);
+        if (this.deleteRowBinding != null) {
+            this.deleteRowBinding.enableLogging(logger);
+        }
+        if (this.insertRowBinding != null) {
+            this.insertRowBinding.enableLogging(logger);            
+        }
         this.rowBinding.enableLogging(logger);
     }
 }
