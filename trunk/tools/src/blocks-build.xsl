@@ -25,8 +25,6 @@
             </fileset>
             <path location="{string('${build.mocks}')}"/>
             <path location="{string('${build.dest}')}"/>
-            <path location="{string('${build.deprecated.dest}')}"/>
-            <path location="{string('${build.scratchpad.dest}')}"/>
          </path>
 
          <path id="test.classpath">

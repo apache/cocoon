@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  * XML matching process.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: WhitespaceFilter.java,v 1.3 2003/04/17 07:32:02 stephan Exp $
+ * @version CVS $Id: WhitespaceFilter.java,v 1.4 2003/05/26 08:44:30 stephan Exp $
  */
 public class WhitespaceFilter extends AbstractXMLPipe {
     private StringBuffer buffer = null;
@@ -149,9 +149,19 @@ public class WhitespaceFilter extends AbstractXMLPipe {
         if (buffer!=null) {
             String text = buffer.toString();
 
-            text = text.replace('\n', ' ');
-            text = text.replace('\r', ' ');
-            text = text.trim();
+            StringBuffer normalized = new StringBuffer();
+
+            for(int i=0; i<text.length(); i++) {
+                if (Character.isWhitespace(text.charAt(i))) {
+                    normalized.append(' ');
+                    while (((i+1)<text.length()) && (Character.isWhitespace(text.charAt(i+1))))
+                        i++;
+                } else {
+                    normalized.append(text.charAt(i));
+                }
+            }
+
+            text = normalized.toString().trim();
 
             if (text.length()>0) {
                 contentHandler.characters(text.toCharArray(), 0,
