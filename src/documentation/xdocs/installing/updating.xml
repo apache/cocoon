@@ -42,7 +42,7 @@
    </s2>
   <s2 title="Namespace changes">
     <p>
-        In order have more consistent namespaces, some transformers
+        In order to have consistent namespaces, some transformers
        and generators (listed below) use new namespaces. If you use any of these components, you will
        need to use the new namespaces.
     </p>
@@ -71,8 +71,9 @@
     one change which shouldn't affect anybody (see below).
    </p>
    <s2 title="Source Resolver">
-    <p>The SourceResolver is an now Avalon component
-      which can be accessed using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em></p>
+    <p>The SourceResolver is now an Avalon component
+      which can be accessed using <em>cocoon.manager.lookup(SourceResolver.ROLE).</em>.
+      The package name of the component is <em>org.apache.excalibur.source</em>.</p>
    </s2>
    <s2 title="XSLT Processor">
     <p>
