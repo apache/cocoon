@@ -284,9 +284,7 @@ PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
 
   <p>
    See catalogs in action with the 
-   <link href="../../overview.html#samples">Cocoon Samples</link>, or
-   from your local webapp distribution in 2.1 via <code>http://localhost:8080/cocoon/samples/misc/catalog-demo</code>,
-   or in 2.0.3 via <code>http://localhost:8080/cocoon/catalog-demo</code>.
+   <link href="../../overview.html#samples">Cocoon Samples</link>
    The demonstration
    intends to be self-documenting. The top-level XML instance describes its
    role, and each included external entity reports how it came into being.
@@ -295,8 +293,6 @@ PUBLIC "-//Indexgeo//DTD Catalog Demo v1.0//EN"
    simply rename the default <code>catalog</code> file before starting
    Cocoon.)
   </p>
-
-<note>TODO: ensure that the link to samples works OK in the various documentation situations (i.e. static site, local docs build)</note>
 
   <p>Here is the source for the top-level XML instance document
    <code>catalog-demo.xml</code> ...
