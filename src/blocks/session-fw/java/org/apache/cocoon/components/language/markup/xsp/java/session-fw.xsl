@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<!-- $Id: session-fw.xsl,v 1.3 2003/12/17 04:15:14 antonio Exp $-->
+<!-- $Id: session-fw.xsl,v 1.4 2003/12/18 13:30:15 antonio Exp $-->
 <!--
 
  ============================================================================
@@ -55,7 +55,7 @@
  * XSP Session-fw logicsheet for the Java language
  *
  * @author <a href="mailto:antonio@apache.org>Antonio Gallardo</a>
- * @version CVS $Revision: 1.3 $ $Date: 2003/12/17 04:15:14 $
+ * @version CVS $Revision: 1.4 $ $Date: 2003/12/18 13:30:15 $
 -->
 
 <xsl:stylesheet version="1.0"
@@ -73,12 +73,8 @@
         <xsp:include>org.apache.avalon.framework.component.ComponentManager</xsp:include>
         <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPSessionFwHelper</xsp:include>
         <xsp:include>org.w3c.dom.DocumentFragment</xsp:include>
-        <xsp:include>org.w3c.dom.Node</xsp:include>
       </xsp:structure>
 
-      <xsp:logic>
-        Node node = null;
-      </xsp:logic>
       <xsl:variable name="create">
         <xsl:choose>
           <xsl:when test="@create-session='yes' or @create-session='true'">true</xsl:when>
@@ -108,12 +104,9 @@
     </xsl:variable>
     <xsl:choose>
         <xsl:when test="$as='string'">
-        	<xsp:logic>
-        	node = ((DocumentFragment)(XSPSessionFwHelper.getXML(this.manager,
+            <xsp:expr>XSPSessionFwHelper.getXMLAsString(this.manager,
                 String.valueOf(<xsl:copy-of select="$context"/>),
-                String.valueOf(<xsl:copy-of select="$path"/>)))).getFirstChild();
-        	</xsp:logic>
-            <xsp:expr>node != null ? node.getNodeValue() : ""</xsp:expr>
+                String.valueOf(<xsl:copy-of select="$path"/>))</xsp:expr>
         </xsl:when>
         <xsl:when test="$as='xml'">
             <xsp-session-fw:xml>
