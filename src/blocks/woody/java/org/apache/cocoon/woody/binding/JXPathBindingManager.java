@@ -60,7 +60,6 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.woody.util.DomHelper;
 import org.apache.cocoon.woody.datatype.DatatypeManager;
 import org.apache.excalibur.source.Source;
@@ -120,7 +119,7 @@ public class JXPathBindingManager implements BindingManager, LogEnabled, Service
     }
 
     public Binding createBinding(Source bindSrc)
-        throws ProcessingException {
+        throws BindingException {
         try {
             Document doc =
                 DomHelper.parse(new InputSource(bindSrc.getURI()));
@@ -134,8 +133,10 @@ public class JXPathBindingManager implements BindingManager, LogEnabled, Service
                 getLogger().debug("Root Element of said binding file is in wrong namespace.");
             }
             return newBinding;
+        } catch (BindingException e) {
+            throw e;
         } catch (Exception e) {
-            throw new ProcessingException("Could not create binding.", e);
+            throw new BindingException("Error creating binding from " + bindSrc.getURI(), e);
         }
     }
 
