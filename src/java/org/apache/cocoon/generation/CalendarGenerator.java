@@ -72,7 +72,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  </dl>
  * </p>
  * 
- * @version CVS $Id: CalendarGenerator.java,v 1.3 2004/04/08 20:15:20 ugo Exp $
+ * @version CVS $Id: CalendarGenerator.java,v 1.4 2004/04/09 07:45:43 ugo Exp $
  */
 public class CalendarGenerator extends ServiceableGenerator implements CacheableProcessingComponent {
     
@@ -112,6 +112,9 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
     /** The format for month names */
     DateFormat monthFormatter;
     
+    /** The current locale */
+    Locale locale;
+    
     /**
      * Set the request parameters. Must be called before the generate method.
      *
@@ -126,17 +129,10 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
         
         this.cacheKeyParList = new ArrayList();
         this.cacheKeyParList.add(src);
-        
-        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        this.year = par.getParameterAsInteger("year", now.get(Calendar.YEAR));
-        this.cacheKeyParList.add(String.valueOf(this.year));
-        this.month = par.getParameterAsInteger("month", now.get(Calendar.MONTH) + 1) - 1;
-        this.cacheKeyParList.add(String.valueOf(this.month));
-        
-        String dateFormatString = par.getParameter("dateFormat", null);
-        this.cacheKeyParList.add(dateFormatString);
+
+        // Determine the locale
         String langString = par.getParameter("lang", null);
-        Locale locale = Locale.getDefault();
+        locale = Locale.getDefault();
         if (langString != null) {
             this.cacheKeyParList.add(langString);
             String countryString = par.getParameter("country", null);
@@ -148,6 +144,16 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
             }
             
         }
+        
+        // Determine year and month. Default is current year and month.
+        Calendar now = Calendar.getInstance(locale);
+        this.year = par.getParameterAsInteger("year", now.get(Calendar.YEAR));
+        this.cacheKeyParList.add(String.valueOf(this.year));
+        this.month = par.getParameterAsInteger("month", now.get(Calendar.MONTH) + 1) - 1;
+        this.cacheKeyParList.add(String.valueOf(this.month));
+        
+        String dateFormatString = par.getParameter("dateFormat", null);
+        this.cacheKeyParList.add(dateFormatString);
         if (dateFormatString != null) {
             this.dateFormatter = new SimpleDateFormat(dateFormatString, locale);
         } else {
@@ -164,7 +170,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
      * @throws  SAXException if an error occurs while outputting the document
      */
     public void generate() throws SAXException {
-        Calendar start = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        Calendar start = Calendar.getInstance(TimeZone.getTimeZone("UTC"), locale);
         start.clear();
         start.set(Calendar.YEAR, this.year);
         start.set(Calendar.MONTH, this.month);
@@ -188,7 +194,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
                     PREFIX + ':' + WEEK_NODE_NAME, attributes);
         }
         while (start.before(end)) {
-            if (start.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+            if (start.get(Calendar.DAY_OF_WEEK) == start.getFirstDayOfWeek()) {
                 weekNo = start.get(Calendar.WEEK_OF_MONTH);
                 attributes.clear();
                 attributes.addAttribute("", NUMBER_ATTR_NAME, NUMBER_ATTR_NAME, "CDATA", String.valueOf(weekNo));
@@ -205,7 +211,7 @@ public class CalendarGenerator extends ServiceableGenerator implements Cacheable
             this.contentHandler.endElement(URI, DAY_NODE_NAME,
                     PREFIX + ':' + DAY_NODE_NAME);
             start.add(Calendar.DAY_OF_MONTH, 1);
-            if (start.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
+            if (start.get(Calendar.DAY_OF_WEEK) == start.getFirstDayOfWeek()
                     || ! start.before(end)) {
                 this.contentHandler.endElement(URI, WEEK_NODE_NAME,
                         PREFIX + ':' + WEEK_NODE_NAME);
