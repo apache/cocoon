@@ -24,6 +24,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 import org.apache.cocoon.components.language.programming.Program;
 import org.apache.cocoon.core.container.AbstractComponentHandler;
+import org.apache.cocoon.core.container.ComponentEnvironment;
 import org.apache.cocoon.core.container.ComponentHandler;
 
 import java.io.File;
@@ -67,9 +68,13 @@ public class JavascriptProgram extends AbstractLogEnabled implements Program {
     public ComponentHandler getHandler(ServiceManager manager,
                                        Context context)
     throws Exception {
+        final ComponentEnvironment env = new ComponentEnvironment();
+        env.serviceManager = manager;
+        env.context = context;
+        env.logger = this.getLogger();
 
         return AbstractComponentHandler.getComponentHandler(
-                null, clazz, config, manager, context, getLogger(), null, null);
+                null, clazz, config, env, null);
     }
 
     public CompiledComponent newInstance() throws Exception {

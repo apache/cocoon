@@ -16,14 +16,10 @@
  */
 package org.apache.cocoon.core.container;
 
-import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.thread.SingleThreaded;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.ServiceInfo;
@@ -67,10 +63,7 @@ implements ComponentHandler {
     public static ComponentHandler getComponentHandler( final String role,
                                                         final Class componentClass,
                                                         final Configuration configuration,
-                                                        final ServiceManager serviceManager,
-                                                        final Context context,
-                                                        final Logger logger,
-                                                        final LoggerManager loggerManager,
+                                                        final ComponentEnvironment env,
                                                         final RoleManager roleManager)
     throws Exception {
         int numInterfaces = 0;
@@ -116,12 +109,6 @@ implements ComponentHandler {
         // Create the factory to use to create the instances of the Component.
         ComponentFactory factory;
         
-        final ComponentEnvironment env = new ComponentEnvironment();
-        env.serviceManager = serviceManager;
-        env.context = context;
-        env.logger = logger;
-        env.loggerManager = loggerManager;
-
         if (DefaultServiceSelector.class.isAssignableFrom(componentClass)) {
             // Special factory for DefaultServiceSelector
             factory = new DefaultServiceSelector.Factory(env, roleManager, info, role);
@@ -137,12 +124,12 @@ implements ComponentHandler {
         ComponentHandler handler;
         
         if( info.getModel() == ServiceInfo.MODEL_POOLED )  {
-            handler = new PoolableComponentHandler( info, logger, factory, configuration );
+            handler = new PoolableComponentHandler( info, env.logger, factory, configuration );
         } else if( info.getModel() == ServiceInfo.MODEL_SINGLETON ) {
-            handler = new ThreadSafeComponentHandler( info, logger, factory );
+            handler = new ThreadSafeComponentHandler( info, env.logger, factory );
         } else {
             // This is a SingleThreaded component
-            handler = new SingleThreadedComponentHandler( info, logger, factory );
+            handler = new SingleThreadedComponentHandler( info, env.logger, factory );
         }
 
         return handler;
