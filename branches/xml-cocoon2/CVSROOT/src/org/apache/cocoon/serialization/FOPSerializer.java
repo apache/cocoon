@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import org.apache.avalon.Poolable;
 import org.apache.fop.apps.Driver;
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.Version;
@@ -28,10 +29,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation &amp; Entwicklung)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2000-12-05 00:24:13 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-12-08 12:05:06 $
  *
  */
-public class FOPSerializer extends AbstractSerializer implements MessageListener {
+public class FOPSerializer extends AbstractSerializer implements MessageListener, Poolable {
 
     /**
      * The FOP driver
@@ -40,8 +41,9 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
 
     /**
      * Create the FOP driver
+     * Set the <code>OutputStream</code> where the XML should be serialized.
      */
-    public FOPSerializer() {
+    public void setOutputStream(OutputStream out) {
         this.driver = new Driver();
 
         // the use of static resources sucks for servlet enviornments
@@ -55,12 +57,6 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
         this.driver.addElementMapping("org.apache.fop.svg.SVGElementMapping");
         this.driver.addPropertyList("org.apache.fop.fo.StandardPropertyListMapping");
         this.driver.addPropertyList("org.apache.fop.svg.SVGPropertyListMapping");
-    }
-
-    /**
-     * Set the <code>OutputStream</code> where the XML should be serialized.
-     */
-    public void setOutputStream(OutputStream out) {
         this.driver.setWriter(new PrintWriter(out));
         this.setContentHandler(this.driver.getContentHandler());
      }
@@ -77,6 +73,9 @@ public class FOPSerializer extends AbstractSerializer implements MessageListener
             throw new SAXException (e);
         } catch (FOPException e) {
             throw new SAXException (e);
+        } finally {
+            driver = null;
+            MessageHandler.removeListener(this);
         }
     }
 
