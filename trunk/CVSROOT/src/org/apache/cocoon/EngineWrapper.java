@@ -1,4 +1,4 @@
-/*-- $Id: EngineWrapper.java,v 1.13 2001-01-11 13:52:19 greenrd Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.14 2001-02-24 18:20:42 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -70,7 +70,7 @@ import org.apache.cocoon.framework.*;
  * But I have more important stuff to do right now.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.13 $ $Date: 2001-01-11 13:52:19 $
+ * @version $Revision: 1.14 $ $Date: 2001-02-24 18:20:42 $
  */
 
 public class EngineWrapper {
@@ -83,11 +83,11 @@ public class EngineWrapper {
         this.userAgent = (String)confs.get("user-agent");
     }
 
-    public void handle(PrintWriter out, File pathToDocument) throws Exception {
+    public void handle(OutputStream out, File pathToDocument) throws Exception {
         this.engine.handle(new HttpServletRequestImpl(pathToDocument), new HttpServletResponseImpl(out));
     }
 
-    public void handle(PrintWriter out, File documentPath, String document) throws Exception {
+    public void handle(OutputStream out, File documentPath, String document) throws Exception {
         this.engine.handle(new HttpServletRequestImpl(documentPath, document), new HttpServletResponseImpl(out));
     }
 
@@ -188,19 +188,33 @@ public class EngineWrapper {
      */
     public class HttpServletResponseImpl implements HttpServletResponse {
         
-        private PrintWriter out;
+        private OutputStream out;
         
-        public HttpServletResponseImpl(PrintWriter out) {
+        public HttpServletResponseImpl(OutputStream out) {
             this.out = out;
         }
 
         public PrintWriter getWriter() throws IOException {
-            return this.out;
+            return new PrintWriter(new OutputStreamWriter(this.out));
+        }
+
+        public ServletOutputStream getOutputStream() throws IOException {
+            return new ServletOutputStream()
+            {
+                public void write(int c) throws IOException
+                {
+                    out.write(c);
+                }
+                public void write(byte[] b, int off, int len)
+                    throws IOException
+               {
+                    out.write(b,off,len);
+                }
+            };
         }
         
         public void setContentLength(int len) {}
         public void setContentType(String type) {}
-        public ServletOutputStream getOutputStream() throws IOException { return null; }
         public String getCharacterEncoding() { return null; }
         public void addCookie(Cookie cookie) {}
         public boolean containsHeader(String name) { return false; }

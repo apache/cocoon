@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.209 2001-02-19 20:06:02 greenrd Exp $ 
+  $Id: changes.xml,v 1.210 2001-02-24 18:20:42 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -18,6 +18,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Nicolás Lichtmaier" due-to-email="nick@debian.org">
+   Fixed command-line mode (again!)
+  </action>
   <action dev="RDG" type="fix" fixes-bug="642" due-to="Antonia Arena" due-to-email="antonio_arena@yahoo.it">
    Fixed bug in Util.getAllPIs
   </action>

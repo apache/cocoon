@@ -1,4 +1,4 @@
-/*-- $Id: Cocoon.java,v 1.21 2001-01-18 22:43:45 greenrd Exp $ -- 
+/*-- $Id: Cocoon.java,v 1.22 2001-02-24 18:20:42 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * separate different knowledge contexts in different processing layers.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.21 $ $Date: 2001-01-18 22:43:45 $
+ * @version $Revision: 1.22 $ $Date: 2001-02-24 18:20:42 $
  */
 
 public class Cocoon extends HttpServlet implements Defaults {
@@ -269,7 +269,7 @@ public class Cocoon extends HttpServlet implements Defaults {
         String userAgent = null;
         String xml = null;
         String out = null;
-        PrintWriter writer = null;
+        OutputStream out = null;
         Configurations confs = null;
 
         if (argument.length == 0)
@@ -305,10 +305,10 @@ public class Cocoon extends HttpServlet implements Defaults {
 
         EngineWrapper engine = new EngineWrapper(confs);
         if (out == null)
-          writer = new PrintWriter(System.out);
+          os = System.out;
         else
-          writer = new PrintWriter(new FileWriter(out), true);
-        engine.handle(writer, new File(xml));
+          os = new FileOutputStream(out);
+        engine.handle(os, new File(xml));
     }
 
     private static void usage() {
