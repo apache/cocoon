@@ -304,6 +304,9 @@
    </action>
  </release>
  <release version="2.1.6" date="TBD">
+   <action dev="VG" type="add">
+     Portal block: New Group Based Profile Manager.
+   </action>
    <action dev="AG" type="update">
      Updated rhino to 1.5r4-20040629T1232,
      xreporter-expression to 20040701, ehcache to 0.9,
