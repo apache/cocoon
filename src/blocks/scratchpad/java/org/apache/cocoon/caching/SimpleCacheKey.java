@@ -18,21 +18,23 @@ package org.apache.cocoon.caching;
 import java.io.Serializable;
 
 /**
- * This is the cache key for one pipeline (or the first part of a pipeline).
- * It consists of one or more {@link ComponentCacheKey}s.
+ * This is a "simple" cache key that does not consider the components used in the
+ * pipeline. It simply consists of a key (unique identifier for the request) and
+ * a boolean value that defines if the key is for a complete pipeline call or
+ * for an internal pipeline call.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleCacheKey.java,v 1.2 2004/03/05 10:07:25 bdelacretaz Exp $
+ * @version CVS $Id: SimpleCacheKey.java,v 1.3 2004/04/15 08:04:39 cziegeler Exp $
  * @since 2.1.1
  */
 public class SimpleCacheKey
-        implements Serializable {
+    implements Serializable {
 
     /** The key */
     final protected String key;
 
-    /** the hash code */
-    final protected boolean complete;
+    /** Is this an external pipeline call? */
+    final protected boolean external;
 
     /** cache key */
     final protected String cacheKey;
@@ -43,11 +45,11 @@ public class SimpleCacheKey
     /**
      * Constructor
      */
-    public SimpleCacheKey(String key, boolean complete) {
+    public SimpleCacheKey(String key, boolean external) {
         this.key = key;
-        this.complete = complete;
+        this.external = external;
         final StringBuffer buf = new StringBuffer();
-        buf.append(complete).append(':').append(this.key);
+        buf.append(this.external).append(':').append(this.key);
         this.cacheKey = buf.toString();
     }
 
@@ -57,7 +59,7 @@ public class SimpleCacheKey
     public boolean equals(Object object) {
         if (object instanceof SimpleCacheKey) {
             SimpleCacheKey pck = (SimpleCacheKey)object;
-            return ( this.cacheKey.equals( pck.cacheKey ) );
+            return this.cacheKey.equals( pck.cacheKey );
         }
         return false;
     }
