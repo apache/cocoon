@@ -15,8 +15,6 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
-import org.outerj.i18n.DateFormat;
-import org.outerj.i18n.I18nSupport;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.forms.Constants;
@@ -24,7 +22,9 @@ import org.apache.cocoon.xml.AttributesImpl;
 
 import java.util.Locale;
 import java.util.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * A Convertor for {@link java.util.Date Date} objects backed by the
@@ -38,11 +38,6 @@ import java.text.ParseException;
  * similar to resource bundle lookup is used. Suppose the locale is nl-BE, then first a formatting
  * pattern for nl-BE will be sought, then one for nl, and if that is not
  * found, finally the locale-independent formatting pattern will be used.
- *
- * <p><strong>NOTE:</strong> the earlier statement about the fact that this class uses java.text.SimpleDateFormat
- * is not entirely correct. In fact, it uses a small wrapper class that will either delegate to
- * java.text.SimpleDateFormat or com.ibm.icu.text.SimpleDateFormat. The com.ibm version will automatically
- * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
  * @version $Id$
  */
@@ -61,13 +56,13 @@ public class FormattingDateConvertor implements Convertor {
     public static final String DATE_TIME = "datetime";
 
     public FormattingDateConvertor() {
-        this.style = java.text.DateFormat.SHORT;
+        this.style = DateFormat.SHORT;
         this.variant = DATE;
         this.localizedPatterns = new LocaleMap();
     }
 
     public ConversionResult convertFromString(String value, Locale locale, Convertor.FormatCache formatCache) {
-        DateFormat dateFormat = getDateFormat(locale, formatCache);
+        SimpleDateFormat dateFormat = getDateFormat(locale, formatCache);
         try {
             return new ConversionResult(dateFormat.parse(value));
         } catch (ParseException e) {
@@ -76,14 +71,14 @@ public class FormattingDateConvertor implements Convertor {
     }
 
     public String convertToString(Object value, Locale locale, Convertor.FormatCache formatCache) {
-        DateFormat dateFormat = getDateFormat(locale, formatCache);
+        SimpleDateFormat dateFormat = getDateFormat(locale, formatCache);
         return dateFormat.format((Date)value);
     }
 
-    private final DateFormat getDateFormat(Locale locale, Convertor.FormatCache formatCache) {
-        DateFormat dateFormat = null;
+    private final SimpleDateFormat getDateFormat(Locale locale, Convertor.FormatCache formatCache) {
+        SimpleDateFormat dateFormat = null;
         if (formatCache != null)
-            dateFormat = (DateFormat)formatCache.get();
+            dateFormat = (SimpleDateFormat)formatCache.get();
         if (dateFormat == null) {
             dateFormat = getDateFormat(locale);
             if (formatCache != null)
@@ -92,21 +87,28 @@ public class FormattingDateConvertor implements Convertor {
         return dateFormat;
     }
 
-    protected DateFormat getDateFormat(Locale locale) {
-        DateFormat dateFormat = null;
+    protected SimpleDateFormat getDateFormat(Locale locale) {
+        SimpleDateFormat dateFormat = null;
 
         if (this.variant.equals(DATE)) {
-            dateFormat = I18nSupport.getInstance().getDateFormat(style, locale);
+            //dateFormat = I18nSupport.getInstance().getDateFormat(style, locale);
+            dateFormat = (SimpleDateFormat)DateFormat.getDateInstance(style, locale);
         } else if (this.variant.equals(TIME)) {
-            dateFormat = I18nSupport.getInstance().getTimeFormat(style, locale);
+            //dateFormat = I18nSupport.getInstance().getTimeFormat(style, locale);
+            dateFormat = (SimpleDateFormat)DateFormat.getTimeInstance(style, locale);
         } else if (this.variant.equals(DATE_TIME)) {
-            dateFormat = I18nSupport.getInstance().getDateTimeFormat(style, style, locale);
+            //dateFormat = I18nSupport.getInstance().getDateTimeFormat(style, style, locale);
+            dateFormat = (SimpleDateFormat)DateFormat.getDateTimeInstance(style, style, locale);
         }
 
         String pattern = (String)localizedPatterns.get(locale);
 
         if (pattern != null)
-            dateFormat.applyLocalizedPattern(pattern);
+            // Note: this was previously using applyLocalizedPattern() which allows to use
+            // a locale-specific pattern syntax, e.g. in french "j" (jour) for "d" and
+            // "a" (annee) for "y". But the localized pattern syntax is very little known and thus
+            // led to some weird pattern syntax error messages.
+            dateFormat.applyPattern(pattern);
         else if (nonLocalizedPattern != null)
             dateFormat.applyPattern(nonLocalizedPattern);
 

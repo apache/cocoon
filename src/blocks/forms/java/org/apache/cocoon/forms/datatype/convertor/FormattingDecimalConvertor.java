@@ -15,12 +15,12 @@
  */
 package org.apache.cocoon.forms.datatype.convertor;
 
-import org.outerj.i18n.I18nSupport;
-import org.outerj.i18n.DecimalFormat;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 import java.util.Locale;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -37,11 +37,6 @@ import java.math.BigInteger;
  * similar to resource bundle lookup is used. Suppose the locale is nl-BE, then first a formatting
  * pattern for nl-BE will be sought, then one for nl, and if that is not
  * found, finally the locale-independent formatting pattern will be used.
- *
- * <p>Note: the earlier statement about the fact that this class uses java.text.DecimalFormat
- * is not entirely correct. In fact, it uses a small wrapper class that will either delegate to
- * java.text.DecimalFormat or com.ibm.icu.text.DecimalFormat. The com.ibm version will automatically
- * be used if it is present on the classpath, otherwise the java.text version will be used.
  *
  * @version $Id$
  */
@@ -113,23 +108,26 @@ public class FormattingDecimalConvertor implements Convertor {
 
         switch (variant) {
             case INTEGER:
-                decimalFormat = I18nSupport.getInstance().getIntegerFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getNumberInstance(locale);
+                decimalFormat.setMaximumFractionDigits(0);
+                decimalFormat.setDecimalSeparatorAlwaysShown(false);
+                decimalFormat.setParseIntegerOnly(true);
                 break;
             case NUMBER:
-                decimalFormat = I18nSupport.getInstance().getNumberFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getNumberInstance(locale);
                 break;
             case CURRENCY:
-                decimalFormat = I18nSupport.getInstance().getCurrencyFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getCurrencyInstance(locale);
                 break;
             case PERCENT:
-                decimalFormat = I18nSupport.getInstance().getPercentFormat(locale);
+                decimalFormat = (DecimalFormat)NumberFormat.getPercentInstance(locale);
                 break;
         }
 
         String pattern = (String)localizedPatterns.get(locale);
 
         if (pattern != null) {
-            decimalFormat.applyLocalizedPattern(pattern);
+            decimalFormat.applyPattern(pattern);
         } else if (nonLocalizedPattern != null) {
             decimalFormat.applyPattern(nonLocalizedPattern);
         }
