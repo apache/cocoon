@@ -105,7 +105,7 @@
           document.createTextNode(
             "{" +
 	      __name + ": \n" +
-	      e.getMessage()
+	      e.getMessage() +
 	    "}"
           )
         );
