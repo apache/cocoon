@@ -16,15 +16,17 @@
         </field>
     </class>
 
-	<class name="org.apache.cocoon.portal.layout.AbstractParameters"
-	       extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
+	<class name="org.apache.cocoon.portal.layout.AbstractParameters">
         <field name="parameters" type="org.apache.cocoon.portal.layout.impl.Parameter" collection="map">
             <bind-xml auto-naming="deriveByClass" />
         </field>
     </class>
     
     <class name="org.apache.cocoon.portal.layout.AbstractLayout"
-           extends="org.apache.cocoon.portal.layout.AbstractParameters">
+           extends="org.apache.cocoon.portal.factory.impl.AbstractProducible">
+        <field name="parameters" type="org.apache.cocoon.portal.layout.impl.Parameter" collection="map">
+            <bind-xml auto-naming="deriveByClass" />
+        </field>
         <field name="layoutRendererName" type="java.lang.String">
             <bind-xml name="layout-renderer-name" node="attribute" />
         </field>
