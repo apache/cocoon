@@ -50,9 +50,9 @@
 */
 package org.apache.cocoon.portal.profile.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.Map;
 
 import org.apache.avalon.framework.component.Component;
@@ -66,8 +66,9 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.persistance.CastorSourceConverter;
 import org.apache.cocoon.portal.profile.ProfileLS;
-import org.apache.cocoon.portal.util.*;
+import org.apache.cocoon.portal.util.ReferenceFieldHandler;
 import org.apache.cocoon.xml.dom.DOMUtil;
+import org.apache.excalibur.source.ModifiableSource;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.source.SourceValidity;
@@ -80,7 +81,7 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: MapSourceAdapter.java,v 1.3 2003/05/26 14:29:53 cziegeler Exp $
+ * @version CVS $Id: MapSourceAdapter.java,v 1.4 2003/05/27 07:38:33 cziegeler Exp $
  */
 public class MapSourceAdapter
     extends AbstractLogEnabled
@@ -134,14 +135,14 @@ public class MapSourceAdapter
 		buffer.append(mapKey.get("user"));
 
 		String sourceURI = buffer.toString();
-		SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 		Source source = null;
 		CastorSourceConverter converter = null;
+        SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
 		try {
 			source = resolver.resolveURI(sourceURI);
-			converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
+            converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
+            ReferenceFieldHandler.setObjectMap((Map)map.get("objectmap"));
 
-			ReferenceFieldHandler.setObjectMap((Map)map.get("objectmap"));
 			return converter.getObject(source.getInputStream(), profile);
 		} finally {
 			resolver.release(source);
@@ -155,13 +156,13 @@ public class MapSourceAdapter
      */
     public void saveProfile(Object key, Map map, Object profile) throws Exception {
 		Map mapKey = (Map) key;
-		StringBuffer buffer = new StringBuffer();
 
 		String profileName = (String)map.get("profile");
 
 		Configuration config = ((Configuration)mapKey.get("config")).getChild("profiles");
 		Object type = map.get("type");
-		String uri = null, configKey = null;
+		String uri = null;
+        String configKey = null;
 		try {
 			if (type == null) {
 				configKey = profileName+"-save";
@@ -179,6 +180,30 @@ public class MapSourceAdapter
 		} catch (Exception e) {
 			throw new ConfigurationException("Error reading URI from configuration "+configKey, e);
 		}
+        
+        // first test: modifiable source?
+        SourceResolver resolver = null;
+        CastorSourceConverter converter = null;
+        Source source = null;
+        try {
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            source = resolver.resolveURI(uri);
+            if ( source instanceof ModifiableSource ) {
+                converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
+                converter.storeObject( ((ModifiableSource)source).getOutputStream(), profileName, profile);
+                return;
+            }
+
+        } finally {
+            resolver.release(source);
+            manager.release(converter);
+            manager.release(resolver);
+            source = null;
+            converter = null;
+            resolver = null;
+        }
+        
+        StringBuffer buffer = new StringBuffer();
 		buffer.append(uri);
 
 		if (uri.indexOf("?") == -1) {
@@ -194,25 +219,26 @@ public class MapSourceAdapter
 		buffer.append("&user=");
 		buffer.append(mapKey.get("user"));
 
-		SourceResolver resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
-		Source source = null;
-		CastorSourceConverter converter = null;
 		SAXParser parser = null;
 		try {
-			StringWriter writer = new StringWriter();
-			
-			converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
-			converter.storeObject(writer, profileName, profile);
+            resolver = (SourceResolver) this.manager.lookup(SourceResolver.ROLE);
+            converter = (CastorSourceConverter) this.manager.lookup(CastorSourceConverter.ROLE);
 
-			buffer.append("&content=");
-			buffer.append(writer.toString());
+            ByteArrayOutputStream writer = new ByteArrayOutputStream();
+        
+            converter.storeObject(writer, profileName, profile);
 
-			source = resolver.resolveURI(buffer.toString());
-			parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
-			Element element = DOMUtil.getDocumentFragment(parser, new InputStreamReader(source.getInputStream())).getOwnerDocument().getDocumentElement();
-			if (!DOMUtil.getValueOf(element, "descendant::sourceResult/execution").trim().equals("success")) {
-				throw new IOException("Could not save profile: "+DOMUtil.getValueOf(element, "descendant::sourceResult/message"));
-			}
+            buffer.append("&content=");
+            buffer.append(writer.toString());
+
+            source = resolver.resolveURI(buffer.toString());
+
+            parser = (SAXParser)this.manager.lookup(SAXParser.ROLE);
+            Element element = DOMUtil.getDocumentFragment(parser, new InputStreamReader(source.getInputStream())).getOwnerDocument().getDocumentElement();
+            if (!DOMUtil.getValueOf(element, "descendant::sourceResult/execution").trim().equals("success")) {
+                throw new IOException("Could not save profile: "+DOMUtil.getValueOf(element, "descendant::sourceResult/message"));
+            }
+
 		} finally {
 			resolver.release(source);
 			manager.release((Component)parser);

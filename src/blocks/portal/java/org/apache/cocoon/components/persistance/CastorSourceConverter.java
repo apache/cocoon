@@ -50,8 +50,9 @@
 */
 package org.apache.cocoon.components.persistance;
 
-import java.io.BufferedWriter;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -83,7 +84,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.3 2003/05/22 15:19:48 cziegeler Exp $
+ * @version CVS $Id: CastorSourceConverter.java,v 1.4 2003/05/27 07:38:33 cziegeler Exp $
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
@@ -108,9 +109,10 @@ public class CastorSourceConverter
         }
     }
 
-	public void storeObject(Writer writer, String name, Object object) throws ConverterException {
+	public void storeObject(OutputStream stream, String name, Object object) throws ConverterException {
+        Writer writer = new OutputStreamWriter(stream);
 		try {
-			Marshaller marshaller = new Marshaller(new BufferedWriter(writer));
+			Marshaller marshaller = new Marshaller( writer );
 			Mapping mapping = new Mapping();
 			marshaller.setMapping((Mapping)this.mappings.get(name));
 			marshaller.marshal(object);
