@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.cocoon.components.modules.input;
 
 import org.apache.avalon.framework.component.ComponentException;
@@ -84,7 +83,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:jefft@apache.org">Jeff Turner</a>
  * @author <a href="mailto:haul@apache.org">Christian Haul</a>
- * @version CVS $Id: XMLFileModule.java,v 1.17 2004/06/16 14:57:54 vgritsenko Exp $
+ * @version CVS $Id: XMLFileModule.java,v 1.18 2004/06/16 20:00:07 vgritsenko Exp $
  */
 public class XMLFileModule extends AbstractJXPathModule implements Composable, ThreadSafe {
 

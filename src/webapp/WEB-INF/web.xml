@@ -432,5 +432,12 @@
     <mime-type>text/plain</mime-type>
   </mime-mapping>
 
-</web-app>
 
+  <!-- Sample environment entry for the NamingInputModule -->
+  <env-entry>
+    <env-entry-name>greeting</env-entry-name>
+    <env-entry-value>Hello, World</env-entry-value>
+    <env-entry-type>java.lang.String</env-entry-type>
+  </env-entry>
+
+</web-app>

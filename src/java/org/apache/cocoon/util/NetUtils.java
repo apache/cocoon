@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,10 +15,18 @@
  */
 package org.apache.cocoon.util;
 
+import org.apache.cocoon.environment.Request;
+import org.apache.commons.lang.StringUtils;
+import org.apache.excalibur.source.SourceParameters;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.BitSet;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -26,18 +34,13 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.cocoon.environment.Request;
-import org.apache.commons.lang.StringUtils;
-import org.apache.excalibur.source.SourceParameters;
-
 /**
  * A collection of <code>File</code>, <code>URL</code> and filename
  * utility methods
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: NetUtils.java,v 1.15 2004/05/01 17:04:10 ugo Exp $
+ * @version CVS $Id: NetUtils.java,v 1.16 2004/06/16 20:00:07 vgritsenko Exp $
  */
-
 public class NetUtils {
 
     /**
@@ -45,10 +48,9 @@ public class NetUtils {
      */
     private static BitSet safeCharacters;
 
-
     private static final char[] hexadecimal =
-    {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-     'A', 'B', 'C', 'D', 'E', 'F'};
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+             'A', 'B', 'C', 'D', 'E', 'F'};
 
     static {
         safeCharacters = new BitSet(256);
@@ -117,12 +119,14 @@ public class NetUtils {
                             byte x = (byte)Integer.parseInt(path.substring(i + 1, i + 3), 16);
                             encodedchars[encodedcharsLength] = x;
                         } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("NetUtils.decodePath: illegal hex characters in pattern %" + path.substring(i + 1, i + 3));
+                            throw new IllegalArgumentException("NetUtils.decodePath: " +
+                                                               "Illegal hex characters in pattern %" + path.substring(i + 1, i + 3));
                         }
                         encodedcharsLength++;
                         i += 3;
                     } else {
-                        throw new IllegalArgumentException("NetUtils.decodePath: % character should be followed by 2 hexadecimal characters.");
+                        throw new IllegalArgumentException("NetUtils.decodePath: " +
+                                                           "% character should be followed by 2 hexadecimal characters.");
                     }
                 }
                 try {
@@ -267,12 +271,12 @@ public class NetUtils {
         }
 
         boolean slash = (path.charAt(path.length() - 1) == '/');
-        
+
         StringBuffer b = new StringBuffer();
         b.append(path);
         if (!slash) {
             b.append('/');
-        } 
+        }
         b.append(resource);
         return b.toString();
     }
@@ -366,7 +370,7 @@ public class NetUtils {
      * Remove parameters from a uri.
      * Resulting Map will have either String for single value attributes,
      * or String arrays for multivalue attributes.
-     * 
+     *
      * @param uri The uri path to deparameterize.
      * @param parameters The map that collects parameters.
      * @return The cleaned uri
@@ -406,7 +410,7 @@ public class NetUtils {
      * Add parameters stored in the Map to the uri string.
      * Map can contain Object values which will be converted to the string,
      * or Object arrays, which will be treated as multivalue attributes.
-     * 
+     *
      * @param uri The uri to add parameters into
      * @param parameters The map containing parameters to be added
      * @return The uri with added parameters
@@ -415,14 +419,14 @@ public class NetUtils {
         if (parameters.size() == 0) {
             return uri;
         }
-        
+
         StringBuffer buffer = new StringBuffer(uri);
         if (uri.indexOf('?') == -1) {
             buffer.append('?');
         } else {
             buffer.append('&');
         }
-        
+
         for (Iterator i = parameters.entrySet().iterator(); i.hasNext();) {
             Map.Entry entry = (Map.Entry)i.next();
             if (entry.getValue().getClass().isArray()) {
@@ -474,10 +478,67 @@ public class NetUtils {
      * Remove any authorisation details from a URI
      */
     public static String removeAuthorisation(String uri) {
-        if (uri.indexOf("@")!=-1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
-            return uri.substring(0, uri.indexOf(":")+2)+uri.substring(uri.indexOf("@")+1);
-        } 
+        if (uri.indexOf("@") != -1 && (uri.startsWith("ftp://") || uri.startsWith("http://"))) {
+            return uri.substring(0, uri.indexOf(":") + 2) + uri.substring(uri.indexOf("@") + 1);
+        }
 
         return uri;
+    }
+
+
+    // FIXME Remove when JDK1.3 support is removed.
+    private static Method urlEncode;
+    private static Method urlDecode;
+
+    static {
+        try {
+            urlEncode = URLEncoder.class.getMethod("encode", new Class[]{String.class, String.class});
+            urlDecode = URLDecoder.class.getMethod("decode", new Class[]{String.class, String.class});
+        } catch (NoSuchMethodException e) {
+            urlEncode = null;
+            urlDecode = null;
+        }
+    }
+
+    /**
+     * Pass through to the {@link java.net.URLEncoder}. If running under JDK &lt; 1.4,
+     * default encoding will always be used.
+     */
+    public static String encode(String s, String enc) throws UnsupportedEncodingException {
+        if (urlEncode != null) {
+            try {
+                return (String)urlEncode.invoke(s, new Object[]{ s, enc } );
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+                if (e.getTargetException() instanceof UnsupportedEncodingException) {
+                    throw (UnsupportedEncodingException)e.getTargetException();
+                } else if (e.getTargetException() instanceof RuntimeException) {
+                    throw (RuntimeException)e.getTargetException();
+                }
+            }
+        }
+
+        return URLEncoder.encode(s);
+    }
+
+    /**
+     * Pass through to the {@link java.net.URLDecoder}. If running under JDK &lt; 1.4,
+     * default encoding will always be used.
+     */
+    public static String decode(String s, String enc) throws UnsupportedEncodingException {
+        if (urlDecode != null) {
+            try {
+                return (String)urlDecode.invoke(s, new Object[]{ s, enc } );
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+                if (e.getTargetException() instanceof UnsupportedEncodingException) {
+                    throw (UnsupportedEncodingException)e.getTargetException();
+                } else if (e.getTargetException() instanceof RuntimeException) {
+                    throw (RuntimeException)e.getTargetException();
+                }
+            }
+        }
+
+        return URLDecoder.decode(s);
     }
 }

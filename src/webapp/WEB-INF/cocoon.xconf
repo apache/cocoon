@@ -146,10 +146,10 @@
       +-->
   <input-modules>
     <component-instance logger="core.modules.input" name="url-encode"       class="org.apache.cocoon.components.modules.input.URLEncodeModule">
-        <encoding>UTF-8</encoding>
+      <encoding>UTF-8</encoding>
     </component-instance>
     <component-instance logger="core.modules.input" name="url-decode"       class="org.apache.cocoon.components.modules.input.URLDecodeModule">
-        <encoding>UTF-8</encoding>
+      <encoding>UTF-8</encoding>
     </component-instance>
     <component-instance logger="core.modules.input" name="global"           class="org.apache.cocoon.components.modules.input.GlobalInputModule"/>
     <component-instance logger="core.modules.input" name="request"          class="org.apache.cocoon.components.modules.input.RequestModule"/>
@@ -170,22 +170,28 @@
     </component-instance>
     <component-instance logger="core.modules.input" name="nullinput"    class="org.apache.cocoon.components.modules.input.NullInputModule"/>
     <component-instance logger="core.modules.input" name="realpath"     class="org.apache.cocoon.components.modules.input.RealPathModule"/> 
+    <component-instance logger="core.modules.input" name="naming"       class="org.apache.cocoon.components.modules.input.NamingInputModule">
+    </component-instance>
+    <component-instance logger="core.modules.input" name="cocoon-properties" class="org.apache.cocoon.components.modules.input.PropertiesFileModule">
+      <file src="resource://org/apache/cocoon/cocoon.properties" />
+    </component-instance>
+    <component-instance logger="core.modules.input" name="flow-attribute"     class="org.apache.cocoon.components.modules.input.FlowAttributeModule"/>
+    <component-instance logger="core.modules.input" name="flow-continuation"  class="org.apache.cocoon.components.modules.input.FlowContinuationModule"/>
+
     <component-instance logger="core.modules.input" name="xmlmeta"      class="org.apache.cocoon.components.modules.input.XMLMetaModule"/>
     <component-instance logger="core.modules.input" name="mapmeta"      class="org.apache.cocoon.components.modules.input.MapMetaModule"/>
     <component-instance logger="core.modules.input" name="datemeta"     class="org.apache.cocoon.components.modules.input.DateMetaInputModule"/>
     <component-instance logger="core.modules.input" name="jxpath"       class="org.apache.cocoon.components.modules.input.JXPathMetaModule"/>
     <component-instance logger="core.modules.input" name="simplemap"    class="org.apache.cocoon.components.modules.input.SimpleMappingMetaModule"/>
     <component-instance logger="core.modules.input" name="locate"       class="org.apache.cocoon.components.modules.input.LocateResource"/>
-    <component-instance logger="core.modules.input" name="chain"    class="org.apache.cocoon.components.modules.input.ChainMetaModule">
+    <component-instance logger="core.modules.input" name="chain"        class="org.apache.cocoon.components.modules.input.ChainMetaModule">
       <input-module name="request-param"/>
       <input-module name="request-attr"/>
       <input-module name="session-attr"/>
       <input-module name="defaults"/>
     </component-instance>
-    <component-instance class="org.apache.cocoon.components.modules.input.PropertiesFileModule" logger="core.modules.input" name="cocoon-properties">
-      <file src="resource://org/apache/cocoon/cocoon.properties" />
-    </component-instance>
-    
+
+
     <!-- The 'defaults', 'myxml' and 'slashdot' input modules are used
          in the samples -->
     <component-instance logger="core.modules.input" name="defaults"     class="org.apache.cocoon.components.modules.input.DefaultsModule">
@@ -194,16 +200,12 @@
         <base-url>http://localhost:8080/cocoon</base-url>
       </values>
     </component-instance>
-
     <component-instance class="org.apache.cocoon.components.modules.input.XMLFileModule" logger="core.modules.xml" name="myxml">
-      <file src="context:///samples/modules/forrestconf.xml"/>
+      <file src="context://samples/modules/forrestconf.xml"/>
     </component-instance>
     <component-instance class="org.apache.cocoon.components.modules.input.XMLFileModule" logger="core.modules.xml" name="slashdot">
       <file src="http://slashdot.org/slashdot.rss"/>
     </component-instance>
-
-    <component-instance logger="core.modules.input" name="flow-attribute"     class="org.apache.cocoon.components.modules.input.FlowAttributeModule"/>
-    <component-instance logger="core.modules.input" name="flow-continuation"  class="org.apache.cocoon.components.modules.input.FlowContinuationModule"/>
 
   </input-modules>
 
