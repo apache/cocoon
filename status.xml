@@ -202,6 +202,9 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="GP" type="add">
+    Allow attribute values to be matches as well for EncodeURLTransformer.
+   </action>
   <action dev="BRD" type="fix">
     Multipart requests: use container encoding for decoding requests, in order to have consistent
     handling between normal requests and multipart requests.
