@@ -29,6 +29,7 @@ import java.io.IOException;
 import org.xml.sax.SAXException;
 import java.net.MalformedURLException;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
 import org.apache.avalon.Loggable;
 
@@ -37,7 +38,7 @@ import org.apache.avalon.Loggable;
  * delegating actual SAX event generation.
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-01 20:04:58 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-05 16:23:10 $
  */
 public class ServerPagesGenerator
   extends ServletGenerator
@@ -107,13 +108,13 @@ public class ServerPagesGenerator
 
     URL url = new URL(systemId);
     if (!url.getProtocol().equals("file")) {
-      throw new IOException("Not a file: " + url.toString());
+      throw new ResourceNotFoundException("Not a file: " + url.toString());
     }
 
     File file = new File(url.getFile());
 
     if (!file.canRead()) {
-      throw new IOException("Can't read file: " + url.toString());
+      throw new ResourceNotFoundException("Can't read file: " + url.toString());
     }
 
     String markupLanguage = this.parameters.getParameter(
@@ -130,7 +131,7 @@ public class ServerPagesGenerator
         programGenerator.load(file, markupLanguage, programmingLanguage, resolver);
     } catch (Exception e) {
       log.warn("ServerPagesGenerator.generate()", e);
-      throw new ProcessingException(e.getMessage());
+      throw new ResourceNotFoundException(e.getMessage(), e);
     }
 
     if (generator instanceof Loggable) {

@@ -16,6 +16,7 @@ import java.util.Map;
 import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
 import org.apache.cocoon.xml.XMLCompiler;
 import org.apache.cocoon.xml.XMLInterpreter;
@@ -56,7 +57,7 @@ import org.apache.avalon.Parameters;
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@sundn.de">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-01-23 17:34:53 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-02-05 16:23:09 $
  */
 public class FileGenerator extends ComposerGenerator implements Poolable, Configurable {
 
@@ -173,7 +174,7 @@ public class FileGenerator extends ComposerGenerator implements Poolable, Config
             }
         } catch (IOException e) {
             log.error("FileGenerator.generate()", e);
-            throw(e);
+            throw new ResourceNotFoundException("FileGenerator could not find resource", e);
         } catch (SAXException e) {
             log.error("FileGenerator.generate()", e);
             throw(e);

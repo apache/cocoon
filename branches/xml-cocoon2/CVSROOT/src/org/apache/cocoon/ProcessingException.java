@@ -7,18 +7,30 @@
  *****************************************************************************/
 package org.apache.cocoon;
 
+import org.apache.avalon.CascadingException;
+
 /**
+ * This Exception is thrown every time there is a problem in processing
+ * a request.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.6 $ $Date: 2000-07-29 18:30:26 $
+ * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-05 16:23:03 $
  */
-public class ProcessingException extends Exception {
+public class ProcessingException extends CascadingException {
 
     /**
      * Construct a new <code>ProcessingException</code> instance.
      */
     public ProcessingException(String message) {
-        super(message);
+        super(message, null);
+    }
+
+    /**
+     * Construct a new <code>ProcessingException</code> that references
+     * a parent Exception.
+     */
+    public ProcessingException(String message, Throwable t) {
+        super(message, t);
     }
 }

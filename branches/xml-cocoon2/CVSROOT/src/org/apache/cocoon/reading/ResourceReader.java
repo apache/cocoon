@@ -24,13 +24,14 @@ import javax.servlet.ServletContext;
 
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
 
 import org.xml.sax.SAXException;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.11 $ $Date: 2001-01-13 13:39:19 $
+ * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-02-05 16:23:14 $
  *
  * The <code>ResourceReader</code> component is used to serve binary data
  * in a sitemap pipeline. It makes use of HTTP Headers to determine if
@@ -89,12 +90,12 @@ public class ResourceReader extends AbstractReader {
             }
         } catch (SAXException se) {
             log.error("ResourceReader: error resolving source \"" + source + "\"", se);
-            throw new IOException ("ResourceReader: error resolving source \""
-                +source+"\". "+se.toString());
+            throw new ResourceNotFoundException ("ResourceReader: error resolving source \""
+                +source+"\". ", se);
         } catch (MalformedURLException mue) {
             log.error("ResourceReader: malformed source \"" + source + "\"", mue);
-            throw new IOException ("ResourceReader: malformed source \""
-                +src+"\". "+mue.toString());
+            throw new ResourceNotFoundException ("ResourceReader: malformed source \""
+                +src+"\". ", mue);
         }
         byte[] buffer = new byte[(int)len];
         is.read(buffer);

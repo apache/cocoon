@@ -62,6 +62,7 @@
 
     import org.apache.cocoon.Cocoon;
     import org.apache.cocoon.ProcessingException;
+    import org.apache.cocoon.ResourceNotFoundException;
     import org.apache.cocoon.acting.Action;
     import org.apache.cocoon.environment.Environment;
     import org.apache.cocoon.matching.Matcher;
@@ -78,7 +79,7 @@
      *
      * @author &lt;a href="mailto:Giacomo.Pati@pwr.ch"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Revision: 1.1.2.73 $ $Date: 2000-12-30 21:33:08 $
+     * @version CVS $Revision: 1.1.2.74 $ $Date: 2001-02-05 16:23:06 $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -329,6 +330,9 @@
           <xsl:variable name="pipeline-position" select="position()"/>
           try {
             <xsl:apply-templates select="./*"/>
+          } catch (ResourceNotFoundException rse) {
+            log.warn("404 Resource Not Found", rse);
+            throw rse;
           } catch (Exception e) {
             log.warn("Error, try to process the error page", e);
             <xsl:choose>
@@ -527,7 +531,7 @@
     <xsl:variable name="action-type">
       <xsl:call-template name="get-parameter">
         <xsl:with-param name="parname">type</xsl:with-param>
-        <xsl:with-param name="default" value=""/>
+        <xsl:with-param name="default">null</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
 
@@ -587,7 +591,7 @@
     <xsl:variable name="action-type">
       <xsl:call-template name="get-parameter">
         <xsl:with-param name="parname">type</xsl:with-param>
-        <xsl:with-param name="default" value=""/>
+        <xsl:with-param name="default">null</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
 
@@ -647,7 +651,7 @@
     <xsl:variable name="action-set">
       <xsl:call-template name="get-parameter">
         <xsl:with-param name="parname">set</xsl:with-param>
-        <xsl:with-param name="default" value=""/>
+        <xsl:with-param name="default">null</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
 

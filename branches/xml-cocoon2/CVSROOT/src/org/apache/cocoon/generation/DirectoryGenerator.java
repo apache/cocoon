@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
- 
+
 package org.apache.cocoon.generation;
 
 import java.io.File;
@@ -22,6 +22,9 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import org.apache.avalon.Parameters;
 import org.apache.avalon.Poolable;
+
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.ResourceNotFoundException;
 
 /**
  * Generates an XML directory listing.
@@ -56,8 +59,8 @@ import org.apache.avalon.Poolable;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-11-29 12:17:56 $ */
- 
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-02-05 16:23:08 $ */
+
 public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
     /** The URI of the namespace of this generator. */
@@ -77,7 +80,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
 
     /*
      * Variables set per-request
-     * 
+     *
      * FIXME: SimpleDateFormat is not supported by all locales!
      */
     protected int depth;
@@ -99,24 +102,24 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par) {
         super.setup(resolver, objectModel, src, par);
-    
+
         String dateFormatString = par.getParameter("dateFormat", null);
-    
+
         if (dateFormatString != null) {
             this.dateFormatter = new SimpleDateFormat(dateFormatString);
         } else {
             this.dateFormatter = new SimpleDateFormat();
         }
-    
+
         this.depth = par.getParameterAsInteger("depth", 1);
-    
+
         /* Create a reusable attributes for creating nodes */
         AttributesImpl attributes = new AttributesImpl();
     }
 
     /**
      * Generate XML data.
-     * 
+     *
      * @throws  SAXException
      *      if an error occurs while outputting the document
      * @throws  IOException
@@ -124,16 +127,17 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
      *      filesystem
      */
     public void generate()
-    throws SAXException, IOException {
+    throws SAXException, ProcessingException {
+        try {
 
         InputSource input;
         URL url;
         File path;
-    
+
         input = resolver.resolveEntity(null,super.source);
             url = new URL(input.getSystemId());
             path = new File(url.getFile());
-    
+
             if (!path.isDirectory()) {
                 throw new IOException("Cannot read directory from "
                       + url.toString() + "\"");
@@ -144,6 +148,10 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
         addPath(path, depth);
         this.contentHandler.endPrefixMapping(PREFIX);
         this.contentHandler.endDocument();
+        } catch (IOException ioe) {
+            log.warn("Could not get resource", ioe);
+            throw new ResourceNotFoundException("Could not get directory", ioe);
+        }
 
     }
 
@@ -185,7 +193,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
      *      the name of the new node
      * @param   path
      *      the file/directory to use when setting attributes
-     * 
+     *
      * @throws  SAXException
      *      if an error occurs while creating the node
      */
@@ -196,8 +204,8 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
     }
 
     /**
-     * Sets the attributes for a given path. The default method sets attributes 
-     * for the name of thefile/directory and for the last modification time 
+     * Sets the attributes for a given path. The default method sets attributes
+     * for the name of thefile/directory and for the last modification time
      * of the path.
      *
      * @param path
@@ -227,7 +235,7 @@ public class DirectoryGenerator extends ComposerGenerator implements Poolable {
      *      the name of the new node
      * @param   path
      *      the file/directory to use when setting attributes
-     * 
+     *
      * @throws  SAXException
      *      if an error occurs while closing the node
      */

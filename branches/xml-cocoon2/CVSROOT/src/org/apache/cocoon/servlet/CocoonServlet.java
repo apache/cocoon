@@ -35,6 +35,7 @@ import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Notifier;
 import org.apache.cocoon.Notification;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.environment.http.HttpEnvironment;
 import org.apache.cocoon.util.ClassUtils;
 import org.apache.cocoon.util.NetUtils;
@@ -54,7 +55,7 @@ import org.apache.log.LogTarget;
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:nicolaken@supereva.it">Nicola Ken Barozzi</a> Aisa
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.4.48 $ $Date: 2001-01-31 15:03:55 $
+ * @version CVS $Revision: 1.1.4.49 $ $Date: 2001-02-05 16:23:15 $
  */
 
 public class CocoonServlet extends HttpServlet {
@@ -368,6 +369,21 @@ public class CocoonServlet extends HttpServlet {
                 n.addExtraDescription("path-info", uri);
                 Notifier.notify(n, req, res);
             }
+        } catch (ResourceNotFoundException rse) {
+            log.warn("The resource was not found", rse);
+
+            res.setStatus(res.SC_NOT_FOUND);
+            Notification n = new Notification(this);
+            n.setType("resource-not-found");
+            n.setTitle("Resource not found");
+            n.setSource("Cocoon servlet");
+            n.setMessage("Resource not found");
+            n.setDescription("The requested URI \""
+                             + req.getRequestURI()
+                             + "\" was not found.");
+            n.addExtraDescription("request-uri", req.getRequestURI());
+            n.addExtraDescription("path-info", uri);
+            Notifier.notify(n, req, res);
         } catch (Exception e) {
             log.error("Problem with servlet", e);
             //res.setStatus(res.SC_INTERNAL_SERVER_ERROR);

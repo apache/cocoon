@@ -27,7 +27,7 @@ import org.w3c.tidy.Tidy;
 
 /**
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Revision: 1.1.2.5 $ $Date: 2000-12-20 23:12:46 $
+ * @version CVS $Revision: 1.1.2.6 $ $Date: 2001-02-05 16:23:10 $
  */
 public class HTMLGenerator extends ComposerGenerator implements Poolable {
     /**
@@ -48,8 +48,8 @@ public class HTMLGenerator extends ComposerGenerator implements Poolable {
             DOMStreamer streamer = new DOMStreamer(this.contentHandler,this.lexicalHandler);
             streamer.stream(doc);
         } catch (IOException e){
-            log.error("HTMLGenerator.generate()", e);
-            throw(e);
+            log.warn("HTMLGenerator.generate()", e);
+            throw new ResourceNotFoundException("Could not get Resource for HTMLGenerator", e);
         } catch (SAXException e){
             log.error("HTMLGenerator.generate()", e);
             throw(e);
