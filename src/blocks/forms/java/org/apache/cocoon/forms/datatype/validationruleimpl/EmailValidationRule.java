@@ -18,12 +18,13 @@ package org.apache.cocoon.forms.datatype.validationruleimpl;
 import org.apache.cocoon.forms.Constants;
 import org.apache.cocoon.forms.util.I18nMessage;
 import org.apache.cocoon.forms.validation.ValidationError;
+import org.apache.commons.validator.EmailValidator;
 import org.outerj.expression.ExpressionContext;
 
 /**
  * ValidationRule that checks that a string is an email address.
  * 
- * @version $Id: EmailValidationRule.java,v 1.2 2004/03/09 14:58:45 cziegeler Exp $
+ * @version $Id$
  */
 public class EmailValidationRule extends AbstractValidationRule {
 
@@ -40,31 +41,8 @@ public class EmailValidationRule extends AbstractValidationRule {
         return clazz.isAssignableFrom(String.class) && !arrayType;
     }
 
-    private boolean isEmail(String email) {
-        // TODO there's room for improvement here
-
-        // check that the email address does not contain spaces
-        int space = email.indexOf(' ');
-        if (space != -1)
-            return false;
-
-        // check that there is an @, and that there's at least one character before the @
-        int atpos = email.indexOf('@');
-        if (atpos < 1)
-            return false;
-
-        atpos++;
-
-        // check there's not second at
-        int anotheratpos = email.indexOf('@', atpos);
-        if (anotheratpos != -1)
-            return false;
-
-        // check there's at least one dot after the at
-        int dotAfterAt = email.indexOf('.', atpos);
-        if (dotAfterAt == -1)
-            return false;
-
-        return true;
+    boolean isEmail(String email) {
+        EmailValidator ev = EmailValidator.getInstance();
+        return ev.isValid(email);
     }
 }
