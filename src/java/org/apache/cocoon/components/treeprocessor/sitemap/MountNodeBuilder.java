@@ -24,7 +24,7 @@ import org.apache.cocoon.components.treeprocessor.variables.VariableResolverFact
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: MountNodeBuilder.java,v 1.3 2004/05/25 07:28:25 cziegeler Exp $
+ * @version CVS $Id: MountNodeBuilder.java,v 1.4 2004/06/05 08:18:50 sylvain Exp $
  */
 
 public class MountNodeBuilder extends AbstractProcessingNodeBuilder implements ThreadSafe {
@@ -39,7 +39,7 @@ public class MountNodeBuilder extends AbstractProcessingNodeBuilder implements T
         MountNode node = new MountNode(
             VariableResolverFactory.getResolver(config.getAttribute("uri-prefix"), manager),
             VariableResolverFactory.getResolver(config.getAttribute("src"), manager),
-            this.treeBuilder.getProcessor(),
+            this.treeBuilder.getProcessor().getWrappingProcessor(),
             config.getAttributeAsBoolean("check-reload", true)
         );
         return (this.treeBuilder.setupNode(node, config));
