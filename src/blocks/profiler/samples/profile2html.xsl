@@ -4,8 +4,6 @@
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:profile="http://apache.org/cocoon/profiler/1.0">
 
-  <xsl:import href="xml2html.xsl"/>
-
   <xsl:param name="sort"/>
   <xsl:param name="key"/>
   <xsl:param name="result"/>
