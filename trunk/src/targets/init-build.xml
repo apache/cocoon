@@ -152,7 +152,7 @@
     <taskdef name="xpatch" classname="XConfToolTask" classpath="${tools.tasks.dest}"/>
 
     <!-- Jing is used in various targets for XML validation with RELAX NG -->
-    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="classpath"/>
+    <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask" classpathref="tasks.classpath"/>
 
     <!-- compile the loader, used to change classpath especially for the CLI and Jetty -->
     <mkdir dir="${tools.loader.dest}"/>
