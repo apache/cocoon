@@ -527,6 +527,8 @@
           <include name="lib/*.jar"/>
         </fileset>
         <pathelement location="${{build.blocks}}/{$block-name}/mocks"/>
+        <pathelement location="${{build.blocks}}/{$block-name}/dest"/>
+        <pathelement location="${{build.blocks}}/{$block-name}/samples"/>
         <xsl:for-each select="$cocoon-block-dependencies">
           <path refid="{substring-after(@project,'cocoon-block-')}.classpath"/>
         </xsl:for-each>
