@@ -18,7 +18,7 @@
 <!--+
     | Batik block samples sitemap
     |
-    | CVS $Id: sitemap.xmap,v 1.1 2004/04/04 04:44:09 antonio Exp $
+    | CVS $Id: sitemap.xmap,v 1.2 2004/04/15 08:40:17 bdelacretaz Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -62,8 +62,8 @@
 
       <!-- ========================== BSF Groovy ========================== -->
 
-      <map:match pattern="hello.gy">
-        <map:generate type="script" src="generator/hello.gy"/>
+      <map:match pattern="generator/*.gy">
+        <map:generate type="script" src="generator/{1}.gy"/>
         <map:transform src="context://samples/hello-world/style/xsl/page2html.xsl"/>
         <map:serialize type="html"/>
       </map:match>
