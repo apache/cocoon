@@ -28,9 +28,10 @@
     <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
 
-	<!-- generate sitemap entries -->
+	<!-- generate sitemap entries 
     <sitemap-components sitemap="${build.webapp}/sitemap.xmap" source="${java}"/>
-
+    -->
+    
     <copy todir="${build.webapp}/stylesheets" filtering="on">
       <fileset dir="${webapp}/stylesheets">
         <include name="**/*.xslt"/>
