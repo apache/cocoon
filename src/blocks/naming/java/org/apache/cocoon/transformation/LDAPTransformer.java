@@ -968,10 +968,12 @@ public class LDAPTransformer extends AbstractTransformer {
                                                 if (query_index > 0) {
                                                     switch (transformer.getQuery(query_index - 1).current_state) {
                                                         case LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT :
-                                                            if (!transformer.getQuery(query_index - 1).filter.equals("")) {
-                                                                transformer.getQuery(query_index - 1).filter.concat(", ");
+                                                            StringBuffer temp =  new StringBuffer(transformer.getQuery(query_index - 1).filter);
+                                                            if (temp.length() > 0) {
+                                                                temp.append(", ");
                                                             }
-                                                            transformer.getQuery(query_index - 1).filter.concat(attrID).concat("=").concat(attrVal);
+                                                            temp.append(attrID).append("=").append(attrVal);
+                                                            transformer.getQuery(query_index - 1).filter = temp.toString();
                                                             break;
                                                         default :
                                                             transformer.start(attrID, attr);
@@ -1016,10 +1018,12 @@ public class LDAPTransformer extends AbstractTransformer {
                                             if (query_index > 0) {
                                                 switch (transformer.getQuery(query_index - 1).current_state) {
                                                     case LDAPTransformer.STATE_INSIDE_FILTER_ELEMENT :
-                                                        if (!transformer.getQuery(query_index - 1).filter.equals("")) {
-                                                            transformer.getQuery(query_index - 1).filter.concat(", ");
+                                                        StringBuffer temp = new StringBuffer(transformer.getQuery(query_index - 1).filter);
+                                                        if (temp.length() > 0) {
+                                                            temp.append(", ");
                                                         }
-                                                        transformer.getQuery(query_index - 1).filter.concat(attrID).concat("=").concat(attrVal);
+                                                        temp.append(attrID).append("=").append(attrVal);
+                                                        transformer.getQuery(query_index - 1).filter = temp.toString();
                                                         break;
                                                     default :
                                                         transformer.start(attrID, attr);
