@@ -50,22 +50,21 @@
 */
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.parameters.Parameters;
-
-import org.apache.cocoon.environment.Cookie;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.sitemap.PatternException;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.environment.Cookie;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.sitemap.PatternException;
 
 /**
  * Matches cookies agains given name. Returns value of the matched cookie.
  *
  * @author <a href="mailto:maciejka@tiger.com.pl">Maciek Kaminski</a>
- * @version CVS $Id: CookieMatcher.java,v 1.5 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: CookieMatcher.java,v 1.6 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Matcher

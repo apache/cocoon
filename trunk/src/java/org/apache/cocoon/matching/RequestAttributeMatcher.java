@@ -50,12 +50,12 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class allows for matching based on a request attribute.
@@ -70,7 +70,7 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RequestAttributeMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: RequestAttributeMatcher.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public class RequestAttributeMatcher implements Matcher, ThreadSafe
 {

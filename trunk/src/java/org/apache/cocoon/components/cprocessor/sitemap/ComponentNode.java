@@ -13,7 +13,6 @@ import java.util.Collections;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.util.StringUtils;
 
 /**

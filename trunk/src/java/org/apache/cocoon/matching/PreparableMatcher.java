@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.sitemap.PatternException;
-
-import java.util.Map;
 
 /**
  * A matcher that can prepare patterns during sitemap setup for faster match at request time.
@@ -61,7 +61,7 @@ import java.util.Map;
  * or to match with a request-time evaluated pattern (for {..} substitution).
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: PreparableMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: PreparableMatcher.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public interface PreparableMatcher extends Matcher {
 

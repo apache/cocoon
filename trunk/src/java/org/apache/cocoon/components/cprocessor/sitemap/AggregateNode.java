@@ -60,12 +60,12 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.sitemap.ContentAggregator;
 import org.apache.cocoon.sitemap.PatternException;
@@ -89,7 +89,7 @@ import org.apache.cocoon.util.StringUtils;
  * <a href="http://marc.theaimsgroup.com/?l=xml-cocoon-dev&m=100517130418424">here</a>.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AggregateNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: AggregateNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public class AggregateNode extends AbstractProcessingNode {
 

@@ -45,9 +45,9 @@
 */
 package org.apache.cocoon.components.flow;
 
-import org.apache.cocoon.environment.Environment;
-
 import java.util.List;
+
+import org.apache.cocoon.environment.Environment;
 
 /**
  * The interface to the flow scripting languages. This interface is
@@ -108,7 +108,7 @@ import java.util.List;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 11, 2002
- * @version CVS $Id: Interpreter.java,v 1.4 2003/10/22 18:10:48 bloritsch Exp $
+ * @version CVS $Id: Interpreter.java,v 1.5 2004/01/05 08:17:31 cziegeler Exp $
  */
 public interface Interpreter
 {

@@ -50,27 +50,21 @@
 */
 package org.apache.cocoon.matching.modular;
 
+import java.util.Map;
+
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
-
 import org.apache.cocoon.components.modules.input.InputModule;
-
 import org.apache.cocoon.matching.AbstractRegexpMatcher;
 import org.apache.cocoon.matching.Matcher;
-
-import java.util.Map;
 
 /**
  * Matches against a regular expression. Needs an input module to
@@ -85,7 +79,7 @@ import java.util.Map;
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: CachingRegexpMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: CachingRegexpMatcher.java,v 1.3 2004/01/05 08:17:31 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Matcher

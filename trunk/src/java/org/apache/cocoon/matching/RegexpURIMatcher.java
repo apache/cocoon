@@ -50,16 +50,16 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
 
 /**
  * Matches the request URIs against a regular expression pattern.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: RegexpURIMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: RegexpURIMatcher.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Matcher

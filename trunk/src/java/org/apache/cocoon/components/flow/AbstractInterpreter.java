@@ -45,6 +45,10 @@
 */
 package org.apache.cocoon.components.flow;
 
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -64,10 +68,6 @@ import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.excalibur.source.SourceUtil;
 
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Map;
-
 /**
  * Abstract superclass for various scripting languages used by Cocoon
  * for flow control. Defines some useful behavior like the ability to
@@ -77,7 +77,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.14 2003/12/28 21:09:59 unico Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.15 2004/01/05 08:17:31 cziegeler Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Serviceable, Contextualizable, Interpreter,

@@ -51,15 +51,15 @@
 package org.apache.cocoon.components.language.generator;
 
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.excalibur.source.Source;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.excalibur.source.Source;
 
 /**
  * This interface defines a loader for programs automatically built from XML
  * documents written in a <code>MarkupLanguage</code>
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Id: ProgramGenerator.java,v 1.4 2003/12/29 13:30:11 unico Exp $
+ * @version CVS $Id: ProgramGenerator.java,v 1.5 2004/01/05 08:17:30 cziegeler Exp $
  */
 public interface ProgramGenerator {
 

@@ -50,16 +50,16 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
 
 /**
  * Match the request URI against a wildcard expression.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: WildcardURIMatcher.java,v 1.3 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: WildcardURIMatcher.java,v 1.4 2004/01/05 08:17:31 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Matcher

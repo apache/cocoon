@@ -56,10 +56,10 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.notification.Notifying;
-import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
+import org.apache.cocoon.components.notification.Notifying;
+import org.apache.cocoon.components.notification.NotifyingBuilder;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.ObjectModelHelper;
 
@@ -68,7 +68,7 @@ import org.apache.cocoon.environment.ObjectModelHelper;
  *
  * @author <a href="mailto:juergen.seitz@basf-it-services.com">J&uuml;rgen Seitz</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: ErrorHandlerHelper.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: ErrorHandlerHelper.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public class ErrorHandlerHelper extends AbstractLogEnabled implements Serviceable {
 

@@ -62,14 +62,12 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 import java.util.TimeZone;
 
@@ -82,7 +80,6 @@ import org.apache.cocoon.components.flow.javascript.fom.FOM_JavaScriptFlowHelper
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.transformation.AbstractTransformer;
 import org.apache.cocoon.xml.XMLConsumer;
@@ -97,7 +94,6 @@ import org.apache.commons.jexl.util.introspection.VelPropertyGet;
 import org.apache.commons.jexl.util.introspection.VelPropertySet;
 import org.apache.commons.jxpath.CompiledExpression;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
-import org.apache.commons.jxpath.ExpressionContext;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.JXPathContextFactory;
@@ -356,7 +352,7 @@ import org.xml.sax.helpers.LocatorImpl;
  * &lt;/table&gt;
  * </pre></p>
  * 
- *  @version CVS $Id: JXTemplateGenerator.java,v 1.24 2003/12/29 15:24:35 unico Exp $
+ *  @version CVS $Id: JXTemplateGenerator.java,v 1.25 2004/01/05 08:17:31 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Generator

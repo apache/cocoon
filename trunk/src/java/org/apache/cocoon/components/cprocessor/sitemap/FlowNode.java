@@ -51,10 +51,10 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.Constants;
-import org.apache.cocoon.components.flow.AbstractInterpreter;
-import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
+import org.apache.cocoon.components.flow.AbstractInterpreter;
+import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
 
@@ -64,7 +64,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * @since September 13, 2002
- * @version CVS $Id: FlowNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: FlowNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public class FlowNode extends AbstractProcessingNode implements Contextualizable {
 

@@ -53,7 +53,6 @@ package org.apache.cocoon.components.cprocessor.sitemap;
 import java.util.ArrayList;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
@@ -75,7 +74,7 @@ import org.apache.cocoon.environment.Redirector;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: PipelinesNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: PipelinesNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

@@ -50,12 +50,12 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-
-import java.util.Map;
 
 /**
  * Matches a sitemap parameter against a regular expression.
@@ -67,7 +67,7 @@ import java.util.Map;
  * </table>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RegexpParameterMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: RegexpParameterMatcher.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Matcher

@@ -50,10 +50,10 @@
 */
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.framework.parameters.Parameters;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.avalon.framework.parameters.Parameters;
 
 /**
  * This class allows for matching based on a parameter provided from the sitemap.
@@ -68,7 +68,7 @@ import java.util.Map;
  * </pre>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: ParameterMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: ParameterMatcher.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=Matcher

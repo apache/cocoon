@@ -50,14 +50,11 @@
 */
 package org.apache.cocoon.components.cprocessor.sitemap;
 
-import java.util.Collection;
 import java.util.Map;
 
-import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
@@ -70,7 +67,7 @@ import org.apache.cocoon.sitemap.PatternException;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: GenerateNode.java,v 1.2 2003/12/28 22:11:19 unico Exp $
+ * @version CVS $Id: GenerateNode.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

@@ -56,14 +56,12 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.excalibur.event.Queue;
 import org.apache.excalibur.event.Sink;
 import org.apache.excalibur.event.command.RepeatedCommand;
@@ -75,7 +73,7 @@ import org.apache.excalibur.event.command.RepeatedCommand;
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
  * @since March 19, 2002
  * @see ContinuationsManager
- * @version CVS $Id: ContinuationsManagerImpl.java,v 1.9 2003/12/26 18:43:39 unico Exp $
+ * @version CVS $Id: ContinuationsManagerImpl.java,v 1.10 2004/01/05 08:17:31 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ContinuationsManager

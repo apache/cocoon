@@ -50,14 +50,13 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
 
 /**
  * Matches a request attribute against a wildcard expression.
@@ -70,7 +69,7 @@ import java.util.Map;
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">Christian Haul</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: WildcardRequestAttributeMatcher.java,v 1.1 2003/03/09 00:09:34 pier Exp $
+ * @version CVS $Id: WildcardRequestAttributeMatcher.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public class WildcardRequestAttributeMatcher extends AbstractWildcardMatcher
     implements Configurable

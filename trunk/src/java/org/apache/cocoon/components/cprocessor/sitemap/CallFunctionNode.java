@@ -56,12 +56,12 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.components.cprocessor.AbstractProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
+import org.apache.cocoon.components.flow.Interpreter;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.sitemap.PatternException;
@@ -74,7 +74,7 @@ import org.apache.cocoon.sitemap.PatternException;
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
  * 
  * @since March 13, 2002
- * @version CVS $Id: CallFunctionNode.java,v 1.2 2003/12/30 04:30:57 crossley Exp $
+ * @version CVS $Id: CallFunctionNode.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

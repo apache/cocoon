@@ -57,7 +57,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
-import org.apache.cocoon.components.cprocessor.NamedProcessingNode;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
 import org.apache.cocoon.environment.Environment;
@@ -66,7 +65,7 @@ import org.apache.cocoon.environment.Environment;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: ActionSetNode.java,v 1.1 2003/12/29 17:13:15 unico Exp $
+ * @version CVS $Id: ActionSetNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

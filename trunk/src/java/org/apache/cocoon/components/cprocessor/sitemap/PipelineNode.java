@@ -56,7 +56,6 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.ConnectionResetException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.components.cprocessor.AbstractParentProcessingNode;
 import org.apache.cocoon.components.cprocessor.InvokeContext;
 import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.SimpleParentProcessingNode;
@@ -71,7 +70,7 @@ import org.apache.cocoon.environment.Environment;
  * @author <a href="mailto:gianugo@apache.org">Gianugo Rabellino</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: PipelineNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: PipelineNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

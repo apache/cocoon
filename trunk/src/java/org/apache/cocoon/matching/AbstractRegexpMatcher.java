@@ -50,16 +50,15 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.sitemap.PatternException;
 import org.apache.regexp.RE;
 import org.apache.regexp.RECompiler;
 import org.apache.regexp.REProgram;
 import org.apache.regexp.RESyntaxException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Base class for all matchers using a regular expression pattern.
@@ -67,7 +66,7 @@ import java.util.Map;
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractRegexpMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: AbstractRegexpMatcher.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  */
 
 public abstract class AbstractRegexpMatcher extends AbstractPreparableMatcher {

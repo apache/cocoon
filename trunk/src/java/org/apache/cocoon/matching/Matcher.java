@@ -50,15 +50,15 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.sitemap.PatternException;
-
-import java.util.Map;
 
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Id: Matcher.java,v 1.2 2003/10/25 21:59:50 ghoward Exp $
+ * @version CVS $Id: Matcher.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  */
 public interface Matcher {
 

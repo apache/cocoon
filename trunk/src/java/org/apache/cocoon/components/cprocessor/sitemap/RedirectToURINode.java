@@ -58,15 +58,15 @@ import org.apache.cocoon.components.cprocessor.ProcessingNode;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolverFactory;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.PermanentRedirector;
+import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.sitemap.PatternException;
 
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: RedirectToURINode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: RedirectToURINode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProcessingNode

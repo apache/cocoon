@@ -63,9 +63,7 @@ import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.classloader.ClassLoaderManager;
@@ -84,7 +82,7 @@ import org.apache.excalibur.source.Source;
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: ProgramGeneratorImpl.java,v 1.7 2003/12/29 13:30:36 unico Exp $
+ * @version CVS $Id: ProgramGeneratorImpl.java,v 1.8 2004/01/05 08:17:30 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=ProgramGenerator

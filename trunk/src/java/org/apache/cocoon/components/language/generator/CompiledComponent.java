@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.components.language.generator;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Modifiable;
 
@@ -59,7 +58,7 @@ import org.apache.cocoon.Modifiable;
  * includes Sitemaps and XSP Pages
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Id: CompiledComponent.java,v 1.3 2003/12/29 13:30:24 unico Exp $
+ * @version CVS $Id: CompiledComponent.java,v 1.4 2004/01/05 08:17:30 cziegeler Exp $
  */
 public interface CompiledComponent extends Serviceable, Modifiable {
 }

@@ -52,7 +52,6 @@ package org.apache.cocoon.components.cprocessor.sitemap;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -68,7 +67,7 @@ import org.apache.cocoon.util.StringUtils;
  *
  * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
  * @author <a href="mailto:Michael.Melhem@dresdner-bank.com">Michael Melhem</a>
- * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.1 2003/12/28 21:03:17 unico Exp $
+ * @version CVS $Id: PipelineEventComponentProcessingNode.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public abstract class PipelineEventComponentProcessingNode extends AbstractProcessingNode
 implements Initializable {

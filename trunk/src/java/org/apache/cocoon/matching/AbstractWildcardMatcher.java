@@ -50,18 +50,17 @@
 */
 package org.apache.cocoon.matching;
 
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.thread.ThreadSafe;
-import org.apache.cocoon.matching.helpers.WildcardHelper;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.matching.helpers.WildcardHelper;
 
 /**
  * Base class for wildcard matchers
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: AbstractWildcardMatcher.java,v 1.2 2003/12/29 15:24:35 unico Exp $
+ * @version CVS $Id: AbstractWildcardMatcher.java,v 1.3 2004/01/05 08:17:30 cziegeler Exp $
  */
 
 public abstract class AbstractWildcardMatcher extends AbstractPreparableMatcher {

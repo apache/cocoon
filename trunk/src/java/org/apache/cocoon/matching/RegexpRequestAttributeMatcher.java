@@ -50,14 +50,13 @@
 */
 package org.apache.cocoon.matching;
 
+import java.util.Map;
+
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
-
 import org.apache.cocoon.environment.ObjectModelHelper;
-
-import java.util.Map;
 
 /**
  * Matches a request attribute against a regular expression.
@@ -68,7 +67,7 @@ import java.util.Map;
  * </table>
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: RegexpRequestAttributeMatcher.java,v 1.1 2003/03/09 00:09:33 pier Exp $
+ * @version CVS $Id: RegexpRequestAttributeMatcher.java,v 1.2 2004/01/05 08:17:30 cziegeler Exp $
  */
 public class RegexpRequestAttributeMatcher extends AbstractRegexpMatcher
     implements Configurable
