@@ -70,7 +70,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 21, 2002
- * @version CVS $Id: ChoiceConstraint.java,v 1.2 2003/03/16 17:49:05 vgritsenko Exp $
+ * @version CVS $Id: ChoiceConstraint.java,v 1.3 2003/11/20 17:11:02 joerg Exp $
  */
 public class ChoiceConstraint extends AbstractConstraint implements Configurable, SingleThreaded {
 
@@ -99,8 +99,9 @@ public class ChoiceConstraint extends AbstractConstraint implements Configurable
 
     public boolean isSatisfiedBy(Object value, Context context) {
         boolean isValid = validValues.contains(value);
-        System.out.println("checking choice [" + String.valueOf(value) + "] contains [" + String.valueOf(validValues) + "] is " + isValid);
-        getLogger().debug("checking choice [" + String.valueOf(value) + "] contains [" + String.valueOf(validValues) + "] is " + isValid);
+        getLogger().debug("checking choice [" + String.valueOf(value)
+                          + "] contains [" + String.valueOf(validValues)
+                          + "] is " + isValid);
         return (isValid);
     }
 

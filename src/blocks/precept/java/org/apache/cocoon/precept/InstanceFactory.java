@@ -69,7 +69,7 @@ import org.apache.cocoon.precept.preceptors.PreceptorBuilder;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Mar 18, 2002
- * @version CVS $Id: InstanceFactory.java,v 1.3 2003/11/20 16:39:31 joerg Exp $
+ * @version CVS $Id: InstanceFactory.java,v 1.4 2003/11/20 17:11:02 joerg Exp $
  */
 public class InstanceFactory extends AbstractLogEnabled
         implements Component, Configurable, Serviceable, ThreadSafe {
@@ -140,7 +140,6 @@ public class InstanceFactory extends AbstractLogEnabled
                 }
                 catch (Exception e) {
                     getLogger().error("", e);
-                    e.printStackTrace(System.out);
                 }
                 finally {
                     manager.release(preceptorBuilder);

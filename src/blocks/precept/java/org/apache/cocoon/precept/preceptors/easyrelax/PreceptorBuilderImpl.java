@@ -94,7 +94,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * @author Torsten Curdt <tcurdt@dff.st>
  * @since Feb 23, 2002
- * @version CVS $Id: PreceptorBuilderImpl.java,v 1.3 2003/11/20 16:39:31 joerg Exp $
+ * @version CVS $Id: PreceptorBuilderImpl.java,v 1.4 2003/11/20 17:11:02 joerg Exp $
  */
 public class PreceptorBuilderImpl extends AbstractXMLConsumer
         implements PreceptorBuilder, Serviceable, Disposable, Poolable {
@@ -176,8 +176,6 @@ public class PreceptorBuilderImpl extends AbstractXMLConsumer
             parser.parse(source);
         }
         catch (Exception e) {
-            e.printStackTrace(System.out);
-
             getLogger().error("", e);
         }
     }
