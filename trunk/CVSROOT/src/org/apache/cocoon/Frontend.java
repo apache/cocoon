@@ -1,4 +1,4 @@
-/*-- $Id: Frontend.java,v 1.5 1999-12-12 11:12:36 stefano Exp $ -- 
+/*-- $Id: Frontend.java,v 1.6 2000-01-05 16:11:26 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -64,7 +64,7 @@ import org.apache.cocoon.framework.*;
  * smart publishing behavior. (ECS may be used instead).
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-12 11:12:36 $
+ * @version $Revision: 1.6 $ $Date: 2000-01-05 16:11:26 $
  */
 
 public class Frontend implements Defaults {
@@ -73,8 +73,8 @@ public class Frontend implements Defaults {
     public static final String SINGLE_COLUMN = "***";
 
 	public static void status(ServletResponse response, Hashtable environment, Hashtable engine) throws IOException {
-        PrintWriter out = new PrintWriter(response.getWriter());
         response.setContentType("text/html");
+        PrintWriter out = new PrintWriter(response.getWriter());
         header(out);
         table(out, "Environment", environment);
         table(out, "Engine", engine);
@@ -92,8 +92,8 @@ public class Frontend implements Defaults {
     }
 
     public static void print(ServletResponse response, String title, String message) throws IOException {
-        PrintWriter out = new PrintWriter(response.getWriter());
         response.setContentType("text/html");
+        PrintWriter out = new PrintWriter(response.getWriter());
         header(out, 80);
         out.println("<h3 align=\"center\">" + title + "</h3>");
         if (message != null) out.println("<blockquote><pre>" + message + "</pre></blockquote>");
