@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<samplesxpipe xpath="/sitemap/pipelines/pipeline[@id='optional']"
+<samplesxpipe xpath="/sitemap/pipelines/pipeline[last()]"
        unless="match[@pattern='xsp-py/*']">
     <!-- XSP pages written in Python -->
     <map:match pattern="xsp-py/*">
