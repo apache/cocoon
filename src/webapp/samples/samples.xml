@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.12 2003/05/03 17:53:11 gianugo Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.13 2003/05/06 19:23:51 vgritsenko Exp $ -->
 
-<samples xmlns:xlink="http://www.w3.org/1999/xlink">
+<samples name="Cocoon Samples" xmlns:xlink="http://www.w3.org/1999/xlink">
 
   <group name="The Power of XML">
    <sample name="Hello World!" href="hello-world/">
