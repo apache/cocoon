@@ -1,4 +1,4 @@
-/*-- $Id: XSLTProcessor.java,v 1.22 2000-12-01 22:54:41 greenrd Exp $ --
+/*-- $Id: XSLTProcessor.java,v 1.23 2000-12-01 23:14:21 greenrd Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -67,6 +67,7 @@ import org.apache.cocoon.framework.*;
 import org.apache.cocoon.transformer.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Utils;
 import org.apache.cocoon.Defaults;
 
@@ -74,7 +75,7 @@ import org.apache.cocoon.Defaults;
  * This class implements an XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.22 $ $Date: 2000-12-01 22:54:41 $
+ * @version $Revision: 1.23 $ $Date: 2000-12-01 23:14:21 $
  */
 
 public class XSLTProcessor implements Actor, Processor, Status, Defaults, Cacheable {
