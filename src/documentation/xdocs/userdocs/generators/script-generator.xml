@@ -1,29 +1,253 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "../../dtd/document-v10.dtd">
-
-<document>
-	<header>
-		<title>Script Generator</title>
-		<version>0.9</version>
-		<type>Technical document</type>
-		<authors>
-			<person name="Carsten Ziegeler" email="cziegeler@apache.org"/>
-		 </authors>
-		 <abstract>This document describes the script generator of Cocoon.</abstract>
-	</header>
-	<body>
-		<s1 title="Script Generator">
-			<p>????.</p>
-			<ul>
-				<li>Name : script</li>
-				<li>Class: org.apache.cocoon.generation.ScriptGenerator</li>
-				<li>Cacheable: ????.</li>
-			</ul>
-<source>
-     <![CDATA[
-  <map:generate type="script"/>
-     ]]>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN"
+"../../dtd/document-v10.dtd">
+<!--
+  <![CDATA[ CVS Version: $Id: script-generator.xml,v 1.4 2003/12/11 09:23:00 huber Exp $ 
+  ]]>
+--><document>
+  <header>
+    <title>ScriptGenerator in Cocoon</title>
+    <version>0.9</version>
+    <type>Technical document</type>
+    <authors>
+      <person email="huber@apache.org" name="Bernhard Huber" />
+    </authors>
+    <abstract>This document describes the <code>ScriptGenerator</code> of
+    Cocoon.</abstract>
+  </header>
+  <body>
+    <s1 title="ScriptGenerator">
+      <table>
+        <tr>
+          <td>NAME</td>
+          <td>script</td>
+        </tr>
+        <tr>
+          <td>WHAT</td>
+          <td>The <code>ScriptGenerator</code> component is used to generate
+          XML by invoking a script.</td>
+        </tr>
+        <tr>
+          <td>TYPE</td>
+          <td>Generator, Sitemap Component</td>
+        </tr>
+        <tr>
+          <td>BLOCK</td>
+          <td>bsf</td>
+        </tr>
+        <tr>
+          <td>CLASS</td>
+          <td>org.apache.cocoon.generation.ScriptGenerator</td>
+        </tr>
+        <tr>
+          <td>SINCE</td>
+          <td>Cocoon 2.1</td>
+        </tr>
+        <tr>
+          <td>CACHEABLE</td>
+          <td>no</td>
+        </tr>
+      </table>
+    </s1>
+    <s1 title="Description">
+      <p>The ScriptGenerator executes arbitrary scripts using the BSF
+      framework and additional interpreter (Rhino, Jython, etc.) as a Cocoon
+      Generator.</p>
+    </s1>
+    <s1 title="Usage">
+      <p>The ScriptGenerator is used primarily for prototyping a Cocoon
+      generator. Moreover if the generator&#39;s XML output is low and the
+      logic processing is high.</p>
+      <s2 title="Sitemap pipeline examples">
+        <p>The following sample uses the ScriptGenerator for generating XML
+        content for URIs matching the pattern <code>*.js</code>. The output of
+        the script invoked by ScriptGenerator is serialized by the default
+        serializer.</p>
+        <source>
+&#60;map:match pattern=&#34;*.js&#34;&#62;
+  &#60;map:generate type=&#34;script&#34; src=&#34;{0}&#34; &#62;
+  &#60;/map:generate&#62;
+  &#60;map:serialize/&#62;
+&#60;/map:match&#62;
+        </source>
+      </s2>
+      <s2 title="Sitemap component configuration example">
+        <p>The following sample declares the ScriptGenerator in the
+        sitemap&#39;s component section. The ScriptGenerator can be used in
+        the sitemap&#39;s section using <code>type</code> value <code>script</code>.
+        In this sample no extra script language is declared.</p>
+        <source>
+&#60;map:generators...
+  &#60;map:generator name=&#34;script&#34; 
+    src=&#34;org.apache.cocoon.generation.ScriptGenerator&#34;
+    logger=&#34;sitemap.generation.scriptgenerator&#34; 
+  /&#62;
+    &#60;!-- optional generator configuration --&#62;
+    ...
+&#60;/map:generators&#62;
+...
 </source>
-		</s1>
-	</body>
+      </s2>
+      <s2 title="Configuration">
+        <p>The ScriptGenerator allows registering additional script languages.</p>
+        <p>List the newly registered language inside the <code>add-language</code>
+        element, each language is defined in <code>language</code> element, by
+        specifying the name of the language using the <code>name</code>
+        attribute, and the language BSF adaptor using the attribute
+        <code>src</code>.</p>
+        <p>Each registered language should be mapped to at least one
+        extension, as the language detection of ScriptGenerator is based on
+        the script&#39;s extension.</p>
+        <p>The following sample register an new language foobar, the BSF
+        adaptor class is <code>foo.bar.ScriptLanguage</code>, and it is
+        associated with the extensions <code>foo</code>, and <code>bar</code>.</p>
+        <source>&#60;add-language&#62;
+  &#60;language name=&#34;foobar&#34; src=&#34;foo.bar.ScriptLanguage&#34;&#62;
+    &#60;extension=&#34;foo&#34;/&#62;
+    &#60;extension=&#34;bar&#34;/&#62;
+  &#60;/language&#62;
+  ...
+&#60;/add-language&#62;
+</source>
+        <p>The next table lists the default mapping of BSF:</p>
+        <table>
+          <tr>
+            <th>Extension</th>
+            <th>Script language</th>
+          </tr>
+          <tr>
+            <td>javascript</td>
+            <td>js</td>
+          </tr>
+          <tr>
+            <td>jacl</td>
+            <td>jacl</td>
+          </tr>
+          <tr>
+            <td>netrexx</td>
+            <td>nrx</td>
+          </tr>
+          <tr>
+            <td>java</td>
+            <td>java</td>
+          </tr>
+          <tr>
+            <td>javaclass</td>
+            <td>class</td>
+          </tr>
+          <tr>
+            <td>bml</td>
+            <td>bml</td>
+          </tr>
+          <tr>
+            <td>vbscript</td>
+            <td>vbs</td>
+          </tr>
+          <tr>
+            <td>jscript</td>
+            <td>jss</td>
+          </tr>
+          <tr>
+            <td>jscript</td>
+            <td>jss</td>
+          </tr>
+          <tr>
+            <td>perlscript</td>
+            <td>pls</td>
+          </tr>
+          <tr>
+            <td>perl</td>
+            <td>pl</td>
+          </tr>
+          <tr>
+            <td>jpython</td>
+            <td>py</td>
+          </tr>
+          <tr>
+            <td>lotusscript</td>
+            <td>lss</td>
+          </tr>
+          <tr>
+            <td>xslt</td>
+            <td>xslt</td>
+          </tr>
+          <tr>
+            <td>pnuts</td>
+            <td>pnut</td>
+          </tr>
+          <tr>
+            <td>beanbasic</td>
+            <td>bb</td>
+          </tr>
+        </table>
+        <p></p>
+      </s2>
+      <s2 title="Setup">
+        <p>ScriptGenerator registers following objects before invoking the
+        script:</p>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Object Typ</th>
+            <th>Comment</th>
+          </tr>
+          <tr>
+            <td>resolver</td>
+            <td>Resolver</td>
+            <td>Cocoon&#39;s resolver</td>
+          </tr>
+          <tr>
+            <td>source</td>
+            <td>Source</td>
+            <td>src attribute of this ScriptGenerator</td>
+          </tr>
+          <tr>
+            <td>objectModel</td>
+            <td>Map</td>
+            <td>Cocoon&#39;s objectModel</td>
+          </tr>
+          <tr>
+            <td>parameters</td>
+            <td>Parameters</td>
+            <td>paramters of this ScriptGenerator</td>
+          </tr>
+          <tr>
+            <td>output</td>
+            <td>StringBuffer</td>
+            <td>XML content, forwarded into Cocoon&#39;s XML pipeline</td>
+          </tr>
+          <tr>
+            <td>logger</td>
+            <td>Logger</td>
+            <td>logger of this ScriptGenerator</td>
+          </tr>
+        </table>
+        <p>The script shall write XML content into the StringBuffer object
+        <code>output.</code> The content of <code>output</code> is parsed by
+        the ScriptGenerator and forwarded into the sitemap pipeline.</p>
+      </s2>
+      <s2 title="Effect on Object Model and Sitemap Parameters">
+        <p>none</p>
+      </s2>
+    </s1>
+    <s1 title="Bugs/Caveats">
+      <p>ScriptGenerator expects the script to write the XML content into the
+      passed object <code>output</code>.</p>
+      <p>Be aware to provide script language implementation, beside BSF
+      implementation.</p>
+    </s1>
+    <s1 title="History">
+      <p>07-24-03: initial creation</p>
+    </s1>
+    <s1 title="Copyright">
+      <p>Copyright (C) 1999-2003 The Apache Software Foundation. All rights
+      reserved.</p>
+    </s1>
+    <s1 title="See also">
+      <p><!-- Links to related components pages. -->A general documentation
+      about generators is available at <link href="../concepts/sitemap.html">generators</link>.</p>
+      <p>Further Documentation about BSF is available <link
+      href="http://www-124.ibm.com/developerworks/projects/bsf">here</link>.</p>
+    </s1>
+  </body>
 </document>
