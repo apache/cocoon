@@ -18,7 +18,6 @@ package org.apache.cocoon.environment.commandline;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -27,13 +26,14 @@ import org.apache.cocoon.environment.Cookie;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Session;
+import org.apache.commons.collections.IteratorUtils;
 
 /**
  * Creates a specific servlet request simulation from command line usage.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CommandLineRequest.java,v 1.10 2004/07/07 07:58:50 cziegeler Exp $
+ * @version CVS $Id: CommandLineRequest.java,v 1.11 2004/07/11 13:59:12 cziegeler Exp $
  */
 
 /*
@@ -41,19 +41,6 @@ import org.apache.cocoon.environment.Session;
  * and should be fixed in the future if required
  */
 public class CommandLineRequest implements Request {
-
-    private class IteratorWrapper implements Enumeration {
-        private Iterator iterator;
-        public IteratorWrapper(Iterator i) {
-            this.iterator = i;
-        }
-        public boolean hasMoreElements() {
-            return iterator.hasNext();
-        }
-        public Object nextElement() {
-            return iterator.next();
-        }
-    }
 
     private class EmptyEnumeration implements Enumeration {
         public boolean hasMoreElements() {
@@ -68,10 +55,11 @@ public class CommandLineRequest implements Request {
     private String contextPath;
     private String servletPath;
     private String pathInfo;
+    private Map globalAttributes;
     private Map attributes;
     private Map parameters;
     private Map headers;
-    private String characterEncoding = null;
+    private String characterEncoding;
 
     public CommandLineRequest(Environment env,
                               String contextPath,
@@ -108,7 +96,8 @@ public class CommandLineRequest implements Request {
         this.contextPath = contextPath;
         this.servletPath = servletPath;
         this.pathInfo = pathInfo;
-        this.attributes = (attributes == null ? new HashMap() : attributes);
+        this.globalAttributes = (attributes == null ? new HashMap() : attributes);
+        this.attributes = new HashMap();
         this.parameters = parameters;
         this.headers = headers;
     }
@@ -140,17 +129,76 @@ public class CommandLineRequest implements Request {
     public String getQueryString() { return null; } // use parameters instead
     public String getPathTranslated() { return null; } // FIXME (SM) this is legal but should we do something more?
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String)
+     */
     public Object getAttribute(String name) {
-        return this.attributes.get(name);
+        return this.getAttribute(name, Request.GLOBAL_SCOPE);
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttributeNames()
+     */
     public Enumeration getAttributeNames() {
-        return new IteratorWrapper(this.attributes.keySet().iterator());
+        return this.getAttributeNames(Request.GLOBAL_SCOPE);
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
+     */
     public void setAttribute(String name, Object value) {
-        this.attributes.put(name, value);
+        this.setAttribute(name, value, Request.GLOBAL_SCOPE);
     }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
+     */
     public void removeAttribute(String name) {
-        this.attributes.remove(name);
+        this.removeAttribute(name, Request.GLOBAL_SCOPE);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+     */
+    public Object getAttribute(String name, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            return this.attributes.get(name);
+        } else {
+            return this.globalAttributes.get(name);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+     */
+    public Enumeration getAttributeNames(int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            return IteratorUtils.asEnumeration(this.attributes.keySet().iterator());
+        } else {
+            return IteratorUtils.asEnumeration(this.globalAttributes.keySet().iterator());
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+     */
+    public void setAttribute(String name, Object value, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            this.attributes.put(name, value);
+        } else {
+            this.globalAttributes.put(name, value);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+     */
+    public void removeAttribute(String name, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            this.attributes.remove(name);
+        } else {
+            this.globalAttributes.remove(name);
+        }
     }
 
     public String getParameter(String name) {
@@ -173,7 +221,7 @@ public class CommandLineRequest implements Request {
     }
 
     public Enumeration getParameterNames() {
-        return (this.parameters != null) ? new IteratorWrapper(this.parameters.keySet().iterator()) : null;
+        return (this.parameters != null) ? IteratorUtils.asEnumeration(this.parameters.keySet().iterator()) : null;
     }
 
     public String[] getParameterValues(String name) {
@@ -207,7 +255,7 @@ public class CommandLineRequest implements Request {
 
     public Enumeration getHeaderNames() {
         if (headers != null) {
-            return new IteratorWrapper(headers.keySet().iterator());
+            return IteratorUtils.asEnumeration(headers.keySet().iterator());
         } else {
             return new EmptyEnumeration();
         }

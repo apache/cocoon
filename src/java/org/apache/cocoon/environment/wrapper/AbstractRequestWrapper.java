@@ -31,7 +31,7 @@ import org.apache.cocoon.environment.Session;
  * implementations.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractRequestWrapper.java,v 1.1 2004/07/07 07:58:49 cziegeler Exp $
+ * @version CVS $Id: AbstractRequestWrapper.java,v 1.2 2004/07/11 13:59:12 cziegeler Exp $
  * @since 2.2
  */
 public abstract class AbstractRequestWrapper implements Request {
@@ -368,4 +368,32 @@ public abstract class AbstractRequestWrapper implements Request {
     public String getAuthType() {
         return this.req.getAuthType();
     }       
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+     */
+    public Object getAttribute(String name, int scope) {
+        return this.req.getAttribute(name, scope);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+     */
+    public Enumeration getAttributeNames(int scope) {
+        return this.req.getAttributeNames(scope);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+     */
+    public void removeAttribute(String name, int scope) {
+        this.req.removeAttribute(name,scope);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+     */
+    public void setAttribute(String name, Object o, int scope) {
+        this.req.setAttribute(name, o, scope);
+    }
 }

@@ -35,6 +35,7 @@ import org.apache.cocoon.environment.Session;
 public class MockRequest implements Request {
     
     private Hashtable attributes = new Hashtable();
+    private Hashtable globalAttributes = new Hashtable();
     private String scheme;
     private String protocol = "HTTP/1.1";
     private String requestURI;
@@ -67,26 +68,6 @@ public class MockRequest implements Request {
     
     public Object get(String name) {
         return getAttribute(name);
-    }
-    
-    public Object getAttribute(String name) {
-        return attributes.get(name);
-    }
-    
-    public Enumeration getAttributeNames() {
-        return attributes.keys();
-    }
-    
-    public void setAttribute(String name, Object o) {
-        if (o == null) {
-            attributes.remove(name);
-        } else {
-            attributes.put(name, o);
-        }
-    }
-    
-    public void removeAttribute(String name) {
-        attributes.remove(name);
     }
     
     public String getAuthType() {
@@ -314,6 +295,7 @@ public class MockRequest implements Request {
     }
     public void reset() {
         attributes.clear();
+        globalAttributes.clear();
         scheme = null;
         protocol = "HTTP/1.1";
         requestURI = null;
@@ -356,4 +338,78 @@ public class MockRequest implements Request {
     public void setIsRequestedSessionIdFromCooki( boolean isRequestedSessionIdFromCookie ) {
         this.isRequestedSessionIdFromCookie = isRequestedSessionIdFromCookie;
     }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String)
+     */
+    public Object getAttribute(String name) {
+        return this.getAttribute(name, Request.GLOBAL_SCOPE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttributeNames()
+     */
+    public Enumeration getAttributeNames() {
+        return this.getAttributeNames(Request.GLOBAL_SCOPE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object)
+     */
+    public void setAttribute(String name, Object value) {
+        this.setAttribute(name, value, Request.GLOBAL_SCOPE);
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String)
+     */
+    public void removeAttribute(String name) {
+        this.removeAttribute(name, Request.GLOBAL_SCOPE);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttribute(java.lang.String, int)
+     */
+    public Object getAttribute(String name, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            return this.attributes.get(name);
+        } else {
+            return this.globalAttributes.get(name);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#getAttributeNames(int)
+     */
+    public Enumeration getAttributeNames(int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            return this.attributes.keys();
+        } else {
+            return this.globalAttributes.keys();
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#setAttribute(java.lang.String, java.lang.Object, int)
+     */
+    public void setAttribute(String name, Object value, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            this.attributes.put(name, value);
+        } else {
+            this.globalAttributes.put(name, value);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.environment.Request#removeAttribute(java.lang.String, int)
+     */
+    public void removeAttribute(String name, int scope) {
+        if ( scope == Request.REQUEST_SCOPE ) {
+            this.attributes.remove(name);
+        } else {
+            this.globalAttributes.remove(name);
+        }
+    }
+
+    
 }
