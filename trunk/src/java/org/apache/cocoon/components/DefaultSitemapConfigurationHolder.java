@@ -56,7 +56,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.4 2003/10/22 14:13:52 bloritsch Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.5 2003/10/22 15:13:55 bloritsch Exp $
  */
 public final class DefaultSitemapConfigurationHolder
     implements SitemapConfigurationHolder {

@@ -71,7 +71,7 @@ import org.apache.avalon.framework.service.Serviceable;
  * To be moved to Avalon ?
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: LifecycleHelper.java,v 1.7 2003/10/22 14:13:52 bloritsch Exp $
+ * @version CVS $Id: LifecycleHelper.java,v 1.8 2003/10/22 15:13:55 bloritsch Exp $
  */
 
 // FIXME : need to handle also LogEnabled.

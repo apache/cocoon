@@ -49,9 +49,9 @@
 */
 package org.apache.cocoon.components;
 
+import org.apache.avalon.fortress.impl.handler.ComponentHandler;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.environment.Environment;
@@ -84,7 +84,7 @@ class RequestLifecycleHelper
      * parameters are not set!
      */
     static void enterEnvironment(Environment      env,
-                                        ServiceManager manager,
+                                 ComponentHandler manager,
                                         Processor        processor) {
         if ( null == env || null == manager || null == processor) {
             throw new IllegalArgumentException("CocoonComponentManager.enterEnvironment: all parameters must be set: " + env + " - " + manager + " - " + processor);
@@ -103,7 +103,7 @@ class RequestLifecycleHelper
 
     /**
      * This hook must be called by the sitemap each time a sitemap is left.
-     * It's the counterpart to {@link #enterEnvironment(Environment, ServiceManager, Processor)}.
+     * It's the counterpart to {@link #enterEnvironment(Environment, ComponentHandler, Processor)}.
      */
     static void leaveEnvironment() {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
@@ -230,27 +230,7 @@ class RequestLifecycleHelper
     /**
      * Add an automatically released component
      */
-    static void addComponentForAutomaticRelease(final ServiceSelector selector,
-                                                       final Object         component,
-                                                       final ServiceManager  manager)
-    throws ProcessingException {
-        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.get(0);
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(PROCESS_KEY);
-            if ( null != desc ) {
-                desc.addToAutoRelease(selector, component, manager);
-            }
-        } else {
-            throw new ProcessingException("Unable to add component for automatic release: no environment available.");
-        }
-    }
-
-    /**
-     * Add an automatically released component
-     */
-    static void addComponentForAutomaticRelease(final ServiceManager manager,
+    static void addComponentForAutomaticRelease(final ComponentHandler manager,
                                                        final Object        component)
     throws ProcessingException {
         final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
@@ -314,10 +294,8 @@ final class CloningInheritableThreadLocal
     }
 }
 
-
 final class EnvironmentDescription
 {
-
     Environment environment;
     Map objectModel;
     Map requestLifecycleComponents;
@@ -357,7 +335,7 @@ final class EnvironmentDescription
             {
                 final Object[] o = (Object[]) iter.next();
                 final Object component = o[0];
-                ( (CocoonComponentManager) o[1] ).releaseRLComponent( component );
+                ((ComponentHandler)o[1]).put(component);
             }
             this.requestLifecycleComponents.clear();
         }
@@ -366,18 +344,8 @@ final class EnvironmentDescription
         {
             final Object[] o = (Object[]) autoreleaseComponents.get( i );
             final Object component = o[0];
-            if ( o[1] instanceof ServiceManager )
-            {
-                ( (ServiceManager) o[1] ).release( component );
-            }
-            else
-            {
-                ( (ServiceSelector) o[1] ).release( component );
-                if ( o[2] != null )
-                {
-                    ( (ServiceManager) o[2] ).release( o[1] );
-                }
-            }
+            final ComponentHandler handler = (ComponentHandler)o[1];
+            handler.put(component);
         }
         this.autoreleaseComponents.clear();
         this.environment = null;
@@ -390,7 +358,7 @@ final class EnvironmentDescription
      */
     void addRequestLifecycleComponent( final String role,
                                        final Object co,
-                                       final ServiceManager manager )
+                                       final ComponentHandler manager )
     {
         if ( this.requestLifecycleComponents == null )
         {
@@ -404,7 +372,7 @@ final class EnvironmentDescription
      */
     void addGlobalRequestLifecycleComponent( final String role,
                                              final Object co,
-                                             final ServiceManager manager )
+                                             final ComponentHandler manager )
     {
         this.getGlobalRequestLifcecycleComponents().put( role, new Object[]{co, manager} );
     }
@@ -462,17 +430,7 @@ final class EnvironmentDescription
     /**
      * Add an automatically released component
      */
-    void addToAutoRelease( final ServiceSelector selector,
-                           final Object component,
-                           final ServiceManager manager )
-    {
-        this.autoreleaseComponents.add( new Object[]{component, selector, manager} );
-    }
-
-    /**
-     * Add an automatically released component
-     */
-    void addToAutoRelease( final ServiceManager manager,
+    void addToAutoRelease( final ComponentHandler manager,
                            final Object component )
     {
         this.autoreleaseComponents.add( new Object[]{component, manager} );
@@ -492,18 +450,8 @@ final class EnvironmentDescription
             if ( o[0] == component )
             {
                 found = true;
-                if ( o[1] instanceof ServiceManager )
-                {
-                    ( (ServiceManager) o[1] ).release( component );
-                }
-                else
-                {
-                    ( (ServiceSelector) o[1] ).release( component );
-                    if ( o[2] != null )
-                    {
-                        ( (ServiceManager) o[2] ).release( o[1] );
-                    }
-                }
+                final ComponentHandler handler = (ComponentHandler)o[1];
+                handler.put(component);
                 this.autoreleaseComponents.remove( i );
             }
             else

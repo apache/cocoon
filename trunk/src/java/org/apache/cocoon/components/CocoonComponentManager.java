@@ -54,7 +54,6 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.cocoon.environment.Environment;
 import org.apache.excalibur.source.SourceResolver;
 
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonComponentManager.java,v 1.23 2003/10/22 14:13:52 bloritsch Exp $
+ * @version CVS $Id: CocoonComponentManager.java,v 1.24 2003/10/22 15:13:55 bloritsch Exp $
  */
 public final class CocoonComponentManager
 implements SourceResolver, ServiceManager
@@ -127,67 +126,6 @@ implements SourceResolver, ServiceManager
             return this;
         }
 
-        final EnvironmentStack stack = RequestLifecycleHelper.getTopEnvironmentStack();
-        if ( null != stack && !stack.empty()) {
-            final Object[] objects = (Object[])stack.getCurrent();
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(RequestLifecycleHelper.PROCESS_KEY);
-            if ( null != desc ) {
-                Object component = desc.getRequestLifecycleComponent(role);
-                if (null != component) {
-                    return component;
-                }
-                component = desc.getGlobalRequestLifecycleComponent(role);
-                if (null != component) {
-                    return component;
-                }
-            }
-        }
-
-        final Object component = parentManager.lookup( role );
-        if (null != component && component instanceof RequestLifecycleComponent) {
-            if (stack == null || stack.empty()) {
-                throw new ServiceException(role, "ComponentManager has no Environment Stack.");
-            }
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(RequestLifecycleHelper.PROCESS_KEY);
-            if ( null != desc ) {
-
-                // first test if the parent CM has already initialized this component
-                if ( !desc.containsRequestLifecycleComponent( role ) ) {
-                    try {
-                        ((RequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects[0],
-                                                                      objectModel);
-                    } catch (Exception local) {
-                        throw new ServiceException(role, "Exception during setup of RequestLifecycleComponent.", local);
-                    }
-                    desc.addRequestLifecycleComponent(role, component, this);
-                }
-            }
-        }
-
-        if (null != component && component instanceof GlobalRequestLifecycleComponent) {
-            if (stack == null || stack.empty()) {
-                throw new ServiceException(role, "ComponentManager has no Environment Stack.");
-            }
-            final Object[] objects = (Object[]) stack.getCurrent();
-            final Map objectModel = ((Environment)objects[0]).getObjectModel();
-            EnvironmentDescription desc = (EnvironmentDescription)objectModel.get(RequestLifecycleHelper.PROCESS_KEY);
-            if ( null != desc ) {
-
-                // first test if the parent CM has already initialized this component
-                if ( !desc.containsGlobalRequestLifecycleComponent( role ) ) {
-                    try {
-                        ((GlobalRequestLifecycleComponent) component).setup((org.apache.cocoon.environment.SourceResolver)objects[0],
-                                                                      objectModel);
-                    } catch (Exception local) {
-                        throw new ServiceException(role, "Exception during setup of RequestLifecycleComponent.", local);
-                    }
-                    desc.addGlobalRequestLifecycleComponent(role, component, this);
-                }
-            }
-        }
 
         if ( null != component && component instanceof SitemapConfigurable) {
 

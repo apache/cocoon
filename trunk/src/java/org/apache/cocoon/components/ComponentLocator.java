@@ -57,7 +57,7 @@ import org.apache.avalon.framework.service.ServiceException;
  * access to the parent component.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentLocator.java,v 1.3 2003/10/22 14:13:52 bloritsch Exp $
+ * @version CVS $Id: ComponentLocator.java,v 1.4 2003/10/22 15:13:55 bloritsch Exp $
  */
 public interface ComponentLocator {
 
