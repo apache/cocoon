@@ -31,7 +31,8 @@ public interface Queue
     /**
      * get the current queue size
      *
-     * @return The current queue size
+     * @return current size of queue. If the size of the queue is not
+     *         maintained by an implementation -1 should be returned.
      */
     int getQueueSize(  );
 }
