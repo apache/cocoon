@@ -66,7 +66,7 @@ import org.apache.cocoon.components.language.programming.Program;
  * It wraps Java Class object.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: JavaProgram.java,v 1.1 2003/03/09 00:09:00 pier Exp $
+ * @version CVS $Id: JavaProgram.java,v 1.2 2003/07/19 15:06:38 joerg Exp $
  */
 public class JavaProgram implements Program {
 
@@ -89,7 +89,7 @@ public class JavaProgram implements Program {
         return ComponentHandler.getComponentHandler(
                 program,
                 new DefaultConfiguration("", "GeneratorSelector"),
-                manager, context, roles, logKitManager);
+                manager, context, roles, logKitManager, null, "N/A");
     }
 
     public CompiledComponent newInstance() throws Exception {

@@ -75,7 +75,7 @@ import java.util.Iterator;
  * This class represents program in the Python language.
  *
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
- * @version CVS $Id: PythonProgram.java,v 1.1 2003/03/09 00:06:02 pier Exp $
+ * @version CVS $Id: PythonProgram.java,v 1.2 2003/07/19 15:06:38 joerg Exp $
  */
 public class PythonProgram implements Program {
 
@@ -110,7 +110,7 @@ public class PythonProgram implements Program {
             throws Exception {
 
         return ComponentHandler.getComponentHandler(
-                clazz, config, manager, context, roles, logKitManager);
+                clazz, config, manager, context, roles, logKitManager, null, "N/A");
     }
 
     public CompiledComponent newInstance() throws Exception {
