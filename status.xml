@@ -201,7 +201,10 @@
 
 
   <changes>
- <release version="@version@" date="@date@">
+  <release version="@version@" date="@date@">
+   <action dev="CZ" type="add">
+     Build system: External blocks can be built together with Cocoon.
+   </action>
    <action dev="RG" type="fix" fixes-bug="33091">
       Refreshing a page with a JSR-168 portlet in it could cause unexpected results. JSR-168 urls can
       now be configured to contain the data required to generated the required events.
