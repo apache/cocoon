@@ -202,6 +202,12 @@
 
   <changes>
   <release version="@version@" date="@date@">
+   <action dev="LG" type="fix" fixes-bug="33836" due-to="Niklas Therning" due-to-email="niklas@trillian.se">
+     Fix thread safety problem in JXTemplateGenerator.setup() concerning template script reparsing.
+   </action>
+   <action dev="LG" type="add">
+     Polish i18n for CForms.
+   </action>
    <action dev="VG" type="fix">
      Runnable Manager: Fix bug preventing scheduling of two different jobs at the same time.
    </action>
