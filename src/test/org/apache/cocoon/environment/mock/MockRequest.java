@@ -69,7 +69,7 @@ import org.apache.cocoon.environment.Session;
 
 public class MockRequest implements Request {
 
-    private Hashtable attributes;
+    private Hashtable attributes = new Hashtable();
     private String scheme;
     private String protocol = "HTTP/1.1";
     private String requestURI;
@@ -78,7 +78,7 @@ public class MockRequest implements Request {
     private String servletPath;
     private String pathInfo;
     private String queryString;
-    private String method;
+    private String method = "GET";
     private String contentType;
     private Locale locale;
     private Principal principal;
@@ -90,7 +90,7 @@ public class MockRequest implements Request {
     private String authType;
     private String charEncoding;
     private String serverName;
-    private int port;
+    private int port = 80;
 
     private Hashtable parameters = new Hashtable();
     private Hashtable headers = new Hashtable();
@@ -338,5 +338,33 @@ public class MockRequest implements Request {
 
     public boolean isRequestedSessionIdFromURL() {
         return false;
+    }
+
+    public void reset() {
+        attributes.clear();
+        scheme = null;
+        protocol = "HTTP/1.1";
+        requestURI = null;
+        requestURL = null;
+        contextPath = null;
+        servletPath = null;
+        pathInfo = null;
+        queryString = null;
+        method = "GET";
+        contentType = null;
+        locale = null;
+        principal = null;
+        remoteAddr = null;
+        remoteHost = null;
+        remoteUser = null;
+        userRole = null;
+        reqSessionId = null;
+        authType = null;
+        charEncoding = null;
+        serverName = null;
+        port = 80;
+
+        parameters.clear();
+        headers.clear();
     }
 }
