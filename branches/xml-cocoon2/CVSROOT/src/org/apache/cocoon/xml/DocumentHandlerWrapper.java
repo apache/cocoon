@@ -10,6 +10,7 @@ package org.apache.cocoon.xml;
 
 import java.util.Vector;
 
+import org.apache.avalon.Recyclable;
 import org.apache.cocoon.xml.AbstractXMLConsumer;
 import org.apache.cocoon.xml.NamespacesTable;
 
@@ -31,9 +32,9 @@ import org.xml.sax.helpers.AttributeListImpl;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.1 $ $Date: 2000-09-27 14:33:45 $
+ * @version CVS $Revision: 1.1.2.2 $ $Date: 2000-10-13 04:18:07 $
  */
-public class DocumentHandlerWrapper extends AbstractXMLConsumer {
+public class DocumentHandlerWrapper extends AbstractXMLConsumer /*implements Recyclable*/ {
 
     /** The current namespaces table. */
     private NamespacesTable namespaces=new NamespacesTable();
@@ -56,6 +57,13 @@ public class DocumentHandlerWrapper extends AbstractXMLConsumer {
     public DocumentHandlerWrapper(DocumentHandler document) {
         this();
         this.setDocumentHandler(document);
+    }
+
+    /**
+     * Implementation of the recycle method
+     */
+    public void recycle() {
+        this.documentHandler = null;
     }
 
     /**

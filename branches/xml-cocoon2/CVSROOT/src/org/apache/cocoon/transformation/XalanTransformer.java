@@ -25,8 +25,7 @@ import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.xml.XMLConsumer;
-import org.apache.cocoon.xml.DocumentHandlerAdapter;
-import org.apache.cocoon.xml.DocumentHandlerWrapper;
+import org.apache.cocoon.xml.ContentHandlerWrapper;
 
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
@@ -40,9 +39,9 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2000-10-12 16:44:08 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-10-13 04:18:09 $
  */
-public class XalanTransformer extends DocumentHandlerWrapper
+public class XalanTransformer extends ContentHandlerWrapper
 implements Transformer, Composer, Poolable {
 
     /** The store service instance */
@@ -115,7 +114,7 @@ implements Transformer, Composer, Poolable {
         }
 
         ContentHandler chandler = transformer.getInputContentHandler();
-        this.setDocumentHandler(new DocumentHandlerAdapter(chandler));
+        super.setContentHandler(chandler);
         if(chandler instanceof org.xml.sax.ext.LexicalHandler)
             this.setLexicalHandler((org.xml.sax.ext.LexicalHandler)chandler);
     }
