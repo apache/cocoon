@@ -202,6 +202,10 @@
 
   <changes>
  <release version="@version@" date="@date@">
+   <action dev="SW" type="add">
+     CForms: add a new "link" styling for action widgets, that renders the action
+     as an hypertext link.
+   </action>
    <action dev="RG" type="update" fixes-bug="28360" due-to="Nico Verwer" due-to-email="nverwer@email.com">
      DateInputModule now accepts date format string when specified in a sitemap.
    </action>

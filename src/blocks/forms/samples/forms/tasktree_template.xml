@@ -99,7 +99,9 @@
             </ft:repeater-widget>
           </jx:when>
           <jx:otherwise>
-            <ft:widget id="addsub"/>
+            <ft:widget id="addsub">
+	      <fi:styling type="link"/>
+	    </ft:widget>
           </jx:otherwise>
         </jx:choose>
       </ft:class>
