@@ -50,6 +50,7 @@ import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.jxpath.DynamicPropertyHandler;
 import org.apache.commons.jxpath.JXPathBeanInfo;
 import org.apache.commons.jxpath.JXPathIntrospector;
+import org.apache.commons.lang.StringUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.velocity.VelocityContext;
@@ -1025,23 +1026,20 @@ public class VelocityGenerator extends ServiceableGenerator
             }
             BufferedReader reader = 
                 new BufferedReader(new StringReader(w.toString()));
-            String message = e.getMessage() +" In generated document:\n";
+            StringBuffer message = new StringBuffer(e.getMessage());
+            message.append(" In generated document:\n");
             for (int i = 0; i < line; i++) {
                 String lineStr = reader.readLine();
                 if (lineStr == null) {
                     break;
                 }
-                message += lineStr + "\n";
+                message.append(lineStr);
+                message.append("\n");
             }
             if (column > 0) {
-                String columnIndicator = "";
-                for (int i = 1; i < column; i++) {
-                    columnIndicator += " ";
-                }
-                columnIndicator += "^" + "\n";
-                message += columnIndicator;
+                message.append(StringUtils.leftPad("^\n", column + 1));
             }
-            SAXException pe = new SAXParseException(message, 
+            SAXException pe = new SAXParseException(message.toString(), 
                                                     e.getPublicId(),
                                                     "(Document generated from template "+e.getSystemId() + ")",
                                                     e.getLineNumber(),
