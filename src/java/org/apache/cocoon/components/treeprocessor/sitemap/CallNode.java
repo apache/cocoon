@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: CallNode.java,v 1.3 2004/06/09 11:59:23 cziegeler Exp $
+ * @version CVS $Id: CallNode.java,v 1.4 2004/06/09 13:43:04 cziegeler Exp $
  */
 
 public class CallNode extends AbstractProcessingNode
@@ -58,10 +58,16 @@ public class CallNode extends AbstractProcessingNode
         super(null);
     }
     
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.component.Composable#compose(org.apache.avalon.framework.component.ComponentManager)
+     */
     public void compose(ComponentManager manager) throws ComponentException {
         this.manager = manager;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ParameterizableProcessingNode#setParameters(java.util.Map)
+     */
     public void setParameters(Map parameterMap) {
         this.parameters = parameterMap;
     }
@@ -71,6 +77,9 @@ public class CallNode extends AbstractProcessingNode
         this.resources = resources;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
     public void initialize() throws Exception {
         if (VariableResolverFactory.needsResolve(this.resourceName)) {
             // Will always be resolved at invoke time
@@ -81,6 +90,9 @@ public class CallNode extends AbstractProcessingNode
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.components.treeprocessor.ProcessingNode#invoke(org.apache.cocoon.environment.Environment, org.apache.cocoon.components.treeprocessor.InvokeContext)
+     */
     public final boolean invoke(Environment env, InvokeContext context)
       throws Exception {
 
@@ -91,11 +103,13 @@ public class CallNode extends AbstractProcessingNode
 
         if (this.resourceNode != null) {
             // Static resource name
-            context.pushMap(null,params);
+            params = this.executor.pushVariables(this, null, params);
+            context.pushMap(null, params);
             
             try {
                 return this.resourceNode.invoke(env, context);
             } finally {
+                this.executor.popVariables(this);
                 context.popMap();
             }
     
@@ -107,11 +121,13 @@ public class CallNode extends AbstractProcessingNode
             }
             
             // and only now push the parameters
+            params = this.executor.pushVariables(this, null, params);
             context.pushMap(null,params);
             
             try {
                 return this.resources.invokeByName(name, env, context);
             } finally {
+                this.executor.popVariables(this);
                 context.popMap();
             }
         }
