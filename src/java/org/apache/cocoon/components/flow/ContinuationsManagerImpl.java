@@ -96,6 +96,7 @@ public class ContinuationsManagerImpl
     private ValueInstrument expirationsSize;
     private CounterInstrument continuationsCreated;
     private CounterInstrument continuationsInvalidated;
+    private boolean isContinuationSharingBugCompatible;
 
     private ServiceManager serviceManager;
 
@@ -122,6 +123,7 @@ public class ContinuationsManagerImpl
 
     public void configure(Configuration config) {
         this.defaultTimeToLive = config.getAttributeAsInteger("time-to-live", (3600 * 1000));
+        this.isContinuationSharingBugCompatible = config.getAttributeAsBoolean("continuation-sharing-bug-compatible", false);
 
         final Configuration expireConf = config.getChild("expirations-check");
         final long initialDelay = expireConf.getChild("offset", true).getValueAsLong(180000);
@@ -208,7 +210,7 @@ public class ContinuationsManagerImpl
                                  + kont.getInterpreterId() + ", looked up for: " 
                                  + interpreterId);
             }
-            return interpreterMatches ? kont : null;
+            return interpreterMatches || isContinuationSharingBugCompatible ? kont : null;
         }
         return null;
     }
