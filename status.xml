@@ -55,6 +55,7 @@
 <!ENTITY eacute           "&#x000E9;">
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
+<!ENTITY ccedil           "&#x000E7;">
 ]>
 
 <!-- CVS $Id$ -->
@@ -232,7 +233,7 @@
      AbstractMessageListener and AbstractMessagePublisher should be used as basis for
      custom publish/subscribe components.
    </action>
-   <action dev="VG" type="fix" fixes-bug="29765" due-to="Rui Alberto L. Gon&#231;alves" due-to-email="rui-l-goncalves@ptinovacao.pt">
+   <action dev="VG" type="fix" fixes-bug="29765" due-to="Rui Alberto L. Gon&ccedil;alves" due-to-email="rui-l-goncalves@ptinovacao.pt">
      XMLDB Block: Add ability to delete collections with XMLDBTransformer.
    </action>
    <action dev="VG" type="update">
@@ -287,6 +288,11 @@
    </action>
    <action dev="CZ" type="fix" fixes-bug="28687">
      Portal: Fix problem with bookmarks and CachingURICoplet
+   </action>
+   <action dev="SW" type="update">
+     A new build property, "include.sources-in-jars", allows to include java
+     source files in jar archives. Useful when using a non-released version
+     to know what sources are used.
    </action>
    <action dev="SW" type="fix" fixes-bug="27249">
      Refactor TreeProcessor to avoid constant reloading of sitemap if its
