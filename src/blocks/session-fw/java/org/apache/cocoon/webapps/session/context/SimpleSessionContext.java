@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
@@ -43,7 +42,7 @@ import org.xml.sax.ext.LexicalHandler;
  *  This is a simple implementation of the session context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SimpleSessionContext.java,v 1.8 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: SimpleSessionContext.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
 */
 public final class SimpleSessionContext
 implements SessionContext {
@@ -66,14 +65,18 @@ implements SessionContext {
     /** The XPath Processor */
     private XPathProcessor xpathProcessor;
 
+    /** The source resolver */
+    private SourceResolver resolver;
+    
     /**
      * Constructor
      */
-    public SimpleSessionContext(XPathProcessor xPathProcessor)
+    public SimpleSessionContext(XPathProcessor xPathProcessor, SourceResolver resolver)
     throws ProcessingException {
-        data = DOMUtil.createDocument();
-        data.appendChild(data.createElementNS(null, "context"));
+        this.data = DOMUtil.createDocument();
+        this.data.appendChild(data.createElementNS(null, "context"));
         this.xpathProcessor = xPathProcessor;
+        this.resolver = resolver;
     }
 
     /**
@@ -403,17 +406,14 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void loadXML(String            path,
-                        SourceParameters  parameters,
-                        Map               objectModel,
-                        SourceResolver    resolver,
-                        ServiceManager    manager)
+                        SourceParameters  parameters)
     throws SAXException, ProcessingException, IOException {
         if (this.loadResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support loading.");
         }
         Source source = null;
         try {
-            source = SourceUtil.getSource(this.loadResource, null, parameters, resolver);
+            source = SourceUtil.getSource(this.loadResource, null, parameters, this.resolver);
             Document doc = SourceUtil.toDOM(source);
             DocumentFragment df = doc.createDocumentFragment();
             df.appendChild(doc.getDocumentElement());
@@ -431,10 +431,7 @@ implements SessionContext {
      * an exception is thrown.
      */
     public void saveXML(String path,
-                        SourceParameters parameters,
-                        Map              objectModel,
-                        SourceResolver   resolver,
-                        ServiceManager   manager)
+                        SourceParameters parameters)
     throws SAXException, ProcessingException, IOException {
         if (this.saveResource == null) {
             throw new ProcessingException("The context " + this.name + " does not support saving.");
@@ -449,7 +446,7 @@ implements SessionContext {
                             null,
                             parameters,
                             frag,
-                            resolver,
+                            this.resolver,
                             "xml");
     }
 

@@ -50,7 +50,7 @@ import org.apache.excalibur.source.SourceValidity;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.18 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.19 2004/03/19 14:21:06 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractUserProfileManager { 
@@ -304,7 +304,7 @@ public class AuthenticationProfileManager
 		try {
 			adapter = (ProfileLS)this.manager.lookup(ProfileLS.ROLE);
 
-			Object result = this.checkValidity(key, parameters, forcedLoad, adapter, service);
+			Object result = this.checkValidity(key, parameters, forcedLoad, adapter);
             
 			if (!(result instanceof SourceValidity))
 				return new Object[]{result, Boolean.FALSE};
@@ -314,7 +314,7 @@ public class AuthenticationProfileManager
 			this.lock.writeLock();
 			
 			// check validity again in case of another thread has already loaded
-			result = this.checkValidity(key, parameters, forcedLoad, adapter, service);
+			result = this.checkValidity(key, parameters, forcedLoad, adapter);
             
 			if (!(result instanceof SourceValidity))
 				return new Object[]{result, Boolean.FALSE};
@@ -344,8 +344,7 @@ public class AuthenticationProfileManager
     protected Object checkValidity(Object key, 
                                   Map parameters, 
                                   boolean forcedLoad, 
-                                  ProfileLS adapter, 
-                                  PortalService service) {
+                                  ProfileLS adapter) {
 		Object[] objects = (Object[])this.attributes.get(key);
 
 		SourceValidity sourceValidity = null;

@@ -78,7 +78,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *  This is the basis portal component
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: PortalManagerImpl.java,v 1.5 2004/03/17 12:09:51 cziegeler Exp $
+ * @version CVS $Id: PortalManagerImpl.java,v 1.6 2004/03/19 14:16:54 cziegeler Exp $
 */
 public final class PortalManagerImpl
 extends AbstractLogEnabled
@@ -1304,7 +1304,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
 
                     // load the status profile when type is user
                     if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
-                        this.buildUserStatusProfile(profileRoot, config, role, id, adminProfile);
+                        this.buildUserStatusProfile(profileRoot, config, role, id);
                     }
 
                     if (!type.equals(PortalManagerImpl.BUILDTYPE_VALUE_BASIC)) {
@@ -1327,7 +1327,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                     if (type.equals(PortalManagerImpl.BUILDTYPE_VALUE_ID)) {
                         DocumentFragment profile = (DocumentFragment)theProfile.get(PortalConstants.PROFILE_PROFILE);
                         Element profileRoot = (Element)profile.getFirstChild();
-                        this.buildUserStatusProfile(profileRoot, config, role, id, adminProfile);
+                        this.buildUserStatusProfile(profileRoot, config, role, id);
                     }
                 }
 
@@ -1459,7 +1459,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                         }
                         if (copletsChanged) {
                             this.saveUserStatusProfile(originalProfile,
-                                   this.getConfiguration(), role, id, adminProfile);
+                                   this.getConfiguration(), role, id);
                         }
                     }
                 }
@@ -2789,7 +2789,6 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 copletThread.init(copletID,
                                   ContextHelper.getObjectModel(this.componentContext),
                                   this.getLogger(),
-                                  ContextHelper.getResponse(this.componentContext),
                                   loadedCoplet,
                                   this.manager,
                                   this.resolver,
@@ -2954,8 +2953,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
     /**
      * Get the coplet Element
      */
-    private Element getCopletElement(DocumentFragment profile,
-                                     String copletID,
+    private Element getCopletElement(String copletID,
                                      String copletNr,
                                      Node[] miscNodes)
     throws javax.xml.transform.TransformerException {
@@ -3101,8 +3099,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                 result = true;
 
            } else {
-                coplet = this.getCopletElement(profile,
-                                   copletID,
+                coplet = this.getCopletElement(copletID,
                                     copletNr,
                                     (Node[])theProfile.get(PortalConstants.PROFILE_MISC_POINTER));
                 if (coplet != null) {
@@ -3791,8 +3788,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
     private void buildUserStatusProfile(Element profileRoot,
                                         Map config,
                                         String role,
-                                        String id,
-                                        boolean adminProfile)
+                                        String id)
     throws ProcessingException {
         // calling method is synced
         String res = (String)config.get(PortalConstants.CONF_STATUS_LOADRESOURCE);
@@ -3839,8 +3835,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
     private void saveUserStatusProfile(Map profile,
                                        Map config,
                                        String role,
-                                       String id,
-                                       boolean adminProfile)
+                                       String id)
     throws ProcessingException {
         // calling method is synced
         String res = (String)config.get(PortalConstants.CONF_STATUS_SAVERESOURCE);
@@ -4016,8 +4011,7 @@ implements Disposable, Composable, Recomposable, Recyclable, Contextualizable, C
                             this.saveUserStatusProfile(theProfile,
                                                        this.getConfiguration(),
                                                        this.getRole(profileID),
-                                                       this.getID(profileID),
-                                                       this.getIsAdminProfile(profileID));
+                                                       this.getID(profileID));
                         }
 
                         // save the profile

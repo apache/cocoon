@@ -31,6 +31,7 @@ import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.webapps.session.SessionConstants;
+import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.xpath.XPathProcessor;
 
 /**
@@ -38,7 +39,7 @@ import org.apache.excalibur.xml.xpath.XPathProcessor;
  *  response context.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: StandardSessionContextProvider.java,v 1.8 2004/03/05 13:02:22 bdelacretaz Exp $
+ * @version CVS $Id: StandardSessionContextProvider.java,v 1.9 2004/03/19 14:16:55 cziegeler Exp $
 */
 public final class StandardSessionContextProvider
 extends AbstractLogEnabled
@@ -51,6 +52,9 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Co
     /** The xpath processor */
     protected XPathProcessor xpathProcessor;
 
+    /** The Source Resolver */
+    protected SourceResolver resolver;
+    
     /**
      * Get the context
      * @param name The name of the context
@@ -65,7 +69,7 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Co
         SessionContext context = this.getContext( objectModel, name );
         if ( context == null ) {
             if ( name.equals(SessionConstants.TEMPORARY_CONTEXT) ) {
-                context = new SimpleSessionContext(this.xpathProcessor);
+                context = new SimpleSessionContext(this.xpathProcessor, this.resolver);
                 context.setup(name, null, null);
             } else if ( name.equals(SessionConstants.REQUEST_CONTEXT) ) {
                 context = new RequestSessionContext();
@@ -113,6 +117,7 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Co
     public void service(ServiceManager manager) throws ServiceException {
         this.manager = manager;
         this.xpathProcessor = (XPathProcessor)this.manager.lookup(XPathProcessor.ROLE);
+        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
     }
 
     /* (non-Javadoc)
@@ -121,6 +126,8 @@ implements SessionContextProvider, ThreadSafe, Contextualizable, Serviceable, Co
     public void dispose() {
         if ( this.manager != null) {
             this.manager.release( this.xpathProcessor );
+            this.manager.release(this.resolver);
+            this.resolver = null;
             this.xpathProcessor = null;
             this.manager = null;            
         }

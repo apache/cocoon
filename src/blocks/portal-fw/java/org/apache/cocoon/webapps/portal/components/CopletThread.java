@@ -29,7 +29,6 @@ import org.apache.cocoon.components.sax.XMLSerializer;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.Response;
 import org.apache.cocoon.webapps.portal.PortalConstants;
 import org.apache.cocoon.webapps.portal.context.SessionContextImpl;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -51,7 +50,7 @@ import org.w3c.dom.NodeList;
  * This is the thread for loading one coplet in the background.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CopletThread.java,v 1.6 2004/03/05 13:02:18 bdelacretaz Exp $
+ * @version CVS $Id: CopletThread.java,v 1.7 2004/03/19 14:16:54 cziegeler Exp $
 */
 public final class CopletThread implements Runnable {
 
@@ -79,7 +78,6 @@ public final class CopletThread implements Runnable {
     public void init(String  copletID,
                      Map     objectModel,
                      Logger  logger,
-                     Response response,
                      Object[] loadedCoplet,
                      ComponentManager manager,
                      SourceResolver resolver,

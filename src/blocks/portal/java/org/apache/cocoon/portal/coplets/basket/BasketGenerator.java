@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: BasketGenerator.java,v 1.3 2004/03/05 13:02:11 bdelacretaz Exp $
+ * @version CVS $Id: BasketGenerator.java,v 1.4 2004/03/19 14:21:06 cziegeler Exp $
  */
 public class BasketGenerator
 extends ServiceableGenerator {
@@ -158,7 +158,7 @@ extends ServiceableGenerator {
      * Render admin mode
      */
     protected void generateAdminMode() 
-    throws IOException, SAXException, ProcessingException {
+    throws SAXException {
         List baskets = this.basketManager.getBaskets();
 
         PortalService service = null;

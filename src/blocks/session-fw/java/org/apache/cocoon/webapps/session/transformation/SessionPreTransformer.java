@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * pipeline.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: SessionPreTransformer.java,v 1.3 2004/03/05 13:02:23 bdelacretaz Exp $
+ * @version CVS $Id: SessionPreTransformer.java,v 1.4 2004/03/19 14:16:54 cziegeler Exp $
 */
 public class SessionPreTransformer
 extends AbstractSessionTransformer {
@@ -203,10 +203,7 @@ extends AbstractSessionTransformer {
             pars.setSingleParameterValue("path", path);
 
             this.getContextManager().getContext(contextName).loadXML(path,
-                                                                        pars,
-                                                                        this.objectModel,
-                                                                        this.resolver,
-                                                                        this.manager);
+                                                                     pars);
         // Element context url
         } else if (name.equals(SessionPreTransformer.CONTEXT_URL_ELEMENT) == true) {
             this.ignoreEventsCount--;

@@ -26,7 +26,7 @@ import java.io.ObjectOutputStream;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: ObjectIDImpl.java,v 1.4 2004/03/05 13:02:15 bdelacretaz Exp $
+ * @version CVS $Id: ObjectIDImpl.java,v 1.5 2004/03/19 14:21:06 cziegeler Exp $
  */
 public class ObjectIDImpl implements org.apache.pluto.om.common.ObjectID, java.io.Serializable
 {
@@ -42,7 +42,7 @@ public class ObjectIDImpl implements org.apache.pluto.om.common.ObjectID, java.i
 
     // internal methods.
     
-    private void readObject (ObjectInputStream stream) throws IOException, ClassNotFoundException
+    private void readObject (ObjectInputStream stream) throws IOException
     {
         intOID = stream.readInt ();
 
