@@ -100,7 +100,7 @@
     </input>
   </xsl:template>
 
-  <xsl:template match="wi:button">
+  <xsl:template match="wi:action">
     <input type="submit" name="{@id}">
       <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
     </input>

@@ -50,63 +50,21 @@
 */
 package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.FormContext;
-import org.apache.cocoon.woody.Constants;
-import org.apache.cocoon.woody.event.ActionEvent;
-import org.apache.cocoon.xml.AttributesImpl;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
-
-import java.util.Locale;
-
 /**
- * A Button widget. A button can be activated by the user, causing the form to be submitted
- * and an event to occur on the server side.
+ * The {@link WidgetDefinition} part of a Action widget, see {@link Action} for more information.
  */
-public class Button extends AbstractWidget {
-    private ButtonDefinition definition;
+public class ActionDefinition extends AbstractWidgetDefinition {
+    private String actionCommand;
 
-    public Button(ButtonDefinition definition) {
-        this.definition = definition;
+    public void setActionCommand(String actionCommand) {
+        this.actionCommand = actionCommand;
     }
 
-    public String getId() {
-        return definition.getId();
+    public String getActionCommand() {
+        return actionCommand;
     }
 
-    public void readFromRequest(FormContext formContext) {
-        String value = formContext.getRequest().getParameter(getFullyQualifiedId());
-        if (value != null && value.length() > 0) {
-            formContext.setActionEvent(new ActionEvent() {
-                public String getActionCommand() {
-                    return definition.getActionCommand();
-                }
-
-                public Widget getSource() {
-                    return Button.this;
-                }
-            });
-        }
-    }
-
-    public boolean validate(FormContext formContext) {
-        return true;
-    }
-
-    private static final String BUTTON_EL = "button";
-    private static final String LABEL_EL = "label";
-
-    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
-        AttributesImpl buttonAttrs = new AttributesImpl();
-        buttonAttrs.addCDATAAttribute("id", getFullyQualifiedId());
-        contentHandler.startElement(Constants.WI_NS, BUTTON_EL, Constants.WI_PREFIX_COLON + BUTTON_EL, buttonAttrs);
-        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
-        generateLabel(contentHandler);
-        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
-        contentHandler.endElement(Constants.WI_NS, BUTTON_EL, Constants.WI_PREFIX_COLON + BUTTON_EL);
-    }
-
-    public void generateLabel(ContentHandler contentHandler) throws SAXException {
-        definition.generateLabel(contentHandler);
+    public Widget createInstance() {
+        return new Action(this);
     }
 }

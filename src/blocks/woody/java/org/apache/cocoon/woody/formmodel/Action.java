@@ -48,15 +48,69 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.woody.event;
+package org.apache.cocoon.woody.formmodel;
 
-import org.apache.cocoon.woody.formmodel.Widget;
+import org.apache.cocoon.woody.FormContext;
+import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.event.ActionEvent;
+import org.apache.cocoon.xml.AttributesImpl;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+
+import java.util.Locale;
 
 /**
- * Currently this event originates from a {@link org.apache.cocoon.woody.formmodel.Action Button}
- * widget.
+ * An Action widget. An Action widget can cause an {@link ActionEvent} to be triggered
+ * on the server side, which will be handled by the {@link org.apache.cocoon.woody.FormHandler FormHandler}
+ * (in case of flowscript this is a javascript function). An Action widget can e.g. be rendered as a button,
+ * or as a hidden field which gets its value set by javascript. The Action widget will generate its associated
+ * ActionEvent when a requestparameter is present with as name the id of this Action widget, and as
+ * value a non-empty value.
  */
-public interface ActionEvent {
-    public String getActionCommand();
-    public Widget getSource();
+public class Action extends AbstractWidget {
+    private ActionDefinition definition;
+
+    public Action(ActionDefinition definition) {
+        this.definition = definition;
+    }
+
+    public String getId() {
+        return definition.getId();
+    }
+
+    public void readFromRequest(FormContext formContext) {
+        String value = formContext.getRequest().getParameter(getFullyQualifiedId());
+        if (value != null && value.length() > 0) {
+            formContext.setActionEvent(new ActionEvent() {
+                public String getActionCommand() {
+                    return definition.getActionCommand();
+                }
+
+                public Widget getSource() {
+                    return Action.this;
+                }
+            });
+        }
+    }
+
+    public boolean validate(FormContext formContext) {
+        return true;
+    }
+
+    private static final String ACTION_EL = "action";
+    private static final String LABEL_EL = "label";
+
+    public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        AttributesImpl buttonAttrs = new AttributesImpl();
+        buttonAttrs.addCDATAAttribute("id", getFullyQualifiedId());
+        contentHandler.startElement(Constants.WI_NS, ACTION_EL, Constants.WI_PREFIX_COLON + ACTION_EL, buttonAttrs);
+        contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
+        generateLabel(contentHandler);
+        contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
+        contentHandler.endElement(Constants.WI_NS, ACTION_EL, Constants.WI_PREFIX_COLON + ACTION_EL);
+    }
+
+    public void generateLabel(ContentHandler contentHandler) throws SAXException {
+        definition.generateLabel(contentHandler);
+    }
 }

@@ -39,7 +39,7 @@
 <!ENTITY ouml             "&#x000F6;">
 <!ENTITY uuml             "&#x000FC;">
 ]>
-<!-- CVS $Id: status.xml,v 1.134 2003/09/02 10:26:18 cziegeler Exp $:-->
+<!-- CVS $Id: status.xml,v 1.135 2003/09/03 08:24:20 bruno Exp $:-->
 <status>
 
  <developers>
@@ -189,6 +189,10 @@
   <changes>
 
  <release version="@version@" date="@date@">
+   <action dev="BRD" type="update">
+     Woody: renamed the button widget to action widget. If you were using this
+     widget, you will need to update your form definition files.
+   </action>
    <action dev="CZ" type="add">
      Adding new RequestDataStore component that can be used as a replacement
      for the component marker interfaces RequestLifeCycleComponent and 
