@@ -4,7 +4,7 @@
                        |  Apache Cocoon Build System |
                        * =========================== *
 
-       CVS $Id: build.xml,v 1.19 2003/03/18 02:21:03 vgritsenko Exp $:
+       CVS $Id: build.xml,v 1.20 2003/03/18 11:59:55 stefano Exp $:
 
 ============================================================================ -->
 
@@ -341,7 +341,7 @@
     <ant antfile="${build.temp}/blocks-build.xml"
          inheritAll="true"
          inheritRefs="false"
-         target="{$block-name}-compile"/>
+         target="${block-name}-compile"/>
   </target>
   
   <!-- compiles and packages all blocks -->
