@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.12 2003/08/11 07:33:08 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.13 2003/08/20 08:34:16 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -719,50 +719,59 @@ public abstract class AbstractCachingProcessingPipeline
                     }
                     SourceValidity[] validities = cachedObject.getValidityObjects();
                     if (validities == null || validities.length != 1) {
-                        throw new ProcessingException("Cached response is not correct.");
-                    }
-                    SourceValidity cachedValidity = validities[0];
-                    int result = cachedValidity.isValid();
-                    boolean valid = false;
-                    if ( result == 0 ) {
-                        // get reader validity and compare
-                        if (isCacheableProcessingComponent) {
-                            readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
-                        } else {
-                            CacheValidity cv = ((Cacheable)super.reader).generateValidity();
-                            if ( cv != null ) {
-                                readerValidity = CacheValidityToSourceValidity.createValidity( cv );
-                            }
+                        // to avoid getting here again and again, we delete it
+                        this.cache.remove( pcKey );
+                        if (this.getLogger().isDebugEnabled()) {
+                            this.getLogger().debug(
+                                "Cached response for '" + environment.getURI() +
+                                "' using key: " + pcKey + " is invalid."
+                            );
                         }
-                        if (readerValidity != null) {
-                            result = cachedValidity.isValid(readerValidity);
-                            if ( result == 0 ) {
-                                readerValidity = null;
+                        cachedResponse = null;
+                    } else {
+                        SourceValidity cachedValidity = validities[0];
+                        int result = cachedValidity.isValid();
+                        boolean valid = false;
+                        if ( result == 0 ) {
+                            // get reader validity and compare
+                            if (isCacheableProcessingComponent) {
+                                readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
                             } else {
-                                valid = (result == 1);
+                                CacheValidity cv = ((Cacheable)super.reader).generateValidity();
+                                if ( cv != null ) {
+                                    readerValidity = CacheValidityToSourceValidity.createValidity( cv );
+                                }
                             }
+                            if (readerValidity != null) {
+                                result = cachedValidity.isValid(readerValidity);
+                                if ( result == 0 ) {
+                                    readerValidity = null;
+                                } else {
+                                    valid = (result == 1);
+                                }
+                            }
+                        } else {
+                            valid = (result > 0);
                         }
-                    } else {
-                        valid = (result > 0);
-                    }
 
-                    if (valid) {
-                        if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug("processReader: using valid cached content for '" + environment.getURI() + "'.");
+                        if (valid) {
+                            if (this.getLogger().isDebugEnabled()) {
+                                this.getLogger().debug("processReader: using valid cached content for '" + environment.getURI() + "'.");
+                            }
+                            byte[] response = cachedObject.getResponse();
+                            if (response.length > 0) {
+                                usedCache = true;
+                                outputStream = environment.getOutputStream(0);
+                                environment.setContentLength(response.length);
+                                outputStream.write(response);
+                            }
+                        } else {
+                            if (this.getLogger().isDebugEnabled()) {
+                                this.getLogger().debug("processReader: cached content is invalid for '" + environment.getURI() + "'.");
+                            }
+                            // remove invalid cached object
+                            this.cache.remove(pcKey);
                         }
-                        byte[] response = cachedObject.getResponse();
-                        if (response.length > 0) {
-                            usedCache = true;
-                            outputStream = environment.getOutputStream(0);
-                            environment.setContentLength(response.length);
-                            outputStream.write(response);
-                        }
-                    } else {
-                        if (this.getLogger().isDebugEnabled()) {
-                            this.getLogger().debug("processReader: cached content is invalid for '" + environment.getURI() + "'.");
-                        }
-                        // remove invalid cached object
-                        this.cache.remove(pcKey);
                     }
                 }
             }
