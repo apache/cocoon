@@ -74,7 +74,7 @@ import javax.servlet.http.HttpServletRequest;
  * FilePart: file part
  *
  * @author <a href="mailto:j.tervoorde@home.nl">Jeroen ter Voorde</a>
- * @version CVS $Id: MultipartParser.java,v 1.1 2003/04/04 13:19:05 stefano Exp $
+ * @version CVS $Id: MultipartParser.java,v 1.2 2003/05/07 05:09:39 vgritsenko Exp $
  */
 public class MultipartParser {
 
@@ -101,7 +101,6 @@ public class MultipartParser {
     /**
      * Constructor, parses given request
      *
-     * @param request The servlet request.
      * @param saveUploadedFilesToDisk Write fileparts to the uploadDirectory. If true the corresponding object
      *              in the hashtable will contain a FilePartFile, if false a FilePartArray
      * @param uploadDirectory The directory to write to if saveUploadedFilesToDisk is true.
@@ -111,9 +110,6 @@ public class MultipartParser {
      * @param silentlyRename If file exists rename file (using filename+number).
      * @param maxUploadSize The maximum content length accepted.
      * @param characterEncoding The character encoding to be used.
-     *
-     * @throws IOException
-     * @throws MultipartException
      */
     public MultipartParser(
             boolean saveUploadedFilesToDisk, 
