@@ -203,5 +203,10 @@
   <role name="org.apache.cocoon.components.modules.input.SitemapVariableHolder"
         shorthand="global-variables"
         default-class="org.apache.cocoon.components.modules.input.SitemapVariableHolder"/>
+  
+  <!-- Storing data in the current request -->
+  <role name="org.apache.cocoon.components.persistence.RequestDataStore"
+        shorthand="request-data-store"
+        default-class="org.apache.cocoon.components.persistence.RequestDataStoreImpl"/>
 
 </role-list>
