@@ -401,33 +401,31 @@ public final class SitemapTask extends AbstractQdoxTask {
             }
             Document doc = parent.getOwnerDocument();
             Node node;
-            StringBuffer buffer = new StringBuffer();
+            
             
             // first check: deprecated?
             if ( SitemapTask.this.deprecated || this.getTagValue("deprecated", null) != null ) {
                 indent(parent, 3);
-                buffer.append("The ")
-                .append(this.type)
+                StringBuffer buffer = new StringBuffer("The ");
+                buffer.append(this.type)
                 .append(" ")
                 .append(this.name)
                 .append(" is deprecated");
                 node = doc.createComment(buffer.toString());
                 parent.appendChild(node);
                 newLine(parent);
-                buffer = new StringBuffer();
             }
             // unstable block?
             if ( !SitemapTask.this.stable ) {
                 indent(parent, 3);
-                buffer.append("The ")
-                .append(this.type)
+                StringBuffer buffer = new StringBuffer("The ");
+                buffer.append(this.type)
                 .append(" ")
                 .append(this.name)
                 .append(" is in an unstable block");
                 node = doc.createComment(buffer.toString());
                 parent.appendChild(node);
                 newLine(parent);
-                buffer = new StringBuffer();                
             }
             
             indent(parent, 3);
