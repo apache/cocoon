@@ -96,15 +96,15 @@ import org.apache.avalon.framework.thread.ThreadSafe;
  *  </tbody>
  * </table>
  * 
- * @version CVS $Id: JMSConnectionImpl.java,v 1.5 2003/11/15 04:21:29 joerg Exp $
+ * @version CVS $Id: JMSConnectionImpl.java,v 1.6 2004/01/05 17:15:16 unico Exp $
  * @author <a href="mailto:haul@informatik.tu-darmstadt.de">haul</a>
  */
 public class JMSConnectionImpl extends AbstractLogEnabled 
-                                implements Configurable, 
-                                            Disposable, 
-                                            ThreadSafe,
-                                            Initializable,  
-                                            JMSConnection {
+                               implements Configurable, 
+                                          Disposable, 
+                                          ThreadSafe,
+                                          Initializable,  
+                                          JMSConnection {
 
     private boolean available = false;
     protected String topicFactoryName;
@@ -121,6 +121,64 @@ public class JMSConnectionImpl extends AbstractLogEnabled
     protected TopicConnectionFactory topicConnectionFactory;
 
     private Parameters jndiParams;
+    
+    
+    public void configure(Configuration conf) throws ConfigurationException {
+        Parameters parameters = Parameters.fromConfiguration(conf);
+        this.jndiParams = Parameters.fromConfiguration(conf.getChild("jndi-info"));
+        this.topicFactoryName =
+                parameters.getParameter("topic-factory", null);
+        this.topicName = parameters.getParameter("topic", null);
+        this.durableSubscriptionID =
+            parameters.getParameter(
+                "durable-subscription-id",null);
+
+        this.ackModeName =
+            parameters.getParameter("ack-mode", this.ackModeName).toLowerCase();
+        // see if an ack mode has been specified. If it hasn't
+        // then assume CLIENT_ACKNOWLEDGE mode.
+        this.ackMode = Session.CLIENT_ACKNOWLEDGE;
+        if (this.ackModeName.equals("auto")) {
+            this.ackMode = Session.AUTO_ACKNOWLEDGE;
+        } else if (this.ackModeName.equals("dups")) {
+            this.ackMode = Session.DUPS_OK_ACKNOWLEDGE;
+        } else if (!this.ackModeName.equals("client")) {
+            // ignore all ack modes, to test no acking
+            this.ackMode = -1;
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        try {
+            this.context = setupContext();
+            this.setupConnection();
+            this.setupSession();
+            this.available = true;
+        } catch (NamingException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Cannot get Initial Context.  Is the JNDI server reachable?",e);
+            }
+        } catch (JMSException e) {
+            if (getLogger().isWarnEnabled()) {
+                getLogger().warn("Failed to initialize JMS.",e);
+            }
+        }
+    }
+
+    /* 
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        try {
+            this.disconnect();
+        } catch (JMSException e) {
+        } catch (NamingException e) {
+        }
+    }
+    
 	/**
      * Register a new TopicListener for this connection.
      * 
@@ -250,62 +308,5 @@ public class JMSConnectionImpl extends AbstractLogEnabled
         this.session.close();
         this.connection.close();
     }
-
-    public void configure(Configuration conf) throws ConfigurationException {
-			Parameters parameters = Parameters.fromConfiguration(conf);
-			this.jndiParams = Parameters.fromConfiguration(conf.getChild("jndi-info"));
-            this.topicFactoryName =
-                    parameters.getParameter("topic-factory", null);
-            this.topicName = parameters.getParameter("topic", null);
-            this.durableSubscriptionID =
-                parameters.getParameter(
-                    "durable-subscription-id",null);
-
-            this.ackModeName =
-                parameters.getParameter("ack-mode", this.ackModeName).toLowerCase();
-            // see if an ack mode has been specified. If it hasn't
-            // then assume CLIENT_ACKNOWLEDGE mode.
-            this.ackMode = Session.CLIENT_ACKNOWLEDGE;
-            if (this.ackModeName.equals("auto")) {
-                this.ackMode = Session.AUTO_ACKNOWLEDGE;
-            } else if (this.ackModeName.equals("dups")) {
-                this.ackMode = Session.DUPS_OK_ACKNOWLEDGE;
-            } else if (!this.ackModeName.equals("client")) {
-                // ignore all ack modes, to test no acking
-                this.ackMode = -1;
-            }
-    }
-
-    
-    /* 
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        try {
-            this.disconnect();
-        } catch (JMSException e) {
-        } catch (NamingException e) {
-        }
-    }
-
-	/* (non-Javadoc)
-	 * @see org.apache.avalon.framework.activity.Initializable#initialize()
-	 */
-	public void initialize() throws Exception {
-		try {
-			this.context = setupContext();
-			this.setupConnection();
-			this.setupSession();
-            this.available = true;
-		} catch (NamingException e) {
-            if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Cannot get Initial Context.  Is the JNDI server reachable?",e);
-            }
-        } catch (JMSException e) {
-            if (getLogger().isWarnEnabled()) {
-                getLogger().warn("Failed to initialize JMS.",e);
-            }
-		}
-	}
 
 }
