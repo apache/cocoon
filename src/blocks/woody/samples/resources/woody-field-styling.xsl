@@ -39,20 +39,22 @@
     </script>
   </xsl:template>
 
-  <!-- must be called in <head> to load calendar script and setup the CSS -->
+  <!--+
+      | must be called in <head> to load help popups, calendar script,
+      | and setup the CSS
+      +-->
   <xsl:template name="woody-field-body">
     <xsl:attribute name="onload">woody_onload(); <xsl:value-of select="@onload"/></xsl:attribute>
     <!--script language="JavaScript">
       // Register woody startup function
       document.body.onload = woody_init;
     </script-->
-
-     <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
+    <div id="woody_calendarDiv" style="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"/>
   </xsl:template>
 
-  <!--
-    Generic wi:field : produce an <input>
-  -->
+  <!--+
+      | Generic wi:field : produce an <input>
+      +-->
   <xsl:template match="wi:field">
     <input name="{@id}" id="{@id}" value="{wi:value}" title="{wi:hint}">
       <xsl:if test="wi:styling">
@@ -72,26 +74,26 @@
     <xsl:if test="@required='true'">
       <span class="woody-field-required"> * </span>
     </xsl:if>
-    <!-- help icon -->
-    <xsl:if test="wi:help">
-      <div class="woody-help" id="help{generate-id()}" style="visibility:hidden; position:absolute;">
-        <xsl:apply-templates select="wi:help/node()"/>
-      </div>
-      <script language="JavaScript">
-        var helpWin<xsl:value-of select="generate-id()"/> = woody_createPopupWindow('help<xsl:value-of select="generate-id()"/>');
-      </script>
-      <a id="{generate-id()}" href="#" onclick="helpWin{generate-id()}.showPopup('{generate-id()}');return false;"><img border="0" src="resources/help.gif"/></a>
-    </xsl:if>
+    <xsl:apply-templates select="wi:help"/>
+  </xsl:template>
 
+  <xsl:template match="wi:help">
+    <div class="woody-help" id="help{generate-id()}" style="visibility:hidden; position:absolute;">
+      <xsl:apply-templates select="node()"/>
+    </div>
+    <script language="JavaScript">
+      var helpWin<xsl:value-of select="generate-id()"/> = woody_createPopupWindow('help<xsl:value-of select="generate-id()"/>');
+    </script>
+    <a id="{generate-id()}" href="#" onclick="helpWin{generate-id()}.showPopup('{generate-id()}');return false;"><img border="0" src="resources/help.gif"/></a>
   </xsl:template>
 
   <xsl:template match="wi:validation-message">
-    <a href="#" class="woody-validation-message-indicator" onclick="alert('{normalize-space(.)}'); return false;">&#160;!&#160;</a>
+    <a href="#" class="woody-validation-message-indicator" onclick="alert('{normalize-space(.)}');return false;">&#160;!&#160;</a>
   </xsl:template>
 
-  <!--
-    Hidden wi:field : produce input with type='hidden'
-  -->
+  <!--+
+      | Hidden wi:field : produce input with type='hidden'
+      +-->
   <xsl:template match="wi:field[wi:styling[@type='hidden']]" priority="2">
     <input type="hidden" name="{@id}" id="{@id}" value="{wi:value}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
@@ -100,14 +102,15 @@
     </input>
   </xsl:template>
 
-  <!--
-    wi:field with a selection list
-    Rendering depends on the attributes of wi:styling :
-    - if @list-type is "radio" : produce radio-buttons oriented according to @list-orientation
-      ("horizontal" or "vertical" - default)
-    - if @list-type is "listbox" : produce a list box with @list-size visible items (default 5)
-    - otherwise, produce a dropdown menu
-  -->
+  <!--+
+      | wi:field with a selection list
+      | Rendering depends on the attributes of wi:styling :
+      | - if @list-type is "radio" : produce radio-buttons oriented according to
+      |   @list-orientation ("horizontal" or "vertical" - default)
+      | - if @list-type is "listbox" : produce a list box with @list-size visible
+      |   items (default 5)
+      | - otherwise, produce a dropdown menu
+      +-->
   <xsl:template match="wi:field[wi:selection-list]" priority="1">
     <xsl:variable name="value" select="wi:value"/>
     <xsl:variable name="liststyle" select="wi:styling/@list-type"/>
@@ -163,9 +166,9 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
-  <!--
-    wi:field with a selection list and @type 'output'
-  -->
+  <!--+
+      | wi:field with a selection list and @type 'output'
+      +-->
   <xsl:template match="wi:field[wi:selection-list and wi:styling[@type='output']]" priority="2">
     <xsl:variable name="value" select="wi:value"/>
     <xsl:variable name="selected" select="wi:selection-list/wi:item[@value = $value]"/>
@@ -179,9 +182,9 @@
     </xsl:choose>
   </xsl:template>
 
-  <!--
-    wi:field with @type 'textarea'
-  -->
+  <!--+
+      | wi:field with @type 'textarea'
+      +-->
   <xsl:template match="wi:field[wi:styling[@type='textarea']]">
     <textarea id="{@id}" name="{@id}" title="{wi:hint}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
@@ -193,16 +196,16 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
-  <!--
-    wi:field with @type 'output' : rendered as text
-  -->
+  <!--+
+      | wi:field with @type 'output' : rendered as text
+      +-->
   <xsl:template match="wi:field[wi:styling[@type='output']]" priority="1">
     <xsl:copy-of select="wi:value"/>
   </xsl:template>
 
-  <!--
-    wi:field with @type 'date' : use CalendarPopup
-  -->
+  <!--+
+      | wi:field with @type 'date' : use CalendarPopup
+      +-->
   <xsl:template match="wi:field[wi:styling[@type='date']]">
     <xsl:variable name="id" select="generate-id()"/>
     <xsl:variable name="format">
@@ -221,16 +224,16 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
-  <!--
-    wi:output
-  -->
+  <!--+
+      | wi:output
+      +-->
   <xsl:template match="wi:output">
     <xsl:copy-of select="wi:value/node()"/>
   </xsl:template>
 
-  <!--
-    wi:booleanfield : produce a checkbox
-  -->
+  <!--+
+      | wi:booleanfield : produce a checkbox
+      +-->
   <xsl:template match="wi:booleanfield">
     <input id="{@id}" type="checkbox" value="true" name="{@id}" title="{wi:hint}">
       <xsl:if test="wi:styling/@submit-on-change='true'">
@@ -243,9 +246,9 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
-  <!--
-    wi:booleanfield with @type 'output' : rendered as text
-  -->
+  <!--+
+      | wi:booleanfield with @type 'output' : rendered as text
+      +-->
   <xsl:template match="wi:booleanfield[wi:styling[@type='output']]">
     <xsl:choose>
       <xsl:when test="wi:value = 'true'">
@@ -257,9 +260,9 @@
     </xsl:choose>
   </xsl:template>
 
-  <!--
-    wi:action
-  -->
+  <!--+
+      | wi:action
+      +-->
   <xsl:template match="wi:action">
     <input id="{@id}" type="submit" name="{@id}" title="{wi:hint}">
       <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
@@ -267,9 +270,9 @@
     </input>
   </xsl:template>
 
-  <!--
-    wi:continuation-id : produce a hidden "continuation-id" input
-  -->
+  <!--+
+      | wi:continuation-id : produce a hidden "continuation-id" input
+      +-->
   <xsl:template match="wi:continuation-id">
     <xsl:choose>
       <xsl:when test="@name">
@@ -281,10 +284,9 @@
     </xsl:choose>
   </xsl:template>
 
-  <!--
-    wi:multivaluefield : produce a list of checkboxes
-  -->
-
+  <!--+
+      | wi:multivaluefield : produce a list of checkboxes
+      +-->
   <xsl:template match="wi:multivaluefield[wi:styling[@list-type='checkbox']]">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
@@ -304,10 +306,9 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
-  <!--
-    wi:multivaluefield : produce a multiple-selection list
-  -->
-
+  <!--+
+      | wi:multivaluefield : produce a multiple-selection list
+      +-->
   <xsl:template match="wi:multivaluefield">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
@@ -338,10 +339,9 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
-  <!--
-    wi:multivaluefield : produce a double selection list
-  -->
-
+  <!--+
+      | wi:multivaluefield : produce a double selection list
+      +-->
   <xsl:template match="wi:multivaluefield[wi:styling[@list-type='double-listbox']]">
     <xsl:variable name="id" select="@id"/>
     <xsl:variable name="values" select="wi:values/wi:value/text()"/>
@@ -412,12 +412,11 @@
         var opt<xsl:value-of select="generate-id()"/> = woody_createOptionTransfer('<xsl:value-of select="@id"/>');
       </script>
     </span>
-
   </xsl:template>
 
-  <!--
-    wi:upload
-  -->
+  <!--+
+      | wi:upload
+      +-->
   <xsl:template match="wi:upload">
     <xsl:choose>
       <xsl:when test="wi:value">
@@ -433,9 +432,9 @@
     <xsl:apply-templates select="." mode="common"/>
   </xsl:template>
 
-  <!--
-    wi:repeater
-  -->
+  <!--+
+      | wi:repeater
+      +-->
   <xsl:template match="wi:repeater">
     <input type="hidden" name="{@id}.size" value="{@size}"/>
     <table border="1">
@@ -448,9 +447,9 @@
     </table>
   </xsl:template>
 
-  <!--
-    wi:repeater-row
-  -->
+  <!--+
+      | wi:repeater-row
+      +-->
   <xsl:template match="wi:repeater-row">
     <tr>
       <xsl:for-each select="*">
@@ -461,16 +460,16 @@
     </tr>
   </xsl:template>
 
-  <!--
-    wi:repeater-size
-  -->
+  <!--+
+      | wi:repeater-size
+      +-->
   <xsl:template match="wi:repeater-size">
     <input type="hidden" name="{@id}.size" value="{@size}"/>
   </xsl:template>
 
-  <!--
-    wi:form-template
-  -->
+  <!--+
+      | wi:form-template
+      +-->
   <xsl:template match="wi:form-template">
     <form>
       <xsl:copy-of select="@*"/>
@@ -481,9 +480,9 @@
     </form>
   </xsl:template>
 
-  <!--
-    wi:form
-  -->
+  <!--+
+      | wi:form
+      +-->
   <xsl:template match="wi:form">
     <table border="1">
       <xsl:for-each select="wi:children/*">
