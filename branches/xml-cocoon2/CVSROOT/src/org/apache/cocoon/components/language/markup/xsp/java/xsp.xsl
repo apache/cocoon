@@ -11,7 +11,7 @@
 
 <!--
  * @author <a href="mailto:ricardo@apache.org>Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2000-12-21 20:38:38 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2000-12-21 22:14:06 $
 -->
 
 <!-- XSP Core logicsheet for the Java language -->
@@ -334,6 +334,8 @@ Either both 'uri' and 'prefix' or none of them must be specified
 
     <xsl:apply-templates select="@*"/>
 
+    <xsl:apply-templates select="xsp:attribute"/>
+
     this.contentHandler.startElement(
       "<xsl:value-of select="namespace-uri(.)"/>",
       "<xsl:value-of select="local-name(.)"/>",
@@ -343,7 +345,7 @@ Either both 'uri' and 'prefix' or none of them must be specified
 
     xspAttr.clear();
 
-    <xsl:apply-templates/>
+    <xsl:apply-templates select="node()[not(name(.) = 'xsp:attribute')]"/>
 
     this.contentHandler.endElement(
       "<xsl:value-of select="namespace-uri(.)"/>",
