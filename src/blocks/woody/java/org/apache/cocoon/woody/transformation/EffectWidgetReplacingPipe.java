@@ -85,7 +85,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  *
- * CVS $Id: EffectWidgetReplacingPipe.java,v 1.3 2003/12/29 17:52:12 stefano Exp $
+ * CVS $Id: EffectWidgetReplacingPipe.java,v 1.4 2004/01/05 16:59:39 vgritsenko Exp $
  * @author Timothy Larson
  */
 public class EffectWidgetReplacingPipe extends EffectPipe {
@@ -111,24 +111,42 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
     protected Widget widget;
     protected Map classes;
 
-    private DocHandler            docHandler            = new DocHandler();
-    private FormHandler           formHandler           = new FormHandler();
-    private NestedHandler         nestedHandler         = new NestedHandler();
-    private WidgetLabelHandler    widgetLabelHandler    = new WidgetLabelHandler();
-    private WidgetHandler         widgetHandler         = new WidgetHandler();
-    private RepeaterSizeHandler   repeaterSizeHandler   = new RepeaterSizeHandler();
-    private RepeaterWidgetLabelHandler repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
-    private RepeaterWidgetHandler repeaterWidgetHandler = new RepeaterWidgetHandler();
-    private StructHandler         structHandler         = new StructHandler();
-    private UnionHandler          unionHandler          = new UnionHandler();
-    private UnionPassThruHandler  unionPassThruHandler  = new UnionPassThruHandler();
-    private NewHandler            newHandler            = new NewHandler();
-    private ClassHandler          classHandler          = new ClassHandler();
-    private ContinuationIdHandler continuationIdHandler = new ContinuationIdHandler();
+    private final DocHandler                  docHandler            = new DocHandler();
+    private final FormHandler                 formHandler           = new FormHandler();
+    private final NestedHandler               nestedHandler         = new NestedHandler();
+    private final WidgetLabelHandler          widgetLabelHandler    = new WidgetLabelHandler();
+    private final WidgetHandler               widgetHandler         = new WidgetHandler();
+    private final RepeaterSizeHandler         repeaterSizeHandler   = new RepeaterSizeHandler();
+    private final RepeaterWidgetLabelHandler  repeaterWidgetLabelHandler = new RepeaterWidgetLabelHandler();
+    private final RepeaterWidgetHandler       repeaterWidgetHandler = new RepeaterWidgetHandler();
+    private final StructHandler               structHandler         = new StructHandler();
+    private final UnionHandler                unionHandler          = new UnionHandler();
+    private final UnionPassThruHandler        unionPassThruHandler  = new UnionPassThruHandler();
+    private final NewHandler                  newHandler            = new NewHandler();
+    private final ClassHandler                classHandler          = new ClassHandler();
+    private final ContinuationIdHandler       continuationIdHandler = new ContinuationIdHandler();
+    private final InsertStylingContentHandler stylingHandler        = new InsertStylingContentHandler();
 
-    private Map templates = new HashMap(10,1);
-    // Use an instance initializer to setup map of templates.
-    {
+    /**
+     * Map containing all handlers
+     */
+    private final Map templates = new HashMap(10, 1);
+
+    protected WoodyPipelineConfig pipeContext;
+
+    /**
+     * Have we encountered a <wi:style> element in a widget ?
+     */
+    protected boolean gotStylingElement;
+
+    /**
+     * Namespace prefix used for the namespace <code>Constants.WT_NS</code>.
+     */
+    protected String namespacePrefix;
+
+
+    public EffectWidgetReplacingPipe() {
+        // Setup map of templates.
         templates.put(WIDGET, widgetHandler);
         templates.put(WIDGET_LABEL, widgetLabelHandler);
         templates.put(REPEATER_WIDGET, repeaterWidgetHandler);
@@ -141,26 +159,13 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
         templates.put(CONTINUATION_ID, continuationIdHandler);
     }
 
-    protected InsertStylingContentHandler stylingHandler = new InsertStylingContentHandler();
-    protected WoodyPipelineConfig pipeContext;
-
-    /**
-     * Have we encountered a <wi:style> element in a widget ?
-     */
-    protected boolean gotStylingElement;
-
-    /** 
-     * Namespace prefix used for the namespace <code>Constants.WT_NS</code>.
-     */
-    protected String namespacePrefix;
-
     private void throwSAXException(String message) throws SAXException{
         throw new SAXException("EffectWoodyTemplateTransformer: " + message);
     }
 
-    public void init(Widget newContextWidget, WoodyPipelineConfig newPipeContext) {
+    public void init(Widget contextWidget, WoodyPipelineConfig pipeContext) {
         super.init();
-        pipeContext = newPipeContext;
+        this.pipeContext = pipeContext;
 
         // Attach document handler
         handler = docHandler;
@@ -172,28 +177,31 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     protected String getWidgetId(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
-        if (widgetId == null || widgetId.equals(""))
+        if (widgetId == null || widgetId.equals("")) {
             throwSAXException("Missing required widget \"id\" attribute.");
+        }
         return widgetId;
     }
 
     protected Widget getWidget(String widgetId) throws SAXException {
         Widget widget = contextWidget.getWidget(widgetId);
-        if (widget == null)
+        if (widget == null) {
             if (contextWidget.getFullyQualifiedId() == null) {
                 throwSAXException("Widget with id \"" + widgetId + "\" does not exist in the form container.");
             } else {
                 throwSAXException("Widget with id \"" + widgetId + "\" does not exist in the container \"" +
-                    contextWidget.getFullyQualifiedId() + "\"");
+                                  contextWidget.getFullyQualifiedId() + "\"");
             }
+        }
         return widget;
     }
 
     protected void getRepeaterWidget(String handler) throws SAXException {
         widgetId = getWidgetId(input.attrs);
         widget = getWidget(widgetId);
-        if (!(widget instanceof Repeater))
+        if (!(widget instanceof Repeater)) {
             throwWrongWidgetType("RepeaterWidgetLabelHandler", input.loc, "repeater");
+        }
     }
 
     public void throwWrongWidgetType(String pipeName, String element, String widget) throws SAXException {
@@ -202,7 +210,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
 
     public Handler nestedTemplate() throws SAXException {
         if (Constants.WT_NS.equals(input.uri)) {
-            // Element in woody namespace.
+            // Element in woody template namespace.
             Handler handler = (Handler)templates.get(input.loc);
             if (handler != null) {
                 return handler;
@@ -458,8 +466,9 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_START_ELEMENT:
                 widgetId = getWidgetId(input.attrs);
                 widget = getWidget(widgetId);
-                if (!(widget instanceof Struct))
+                if (!(widget instanceof Struct)) {
                     throwWrongWidgetType("StructHandler", input.loc, "struct");
+                }
                 contextWidgets.addFirst(contextWidget);
                 contextWidget = widget;
                 out.element(Constants.WI_PREFIX, Constants.WI_NS, "struct");
@@ -527,7 +536,7 @@ public class EffectWidgetReplacingPipe extends EffectPipe {
             case EVENT_ELEMENT:
                 if (Constants.WT_NS.equals(input.uri)) {
                     if ("case".equals(input.loc)) {
-                        if (((String)((Union)contextWidget).getValue()).equals(input.attrs.getValue("id"))) {
+                        if (((Union)contextWidget).getValue().equals(input.attrs.getValue("id"))) {
                             return nestedHandler;
                         } else {
                             return nullHandler;
