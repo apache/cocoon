@@ -169,8 +169,8 @@ import java.util.Map;
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:mike@hihat.net">Michael McKibben</a>
- * @author <a href=mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
- * @version CVS $Id: VelocityGenerator.java,v 1.4 2003/05/16 13:35:56 stephan Exp $
+ * @author <a href="mailto:michael.homeijer@ordina.nl">Michael Homeijer</a>
+ * @version CVS $Id: VelocityGenerator.java,v 1.5 2003/05/16 13:40:03 stephan Exp $
  */
 public class VelocityGenerator extends ComposerGenerator
   implements Initializable, Configurable, LogSystem {
