@@ -17,7 +17,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.141 2004/04/13 08:38:07 joerg Exp $
+    | CVS $Id: gump.xml,v 1.142 2004/04/13 09:43:08 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -59,6 +59,7 @@
     <depend project="excalibur-logger"/>
     <depend project="excalibur-event" inherit="runtime"/>
     <depend project="excalibur-i18n"/>
+    <depend project="excalibur-testcase"/>
 
     <depend project="jakarta-regexp"/>
     <depend project="jakarta-servletapi"/>
