@@ -24,7 +24,7 @@ import java.util.Map;
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CopletBaseData.java,v 1.8 2004/03/05 13:02:10 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public final class CopletBaseData { 
 
@@ -35,6 +35,7 @@ public final class CopletBaseData {
 	private String copletAdapterName;
 
 	public CopletBaseData() {
+        // Nothing to do
 	}
 
 	public String getId() {
