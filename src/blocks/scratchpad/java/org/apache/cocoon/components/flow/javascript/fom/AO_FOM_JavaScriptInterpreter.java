@@ -87,14 +87,27 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
 import org.mozilla.javascript.tools.shell.Global;
 
 /**
- * Interface with the JavaScript interpreter.
- *
+ * <p>Interface with the JavaScript interpreter.</p>
+ * <p>This version of the JavaScript interpreter provides enhanced
+ *    functionality and supports interception.</p>
+ * 
+ * <p>Changes:
+ *   <ul>
+ *     <li>Use of the AO_FOM_Cocoon object encapsulating the Cocoon object.
+ *         All references to the FOM_Cocoon object had to be changed.
+ *     </li>
+ *     <li>Additional configurations</li>
+ *     <li>adding the <code>JavaScriptAspectWeaver</code> to the SourceEntry
+ *         object if interceptions are enabled</li>
+ *    </ul>
+ * </p>
+ * 
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @author <a href="mailto:coliver@apache.org">Christopher Oliver</a>  
  * @author <a href="mailto:reinhard@apache.org">Reinhard Pötz</a> 
  * @since 2.1
- * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.1 2003/09/06 13:23:30 reinhard Exp $
+ * @version CVS $Id: AO_FOM_JavaScriptInterpreter.java,v 1.2 2003/09/08 22:56:34 reinhard Exp $
  */
 public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -159,7 +172,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         public Source getSource() {
             return source;
         }
-
+        // (RPO) added/changed by interception layer    
         private JavaScriptAspectWeaver aspectWeaver = null;
 
         public void setAspectWeaver( JavaScriptAspectWeaver aspectWeaver ) {
@@ -178,6 +191,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             }
             return script;
         }
+        //  -- end        
     }
     
     /**
@@ -185,9 +199,10 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
      *
      */
     Map compiledScripts = new HashMap();
-
     JSErrorReporter errorReporter;
+    
     boolean enableDebugger = false;
+
     /**
      * JavaScript debugger: there's only one of these: it can debug multiple
      * threads executing JS code.
@@ -217,9 +232,14 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         return debugger;
     }
 
-    public void configure(Configuration config)
-        throws ConfigurationException
-    {
+    // (RPO) added by interception layer       
+    Configuration stopExecutionFunctionsConf = null;
+    boolean copyResultScript = false;
+    // --end
+
+    public void configure(Configuration config) 
+        throws ConfigurationException {
+            
         super.configure(config);
 
         String loadOnStartup
@@ -234,8 +254,14 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             enableDebugger = true;
         }
         
-        isInterceptionEnabled = config.getChild( "enable-interception" ).getValueAsBoolean( true );
-        
+        // (RPO) added by interception layer    
+        isInterceptionEnabled = 
+            config.getChild( "enable-interception" ).getValueAsBoolean( true );
+            stopExecutionFunctionsConf = 
+            config.getChild( "cont-creating-functions" );
+        copyResultScript = 
+           config.getChild( "copy-result-script" ).getValueAsBoolean( false );
+        // --end
     }
 
     public void initialize()
@@ -458,13 +484,16 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
                     entry = new ScriptSourceEntry(src);
                     compiledScripts.put(sourceURI, entry);
                 }
+                // (RPO) added/changed by interception layer            
                 // add interception support
                 if( isInterceptionEnabled ) {
                     JavaScriptAspectWeaver aspectWeaver = new JavaScriptAspectWeaver();
                     aspectWeaver.setEnvironment( environment );
                     aspectWeaver.enableLogging( this.getLogger() );
+                    aspectWeaver.setStopExecutionFunctionsConf( this.stopExecutionFunctionsConf );
                     entry.setAspectWeaver( aspectWeaver );
-                }                   
+                }        
+                // --end           
                 // Compile the script if necessary
                 entry.getScript(context, this.scope, needsRefresh);
             }
@@ -512,7 +541,7 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
             return compiledScript;
         }
     }
-
+    // (RPO) added/changed by interception layer   
     private Script compileScript( Context cx, Scriptable scope, 
                                   Source src, JavaScriptAspectWeaver aspectWeaver)
         throws Exception {
@@ -544,7 +573,8 @@ public class AO_FOM_JavaScriptInterpreter extends AbstractInterpreter
         }
         return compiledScript;
     }
-
+    // -- end
+    
     /**
      * Calls a JavaScript function, passing <code>params</code> as its
      * arguments. In addition to this, it makes available the parameters
