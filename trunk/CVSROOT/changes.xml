@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes   
-  $Id: changes.xml,v 1.130 2000-10-21 14:20:07 greenrd Exp $ 
+  $Id: changes.xml,v 1.131 2000-10-22 12:28:18 greenrd Exp $ 
 -->
 
 <changes title="History of Changes">
@@ -17,6 +17,9 @@
   </devs>
 
  <release version="@version@" date="@date@">
+  <action dev="RDG" type="fix" due-to="Jeff Turner" due-to-email="jeff@socialchange.net.au">
+   LDAP processor now accepts byte arrays without throwing a ClassCastException
+  </action>
   <action dev="RDG" type="add" due-to="Mahe Vincent" 
    due-to-email="vincent.mahe@rd.francetelecom.fr">
    Added installation instructions for JRun 3.0

@@ -1,4 +1,4 @@
-/*-- $Id: LdapProcessor.java,v 1.2 2000-02-13 18:29:31 stefano Exp $ -- 
+/*-- $Id: LdapProcessor.java,v 1.3 2000-10-22 12:28:18 greenrd Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
@@ -53,6 +53,7 @@ package org.apache.cocoon.processor.ldap;
 
 import java.util.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import org.w3c.dom.*;
 import javax.servlet.http.*;
 import org.apache.cocoon.framework.*;
@@ -167,7 +168,21 @@ public class LdapProcessor extends AbstractActor implements Processor, Status {
 						Enumeration vals = attr.getAll();
 						while(vals.hasMoreElements()) {
 							Element attrElement = doc.createElement(attrId);
-							attrElement.appendChild(doc.createTextNode((String)vals.nextElement()));
+							Object valObj = vals.nextElement ();
+							String valStr;
+							try {
+								valStr = (String)valObj;
+							}
+							catch (ClassCastException ex) {
+								// it's an array
+								int strSize = Array.getLength (valObj);
+								StringBuffer valBuf = new StringBuffer(strSize);
+								for (int i = 0; i < strSize; i++) {
+									valBuf.append (Array.get (valObj,i));
+								}
+								valStr = valBuf.toString ();
+							}
+							attrElement.appendChild(doc.createTextNode(valStr));
 							searchNode.appendChild(attrElement);
 							                
 						}
