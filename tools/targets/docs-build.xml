@@ -1,6 +1,6 @@
 <!-- === Documentation Targets ================================================= -->
 
-  <target name="prepare-docs" depends="blocks">
+  <target name="prepare-docs" unless="exclude.documentation" depends="blocks">
 
     <!-- Set classpath for documentation -->
     <path id="documentation.classpath">
