@@ -89,7 +89,7 @@ public abstract class JXPathBindingBase implements Binding, LogEnabled {
                 classBinding = parent.getClass(id);
                 // Cache result
                 if (classes == null) {
-                   classes = new HashMap();
+                    classes = new HashMap();
                 }
                 classes.put(id, classBinding);
             } else {

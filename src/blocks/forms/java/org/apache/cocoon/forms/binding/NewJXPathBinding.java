@@ -41,14 +41,18 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
      * @param widgetId
      * @param childBindings
      */
-    public NewJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts, String widgetId, JXPathBindingBase[] childBindings) {
+    public NewJXPathBinding(JXPathBindingBuilderBase.CommonAttributes commonAtts,
+            String widgetId, JXPathBindingBase[] childBindings) {
         super(commonAtts, childBindings);
         this.widgetId = widgetId;
         this.classBinding = null;
     }
 
-    private void resolve() {
+    private void resolve() throws BindingException {
         classBinding = getClass(widgetId);
+        if (classBinding == null) {
+            throw new BindingException("Class \"" + widgetId + "\" does not exist");
+        }
     }
 
     /**
@@ -59,16 +63,12 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
     public void doLoad(Widget frmModel, JXPathContext jxpc) throws BindingException {
         if (classBinding == null)
             resolve();
-        if (classBinding instanceof ClassJXPathBinding) {
-            Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
-            if (subBindings != null) {
-                int size = subBindings.length;
-                for (int i = 0; i < size; i++) {
-                    subBindings[i].loadFormFromModel(frmModel, jxpc);
-                }
+        Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
+        if (subBindings != null) {
+            int size = subBindings.length;
+            for (int i = 0; i < size; i++) {
+                subBindings[i].loadFormFromModel(frmModel, jxpc);
             }
-        } else {
-            classBinding.loadFormFromModel(frmModel, jxpc);
         }
     }
 
@@ -80,16 +80,12 @@ public class NewJXPathBinding extends ComposedJXPathBindingBase {
     public void doSave(Widget frmModel, JXPathContext jxpc) throws BindingException {
         if (classBinding == null)
             resolve();
-        if (classBinding instanceof ClassJXPathBinding) {
-            Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
-            if (subBindings != null) {
-                int size = subBindings.length;
-                for (int i = 0; i < size; i++) {
-                    subBindings[i].saveFormToModel(frmModel, jxpc);
-                }
+        Binding[] subBindings = ((ComposedJXPathBindingBase)classBinding).getChildBindings();
+        if (subBindings != null) {
+            int size = subBindings.length;
+            for (int i = 0; i < size; i++) {
+                subBindings[i].saveFormToModel(frmModel, jxpc);
             }
-        } else {
-            classBinding.saveFormToModel(frmModel, jxpc);
         }
     }
 
