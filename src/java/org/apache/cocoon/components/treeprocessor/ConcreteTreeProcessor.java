@@ -50,7 +50,7 @@ import org.apache.cocoon.sitemap.SitemapListener;
  * @version $Id$
  */
 public class ConcreteTreeProcessor extends AbstractLogEnabled
-                                   implements Processor {
+                                   implements Processor, Disposable {
 
     /** Our ServiceManager */
     private ServiceManager manager;
@@ -337,6 +337,9 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         return result;
     }
 
+    /**
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
     public void dispose() {
         if (this.disposableNodes != null) {
             // we must dispose the nodes in reverse order
