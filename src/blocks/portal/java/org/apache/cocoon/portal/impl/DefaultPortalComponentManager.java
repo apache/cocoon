@@ -47,13 +47,7 @@ import org.apache.cocoon.portal.profile.ProfileManager;
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * 
- * @version CVS $Id: DefaultPortalComponentManager.java,v 1.5 2004/06/21 11:09:45 cziegeler Exp $
- */
-/**
- * @author CZiegeler
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
+ * @version CVS $Id$
  */
 public class DefaultPortalComponentManager
     extends AbstractLogEnabled
