@@ -80,7 +80,7 @@ import org.apache.cocoon.bean.CocoonBean;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a> 
- * @version CVS $Id: Main.java,v 1.5 2003/06/11 02:59:36 vgritsenko Exp $
+ * @version CVS $Id: Main.java,v 1.6 2003/06/24 16:44:33 cziegeler Exp $
  */
 public class Main {
 
@@ -360,7 +360,6 @@ public class Main {
         System.out.println(getProlog());
         
         cocoon.initialize();
-        cocoon.warmup();
         cocoon.process();
         cocoon.dispose();
 

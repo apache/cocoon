@@ -110,7 +110,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a> (Apache Software Foundation)
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Cocoon.java,v 1.8 2003/06/04 09:25:53 upayavira Exp $
+ * @version CVS $Id: Cocoon.java,v 1.9 2003/06/24 16:44:35 cziegeler Exp $
  */
 public class Cocoon
         extends AbstractLogEnabled
@@ -267,8 +267,8 @@ public class Cocoon
         } else {
             this.componentManager = new CocoonComponentManager((ClassLoader)this.context.get(Constants.CONTEXT_CLASS_LOADER));
         }
-        this.componentManager.enableLogging(getLogger().getChildLogger("manager"));
-        this.componentManager.contextualize(this.context);
+        ContainerUtil.enableLogging(this.componentManager, getLogger().getChildLogger("manager"));
+        ContainerUtil.contextualize(this.componentManager, this.context);
         this.componentManager.setInstrumentManager(this.instrumentManager);
 
         if (getLogger().isDebugEnabled()) {
@@ -296,10 +296,13 @@ public class Cocoon
         }
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Using parser: " + parser);
+            getLogger().debug("Classpath = " + classpath);
+            getLogger().debug("Work directory = " + workDir.getCanonicalPath());
         }
+
         ExcaliburComponentManager startupManager = new ExcaliburComponentManager((ClassLoader)this.context.get(Constants.CONTEXT_CLASS_LOADER));
-        startupManager.enableLogging(getLogger().getChildLogger("startup"));
-        startupManager.contextualize(this.context);
+        ContainerUtil.enableLogging(startupManager, getLogger().getChildLogger("startup"));
+        ContainerUtil.contextualize(startupManager, this.context);
         startupManager.setLogKitManager(this.logKitManager);
 
         try {
@@ -308,17 +311,14 @@ public class Cocoon
             throw new ConfigurationException("Could not load parser " + parser, e);
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug("Classpath = " + classpath);
-            getLogger().debug("Work directory = " + workDir.getCanonicalPath());
-        }
-        startupManager.initialize();
+        ContainerUtil.initialize(startupManager);
 
         this.configure(startupManager);
-        startupManager.dispose();
+
+        ContainerUtil.dispose(startupManager);
         startupManager = null;
 
-        this.componentManager.initialize();
+        ContainerUtil.initialize(this.componentManager);
 
         // Get the Processor and keep it if it's ThreadSafe
         Processor processor = (Processor)this.componentManager.lookup(Processor.ROLE);
@@ -358,11 +358,10 @@ public class Cocoon
      * Configure this <code>Cocoon</code> instance.
      *
      * @param startupManager an <code>ExcaliburComponentManager</code> value
-     * @return a <code>Configuration</code> value
      * @exception ConfigurationException if an error occurs
      * @exception ContextException if an error occurs
      */
-    public Configuration configure(ExcaliburComponentManager startupManager) throws ConfigurationException, ContextException {
+    public void configure(ExcaliburComponentManager startupManager) throws ConfigurationException, ContextException {
         SAXParser p = null;
         Configuration roleConfig = null;
 
@@ -382,8 +381,8 @@ public class Cocoon
         }
 
         DefaultRoleManager drm = new DefaultRoleManager();
-        drm.enableLogging(getLogger().getChildLogger("roles"));
-        drm.configure(roleConfig);
+        ContainerUtil.enableLogging(drm, getLogger().getChildLogger("roles"));
+        ContainerUtil.configure(drm, roleConfig);
         roleConfig = null;
 
         try {
@@ -434,8 +433,8 @@ public class Cocoon
             }
 
             DefaultRoleManager urm = new DefaultRoleManager(drm);
-            urm.enableLogging(getLogger().getChildLogger("roles").getChildLogger("user"));
-            urm.configure(roleConfig);
+            ContainerUtil.enableLogging(urm, getLogger().getChildLogger("roles").getChildLogger("user"));
+            ContainerUtil.configure(urm, roleConfig);
             roleConfig = null;
             drm = urm;
         }
@@ -446,9 +445,7 @@ public class Cocoon
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Setting up components...");
         }
-        this.componentManager.configure(conf);
-
-        return conf;
+        ContainerUtil.configure(this.componentManager, conf);
     }
 
     /**
@@ -493,7 +490,7 @@ public class Cocoon
     public void dispose() {
         this.componentManager.release(this.threadSafeProcessor);
         ContainerUtil.dispose(threads);
-        this.componentManager.dispose();
+        ContainerUtil.dispose(this.componentManager);
         this.disposed = true;
     }
 
@@ -593,9 +590,7 @@ public class Cocoon
             }
         }
 
-        if (getLogger().isDebugEnabled()) {
-            getLogger().debug(msg.toString());
-        }
+        getLogger().debug(msg.toString());
     }
 
     /**
@@ -607,7 +602,7 @@ public class Cocoon
      */
     public boolean process(Environment environment)
     throws Exception {
-        if (disposed) {
+        if (this.disposed) {
             throw new IllegalStateException("You cannot process a Disposed Cocoon engine.");
         }
 
@@ -700,27 +695,6 @@ public class Cocoon
     }
 
     /**
-     * Process the given <code>Environment</code> to generate the sitemap.
-     * Delegated to the Processor component if it's a <code>SitemapManager</code>.
-     *
-     * @param environment an <code>Environment</code> value
-     * @exception Exception if an error occurs
-     */
-    public void generateSitemap(Environment environment)
-    throws Exception {
-        /**
-        Component processor = this.componentManager.lookup(Processor.ROLE);
-        try {
-            if (processor instanceof SitemapManager) {
-                ((SitemapManager)processor).generateSitemap(environment);
-            }
-        } finally {
-            this.componentManager.release(processor);
-        }
-        */
-    }
-
-    /**
      * Process the given <code>Environment</code> to generate Java code for specified XSP files.
      *
      * @param fileName a <code>String</code> value
@@ -746,7 +720,6 @@ public class Cocoon
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("XSP generation complete:" + xsp);
             }
-            this.componentManager.release(programGenerator);
         } finally {
             this.componentManager.release(programGenerator);
         }
@@ -758,6 +731,7 @@ public class Cocoon
     public int getActiveRequestCount() {
         return activeRequestCount;
     }
+    
     public ExcaliburComponentManager getComponentManager() {
         return this.componentManager;
     }
