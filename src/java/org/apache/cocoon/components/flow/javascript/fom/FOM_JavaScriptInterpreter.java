@@ -92,7 +92,7 @@ import org.mozilla.javascript.tools.shell.Global;
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @author <a href="mailto:crafterm@apache.org">Marcus Crafter</a>
  * @since March 25, 2002
- * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.9 2003/09/24 20:38:09 sylvain Exp $
+ * @version CVS $Id: FOM_JavaScriptInterpreter.java,v 1.10 2003/09/29 12:56:05 sylvain Exp $
  */
 public class FOM_JavaScriptInterpreter extends AbstractInterpreter
     implements Configurable, Initializable
@@ -530,6 +530,9 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
             try {
                 setupContext(environment, context, thrScope);
                 cocoon = (FOM_Cocoon)thrScope.get("cocoon", thrScope);
+                
+                // Register the current scope for scripts indirectly called from this function
+                cocoon.getRequest().setAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE, thrScope);
                 if (enableDebugger) {
                     if (!getDebugger().isVisible()) {
                         // only raise the debugger window if it isn't already visible
@@ -612,6 +615,9 @@ public class FOM_JavaScriptInterpreter extends AbstractInterpreter
         synchronized (kScope) {
             FOM_Cocoon cocoon = (FOM_Cocoon)kScope.get("cocoon", kScope);
             cocoon.setup(this, environment, manager, getLogger());
+            // Register the current scope for scripts indirectly called from this function
+            cocoon.getRequest().setAttribute(FOM_JavaScriptFlowHelper.FOM_SCOPE, kScope);
+
             if (enableDebugger) {
                 getDebugger().setVisible(true);
             }
