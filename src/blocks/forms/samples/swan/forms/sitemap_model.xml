@@ -37,13 +37,14 @@
         </fd:repeater>
         <fd:repeater-action id="addItem" action-command="add-row" repeater="items">
           <fd:label>Add Child</fd:label>
+          <fd:hint>Add child</fd:hint>
           <fd:on-action>
             <javascript>
               var repeater = event.getSourceWidget().lookupWidget("../items");
               var view = repeater.getRow(repeater.getSize() - 1).getChild("view-selector");
               view.setValue("edit");
-              view.setProcessRequests(false);
-              //print(widget.getRequestParameterName());
+              // View is selected by buttons.
+              view.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
             </javascript>
           </fd:on-action>
         </fd:repeater-action>
@@ -66,27 +67,27 @@
               var union = widget.lookupWidget("../union");
               var type = widget.lookupWidget("../type-selector");
               var stuff = union.lookupWidget(union.getValue() + "/stuff");
-              print("View set to: " + widget.getValue() + " for: " + widget.getRequestParameterName());
               if("edit".equals(widget.getValue())) {
                 if(stuff != null) {
-                  stuff.setProcessRequests(true);
+                  stuff.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
                 }
-                type.setProcessRequests(true);
+                type.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
               } else if("view".equals(widget.getValue())){
-                union.setProcessRequests(true);
+                union.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.ACTIVE);
                 if(stuff != null) {
-                  stuff.setProcessRequests(false);
+                  stuff.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
                 }
-                type.setProcessRequests(false);
+                type.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
               } else {
-                union.setProcessRequests(false);
-                type.setProcessRequests(false);
+                union.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
+                type.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
               }
             </javascript>
           </fd:on-value-changed>
         </fd:field>
         <fd:action id="fold-view" action-command="fold-view">
           <fd:label>F</fd:label>
+          <fd:hint>Fold</fd:hint>
           <fd:on-action>
             <javascript>
               var view = event.getSourceWidget().lookupWidget("../view-selector");
@@ -96,6 +97,7 @@
         </fd:action>
         <fd:action id="view-view" action-command="view-view">
           <fd:label>V</fd:label>
+          <fd:hint>View</fd:hint>
           <fd:on-action>
             <javascript>
               var view = event.getSourceWidget().lookupWidget("../view-selector");
@@ -105,6 +107,7 @@
         </fd:action>
         <fd:action id="edit-view" action-command="edit-view">
           <fd:label>E</fd:label>
+          <fd:hint>Edit</fd:hint>
           <fd:on-action>
             <javascript>
               var view = event.getSourceWidget().lookupWidget("../view-selector");
@@ -143,20 +146,42 @@
 
     <fd:class id="item-row-class">
       <fd:widgets>
-        <fd:row-action id="down" action-command="move-down">
-          <fd:label>v</fd:label>
-        </fd:row-action>
+
         <fd:row-action id="up" action-command="move-up">
           <fd:label>^</fd:label>
+          <fd:hint>Move up</fd:hint>
         </fd:row-action>
-        <fd:row-action id="delete" action-command="delete">
-          <fd:label>X</fd:label>
+
+        <fd:row-action id="down" action-command="move-down">
+          <fd:label>v</fd:label>
+          <fd:hint>Move down</fd:hint>
         </fd:row-action>
+
         <fd:row-action id="add" action-command="add-after">
           <fd:label>+</fd:label>
+          <fd:hint>Add after</fd:hint>
+          <fd:on-action>
+            <javascript>
+              var cur_row = Packages.org.apache.cocoon.forms.formmodel.Repeater.getParentRow(event.getSourceWidget());
+              var repeater = cur_row.getParent();
+              var new_row = repeater.getChild(repeater.indexOf(cur_row)+1);
+              var view = new_row.getChild("view-selector");
+              view.setValue("edit");
+              // View is selected by buttons.
+              view.setState(Packages.org.apache.cocoon.forms.formmodel.WidgetState.DISABLED);
+            </javascript>
+          </fd:on-action>
         </fd:row-action>
+
+        <fd:row-action id="delete" action-command="delete">
+          <fd:label>X</fd:label>
+          <fd:hint>Delete</fd:hint>
+        </fd:row-action>
+
         <fd:new id="view-selector-class"/>
+
         <fd:new id="type-selector-class"/>
+
         <fd:union id="union" default="" case="type-selector">
           <fd:label>Type</fd:label>
           <fd:widgets>
@@ -327,6 +352,7 @@
           </fd:widgets>
 
         </fd:union>
+
       </fd:widgets>
     </fd:class>
  

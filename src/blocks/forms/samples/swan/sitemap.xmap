@@ -120,6 +120,11 @@
         <map:serialize/>
       </map:match>
  
+      <map:match pattern="*-error-pipeline">
+        <map:generate src="error.xml"/>
+        <map:serialize/>
+      </map:match>
+ 
       <map:match pattern="*-success-pipeline.xsp">
         <map:generate type="serverpages" src="forms/{1}_success.xsp"/>
         <map:call resource="simple-page2html">
@@ -146,14 +151,13 @@
          -->
  
       <!-- TODO: Fix edit-any-file security hole! -->
-      <!--
       <map:match pattern="binding.flow">
         <map:call function="handleForm">
           <map:parameter name="function" value="binding_gui"/>
           <map:parameter name="form-definition" value="forms/binding_model.xml"/>
           <map:parameter name="attribute-name" value="form_binding_gui"/>
           <map:parameter name="bindingURI" value="forms/binding_binding.xml"/>
-          <map:parameter name="documentURI" value="data/{request-param:file}"/>
+          <map:parameter name="documentURI" value="{request-param:file}"/>
         </map:call>
       </map:match>
  
@@ -163,7 +167,7 @@
           <map:parameter name="form-definition" value="forms/model_model.xml"/>
           <map:parameter name="attribute-name" value="form_model_gui"/>
           <map:parameter name="bindingURI" value="forms/model_binding.xml"/>
-          <map:parameter name="documentURI" value="data/{request-param:file}"/>
+          <map:parameter name="documentURI" value="{request-param:file}"/>
         </map:call>
       </map:match>
 
@@ -173,7 +177,7 @@
           <map:parameter name="form-definition" value="forms/sitemap_model.xml"/>
           <map:parameter name="attribute-name" value="form_sitemap_gui"/>
           <map:parameter name="bindingURI" value="forms/sitemap_binding.xml"/>
-          <map:parameter name="documentURI" value="data/{request-param:file}"/>
+          <map:parameter name="documentURI" value="{request-param:file}"/>
         </map:call>
       </map:match>
  
@@ -183,7 +187,7 @@
           <map:parameter name="form-definition" value="forms/template_model.xml"/>
           <map:parameter name="attribute-name" value="form_template_gui"/>
           <map:parameter name="bindingURI" value="forms/template_binding.xml"/>
-          <map:parameter name="documentURI" value="data/{request-param:file}"/>
+          <map:parameter name="documentURI" value="{request-param:file}"/>
         </map:call>
       </map:match>
 
@@ -193,10 +197,9 @@
           <map:parameter name="form-definition" value="forms/xreport_model.xml"/>
           <map:parameter name="attribute-name" value="form_xreport_gui"/>
           <map:parameter name="bindingURI" value="forms/xreport_binding.xml"/>
-          <map:parameter name="documentURI" value="data/{request-param:file}"/>
+          <map:parameter name="documentURI" value="{request-param:file}"/>
         </map:call>
       </map:match>
-      -->
 
       <map:match pattern="*">
         <map:redirect-to uri="{1}/"/>

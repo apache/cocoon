@@ -22,10 +22,6 @@
     CVS $Id$
   -->
 
-  <!--
-  TODO: Add features to "items-class" (e.g. move-up, move-down, add-before, add-after).
-  -->
-
   <style type="text/css">
     li {
       list-style-type: none
@@ -471,26 +467,26 @@
       <ft:class id="view-selector-class">
         <ft:choose path="view-selector">
           <ft:when value="fold">
-            <ft:widget id="view-view"><fi:styling type="image" src="resources/BtnGrey.gif"/></ft:widget>
-            <ft:widget id="edit-view"><fi:styling type="image" src="resources/BtnDkGrey.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/view.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/edit.gif"/></ft:widget>
           </ft:when>
           <ft:when value="view">
-            <ft:widget id="fold-view"><fi:styling type="image" src="resources/BtnWhite.gif"/></ft:widget>
-            <ft:widget id="edit-view"><fi:styling type="image" src="resources/BtnDkGrey.gif"/></ft:widget>
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/fold.gif"/></ft:widget>
+            <ft:widget id="edit-view"><fi:styling type="image" src="resources/edit.gif"/></ft:widget>
           </ft:when>
           <ft:when value="edit">
-            <ft:widget id="fold-view"><fi:styling type="image" src="resources/BtnWhite.gif"/></ft:widget>
-            <ft:widget id="view-view"><fi:styling type="image" src="resources/BtnGrey.gif"/></ft:widget>
+            <ft:widget id="fold-view"><fi:styling type="image" src="resources/fold.gif"/></ft:widget>
+            <ft:widget id="view-view"><fi:styling type="image" src="resources/view.gif"/></ft:widget>
           </ft:when>
         </ft:choose>
       </ft:class>
 
       <ft:class id="item-row-class">
         <span class="actions">
-          <ft:widget id="down"><fi:styling type="image" src="resources/move_down.gif"/></ft:widget>
           <ft:widget id="up"><fi:styling type="image" src="resources/move_up.gif"/></ft:widget>
-          <ft:widget id="delete"><fi:styling type="image" src="resources/delete.gif"/></ft:widget>
+          <ft:widget id="down"><fi:styling type="image" src="resources/move_down.gif"/></ft:widget>
           <ft:widget id="add"><fi:styling type="image" src="resources/new.gif"/></ft:widget>
+          &#160;<ft:widget id="delete"><fi:styling type="image" src="resources/delete.gif"/></ft:widget>
         </span>
         <ft:new id="view-selector-class"/>
         <ft:new id="type-selector-class"/>
@@ -498,28 +494,18 @@
       </ft:class>
 
       <ft:class id="items-class">
-        <ft:widget id="addItem"/>
+        <ft:widget id="addItem"><fi:styling type="image" src="resources/new_child.gif"/></ft:widget>
         <ft:repeater-size id="items"/>
         <ft:repeater-widget id="items">
           <div class="section"><ft:new id="item-row-class"/></div>
         </ft:repeater-widget>
       </ft:class>
 
-      <!--
-      <table border="3">
-        <tr>
-          <td>
-      -->
-            <p>
-              <ft:new id="items-class"/>
-            </p>
-            <ft:widget id="messages"/><br/>
-            <input type="submit"/>
-      <!--
-          </td>
-        </tr>
-      </table>
-      -->
+      <p>
+        <ft:new id="items-class"/>
+      </p>
+      <ft:widget id="messages"/><br/>
+      <input type="submit"/>
 
     </ft:form-template>
   </content>

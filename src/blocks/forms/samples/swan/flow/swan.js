@@ -47,6 +47,28 @@ function editor_gui(form, type) {
     // contains the location of the file to be edited
     var documentURI = cocoon.parameters["documentURI"];
 
+    // Yes, this is a hack, but it closes
+    // the read-any-file security hole so
+    // that this can work out-of-the-box.
+    var allowed_files = [
+      "report1.xml", "sitemap.xmap",
+      "form_model_gui_binding.xml", "form_model_gui_data.xml",
+      "form_model_gui_template_data.xml",
+      "sample_form_1.xml", "sample_form_1_template.xml",
+      "sample_form_2.xml", "sample_form_2_template.xml"
+    ];
+
+    if (present(documentURI, allowed_files)) {
+      print("Yeah! " + documentURI);
+    } else {
+      print("Trouble! " + documentURI);
+      cocoon.sendPage(type + "-error-pipeline");
+      return;
+    }
+
+    // prepend data directory
+    documentURI = "data/" + documentURI;
+
     // parse the document to a DOM-tree
     var document = loadDocument(documentURI);
 
@@ -76,6 +98,12 @@ function editor_gui(form, type) {
     // also store the form as a request attribute as the XSP isn't flow-aware
     cocoon.request.setAttribute("form_" + type + "_gui", form.getWidget());
     cocoon.sendPage(type + "-success-pipeline.xsp");
+}
+
+function present(string, list) {
+  for (var i = 0; i < list.length; i++)
+    if (string == list[i]) return true;
+  return false;
 }
 
 function clean_node(node) {
