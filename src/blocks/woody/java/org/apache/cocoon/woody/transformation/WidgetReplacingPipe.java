@@ -78,10 +78,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>For more information about the supported tags and their function, see the user documentation
  * for the woody template transformer.</p>
  * 
- * @version CVS $Id: WidgetReplacingPipe.java,v 1.14 2003/11/17 04:27:48 antonio Exp $
+ * @version CVS $Id: WidgetReplacingPipe.java,v 1.15 2003/11/17 10:04:00 joerg Exp $
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
-         
+
     private static final String REPEATER_SIZE = "repeater-size";
     private static final String REPEATER_WIDGET_LABEL = "repeater-widget-label";
     private static final String WIDGET_LABEL = "widget-label";
@@ -91,7 +91,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
     private static final String CONTINUATION_ID = "continuation-id";
     private static final String FORM_TEMPLATE_EL = "form-template";
     private static final String STYLING_EL = "styling";
-    
+
     /** Default key under which the woody form is stored in the JXPath context. */
     public static final String WOODY_FORM = "woody-form";
 
@@ -117,7 +117,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
     protected WoodyTemplateTransformer pipeContext;
-    
+
     /** Have we encountered a <wi:style> element in a widget ? */
     protected boolean gotStylingElement;
 
@@ -140,16 +140,17 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             saxBuffer.startElement(namespaceURI, localName, qName, attributes);
         } else if (namespaceURI.equals(Constants.WT_NS)) {
             if (localName.equals(WIDGET) || localName.equals(REPEATER_WIDGET)) {
-				checkContextWidgetAvailable(qName);
-				inWidgetElement = true;
-				widgetElementNesting = elementNestingCounter;
-				gotStylingElement = false;
-				saxBuffer = new SaxBuffer();
-				// retrieve widget here, but its XML will only be streamed in the endElement call
-				widget = getWidget(attributes);
-				repeaterWidget = localName.equals(REPEATER_WIDGET);
-				if (repeaterWidget && !(widget instanceof Repeater))
-					throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
+                checkContextWidgetAvailable(qName);
+                inWidgetElement = true;
+                widgetElementNesting = elementNestingCounter;
+                gotStylingElement = false;
+                saxBuffer = new SaxBuffer();
+                // retrieve widget here, but its XML will only be streamed in the endElement call
+                widget = getWidget(attributes);
+                repeaterWidget = localName.equals(REPEATER_WIDGET);
+                if (repeaterWidget && !(widget instanceof Repeater)) {
+                    throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget\" can only be used for repeater widgets.");
+                }
             } else if (localName.equals(WIDGET_LABEL)) {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
@@ -157,11 +158,13 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             } else if (localName.equals(REPEATER_WIDGET_LABEL)) {
                 checkContextWidgetAvailable(qName);
                 Widget widget = getWidget(attributes);
-                if (!(widget instanceof Repeater))
+                if (!(widget instanceof Repeater)) {
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" can only be used for repeater widgets.");
+                }
                 String widgetId = attributes.getValue("widget-id");
-                if (widgetId == null || widgetId.equals(""))
+                if (widgetId == null || widgetId.equals("")) {
                     throw new SAXException("WoodyTemplateTransformer: the element \"repeater-widget-label\" requires a \"widget-id\" attribute.");
+                }
                 ((Repeater)widget).generateWidgetLabel(widgetId, contentHandler);
             } else if (localName.equals(REPEATER_SIZE)) {
                 checkContextWidgetAvailable(qName);
@@ -172,8 +175,9 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 ((Repeater)widget).generateSize(contentHandler);
                 contentHandler.endPrefixMapping(Constants.WI_PREFIX);
             } else if (localName.equals(FORM_TEMPLATE_EL)) {
-                if (contextWidget != null)
+                if (contextWidget != null) {
                     throw new SAXException("Detected nested wt:form-template elements, this is not allowed.");
+                }
                 contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
 
                 // ====> Retrieve the form
@@ -187,25 +191,29 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     attributes = attrsCopy;
 
                     Object form = pipeContext.getJXPathContext().getValue(formJXPath);
-                    if (form == null)
+                    if (form == null) {
                         throw new SAXException("No form found at location \"" + formJXPath + "\".");
-                    if (!(form instanceof Form))
+                    }
+                    if (!(form instanceof Form)) {
                         throw new SAXException("Object returned by expression \"" + formJXPath + "\" is not a Woody Form.");
+                    }
                     contextWidget = (Form)form;
                 } else if (pipeContext.getAttributeName() != null) { // then see if an attribute-name was specified
                     contextWidget = (Form)pipeContext.getRequest().getAttribute(pipeContext.getAttributeName());
-                    if (contextWidget == null)
+                    if (contextWidget == null) {
                         throw new SAXException("No form found in request attribute with name \"" + pipeContext.getAttributeName() + "\"");
+                    }
                 } else { // and then see if we got a form from the flow
                     formJXPath = "/" + WoodyTemplateTransformer.WOODY_FORM;
                     Object form = null;
                     try {
                         form = pipeContext.getJXPathContext().getValue(formJXPath);
                     } catch (JXPathException e) { /* do nothing */ }
-                    if (form != null)
+                    if (form != null) {
                         contextWidget = (Form)form;
-                    else
+                    } else {
                         throw new SAXException("No Woody form found.");
+                    }
                 }
 
                 // ====> Determine the Locale
@@ -221,10 +229,13 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                     try {
                         locale = pipeContext.getJXPathContext().getValue("/locale");
                     } catch (JXPathException e) {}
-                    if (locale != null)
+                    if (locale != null) {
                         pipeContext.setLocale((Locale)locale);
-                    else // final solution: use locale defined in the server machine
+                    }
+                    else {
+                        // final solution: use locale defined in the server machine
                         pipeContext.setLocale(Locale.getDefault());
+                    }
                 }
 
                 String[] namesToTranslate = {"action"};
@@ -238,7 +249,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                 if (idObj == null) {
                     throw new SAXException("No continuation found");
                 }
-                
+
                 String id = idObj.toString();
                 contentHandler.startPrefixMapping(Constants.WI_PREFIX, Constants.WI_NS);
                 contentHandler.startElement(Constants.WI_NS, CONTINUATION_ID, Constants.WI_PREFIX_COLON + CONTINUATION_ID, attributes);
@@ -302,7 +313,7 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
                                 } else {
                                     translated.append('#').append('{').append(expression);
                                 }
-                            } 
+                            }
                         }
                     } else {
                         translated.append((char) chr);
@@ -323,17 +334,19 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     protected Widget getWidget(Attributes attributes) throws SAXException {
         String widgetId = attributes.getValue("id");
-        if (widgetId == null || widgetId.equals(""))
+        if (widgetId == null || widgetId.equals("")) {
             throw new SAXException("WoodyTemplateTransformer: missing id attribute on a woody element.");
+        }
         Widget widget = contextWidget.getWidget(widgetId);
-        if (widget == null)
+        if (widget == null) {
             throw new SAXException("WoodyTemplateTransformer: widget with id \"" + widgetId + "\" does not exist in the container " + contextWidget.getFullyQualifiedId());
+        }
         return widget;
     }
 
     public void endElement(String namespaceURI, String localName, String qName)
             throws SAXException {
-        
+
         if (inWidgetElement) {
             if (elementNestingCounter == widgetElementNesting &&
                 namespaceURI.equals(Constants.WT_NS)
@@ -371,61 +384,69 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
             } else if (localName.equals(FORM_TEMPLATE_EL)) {
                 contextWidget = null;
                 contentHandler.endElement(Constants.WI_NS, FORM_TEMPLATE_EL,
-                        Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL);
+                                          Constants.WI_PREFIX_COLON + FORM_TEMPLATE_EL);
                 contentHandler.endPrefixMapping(Constants.WI_PREFIX);
-            } else
+            } else {
                 super.endElement(namespaceURI, localName, qName);
-        } else
+            }
+        } else {
             super.endElement(namespaceURI, localName, qName);
+        }
         elementNestingCounter--;
     }
 
     public void startPrefixMapping(String prefix, String uri)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.startPrefixMapping(prefix, uri);
-        else
+        } else {
             super.startPrefixMapping(prefix, uri);
+        }
     }
 
     public void endPrefixMapping(String prefix)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.endPrefixMapping(prefix);
-        else
+        } else {
             super.endPrefixMapping(prefix);
+        }
     }
 
     public void characters(char c[], int start, int len)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.characters(c, start, len);
-        else
+        } else {
             super.characters(c, start, len);
+        }
     }
 
     public void ignorableWhitespace(char c[], int start, int len)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.ignorableWhitespace(c, start, len);
-        else
+        } else {
             super.ignorableWhitespace(c, start, len);
+        }
     }
 
     public void processingInstruction(String target, String data)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.processingInstruction(target, data);
-        else
+        } else {
             super.processingInstruction(target, data);
+        }
     }
 
     public void skippedEntity(String name)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.skippedEntity(name);
-        else
+        } else {
             super.skippedEntity(name);
+        }
     }
 
     public void startEntity(String name)
@@ -438,36 +459,40 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     public void endEntity(String name)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.endEntity(name);
-        else
+        } else {
             super.endEntity(name);
+        }
     }
 
     public void startCDATA()
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.startCDATA();
-        else
+        } else {
             super.startCDATA();
+        }
     }
 
     public void endCDATA()
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.endCDATA();
-        else
+        } else {
             super.endCDATA();
+        }
     }
 
     public void comment(char ch[], int start, int len)
             throws SAXException {
-        if (inWidgetElement)
+        if (inWidgetElement) {
             saxBuffer.comment(ch, start, len);
-        else
+        } else {
             super.comment(ch, start, len);
+        }
     }
-    
+
     public void recycle() {
         super.recycle();
         this.contextWidget = null;
