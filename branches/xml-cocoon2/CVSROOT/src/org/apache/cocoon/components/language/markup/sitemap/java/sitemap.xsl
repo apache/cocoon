@@ -98,7 +98,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.101 2001-04-23 14:38:51 dims Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.102 2001-04-24 16:16:26 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -1008,10 +1008,10 @@
     </xsl:if>
     <xsl:choose>
       <xsl:when test="@ns">
-        <xsl:value-of select="$ca"/>.addPart("<xsl:value-of select="@src"/>", "<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
+        <xsl:value-of select="$ca"/>.addPart(substitute(listOfMaps,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@element"/>", "<xsl:value-of select="@ns"/>");
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="$ca"/>.addPart("<xsl:value-of select="@src"/>", "<xsl:value-of select="@element"/>", null);
+        <xsl:value-of select="$ca"/>.addPart(substitute(listOfMaps,"<xsl:value-of select="@src"/>"), "<xsl:value-of select="@element"/>", null);
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template> <!-- match="map:aggregate/map:part" -->
