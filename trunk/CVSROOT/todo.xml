@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.5 1999-12-08 12:29:05 stefano Exp $
+  $Id: todo.xml,v 1.6 1999-12-10 22:34:49 stefano Exp $
 -->
 
 <todo title="Cocoon Things To Do">
@@ -16,15 +16,11 @@
  </devs>
  
  <action priority="showstopper" assigned-to="SM" context="docs">
-  Finish XML-ize the docs (install, DCP, SQL).
+  Finish XML-ize the docs (DCP, SQL).
  </action>
 
  <action priority="showstopper" assigned-to="SM" context="admin">
   Write the user selectable error page.
- </action>
-
- <action priority="showstopper" assigned-to="SM" context="build">
-  Finish Ant build file and clean it up.
  </action>
 
  <action priority="showstopper" assigned-to="SM" context="admin">

@@ -32,7 +32,7 @@ Fixme:
 Copyright:
   Copyright (c) 1999 The Apache Software Foundation.
 
-   $Id: build.xml,v 1.5 1999-12-08 12:29:05 stefano Exp $
+   $Id: build.xml,v 1.6 1999-12-10 22:34:49 stefano Exp $
 
 ==================================================================== -->
 
@@ -52,8 +52,13 @@ Copyright:
   <property name="images.dir" value="./resources"/>
   <property name="samples.dir" value="./samples"/>
   <property name="version.file" value="org/apache/cocoon/Defaults.java"/>
+  <property name="packages" value="org.apache.cocoon.*"/>
 
-  <property name="packages" value="org.apache.cocoon"/>
+  <property name="sbk.docs" value="./build/sbkdocs"/>
+  <property name="style" value="../xml-site/style/"/>
+  <property name="xslt" value="org.apache.xalan.xslt.Process"/>
+  <property name="xslt.params" value="-xml -validate -indent 1"/>
+  <property name="doc.generator" value="org.apache.stylebook.StyleBook"/>
 
   <property name="build.dir" value="./build"/>
   <property name="build.src" value="./build/src"/>
@@ -61,14 +66,10 @@ Copyright:
   <property name="build.docs" value="./build/docs"/>
   <property name="build.javadocs" value="./build/javadocs"/>
 
-  <property name="sbk.docs" value="./build/sbkdocs"/>
-
   <property name="dist.dir" value="./dist"/>
 
   <property name="site.dir" value="../xml-site/sources/cocoon"/>
   <property name="site.docs" value="../xml-site/targets/cocoon"/>
-
-  <property name="style" value="../xml-site/style"/>
 
   <!-- =================================================================== -->
   <!-- Prepares the build directory                                        -->
@@ -80,7 +81,7 @@ Copyright:
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
-  <target name="compile" depends="prepare">
+  <target name="prepare-src" depends="prepare">
     <!-- create directories -->
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
@@ -91,8 +92,12 @@ Copyright:
     <!-- substitute tokens as needed -->
     <replace file="${build.src}/${version.file}" token="@@version@@" value="${version}"/>
     <replace file="${build.src}/${version.file}" token="@@year@@" value="${year}"/>
+  </target>
 
-    <!-- do the compilation -->
+  <!-- =================================================================== -->
+  <!-- Compiles the source directory                                       -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="prepare-src">
     <javac srcdir="${build.src}" destdir="${build.dest}" debug="${debug}"/>
   </target>
 
@@ -100,7 +105,6 @@ Copyright:
   <!-- Creates the class package                                           -->
   <!-- =================================================================== -->
   <target name="package" depends="compile">
-    <!-- create the package -->
     <jar jarfile="${build.dir}/${name}.jar" basedir="${build.dest}" manifest="${build.src}/MANIFEST.mf" items="org"/>
   </target>
 
@@ -109,38 +113,38 @@ Copyright:
   <!-- =================================================================== -->
   <target name="docs-convert" depends="prepare">
     <mkdir dir="${sbk.docs}"/>
-    <xslt src="${docs.dir}/index.xml" dest="${sbk.docs}/index-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/installing.xml" dest="${sbk.docs}/installing-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/cocoon2.xml" dest="${sbk.docs}/cocoon2-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/dcpprocessor.xml" dest="${sbk.docs}/dcpprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/sqlprocessor.xml" dest="${sbk.docs}/sqlprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/license.xml" dest="${sbk.docs}/license-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/javadoc.xml" dest="${sbk.docs}/javadoc-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/guide.xml" dest="${sbk.docs}/guide-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/technologies.xml" dest="${sbk.docs}/technologies-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/dynamic.xml" dest="${sbk.docs}/dynamic-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/faq.xml" dest="${sbk.docs}/faq-sbk.xml" sheet="${sheets.dir}/faq-stylebook.xsl"/>
-    <xslt src="${docs.dir}/WD-xsp.xml" dest="${sbk.docs}/WD-xsp-sbk.xml" sheet="${sheets.dir}/spec-stylebook.xsl"/>
-    <xslt src="changes.xml" dest="${sbk.docs}/changes-sbk.xml" sheet="${sheets.dir}/changes-stylebook.xsl"/>
-    <xslt src="todo.xml" dest="${sbk.docs}/todo-sbk.xml" sheet="${sheets.dir}/todo-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/index.xml -out ${sbk.docs}/index-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/installing.xml -out ${sbk.docs}/installing-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${sbk.docs}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${sbk.docs}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${sbk.docs}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/license.xml -out ${sbk.docs}/license-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/javadoc.xml -out ${sbk.docs}/javadoc-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/guide.xml -out ${sbk.docs}/guide-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/technologies.xml -out ${sbk.docs}/technologies-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dynamic.xml -out ${sbk.docs}/dynamic-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/faq.xml -out ${sbk.docs}/faq-sbk.xml -xsl ${sheets.dir}/faq-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/WD-xsp.xml -out ${sbk.docs}/WD-xsp-sbk.xml -xsl ${sheets.dir}/spec-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in changes.xml -out ${sbk.docs}/changes-sbk.xml -xsl ${sheets.dir}/changes-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in todo.xml -out ${sbk.docs}/todo-sbk.xml -xsl ${sheets.dir}/todo-stylebook.xsl"/>
     <copydir src="${images.dir}" dest="${sbk.docs}/images"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Generate HTML docs                                                  -->
   <!-- =================================================================== -->
+<!--  <target name="docs" depends="docs-convert"> -->
   <target name="docs">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${sbk.docs}/book.xml"/>
-    <stylebook book="${sbk.docs}/book.xml" dest="${build.docs}" style="${style}"/>
+    <java class="${doc.generator}" args="targetDirectory=${build.docs} ${sbk.docs}/book.xml ${style}"/>
   </target>
-
+  
   <!-- =================================================================== -->
   <!-- Creates the API documentation                                       -->
   <!-- =================================================================== -->
-  <target name="javadocs" depends="prepare">
+  <target name="javadocs" depends="prepare-src">
     <mkdir dir="${build.javadocs}"/>
-    <copyfile src="${stylesheets}/javadoc.css" dest="{$build.javadocs}/stylesheet.css"/>
     <javadoc2 packagenames="${packages}"
               sourcepath="${build.src}"
               destdir="${build.javadocs}"
@@ -149,8 +153,9 @@ Copyright:
               use="true"
               windowtitle="${name} API"
               doctitle="${name}"
-              bottom="Copyright &#169; ${YEAR} Apache XML Project. All Rights Reserved."
+              bottom="Copyright &#169; ${year} Apache XML Project. All Rights Reserved."
     />
+    <copyfile src="${stylesheets}/javadoc.css" dest="{$build.javadocs}/stylesheet.css"/>
   </target>
 
   <!-- =================================================================== -->
@@ -169,11 +174,11 @@ Copyright:
     <mkdir dir="${dist.dir}/xdocs/stylesheets"/>
 
     <copydir src="${build.src}" dest="${dist.dir}/src" ignore="cocoon.properties"/>
-    <copyfile src="${dist.dir}/src/org/apache/cocoon/cocoon.properties" dest="${dist.dir}/conf/cocoon.properties"/>
-    <copyfile src="${build.dir}/${name}-${version}.jar" dest="${dist.dir}/bin/${name}-${version}.jar"/>
+    <copyfile src="${src.dir}/org/apache/cocoon/cocoon.properties" dest="${dist.dir}/conf/cocoon.properties"/>
+    <copyfile src="${build.dir}/${name}.jar" dest="${dist.dir}/bin/${name}.jar"/>
     <copydir src="${build.docs}" dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
-    <copydir src="${samples.src}" dest="${dist.dir}/samples"/>
+    <copydir src="${samples.dir}" dest="${dist.dir}/samples"/>
     <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" ignore="docs-book.xml, site-book.xml"/>
     <copydir src="${dtd.dir}" dest="${dist.dir}/xdocs/DTD"/>
     <copydir src="${sheets.dir}" dest="${dist.dir}/xdocs/stylesheets" ignore="javadoc.css"/>
@@ -183,7 +188,7 @@ Copyright:
     <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
     <copyfile src="build.xml" dest="${dist.dir}/build.xml"/>
 
-    <jar jarfile="${name}-${version}.jar" basedir="${dist.dir}" items="bin, src, conf, docs, samples, xdocs"/>
+    <jar jarfile="${name}-${version}.jar" basedir="${dist.dir}" items="."/>
   </target>
 
   <!-- =================================================================== -->
@@ -198,23 +203,23 @@ Copyright:
   <!-- Creates the web site                                                -->
   <!-- =================================================================== -->
   <target name="site">
-    <copyfile src="${docs.dir}/site-book.xml" dest="${site.dir}/../cocoon.xml"/>
-    <xslt src="${docs.dir}/index.xml" dest="${site.dir}/index-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/installing.xml" dest="${site.dir}/installing-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/cocoon2.xml" dest="${site.dir}/cocoon2-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/dcpprocessor.xml" dest="${site.dir}/dcpprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/sqlprocessor.xml" dest="${site.dir}/sqlprocessor-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/license.xml" dest="${site.dir}/license-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/javadoc.xml" dest="${site.dir}/javadoc-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/guide.xml" dest="${site.dir}/guide-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/technologies.xml" dest="${site.dir}/technologies-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/dynamic.xml" dest="${site.dir}/dynamic-sbk.xml" sheet="${sheets.dir}/document-stylebook.xsl"/>
-    <xslt src="${docs.dir}/faq.xml" dest="${site.dir}/faq-sbk.xml" sheet="${sheets.dir}/faq-stylebook.xsl"/>
-    <xslt src="${docs.dir}/WD-xsp.xml" dest="${site.dir}/WD-xsp-sbk.xml" sheet="${sheets.dir}/spec-stylebook.xsl"/>
-    <xslt src="changes.xml" dest="${site.dir}/changes-sbk.xml" sheet="${sheets.dir}/changes-stylebook.xsl"/>
-    <xslt src="todo.xml" dest="${site.dir}/todo-sbk.xml" sheet="${sheets.dir}/todo-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/index.xml -out ${site.dir}/index-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/installing.xml -out ${site.dir}/installing-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/cocoon2.xml -out ${site.dir}/cocoon2-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dcpprocessor.xml -out ${site.dir}/dcpprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/sqlprocessor.xml -out ${site.dir}/sqlprocessor-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/license.xml -out ${site.dir}/license-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/javadoc.xml -out ${site.dir}/javadoc-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/guide.xml -out ${site.dir}/guide-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/technologies.xml -out ${site.dir}/technologies-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/dynamic.xml -out ${site.dir}/dynamic-sbk.xml -xsl ${sheets.dir}/document-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/faq.xml -out ${site.dir}/faq-sbk.xml -xsl ${sheets.dir}/faq-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in ${docs.dir}/WD-xsp.xml -out ${site.dir}/WD-xsp-sbk.xml -xsl ${sheets.dir}/spec-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in changes.xml -out ${site.dir}/changes-sbk.xml -xsl ${sheets.dir}/changes-stylebook.xsl"/>
+    <java class="${xslt}" args="${xslt.params} -in todo.xml -out ${site.dir}/todo-sbk.xml -xsl ${sheets.dir}/todo-stylebook.xsl"/>  
     <copydir src="${images.dir}" dest="${site.dir}/images"/>
-    <stylebook book="${site.dir}/../cocoon.xml" dest="${site.docs}" style="${style}"/>
+    <copyfile src="${docs.dir}/site-book.xml" dest="${site.dir}/../cocoon.xml"/>
+    <java class="${doc.generator}" args="targetDirectory=${site.docs} ${site.dir}/../cocoon.xml ${style}"/>
   </target>
 
 </project>
