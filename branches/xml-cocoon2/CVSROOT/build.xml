@@ -93,7 +93,6 @@ NOTE: the "site" target is only useful for site mantainers.
 
     <property name="src.dir"      value="./src"/>
     <property name="lib.dir"      value="./lib"/>
-    <property name="conf.dir"     value="./conf"/>
     <property name="docs.dir"     value="./xdocs"/>
     <property name="dtd.dir"      value="./xdocs/dtd"/>
     <property name="skins.dir"    value="./skins"/>
@@ -222,7 +221,7 @@ NOTE: the "site" target is only useful for site mantainers.
   <target name="webapp" depends="prepare">
     <mkdir dir="${build.war}"/>
 
-    <copydir src="${conf.dir}" dest="${build.war}" filtering="on"/>
+    <copydir src="${webapp.dir}" dest="${build.war}" filtering="on"/>
 
     <copydir src="${webapp.dir}" dest="${build.war}" filtering="on">
       <exclude name="**/images/*"/>
@@ -323,7 +322,7 @@ NOTE: the "site" target is only useful for site mantainers.
     <copyfile src="${build.war}/${name}.war" dest="${dist.dir}/webapp/${name}.war"/>
 
     <copydir src="${build.src}"      dest="${dist.dir}/src"/>
-    <copydir src="${conf.dir}"       dest="${dist.dir}/conf"/>
+    <copydir src="${webapp.dir}"     dest="${dist.dir}/conf" includes="*.x*" excludes="*/**"/>
     <copydir src="${build.docs}"     dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
     <copydir src="${docs.dir}"       dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
