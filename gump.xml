@@ -3,7 +3,7 @@
 <!--+
     | Cocoon GUMP Descriptor
     |
-    | CVS $Id: gump.xml,v 1.97 2003/11/14 23:33:28 joerg Exp $
+    | CVS $Id: gump.xml,v 1.98 2003/11/18 18:05:30 joerg Exp $
     +-->
 
 <module name="cocoon-2.1">
@@ -84,12 +84,32 @@
     </nag>
   </project>
 
-
- <!--
-    *************************************
-    ********  COCOON SCRATCHPAD  ********
-    *************************************
+  <!--
+    ********************************************
+    ********       COCOON BLOCKS        ********
+    ********************************************
   -->
+
+  <project name="cocoon-block-fop" status="stable">
+    <package>org.apache.cocoon</package>
+
+    <ant target="gump-block">
+      <property name="block-name" value="fop"/>
+      <property name="version" value="@@DATE@@"/>
+    </ant>
+
+    <depend project="cocoon" inherit="all"/>
+    <depend project="xml-fop-maintenance"/>
+    <depend project="cocoon-block-batik"/>
+
+    <work nested="tools/anttasks"/>
+    <home nested="build/cocoon-@@DATE@@"/>
+
+    <jar name="blocks/fop-block.jar"/>
+
+    <nag from="Gump" to="dev@cocoon.apache.org"/>
+    <nag from="Gump" to="fop-dev@xml.apache.org"/>
+  </project>
 
   <project name="cocoon-block-scratchpad" status="unstable">
     <package>org.apache.cocoon</package>
@@ -117,34 +137,6 @@
     <jar name="blocks/scratchpad-block.jar"/>
 
     <nag from="Gump" to="dev@cocoon.apache.org"/>
-  </project>
-
-
-  <!--
-    ********************************************
-    ********       COCOON BLOCKS        ********
-    ********************************************
-  -->
-
-  <project name="cocoon-block-fop" status="stable">
-    <package>org.apache.cocoon</package>
-
-    <ant target="gump-block">
-      <property name="block-name" value="fop"/>
-      <property name="version" value="@@DATE@@"/>
-    </ant>
-
-    <depend project="cocoon" inherit="all"/>
-    <depend project="xml-fop-maintenance"/>
-    <depend project="cocoon-block-batik"/>
-
-    <work nested="tools/anttasks"/>
-    <home nested="build/cocoon-@@DATE@@"/>
-
-    <jar name="blocks/fop-block.jar"/>
-
-    <nag from="Gump" to="dev@cocoon.apache.org"/>
-    <nag from="Gump" to="fop-dev@xml.apache.org"/>
   </project>
 
   <project name="cocoon-block-batik" status="stable">
