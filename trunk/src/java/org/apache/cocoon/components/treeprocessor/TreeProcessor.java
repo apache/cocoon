@@ -51,18 +51,21 @@
 package org.apache.cocoon.components.treeprocessor;
 
 import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.net.URL;
 import java.util.Map;
 
-import org.apache.avalon.excalibur.component.RoleManageable;
-import org.apache.avalon.excalibur.component.RoleManager;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.TransformerHandler;
+
+import org.apache.avalon.fortress.impl.DefaultContainerManager;
+import org.apache.avalon.fortress.util.FortressConfig;
 import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.apache.avalon.framework.configuration.NamespacedSAXConfigurationHandler;
 import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
@@ -72,307 +75,174 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.components.ChainedConfiguration;
-import org.apache.cocoon.components.ExtendedComponentSelector;
-import org.apache.cocoon.components.LifecycleHelper;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
-import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
+import org.apache.cocoon.xml.LocationAugmentationPipe;
+import org.apache.cocoon.xml.XMLUtils;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
+import org.apache.excalibur.xml.sax.SAXParser;
+import org.apache.excalibur.xml.xslt.XSLTProcessor;
+import org.xml.sax.InputSource;
 
 /**
- * Interpreted tree-traversal implementation of a pipeline assembly language.
- *
+ * 
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: TreeProcessor.java,v 1.24 2003/11/15 04:21:57 joerg Exp $
+ * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
+ * 
+ * @avalon.component
+ * @avalon.service type="Processor"
+ * @x-avalon.lifestyle type="singleton"
+ * @x-avalon.info name="sitemap"
  */
+public class TreeProcessor extends AbstractLogEnabled 
+implements Processor, Contextualizable, Serviceable, Configurable, Initializable, Disposable {
 
-public class TreeProcessor
-    extends AbstractLogEnabled
-    implements ThreadSafe,
-               Processor,
-               Serviceable,
-               Configurable,
-               RoleManageable,
-               Contextualizable,
-               Disposable {
-
+    /** Environment attribute key for redirection status communication */
     public static final String COCOON_REDIRECT_ATTR = "cocoon: redirect url";
-
-    private static final String XCONF_URL =
-        "resource://org/apache/cocoon/components/treeprocessor/treeprocessor-builtins.xml";
-
+    
+    /** The xsl transformation location for turning a sitemap into a Fortress container configuration */
+    private static final String SITEMAP2XCONF_URL = 
+        "resource://org.apache.cocoon.components.treeprocessor.sitemap2xconf.xsl";
+    
     /** The parent TreeProcessor, if any */
-    protected TreeProcessor parent;
-
-    /** The context */
-    protected Context context;
-
-    /** The component manager */
-    protected ServiceManager manager;
-
-    /** The role manager */
-    protected RoleManager roleManager;
-
-    /** The language used by this processor */
-    protected String language;
-
-    /** Selector of TreeBuilders, the hint is the language name */
-    protected ExtendedComponentSelector builderSelector;
-
+    private TreeProcessor m_parent;
+    private EnvironmentHelper m_environmentHelper;
+    
+    private Context m_context;
+    private ServiceManager m_manager;
+    private SourceResolver m_resolver;
+    
+    /** The object that manages the sitemap container */
+    private DefaultContainerManager m_cm;
+    
+    /* some configuration options */
+    private String m_fileName;
+    private boolean m_checkReload;
+    private long m_lastModifiedDelay;
+    
+    /* the tree configuration source (the sitemap) */
+    private DelayedRefreshSourceWrapper m_source;
+    private long m_lastModified;
+    
+    /* the sitemap2xconf.xsl stylesheet */
+    private Source m_transform;
+    
     /** The root node of the processing tree */
-    protected ProcessingNode rootNode;
-
-    /** The list of processing nodes that should be disposed when disposing this processor */
-    protected List disposableNodes;
-
-    /** Last modification time */
-    protected long lastModified = 0;
-
-    /** The source of the tree definition */
-    protected DelayedRefreshSourceWrapper source;
-
-    /** Delay for <code>sourceLastModified</code>. */
-    protected long lastModifiedDelay;
-
-    /** The current language configuration */
-    protected Configuration currentLanguage;
-
-    /** The file to process */
-    protected String fileName;
-
-    /** Check for reload? */
-    protected boolean checkReload;
-
-    /** The component configurations from the sitemap (if any) */
-    protected Configuration componentConfigurations;
+    private ProcessingNode m_rootNode;
     
-    /** The different sitemap component configurations */
-    protected Map sitemapComponentConfigurations;
+    // ---------------------------------------------------- lifecycle
     
-    /** The service manager for the sitemap */
-    protected ServiceManager sitemapComponentManager;
-    
-    /** The source resolver */
-    protected SourceResolver resolver;
-    
-    /** The environment helper */
-    protected EnvironmentHelper environmentHelper;
-
-    /**
-     * Create a TreeProcessor.
-     */
     public TreeProcessor() {
-        // Language can be overriden in the configuration.
-        this.language = "sitemap";
-
-        this.checkReload = true;
-        this.lastModifiedDelay = 1000;
     }
-
-    /**
-     * Create a child processor for a given language
-     */
-    protected TreeProcessor(TreeProcessor parent, ServiceManager manager, String language) {
-        this.parent = parent;
-        this.language = (language == null) ? parent.language : language;
-
-        // Copy all that can be copied from the parent
-        this.enableLogging(parent.getLogger());
-        this.context = parent.context;
-        this.roleManager = parent.roleManager;
-        this.builderSelector = parent.builderSelector;
-        this.checkReload = parent.checkReload;
-        this.lastModifiedDelay = parent.lastModifiedDelay;
-
-        // We have our own CM
-        this.manager = manager;
-        
-        // Other fields are setup in initialize()
+    
+    private TreeProcessor(TreeProcessor parent) throws Exception {
+        m_parent = parent;
+        ContainerUtil.enableLogging(this,parent.getLogger());
+        ContainerUtil.contextualize(this,parent.m_context);
+        ContainerUtil.service(this,parent.m_manager);
+        m_fileName = parent.m_fileName;
+        m_checkReload = parent.m_checkReload;
+        m_lastModifiedDelay = parent.m_lastModifiedDelay;
     }
-
-    /**
-     * Create a new child of this processor (used for mounting submaps).
-     *
-     * @param manager the component manager to be used by the child processor.
-     * @param language the language to be used by the child processor.
-     * @return a new child processor.
-     */
-    public TreeProcessor createChildProcessor(ServiceManager manager,
-                                                String language,
-                                                Source source,
-                                                String prefix)
-    throws Exception {
-
-        // Note: lifecycle methods aren't called, since this constructors copies all
-        // that can be copied from the parent (see above)
-        TreeProcessor child = new TreeProcessor(this, manager, language);
-        child.source = new DelayedRefreshSourceWrapper(source, lastModifiedDelay);
-        this.environmentHelper = new EnvironmentHelper(parent.environmentHelper);
-        // TODO - Test if getURI() is correct
-        this.environmentHelper.changeContext(prefix, source.getURI());
-        return child;
-    }
-
+    
     public void contextualize(Context context) throws ContextException {
-        this.context = context;
+        m_context = context;
     }
-
-    public void service(ServiceManager manager) throws ServiceException {
-        this.manager = manager;
-        this.resolver = (SourceResolver)this.manager.lookup(SourceResolver.ROLE);
-        try {
-            if ( this.environmentHelper == null ) {
-                this.environmentHelper = new EnvironmentHelper(
-                             (String) this.context.get(Constants.CONTEXT_ROOT_URL));
-            }
-            ContainerUtil.enableLogging(this.environmentHelper, this.getLogger());
-            ContainerUtil.service(this.environmentHelper, this.manager);
-        } catch (ContextException e) {
-            throw new ServiceException("Unable to get context root url from context.", e);
-        }
-    }
-
-    public void setRoleManager(RoleManager rm) {
-        this.roleManager = rm;
-    }
-
-
-/*
-  <processor>
-    <reload delay="10"/>
-    <root-language name="sitemap"/>
-    <language>...</language>
-  </processor>
-*/
-    public void configure(Configuration config)
-    throws ConfigurationException {
-        this.fileName = config.getAttribute("file", null);
-        this.checkReload = config.getAttributeAsBoolean("check-reload", true);
-
-        Configuration rootLangConfig = config.getChild("root-language", false);
-        if (rootLangConfig != null) {
-            this.language = rootLangConfig.getAttribute("name");
-        }
-
-        // Obtain the configuration file, or use the XCONF_URL if none
-        // is defined
-        String xconfURL = config.getAttribute("config", XCONF_URL);
-
-        // Reload check delay. Default is 1 second.
-        this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", 1000L);
-
-        // Read the builtin languages definition file
-        Configuration builtin;
-        try {
-            Source source = this.resolver.resolveURI( xconfURL );
-            try {
-                SAXConfigurationHandler handler = new SAXConfigurationHandler();
-                SourceUtil.toSAX( this.manager, source, null, handler);
-                builtin = handler.getConfiguration();
-            } finally {
-                this.resolver.release( source );
-            }
-        } catch(Exception e) {
-            String msg = "Error while reading " + xconfURL + ": " + e.getMessage();
-            throw new ConfigurationException(msg, e);
-        } finally {
-            this.manager.release( resolver );
-        }
-
-        // Create a selector for tree builders of all languages
-        this.builderSelector = new ExtendedComponentSelector(Thread.currentThread().getContextClassLoader());
-        try {
-            LifecycleHelper.setupComponent(this.builderSelector,
-                getLogger(),
-                this.context,
-                this.manager,
-                this.roleManager,
-                builtin
-            );
-        } catch(ConfigurationException ce) {
-            throw ce;
-        } catch(Exception e) {
-            throw new ConfigurationException("Could not setup builder selector", e);
-        }
-    }
-
+    
     /**
-     * Process the given <code>Environment</code> producing the output.
-     * @return If the processing is successfull <code>true</code> is returned.
-     *         If not match is found in the sitemap <code>false</code>
-     *         is returned.
-     * @throws org.apache.cocoon.ResourceNotFoundException If a sitemap component tries
-     *                                   to access a resource which can not
-     *                                   be found, e.g. the generator
-     *         ConnectionResetException  If the connection was reset
+     * @avalon.dependency  type="SourceResolver"
+     * @avalon.dependency  type="SAXParser"
+     * @avalon.dependency  type="XSLTProcessor"
      */
+    public void service(ServiceManager manager) throws ServiceException {
+        m_manager = manager;
+        m_resolver = (SourceResolver) m_manager.lookup(SourceResolver.ROLE);
+    }
+    
+    public void configure(Configuration config) throws ConfigurationException {
+        m_fileName = config.getAttribute("file", null);
+        m_checkReload = config.getAttributeAsBoolean("check-reload", true);
+        
+        // Reload check delay. Default is 1 second.
+        m_lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay",1000L);
+        
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Initializable#initialize()
+     */
+    public void initialize() throws Exception {
+        // setup the environment helper
+        if (m_environmentHelper == null ) {
+            m_environmentHelper = new EnvironmentHelper(
+                (String) m_context.get(Constants.CONTEXT_ROOT_URL));
+        }
+        ContainerUtil.enableLogging(m_environmentHelper,getLogger());
+        ContainerUtil.service(m_environmentHelper,m_manager);
+        m_transform = m_resolver.resolveURI(SITEMAP2XCONF_URL);
+    }
+
+    /* (non-Javadoc)
+     * @see org.apache.avalon.framework.activity.Disposable#dispose()
+     */
+    public void dispose() {
+        ContainerUtil.dispose(m_cm);
+        m_cm = null;
+        ContainerUtil.dispose(m_environmentHelper);
+        m_environmentHelper = null;
+        if (m_manager != null) {
+            if (m_source != null ) {
+                m_resolver.release(m_source.getSource());
+                m_source = null;
+            }
+            m_manager.release(m_resolver);
+            m_resolver = null;
+            m_manager = null;
+        }
+    }
+    
+    // ---------------------------------------------------- Processor implementation
+    
     public boolean process(Environment environment) throws Exception {
         InvokeContext context = new InvokeContext();
-
         context.enableLogging(getLogger());
-
         try {
             return process(environment, context);
         } finally {
             context.dispose();
         }
     }
-
+    
     /**
-     * Process the given <code>Environment</code> to assemble
-     * a <code>ProcessingPipeline</code>.
-     * @since 2.1
-     */
-    public ProcessingPipeline buildPipeline(Environment environment)
-    throws Exception {
-        InvokeContext context = new InvokeContext( true );
-
-        context.enableLogging(getLogger());
-
-        try {
-            if ( process(environment, context) ) {
-                return context.getProcessingPipeline();
-            } else {
-                return null;
-            }
-        } finally {
-            context.dispose();
-        }
-    }
-
-    /**
-     * Do the actual processing, be it producing the response or just building the pipeline
+     * Do the actual processing, be it producing the response or just building the pipeline.
+     * 
      * @param environment
      * @param context
-     * @return true if the pipeline was successfully built, false otherwise.
+     * @return
      * @throws Exception
      */
-    protected boolean process(Environment environment, InvokeContext context)
+    private boolean process(Environment environment, InvokeContext context)
     throws Exception {
-
-        // first, check for sitemap changes
-        if (this.rootNode == null ||
-            (this.checkReload && this.source.getLastModified() > this.lastModified)) {
+    
+        // first, check whether we need to load the sitemap
+        if (m_rootNode == null || (m_checkReload && m_source.getLastModified() > m_lastModified)) {
             setupRootNode(environment);
         }
-
+        
         // and now process
-        EnvironmentHelper.enterProcessor(this, this.sitemapComponentManager, environment);
+        EnvironmentHelper.enterProcessor(this, m_manager, environment);
         try {
-            boolean success = this.rootNode.invoke(environment, context);
-            
+            boolean success = m_rootNode.invoke(environment, context);
             if (success) {
                 // Do we have a cocoon: redirect ?
-                String cocoonRedirect = (String)environment.getAttribute(COCOON_REDIRECT_ATTR);
+                String cocoonRedirect = (String) environment.getAttribute(COCOON_REDIRECT_ATTR);
                 if (cocoonRedirect != null) {
                     // Remove the redirect indication
                     environment.removeAttribute(COCOON_REDIRECT_ATTR);
@@ -382,13 +252,81 @@ public class TreeProcessor
                     // "normal" success
                     return true;
                 }
-           
             } else {
                 return false;
             }
-
         } finally {
             EnvironmentHelper.leaveProcessor();
+        }
+    }
+    
+    private synchronized void setupRootNode(Environment env) throws Exception {
+
+        // Now that we entered the synchronized area, recheck what's already
+        // been checked in process().
+        if (m_rootNode != null && m_source.getLastModified() <= m_lastModified) {
+            // Nothing changed
+            return;
+        }
+        
+        long startTime = System.currentTimeMillis();
+
+        if (m_source == null) {
+            Source source = m_resolver.resolveURI(m_fileName);
+            m_source = new DelayedRefreshSourceWrapper(source,m_lastModifiedDelay);
+        }        
+
+        ContainerUtil.dispose(m_cm);
+        // create the sitemap container
+        FortressConfig config = new FortressConfig(m_context);
+        config.setContainerClass(Thread.currentThread().getContextClassLoader().
+            loadClass(SitemapContainer.class.getName()));
+        config.setContextRootURL(new URL((String) m_context.get(Constants.CONTEXT_ROOT_URL)));
+        config.setContextClassLoader(Thread.currentThread().getContextClassLoader());
+        config.setContainerConfiguration(buildConfiguration(m_source));
+        m_cm = new DefaultContainerManager(config.getContext(),getLogger());
+        ProcessingNode root = ((SitemapContainer) m_cm.getContainer()).getRootNode();
+        
+        m_lastModified = System.currentTimeMillis();
+
+        if (getLogger().isDebugEnabled()) {
+            double time = (m_lastModified - startTime) / 1000.0;
+            getLogger().debug("TreeProcessor built in " + time + " secs from " + m_source.getURI());
+        }
+
+        // Finished
+        m_rootNode = root;
+    }
+    
+    private Configuration buildConfiguration(Source source) throws Exception {
+        
+        SAXParser parser = null;
+        XSLTProcessor xsltProcessor = null;
+        try {
+            // get the SAX parser
+            parser = (SAXParser) m_manager.lookup(SAXParser.ROLE);
+            
+            // setup the sitemap2xconf transformation handler
+            xsltProcessor = (XSLTProcessor) m_manager.lookup(XSLTProcessor.ROLE);
+            final TransformerHandler transformHandler = xsltProcessor.getTransformerHandler(m_transform);
+            final Transformer transformer = transformHandler.getTransformer();
+            // TODO: setup tranformer parameters
+            
+            final NamespacedSAXConfigurationHandler configHandler = new NamespacedSAXConfigurationHandler();
+            transformHandler.setResult(new SAXResult(configHandler));
+            
+            LocationAugmentationPipe pipe = new LocationAugmentationPipe();
+            pipe.setConsumer(XMLUtils.getConsumer(transformHandler));
+            
+            return configHandler.getConfiguration();
+        }
+        finally {
+            if (parser != null) {
+                m_manager.release(parser);
+            }
+            if (xsltProcessor != null) {
+                m_manager.release(xsltProcessor);
+            }
         }
     }
     
@@ -407,7 +345,7 @@ public class TreeProcessor
             environment = facade.getDelegate();
         }
         
-        Environment newEnv = new ForwardEnvironmentWrapper(environment, this.manager, uri, getLogger());
+        Environment newEnv = new ForwardEnvironmentWrapper(environment, m_manager, uri, getLogger());
         
         if (facade != null) {
             // Change the facade delegate
@@ -418,7 +356,7 @@ public class TreeProcessor
         // Get the processor that should process this request
         TreeProcessor processor;
         if (getRootProcessor().getContext().equals(this.getContext())) {
-            processor = (TreeProcessor)getRootProcessor();
+            processor = (TreeProcessor) getRootProcessor();
         } else {
             processor = this;
         }
@@ -428,159 +366,39 @@ public class TreeProcessor
         return processor.process(newEnv, context);
     }
     
-    /**
-     * Get the root parent of this processor
-     * @since 2.1.1
+    /* (non-Javadoc)
+     * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
      */
-    public Processor getRootProcessor() {
-        TreeProcessor result = this;
-        while(result.parent != null) {
-            result = result.parent;
-        }
-        
-        return result;
+    public ProcessingPipeline buildPipeline(Environment environment) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
-     * Set the sitemap component configurations
-     */
-    public void setComponentConfigurations(Configuration componentConfigurations) {
-        this.componentConfigurations = componentConfigurations;
-        this.sitemapComponentConfigurations = null;
-    }
-
-    /**
-     * Get the sitemap component configurations
-     * @since 2.1
+     * TODO: do we still need this?
      */
     public Map getComponentConfigurations() {
-        // do we have the sitemap configurations prepared for this processor?
-        if ( null == this.sitemapComponentConfigurations ) {
-            
-            synchronized (this) {
-
-                if ( this.sitemapComponentConfigurations == null ) {
-                    // do we have configurations?
-                    final Configuration[] childs = (this.componentConfigurations == null 
-                                                     ? null 
-                                                     : this.componentConfigurations.getChildren());
-                    
-                    if ( null != childs ) {
-        
-                        if ( null == this.parent ) {
-                            this.sitemapComponentConfigurations = new HashMap(12);
-                        } else {
-                            // copy all configurations from parent
-                            this.sitemapComponentConfigurations = new HashMap(this.parent.getComponentConfigurations()); 
-                        }
-                        
-                        // and now check for new configurations
-                        for(int m = 0; m < childs.length; m++) {
-                            
-                            final String r = this.roleManager.getRoleForName(childs[m].getName());
-                            this.sitemapComponentConfigurations.put(r, new ChainedConfiguration(childs[m], 
-                                                                             (ChainedConfiguration)this.sitemapComponentConfigurations.get(r)));
-                        }
-                    } else {
-                        // we don't have configurations
-                        if ( null == this.parent ) {
-                            this.sitemapComponentConfigurations = Collections.EMPTY_MAP;
-                        } else {
-                            // use configuration from parent
-                            this.sitemapComponentConfigurations = this.parent.getComponentConfigurations(); 
-                        }
-                    }
-                }
-            }
-        }
-        return this.sitemapComponentConfigurations;
-    }
-
-    protected synchronized void setupRootNode(Environment env) throws Exception {
-
-        // Now that we entered the synchronized area, recheck what's already
-        // been checked in process().
-        if (this.rootNode != null && source.getLastModified() <= this.lastModified) {
-            // Nothing changed
-            return;
-        }
-
-        long startTime = System.currentTimeMillis();
-
-        // Dispose the previous tree, if any
-        disposeTree();
-
-        // Get a builder
-        TreeBuilder builder = (TreeBuilder)this.builderSelector.select(this.language);
-        ProcessingNode root;
-        try {
-            if (builder instanceof Recomposable) {
-                ((Recomposable)builder).recompose(this.manager);
-            }
-            builder.setProcessor(this);
-            if (this.fileName == null) {
-                this.fileName = builder.getFileName();
-            }
-
-            if (this.source == null) {
-                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName), lastModifiedDelay);
-            }
-            root = builder.build(this.source);
-
-            this.sitemapComponentManager = builder.getSitemapComponentManager();
-            
-            this.disposableNodes = builder.getDisposableNodes();
-        } finally {
-            this.builderSelector.release(builder);
-        }
-
-        this.lastModified = System.currentTimeMillis();
-
-        if (getLogger().isDebugEnabled()) {
-            double time = (this.lastModified - startTime) / 1000.0;
-            getLogger().debug("TreeProcessor built in " + time + " secs from " + source.getURI());
-        }
-
-        // Finished
-        this.rootNode = root;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.activity.Disposable#dispose()
-     */
-    public void dispose() {
-        this.disposeTree();
-        ContainerUtil.dispose(this.environmentHelper);
-        this.environmentHelper = null;
-        if (this.parent == null) {
-            // root processor : dispose the builder selector
-            this.builderSelector.dispose();
-        }
-        if ( this.manager != null ) {
-            if ( this.source != null ) {
-                this.resolver.release(this.source.getSource());
-                this.source = null;
-            }
-            this.manager.release(this.resolver);
-            this.resolver = null;
-            this.manager = null;
-        }
-    }
-
-    /**
-     * Dispose all nodes in the tree that are disposable
-     */
-    protected void disposeTree() {
-        if (this.disposableNodes != null) {
-            // we must dispose the nodes in reverse order
-            // otherwise selector nodes are freed before the components node
-            for(int i=this.disposableNodes.size()-1; i>-1; i--) {
-                ((Disposable)disposableNodes.get(i)).dispose();
-            }
-            this.disposableNodes = null;
-        }
+        return null;
     }
     
+    /**
+     * TODO: do we still need this?
+     */
+    public String getContext() {
+        return getEnvironmentHelper().getContext();
+    }
+    
+    /**
+     * TODO: why do me need this?
+     */
+    public Processor getRootProcessor() {
+        return null;
+    }
+
+    public EnvironmentHelper getEnvironmentHelper() {
+        return m_environmentHelper;
+    }
+
     /**
      * Local extension of EnvironmentWrapper to propagate otherwise blocked
      * methods to the actual environment.
@@ -609,18 +427,4 @@ public class TreeProcessor
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getEnvironmentHelper()
-     */
-    public EnvironmentHelper getEnvironmentHelper() {
-        return this.environmentHelper;
-    }
-
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#getContext()
-     */
-    public String getContext() {
-        return this.environmentHelper.getContext();
-    }
-    
 }
