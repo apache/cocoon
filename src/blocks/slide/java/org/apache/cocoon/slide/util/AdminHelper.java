@@ -434,9 +434,9 @@ public class AdminHelper {
         Content content = nat.getContentHelper();
         
         ObjectNode object = structure.retrieve(slideToken,path);
-        Enumeration enum = structure.getChildren(slideToken,object);
-        while (enum.hasMoreElements()) {
-            String uri = ((ObjectNode) enum.nextElement()).getUri();
+        Enumeration enumeration = structure.getChildren(slideToken,object);
+        while (enumeration.hasMoreElements()) {
+            String uri = ((ObjectNode) enumeration.nextElement()).getUri();
             NodeRevisionDescriptors revisions = content.retrieve(slideToken, uri);
             NodeRevisionDescriptor revision = content.retrieve(slideToken, revisions);
             NodeProperty property = revision.getProperty("group-member-set","DAV:");
@@ -483,9 +483,9 @@ public class AdminHelper {
         Structure structure = nat.getStructureHelper();
         
         ObjectNode object = structure.retrieve(slideToken,path);
-        Enumeration enum = structure.getChildren(slideToken,object);
-        while (enum.hasMoreElements()) {
-            result.add(((ObjectNode) enum.nextElement()).getUri());
+        Enumeration enumeration = structure.getChildren(slideToken,object);
+        while (enumeration.hasMoreElements()) {
+            result.add(((ObjectNode) enumeration.nextElement()).getUri());
         }
         
         return result;

@@ -291,10 +291,10 @@ public class LDAPEntryManager
 		Converts a NamingEnumeration into a Map of those Entries, with Attributes 
 		Should be easier to manupulate in FlowScript and display in JXTemplate
 	*/
-	private Map namingEnumeration2Map (NamingEnumeration enum) throws NamingException {
+	private Map namingEnumeration2Map (NamingEnumeration enumeration) throws NamingException {
 		Map map = new HashMap ();
-		while (enum.hasMore ()) {
-			SearchResult sr = (SearchResult)enum.next ();
+		while (enumeration.hasMore ()) {
+			SearchResult sr = (SearchResult)enumeration.next ();
 			map.put (sr.getName (), attributes2Map(sr.getAttributes ()));
 		}
 		return map;

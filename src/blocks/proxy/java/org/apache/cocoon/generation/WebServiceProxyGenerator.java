@@ -71,7 +71,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:ivelin@apache.org">Ivelin Ivanov</a>, June 30, 2002
  * @author <a href="mailto:tony@apache.org">Tony Collen</a>, December 2, 2002
- * @version CVS $Id: WebServiceProxyGenerator.java,v 1.7 2004/03/05 13:02:20 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class WebServiceProxyGenerator extends ServiceableGenerator {
 
@@ -172,9 +172,9 @@ public class WebServiceProxyGenerator extends ServiceableGenerator {
         Request request = ObjectModelHelper.getRequest(objectModel);
 
         ArrayList paramList = new ArrayList();
-        Enumeration enum = request.getParameterNames();
-        while (enum.hasMoreElements()) {
-            String pname = (String)enum.nextElement();
+        Enumeration enumeration = request.getParameterNames();
+        while (enumeration.hasMoreElements()) {
+            String pname = (String)enumeration.nextElement();
             String[] paramsForName = request.getParameterValues(pname);
             for (int i = 0; i < paramsForName.length; i++) {
                 NameValuePair pair = new NameValuePair(pname, paramsForName[i]);
