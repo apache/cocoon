@@ -220,6 +220,8 @@ public class LocaleAction extends ServiceableAction implements ThreadSafe, Confi
 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Locale attribute name is " + this.localeAttribute);
+            getLogger().debug((this.useLocale ? "will" : "won't") + " use request locale");
+            getLogger().debug("default locale " + this.defaultLocale);
         }
     }
 
