@@ -60,16 +60,22 @@ import org.apache.cocoon.xml.XMLConsumer;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xml.sax.Locator;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * The <code>SVGBuilder</code> is a utility class that will generate a
  * SVG-DOM Document from SAX events using Batik's SVGDocumentFactory.
  *
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
- * @version CVS $Id: SVGBuilder.java,v 1.3 2003/05/06 23:42:21 vgritsenko Exp $
+ * @version CVS $Id: SVGBuilder.java,v 1.4 2003/05/07 19:15:02 vgritsenko Exp $
  */
 public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, LogEnabled {
     protected Logger log;
+
+    protected Locator locator;
 
     private static final String SAX_PARSER
         = "org.apache.xerces.parsers.SAXParser";
@@ -100,7 +106,7 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
      * Return the newly built Document.
      */
     public Document getDocument() {
-        return this.document;
+        return super.document;
     }
 
     /**
@@ -112,11 +118,10 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
         try {
             // Create SVG Document
             String namespaceURI = SVGDOMImplementation.SVG_NAMESPACE_URI;
-            this.document = implementation.createDocument(namespaceURI, "svg", null);
+            super.document = implementation.createDocument(namespaceURI, "svg", null);
             super.startDocument();
-            // add svg, and SVG_NAMESPACE to SAXDocumentFactory namespace handling
-            // this is a fix only ties svg to svg namespace uri
-            // it is not as general as tieing any prefix to svg namespace uri
+            // Add svg, and SVG_NAMESPACE to SAXDocumentFactory namespace handling.
+            // This ties 'svg' prefix used above to the svg namespace uri.
             namespaces.put("svg", SVGDOMImplementation.SVG_NAMESPACE_URI);
         } catch (SAXException se) {
             throw se;
@@ -126,6 +131,11 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
             }
             throw new SAXException("Exception in startDocument", ex);
         }
+    }
+
+    public void setDocumentLocator(Locator locator) {
+        this.locator = locator;
+        super.setDocumentLocator(locator);
     }
 
     /**
@@ -138,9 +148,18 @@ public class SVGBuilder extends SAXSVGDocumentFactory implements XMLConsumer, Lo
             super.endDocument();
 
             // FIXME: Hack.
-            ((org.apache.batik.dom.svg.SVGOMDocument)this.document).setURLObject(new java.net.URL("http://xml.apache.org"));
+            try {
+                if (this.locator != null) {
+                    ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(new URL(this.locator.getSystemId()));
+                } else {
+                    getLogger().warn("setDocumentLocator was not called, URI resolution will not work");
+                }
+            } catch (MalformedURLException e) {
+                getLogger().warn("Unable to set document base URI to " + this.locator.getSystemId(), e);
+                ((org.apache.batik.dom.svg.SVGOMDocument)super.document).setURLObject(new URL("http://xml.apache.org/"));
+            }
 
-            this.notify(this.document);
+            notify(super.document);
         } catch (SAXException se) {
             throw se;
         } catch (Exception ex){
