@@ -1172,11 +1172,4 @@
     <homepage>http://jakarta.apache.org/tomcat/</homepage>
   </file>
 
-  <file>
-    <title>Jakarta Commons Validator</title>
-    <description>Validation rules for user input.</description>
-    <used-by>Cocoon Forms</used-by>
-    <lib>forms/lib/commons-validator-1.1.3.jar</lib>
-    <homepage>http://jakarta.apache.org/commons/validator/</homepage>
-  </file>
 </jars>
