@@ -205,24 +205,12 @@
 
   <changes>
  <release version="@version@" date="@date@">
-   <action dev="TC" type="fix" fixes-bug="30994">
-     Change constructor to be public in order to fix bug 30270
-   </action>
-   <action dev="JH" type="add" fixes-bug="29715" due-to="Nuno Santos" due-to-email="nsantos@electroplus.pt">
-     Forms block: added possibility to add a SelectionList based on Java.
-   </action>
    <action dev="TC" type="add" fixes-bug="30417">
      Added best-fit-while-keeping-aspect-ratio option to the ImageReader
    </action>
    <action dev="RP" type="add" due-to="Adam Ratclif" fixes-bug="31359">
      Apply patch: Add support for calling webservices from within Flowscript.
    </action>   
-   <action dev="TC" type="fix" fixes-bug="31545">
-     Throw a more meaningful exception if charset classes are missing
-   </action>
-   <action dev="TC" type="fix" fixes-bug="30874">
-     Fixes the SQLTransformer not to close the statement twice
-   </action>
    <action dev="CZ" type="add">
      New getSitemapPath() method on the Request object to get the path to the
      current sitemap even if you are in a sub sitemap. Added an abstract request
@@ -341,6 +329,18 @@
    <action dev="CZ" type="fix" fixes-bug="29951" due-to="Christian Mayrhuber" due-to-email="christian.mayrhuber@gmx.net">
      Portal block: Apply patch for handling GET method when no enctype is set in CopletTransformer.
    </action>
+   <action dev="TC" type="fix" fixes-bug="31545">
+    Throw a more meaningful exception if charset classes are missing
+   </action>
+    <action dev="TC" type="fix" fixes-bug="30874">
+     Fixes the SQLTransformer not to close the statement twice
+    </action>
+   <action dev="TC" type="fix" fixes-bug="30994">
+     Change constructor to be public in order to fix bug 30270
+   </action>
+   <action dev="JH" type="add" fixes-bug="29715" due-to="Nuno Santos" due-to-email="nsantos@electroplus.pt">
+     Forms block: added possibility to add a SelectionList based on Java.
+   </action>
    <action dev="AG" type="update">
      Updated xalan to 2.6.1-dev-20041008T0304
    </action>
@@ -383,6 +383,11 @@
    <action dev="VG" type="fix">
      Allow recursive Flow invocations with processPipelineTo.
    </action>
+   <action dev="SW" type="fix">
+     Forms block: rename <code>fd:on-activate</code> to <code>fd:on-action</code> on
+     <code>fd:row-action</code> and <code>fd:repeater-action</code> for consistency
+     with <code>fd:action</code> and <code>fd:submit</code>.
+   </action>
    <action dev="CZ" type="update">
      Cache the mime-type of readers and serializers.
    </action>
@@ -395,6 +400,11 @@
    <action dev="VG" type="update">
      Add support for translating attribute values which contain i18n expressions
      rather than complete i18n key.
+   </action>
+   <action dev="SW" type="add">
+     Forms block: allow widget attributes which were only accessible programmatically
+     to be set in the form definition. This allows e.g. generic form processing code
+     to find widgets having a particular attribute.
    </action>
    <action dev="SW" type="update">
      Mail block: the MailSender now gets its source resolver from the service manager.
@@ -446,6 +456,9 @@
    </action>
    <action dev="VG" type="fix">
      Cron block: Fix TestCronJob pipeline call functionality.
+   </action>
+   <action dev="AG" type="fix" fixes-bug="30065" due-to="Johnson Hsu" due-to-email="johnson@soho.club.tw">
+     GetInstance don't work with upgrade from db-ojb-1.0rc6.
    </action>
    <action dev="AG" type="update">
      Updated rhino to 1.5r4-20040629T1232,
