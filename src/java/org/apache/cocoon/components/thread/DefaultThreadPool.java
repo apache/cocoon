@@ -27,7 +27,7 @@ import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
  * configuration into the <code>configure</code> method.
  *
  * @author <a href="mailto:giacomo.at.apache.org">Giacomo Pati</a>
- * @version CVS $Id: DefaultThreadPool.java,v 1.5 2004/06/23 20:25:43 giacomo Exp $
+ * @version CVS $Id$
  */
 public class DefaultThreadPool
     extends PooledExecutor
@@ -103,6 +103,18 @@ public class DefaultThreadPool
     /**
      * DOCUMENT ME!
      *
+     * @return maximum size of the queue (0 if isQueued() == false)
+     *
+     * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
+     */
+    public int getMaxQueueSize(  )
+    {
+        return ( ( m_queueSize < 0 ) ? Integer.MAX_VALUE : m_queueSize );
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
      * @return size of queue (0 if isQueued() == false)
      *
      * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
@@ -123,8 +135,8 @@ public class DefaultThreadPool
     /**
      * Get hte priority used to create Threads
      *
-     * @return {@link Thread#MIN_PRIORITY}, {@link
-     *         Thread#NORM_PRIORITY}, or {@link Thread#MAX_PRIORITY}
+     * @return {@link Thread#MIN_PRIORITY}, {@link Thread#NORM_PRIORITY}, or
+     *         {@link Thread#MAX_PRIORITY}
      */
     public int getPriority(  )
     {
@@ -134,7 +146,7 @@ public class DefaultThreadPool
     /**
      * DOCUMENT ME!
      *
-     * @return size of queue (0 if isQueued() == false)
+     * @return current size of the queue (0 if isQueued() == false)
      *
      * @see org.apache.cocoon.components.thread.ThreadPool#getQueueSize()
      */
@@ -210,6 +222,8 @@ public class DefaultThreadPool
      */
     void setBlockPolicy( final String blockPolicy )
     {
+        m_blockPolicy = blockPolicy;
+
         if( POLICY_ABORT.equalsIgnoreCase( blockPolicy ) )
         {
             abortWhenBlocked(  );
@@ -254,6 +268,16 @@ public class DefaultThreadPool
     void setName( String name )
     {
         m_name = name;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param priority The priority to set.
+     */
+    void setPriority( final int priority )
+    {
+        m_priority = priority;
     }
 
     /**
@@ -331,13 +355,5 @@ public class DefaultThreadPool
     private Logger getLogger(  )
     {
         return m_logger;
-    }
-
-    /**
-     * @param priority The priority to set.
-     */
-    void setPriority( final int priority )
-    {
-        m_priority = priority;
     }
 }

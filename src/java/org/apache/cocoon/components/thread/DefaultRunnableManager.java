@@ -112,7 +112,7 @@ public class DefaultRunnableManager
      * Sorted set of <code>ExecutionInfo</code> instances, based on their next
      * execution time.
      */
-    protected SortedSet m_executionInfo = new TreeSet(  );
+    protected SortedSet m_commandStack = new TreeSet(  );
 
     /** The managed thread pools */
     final Map m_pools = new HashMap(  );
@@ -146,44 +146,11 @@ public class DefaultRunnableManager
         }
 
         final Configuration [] threadpools =
-            config.getChildren( "thread-pools" );
+            config.getChild( "thread-pools" ).getChildren( "thread-pool" );
 
         for( int i = 0; i < threadpools.length; i++ )
         {
             final DefaultThreadPool pool = configThreadPool( threadpools[ i ] );
-
-            if( getLogger(  ).isInfoEnabled(  ) )
-            {
-                if( pool.isQueued(  ) )
-                {
-                    final StringBuffer msg = new StringBuffer(  );
-                    msg.append( "ThreadPool named \"" ).append( pool.getName(  ) );
-                    msg.append( "\" created with queue-size=" );
-                    msg.append( pool.getQueueSize(  ) );
-                    msg.append( ",max-pool-size=" ).append( pool.getMaximumPoolSize(  ) );
-                    msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
-                    msg.append( ",priority=" ).append( pool.getPriority(  ) );
-                    msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
-                    msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
-                    msg.append( ",block-policy=\"" ).append( pool.getBlockPolicy(  ) );
-                    msg.append( "\",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
-                    getLogger(  ).info( msg.toString(  ) );
-                }
-                else
-                {
-                    final StringBuffer msg = new StringBuffer(  );
-                    msg.append( "ThreadPool named \"" ).append( pool.getName(  ) );
-                    msg.append( "\" created with no queue,max-pool-size=" )
-                       .append( pool.getMaximumPoolSize(  ) );
-                    msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
-                    msg.append( ",priority=" ).append( pool.getPriority(  ) );
-                    msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
-                    msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
-                    msg.append( ",block-policy=" ).append( pool.getBlockPolicy(  ) );
-                    msg.append( ",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
-                    getLogger(  ).info( msg.toString(  ) );
-                }
-            }
         }
 
         // Check if a "default" pool has been created
@@ -436,20 +403,20 @@ public class DefaultRunnableManager
 
         while( m_keepRunning )
         {
-            synchronized( m_executionInfo )
+            synchronized( m_commandStack )
             {
                 try
                 {
-                    if( m_executionInfo.size(  ) > 0 )
+                    if( m_commandStack.size(  ) > 0 )
                     {
                         final ExecutionInfo info =
-                            (ExecutionInfo)m_executionInfo.first(  );
+                            (ExecutionInfo)m_commandStack.first(  );
                         final long delay =
                             info.m_nextRun - System.currentTimeMillis(  );
 
                         if( delay > 0 )
                         {
-                            m_executionInfo.wait( delay );
+                            m_commandStack.wait( delay );
                         }
                     }
                     else
@@ -459,7 +426,7 @@ public class DefaultRunnableManager
                             getLogger(  ).debug( "No commands available. Will just wait for one" );
                         }
 
-                        m_executionInfo.wait(  );
+                        m_commandStack.wait(  );
                     }
                 }
                 catch( final InterruptedException ie )
@@ -472,14 +439,17 @@ public class DefaultRunnableManager
 
                 if( m_keepRunning )
                 {
-                    final ExecutionInfo info =
-                        (ExecutionInfo)m_executionInfo.first(  );
-                    final long delay =
-                        info.m_nextRun - System.currentTimeMillis(  );
-
-                    if( delay < 0 )
+                    if( m_commandStack.size(  ) > 0 )
                     {
-                        info.execute(  );
+                        final ExecutionInfo info =
+                            (ExecutionInfo)m_commandStack.first(  );
+                        final long delay =
+                            info.m_nextRun - System.currentTimeMillis(  );
+
+                        if( delay < 0 )
+                        {
+                            info.execute(  );
+                        }
                     }
                 }
             }
@@ -518,9 +488,9 @@ public class DefaultRunnableManager
     {
         m_keepRunning = false;
 
-        synchronized( m_executionInfo )
+        synchronized( m_commandStack )
         {
-            m_executionInfo.notifyAll(  );
+            m_commandStack.notifyAll(  );
         }
     }
 
@@ -547,6 +517,9 @@ public class DefaultRunnableManager
         }
         else
         {
+            getLogger(  ).warn( "Unknown thread priority \"" + priority +
+                                "\". Set to \"NORM\"." );
+
             return Thread.NORM_PRIORITY;
         }
     }
@@ -566,8 +539,14 @@ public class DefaultRunnableManager
         final String name = config.getChild( "name" ).getValue(  );
         final int queueSize =
             config.getChild( "queue-size" ).getValueAsInteger( DEFAULT_QUEUE_SIZE );
-        final int maxPoolSize =
+        int maxPoolSize =
             config.getChild( "max-pool-size" ).getValueAsInteger( DEFAULT_MAX_POOL_SIZE );
+
+        if( maxPoolSize < 0 )
+        {
+            maxPoolSize = Integer.MAX_VALUE;
+        }
+
         int minPoolSize =
             config.getChild( "min-pool-size" ).getValueAsInteger( DEFAULT_MIN_POOL_SIZE );
 
@@ -578,13 +557,27 @@ public class DefaultRunnableManager
         {
             minPoolSize = DEFAULT_MIN_POOL_SIZE;
         }
+        else if( minPoolSize < 1 )
+        {
+            getLogger(  ).warn( "Config element min-pool-size < 1 for pool \"" +
+                                name + "\". Set to 1" );
+            minPoolSize = 1;
+        }
 
         final String priority =
             config.getChild( "priority" ).getValue( DEFAULT_THREAD_PRIORITY );
         final boolean isDaemon =
             config.getChild( "daemon" ).getValueAsBoolean( DEFAULT_DAEMON_MODE );
-        final long keepAliveTime =
+        long keepAliveTime =
             config.getChild( "keep-alive-time-ms" ).getValueAsLong( DEFAULT_KEEP_ALIVE_TIME );
+
+        if( keepAliveTime < 0 )
+        {
+            getLogger(  ).warn( "Config element keep-alive-time-ms < 0 for pool \"" +
+                                name + "\". Set to 1000" );
+            keepAliveTime = 1000;
+        }
+
         final String blockPolicy =
             config.getChild( "block-policy" ).getValue( DefaultThreadPool.POLICY_DEFAULT );
         final boolean shutdownGraceful =
@@ -668,7 +661,49 @@ public class DefaultRunnableManager
             m_pools.put( name, pool );
         }
 
+        printPoolInfo( pool );
+
         return pool;
+    }
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param pool DOCUMENT ME!
+     */
+    private void printPoolInfo( final DefaultThreadPool pool )
+    {
+        if( getLogger(  ).isInfoEnabled(  ) )
+        {
+            if( pool.isQueued(  ) )
+            {
+                final StringBuffer msg = new StringBuffer(  );
+                msg.append( "ThreadPool named \"" ).append( pool.getName(  ) );
+                msg.append( "\" created with maximum queue-size=" );
+                msg.append( pool.getMaxQueueSize(  ) );
+                msg.append( ",max-pool-size=" ).append( pool.getMaximumPoolSize(  ) );
+                msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
+                msg.append( ",priority=" ).append( pool.getPriority(  ) );
+                msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
+                msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
+                msg.append( ",block-policy=\"" ).append( pool.getBlockPolicy(  ) );
+                msg.append( "\",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
+                getLogger(  ).info( msg.toString(  ) );
+            }
+            else
+            {
+                final StringBuffer msg = new StringBuffer(  );
+                msg.append( "ThreadPool named \"" ).append( pool.getName(  ) );
+                msg.append( "\" created with no queue,max-pool-size=" ).append( pool.getMaximumPoolSize(  ) );
+                msg.append( ",min-pool-size=" ).append( pool.getMinimumPoolSize(  ) );
+                msg.append( ",priority=" ).append( pool.getPriority(  ) );
+                msg.append( ",isDaemon=" ).append( ( (ThreadFactory)pool.getThreadFactory(  ) ).isDaemon(  ) );
+                msg.append( ",keep-alive-time-ms=" ).append( pool.getKeepAliveTime(  ) );
+                msg.append( ",block-policy=" ).append( pool.getBlockPolicy(  ) );
+                msg.append( ",shutdown-wait-time-ms=" ).append( pool.getShutdownWaitTimeMs(  ) );
+                getLogger(  ).info( msg.toString(  ) );
+            }
+        }
     }
 
     //~ Inner Classes ----------------------------------------------------------
@@ -726,10 +761,10 @@ public class DefaultRunnableManager
             m_logger = logger;
             m_nextRun = System.currentTimeMillis(  ) + delay;
 
-            synchronized( m_executionInfo )
+            synchronized( m_commandStack )
             {
-                m_executionInfo.add( this );
-                m_executionInfo.notifyAll(  );
+                m_commandStack.add( this );
+                m_commandStack.notifyAll(  );
             }
         }
 
@@ -762,16 +797,16 @@ public class DefaultRunnableManager
                                      ",interval=" + m_interval );
             }
 
-            synchronized( m_executionInfo )
+            synchronized( m_commandStack )
             {
-                m_executionInfo.remove( this );
+                m_commandStack.remove( this );
                 m_nextRun = ( ( m_interval > 0 )
                               ? ( System.currentTimeMillis(  ) + m_interval ) : 0 );
 
                 if( m_nextRun > 0 )
                 {
-                    m_executionInfo.add( this );
-                    m_executionInfo.notifyAll(  );
+                    m_commandStack.add( this );
+                    m_commandStack.notifyAll(  );
                 }
             }
 
