@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: sitemap.xmap,v 1.6 2003/05/17 08:11:27 jefft Exp $ -->
+<!-- $Id: sitemap.xmap,v 1.7 2003/10/31 11:45:55 unico Exp $ -->
 <!--
 Input Modules sample sitemap.
 
@@ -275,7 +275,26 @@ Author: Konstantin Piroumian "kpiroumian@apache.org"
         </map:transform>
         <map:serialize />
       </map:match>               
- 
+
+      <map:match pattern="content/properties.xsp">
+        <map:generate type="serverpages" src="properties.xsp">
+          <map:parameter name="name" value="{cocoon-properties:name}"/>
+          <map:parameter name="Name" value="{cocoon-properties:Name}"/>
+          <map:parameter name="fullname" value="{cocoon-properties:fullname}"/>
+          <map:parameter name="version" value="{cocoon-properties:version}"/>
+          <map:parameter name="released.version" value="{cocoon-properties:released.version}"/>
+          <map:parameter name="year" value="{cocoon-properties:year}"/>
+        </map:generate>
+        <map:transform src="properties2html.xsl">
+          <map:parameter name="title" value="Properties File Module
+            (PropertiesFileModule)"/>  
+          <map:parameter name="description" value="PropertiesFileModule provides access
+            to properties from a properties file. In this example the keys identify properties in
+            resource://org/apache/cocoon/cocoon.properties"/>
+        </map:transform>
+        <map:serialize />
+      </map:match>
+
       <!-- Menu generation -->
       <map:match pattern="menu/*">
         <map:generate src="menu.xml"/>
