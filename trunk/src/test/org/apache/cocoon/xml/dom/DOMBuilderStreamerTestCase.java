@@ -65,7 +65,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Testcase for DOMStreamer and DOMBuilder.
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.2 2003/04/22 07:37:19 stephan Exp $
+ * @version CVS $Id: DOMBuilderStreamerTestCase.java,v 1.3 2003/04/23 06:44:50 stephan Exp $
  */
 public class DOMBuilderStreamerTestCase extends XMLTestCase {
 
@@ -91,12 +91,12 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
 
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
-        builder.startElement(null, "root", "root", atts);
-        builder.startElement(null, "node", "node", atts);
-        builder.endElement(null, "node", "node");
-        builder.startElement(null, "node", "node", atts);
-        builder.endElement(null, "node", "node");
-        builder.endElement(null, "root", "root");
+        builder.startElement("", "root", "root", atts);
+        builder.startElement("", "node", "node", atts);
+        builder.endElement("", "node", "node");
+        builder.startElement("", "node", "node", atts);
+        builder.endElement("", "node", "node");
+        builder.endElement("", "root", "root");
         builder.endDocument();
 
         Document document = XMLUnit.buildControlDocument("<root><node/><node/></root>");
@@ -108,31 +108,31 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
 
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
-        builder.startElement(null, "root", "root", atts);
+        builder.startElement("", "root", "root", atts);
         builder.characters("abcd".toCharArray(), 0, 4);
-        builder.endElement(null, "root", "node");
+        builder.endElement("", "root", "node");
         builder.endDocument();
 
         Document document = XMLUnit.buildControlDocument("<root>abcd</root>");
         assertXMLEqual(document, builder.getDocument());
     }
 
-    public void testBuilderWithNS()  throws Exception {
+    /*public void testBuilderWithNS()  throws Exception {
         AttributesImpl atts = new AttributesImpl();
 
         DOMBuilder builder = new DOMBuilder();
         builder.startDocument();
-        builder.startPrefixMapping(null, "http://xml.apache.org");
-        builder.startElement(null, "root", "root", atts);
-        builder.endElement(null, "node", "node");
-        builder.endPrefixMapping(null);
+        builder.startPrefixMapping("", "http://xml.apache.org");
+        builder.startElement("", "root", "root", atts);
+        builder.endElement("", "node", "node");
+        builder.endPrefixMapping("");
         builder.endDocument();
 
         Document document = XMLUnit.buildControlDocument("<root xmlns=\"http://xml.apache.org\"/>");
-        //assertXMLEqual(document, builder.getDocument());
-    }
+        assertXMLEqual(document, builder.getDocument());
+    }*/
 
-    public void testBuilderWithPrefix()  throws Exception {
+    /*public void testBuilderWithPrefix()  throws Exception {
         AttributesImpl atts = new AttributesImpl();
 
         DOMBuilder builder = new DOMBuilder();
@@ -144,8 +144,8 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
         builder.endDocument();
 
         Document document = XMLUnit.buildControlDocument("<bla:root xmlns:bla=\"http://xml.apache.org\"/>");
-        //assertXMLEqual(document, builder.getDocument());
-    }
+        assertXMLEqual(document, builder.getDocument());
+    }*/
 
     /*public void testBuilderWithNSError()  throws Exception {
         AttributesImpl atts = new AttributesImpl();
@@ -155,7 +155,7 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
         try {
             builder.startDocument();
             builder.startPrefixMapping("bla", "http://xml.apache.org");
-            atts.addAttribute( null, "bla", "xmlns:bla", "CDATA", "http://xml.apache.org");
+            atts.addAttribute( "", "bla", "xmlns:bla", "CDATA", "http://xml.apache.org");
             builder.startElement("http://xml.apache.org", "root", "bla:root", atts);
             builder.endElement("http://xml.apache.org", "root", "bla:root");
             builder.endPrefixMapping("bla");
@@ -207,7 +207,7 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
         assertXMLEqual(moreElementDocument, document);
     }
 
-    public void testStreamerWithNS() throws Exception {
+    /*public void testStreamerWithNS() throws Exception {
 
         Document document = XMLUnit.getControlParser().newDocument();
         Element elemA = document.createElementNS("http://xml.apache.org", "root");
@@ -227,6 +227,6 @@ public class DOMBuilderStreamerTestCase extends XMLTestCase {
         document = builder.getDocument();
     
         Document moreElementDocument = XMLUnit.buildControlDocument("<root xmlns=\"http://xml.apache.org\"><node/><node/></root>");
-        //assertXMLEqual(moreElementDocument, document);
-    }
+        assertXMLEqual(moreElementDocument, document);
+    }*/
 }
