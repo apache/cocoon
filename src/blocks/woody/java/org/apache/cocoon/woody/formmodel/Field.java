@@ -88,7 +88,7 @@ public class Field extends AbstractWidget {
     }
 
     public void setValue(Object object) {
-        if (!definition.getDatatype().getTypeClass().isAssignableFrom(object.getClass()))
+        if (object != null && !definition.getDatatype().getTypeClass().isAssignableFrom(object.getClass()))
             throw new RuntimeException("Tried to set value of field \"" + getFullyQualifiedId() + "\" with an object of an incorrect type.");
 
         value = object;
