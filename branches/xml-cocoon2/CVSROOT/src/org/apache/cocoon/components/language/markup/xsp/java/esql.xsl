@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- $Id: esql.xsl,v 1.1.2.14 2000-12-21 20:45:08 bloritsch Exp $-->
+<!-- $Id: esql.xsl,v 1.1.2.15 2000-12-21 21:06:39 bloritsch Exp $-->
 <!--
 
  ============================================================================
@@ -397,6 +397,7 @@
               esqlSession = (EsqlSession)esqlSessions.pop();
           }
       }
+      } // Where does this match?
     </xsp:logic>
   </xsl:template>
 
@@ -453,7 +454,7 @@
 
           <xsp:element>
             <xsp:param name="name"><xsp:expr>tagName</xsp:expr></xsp:param>
-            <xsp:text><xsp:expr>esqlSession.resultset.getString(esqlI)</xsp:expr></xsp:text>
+            <xsp:expr>esqlSession.resultset.getString(esqlI)</xsp:expr>
           </xsp:element>
       }
 
