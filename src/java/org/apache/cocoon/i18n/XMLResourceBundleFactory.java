@@ -16,6 +16,7 @@
 package org.apache.cocoon.i18n;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -23,9 +24,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.activity.Disposable;
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.DefaultComponentSelector;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -35,10 +34,10 @@ import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
+import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceResolver;
-import org.apache.cocoon.ResourceNotFoundException;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -49,11 +48,13 @@ import org.xml.sax.SAXParseException;
  * @author <a href="mailto:neeme@one.lv">Neeme Praks</a>
  * @author <a href="mailto:oleg@one.lv">Oleg Podolsky</a>
  * @author <a href="mailto:kpiroumian@apache.org">Konstantin Piroumian</a>
- * @version CVS $Id: XMLResourceBundleFactory.java,v 1.14 2004/04/29 01:00:43 crossley Exp $
+ * @version CVS $Id$
  */
-public class XMLResourceBundleFactory extends DefaultComponentSelector
-        implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
+public class XMLResourceBundleFactory
+       implements BundleFactory, Serviceable, Configurable, Disposable, ThreadSafe, LogEnabled {
 
+    protected Map cache = Collections.synchronizedMap(new HashMap());
+    
     /**
      * Should we load bundles to cache on startup or not?
      */
@@ -108,7 +109,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
     }
 
     public void dispose() {
-        Iterator i = getComponentMap().values().iterator();
+        Iterator i = this.cache.values().iterator();
         while (i.hasNext()) {
             Object bundle = i.next();
             if (bundle instanceof Disposable) {
@@ -321,7 +322,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
         return null;
     }
 
-    public void release(Component component) {
+    public void release(Bundle bundle) {
         // Do nothing
     }
 
@@ -406,17 +407,18 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
      */
     protected XMLResourceBundle selectCached(String fileName) {
         XMLResourceBundle bundle = null;
-        try {
-            bundle = (XMLResourceBundle)super.select(fileName);
+        bundle = (XMLResourceBundle)cache.get(fileName);
+        if (bundle != null) {
             bundle.update(fileName);
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Returning from cache: " + fileName);
             }
-        } catch (ComponentException e) {
+        } else {
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Not found in cache: " + fileName);
             }
         }
+
         return bundle;
     }
 
@@ -456,7 +458,7 @@ public class XMLResourceBundleFactory extends DefaultComponentSelector
             if (getLogger().isDebugEnabled()) {
                 getLogger().debug("Updating cache: " + fileName);
             }
-            super.put(fileName, bundle);
+            this.cache.put(fileName, bundle);
         }
     }
 }
