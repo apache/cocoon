@@ -15,7 +15,7 @@
  <s1 title="What is it?">
 
   <p>
-   <img src="images/cocoon.jpg" alt="Cocoon"/> Cocoon is a 100% pure
+   <img src="images/cocoon2.gif" alt="Cocoon"/> Cocoon is a 100% pure
    Java publishing framework that relies on new W3C
    technologies (such as DOM, XML, and XSL) to provide web content.
   </p>
@@ -177,7 +177,7 @@
   </p>
 
   <p>
-   Thank you very much. <img src="images/cocoon-small.jpg" alt="Powered by Cocoon"/>
+   Thank you very much.
   </p>
  </s1>
  </body>
