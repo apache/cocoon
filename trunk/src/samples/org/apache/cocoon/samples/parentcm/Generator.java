@@ -50,7 +50,6 @@
 */
 package org.apache.cocoon.samples.parentcm;
 
-import org.apache.avalon.excalibur.pool.Poolable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
@@ -69,10 +68,12 @@ import java.util.Map;
  * Where <code><i>current time</i></code> is the current time as obtained from the
  * <code>Time</code> component.
  *
+ * @TODO: POOLED
+ *
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: Generator.java,v 1.2 2003/10/17 17:49:24 bloritsch Exp $
+ * @version CVS $Id: Generator.java,v 1.3 2003/10/22 18:18:36 bloritsch Exp $
  */
-public class Generator extends ServiceableGenerator implements Poolable {
+public class Generator extends ServiceableGenerator {
 
     /**
      * Current time.

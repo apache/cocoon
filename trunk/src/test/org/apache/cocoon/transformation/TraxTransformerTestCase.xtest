@@ -25,40 +25,6 @@
 
  <context/>
 
- <roles>
-  <role name="org.apache.excalibur.xml.sax.SAXParser"
-        shorthand="xml-parser"
-        default-class="org.apache.excalibur.xml.impl.JaxpParser"/>
-
-  <role name="org.apache.excalibur.xmlizer.XMLizer"
-        shorthand="xmlizer"
-        default-class="org.apache.excalibur.xmlizer.DefaultXMLizer"/>
-
-  <role name="org.apache.excalibur.xml.xslt.XSLTProcessor"
-        shorthand="xslt-processor"
-        default-class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl"/>
-
-  <role name="org.apache.excalibur.source.SourceFactorySelector"
-        shorthand="source-factories"
-        default-class="org.apache.avalon.excalibur.component.ExcaliburComponentSelector"/>
-
-  <role name="org.apache.excalibur.source.SourceResolver"
-        shorthand="source-resolver"
-        default-class="org.apache.excalibur.source.impl.SourceResolverImpl"/>
-
-  <role name="org.apache.cocoon.transformation.TransformerSelector"
-        shorthand="transformers"
-        default-class="org.apache.cocoon.components.ExtendedComponentSelector"/>
-
-  <role name="org.apache.excalibur.store.Store/TransientStore"
-        shorthand="transient-store"
-        default-class="org.apache.excalibur.store.impl.MemoryStore"/>
-
-  <role name="org.apache.excalibur.store.Store"
-       shorthand="persistent-store"
-       default-class="org.apache.excalibur.store.impl.MemoryStore"/>
- </roles>
-
  <components>
   <xml-parser class="org.apache.excalibur.xml.impl.JaxpParser">
    <parameter name="validate" value="false"/>
@@ -103,7 +69,7 @@
   </component-instance>
 
   <transformers logger="test">
-   <component-instance class="org.apache.cocoon.transformation.TraxTransformer" 
+   <component-instance class="org.apache.cocoon.transformation.TraxTransformer"
                        name="xalan">
     <use-request-parameters>false</use-request-parameters>
     <use-session-parameters>false</use-session-parameters>
@@ -111,7 +77,7 @@
     <xslt-processor-role>xalan</xslt-processor-role>
    </component-instance>
 
-   <component-instance name="xsltc" 
+   <component-instance name="xsltc"
                        class="org.apache.cocoon.transformation.TraxTransformer">
     <use-request-parameters>false</use-request-parameters>
     <use-session-parameters>false</use-session-parameters>

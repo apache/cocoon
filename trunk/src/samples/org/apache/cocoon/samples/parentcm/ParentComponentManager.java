@@ -50,16 +50,16 @@
 */
 package org.apache.cocoon.samples.parentcm;
 
-import org.apache.avalon.excalibur.component.ExcaliburComponentManager;
 import org.apache.avalon.excalibur.naming.memory.MemoryInitialContextFactory;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.container.ContainerUtil;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.DefaultServiceManager;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
 
 import javax.naming.Context;
 import java.util.Hashtable;
@@ -70,9 +70,9 @@ import java.util.Hashtable;
  * and delegate any requests to it.
  *
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: ParentComponentManager.java,v 1.1 2003/03/09 00:10:03 pier Exp $
+ * @version CVS $Id: ParentComponentManager.java,v 1.2 2003/10/22 18:18:37 bloritsch Exp $
  */
-public class ParentComponentManager implements ComponentManager, LogEnabled, Initializable {
+public class ParentComponentManager implements ServiceManager, LogEnabled, Initializable {
 
     /**
      * Our logger.
@@ -88,17 +88,17 @@ public class ParentComponentManager implements ComponentManager, LogEnabled, Ini
      * The delegate that will be configured and provide the
      * functionality for this component manager.
      */
-    private final ExcaliburComponentManager delegate;
+    private final ServiceManager delegate;
 
     public ParentComponentManager(final String jndiName) {
         this.jndiName = jndiName;
 
         // Initialize it here so we can let it be final.
-        this.delegate = new ExcaliburComponentManager();
+        this.delegate = new DefaultServiceManager();
     }
 
-    public boolean hasComponent(final String role) {
-        return delegate.hasComponent(role);
+    public boolean hasService(final String role) {
+        return delegate.hasService(role);
     }
 
     /**
@@ -125,25 +125,25 @@ public class ParentComponentManager implements ComponentManager, LogEnabled, Ini
 
         // We ignore the setRoleManager call, as ExcaliburComponentManager handles that
         // in configure().
-        this.delegate.enableLogging(logger);
-        this.delegate.contextualize(new DefaultContext());
-        this.delegate.configure(config);
-        this.delegate.initialize();
+        ContainerUtil.enableLogging(delegate, logger);
+        ContainerUtil.contextualize(delegate, new DefaultContext());
+        ContainerUtil.configure(delegate, config);
+        ContainerUtil.initialize(delegate);
 
         this.logger.debug("Component manager successfully initialized.");
     }
 
-    public Component lookup(final String role) throws ComponentException {
+    public Object lookup(final String role) throws ServiceException {
         return this.delegate.lookup(role);
     }
 
-    public void release(final Component component) {
+    public void release(final Object component) {
         this.delegate.release(component);
     }
 
     /**
      * Provide component with a logger.
-     * 
+     *
      * @param logger the logger
      */
     public void enableLogging(Logger logger) {
