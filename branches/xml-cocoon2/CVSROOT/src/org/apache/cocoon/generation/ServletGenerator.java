@@ -17,7 +17,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.environment.Response;
-import org.apache.cocoon.environment.http.HttpContext;
+import org.apache.cocoon.environment.Context;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -25,14 +25,14 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-03-30 17:14:33 $
+ * @version CVS $Revision: 1.1.2.14 $ $Date: 2001-04-02 13:53:09 $
  */
 public abstract class ServletGenerator extends ComposerGenerator
 implements Composer {
 
     protected Request request=null;
     protected Response response=null;
-    protected HttpContext context=null;
+    protected Context context=null;
 
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
@@ -40,6 +40,6 @@ implements Composer {
       super.setup(resolver, objectModel, src, par);
       this.request = (Request) objectModel.get(Constants.REQUEST_OBJECT);
       this.response = (Response) objectModel.get(Constants.RESPONSE_OBJECT);
-      this.context = (HttpContext) objectModel.get(Constants.CONTEXT_OBJECT);
+      this.context = (Context) objectModel.get(Constants.CONTEXT_OBJECT);
     }
 }

@@ -11,20 +11,26 @@
    <xsp:include>org.apache.cocoon.components.language.markup.xsp.XSPUtil</xsp:include>
   </xsp:structure>
 
+  <xsp:logic>
+  File uploadDir = null;
+  /** Contextualize this class */
+  public void contextualize(Context context) {
+    uploadDir = (File) context.get(Constants.CONTEXT_UPLOAD_DIR);
+  }
+  </xsp:logic>
+
   <page>
    <title>This form allows you upload files</title>
    <content>
      <para>
        <form method="post" enctype="multipart/form-data" action="upload">
          File:  <input type="file" name="uploaded_file" size="50" />
-	 <p><input type="submit" value="Upload File" /></p>
+     <p><input type="submit" value="Upload File" /></p>
        </form>
      </para>
      <para>
      <ul>
        <xsp:logic>
-         File workDir = (File) XSPUtil.getContextAttribute(objectModel, "javax.servlet.context.tempdir");
-         File uploadDir = IOUtils.createFile(workDir, "image-dir" + File.separator);
          String[] filelist = uploadDir.list();
          for (int i = 0; i &lt; filelist.length; i++) {
            <li>

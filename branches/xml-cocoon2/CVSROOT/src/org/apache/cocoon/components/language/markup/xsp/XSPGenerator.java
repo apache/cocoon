@@ -14,6 +14,8 @@ import org.apache.cocoon.components.parser.Parser;
 import org.apache.cocoon.components.language.generator.CompiledComponent;
 
 import org.apache.avalon.Poolable;
+import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Context;
 
 import org.apache.cocoon.generation.AbstractServerPage;
 
@@ -21,9 +23,13 @@ import org.apache.cocoon.generation.AbstractServerPage;
  * Base class for XSP-generated <code>ServerPagesGenerator</code> classes
  *
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version CVS $Revision: 1.1.2.16 $ $Date: 2001-03-21 18:51:04 $
+ * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-02 13:53:08 $
  */
-public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent {
+public abstract class XSPGenerator extends AbstractServerPage implements CompiledComponent, Contextualizable {
+
+  /** Contextualize this class */
+  public void contextualize(Context context) {
+  }
 
   /**
    * Set the current <code>ComponentManager</code> instance used by this

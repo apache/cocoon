@@ -10,7 +10,7 @@ package org.apache.cocoon;
 
 /**
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-02-21 14:56:01 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-02 13:53:06 $
  */
 
 public interface Constants {
@@ -60,6 +60,7 @@ public interface Constants {
     String CONTEXT_ROOT_PATH       = "root-path";
     String CONTEXT_CLASS_LOADER    = "class-loader";
     String CONTEXT_WORK_DIR        = "work-directory";
+    String CONTEXT_UPLOAD_DIR      = "upload-directory";
     String CONTEXT_CLASSPATH       = "classpath";
     String CONTEXT_CONFIG_URL      = "config-url";
     String CONTEXT_LOG_DIR         = "log-directory";
