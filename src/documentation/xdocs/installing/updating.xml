@@ -132,6 +132,9 @@
       <em>org.apache.cocoon.components.resolver.Resolver.ROLE</em> anymore; use
       <em>org.apache.excalibur.xml.EntityResolver.ROLE</em> instead.
     </p>
+    <p>The default entities (DTDs, entity sets, etc.) have moved to the
+     WEB-INF/ directory.
+    </p>
    </s2>
    <s2 title="Stores">
     <p>The Store and StoreJanitor components and implementations have been moved to
