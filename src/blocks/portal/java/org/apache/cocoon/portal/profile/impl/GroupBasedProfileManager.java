@@ -197,7 +197,7 @@ public class GroupBasedProfileManager
     /* (non-Javadoc)
      * @see org.apache.cocoon.portal.profile.ProfileManager#getPortalLayout(java.lang.String, java.lang.String)
      */
-    public Layout getPortalLayout(String layoutKey, String layoutID) {
+    public Layout getPortalLayout(String layoutKey, String layoutId) {
         PortalService service = null;
 
         try {
@@ -210,8 +210,18 @@ public class GroupBasedProfileManager
             if ( null != l) {
                 return l;
             }
-            final UserProfile profile = this.getUserProfile(layoutKey);
-            return (Layout)profile.getLayouts().get(layoutID);
+            
+            UserProfile profile = this.getUserProfile(layoutKey);
+            if ( profile == null ) {
+                profile = this.loadProfile(layoutKey, service);
+            }
+            if ( profile == null ) {
+                throw new RuntimeException("Unable to load profile: " + layoutKey);
+            }
+            if ( layoutId != null ) {
+                return (Layout)profile.getLayouts().get(layoutId);
+            }
+            return profile.getRootLayout();
         } catch (Exception ce) {
             throw new CascadingRuntimeException("Exception during loading of profile.", ce);
         } finally {
@@ -267,5 +277,12 @@ public class GroupBasedProfileManager
         }
     }
         
-    
+    /**
+     * Load the profile
+     */
+    protected UserProfile loadProfile(final String layoutKey, final PortalService service) {
+        final UserProfile profile = new UserProfile();
+        
+        return profile;
+    }
 }

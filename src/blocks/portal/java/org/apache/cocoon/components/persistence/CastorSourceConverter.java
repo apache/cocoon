@@ -51,13 +51,13 @@ import org.xml.sax.InputSource;
  * In order to work properly the methods provided by this interface require some 
  * parameters:
  * objectmap : containing a map of objects for resolving references during load
- * profiletype: specifying the mapping (this is one of layout, copletinstancedata, copletdata or copletbasedate
+ * profiletype: specifying the mapping (this is one of layout, copletinstancedata, copletdata or copletbasedata
  * 
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:volker.schmitt@basf-it-services.com">Volker Schmitt</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * 
- * @version CVS $Id: CastorSourceConverter.java,v 1.4 2004/03/05 13:02:07 bdelacretaz Exp $
+ * @version CVS $Id$
  */
 public class CastorSourceConverter
     extends AbstractLogEnabled
@@ -65,19 +65,22 @@ public class CastorSourceConverter
         
     public static final String ROLE = CastorSourceConverter.class.getName();
 
+    public static final String PARAMETER_OBJECTMAP = "objectmap";
+    public static final String PARAMETER_PROFILETYPE = "profiletype";
+    
     private Map mappingSources = new HashMap();
     private ServiceManager manager;
     private Map mappings = new HashMap();
 
     public Object getObject(InputStream stream, Map parameters) throws ConverterException {
         try {
-            ReferenceFieldHandler.setObjectMap((Map)parameters.get("objectmap"));
-            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(parameters.get("profiletype")));
+            ReferenceFieldHandler.setObjectMap((Map)parameters.get(PARAMETER_OBJECTMAP));
+            Unmarshaller unmarshaller = new Unmarshaller((Mapping)this.mappings.get(parameters.get(PARAMETER_PROFILETYPE)));
             Object result = unmarshaller.unmarshal(new InputSource(stream));
             stream.close();
             return result;
         } catch (MappingException e) {
-            throw new ConverterException("can't create Unmarshaller", e);
+            throw new ConverterException("Can't create Unmarshaller", e);
         } catch (Exception e) {
             throw new ConverterException(e.getMessage(), e);
         }
@@ -87,11 +90,11 @@ public class CastorSourceConverter
         Writer writer = new OutputStreamWriter(stream);
 		try {
 			Marshaller marshaller = new Marshaller( writer );
-			marshaller.setMapping((Mapping)this.mappings.get(parameters.get("profiletype")));
+			marshaller.setMapping((Mapping)this.mappings.get(parameters.get(PARAMETER_PROFILETYPE)));
 			marshaller.marshal(object);
 			writer.close();
 		} catch (MappingException e) {
-			throw new ConverterException("can't create Unmarshaller", e);
+			throw new ConverterException("Can't create Unmarshaller", e);
 		} catch (Exception e) {
 			throw new ConverterException(e.getMessage(), e);
 		}
