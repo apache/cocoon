@@ -390,7 +390,7 @@ The <code>formatNumber</code> tag is used to display numeric data, including cur
 Only the <code>value</code> attribute is required. It is used to specify the numeric value that is to be formatted.
 </p>
 <p>
-The value of the <code>type</code> attribute should be either "number", "currency", or "percentage", and indicates what type of numeric value is being formatted. The default value for this attribute is "number". The <code>pattern</code> attribute takes precedence over the <code>type</code> attribute and allows more precise formatting of numeric values following the pattern conventions of the <code>java.text.DecimalFormat</code> class. 
+The value of the <code>type</code> attribute should be either "number", "currency", or "percent", and indicates what type of numeric value is being formatted. The default value for this attribute is "number". The <code>pattern</code> attribute takes precedence over the <code>type</code> attribute and allows more precise formatting of numeric values following the pattern conventions of the <code>java.text.DecimalFormat</code> class. 
 </p>
 <p>
 When the <code>type</code> attribute has a value of "currency", the <code>currencyCode</code> attribute can be used to explicitly specify the currency for the numerical value being displayed. As with language and country codes, currency codes are governed by an ISO standard. This code is used to determine the currency symbol to display as part of the formatted value. 
