@@ -7,32 +7,22 @@
  *****************************************************************************/
 package org.apache.cocoon.generation;
 
-import org.apache.avalon.ThreadSafe;
 import java.io.IOException;
 import java.io.File;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import org.apache.cocoon.caching.Cacheable;
 import org.apache.cocoon.caching.CacheValidity;
 import org.apache.cocoon.caching.TimeStampCacheValidity;
 import org.apache.cocoon.components.parser.Parser;
-import org.apache.cocoon.components.store.Store;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.Roles;
-import org.apache.cocoon.xml.XMLCompiler;
-import org.apache.cocoon.xml.XMLInterpreter;
-import org.apache.cocoon.xml.XMLMulticaster;
 import org.apache.cocoon.util.HashUtil;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.component.ComponentException;
-import org.apache.avalon.configuration.Configurable;
-import org.apache.avalon.configuration.Configuration;
-import org.apache.avalon.configuration.ConfigurationException;
 import org.apache.avalon.configuration.Parameters;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Component;
@@ -42,42 +32,19 @@ import org.apache.avalon.Component;
  *
  * The <code>FileGenerator</code> is a class that reads XML from a source
  * and generates SAX Events.
- *
- * The generator can use a store to store the compiled xml. The compiled
- * xml reduces the processing time as no second parsing for that xml is required.
- * The compiled xml is only generated for local files and can be configured in
- * the sitemap. The generator can get a default behaviour and each sitemap
- * pipeline can override this behaviour.
- * <p>
- * <code>
- * &lt;map:generator name="file" src="org.apache.cocoon.generation.FileGenerator"&gt;<br>
- * &nbsp;&nbsp;&lt;use-store map:value="false"/&gt;<br>
- * &lt;/map:generator&gt;
- * &lt:map:generate type="file"&gt;<br>
- * &nbsp;&nbsp;&lt;parameter name="use-store" value="true"/&gt;<br>
- * &lt;/map:generate&gt;<br>
- * </code>
- * </p>
+ * The FileGenerator implements the <code>Cacheable</code> interface.
  *
  * @author <a href="mailto:fumagalli@exoffice.com">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation, Exoffice Technologies)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Revision: 1.1.2.27 $ $Date: 2001-04-11 12:41:23 $
+ * @version CVS $Revision: 1.1.2.28 $ $Date: 2001-04-12 09:40:03 $
  */
 public class FileGenerator extends ComposerGenerator
-implements Configurable, Cacheable {
-
-    /** The store service instance */
-    private Store store = null;
-
-    /** Is the store turned on? (default is off) */
-    private boolean useStore;
-
-    /** The default configuration for useStore */
-    private boolean defaultUseStore;
+implements Cacheable {
 
     /** The input source */
     private InputSource inputSource;
+    /** The system ID of the input source */
     private String      systemID;
 
     /**
@@ -88,12 +55,15 @@ implements Configurable, Cacheable {
         super.compose(manager);
         try {
             getLogger().debug("Looking up " + Roles.STORE);
-            this.store = (Store) manager.lookup(Roles.STORE);
         } catch (Exception e) {
             getLogger().error("Could not find component", e);
         }
     }
 
+    /**
+     * Recycle this component.
+     * All instance variables are set to <code>null</code>.
+     */
     public void recycle() {
         super.recycle();
         this.inputSource = null;
@@ -101,25 +71,13 @@ implements Configurable, Cacheable {
     }
 
     /**
-     * Configure this generator.
-     */
-    public void configure(Configuration conf)
-    throws ConfigurationException {
-        if (conf != null) {
-            Configuration child = conf.getChild("use-store");
-            this.defaultUseStore = child.getValueAsBoolean(false);
-        }
-    }
-
-    /**
-     * Set the use-store parameter
+     * Setup the file generator.
      */
     public void setup(EntityResolver resolver, Map objectModel, String src, Parameters par)
         throws ProcessingException, SAXException, IOException {
         super.setup(resolver, objectModel, src, par);
         this.inputSource = super.resolver.resolveEntity(null, super.source);
         this.systemID = this.inputSource.getSystemId();
-        this.useStore = par.getParameterAsBoolean("use-store", this.defaultUseStore);
     }
 
     /**
@@ -131,9 +89,8 @@ implements Configurable, Cacheable {
     public long generateKey() {
         if (this.systemID.startsWith("file:") == true) {
             return HashUtil.hash(super.source);
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     /**
@@ -155,69 +112,17 @@ implements Configurable, Cacheable {
      */
     public void generate()
     throws IOException, SAXException, ProcessingException {
+        Parser parser = null;
         try {
-            // Only local files are checked for modification
-            // External files are never stored
-            // Using the entity resolver we get the filename of the current file:
-            // The systemID of such a resource starts with file:.
             getLogger().debug("processing file " + super.source);
             getLogger().debug("file resolved to " + this.systemID);
-            byte[]      cxml = null;
 
-            if (this.useStore == true)
-            {
-                // Is this a local file
-                if (this.systemID.startsWith("file:") == true) {
-                    // Stored is an array of the compiled xml and the caching time
-                    if (store.containsKey(this.systemID) == true) {
-                        Object[] cxmlAndTime = (Object[])store.get(this.systemID);
-                        File xmlFile = new File(this.systemID.substring("file:".length()));
-                        long storedTime = ((Long)cxmlAndTime[1]).longValue();
-                        if (storedTime >= xmlFile.lastModified()) {
-                            cxml = (byte[])cxmlAndTime[0];
-                        }
-                    }
-                }
-            }
+            parser = (Parser)this.manager.lookup(Roles.PARSER);
 
-            if(cxml == null)
-            {
-                Parser parser = (Parser)this.manager.lookup(Roles.PARSER);
-                try {
-                    // use the xmlcompiler for local files if storing is on
-                    if (this.useStore == true && this.systemID.startsWith("file:") == true)
-                    {
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        XMLCompiler compiler = new XMLCompiler();
-                        compiler.setOutputStream(baos);
-                        XMLMulticaster multicaster = new XMLMulticaster(compiler, null,
-                              this.contentHandler, this.lexicalHandler);
+            parser.setContentHandler(super.contentHandler);
+            parser.setLexicalHandler(super.lexicalHandler);
 
-                        parser.setContentHandler(multicaster);
-                        parser.setLexicalHandler(multicaster);
-                        parser.parse(this.inputSource);
-
-                        // Stored is an array of the cxml and the current time
-                        Object[] cxmlAndTime = new Object[2];
-                        cxmlAndTime[0] = baos.toByteArray();
-                        cxmlAndTime[1] = new Long(System.currentTimeMillis());
-                        store.hold(this.systemID, cxmlAndTime);
-                    } else {
-                        parser.setContentHandler(this.contentHandler);
-                        parser.setLexicalHandler(this.lexicalHandler);
-                        parser.parse(this.inputSource);
-                    }
-                } finally {
-                    this.manager.release((Component) parser);
-                }
-            } else {
-                // use the stored cxml
-                ByteArrayInputStream bais = new ByteArrayInputStream(cxml);
-                XMLInterpreter interpreter = new XMLInterpreter();
-                interpreter.setContentHandler(this.contentHandler);
-                interpreter.setEntityResolver(super.resolver);
-                interpreter.parse(bais);
-            }
+            parser.parse(this.inputSource);
         } catch (IOException e) {
             getLogger().error("FileGenerator.generate()", e);
             throw new ResourceNotFoundException("FileGenerator could not find resource", e);
@@ -227,6 +132,8 @@ implements Configurable, Cacheable {
         } catch (Exception e){
             getLogger().error("Could not get parser", e);
             throw new ProcessingException("Exception in FileGenerator.generate()",e);
+        } finally {
+            if (parser != null) this.manager.release((Component) parser);
         }
     }
 }
