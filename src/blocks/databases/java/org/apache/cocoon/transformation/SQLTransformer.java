@@ -86,7 +86,7 @@ import javax.xml.transform.OutputKeys;
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
  * @author <a href="mailto:sven.beauprez@the-ecorp.com">Sven Beauprez</a>
- * @version CVS $Id: SQLTransformer.java,v 1.5 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: SQLTransformer.java,v 1.6 2003/06/11 00:28:31 joerg Exp $
  */
 public class SQLTransformer
   extends AbstractSAXTransformer
@@ -1038,7 +1038,7 @@ public class SQLTransformer
                     sb.append( query.getColumnValue( av.name ) );
                 }
             }
-            
+
             String query = StringUtils.replace(sb.toString().trim(), "\r", " ", -1);
             // Test, if this is an update (by comparing with select)
             if ( !isstoredprocedure && !isupdate) {
@@ -1175,32 +1175,33 @@ public class SQLTransformer
             query_parts.addElement( object );
         }
 
-        protected void serializeData(ComponentManager manager,
-                                     String           value)
-        throws SQLException, SAXException {
+        protected void serializeData(ComponentManager manager, String value)
+                throws SQLException, SAXException {
             if (value != null) {
                 value = value.trim();
                 // Could this be XML ?
                 if (value.length() > 0 && value.charAt(0) == '<') {
                     try {
-                        if (transformer.parser != null) {
+                        if (transformer.parser == null) {
                             transformer.parser = (SAXParser)manager.lookup(SAXParser.ROLE);
                         }
-                        if (transformer.compiler != null) {
-                            compiler = (XMLSerializer)manager.lookup(XMLSerializer.ROLE);
+                        if (transformer.compiler == null) {
+                            transformer.compiler = (XMLSerializer)manager.lookup(XMLSerializer.ROLE);
                         }
-                        if (transformer.interpreter != null) {
-                            interpreter = (XMLDeserializer)manager.lookup(XMLDeserializer.ROLE);
+                        if (transformer.interpreter == null) {
+                            transformer.interpreter = (XMLDeserializer)manager.lookup(XMLDeserializer.ROLE);
                         }
-                        parser.parse(new InputSource(new StringReader("<root>"+value+"</root>")), compiler);
+                        transformer.parser.parse(new InputSource(new StringReader("<root>" + value + "</root>")),
+                                                 transformer.compiler);
 
                         IncludeXMLConsumer filter = new IncludeXMLConsumer(transformer, transformer);
                         filter.setIgnoreRootElement(true);
 
-                        interpreter.setConsumer(filter);
+                        transformer.interpreter.setConsumer(filter);
 
-                        interpreter.deserialize(compiler.getSAXFragment());
+                        transformer.interpreter.deserialize(transformer.compiler.getSAXFragment());
                     } catch (Exception local) {
+                        // FIXME: bad coding "catch(Exception)"
                         // if an exception occured the data was not xml
                         transformer.data(value);
                     }
