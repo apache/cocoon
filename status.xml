@@ -40,7 +40,7 @@
 <!ENTITY uuml             "&#x000FC;">
 ]>
 
-<!-- CVS $Id: status.xml,v 1.140 2003/09/04 07:09:24 giacomo Exp $:-->
+<!-- CVS $Id: status.xml,v 1.141 2003/09/04 08:30:04 bruno Exp $:-->
 
 <status>
  <developers>
@@ -220,7 +220,7 @@
      Added include/exclude feature to CLI to allow fine-tuning of crawling of a site.
    </action>
    <action dev="BRD" type="fix" fixes-bug="18131">
-     Patched util-concurrent.jar so that Tomcat shutdown and continuations
+     Upgraded excalibur-event package so that Tomcat shutdown and continuations
      cleanup now works properly.
    </action>
    <action dev="CZ" type="add">
