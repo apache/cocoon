@@ -61,10 +61,9 @@ import java.util.Map;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Environment.java,v 1.5 2003/07/10 13:17:03 cziegeler Exp $
+ * @version CVS $Id: Environment.java,v 1.6 2003/10/15 18:03:52 cziegeler Exp $
  */
-public interface Environment
-    extends SourceResolver {
+public interface Environment {
 
     /**
      * Get the URI to process. The prefix is stripped off.

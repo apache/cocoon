@@ -76,7 +76,7 @@ import org.apache.excalibur.source.impl.validity.DeferredValidity;
  * @since 2.1
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:Michael.Melhem@managesoft.com">Michael Melhem</a>
- * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.14 2003/09/24 21:41:11 cziegeler Exp $
+ * @version CVS $Id: AbstractCachingProcessingPipeline.java,v 1.15 2003/10/15 18:03:53 cziegeler Exp $
  */
 public abstract class AbstractCachingProcessingPipeline
     extends BaseCachingProcessingPipeline {
@@ -115,10 +115,6 @@ public abstract class AbstractCachingProcessingPipeline
     protected int firstNotCacheableTransformerIndex;
     /** Cache complete response */
     protected boolean cacheCompleteResponse;
-
-    protected boolean   generatorIsCacheableProcessingComponent;
-    protected boolean   serializerIsCacheableProcessingComponent;
-    protected boolean[] transformerIsCacheableProcessingComponent;
 
     /** Smart caching ? */
     protected boolean doSmartCaching;
@@ -306,9 +302,6 @@ public abstract class AbstractCachingProcessingPipeline
         this.toCacheKey = null;
 
         Serializable key = null;
-        this.generatorIsCacheableProcessingComponent = false;
-        this.serializerIsCacheableProcessingComponent = false;
-        this.transformerIsCacheableProcessingComponent = new boolean[this.transformers.size()];
 
         this.firstNotCacheableTransformerIndex = 0;
         this.cacheCompleteResponse = false;
@@ -322,9 +315,6 @@ public abstract class AbstractCachingProcessingPipeline
         // is the generator cacheable?
         if (super.generator instanceof CacheableProcessingComponent) {
             key = ((CacheableProcessingComponent)super.generator).getKey();
-            this.generatorIsCacheableProcessingComponent = true;
-        } else if (super.generator instanceof Cacheable) {
-            key = new Long(((Cacheable)super.generator).generateKey());
         }
 
         if (key != null) {
@@ -345,9 +335,6 @@ public abstract class AbstractCachingProcessingPipeline
                 key = null;
                 if (trans instanceof CacheableProcessingComponent) {
                     key = ((CacheableProcessingComponent)trans).getKey();
-                    this.transformerIsCacheableProcessingComponent[this.firstNotCacheableTransformerIndex] = true;
-                } else if (trans instanceof Cacheable) {
-                    key = new Long(((Cacheable)trans).generateKey());
                 }
                 if (key != null) {
                     this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Transformer,
@@ -367,9 +354,6 @@ public abstract class AbstractCachingProcessingPipeline
                 key = null;
                 if (super.serializer instanceof CacheableProcessingComponent) {
                     key = ((CacheableProcessingComponent)this.serializer).getKey();
-                    this.serializerIsCacheableProcessingComponent = true;
-                } else if (this.serializer instanceof Cacheable) {
-                    key = new Long(((Cacheable)this.serializer).generateKey());
                 }
                 if (key != null) {
                     this.toCacheKey.addKey(this.newComponentCacheKey(ComponentCacheKey.ComponentType_Serializer,
@@ -691,12 +675,8 @@ public abstract class AbstractCachingProcessingPipeline
 
             // test if reader is cacheable
             Serializable readerKey = null;
-            boolean isCacheableProcessingComponent = false;
             if (super.reader instanceof CacheableProcessingComponent) {
                 readerKey = ((CacheableProcessingComponent)super.reader).getKey();
-                isCacheableProcessingComponent = true;
-            } else if (super.reader instanceof Cacheable) {
-                readerKey = new Long(((Cacheable)super.reader).generateKey());
             }
 
             if ( readerKey != null) {
@@ -734,14 +714,8 @@ public abstract class AbstractCachingProcessingPipeline
                         boolean valid = false;
                         if ( result == 0 ) {
                             // get reader validity and compare
-                            if (isCacheableProcessingComponent) {
-                                readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
-                            } else {
-                                CacheValidity cv = ((Cacheable)super.reader).generateValidity();
-                                if ( cv != null ) {
-                                    readerValidity = CacheValidityToSourceValidity.createValidity( cv );
-                                }
-                            }
+                            readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
+
                             if (readerValidity != null) {
                                 result = cachedValidity.isValid(readerValidity);
                                 if ( result == 0 ) {
@@ -783,14 +757,7 @@ public abstract class AbstractCachingProcessingPipeline
                         this.getLogger().debug("processReader: caching content for further requests of '" + environment.getURI() + "'.");
                     }
                     if (readerValidity == null) {
-                        if (isCacheableProcessingComponent) {
-                            readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
-                        } else {
-                            CacheValidity cv = ((Cacheable)super.reader).generateValidity();
-                            if ( cv != null ) {
-                                readerValidity = CacheValidityToSourceValidity.createValidity( cv );
-                            }
-                        }
+                        readerValidity = ((CacheableProcessingComponent)super.reader).getValidity();
                     }
                     if (readerValidity != null) {
                         outputStream = environment.getOutputStream(this.outputBufferSize);
@@ -906,32 +873,17 @@ public abstract class AbstractCachingProcessingPipeline
 
         if (index == 0) {
             // test generator
-            if (this.generatorIsCacheableProcessingComponent) {
-                validity = ((CacheableProcessingComponent)super.generator).getValidity();
-                if(debug) msg += "generator: using getValidity";
-            } else {
-                validity = CacheValidityToSourceValidity.createValidity(((Cacheable)super.generator).generateValidity());
-                if(debug) msg += "generator: using generateValidity";
-            }
+            validity = ((CacheableProcessingComponent)super.generator).getValidity();
+            if(debug) msg += "generator: using getValidity";
         } else if (index <= firstNotCacheableTransformerIndex) {
             // test transformer
             final Transformer trans = (Transformer)super.transformers.get(index-1);
-            if (this.transformerIsCacheableProcessingComponent[index-1]) {
-                validity = ((CacheableProcessingComponent)trans).getValidity();
-                if(debug) msg += "transformer: using getValidity";
-            } else {
-                validity = CacheValidityToSourceValidity.createValidity(((Cacheable)trans).generateValidity());
-                if(debug) msg += "transformer: using generateValidity";
-            }
+            validity = ((CacheableProcessingComponent)trans).getValidity();
+            if(debug) msg += "transformer: using getValidity";
         } else {
             // test serializer
-            if (this.serializerIsCacheableProcessingComponent) {
-                validity = ((CacheableProcessingComponent)super.serializer).getValidity();
-                if(debug) msg += "serializer: using getValidity";
-            } else {
-                validity = CacheValidityToSourceValidity.createValidity(((Cacheable)super.serializer).generateValidity());
-                if(debug) msg += "serializer: using generateValidity";
-            }
+            validity = ((CacheableProcessingComponent)super.serializer).getValidity();
+            if(debug) msg += "serializer: using getValidity";
         }
 
         if(debug) {
@@ -954,7 +906,6 @@ public abstract class AbstractCachingProcessingPipeline
         this.fromCacheKey = null;
         this.cachedResponse = null;
         
-        this.transformerIsCacheableProcessingComponent = null;
         this.toCacheKey = null;
         this.toCacheSourceValidities = null;
 

@@ -63,14 +63,10 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.CocoonComponentManager;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.util.BufferedOutputStream;
-import org.apache.cocoon.util.ClassUtils;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
-import org.apache.excalibur.source.SourceException;
-import org.xml.sax.SAXException;
 
 /**
  * Base class for any environment
@@ -78,9 +74,11 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: AbstractEnvironment.java,v 1.16 2003/09/18 14:40:25 vgritsenko Exp $
+ * @version CVS $Id: AbstractEnvironment.java,v 1.17 2003/10/15 18:03:52 cziegeler Exp $
  */
-public abstract class AbstractEnvironment extends AbstractLogEnabled implements Environment {
+public abstract class AbstractEnvironment 
+    extends AbstractLogEnabled 
+    implements Environment {
 
     /** The current uri in progress */
     protected String uris;
@@ -345,59 +343,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     }
 
     /**
-     * Resolve an entity.
-     * @deprecated Use the resolveURI methods instead
-     */
-    public Source resolve(String systemId)
-    throws ProcessingException, SAXException, IOException {
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        if (getLogger().isDebugEnabled()) {
-            this.getLogger().debug("Resolving '"+systemId+"' in context '" + this.context + "'");
-        }
-        if (systemId == null) throw new SAXException("Invalid System ID");
-
-        // get the wrapper class - we don't want to import the wrapper directly
-        // to avoid a direct dependency from the core to the deprecation package
-        Class clazz;
-        try {
-            clazz = ClassUtils.loadClass("org.apache.cocoon.components.source.impl.AvalonToCocoonSourceInvocationHandler");
-        } catch (Exception e) {
-            throw new ProcessingException("The deprecated resolve() method of the environment was called."
-                                          +"Please either update your code to use the new resolveURI() method or"
-                                          +" install the deprecation support.", e);
-        }
-        if ( null == avalonToCocoonSourceWrapper ) {
-            synchronized (this.getClass()) {
-                try {
-                    avalonToCocoonSourceWrapper = clazz.getDeclaredMethod("createProxy",
-                           new Class[] {ClassUtils.loadClass("org.apache.excalibur.source.Source"),
-                                        ClassUtils.loadClass("org.apache.excalibur.source.SourceResolver"),
-                                        ClassUtils.loadClass(Environment.class.getName()),
-                                        ClassUtils.loadClass(ComponentManager.class.getName())});
-                } catch (Exception e) {
-                    throw new ProcessingException("The deprecated resolve() method of the environment was called."
-                                                  +"Please either update your code to use the new resolveURI() method or"
-                                                  +" install the deprecation support.", e);
-                }
-            }
-           
-        }
-        try {
-            org.apache.excalibur.source.Source source = this.resolveURI( systemId );
-            Source wrappedSource;
-            wrappedSource = (Source)avalonToCocoonSourceWrapper.invoke(clazz,
-                        new Object[] {source, this.sourceResolver, this, this.manager});
-            return wrappedSource;
-        } catch (SourceException se) {
-            throw SourceUtil.handle(se);
-        } catch (Exception e) {
-            throw new ProcessingException("Unable to create source wrapper.", e);
-        }
-    }
-
-    /**
      * Check if the response has been modified since the same
      * "resource" was requested.
      * The caller has to test if it is really the same "resource"
@@ -488,37 +433,6 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             this.secureOutputStream.realFlush();
         } else if ( this.outputStream != null ){
             this.outputStream.flush();
-        }
-    }
-
-    /**
-     * Get a <code>Source</code> object.
-     */
-    public org.apache.excalibur.source.Source resolveURI(final String location)
-    throws MalformedURLException, IOException, SourceException
-    {
-        return this.resolveURI(location, null, null);
-    }
-
-    /**
-     * Get a <code>Source</code> object.
-     */
-    public org.apache.excalibur.source.Source resolveURI(final String location,
-                                                         String baseURI,
-                                                         final Map    parameters)
-    throws MalformedURLException, IOException, SourceException {
-        if ( !this.initializedComponents) {
-            this.initComponents();
-        }
-        return this.sourceResolver.resolveURI(location, baseURI, parameters);
-    }
-
-    /**
-     * Releases a resolved resource
-     */
-    public void release( final org.apache.excalibur.source.Source source ) {
-        if ( null != source ) {
-            this.sourceResolver.release( source );
         }
     }
 
