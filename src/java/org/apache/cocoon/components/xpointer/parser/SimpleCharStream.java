@@ -332,7 +332,7 @@ public class SimpleCharStream {
             new java.io.InputStreamReader(dstream),
             startline,
             startcolumn,
-            4096);
+            buffersize);
     }
 
     public SimpleCharStream(
@@ -355,7 +355,7 @@ public class SimpleCharStream {
             new java.io.InputStreamReader(dstream),
             startline,
             startcolumn,
-            4096);
+            buffersize);
     }
 
     public void ReInit(java.io.InputStream dstream) {
