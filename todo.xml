@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  CVS $Id: todo.xml,v 1.8 2003/03/21 08:59:06 tcurdt Exp $
+  CVS $Id: todo.xml,v 1.9 2003/03/23 07:17:16 crossley Exp $
 -->
 
 <todo title="Things To Do">
@@ -92,6 +92,11 @@
   <action context="code" assigned-to="open">
    Finish the
    <link href="plan/samples.html">refactoring of samples</link>
+  </action>
+
+  <action context="build" assigned-to="open">
+   Bring back the check-jars functionality. This verified that all jars
+   were properly described. It was lost the the recent build re-factoring.
   </action>
 
   <action context="code" assigned-to="open">
