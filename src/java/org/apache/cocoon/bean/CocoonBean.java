@@ -94,7 +94,7 @@ import java.util.Map;
  * @author <a href="mailto:nicolaken@apache.org">Nicola Ken Barozzi</a>
  * @author <a href="mailto:vgritsenko@apache.org">Vadim Gritsenko</a>
  * @author <a href="mailto:uv@upaya.co.uk">Upayavira</a>
- * @version CVS $Id: CocoonBean.java,v 1.36 2003/10/13 12:08:10 upayavira Exp $
+ * @version CVS $Id: CocoonBean.java,v 1.37 2003/10/17 14:08:29 upayavira Exp $
  */
 public class CocoonBean extends CocoonWrapper {
 
@@ -368,7 +368,9 @@ public class CocoonBean extends CocoonWrapper {
             this.initialize();
         }
 
-        readChecksumFile();
+        if (this.checksumsURI != null) {
+            readChecksumFile();
+        }
         
         if (crawler.getRemainingCount()==0) {
             super.precompile();
@@ -384,7 +386,9 @@ public class CocoonBean extends CocoonWrapper {
             }
         }
         
-        writeChecksumFile();
+        if (this.checksumsURI != null) {
+            writeChecksumFile();
+        }
         
         if (log.isInfoEnabled()) {
               log.info(
