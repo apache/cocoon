@@ -1489,7 +1489,7 @@
 
   <project name="nekodtd">
     <package>org.cyberneko.dtd</package>
-    <jar name="lib/optional/nekodtd-0.1.10.jar"/>
+    <jar name="lib/optional/nekodtd-0.1.11.jar"/>
   </project>  
 
   <project name="daisy-htmlcleaner">
