@@ -123,7 +123,7 @@ import org.apache.log.output.ServletOutputLogTarget;
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:leo.sutic@inspireinfrastructure.com">Leo Sutic</a>
- * @version CVS $Id: CocoonServlet.java,v 1.12 2003/08/01 10:06:41 cziegeler Exp $
+ * @version CVS $Id: CocoonServlet.java,v 1.13 2003/08/01 10:28:38 cziegeler Exp $
  */
 public class CocoonServlet extends HttpServlet {
 
@@ -823,8 +823,15 @@ public class CocoonServlet extends HttpServlet {
             //Configure the logkit management
             String logkitConfig = getInitParameter("logkit-config", "/WEB-INF/logkit.xconf");
 
-            InputStream is = this.servletContext.getResourceAsStream(logkitConfig);
-            if (is == null) is = new FileInputStream(logkitConfig);
+            // test if this is a qualified url
+            InputStream is = null;
+            if ( logkitConfig.indexOf(':') == -1) {
+                is = this.servletContext.getResourceAsStream(logkitConfig);
+                if (is == null) is = new FileInputStream(logkitConfig);
+            } else {
+                URL logkitURL = new URL(logkitConfig);
+                is = logkitURL.openStream();
+            }
             final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
             final Configuration conf = builder.build(is);
             logKitManager.configure(conf);
