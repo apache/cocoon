@@ -33,7 +33,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * Base class for XMLPipe's. Allows the structure of the source code of
  * the XMLPipe to match the structure of the data being transformed.
  *
- * @version $Id: EffectPipe.java,v 1.7 2004/04/14 18:01:22 joerg Exp $
+ * @version $Id: EffectPipe.java,v 1.8 2004/04/29 08:46:19 cziegeler Exp $
  */
 public class EffectPipe extends AbstractXMLPipe {
 
@@ -185,31 +185,31 @@ public class EffectPipe extends AbstractXMLPipe {
             super.endPrefixMapping(input.prefix);
         }
 
-        public void element(String prefix, String uri, String loc, Attributes attrs) throws SAXException {
+        public void element(String prefix, String uri, String loc, Attributes attrs) {
             element = new Element(uri, loc, prefix + ":" + loc, attrs);
         }
 
-        public void element(String prefix, String uri, String loc) throws SAXException {
+        public void element(String prefix, String uri, String loc) {
             element(prefix, uri, loc, null);
         }
 
-        public void element(String loc, Attributes attrs) throws SAXException {
+        public void element(String loc, Attributes attrs) {
             element = new Element("", loc, loc, attrs);
         }
 
-        public void element(String loc) throws SAXException {
+        public void element(String loc) {
             element(loc, null);
         }
 
-        public void element() throws SAXException {
+        public void element() {
             element = new Element(input.uri, input.loc, input.raw, input.attrs);
         }
 
-        public void attribute(String prefix, String uri, String name, String value) throws SAXException {
+        public void attribute(String prefix, String uri, String name, String value) {
             element.addAttribute(prefix, uri, name, value);
         }
 
-        public void attribute(String name, String value) throws SAXException {
+        public void attribute(String name, String value) {
             element.addAttribute(name, value);
         }
 
@@ -222,11 +222,11 @@ public class EffectPipe extends AbstractXMLPipe {
             }
         }
 
-        public void attributes(Attributes attrs) throws SAXException {
+        public void attributes(Attributes attrs) {
             element.addAttributes(attrs);
         }
 
-        public void attributes() throws SAXException {
+        public void attributes() {
             attributes(input.attrs);
         }
 
