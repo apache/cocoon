@@ -66,6 +66,13 @@ Test 3.2 This should be followed by two bullet points with one line of text in b
 and this is not part of bullet one.
 * But this is bullet two.
 
+Test 3.3 This should be followed by 4 bullet points with no text in between them:
+
+* Bullet 3.3.1, adding some ''italic'' should not break the bullet point in two
+* Bullet 3.3.2, adding some __bold__ should not break the bullet point in two
+* Bullet 3.3.3, adding some {{monospaced}} should not break the bullet point in two
+* Bullet 3.3.4, adding some ''italic'', __bold__, and {{monospaced}} should not break the bullet point in two
+
 -- 4.TEXT ATTRIBUTES --
 
 Test 4.1 The words __bold__, ''italic'' and {{monospaced}} in this phrase should be displayed with the corresponding attributes.
