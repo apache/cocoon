@@ -17,9 +17,9 @@ package org.apache.cocoon.mail;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.cocoon.mail.command.AbstractMailCommand;
 
 /**
@@ -32,7 +32,7 @@ import org.apache.cocoon.mail.command.AbstractMailCommand;
  *
  * @author Bernhard Huber
  * @since 28. Dezember 2002
- * @version CVS $Id: MailCommandBuilder.java,v 1.4 2004/03/05 13:02:00 bdelacretaz Exp $
+ * @version CVS $Id: MailCommandBuilder.java,v 1.5 2004/05/26 01:56:28 joerg Exp $
  */
 public class MailCommandBuilder extends AbstractLogEnabled {
 
@@ -66,9 +66,7 @@ public class MailCommandBuilder extends AbstractLogEnabled {
             if (clazz != null) {
                 ama = (AbstractMailCommand) clazz.newInstance();
                 // enable logging of the mail command
-                if (ama instanceof LogEnabled) {
-                    ((LogEnabled) ama).enableLogging(getLogger());
-                }
+                ama.enableLogging(getLogger());
                 // contextualize the mail command
                 if (ama instanceof Contextualizable) {
                     ((Contextualizable) ama).contextualize(mailContext);

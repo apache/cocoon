@@ -15,7 +15,6 @@
  */
 package org.apache.cocoon.components.treeprocessor.sitemap;
 
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.cocoon.components.treeprocessor.AbstractProcessingNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -26,7 +25,7 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNode;
  *
  * @author <a href="mailto:ovidiu@apache.org">Ovidiu Predescu</a>
  * @since March 25, 2002
- * @version CVS $Id: ContinueNodeBuilder.java,v 1.3 2004/03/05 13:02:52 bdelacretaz Exp $
+ * @version CVS $Id: ContinueNodeBuilder.java,v 1.4 2004/05/26 01:56:28 joerg Exp $
  */
 public class ContinueNodeBuilder extends AbstractProcessingNodeBuilder
 {
@@ -39,8 +38,8 @@ public class ContinueNodeBuilder extends AbstractProcessingNodeBuilder
 
     this.node = new ContinueNode(contId);
     this.treeBuilder.setupNode(this.node, config);
-    if (node instanceof Configurable)
-      ((Configurable)this.node).configure(config);
+
+    this.node.configure(config);
 
     return this.node;
   }
