@@ -376,7 +376,7 @@
       available to the Java developers using a Java-like syntax.
     </description>
     <used-by>BSF Block (Script generator, script action)</used-by>
-    <lib>optional/groovy-1.0-beta-6.jar</lib>
+    <lib>optional/groovy-1.0-beta-7.jar</lib>
     <homepage>http://groovy.codehaus.org/</homepage>
   </file>
 
