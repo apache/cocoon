@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.apache.avalon.util.cli.CLArgsParser;
-import org.apache.avalon.util.cli.CLOption;
-import org.apache.avalon.util.cli.CLOptionDescriptor;
-import org.apache.avalon.util.cli.CLUtil;
+import org.apache.excalibur.cli.CLArgsParser;
+import org.apache.excalibur.cli.CLOption;
+import org.apache.excalibur.cli.CLOptionDescriptor;
+import org.apache.excalibur.cli.CLUtil;
 import org.apache.avalon.DefaultContext;
 
 import org.apache.cocoon.util.IOUtils;
@@ -51,7 +51,7 @@ import org.apache.log.LogTarget;
  * Command line entry point.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Revision: 1.1.4.28 $ $Date: 2001-04-02 16:35:50 $
+ * @version CVS $Revision: 1.1.4.29 $ $Date: 2001-04-17 03:55:01 $
  */
 
 public class Main {

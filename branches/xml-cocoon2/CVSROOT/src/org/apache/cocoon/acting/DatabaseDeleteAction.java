@@ -33,7 +33,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
-import org.apache.avalon.util.datasource.DataSourceComponent;
+import org.apache.excalibur.datasource.DataSourceComponent;
 
 /**
  * Delete a record from a database.  This Action assumes that all
@@ -43,7 +43,7 @@ import org.apache.avalon.util.datasource.DataSourceComponent;
  * the keys.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.12 $ $Date: 2001-04-11 12:41:13 $
+ * @version CVS $Revision: 1.1.2.13 $ $Date: 2001-04-17 03:55:10 $
  */
 public final class DatabaseDeleteAction extends AbstractDatabaseAction {
     private static final Map deleteStatements = new HashMap();

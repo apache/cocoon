@@ -29,7 +29,7 @@ import org.apache.avalon.Composer;
 import org.apache.avalon.Component;
 import org.apache.avalon.Poolable;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.util.datasource.DataSourceComponent;
+import org.apache.excalibur.datasource.DataSourceComponent;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Roles;
@@ -50,7 +50,7 @@ import org.xml.sax.ext.LexicalHandler;
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
  * @author <a href="mailto:giacomo.pati@pwr.ch">Giacomo Pati</a>
  *         (PWR Organisation & Entwicklung)
- * @version CVS $Revision: 1.1.2.22 $ $Date: 2001-04-13 16:02:27 $ $Author: dims $
+ * @version CVS $Revision: 1.1.2.23 $ $Date: 2001-04-17 03:55:17 $ $Author: donaldp $
  */
 
 public class SQLTransformer extends AbstractTransformer implements Composer, Loggable, Poolable, Disposable {

@@ -33,14 +33,14 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.Request;
 import org.apache.cocoon.generation.ImageDirectoryGenerator;
-import org.apache.avalon.util.datasource.DataSourceComponent;
+import org.apache.excalibur.datasource.DataSourceComponent;
 
 /**
  * Update a record in a database.  This Action assumes that there is
  * only one table at a time to update.
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @version CVS $Revision: 1.1.2.17 $ $Date: 2001-04-11 12:41:14 $
+ * @version CVS $Revision: 1.1.2.18 $ $Date: 2001-04-17 03:55:10 $
  */
 public class DatabaseUpdateAction extends AbstractDatabaseAction {
     private static final Map updateStatements = new HashMap();

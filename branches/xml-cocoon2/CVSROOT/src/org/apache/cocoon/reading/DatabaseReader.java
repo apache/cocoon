@@ -13,7 +13,7 @@ import org.apache.avalon.ComponentSelector;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Disposable;
-import org.apache.avalon.util.datasource.DataSourceComponent;
+import org.apache.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.configuration.Configurable;
 import org.apache.avalon.configuration.Configuration;
 import org.apache.avalon.configuration.ConfigurationException;
