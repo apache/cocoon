@@ -30,3 +30,8 @@ To get it running add these components to the cocoon.xconf:
 <!-- This is a sample target, that is called as configured in the sample above -->
 <component role="org.apache.avalon.cornerstone.services.scheduler.Target/test" 
            class="org.apache.cocoon.components.scheduler.TestTarget"/>
+           
+For more information, see:
+
+http://wiki.cocoondev.org/Wiki.jsp?page=Scheduler
+
