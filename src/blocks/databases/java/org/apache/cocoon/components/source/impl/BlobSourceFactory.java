@@ -74,7 +74,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: BlobSourceFactory.java,v 1.2 2003/03/16 18:03:54 vgritsenko Exp $
+ * @version CVS $Id: BlobSourceFactory.java,v 1.1 2003/06/23 17:53:42 cziegeler Exp $
  */
 public class BlobSourceFactory
   extends AbstractLogEnabled
