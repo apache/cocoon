@@ -58,7 +58,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.avalon.framework.CascadingRuntimeException;
-import org.apache.avalon.framework.CascadingThrowable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
@@ -79,10 +78,10 @@ import org.apache.cocoon.portal.util.DeltaApplicableReferencesAdjustable;
 import org.apache.cocoon.webapps.authentication.AuthenticationManager;
 import org.apache.cocoon.webapps.authentication.user.RequestState;
 import org.apache.cocoon.webapps.authentication.user.UserHandler;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.excalibur.source.SourceNotFoundException;
 import org.apache.excalibur.source.SourceValidity;
 import org.exolab.castor.mapping.Mapping;
-import org.xml.sax.SAXException;
 
 /**
  * The profile manager using the authentication framework
@@ -92,7 +91,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Björn Lütkemeier</a>
  * 
- * @version CVS $Id: AuthenticationProfileManager.java,v 1.1 2003/05/27 11:54:18 cziegeler Exp $
+ * @version CVS $Id: AuthenticationProfileManager.java,v 1.2 2003/05/27 12:24:36 cziegeler Exp $
  */
 public class AuthenticationProfileManager 
     extends AbstractLogEnabled 
@@ -471,13 +470,7 @@ public class AuthenticationProfileManager
 			if (t instanceof SourceNotFoundException) {
                 return true;
 			}
-            if (t instanceof CascadingThrowable) {
-                t = ((CascadingThrowable)t).getCause();
-            } else if ( t instanceof SAXException ) {
-                t = ((SAXException)t).getCause();
-            } else {
-                t = null;
-            }
+            t = ExceptionUtils.getCause(t);
 		}
 		return false;
 	}
