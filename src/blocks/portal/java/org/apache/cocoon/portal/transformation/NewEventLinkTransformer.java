@@ -17,8 +17,6 @@ package org.apache.cocoon.portal.transformation;
 
 import java.util.Stack;
 
-import org.apache.avalon.framework.service.ServiceException;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.CopletLinkEvent;
 import org.xml.sax.Attributes;
@@ -56,7 +54,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *   
  * @author <a href="mailto:gernot.koller@rizit.at">Gernot Koller</a>
  * 
- * @version CVS $Id: NewEventLinkTransformer.java,v 1.6 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: NewEventLinkTransformer.java,v 1.7 2004/03/16 09:16:59 cziegeler Exp $
  */
 public class NewEventLinkTransformer extends AbstractCopletTransformer {
     /**
@@ -172,46 +170,37 @@ public class NewEventLinkTransformer extends AbstractCopletTransformer {
         // if attribute found that contains a link
         if (link != null) {
             CopletInstanceData cid = this.getCopletInstanceData();
-            PortalService portalService = null;
-            try {
-                portalService = (PortalService) this.manager.lookup(PortalService.ROLE);
-                // create event link
-                CopletLinkEvent event = new CopletLinkEvent(cid, link);
-                String eventLink = portalService.getComponentManager().getLinkService().getLinkURI(event);
+            // create event link
+            CopletLinkEvent event = new CopletLinkEvent(cid, link);
+            String eventLink = this.getPortalService().getComponentManager().getLinkService().getLinkURI(event);
 
-                //form elements need hidden inputs to change request parameters
-                if (formSpecialTreatment) {
-                    int begin =
-                        eventLink.indexOf("cocoon-portal-action=")
-                            + "cocoon-portal-action=".length();
-                    int end = eventLink.indexOf('&', begin);
-                    if (end == -1) {
-                        end = eventLink.length();
-                    }
-
-                    portalAction = eventLink.substring(begin, end);
-
-                    begin =
-                        eventLink.indexOf("cocoon-portal-event=")
-                            + "cocoon-portal-event=".length();
-                    end = eventLink.indexOf('&', begin);
-                    if (end == -1) {
-                        end = eventLink.length();
-                    }
-                    portalEvent = eventLink.substring(begin, end);
-
-                    eventLink =
-                        eventLink.substring(0, eventLink.indexOf('?'));
+            //form elements need hidden inputs to change request parameters
+            if (formSpecialTreatment) {
+                int begin =
+                    eventLink.indexOf("cocoon-portal-action=")
+                        + "cocoon-portal-action=".length();
+                int end = eventLink.indexOf('&', begin);
+                if (end == -1) {
+                    end = eventLink.length();
                 }
 
-                // insert event link
-                newAttributes.setValue(index, eventLink);
+                portalAction = eventLink.substring(begin, end);
+
+                begin =
+                    eventLink.indexOf("cocoon-portal-event=")
+                        + "cocoon-portal-event=".length();
+                end = eventLink.indexOf('&', begin);
+                if (end == -1) {
+                    end = eventLink.length();
+                }
+                portalEvent = eventLink.substring(begin, end);
+
+                eventLink =
+                    eventLink.substring(0, eventLink.indexOf('?'));
             }
-            catch (ServiceException e) {
-                throw new SAXException(e);
-            } finally {
-                this.manager.release(portalService);
-            }
+
+            // insert event link
+            newAttributes.setValue(index, eventLink);
         }
 
         elementStack.push(elementName);

@@ -19,10 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.avalon.framework.service.ServiceException;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.portal.LinkService;
-import org.apache.cocoon.portal.PortalService;
 import org.apache.cocoon.portal.coplet.CopletInstanceData;
 import org.apache.cocoon.portal.event.impl.ChangeCopletInstanceAspectDataEvent;
 import org.apache.cocoon.portal.event.impl.CopletJXPathEvent;
@@ -53,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:bluetkemeier@s-und-n.de">Bj&ouml;rn L&uuml;tkemeier</a>
- * @version CVS $Id: CopletTransformer.java,v 1.16 2004/03/05 13:02:16 bdelacretaz Exp $
+ * @version CVS $Id: CopletTransformer.java,v 1.17 2004/03/16 09:16:59 cziegeler Exp $
  */
 public class CopletTransformer 
 extends AbstractCopletTransformer {
@@ -133,64 +131,56 @@ extends AbstractCopletTransformer {
             }
                 
         } else if (name.equals(LINK_ELEM)) {
-            PortalService portalService = null;
-            try {
-                portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
 
-                final LinkService linkService = portalService.getComponentManager().getLinkService();
-                final String format = attr.getValue("format");
-                AttributesImpl newAttrs = new AttributesImpl();
-                newAttrs.setAttributes(attr);
-                newAttrs.removeAttribute("format");
+            final LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+            final String format = attr.getValue("format");
+            AttributesImpl newAttrs = new AttributesImpl();
+            newAttrs.setAttributes(attr);
+            newAttrs.removeAttribute("format");
 
-                if ( attr.getValue("href") != null ) {
-                    final CopletInstanceData cid = this.getCopletInstanceData();
-                    ChangeCopletInstanceAspectDataEvent event = new ChangeCopletInstanceAspectDataEvent(cid, null, null);
-                    
-                    String value = linkService.getLinkURI(event);
-                    if (value.indexOf('?') == -1) {
-                        value = value + '?' + attr.getValue("href");
-                    } else {
-                        value = value + '&' + attr.getValue("href");
-                    }
-                    newAttrs.removeAttribute("href");
-                    this.output(value, format, newAttrs );
+            if ( attr.getValue("href") != null ) {
+                final CopletInstanceData cid = this.getCopletInstanceData();
+                ChangeCopletInstanceAspectDataEvent event = new ChangeCopletInstanceAspectDataEvent(cid, null, null);
+                
+                String value = linkService.getLinkURI(event);
+                if (value.indexOf('?') == -1) {
+                    value = value + '?' + attr.getValue("href");
                 } else {
-                    final String path = attr.getValue("path");
-                    final String value = attr.getValue("value");
-                    
-                    newAttrs.removeAttribute("path");
-                    newAttrs.removeAttribute("value");
-                    
-                    JXPathEvent event = null;
-                    if ( attr.getValue("layout") != null ) {
-                        newAttrs.removeAttribute("layout");
-                        final String layoutId = attr.getValue("layout");
-                        Object layout = portalService.getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
-                        if ( layout != null ) {
-                            event = new JXPathEvent(layout, path, value);
-                        }
-                    } else {
-                        String copletId = attr.getValue("coplet");
-                        newAttrs.removeAttribute("coplet");
-                        final CopletInstanceData cid = this.getCopletInstanceData(copletId);
-                        if ( cid != null ) {
-                            event = new CopletJXPathEvent(cid, path, value);
-                        }
+                    value = value + '&' + attr.getValue("href");
+                }
+                newAttrs.removeAttribute("href");
+                this.output(value, format, newAttrs );
+            } else {
+                final String path = attr.getValue("path");
+                final String value = attr.getValue("value");
+                
+                newAttrs.removeAttribute("path");
+                newAttrs.removeAttribute("value");
+                
+                JXPathEvent event = null;
+                if ( attr.getValue("layout") != null ) {
+                    newAttrs.removeAttribute("layout");
+                    final String layoutId = attr.getValue("layout");
+                    Object layout = this.getPortalService().getComponentManager().getProfileManager().getPortalLayout(null, layoutId);
+                    if ( layout != null ) {
+                        event = new JXPathEvent(layout, path, value);
                     }
-                    if ( this.insideLinks ) {
-                        if ( event != null ) {
-                            this.collectedEvents.add(event);
-                        }
-                    } else {
-                        final String href = linkService.getLinkURI(event);
-                        this.output(href, format, newAttrs );
+                } else {
+                    String copletId = attr.getValue("coplet");
+                    newAttrs.removeAttribute("coplet");
+                    final CopletInstanceData cid = this.getCopletInstanceData(copletId);
+                    if ( cid != null ) {
+                        event = new CopletJXPathEvent(cid, path, value);
                     }
                 }
-            } catch (ServiceException e) {
-                throw new SAXException("Error getting portal service.", e);
-            } finally {
-                this.manager.release( portalService );
+                if ( this.insideLinks ) {
+                    if ( event != null ) {
+                        this.collectedEvents.add(event);
+                    }
+                } else {
+                    final String href = linkService.getLinkURI(event);
+                    this.output(href, format, newAttrs );
+                }
             }
         } else if (name.equals(LINKS_ELEM) ) {
             this.insideLinks = true;
@@ -221,19 +211,12 @@ extends AbstractCopletTransformer {
         } else if ( name.equals(LINKS_ELEM) ) {
             this.insideLinks = false;
             final String format = (String)this.stack.pop();
-            PortalService portalService = null;
-            try {
-                portalService = (PortalService)this.manager.lookup(PortalService.ROLE);
-                final LinkService linkService = portalService.getComponentManager().getLinkService();
-                
-                final String href = linkService.getLinkURI(this.collectedEvents);
-                final AttributesImpl newAttrs = new AttributesImpl();
-                this.output(href, format, newAttrs );
-            } catch (ServiceException e) {
-                throw new SAXException("Error getting portal service.", e);
-            } finally {
-                this.manager.release( portalService );
-            }
+            final LinkService linkService = this.getPortalService().getComponentManager().getLinkService();
+            
+            final String href = linkService.getLinkURI(this.collectedEvents);
+            final AttributesImpl newAttrs = new AttributesImpl();
+            this.output(href, format, newAttrs );
+
             this.collectedEvents.clear();
             if ( this.content != null ) {
                 this.content.toSAX(this.contentHandler);
