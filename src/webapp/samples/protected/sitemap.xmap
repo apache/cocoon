@@ -45,7 +45,7 @@
       <!-- ================= -->
       <map:match pattern="login">
         <map:generate src="docs/login.xml"/>
-     	<map:transform src="context://samples/stylesheets/page/simple-page2html.xsl">
+     	<map:transform src="context://samples/common/style/xsl/html/simple-page2html.xsl">
      	   <map:parameter name="servletPath" value="{request:servletPath}"/>
      	   <map:parameter name="sitemapURI" value="{request:sitemapURI}"/>
      	   <map:parameter name="contextPath" value="{request:contextPath}"/>

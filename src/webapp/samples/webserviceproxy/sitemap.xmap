@@ -19,17 +19,14 @@
 			<!-- Interactive Web Application Syndication  -->
 			<map:match pattern="*">
 				<map:generate type="proxy"
-					src="http://localhost:8080/cocoon/samples/xmlform/wizard?cocoon-view=xml"
+					src="http://localhost:8888/samples/xmlform/wizard?cocoon-view=xml"
 					label="xml"/>
 				<!-- This line is temporarily hidden, due to problem with the InputModule -->
 				<!-- src="http://{header:host}/cocoon/samples/xmlform/wizard?cocoon-view=xml" -->
 				<map:transform src="stylesheets/newWizard2html.xsl" />
-				<map:transform
-					src="context://stylesheets/system/xmlform2html.xslt"
-					/>
+				<map:transform src="context://stylesheets/system/xmlform2html.xslt"/>
 				<map:serialize type="html"/>
 			</map:match>
 		</map:pipeline>
 	</map:pipelines>
 </map:sitemap>
-<!-- end of file -->

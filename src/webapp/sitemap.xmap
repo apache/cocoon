@@ -11,7 +11,7 @@
     | feature or technique, often they are explained in more detail in 
     | the accompanying documentation.
     |
-    | CVS $Id: sitemap.xmap,v 1.6 2003/03/17 00:47:43 vgritsenko Exp $
+    | CVS $Id: sitemap.xmap,v 1.7 2003/03/26 21:21:40 stefano Exp $
     +-->
 
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
@@ -57,6 +57,7 @@
     <map:generator label="data" logger="sitemap.generator.request" name="request" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.RequestGenerator"/>
     <map:generator label="content,data" logger="sitemap.generator.stream" name="stream" pool-grow="2" pool-max="16" pool-min="1" src="org.apache.cocoon.generation.StreamGenerator"/>
     <map:generator label="data" logger="sitemap.generator.status" name="status" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.StatusGenerator"/>
+    <map:generator label="data" logger="sitemap.generator.proxy" name="proxy" pool-grow="2" pool-max="16" pool-min="2" src="org.apache.cocoon.generation.WebServiceProxyGenerator"/>    
   </map:generators>
 
   <!--+
@@ -292,7 +293,7 @@
     </map:view>
 
     <map:view from-label="data" name="pretty-content">
-      <map:transform src="stylesheets/simple-xml2html.xsl"/>
+      <map:transform src="stylesheets/system/xml2html.xsl"/>
       <map:serialize type="html"/>
     </map:view>
 
@@ -397,19 +398,43 @@
       <map:serialize type="xhtml"/>
     </map:match>
 
-    <!-- welcome page images -->
+    <!--+
+        | The default matching is also capable of matching more than a
+        | single request by the use of 'wildcards'. There are two kins of 
+        | wildcards:
+        | 
+        |  "*" means "anything that does not contain a path separator"
+        |  "**" means "anything including path separators"
+        |
+        | The tokens matched by the wildcards are put passed over as sitemap
+        | variables. Those variables can be accessed using the '{...}' syntax
+        | inside the attributes. The URI-matching tokens are associated to
+        | numbered variables, as shown in the following match that processes all
+        | the GIF images that are located in the 'images/' URL space but
+        | not in any deeper levels. Note how requesting "images/logo.gif" 
+        | triggers the matcher to create the token {1} = 'logo' which is later
+        | expanded into the src="" attribute of the reader, indicating 
+        | what file it has to read. 
+        +-->
+        
+    <!-- images -->
     <map:match pattern="images/*.gif">
       <map:read src="resources/images/{1}.gif" mime-type="images/gif"/>
     </map:match>
 
-    <!-- welcome page CSS stylesheets -->
+    <!-- CSS stylesheets -->
     <map:match pattern="styles/*.css">
       <map:read src="resources/styles/{1}.css" mime-type="text/css"/>
     </map:match>
 
+    <!-- JavaScript scripts -->
+    <map:match pattern="scripts/*.js">
+      <map:read src="resources/scripts/{1}.js" mime-type="text/javascript"/>
+    </map:match>
+    
     <!-- favicon -->
-    <map:match pattern="favicon.ico">
-      <map:read src="resources/images/cocoon.ico"/>
+    <map:match pattern="**/favicon.ico">
+      <map:read src="resources/icons/cocoon.ico"/>
     </map:match>
 
     <!--+

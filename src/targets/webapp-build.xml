@@ -5,18 +5,18 @@
 
     <copy file="${webapp}/welcome.xml" tofile="${build.webapp}/welcome.xml" filtering="on"/>
     <copy file="${webapp}/welcome.xslt" tofile="${build.webapp}/welcome.xslt" filtering="on"/>
-    <copy file="${resources.logos}/cocoon-button-powered-158.gif" tofile="${build.webapp}/resources/images/powered.gif"/>
-    <copy file="${resources.logos}/cocoon.ico" tofile="${build.webapp}/resources/images/cocoon.ico"/>
-    <copy file="${resources.styles}/cocoon.css" tofile="${build.webapp}/resources/styles/cocoon.css"/>
-
     <copy file="${webapp}/sitemap.xmap" tofile="${build.webapp}/sitemap.xmap"/>
 
-    <copy todir="${build.webapp}/stylesheets">
+    <copy todir="${build.webapp}/stylesheets" filtering="on">
       <fileset dir="${webapp}/stylesheets">
         <include name="**/*.xslt"/>
       </fileset>
     </copy>
-        
+
+    <copy todir="${build.webapp}/resources" filtering="off">
+      <fileset dir="${webapp}/resources"/>
+    </copy>
+            
     <copy todir="${build.webapp}/WEB-INF" filtering="on">
       <fileset dir="${webapp}/WEB-INF">
         <include name="entities/**"/>

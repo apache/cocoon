@@ -1,36 +1,79 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<!-- CVS $Id: samples.xml,v 1.7 2003/03/25 17:10:34 stefano Exp $ -->
+<!-- CVS $Id: samples.xml,v 1.8 2003/03/26 21:21:37 stefano Exp $ -->
 
-<samples>
+<samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
-  <group name="System Tools And Pages">
-    <sample name="Status Page" href="status.html">
-    Cocoon status page.
+  <group name="The Power of XML">
+   <sample name="Hello World!" href="hello-world/">
+    The complete separation between content and style
+    leads to a very powerful multi-channeling solution where you can
+    apply different stylesheets to the same content and generate different
+    flavors of it.
    </sample>
-   <sample name="Clear Cache" href="clearcache.html">
-    Empties the Cocoon cache.
+   <sample name="XML-ized web sites" href="sites/">
+    A couple of existing web sites have been xml-ized to show you
+    how easier it is to handle content-pure markup.
+   </sample>   
+   <sample name="Internationalization (i18n) &amp; Localization (l10n)" href="i18n/">
+    Since XML is based on Unicode, it can be used to encode all types of
+    languages. Here is an example of the power of such an approach with
+    the help of those i18n and l10n Cocoon facilities.
    </sample>
-   <sample name="Clear Persistent Store" href="clearpersistentstore.html">
-    Empties the Cocoon persistent store.
+   <sample name="Syndication and Content Aggregation" href="aggregation/">
+    Separation of content and style allows not only to serve your content
+    in different ways, but also to syndicate, aggregate or otherwise transform
+    content provided by other web sites.
    </sample>
-   <sample name="Request Page" href="request.html">
-    This example shows the usage of the RequestGenerator.
+   <sample name="Resource Catalog" href="catalog/">
+    XML is handy but also very complex. Cocoon integrates a number of 
+    facilities to help you during your journey thru XML-land. One of these
+    is the centralized handling of resolving network resources 
+    (e.g. DTDs, symbols, character entity sets, images) to local copies thru
+    the use of catalogs.
    </sample>
-   <sample name="Input Modules" href="modules/">
-    This example shows the usage of Input Modules in sitemap attribute expressions.
-   </sample>
-    <sample name="Error Page" href="generror.html">
-    This example shows what happens if an error is triggered in the pipeline.
+  </group>
+
+ <!-- still to fix
+ 
+  <group name="Web Services">
+   <sample name="SOAP" href="soap/">
+     Cocoon ships with facilities for immediate connection to SOAP resources.
+     These examples show you how to connect to any web service with a few
+     lines of XML markup.
    </sample>
   </group>
   
-  <group name="Control flow">
-    <sample name="Documentation" href="flow/">
-    Introduction to Cocoon's control flow of Web pages.
+ -->
+   
+ <!-- 
+ 
+  FIXME (SM) this should move into the proxy block 
+  
+  <group name="Web Site Syndication">
+    <sample name="Examples" href="webserviceproxy/">
+    Demonstrates how to embed One Web Site functionality
+    in Another. Using the WebServiceProxyGenerator remote web app
+    integration is easy.
+    </sample>
+    <sample name="Virtual Portal Demo" href="webserviceproxy/cocoonhive/">
+    A more sophisticated example including Amazon and OpenWiki. 
+    Shows how a personalized
+    portal can be built by connecting multiple remote
+    services without writing a single line of business logic code.
+    Only styling is used in addition to the proxy.
    </sample>
-    <sample name="Examples" href="flow/samples.html">
-    Samples implemented using control flow.
+  </group> -->
+   
+  <group name="Input Modules">
+   <sample name="Input Modules" href="modules/">
+    This example shows the usage of Input Modules in sitemap attribute expressions.
+   </sample>
+  </group>
+  
+  <group name="Flowscript">
+   <sample name="Examples" href="flow/">
+    Examples of Cocoon's control flow of Web pages.
    </sample>
   </group>
   
@@ -51,45 +94,55 @@
    </sample>
   </group>
   
-  <group name="Web Site Syndication">
-    <sample name="Examples" href="webserviceproxy/">
-    Demonstrates how to embed One Web Site functionality
-    in Another. Using the WebServiceProxyGenerator remote web app
-    integration is easy.
+  <group name="System Tools And Pages">
+   <sample name="Status Page" href="status.html">
+    This page shows the current internal status of cocoon, along with
+    information on the cache and the object stores.
    </sample>
-    <sample name="Virtual Portal Demo" href="webserviceproxy/cocoonhive/">
-    A more sophisticated example including Amazon and OpenWiki. 
-    Shows how a personalized
-    portal can be built by connecting multiple remote
-    services without writing a single line of business logic code.
-    Only styling is used in addition to the proxy.
+   <sample name="Clear Cache" href="clearcache.html">
+    Empties the Cocoon cache.
+   </sample>
+   <sample name="Clear Persistent Store" href="clearpersistentstore.html">
+    Empties the Cocoon persistent store.
+   </sample>
+   <sample name="Request Page" href="request.html">
+    This example shows the usage of the RequestGenerator.
+   </sample>
+   <sample name="Error Page" href="generror.html">
+    This example shows what happens if an error is triggered in the pipeline.
+   </sample>
+  <sample name="Link Status" href="linkstatus">
+    Verify that there are no broken hyperlinks in the local Cocoon
+    documentation. This sample will start at the home page of the local
+    documentation webapp and traverse each internal link, reporting its status
+    in a colour-coded table. Be patient - this process will take a while.
+    NOTE: this will work only if you have included the documentation when 
+    you built the web application
+  </sample>
+  </group>
+     
+  <!-- still to fix
+  
+  <group name="Web Applications">
+   <sample name="Protected Area" href="protected/login">
+          An example web-application built around db-authenticator,
+          form-validator, session-validator and session-invalidator
+          actions.
    </sample>
   </group>
   
-  <group name="Internationalization &amp; Localization">
-    <sample name="i18n samples" href="i18n/">
-    Internationalization with Cocoon
-   </sample>
+  <group name="Sample Forms">
+    <sample name="Simple Form Validation - Transformer" href="simpleform/sform" xlink:role="dynamic">
+      This example demonstrates the use of an action to validate user
+      input and report validation errors to the user through a transfomer.
+    </sample>
+    <sample name="Simple Form Validation - Logicsheet" href="simpleform/formval" xlink:role="dynamic">
+      This example demonstrates the use of an action to validate user
+      input and report validation errors to the user through a taglib.
+    </sample>
   </group>
   
-  <group name="DTD and Entity Catalogs">
-   <sample name="Catalog entity resolver" href="catalog/">
-    Resolve network resources (e.g. DTDs, symbols, character entity sets,
-    images) to local copies.
-   </sample>
-  </group>
-  
-  <group name="More Samples">
-    <sample name="Static Content" href="sample-static">
-    How to produce different type of static content.
-   </sample>
-    <sample name="Server Pages" href="sample-xsp">
-    Dynamic content implemented in XSP pages.
-   </sample>
-    <sample name="Dynamic Content" href="sample-dynamic">
-    More ways of implementing dynamic content.
-   </sample>
-  </group>
+  -->
   
   <group name="Block samples">
     <sample name="Blocks with samples" href="blocks">

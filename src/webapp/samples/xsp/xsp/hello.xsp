@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- CVS: $Id: hello.xsp,v 1.1 2003/03/26 21:21:33 stefano Exp $ -->
+
+<xsp:page language="java"
+          xmlns:xsp="http://apache.org/xsp">
+
+  <page>
+    <title>Hello</title>
+    <content>
+      <para>This is my first Cocoon page!</para>
+
+      <xsp:element name="para">
+        With the help of XSP and 
+        <xsp:expr>Constants.COMPLETE_NAME</xsp:expr>
+      </xsp:element>
+    </content>
+  </page>
+
+</xsp:page>

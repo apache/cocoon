@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <samples xmlns:xlink="http://www.w3.org/1999/xlink">
 
- <group name="Main examples page">
-  <sample name="Back" href="..">to Cocoon examples main page</sample>
- </group>
-
  <group name="XML Entity Catalogs">
   <sample name="Entity Resolution Using Catalogs" href="catalog-demo">
    Catalog entity resolver. External entities (e.g. DTDs, symbols,

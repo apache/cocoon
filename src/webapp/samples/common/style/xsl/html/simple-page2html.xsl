@@ -110,6 +110,11 @@
    </p>
   </xsl:template>
 
+  <xsl:template match="link">
+   <a href="{@href}">
+     <xsl:apply-templates/>
+   </a>
+  </xsl:template>
 
   <xsl:template match="@*|node()" priority="-2"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
   <xsl:template match="text()" priority="-1"><xsl:value-of select="."/></xsl:template>
