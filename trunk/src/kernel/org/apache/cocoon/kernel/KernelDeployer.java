@@ -43,7 +43,7 @@ import org.apache.cocoon.kernel.logging.Logging;
  * interface.</p>
  *
  * @author <a href="mailto:pier@apache.org">Pier Fumagalli</a>
- * @version 1.0 (CVS $Revision: 1.10 $)
+ * @version 1.0 (CVS $Revision: 1.11 $)
  */
 public class KernelDeployer implements Deployer, Logging {
 
@@ -247,6 +247,16 @@ public class KernelDeployer implements Deployer, Logging {
             throw new DeploymentException("Incompatible or non specified "
                                           + "parameter \"" + name + "\" with "
                                           + "type \"" + type + "\" for \""
+                                          + deployable + "\"");
+        }
+
+        /* Check that no extra parameters are there */
+        iterator = parameters.keySet().iterator();
+        while (iterator.hasNext()) {
+            String name = (String) iterator.next();
+            if (descriptor.parameterType(name) != null) continue;
+            throw new DeploymentException("Non required parameter \""
+                                          + name + "\" specifed for \""
                                           + deployable + "\"");
         }
 
