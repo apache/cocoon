@@ -94,7 +94,7 @@
      *
      * @author &lt;a href="mailto:giacomo@apache.org"&gt;Giacomo Pati&lt;/a&gt;
      * @author &lt;a href="mailto:bloritsch@apache.org"&gt;Berin Loritsch&lt;/a&gt;
-     * @version CVS $Id: sitemap.xsl,v 1.1.2.82 2001-02-26 16:36:16 giacomo Exp $
+     * @version CVS $Id: sitemap.xsl,v 1.1.2.83 2001-02-26 23:01:40 bloritsch Exp $
      */
     public class <xsl:value-of select="@file-name"/> extends AbstractSitemap {
       static final String LOCATION = "<xsl:value-of select="translate(@file-path, '/', '.')"/>.<xsl:value-of select="@file-name"/>";
@@ -606,7 +606,7 @@
       </xsl:call-template>
     </xsl:variable>
 
-    <!-- gets the string how the action is to be invoced in java code -->
+    <!-- gets the string how the action is to be invoked in java code -->
     <xsl:variable name="action-name">
       ((Action)this.actions.select("<xsl:value-of select="$action-type"/>")).act
     </xsl:variable>
@@ -680,10 +680,10 @@
     <xsl:variable name="component-param">
       <xsl:choose>
         <xsl:when test="count(parameter)>0">
-          nparam
+          param
         </xsl:when>
         <xsl:otherwise>
-          param
+          nparam
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
