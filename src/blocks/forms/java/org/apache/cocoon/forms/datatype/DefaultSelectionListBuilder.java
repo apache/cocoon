@@ -131,7 +131,7 @@ public class DefaultSelectionListBuilder implements SelectionListBuilder, Servic
             Element selectionListElement = document.getDocumentElement();
             if (!Constants.DEFINITION_NS.equals(selectionListElement.getNamespaceURI()) ||
                     !"selection-list".equals(selectionListElement.getLocalName())) {
-                throw new Exception("Excepted a fd:selection-list element at " +
+                throw new Exception("Expected a fd:selection-list element at " +
                                     DomHelper.getLocation(selectionListElement));
             }
 
