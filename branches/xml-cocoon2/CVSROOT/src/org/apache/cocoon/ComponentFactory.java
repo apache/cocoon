@@ -17,17 +17,17 @@ import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Configurable;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ThreadSafe;
+import org.apache.avalon.Contextualizable;
+import org.apache.avalon.Context;
 
 import org.apache.log.Logger;
 import org.apache.avalon.Loggable;
 
-import org.apache.cocoon.components.language.generator.AbstractCompiledComponent;
-
 /** Factory for Cocoon components.
  * @author <a href="mailto:paul@luminas.co.uk">Paul Russell</a>
- * @version CVS $Revision: 1.1.2.7 $ $Date: 2001-02-16 18:11:37 $
+ * @version CVS $Revision: 1.1.2.8 $ $Date: 2001-02-16 20:28:54 $
  */
-public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
+public class ComponentFactory implements ObjectFactory, PoolClient, ThreadSafe, Loggable {
     private Logger log;
 
     /** The class which this <code>ComponentFactory</code>
@@ -43,6 +43,12 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
      */
     private ComponentManager manager;
 
+    /** The Context for the component
+     */
+    private Context context;
+
+    /** The Pool for the component
+     */
     private Pool pool;
 
     public void setPool(Pool pool) {
@@ -56,10 +62,11 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
      * @param config the <code>Configuration</code> object to pass to new instances.
      * @param manager the component manager to pass to <code>Composer</code>s.
      */
-    public ComponentFactory(Class componentClass, Configuration config, ComponentManager manager) {
+    public ComponentFactory(Class componentClass, Configuration config, ComponentManager manager, Context context) {
         this.componentClass = componentClass;
         this.conf = config;
         this.manager = manager;
+        this.context = context;
     }
 
     public void setLogger(Logger logger) {
@@ -75,6 +82,10 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
             + componentClass.getName() + "."
         );
 
+        if ( comp instanceof Contextualizable ) {
+            ((Contextualizable)comp).contextualize(this.context);
+        }
+
         if ( comp instanceof Loggable) {
             ((Loggable)comp).setLogger(this.log);
         }
@@ -87,12 +98,14 @@ public class ComponentFactory implements ObjectFactory, ThreadSafe, Loggable {
             ((Composer)comp).compose(this.manager);
         }
 
-        if ( comp instanceof AbstractCompiledComponent) {
-            ((AbstractCompiledComponent) comp).setPool(this.pool);
+        if ( comp instanceof PoolClient) {
+            ((PoolClient) comp).setPool(this.pool);
         }
 
         return comp;
     }
+
+    public void returnToPool() {}
 
     public final Class getCreatedClass() {
         return componentClass;
