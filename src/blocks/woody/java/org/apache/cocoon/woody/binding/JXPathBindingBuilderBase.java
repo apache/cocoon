@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
  * <li>Attribute direction="load|save|both": {@link #getCommonAttributes(Element)}</li>
  * </ul>
  *
- * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.3 2004/02/19 22:13:27 joerg Exp $
+ * @version CVS $Id: JXPathBindingBuilderBase.java,v 1.4 2004/02/29 09:20:56 antonio Exp $
  */
 public abstract class JXPathBindingBuilderBase implements LogEnabled {
 
@@ -76,7 +76,9 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
      */
     public void enableLogging(Logger logger) {
         this.logger = logger;
-        logger.debug("JXPathBindingBuilderBase got logger...");
+        if (logger.isDebugEnabled()) {
+            logger.debug("JXPathBindingBuilderBase got logger...");
+        }
     }
 
     /**
@@ -202,9 +204,10 @@ public abstract class JXPathBindingBuilderBase implements LogEnabled {
          * @return null if the leniency parameter is String, otherwise the
          */
         private static Boolean decideLeniency(String leniency) {
-            if (leniency == null) return null;
+            if (leniency == null) {
+                return null;
+            }
             return new Boolean(leniency);
         }
-
     }
 }

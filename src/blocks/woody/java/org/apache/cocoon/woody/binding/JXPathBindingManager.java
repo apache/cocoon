@@ -1,7 +1,7 @@
 /*
 
  ============================================================================
-                   The Apache Software License, Version 1.1
+ The Apache Software License, Version 1.1
  ============================================================================
 
  Copyright (C) 1999-2003 The Apache Software Foundation. All rights reserved.
@@ -10,26 +10,26 @@
  tion, are permitted provided that the following conditions are met:
 
  1. Redistributions of  source code must  retain the above copyright  notice,
-    this list of conditions and the following disclaimer.
+ this list of conditions and the following disclaimer.
 
  2. Redistributions in binary form must reproduce the above copyright notice,
-    this list of conditions and the following disclaimer in the documentation
-    and/or other materials provided with the distribution.
+ this list of conditions and the following disclaimer in the documentation
+ and/or other materials provided with the distribution.
 
  3. The end-user documentation included with the redistribution, if any, must
-    include  the following  acknowledgment:  "This product includes  software
-    developed  by the  Apache Software Foundation  (http://www.apache.org/)."
-    Alternately, this  acknowledgment may  appear in the software itself,  if
-    and wherever such third-party acknowledgments normally appear.
+ include  the following  acknowledgment:  "This product includes  software
+ developed  by the  Apache Software Foundation  (http://www.apache.org/)."
+ Alternately, this  acknowledgment may  appear in the software itself,  if
+ and wherever such third-party acknowledgments normally appear.
 
  4. The names "Apache Cocoon" and  "Apache Software Foundation" must  not  be
-    used to  endorse or promote  products derived from  this software without
-    prior written permission. For written permission, please contact
-    apache@apache.org.
+ used to  endorse or promote  products derived from  this software without
+ prior written permission. For written permission, please contact
+ apache@apache.org.
 
  5. Products  derived from this software may not  be called "Apache", nor may
-    "Apache" appear  in their name,  without prior written permission  of the
-    Apache Software Foundation.
+ "Apache" appear  in their name,  without prior written permission  of the
+ Apache Software Foundation.
 
  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
@@ -47,7 +47,7 @@
  Stefano Mazzocchi  <stefano@apache.org>. For more  information on the Apache
  Software Foundation, please see <http://www.apache.org/>.
 
-*/
+ */
 package org.apache.cocoon.woody.binding;
 
 import org.apache.avalon.framework.activity.Disposable;
@@ -70,41 +70,51 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 /**
- * JXPathBindingManager provides an implementation of {@link BindingManager}
- * by usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
- * JXPath package</a>.
- *
- * @version CVS $Id: JXPathBindingManager.java,v 1.19 2004/02/06 14:33:05 joerg Exp $
+ * JXPathBindingManager provides an implementation of {@link BindingManager}by
+ * usage of the <a href="http://jakarta.apache.org/commons/jxpath/index.html">
+ * JXPath package </a>.
+ * 
+ * @version CVS $Id: JXPathBindingManager.java,v 1.19 2004/02/06 14:33:05 joerg
+ *               Exp $
  */
-public class JXPathBindingManager extends AbstractLogEnabled
-        implements BindingManager, Serviceable, Disposable,
-                   Initializable, Configurable, ThreadSafe {
+public class JXPathBindingManager extends AbstractLogEnabled implements
+        BindingManager, Serviceable, Disposable, Initializable, Configurable,
+        ThreadSafe {
 
     private static final String PREFIX = "WoodyBinding:";
+
     private ServiceManager serviceManager;
+
     private DatatypeManager datatypeManager;
+
     private Configuration configuration;
+
     private SimpleServiceSelector bindingBuilderSelector;
+
     private CacheManager cacheManager;
 
     public void service(ServiceManager serviceManager) throws ServiceException {
         this.serviceManager = serviceManager;
-        this.datatypeManager = (DatatypeManager)serviceManager.lookup(DatatypeManager.ROLE);
-        this.cacheManager = (CacheManager)serviceManager.lookup(CacheManager.ROLE);
+        this.datatypeManager = (DatatypeManager) serviceManager
+                .lookup(DatatypeManager.ROLE);
+        this.cacheManager = (CacheManager) serviceManager
+                .lookup(CacheManager.ROLE);
     }
 
-    public void configure(Configuration configuration) throws ConfigurationException {
+    public void configure(Configuration configuration)
+            throws ConfigurationException {
         this.configuration = configuration;
     }
 
     public void initialize() throws Exception {
-        bindingBuilderSelector = new SimpleServiceSelector("binding", JXPathBindingBuilderBase.class);
+        bindingBuilderSelector = new SimpleServiceSelector("binding",
+                JXPathBindingBuilderBase.class);
         bindingBuilderSelector.enableLogging(getLogger());
         bindingBuilderSelector.configure(configuration.getChild("bindings"));
     }
 
     public Binding createBinding(Source source) throws BindingException {
-        Binding binding = (Binding)this.cacheManager.get(source, PREFIX);
+        Binding binding = (Binding) this.cacheManager.get(source, PREFIX);
         if (binding == null) {
             try {
                 InputSource is = new InputSource(source.getInputStream());
@@ -113,17 +123,26 @@ public class JXPathBindingManager extends AbstractLogEnabled
                 Document doc = DomHelper.parse(is);
                 Element rootElm = doc.getDocumentElement();
                 if (BindingManager.NAMESPACE.equals(rootElm.getNamespaceURI())) {
-                    binding = getBuilderAssistant().getBindingForConfigurationElement(rootElm);
-                    ((JXPathBindingBase)binding).enableLogging(getLogger());
-                    getLogger().debug("Creation of new Binding finished. " + binding);
+                    binding = getBuilderAssistant()
+                            .getBindingForConfigurationElement(rootElm);
+                    ((JXPathBindingBase) binding).enableLogging(getLogger());
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger().debug(
+                                "Creation of new Binding finished. " + binding);
+                    }
                 } else {
-                    getLogger().debug("Root Element of said binding file is in wrong namespace.");
+                    if (getLogger().isDebugEnabled()) {
+                        getLogger()
+                                .debug(
+                                        "Root Element of said binding file is in wrong namespace.");
+                    }
                 }
                 this.cacheManager.set(binding, source, PREFIX);
             } catch (BindingException e) {
                 throw e;
             } catch (Exception e) {
-                throw new BindingException("Error creating binding from " + source.getURI(), e);
+                throw new BindingException("Error creating binding from "
+                        + source.getURI(), e);
             }
         }
         return binding;
@@ -144,33 +163,40 @@ public class JXPathBindingManager extends AbstractLogEnabled
     /**
      * Assistant Inner class discloses enough features to the created
      * childBindings to recursively
-     *
-     * This patterns was chosen to prevent Inversion Of Control between
-     * this factory and its builder classes (that could be provided by
-     * third parties.)
+     * 
+     * This patterns was chosen to prevent Inversion Of Control between this
+     * factory and its builder classes (that could be provided by third
+     * parties.)
      */
-    /* NOTE: To get access to the logger in this inner class you must not call
+    /*
+     * NOTE: To get access to the logger in this inner class you must not call
      * getLogger() as with JDK 1.3 this gives a NoSuchMethod error. You need to
      * implement an explicit access method for the logger in the outer class.
      */
     public class Assistant {
 
-        private JXPathBindingBuilderBase getBindingBuilder(String bindingType) throws BindingException {
+        private JXPathBindingBuilderBase getBindingBuilder(String bindingType)
+                throws BindingException {
             try {
-                return (JXPathBindingBuilderBase) bindingBuilderSelector.select(bindingType);
+                return (JXPathBindingBuilderBase) bindingBuilderSelector
+                        .select(bindingType);
             } catch (ServiceException e) {
-                throw new BindingException("Cannot handle binding element with name \"" + bindingType + "\".", e);
+                throw new BindingException(
+                        "Cannot handle binding element with " + "name \""
+                                + bindingType + "\".", e);
             }
         }
 
         /**
-         * Creates a {@link Binding} following the specification in the
+         * Creates a {@link Binding}following the specification in the
          * provided config element.
          */
-        public JXPathBindingBase getBindingForConfigurationElement(Element configElm) throws BindingException {
+        public JXPathBindingBase getBindingForConfigurationElement(
+                Element configElm) throws BindingException {
             String bindingType = configElm.getLocalName();
             JXPathBindingBuilderBase bindingBuilder = getBindingBuilder(bindingType);
-            JXPathBindingBase childBinding = bindingBuilder.buildBinding(configElm, this);
+            JXPathBindingBase childBinding = bindingBuilder.buildBinding(
+                    configElm, this);
             return childBinding;
         }
 
@@ -178,21 +204,20 @@ public class JXPathBindingManager extends AbstractLogEnabled
          * Makes an array of childBindings for the child-elements of the
          * provided configuration element.
          */
-        public JXPathBindingBase[] makeChildBindings(Element parentElement) throws BindingException {
-            if (parentElement == null) {
-                return null;
-            }
-
-            Element[] childElements = DomHelper.getChildElements(parentElement, BindingManager.NAMESPACE);
-            if (childElements.length > 0) {
-                JXPathBindingBase[] childBindings = new JXPathBindingBase[childElements.length];
-                for (int i = 0; i < childElements.length; i++) {
-                    childBindings[i] = getBindingForConfigurationElement(childElements[i]);
+        public JXPathBindingBase[] makeChildBindings(Element parentElement)
+                throws BindingException {
+            if (parentElement != null) {
+                Element[] childElements = DomHelper.getChildElements(
+                        parentElement, BindingManager.NAMESPACE);
+                if (childElements.length > 0) {
+                    JXPathBindingBase[] childBindings = new JXPathBindingBase[childElements.length];
+                    for (int i = 0; i < childElements.length; i++) {
+                        childBindings[i] = getBindingForConfigurationElement(childElements[i]);
+                    }
+                    return childBindings;
                 }
-                return childBindings;
-            } else {
-                return null;
             }
+            return null;
         }
 
         public DatatypeManager getDatatypeManager() {
