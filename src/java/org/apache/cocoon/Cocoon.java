@@ -143,15 +143,14 @@ public class Cocoon
         ((DefaultContext)this.context).makeReadOnly();
 
         final Settings settings = Core.getSettings(this.context);
-        final URL u = (URL)this.context.get(Constants.CONTEXT_CONFIG_URL);
         try {
             URLSource urlSource = new URLSource();
-            urlSource.init(u, null);
+            urlSource.init(new URL(settings.getConfiguration()), null);
             this.configurationFile = new DelayedRefreshSourceWrapper(urlSource,
                                                                      settings.getConfigurationReloadDelay());
 
         } catch (IOException ioe) {
-            throw new ContextException("Could not open configuration file: " + u, ioe);
+            throw new ContextException("Could not open configuration file: " + settings.getConfiguration(), ioe);
         }
     }
 

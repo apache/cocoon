@@ -16,6 +16,7 @@
  */
 package org.apache.cocoon.core;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +29,7 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.cocoon.Constants;
 import org.apache.cocoon.configuration.Settings;
 
 /**
@@ -101,9 +103,46 @@ public class Core
      * Return the component context.
      * This method allows access to the component context for other components
      * that are not created by an Avalon based container.
+     * FIXME - will be removed before the release
      */
     public Context getContext() {
         return this.context;
+    }
+
+    /**
+     * Return the environment context object.
+     * @return The environment context.
+     */
+    public org.apache.cocoon.environment.Context getEnvironmentContext() {
+        try {
+            return (org.apache.cocoon.environment.Context)this.context.get(Constants.CONTEXT_ENVIRONMENT_CONTEXT);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException("Unable to get the environment object from the context.", ce);
+        }
+    }
+    
+    public File getWorkDirectory() {
+        try {
+            return (File)this.context.get(Constants.CONTEXT_WORK_DIR);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException("Unable to get the working directory from the context.", ce);
+        }        
+    }
+
+    public File getUploadDirectory() {
+        try {
+            return (File)this.context.get(Constants.CONTEXT_UPLOAD_DIR);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException("Unable to get the upload directory from the context.", ce);
+        }        
+    }
+
+    public File getCacheDirectory() {
+        try {
+            return (File)this.context.get(Constants.CONTEXT_CACHE_DIR);
+        } catch (ContextException ce) {
+            throw new CascadingRuntimeException("Unable to get the cache directory from the context.", ce);
+        }        
     }
 
     /**
@@ -112,6 +151,7 @@ public class Core
      * and use {@link #getSettings()} instead.
      * @param context The component context.
      * @return The settings.
+     * FIXME - will be removed before the release
      */
     public static final Settings getSettings(Context context) {
         // the settings object is always present
