@@ -68,6 +68,6 @@
   </menu>
 
   <menu label="Other resources">
-    <menu-item label="Forms @ Wiki" href="http://wiki.cocoondev.org/Wiki.jsp?page=Forms"/>
+    <menu-item label="Forms @ Wiki" href="http://wiki.apache.org/cocoon/Forms"/>
   </menu>
 </book>

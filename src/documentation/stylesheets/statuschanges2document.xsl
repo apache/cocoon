@@ -23,7 +23,7 @@
 
  <xsl:param name="name"/>
 
- <xsl:variable name="bugzilla" select="'http://nagoya.apache.org/bugzilla/'"/>
+ <xsl:variable name="bugzilla" select="'http://issues.apache.org/bugzilla/'"/>
  <xsl:variable name="singleBug" select="concat($bugzilla, 'show_bug.cgi?id=')"/>
  <xsl:variable name="buglist" select="concat($bugzilla, 'buglist.cgi?bug_id=')"/>
 

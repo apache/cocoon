@@ -76,7 +76,7 @@ distinguish between a Bug report, a Patch submission, and an Enhancement suggest
 	<s1 title="Steps">
 <p>
 Here is how to proceed. Go to
-<fork href="http://nagoya.apache.org/bugzilla/">Bugzilla</fork>
+<fork href="http://issues.apache.org/bugzilla/">Bugzilla</fork>
 in another browser window.
 </p>
 
@@ -343,7 +343,7 @@ single click.
 	<ul>
 <li>
 Bugzilla is at 
-<link href="http://nagoya.apache.org/bugzilla/">http://nagoya.apache.org/bugzilla/</link>
+<link href="http://issues.apache.org/bugzilla/">http://issues.apache.org/bugzilla/</link>
 </li>
 <li>
 Helpful Bug Writing Guidelines are available directly from the

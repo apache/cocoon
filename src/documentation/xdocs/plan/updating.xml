@@ -47,14 +47,20 @@
     If you follow the instructions of this document closely, however,
     you should be able to quickly upgrade your Cocoon 2.1.x installation.
    </p>
+   <p>
+    In general, a good advice is that you avoid any calls to private or deprecated
+    API. If you are calling deprecated API, look up for an alternative. In most 
+    case this is documented in the java docs. If not or if you are calling private
+    API please ask on the mailing lists for a the "right way".
+   </p>
   </s1>
   <s1 title="Updating Your Application">
     <p>Currently, updating your application from an older version to the latest
-     version of Cocoon has do be done manually (but we are working on a better
+     version of Cocoon has to be done manually (but we are working on a better
      solution!).</p>
     <p>We suggest you, that you start from a clean Cocoon installation and 
     incorporate your changes into the cocoon.xconf, the sitemap etc. This
-    is in most cases much easier that starting with your old application
+    is in most cases much easier than starting with your old application
     and adapting it for Cocoon 2.2.x.</p>
   </s1>
   <s1 title="Sitemap Changes">
@@ -65,7 +71,7 @@
        <li>If the used reader has a mime-type definition, it is used.</li>
        <li>If both are not set, the reader itself has to provide the mime-type.</li>
       </ol>
-      <p>You can find further information in <link href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=10277">bug entry 10277</link>.</p>
+      <p>You can find further information in <link href="http://issues.apache.org/bugzilla/show_bug.cgi?id=10277">bug entry 10277</link>.</p>
     </s2>
   </s1>
   <s1 title="Recompilation">
@@ -85,6 +91,11 @@
       <p>The deprecated <em>getOutputStream</em> method of the <em>Environment</em> 
       interface has been removed. Use the <em>getOutputStream(int)</em> method
       instead.</p>
+      <p>
+        In addition some methods of the Environment interface have been changed,
+        removed and added. The environment is now free from any dependencies
+        to the Cocoon core and it is easier to create own environments.
+      </p>
     </s2>
     <s2 title="Cocoon Source Resolver Interface">
       <p>The deprecated <em>resolve</em> method of the 
@@ -106,10 +117,12 @@
         <li><em>org.apache.cocoon.components.source.DelayedRefreshSourceWrapper</em> - org.apache.cocoon.components.source.impl.DelayedRefreshSourceWrapper</li>
         <li><em>org.apache.cocoon.components.source.FileSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.FileSourceFactory</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.ModifiableTraversableSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.SitemapSource</em> - org.apache.cocoon.components.source.impl.SitemapSource</li>
         <li><em>org.apache.cocoon.components.source.SourceFactory</em> - org.apache.cocoon.components.source.impl.SitemapSourceFactory</li>
         <li><em>org.apache.cocoon.components.source.SourceHandler</em> - Not needed anymore</li>
         <li><em>org.apache.cocoon.components.source.SourceHandlerImpl</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.components.source.TraversableSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.URLSource</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.source.impl.AvalonToCocoonSource</em> - Not needed anymore</li>
         <li><em>org.apache.cocoon.components.source.impl.AvalonToCocoonSourceInvocationHandler</em> - Not needed anymore</li>
@@ -120,6 +133,7 @@
         <li><em>org.apache.cocoon.components.url.ResourceURLFactory</em> - Excalibur SourceResolver</li>
         <li><em>org.apache.cocoon.components.url.URLFactory</em> - Not needed anymore</li>
         <li><em>org.apache.cocoon.components.url.URLFactoryImpl</em> - Not needed anymore</li>
+        <li><em>org.apache.cocoon.xml.XMLizable</em> - Excalibur SourceResolver</li>
       </ul>
     </s2>
     <s2 title="XML Parsing">
@@ -146,6 +160,7 @@
         <li><em>org.apache.cocoon.components.store.Store</em> - Excalibur Store</li>
         <li><em>org.apache.cocoon.components.store.StoreJanitor</em> - Excalibur Store</li>
         <li><em>org.apache.cocoon.components.store.StoreJanitorImpl</em> - Excalibur Store</li>
+        <li><em>org.apache.cocoon.components.store.impl.DefaultPersistentStore</em> - JCS Store</li>
       </ul>
     </s2>
     <s2 title="XSLT Processor">
@@ -156,14 +171,26 @@
     </s2>
     <s2 title="Sitemap Components">
       <ul>
+        <li><em>org.apache.cocoon.components.treeprocessor.MapStackResolver</em> - org.apache.cocoon.components.treeprocessor.variables.VariableResolverFactory</li>
         <li><em>org.apache.cocoon.matching.RegexpTargetHostMatcher</em> - org.apache.cocoon.matching.RegexpHostMatcher</li>
         <li><em>org.apache.cocoon.matching.RequestParamMatcher</em> - org.apache.cocoon.matching.RequestParameterMatcher</li>
         <li><em>org.apache.cocoon.matching.WildcardParameterValueMatcher</em> - org.apache.cocoon.matching.WildcardRequestParameterMatcher</li>
         <li><em>org.apache.cocoon.matching.helpers.WildcardURIMatcher</em> - org.apache.cocoon.matching.helpers.WildcardHelper</li>
         <li><em>org.apache.cocoon.selection.RequestSelector</em> - org.apache.cocoon.selection.RequestParameterSelector</li>
         <li><em>org.apache.cocoon.selection.SessionStateSelector</em> - org.apache.cocoon.selection.SessionAttributeSelector</li>
+        <li><em>org.apache.cocoon.sitemap.SitemapRedirector</em> - Removed</li>
+        <li><em>org.apache.cocoon.sitemap.XSLTFactoryLoader</em> - Removed</li>
         <li><em>org.apache.cocoon.transformation.CachingCIncludeTransformer</em> - org.apache.cocoon.transformation.CIncludeTransformer</li>
+        <li><em>org.apache.cocoon.transformation.helpers.MirrorRecorder</em> - Different alternatives, e.g. ParamSaxBuffer</li>
       </ul>
+    </s2>
+    <s2 title="Request Lifecycle Components">
+      <p>
+        The deprecated class <em>org.apache.cocoon.components.RequestLifecycleComponent</em>
+        and the deprecated class <em>org.apache.cocoon.components.GlobalRequestLifecycleComponent</em>
+        have been removed. Use the <em>org.apache.cocoon.components.persistence.RequestDataStore</em>
+        component instead.
+      </p>
     </s2>
   </s1>
   <s1 title="Caching">
@@ -175,13 +202,13 @@
      <ul>
      <li><em>Cacheable</em> : Use the <em>CacheableProcessingComponent</em> interface that is very similar.</li>
      <li><em>CacheValidity</em> : Is replaced by <em>SourceValidity</em>.</li>
-     <li><em>AggregatedCacheValidity</em></li>
-     <li><em>CompositeCacheValidity</em></li> 
-     <li><em>DeltaTimeCacheValidity</em></li>
-     <li><em>IncludeCacheValidity</em></li>
-     <li><em>NOPCacheValidity</em></li>
-     <li><em>ParametersCacheValidity</em></li>
-     <li><em>TimeStampCacheValidity</em></li>
+     <li><em>AggregatedCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>CompositeCacheValidity</em> - Excalibur SourceResolver</li> 
+     <li><em>DeltaTimeCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>IncludeCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>NOPCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>ParametersCacheValidity</em> - Excalibur SourceResolver</li>
+     <li><em>TimeStampCacheValidity</em> - Excalibur SourceResolver</li>
      <li><em>CacheValidityToSourceValidity</em></li>
      <li><em>SourceCacheValidity</em></li>
      <li><em>CachedEventObject</em> : Is replaced by <em>CachedResponse</em>.</li>
@@ -212,7 +239,7 @@
       <p>Another serious issue is the presence of the Xalan and Xerces
        package in the JDK 1.4. For general information on this please read the
        <link href="http://xml.apache.org/xalan-j/faq.html#jdk14">Xalan FAQ</link> and our own
-       <link href="http://wiki.cocoondev.org/Wiki.jsp?page=EndorsedLibsProblem">EndorsedLibsProblem</link>
+       <link href="http://wiki.apache.org/cocoon/EndorsedLibsProblem">EndorsedLibsProblem</link>
        wiki page.
       </p>
       <p>

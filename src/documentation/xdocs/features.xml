@@ -101,8 +101,19 @@
           datasources and output formats)
         </li>
         <li>
-          Create static content (automatically) by separating data from view
-          - see <link href="http://xml.apache.org/forrest/">Apache Forrest</link>
+          Create static content (automatically) by separating data from view</li>
+        <li>
+          Offline generation modes with Cocoon's own
+          <link href="userdocs/offline/">offline facilities</link>:
+          command-line interface (CLI), ant task, bean. Also with
+          <link href="http://forrest.apache.org/">Apache Forrest</link>
+          which utilises Cocoon.
+        </li>
+        <li>
+          Dynamic document preparation with
+          <link href="http://forrest.apache.org/">Apache Forrest</link>,
+          the '<code>forrest run</code>' mode. Use many different data input
+          formats, see the transformed result immediately in the browser.
         </li>
         <li>
           Advanced web applications with J2EE integration
@@ -337,7 +348,7 @@
       <ul>
         <li>
            Enhanced form handling with strong validation through 
-           <link href="http://wiki.cocoondev.org/Wiki.jsp?page=Woody">CocoonForms</link>
+           <link href="userdocs/forms/index.html">Cocoon Forms</link>
         </li>
         <li>
            Easy integration of (future) <fork href="http://www.w3.org/TR/xforms/">XForms</fork> clients

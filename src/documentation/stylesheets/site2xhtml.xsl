@@ -25,6 +25,7 @@
         <title>
           <xsl:value-of select="/site/document/title"/>
         </title>
+	<link rel="shortcut icon" href="favicon.ico"/>
         <style type="text/css">
 a.menu {
 	color: #FFFFFF;

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 1999-2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
+
+<document>
+  <!-- This document will be enhanced by information taken from the javadoc -->
+  <header>
+    <title>Description of the mp3directory generator</title>
+    <version>current</version>
+    <type>Reference</type>
+    <authors>
+      <person email="users@cocoon.apache.org" name="The Cocoon Community"/>
+    </authors>
+  </header>
+  <body>
+    <s1 title="MP3DirectoryGenerator">
+ <p>
+  Following extra attributes added to valid MP3 files:</p>
+ <ul>
+ <li><em>frequency</em> : the frequency of the MP3 file in KHz (most common: 44.1)</li>
+ <li><em>bitrate</em> : the bitrate of the MP3 file in Kbit, from 8 to 448.</li>
+ <li><em>mode</em> : the mode of the MP3 file, one of the following: Stereo, 
+          Joint stereo, Dual channel, Single channel.</li>
+ <li><em>variable-rate</em> (optional) : value is "yes" if VBR header is detected.</li>
+ <li><em>title, artitst, album, year, comment, track, genre</em> (all optional) : 
+       values obtained from MP3 ID3 tag.</li>
+   </ul>
+    </s1>
+  </body>
+</document>

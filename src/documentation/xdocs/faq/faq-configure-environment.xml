@@ -213,7 +213,7 @@ Another user adds: In my experience, session support is lost when you use mod_re
   <answer>
     <p>
       See the Wiki page 
-      <link href="http://wiki.cocoondev.org/Wiki.jsp?page=ApacheModProxy">ApacheModProxy</link>
+      <link href="http://wiki.apache.org/cocoon/ApacheModProxy">ApacheModProxy</link>
       for a thorough discussion of this topic.
     </p>
     <p>

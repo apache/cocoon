@@ -17,6 +17,7 @@
 <!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V1.0//EN" "document-v10.dtd">
 
 <document>
+    <!-- This document will be enhanced by information taken from the javadoc -->
   <header>
     <title>Image Directory Generator</title>
     <version>1.0</version>
@@ -28,13 +29,6 @@
   </header>
   <body>
     <s1 title="Image Directory Generator">
-      <p>Generates an XML directory listing. This is an extension of the
-      	<link href="directory-generator.html">Directory Generator</link>.</p>
-      <ul>
-        <li>Name: imagedirectory</li>
-        <li>Class: org.apache.cocoon.generation.ImageDirectoryGenerator</li>
-        <li>Cacheable: yes</li>
-      </ul>
       <p>The Image Directory provides all the functionality of the
       	<link href="directory-generator.html">Directory Generator</link>. Additionally it
         ensures that the files are images and adds their dimensions (<code>width</code>

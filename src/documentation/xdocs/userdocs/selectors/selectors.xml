@@ -116,6 +116,9 @@
 				<li><strong>HeaderSelector</strong>: same as the Parameter selector,
         but matches against the request headers;</li>
 
+				<li><link href="regular-expression-header-selector.html">RegexpHeaderSelector</link>: same as the Header selector,
+        but uses a regular expression for matching;</li>
+
 				<li><strong>RequestSelector</strong>: again, same as the Parameter selector,
         but matches against the Request parameters;</li>
 

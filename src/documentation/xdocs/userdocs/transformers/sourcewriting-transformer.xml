@@ -31,6 +31,10 @@
 			<p>Diverts xml from a pipeline, writing it to a Source (or
       deleting it).</p>
 			<p>Thankfully, <code>FileSource</code> is no longer the only <code>Source</code> that currently implements <code>WritableSource</code>; there are implementations of WebDAV and Apache Slide WritableSources in the scratchpad. Hopefully further <code>ModifiableSource</code> implementations (XMLDB, CVS, Email, SQL, etc.) will be appear in the future.</p>
+      <p>See the transformer in action with the Cocoon Samples for webdav block,
+      and Wiki about it at
+      <link href="http://wiki.apache.org/cocoon/WebDAVCMS">WebDAVCMS</link>.
+      </p>
 			<ul>
 				<li>Name : write-source</li>
 				<li>Class: org.apache.cocoon.transformation.SourceWritingTransformer</li>
@@ -101,14 +105,14 @@
 			<s2 title="source:write">
 				<p>The source:write tag can take optional attributes, <code>create</code> (defaults to 'true') and <code>serializer</code> (defaults to the serializer set up in the definition or invocation of the transformer).</p>
 				<p>Replaces the entire content of a <code>Source</code> (specified by the <code><![CDATA[<source:source/>]]></code> tag) with the contents of the <code><![CDATA[<source:fragment/>]]></code> tag, if @create is 'true', a new asset will be created if one does not already exist.</p>
-				<p>The <code><![CDATA[<source:source/>]]></code> and <code><![CDATA[<source:fragment/>]]></code> tags are required, a <code><![CDATA[<source:path/>]]></code> tag is optional, if specified, the value is an used as an XPath to generate xml in your <code>Source</code>, inwhich to wrap your content.</p>
+				<p>The <code><![CDATA[<source:source/>]]></code> and <code><![CDATA[<source:fragment/>]]></code> tags are required, a <code><![CDATA[<source:path/>]]></code> tag is optional, if specified, the value is used as an XPath to generate xml in your <code>Source</code>, in which to wrap your content.</p>
 				<s3 title="source:source">
 					<p>The System ID of the <code>Source</code> to be written to.</p>
-					<p>eg: <code><![CDATA[<source:source>docs/blah.xml</source:source>]]></code> or <code><![CDATA[<source:source>context:/blah.xml</source:source>]]></code> etc.</p>
+					<p>e.g. <code><![CDATA[<source:source>docs/blah.xml</source:source>]]></code> or <code><![CDATA[<source:source>context:/blah.xml</source:source>]]></code> etc.</p>
 				</s3>
 				<s3 title="source:fragment">
 					<p>The XML Fragment to be written.</p>
-					<p>eg: </p>
+					<p>For example:</p>
 						<source>
 							<![CDATA[
 	<source:fragment><foo>
@@ -133,7 +137,7 @@
 				</s3>
 				<s3 title="source:path">
 					<p>[Optional] XPath to specify how your content is wrapped</p>
-					<p>eg: <code><![CDATA[<source:path>doc</source:path>]]></code> - your content is placed inside a <code><![CDATA[<doc/>]]></code> root tag.</p>
+					<p>e.g. <code><![CDATA[<source:path>doc</source:path>]]></code> - your content is placed inside a <code><![CDATA[<doc/>]]></code> root tag.</p>
 					<note>If this parameter is omitted, your content MUST have only ONE top-level node.</note>
 				</s3>
  			</s2>
@@ -144,11 +148,11 @@
 				<p>The <code><![CDATA[<source:source/>]]></code>, <code><![CDATA[<source:path/>]]></code> and <code><![CDATA[<source:fragment/>]]></code> tags are all required, the <code><![CDATA[<source:replace/>]]></code> and <code><![CDATA[<source:reinsert/>]]></code> tags are optional.</p>
 				<s3 title="source:source">
 					<p>The System ID of the <code>Source</code> to be inserted into.</p>
-					<p>eg: <code><![CDATA[<source:source>docs/blah.xml</source:source>]]></code> or <code><![CDATA[<source:source>context:/blah.xml</source:source>]]></code> etc.</p>
+					<p>e.g. <code><![CDATA[<source:source>docs/blah.xml</source:source>]]></code> or <code><![CDATA[<source:source>context:/blah.xml</source:source>]]></code> etc.</p>
 				</s3>
 				<s3 title="source:fragment">
 					<p>The XML Fragment to be written.</p>
-					<p>eg:</p>
+					<p>e.g.</p>
 						<source>
 							<![CDATA[
 	<source:fragment>
@@ -176,12 +180,12 @@
 				</s3>
 				<s3 title="source:replace">
 					<p>[Optional] XPath (from <code><![CDATA[<source:path/>]]></code>) to select the node that is replaced by your new content</p>
-					<p>eg: <code><![CDATA[<source:replace>foo/bar/dogcow/@status='cut'</source:replace>]]></code> (is equivalent to this in XSLT: <code>select="foo[bar/dogcow/@status='cut']"</code>), what gets replaced is the <code><![CDATA[<foo/>]]></code> which has a <code><![CDATA[<bar/>]]></code> with a <code><![CDATA[<dogcow status="cut"/>]]></code> in it.</p>
+					<p>e.g. <code><![CDATA[<source:replace>foo/bar/dogcow/@status='cut'</source:replace>]]></code> (is equivalent to this in XSLT: <code>select="foo[bar/dogcow/@status='cut']"</code>), what gets replaced is the <code><![CDATA[<foo/>]]></code> which has a <code><![CDATA[<bar/>]]></code> with a <code><![CDATA[<dogcow status="cut"/>]]></code> in it.</p>
 					<p>The <code>overwrite</code> attribute of the parent <code><![CDATA[<source:insert/>]]></code> is used to check if replacing is allowed. If <code>overwrite</code> is 'true' (the default) the node is replaced. If <code>overwrite</code> is 'false' the node is only inserted if the replace node is found.</p>
 				</s3>
 				<s3 title="source:reinsert">
 					<p>[Optional] The XPath (relative to <code><![CDATA[<source:replace/>]]></code>) to backup the contents of the overwritten node to.</p>
-					<p>eg: <code><![CDATA[<source:reinsert>foo/versions</source:reinsert>]]></code> or <code><![CDATA[<source:reinsert>/doc/versions/foo</source:reinsert>]]></code>.</p>
+					<p>e.g. <code><![CDATA[<source:reinsert>foo/versions</source:reinsert>]]></code> or <code><![CDATA[<source:reinsert>/doc/versions/foo</source:reinsert>]]></code>.</p>
 					<p>If specified and a node is replaced, all children of this replaced node will be reinserted at the given path.</p>
 				</s3>
  			</s2>
