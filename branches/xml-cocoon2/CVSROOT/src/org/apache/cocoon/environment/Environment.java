@@ -5,38 +5,65 @@
  * version 1.1, a copy of which has been included  with this distribution in *
  * the LICENSE file.                                                         *
  *****************************************************************************/
+
 package org.apache.cocoon.environment;
 
-import java.io.IOException; 
-import java.io.OutputStream; 
-import java.net.MalformedURLException; 
-import java.util.Dictionary; 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.util.Dictionary;
 
-import org.xml.sax.EntityResolver; 
-import org.xml.sax.SAXException; 
+import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXException;
 
 /**
- * Base interface for an environment abstraction 
+ * Base interface for an environment abstraction
  *
  * @author <a href="mailto:Giacomo.Pati@pwr.ch">Giacomo Pati</a>
- * @version CVS $Revision: 1.1.2.8 $ $Date: 2000-08-31 14:56:34 $
+ * @version CVS $Revision: 1.1.2.9 $ $Date: 2000-08-31 15:56:34 $
  */
 
 public interface Environment extends EntityResolver {
-    // Sitemap methods
-    public String getUri (); 
-    public void changeContext (String uriprefix, String context) 
-        throws MalformedURLException;
-    public void redirect (String url) throws IOException;
 
-    // Request methods
-    public String getView ();
+    /**
+     * Get the URI to process
+     */
+    public String getUri();
 
-    // Response methods
-    public void setContentType (String mimeType); 
+    /**
+     * Get the view to process
+     */
+    public String getView();
+
+    /**
+     * Change the context from uriprefix to context
+     */
+    public void changeContext(String uriprefix, String context) throws MalformedURLException;
+
+    /**
+     * Redirect to the given URL
+     */
+    public void redirect(String url) throws IOException;
+
+    /**
+     * Set the content type of the generated resource
+     */
+    public void setContentType(String mimeType);
+
+    /**
+     * Set the response status code
+     */
     public void setStatus (int statusCode); 
-    public OutputStream getOutputStream() throws IOException; 
 
-    // Object model
-    public Dictionary getObjectModel(); 
-  }
+    /**
+     * Get the output stream where to write the generated resource.
+     */
+    public OutputStream getOutputStream() throws IOException;
+
+    /**
+     * Get the underlying object model
+     */
+    public Dictionary getObjectModel();
+
+}
+
