@@ -14,8 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<fd:form
-  xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
+
+<fd:form xmlns:fd="http://apache.org/cocoon/forms/1.0#definition">
 
   <fd:widgets>
   
