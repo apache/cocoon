@@ -69,9 +69,6 @@
     <sample name="webdav.org" href="http://www.webdav.org/">
       The webdav.org website
     </sample>
-    <sample name="htmlArea" href="http://sourceforge.net/projects/itools-htmlarea/">
-      A textarea replacement for WYSIWYG editing
-    </sample>
     <sample name="Catacomb" href="http://www.webdav.org/catacomb/">
       A DASL enabled WebDAV server
     </sample>
