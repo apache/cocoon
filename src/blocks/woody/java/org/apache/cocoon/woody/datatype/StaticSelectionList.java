@@ -53,6 +53,8 @@ package org.apache.cocoon.woody.datatype;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.apache.cocoon.woody.Constants;
+import org.apache.cocoon.woody.datatype.convertor.Convertor;
+import org.apache.cocoon.woody.datatype.convertor.DefaultFormatCache;
 import org.apache.cocoon.components.sax.XMLByteStreamInterpreter;
 import org.apache.cocoon.xml.AttributesImpl;
 
@@ -64,8 +66,9 @@ import java.util.Locale;
 /**
  * An implementation of a SelectionList. Create instances of this class by using
  * the {@link SelectionListBuilder}. This implementation is called "Static" because
- * the list of items is not retrieved dynamically, but only ones and shared for
- * all users of the {@link Datatype}.
+ * the items in the list are build once from its source, and then list items are
+ * cached as part of this object. In contrast, the {@link DynamicSelectionList}
+ * will retrieve its content from its source each time it's needed.
  */
 public class StaticSelectionList implements SelectionList {
     /** The datatype to which this selection list belongs */
@@ -86,11 +89,12 @@ public class StaticSelectionList implements SelectionList {
     }
 
     public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException {
+        Convertor.FormatCache formatCache = new DefaultFormatCache();
         contentHandler.startElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL, Constants.EMPTY_ATTRS);
         Iterator itemIt = items.iterator();
         while (itemIt.hasNext()) {
             SelectionListItem item = (SelectionListItem)itemIt.next();
-            item.generateSaxFragment(contentHandler, locale);
+            item.generateSaxFragment(contentHandler, locale, formatCache);
         }
         contentHandler.endElement(Constants.WI_NS, SELECTION_LIST_EL, Constants.WI_PREFIX_COLON + SELECTION_LIST_EL);
     }
@@ -113,10 +117,12 @@ public class StaticSelectionList implements SelectionList {
             this.label = label;
         }
 
-        public void generateSaxFragment(ContentHandler contentHandler, Locale locale) throws SAXException
+        public void generateSaxFragment(ContentHandler contentHandler, Locale locale, Convertor.FormatCache formatCache)
+                throws SAXException
         {
             AttributesImpl itemAttrs = new AttributesImpl();
-            itemAttrs.addCDATAAttribute("value", datatype.convertToString(value));
+            String stringValue = datatype.getConvertor().convertToString(value, locale, formatCache);;
+            itemAttrs.addCDATAAttribute("value", stringValue);
             contentHandler.startElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL, itemAttrs);
             contentHandler.startElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL, Constants.EMPTY_ATTRS);
             if (label != null) {
@@ -124,8 +130,7 @@ public class StaticSelectionList implements SelectionList {
                 interpreter.setContentHandler(contentHandler);
                 interpreter.deserialize(label);
             } else {
-                String formattedLabel = datatype.convertToStringLocalized(value, locale);
-                contentHandler.characters(formattedLabel.toCharArray(), 0, formattedLabel.length());
+                contentHandler.characters(stringValue.toCharArray(), 0, stringValue.length());
             }
             contentHandler.endElement(Constants.WI_NS, LABEL_EL, Constants.WI_PREFIX_COLON + LABEL_EL);
             contentHandler.endElement(Constants.WI_NS, ITEM_EL, Constants.WI_PREFIX_COLON + ITEM_EL);
