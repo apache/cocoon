@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.environment;
+package org.apache.cocoon.environment.internal;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -63,6 +63,12 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.source.SourceUtil;
+import org.apache.cocoon.environment.Environment;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.Response;
+import org.apache.cocoon.environment.Session;
+import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.excalibur.source.Source;
 
@@ -73,7 +79,7 @@ import org.apache.excalibur.source.Source;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentHelper.java,v 1.18 2004/01/09 08:36:37 cziegeler Exp $
+ * @version CVS $Id: EnvironmentHelper.java,v 1.1 2004/01/10 14:38:19 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentHelper

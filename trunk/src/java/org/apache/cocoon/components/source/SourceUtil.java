@@ -62,7 +62,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.ServiceSelector;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.serialization.Serializer;
 import org.apache.cocoon.xml.IncludeXMLConsumer;
 import org.apache.cocoon.xml.XMLUtils;
@@ -93,7 +93,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
- * @version CVS $Id: SourceUtil.java,v 1.10 2004/01/07 15:48:32 cziegeler Exp $
+ * @version CVS $Id: SourceUtil.java,v 1.11 2004/01/10 14:38:19 cziegeler Exp $
  */
 public final class SourceUtil {
 

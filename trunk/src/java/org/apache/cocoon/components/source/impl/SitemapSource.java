@@ -66,8 +66,8 @@ import org.apache.cocoon.ResourceNotFoundException;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.environment.wrapper.MutableEnvironmentFacade;
 import org.apache.cocoon.xml.ContentHandlerWrapper;
@@ -87,7 +87,7 @@ import org.xml.sax.ext.LexicalHandler;
  * by invoking a pipeline.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapSource.java,v 1.23 2004/01/09 08:39:54 cziegeler Exp $
+ * @version CVS $Id: SitemapSource.java,v 1.24 2004/01/10 14:38:19 cziegeler Exp $
  */
 public final class SitemapSource
 extends AbstractLogEnabled

@@ -58,7 +58,7 @@ import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
 import org.apache.cocoon.environment.AbstractEnvironment;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.SourceResolver;
@@ -74,7 +74,7 @@ import java.net.MalformedURLException;
  * This environment is used to save the requested file to disk.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.8 2003/10/30 12:38:26 cziegeler Exp $
+ * @version CVS $Id: AbstractCommandLineEnvironment.java,v 1.9 2004/01/10 14:38:19 cziegeler Exp $
  */
 
 public abstract class AbstractCommandLineEnvironment

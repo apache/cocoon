@@ -56,14 +56,14 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * This class is a wrapper around the real processor (the <code>Cocoon</code> class).
  * It is necessary to avoid infinite dispose loops
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ProcessorWrapper.java,v 1.9 2004/01/09 08:36:37 cziegeler Exp $
+ * @version CVS $Id: ProcessorWrapper.java,v 1.10 2004/01/10 14:38:19 cziegeler Exp $
  */
 public final class ProcessorWrapper
 implements Processor, Disposable, ThreadSafe {

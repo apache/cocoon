@@ -54,14 +54,14 @@ import java.util.Map;
 
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * 
  * @author <a href="mailto:pier@apache.org">Pierpaolo Fumagalli</a>
  *         (Apache Software Foundation)
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: Processor.java,v 1.13 2004/01/09 08:36:37 cziegeler Exp $
+ * @version CVS $Id: Processor.java,v 1.14 2004/01/10 14:38:19 cziegeler Exp $
  */
 public interface Processor {
 

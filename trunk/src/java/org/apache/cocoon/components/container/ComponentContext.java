@@ -54,7 +54,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.cocoon.components.ContextHelper;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 import java.util.Map;
 
@@ -64,7 +64,7 @@ import java.util.Map;
  * getting objects from the object model.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: ComponentContext.java,v 1.1 2004/01/07 15:57:30 cziegeler Exp $
+ * @version CVS $Id: ComponentContext.java,v 1.2 2004/01/10 14:38:19 cziegeler Exp $
  */
 
 public class ComponentContext

@@ -59,7 +59,6 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.JavaScriptException;
 
 import org.apache.cocoon.sitemap.SitemapRedirector;
-import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.Session;
 import org.apache.cocoon.environment.Response;
@@ -68,6 +67,7 @@ import org.apache.cocoon.environment.Redirector;
 import org.apache.cocoon.environment.ObjectModelHelper;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.Context;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.components.modules.output.OutputModule;
 import org.apache.cocoon.components.modules.input.InputModule;
 import org.apache.cocoon.components.cprocessor.sitemap.PipelinesNode;
@@ -84,7 +84,7 @@ import org.apache.avalon.framework.service.ServiceSelector;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 16, 2002
- * @version CVS $Id: JSCocoon.java,v 1.15 2004/01/07 15:48:32 cziegeler Exp $
+ * @version CVS $Id: JSCocoon.java,v 1.16 2004/01/10 14:38:19 cziegeler Exp $
  */
 public class JSCocoon extends ScriptableObject
 {

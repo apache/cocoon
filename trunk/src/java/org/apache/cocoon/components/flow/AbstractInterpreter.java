@@ -64,7 +64,7 @@ import org.apache.cocoon.Processor;
 import org.apache.cocoon.components.cprocessor.sitemap.PipelinesNode;
 import org.apache.cocoon.environment.Context;
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.excalibur.source.SourceUtil;
 
@@ -77,7 +77,7 @@ import org.apache.excalibur.source.SourceUtil;
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since March 15, 2002
- * @version CVS $Id: AbstractInterpreter.java,v 1.15 2004/01/05 08:17:31 cziegeler Exp $
+ * @version CVS $Id: AbstractInterpreter.java,v 1.16 2004/01/10 14:38:19 cziegeler Exp $
  */
 public abstract class AbstractInterpreter extends AbstractLogEnabled
   implements Serviceable, Contextualizable, Interpreter,

@@ -63,8 +63,8 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.components.pipeline.ProcessingPipeline;
 import org.apache.cocoon.components.cprocessor.variables.VariableResolver;
-import org.apache.cocoon.environment.EnvironmentContext;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentContext;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * The invocation context of <code>ProcessingNode</code>s.
@@ -79,7 +79,7 @@ import org.apache.cocoon.environment.EnvironmentHelper;
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
  * @author <a href="mailto:tcurdt@apache.org">Torsten Curdt</a>
- * @version CVS $Id: InvokeContext.java,v 1.4 2004/01/09 08:36:37 cziegeler Exp $
+ * @version CVS $Id: InvokeContext.java,v 1.5 2004/01/10 14:38:19 cziegeler Exp $
  */
 public class InvokeContext extends AbstractLogEnabled implements Serviceable, Disposable{
 

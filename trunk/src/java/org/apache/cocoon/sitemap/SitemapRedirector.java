@@ -51,8 +51,8 @@
 package org.apache.cocoon.sitemap;
 
 import org.apache.cocoon.environment.Environment;
-import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.Redirector;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 import java.io.IOException;
 
@@ -60,7 +60,7 @@ import java.io.IOException;
  * Wrapper for sitemap redirection
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: SitemapRedirector.java,v 1.5 2003/11/16 23:17:10 unico Exp $
+ * @version CVS $Id: SitemapRedirector.java,v 1.6 2004/01/10 14:38:19 cziegeler Exp $
  */
 public class SitemapRedirector implements Redirector {
     

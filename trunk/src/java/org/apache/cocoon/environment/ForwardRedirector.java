@@ -55,13 +55,14 @@ import java.io.IOException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.cprocessor.TreeProcessor;
+import org.apache.cocoon.environment.internal.*;
 
 /**
  * A <code>Redirector</code> that handles forward redirects, i.e. internal
  * redirects using the "cocoon:" pseudo-protocol.
  *
  * @author <a href="mailto:sylvain@apache.org">Sylvain Wallez</a>
- * @version CVS $Id: ForwardRedirector.java,v 1.14 2003/12/28 21:09:59 unico Exp $
+ * @version CVS $Id: ForwardRedirector.java,v 1.15 2004/01/10 14:38:19 cziegeler Exp $
  */
 public class ForwardRedirector
 extends AbstractLogEnabled 

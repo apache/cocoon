@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.environment;
+package org.apache.cocoon.environment.internal;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +56,7 @@ import java.util.Map;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.container.ContainerUtil;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * Experimental code for cleaning up the environment handling
@@ -72,7 +73,7 @@ import org.apache.avalon.framework.container.ContainerUtil;
  * dispose an object, use a key that starts with "global:"!
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentContext.java,v 1.4 2004/01/09 08:36:37 cziegeler Exp $
+ * @version CVS $Id: EnvironmentContext.java,v 1.1 2004/01/10 14:38:19 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentContext 

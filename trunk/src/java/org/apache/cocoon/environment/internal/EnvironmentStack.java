@@ -48,7 +48,7 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.environment;
+package org.apache.cocoon.environment.internal;
 
 import org.apache.cocoon.xml.XMLConsumer;
 import org.apache.commons.collections.ArrayStack;
@@ -65,7 +65,8 @@ import org.xml.sax.SAXException;
  * cocoon protocol and the sitemap source resolving.
  *
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentStack.java,v 1.4 2004/01/05 13:28:01 cziegeler Exp $
+ * @version CVS $Id: EnvironmentStack.java,v 1.1 2004/01/10 14:38:19 cziegeler Exp $
+ * @since 2.2
  */
 final class EnvironmentStack 
     extends ArrayStack 

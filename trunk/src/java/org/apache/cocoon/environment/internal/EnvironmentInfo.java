@@ -48,10 +48,11 @@
  Software Foundation, please see <http://www.apache.org/>.
 
 */
-package org.apache.cocoon.environment;
+package org.apache.cocoon.environment.internal;
 
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
+import org.apache.cocoon.environment.Environment;
 
 /**
  * Experimental code for cleaning up the environment handling
@@ -60,7 +61,7 @@ import org.apache.cocoon.Processor;
  * really need it.
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: EnvironmentInfo.java,v 1.3 2004/01/05 13:28:01 cziegeler Exp $
+ * @version CVS $Id: EnvironmentInfo.java,v 1.1 2004/01/10 14:38:19 cziegeler Exp $
  * @since 2.2
  */
 public class EnvironmentInfo {

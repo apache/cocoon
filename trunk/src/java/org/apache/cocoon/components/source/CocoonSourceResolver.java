@@ -58,8 +58,8 @@ import java.util.Map;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Processor;
-import org.apache.cocoon.environment.EnvironmentHelper;
 import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.source.impl.SourceResolverImpl;
@@ -69,7 +69,7 @@ import org.apache.excalibur.source.impl.SourceResolverImpl;
  * Cocoon.
  *
  * @author <a href="mailto:cziegeler@s-und-n.de">Carsten Ziegeler</a>
- * @version CVS $Id: CocoonSourceResolver.java,v 1.6 2003/12/27 15:10:22 unico Exp $
+ * @version CVS $Id: CocoonSourceResolver.java,v 1.7 2004/01/10 14:38:19 cziegeler Exp $
  * 
  * @avalon.component
  * @avalon.service type=SourceResolver

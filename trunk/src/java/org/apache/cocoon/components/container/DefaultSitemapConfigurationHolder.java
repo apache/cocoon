@@ -55,14 +55,14 @@ import java.util.Map;
 
 import org.apache.cocoon.components.ChainedConfiguration;
 import org.apache.cocoon.components.SitemapConfigurationHolder;
-import org.apache.cocoon.environment.EnvironmentHelper;
+import org.apache.cocoon.environment.internal.EnvironmentHelper;
 
 /**
  * This is the implementation for the sitemap configuration holder that implements
  * the the sitemap component configurations
  * 
  * @author <a href="mailto:cziegeler@apache.org">Carsten Ziegeler</a>
- * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.1 2004/01/07 15:57:30 cziegeler Exp $
+ * @version CVS $Id: DefaultSitemapConfigurationHolder.java,v 1.2 2004/01/10 14:38:19 cziegeler Exp $
  */
 public final class DefaultSitemapConfigurationHolder
     implements SitemapConfigurationHolder {
