@@ -89,7 +89,6 @@ import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceResolver;
 import org.apache.excalibur.xml.sax.SAXParser;
 import org.apache.excalibur.xml.xslt.XSLTProcessor;
-import org.xml.sax.InputSource;
 
 /**
  * 
@@ -106,6 +105,9 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
 
     /** Environment attribute key for redirection status communication */
     public static final String COCOON_REDIRECT_ATTR = "cocoon: redirect url";
+    
+    /** The sitemap namespace */
+    public static final String SITEMAP_NS = "http://apache.org/cocoon/sitemap/1.0";
     
     /** The xsl transformation location for turning a sitemap into a Fortress container configuration */
     private static final String SITEMAP2XCONF_URL = 
@@ -366,12 +368,25 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
         return processor.process(newEnv, context);
     }
     
-    /* (non-Javadoc)
-     * @see org.apache.cocoon.Processor#buildPipeline(org.apache.cocoon.environment.Environment)
+    /**
+     * Process the given <code>Environment</code> to assemble
+     * a <code>ProcessingPipeline</code>.
+     * @since 2.1
      */
     public ProcessingPipeline buildPipeline(Environment environment) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        InvokeContext context = new InvokeContext( true );
+
+        context.enableLogging(getLogger());
+
+        try {
+            if ( process(environment, context) ) {
+                return context.getProcessingPipeline();
+            } else {
+                return null;
+            }
+        } finally {
+            context.dispose();
+        }
     }
 
     /**
@@ -389,10 +404,18 @@ implements Processor, Contextualizable, Serviceable, Configurable, Initializable
     }
     
     /**
-     * TODO: why do me need this?
+     * TODO: do we still need this?
+     * 
+     * Get the root parent of this processor
+     * @since 2.1.1
      */
     public Processor getRootProcessor() {
-        return null;
+        TreeProcessor result = this;
+        while(result.m_parent != null) {
+            result = result.m_parent;
+        }
+        
+        return result;
     }
 
     public EnvironmentHelper getEnvironmentHelper() {
