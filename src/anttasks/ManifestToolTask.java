@@ -92,8 +92,10 @@ public final class ManifestToolTask extends Task {
                     }
                 }
             }
-        }finally {
-            w.close();
+        } finally {
+            if (w != null) {
+                w.close();
+            }
         }
     }
 }
