@@ -214,20 +214,30 @@ public class JXFormsGenerator extends AbstractGenerator {
             if (absolute) {
                 ctx = root;
             }
-            // hack: for non-collections iteratePointers doesn't always do 
-            // the right thing 
+            return jxpath.iteratePointers(ctx);
+        }
+
+      
+        Iterator iterate(JXPathContext root, JXPathContext current) {
+            JXPathContext ctx = current;
+            if (absolute) {
+                ctx = root;
+            }
+            // Hack: iterate doesn't always do the right thing for non-
+            // collections
             final NodePointer ptr = (NodePointer)jxpath.getPointer(ctx, "???");
             if (ptr.isCollection()) {
-                return jxpath.iteratePointers(ctx);
+                return jxpath.iterate(ctx);
             } 
+            final Object value = ptr.getValue();
             return new Iterator() {
-                    Pointer p = ptr;
+                    Object val = value;
                     public boolean hasNext() {
-                        return p != null;
+                        return val != null;
                     }
                     public Object next() {
-                        Object result = p;
-                        p = null;
+                        Object result = val;
+                        val = null;
                         return result;
                     }
                     public void remove() {
@@ -1475,15 +1485,11 @@ public class JXFormsGenerator extends AbstractGenerator {
                                       startElement.raw,
                                       startElement.attributes);
                 if (ref != null) {
-                    Iterator iter = ref.iteratePointers(rootContext,
-                                                        currentContext);
+                    Iterator iter = ref.iterate(rootContext,
+                                                currentContext);
                     while (iter.hasNext()) {
-                        Pointer ptr = (Pointer)iter.next();
-                        AttributesImpl attrs = new AttributesImpl();
-                        attrs.addAttribute(NS, REF, REF, "CDATA",
-                                           ptr.asPath());
+                        Object val = iter.next();
                         consumer.startElement(NS, VALUE, VALUE, EMPTY_ATTRS);
-                        Object val = ptr.getValue();
                         if (val == null) val = "";
                         String str = String.valueOf(val);
                         consumer.characters(str.toCharArray(), 0, str.length());
