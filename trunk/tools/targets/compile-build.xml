@@ -138,7 +138,7 @@
 
   <!-- package testcase code -->
   <target name="package-testcase" depends="compile-tests">
-    <jar jarfile="${build}/${name}-testcase.jar">
+    <jar jarfile="${build}/${name}-testcase.jar" index="true">
       <fileset dir="${build.test}">
         <include name="org/apache/cocoon/environment/mock/*"/>
         <include name="org/apache/cocoon/components/source/SourceResolverAdapter*"/>

@@ -57,7 +57,7 @@
   </target>
 
   <target name="forrest.checkenv" if="env.FORREST_HOME">
-    <echo level="verbose">Found $FORREST_HOME..</echo>
+    <echo level="verbose">Found $FORREST_HOME=${env.FORREST_HOME}</echo>
     <property name="forrest.home" location="${env.FORREST_HOME}"/>
     <echo level="verbose">forrest.home set to ${forrest.home}</echo>
     <available file="${forrest.home}" type="dir" property="forrest.home.present"/>
@@ -158,8 +158,8 @@
       Then either:
 
       - Set FORREST_HOME as the Forrest build instructions describe
-      - Create a build.properties, with the forrest.home property pointing to
-        the forrest shbat directory, eg:
+      - Create a project.properties, with the forrest.home property
+        pointing to the forrest shbat directory, e.g.
 
         forrest.home=${winpath}  (Windows)
         forrest.home=${unixpath}  (Unix)
