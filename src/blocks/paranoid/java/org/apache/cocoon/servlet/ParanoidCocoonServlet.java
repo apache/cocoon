@@ -74,12 +74,23 @@ import javax.servlet.http.HttpServlet;
  * such as Xerces and Xalan versions included in JDK 1.4.
  * <p>
  * This servlet propagates all initialisation parameters to the sandboxed servlet, and
- * accept only one additional parameter, <code>servlet-class</code>, which defined the
- * sandboxed servlet class. The default is {@link CocoonServlet}.
+ * accepts the parameters <code>servlet-class</code> and <code>paranoid-classpath</code>.
+ * <ul>
+ *  <li><code>servlet-class</code> defines the sandboxed servlet class, the default is 
+ *      {@link CocoonServlet}
+ *  <li><code>paranoid-classpath</code> expects the name of a text file that can contain 
+ *      lines begining with <code>class-dir:<code> (directory containing classes),
+ *      <code>lib-dir:<code> (directory containing JAR or ZIP libraries) and <code>#</code>
+ *      (for comments). <br/>
+ *      All other lines are considered as URLs.
+ *      <br/>
+ *      It is also possible to use a the pseudo protocol prefix<code>context:/<code> which 
+ *      is resolved to the basedir of the servlet context.
+ * </ul>
  *
  * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: ParanoidCocoonServlet.java,v 1.1 2003/12/11 18:22:14 sylvain Exp $
+ * @version CVS $Id: ParanoidCocoonServlet.java,v 1.2 2004/01/19 10:09:27 reinhard Exp $
  */
 
 public class ParanoidCocoonServlet extends HttpServlet {
@@ -88,6 +99,10 @@ public class ParanoidCocoonServlet extends HttpServlet {
 	 * The name of the actual servlet class.
 	 */
 	public static final String DEFAULT_SERVLET_CLASS = "org.apache.cocoon.servlet.CocoonServlet";
+    
+    protected static final String CONTEXT_PREFIX = "context:";
+    
+    protected static final String FILE_PREFIX = "file:";
     
 	protected Servlet servlet;
     
@@ -105,7 +120,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
         if ( externalClasspath == null ) {
             this.classloader = this.getClassLoader(this.getContextDir());
         } else {
-            this.classloader = this.getClassLoader(externalClasspath);
+            this.classloader = this.getClassLoader(externalClasspath, this.getContextDir());
         }
         
         String servletName = config.getInitParameter("servlet-class");
@@ -203,7 +218,7 @@ public class ParanoidCocoonServlet extends HttpServlet {
      * Get the classloader that will be used to create the actual servlet. Its classpath is defined
      * by an external file.
      */
-    protected ClassLoader getClassLoader(String externalClasspath) 
+    protected ClassLoader getClassLoader(String externalClasspath, File contextDir) 
     throws ServletException {
         final List urlList = new ArrayList();
 
@@ -214,16 +229,22 @@ public class ParanoidCocoonServlet extends HttpServlet {
         
             String line;
             do {
-                line = lineReader.readLine();
+                line = lineReader.readLine();                
                 if ( line != null ) {
                     if (line.startsWith("class-dir:")) {
                         line = line.substring("class-dir:".length()).trim();
+                        if( line.startsWith(CONTEXT_PREFIX)) {
+                            line = contextDir + line.substring(CONTEXT_PREFIX.length());
+                        }
                         URL url = new File(line).toURL();
                         log("Adding class directory " + url);
                         urlList.add(url);
                         
                     } else if (line.startsWith("lib-dir:")) {
                         line = line.substring("lib-dir:".length()).trim();
+                        if( line.startsWith(CONTEXT_PREFIX)) {
+                            line = contextDir + line.substring(CONTEXT_PREFIX.length());                            
+                        }                        
                         File dir = new File(line);
                         File[] libraries = dir.listFiles(new JarFileFilter());
                         log("Adding " + libraries.length + " libraries from " + dir.toURL());
@@ -231,15 +252,21 @@ public class ParanoidCocoonServlet extends HttpServlet {
                             URL url = libraries[i].toURL();
                             urlList.add(url);
                         }
+                    } else if(line.startsWith("#")) {
+                        // skip it (consider it as comment)
                     } else {
                         // Consider it as a URL
                         final URL lib;
+                        if( line.startsWith(CONTEXT_PREFIX)) {
+                            line = FILE_PREFIX + "/" + contextDir + 
+                                line.substring(CONTEXT_PREFIX.length()).trim();
+                        }                        
                         if ( line.indexOf(':') == -1) {
                             File entry = new File(line);        
-                            lib = entry.toURL();
+                            lib = entry.toURL();                          
                         } else {
                             lib = new URL(line);
-                        }
+                        }                        
                         log("Adding class URL " + lib);
                         urlList.add(lib);
                     }
@@ -293,5 +320,6 @@ public class ParanoidCocoonServlet extends HttpServlet {
             return name.endsWith(".zip") || name.endsWith(".jar");
         }
     }
+   
 }
 
