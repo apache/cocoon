@@ -1,10 +1,10 @@
-/*-- $Id: XTTransformer.java,v 1.3 2000-01-09 23:46:14 stefano Exp $ -- 
+/*-- $Id: XTTransformer.java,v 1.4 2000-02-13 18:29:42 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:

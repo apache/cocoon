@@ -118,6 +118,13 @@ Here is a list of such modules and what you have to download to build them:
 
  org.apache.cocoon.processor.dcp.DCPProcessor ===>
        FESI 1.21+ (http://home.worldcom.ch/jmlugrin/fesi/download.html)
+       
+2) The "docs" target doesn't work. What's wrong?
+
+You are probably using a Java 1.1.x environment. Since Stylebook renders also
+the page images from the XML documents, it needs extended image rendering
+and graphic capabilities that were included in Java 1.2. For this reason,
+a Java 1.2 compatible JVM is required for this target.       
 
 ============================================================================ -->
 
@@ -130,13 +137,12 @@ Here is a list of such modules and what you have to download to build them:
     <tstamp/>
     <property name="Name" value="Cocoon"/>
     <property name="name" value="cocoon"/>
-    <property name="version" value="1.6.2-dev"/>
+    <property name="version" value="1.6.2"/>
     <property name="year" value="1999-2000"/>
 
     <echo message="------------------- ${Name} ${version} [${year}] ----------------"/>
 
     <property name="build.compiler" value="classic"/>
-    <!-- <property name="build.compiler" value="jikes"/> -->
     <property name="debug" value="off"/>
     <property name="optimize" value="on"/>
     <property name="deprecation" value="off"/>
@@ -166,8 +172,11 @@ Here is a list of such modules and what you have to download to build them:
     <property name="site" value="../xml-site/targets/cocoon"/>
 
     <available property="xt.present" class="com.jclark.xsl.sax.XSLProcessor"/>
-    <available property="fesi.present" class="FESI.interpreter.interpret"/>
+    <available property="fesi.present" class="FESI.jslib.JSGlobalObject"/>
     <available property="jndi.present" class="javax.naming.Name"/>
+    
+    <filter token="year" value="${year}"/>
+    <filter token="version" value="${version}"/>
   </target>
 
   <!-- =================================================================== -->
@@ -207,31 +216,27 @@ Here is a list of such modules and what you have to download to build them:
   <!-- Prepares the build directory                                        -->
   <!-- =================================================================== -->
   <target name="prepare-xt" if="xt.present">
-    <copydir src="${src.dir}" dest="${build.src}" includes="**/XTTransformer.java"/>
+    <copydir src="${src.dir}" dest="${build.src}" includes="**/XT*"/>
   </target>
 
   <target name="prepare-ldap" if="jndi.present">
     <copydir src="${src.dir}" dest="${build.src}" includes="**/ldap/**"/>
   </target>
 
-  <target name="prepare-dcp" if="fesi.present">
-    <copydir src="${src.dir}" dest="${build.src}" includes="**/dcp/**, **/*DCP**, **/interpreter/**"/>
+  <target name="prepare-ecma" if="fesi.present">
+    <copydir src="${src.dir}" dest="${build.src}" includes="**/ecmascript/**"/>
   </target>
 
   <!-- =================================================================== -->
   <!-- Prepares the source code                                            -->
   <!-- =================================================================== -->
-  <target name="prepare-src" depends="prepare, prepare-xt, prepare-dcp, prepare-ldap">
+  <target name="prepare-src" depends="prepare, prepare-xt, prepare-ecma, prepare-ldap">
     <!-- create directories -->
     <mkdir dir="${build.src}"/>
     <mkdir dir="${build.dest}"/>
 
     <!-- copy src files -->
-    <copydir src="${src.dir}" dest="${build.src}" excludes="**/XTTransformer.java, **/ldap/**, **/dcp/**, **/*DCP**, **/interpreter/**"/>
-
-    <!-- substitute tokens as needed -->
-    <replace file="${build.src}/${version.file}" token="@@version@@" value="${version}"/>
-    <replace file="${build.src}/${version.file}" token="@@year@@" value="${year}"/>
+    <copydir src="${src.dir}" dest="${build.src}" excludes="**/XT*, **/ldap/**, **/ecmascript/**"/>
   </target>
 
   <!-- =================================================================== -->
@@ -274,8 +279,7 @@ Here is a list of such modules and what you have to download to build them:
   <target name="docs" depends="prepare-docs">
     <mkdir dir="${build.docs}"/>
     <copyfile src="${docs.dir}/docs-book.xml" dest="${docs.dir}/book.xml"/>
-    <replace file="${docs.dir}/book.xml" token="@@year@@" value="${year}"/>
-    <java fork="yes" classpath="${doc.generator.package}" class="${doc.generator}"
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" class="${doc.generator}"
           args="targetDirectory=${build.docs} ${docs.dir}/book.xml ${skin}"/>
   </target>
 
@@ -285,8 +289,7 @@ Here is a list of such modules and what you have to download to build them:
   <target name="site" depends="prepare-docs">
     <mkdir dir="${site.dir}"/>
     <copyfile src="${docs.dir}/site-book.xml" dest="${docs.dir}/book.xml"/>
-    <replace file="${docs.dir}/book.xml" token="@@year@@" value="${year}"/>
-    <java fork="yes" classpath="${doc.generator.package}" class="${doc.generator}"
+    <java fork="yes" classpath="${java.class.path}:${doc.generator.package}" class="${doc.generator}"
           args="targetDirectory=${site} ${docs.dir}/book.xml ${skin}"/>
   </target>
 
@@ -330,14 +333,12 @@ Here is a list of such modules and what you have to download to build them:
     <copydir src="${build.docs}" dest="${dist.dir}/docs"/>
     <copydir src="${build.javadocs}" dest="${dist.dir}/docs/api"/>
     <copydir src="${samples.dir}" dest="${dist.dir}/samples"/>
-    <replace file="${samples.dir}/index.xsl" token="@@year@@" value="${year}"/>
     <copydir src="${docs.dir}" dest="${dist.dir}/xdocs" excludes="book.xml, changes.xml, todo.xml"/>
     <copydir src="${skins.dir}" dest="${dist.dir}/skins"/>
     <copydir src="${lib.dir}" dest="${dist.dir}/lib"/>
 
     <copyfile src="README" dest="${dist.dir}/README"/>
     <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
-    <replace file="${dist.dir}/README" token="@@version@@" value="${version}"/>
 
     <copydir src="." dest="${dist.dir}" includes="build.*"/>
 
@@ -346,29 +347,35 @@ Here is a list of such modules and what you have to download to build them:
   </target>
 
   <!-- =================================================================== -->
-  <!-- Packages the distribution with ZIP                                  -->
+  <!-- Packages the distribution as .zip                                   -->
   <!-- =================================================================== -->
   <target name="dist-zip" depends="dist">
     <zip zipfile="${Name}-${version}.zip" basedir="${dist.dir}" includes="**"/>
   </target>
 
   <!-- =================================================================== -->
-  <!-- Packages the distribution with TAR-GZIP                             -->
+  <!-- Packages the distribution with .tar.gzip                            -->
   <!-- =================================================================== -->
   <target name="dist-tgz" depends="dist">
-    <!-- <tar tarfile="${Name}-${version}.tar" basedir="${dist.dir}" includes="**"/> -->
+    <tar tarfile="${Name}-${version}.tar" basedir="${dist.dir}" includes="**"/>
     <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
   </target>
 
   <!-- =================================================================== -->
-  <!-- Cleans everything                                                   -->
+  <!-- Clean targets                                                       -->
   <!-- =================================================================== -->
   <target name="clean">
     <deltree dir="${build.dir}"/>
-    <deltree dir="${dist.dir}"/>
     <delete file="${docs.dir}/changes.xml"/>
     <delete file="${docs.dir}/todo.xml"/>
     <delete file="${docs.dir}/book.xml"/>
+  </target>
+
+  <target name="distclean" depends="clean">
+    <deltree dir="${dist.dir}"/>
+    <delete file="${Name}-${version}.tar.gz"/>
+    <delete file="${Name}-${version}.tar"/>
+    <delete file="${Name}-${version}.zip"/>
   </target>
 
 </project>

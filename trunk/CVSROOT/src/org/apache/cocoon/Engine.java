@@ -1,10 +1,10 @@
-/*-- $Id: Engine.java,v 1.15 2000-02-09 21:27:58 stefano Exp $ --
+/*-- $Id: Engine.java,v 1.16 2000-02-13 18:29:16 stefano Exp $ --
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
 
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -72,7 +72,7 @@ import org.apache.cocoon.interpreter.*;
  * This class implements the engine that does all the document processing.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.15 $ $Date: 2000-02-09 21:27:58 $
+ * @version $Revision: 1.16 $ $Date: 2000-02-13 18:29:16 $
  */
 
 public class Engine implements Defaults {

@@ -1,10 +1,10 @@
-/*-- $Id: ProducerFromRequest.java,v 1.1 1999-12-02 11:52:01 stefano Exp $ -- 
+/*-- $Id: ProducerFromRequest.java,v 1.2 2000-02-13 18:29:41 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -66,7 +66,7 @@ import org.apache.cocoon.framework.*;
  * HttpServletRequest.
  * 
  * @author <a href="mailto:grit@wwcn.org">Gerrit Hiddink</a>
- * @version $Revision: 1.1 $ $Date: 1999-12-02 11:52:01 $
+ * @version $Revision: 1.2 $ $Date: 2000-02-13 18:29:41 $
  */
 
 

@@ -4,7 +4,7 @@
 
 <!-- 
   History of Cocoon changes
-  $Id: todo.xml,v 1.16 2000-01-27 03:40:22 stefano Exp $
+  $Id: todo.xml,v 1.17 2000-02-13 18:29:12 stefano Exp $
 -->
 
 <todo title="Things To Do">
@@ -26,12 +26,6 @@
   <action context="code">
    Pass request/session parameters to the XSLT processors for dynamic
    stylesheet operation. (follows sitemap)
-  </action>
-  <action context="code">
-   Fix problems on Xalan liaison that breaks &lt;xsl:import&gt; (follows SAX usage).
-  </action>
-  <action context="code">
-   Create a caching virtual URL file system for external inclusions.
   </action>
   <action context="code">
    Add logging.

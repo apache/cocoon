@@ -3,7 +3,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -65,7 +65,7 @@ import javax.servlet.http.*;
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:bmclaugh@algx.net">Brett McLaughlin</a>
- * @version $Revision: 1.1 $ $Date: 1999-12-23 01:28:32 $
+ * @version $Revision: 1.2 $ $Date: 2000-02-13 18:29:14 $
  */ 
 public class CocoonServletResponse implements HttpServletResponse {
         

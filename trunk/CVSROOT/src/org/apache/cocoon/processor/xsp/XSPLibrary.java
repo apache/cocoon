@@ -1,10 +1,10 @@
-/*-- $Id: XSPLibrary.java,v 1.3 2000-01-03 01:42:50 stefano Exp $ -- 
+/*-- $Id: XSPLibrary.java,v 1.4 2000-02-13 18:29:34 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@ import java.util.*;
 
 /**
  * @author <a href="mailto:ricardo@apache.org">Ricardo Rocha</a>
- * @version $Revision: 1.3 $ $Date: 2000-01-03 01:42:50 $
+ * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:34 $
  */
 public class XSPLibrary {
   protected String namespace;

@@ -1,10 +1,10 @@
-/*-- $Id: NoCache.java,v 1.3 1999-11-09 02:29:30 dirkx Exp $ -- 
+/*-- $Id: NoCache.java,v 1.4 2000-02-13 18:29:18 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@ import org.apache.cocoon.framework.*;
  * A caching implementation that doesn't cache anything :).
  *
  * @author <a href="stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $Date: 1999/11/09 02:20:51 $
+ * @version $Revision: 1.4 $Date: 1999/11/09 02:29:30 $
  */
 public class NoCache extends AbstractActor implements Cache, Status {
 

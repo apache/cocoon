@@ -1,10 +1,10 @@
-/*-- $Id: DCPException.java,v 1.3 1999-11-09 02:30:45 dirkx Exp $ -- 
+/*-- $Id: DCPException.java,v 1.4 2000-02-13 18:29:30 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@ package org.apache.cocoon.processor.dcp;
  * wrong during processing. 
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.3 $ $Date: 1999-11-09 02:30:45 $
+ * @version $Revision: 1.4 $ $Date: 2000-02-13 18:29:30 $
  */
 
 public class DCPException extends Exception {

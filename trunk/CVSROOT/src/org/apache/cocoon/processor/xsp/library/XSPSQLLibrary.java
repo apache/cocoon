@@ -3,7 +3,7 @@
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@ import org.w3c.dom.*;
  * A processor that performs SQL database queries.
  *
  * @author <a href="mailto:balld@webslingerZ.com">Donald Ball</a>
- * @version $Revision: 1.1 $ $Date: 2000-02-04 07:19:45 $
+ * @version $Revision: 1.2 $ $Date: 2000-02-13 18:29:38 $
  */
 
 public class XSPSQLLibrary {

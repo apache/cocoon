@@ -1,10 +1,10 @@
-/*-- $Id: XalanTransformer.java,v 1.6 2000-01-31 21:53:19 stefano Exp $ -- 
+/*-- $Id: XalanTransformer.java,v 1.7 2000-02-13 18:29:42 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
  * Xalan XSLT processor.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.6 $ $Date: 2000-01-31 21:53:19 $
+ * @version $Revision: 1.7 $ $Date: 2000-02-13 18:29:42 $
  */
 
 public class XalanTransformer extends AbstractActor implements Transformer, Status {

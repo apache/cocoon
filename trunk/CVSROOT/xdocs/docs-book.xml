@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<book software="Cocoon" title="Cocoon documentation" copyright="@@year@@ The Apache Software Foundation">
+<book software="Cocoon" title="Cocoon documentation" copyright="@year@ The Apache Software Foundation">
 
   <page id="index" label="Index" source="index.xml"/>
   <page id="license" label="License" source="license.xml"/>

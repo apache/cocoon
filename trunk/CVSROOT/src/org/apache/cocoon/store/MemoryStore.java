@@ -1,10 +1,10 @@
-/*-- $Id: MemoryStore.java,v 1.5 1999-12-16 11:44:13 stefano Exp $ -- 
+/*-- $Id: MemoryStore.java,v 1.6 2000-02-13 18:29:42 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -65,7 +65,7 @@ import org.apache.cocoon.framework.*;
  * sending a note about a method to do it.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.5 $ $Date: 1999-12-16 11:44:13 $
+ * @version $Revision: 1.6 $ $Date: 2000-02-13 18:29:42 $
  */
 
 public class MemoryStore implements Store, Configurable, Status {

@@ -33,7 +33,7 @@
     
     <p align="center">
      <font size="-1">
-      Copyright &#169; 1999 <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
+      Copyright &#169; @year@ <a href="http://xml.apache.org">The Apache XML Project</a>.<br/>
       All rights reserved.
      </font>
     </p>

@@ -1,10 +1,10 @@
-/*-- $Id: EngineWrapper.java,v 1.8 1999-12-23 01:28:58 stefano Exp $ -- 
+/*-- $Id: EngineWrapper.java,v 1.9 2000-02-13 18:29:16 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -70,7 +70,7 @@ import org.apache.cocoon.framework.*;
  * But I have more important stuff to do right now.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.8 $ $Date: 1999-12-23 01:28:58 $
+ * @version $Revision: 1.9 $ $Date: 2000-02-13 18:29:16 $
  */
 
 public class EngineWrapper {

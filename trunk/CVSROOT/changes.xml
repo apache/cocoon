@@ -4,7 +4,7 @@
 
 <!--
   History of Cocoon changes
-  $Id: changes.xml,v 1.27 2000-02-09 21:30:51 stefano Exp $
+  $Id: changes.xml,v 1.28 2000-02-13 18:29:12 stefano Exp $
 -->
 
 <changes title="History of Changes">
@@ -14,13 +14,22 @@
     <person name="Ricardo Rocha" email="rrocha@apache.org" id="RR"/>
   </devs>
 
- <release version="1.6.2-dev" date="Not yet released">
-  <action dev="SM" type="remove">
+ <release version="1.7-dev" date="Not yet released">
+  <action dev="SM" type="fix">
+    Fixed installation instructions to make it easier for newbies to get
+    going. Anyway, if you still find it hard, help us instead of complaining :)
+  </action>
+  <action dev="SM" type="fix">
+    Patched build system with Ant upgrades. Now it is possible to build
+    Cocoon even if not all the used packages are present, this because some
+    of the compilation targets will react on class presence and skip themselves.
+  </action>
+  <action dev="SM" type="add">
     Added library with all the required jar files for ease of installation.
   </action>
   <action dev="SM" type="remove">
-    Leave DCP out by default. Now DCP is considered obsolete and will be
-    removed in future versions.
+    Leave DCP out in configurations by default. Now DCP is considered obsolete 
+    and will be removed in future versions.
   </action>
   <action dev="SM" type="remove">
     Removed ProducerFromMap.

@@ -1,10 +1,10 @@
-/*-- $Id: ProcessorFactory.java,v 1.4 1999-11-30 16:30:09 stefano Exp $ -- 
+/*-- $Id: ProcessorFactory.java,v 1.5 2000-02-13 18:29:30 stefano Exp $ -- 
 
  ============================================================================
                    The Apache Software License, Version 1.1
  ============================================================================
  
-    Copyright (C) 1999 The Apache Software Foundation. All rights reserved.
+ Copyright (C) @year@ The Apache Software Foundation. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modifica-
  tion, are permitted provided that the following conditions are met:
@@ -61,7 +61,7 @@ import org.apache.cocoon.framework.*;
  * associated to the produced document.
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @version $Revision: 1.4 $ $Date: 1999-11-30 16:30:09 $
+ * @version $Revision: 1.5 $ $Date: 2000-02-13 18:29:30 $
  */
 
 public class ProcessorFactory extends Router implements Defaults {
