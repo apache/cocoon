@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <!--
 	Stylesheet for extracting Schematron information from a RELAX-NG schema.
 	Based on the stylesheet for extracting Schematron information from W3C XML Schema.
