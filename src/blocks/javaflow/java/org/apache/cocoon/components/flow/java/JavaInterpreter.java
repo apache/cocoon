@@ -84,8 +84,11 @@ public class JavaInterpreter extends AbstractInterpreter implements Configurable
             continuationclassloader.addIncludeClass(includes[i].getAttribute("class"));
     }
 
-    public void initialize() throws Exception {
-        
+    public synchronized void initialize() throws Exception {
+
+        if (initialized) {
+            return;
+        }
         if (getLogger().isDebugEnabled())
             getLogger().debug("initialize java flow interpreter");
 
