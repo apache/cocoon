@@ -50,24 +50,26 @@
 */
 package org.apache.cocoon.woody.transformation;
 
-import org.apache.cocoon.transformation.Transformer;
-import org.apache.cocoon.environment.SourceResolver;
-import org.apache.cocoon.environment.Request;
-import org.apache.cocoon.environment.ObjectModelHelper;
-import org.apache.cocoon.ProcessingException;
-import org.apache.cocoon.woody.formmodel.Form;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.avalon.framework.parameters.ParameterException;
-import org.apache.avalon.excalibur.pool.Poolable;
-import org.xml.sax.SAXException;
-
-import java.util.Map;
 import java.io.IOException;
+import java.util.Map;
+
+import org.apache.avalon.framework.parameters.ParameterException;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.cocoon.ProcessingException;
+import org.apache.cocoon.environment.ObjectModelHelper;
+import org.apache.cocoon.environment.Request;
+import org.apache.cocoon.environment.SourceResolver;
+import org.apache.cocoon.transformation.Transformer;
+import org.apache.cocoon.woody.formmodel.Form;
+import org.xml.sax.SAXException;
 
 /**
  * See description of {@link WidgetReplacingPipe}.
  */
-public class WoodyTemplateTransformer extends WidgetReplacingPipe implements Transformer, Poolable {
+public class WoodyTemplateTransformer 
+    extends WidgetReplacingPipe 
+    implements Transformer {
+    
     public void setup(SourceResolver resolver, Map objectModel, String src, Parameters parameters) throws ProcessingException,
             SAXException, IOException {
 

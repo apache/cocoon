@@ -91,28 +91,29 @@ import java.util.Locale;
  * <p>Woody ships with an XSL that can style all the widgets that are provided by the core Woody framework.
  */
 public class WidgetReplacingPipe extends AbstractXMLPipe {
-    private Widget contextWidget;
+    
+    protected Widget contextWidget;
     /** Indicates whether we're currently in a widget element. */
-    private boolean inWidgetElement;
+    protected boolean inWidgetElement;
     /** Compiler used to record the XML inside wi:widget elements. */
-    private XMLByteStreamCompiler xmlCompiler = new XMLByteStreamCompiler();
+    protected XMLByteStreamCompiler xmlCompiler = new XMLByteStreamCompiler();
     /** Counts the element nesting. */
-    private int elementNestingCounter;
+    protected int elementNestingCounter;
     /**
      * Contains the value of the {@link #elementNestingCounter} on the moment the transformer
      * encountered a wi:widget element. Used to detect the corresponding endElement call
      * for the wi:widget element.
      */
-    private int widgetElementNesting;
+    protected int widgetElementNesting;
     /**
      * If {@link #inWidgetElement} = true, then this contains the widget currenlty being handled.
      */
-    private Widget widget;
+    protected Widget widget;
     /** Boolean indicating wether the current widget requires special repeater-treatement. */
-    private boolean repeaterWidget;
-    private WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
+    protected boolean repeaterWidget;
+    protected WoodyTemplateTransformer.InsertStylingContentHandler stylingHandler = new WoodyTemplateTransformer.InsertStylingContentHandler();
 
-    private static final String STYLING_EL = "styling";
+    protected static final String STYLING_EL = "styling";
 
     public void init(Widget contextWidget) {
         this.contextWidget = contextWidget;
@@ -349,7 +350,8 @@ public class WidgetReplacingPipe extends AbstractXMLPipe {
 
     public void recycle() {
         super.recycle();
-        contextWidget = null;
+        this.contextWidget = null;
+        this.widget = null;
     }
 
 }

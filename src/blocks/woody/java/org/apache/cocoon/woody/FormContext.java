@@ -59,10 +59,11 @@ import java.util.Locale;
  * Holds data needed during the processing of a form submit.
  */
 public class FormContext {
-    private Request request;
-    private Locale locale;
-    private ActionEvent actionEvent;
-    private boolean doValidation;
+    
+    protected Request request;
+    protected Locale locale;
+    protected ActionEvent actionEvent;
+    protected boolean doValidation;
 
     public FormContext(Request request, Locale locale) {
         this.request = request;
