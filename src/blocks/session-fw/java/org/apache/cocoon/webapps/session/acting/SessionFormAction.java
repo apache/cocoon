@@ -131,7 +131,7 @@ import java.util.Map;
  * where "session-form" is configured as SessionFormAction
  * 
  * @author <a href="mailto:gcasper@s-und-n.de">Guido Casper</a>
- * @version CVS $Id: SessionFormAction.java,v 1.2 2003/03/24 14:33:56 stefano Exp $
+ * @version CVS $Id: SessionFormAction.java,v 1.3 2003/04/27 15:03:25 cziegeler Exp $
 */
 public class SessionFormAction extends AbstractValidatorAction implements ThreadSafe
 {
@@ -142,25 +142,11 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
             Parameters parameters) throws Exception {
         Request req = ObjectModelHelper.getRequest(objectModel);
 
-        /* check request validity */
-        if (req == null) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug ("No request object");
-            return null;
-        }
-
-        /* FIXME (SM): the code below appears unused. Should we remove it?
-
-        // read global parameter settings
-        boolean reloadable = Constants.DESCRIPTOR_RELOADABLE_DEFAULT;
-        if (this.settings.containsKey("reloadable")) {
-            reloadable = Boolean.valueOf((String) this.settings.get("reloadable")).booleanValue();
-        }*/
-
+        SessionManager sessionManager = null;
         // read local settings
         try {
 
-            SessionManager sessionManager = (SessionManager)this.manager.lookup(SessionManager.ROLE);
+            sessionManager = (SessionManager)this.manager.lookup(SessionManager.ROLE);
             Session session = sessionManager.getSession(true);
 
             Configuration conf = (Configuration)session.getAttribute(
@@ -186,9 +172,11 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
              * old obsoleted method
              */
             if (!"".equals (valstr.trim ())) {
-                if (getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug ("Validating parameters "
                                        + "as specified via 'validate' parameter");
+                }
+
                 /* get list of params to be validated */
                 String[] rparams = null;
                 if (!"*".equals(valstr.trim())) {
@@ -199,8 +187,9 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
                     for (int i=0; i<desc.length; i++) {
                         rparams[i] = desc[i].getAttribute("name","");
                         if ("".equals(rparams[i])) {
-                            if (getLogger().isDebugEnabled())
+                            if (getLogger().isDebugEnabled()) {
                                 getLogger().debug ("Wrong syntax of the 'validate' parameter");
+                            }
                             return null;
                         }
                     }
@@ -213,8 +202,9 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
                 for (int i = 0; i < rparams.length; i ++) {
                     name = rparams[i];
                     if (name == null || "".equals (name.trim ())) {
-                        if (getLogger().isDebugEnabled())
+                        if (getLogger().isDebugEnabled()) {
                             getLogger().debug ("Wrong syntax of the 'validate' parameter");
+                        }
                         return null;
                     }
                     name = name.trim ();
@@ -225,8 +215,9 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
                     result = validateParameter (name, null, desc,
                                                 params, true);
                     if (!result.isOK()) {
-                        if (getLogger().isDebugEnabled())
+                        if (getLogger().isDebugEnabled()) {
                             getLogger().debug ("Validation failed for parameter " + name);
+                        }
                         allOK = false;
                     }
                     actionMap.put (name, result.getObject());
@@ -237,9 +228,10 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
              * new set-based method
              */
             if (!"".equals (valsetstr.trim ())) {
-                if (getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug ("Validating parameters "
                                        + "from given constraint-set " + valsetstr);
+                }
                 // go over all constraint sets
                 // untill the requested set is found
                 // set number will be in j
@@ -255,10 +247,11 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
                     }
                 }
                 if (!found) {
-                    if (getLogger().isDebugEnabled())
+                    if (getLogger().isDebugEnabled()) {
                         getLogger().debug ("Given set "
                                            + valsetstr
                                            + " does not exist in a description file");
+                    }
                     return null;
                 }
                 cset = csets[j];
@@ -269,25 +262,28 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
                 ValidatorActionHelper result = null;
                 String name = null;
                 HashMap params = new HashMap (set.length);
-                if (getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug ("Given set "
                                        + valsetstr
                                        + " contains " + set.length + " rules");
+                }
+                
                 /* put required params into hash */
                 for (int i = 0; i < set.length; i ++) {
                     name = set[i].getAttribute ("name", "").trim();
                     if ("".equals(name)) {
-                        if (getLogger().isDebugEnabled())
+                        if (getLogger().isDebugEnabled()) {
                             getLogger().debug ("Wrong syntax "
                                                + " of 'validate' children nr. " + i);
+                        }
                         return null;
                     }
                     Object[] values = req.getParameterValues(name);
                     if (values != null) {
                         switch (values.length) {
-                        case 0: params.put(name,null); break;
-                        case 1: params.put(name,values[0]); break;
-                        default: params.put(name,values);
+                            case 0: params.put(name,null); break;
+                            case 1: params.put(name,values[0]); break;
+                            default: params.put(name,values);
                         }
                     } else {
                         params.put(name,values);
@@ -300,36 +296,49 @@ public class SessionFormAction extends AbstractValidatorAction implements Thread
                     result = validateParameter (name, rule, set[i],
                             desc, params, true);
                     if (!result.isOK()) {
-                        if (getLogger().isDebugEnabled())
+                        if (getLogger().isDebugEnabled()) {
                             getLogger().debug ("Validation failed for parameter " + name);
+                        }
                         allOK = false;
                     }
                     actionMap.put (name, result.getObject());
                     resultMap.put (name, result.getResult());
                 }
             }
+            
             if (!allOK) {
+                
                 // if any validation failed return an empty map
                 actionMap = null;
                 resultMap.put("*", ValidatorActionResult.ERROR);
-                if (getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug ("All form params validated. An error occurred.");
+                }
+                
             } else {
+                
                 resultMap.put("*", ValidatorActionResult.OK);
-                if (getLogger().isDebugEnabled())
+                if (getLogger().isDebugEnabled()) {
                     getLogger().debug ("All form params successfully validated");
+                }
             }
+            
             // store validation results in request attribute
             req.setAttribute(Constants.XSP_FORMVALIDATOR_PATH, resultMap);
+            
             // store validation results in session attribute
             // to be used by SessionTransformer
             session.setAttribute(req.getParameter(SessionConstants.SESSION_FORM_PARAMETER)+
                                  "validation-result", resultMap);
-            //return Collections.unmodifiableMap (actionMap);
+
             return actionMap;
-        } catch (Exception e) {
-            if (getLogger().isDebugEnabled())
-                getLogger().debug ("exception: ", e);
+            
+        } catch (Exception ignore) {
+            if (getLogger().isDebugEnabled()) {
+                getLogger().debug ("exception: ", ignore);
+            }
+        } finally {
+            this.manager.release( sessionManager );
         }
         return null;
     }
