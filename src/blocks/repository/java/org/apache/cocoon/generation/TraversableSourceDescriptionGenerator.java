@@ -109,7 +109,6 @@ public class TraversableSourceDescriptionGenerator extends TraversableGenerator 
     
     private static final String PROPERTIES_NODE_NAME = "properties";
     private static final String PROPERTIES_NODE_QNAME = PREFIX + ":" + PROPERTIES_NODE_NAME;
-    private static final String PROPERTY_TYPE_ATTR_NAME = "type";
 
     private static final String PERMISSIONS_NODE_NAME = "permissions";
     private static final String PERMISSIONS_NODE_QNAME = PREFIX + ":" + PERMISSIONS_NODE_NAME;

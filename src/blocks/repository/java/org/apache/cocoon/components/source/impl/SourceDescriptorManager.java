@@ -56,8 +56,6 @@ import java.util.Set;
 
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -67,6 +65,8 @@ import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceDescriptor;
 import org.apache.cocoon.components.source.SourceInspector;
@@ -81,17 +81,17 @@ import org.apache.excalibur.source.impl.validity.AggregatedValidity;
  * 
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: SourceDescriptorManager.java,v 1.4 2003/10/28 13:48:12 unico Exp $
+ * @version CVS $Id: SourceDescriptorManager.java,v 1.5 2003/10/31 12:49:06 joerg Exp $
  */
 public final class SourceDescriptorManager extends AbstractLogEnabled 
-implements SourceDescriptor, Contextualizable, Composable, 
+implements SourceDescriptor, Contextualizable, Serviceable, 
 Configurable, Initializable, Disposable, ThreadSafe {
     
     // the registered inspectors
     private Set m_inspectors;
     
     private Context m_context;
-    private ComponentManager m_manager;
+    private ServiceManager m_manager;
     private Configuration m_configuration;
     
     
@@ -104,7 +104,7 @@ Configurable, Initializable, Disposable, ThreadSafe {
         m_context = context;
     }
     
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         m_manager = manager;
     }
         
@@ -135,7 +135,7 @@ Configurable, Initializable, Disposable, ThreadSafe {
             }
             ContainerUtil.enableLogging(inspector,getLogger());
             ContainerUtil.contextualize(inspector,m_context);
-            ContainerUtil.compose(inspector,m_manager);
+            ContainerUtil.service(inspector,m_manager);
             ContainerUtil.configure(inspector,children[i]);
             ContainerUtil.parameterize(inspector,
                 Parameters.fromConfiguration(children[i]));

@@ -60,13 +60,13 @@ import java.util.List;
 import org.apache.avalon.excalibur.datasource.DataSourceComponent;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.ServiceSelector;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.caching.Cache;
 import org.apache.cocoon.caching.EventAware;
@@ -107,7 +107,7 @@ import org.apache.excalibur.source.SourceValidity;
  */
 public class SimpleJdbcSourceDescriptor
     extends AbstractConfigurableSourceDescriptor
-    implements SourceDescriptor, Composable, Configurable, Initializable, Disposable, ThreadSafe {
+    implements SourceDescriptor, Serviceable, Configurable, Initializable, Disposable, ThreadSafe {
     
     
     private static final String STMT_SELECT_SINGLE =
@@ -122,7 +122,7 @@ public class SimpleJdbcSourceDescriptor
     private static final String STMT_DELETE =
         "DELETE FROM sourceprops WHERE source=? AND namespace=? AND name=?;";
     
-    private ComponentManager m_manager;
+    private ServiceManager m_manager;
     private SourceResolver m_resolver;
     private EventAware m_cache;
     private DataSourceComponent m_datasource;
@@ -136,7 +136,7 @@ public class SimpleJdbcSourceDescriptor
     public SimpleJdbcSourceDescriptor() {
     }
     
-    public void compose(ComponentManager manager) throws ComponentException {
+    public void service(ServiceManager manager) throws ServiceException {
         m_manager = manager;
         m_resolver = (SourceResolver) manager.lookup(SourceResolver.ROLE);
         Cache cache = (Cache) manager.lookup(Cache.ROLE + "/EventAware");
@@ -171,7 +171,7 @@ public class SimpleJdbcSourceDescriptor
     }
     
     public void initialize() throws Exception {
-        ComponentSelector datasources = (ComponentSelector) m_manager.lookup(
+        ServiceSelector datasources = (ServiceSelector) m_manager.lookup(
             DataSourceComponent.ROLE + "Selector");
         m_datasource = (DataSourceComponent) datasources.select(m_datasourceName);
     }

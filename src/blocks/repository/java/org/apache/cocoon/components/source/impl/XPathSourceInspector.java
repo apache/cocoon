@@ -51,13 +51,12 @@ package org.apache.cocoon.components.source.impl;
 
 import java.io.IOException;
 
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.service.ServiceException;
+import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.service.Serviceable;
 import org.apache.avalon.framework.thread.ThreadSafe;
 import org.apache.cocoon.components.source.SourceInspector;
 import org.apache.cocoon.components.source.helpers.SourceProperty;
@@ -75,10 +74,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:stephan@apache.org">Stephan Michels</a>
  * @author <a href="mailto:unico@apache.org">Unico Hommes</a>
- * @version CVS $Id: XPathSourceInspector.java,v 1.3 2003/10/27 09:30:07 unico Exp $
+ * @version CVS $Id: XPathSourceInspector.java,v 1.4 2003/10/31 12:49:06 joerg Exp $
  */
 public class XPathSourceInspector extends AbstractLogEnabled implements 
-    SourceInspector, Composable, Parameterizable, ThreadSafe {
+    SourceInspector, Serviceable, Parameterizable, ThreadSafe {
 
     /**
      * The default namespace uri of the property exposed by this SourceInspector.
@@ -101,9 +100,9 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
     private String extension;
     private String xpath;
 
-    private ComponentManager manager = null;
+    private ServiceManager manager = null;
 
-    public void compose(ComponentManager manager) {
+    public void service(ServiceManager manager) {
         this.manager = manager;
     }
     
@@ -131,11 +130,12 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
                                         + " is not a valid XML file");
             } catch (IOException ioe) {
                 this.getLogger().error("Could not read file", ioe);
-            } catch (ComponentException ce) {
+            } catch (ServiceException ce) {
                 this.getLogger().error("Could not retrieve component", ce);
             } finally {
-                if (parser!=null)
-                    this.manager.release((Component)parser);
+                if (parser != null) {
+                    this.manager.release(parser);
+                }
             }
 
             if (doc != null) {
@@ -150,11 +150,12 @@ public class XPathSourceInspector extends AbstractLogEnabled implements
                     property.setValue(nodelist);
 
                     return property;
-                } catch (ComponentException ce) {
-                    this.getLogger().error("Could not retrieve component", ce);
+                } catch (ServiceException se) {
+                    this.getLogger().error("Could not retrieve component", se);
                 } finally {
-                    if ((processor!=null) && (processor instanceof Component))
-                        this.manager.release((Component)processor);
+                    if (processor != null) {
+                        this.manager.release(processor);
+                    }
                 }
             }
         } 
