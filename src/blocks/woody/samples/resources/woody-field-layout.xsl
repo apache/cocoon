@@ -161,9 +161,9 @@
   </xsl:template>
 
   <!--
-    wi:button
+    wi:action
   -->
-  <xsl:template match="wi:button">
+  <xsl:template match="wi:action">
     <input type="submit" name="{@id}" title="{wi:help}">
       <xsl:attribute name="value"><xsl:value-of select="wi:label/node()"/></xsl:attribute>
     </input>
