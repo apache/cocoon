@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
  * </ul>
  *
  * @author <a href="http://www.apache.org/~sylvain/">Sylvain Wallez</a>
- * @version CVS $Id: JavaScriptJXPathBindingBuilder.java,v 1.4 2004/06/24 11:32:47 cziegeler Exp $
+ * @version CVS $Id$
  */
 public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase implements Contextualizable {
 
@@ -75,7 +75,7 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
 		this.avalonContext = context;
 	}
 
-	public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
+    public JXPathBindingBase buildBinding(Element element, Assistant assistant) throws BindingException {
         try {
             CommonAttributes commonAtts = JXPathBindingBuilderBase.getCommonAttributes(element);
 
@@ -103,7 +103,7 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
                 }
                 saveScript = JavaScriptHelper.buildFunction(saveElem, JavaScriptJXPathBinding.SAVE_PARAMS);
             }
-            
+
             // Build child bindings
             Map childBindings;
             Element[] children = DomHelper.getChildElements(element, BindingManager.NAMESPACE, "child-binding");
@@ -113,7 +113,7 @@ public class JavaScriptJXPathBindingBuilder extends JXPathBindingBuilderBase imp
             		childBindings = new HashMap();
             		for (int i = 0; i < children.length; i++) {
             			Element child = children[i];
-            			
+
             			// Get the binding name and check its uniqueness
             			String name = DomHelper.getAttribute(child, "name");
             			if (childBindings.containsKey(name)) {

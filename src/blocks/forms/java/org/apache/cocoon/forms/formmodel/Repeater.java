@@ -191,12 +191,12 @@ public class Repeater extends AbstractWidget
                 } catch (NumberFormatException exc) {
                     // do nothing
                 }
- 
+
                 // some protection against people who might try to exhaust the server by supplying very large
                 // size parameters
                 if (size > 500)
                     throw new RuntimeException("Client is not allowed to specify a repeater size larger than 500.");
- 
+
                 int currentSize = getSize();
                 if (currentSize < size) {
                     for (int i = currentSize; i < size; i++) {
@@ -209,7 +209,7 @@ public class Repeater extends AbstractWidget
                 }
             }
         }
- 
+
         if(getProcessChildRequests() == true) {
             // let the rows read their data from the request
             Iterator rowIt = rows.iterator();
@@ -328,7 +328,7 @@ public class Repeater extends AbstractWidget
         public Widget getParent() {
             return Repeater.this;
         }
-        
+
         public Form getForm() {
             return Repeater.this.getForm();
         }

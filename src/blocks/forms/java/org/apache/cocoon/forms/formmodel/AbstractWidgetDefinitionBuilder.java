@@ -67,7 +67,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
     protected void setCommonProperties(Element widgetElement, AbstractWidgetDefinition widgetDefinition) throws Exception {
         // location
         widgetDefinition.setLocation(DomHelper.getLocation(widgetElement));
-        
+
         // id
         if (widgetDefinition instanceof FormDefinition) {
             // FormDefinition is the *only* kind of widget that has an optional id
@@ -80,7 +80,7 @@ public abstract class AbstractWidgetDefinitionBuilder implements WidgetDefinitio
             }
             widgetDefinition.setId(id);
         }
-        
+
         // attributes
         Element attrContainer = DomHelper.getChildElement(widgetElement, Constants.DEFINITION_NS, "attributes", false);
         if (attrContainer != null) {

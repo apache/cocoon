@@ -76,7 +76,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
             enteredValues = formContext.getRequest().getParameterValues(getRequestParameterName());
             validationError = null;
             values = null;
- 
+
             boolean conversionFailed = false;
             if (enteredValues != null) {
                 // Normally, for MultiValueFields, the user selects the values from
@@ -96,7 +96,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
                         break;
                     }
                 }
- 
+
                 if (!conversionFailed)
                     values = tempValues;
                 else
@@ -207,7 +207,7 @@ public class MultiValueField extends AbstractWidget implements ValidationErrorAw
     public void setSelectionList(String uri) {
         setSelectionList(this.definition.buildSelectionList(uri));
     }
-    
+
     /**
      * Delete this field's selection list.
      */

@@ -725,7 +725,7 @@ public class ScriptableWidget extends ScriptableObject implements ValueChangedLi
             }
         }
     }
-    
+
     public void jsFunction_removeSelectionList() {
     	if (delegate instanceof SelectableWidget) {
     		((SelectableWidget)delegate).removeSelectionList();

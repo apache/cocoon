@@ -70,7 +70,7 @@ public class BooleanField extends AbstractWidget implements ValidationErrorAware
                 value = Boolean.TRUE;
             else
                 value = Boolean.FALSE;
-            
+
             if (value != oldValue) {
                 getForm().addWidgetEvent(new ValueChangedEvent(this, oldValue, value));
             }
