@@ -49,6 +49,18 @@
         </fileset>
       </path>
 
+      <path id="htmlunit.classpath">
+        <fileset dir="${{htmlunit.home}}/lib">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${{tools.lib}}">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${{lib}}">
+          <include name="core/avalon-framework-*.jar"/>
+        </fileset>
+      </path>
+
       <!-- Files, which should no compiled or otherwise processed -->
       <patternset id="unprocessed.sources">
         <exclude name="**/*.java"/>
@@ -355,7 +367,7 @@
         <sequential>
           <!-- Test if this block has tests -->
           <if>
-            <available file="@{{dir}}/test"/>
+            <available file="@{{dir}}/test/org/apache"/>
             <then>
               <mkdir dir="${{build.blocks}}/@{{name}}/test"/>
 
@@ -370,7 +382,7 @@
                      target="${{target.vm}}"
                      nowarn="${{compiler.nowarn}}"
                      compiler="${{compiler}}">
-                <src path="@{{dir}}/test"/>
+                <src path="@{{dir}}/test/org/apache"/>
                 <classpath>
                   <path refid="@{{name}}.classpath"/>
                   <path refid="test.classpath"/>
@@ -391,6 +403,64 @@
                 <formatter type="xml"/>
                 <batchtest todir="${{build.test.output}}">
                   <fileset dir="${{build.blocks}}/@{{name}}/test">
+                    <include name="**/*TestCase.class"/>
+                    <include name="**/*Test.class"/>
+                    <exclude name="**/AllTest.class"/>
+                    <exclude name="**/*$$*Test.class"/>
+                    <exclude name="**/Abstract*.class"/>
+                    <exclude name="htmlunit/**"/>
+                  </fileset>
+                </batchtest>
+              </junit>
+            </then>
+          </if>
+        </sequential>
+      </macrodef>
+
+      <macrodef name="block-prepare-htmlunit-tests">
+        <attribute name="name"/>
+        <attribute name="dir"/>
+        <sequential>
+          <!-- Test if this block has tests -->
+          <if>
+            <and>
+              <available file="@{{dir}}/test/htmlunit"/>
+              <available file="${{htmlunit.home}}"/>
+            </and>
+            <then>
+              <mkdir dir="${{build.blocks}}/@{{name}}/test/htmlunit"/>
+
+              <copy todir="${{build.blocks}}/@{{name}}/test/htmlunit" filtering="on">
+                <fileset dir="@{{dir}}/test/htmlunit" excludes="**/*.java"/>
+              </copy>
+
+              <javac destdir="${{build.blocks}}/@{{name}}/test/htmlunit"
+                     debug="${{compiler.debug}}"
+                     optimize="${{compiler.optimize}}"
+                     deprecation="${{compiler.deprecation}}"
+                     target="${{target.vm}}"
+                     nowarn="${{compiler.nowarn}}"
+                     compiler="${{compiler}}">
+                <src path="@{{dir}}/test/htmlunit"/>
+                <classpath>
+                  <path refid="htmlunit.classpath"/>
+                  <pathelement location="${{build.test.htmlunit}}"/>
+                </classpath>
+              </javac>
+
+              <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
+                <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
+                <jvmarg value="-Djunit.test.loglevel=${{junit.test.loglevel}}"/>
+                <jvmarg value="-Dhtmlunit.test.baseurl=${{htmlunit.test.baseurl}}"/>
+                <classpath>
+                  <path refid="htmlunit.classpath"/>
+                  <pathelement location="${{build.test.htmlunit}}"/>
+                  <pathelement location="${{build.blocks}}/@{{name}}/test/htmlunit"/>
+                </classpath>
+                <formatter type="plain" usefile="no"/>
+                <formatter type="xml"/>
+                <batchtest todir="${{build.test.htmlunit.output}}">
+                  <fileset dir="${{build.blocks}}/@{{name}}/test/htmlunit">
                     <include name="**/*TestCase.class"/>
                     <include name="**/*Test.class"/>
                     <exclude name="**/AllTest.class"/>
@@ -549,6 +619,16 @@
         <xsl:for-each select="$cocoon-blocks">
           <xsl:text>,</xsl:text>
           <xsl:value-of select="concat(@name, '-tests')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </target>
+
+    <target name="prepare-htmlunit-tests">
+      <xsl:attribute name="depends">
+        <xsl:text>init</xsl:text>
+        <xsl:for-each select="$cocoon-blocks">
+          <xsl:text>,</xsl:text>
+          <xsl:value-of select="concat(@name, '-prepare-htmlunit-tests')"/>
         </xsl:for-each>
       </xsl:attribute>
     </target>
@@ -818,6 +898,10 @@
         </xsl:if>
       </xsl:attribute>
       <block-tests name="{$block-name}" dir="{@dir}"/>
+    </target>
+
+    <target name="{@name}-prepare-htmlunit-tests" unless="internal.exclude.block.{$block-name}">
+        <block-prepare-htmlunit-tests name="{$block-name}" dir="{@dir}"/>
     </target>
 
     <target name="{@name}-prepare-anteater-tests" unless="internal.exclude.block.{$block-name}">

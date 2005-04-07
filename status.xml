@@ -196,6 +196,9 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="BD" type="add" fixes-bug="34294" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
+      New set of automated tests based on HtmlUnit 
+    </action>
     <action dev="VG" type="update">
       Add support for namespaced XML elements to the JXPath based input
       modules (includes JXPathMetaModule, XMLFileModule, and others).
