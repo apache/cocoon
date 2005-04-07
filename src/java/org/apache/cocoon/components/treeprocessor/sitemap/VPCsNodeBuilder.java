@@ -18,8 +18,11 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
+import org.apache.cocoon.components.treeprocessor.ContainerNode;
 import org.apache.cocoon.components.treeprocessor.ContainerNodeBuilder;
+import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.generation.VirtualPipelineGenerator;
+import org.apache.cocoon.reading.VirtualPipelineReader;
 
 /**
  * Handles a set of virtual sitemap components.
@@ -41,6 +44,16 @@ public class VPCsNodeBuilder extends ContainerNodeBuilder {
         checkNamespace(child);
 
         String clazz = child.getAttribute("src");
-        return VirtualPipelineGenerator.class.getName().equals(clazz);
+        return VirtualPipelineGenerator.class.getName().equals(clazz)
+            || VirtualPipelineReader.class.getName().equals(clazz);
+    }
+
+    protected void setupNode(ContainerNode node, Configuration config)throws Exception {
+
+        this.treeBuilder.setupNode(node, config);
+
+        ProcessingNode[] children = buildChildNodes(config);
+
+        node.setChildren(children);
     }
 }
