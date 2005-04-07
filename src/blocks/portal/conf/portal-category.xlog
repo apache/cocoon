@@ -14,14 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <!--+
     | $Id$
     +-->
 <xlog xpath="/logkit/categories" 
       unless="category[@name='portal']">
     
-    <category log-level="ERROR" name="portal">
+    <category log-level="${build.webapp.loglevel}" name="portal">
       <log-target id-ref="portal" />
     </category>
     
