@@ -18,7 +18,7 @@ package org.apache.cocoon.components.treeprocessor.sitemap;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 
-import org.apache.cocoon.components.treeprocessor.CategoryNodeBuilder;
+import org.apache.cocoon.components.treeprocessor.ContainerNodeBuilder;
 import org.apache.cocoon.generation.VirtualPipelineGenerator;
 
 /**
@@ -26,7 +26,7 @@ import org.apache.cocoon.generation.VirtualPipelineGenerator;
  *
  * @version $Id$
  */
-public class VPCsNodeBuilder extends CategoryNodeBuilder {
+public class VPCsNodeBuilder extends ContainerNodeBuilder {
 
     /**
      * Checks if a child element is a VPC, and if not throws a <code>ConfigurationException</code>.
