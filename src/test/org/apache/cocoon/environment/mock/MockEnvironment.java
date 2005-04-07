@@ -107,11 +107,10 @@ public class MockEnvironment implements Environment {
     }
 
     public boolean isResponseModified(long lastModified) {
-        throw new AssertionFailedError("Not implemented");
+        return false;
     }
 
     public void setResponseIsNotModified() {
-        throw new AssertionFailedError("Not implemented");
     }
 
     public void setAttribute(String name, Object value) {
