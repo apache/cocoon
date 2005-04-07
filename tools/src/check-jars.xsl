@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 -->
 
 <!--+
-    | CVS $Id: check-jars.xsl,v 1.4 2004/03/08 06:07:15 antonio Exp $
+    | $Id$
     |
     | Simple stylesheet to verify that files defined in lib/jars.xml
     | actually appear in the lib/ directory, and vice-versa, that files
@@ -72,9 +72,9 @@
   <xsl:variable name="jars.xml" select="/"/>
 
   <xsl:template match="/">
- 	<!-- Validate lib/jars.xml prior to checking files -->
+    <!-- Validate lib/jars.xml prior to checking files -->
 
- 	<!-- Verify that all the entries in lib/jars.xml have appropriate tags -->
+    <!-- Verify that all the entries in lib/jars.xml have appropriate tags -->
     <xsl:apply-templates select="//file" mode="no-tag"/>
 
     <!-- Verify that all the file entries are unique -->
@@ -82,7 +82,8 @@
       <xsl:variable name="this" select="normalize-space(text())"/>
       <xsl:if test="count($jars.xml/jars/file/lib[normalize-space(text()) = $this]) > 1">
         <xsl:message terminate="yes">
-  Duplicate entry for file <xsl:value-of select="$this"/>
+  [ERROR] Duplicate entry for file <xsl:value-of select="$this"/>
+
         </xsl:message>
       </xsl:if>
       <!-- ensure a decent filename -->
@@ -99,28 +100,28 @@
 
     <!-- Verify that files that appear in lib/ are declared in jars.xml -->
     <xsl:apply-templates select="$current-jars.xml/jars" mode="appears-but-not-declared"/>
-    
-	<!-- create the documentation -->
-	<document>
-	 <header>
-	  <title>Cocoon JARs</title>
-	  <authors>
-	   <person name="Cocoon Developers" email="dev@cocoon.apache.org"/>
-	  </authors>
-	 </header>
-	 <body>
-	 <s1 title="What, why and when...">
-	  <p>This is a list of the available jars, what they are, where they come from,
-	   and what they do.</p>
-	  <table>
-	   <tr>
-	     <th>Title</th>
-	     <th>Jar (type/name)</th>
-	     <th>Description</th>
-	     <th>Used by</th>
-	   </tr>
-	   <xsl:apply-templates select="jars/file" mode="documentation"/>
-	  </table>
+
+    <!-- create the documentation -->
+    <document>
+     <header>
+      <title>Cocoon JARs</title>
+      <authors>
+       <person name="Cocoon Developers" email="dev@cocoon.apache.org"/>
+      </authors>
+     </header>
+     <body>
+     <s1 title="What, why and when...">
+      <p>This is a list of the available jars, what they are, where they come from,
+       and what they do.</p>
+      <table>
+       <tr>
+         <th>Title</th>
+         <th>Jar (type/name)</th>
+         <th>Description</th>
+         <th>Used by</th>
+       </tr>
+       <xsl:apply-templates select="jars/file" mode="documentation"/>
+      </table>
      </s1>
     </body>
    </document>
@@ -133,9 +134,12 @@
     <xsl:variable name="this" select="normalize-space(text())"/>
     <xsl:if test="count($current-jars.xml/jars/jar[normalize-space(text()) = $this]) = 0">
       <xsl:message terminate="yes">
-  File <xsl:value-of select="$this"/> is declared in lib/jars.xml, but doesn't appear in the lib/ directory.
+  [ERROR] File <xsl:value-of select="$this"/> is declared in lib/jars.xml,
+  but doesn't appear in the lib/ directory.
 
-  If this file was removed, please update the lib/jars.xml file to remove this file entry.</xsl:message>
+  If this file was removed, please update the lib/jars.xml file to remove
+  this file entry.
+      </xsl:message>
     </xsl:if>
   </xsl:template>
 
@@ -148,14 +152,18 @@
       <xsl:choose>
         <xsl:when test="starts-with($this, 'local/')">
           <xsl:message>
-  [WARN] Using local library <xsl:value-of select="$this"/> : ensure it doesn't conflict with any other library.
+  [WARN] Using local library <xsl:value-of select="$this"/> : ensure it
+  doesn't conflict with any other library.
           </xsl:message>
         </xsl:when>
         <xsl:otherwise>
           <xsl:message terminate="yes">
-  File <xsl:value-of select="$this"/> appears in the lib/ directory, but is not declared in lib/jars.xml.
+  [ERROR] File <xsl:value-of select="$this"/> appears in the lib/ directory,
+  but is not declared in lib/jars.xml.
 
-  Please update the lib/jars.xml file to include the <xsl:value-of select="$this"/> file together with a description.</xsl:message>
+  Please update the lib/jars.xml file to include the <xsl:value-of select="$this"/>
+  file together with a description.
+          </xsl:message>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
@@ -164,51 +172,61 @@
   <!-- Verify if a file element has a "title" tag -->
   <xsl:template match="file[not(title)]" mode="no-tag">
     <xsl:message terminate="yes">
-  Entry for file <xsl:value-of select="normalize-space(lib/text())"/> in the lib/jars.xml does not have a "title" tag.
+  [ERROR] Entry for file <xsl:value-of select="normalize-space(lib/text())"/>
+  in the lib/jars.xml does not have a "title" tag.
 
-  Please add a title tag before continuing.</xsl:message>
+  Please add a title tag before continuing.
+    </xsl:message>
   </xsl:template>
 
   <!-- Verify if a file element has a "description" tag -->
   <xsl:template match="file[not(description)]" mode="no-tag">
     <xsl:message terminate="yes">
-  Entry for file <xsl:value-of select="normalize-space(lib/text())"/> in the lib/jars.xml does not have a "description" tag.
+  [ERROR] Entry for file <xsl:value-of select="normalize-space(lib/text())"/>
+  in the lib/jars.xml does not have a "description" tag.
 
-  Please add a description tag before continuing.</xsl:message>
+  Please add a description tag before continuing.
+    </xsl:message>
   </xsl:template>
 
   <!-- Verify if a file element has an "used-by" tag -->
   <xsl:template match="file[not(used-by)]" mode="no-tag">
     <xsl:message terminate="yes">
-  Entry for file <xsl:value-of select="normalize-space(lib/text())"/> in the lib/jars.xml does not have a "used-by" tag.
+  [ERROR] Entry for file <xsl:value-of select="normalize-space(lib/text())"/>
+  in the lib/jars.xml does not have a "used-by" tag.
 
-  Please add a used-by tag before continuing.</xsl:message>
+  Please add a used-by tag before continuing.
+    </xsl:message>
   </xsl:template>
 
   <!-- Verify if a file element has an "lib" tag -->
   <xsl:template match="file[not(lib)]" mode="no-tag">
     <xsl:message terminate="yes">
-  Entry for file <xsl:value-of select="normalize-space(title/text())"/> in the lib/jars.xml does not have a "lib" tag.
+  [ERROR] Entry for file <xsl:value-of select="normalize-space(title/text())"/>
+  in the lib/jars.xml does not have a "lib" tag.
 
-  Please add a lib tag before continuing.</xsl:message>
+  Please add a lib tag before continuing.
+    </xsl:message>
   </xsl:template>
 
   <!-- Verify if a file element has an "url" tag -->
   <xsl:template match="file[not(homepage)]" mode="no-tag">
     <xsl:message terminate="yes">
-  Entry for file <xsl:value-of select="normalize-space(lib/text())"/> in the lib/jars.xml does not have a "homepage" tag.
+  [ERROR] Entry for file <xsl:value-of select="normalize-space(lib/text())"/>
+  in the lib/jars.xml does not have a "homepage" tag.
 
-  Please add a homepage tag before continuing.</xsl:message>
+  Please add a homepage tag before continuing.
+    </xsl:message>
   </xsl:template>
 
   <!-- Format for documentation -->
   <xsl:template match="file" mode="documentation">
-	<tr>
-		<td><link href="{homepage}"><xsl:value-of select="title"/></link></td>
-		<td><xsl:value-of select="lib"/></td>
-		<td><xsl:value-of select="description"/></td>
-		<td><xsl:value-of select="used-by"/></td>
-	</tr>
+    <tr>
+      <td><link href="{homepage}"><xsl:value-of select="title"/></link></td>
+      <td><xsl:value-of select="lib"/></td>
+      <td><xsl:value-of select="description"/></td>
+      <td><xsl:value-of select="used-by"/></td>
+    </tr>
   </xsl:template>
 
   <xsl:template name="relativize-path">
