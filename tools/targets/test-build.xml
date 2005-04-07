@@ -56,10 +56,27 @@
           <exclude name="**/*$$*Test.class" />
           <exclude name="**/Abstract*.class" />
           <exclude name="**/SitemapComponentTestCase*"/>
+          <exclude name="**/SitemapTestCase*"/>
           <exclude name="**/ContainerTestCase*"/>
           <exclude name="**/CocoonTestCase*"/>
         </fileset>
       </batchtest>
+    </junit>
+  </target>
+
+  <!-- Runs one JUnit test -->
+  <target name="core-junit-test" depends="compile-tests, junit-tests-prepare">
+    <fail unless="junit.testcase"
+          message="Please set the property $${junit.testcase} to a JUnit testcase (package.Classname, e.g. org.test.MyTestCase)."/>
+    <junit printsummary="yes" fork="yes" failureproperty="junit.test.failed">
+      <jvmarg value="-Djava.endorsed.dirs=lib/endorsed"/>
+      <jvmarg value="-Djunit.test.loglevel=${junit.test.loglevel}"/>
+      <classpath>
+        <path refid="test.classpath"/>
+      </classpath>
+      <formatter type="plain" usefile="no"/>
+      <formatter type="xml"/>
+      <test name="${junit.testcase}" todir="${build.test.output}"/>
     </junit>
   </target>
 
