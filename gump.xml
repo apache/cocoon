@@ -492,6 +492,7 @@
     <library name="groovy"/>
     <library name="asm"/>
     <library name="asm-util"/>
+    <library name="antlr"/>
 
     <work nested="tools/anttasks"/>
     <home nested="build/cocoon-@@DATE@@"/>
