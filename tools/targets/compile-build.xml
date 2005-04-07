@@ -83,6 +83,9 @@
 
   <!-- compiles tests classes -->
   <target name="compile-tests"
+          depends="compile-junit-tests, compile-htmlunit-tests"/>
+
+  <target name="compile-tests-prepare"
           depends="compile-core, compile-deprecated, clover.off">
     <mkdir dir="${build.test}"/>
 
@@ -90,6 +93,11 @@
     <copy todir="${build.test}" filtering="on">
       <fileset dir="${test}" excludes="**/*.java"/>
     </copy>
+  </target>
+
+  <target name="compile-junit-tests" depends="compile-tests-prepare">
+
+    <!-- Compile JUnit tests, using Cocoon libraries -->
 
     <path id="test.classpath">
       <path refid="classpath"/>
@@ -102,8 +110,7 @@
       </fileset>
     </path>
 
-    <!-- Compile tests -->
-    <javac srcdir="${test}"
+    <javac srcdir="${test}/org/apache"
            destdir="${build.test}"
            debug="${compiler.debug}"
            optimize="${compiler.optimize}"
@@ -112,6 +119,35 @@
            source="${source.vm}"
            compiler="${compiler}"
            classpathref="test.classpath"/>
+  </target>
+
+  <target name="compile-htmlunit-tests" if="htmlunit.present"
+          depends="compile-tests-prepare">
+
+    <!-- Compile JUnit tests using htmlUnit (requires running server) -->
+
+    <path id="htmlunit.classpath">
+      <pathelement location="${build.test.htmlunit}" />
+      <fileset dir="${htmlunit.home}/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${tools.lib}">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${lib}">
+        <include name="core/avalon-framework-*.jar"/>
+      </fileset>
+    </path>
+
+    <javac srcdir="${test}/htmlunit/org/apache"
+           destdir="${build.test.htmlunit}"
+           debug="${compiler.debug}"
+           optimize="${compiler.optimize}"
+           deprecation="${compiler.deprecation}"
+           target="${target.vm}"
+           source="${source.vm}"
+           compiler="${compiler}"
+           classpathref="htmlunit.classpath"/>
   </target>
 
 <!-- === Package Targets ================================================= -->

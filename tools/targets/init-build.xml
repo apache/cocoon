@@ -51,6 +51,9 @@
     <!-- Get the build properties from an external file -->
     <property file="build.properties"/>
 
+    <!-- Check whether HtmlUnit is installed and available -->
+    <available file="${htmlunit.home}" property="htmlunit.present"/>
+
     <!-- Allow users a chance to override without editing the main file -->
     <property file="${user.home}/cocoon.blocks.properties"/>
     <property file="local.blocks.properties"/>
