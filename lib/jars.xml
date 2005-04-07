@@ -42,7 +42,7 @@
       support high level server development. 
     </description>
     <used-by>Cocoon</used-by>
-    <lib>optional/excalibur-datasource-1.1.1.jar</lib>
+    <lib>optional/excalibur-datasource-1.2.0.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
@@ -119,11 +119,33 @@
       support high level server development.
     </description>
     <used-by>Cocoon</used-by>
-    <lib>core/excalibur-pool-1.2.jar</lib>
+    <lib>core/excalibur-pool-api-2.0.0.jar</lib>
     <homepage>http://excalibur.apache.org/</homepage>
   </file>
 
   <file id="excalibur-sourceresolve">
+    <title>Excalibur Pool</title>
+    <description>
+      Part of Excalibur, it is a set of classes and patterns that
+      support high level server development.
+    </description>
+    <used-by>Cocoon</used-by>
+    <lib>core/excalibur-pool-impl-2.0.0.jar</lib>
+    <homepage>http://excalibur.apache.org/</homepage>
+  </file>
+
+  <file>
+    <title>Excalibur Pool</title>
+    <description>
+      Part of Excalibur, it is a set of classes and patterns that
+      support high level server development.
+    </description>
+    <used-by>Cocoon</used-by>
+    <lib>core/excalibur-pool-instrumented-2.0.0.jar</lib>
+    <homepage>http://excalibur.apache.org/</homepage>
+  </file>
+
+  <file>
     <title>Excalibur SourceResolve</title>
     <description>
       Part of Excalibur, it is a set of classes and patterns that
