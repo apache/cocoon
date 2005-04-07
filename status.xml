@@ -196,8 +196,13 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="VG" type="fix">
+      Updated excalibur-pool to 2.0.0, excalibur-datasource to 1.2.0.
+      Fixes problem of database connections pools not coming up after
+      database outage.
+    </action>
     <action dev="AG" type="update">
-     Updated groovy to 1.0-jsr-01.
+      Updated groovy to 1.0-jsr-01.
     </action>
     <action dev="BD" type="add" fixes-bug="34294" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
       New set of automated tests based on HtmlUnit 
