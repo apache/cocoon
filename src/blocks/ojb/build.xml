@@ -27,9 +27,14 @@
     <fileset dir="${basedir}/lib/local">
       <include name="*.jar"/>
     </fileset>
+    <fileset dir="${basedir}/lib/endorsed">
+      <include name="*.jar"/>
+    </fileset>
   </path>
 
-  <available classname="${jdoEnhancer}" classpathref="ojb.classpath" property="jdo.present"/>
+  <available classname="${jdoEnhancer}"
+             classpathref="ojb.classpath"
+             property="jdo.present"/>
 
   <target name="main" unless="unless.exclude.webapp.samples" depends="jdo"/>
 
@@ -58,7 +63,8 @@
     </javac>
   </target>
 
-  <target name="jdo" if="jdo.present" unless="unless.exclude.webapp.samples" depends="prepare, compile">
+  <target name="jdo" depends="prepare, compile"
+          if="jdo.present" unless="unless.exclude.webapp.samples">
     <property name="build.blocks.ojb.samples.package" value="${build.blocks.ojb.samples}/org/apache/cocoon/ojb/samples/bean"/>
     <!-- Run the JDO Enhancer -->
     <echo>Running JDO Enhancer ...</echo>
