@@ -21,7 +21,7 @@
 <xlog xpath="/logkit/categories" 
       unless="category[@name='forms']">
     
-    <category log-level="ERROR" name="forms">
+    <category log-level="${build.webapp.loglevel}" name="forms">
       <log-target id-ref="forms" />
     </category>
     
