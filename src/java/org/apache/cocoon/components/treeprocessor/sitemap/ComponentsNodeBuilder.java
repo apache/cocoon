@@ -28,6 +28,9 @@ import org.apache.cocoon.components.treeprocessor.ProcessingNodeBuilder;
  */
 public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder {
 
+    private static String[] VPCTypes =
+    {"generators", "transformers", "serializers", "readers"};
+
     /** This builder has no parameters -- return <code>false</code> */
     protected boolean hasParameters() {
         return false;
@@ -35,12 +38,14 @@ public class ComponentsNodeBuilder extends AbstractProcessingNodeBuilder {
 
     public ProcessingNode buildNode(Configuration config) throws Exception {
         // Handle the VPCs
-        Configuration child = config.getChild("generators", false);
-        if (child != null) {
-            ProcessingNodeBuilder childBuilder = this.treeBuilder.createNodeBuilder(child);
-            childBuilder.buildNode(child);
+        for (int i = 0; i < VPCTypes.length; i++) {
+            Configuration child = config.getChild(VPCTypes[i], false);
+            if (child != null) {
+                ProcessingNodeBuilder childBuilder =
+                    this.treeBuilder.createNodeBuilder(child);
+                childBuilder.buildNode(child);
+            }
         }
         return null;
     }
 }
-

@@ -380,7 +380,17 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     }
 
     public boolean process(Environment environment) throws ProcessingException {
-        throw new UnsupportedOperationException();
+        if (!this.prepared) {
+            preparePipeline(environment);
+        }
+
+        // If this is an internal request, lastConsumer was reset!
+        if (this.lastConsumer == null) {
+            this.lastConsumer = this.serializer;
+        }
+        
+        connectPipeline(environment);
+        return processXMLPipeline(environment);
     }
 
     /**
