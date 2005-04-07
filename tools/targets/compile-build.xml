@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-  Copyright 1999-2004 The Apache Software Foundation
+  Copyright 1999-2005 The Apache Software Foundation
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -110,7 +110,7 @@
       </fileset>
     </path>
 
-    <javac srcdir="${test}/org/apache"
+    <javac srcdir="${test}"
            destdir="${build.test}"
            debug="${compiler.debug}"
            optimize="${compiler.optimize}"
@@ -118,7 +118,9 @@
            target="${target.vm}"
            source="${source.vm}"
            compiler="${compiler}"
-           classpathref="test.classpath"/>
+           classpathref="test.classpath">
+      <exclude name="htmlunit/**"/>
+    </javac>
   </target>
 
   <target name="compile-htmlunit-tests" if="htmlunit.present"
