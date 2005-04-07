@@ -426,6 +426,9 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="AG" type="update">
+     Updated groovy to 1.0-jsr-01.
+    </action>
     <action dev="VG" type="update">
       Add support for namespaced XML elements to the JXPath based input
       modules (includes JXPathMetaModule, XMLFileModule, and others).
