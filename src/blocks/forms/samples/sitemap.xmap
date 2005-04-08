@@ -102,13 +102,13 @@
            <!-- Here we use an action especially created for the "form1" example
            which will initialise the form with some data. -->
            <map:act type="init-form">
-             <map:parameter name="definitionURI" value="forms/form1.xml"/>
+             <map:parameter name="form-definition" value="forms/form1.xml"/>
              <map:parameter name="attribute-name" value="form1"/>
            </map:act>
          </map:when>
          <map:when test="POST">
            <map:act type="handle-form-submit">
-             <map:parameter name="definitionURI" value="forms/form1.xml"/>
+             <map:parameter name="form-definition" value="forms/form1.xml"/>
              <map:parameter name="attribute-name" value="form1"/>
              <map:parameter name="formhandler" value="org.apache.cocoon.forms.samples.Form1Handler"/>
 
