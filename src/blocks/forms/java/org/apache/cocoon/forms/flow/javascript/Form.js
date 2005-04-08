@@ -262,24 +262,32 @@ Form.prototype.saveXML = function(uri) {
 }
 
 function handleForm() {
-    var form = new Form(cocoon.parameters["form-definition"]);
-
-    var args = [form];
-
-    // set the binding on the form if there's any
+    // get the form definition
+    var def = cocoon.parameters["definitionURI"];
+    if (def == null) {
+        if (cocoon.parameters["form-definition"] != null) {
+            cocoon.log.warn("the form-definition parameter in handleForm has changed to definitionURI");
+            def = cocoon.parameters["form-definition"];
+        } else {
+            throw "Definition not configured for this form.";
+        }
+    }
+    // create the Form
+    var form = new Form(def);
+    // set the binding on the form if there is one
     var bindingURI = cocoon.parameters["bindingURI"];
     if (bindingURI != null) {
         form.createBinding(bindingURI);
     }
-
+    // get the function to call to handle the form
     var funcName = cocoon.parameters["function"];
     var func = this[funcName];
-
+    // check the function exists
     if (!func) {
         throw "Function \"" + funcName + "\" is not defined.";
     } else if (!(func instanceof Function)) {
         throw "\"" + funcName + "\" is not a function.";
     }
-
-    func.apply(this, args);
+    // call the function
+    func.apply(this, [form]);
 }
