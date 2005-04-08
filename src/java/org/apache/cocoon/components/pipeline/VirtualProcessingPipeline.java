@@ -42,6 +42,7 @@ import org.apache.cocoon.xml.SaxBuffer;
 import org.apache.excalibur.source.SourceValidity;
 import org.xml.sax.SAXException;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -400,7 +401,26 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     throws ProcessingException {
 
         try {
-            this.generator.generate();
+            if (this.lastConsumer == null) {
+                // internal processing
+                this.generator.generate();
+            } else {
+                if (this.serializer.shouldSetContentLength()) {
+                    // set the output stream
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    this.serializer.setOutputStream(os);
+
+                    // execute the pipeline:
+                    this.generator.generate();
+                    environment.setContentLength(os.size());
+                    os.writeTo(environment.getOutputStream(0));
+                } else {
+                    // set the output stream
+                    this.serializer.setOutputStream(environment.getOutputStream(0));
+                    // execute the pipeline:
+                    this.generator.generate();
+                }
+            }
         } catch (ProcessingException e) {
             throw e;
         } catch (Exception e) {
