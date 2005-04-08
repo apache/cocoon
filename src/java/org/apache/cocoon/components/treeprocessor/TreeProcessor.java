@@ -308,26 +308,40 @@ public class TreeProcessor
         this.setupLogger(newProcessor);
         //FIXME (SW): why do we need to enterProcessor here?
         CocoonComponentManager.enterEnvironment(env, this.manager, this);
+        String oldContext = env.getContext();
         try {
             if (builder instanceof Recomposable) {
                 ((Recomposable)builder).recompose(this.manager);
             }
             builder.setProcessor(newProcessor);
-            if (this.fileName == null) {
-                this.fileName = builder.getFileName();
-            }
 
             if (this.source == null) {
+                if (this.fileName == null) {
+                    // Case of the root sitemap if no explicit config was given
+                    this.fileName = builder.getFileName();
+                }
+
                 this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName),
                                                               lastModifiedDelay);
+                
+                if (this.parent == null) {
+                    // Ensure the root processor has a filename to change its context
+                    this.fileName = this.source.getURI();
+                }
             }
+            
+            // Set the context to the sitemap location as components may lookup some resources
+            // during their initialization
+            env.changeContext("", this.source.getURI());
 
             newLastModified = this.source.getLastModified();
 
             ProcessingNode root = builder.build(this.source);
 
-            newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes());
+            newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes(), this.source.getURI());
         } finally {
+            // Restore the context (FIXME: need to separate this from URI prefix)
+            env.changeContext("", oldContext);
             CocoonComponentManager.leaveEnvironment();
             this.builderSelector.release(builder);
         }
