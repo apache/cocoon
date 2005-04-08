@@ -82,7 +82,7 @@ public class CoreUtil {
     protected final Settings settings;
 
     /** The parent service manager TODO This will be made protected*/
-    public final ServiceManager parentManager;
+    public ServiceManager parentManager;
 
     /** TODO This will be made protected */
     public Logger log;
@@ -243,11 +243,11 @@ public class CoreUtil {
         // set class loader
         this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.env.getInitClassLoader());
 
-        // create parent service manager
-        final ServiceManager parent = this.getParentServiceManager();
+        // create the Core object
+        final Core core = this.createCore();
 
-        // create a service manager
-        this.parentManager = new RootServiceManager(parent, this.createCore());
+        // create parent service manager
+        this.parentManager = this.getParentServiceManager(core);
     }
 
     public Core getCore() {
@@ -272,7 +272,7 @@ public class CoreUtil {
      *
      * @return the parent service manager, or <code>null</code>.
      */
-    protected ServiceManager getParentServiceManager() {
+    protected ServiceManager getParentServiceManager(Core core) {
         String parentServiceManagerClass = this.settings.getParentServiceManagerClassName();
         String parentServiceManagerInitParam = null;
         if (parentServiceManagerClass != null) {
@@ -298,8 +298,8 @@ public class CoreUtil {
                     this.log.error("Could not initialize parent component manager.", e);
                 }
             }
-        }
-        return parentServiceManager;
+        }        
+        return new RootServiceManager(parentServiceManager, core);
     }
 
     /**
@@ -625,10 +625,12 @@ public class CoreUtil {
             ContainerUtil.enableLogging(c, getCocoonLogger());
             // TODO: c.setLoggerManager(this.loggerManager);
             ContainerUtil.contextualize(c, this.appContext);
-            final ServiceManager parent = this.getParentServiceManager();
-            if (parent != null) {
-                ContainerUtil.service(c, parent);
-            }
+
+            // create the Core object
+            final Core core = this.createCore();
+            this.parentManager = this.getParentServiceManager(core);
+            ContainerUtil.service(c, this.parentManager);
+
             ContainerUtil.initialize(c);
             this.creationTime = System.currentTimeMillis();
 
@@ -685,6 +687,8 @@ public class CoreUtil {
             ContainerUtil.dispose(this.cocoon);
             this.cocoon = null;
         }
+        ContainerUtil.dispose(this.parentManager);
+        this.parentManager = null;
     }
 
     protected Logger getCocoonLogger() {
@@ -763,6 +767,26 @@ public class CoreUtil {
      */
     protected void updateEnvironment() throws Exception {
         // can be overridden
+    }
+
+    /**
+     * Dispose Cocoon when servlet is destroyed
+     */
+    public void destroy() {
+        if (this.settings.isInitClassloader()) {
+            try {
+                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
+            } catch (Exception e) {
+                // ignore this
+            }
+        }
+
+        if (this.cocoon != null) {
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("Servlet destroyed - disposing Cocoon");
+            }
+            this.disposeCocoon();
+        }
     }
 
 }
