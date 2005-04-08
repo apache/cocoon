@@ -27,7 +27,7 @@
     <tstamp/>
 
     <!-- Get the (constant) cocoon properties -->
-    <property file="src/core/java/org/apache/cocoon/cocoon.properties"/>
+    <property file="src/java/org/apache/cocoon/cocoon.properties"/>
 
     <!-- Detecting the current jvm -->
     <condition property="target.vm" value="${ant.java.version}">
