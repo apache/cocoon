@@ -17,8 +17,6 @@
 package org.apache.cocoon.core;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,12 +26,9 @@ import org.apache.avalon.framework.CascadingRuntimeException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.log.LogTarget;
 
 /**
  * This is the core Cocoon component.
@@ -48,6 +43,7 @@ import org.apache.log.LogTarget;
 public class Core
     implements Contextualizable {
 
+    /** The key to lookup the component. */
     public static String ROLE = Core.class.getName();
 
     /** Application <code>Context</code> Key for the settings. Please don't
@@ -180,47 +176,6 @@ public class Core
         } catch (ContextException ce) {
             throw new CascadingRuntimeException("Unable to get the settings object from the context.", ce);
         }
-    }
-
-    public static interface BootstrapEnvironment {
-
-        void log(String message);
-        void log(String message, Throwable error);
-        
-        InputStream getInputStream(String path);
-        
-        void configure(Settings settings);
-        void configureLoggingContext(DefaultContext context);
-
-        void configure(DefaultContext context);
-
-        ClassLoader getInitClassLoader();
-
-        org.apache.cocoon.environment.Context getEnvironmentContext();
-        
-        /**
-         * Returns the URL to the application context.
-         */
-        String getContextURL();
-
-        /**
-         * Returns a file to the application context.
-         * @return A file pointing to the context or null if the context is not
-         *         writeable.
-         */
-        File getContextForWriting();
-
-        LogTarget getDefaultLogTarget();
-
-        /**
-         * Set the ConfigFile for the Cocoon object.
-         *
-         * @param configFileName The file location for the cocoon.xconf
-         *
-         * @throws Exception
-         */
-        public URL getConfigFile(final Logger logger, final String configFileName)
-        throws Exception;
     }
     
 }

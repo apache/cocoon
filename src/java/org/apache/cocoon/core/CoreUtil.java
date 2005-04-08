@@ -32,6 +32,7 @@ import org.apache.avalon.excalibur.logger.Log4JLoggerManager;
 import org.apache.avalon.excalibur.logger.LogKitLoggerManager;
 import org.apache.avalon.excalibur.logger.LoggerManager;
 import org.apache.avalon.framework.CascadingRuntimeException;
+import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -43,14 +44,15 @@ import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.cocoon.Cocoon;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.components.ContextHelper;
 import org.apache.cocoon.configuration.ConfigurationBuilder;
 import org.apache.cocoon.configuration.Settings;
-import org.apache.cocoon.core.Core.BootstrapEnvironment;
 import org.apache.cocoon.core.source.SimpleSourceResolver;
 import org.apache.cocoon.matching.helpers.WildcardHelper;
 import org.apache.cocoon.util.ClassUtils;
+import org.apache.cocoon.util.StringUtils;
 import org.apache.cocoon.util.log.Log4JConfigurator;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.TraversableSource;
@@ -61,6 +63,7 @@ import org.apache.log.util.DefaultErrorHandler;
 import org.apache.log4j.LogManager;
 
 /**
+ * This is an utility class to create a new Cocoon instance.
  *
  * @version SVN $Id$
  * @since 2.2
@@ -73,7 +76,7 @@ public class CoreUtil {
     protected final static String CORE_KEY = Core.class.getName();
 
     /** The callback to the real environment */
-    protected final Core.BootstrapEnvironment env;
+    protected final BootstrapEnvironment env;
 
     /** "legacy" support: create an avalon context */
     protected final DefaultContext appContext = new DefaultContext();
@@ -81,28 +84,29 @@ public class CoreUtil {
     /** The settings */
     protected final Settings settings;
 
-    /** The parent service manager TODO This will be made protected*/
-    public ServiceManager parentManager;
+    /** The parent service manager. */
+    protected ServiceManager parentManager;
 
-    /** TODO This will be made protected */
-    public Logger log;
-    /** TODO This will be made protected */
-    public LoggerManager loggerManager;
+    /** The root logger. */
+    protected Logger log;
 
-    /** TODO This will be made protected */
-    public Object cocoon;
+    /** The logger manager. */
+    protected LoggerManager loggerManager;
+
+    /** The Cocoon instance (the root processor). */
+    protected Cocoon cocoon;
     
     /**
      * The time the cocoon instance was created
      */
     protected long creationTime;
 
-    public CoreUtil(Core.BootstrapEnvironment environment) 
+    public CoreUtil(BootstrapEnvironment environment) 
     throws Exception {
         this.env = environment;
 
         // create settings
-        this.settings = createSettings(this.env);
+        this.settings = this.createSettings();
         this.appContext.put(Core.CONTEXT_SETTINGS, this.settings);
 
         if (this.settings.isInitClassloader()) {
@@ -157,7 +161,8 @@ public class CoreUtil {
         this.settings.setWorkDirectory(workDir.getAbsolutePath());
 
         // Init logger
-        initLogger();
+        this.initLogger();
+        this.env.setLogger(this.log);
 
         // Output some debug info
         if (this.log.isDebugEnabled()) {
@@ -233,7 +238,7 @@ public class CoreUtil {
         this.settings.setCacheDirectory(cacheDir.getAbsolutePath());
 
         // update settings
-        final URL u = this.env.getConfigFile(this.log, this.settings.getConfiguration());
+        final URL u = this.env.getConfigFile(this.settings.getConfiguration());
         this.settings.setConfiguration(u.toExternalForm());
         this.appContext.put(Constants.CONTEXT_CONFIG_URL, u);
 
@@ -305,9 +310,8 @@ public class CoreUtil {
     /**
      * Get the settings for Cocoon
      * @param env This provides access to various parts of the used environment.
-     * TODO Make a non-static, protected method out of this
      */
-    public static Settings createSettings(BootstrapEnvironment env) {
+    protected Settings createSettings() {
         // create an empty settings objects
         final Settings s = new Settings();
 
@@ -551,7 +555,8 @@ public class CoreUtil {
         return WildcardHelper.match(null, uri, parsedPattern);      
     }
 
-    public static final class RootServiceManager implements ServiceManager {
+    public static final class RootServiceManager 
+    implements ServiceManager, Disposable {
         
         protected final ServiceManager parent;
         protected final Core cocoon;
@@ -561,7 +566,7 @@ public class CoreUtil {
             this.cocoon = c;
         }
 
-        /* (non-Javadoc)
+        /**
          * @see org.apache.avalon.framework.service.ServiceManager#hasService(java.lang.String)
          */
         public boolean hasService(String key) {
@@ -574,7 +579,7 @@ public class CoreUtil {
             return false;
         }
 
-        /* (non-Javadoc)
+        /**
          * @see org.apache.avalon.framework.service.ServiceManager#lookup(java.lang.String)
          */
         public Object lookup(String key) throws ServiceException {
@@ -587,7 +592,7 @@ public class CoreUtil {
             throw new ServiceException("Cocoon", "Component for key '" + key + "' not found.");
         }
 
-        /* (non-Javadoc)
+        /**
          * @see org.apache.avalon.framework.service.ServiceManager#release(java.lang.Object)
          */
         public void release(Object component) {
@@ -595,12 +600,19 @@ public class CoreUtil {
                 this.parent.release(component);
             }
         }
+
+        /**
+         * @see org.apache.avalon.framework.activity.Disposable#dispose()
+         */
+        public void dispose() {
+            ContainerUtil.dispose(this.parent);
+        }
     }
 
     /**
      * Creates the Cocoon object and handles exception handling.
      */
-    public synchronized void createCocoon() 
+    public synchronized Cocoon createCocoon() 
     throws Exception {
 
         /* HACK for reducing class loader problems.                                     */
@@ -621,9 +633,9 @@ public class CoreUtil {
             if (this.log.isInfoEnabled()) {
                 this.log.info("Reloading from: " + this.settings.getConfiguration());
             }
-            Object c = ClassUtils.newInstance("org.apache.cocoon.Cocoon");
+            Cocoon c = (Cocoon)ClassUtils.newInstance("org.apache.cocoon.Cocoon");
             ContainerUtil.enableLogging(c, getCocoonLogger());
-            // TODO: c.setLoggerManager(this.loggerManager);
+            c.setLoggerManager(this.loggerManager);
             ContainerUtil.contextualize(c, this.appContext);
 
             // create the Core object
@@ -634,27 +646,26 @@ public class CoreUtil {
             ContainerUtil.initialize(c);
             this.creationTime = System.currentTimeMillis();
 
-            disposeCocoon();
             this.cocoon = c;
         } catch (Exception e) {
             this.log.error("Exception reloading", e);
             this.disposeCocoon();
             throw e;
         }
+        return this.cocoon;
     }
 
     /**
      * Gets the current cocoon object.  Reload cocoon if configuration
      * changed or we are reloading.
      */
-    public void getCocoon(final String pathInfo, final String reloadParam)
+    public Cocoon getCocoon(final String pathInfo, final String reloadParam)
     throws Exception {
         if (this.settings.isAllowReload()) {
             boolean reload = false;
 
             if (this.cocoon != null) {
-                // TODO: activate
-/*                if (this.cocoon.modifiedSince(this.creationTime)) {
+                if (this.cocoon.modifiedSince(this.creationTime)) {
                     if (this.log.isInfoEnabled()) {
                         this.log.info("Configuration changed reload attempt");
                     }
@@ -664,7 +675,7 @@ public class CoreUtil {
                         this.log.info("Forced reload attempt");
                     }
                     reload = true;
-                } */
+                }
             } else if (pathInfo == null && reloadParam != null) {
                 if (this.log.isInfoEnabled()) {
                     this.log.info("Invalid configurations reload");
@@ -677,6 +688,7 @@ public class CoreUtil {
                 this.createCocoon();
             }
         }
+        return this.cocoon;
     }
 
     /**
@@ -684,6 +696,9 @@ public class CoreUtil {
      */
     public final void disposeCocoon() {
         if (this.cocoon != null) {
+            if (this.log.isDebugEnabled()) {
+                this.log.debug("Disposing Cocoon");
+            }
             ContainerUtil.dispose(this.cocoon);
             this.cocoon = null;
         }
@@ -766,7 +781,10 @@ public class CoreUtil {
      * of this class (eg. Cocoon Context).
      */
     protected void updateEnvironment() throws Exception {
-        // can be overridden
+        StringBuffer buffer = new StringBuffer(this.env.getClassPath(this.settings));
+        buffer.append(File.pathSeparatorChar).append(this.getExtraClassPath());
+
+        this.appContext.put(Constants.CONTEXT_CLASSPATH, buffer.toString());
     }
 
     /**
@@ -780,13 +798,58 @@ public class CoreUtil {
                 // ignore this
             }
         }
-
-        if (this.cocoon != null) {
-            if (this.log.isDebugEnabled()) {
-                this.log.debug("Servlet destroyed - disposing Cocoon");
-            }
-            this.disposeCocoon();
-        }
+        this.disposeCocoon();
     }
+
+    /**
+     * Retreives the "extra-classpath" attribute, that needs to be
+     * added to the class path.
+     */
+    protected String getExtraClassPath() {
+        if (this.settings.getExtraClasspaths().size() > 0) {
+            StringBuffer sb = new StringBuffer();
+            final Iterator iter = this.settings.getExtraClasspaths().iterator();
+            int i = 0;
+            while (iter.hasNext()) {
+                String s = (String)iter.next();
+                if (i++ > 0) {
+                    sb.append(File.pathSeparatorChar);
+                }
+                if ((s.charAt(0) == File.separatorChar) ||
+                        (s.charAt(1) == ':')) {
+                    if (this.log.isDebugEnabled()) {
+                        this.log.debug("extraClassPath is absolute: " + s);
+                    }
+                    sb.append(s);
+
+                } else {
+                    if (s.indexOf("${") != -1) {
+                        String path = StringUtils.replaceToken(s);
+                        sb.append(path);
+                        if (this.log.isDebugEnabled()) {
+                            this.log.debug("extraClassPath is not absolute replacing using token: [" + s + "] : " + path);
+                        }
+                    } else {
+                        String path = null;
+                        if (this.env.getContextForWriting() != null) {
+                            path = this.env.getContextForWriting() + s;
+                            if (this.log.isDebugEnabled()) {
+                                this.log.debug("extraClassPath is not absolute pre-pending context path: " + path);
+                            }
+                        } else {
+                            path = this.settings.getWorkDirectory() + s;
+                            if (this.log.isDebugEnabled()) {
+                                this.log.debug("extraClassPath is not absolute pre-pending work-directory: " + path);
+                            }
+                        }
+                        sb.append(path);
+                    }
+                }
+            }
+            return sb.toString();
+        }
+        return "";
+    }
+
 
 }
