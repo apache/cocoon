@@ -196,6 +196,10 @@
 
   <changes>
   <release version="@version@" date="@date@">
+    <action dev="SW" type="fix">
+      Fix environment handling to allow the root sitemap to be at an abitrary location
+      and not only in the main webapp context directory.
+    </action>
     <action dev="VG" type="fix">
       Updated excalibur-pool to 2.0.0, excalibur-datasource to 1.2.0.
       Fixes problem of database connections pools not coming up after

@@ -243,7 +243,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
     /**
      * Adds an prefix to the overall stripped off prefix from the request uri
      */
-    public void changeContext(String prefix, String newContext)
+    public void changeContext(String newPrefix, String newContext)
     throws IOException {
         if (!this.initializedComponents) {
             this.initComponents();
@@ -252,19 +252,19 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
         if (getLogger().isDebugEnabled()) {
             getLogger().debug("Changing Cocoon context");
             getLogger().debug("  from context(" + this.context + ") and prefix(" + this.prefix + ")");
-            getLogger().debug("  to context(" + newContext + ") and prefix(" + prefix + ")");
+            getLogger().debug("  to context(" + newContext + ") and prefix(" + newPrefix + ")");
             getLogger().debug("  at URI " + this.uris);
         }
 
-        int l = prefix.length();
+        int l = newPrefix.length();
         if (l >= 1) {
-            if (!this.uris.startsWith(prefix)) {
+            if (!this.uris.startsWith(newPrefix)) {
                 String message = "The current URI (" + this.uris +
-                                 ") doesn't start with given prefix (" + prefix + ")";
+                                 ") doesn't start with given prefix (" + newPrefix + ")";
                 getLogger().error(message);
                 throw new RuntimeException(message);
             }
-            this.prefix.append(prefix);
+            this.prefix.append(newPrefix);
             this.uris = this.uris.substring(l);
 
             // check for a slash at the beginning to avoid problems with subsitemaps
@@ -274,7 +274,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             }
         }
 
-        if (SourceUtil.getScheme(this.context).equals("zip")) {
+        if (this.context.startsWith("zip:")) {
             // if the resource is zipped into a war file (e.g. Weblogic temp deployment)
             // FIXME (VG): Is this still required? Better to unify both cases.
             if (getLogger().isDebugEnabled()) {
@@ -288,7 +288,7 @@ public abstract class AbstractEnvironment extends AbstractLogEnabled implements 
             } finally {
                 this.sourceResolver.release(source);
             }
-        } else {
+        } else if (newContext.length() > 0){
             String sContext;
             // if we got a absolute context or one with a protocol resolve it
             if (newContext.charAt(0) == '/') {
