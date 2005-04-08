@@ -48,22 +48,8 @@
         <exclude name="**/*.java"/>
       </fileset>
     </copy>
-    <copy todir="${build.dest}">
-      <fileset dir="${src.core}">
-        <exclude name="**/*.java"/>
-      </fileset>
-    </copy>
 
     <echo message="Compiling Cocoon Core"/>
-    <javac srcdir="${src.core}"
-           destdir="${build.dest}"
-           debug="${compiler.debug}"
-           optimize="${compiler.optimize}"
-           deprecation="${compiler.deprecation}"
-           target="${target.vm}"
-           source="${source.vm}"
-           nowarn="${compiler.nowarn}"
-           classpathref="classpath"/>
 
     <javac srcdir="${java}"
            destdir="${build.dest}"
@@ -126,7 +112,6 @@
            source="${source.vm}"
            compiler="${compiler}"
            classpathref="test.classpath">
-       <src path="${src.core.test}"/>
        <src path="${test}"/>
     </javac>
   </target>
