@@ -63,7 +63,7 @@ public class SitemapTestCase extends SitemapComponentTestCase {
         } else {
             components = new DefaultConfiguration("", "-");
         }
-        //prepare(context, roles, components);
+        prepare(context, roles, components);
     }
 
 
