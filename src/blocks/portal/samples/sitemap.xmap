@@ -124,7 +124,9 @@
 
       <!-- select skin to use -->
       <map:global-variables>
-		<skin>common</skin>
+				<skin>common</skin>
+				<mainTitle>Cocoon Portal</mainTitle>
+				<toolsTitle>Cocoon Portal Tools</toolsTitle>
       </map:global-variables>
 
     </map:component-configurations>
@@ -166,6 +168,9 @@
 
       <map:match pattern="save-user-profile">
         <map:generate src="resources/save-user-profile.xml"/>
+				<map:transform src="styles/save-user-profile.xsl">
+					<map:parameter name="profiles" value="context://samples/blocks/portal/profiles/"/>
+				</map:transform>
         <map:transform type="session"/>
         <map:transform type="write-source"/>
         <map:serialize type="xml"/>
@@ -227,6 +232,8 @@
           <map:generate type="portal" label="content"/>
           <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
             <map:parameter name="user" value="{ID}"/>
+            <map:parameter name="title" value="{global:mainTitle}"/>
+            <map:parameter name="base" value="{portalpath:relative}"/>
           </map:transform>
           <map:transform type="cinclude"/>
           <map:transform type="portal-coplet"/>

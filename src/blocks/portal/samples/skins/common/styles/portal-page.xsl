@@ -19,17 +19,14 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:param name="user"/>
-
+<xsl:param name="title"/>
 <xsl:param name="base"/>
+
 <xsl:template match="/">
   <html>
     <head>
-	  <xsl:if test="$base">
-		<base>
-			<xsl:attribute name="href"><xsl:value-of select="$base"/></xsl:attribute>
-		</base>
-      </xsl:if>
-      <link type="text/css" rel="stylesheet" href="css/page.css"/>
+			<title><xsl:value-of select="$title"/></title>
+      <link type="text/css" rel="stylesheet" href="{$base}css/page.css"/>
     </head>
     <body>
       <table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody> 
@@ -39,27 +36,27 @@
             <table border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody> 
               <tr>
                 <td colspan="2" noWrap="" height="1%" bgcolor="#294563">
-                  <img height="5" src="images/space.gif" width="100%"/>
+                  <img height="5" src="{$base}images/space.gif" width="100%"/>
                 </td>
               </tr>
               <tr> 
                 <td colspan="2" bgcolor="#294563" height="98%" align="center" valign="middle" width="100%">
-                  <img src="images/portal-logo.gif" width="250" height="90" />
+                  <img src="{$base}images/portal-logo.gif" width="250" height="90" />
                 </td>
               </tr>
               <tr valign="bottom"> 
                 <td height="99%" bgcolor="#294563" width="99%" align="right">
                   <xsl:if test="$user!='anonymous'">
-                    <a href="logout"><img src="images/logout-door.gif" width="18" height="22" border="0"/></a>
+                    <a href="{$base}logout"><img src="{$base}images/logout-door.gif" width="18" height="22" border="0"/></a>
                   </xsl:if>
-                  <img height="5" src="images/space.gif" width="5"/>
+                  <img height="5" src="{$base}images/space.gif" width="5"/>
                 </td>
                 <td height="99%" bgcolor="#294563" width="1%" align="right">
                   <xsl:if test="$user!='anonymous'">
-                    <a href="logout" style="color:#CFDCED;font-size:75%;">Logout</a>&#160;
-					<a href="tools/" style="color:#CFDCED;font-size:75%;">Tools</a>&#160;
+                    <a href="{$base}logout" style="color:#CFDCED;font-size:75%;">Logout</a>&#160;
+										<a href="{$base}tools/" style="color:#CFDCED;font-size:75%;">Tools</a>&#160;
                   </xsl:if>
-                  <img height="5" src="images/space.gif" width="5"/>
+                  <img height="5" src="{$base}images/space.gif" width="5"/>
                 </td>
               </tr>
             </tbody></table>
@@ -79,7 +76,7 @@
             <table border="0" cellPadding="0" cellSpacing="0" width="100%"><tbody> 
               <tr> 
                 <td colspan="2" noWrap="" height="30" bgcolor="#294563">
-                  <img height="1" src="images/space.gif" width="1"/>
+                  <img height="1" src="{$base}images/space.gif" width="1"/>
                 </td>
               </tr>
             </tbody></table>
@@ -90,6 +87,18 @@
     </body>
   </html>
 
+</xsl:template>
+
+<!-- make links relative -->
+<xsl:template match="a[not(@target)]">
+	<a><xsl:apply-templates select="@*"/><xsl:attribute name="href"><xsl:value-of select="concat($base,@href)"/></xsl:attribute><xsl:apply-templates/></a>
+</xsl:template>
+<!-- make images relative -->
+<xsl:template match="img">
+	<img>
+		<xsl:apply-templates select="@*"/>
+		<xsl:attribute name="src"><xsl:value-of select="concat($base,@src)"/></xsl:attribute>
+	</img>
 </xsl:template>
 
 <!-- Copy all and apply templates -->

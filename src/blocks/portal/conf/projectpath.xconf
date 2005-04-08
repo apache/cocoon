@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xconf xpath="/cocoon/input-modules" 
+       unless="component-instance[@name='portalpath']">
+    <component-instance logger="core.modules.input"
+          name="portalpath"
+          class="org.apache.cocoon.components.modules.input.ProjectPathModule">
+       <uri-prefix>samples/blocks/portal/</uri-prefix>
+    </component-instance>
+</xconf>

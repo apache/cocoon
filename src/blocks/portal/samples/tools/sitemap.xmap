@@ -45,7 +45,7 @@
 <!-- select skin to use -->
     <map:component-configurations>
       <map:global-variables>
-		<base>http://localhost:8888/samples/blocks/portal/</base>
+      	
       </map:global-variables>
 
     </map:component-configurations>
@@ -75,7 +75,8 @@
         <map:transform src="{portal-skin:skin.basepath}/styles/tab.xsl" />
         <map:transform src="skins/{portal-skin:skin}/styles/function.xsl" />
         <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
-			<map:parameter name="base" value="{global:base}"/>
+					<map:parameter name="base" value="{portalpath:relative}"/>
+					<map:parameter name="title" value="{global:toolsTitle}"/>
         </map:transform>
         <map:serialize type="html"></map:serialize>
       </map:match>
@@ -91,7 +92,8 @@
         <map:transform src="{portal-skin:skin.basepath}/styles/tab.xsl" />
         <map:transform src="skins/{portal-skin:skin}/styles/function.xsl" />
         <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
-			<map:parameter name="base" value="{global:base}"/>
+					<map:parameter name="base" value="{portalpath:relative}"/>
+					<map:parameter name="title" value="{global:toolsTitle}"/>
         </map:transform>
         <map:serialize type="html"></map:serialize>
       </map:match>

@@ -22,7 +22,7 @@
 
 <user xmlns:source="http://apache.org/cocoon/source/1.0" xmlns:session="http://apache.org/cocoon/session/1.0">
     <source:insert>
-    	<source:source>context://samples/blocks/portal/profiles/<session:getxml context="request" path="/parameter/profile"/>/<session:getxml context="request" path="/parameter/portal"/>-user-<session:getxml context="request" path="/parameter/user"/>.xml</source:source>
+    	<source:source><session:getxml context="request" path="/parameter/profile"/>/<session:getxml context="request" path="/parameter/portal"/>-user-<session:getxml context="request" path="/parameter/user"/>.xml</source:source>
         <source:path>/</source:path>
         <source:fragment><session:getxml context="request" path="/parameter/content"/></source:fragment>
         <source:replace>*</source:replace>

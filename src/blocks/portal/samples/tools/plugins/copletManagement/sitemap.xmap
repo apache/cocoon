@@ -38,6 +38,9 @@
      
      <map:match pattern="save-user-profile">
         <map:generate src="context://samples/blocks/portal/resources/save-user-profile.xml"/>
+				<map:transform src="context://samples/blocks/portal/styles/save-user-profile.xsl">
+					<map:parameter name="profiles" value="context://samples/blocks/portal/profiles/"/>
+				</map:transform>
         <map:transform type="session"/>
         <map:transform type="write-source"/>
         <map:serialize type="xml"/>
@@ -78,7 +81,8 @@
         <map:transform src="{portal-skin:skin.basepath}/styles/tab.xsl" />
         <map:transform src="../../skins/{portal-skin:skin}/styles/function.xsl" />
         <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
-          <map:parameter name="base" value="{global:base}" />
+					<map:parameter name="base" value="{portalpath:relative}"/>
+					<map:parameter name="title" value="{global:toolsTitle}"/>
         </map:transform>
         <map:serialize type="html" />
       </map:match>
@@ -97,7 +101,8 @@
         <map:transform src="{portal-skin:skin.basepath}/styles/tab.xsl" />
         <map:transform src="../../skins/{portal-skin:skin}/styles/function.xsl" />
         <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
-          <map:parameter name="base" value="{global:base}" />
+					<map:parameter name="base" value="{portalpath:relative}"/>
+					<map:parameter name="title" value="{global:toolsTitle}"/>
         </map:transform>
         <map:serialize type="html" />
       </map:match>
@@ -114,7 +119,8 @@
         <map:transform src="{portal-skin:skin.basepath}/styles/tab.xsl" />
         <map:transform src="../../skins/{portal-skin:skin}/styles/function.xsl" />
         <map:transform src="{portal-skin:skin.basepath}/styles/portal-page.xsl">
-          <map:parameter name="base" value="{global:base}" />
+					<map:parameter name="base" value="{portalpath:relative}"/>
+					<map:parameter name="title" value="{global:toolsTitle}"/>
         </map:transform>
         <map:serialize type="html" />
       </map:match>
@@ -130,13 +136,6 @@
       
       <map:match pattern="*.continue">
         <map:call continuation="{1}" />
-      </map:match>
-      
-      <map:match pattern="save-user-profile">
-        <map:generate src="context:/mobi/ressources/save-user-profile.xml"/>
-        <map:transform type="session"/>
-        <map:transform type="write-source"/>
-        <map:serialize type="xml"/>
       </map:match>
       
       <map:match pattern="*">
