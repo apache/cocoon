@@ -196,10 +196,29 @@ public class ContainerTestCase extends TestCase {
             conf = new DefaultConfiguration("", "-");
         }
 
-        this.context = this.setupContext( conf.getChild( "context" ) );
+        this.prepare( conf.getChild( "context" ),
+                      conf.getChild( "roles" ),
+                      conf.getChild( "components" ) );
+    }
 
-        this.setupManagers( conf.getChild( "components" ),
-                            conf.getChild( "roles" ));
+    /**
+     * Initializes the ComponentLocator
+     *
+     * @param context The configuration object for the context
+     * @param roles The configuration object for the roles
+     * @param components The configuration object for the components
+     *
+     * More detailed control over configuration can be achieved by
+     * overriding <code>prepare()</code>, construct the configuration
+     *  objects and call this method.
+     */
+    protected final void prepare( final Configuration context,
+                                  final Configuration roles,
+                                  final Configuration components )
+    throws Exception {
+        this.context = this.setupContext( context );
+
+        this.setupManagers( components, roles );
     }
 
     /* (non-Javadoc)
