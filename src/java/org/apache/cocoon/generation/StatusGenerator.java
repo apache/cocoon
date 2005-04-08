@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.cocoon.Constants;
@@ -83,24 +80,13 @@ import org.xml.sax.helpers.AttributesImpl;
  * @version $Id$
  */
 public class StatusGenerator 
-    extends ServiceableGenerator 
-    implements Contextualizable {
+    extends ServiceableGenerator {
 
     /**
      * The StoreJanitor used to get cache statistics
      */
     protected StoreJanitor storejanitor;
     protected Store store_persistent;
-
-    /** The context */
-    protected Context context;
-
-    /* (non-Javadoc)
-     * @see org.apache.avalon.framework.context.Contextualizable#contextualize(org.apache.avalon.framework.context.Context)
-     */
-    public void contextualize(Context context) throws ContextException {
-        this.context = context;
-    }
 
     /**
      * The XML namespace for the output document.
@@ -333,7 +319,14 @@ public class StatusGenerator
     }
 
     private void genSettings() throws SAXException {
-        final Settings s = Core.getSettings(this.context);
+        Core core = null;
+        try {
+            core = (Core)this.manager.lookup(Core.ROLE);
+        } catch (ServiceException se) {
+            // this can never happen
+            throw new RuntimeException("Unable to lookup Cocoon core.");
+        }
+        final Settings s = core.getSettings();
         this.startGroup("Settings");
         
         this.addValue(Settings.KEY_CONFIGURATION, s.getConfiguration());

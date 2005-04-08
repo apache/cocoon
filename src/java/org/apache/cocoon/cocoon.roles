@@ -29,11 +29,6 @@
 ]>
 
 <role-list>
-  <!-- This is the Cocoon core -->
-  <role name="org.apache.cocoon.core.Core"
-        default-class="org.apache.cocoon.core.Core"
-        model="singleton"/>
-
   <role name="org.apache.cocoon.components.classloader.ClassLoaderFactory"
         default-class="org.apache.cocoon.components.classloader.DefaultClassLoaderFactory"/>
 

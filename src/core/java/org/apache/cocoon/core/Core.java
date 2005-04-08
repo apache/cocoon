@@ -48,6 +48,8 @@ import org.apache.log.LogTarget;
 public class Core
     implements Contextualizable {
 
+    public static String ROLE = Core.class.getName();
+
     /** Application <code>Context</code> Key for the settings. Please don't
      * use this constant to lookup the settings object. Lookup the core
      * component and use {@link #getSettings()} instead. */
@@ -64,10 +66,6 @@ public class Core
 
     private final Settings settings;
     
-    public Core() {
-        this.settings = null;
-    }
-
     public Core(Settings s, Context c) {
         this.settings = s;
         this.context = c;
@@ -110,8 +108,7 @@ public class Core
      * Return the settings.
      */
     public Settings getSettings() {
-        return getSettings(this.context);
-        // return this.settings;
+        return this.settings;
     }
 
     /**
