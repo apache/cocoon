@@ -203,7 +203,7 @@ public class CocoonServlet extends HttpServlet {
             }
         } catch (Exception e) {
             // Ignore security exception
-            System.out.println("CocoonServlet: Could not check system properties, got: " + e);
+            this.servletContext.log("CocoonServlet: Could not check system properties, got: " + e);
         }
 
         // initialize settings
