@@ -19,18 +19,14 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:param name="user"/>
-
+<xsl:param name="title"/>
 <xsl:param name="base"/>
 
 <xsl:template match="/">
 <html>
 	<head>
-	   <xsl:if test="$base">
-			<base>
-				<xsl:attribute name="href"><xsl:value-of select="$base"/></xsl:attribute>
-			</base>
-        </xsl:if>
-		<link type="text/css" rel="stylesheet" href="css/page.css"/>
+		<title><xsl:value-of select="$title"/></title>
+		<link type="text/css" rel="stylesheet" href="{$base}css/page.css"/>
 	</head>
 	<body>
 	<table bgColor="#ffffff" border="0" cellPadding="0" cellSpacing="0" width="100%">
@@ -53,10 +49,10 @@
 			<tr> 
 				<td colspan="2" noWrap="" height="10" bgcolor="#DDDDDD" align="right">
 				    <xsl:if test="$user!='anonymous'">
-						<a href="logout" style="color:#4C6C8F;font-size:75%;">
+						<a href="{$base}logout" style="color:#4C6C8F;font-size:75%;">
 							Logout
 						</a><br/>
-						<a href="tools/" style="color:#4C6C8F;font-size:75%;">
+						<a href="{$base}tools/" style="color:#4C6C8F;font-size:75%;">
 							Tools
 						</a>
 				    </xsl:if>
@@ -81,12 +77,12 @@
 		<tbody> 
 		<tr> 
 			<td colspan="2" noWrap="" height="10" bgcolor="#DDDDDD">
-				<img height="1" src="images/space.gif" width="1"/>
+				<img height="1" src="{$base}images/space.gif" width="1"/>
 			</td>
 		</tr>
 		<tr> 
 			<td colspan="2" noWrap="" height="30" bgcolor="#CCCCCC">
-				<img height="1" src="images/space.gif" width="1"/>
+				<img height="1" src="{$base}images/space.gif" width="1"/>
 			</td>
 		</tr>
 		</tbody>
@@ -99,6 +95,18 @@
 	</body>
 </html>
 
+</xsl:template>
+
+<!-- make links relative -->
+<xsl:template match="a[not(@target)]">
+	<a><xsl:apply-templates select="@*"/><xsl:attribute name="href"><xsl:value-of select="concat($base,@href)"/></xsl:attribute><xsl:apply-templates/></a>
+</xsl:template>
+<!-- make images relative -->
+<xsl:template match="img">
+	<img>
+		<xsl:apply-templates select="@*"/>
+		<xsl:attribute name="src"><xsl:value-of select="concat($base,@src)"/></xsl:attribute>
+	</img>
 </xsl:template>
 
 <!-- Copy all and apply templates -->
