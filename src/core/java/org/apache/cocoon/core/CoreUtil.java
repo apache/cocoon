@@ -340,21 +340,6 @@ public class CoreUtil {
     }
 
     protected void initLogger() {
-        final DefaultContext subcontext = new DefaultContext(this.appContext);
-        subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
-        if (this.env.getContextForWriting() == null) {
-            File logSCDir = new File(this.settings.getWorkDirectory(), "log");
-            logSCDir.mkdirs();
-            subcontext.put("context-root", logSCDir.toString());
-        } else {
-            try {
-                subcontext.put("context-root", this.env.getContextForWriting().toURL().toExternalForm());
-            } catch (MalformedURLException ignore) {
-                // we simply ignore this
-            }
-        }
-        this.env.configureLoggingContext(subcontext);
-
         String logLevel = settings.getBootstrapLogLevel();
         if (logLevel == null) {
             logLevel = "INFO";
@@ -374,26 +359,28 @@ public class CoreUtil {
         defaultHierarchy.setDefaultPriority(logPriority);
         final Logger logger = new LogKitLogger(Hierarchy.getDefaultHierarchy().getLoggerFor(""));
 
-        // we can't pass the context-root to our resolver
-        Object value = null;
-        try {
-            value = subcontext.get("context-root");
-            ((DefaultContext) subcontext).put("context-root", null);
-        } catch (ContextException ignore) {
-            // not available
-        }
         // Create our own resolver
         SimpleSourceResolver resolver = new SimpleSourceResolver();
         resolver.enableLogging(logger);
         try {
-            resolver.contextualize(subcontext);
+            resolver.contextualize(this.appContext);
         } catch (ContextException ce) {
             throw new CascadingRuntimeException(
                     "Cannot setup source resolver.", ce);
         }
-        if (value != null) {
-            ((DefaultContext) subcontext).put("context-root", value);
+
+        // create an own context for the logger manager
+        final DefaultContext subcontext = new DefaultContext(this.appContext);
+        subcontext.put("context-work", new File(this.settings.getWorkDirectory()));
+        if (this.env.getContextForWriting() == null) {
+            File logSCDir = new File(this.settings.getWorkDirectory(), "log");
+            logSCDir.mkdirs();
+            subcontext.put("context-root", logSCDir.toString());
+        } else {
+            subcontext.put("context-root", this.env.getContextForWriting().toString());
         }
+        this.env.configureLoggingContext(subcontext);
+
         String loggerManagerClass = settings.getLoggerClassName();
         if (loggerManagerClass == null) {
             loggerManagerClass = LogKitLoggerManager.class.getName();
