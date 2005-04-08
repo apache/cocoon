@@ -936,7 +936,8 @@ public class CocoonServlet extends HttpServlet {
      * @return the parent service manager, or <code>null</code>.
      */
     protected synchronized ServiceManager getParentServiceManager() {
-        ContainerUtil.dispose(this.parentServiceManager);
+        // FIXME - move this to CoreUtil!
+/*        ContainerUtil.dispose(this.parentServiceManager);
 
         this.parentServiceManager = null;
         if (parentServiceManagerClass != null) {
@@ -953,7 +954,7 @@ public class CocoonServlet extends HttpServlet {
                     getLogger().error("Could not initialize parent component manager.", e);
                 }
             }
-        }
+        }*/
         return parentServiceManager;
     }
 
