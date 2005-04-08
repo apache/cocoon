@@ -89,6 +89,14 @@ public class CoreUtil {
     /** TODO This will be made protected */
     public LoggerManager loggerManager;
 
+    /** TODO This will be made protected */
+    public Object cocoon;
+    
+    /**
+     * The time the cocoon instance was created
+     */
+    protected long creationTime;
+
     public CoreUtil(Core.BootstrapEnvironment environment) 
     throws Exception {
         this.env = environment;
@@ -231,6 +239,9 @@ public class CoreUtil {
 
         // set encoding
         this.appContext.put(Constants.CONTEXT_DEFAULT_ENCODING, settings.getFormEncoding());
+
+        // set class loader
+        this.appContext.put(Constants.CONTEXT_CLASS_LOADER, this.env.getInitClassLoader());
 
         // create parent service manager
         final ServiceManager parent = this.getParentServiceManager();
@@ -584,6 +595,174 @@ public class CoreUtil {
                 this.parent.release(component);
             }
         }
+    }
+
+    /**
+     * Creates the Cocoon object and handles exception handling.
+     */
+    public synchronized void createCocoon() 
+    throws Exception {
+
+        /* HACK for reducing class loader problems.                                     */
+        /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
+        if (this.settings.isInitClassloader()) {
+            try {
+                Thread.currentThread().setContextClassLoader(this.env.getInitClassLoader());
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+
+        this.updateEnvironment();
+        this.forceLoad();
+        this.forceProperty();
+
+        try {
+            if (this.log.isInfoEnabled()) {
+                this.log.info("Reloading from: " + this.settings.getConfiguration());
+            }
+            Object c = ClassUtils.newInstance("org.apache.cocoon.Cocoon");
+            ContainerUtil.enableLogging(c, getCocoonLogger());
+            // TODO: c.setLoggerManager(this.loggerManager);
+            ContainerUtil.contextualize(c, this.appContext);
+            final ServiceManager parent = this.getParentServiceManager();
+            if (parent != null) {
+                ContainerUtil.service(c, parent);
+            }
+            ContainerUtil.initialize(c);
+            this.creationTime = System.currentTimeMillis();
+
+            disposeCocoon();
+            this.cocoon = c;
+        } catch (Exception e) {
+            this.log.error("Exception reloading", e);
+            this.disposeCocoon();
+            throw e;
+        }
+    }
+
+    /**
+     * Gets the current cocoon object.  Reload cocoon if configuration
+     * changed or we are reloading.
+     */
+    public void getCocoon(final String pathInfo, final String reloadParam)
+    throws Exception {
+        if (this.settings.isAllowReload()) {
+            boolean reload = false;
+
+            if (this.cocoon != null) {
+                // TODO: activate
+/*                if (this.cocoon.modifiedSince(this.creationTime)) {
+                    if (this.log.isInfoEnabled()) {
+                        this.log.info("Configuration changed reload attempt");
+                    }
+                    reload = true;
+                } else if (pathInfo == null && reloadParam != null) {
+                    if (this.log.isInfoEnabled()) {
+                        this.log.info("Forced reload attempt");
+                    }
+                    reload = true;
+                } */
+            } else if (pathInfo == null && reloadParam != null) {
+                if (this.log.isInfoEnabled()) {
+                    this.log.info("Invalid configurations reload");
+                }
+                reload = true;
+            }
+
+            if (reload) {
+                this.initLogger();
+                this.createCocoon();
+            }
+        }
+    }
+
+    /**
+     * Destroy Cocoon
+     */
+    public final void disposeCocoon() {
+        if (this.cocoon != null) {
+            ContainerUtil.dispose(this.cocoon);
+            this.cocoon = null;
+        }
+    }
+
+    protected Logger getCocoonLogger() {
+        final String rootlogger = this.settings.getCocoonLogger();
+        if (rootlogger != null) {
+            return this.loggerManager.getLoggerForCategory(rootlogger);
+        }
+        return this.log;
+    }
+
+    /**
+     * Handle the <code>load-class</code> parameter. This overcomes
+     * limits in many classpath issues. One of the more notorious
+     * ones is a bug in WebSphere that does not load the URL handler
+     * for the <code>classloader://</code> protocol. In order to
+     * overcome that bug, set <code>load-class</code> parameter to
+     * the <code>com.ibm.servlet.classloader.Handler</code> value.
+     *
+     * <p>If you need to load more than one class, then separate each
+     * entry with whitespace, a comma, or a semi-colon. Cocoon will
+     * strip any whitespace from the entry.</p>
+     */
+    protected void forceLoad() {
+        final Iterator i = this.settings.getLoadClasses();
+        while (i.hasNext()) {
+            final String fqcn = (String)i.next();
+            try {
+                if (this.log.isDebugEnabled()) {
+                    this.log.debug("Loading: " + fqcn);
+                }
+                ClassUtils.loadClass(fqcn).newInstance();
+            } catch (Exception e) {
+                if (this.log.isWarnEnabled()) {
+                    this.log.warn("Could not load class: " + fqcn, e);
+                }
+                // Do not throw an exception, because it is not a fatal error.
+            }
+        }
+    }
+
+    /**
+     * Handle the "force-property" parameter.
+     *
+     * If you need to force more than one property to load, then
+     * separate each entry with whitespace, a comma, or a semi-colon.
+     * Cocoon will strip any whitespace from the entry.
+     */
+    protected void forceProperty() {
+        if (this.settings.getForceProperties().size() > 0) {
+            Properties systemProps = System.getProperties();
+            final Iterator i = this.settings.getForceProperties().entrySet().iterator();
+            while (i.hasNext()) {
+                final Map.Entry current = (Map.Entry)i.next();
+                try {
+                    if (this.log.isDebugEnabled()) {
+                        this.log.debug("Setting: " + current.getKey() + "=" + current.getValue());
+                    }
+                    systemProps.setProperty(current.getKey().toString(), current.getValue().toString());
+                } catch (Exception e) {
+                    if (this.log.isWarnEnabled()) {
+                        this.log.warn("Could not set property: " + current.getKey(), e);
+                    }
+                    // Do not throw an exception, because it is not a fatal error.
+                }
+            }
+            System.setProperties(systemProps);
+        }
+    }
+
+    /**
+     * Method to update the environment before Cocoon instances are created.
+     *
+     * This is also useful if you wish to customize any of the 'protected'
+     * variables from this class before a Cocoon instance is built in a derivative
+     * of this class (eg. Cocoon Context).
+     */
+    protected void updateEnvironment() throws Exception {
+        // can be overridden
     }
 
 }

@@ -60,7 +60,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.net.URL;
@@ -133,9 +132,6 @@ public class CocoonServlet extends HttpServlet {
 
     /** The classloader that will be set as the context classloader if init-classloader is true */
     protected final ClassLoader classLoader = this.getClass().getClassLoader();
-
-    private String parentServiceManagerClass;
-    private String parentServiceManagerInitParam;
 
     /** The parent ServiceManager, if any. Stored here in order to be able to dispose it in destroy(). */
     private ServiceManager parentServiceManager;
@@ -292,22 +288,6 @@ public class CocoonServlet extends HttpServlet {
     }
 
     /**
-     * Adds an URL to the classloader. Does nothing here, but is
-     * overriden in {@link ParanoidCocoonServlet}.
-     */
-    protected void addClassLoaderURL(URL URL) {
-        // Nothing
-    }
-
-    /**
-     * Adds a directory to the classloader. Does nothing here, but is
-     * overriden in {@link ParanoidCocoonServlet}.
-     */
-    protected void addClassLoaderDirectory(String dir) {
-        // Nothing
-    }
-
-    /**
      * This builds the important ClassPath used by this Servlet.  It
      * does so in a Servlet Engine neutral way.  It uses the
      * <code>ServletContext</code>'s <code>getRealPath</code> method
@@ -339,8 +319,6 @@ public class CocoonServlet extends HttpServlet {
 
             if (classDir != null) {
                 buildClassPath.append(classDir);
-
-                addClassLoaderDirectory(classDir);
             }
         } else {
             // New(ish) method for war'd deployments
@@ -365,8 +343,6 @@ public class CocoonServlet extends HttpServlet {
 
             if (classDirURL != null) {
                 buildClassPath.append(classDirURL.toExternalForm());
-
-                addClassLoaderURL(classDirURL);
             }
         }
 
@@ -381,8 +357,6 @@ public class CocoonServlet extends HttpServlet {
             for (int i = 0; i < libraries.length; i++) {
                 String fullName = IOUtils.getFullFilename(libraries[i]);
                 buildClassPath.append(File.pathSeparatorChar).append(fullName);
-
-                addClassLoaderDirectory(fullName);
             }
         }
 
@@ -499,7 +473,6 @@ public class CocoonServlet extends HttpServlet {
                     }
                     sb.append(s);
 
-                    addClassLoaderDirectory(s);
                 } else {
                     if (s.indexOf("${") != -1) {
                         String path = StringUtils.replaceToken(s);
@@ -507,7 +480,6 @@ public class CocoonServlet extends HttpServlet {
                         if (getLogger().isDebugEnabled()) {
                             getLogger().debug("extraClassPath is not absolute replacing using token: [" + s + "] : " + path);
                         }
-                        addClassLoaderDirectory(path);
                     } else {
                         String path = null;
                         if (this.servletContextPath != null) {
@@ -522,7 +494,6 @@ public class CocoonServlet extends HttpServlet {
                             }
                         }
                         sb.append(path);
-                        addClassLoaderDirectory(path);
                     }
                 }
             }
@@ -1228,6 +1199,10 @@ public class CocoonServlet extends HttpServlet {
          */
         public void configure(DefaultContext context) {
             context.put(CONTEXT_SERVLET_CONFIG, this.config);
+            // TODO - move the following into CoreUtil
+            context.put(Constants.CONTEXT_CLASS_LOADER, classLoader);
+            // TODO:
+            //context.put(Constants.CONTEXT_CLASSPATH, getClassPath());
         }
 
         /**
