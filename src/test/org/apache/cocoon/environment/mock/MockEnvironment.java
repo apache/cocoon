@@ -107,7 +107,7 @@ public class MockEnvironment implements Environment {
     }
 
     public boolean isResponseModified(long lastModified) {
-        return false;
+        return true;
     }
 
     public void setResponseIsNotModified() {
