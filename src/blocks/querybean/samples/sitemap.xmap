@@ -158,10 +158,9 @@
     		<map:read src="resources/images/{1}"/>
       </map:match>
 
-
-			<!-- create the index -->
+			<!-- create the index from the contents of a collection -->
 			<map:match pattern="create.html">
-				<map:call function="createIndex">
+				<map:call function="indexCollection">
 					<map:parameter name="screen" value="screen/indexer"/>
 					<map:parameter name="lucene-directory" value="{global:lucene-directory}"/>
 					<map:parameter name="lucene-analyzer" value="{global:lucene-analyzer}"/>
@@ -171,6 +170,22 @@
 					<map:parameter name="content-directory" value="context://docs/xdocs"/>
 					<map:parameter name="include-pattern" value="\.xml$"/>
 					<map:parameter name="exclude-pattern" value="/book\.xml$"/>
+					<map:parameter name="result-directory" value="/docs/"/>
+					<map:parameter name="result-suffix" value=".html"/>
+				</map:call>
+			</map:match>
+
+			<!-- update the index with a single resource -->
+			<map:match pattern="update/**">
+				<map:call function="indexItem">
+					<map:parameter name="screen" value="screen/indexer"/>
+					<map:parameter name="lucene-directory" value="{global:lucene-directory}"/>
+					<map:parameter name="lucene-analyzer" value="{global:lucene-analyzer}"/>
+					<map:parameter name="lucene-merge-factor" value="10"/>
+					<map:parameter name="lucene-create-index" value="false"/>
+					<map:parameter name="lucene-content" value="cocoon:/prepare4indexing/"/>
+					<map:parameter name="content-directory" value="{global:root}"/>
+					<map:parameter name="indexer-target" value="{1}"/><!-- the resource to be indexed -->
 					<map:parameter name="result-directory" value="/docs/"/>
 					<map:parameter name="result-suffix" value=".html"/>
 				</map:call>
