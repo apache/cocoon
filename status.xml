@@ -432,7 +432,7 @@
       database outage.
     </action>
     <action dev="AG" type="update">
-      Updated groovy to 1.0-jsr-01.
+      Updated groovy to 1.0-jsr-01, jdtcore to 3.0.2.
     </action>
     <action dev="VG" type="update">
       Add support for namespaced XML elements to the JXPath based input
