@@ -62,8 +62,8 @@ import org.apache.cocoon.util.HashMap;
  * <pre>
  *   <img src="../../imagename.png"/>
  * </pre>
- * Using 'projectpath:path' would have given you: /some/folder/page.html<br/>
- * Using 'projectpath:folder' would have given you: /some/folder/
+ * Using 'myproject:path' would have given you: /some/folder/page.html<br/>
+ * Using 'myproject:folder' would have given you: /some/folder/
  * </p>
  *
  */
