@@ -206,7 +206,7 @@
       database outage.
     </action>
     <action dev="AG" type="update">
-      Updated groovy to 1.0-jsr-01.
+      Updated groovy to 1.0-jsr-01, jdtcore to 3.0.2.
     </action>
     <action dev="BD" type="add" fixes-bug="34294" due-to="Alfred Nathaniel" due-to-email="Alfred.Nathaniel@swx.com">
       New set of automated tests based on HtmlUnit 
