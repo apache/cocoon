@@ -27,7 +27,7 @@
   <xmlizer/>
 
   <input-modules>
-    <component-instance class="org.apache.cocoon.components.modules.input.EnvironmentAttributeModule" name="environment-attribute"/>
+    <component-instance class="org.apache.cocoon.components.modules.input.EnvironmentAttributeModule" name="environment-attr"/>
   </input-modules>
 
   <source-factories>

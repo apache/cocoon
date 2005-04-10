@@ -164,6 +164,7 @@
     <component-instance logger="core.modules.input" name="request"          class="org.apache.cocoon.components.modules.input.RequestModule"/>
     <component-instance logger="core.modules.input" name="baselink"         class="org.apache.cocoon.components.modules.input.BaseLinkModule" />
     <component-instance logger="core.modules.input" name="session"          class="org.apache.cocoon.components.modules.input.SessionModule"/>
+    <component-instance logger="core.modules.input" name="environment-attr" class="org.apache.cocoon.components.modules.input.EnvironmentAttributeModule"/>
     <component-instance logger="core.modules.input" name="request-param"    class="org.apache.cocoon.components.modules.input.RequestParameterModule"/>
     <component-instance logger="core.modules.input" name="raw-request-param" class="org.apache.cocoon.components.modules.input.RawRequestParameterModule"/>
     <component-instance logger="core.modules.input" name="request-attr"     class="org.apache.cocoon.components.modules.input.RequestAttributeModule"/>

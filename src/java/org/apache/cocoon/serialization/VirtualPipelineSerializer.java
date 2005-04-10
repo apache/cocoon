@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.cocoon.reading;
+package org.apache.cocoon.serialization;
 
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
 import org.apache.cocoon.sitemap.impl.AbstractVirtualSitemapComponent;
+import org.apache.cocoon.xml.XMLConsumer;
 
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class VirtualPipelineReader extends AbstractVirtualSitemapComponent
-    implements Reader {
+public class VirtualPipelineSerializer extends AbstractVirtualSitemapComponent
+    implements Serializer {
 
     protected String getTypeName() {
-        return "reader";
+        return "serializer";
     }
 
     /**
@@ -46,38 +47,38 @@ public class VirtualPipelineReader extends AbstractVirtualSitemapComponent
     }
 
     /**
-     * @return the time the read source was last modified or 0 if it is not
-     *         possible to detect
-     */
-    public long getLastModified() {
-        return 0;
-    }
-
-    /**
      * Test if the component wants to set the content length
      */
     public boolean shouldSetContentLength() {
         return this.getPipeline().shouldSetContentLength();
     }
 
-    public void generate()
-    throws IOException, SAXException, ProcessingException {
-
+    /**
+     *  Process the SAX event. A new document is processed. The
+     *  internal pipeline is prepared.
+     *
+     *  @see org.xml.sax.ContentHandler#startDocument()
+     */
+    public void startDocument() throws SAXException {
         // Should use SourceResolver and context of the this
         // components' sitemap, not caller sitemap
-        EnvironmentHelper.enterEnvironment(this.getVPCEnvironment());
         try {
+            EnvironmentHelper.enterEnvironment(this.getVPCEnvironment());
             this.getPipeline().prepareInternal(this.getVPCEnvironment());
+        } catch (Exception e) {
+            throw new SAXException("VirtualPipelineSerializer: couldn't create internal pipeline ", e);
         } finally {
             EnvironmentHelper.leaveEnvironment();
         }
 
-        // Should use SourceResolver of the this components' sitemap, not caller sitemap
-        EnvironmentHelper.enterEnvironment(this.getMappedSourceEnvironment());
         try {
-            this.getPipeline().process(this.getMappedSourceEnvironment());
-        } finally {
-            EnvironmentHelper.leaveEnvironment();
+            super.setConsumer(EnvironmentHelper
+                              .createPushEnvironmentConsumer(this.getPipeline().getXMLConsumer(this.getMappedSourceEnvironment()),
+                                                             this.getMappedSourceEnvironment()));
+        } catch (ProcessingException e) {
+            throw new SAXException("VirtualPipelineSerializer: couldn't get xml consumer from the pipeline ", e);
         }
+
+        super.startDocument();
     }
-}
+ }

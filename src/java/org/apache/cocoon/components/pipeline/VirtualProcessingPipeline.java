@@ -84,6 +84,12 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     private boolean prepared;
 
     /**
+     * This is the first consumer component in the pipeline, either
+     * the first transformer or the serializer.
+     */
+    protected XMLConsumer firstConsumer;
+
+    /**
      * This is the last component in the pipeline, either the serializer
      * or a custom xmlconsumer for the cocoon: protocol etc.
      */
@@ -174,15 +180,9 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
      * @param source the source used to setup the transformer (e.g. XSL file), or
      *        <code>null</code> if no source is given.
      * @param param the parameters for the transfomer.
-     * @throws org.apache.cocoon.ProcessingException if the generator couldn't be obtained.
      */
     public void addTransformer(String role, String source, Parameters param, Parameters hintParam)
     throws ProcessingException {
-        if (this.generator == null) {
-            throw new ProcessingException ("Must set a generator before adding transformer '" + role +
-                                           "' at " + getLocation(param));
-        }
-
         try {
             this.transformers.add(this.newManager.lookup(Transformer.ROLE + '/' + role));
         } catch (ServiceException ce) {
@@ -201,11 +201,6 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         if (this.serializer != null) {
             // Should normally not happen as adding a serializer starts pipeline processing
             throw new ProcessingException ("Serializer already set. Cannot set serializer '" + role +
-                                           "' at " + getLocation(param));
-        }
-
-        if (this.generator == null) {
-            throw new ProcessingException ("Must set a generator before setting serializer '" + role +
                                            "' at " + getLocation(param));
         }
 
@@ -231,13 +226,9 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
 
     /**
      * Sanity check
-     * @return true if the pipeline is 'sane', false otherwise.
+     * @return true if the pipeline is 'sane', for VPCs all pipelines are sane
      */
     protected boolean checkPipeline() {
-        if (this.generator == null) {
-            return false;
-        }
-
         return true;
     }
 
@@ -250,12 +241,12 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
             // SourceResolver resolver = this.processor.getSourceResolver();
 
             // setup the generator
-            this.generator.setup(
-                resolver,
-                environment.getObjectModel(),
-                generatorSource,
-                generatorParam
-            );
+            if (this.generator != null) {
+                this.generator.setup(resolver,
+                                     environment.getObjectModel(),
+                                     generatorSource,
+                                     generatorParam);
+            }
 
             Iterator transformerItt = this.transformers.iterator();
             Iterator transformerSourceItt = this.transformerSources.iterator();
@@ -270,7 +261,7 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
                 );
             }
 
-            if (this.serializer instanceof SitemapModelComponent) {
+            if (this.serializer != null && this.serializer instanceof SitemapModelComponent) {
                 ((SitemapModelComponent)this.serializer).setup(
                     resolver,
                     environment.getObjectModel(),
@@ -305,14 +296,24 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         XMLProducer prev = this.generator;
 
         Iterator itt = this.transformers.iterator();
+
+        // No generator for VPC transformer and serializer 
+        if (this.generator == null && itt.hasNext()) {
+            this.firstConsumer = (XMLConsumer)(prev = (XMLProducer)itt.next());
+        }
+
         while (itt.hasNext()) {
             Transformer next = (Transformer) itt.next();
             connect(environment, prev, next);
             prev = next;
         }
-
+        
         // insert the serializer
-        connect(environment, prev, this.lastConsumer);
+        if (prev != null) {
+            connect(environment, prev, this.lastConsumer);
+        } else {
+            this.firstConsumer = this.lastConsumer;
+        }
     }
 
     /**
@@ -395,13 +396,119 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
     }
 
     /**
+     * Process the given <code>Environment</code>, but do not use the
+     * serializer. Instead the sax events are streamed to the XMLConsumer.
+     */
+    public boolean process(Environment environment, XMLConsumer consumer)
+    throws ProcessingException {
+        // Exception happened during setup and was handled
+        if (this.errorPipeline != null) {
+            return this.errorPipeline.processingPipeline.process(environment, consumer);
+        }
+
+        // Have to buffer events if error handler is specified.
+        SaxBuffer buffer = null;
+        this.lastConsumer = this.errorHandler == null? consumer: (buffer = new SaxBuffer());
+        try {
+            connectPipeline(environment);
+            return processXMLPipeline(environment);
+        } catch (ProcessingException e) {
+            buffer = null;
+            return processErrorHandler(environment, e, consumer);
+        } finally {
+            if (buffer != null) {
+                try {
+                    buffer.toSAX(consumer);
+                } catch (SAXException e) {
+                    throw new ProcessingException("Failed to execute pipeline.", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the first consumer - used for VPC transformers
+     */
+    public XMLConsumer getXMLConsumer(Environment environment, XMLConsumer consumer)
+        throws ProcessingException {
+        if (!this.prepared) {
+            preparePipeline(environment);
+        }
+
+        this.lastConsumer = consumer;
+        connectPipeline(environment);
+
+        if (this.firstConsumer == null)
+            throw new ProcessingException("A VPC transformer pipeline should not contain a generator.");
+
+        return this.firstConsumer;
+    }
+
+    /**
+     * Get the first consumer - used for VPC serializers
+     */
+    public XMLConsumer getXMLConsumer(Environment environment) throws ProcessingException {
+        if (!this.prepared) {
+            preparePipeline(environment);
+        }
+
+        // If this is an internal request, lastConsumer was reset!
+        if (this.lastConsumer == null) {
+            this.lastConsumer = this.serializer;
+        }
+        
+        connectPipeline(environment);
+
+        if (this.serializer == null) {
+            throw new ProcessingException("A VPC serializer pipeline must contain a serializer.");
+        }
+
+        try {
+            this.serializer.setOutputStream(environment.getOutputStream(0));
+        } catch (Exception e) {
+            throw new ProcessingException("Couldn't set output stream ", e);
+        }
+            
+        if (this.firstConsumer == null)
+            throw new ProcessingException("A VPC serializer pipeline should not contain a generator.");
+
+        return this.firstConsumer;
+    }
+
+    /**
+     * Get the mime-type for the serializer
+     */
+    public String getMimeType() {
+        if (this.lastConsumer == null) {
+            // internal processing: text/xml
+            return "text/xml";
+        } else {
+            // Get the mime-type
+            if (serializerMimeType != null) {
+                // there was a serializer defined in the sitemap
+                return serializerMimeType;
+            } else {
+                // ask to the component itself
+                return this.serializer.getMimeType();
+            }
+        }
+    }
+
+    /**
+     * Test if the serializer wants to set the content length
+     */
+    public boolean shouldSetContentLength() {
+        return this.serializer.shouldSetContentLength();
+    }
+
+    /**
      * Process the SAX event pipeline
      */
     protected boolean processXMLPipeline(Environment environment)
     throws ProcessingException {
 
         try {
-            if (this.lastConsumer == null) {
+            if (this.lastConsumer == null || this.serializer == null) {
                 // internal processing
                 this.generator.generate();
             } else {
@@ -430,7 +537,6 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         return true;
     }
 
-
     public void recycle() {
         this.prepared = false;
 
@@ -458,43 +564,13 @@ public class VirtualProcessingPipeline extends AbstractLogEnabled
         this.serializer = null;
         this.processor = null;
         this.lastConsumer = null;
+        this.firstConsumer = null;
 
         // Release error handler
         this.errorHandler = null;
         if (this.errorPipeline != null) {
             this.errorPipeline.release();
             this.errorPipeline = null;
-        }
-    }
-
-    /**
-     * Process the given <code>Environment</code>, but do not use the
-     * serializer. Instead the sax events are streamed to the XMLConsumer.
-     */
-    public boolean process(Environment environment, XMLConsumer consumer)
-    throws ProcessingException {
-        // Exception happened during setup and was handled
-        if (this.errorPipeline != null) {
-            return this.errorPipeline.processingPipeline.process(environment, consumer);
-        }
-
-        // Have to buffer events if error handler is specified.
-        SaxBuffer buffer = null;
-        this.lastConsumer = this.errorHandler == null? consumer: (buffer = new SaxBuffer());
-        try {
-            connectPipeline(environment);
-            return processXMLPipeline(environment);
-        } catch (ProcessingException e) {
-            buffer = null;
-            return processErrorHandler(environment, e, consumer);
-        } finally {
-            if (buffer != null) {
-                try {
-                    buffer.toSAX(consumer);
-                } catch (SAXException e) {
-                    throw new ProcessingException("Failed to execute pipeline.", e);
-                }
-            }
         }
     }
 

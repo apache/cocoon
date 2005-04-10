@@ -23,7 +23,7 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.context.DefaultContext;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -32,7 +32,7 @@ import org.apache.avalon.framework.service.Serviceable;
 import org.apache.cocoon.Constants;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.components.source.SourceUtil;
-import org.apache.cocoon.components.pipeline.ProcessingPipeline;
+import org.apache.cocoon.components.source.impl.SitemapSourceInfo;
 import org.apache.cocoon.components.pipeline.VirtualProcessingPipeline;
 import org.apache.cocoon.components.treeprocessor.InvokeContext;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
@@ -40,7 +40,9 @@ import org.apache.cocoon.components.treeprocessor.sitemap.VPCNode;
 import org.apache.cocoon.environment.Environment;
 import org.apache.cocoon.environment.SourceResolver;
 import org.apache.cocoon.environment.internal.EnvironmentHelper;
+import org.apache.cocoon.environment.wrapper.EnvironmentWrapper;
 import org.apache.cocoon.sitemap.SitemapModelComponent;
+import org.apache.cocoon.xml.AbstractXMLPipe;
 import org.apache.excalibur.source.Source;
 import org.apache.excalibur.source.SourceException;
 import org.apache.excalibur.xml.sax.XMLizable;
@@ -60,24 +62,28 @@ import java.util.Set;
  * <li>Implement caching
  * </ul>
  */
-public abstract class AbstractVirtualSitemapComponent extends AbstractLogEnabled
+public abstract class AbstractVirtualSitemapComponent extends AbstractXMLPipe
     implements SitemapModelComponent, Serviceable, Disposable, Contextualizable, Configurable {
 
-    protected SourceResolver resolver;
+    private ProcessingNode node;
+    private String sourceMapName;
+    private Map sourceMap = new HashMap();
+    private Set sources;
+    private VirtualProcessingPipeline pipeline;
+    // An environment containing a map with the souces from the calling environment
+    private EnvironmentWrapper mappedSourceEnvironment;
+    // An environment with the URI and URI prefix of the sitemap where the VPC is defined
+    private EnvironmentWrapper vpcEnvironment;
+
     protected DefaultContext context;
+    protected SourceResolver resolver;
     protected ServiceManager manager;
-    protected ProcessingNode node;
-    protected ProcessingPipeline pipeline;
-    protected String sourceMapName;
-    protected Map sourceMap = new HashMap();
-    protected Set sources;
-    protected String name;
 
-
-    protected class MyInvokeContext extends InvokeContext {
-        public MyInvokeContext() throws Exception {
+    private class MyInvokeContext extends InvokeContext {
+        public MyInvokeContext(Logger logger) throws Exception {
             super(true);
             super.processingPipeline = new VirtualProcessingPipeline(AbstractVirtualSitemapComponent.this.context);
+            ((VirtualProcessingPipeline)super.processingPipeline).enableLogging(logger);
         }
     }
 
@@ -111,16 +117,16 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractLogEnabled
     }
 
     public void configure(Configuration configuration) throws ConfigurationException {
-        this.name = configuration.getAttribute("name");
+        String name = configuration.getAttribute("name");
         this.sourceMapName =
-            Constants.CONTEXT_ENV_PREFIX + "-" + getTypeName() + "-source-map-" + this.name;
+            Constants.CONTEXT_ENV_PREFIX + "-" + getTypeName() + "-source-map-" + name;
         try {
             this.node = (ProcessingNode)this.context.get(Constants.CONTEXT_VPC_PREFIX +
-                                                         getTypeName() + "-" + this.name);
+                                                         getTypeName() + "-" + name);
             this.sources = ((VPCNode)node).getSources();
         } catch (Exception e) {
             throw new ConfigurationException("Can not find VirtualPipelineComponent '" +
-                                             this.name + "' configuration");
+                                             name + "' configuration");
         }
     }
 
@@ -129,13 +135,16 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractLogEnabled
         this.resolver = resolver;
 
         Environment env = EnvironmentHelper.getCurrentEnvironment();
-        String oldPrefix = env.getURIPrefix();
-        String oldURI    = env.getURI();
 
-        // save callers resolved sources if there are any
-        Map oldSourceMap = (Map)env.getAttribute(this.sourceMapName);
+        // Hack to get an info object with the right uri for the
+        // current sitemap, there is no vpc protocol.
+        SitemapSourceInfo mappedSourceEnvironmentInfo =
+            SitemapSourceInfo.parseURI(env, "vpc:/");
+
+        this.mappedSourceEnvironment =
+            new EnvironmentWrapper(env, mappedSourceEnvironmentInfo, getLogger());
         // place for resolved sources
-        env.setAttribute(this.sourceMapName, this.sourceMap);
+        this.mappedSourceEnvironment.setAttribute(this.sourceMapName, this.sourceMap);
 
         MyInvokeContext invoker = null;
 
@@ -143,17 +152,29 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractLogEnabled
             // resolve the sources in the parameter map before switching context
             Map resolvedParams = resolveParams(par, src);
 
-            String uri = (String) this.context.get(Constants.CONTEXT_ENV_URI);
-            String prefix = (String) this.context.get(Constants.CONTEXT_ENV_PREFIX);
-            env.setURI(prefix, uri);
+            // set up info object for VPC environment wrapper, would
+            // better be done in a constructor for the info.
+            SitemapSourceInfo vpcEnvironmentInfo = new SitemapSourceInfo();
+            vpcEnvironmentInfo.prefix = (String) this.context.get(Constants.CONTEXT_ENV_PREFIX);
+            vpcEnvironmentInfo.uri = (String) this.context.get(Constants.CONTEXT_ENV_URI);
+            vpcEnvironmentInfo.requestURI = vpcEnvironmentInfo.prefix + vpcEnvironmentInfo.uri;
+            vpcEnvironmentInfo.rawMode = false;
 
-            invoker = new MyInvokeContext();
+            // set up the vpc environment
+            this.vpcEnvironment =
+                new EnvironmentWrapper(this.mappedSourceEnvironment,
+                                       vpcEnvironmentInfo, getLogger());
+
+            EnvironmentHelper.enterEnvironment(this.vpcEnvironment);
+
+            // set up invoker with sitemap params
+            invoker = new MyInvokeContext(getLogger());
             invoker.enableLogging(getLogger());
             invoker.service(this.manager);
             invoker.pushMap(null, resolvedParams);
 
-            this.node.invoke(env, invoker);
-            this.pipeline = invoker.getProcessingPipeline();
+            this.node.invoke(this.vpcEnvironment, invoker);
+            this.pipeline = (VirtualProcessingPipeline)invoker.getProcessingPipeline();
         } catch (Exception e) {
             throw new ProcessingException("Oops", e);
         } finally {
@@ -162,16 +183,25 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractLogEnabled
                 invoker.dispose();
             }
             // Restore context
-            env.setURI(oldPrefix, oldURI);
-            // restore sourceMap
-            if (oldSourceMap != null)
-                env.setAttribute(this.sourceMapName, oldSourceMap);
-            else
-                env.removeAttribute(this.sourceMapName);
+            EnvironmentHelper.leaveEnvironment();
         }
     }
 
-    protected Map resolveParams(Parameters par, String src)
+    protected VirtualProcessingPipeline getPipeline() {
+        return this.pipeline;
+    }
+
+    // An environment containing a map with the souces from the calling environment
+    protected EnvironmentWrapper getMappedSourceEnvironment() {
+        return this.mappedSourceEnvironment;
+    }
+
+    // An environment with the URI and URI prefix of the sitemap where the VPC is defined
+    protected EnvironmentWrapper getVPCEnvironment() {
+        return this.vpcEnvironment;
+    }
+
+    private Map resolveParams(Parameters par, String src)
         throws ProcessingException, IOException {
         HashMap map = new HashMap();
 
@@ -192,7 +222,7 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractLogEnabled
         return map;
     }
 
-    protected String resolveAndMapSourceURI(String name, String uri)
+    private String resolveAndMapSourceURI(String name, String uri)
         throws ProcessingException, IOException {
 
         // Resolve the URI
@@ -209,9 +239,9 @@ public abstract class AbstractVirtualSitemapComponent extends AbstractLogEnabled
         // Create a new URI that refers to the source in the context
         String mappedURI;
         if (src instanceof XMLizable)
-            mappedURI = "xmodule:environment-attribute:" + this.sourceMapName + "#" + name;
+            mappedURI = "xmodule:environment-attr:" + this.sourceMapName + "#" + name;
         else
-            mappedURI = "module:environment-attribute:" + this.sourceMapName + "#" + name;
+            mappedURI = "module:environment-attr:" + this.sourceMapName + "#" + name;
         
         return mappedURI;
     }
