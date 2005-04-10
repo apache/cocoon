@@ -294,6 +294,38 @@ implements SourceResolver, Serviceable, Disposable {
     }
 
     /**
+     * This method is used for entering a new environment.
+     *
+     * @throws ProcessingException if there is no current processing environment
+     */
+    public static void enterEnvironment(Environment env)
+    throws ProcessingException {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        EnvironmentInfo info = null;
+        if ( stack != null && !stack.isEmpty()) {
+            info = stack.getCurrentInfo();
+        } else {
+            throw new ProcessingException("There must be a current processing environment.");
+        }
+
+        stack.pushInfo(new EnvironmentInfo(info.processor, stack.getOffset(), info.manager, env));
+        stack.setOffset(stack.size() - 1);
+    }
+
+    /**
+     * This method is used for leaving the current environment.
+     * 
+     * <p>It's the counterpart to the {@link #enterEnvironment(Environment)} method.</p>
+     */
+    public static Environment leaveEnvironment() {
+        final EnvironmentStack stack = (EnvironmentStack)environmentStack.get();
+        final EnvironmentInfo info = (EnvironmentInfo)stack.pop();
+        stack.setOffset(info.oldStackCount);
+
+        return info.environment;
+    }
+
+    /**
      * INTERNAL METHOD. Do not use, can be removed without warning or deprecation cycle.
      */
     public static int markEnvironment() {
@@ -370,6 +402,22 @@ implements SourceResolver, Serviceable, Disposable {
         final EnvironmentInfo info = stack.getCurrentInfo();
         return stack.getEnvironmentAwareConsumerWrapper(consumer, info.oldStackCount);
     }
+
+    /**
+     * Create an environment aware xml consumer that push an
+     * environment before calling the consumer.
+     */
+    public static XMLConsumer createPushEnvironmentConsumer(XMLConsumer consumer, Environment environment) {
+        return new PushEnvironmentChanger(consumer, environment);
+    }
+
+    /**
+     * Create an environment aware xml consumer that pop and save the
+     * current environment before calling the consumer.
+     */
+    public static XMLConsumer createPopEnvironmentConsumer(XMLConsumer consumer) {
+        return new PopEnvironmentChanger(consumer);
+    }
 }
 
 final class CloningInheritableThreadLocal
@@ -394,4 +442,3 @@ final class CloningInheritableThreadLocal
         return null;
     }
 }
-

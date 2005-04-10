@@ -23,6 +23,8 @@ import org.apache.cocoon.components.treeprocessor.ContainerNodeBuilder;
 import org.apache.cocoon.components.treeprocessor.ProcessingNode;
 import org.apache.cocoon.generation.VirtualPipelineGenerator;
 import org.apache.cocoon.reading.VirtualPipelineReader;
+import org.apache.cocoon.serialization.VirtualPipelineSerializer;
+import org.apache.cocoon.transformation.VirtualPipelineTransformer;
 
 /**
  * Handles a set of virtual sitemap components.
@@ -45,6 +47,8 @@ public class VPCsNodeBuilder extends ContainerNodeBuilder {
 
         String clazz = child.getAttribute("src");
         return VirtualPipelineGenerator.class.getName().equals(clazz)
+            || VirtualPipelineSerializer.class.getName().equals(clazz)
+            || VirtualPipelineTransformer.class.getName().equals(clazz)
             || VirtualPipelineReader.class.getName().equals(clazz);
     }
 

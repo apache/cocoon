@@ -26,6 +26,18 @@
 
   <xmlizer/>
 
+  <xslt-processor>
+     <parameter name="use-store" value="false"/>
+     <parameter name="incremental-processing" value="false"/>
+  </xslt-processor>
+
+  <component role="org.apache.excalibur.xml.xslt.XSLTProcessor/xalan"
+             class="org.apache.excalibur.xml.xslt.XSLTProcessorImpl">
+     <parameter name="use-store" value="false"/>
+     <parameter name="incremental-processing" value="false"/>
+     <parameter name="transformer-factory" value="org.apache.xalan.processor.TransformerFactoryImpl"/>
+  </component>
+
   <input-modules>
     <component-instance class="org.apache.cocoon.components.modules.input.EnvironmentAttributeModule" name="environment-attr"/>
   </input-modules>
@@ -41,6 +53,6 @@
 
   <!-- Relative sitemap path works during sitemap execution but
        give exceptions during decommissioning -->
-  <sitemap file="resource://org/apache/cocoon/reading/vpc-sitemap.xmap"/>
+  <sitemap file="resource://org/apache/cocoon/transformation/vpc-sitemap.xmap"/>
 
 </components>
