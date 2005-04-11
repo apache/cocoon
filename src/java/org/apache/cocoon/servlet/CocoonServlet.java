@@ -1056,7 +1056,12 @@ public class CocoonServlet extends HttpServlet {
         }
 
         // Get the cocoon engine instance
-        getCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM));
+        
+        if (reloadCocoon(request.getPathInfo(), request.getParameter(Constants.RELOAD_PARAM))) {
+            disposeCocoon();
+            initLogger();
+            createCocoon();
+        }
 
         // Check if cocoon was initialized
         if (this.cocoon == null) {
@@ -1371,6 +1376,12 @@ public class CocoonServlet extends HttpServlet {
      */
     private synchronized void createCocoon()
     throws ServletException {
+        
+        // Recheck that we need to create the cocoon object. It can have been created by
+        // a concurrent invocation to this method.
+        if (this.cocoon != null) {
+            return;
+        }
 
         /* HACK for reducing class loader problems.                                     */
         /* example: xalan extensions fail if someone adds xalan jars in tomcat3.2.1/lib */
@@ -1405,7 +1416,6 @@ public class CocoonServlet extends HttpServlet {
             ContainerUtil.initialize(c);
             this.creationTime = System.currentTimeMillis();
 
-            disposeCocoon();
             this.cocoon = c;
         } catch (Exception e) {
             if (getLogger().isErrorEnabled()) {
@@ -1493,7 +1503,7 @@ public class CocoonServlet extends HttpServlet {
      * Gets the current cocoon object.  Reload cocoon if configuration
      * changed or we are reloading.
      */
-    private void getCocoon(final String pathInfo, final String reloadParam)
+    private boolean reloadCocoon(final String pathInfo, final String reloadParam)
     throws ServletException {
         if (this.allowReload) {
             boolean reload = false;
@@ -1516,11 +1526,10 @@ public class CocoonServlet extends HttpServlet {
                 }
                 reload = true;
             }
-
-            if (reload) {
-                initLogger();
-                createCocoon();
-            }
+            
+            return reload;
+        } else {
+            return false;
         }
     }
 
