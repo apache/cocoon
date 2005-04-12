@@ -80,9 +80,6 @@ public class TreeProcessor extends AbstractLogEnabled
     /** Delay for <code>sourceLastModified</code>. */
     protected long lastModifiedDelay;
 
-    /** The file to process */
-    protected String fileName;
-
     /** Check for reload? */
     protected boolean checkReload;
     
@@ -210,7 +207,7 @@ public class TreeProcessor extends AbstractLogEnabled
      */
     public void configure(Configuration config)
     throws ConfigurationException {
-        this.fileName = config.getAttribute("file", null);
+
         this.checkReload = config.getAttributeAsBoolean("check-reload", true);
 
         // Obtain the configuration file, or use the XCONF_URL if none
@@ -219,6 +216,14 @@ public class TreeProcessor extends AbstractLogEnabled
 
         // Reload check delay. Default is 1 second.
         this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", 1000L);
+
+        String fileName = config.getAttribute("file", "sitemap.xmap");
+        
+        try {
+            this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(fileName), lastModifiedDelay);
+        } catch (Exception e) {
+            throw new ConfigurationException("Cannot resolve " + fileName, e);
+        }
 
         // Read the builtin languages definition file
         try {
@@ -346,7 +351,12 @@ public class TreeProcessor extends AbstractLogEnabled
      * Sets up the concrete processor, building or rebuilding it if necessary.
      */
     private void setupConcreteProcessor(Environment env) throws Exception {
-        // first, check for sitemap changes
+
+        if (this.parent == null) {
+            // Ensure root sitemap uses the correct context, even if not located in the webapp context
+            this.environmentHelper.changeContext(this.source, "");
+        }
+
         if (this.concreteProcessor == null || this.concreteProcessor.isReloadNeeded() ||
                 (this.checkReload && this.source.getLastModified() != this.lastModified)) {
             buildConcreteProcessor(env);
@@ -380,14 +390,6 @@ public class TreeProcessor extends AbstractLogEnabled
         EnvironmentHelper.enterProcessor(this, this.manager, env);
 
         try {
-            // Load the sitemap file
-            if (this.fileName == null) {
-                this.fileName = "sitemap.xmap";
-            }
-            if (this.source == null) {
-                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName),
-                                                              lastModifiedDelay);
-            }
 
             // Build a namespace-aware configuration object
             NamespacedSAXConfigurationHandler handler = new NamespacedSAXConfigurationHandler();
