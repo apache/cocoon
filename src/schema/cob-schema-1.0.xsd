@@ -22,35 +22,34 @@
   <xs:element name="block">
     <xs:complexType>
       <xs:all>
-        <xs:element ref="name" minOccurs="1" maxOccurs="1"/>
-        <xs:element ref="description" minOccurs="1" maxOccurs="1"/>
-        <xs:element ref="state" minOccurs="1" maxOccurs="1"/>        
-        <xs:element ref="license" minOccurs="1" maxOccurs="1"/>
-        <xs:element ref="author" minOccurs="1" maxOccurs="1"/>
-        <xs:element ref="sitemap" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="properties" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="requirements" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="implements" minOccurs="0" maxOccurs="1"/>
-        <xs:element ref="extends" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="name" type="name"/>
+        <xs:element name="description" type="href"/>
+        <xs:element name="state" type="state"/>        
+        <xs:element name="license" type="href"/>
+        <xs:element name="author" type="href"/>
+        <xs:element name="sitemap" type="src" minOccurs="0"/>
+        <xs:element name="properties" type="properties" minOccurs="0"/>
+        <xs:element name="requirements" type="requirements" minOccurs="0"/>
+        <xs:element name="implements" type="implements" minOccurs="0"/>
+        <xs:element name="extends" type="extends" minOccurs="0"/>
       </xs:all>
       <xs:attribute name="id" type="xs:anyURI" use="required"/>
     </xs:complexType>
   </xs:element>
     
   <!-- general meta data -->
-  <xs:element name="name" type="xs:string"/>
-  <xs:element name="description" type="href"/>
-  <xs:element name="state">
-  	<xs:complexType>
-	  	<xs:attribute name="href" type="xs:anyURI" use="required"/>
-	  	<xs:attribute name="community" type="community" use="required"/>
-	  	<xs:attribute name="interfaces" type="stability" use="required"/>
-	  	<xs:attribute name="implementation" type="stability" use="required"/>
-  	</xs:complexType>
-  </xs:element>
-  <xs:element name="license" type="href"/>
-  <xs:element name="author" type="href"/>
-  <xs:element name="sitemap" type="src"/>
+  <xs:complexType name="name">
+    <xs:simpleContent>
+      <xs:extension base="xs:string"/>
+    </xs:simpleContent>
+  </xs:complexType> 
+
+  <xs:complexType name="state">
+  	<xs:attribute name="href" type="xs:anyURI" use="required"/>
+  	<xs:attribute name="community" type="community" use="required"/>
+  	<xs:attribute name="interfaces" type="stability" use="required"/>
+  	<xs:attribute name="implementation" type="stability" use="required"/>
+  </xs:complexType>
   
   <xs:simpleType name="community">
 	  <xs:restriction base="xs:string">
@@ -80,58 +79,47 @@
   </xs:complexType>  
   
   <!-- properties -->
-  <xs:element name="properties">
-  	<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="property" maxOccurs="unbounded"/>
-			</xs:sequence>
-  	</xs:complexType>
-  </xs:element>
-  <xs:element name="property">
-  	<xs:complexType>
-			<xs:all>
-				<xs:element name="default" minOccurs="0" maxOccurs="1" type="xs:string"/>
-				<xs:element name="description" minOccurs="1" maxOccurs="1" type="xs:string"/>
-			</xs:all>
-			<xs:attribute name="name" use="required"/>
-  	</xs:complexType>  	
-  </xs:element>
-  
+  <xs:complexType name="properties">
+		<xs:sequence>
+			<xs:element name="property" type="property" maxOccurs="unbounded"/>
+		</xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="property">
+		<xs:all>
+			<xs:element name="default" minOccurs="0" maxOccurs="1" type="xs:string"/>
+			<xs:element name="description" minOccurs="1" maxOccurs="1" type="xs:string"/>
+		</xs:all>
+		<xs:attribute name="name" use="required"/>
+  </xs:complexType>  	
+
   <!-- requirements -->
-  <xs:element name="requirements">
-  	<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="requires" maxOccurs="unbounded"/>
-			</xs:sequence>
-  	</xs:complexType>  
-  </xs:element>
-  <xs:element name="requires">
-  	<xs:complexType>
-  		<xs:attribute name="interface" type="xs:anyURI" use="required"/>
-  		<xs:attribute name="default" type="xs:anyURI" use="optional"/>
-  		<xs:attribute name="name" type="xs:string" use="required"/>
-  	</xs:complexType>  	
-  </xs:element>
-  
-  <!-- implements -->
-  <xs:element name="implements">
-  	<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="interface" maxOccurs="unbounded"/>
-			</xs:sequence>
-  	</xs:complexType>  	
-  </xs:element>
-  <xs:element name="interface">
-  	<xs:complexType>
-  		<xs:attribute name="id" type="xs:anyURI" use="required"/>
-  	</xs:complexType>  	  	
-  </xs:element>
+  <xs:complexType name="requirements">
+		<xs:sequence>
+			<xs:element name="requires" type="requires" maxOccurs="unbounded"/>
+		</xs:sequence>
+  </xs:complexType>  
+
+  <xs:complexType name="requires">
+  	<xs:attribute name="interface" type="xs:anyURI" use="required"/>
+  	<xs:attribute name="default" type="xs:anyURI" use="optional"/>
+  	<xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>  	
 
   <!-- implements -->
-  <xs:element name="extends">
-  	<xs:complexType>
-  		<xs:attribute name="block" type="xs:anyURI" use="required"/>
-  	</xs:complexType>  	  	
-  </xs:element>
+  <xs:complexType name="implements">
+		<xs:sequence>
+			<xs:element name="interface" type="interface" maxOccurs="unbounded"/>
+		</xs:sequence>
+  </xs:complexType>  	
+
+  <xs:complexType name="interface">
+  	<xs:attribute name="id" type="xs:anyURI" use="required"/>
+  </xs:complexType>  	  	
+
+  <!-- implements -->
+  <xs:complexType name="extends">
+  	<xs:attribute name="block" type="xs:anyURI" use="required"/>
+  </xs:complexType>  	  	
 
 </xs:schema>
