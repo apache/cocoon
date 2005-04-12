@@ -62,8 +62,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     private Map sitemapComponentConfigurations;
 
     private Configuration componentConfigurations;
-    
-    private String uriContext;
 
     /** Number of simultaneous uses of this processor (either by concurrent request or by internal requests) */
     private int requestCount;
@@ -74,7 +72,7 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
 	}
 
 	/** Set the processor data, result of the treebuilder job */
-	public void setProcessorData(ComponentManager manager, ProcessingNode rootNode, List disposableNodes, String uriContext) {
+	public void setProcessorData(ComponentManager manager, ProcessingNode rootNode, List disposableNodes) {
         if (this.sitemapComponentManager != null) {
             throw new IllegalStateException("setProcessorData() can only be called once");
         }
@@ -82,7 +80,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
         this.sitemapComponentManager = manager;
         this.rootNode = rootNode;
         this.disposableNodes = disposableNodes;
-        this.uriContext = uriContext;
 	}
 
 	/** Set the sitemap component configurations (called as part of the tree building process) */
@@ -220,8 +217,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     		try {
     	        // and now process
             CocoonComponentManager.enterEnvironment(environment, this.sitemapComponentManager, this);
-            String oldContext = environment.getContext();
-            environment.changeContext("", this.uriContext);
 
             Map objectModel = environment.getObjectModel();
 
@@ -241,7 +236,6 @@ public class ConcreteTreeProcessor extends AbstractLogEnabled
     	            return success;
 
     	        } finally {
-                    environment.changeContext("", oldContext);
                     CocoonComponentManager.leaveEnvironment(success);
                     // Restore old redirector and resolver
      	            context.setRedirector(oldRedirector);
