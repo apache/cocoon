@@ -21,56 +21,46 @@
  
   <xs:element name="wiring">
     <xs:complexType>
-      <xs:sequence>
-      	<xs:element ref="block" maxOccurs="unbounded"/>
+      <xs:sequence minOccurs="0">
+      	<xs:element name="block" type="block" maxOccurs="unbounded"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   
-  <xs:element name="block">
-  	<xs:complexType>
-			<xs:all>
-				<xs:element ref="mount" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="connections" minOccurs="0" maxOccurs="1"/>
-				<xs:element ref="properties" minOccurs="0" maxOccurs="1"/>
-			</xs:all>
-			<xs:attribute name="id" type="xs:anyURI" use="required"/>
-			<xs:attribute name="location" type="xs:anyURI" use="required"/>
-  	</xs:complexType>  
-  </xs:element>
-  <xs:element name="mount">
-  	<xs:complexType>
-  		<xs:attribute name="path" type="xs:string" use="required"/>
-  	</xs:complexType>  	
-  </xs:element>
-  <xs:element name="connections">
-  	<xs:complexType>
-  		<xs:sequence>
-  			<xs:element ref="connection" minOccurs="0" maxOccurs="unbounded"/>
-  		</xs:sequence>
-  	</xs:complexType>  	
-  </xs:element>  
+  <xs:complexType name="block">
+		<xs:all>
+			<xs:element name="mount" type="mount" minOccurs="0"/>
+			<xs:element name="connections" type="connections" minOccurs="0"/>
+			<xs:element name="properties" type="properties" minOccurs="0"/>
+		</xs:all>
+		<xs:attribute name="id" type="xs:anyURI" use="required"/>
+		<xs:attribute name="location" type="xs:anyURI" use="required"/>
+  </xs:complexType>  
 
-  <xs:element name="connection">
-  	<xs:complexType>
-  		<xs:attribute name="name" type="xs:string" use="required"/>
-  		<xs:attribute name="block" type="xs:anyURI" use="required"/>
-  	</xs:complexType>   	
-  </xs:element>
+  <xs:complexType name="mount">
+  	<xs:attribute name="path" type="xs:string" use="required"/>
+  </xs:complexType>  	
 
-  <xs:element name="properties">
-  	<xs:complexType>
-  		<xs:sequence>
-  			<xs:element ref="property" minOccurs="1" maxOccurs="unbounded"/>
-  		</xs:sequence>
-  	</xs:complexType>  	
-  </xs:element>  
-  <xs:element name="property">
-  	<xs:complexType>
-  		<xs:attribute name="name" type="xs:string" use="required"/>
-  		<xs:attribute name="value" type="xs:string" use="required"/>
-  	</xs:complexType>   	
-  </xs:element>
+  <xs:complexType name="connections">
+  	<xs:sequence>
+  		<xs:element name="connection" type="connection" minOccurs="0" maxOccurs="unbounded"/>
+  	</xs:sequence>
+  </xs:complexType>  	
 
+  <xs:complexType name="connection">
+  	<xs:attribute name="name" type="xs:string" use="required"/>
+  	<xs:attribute name="block" type="xs:anyURI" use="required"/>
+  </xs:complexType>   	
+
+  <xs:complexType name="properties">
+  	<xs:sequence>
+  		<xs:element name="property" type="property" minOccurs="1" maxOccurs="unbounded"/>
+  	</xs:sequence>
+  </xs:complexType>  	
+
+  <xs:complexType name="property">
+  	<xs:attribute name="name" type="xs:string" use="required"/>
+  	<xs:attribute name="value" type="xs:string" use="required"/>
+  </xs:complexType>   	
 
 </xs:schema>
