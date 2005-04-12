@@ -15,6 +15,8 @@
  */
 package org.apache.cocoon.components.treeprocessor;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.apache.avalon.excalibur.component.RoleManageable;
@@ -93,9 +95,6 @@ public class TreeProcessor
 
     /** The current language configuration */
     protected Configuration currentLanguage;
-
-    /** The file to process */
-    protected String fileName;
 
     /** Check for reload? */
     protected boolean checkReload;
@@ -184,7 +183,7 @@ public class TreeProcessor
 */
     public void configure(Configuration config)
     throws ConfigurationException {
-        this.fileName = config.getAttribute("file", null);
+
         this.checkReload = config.getAttributeAsBoolean("check-reload", true);
 
         // Obtain the configuration file, or use the XCONF_URL if none
@@ -193,6 +192,14 @@ public class TreeProcessor
 
         // Reload check delay. Default is 1 second.
         this.lastModifiedDelay = config.getChild("reload").getAttributeAsLong("delay", 1000L);
+
+        String fileName = config.getAttribute("file", "sitemap.xmap");
+        
+        try {
+            this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(fileName), lastModifiedDelay);
+        } catch (Exception e) {
+            throw new ConfigurationException("Cannot resolve " + fileName, e);
+        }
 
         // Read the builtin languages definition file
         Configuration builtin;
@@ -283,7 +290,13 @@ public class TreeProcessor
     }
 
     private void setupConcreteProcessor(Environment env) throws Exception {
-        // first, check for sitemap changes
+        
+        if (this.parent == null) {
+            // Ensure root sitemap uses the correct context, even if not located in the webapp context
+            env.changeContext("", this.source.getURI());
+        }
+
+        // check for sitemap changes
         if (this.concreteProcessor == null ||
             (this.checkReload && this.source.getLastModified() != this.lastModified)) {
             buildConcreteProcessor(env);
@@ -308,40 +321,18 @@ public class TreeProcessor
         this.setupLogger(newProcessor);
         //FIXME (SW): why do we need to enterProcessor here?
         CocoonComponentManager.enterEnvironment(env, this.manager, this);
-        String oldContext = env.getContext();
         try {
             if (builder instanceof Recomposable) {
                 ((Recomposable)builder).recompose(this.manager);
             }
             builder.setProcessor(newProcessor);
-
-            if (this.source == null) {
-                if (this.fileName == null) {
-                    // Case of the root sitemap if no explicit config was given
-                    this.fileName = builder.getFileName();
-                }
-
-                this.source = new DelayedRefreshSourceWrapper(this.resolver.resolveURI(this.fileName),
-                                                              lastModifiedDelay);
-                
-                if (this.parent == null) {
-                    // Ensure the root processor has a filename to change its context
-                    this.fileName = this.source.getURI();
-                }
-            }
             
-            // Set the context to the sitemap location as components may lookup some resources
-            // during their initialization
-            env.changeContext("", this.source.getURI());
-
             newLastModified = this.source.getLastModified();
 
             ProcessingNode root = builder.build(this.source);
 
-            newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes(), this.source.getURI());
+            newProcessor.setProcessorData(builder.getSitemapComponentManager(), root, builder.getDisposableNodes());
         } finally {
-            // Restore the context (FIXME: need to separate this from URI prefix)
-            env.changeContext("", oldContext);
             CocoonComponentManager.leaveEnvironment();
             this.builderSelector.release(builder);
         }

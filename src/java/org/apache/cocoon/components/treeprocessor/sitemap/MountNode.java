@@ -103,8 +103,7 @@ public class MountNode extends AbstractProcessingNode
         boolean pipelineWasBuilt = false;
 
         try {
-            // We only change the prefix here. Context will be changed by the processor itself.
-            env.changeContext(resolvedPrefix, "");
+            env.changeContext(resolvedPrefix, resolvedSource);
 
             if (context.isBuildingPipelineOnly()) {
                 // Propagate pipelines
