@@ -1374,7 +1374,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * Creates the Cocoon object and handles exception handling.
      */
-    private synchronized void createCocoon()
+    protected synchronized void createCocoon()
     throws ServletException {
         
         // Recheck that we need to create the cocoon object. It can have been created by
@@ -1536,7 +1536,7 @@ public class CocoonServlet extends HttpServlet {
     /**
      * Destroy Cocoon
      */
-    private final void disposeCocoon() {
+    protected final void disposeCocoon() {
         if (this.cocoon != null) {
             ContainerUtil.dispose(this.cocoon);
             this.cocoon = null;
