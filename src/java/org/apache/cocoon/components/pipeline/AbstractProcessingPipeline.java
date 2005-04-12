@@ -533,10 +533,15 @@ public abstract class AbstractProcessingPipeline
                     return;
                 }
             } catch (ProcessingException e) {
+                // Log the original exception
+                getLogger().error("Failed to process error handler for exception", e);
                 throw e;
             } catch (Exception e) {
                 throw new ProcessingException("Failed to handle exception <" + ex + ">", e);
             }
+        } else {
+            // propagate exception if we have no error handler
+            throw ex;
         }
     }
 
