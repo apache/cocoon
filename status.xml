@@ -426,6 +426,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="fix">
+      Fixed caching of a pipeline aggregating non cacheable pipelines via
+      <code>cocoon:</code> protocol.
+    </action>
     <action dev="VG" type="update">
       Stacktrace of the ResourceNotFound exception is logged only in DEBUG level,
       otherwise only exception message is logged.
