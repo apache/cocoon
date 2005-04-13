@@ -371,11 +371,11 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
                 this.toCacheSourceValidities =
                     new SourceValidity[this.toCacheKey.size()];
+
                 int len = this.toCacheSourceValidities.length;
                 int i = 0;
                 while (i < len) {
-                    final SourceValidity validity =
-                        this.getValidityForInternalPipeline(i);
+                    final SourceValidity validity = getValidityForInternalPipeline(i);
 
                     if (validity == null) {
                         if (i > 0
@@ -390,8 +390,7 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                                 this.cacheCompleteResponse = false;
                             }
                             SourceValidity[] copy = new SourceValidity[i];
-                            System.arraycopy(this.toCacheSourceValidities, 0,
-                                             copy, 0, copy.length);
+                            System.arraycopy(this.toCacheSourceValidities, 0, copy, 0, copy.length);
                             this.toCacheSourceValidities = copy;
                             len = this.toCacheSourceValidities.length;
                         } else {
@@ -808,10 +807,12 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
 
 
     /**
-     * Return valid validity objects for the event pipeline
-     * If the "event pipeline" (= the complete pipeline without the
+     * Return valid validity objects for the event pipeline.
+     *
+     * If the event pipeline (the complete pipeline without the
      * serializer) is cacheable and valid, return all validity objects.
-     * Otherwise return <code>null</code>
+     *
+     * Otherwise, return <code>null</code>.
      */
     public SourceValidity getValidityForEventPipeline() {
         if (isInternalError()) {
@@ -819,6 +820,12 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
         }
 
         if (this.cachedResponse != null) {
+            if (!this.cacheCompleteResponse &&
+                    this.firstNotCacheableTransformerIndex < super.transformers.size()) {
+                // Cache contains only partial pipeline.
+                return null;
+            }
+
             if (this.toCacheSourceValidities != null) {
                 // This means that the pipeline is valid based on the validities
                 // of the individual components
@@ -826,32 +833,34 @@ public abstract class AbstractCachingProcessingPipeline extends BaseCachingProce
                 for (int i=0; i < this.toCacheSourceValidities.length; i++) {
                     validity.add(this.toCacheSourceValidities[i]);
                 }
+
                 return validity;
             }
-            else {
-                // This means that the pipeline is valid because it has not yet expired
-                return NOPValidity.SHARED_INSTANCE;
-            }
+
+            // This means that the pipeline is valid because it has not yet expired
+            return NOPValidity.SHARED_INSTANCE;
         } else {
             int vals = 0;
 
-            if ( null != this.toCacheKey
-                 && !this.cacheCompleteResponse
-                 && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
-                 vals = this.toCacheKey.size();
-            } else if ( null != this.fromCacheKey
-                         && !this.completeResponseIsCached
-                         && this.firstProcessedTransformerIndex == super.transformers.size()) {
-                 vals = this.fromCacheKey.size();
+            if (null != this.toCacheKey
+                    && !this.cacheCompleteResponse
+                    && this.firstNotCacheableTransformerIndex == super.transformers.size()) {
+                vals = this.toCacheKey.size();
+            } else if (null != this.fromCacheKey
+                    && !this.completeResponseIsCached
+                    && this.firstProcessedTransformerIndex == super.transformers.size()) {
+                vals = this.fromCacheKey.size();
             }
-            if ( vals > 0 ) {
+
+            if (vals > 0) {
                 final AggregatedValidity validity = new AggregatedValidity();
-                for(int i=0; i < vals; i++) {
-                    validity.add(this.getValidityForInternalPipeline(i));
-                    //validity.add(new DeferredPipelineValidity(this, i));
+                for (int i = 0; i < vals; i++) {
+                    validity.add(getValidityForInternalPipeline(i));
                 }
+
                 return validity;
             }
+
             return null;
         }
     }
