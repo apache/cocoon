@@ -451,16 +451,18 @@ public class ManagedCocoonPortlet extends GenericPortlet {
                                     null);
                     return;
                 }
-            } catch (ResourceNotFoundException rse) {
-                if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("The resource was not found", rse);
+            } catch (ResourceNotFoundException e) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().warn(e.getMessage(), e);
+                } else if (getLogger().isWarnEnabled()) {
+                    getLogger().warn(e.getMessage());
                 }
 
                 manageException(request, res, env, uri,
                                 "Resource Not Found",
                                 "Resource Not Found",
                                 "The requested portlet could not be found",
-                                rse);
+                                e);
                 return;
 
             } catch (ConnectionResetException e) {
