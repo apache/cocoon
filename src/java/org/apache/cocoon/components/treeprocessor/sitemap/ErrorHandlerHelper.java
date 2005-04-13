@@ -162,7 +162,11 @@ public class ErrorHandlerHelper extends AbstractLogEnabled
                                                                       Environment env,
                                                                       InvokeContext context)
     throws Exception {
-        this.handledErrorsLogger.error(ex.getMessage(), ex);
+        if (ex instanceof ResourceNotFoundException) {
+            this.handledErrorsLogger.error(ex.getMessage());
+        } else {
+            this.handledErrorsLogger.error(ex.getMessage(), ex);
+        }
 
         try {
             prepare(context, env, ex);
