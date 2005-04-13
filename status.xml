@@ -426,6 +426,10 @@
    </action>
   </release>
   <release version="2.1.8" date="TBD">
+    <action dev="VG" type="update">
+      Stacktrace of the ResourceNotFound exception is logged only in DEBUG level,
+      otherwise only exception message is logged.
+    </action>
     <action dev="SW" type="fix">
       Fix environment handling to allow the root sitemap to be at an abitrary location
       and not only in the main webapp context directory.

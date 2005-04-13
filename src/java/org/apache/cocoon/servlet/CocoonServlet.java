@@ -402,9 +402,11 @@ public class CocoonServlet extends HttpServlet {
                                     null);
                     return;
                 }
-            } catch (ResourceNotFoundException rse) {
-                if (getLogger().isWarnEnabled()) {
-                    getLogger().warn("The resource was not found", rse);
+            } catch (ResourceNotFoundException e) {
+                if (getLogger().isDebugEnabled()) {
+                    getLogger().warn(e.getMessage(), e);
+                } else if (getLogger().isWarnEnabled()) {
+                    getLogger().warn(e.getMessage());
                 }
 
                 manageException(request, res, env, uri,
@@ -412,7 +414,7 @@ public class CocoonServlet extends HttpServlet {
                                 "Resource Not Found",
                                 "Resource Not Found",
                                 "The requested resource \"" + request.getRequestURI() + "\" could not be found",
-                                rse);
+                                e);
                 return;
 
             } catch (ConnectionResetException e) {
