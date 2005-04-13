@@ -36,7 +36,8 @@ import org.apache.log.Logger;
  *     package name. Warning: This pattern works only if formatting occurs in
  *     the same thread as the call to Logger, i.e. it won't work with
  *     <code>AsyncLogTarget</code>.</li>
- * <li><code>uri</code>: Outputs the request URI.<li>
+ * <li><code>uri</code>: Outputs the request URI.</li>
+ * <li><code>query</code>: Outputs the request query string</li>
  * <li><code>thread</code>: Outputs the name of the current thread (first element
  *     on the context stack).</li>
  * <li><code>host</code>: Outputs the request host header.<li>
@@ -58,11 +59,13 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
     protected final static int     TYPE_URI    = MAX_TYPE + 2;
     protected final static int     TYPE_THREAD = MAX_TYPE + 3;
     protected final static int     TYPE_HOST   = MAX_TYPE + 4;
+    protected final static int     TYPE_QUERY  = MAX_TYPE + 5;
 
     protected final static String  TYPE_CLASS_STR       = "class";
     protected final static String  TYPE_CLASS_SHORT_STR = "short";
 
     protected final static String  TYPE_URI_STR         = "uri";
+    protected final static String  TYPE_QUERY_STR       = "query";
     protected final static String  TYPE_THREAD_STR      = "thread";
     protected final static String  TYPE_HOST_STR        = "host";
 
@@ -136,6 +139,8 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
             return TYPE_THREAD;
         } else if (type.equalsIgnoreCase(TYPE_HOST_STR)) {
             return TYPE_HOST;
+        } else if (type.equalsIgnoreCase(TYPE_QUERY_STR)) {
+            return TYPE_QUERY;  
         } else {
             return super.getTypeIdFor(type);
         }
@@ -153,6 +158,8 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
                 return getThread(event.getContextMap());
             case TYPE_HOST:
                 return getHost(event.getContextMap());
+            case TYPE_QUERY:
+                return getQueryString(event.getContextMap());
         }
         return super.formatPatternRun(event, run);
     }
@@ -204,6 +211,23 @@ public class CocoonLogFormatter extends ExtensiblePatternFormatter
         return "Unknown-URI";
     }
 
+    /**
+     * Find request query string
+     */
+    private String getQueryString(ContextMap ctxMap) {
+        if (ctxMap != null) {
+            final Object context = ctxMap.get("objectModel");
+            if (context != null && context instanceof Map) {
+                // Get the request
+                final Request request = ObjectModelHelper.getRequest((Map) context);
+                if (request != null) {
+                    return "?" + request.getQueryString();
+                }
+            }
+        }
+        return "";
+    }
+    
     /**
      * Find the host header of the request that is being processed.
      */
